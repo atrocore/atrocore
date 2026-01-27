@@ -158,14 +158,24 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     ];
                 }
             }
-            var list = [{
-                action: 'quickView',
-                label: 'View',
-                data: {
-                    id: this.model.id
-                },
-                link: '#' + this.model.name + '/view/' + this.model.id
-            }];
+
+            var list = [];
+            let quickView = true;
+
+            if (this.model.get('_meta')?.permissions?.quickView === false) {
+                quickView = false;
+            }
+
+            if (quickView) {
+                list.push({
+                    action: 'quickView',
+                    label: 'View',
+                    data: {
+                        id: this.model.id
+                    },
+                    link: '#' + this.model.name + '/view/' + this.model.id
+                })
+            }
 
             if (this.model.get('_meta')?.permissions?.edit) {
                 list.push({
@@ -233,7 +243,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 actionList: this.getActionList(),
                 scope: this.model.name,
                 hasInheritedIcon: this.model.has('isInherited'),
-                isInherited: this.model.get('isInherited')
+                isInherited: this.model.get('isInherited'),
+                showActionIcon: !!this.options?.showActionIcon
             };
         }
     });

@@ -4,7 +4,6 @@
   "relationshipPanels": {
     "selectionItems": {
       "checkboxes": false,
-      "view": "views/selection/record/panels/selection-items",
       "hideShowFullList": true,
       "select": false,
       "unlink": false,

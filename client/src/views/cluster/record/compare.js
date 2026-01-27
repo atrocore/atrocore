@@ -22,15 +22,6 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
             return false;
         },
 
-        setup() {
-            Dep.prototype.setup.call(this);
-            this.recordActions.unshift({
-                name: 'rejectItem',
-                iconClass: 'ph ph-x',
-                label: this.translate('rejectItem'),
-            })
-        },
-
         actionRejectItem(e) {
             const id = $(e.currentTarget).data('selection-item-id');
 

@@ -227,7 +227,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (selectAttributeList) {
                         this.collection.data.select = selectAttributeList.join(',');
                     }
-                    this.collection.fetch({ keepSelected: true })
+                    this.collection.fetch({keepSelected: true})
                     this.collection.once('sync', () => {
                         this.notify(false);
                     })
@@ -289,7 +289,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.notify('Please wait...');
             this.collection.once('sync', function () {
                 this.notify(false);
-                this.trigger('sort', { sortBy: field, asc: asc });
+                this.trigger('sort', {sortBy: field, asc: asc});
             }, this);
             var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
             while (this.collection.length > maxSizeLimit) {
@@ -628,7 +628,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 requestData.where = this.collection.getWhereForCheckedRecords();
                 requestData.massAction = true;
             } else if (this.checkedList && this.checkedList.length > 0) {
-                requestData.where = [{ type: "in", attribute: "id", value: this.checkedList }];
+                requestData.where = [{type: "in", attribute: "id", value: this.checkedList}];
                 requestData.massAction = true;
             }
 
@@ -663,7 +663,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
-                var data = { permanently: permanently };
+                var data = {permanently: permanently};
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhereForCheckedRecords();
                     data.selectData = this.collection.data || {};
@@ -884,8 +884,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }).then(result => {
                 this.getModelFactory().create('Selection', (selectionModel) => {
                     selectionModel.set(result);
-                    this.getRouter().navigate('#Selection/view/' + result.id, { trigger: false });
-                    this.getRouter().dispatch('Selection', 'view', { model: selectionModel })
+                    this.getRouter().navigate('#Selection/view/' + result.id, {trigger: false});
+                    this.getRouter().dispatch('Selection', 'view', {model: selectionModel})
                 });
             });
         },
@@ -976,7 +976,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                 collection.maxSize = 10;
 
-                if(this.getMetadata().get(['scopes', this.entityType, 'hasAttribute'])) {
+                if (this.getMetadata().get(['scopes', this.entityType, 'hasAttribute'])) {
                     collection.data.allAttributes = true;
                     collection.data.completeAttrDefs = true;
                 }
@@ -1028,8 +1028,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.buttonList = Espo.Utils.clone(this.buttonList);
             this.relationScope = this.getRelationScope()
 
-            if('listInlineEditModeEnabled' in this.options)  {
-                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            if ('listInlineEditModeEnabled' in this.options) {
+                this.listInlineEditModeEnabled = this.options.listInlineEditModeEnabled;
             }
 
             if (typeof this.options.resizable === 'boolean') {
@@ -1078,9 +1078,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled'])) {
-               this.removeMassAction('select');
-               this.removeMassAction('compare');
-               this.removeMassAction('merge');
+                this.removeMassAction('select');
+                this.removeMassAction('compare');
+                this.removeMassAction('merge');
             }
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
@@ -1157,7 +1157,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 dynamicActions = dynamicActions.sort((v1, v2) => {
                     return v1.label.localeCompare(v2.label);
                 })
-                dynamicActions.unshift({ divider: true })
+                dynamicActions.unshift({divider: true})
                 this.massActionList.push(...dynamicActions);
                 this.checkAllResultMassActionList.push(...dynamicActions);
             }
@@ -1277,6 +1277,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.refreshLayout()
                 })
             }
+
+            this.listenTo(this, 'refresh', () => {
+                this.collection.fetch();
+            });
         },
 
         afterSave: function () {
@@ -1352,7 +1356,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 },
                 handleSelectAll: (e) => {
                     this.handleSelectAll(e);
-                    component.$set({ selected: this.allResultIsChecked });
+                    component.$set({selected: this.allResultIsChecked});
                 }
             };
         },
@@ -1955,7 +1959,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({ number: k, relEntity: parts[0] });
+                        toRemove.push({number: k, relEntity: parts[0]});
                     }
                 });
 
@@ -2031,7 +2035,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let attributesIds = [];
             (this.listLayout || []).forEach(item => {
                 let conditionFieldItems = this.getConditionGroupFields(item);
-                if (conditionFieldItems.length ) {
+                if (conditionFieldItems.length) {
                     for (const conditionFieldItem of conditionFieldItems) {
                         if (conditionFieldItem.attributeId && !attributesIds.includes(conditionFieldItem.attributeId)) {
                             attributesIds.push(conditionFieldItem.attributeId);
@@ -2103,7 +2107,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
                     if (!fieldType) return;
                     this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
-                        if(list.includes(attribute)) {
+                        if (list.includes(attribute)) {
                             return;
                         }
                         if (fieldType === 'link' || fieldType === 'linkMultiple') {
@@ -2138,13 +2142,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let conditionChecker = new ConditionsChecker(this);
             ['required', 'visible', 'protected', 'readOnly'].forEach((type) => {
                 let defs = item.attributeDefs ?? this.getMetadata().get(['entityDefs', this.scope, 'fields', item.name])
-                let conditions =  defs?.['conditionalProperties']?.[type]?.['conditionGroup'];
-                if(!conditions) {
+                let conditions = defs?.['conditionalProperties']?.[type]?.['conditionGroup'];
+                if (!conditions) {
                     return;
                 }
 
-                for (let field of conditionChecker.getConditionGroupFields(conditions)){
-                    if(!list.includes(field)) {
+                for (let field of conditionChecker.getConditionGroupFields(conditions)) {
+                    if (!list.includes(field)) {
                         list.push(field);
                     }
                 }
@@ -2722,9 +2726,63 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
                 entityType: this.collection.name,
                 entityId: data.id
-            }).then( _ => {
+            }).then(_ => {
                 this.notify(this.translate('Success'), 'success')
             })
+        },
+
+        actionCustomAction(data) {
+            data = data || {};
+            let id = data.id;
+            let name = data.name;
+            let parentScope = data['parentScope'];
+
+            if (!id || !name || !parentScope) return;
+
+            let model = null;
+
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+
+            if (!model) {
+                return;
+            }
+
+
+            let actionDefs  = (this.getMetadata()
+                .get(['clientDefs', parentScope, 'relationshipPanels', this.relationName, 'customActions']) || [])
+                .find(a => a.name === name);
+
+            if(!actionDefs || !actionDefs.url) {
+                return;
+            }
+
+            let runAction  = ()  => {
+                this.notify(this.translate('Loading...'));
+                this.ajaxPostRequest(actionDefs.url, {action: name, scope: model.name,  id: id})
+                    .then(response => {
+                        this.notify(this.translate('Done'), 'success');
+                        if(actionDefs.refresh) {
+                            this.trigger('refresh')
+                        }
+                    });
+            }
+
+            if(actionDefs.confirm) {
+                this.confirm({
+                    message: this.translate(actionDefs.name, 'customActionConfirms', parentScope),
+                    confirmText: this.translate('Apply')
+                }, function () {
+                    runAction();
+                }, this);
+            }else{
+                runAction();
+            }
+
+
+
+
         },
 
         actionQuickView: function (data) {
@@ -2775,7 +2833,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, this);
 
                     this.listenToOnce(view, 'after:edit-cancel', function () {
-                        this.actionQuickView({ id: view.model.id, scope: view.model.name });
+                        this.actionQuickView({id: view.model.id, scope: view.model.name});
                     }, this);
 
                     this.listenToOnce(view, 'after:save', function (model) {
@@ -2783,7 +2841,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, this);
                 }, this);
             } else {
-                this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: true });
+                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
             }
         },
 
@@ -2804,7 +2862,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 fullFormDisabled: true,
                 layoutName: 'upload',
                 multiUpload: false,
-                attributes: _.extend(model.attributes, { reupload: model.id }),
+                attributes: _.extend(model.attributes, {reupload: model.id}),
             }, view => {
                 view.render();
                 this.notify(false);
@@ -2902,7 +2960,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
-                this.getRouter().navigate('#' + scope + '/edit/' + id, { trigger: false });
+                this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
                 this.getRouter().dispatch(scope, 'edit', options);
             }
         },
@@ -2936,7 +2994,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (response.success) {
                         this.notify(response.message, 'success');
                         if (response.redirect) {
-                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, { trigger: false });
+                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, {trigger: false});
                             this.getRouter().dispatch(response.scope, 'view', {
                                 id: response.entityId,
                             })
@@ -3107,7 +3165,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 $.ajax({
                     url: this.entityType + '/action/restore',
                     type: 'POST',
-                    data: JSON.stringify({ id: id })
+                    data: JSON.stringify({id: id})
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);
@@ -3120,7 +3178,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         actionDeletePermanently(data) {
-            let id = (data || { id: null }).id;
+            let id = (data || {id: null}).id;
             if (!id) {
                 return;
             }
@@ -3210,7 +3268,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         this.notify(false)
                     });
                 }, this);
-                model.fetch({ main: true });
+                model.fetch({main: true});
             }, this);
         },
 
@@ -3232,7 +3290,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
 
             this.listenTo(view.model, 'change', () => {
-                if ( this.inlineEditModeIsOn) {
+                if (this.inlineEditModeIsOn) {
                     this.setIsChanged();
                 }
             });
@@ -3242,11 +3300,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 for (let field in view.nestedViews) {
                     let fieldView = view.nestedViews[field];
 
-                    if(typeof fieldView.setReadOnly !== 'function') {
+                    if (typeof fieldView.setReadOnly !== 'function') {
                         continue;
                     }
 
-                    if(!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
+                    if (!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
                         fieldView.setReadOnly(true);
                     }
 

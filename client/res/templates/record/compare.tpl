@@ -40,7 +40,7 @@
                                             </th>
                                         {{/if}}
                                     {{/unless}}
-                                    <th class="text-center {{#unless isFirst}} inline-actions {{/unless}}">
+                                    <th class="text-center {{#unless isFirst}} inline-actions {{/unless}}" data-id ="{{id}}">
                                         {{{name}}}
                                         {{#if _error}}
                                             <br>
@@ -49,16 +49,7 @@
                                         {{#unless isFirst}}
                                          {{#if ../hasRecordAction}}
                                             <div class="pull-right inline-actions">
-                                                <a href="javascript:" data-toggle="dropdown"><i class="ph ph-dots-three-vertical"></i></a>
-                                                <ul class="dropdown-menu">
-                                                    {{#each ../recordActions}}
-                                                        <li>
-                                                            <a href="javascript:" class="record-action" data-action="{{name}}" data-entity-type="{{../entityType}}" data-selection-item-id="{{../selectionItemId}}" data-id="{{../id}}">
-                                                                {{#if iconClass }}<i class="{{iconClass}}"></i>{{/if}} <span>{{label}}</span>
-                                                            </a>
-                                                        </li>
-                                                    {{/each}}
-                                                </ul>
+                                                {{{var action ../this}}}
                                             </div>
                                         {{/if}}
                                         {{/unless}}

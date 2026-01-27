@@ -290,53 +290,62 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         loadSelectionItemModels(selectionId) {
             let models = [];
             return new Promise((initialResolve, reject) => {
-                this.ajaxGetRequest(this.getItemsUrl(selectionId))
-                    .then(result => {
-                        let entityByScope = {};
-                        let order = 0;
-                        for (const entityData of result.list) {
-                            let scope = entityData.entityType ?? entityData.entityName;
-                            if (!entityByScope[scope]) {
-                                entityByScope[scope] = [];
-                            }
-                            entityData.entity._order = order;
-                            entityData.entity._selectionItemId = entityData.id;
-
-                            entityByScope[scope].push(entityData.entity);
-                            order++
-                        }
-                        let promises = [];
-
-                        for (const scope in entityByScope) {
-                            promises.push(new Promise((resolve) => {
-                                this.getModelFactory().create(scope, model => {
-                                    for (const data of entityByScope[scope]) {
-                                        let currentModel = model.clone();
-                                        currentModel.set(data);
-                                        currentModel._order = data._order;
-                                        models.push(currentModel);
-                                    }
-                                    resolve();
-                                })
-                            }));
-                        }
-
-                        Promise.all(promises)
-                            .then(() => {
-                                models.sort((a, b) => a._order - b._order);
-
-                                let orderedModels = [];
-                                // we order by entity, master first then staging
-                                for (const entityType of this.getEntityTypes()) {
-                                    models.forEach(m => {
-                                        if (m.name === entityType) {
-                                            orderedModels.push(m);
-                                        }
-                                    })
+                this.getModelFactory().create(this.itemScope, (itemModel) => {
+                    this.ajaxGetRequest(this.getItemsUrl(selectionId))
+                        .then(result => {
+                            let entityByScope = {};
+                            let order = 0;
+                            for (const entityData of result.list) {
+                                let scope = entityData.entityType ?? entityData.entityName;
+                                if (!entityByScope[scope]) {
+                                    entityByScope[scope] = [];
                                 }
-                                initialResolve(orderedModels);
-                            });
-                    });
+                                entityData.entity._order = order;
+                                entityData.entity._selectionItemId = entityData.id;
+                                let itemData = Espo.utils.clone(entityData);
+                                delete itemData.entity;
+                                entityData.entity._item = itemData;
+                                entityByScope[scope].push(entityData.entity);
+                                order++
+                            }
+                            let promises = [];
+
+                            for (const scope in entityByScope) {
+                                promises.push(new Promise((resolve) => {
+                                    this.getModelFactory().create(scope, model => {
+                                        for (const data of entityByScope[scope]) {
+                                            let currentModel = model.clone();
+                                            let item = itemModel.clone();
+                                            item.set(data._item);
+                                            delete  data._item;
+                                            currentModel.set(data);
+                                            currentModel.item = item;
+                                            currentModel._order = data._order;
+                                            models.push(currentModel);
+                                        }
+                                        resolve();
+                                    })
+                                }));
+                            }
+
+                            Promise.all(promises)
+                                .then(() => {
+                                    models.sort((a, b) => a._order - b._order);
+
+                                    let orderedModels = [];
+                                    // we order by entity, master first then staging
+                                    for (const entityType of this.getEntityTypes()) {
+                                        models.forEach(m => {
+                                            if (m.name === entityType) {
+                                                orderedModels.push(m);
+                                            }
+                                        })
+                                    }
+                                    initialResolve(orderedModels);
+                                });
+                        });
+                })
+
             });
         },
 

@@ -12,14 +12,25 @@
       "checkboxes": false,
       "actions": {
         "unlinkRelated": {
-          "url": "ClusterItem/{{id}}"
+          "url": "ClusterItem/{{id}}",
+          "iconClass": ""
         },
         "removeRelated": {
-          "url": "{{entityName}}/{{entityId}}"
+          "url": "{{entityName}}/{{entityId}}",
+          "iconClass": ""
         }
       },
-      "view": "views/cluster/record/panels/cluster-items",
+      "customActions": [
+        {
+          "name": "reject",
+          "url": "ClusterItem/action/reject",
+          "confirm": true,
+          "refresh": true,
+          "iconClass": "ph ph-x"
+        }
+      ],
       "hideShowFullList": true,
+      "create": false,
       "select": false,
       "unlink": false,
       "canClose": false,

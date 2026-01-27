@@ -28,6 +28,10 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
 
         hasRemoveRecord: true,
 
+        recordActionView: 'views/record/row-actions/relationship',
+
+        relationName: 'clusterItems',
+
         actionRemoveItem: function (e) {
             this.afterRemoveButtonClicked(e)
         },
@@ -123,6 +127,17 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                     this.getParentView().setupLayoutEditorButton();
                 });
             });
+
+            this.getModels().forEach(model => {
+                this.createView(model.id + 'Action', this.recordActionView, {
+                    el: this.options.el + ` [data-id="${model.id}"] .inline-actions`,
+                    model: model.item,
+                    scope: this.itemScope,
+                    showIcons: true,
+                    parentModelName: this.selectionModel.name,
+                    relationName: 'clusterItems'
+                })
+            })
         },
 
         executeAction: function (action, data = null, e = null) {
