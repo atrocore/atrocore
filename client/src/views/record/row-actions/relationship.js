@@ -40,13 +40,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
 
             let list = [];
 
-            let quickView = true;
-
-            if (this.model.get('_meta')?.permissions?.quickView === false) {
-                quickView = false;
-            }
-
-            if (quickView) {
+            if (!(this.model.get('_meta')?.permissions?.quickView === false)) {
                 list.push({
                     action: 'quickView',
                     label: 'View',
