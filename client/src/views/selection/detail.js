@@ -799,27 +799,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             });
         },
 
-        afterRemoveSelectedRecords(selectedRecordIds) {
-            this.selectionItemModels = this.selectionItemModels.filter(m => !selectedRecordIds.includes(m.get('_selectionItemId')))
-
-            if (this.selectionItemModels.length === 0) {
-                this.actionShowSelectionView({name: 'standard'});
-                return;
-            }
-
-            window.leftSidePanel?.setRecords(this.getRecordForPanels());
-
-            if (this.selectionItemModels.length === 2) {
-                this.selectedIds = this.selectionItemModels.map(m => m.id);
-            } else {
-                this.selectedIds = this.selectedIds.filter(id => this.selectionItemModels.find(v => v.id === id))
-            }
-
-            window.leftSidePanel?.setSelectedIds(this.selectedIds);
-
-            this.model.trigger('after:unrelate')
-        },
-
         toggleSelected(itemId) {
             if (this.selectedIds.includes(itemId)) {
                 if (this.selectedIds.length === 2) {
@@ -838,15 +817,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.selectedIds.push(itemId);
             }
             return true;
-        },
-
-        afterChangedSelectedRecords(changedIds) {
-            this.notify(this.translate('Loading...'));
-            this.selectedIds = this.selectedIds.concat(changedIds);
-            this.reloadModels(() => {
-                this.refreshContent();
-            });
-            this.notify(this.notify(this.translate('Done'), 'success'));
         },
 
         getCompareButtons() {
