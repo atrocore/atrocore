@@ -166,14 +166,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.merging) {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 this.merging = false;
-                this.reRender();
-                this.renderFieldsPanels();
                 if (relationshipsPanels) {
                     relationshipsPanels.changeViewMode('detail');
                     relationshipsPanels.merging = false;
+                    relationshipsPanels.reRender();
                 }
-                this.$el.find('div.compare-records').attr('data-mode', 'compare')
 
+                this.reRender();
+                this.renderFieldsPanels();
+                this.$el.find('div.compare-records').attr('data-mode', 'compare')
             }
         },
 
@@ -182,16 +183,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (!this.merging) {
                 this.notify('Loading...')
                 this.merging = true;
+                if (relationshipsPanels) {
+                    relationshipsPanels.merging = true;
+                    relationshipsPanels.changeViewMode('edit');
+                    relationshipsPanels.reRender();
+                }
+
                 this.reRender();
                 this.renderFieldsPanels();
                 this.listenTo(this, 'after:fields-panel-rendered', () => {
                     this.handleRadioButtonsDisableState(false)
                 })
-
-                if (relationshipsPanels) {
-                    relationshipsPanels.merging = true;
-                    relationshipsPanels.changeViewMode('edit');
-                }
 
                 this.$el.find('div.compare-records').attr('data-mode', 'merge')
                 return;
