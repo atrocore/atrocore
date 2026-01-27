@@ -28,10 +28,6 @@ Espo.define('views/selection/record/detail/compare', [
 
         itemScope: 'SelectionItem',
 
-        hasReplaceRecord: true,
-
-        hasRemoveRecord: true,
-
         recordActionView: 'views/record/row-actions/relationship',
 
         relationName: 'selectionItems',

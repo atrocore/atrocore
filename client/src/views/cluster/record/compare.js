@@ -14,10 +14,6 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
 
         itemScope: 'ClusterItem',
 
-        hasReplaceRecord: false,
-
-        hasRemoveRecord: true,
-
         relationName: 'clusterItems',
 
         isComparisonAcrossScopes() {

@@ -48,10 +48,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         inlineEditDisabled: false,
 
-        hasReplaceRecord: false,
-
-        hasRemoveRecord: false,
-
         recordActionView: false,
 
         events: {
