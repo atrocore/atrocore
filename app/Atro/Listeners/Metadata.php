@@ -971,7 +971,7 @@ class Metadata extends AbstractListener
                                     'type'                      => 'linkMultiple',
                                     'linkToRelationEntity'      => $relationParams['entity'],
                                     'layoutDetailDisabled'      => true,
-                                    'layoutLeftSidebarDisabled' => true,
+                                    'layoutNavigationDisabled' => true,
                                     'massUpdateDisabled'        => true,
                                     'noLoad'                    => true
                                 ];
@@ -1008,7 +1008,7 @@ class Metadata extends AbstractListener
                             $data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName] = [
                                 'type'                      => 'linkMultiple',
                                 'linkToRelationEntity'      => $scope,
-                                'layoutLeftSidebarDisabled' => true,
+                                'layoutNavigationDisabled' => true,
                                 'layoutDetailDisabled'      => true,
                                 'massUpdateDisabled'        => true,
                                 'noLoad'                    => true
@@ -1145,8 +1145,8 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope]['fields']['parents']['view'] = 'views/fields/hierarchy-parents';
             }
             $data['entityDefs'][$scope]['fields']['parents']['layoutDetailDisabled'] = false;
-            $data['entityDefs'][$scope]['fields']['parents']['layoutLeftSidebarDisabled'] = true;
-            $data['entityDefs'][$scope]['fields']['children']['layoutLeftSidebarDisabled'] = true;
+            $data['entityDefs'][$scope]['fields']['parents']['layoutNavigationDisabled'] = true;
+            $data['entityDefs'][$scope]['fields']['children']['layoutNavigationDisabled'] = true;
 
             $data['entityDefs'][$scope]['fields']['routes'] = [
                 "type"               => "jsonArray",
@@ -1234,7 +1234,7 @@ class Metadata extends AbstractListener
                     "notStorable"               => true,
                     "entity"                    => $scope,
                     "emHidden"                  => true,
-                    "layoutLeftSidebarDisabled" => true,
+                    "layoutNavigationDisabled" => true,
                     "exportDisabled"            => false,
                     "importDisabled"            => false,
                     "openApiDisabled"           => true
@@ -1245,7 +1245,7 @@ class Metadata extends AbstractListener
                     [
                         "layoutListDisabled"        => true,
                         "layoutDetailDisabled"      => true,
-                        "layoutLeftSidebarDisabled" => true,
+                        "layoutNavigationDisabled" => true,
                         "massUpdateDisabled"        => true,
                         "filterDisabled"            => true,
                         "importDisabled"            => true,
@@ -1436,7 +1436,7 @@ class Metadata extends AbstractListener
                     "layoutDetailDisabled"        => true,
                     "layoutListDisabled"          => true,
                     "layoutRelationshipsDisabled" => true,
-                    "layoutLeftSidebarDisabled"   => true,
+                    "layoutNavigationDisabled"   => true,
                     "massUpdateDisabled"          => true,
                     "importDisabled"              => true,
                     "exportDisabled"              => true,
@@ -1448,7 +1448,7 @@ class Metadata extends AbstractListener
                     "layoutDetailDisabled"        => true,
                     "layoutListDisabled"          => true,
                     "layoutRelationshipsDisabled" => true,
-                    "layoutLeftSidebarDisabled"   => true,
+                    "layoutNavigationDisabled"   => true,
                     "massUpdateDisabled"          => true,
                     "importDisabled"              => true,
                     "exportDisabled"              => true,
@@ -2120,7 +2120,7 @@ class Metadata extends AbstractListener
                             "type"                      => "linkMultiple",
                             "layoutDetailDisabled"      => true,
                             "layoutListDisabled"        => true,
-                            "layoutLeftSidebarDisabled" => true,
+                            "layoutNavigationDisabled" => true,
                             "massUpdateDisabled"        => true,
                             "filterDisabled"            => false,
                             "noLoad"                    => true,
@@ -2131,7 +2131,7 @@ class Metadata extends AbstractListener
                             "type"                      => "linkMultiple",
                             "layoutDetailDisabled"      => true,
                             "layoutListDisabled"        => true,
-                            "layoutLeftSidebarDisabled" => true,
+                            "layoutNavigationDisabled" => true,
                             "massUpdateDisabled"        => true,
                             "filterDisabled"            => false,
                             "noLoad"                    => true,
@@ -2142,7 +2142,7 @@ class Metadata extends AbstractListener
                             "type"                      => "linkMultiple",
                             "layoutDetailDisabled"      => true,
                             "layoutListDisabled"        => true,
-                            "layoutLeftSidebarDisabled" => true,
+                            "layoutNavigationDisabled" => true,
                             "massUpdateDisabled"        => true,
                             "filterDisabled"            => false,
                             "noLoad"                    => true,
@@ -2153,7 +2153,7 @@ class Metadata extends AbstractListener
                             "type"                      => "linkMultiple",
                             "layoutDetailDisabled"      => true,
                             "layoutListDisabled"        => true,
-                            "layoutLeftSidebarDisabled" => true,
+                            "layoutNavigationDisabled" => true,
                             "massUpdateDisabled"        => true,
                             "filterDisabled"            => false,
                             "noLoad"                    => true,
