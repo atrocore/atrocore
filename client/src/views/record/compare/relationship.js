@@ -482,14 +482,16 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
 
             let model = stagingEntity ? this.models.filter(m => m.name === stagingEntity)[0] : this.models.filter(m => m.name === this.scope)[0];
             let scope = stagingEntity ?? this.scope;
-            let midKeys = model.defs.links[this.relationship.name].midKeys;
+            if(model) {
+                let midKeys = model.defs.links[this.relationship.name].midKeys;
 
-            if (model.defs.links[this.relationship.name].isAssociateRelation) {
-                return midKeys[0]
-            }
+                if (model.defs.links[this.relationship.name].isAssociateRelation) {
+                    return midKeys[0]
+                }
 
-            if (midKeys && midKeys.length === 2) {
-                return midKeys[1];
+                if (midKeys && midKeys.length === 2) {
+                    return midKeys[1];
+                }
             }
 
             return scope.charAt(0).toLowerCase() + scope.slice(1) + 'Id';
@@ -498,16 +500,18 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
         getRelationshipRelationColumnId(stagingEntity = null) {
             let model = stagingEntity ? this.models.filter(m => m.name === stagingEntity)[0] : this.models.filter(m => m.name === this.scope)[0];
             let midKeys = null;
-            midKeys = model.defs.links[this.relationship.name].midKeys;
-            if (model.defs.links[this.relationship.name].isAssociateRelation) {
-                return midKeys[1]
-            }
+            if(model) {
+                midKeys = model.defs.links[this.relationship.name].midKeys;
+                if (model.defs.links[this.relationship.name].isAssociateRelation) {
+                    return midKeys[1]
+                }
 
-            if (midKeys && midKeys.length === 2) {
-                return midKeys[0];
-            }
+                if (midKeys && midKeys.length === 2) {
+                    return midKeys[0];
+                }
 
-            return this.relationship.scope.charAt(0).toLowerCase() + this.relationship.scope.slice(1) + 'Id';
+                return this.relationship.scope.charAt(0).toLowerCase() + this.relationship.scope.slice(1) + 'Id';
+            }
         },
 
         getLinkName() {
