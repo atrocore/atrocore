@@ -32,13 +32,18 @@ class Selection extends Base
     {
         $selection = $this->createSelection($scope);
 
+        $items = [];
         foreach ($entityIds as $entityId) {
             $record = $this->getEntityManager()->getEntity('SelectionItem');
             $record->set('entityId', $entityId);
             $record->set('entityType', $scope);
             $record->set('selectionId', $selection->get('id'));
             $this->getEntityManager()->saveEntity($record);
+
+            $items[] = $record->getValueMap();
         }
+
+        $selection->set('selectionItems', $items);
 
         return $selection;
     }
