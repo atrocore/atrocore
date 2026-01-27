@@ -345,8 +345,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                     initialResolve(orderedModels);
                                 });
                         });
-                })
-
+                });
             });
         },
 
