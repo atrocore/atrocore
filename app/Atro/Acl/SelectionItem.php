@@ -33,7 +33,7 @@ class SelectionItem extends Base
         }
 
         if ($action === 'read') {
-            $record = $this->getEntityManager()->getEntity($entity->get('entityType'), $entity->get('entityId'));
+            $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
             if (empty($record)) {
                 return false;
             }
