@@ -102,26 +102,16 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                             entityIds: this.getModels().map(m => m.id)
                         }).then(result => {
                             this.getModelFactory().create('Selection', (selectionModel) => {
-                                this.getModelFactory().create('SelectionItem', (selectionItemModel) => {
-                                    selectionModel.set(result);
-                                    const link = '#Selection/view/' + result.id + '/selectionViewMode=' + (this.getView('modalRecord').merging ? 'merge' : 'compare');
-                                    this.getRouter().navigate(link, { trigger: false });
-                                    this.getRouter().dispatch('Selection', 'view', {
-                                        id: result.id,
-                                        model: selectionModel,
-                                        selectionViewMode: this.getView('modalRecord').merging ? 'merge' : 'compare',
-                                        models: this.getModels().map(model => {
-                                            const item = (result.selectionItems || []).filter(item => item.entityId === model.id)[0];
-                                            model.attributes._selectionItemId = item?.id
-                                            let itemModel = selectionItemModel.clone();
-                                            itemModel.set(item);
-                                            model.item = itemModel;
-                                            return model;
-                                        })
-                                    });
-                                    dialog.close();
-                                    this.clearView('modalRecord');
+                                selectionModel.set(result);
+                                const link = '#Selection/view/' + result.id + '/selectionViewMode=' + (this.getView('modalRecord').merging ? 'merge' : 'compare');
+                                this.getRouter().navigate(link, { trigger: false });
+                                this.getRouter().dispatch('Selection', 'view', {
+                                    id: result.id,
+                                    model: selectionModel,
+                                    selectionViewMode: this.getView('modalRecord').merging ? 'merge' : 'compare',
                                 });
+                                dialog.close();
+                                this.clearView('modalRecord');
                             });
                         });
                     }
