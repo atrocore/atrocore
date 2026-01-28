@@ -138,81 +138,129 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
         getActionList: function () {
             const scope = this.options.scope;
             const filters = this.getStorage().get('listQueryBuilder', scope);
-            if (filters && filters?.bool?.onlyDeleted === true) {
-                if (this.model.get('_meta')?.permissions?.delete) {
-                    return [
-                        {
-                            action: 'quickRestore',
-                            label: 'Restore',
-                            data: {
-                                id: this.model.id
-                            }
-                        },
-                        {
-                            action: 'deletePermanently',
-                            label: 'deletePermanently',
-                            data: {
-                                id: this.model.id
-                            }
+
+            let actionsSortOrder = {
+                "quickView": 110,
+                "quickEdit": 120,
+                "select": 130,
+                "quickCompare": 140,
+                "quickRemove": 150,
+                "quickRestore": 160,
+                "deletePermanently": 170
+            };
+
+            $.each(this.getMetadata().get(['clientDefs', scope, 'listActions']) || {}, (actionName, actionData) => {
+                if (actionData.sortOrder) {
+                    actionsSortOrder[actionName] = actionData.sortOrder;
+                }
+                if (!actionsSortOrder[actionName]) {
+                    actionsSortOrder[actionName] = 100;
+                }
+                if (actionData.disabled === true && actionsSortOrder[actionName]) {
+                    delete actionsSortOrder[actionName];
+                }
+            });
+
+            const sortedActionKeys = Object.keys(actionsSortOrder)
+                .sort((a, b) => actionsSortOrder[a] - actionsSortOrder[b]);
+
+            let list = [];
+
+            sortedActionKeys.forEach(actionName => {
+                if (actionName === 'quickRestore') {
+                    if (filters && filters?.bool?.onlyDeleted === true) {
+                        if (this.model.get('_meta')?.permissions?.delete) {
+                            list.push({
+                                action: 'quickRestore',
+                                label: 'Restore',
+                                data: {
+                                    id: this.model.id
+                                }
+                            });
                         }
-                    ];
-                }
-            }
-
-            var list = [{
-                action: 'quickView',
-                label: 'View',
-                data: {
-                    id: this.model.id
-                },
-                link: '#' + this.model.name + '/view/' + this.model.id
-            }];
-
-            if (this.model.get('_meta')?.permissions?.edit) {
-                list.push({
-                    action: 'quickEdit',
-                    label: 'Edit',
-                    data: {
-                        id: this.model.id
-                    },
-                    link: '#' + this.model.name + '/edit/' + this.model.id
-                });
-            }
-
-            if (!this.getMetadata().get(['scopes', this.model.name, 'selectionDisabled']) && this.getAcl().check('Selection', 'create')) {
-                list.push({
-                    action: 'select',
-                    label: 'Select',
-                    data: {
-                        id: this.model.id
                     }
-                })
-            }
-
-            if (this.getMetadata().get(['clientDefs', this.model.name, 'showCompareAction'])) {
-                let instances = this.getMetadata().get(['app', 'comparableInstances']);
-                if (instances.length) {
+                } else if (actionName === 'deletePermanently') {
+                    if (filters && filters?.bool?.onlyDeleted === true) {
+                        if (this.model.get('_meta')?.permissions?.delete) {
+                            list.push({
+                                action: 'deletePermanently',
+                                label: 'deletePermanently',
+                                data: {
+                                    id: this.model.id
+                                }
+                            });
+                        }
+                    }
+                } else if (actionName === 'quickView') {
                     list.push({
-                        action: 'quickCompare',
-                        label: this.translate('Compare with ' + instances[0].name),
-                        name: 'compare',
+                        action: 'quickView',
+                        label: 'View',
                         data: {
-                            id: this.model.id,
-                            scope: this.model.name
+                            id: this.model.id
                         },
+                        link: '#' + this.model.name + '/view/' + this.model.id
                     });
-                }
-            }
-
-            if (this.model.get('_meta')?.permissions?.delete) {
-                list.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id
+                } else if (actionName === 'quickEdit') {
+                    if (this.model.get('_meta')?.permissions?.edit) {
+                        list.push({
+                            action: 'quickEdit',
+                            label: 'Edit',
+                            data: {
+                                id: this.model.id
+                            },
+                            link: '#' + this.model.name + '/edit/' + this.model.id
+                        });
                     }
-                });
-            }
+                } else if (actionName === 'select') {
+                    if (!this.getMetadata().get(['scopes', this.model.name, 'selectionDisabled']) && this.getAcl().check('Selection', 'create')) {
+                        list.push({
+                            action: 'select',
+                            label: 'Select',
+                            data: {
+                                id: this.model.id
+                            }
+                        })
+                    }
+                } else if (actionName === 'quickCompare') {
+                    if (this.getMetadata().get(['clientDefs', this.model.name, 'showCompareAction'])) {
+                        let instances = this.getMetadata().get(['app', 'comparableInstances']);
+                        if (instances.length) {
+                            list.push({
+                                action: 'quickCompare',
+                                label: this.translate('Compare with ' + instances[0].name),
+                                name: 'compare',
+                                data: {
+                                    id: this.model.id,
+                                    scope: this.model.name
+                                },
+                            });
+                        }
+                    }
+                } else if (actionName === 'quickRemove') {
+                    if (this.model.get('_meta')?.permissions?.delete) {
+                        list.push({
+                            action: 'quickRemove',
+                            label: 'Remove',
+                            data: {
+                                id: this.model.id
+                            }
+                        });
+                    }
+                } else {
+                    let actionData = this.getMetadata().get(['clientDefs', scope, 'listActions', actionName]);
+                    if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
+                        list.push({
+                            action: actionData.action || 'universalAction',
+                            iconClass: actionData.iconClass,
+                            label: this.translate(actionName, 'actions', scope),
+                            data: {
+                                'name': actionName,
+                                'id': this.model.id
+                            }
+                        })
+                    }
+                }
+            });
 
             list.push({
                 divider: true
