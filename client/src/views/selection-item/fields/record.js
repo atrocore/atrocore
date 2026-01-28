@@ -33,7 +33,7 @@ Espo.define('views/selection-item/fields/record', 'views/fields/link',
                 });
 
                 this.listenTo(this.model, 'change:recordId', () => {
-                   this.model.get('entityId', this.model.get('recordId'))
+                   this.model.set('entityId', this.model.get('recordId'))
                 });
             }
         });

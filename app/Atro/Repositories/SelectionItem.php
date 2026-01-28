@@ -30,7 +30,7 @@ class SelectionItem extends Base
             throw new BadRequest(str_replace('%s', $entity->get('entityName'), $this->getLanguage()->translate('selectionDisabledForEntity', 'messages', 'SelectionItem')));
         }
 
-        $record = $this->getEntityManager()->getRepository($entity->get('entityType'))
+        $record = $this->getEntityManager()->getRepository($entity->get('entityName'))
             ->select(['id'])
             ->where(['id' => $entity->get('entityId')])
             ->findOne();

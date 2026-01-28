@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection-item/fields/entity-type', 'views/fields/entity-type',
+Espo.define('views/selection-item/fields/entity-name', 'views/fields/entity-type',
     Dep => {
         return Dep.extend({
             checkAvailability(entityType) {
