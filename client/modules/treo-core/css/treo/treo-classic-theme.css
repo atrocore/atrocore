@@ -19349,8 +19349,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: none;
 }
 
-.compare-panel table th:hover div.inline-actions,
-.compare-panel table th div.inline-actions.open {
+.compare-panel table th:hover .inline-actions,
+.compare-panel table th .inline-actions:has(.list-row-buttons.open) {
     display: flex;
 }
 

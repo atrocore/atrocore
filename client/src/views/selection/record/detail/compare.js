@@ -79,17 +79,9 @@ Espo.define('views/selection/record/detail/compare', [
             this.listenTo(this, 'refresh', () => {
                 let view = this.getParentView();
                 if (view) {
-                    view.reloadModels(() => view.refreshContent());
+                    view.refresh();
                 }
-            })
-        },
-
-        getModel(data, evt) {
-            let model = this.getModels().find(m => m.item.id === data.id);
-            if (!model) {
-                return;
-            }
-            return model.item;
+            });
         },
 
         prepareAndExecuteAction(data, callback) {
@@ -101,6 +93,13 @@ Espo.define('views/selection/record/detail/compare', [
             let self = Espo.utils.clone(this);
             self.model = this.selectionModel;
             self.link = this.relationName;
+            self.getModel = () => {
+                let model = this.getModels().find(m => m.item.id === data.id);
+                if (!model) {
+                    return;
+                }
+                return model.item;
+            }
             this.getCollectionFactory().create(this.itemScope, (collection) => {
                 self.collection = collection;
                 self.collection.add(itemModel);
@@ -122,9 +121,9 @@ Espo.define('views/selection/record/detail/compare', [
             });
         },
 
-        actionCustomAction(data) {
+        actionUniversalAction(data) {
             this.prepareAndExecuteAction(data, (self) => {
-                Relationship.prototype.actionCustomAction.call(self, data);
+                Relationship.prototype.actionUniversalAction.call(self, data);
             });
         },
 
