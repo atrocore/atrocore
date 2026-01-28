@@ -44,18 +44,18 @@ class ClusterItem extends Base
             $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
 
             if (empty($record)) {
-                throw new NotFound("Cluster item record not found");
+                throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
             }
 
             if (!empty($record->get('goldenRecord'))) {
-                throw new BadRequest("This record is already confirmed");
+                throw new BadRequest($this->getInjection('language')->translate("alreadyConfirmed", "exceptions", "ClusterItem"));
             }
 
             if (empty($goldenRecord)) {
                 foreach ($cluster->get('clusterItems') as $clusterItem) {
                     if ($clusterItem->get('entityName') === $cluster->get('masterEntity')) {
-                        // master entity record does not exist in the cluster
-                        throw new BadRequest("Golden record is not set on the cluster");
+                        // master entity record exists in the cluster
+                        throw new BadRequest($this->getInjection('language')->translate("goldenRecordIsNotSetOnCluster", "exceptions", "ClusterItem"));
                     }
                 }
 
@@ -94,12 +94,12 @@ class ClusterItem extends Base
         if (!empty($cluster->get('goldenRecord'))) {
             if ($cluster->get('masterEntity') === $entity->get('entityName')) {
                 if ($cluster->get('goldenRecordId') === $entity->get('entityId')) {
-                    throw new BadRequest("This record cannot be rejected");
+                    throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
                 }
             } else {
                 $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
                 if (!empty($record) && $record->get('goldenRecordId') === $cluster->get('goldenRecordId')) {
-                    throw new BadRequest("This record cannot be rejected");
+                    throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
                 }
             }
         }

@@ -640,7 +640,7 @@ class Record extends RecordService
 
         $mappingScript = $masterDataEntity->get('mappingScript');
         if (empty($mappingScript)) {
-            throw new BadRequest("Mapping script is not configured");
+            throw new BadRequest($this->getInjection('language')->translate('mappingScriptIsMissing', 'exceptions', 'MasterDataEntity'));
         }
 
         $templateData = ['sourceEntity' => $stagingEntity];
@@ -648,7 +648,7 @@ class Record extends RecordService
         $input = json_decode($res);
 
         if (empty($input)) {
-            throw new BadRequest("Mapping script returned empty result: $res");
+            throw new BadRequest(str_replace('%s', $res, $this->getInjection('language')->translate('mappingScriptIsInvalid', 'exceptions', 'MasterDataEntity')));
         }
 
         return $this->createEntity($input);

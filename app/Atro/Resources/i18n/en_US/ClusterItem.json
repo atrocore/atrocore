@@ -5,5 +5,11 @@
     "record": "Record",
     "cluster": "Cluster",
     "matchedRecord": "Matched Record"
+  },
+  "exceptions": {
+    "alreadyConfirmed": "This record is already confirmed",
+    "notFound": "Cluster item record not found",
+    "goldenRecordIsNotSetOnCluster": "Golden record is not set on the cluster",
+    "cannotReject": "This cluster item cannot be rejected"
   }
 }
