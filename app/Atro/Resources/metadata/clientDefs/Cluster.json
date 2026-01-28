@@ -17,12 +17,19 @@
         "quickEdit": {
           "disabled": true
         },
+        "confirm": {
+          "url": "ClusterItem/action/confirm",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-check",
+          "sortOrder": 10
+        },
         "reject": {
           "url": "ClusterItem/action/reject",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-x",
-          "sortOrder": 10
+          "sortOrder": 20
         },
         "unlinkRelated": {
           "url": "ClusterItem/{{id}}"
