@@ -627,33 +627,6 @@ class Record extends RecordService
             ->getArgument('result');
     }
 
-    public function createFromStagingRecord(IEntity $stagingEntity): Entity
-    {
-        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $stagingEntity->getEntityType());
-        if (empty($masterDataEntity)) {
-            throw new BadRequest("MasterDataEntity with entityType {$stagingEntity->getEntityType()} not found");
-        }
-
-        if ($masterDataEntity->get('masterEntity') !== $this->getEntityType()) {
-            throw new BadRequest("{$this->getEntityType()} is not a master for {$stagingEntity->getEntityType()}");
-        }
-
-        $mappingScript = $masterDataEntity->get('mappingScript');
-        if (empty($mappingScript)) {
-            throw new BadRequest($this->getInjection('language')->translate('mappingScriptIsMissing', 'exceptions', 'MasterDataEntity'));
-        }
-
-        $templateData = ['sourceEntity' => $stagingEntity];
-        $res = $this->getEntityManager()->getContainer()->get('twig')->renderTemplate($mappingScript, $templateData);
-        $input = json_decode($res);
-
-        if (empty($input)) {
-            throw new BadRequest(str_replace('%s', $res, $this->getInjection('language')->translate('mappingScriptIsInvalid', 'exceptions', 'MasterDataEntity')));
-        }
-
-        return $this->createEntity($input);
-    }
-
     public function createFromPrimaryRecord(string $id, \stdClass $input): Entity
     {
         $primaryEntityId = $this->getMetadata()->get(['scopes', $this->getentityType(), 'primaryEntityId']);

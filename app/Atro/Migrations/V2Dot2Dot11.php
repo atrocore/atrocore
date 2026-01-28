@@ -23,6 +23,11 @@ class V2Dot2Dot11 extends Base
     public function up(): void
     {
         $this->exec("ALTER TABLE cluster ADD golden_record_id VARCHAR(36) DEFAULT NULL");
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE master_data_entity RENAME COLUMN mapping_script TO merging_script");
+        } else {
+            $this->exec("ALTER TABLE master_data_entity CHANGE mapping_script merging_script LONGTEXT DEFAULT NULL;");
+        }
     }
 
     protected function exec(string $sql): void

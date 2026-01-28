@@ -19,6 +19,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\IEntity;
 
 class ClusterItem extends Base
 {
@@ -47,20 +48,38 @@ class ClusterItem extends Base
                 throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
             }
 
-            if (!empty($record->get('goldenRecord'))) {
-                throw new BadRequest($this->getInjection('language')->translate("alreadyConfirmed", "exceptions", "ClusterItem"));
-            }
+            $confirmedClusterItems = [$entity];
 
             if (empty($goldenRecord)) {
                 foreach ($cluster->get('clusterItems') as $clusterItem) {
                     if ($clusterItem->get('entityName') === $cluster->get('masterEntity')) {
-                        // master entity record exists in the cluster
-                        throw new BadRequest($this->getInjection('language')->translate("goldenRecordIsNotSetOnCluster", "exceptions", "ClusterItem"));
+                        if (!empty($itemRecord = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId')))) {
+                            $goldenRecord = $itemRecord;
+
+                            $cluster->set('goldenRecordId', $goldenRecord->get('id'));
+                            $this->getEntityManager()->saveEntity($cluster);
+                            break;
+                        }
                     }
                 }
+            } else {
+                foreach ($cluster->get('clusterItems') as $clusterItem) {
+                    if ($clusterItem->get('id') !== $entity->get('id') && $clusterItem->get('entityName') !== $cluster->get('masterEntity')) {
+                        if (!empty($itemRecord = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId')))) {
+                            if ($itemRecord->get('goldenRecordId') === $goldenRecord->get('id')) {
+                                $confirmedClusterItems[] = $itemRecord;
+                            }
+                        }
+                    }
+                }
+            }
 
-                // try to create a golden record
-                $goldenRecord = $this->getService($cluster->get('masterEntity'))->createFromStagingRecord($record);
+
+            $res = $this->createOrUpdateGoldenRecord($record, $cluster, $confirmedClusterItems, $goldenRecord);
+
+
+            if (empty($goldenRecord)) {
+                $goldenRecord = $res;
 
                 $clusterItem = $this->getEntityManager()->getEntity('ClusterItem');
                 $clusterItem->set('clusterId', $cluster->get('id'));
@@ -263,6 +282,39 @@ class ClusterItem extends Base
         foreach ($entities as $key => $entity) {
             $collection->offsetSet($key, $entity);
         }
+    }
+
+    public function createOrUpdateGoldenRecord(IEntity $stagingEntity, IEntity $cluster, array $confirmedClusterItems, ?IEntity $goldenRecord): Entity
+    {
+        $masterEntity = $cluster->get('masterEntity');
+        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $stagingEntity->getEntityType());
+        if (empty($masterDataEntity)) {
+            throw new BadRequest("MasterDataEntity with entityType {$stagingEntity->getEntityType()} not found");
+        }
+
+        $mergingScript = $masterDataEntity->get('mergingScript');
+        if (empty($mergingScript)) {
+            throw new BadRequest($this->getInjection('language')->translate('mergingScriptIsMissing', 'exceptions', 'MasterDataEntity'));
+        }
+
+        $templateData = [
+            'sourceEntity'          => $stagingEntity,
+            'confirmedClusterItems' => $confirmedClusterItems,
+            'cluster'               => $cluster,
+            'goldenRecord'          => $goldenRecord,
+        ];
+        $res = $this->getEntityManager()->getContainer()->get('twig')->renderTemplate($mergingScript, $templateData);
+        $input = json_decode($res);
+
+        if (empty($input)) {
+            throw new BadRequest(str_replace('%s', $res, $this->getInjection('language')->translate('mergingScriptIsInvalid', 'exceptions', 'MasterDataEntity')));
+        }
+
+        if (empty($goldenRecord)) {
+            return $this->getService($masterEntity)->createEntity($input);
+        }
+
+        return $this->getService($masterEntity)->updateEntity($goldenRecord->get('id'), $input);
     }
 
     protected function getService(string $name): Record
