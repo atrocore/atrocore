@@ -36,12 +36,12 @@ class Selection extends Base
     {
         $result = $this->getConnection()->createQueryBuilder()
             ->from('selection_item', 'sr')
-            ->select('distinct sr.entity_type')
+            ->select('distinct sr.entity_name')
             ->join('sr', 'selection', 's', 'sr.selection_id = s.id')
             ->where('s.id = :selectionId')
             ->setParameter('selectionId', $selectionId)
             ->fetchAllAssociative();
 
-        return array_column($result, 'entity_type');
+        return array_column($result, 'entity_name');
     }
 }

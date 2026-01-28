@@ -996,7 +996,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                             }
                             model.forEach(m => {
                                 selectedRecords.push({
-                                    entityType: m.name,
+                                    entityName: m.name,
                                     entityId: m.id
                                 })
                             });
