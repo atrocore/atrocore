@@ -69,7 +69,6 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             'click [data-action="quickCreate"]': function (e) {
                 e.preventDefault();
                 var scope = $(e.currentTarget).data('name');
-                debugger
                 this.quickCreate(scope);
             },
             'click a.action': function (e) {
