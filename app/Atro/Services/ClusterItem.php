@@ -129,11 +129,13 @@ class ClusterItem extends Base
                 $entities = $this->getEntityManager()->getRepository($entityType)->where(['id' => $ids])->find();
                 $retrievedIds = [];
                 foreach ($entities as $entity) {
-                    $retrievedIds[] = $entity->get('id');
+                    if ($this->getAcl()->check($entity, 'read')) {
+                        $retrievedIds[] = $entity->get('id');
+                    }
                 }
 
                 foreach ($records as $key => $record) {
-                    if (!in_array($record->get('entityId'), $retrievedIds) || !$this->getAcl()->check($record, 'read')) {
+                    if (!in_array($record->get('entityId'), $retrievedIds)) {
                         unset($collection[$key]);
                     }
                     foreach ($entities as $entity) {
@@ -163,11 +165,13 @@ class ClusterItem extends Base
                 $retrievedIds = [];
 
                 foreach ($entities as $entity) {
-                    $retrievedIds[] = $entity->get('id');
+                    if ($this->getAcl()->check($entity, 'read')) {
+                        $retrievedIds[] = $entity->get('id');
+                    }
                 }
 
                 foreach ($records as $key => $record) {
-                    if (!in_array($record->get('entityId'), $retrievedIds) || !$this->getAcl()->check($record, 'read')) {
+                    if (!in_array($record->get('entityId'), $retrievedIds)) {
                         unset($collection[$key]);
                     }
                     foreach ($entities as $entity) {

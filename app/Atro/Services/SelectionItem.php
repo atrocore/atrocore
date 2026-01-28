@@ -79,7 +79,9 @@ class SelectionItem extends Base
                 $entities = $this->getEntityManager()->getRepository($entityType)->where(['id' => $ids])->find();
                 $retrievedIds = [];
                 foreach ($entities as $entity) {
-                    $retrievedIds[] = $entity->get('id');
+                    if ($this->getAcl()->check($entity, 'read')) {
+                        $retrievedIds[] = $entity->get('id');
+                    }
                 }
 
                 foreach ($records as $key => $record) {
@@ -110,7 +112,9 @@ class SelectionItem extends Base
                 $retrievedIds = [];
 
                 foreach ($entities as $entity) {
-                    $retrievedIds[] = $entity->get('id');
+                    if ($this->getAcl()->check($entity, 'read')) {
+                        $retrievedIds[] = $entity->get('id');
+                    }
                 }
 
                 foreach ($records as $key => $record) {
