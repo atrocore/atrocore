@@ -62,10 +62,31 @@ class SelectionItem extends Base
         }
     }
 
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+        $this->prepareEntityRecord($entity);
+    }
+
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
+        $this->prepareCollectionRecords($collection, $selectParams);
+    }
 
+    public function prepareEntityRecord($entity): void
+    {
+        if (empty($entity->_fromCollection)) {
+            $entity->set('recordId', $entity->get('entityId'));
+            $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId'));
+            if (!empty($record)) {
+                $entity->set('recordName', $record->get('name'));
+            }
+        }
+    }
+
+    public function prepareCollectionRecords($collection, array $selectParams = []): void
+    {
         $entityIds = [];
         foreach ($collection as $key => $entity) {
             $entityIds[$entity->get('entityName')][$key] = $entity;
@@ -77,12 +98,12 @@ class SelectionItem extends Base
             $ids = array_map(fn($entity) => $entity->get('entityId'), $records);
             if ($loadEntity) {
                 $entities = $this->getEntityManager()->getRepository($entityType)->where(['id' => $ids])->find();
-
+                $service = $this->getRecordService($entityType);
                 foreach ($records as $record) {
                     foreach ($entities as $entity) {
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
                             $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
-                            $this->getService($entityType)->prepareEntityForOutput($entity);
+                            $service->prepareEntityForOutput($entity);
                         }
 
                         if ($record->get('entityId') === $entity->get('id')) {
@@ -156,13 +177,5 @@ class SelectionItem extends Base
         }
 
         return true;
-    }
-
-    protected function getService(string $name): Record
-    {
-        if (!empty($this->services[$name])) {
-            return $this->services[$name];
-        }
-        return $this->services[$name] = $this->getServiceFactory()->create($name);
     }
 }
