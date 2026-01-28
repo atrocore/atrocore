@@ -149,7 +149,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 "deletePermanently": 170
             };
 
-            $.each(this.getMetadata().get(['clientDefs', scope, 'actions']) || {}, (actionName, actionData) => {
+            $.each(this.getMetadata().get(['clientDefs', scope, 'listActions']) || {}, (actionName, actionData) => {
                 if (actionData.sortOrder) {
                     actionsSortOrder[actionName] = actionData.sortOrder;
                 }
@@ -247,7 +247,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         });
                     }
                 } else {
-                    let actionData = this.getMetadata().get(['clientDefs', scope, 'actions', actionName]);
+                    let actionData = this.getMetadata().get(['clientDefs', scope, 'listActions', actionName]);
                     if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
                         list.push({
                             action: actionData.action || 'universalAction',

@@ -3096,7 +3096,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             const scope = model.name || this.scope;
 
-            let actionDefs = this.getMetadata().get(['clientDefs', scope, 'actions', name]) || {};
+            let actionDefs = this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
 
             if (!actionDefs || !actionDefs.url) {
                 return;
