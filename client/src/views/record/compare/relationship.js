@@ -161,7 +161,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                     let linkedColumnViewKey = null;
                     data.forEach((el, key) => {
                         if (!el.field) {
-                            el.entityValueKeys.push({ key: null });
+                            el.entityValueKeys.push({key: null});
                             return;
                         }
 
@@ -171,7 +171,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                         let viewName = fieldModel.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldModel.getFieldType(field))
                         let viewKey = linkedEntity.id + (el.realField || el.field) + index + 'Current';
                         let mode = 'detail';
-                        el.entityValueKeys.push({ key: viewKey });
+                        el.entityValueKeys.push({key: viewKey});
 
                         if (el.field === this.isLinkedColumns) {
                             linkedColumnViewKey = viewKey;
@@ -299,6 +299,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
 
                                 this.ajaxGetRequest(this.relationName, {
                                     maxSize: 500 * this.models.length,
+                                    collectionOnly: true,
                                     where: [
                                         {
                                             type: 'in',
@@ -312,10 +313,14 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                                 stagingEntities.forEach(stagingEntity => {
                                     let stagingRelation = this.getMetadata().get(['entityDefs', stagingEntity, 'links', this.relationship.link, 'relationName'])
                                     if (!stagingRelation) {
+                                        promises.push(new Promise(resolve => {
+                                            resolve({});
+                                        }));
                                         return;
                                     }
                                     stagingRelation = stagingRelation.charAt(0).toUpperCase() + stagingRelation.slice(1);
                                     promises.push(this.ajaxGetRequest(stagingRelation, {
+                                        collectionOnly: true,
                                         maxSize: 500 * this.models.length,
                                         where: [
                                             {
@@ -355,7 +360,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
 
                                         if (stagingEntities.length) {
                                             stagingEntities.forEach((stagingEntity, key) => {
-                                                let stagingRelationList = results[2 + key].list;
+                                                let stagingRelationList = results[2 + key]?.list || [];
                                                 stagingRelationList.forEach(relationItem => {
                                                     if (item.id === relationItem[this.getRelationshipRelationColumnId(stagingEntity)] && model.id === relationItem[this.getModelRelationColumnId(stagingEntity)]) {
                                                         m.set(relationItem);
@@ -416,7 +421,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                 listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({ number: k, relEntity: parts[0] });
+                        toRemove.push({number: k, relEntity: parts[0]});
                     }
                 });
 
@@ -482,7 +487,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
 
             let model = stagingEntity ? this.models.filter(m => m.name === stagingEntity)[0] : this.models.filter(m => m.name === this.scope)[0];
             let scope = stagingEntity ?? this.scope;
-            if(model) {
+            if (model) {
                 let midKeys = model.defs.links[this.relationship.name].midKeys;
 
                 if (model.defs.links[this.relationship.name].isAssociateRelation) {
@@ -500,7 +505,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
         getRelationshipRelationColumnId(stagingEntity = null) {
             let model = stagingEntity ? this.models.filter(m => m.name === stagingEntity)[0] : this.models.filter(m => m.name === this.scope)[0];
             let midKeys = null;
-            if(model) {
+            if (model) {
                 midKeys = model.defs.links[this.relationship.name].midKeys;
                 if (model.defs.links[this.relationship.name].isAssociateRelation) {
                     return midKeys[1]
