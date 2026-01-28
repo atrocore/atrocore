@@ -492,7 +492,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
         actionQuickCreate: function () {
             var attributes = this.getCreateAttributes() || {};
-debugger
             this.notify('Loading...');
             var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'views/modals/edit';
             var options = {
