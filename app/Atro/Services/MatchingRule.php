@@ -29,7 +29,12 @@ class MatchingRule extends Base
             if (empty($checkEntity->get('matchingRuleSetId'))) {
                 break;
             }
-            $checkEntity = $this->getRepository()->get($checkEntity->get('matchingRuleSetId'));
+            $res = $this->getRepository()->get($checkEntity->get('matchingRuleSetId'));
+            if (!empty($res)) {
+                $checkEntity = $res;
+            } else {
+                break;
+            }
         }
 
         $matching = $checkEntity->get('matching');
