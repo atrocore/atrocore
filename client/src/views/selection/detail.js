@@ -105,28 +105,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 setTimeout(() => this.enableButtons(), 300);
             });
 
-            this.listenTo(this.model, 'after:unrelate refresh', () => {
-                if (['compare', 'merge'].includes(this.selectionViewMode)) {
-                    this.reloadModels(() => this.refreshContent());
-                    this.notify(this.notify(this.translate('Done'), 'success'));
-                } else {
-                    this.refreshContent();
-                    this.notify(this.notify(this.translate('Done'), 'success'));
-                }
-            });
-
             this.listenTo(this.model, 'after:relate', () => {
                 this.setupCustomButtons();
-                this.notify(this.translate('Loading...'));
-                this.model.fetch().then(() => {
-                    if (['compare', 'merge'].includes(this.selectionViewMode)) {
-                        this.reloadModels(() => this.refreshContent());
-                        this.notify(this.notify(this.translate('Done'), 'success'));
-                    } else {
-                        this.refreshContent();
-                        this.notify(this.notify(this.translate('Done'), 'success'));
-                    }
-                });
+            });
+
+            this.listenTo(this.model, 'after:unrelate refresh after:relate', () => {
+               this.refresh();
             });
 
             this.listenTo(this.model, 'init-collection:' + this.link, (collection) => {
@@ -156,6 +140,17 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             });
 
             this.notify(this.translate('Loading...'));
+        },
+
+        refresh() {
+            this.notify(this.translate('Loading...'));
+            if (['compare', 'merge'].includes(this.selectionViewMode)) {
+                this.reloadModels(() => this.refreshContent());
+                this.notify(this.notify(this.translate('Done'), 'success'));
+            } else {
+                this.refreshContent();
+                this.notify(this.notify(this.translate('Done'), 'success'));
+            }
         },
 
         isActiveMerge() {
@@ -265,6 +260,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.loadSelectionItemModels(this.model.id).then(models => {
                 this.selectionItemModels = models;
 
+                this.selectedIds = [];
                 for (const model of this.selectionItemModels) {
                     if (this.selectedIds.length >= this.maxForComparison) {
                         break;
@@ -364,8 +360,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         refreshContent() {
             this.reloadStyle(this.selectionViewMode);
-
-            window.leftSidePanel?.setRecords(this.getRecordForPanels());
 
             this.setupRecord();
         },
@@ -682,7 +676,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             });
         },
 
-
         afterRender() {
             this.treeAllowed = false
             Dep.prototype.afterRender.call(this);
@@ -891,16 +884,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 });
 
                 return entities;
-            }
-
-            if (this.selectionItemModels && this.selectionItemModels.length) {
-                let entityTypes = [];
-                this.selectionItemModels.forEach(m => {
-                    if (!entityTypes.includes(m.name)) {
-                        entityTypes.push(m.name);
-                    }
-                });
-                return entityTypes;
             }
 
             return this.model.get('entityTypes') || [];

@@ -3077,6 +3077,54 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }, this);
         },
 
+        actionUniversalAction(data) {
+            data = data || {};
+            let id = data.id;
+            let name = data.name;
+
+            if (!id || !name) return;
+
+            let model = null;
+
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+
+            if (!model) {
+                return;
+            }
+
+            const scope = model.name || this.scope;
+
+            let actionDefs = this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
+
+            if (!actionDefs || !actionDefs.url) {
+                return;
+            }
+
+            let runAction = () => {
+                this.notify(this.translate('Loading...'));
+                this.ajaxPostRequest(actionDefs.url, {action: name, scope: scope, id: id})
+                    .then(response => {
+                        this.notify(this.translate('Done'), 'success');
+                        if (actionDefs.refresh) {
+                            this.collection.fetch();
+                        }
+                    });
+            }
+
+            if (actionDefs.confirm) {
+                this.confirm({
+                    message: this.translate(actionDefs.name, 'actionConfirms', scope),
+                    confirmText: this.translate('Apply')
+                }, function () {
+                    runAction();
+                }, this);
+            } else {
+                runAction();
+            }
+        },
+
         actionQuickRestore: function (data) {
             data = data || {}
             var id = data.id;
