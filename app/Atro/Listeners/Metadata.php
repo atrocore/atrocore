@@ -27,6 +27,7 @@ use Atro\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Atro\Core\Utils\Util;
 use Atro\Repositories\Matching as MatchingRepository;
+use Espo\ORM\EntityCollection;
 
 class Metadata extends AbstractListener
 {
@@ -215,42 +216,40 @@ class Metadata extends AbstractListener
         }
 
         try {
-            $res = $this->getConnection()->createQueryBuilder()
-                ->select('*')
-                ->from('master_data_entity')
-                ->where('deleted=:false')
-                ->andWhere('source_entity IS NOT NULL')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
+            $res = $this->getEntityManager()->getRepository('MasterDataEntity')
+                ->select(['id', 'sourceEntity'])
+                ->where(['sourceEntity!=' => null])
+                ->find();
         } catch (\Throwable $e) {
-            $res = [];
+            $res = new EntityCollection([], 'MasterDataEntity');
         }
 
-        if (!empty($res)) {
-            foreach ($res as $item) {
-                $foreign = Util::pluralize(lcfirst($item['id']));
+        foreach ($res as $item) {
+            $stagingEntity = $item->id;
+            $sourceEntity = $item->get('sourceEntity');
 
-                $data['entityDefs'][$item['id']]['fields']['sourceRecord'] = [
-                    'type'   => 'link',
-                    'unique' => true,
-                ];
-                $data['entityDefs'][$item['id']]['links']['sourceRecord'] = [
-                    'type'    => 'belongsTo',
-                    'foreign' => $foreign,
-                    'entity'  => $item['source_entity']
-                ];
+            $foreign = Util::pluralize(lcfirst($stagingEntity));
 
-                $data['entityDefs'][$item['source_entity']]['fields'][$foreign] = [
-                    'type'     => 'linkMultiple',
-                    'labelKey' => "Global.scopeNamesPlural.{$item['id']}",
-                    'noLoad'   => true,
-                ];
-                $data['entityDefs'][$item['source_entity']]['links'][$foreign] = [
-                    'type'    => 'hasMany',
-                    'foreign' => 'sourceRecord',
-                    'entity'  => $item['id']
-                ];
-            }
+            $data['entityDefs'][$stagingEntity]['fields']['sourceRecord'] = [
+                'type'   => 'link',
+                'unique' => true,
+            ];
+            $data['entityDefs'][$stagingEntity]['links']['sourceRecord'] = [
+                'type'    => 'belongsTo',
+                'foreign' => $foreign,
+                'entity'  => $sourceEntity
+            ];
+
+            $data['entityDefs'][$sourceEntity]['fields'][$foreign] = [
+                'type'     => 'linkMultiple',
+                'labelKey' => "Global.scopeNamesPlural.{$stagingEntity}",
+                'noLoad'   => true,
+            ];
+            $data['entityDefs'][$sourceEntity]['links'][$foreign] = [
+                'type'    => 'hasMany',
+                'foreign' => 'sourceRecord',
+                'entity'  => $stagingEntity
+            ];
         }
     }
 
