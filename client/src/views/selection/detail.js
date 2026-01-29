@@ -30,6 +30,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         selectedIds: [],
 
+        hiddenIds: [],
+
         maxForComparison: 5,
 
         collection: null,
@@ -57,18 +59,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             Dep.prototype.init.call(this);
             if (this.options.params.selectionViewMode && this.availableModes.includes(this.options.params.selectionViewMode)) {
                 this.selectionViewMode = this.options.params.selectionViewMode;
-                this.selectionItemModels = this.options.params.models;
-                if (this.selectionItemModels) {
-                    this.selectedIds = [];
-                    for (const model of this.selectionItemModels) {
-                        if (this.selectedIds.length >= this.maxForComparison) {
-                            break;
-                        }
-
-                        this.selectedIds.push(model.id);
-                    }
-                }
             }
+            this.maxForComparison = this.getConfig().get('maxComparableItem') || 5
         },
 
         setup: function () {
@@ -111,6 +103,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             this.listenTo(this.model, 'after:unrelate refresh after:relate', () => {
                this.refresh();
+            });
+
+            this.listenTo(this, 'refresh', () =>  {
+                this.refresh();
             });
 
             this.listenTo(this.model, 'init-collection:' + this.link, (collection) => {
@@ -258,26 +254,39 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         reloadModels(callback) {
             this.loadSelectionItemModels(this.model.id).then(models => {
+                if(models.length === 0) {
+                    return;
+                }
                 this.selectionItemModels = models;
+                let allIds = models.map(m => m.id);
+                // remove dead Ids
+                this.hiddenIds = this.hiddenIds.filter(id => allIds.includes(id));
 
-                this.selectedIds = [];
-                for (const model of this.selectionItemModels) {
-                    if (this.selectedIds.length >= this.maxForComparison) {
+                for (const id of allIds.reverse()) {
+                    if ((allIds.length - this.hiddenIds.length) <= this.maxForComparison) {
                         break;
                     }
 
-                    this.selectedIds.push(model.id);
+                    if(this.hiddenIds.includes(id)) {
+                        continue;
+                    }
+
+                    this.hiddenIds.push(id);
                 }
 
                 if (window.leftSidePanel) {
                     window.leftSidePanel?.setRecords(this.getRecordForPanels());
-                    window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                    window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
                 }
 
                 if (callback) {
                     callback();
                 }
             });
+        },
+
+        getSelectedIds() {
+            return this.selectionItemModels.map(m => m.id).filter(id => !this.hiddenIds.includes(id));
         },
 
         getItemsUrl(selectionId) {
@@ -447,7 +456,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             };
 
             if (this.selectionItemModels) {
-                o.models = this.selectionItemModels.filter(m => this.selectedIds.includes(m.id));
+                o.models = this.selectionItemModels.filter(m => !this.hiddenIds.includes(m.id));
             }
 
             this.optionsToPass.forEach(function (option) {
@@ -634,9 +643,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.listenToOnce(view, 'after:save', () => {
                         let model = view.getView('record')?.model;
                         if (model) {
-                            if (this.toggleSelected(model.get('entityId'))) {
-                                window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                            if(this.getSelectedIds().length >= this.maxForComparison) {
+                                this.toggleSelected(model.get('entityId'));
                             }
+                            window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
+
                             if (!this.model.get('entityTypes')) {
                                 this.model.set('entityTypes', []);
                             }
@@ -662,14 +673,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.listenToOnce(view, 'select', function (model) {
                     this.clearView('selectRecords');
                     this.ajaxPostRequest('SelectionItem', {
-                        entityType: foreignScope,
+                        entityName: foreignScope,
                         entityId: model.id,
                         selectionId: this.model.id
                     }).then(() => {
                         this.model.trigger('after:relate', this.link);
-                        if (this.toggleSelected(model.id)) {
-                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                        if(this.getSelectedIds().length >= this.maxForComparison) {
+                            this.toggleSelected(model.get('entityId'));
                         }
+                        window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
                     })
                 }, this);
             });
@@ -740,23 +752,27 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                 target: element,
                                 props: {
                                     records: this.getRecordForPanels(),
-                                    selectedIds: this.selectedIds,
+                                    selectedIds: this.getSelectedIds(),
                                     selectionViewMode: this.selectionViewMode,
                                     onItemClicked: (e, itemId) => {
                                         if (this.selectionViewMode === 'standard') {
                                             return;
                                         }
+
                                         e.preventDefault();
 
                                         if (this.toggleSelected(itemId)) {
-                                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
-                                            this.setupRecord();
+                                            window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
+                                            if(this.getView('record')) {
+                                                this.getView('record').showLoader();
+                                            }
+                                            this.trigger('refresh');
                                         }
                                     },
                                     onSelectAll: (entityType) => {
                                         let shouldReload = false;
                                         this.selectionItemModels.forEach(model => {
-                                            if (model.name === entityType && !this.selectedIds.includes(model.id)) {
+                                            if (model.name === entityType && this.hiddenIds.includes(model.id)) {
                                                 if (this.toggleSelected(model.id)) {
                                                     shouldReload = true;
                                                 }
@@ -764,14 +780,17 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
-                                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
-                                            this.setupRecord();
+                                            if(this.getView('record')) {
+                                                this.getView('record').showLoader();
+                                            }
+                                            window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
+                                            this.trigger('refresh');
                                         }
                                     },
                                     onUnSelectAll: (entityType) => {
                                         let shouldReload = false;
                                         this.selectionItemModels.reverse().forEach(model => {
-                                            if (model.name === entityType && this.selectedIds.includes(model.id)) {
+                                            if (model.name === entityType && !this.hiddenIds.includes(model.id)) {
                                                 if (this.toggleSelected(model.id)) {
                                                     shouldReload = true;
                                                 }
@@ -779,7 +798,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
-                                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                                            window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
                                             this.setupRecord();
                                         }
                                     }
@@ -792,21 +811,22 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         toggleSelected(itemId) {
-            if (this.selectedIds.includes(itemId)) {
-                if (this.selectedIds.length === 2) {
+            if (!this.hiddenIds.includes(itemId)) {
+                if (this.getSelectedIds().length === 2) {
                     this.notify(this.translate('minimumRecordForComparison', 'messages').replace('{count}', 2));
                     return;
                 }
-                this.selectedIds = this.selectedIds.filter(id => id !== itemId);
+                this.hiddenIds.push(itemId);
             } else {
-                let maxComparableItem = this.getConfig().get('maxComparableItem') || 10;
+                let maxComparableItem = this.maxForComparison;
 
-                if (this.selectedIds.length >= maxComparableItem) {
+                if (this.getSelectedIds().length >= maxComparableItem) {
                     this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem));
                     return;
                 }
 
-                this.selectedIds.push(itemId);
+
+                this.hiddenIds = this.hiddenIds.filter(id => id !== itemId);
             }
             return true;
         },

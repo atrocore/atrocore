@@ -1186,6 +1186,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         isPanelsLoading() {
             return this.renderedPanels.length < this.fieldPanels.length + 1;
-        }
+        },
+
+        showLoader() {
+            this.$el.find('.overlay').removeClass('hidden');
+        },
     });
 });
