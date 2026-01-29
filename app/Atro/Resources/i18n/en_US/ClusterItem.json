@@ -5,5 +5,10 @@
     "record": "Record",
     "cluster": "Cluster",
     "matchedRecord": "Matched Record"
+  },
+  "exceptions": {
+    "notFound": "Cluster item record not found",
+    "cannotReject": "This cluster item cannot be rejected",
+    "cannotUnreject": "This cluster item cannot be unrejected"
   }
 }

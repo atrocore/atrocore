@@ -1,10 +1,9 @@
 [
   {
-    "name": "name",
-    "link": true
+    "name": "record"
   },
   {
-    "name": "entityType"
+    "name": "entityName"
   },
   {
     "name": "selection"

@@ -5,5 +5,8 @@
   },
   {
     "name": "masterEntity"
+  },
+  {
+    "name": "goldenRecord"
   }
 ]

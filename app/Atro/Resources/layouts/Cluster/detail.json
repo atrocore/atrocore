@@ -13,6 +13,12 @@
       ],
       [
         {
+          "name": "goldenRecord"
+        },
+        false
+      ],
+      [
+        {
           "name": "description",
           "fullWidth": true
         }

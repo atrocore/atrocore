@@ -22,15 +22,15 @@ use Espo\ORM\EntityCollection;
 
 class SelectionItem extends Base
 {
-    protected $mandatorySelectAttributeList = ['name', 'entityId', 'entityType'];
+    protected $mandatorySelectAttributeList = ['name', 'entityId', 'entityName'];
 
-    protected  array $services = [];
+    protected array $services = [];
 
     public function replaceItem(string $id, \stdClass $selectedItem): bool
     {
         $item = $this->getRepository()->get($id);
-        if($item->get('entityType') !== $selectedItem->entityType) {
-            throw new BadRequest('entityType mismatch');
+        if ($item->get('entityName') !== $selectedItem->entityName) {
+            throw new BadRequest('entityName mismatch');
         }
         $item->set('entityId', $selectedItem->entityId);
         $this->getEntityManager()->saveEntity($item);
@@ -62,13 +62,34 @@ class SelectionItem extends Base
         }
     }
 
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+        $this->prepareEntityRecord($entity);
+    }
+
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
+        $this->prepareCollectionRecords($collection, $selectParams);
+    }
 
+    public function prepareEntityRecord($entity): void
+    {
+        if (empty($entity->_fromCollection)) {
+            $entity->set('recordId', $entity->get('entityId'));
+            $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId'));
+            if (!empty($record)) {
+                $entity->set('recordName', $record->get('name'));
+            }
+        }
+    }
+
+    public function prepareCollectionRecords($collection, array $selectParams = []): void
+    {
         $entityIds = [];
         foreach ($collection as $key => $entity) {
-            $entityIds[$entity->get('entityType')][$key] = $entity;
+            $entityIds[$entity->get('entityName')][$key] = $entity;
         }
 
         $loadEntity = !empty($selectParams['select']) && in_array('entity', $selectParams['select']);
@@ -77,23 +98,17 @@ class SelectionItem extends Base
             $ids = array_map(fn($entity) => $entity->get('entityId'), $records);
             if ($loadEntity) {
                 $entities = $this->getEntityManager()->getRepository($entityType)->where(['id' => $ids])->find();
-                $retrievedIds = [];
-                foreach ($entities as $entity) {
-                    $retrievedIds[] = $entity->get('id');
-                }
-
-                foreach ($records as $key => $record) {
-                    if (!in_array($record->get('entityId'), $retrievedIds)) {
-                        unset($collection[$key]);
-                    }
+                $service = $this->getRecordService($entityType);
+                foreach ($records as $record) {
                     foreach ($entities as $entity) {
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
                             $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
-                            $this->getService($entityType)->prepareEntityForOutput($entity);
+                            $service->prepareEntityForOutput($entity);
                         }
 
                         if ($record->get('entityId') === $entity->get('id')) {
-                            $record->set('name', $entity->get('name') ?? $entity->get('id'));
+                            $record->set('recordId', $entity->get('id'));
+                            $record->set('recordName', $entity->get('name') ?? $entity->get('id'));
                             $record->set('entity', $entity->toArray());
                         }
                     }
@@ -107,48 +122,29 @@ class SelectionItem extends Base
 
                 $entities = $this->getEntityManager()->getRepository($entityType)->select($select)->where(['id' => $ids])->find();
 
-                $retrievedIds = [];
-
-                foreach ($entities as $entity) {
-                    $retrievedIds[] = $entity->get('id');
-                }
-
-                foreach ($records as $key => $record) {
-                    if (!in_array($record->get('entityId'), $retrievedIds)) {
-                        unset($collection[$key]);
-                    }
+                foreach ($records as $record) {
                     foreach ($entities as $entity) {
                         if ($record->get('entityId') === $entity->get('id')) {
-                            $record->set('name', $entity->get('name') ?? $entity->get('id'));
+                            $record->set('recordId', $entity->get('id'));
+                            $record->set('recordName', $entity->get('name') ?? $entity->get('id'));
                         }
                     }
                 }
             }
         }
-
-        // we reset the index from 0 in case of unset
-        $entities = [];
-        foreach ($collection as $key => $record) {
-            $entities[] = $record;
-            $collection->offsetUnset($key);
-        }
-
-        foreach ($entities as $key => $entity) {
-            $collection->offsetSet($key, $entity);
-        }
     }
 
-    public function createOnCurrentItem(string $entityType, string $entityId): bool
+    public function createOnCurrentItem(string $entityName, string $entityId): bool
     {
         $currentSelection = $this->getUser()->get('currentSelection');
 
-        $masterEntity = $this->getMetadata()->get(['scopes', $entityType, 'primaryEntityId']);
+        $masterEntity = $this->getMetadata()->get(['scopes', $entityName, 'primaryEntityId']);
 
-        if(empty($currentSelection)) {
+        if (empty($currentSelection)) {
             $currentSelection = $this->getEntityManager()->getEntity('Selection');
             $currentSelection->set('type', 'single');
-            $currentSelection->set('entity', $entityType);
-            if(!empty($masterEntity)) {
+            $currentSelection->set('entity', $entityName);
+            if (!empty($masterEntity)) {
                 $currentSelection->set('entity', $masterEntity);
             }
             $this->getEntityManager()->saveEntity($currentSelection);
@@ -158,13 +154,13 @@ class SelectionItem extends Base
             $this->getEntityManager()->saveEntity($this->getUser());
         }
 
-        $relevantEntities = [$entityType];
+        $relevantEntities = [$entityName];
 
-        if(!empty($masterEntity)) {
+        if (!empty($masterEntity)) {
             $relevantEntities[] = $masterEntity;
         }
 
-        if($currentSelection->get('type') === 'single' && !in_array($currentSelection->get('entity'), $relevantEntities)) {
+        if ($currentSelection->get('type') === 'single' && !in_array($currentSelection->get('entity'), $relevantEntities)) {
             $currentSelection->set('type', 'multiple');
             $currentSelection->set('entity', null);
             $this->getEntityManager()->saveEntity($currentSelection);
@@ -172,21 +168,14 @@ class SelectionItem extends Base
 
         $record = $this->getEntityManager()->getEntity('SelectionItem');
         $record->set('entityId', $entityId);
-        $record->set('entityType', $entityType);
+        $record->set('entityName', $entityName);
         $record->set('selectionId', $currentSelection->get('id'));
-        try{
+
+        try {
             $this->getEntityManager()->saveEntity($record);
-        }catch (NotUnique $e) {
+        } catch (NotUnique $e) {
         }
 
         return true;
-    }
-
-    protected function getService(string $name): Record
-    {
-        if(!empty($this->services[$name])) {
-            return $this->services[$name];
-        }
-        return $this->services[$name] = $this->getServiceFactory()->create($name);
     }
 }

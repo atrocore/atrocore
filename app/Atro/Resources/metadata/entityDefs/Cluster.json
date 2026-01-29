@@ -25,6 +25,12 @@
       "type": "linkMultiple",
       "auditableEnabled": true
     },
+    "goldenRecord": {
+      "type": "link",
+      "layoutNavigationDisabled": true,
+      "protected": true,
+      "entityNameField": "masterEntity"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

@@ -1457,6 +1457,71 @@
     }
   },
   {
+    "route": "/ClusterItem/action/unreject",
+    "method": "post",
+    "description": "Unreject a cluster item",
+    "operationId": "unrejectClusterItem",
+    "tags": [
+      "ClusterItem"
+    ],
+    "params": {
+      "controller": "ClusterItem",
+      "action": "unreject"
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "relationId": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
+  },
+  {
+    "route": "/ClusterItem/action/confirm",
+    "method": "post",
+    "description": "Confirm a cluster item",
+    "operationId": "confirmClusterItem",
+    "tags": [
+      "ClusterItem"
+    ],
+    "params": {
+      "controller": "ClusterItem",
+      "action": "confirm"
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
+  },
+  {
     "route": "/SelectionItem/action/createOnCurrentSelection",
     "method": "post",
     "params": {
