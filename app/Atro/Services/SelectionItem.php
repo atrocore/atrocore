@@ -92,7 +92,6 @@ class SelectionItem extends Base
             $entityIds[$entity->get('entityName')][$key] = $entity;
         }
 
-
         $loadEntity = !empty($selectParams['select']) && in_array('entity', $selectParams['select']);
 
         foreach ($entityIds as $entityType => $records) {
