@@ -22,7 +22,7 @@
           "url": "SelectionItem/action/replaceItem",
           "confirm": false,
           "refresh": true,
-          "modalSelectEntity": "{{entityType}}",
+          "modalSelectEntity": "{{entityName}}",
           "modalSelectMultiple": false,
           "iconClass": "ph ph-swap",
           "sortOrder": 10
@@ -31,7 +31,7 @@
           "url": "SelectionItem/{{id}}"
         },
         "removeRelated": {
-          "url": "{{entityType}}/{{entityId}}"
+          "url": "{{entityName}}/{{entityId}}"
         }
       }
     }

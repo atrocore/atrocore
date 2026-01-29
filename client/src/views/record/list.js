@@ -2720,7 +2720,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
-                entityType: this.collection.name,
+                entityName: this.collection.name,
                 entityId: data.id
             }).then(_ => {
                 this.notify(this.translate('Success'), 'success')

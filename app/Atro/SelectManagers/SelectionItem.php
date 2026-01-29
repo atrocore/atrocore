@@ -12,6 +12,7 @@
 namespace Atro\SelectManagers;
 
 use Atro\Core\SelectManagers\Base;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -28,17 +29,18 @@ class SelectionItem extends Base
         }
     }
 
+    public function applyAdditional(array &$result, array $params)
+    {
+        parent::applyAdditional($result, $params);
+
+        $result['callbacks'][] = [$this, 'filterDeletedRecords'];
+    }
+
     public function onlyAllowedRecords(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
-        $entities = $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select('entity_type')
-            ->distinct()
-            ->from('selection_item')
-            ->where('deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchFirstColumn();
+        $entities = $this->getEntities();
 
         if (empty($entities)) {
             return;
@@ -53,7 +55,7 @@ class SelectionItem extends Base
             $qb1 = $mapper->createSelectQueryBuilder($this->getEntityManager()->getRepository($entityName)->get(), $sp);
             $qb1->select("{$tableAlias}.id");
 
-            $andWhereParts[] = "({$tableAlias}.entity_type=:entityName{$k} AND {$tableAlias}.entity_id IN (" . str_replace($tableAlias, $tableAlias . $k, $qb1->getSql()) . "))";
+            $andWhereParts[] = "({$tableAlias}.entity_name=:entityName{$k} AND {$tableAlias}.entity_id IN (" . str_replace($tableAlias, $tableAlias . $k, $qb1->getSql()) . "))";
 
             $qb->setParameter("entityName{$k}", $entityName);
             foreach ($qb1->getParameters() as $param => $val) {
@@ -64,5 +66,42 @@ class SelectionItem extends Base
         if (!empty($andWhereParts)) {
             $qb->andWhere(implode(' OR ', $andWhereParts));
         }
+    }
+
+    public function filterDeletedRecords(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $entities = $this->getEntities();
+
+        if (empty($entities)) {
+            return;
+        }
+
+        $andWhereParts = [];
+
+        foreach ($entities as $k => $entityName) {
+            $tableName = $this->getEntityManager()->getConnection()->quoteIdentifier(Util::toUnderScore($entityName));
+
+            $andWhereParts[] = "({$tableAlias}.entity_name=:entityName{$k} AND EXISTS (SELECT 1 FROM $tableName WHERE id = {$tableAlias}.entity_id AND deleted = :false))";
+
+            $qb->setParameter("entityName{$k}", $entityName);
+            $qb->setParameter("false", false, ParameterType::BOOLEAN);
+        }
+
+        if (!empty($andWhereParts)) {
+            $qb->andWhere(implode(' OR ', $andWhereParts));
+        }
+    }
+
+    protected  function getEntities(): array
+    {
+       return  $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('entity_name')
+            ->distinct()
+            ->from(Util::toUnderScore($this->getEntityType()))
+            ->where('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
     }
 }

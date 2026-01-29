@@ -283,9 +283,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionSelect: function (data) {
-
             this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
-                entityType: this.model.name,
+                entityName: this.model.name,
                 entityId: this.model.id
             }).then( _ => {
                 this.notify(this.translate('Success'), 'success')

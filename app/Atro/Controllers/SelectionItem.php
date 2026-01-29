@@ -31,10 +31,10 @@ class SelectionItem extends Base
 
     public function actionCreateOnCurrentSelection($params, $data, $request)
     {
-        if (!$request->isPost() || empty($data->entityType) || empty($data->entityId)) {
+        if (!$request->isPost() || empty($data->entityName) || empty($data->entityId)) {
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->createOnCurrentItem($data->entityType, $data->entityId);
+        return $this->getRecordService()->createOnCurrentItem($data->entityName, $data->entityId);
     }
 }

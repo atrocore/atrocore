@@ -26,26 +26,18 @@ class SelectionItem extends Base
     protected function beforeSave(Entity $entity, array $options = [])
     {
 
-        if ($this->getMetadata()->get(['scopes', $entity->get('entityType'), 'selectionDisabled'])) {
-            throw new BadRequest(str_replace('%s', $entity->get('entityType'), $this->getLanguage()->translate('selectionDisabledForEntity', 'messages', 'SelectionItem')));
+        if ($this->getMetadata()->get(['scopes', $entity->get('entityName'), 'selectionDisabled'])) {
+            throw new BadRequest(str_replace('%s', $entity->get('entityName'), $this->getLanguage()->translate('selectionDisabledForEntity', 'messages', 'SelectionItem')));
         }
 
-        $select = ['id'];
-
-        if ($this->getMetadata()->get(['entityDefs', $entity->get('entityType'), 'fields', 'name'])) {
-            $select[] = 'name';
-        }
-
-        $record = $this->getEntityManager()->getRepository($entity->get('entityType'))
-            ->select($select)
+        $record = $this->getEntityManager()->getRepository($entity->get('entityName'))
+            ->select(['id'])
             ->where(['id' => $entity->get('entityId')])
             ->findOne();
 
         if (empty($record)) {
-            throw new Error("Selection record not found");
+            throw new Error("Record in selection Item not found");
         }
-
-        $entity->set('name', $record->get('name') ?? $record->get('id'));
 
         parent::beforeSave($entity, $options);
     }
@@ -69,18 +61,18 @@ class SelectionItem extends Base
         parent::clearDeletedRecords();
 
         $records = $this->getConnection()->createQueryBuilder()
-            ->select('entity_type')
+            ->select('entity_name')
             ->distinct()
             ->from('selection_item')
             ->fetchAllAssociative();
 
         foreach ($records as $record) {
-            $entityName = $record['entity_type'];
+            $entityName = $record['entity_name'];
             $tableName = $this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName)));
 
             $this->getConnection()->createQueryBuilder()
                 ->delete('selection_item', 'ci')
-                ->where("ci.entity_type=:entityName AND NOT EXISTS (SELECT 1 FROM $tableName e WHERE e.id=ci.entity_id)")
+                ->where("ci.entity_name=:entityName AND NOT EXISTS (SELECT 1 FROM $tableName e WHERE e.id=ci.entity_id)")
                 ->setParameter('entityName', $entityName)
                 ->executeQuery();
         }

@@ -17,52 +17,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
-class ClusterItem extends Base
+class ClusterItem extends SelectionItem
 {
-    protected function access(&$result)
-    {
-        parent::access($result);
 
-        if (!$this->getUser()->isAdmin()) {
-            $result['callbacks'][] = [$this, 'onlyAllowedRecords'];
-        }
-    }
-
-    public function onlyAllowedRecords(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
-    {
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-
-        $entities = $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select('entity_name')
-            ->distinct()
-            ->from('cluster_item')
-            ->where('deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchFirstColumn();
-
-        if (empty($entities)) {
-            return;
-        }
-
-        $andWhereParts = [];
-
-        foreach ($entities as $k => $entityName) {
-            $sp = $this->createSelectManager($entityName)->getSelectParams([], true, true);
-            $sp['select'] = ['id'];
-
-            $qb1 = $mapper->createSelectQueryBuilder($this->getEntityManager()->getRepository($entityName)->get(), $sp);
-            $qb1->select("{$tableAlias}.id");
-
-            $andWhereParts[] = "({$tableAlias}.entity_name=:entityName{$k} AND {$tableAlias}.entity_id IN (" . str_replace($tableAlias, $tableAlias . $k, $qb1->getSql()) . "))";
-
-            $qb->setParameter("entityName{$k}", $entityName);
-            foreach ($qb1->getParameters() as $param => $val) {
-                $qb->setParameter($param, $val, Mapper::getParameterType($val));
-            }
-        }
-
-        if (!empty($andWhereParts)) {
-            $qb->andWhere(implode(' OR ', $andWhereParts));
-        }
-    }
 }

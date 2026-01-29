@@ -281,7 +281,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getItemsUrl(selectionId) {
-            return `selection/${selectionId}/selectionItems?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`;
+            return `selection/${selectionId}/selectionItems?select=name,entityName,entityId,entity&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`;
         },
 
         loadSelectionItemModels(selectionId) {
@@ -293,7 +293,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             let entityByScope = {};
                             let order = 0;
                             for (const entityData of result.list) {
-                                let scope = entityData.entityType ?? entityData.entityName;
+                                let scope = entityData.entityName;
                                 if (!entityByScope[scope]) {
                                     entityByScope[scope] = [];
                                 }
@@ -627,7 +627,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         link: this.inverseLink,
                         panelName: this.link,
                     },
-                    layoutRelatedScope: this.scope + '.' + this.link,
                     attributes: attributes,
                 }, view => {
                     view.render();
