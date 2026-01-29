@@ -72,7 +72,7 @@ class LastViewed extends AbstractService
         $params = [
             'maxSize' => $maxSize,
             'sortBy'  => 'createdAt',
-            'asc'     => false
+            'asc'     => false,
         ];
 
         $sp = $selectManager->getSelectParams($params);
@@ -118,11 +118,11 @@ class LastViewed extends AbstractService
         $repository = $this->getEntityManager()->getRepository('ActionHistoryRecord');
         $entities = $repository->find($sp);
 
-        foreach ($entities as $entity) {
-            if ($this->getEntityManager()->hasRepository($entity->get('controllerName'))) {
+        foreach ($entities as $i => $entity) {
+            if ($this->getEntityManager()->hasRepository($entity->get('controllerName')) && !empty($entity->get('targetId'))) {
                 $repository = $this->getEntityManager()->getRepository($entity->get('controllerName'));
-
                 $nameField = $this->getMetadata()->get(['scopes', $entity->get('controllerName'), 'nameField']) ?? 'name';
+
                 if ($repository instanceof ReferenceData || $repository instanceof UserProfile) {
                     $foreignEntity = $repository->get($entity->get('targetId'));
                 } else {
@@ -130,6 +130,10 @@ class LastViewed extends AbstractService
                 }
                 if (!empty($foreignEntity)) {
                     $entity->set('targetName', $foreignEntity->get($nameField));
+                } else {
+                    // skip deleted entities
+                    $entities->offsetUnset($i);
+                    continue;
                 }
             }
 
@@ -196,18 +200,19 @@ class LastViewed extends AbstractService
         ])->find()->count();
 
         foreach ($collection as $i => $entity) {
-            if ($this->getEntityManager()->hasRepository($entity->get('controllerName'))) {
+            if ($this->getEntityManager()->hasRepository($entity->get('controllerName')) && !empty($entity->get('targetId'))) {
                 $repository = $this->getEntityManager()->getRepository($entity->get('controllerName'));
-
                 $nameField = $this->getMetadata()->get(['scopes', $entity->get('controllerName'), 'nameField']) ?? 'name';
+
                 if ($repository instanceof ReferenceData || $repository instanceof UserProfile) {
                     $foreignEntity = $repository->get($entity->get('targetId'));
                 } else {
                     $foreignEntity = $repository->select(['id', $nameField])->where(['id' => $entity->get('targetId')])->findOne();
                 }
+
                 if (!empty($foreignEntity)) {
                     $entity->set('targetName', $foreignEntity->get($nameField));
-                }else if(!empty($params['skipDeleted'])) {
+                } else if (!empty($params['skipDeleted'])) {
                     $collection->offsetUnset($i);
                     continue;
                 }
