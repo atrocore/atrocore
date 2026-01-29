@@ -206,6 +206,10 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             return this.models;
         },
 
+        showLoader() {
+            this.$el.find('.overlay').removeClass('hidden');
+        },
+
         afterRender() {
             let count = 0;
             this.models.forEach(m => {
