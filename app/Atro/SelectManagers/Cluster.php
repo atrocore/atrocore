@@ -44,6 +44,20 @@ class Cluster extends Base
             return;
         }
 
+        $forbiddenEntities = [];
+        foreach ($entities as $entityName) {
+            if (!$this->getAcl()->checkScope($entityName, 'read')) {
+                $forbiddenEntities[] = $entityName;
+            }
+        }
+
+        if (!empty($forbiddenEntities)) {
+            $qb->andWhere("{$tableAlias}.master_entity NOT IN (:forbiddenEntities)")
+                ->setParameter("forbiddenEntities", $forbiddenEntities, Mapper::getParameterType($forbiddenEntities));
+
+            $entities = array_diff($entities, $forbiddenEntities);
+        }
+
         $andWhereParts = ["{$tableAlias}.golden_record_id is null"];
 
         foreach ($entities as $k => $entityName) {

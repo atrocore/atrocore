@@ -29,7 +29,7 @@
       "type": "link",
       "layoutNavigationDisabled": true,
       "protected": true,
-      "entityTypeField": "masterEntity"
+      "entityNameField": "masterEntity"
     },
     "createdAt": {
       "type": "datetime",
