@@ -25,7 +25,7 @@
     "storageHasItems": "Připojenou složku nelze změnit pro neprázdné úložiště.",
     "storagePathNotUnique": "Cesta k úložišti by měla být jedinečná.",
     "storagePathContainFilesFromAnotherStorage": "Strom složek zahájený vybranou cestou k úložišti nemůže obsahovat složky/soubory spojené s jiným úložištěm.",
-    "storageTypeCannotBeChanged": "Typ úložiště nelze změnit.",
+    "storageTypeCannotBeChanged": "Type úložiště nelze změnit.",
     "storagePathCannotBeChanged": "Cestu k úložišti nelze změnit."
   }
 }
