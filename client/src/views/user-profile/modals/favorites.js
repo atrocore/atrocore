@@ -20,6 +20,7 @@ Espo.define('views/user-profile/modals/favorites', 'views/layout-profile/modals/
                 this.notify('Saved', 'success');
                 this.close();
                 this.getPreferences().trigger('favorites:update');
+                window.dispatchEvent(new CustomEvent('favorites:update', { detail: this.getPreferences().get('favoritesList') }));
             });
         }
     })
