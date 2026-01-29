@@ -17,6 +17,10 @@
   },
   "labels": {
     "manufacturer": "Fabricant",
-    "other": "Autre"
+    "other": "Autre",
+    "MasterData": "Données de base",
+    "Description": "Description",
+    "State": "État",
+    "Placement": "Emplacement"
   }
 }

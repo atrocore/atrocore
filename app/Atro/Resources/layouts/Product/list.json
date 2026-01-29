@@ -1,21 +1,21 @@
 [
+  [
     {
-        "name": "image"
+      "name": "number"
     },
     {
-        "name": "name",
-        "link": true
+      "name": "image",
+      "notSortable": true
     },
     {
-        "name": "number"
+      "name": "name",
+      "link": true
     },
     {
-        "name": "unitPrice"
+      "name": "isActive"
     },
     {
-        "name": "isActive"
-    },
-    {
-        "name": "modifiedAt"
+      "name": "owner"
     }
+  ]
 ]

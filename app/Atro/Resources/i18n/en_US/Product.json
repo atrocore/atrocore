@@ -17,6 +17,10 @@
   },
   "labels": {
     "manufacturer": "Manufacturer",
-    "other": "Other"
+    "other": "Other",
+    "MasterData": "Master Data",
+    "Description": "Description",
+    "State": "State",
+    "Placement": "Placement"
   }
 }
