@@ -15991,24 +15991,22 @@ span.became .file-link {
     display: inline-block
 }
 
-.bottom .panel .group-container {
-    margin: -14px -20px;
+.bottom .panel .group-container .group {
+    width: 100%;
+    overflow-x: auto;
 }
 
 @media screen and (max-width: 768px) {
     .content {
         position: relative;
     }
-
-
-    .bottom .panel .group-container {
-        margin-left: -10px;
-        margin-right: -10px;
-    }
 }
 
 .bottom .panel .group-container > .group > .group-name {
     padding: 10px 0 10px 10px;
+    z-index: 1;
+    position: sticky;
+    left: 0;
 }
 
 .bottom .panel .group-container > .group > .group-name .btn {
@@ -18580,6 +18578,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     padding-top: 20px !important;
 }
 
+.modal-body > .list-buttons-container {
+    position: sticky;
+    left: 0;
+}
+
 .list-buttons-container {
     margin: 10px 0;
 }
@@ -18589,10 +18592,15 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
+    padding: 0 20px;
 }
 
 .list-container.for-tree-view > .list-buttons-container .counters-container {
     margin: 0 0 0 auto;
+}
+
+.list-container.for-tree-view > .records-tree {
+    margin: 0 20px;
 }
 
 .modal.custom-download .modal-dialog {

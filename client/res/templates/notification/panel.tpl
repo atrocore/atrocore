@@ -11,7 +11,7 @@
             <button class="btn btn-primary outline" data-action="markAllNotificationsRead"><i class="ph ph-checks"></i><span>{{translate 'Mark all read'}}</span></button>
         </div>
         <div class="list-container">
-            {{translate 'Loading...'}}
+            <div class="no-data-container">{{translate 'Loading...'}}</div>
         </div>
     </div>
 </div>
