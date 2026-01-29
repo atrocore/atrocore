@@ -96,12 +96,23 @@ class SelectionItem extends Base
 
     protected  function getEntities(): array
     {
-       return  $this->getEntityManager()->getConnection()->createQueryBuilder()
+       $entities =   $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('entity_name')
             ->distinct()
             ->from(Util::toUnderScore($this->getEntityType()))
             ->where('deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchFirstColumn();
+
+       $filtered = [];
+
+       foreach ($entities as $entity) {
+           $type = $this->getMetadata()->get(['scopes', $entity, 'type']);
+           if(in_array($type, ['Base', 'Hierarchy'])) {
+               $filtered[] = $entity;
+           }
+       }
+
+       return $filtered;
     }
 }

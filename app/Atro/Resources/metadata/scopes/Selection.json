@@ -13,10 +13,20 @@
   "modifiedExtendedRelations": [
     "selectionItems"
   ],
-  "aclLevelList": [
-    "no",
-    "all"
+  "aclActionList": [
+    "edit",
+    "delete"
   ],
+  "aclActionLevelListMap": {
+    "edit": [
+      "all",
+      "no"
+    ],
+    "delete": [
+      "all",
+      "no"
+    ]
+  },
   "selectionDisabled": true,
   "nameField": "number"
 }

@@ -743,6 +743,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                     selectedIds: this.selectedIds,
                                     selectionViewMode: this.selectionViewMode,
                                     onItemClicked: (e, itemId) => {
+                                        console.log('iiii')
                                         if (this.selectionViewMode === 'standard') {
                                             return;
                                         }
@@ -764,6 +765,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
+                                            console.log('iciiii')
                                             window.leftSidePanel?.setSelectedIds(this.selectedIds);
                                             this.setupRecord();
                                         }
