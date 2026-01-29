@@ -47,23 +47,34 @@
       "asc": false
     },
     "rejectedClusterItems": {
-      "checkboxes": false,
-      "create": false,
-      "rowActionsView": "views/record/row-actions/relationship-remove-only",
-      "hideShowFullList": true,
-      "select": false,
-      "unlink": false,
-      "sortBy": "createdAt",
-      "asc": false,
       "actions": {
+        "quickView": {
+          "disabled": true
+        },
+        "quickEdit": {
+          "disabled": true
+        },
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "removeRelated": {
+          "disabled": true
+        },
         "unreject": {
           "url": "ClusterItem/action/unreject",
           "confirm": false,
           "refresh": true,
-          "iconClass": "ph ph-x",
+          "iconClass": "ph ph-arrow-u-up-left",
           "sortOrder": 20
         }
-      }
+      },
+      "checkboxes": false,
+      "create": false,
+      "hideShowFullList": true,
+      "select": false,
+      "unlink": false,
+      "sortBy": "createdAt",
+      "asc": false
     }
   }
 }

@@ -162,16 +162,18 @@ class ClusterItem extends Base
             throw new NotFound();
         }
 
-        if (empty($cluster = $entity->get('cluster'))) {
-            throw new Exception("Cluster is not set for item {$clusterItemId}");
+        $cluster = $rejectedClusterItem->get('cluster');
+        if (empty($cluster)) {
+            throw new Exception("Cluster not found");
         }
 
         if ($this->isClusterItemConfirmed($clusterItem)) {
             throw new BadRequest($this->getInjection('language')->translate("cannotUnreject", "exceptions", "ClusterItem"));
         }
 
-        
+        $this->getRepository()->moveToCluster($clusterItem->get('id'), $cluster->get('id'));
 
+        $this->getEntityManager()->removeEntity($rejectedClusterItem);
 
         return true;
     }
@@ -201,12 +203,24 @@ class ClusterItem extends Base
 
     public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
     {
-        if ($entityFrom->getEntityName() !== 'Cluster' || $link !== 'clusterItems') {
+        if ($entityFrom->getEntityName() !== 'Cluster' || !in_array($link, ['clusterItems', 'rejectedClusterItems'])) {
             parent::putAclMetaForLink($entityFrom, $link, $entity);
             return;
         }
 
         $this->putAclMeta($entity);
+
+        if ($link === 'rejectedClusterItems') {
+            if ($this->getUser()->isAdmin()) {
+                $entity->setMetaPermission('unreject', true);
+                return;
+            }
+
+            if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
+                $entity->setMetaPermission('unreject', $this->getAcl()->check($record, 'edit'));
+            }
+            return;
+        }
 
         if ($this->getUser()->isAdmin()) {
             $entity->setMetaPermission('confirm', true);
