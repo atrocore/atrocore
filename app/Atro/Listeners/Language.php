@@ -229,6 +229,20 @@ class Language extends AbstractListener
             }
         }
 
+        // prepare translation via labelKey
+        foreach ($this->getMetadata()->get('entityDefs') ?? [] as $entityName => $entityDefs) {
+            foreach ($entityDefs['fields'] ?? [] as $fieldName => $fieldDefs) {
+                if (!empty($fieldDefs['labelKey'])) {
+                    $parts = explode('.', $fieldDefs['labelKey']);
+                    foreach ($data as $locale => $rows) {
+                        if (isset($rows[$parts[0]][$parts[1]][$parts[2]])) {
+                            $data[$locale][$entityName]['fields'][$fieldName] = $rows[$parts[0]][$parts[1]][$parts[2]];
+                        }
+                    }
+                }
+            }
+        }
+
         $event->setArgument('data', $data);
     }
 

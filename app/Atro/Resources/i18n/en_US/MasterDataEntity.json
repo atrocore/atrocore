@@ -1,6 +1,7 @@
 {
   "fields": {
     "masterEntity": "Master Entity",
+    "sourceEntity": "Source Entity",
     "mergingScript": "Merging Script"
   },
   "tooltips": {

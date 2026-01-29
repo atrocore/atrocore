@@ -277,6 +277,14 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                         options.push(option);
                     }
                 });
+
+                if (this.model.getFieldParam(this.name, 'optionsType') === 'entityName') {
+                    this.params.translation = 'Global.scopeNames';
+                    options.sort((v1, v2) => {
+                        return this.translate(v1, 'scopeNames').localeCompare(this.translate(v2, 'scopeNames'));
+                    });
+                }
+
                 this.params.options = options;
             }
         },

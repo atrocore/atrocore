@@ -27,6 +27,7 @@ use Atro\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Atro\Core\Utils\Util;
 use Atro\Repositories\Matching as MatchingRepository;
+use Espo\ORM\EntityCollection;
 
 class Metadata extends AbstractListener
 {
@@ -36,6 +37,8 @@ class Metadata extends AbstractListener
 
         $this->addFollowersField($data);
         $this->prepareUserProfile($data);
+
+        $this->prepareMasterDataEntity($data);
 
         $event->setArgument('data', $data);
     }
@@ -195,6 +198,58 @@ class Metadata extends AbstractListener
                     'className'  => $className,
                 ];
             }
+        }
+    }
+
+    protected function prepareMasterDataEntity(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        // Prepare options for the 'sourceEntity' field of the 'MasterDataEntity' entity.
+        $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'] = [];
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && $scope !== 'MasterDataEntity') {
+                $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'][] = $scope;
+            }
+        }
+
+        try {
+            $res = $this->getEntityManager()->getRepository('MasterDataEntity')
+                ->select(['id', 'sourceEntity'])
+                ->where(['sourceEntity!=' => null])
+                ->find();
+        } catch (\Throwable $e) {
+            $res = new EntityCollection([], 'MasterDataEntity');
+        }
+
+        foreach ($res as $item) {
+            $stagingEntity = $item->id;
+            $sourceEntity = $item->get('sourceEntity');
+
+            $foreign = Util::pluralize(lcfirst($stagingEntity));
+
+            $data['entityDefs'][$stagingEntity]['fields']['sourceRecord'] = [
+                'type'   => 'link',
+                'unique' => true,
+            ];
+            $data['entityDefs'][$stagingEntity]['links']['sourceRecord'] = [
+                'type'    => 'belongsTo',
+                'foreign' => $foreign,
+                'entity'  => $sourceEntity
+            ];
+
+            $data['entityDefs'][$sourceEntity]['fields'][$foreign] = [
+                'type'     => 'linkMultiple',
+                'labelKey' => "Global.scopeNamesPlural.{$stagingEntity}",
+                'noLoad'   => true,
+            ];
+            $data['entityDefs'][$sourceEntity]['links'][$foreign] = [
+                'type'    => 'hasMany',
+                'foreign' => 'sourceRecord',
+                'entity'  => $stagingEntity
+            ];
         }
     }
 

@@ -22,6 +22,12 @@
         }
       }
     },
+    "sourceEntity": {
+      "type": "enum",
+      "optionsType": "entityName",
+      "options": [],
+      "customizable": false
+    },
     "mergingScript": {
       "type": "text",
       "view": "views/fields/script",

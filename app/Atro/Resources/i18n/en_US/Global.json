@@ -688,6 +688,7 @@
   },
   "fields": {
     "__currentUser": "Current User",
+    "sourceRecord": "Source Record",
     "number": "Number",
     "createdCountFilterActionExecution": "Created by Action Execution",
     "updatedCountFilterActionExecution": "Updated by Action Execution",

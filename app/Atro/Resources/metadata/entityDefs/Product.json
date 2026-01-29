@@ -67,6 +67,7 @@
     },
     "number": {
       "type": "varchar",
+      "required": true,
       "trim": true,
       "index": true,
       "massUpdateDisabled": true
