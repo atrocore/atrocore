@@ -7,6 +7,7 @@
   },
   "actions": {
     "reject": "Reject",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "unreject": "Unreject"
   }
 }

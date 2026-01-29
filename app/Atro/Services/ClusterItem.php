@@ -110,17 +110,8 @@ class ClusterItem extends Base
             throw new Exception("Cluster is not set for item {$id}");
         }
 
-        if (!empty($cluster->get('goldenRecord'))) {
-            if ($cluster->get('masterEntity') === $entity->get('entityName')) {
-                if ($cluster->get('goldenRecordId') === $entity->get('entityId')) {
-                    throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
-                }
-            } else {
-                $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
-                if (!empty($record) && $record->get('goldenRecordId') === $cluster->get('goldenRecordId')) {
-                    throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
-                }
-            }
+        if ($this->isClusterItemConfirmed($entity)) {
+            throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
         }
 
         $rci = $this->getEntityManager()->getEntity('RejectedClusterItem');
@@ -162,14 +153,74 @@ class ClusterItem extends Base
         return true;
     }
 
+    public function unreject(string $clusterItemId, string $rejectedClusterItemId): bool
+    {
+        $clusterItem = $this->getEntity($clusterItemId);
+        $rejectedClusterItem = $this->getEntityManager()->getEntity('RejectedClusterItem', $rejectedClusterItemId);
+
+        if (empty($clusterItem) || empty($rejectedClusterItem)) {
+            throw new NotFound();
+        }
+
+        $cluster = $rejectedClusterItem->get('cluster');
+        if (empty($cluster)) {
+            throw new NotFound("Cluster not found");
+        }
+
+        if ($this->isClusterItemConfirmed($clusterItem)) {
+            throw new BadRequest($this->getInjection('language')->translate("cannotUnreject", "exceptions", "ClusterItem"));
+        }
+
+        $this->getRepository()->moveToCluster($clusterItem->get('id'), $cluster->get('id'));
+
+        $this->getEntityManager()->removeEntity($rejectedClusterItem);
+
+        return true;
+    }
+
+
+    public function isClusterItemConfirmed(IEntity $clusterItem): bool
+    {
+        if (empty($cluster = $clusterItem->get('cluster'))) {
+            return false;
+        }
+
+        if (!empty($cluster->get('goldenRecord'))) {
+            if ($cluster->get('masterEntity') === $clusterItem->get('entityName')) {
+                if ($cluster->get('goldenRecordId') === $clusterItem->get('entityId')) {
+                    return true;
+                }
+            } else {
+                $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId'));
+                if (!empty($record) && $record->get('goldenRecordId') === $cluster->get('goldenRecordId')) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
     {
-        if ($entityFrom->getEntityName() !== 'Cluster' || $link !== 'clusterItems') {
+        if ($entityFrom->getEntityName() !== 'Cluster' || !in_array($link, ['clusterItems', 'rejectedClusterItems'])) {
             parent::putAclMetaForLink($entityFrom, $link, $entity);
             return;
         }
 
         $this->putAclMeta($entity);
+
+        if ($link === 'rejectedClusterItems') {
+            if ($this->getUser()->isAdmin()) {
+                $entity->setMetaPermission('unreject', true);
+                return;
+            }
+
+            if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
+                $entity->setMetaPermission('unreject', $this->getAcl()->check($record, 'edit'));
+            }
+            return;
+        }
 
         if ($this->getUser()->isAdmin()) {
             $entity->setMetaPermission('confirm', true);

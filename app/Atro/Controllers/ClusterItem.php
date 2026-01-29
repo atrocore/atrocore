@@ -37,6 +37,28 @@ class ClusterItem extends Base
         return $this->getRecordService()->reject((string)$data->id);
     }
 
+    public function actionUnreject($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!property_exists($data, 'id')) {
+            throw new BadRequest('ID is required.');
+        }
+
+        if (!property_exists($data, 'relationId')) {
+            throw new BadRequest('Rejected cluster item id is required.');
+        }
+
+        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
+            throw new Forbidden();
+        }
+
+
+        return $this->getRecordService()->unreject((string)$data->id,(string)$data->relationId);
+    }
+
     public function actionConfirm($params, $data, $request)
     {
         if (!$request->isPost()) {
