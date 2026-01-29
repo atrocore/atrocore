@@ -22,6 +22,14 @@
         }
       }
     },
+    "sourceEntity": {
+      "type": "enum",
+      "optionsType": "entityName",
+      "options": [
+        "Product"
+      ],
+      "customizable": false
+    },
     "mappingScript": {
       "type": "text",
       "view": "views/fields/script",

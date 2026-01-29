@@ -37,6 +37,14 @@ class Metadata extends AbstractListener
         $this->addFollowersField($data);
         $this->prepareUserProfile($data);
 
+        // Prepare options for the 'sourceEntity' field of the 'MasterDataEntity' entity.
+        $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'] = [];
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && $scope !== 'MasterDataEntity') {
+                $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'][] = $scope;
+            }
+        }
+
         $event->setArgument('data', $data);
     }
 
