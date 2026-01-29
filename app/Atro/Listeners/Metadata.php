@@ -2525,11 +2525,11 @@ class Metadata extends AbstractListener
             ];
 
             // add link to the primary entity
-            $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
+            $data['entityDefs'][$scope]['fields']['goldenRecord'] = [
                 'type'     => 'link',
                 'required' => false
             ];
-            $data['entityDefs'][$scope]['links']['primaryRecord'] = [
+            $data['entityDefs'][$scope]['links']['goldenRecord'] = [
                 'type'    => 'belongsTo',
                 'foreign' => 'derivedRecords',
                 'entity'  => $primaryEntity
@@ -2541,7 +2541,7 @@ class Metadata extends AbstractListener
             ];
             $data['entityDefs'][$primaryEntity]['links']['derivedRecords'] = [
                 'type'         => 'hasMany',
-                'foreign'      => 'primaryRecord',
+                'foreign'      => 'goldenRecord',
                 'entity'       => $scope,
                 'notMergeable' => true
             ];
@@ -2580,34 +2580,6 @@ class Metadata extends AbstractListener
                     "emHidden"             => true
                 ];
             }
-
-            if (empty($defs['matchMasterRecords'])) {
-                continue;
-            }
-
-            $sourceRecords = 'sourceRecords' . $sourceEntity;
-
-            $data['entityDefs'][$sourceEntity]['fields']['goldenRecord'] = [
-                'type'         => 'link',
-                'customizable' => false,
-            ];
-            $data['entityDefs'][$sourceEntity]['links']['goldenRecord'] = [
-                'type'    => 'belongsTo',
-                'foreign' => $sourceRecords,
-                'entity'  => $defs['primaryEntityId'],
-            ];
-
-            $data['entityDefs'][$defs['primaryEntityId']]['fields'][$sourceRecords] = [
-                'type'         => 'linkMultiple',
-                'noLoad'       => true,
-                'customizable' => false,
-            ];
-
-            $data['entityDefs'][$defs['primaryEntityId']]['links'][$sourceRecords] = [
-                'type'    => 'hasMany',
-                'foreign' => 'goldenRecord',
-                'entity'  => $sourceEntity,
-            ];
         }
 
         // set matching rules types

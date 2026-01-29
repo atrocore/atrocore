@@ -16,6 +16,7 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Exception;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -213,7 +214,12 @@ class ClusterItem extends Base
         if ($link === 'rejectedClusterItems') {
             if ($this->getUser()->isAdmin()) {
                 $entity->setMetaPermission('unreject', true);
+                $entity->setMetaPermission('unlink', true);
                 return;
+            }
+
+            if (!empty($entity->relationEntity)) {
+                $entity->setMetaPermission('unlink', $this->getAcl()->check($entity->relationEntity, 'delete'));
             }
 
             if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
@@ -239,6 +245,45 @@ class ClusterItem extends Base
             $entity->setMetaPermission('confirm', $this->getAcl()->check($record, 'edit'));
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
         }
+    }
+
+    public function createOrUpdateGoldenRecord(IEntity $stagingEntity, IEntity $cluster, array $confirmedClusterItems, ?IEntity $goldenRecord): Entity
+    {
+        $masterEntity = $cluster->get('masterEntity');
+        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $stagingEntity->getEntityType());
+        if (empty($masterDataEntity)) {
+            throw new BadRequest("MasterDataEntity with entityType {$stagingEntity->getEntityType()} not found");
+        }
+
+        $mergingScript = $masterDataEntity->get('mergingScript');
+        if (empty($mergingScript)) {
+            throw new BadRequest($this->getInjection('language')->translate('mergingScriptIsMissing', 'exceptions', 'MasterDataEntity'));
+        }
+
+        $templateData = [
+            'sourceEntity'          => $stagingEntity,
+            'confirmedClusterItems' => $confirmedClusterItems,
+            'cluster'               => $cluster,
+            'goldenRecord'          => $goldenRecord,
+        ];
+        $res = $this->getEntityManager()->getContainer()->get('twig')->renderTemplate($mergingScript, $templateData);
+        $input = json_decode($res);
+
+        if (empty($input)) {
+            throw new BadRequest(str_replace('%s', $res, $this->getInjection('language')->translate('mergingScriptIsInvalid', 'exceptions', 'MasterDataEntity')));
+        }
+
+        if (empty($goldenRecord)) {
+            return $this->getRecordService($masterEntity)->createEntity($input);
+        }
+
+        try {
+            $goldenRecord = $this->getRecordService($masterEntity)->updateEntity($goldenRecord->get('id'), $input);
+        } catch (NotModified) {
+            // ignore
+        }
+
+        return $goldenRecord;
     }
 
     public function prepareEntityForOutput(Entity $entity)

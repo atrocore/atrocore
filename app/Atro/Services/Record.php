@@ -639,7 +639,7 @@ class Record extends RecordService
             throw new NotFound("{$this->getEntityType()} with id $id not found");
         }
 
-        $input->primaryRecordId = $primaryEntity->get('id');
+        $input->goldenRecordId = $primaryEntity->get('id');
 
         foreach ($primaryEntity->toArray() as $field => $value) {
             if (in_array($field, ['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'])) {

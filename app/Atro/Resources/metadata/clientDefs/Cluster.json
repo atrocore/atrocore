@@ -54,9 +54,6 @@
         "quickEdit": {
           "disabled": true
         },
-        "unlinkRelated": {
-          "disabled": true
-        },
         "removeRelated": {
           "disabled": true
         },
