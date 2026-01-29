@@ -12,7 +12,7 @@
     "record": {
       "type": "link",
       "notStorable": true,
-      "view": "views/cluster-item/fields/record",
+      "view": "views/selection-item/fields/record",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "protected": true,

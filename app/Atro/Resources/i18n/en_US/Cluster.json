@@ -6,6 +6,8 @@
     "rejectedClusterItems": "Rejected Cluster Items"
   },
   "actions": {
-    "reject": "Reject"
+    "reject": "Reject",
+    "confirm": "Confirm",
+    "unreject": "Unreject"
   }
 }

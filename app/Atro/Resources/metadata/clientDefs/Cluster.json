@@ -17,12 +17,19 @@
         "quickEdit": {
           "disabled": true
         },
+        "confirm": {
+          "url": "ClusterItem/action/confirm",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-check",
+          "sortOrder": 10
+        },
         "reject": {
           "url": "ClusterItem/action/reject",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-x",
-          "sortOrder": 10
+          "sortOrder": 20
         },
         "unlinkRelated": {
           "url": "ClusterItem/{{id}}"
@@ -40,10 +47,29 @@
       "asc": false
     },
     "rejectedClusterItems": {
-      "readOnly": true,
+      "actions": {
+        "quickView": {
+          "disabled": true
+        },
+        "quickEdit": {
+          "disabled": true
+        },
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "removeRelated": {
+          "disabled": true
+        },
+        "unreject": {
+          "url": "ClusterItem/action/unreject",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-arrow-u-up-left",
+          "sortOrder": 20
+        }
+      },
       "checkboxes": false,
       "create": false,
-      "rowActionsView": "views/record/row-actions/relationship-remove-only",
       "hideShowFullList": true,
       "select": false,
       "unlink": false,
