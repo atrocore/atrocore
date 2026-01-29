@@ -17,25 +17,16 @@ class V2Dot2Dot11 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2026-01-29 10:00:00');
+        return new \DateTime('2026-01-28 10:00:00');
     }
 
     public function up(): void
     {
+        $this->exec("ALTER TABLE cluster ADD golden_record_id VARCHAR(36) DEFAULT NULL");
         if ($this->isPgSQL()) {
-           $this->exec("DROP INDEX IDX_SELECTION_ITEM_UNIQUE");
-           $this->exec("DROP INDEX IDX_SELECTION_ITEM_ENTITY_NAME");
-           $this->exec("ALTER TABLE selection_item RENAME COLUMN entity_type TO entity_name");
-           $this->exec("ALTER TABLE selection_item RENAME COLUMN entity_type TO entity_name");
-           $this->exec("CREATE INDEX IDX_SELECTION_ITEM_ENTITY_NAME ON selection_item (entity_name, deleted)");
-           $this->exec("CREATE UNIQUE INDEX IDX_SELECTION_ITEM_UNIQUE ON selection_item (deleted, entity_name, entity_id, selection_id)");
-
+            $this->exec("ALTER TABLE master_data_entity RENAME COLUMN mapping_script TO merging_script");
         } else {
-          $this->exec("DROP INDEX IDX_SELECTION_ITEM_ENTITY_NAME ON selection_item;");
-          $this->exec("DROP INDEX IDX_SELECTION_ITEM_UNIQUE ON selection_item;");
-          $this->exec("ALTER TABLE selection_item CHANGE entity_type entity_name VARCHAR(255) DEFAULT NULL;");
-          $this->exec("CREATE INDEX IDX_SELECTION_ITEM_ENTITY_NAME ON selection_item (entity_name, deleted);");
-          $this->exec("CREATE UNIQUE INDEX IDX_SELECTION_ITEM_UNIQUE ON selection_item (deleted, entity_name, entity_id, selection_id)");
+            $this->exec("ALTER TABLE master_data_entity CHANGE mapping_script merging_script LONGTEXT DEFAULT NULL;");
         }
     }
 

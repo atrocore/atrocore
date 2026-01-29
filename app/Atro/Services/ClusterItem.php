@@ -13,15 +13,90 @@
 namespace Atro\Services;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Exception;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\IEntity;
 
 class ClusterItem extends Base
 {
     protected $mandatorySelectAttributeList = ['entityName', 'entityId'];
+
+    public function confirm(string $id): bool
+    {
+        $entity = $this->getEntity($id);
+
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (empty($cluster = $entity->get('cluster'))) {
+            throw new Exception("Cluster is not set for item {$id}");
+        }
+
+        if ($entity->get('entityName') === $cluster->get('masterEntity')) {
+            $cluster->set('goldenRecordId', $entity->get('entityId'));
+            $this->getEntityManager()->saveEntity($cluster);
+        } else {
+            $goldenRecord = $cluster->get('goldenRecord');
+            $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
+
+            if (empty($record)) {
+                throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
+            }
+
+            $confirmedClusterItems = [$entity];
+
+            if (empty($goldenRecord)) {
+                foreach ($cluster->get('clusterItems') as $clusterItem) {
+                    if ($clusterItem->get('entityName') === $cluster->get('masterEntity')) {
+                        if (!empty($itemRecord = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId')))) {
+                            $goldenRecord = $itemRecord;
+
+                            $cluster->set('goldenRecordId', $goldenRecord->get('id'));
+                            $this->getEntityManager()->saveEntity($cluster);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                foreach ($cluster->get('clusterItems') as $clusterItem) {
+                    if ($clusterItem->get('id') !== $entity->get('id') && $clusterItem->get('entityName') !== $cluster->get('masterEntity')) {
+                        if (!empty($itemRecord = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId')))) {
+                            if ($itemRecord->get('goldenRecordId') === $goldenRecord->get('id')) {
+                                $confirmedClusterItems[] = $itemRecord;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            $res = $this->createOrUpdateGoldenRecord($record, $cluster, $confirmedClusterItems, $goldenRecord);
+
+
+            if (empty($goldenRecord)) {
+                $goldenRecord = $res;
+
+                $clusterItem = $this->getEntityManager()->getEntity('ClusterItem');
+                $clusterItem->set('clusterId', $cluster->get('id'));
+                $clusterItem->set('entityName', $cluster->get('masterEntity'));
+                $clusterItem->set('entityId', $goldenRecord->get('id'));
+                $this->getEntityManager()->saveEntity($clusterItem);
+
+                $cluster->set('goldenRecordId', $goldenRecord->get('id'));
+                $this->getEntityManager()->saveEntity($cluster);
+            }
+
+            $record->set('goldenRecordId', $goldenRecord->get('id'));
+            $this->getEntityManager()->saveEntity($record);
+        }
+
+        return true;
+    }
 
     public function reject(string $id): bool
     {
@@ -33,6 +108,19 @@ class ClusterItem extends Base
 
         if (empty($cluster = $entity->get('cluster'))) {
             throw new Exception("Cluster is not set for item {$id}");
+        }
+
+        if (!empty($cluster->get('goldenRecord'))) {
+            if ($cluster->get('masterEntity') === $entity->get('entityName')) {
+                if ($cluster->get('goldenRecordId') === $entity->get('entityId')) {
+                    throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
+                }
+            } else {
+                $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
+                if (!empty($record) && $record->get('goldenRecordId') === $cluster->get('goldenRecordId')) {
+                    throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
+                }
+            }
         }
 
         $rci = $this->getEntityManager()->getEntity('RejectedClusterItem');
@@ -84,17 +172,20 @@ class ClusterItem extends Base
         $this->putAclMeta($entity);
 
         if ($this->getUser()->isAdmin()) {
+            $entity->setMetaPermission('confirm', true);
             $entity->setMetaPermission('reject', true);
             $entity->setMetaPermission('unlink', true);
             $entity->setMetaPermission('delete', true);
             return;
         }
 
+        $entity->setMetaPermission('confirm', false);
         $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));
         $entity->setMetaPermission('delete', false);
 
         if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
+            $entity->setMetaPermission('confirm', $this->getAcl()->check($record, 'edit'));
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
         }
     }

@@ -1,9 +1,9 @@
 {
   "fields": {
     "masterEntity": "Stammdaten-Entität",
-    "mappingScript": "Mapping-Skript"
+    "mergingScript": "Skript zusammenführen"
   },
   "tooltips": {
-    "mappingScript": "Konfigurieren Sie, wie Quelldaten transformiert, vereinheitlicht und dem Stammsatz zugeordnet werden."
+    "mergingScript": "Konfigurieren Sie, wie Quelldaten transformiert, vereinheitlicht und dem Stammsatz zugeordnet werden."
   }
 }
