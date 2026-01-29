@@ -8,34 +8,28 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection-item/fields/record', 'views/fields/link',
-    Dep => {
-        return Dep.extend({
+Espo.define('views/selection-item/fields/record', 'views/fields/link', Dep => {
 
-            createDisabled: true,
+    return Dep.extend({
 
-            selectBoolFilterList: ['notEntity'],
+        setup() {
+            this.options.foreignScope = this.model.get('entityName');
 
-            boolFilterData: {
-                notEntity() {
-                    return this.model.get('recordId');
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:recordId', () => {
+                this.model.set('entityId', this.model.get('recordId'));
+            })
+
+            this.listenTo(this.model, 'change:entityName', () => {
+                this.foreignScope = this.model.get('entityName');
+                this.reRenderByConditionalProperties();
+                if(!this.readOnly) {
+                    this.setMode('edit');
                 }
-            },
-
-            setup: function () {
-                this.name = 'record'
-                this.foreignScope = this.model.get('entityName')
-
-                Dep.prototype.setup.call(this);
-
-                this.listenTo(this.model, 'change:entityName', () => {
-                    this.foreignScope = this.model.get('entityName')
-                });
-
-                this.listenTo(this.model, 'change:recordId', () => {
-                   this.model.set('entityId', this.model.get('recordId'))
-                });
-            }
-        });
+                this.reRender();
+            })
+        },
 
     });
+});
