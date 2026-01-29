@@ -224,7 +224,7 @@ class ClusterItem extends Base
                 }
 
                 foreach ($records as $key => $record) {
-                    if (!in_array($record->get('entityId'), $retrievedIds) || !$this->getAcl()->check($record, 'read')) {
+                    if (!in_array($record->get('entityId'), $retrievedIds)) {
                         unset($collection[$key]);
                     }
                     foreach ($entities as $entity) {
@@ -258,7 +258,7 @@ class ClusterItem extends Base
                 }
 
                 foreach ($records as $key => $record) {
-                    if (!in_array($record->get('entityId'), $retrievedIds) || !$this->getAcl()->check($record, 'read')) {
+                    if (!in_array($record->get('entityId'), $retrievedIds)) {
                         unset($collection[$key]);
                     }
                     foreach ($entities as $entity) {
