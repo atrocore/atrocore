@@ -37,13 +37,7 @@ class Metadata extends AbstractListener
         $this->addFollowersField($data);
         $this->prepareUserProfile($data);
 
-        // Prepare options for the 'sourceEntity' field of the 'MasterDataEntity' entity.
-        $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'] = [];
-        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && $scope !== 'MasterDataEntity') {
-                $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'][] = $scope;
-            }
-        }
+        $this->prepareMasterDataEntity($data);
 
         $event->setArgument('data', $data);
     }
@@ -201,6 +195,60 @@ class Metadata extends AbstractListener
                     'label'      => $className::getTypeLabel(),
                     'entityName' => $className::getEntityName(),
                     'className'  => $className,
+                ];
+            }
+        }
+    }
+
+    protected function prepareMasterDataEntity(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        // Prepare options for the 'sourceEntity' field of the 'MasterDataEntity' entity.
+        $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'] = [];
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && $scope !== 'MasterDataEntity') {
+                $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'][] = $scope;
+            }
+        }
+
+        try {
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('master_data_entity')
+                ->where('deleted=:false')
+                ->andWhere('source_entity IS NOT NULL')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $res = [];
+        }
+
+        if (!empty($res)) {
+            foreach ($res as $item) {
+                $foreign = Util::pluralize(lcfirst($item['id']));
+
+                $data['entityDefs'][$item['id']]['fields']['sourceRecord'] = [
+                    'type'   => 'link',
+                    'unique' => true,
+                ];
+                $data['entityDefs'][$item['id']]['links']['sourceRecord'] = [
+                    'type'    => 'belongsTo',
+                    'foreign' => $foreign,
+                    'entity'  => $item['source_entity']
+                ];
+
+                $data['entityDefs'][$item['source_entity']]['fields'][$foreign] = [
+                    'type'     => 'linkMultiple',
+                    'labelKey' => "Global.scopeNamesPlural.{$item['id']}",
+                    'noLoad'   => true,
+                ];
+                $data['entityDefs'][$item['source_entity']]['links'][$foreign] = [
+                    'type'    => 'hasMany',
+                    'foreign' => 'sourceRecord',
+                    'entity'  => $item['id']
                 ];
             }
         }
