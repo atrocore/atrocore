@@ -130,6 +130,15 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         },
 
+        getComparisonScope: function() {
+            const scopeDefs = this.getMetadata().get(['scopes', this.scope]) || {};
+            if (scopeDefs.primaryEntityId && scopeDefs.role === 'staging') {
+                return scopeDefs.primaryEntityId;
+            }
+
+            return this.scope;
+        },
+
         setupRecord() {
             this.notify('Loading...');
             let options = {
@@ -139,7 +148,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 collection: this.options.collection,
                 models: this.options.models,
                 selectionModel: this.options.selectionModel,
-                scope: this.scope,
+                scope: this.getComparisonScope(),
                 merging: this.options.merging,
                 mergeCallback: this.options.mergeCallback,
             };
