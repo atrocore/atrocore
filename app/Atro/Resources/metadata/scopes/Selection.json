@@ -13,6 +13,10 @@
   "modifiedExtendedRelations": [
     "selectionItems"
   ],
+  "aclLevelList": [
+    "no",
+    "all"
+  ],
   "selectionDisabled": true,
   "nameField": "number"
 }
