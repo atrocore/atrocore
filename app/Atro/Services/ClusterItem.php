@@ -162,6 +162,20 @@ class ClusterItem extends Base
         return true;
     }
 
+    public function unreject(string $clusterItemId, string $rejectedClusterItemId): bool
+    {
+        $clusterItem = $this->getEntity($clusterItemId);
+        $rejectedClusterItem = $this->getEntityManager()->getEntity('RejectedClusterItem', $rejectedClusterItemId);
+
+        if (empty($entity) || empty($rejectedClusterItem)) {
+            throw new NotFound();
+        }
+
+
+
+        return true;
+    }
+
     public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
     {
         if ($entityFrom->getEntityName() !== 'Cluster' || $link !== 'clusterItems') {

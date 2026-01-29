@@ -120,8 +120,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.defs.create = false;
             }
 
-            if('listInlineEditModeEnabled' in this.options)  {
-                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            if ('listInlineEditModeEnabled' in this.options) {
+                this.listInlineEditModeEnabled = this.options.listInlineEditModeEnabled;
             }
 
             let canSelect = true;
@@ -279,7 +279,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             var sortBy = this.defs.sortBy || null;
             var asc = null;
-            if('asc' in this.defs) {
+            if ('asc' in this.defs) {
                 asc = !!this.defs.asc;
             }
 
@@ -331,7 +331,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
                 this.collection = collection;
 
-                this.model.trigger('init-collection:'+this.link, collection);
+                this.model.trigger('init-collection:' + this.link, collection);
 
                 this.setFilter(this.filter);
 
@@ -971,6 +971,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             let runAction = () => {
+                const data = { action: name, scope: model.name, id: id }
+                if (model.relationModel) {
+                    data.relationScope = model.relationModel.name;
+                    data.relationId = model.relationModel.get('id');
+                }
+
+                this.ajaxPostRequest(actionDefs.url, data);
                 if (actionDefs.modalSelectEntity) {
                     let entityType = actionDefs.modalSelectEntity;
                     let selectedRecords = [];
@@ -1003,12 +1010,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
                             this.notify(this.translate('Loading...'));
 
-                            this.ajaxPostRequest(actionDefs.url, {
-                                action: name,
-                                scope: model.name,
-                                id: id,
-                                selectedRecords: selectedRecords
-                            })
+                            data.selectedRecords = selectedRecords;
+                            this.ajaxPostRequest(actionDefs.url, data)
                                 .then(response => {
                                     this.notify(this.translate('Done'), 'success');
                                     if (actionDefs.refresh) {
@@ -1019,7 +1022,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     });
                 } else {
                     this.notify(this.translate('Loading...'));
-                    this.ajaxPostRequest(actionDefs.url, {action: name, scope: model.name, id: id})
+                    this.ajaxPostRequest(actionDefs.url, data)
                         .then(response => {
                             this.notify(this.translate('Done'), 'success');
                             if (actionDefs.refresh) {

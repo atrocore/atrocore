@@ -47,7 +47,6 @@
       "asc": false
     },
     "rejectedClusterItems": {
-      "readOnly": true,
       "checkboxes": false,
       "create": false,
       "rowActionsView": "views/record/row-actions/relationship-remove-only",
@@ -55,7 +54,16 @@
       "select": false,
       "unlink": false,
       "sortBy": "createdAt",
-      "asc": false
+      "asc": false,
+      "actions": {
+        "unreject": {
+          "url": "ClusterItem/action/unreject",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-x",
+          "sortOrder": 20
+        }
+      }
     }
   }
 }
