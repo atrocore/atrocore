@@ -977,7 +977,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     data.relationId = model.relationModel.get('id');
                 }
 
-                this.ajaxPostRequest(actionDefs.url, data);
                 if (actionDefs.modalSelectEntity) {
                     let entityType = actionDefs.modalSelectEntity;
                     let selectedRecords = [];

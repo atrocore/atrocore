@@ -158,13 +158,13 @@ class ClusterItem extends Base
         $clusterItem = $this->getEntity($clusterItemId);
         $rejectedClusterItem = $this->getEntityManager()->getEntity('RejectedClusterItem', $rejectedClusterItemId);
 
-        if (empty($entity) || empty($rejectedClusterItem)) {
+        if (empty($clusterItem) || empty($rejectedClusterItem)) {
             throw new NotFound();
         }
 
         $cluster = $rejectedClusterItem->get('cluster');
         if (empty($cluster)) {
-            throw new Exception("Cluster not found");
+            throw new NotFound("Cluster not found");
         }
 
         if ($this->isClusterItemConfirmed($clusterItem)) {
