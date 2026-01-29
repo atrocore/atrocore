@@ -174,6 +174,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
             this.foreignScope = this.options.foreignScope || this.foreignScope;
             this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
+            if (this.model.getFieldParam(this.name, 'entityTypeField')){
+                this.foreignScope = this.foreignScope || this.model.get(this.model.getFieldParam(this.name, 'entityTypeField'));
+            }
 
             // prepare default value
             const fieldDefs = this.model.defs.fields[this.name] || null;

@@ -11,34 +11,42 @@
 
 namespace Atro\Acl;
 
+use Atro\Entities\User;
 use Espo\Core\Acl\Base;
-use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 class SelectionItem extends Base
 {
     public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
     {
-        return true;
+        return $this->getAclManager()->checkScope($user, 'Selection', $action);
     }
 
-    public function checkEntityRead(User $user, Entity $entity, $data)
+    public function checkEntity(User $user, Entity $entity, $data, $action)
     {
-        return true;
-    }
+        if (!empty($entity->get('selectionId'))) {
+            $selection = $this->getEntityManager()->getEntity('Selection', $entity->get('selectionId'));
+        }
 
-    public function checkEntityCreate(User $user, Entity $entity, $data)
-    {
-        return true;
-    }
+        if (empty($selection)) {
+            return false;
+        }
 
-    public function checkEntityEdit(User $user, Entity $entity, $data)
-    {
-        return true;
-    }
+        if ($action === 'read') {
+            $record = $this->getEntityManager()->getEntity($entity->get('entityType'), $entity->get('entityId'));
+            if (empty($record)) {
+                return false;
+            }
 
-    public function checkEntityDelete(User $user, Entity $entity, $data)
-    {
-        return true;
+            if (!$this->getAclManager()->checkEntity($user, $record, $action)) {
+                return false;
+            }
+        }
+
+        if (in_array($action, ['create', 'delete'])) {
+            $action = 'edit';
+        }
+
+        return $this->getAclManager()->checkEntity($user, $selection, $action);
     }
 }

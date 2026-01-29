@@ -27,9 +27,9 @@
     },
     "goldenRecord": {
       "type": "link",
-      "view": "views/cluster/fields/golden-record",
       "layoutNavigationDisabled": true,
-      "protected": true
+      "protected": true,
+      "entityTypeField": "masterEntity"
     },
     "createdAt": {
       "type": "datetime",
