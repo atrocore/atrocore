@@ -57,7 +57,7 @@ class SelectionItem extends Base
         $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));
         $entity->setMetaPermission('delete', false);
 
-        if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityType'), $entity->get('entityId')))) {
+        if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId')))) {
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
         }
     }
