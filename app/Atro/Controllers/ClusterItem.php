@@ -29,16 +29,12 @@ class ClusterItem extends Base
             throw new BadRequest('ID is required.');
         }
 
-        if (!property_exists($data, 'relationId')) {
-            throw new BadRequest('Rejected cluster item id is required.');
-        }
-
         if (!$this->getAcl()->check('ClusterItem', 'edit')) {
             throw new Forbidden();
         }
 
 
-        return $this->getRecordService()->reject((string)$data->id, (string)$data->relationId);
+        return $this->getRecordService()->reject((string)$data->id);
     }
 
     public function actionUnreject($params, $data, $request)
@@ -51,12 +47,16 @@ class ClusterItem extends Base
             throw new BadRequest('ID is required.');
         }
 
+        if (!property_exists($data, 'relationId')) {
+            throw new BadRequest('Rejected cluster item id is required.');
+        }
+
         if (!$this->getAcl()->check('ClusterItem', 'edit')) {
             throw new Forbidden();
         }
 
 
-        return $this->getRecordService()->unreject((string)$data->id);
+        return $this->getRecordService()->unreject((string)$data->id,(string)$data->relationId);
     }
 
     public function actionConfirm($params, $data, $request)

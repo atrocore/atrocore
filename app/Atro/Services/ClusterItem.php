@@ -110,17 +110,8 @@ class ClusterItem extends Base
             throw new Exception("Cluster is not set for item {$id}");
         }
 
-        if (!empty($cluster->get('goldenRecord'))) {
-            if ($cluster->get('masterEntity') === $entity->get('entityName')) {
-                if ($cluster->get('goldenRecordId') === $entity->get('entityId')) {
-                    throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
-                }
-            } else {
-                $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
-                if (!empty($record) && $record->get('goldenRecordId') === $cluster->get('goldenRecordId')) {
-                    throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
-                }
-            }
+        if ($this->isClusterItemConfirmed($entity)) {
+            throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
         }
 
         $rci = $this->getEntityManager()->getEntity('RejectedClusterItem');
@@ -171,9 +162,41 @@ class ClusterItem extends Base
             throw new NotFound();
         }
 
+        if (empty($cluster = $entity->get('cluster'))) {
+            throw new Exception("Cluster is not set for item {$clusterItemId}");
+        }
+
+        if ($this->isClusterItemConfirmed($clusterItem)) {
+            throw new BadRequest($this->getInjection('language')->translate("cannotUnreject", "exceptions", "ClusterItem"));
+        }
+
+        
 
 
         return true;
+    }
+
+
+    public function isClusterItemConfirmed(IEntity $clusterItem): bool
+    {
+        if (empty($cluster = $clusterItem->get('cluster'))) {
+            return false;
+        }
+
+        if (!empty($cluster->get('goldenRecord'))) {
+            if ($cluster->get('masterEntity') === $clusterItem->get('entityName')) {
+                if ($cluster->get('goldenRecordId') === $clusterItem->get('entityId')) {
+                    return true;
+                }
+            } else {
+                $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId'));
+                if (!empty($record) && $record->get('goldenRecordId') === $cluster->get('goldenRecordId')) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
