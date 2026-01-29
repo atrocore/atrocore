@@ -25,9 +25,7 @@
     "sourceEntity": {
       "type": "enum",
       "optionsType": "entityName",
-      "options": [
-        "Product"
-      ],
+      "options": [],
       "customizable": false
     },
     "mappingScript": {
