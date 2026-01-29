@@ -29,6 +29,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         canReset: true,
                         afterSave: () => {
                             this.getPreferences().trigger('favorites:update');
+                            window.dispatchEvent(new CustomEvent('favorites:update', { detail: this.getPreferences().get('favoritesList') }));
                         },
                     }, view => {
                         this.notify(false)
