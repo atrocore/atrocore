@@ -796,8 +796,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
+                                            if(this.getView('record')) {
+                                                this.getView('record').showLoader();
+                                            }
                                             window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
-                                            this.setupRecord();
+                                            this.trigger('refresh');
                                         }
                                     }
                                 }
