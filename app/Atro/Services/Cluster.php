@@ -55,16 +55,7 @@ class Cluster extends Base
 
             $entities = $this->getEntityManager()->getRepository($entityType)->select($select)->where(['id' => $ids])->find();
 
-            $retrievedIds = [];
-
-            foreach ($entities as $entity) {
-                $retrievedIds[] = $entity->get('id');
-            }
-
             foreach ($records as $key => $record) {
-                if (!$this->getAcl()->check($record, 'read')) {
-                    unset($collection[$key]);
-                }
                 foreach ($entities as $entity) {
                     if ($record->get('goldenRecordId') === $entity->get('id')) {
                         $record->set('goldenRecordName', $entity->get($nameField) ?? $entity->get('id'));
@@ -72,17 +63,6 @@ class Cluster extends Base
                     }
                 }
             }
-        }
-
-        // we reset the index from 0 in case of unset
-        $entities = [];
-        foreach ($collection as $key => $record) {
-            $entities[] = $record;
-            $collection->offsetUnset($key);
-        }
-
-        foreach ($entities as $key => $entity) {
-            $collection->offsetSet($key, $entity);
         }
     }
 }
