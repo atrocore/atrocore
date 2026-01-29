@@ -28,8 +28,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         selectionItemModels: [],
 
-        selectedIds: [],
-
         hiddenIds: [],
 
         maxForComparison: 5,
