@@ -1252,7 +1252,6 @@ class Metadata extends AbstractListener
                         "emHidden"                  => true
                     ]
                 );
-                $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
             }
         }
 
