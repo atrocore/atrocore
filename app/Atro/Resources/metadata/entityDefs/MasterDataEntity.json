@@ -22,7 +22,7 @@
         }
       }
     },
-    "mappingScript": {
+    "mergingScript": {
       "type": "text",
       "view": "views/fields/script",
       "language": "json",

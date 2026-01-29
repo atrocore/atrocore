@@ -156,10 +156,16 @@ class LayoutManager
 
         if (!empty($derivativeScope)) {
             if ($viewType === 'detail') {
+                if (!empty($this->getMetadata()->get(['scopes', $derivativeScope, 'matchMasterRecords']))) {
+                    array_unshift($layout[0]['rows'], [['name' => 'goldenRecord'], false]);
+                }
                 array_unshift($layout[0]['rows'], [['name' => 'derivativeStatus'], ['name' => 'primaryRecord']]);
             } elseif ($viewType === 'list') {
                 $layout[] = ['name' => 'derivativeStatus'];
                 $layout[] = ['name' => 'primaryRecord'];
+                if (!empty($this->getMetadata()->get(['scopes', $derivativeScope, 'matchMasterRecords']))) {
+                    $layout[] = ['name' => 'goldenRecord'];
+                }
             }
         }
 

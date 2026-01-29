@@ -36,4 +36,21 @@ class ClusterItem extends Base
 
         return $this->getRecordService()->reject((string)$data->id);
     }
+
+    public function actionConfirm($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!property_exists($data, 'id')) {
+            throw new BadRequest('ID is required.');
+        }
+
+        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->confirm((string)$data->id);
+    }
 }
