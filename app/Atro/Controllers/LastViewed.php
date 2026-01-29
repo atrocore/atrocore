@@ -31,8 +31,9 @@ class LastViewed extends \Espo\Core\Controllers\Base
         $maxSize = intval($request->get('maxSize'));
 
         $params = array(
-            'offset'  => $offset,
-            'maxSize' => $maxSize
+            'offset'      => $offset,
+            'maxSize'     => $maxSize,
+            'skipDeleted' => true
         );
 
         $result = $this->getLastViewedService()->get($params);
