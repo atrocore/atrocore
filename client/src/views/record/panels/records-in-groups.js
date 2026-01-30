@@ -240,7 +240,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                             layoutName: this.layoutName,
                             listLayout: this.listLayout,
                             layoutRelatedScope: this.model.name + '.' + this.link,
-                            checkboxes: false,
+                            checkboxes: this.checkboxes,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                             buttonsDisabled: true,
                             el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
@@ -259,7 +259,6 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                         this.createView(group.key, viewName, options, view => {
                             view.listenTo(view, 'remove-group', (data) => this.unlinkGroup(data));
                             view.listenTo(view, 'remove-group-hierarchically', (data) => this.unlinkGroupHierarchy(data));
-
                             view.render(() => {
                                 count++;
                                 if (typeof view.getEditableFields === 'function') {

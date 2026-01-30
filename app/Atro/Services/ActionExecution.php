@@ -40,4 +40,16 @@ class ActionExecution extends Base
             }
         }
     }
+
+    public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
+    {
+        if ($entityFrom->getEntityName() !== 'Action' || $link !== 'executions') {
+            parent::putAclMetaForLink($entityFrom, $link, $entity);
+            return;
+        }
+
+        $this->putAclMeta($entity);
+
+        $entity->setMetaPermission('allLogs', true);
+    }
 }

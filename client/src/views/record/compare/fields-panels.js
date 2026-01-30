@@ -94,7 +94,8 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             inlineEditDisabled: fieldData.inlineEditDisabled || false,
                             fieldActionsDisabled: true,
                             disabled: this.merging || !this.getAcl().check(model.name, 'edit'),
-                            disableToggle: true
+                            disableToggle: true,
+                            disableToggleVisibility: true
                         }, view => {
                             let viewKey = row.key;
 

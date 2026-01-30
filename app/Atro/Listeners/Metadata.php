@@ -20,6 +20,7 @@ use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Entities\File;
+use Atro\Repositories\MasterDataEntity;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -27,7 +28,6 @@ use Atro\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Atro\Core\Utils\Util;
 use Atro\Repositories\Matching as MatchingRepository;
-use Espo\ORM\EntityCollection;
 
 class Metadata extends AbstractListener
 {
@@ -216,17 +216,14 @@ class Metadata extends AbstractListener
         }
 
         try {
-            $res = $this->getEntityManager()->getRepository('MasterDataEntity')
-                ->select(['id', 'sourceEntity'])
-                ->where(['sourceEntity!=' => null])
-                ->find();
+            $res = MasterDataEntity::getRecordsWithSourceEntities($this->getConnection());
         } catch (\Throwable $e) {
-            $res = new EntityCollection([], 'MasterDataEntity');
+            $res = [];
         }
 
         foreach ($res as $item) {
-            $stagingEntity = $item->id;
-            $sourceEntity = $item->get('sourceEntity');
+            $stagingEntity = $item['id'];
+            $sourceEntity = $item['source_entity'];
 
             $foreign = Util::pluralize(lcfirst($stagingEntity));
 

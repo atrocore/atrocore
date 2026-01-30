@@ -33,7 +33,9 @@
   "labels": {
     "execute": "Выполнить",
     "Parameters": "Параметры",
-    "fieldsPanel": "Обновить",
+    "fieldsPanel": "Обновить"
+  },
+  "actions": {
     "allLogs": "Все журналы"
   },
   "massActions": {

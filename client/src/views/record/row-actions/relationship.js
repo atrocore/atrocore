@@ -165,9 +165,12 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                 divider: true
             });
 
-            list.push({
-                preloader: true
-            });
+            if (!this.getMetadata().get(['clientDefs', parentModelName, 'relationshipPanels', relationName, 'dynamicActionDisabled'])) {
+                list.push({
+                    preloader: true
+                });
+            }
+
 
             return list;
         }

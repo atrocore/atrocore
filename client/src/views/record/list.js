@@ -1037,7 +1037,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'Archive') {
-                this.rowActionsView = 'views/record/row-actions/view-only';
                 this.massActionList = ['export'];
             }
 
@@ -2398,8 +2397,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 name: 'buttonsField',
                 view: this.rowActionsView,
                 options: {
-                    parentModelName: this.getParentModel()?.name,
-                    relationName: this?.relationName,
+                    parentModelName: this.getParentModel()?.name ?? this.options.parentModelName,
+                    relationName: this.relationName ?? this.options.relationName ?? this.options.panelView?.panelName,
                     defs: {
                         params: {}
                     }
@@ -3095,7 +3094,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             const scope = model.name || this.scope;
-
             let actionDefs = this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
 
             if (!actionDefs || !actionDefs.url) {

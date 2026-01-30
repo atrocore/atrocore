@@ -532,7 +532,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
             let areRendered = [];
             (this.groups || []).forEach(group => {
                 this.getCollectionFactory().create(this.scope, collection => {
-                    let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
+                    let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'views/record/list';
                     this.getHelper().layoutManager.get(this.scope, this.layoutName,this.model.name, data => {
                         this.createView(group.key, viewName, {
                             collection: this.prepareGroupCollection(group, collection),
@@ -542,7 +542,9 @@ Espo.define('views/classification/record/panels/classification-attributes',
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                             buttonsDisabled: true,
                             el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
-                            showMore: false
+                            showMore: false,
+                            setViewBeforeCallback: true,
+                            parentModelName: this.model.name
                         }, view => {
                             view.render();
                             this.listenTo(view, 'after:render', () => {
