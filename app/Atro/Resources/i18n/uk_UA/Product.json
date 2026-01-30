@@ -21,7 +21,7 @@
     "MasterData": "Основні дані",
     "Description": "Короткий опис",
     "State": "державний",
-    "Placement": "Розміщення",
+    "Taxonomy": "Таксономія",
     "ProductLifeCycle": "Життєвий цикл продукту"
   }
 }
