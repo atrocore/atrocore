@@ -1,0 +1,16 @@
+[
+  {
+    "name": "number"
+  },
+  {
+    "name": "image",
+    "notSortable": true
+  },
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "isActive"
+  }
+]

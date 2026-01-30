@@ -1,0 +1,19 @@
+[
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "image",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "isActive"
+        },
+        false
+      ]
+    ]
+  }
+]
