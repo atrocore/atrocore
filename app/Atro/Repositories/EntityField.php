@@ -234,10 +234,6 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
-//        if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.customizable") === false) {
-//            throw new Forbidden();
-//        }
-
         if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")) {
             throw new Forbidden();
         }
@@ -245,6 +241,12 @@ class EntityField extends ReferenceData
         if (!empty($entity->get('foreignEntityId'))) {
             if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.primaryEntityId")) {
                 throw new Forbidden();
+            }
+        }
+
+        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'ReferenceData') {
+            if (in_array($entity->get('type'), ['link', 'script', 'autoincrement'])) {
+                throw new BadRequest("A field of this type cannot be added to an entity of type Reference.");
             }
         }
 
