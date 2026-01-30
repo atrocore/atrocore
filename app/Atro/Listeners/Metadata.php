@@ -20,6 +20,7 @@ use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Entities\File;
+use Atro\Repositories\MasterDataEntity;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -215,13 +216,7 @@ class Metadata extends AbstractListener
         }
 
         try {
-            $res = $this->getConnection()->createQueryBuilder()
-                ->select('id, source_entity')
-                ->from('master_data_entity')
-                ->where('deleted=:false')
-                ->andWhere('source_entity IS NOT NULL')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
+            $res = MasterDataEntity::getRecordsWithSourceEntities($this->getConnection());
         } catch (\Throwable $e) {
             $res = [];
         }

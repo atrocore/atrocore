@@ -15,10 +15,23 @@ namespace Atro\Repositories;
 
 use Atro\Core\DataManager;
 use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class MasterDataEntity extends Base
 {
+    public static function getRecordsWithSourceEntities(Connection $conn): array
+    {
+        return $conn->createQueryBuilder()
+            ->select('*')
+            ->from('master_data_entity')
+            ->where('deleted=:false')
+            ->andWhere('source_entity IS NOT NULL')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+    }
+
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
