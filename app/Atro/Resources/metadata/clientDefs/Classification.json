@@ -29,12 +29,6 @@
         "removeRelated": {
           "disabled": true
         },
-        "openInTab": {
-          "disabled": true
-        },
-        "reupload": {
-          "disabled": true
-        },
         "unlinkRelatedAttribute": {
           "action": "unlinkRelatedAttribute",
           "sortOrder": 200

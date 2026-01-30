@@ -22,12 +22,6 @@
         },
         "removeRelated": {
           "disabled": true
-        },
-        "openInTab": {
-          "disabled": true
-        },
-        "reupload": {
-          "disabled": true
         }
       }
     }
