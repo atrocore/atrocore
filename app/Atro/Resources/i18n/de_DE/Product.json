@@ -21,6 +21,7 @@
     "MasterData": "Stammdaten",
     "Description": "Beschreibung",
     "State": "Zustand",
-    "Placement": "Platzierung"
+    "Placement": "Platzierung",
+    "ProductLifeCycle": "Produktlebenszyklus"
   }
 }
