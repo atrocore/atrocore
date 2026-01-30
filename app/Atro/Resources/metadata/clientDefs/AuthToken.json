@@ -14,9 +14,6 @@
         "quickEdit": {
           "disabled": true
         },
-        "inheritRelated": {
-          "disabled": true
-        },
         "unlinkRelated": {
           "disabled": true
         },

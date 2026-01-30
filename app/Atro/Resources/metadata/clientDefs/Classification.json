@@ -20,9 +20,6 @@
       "selectAction": "selectRelatedEntity",
       "view": "views/classification/record/panels/classification-attributes",
       "actions": {
-        "inheritRelated": {
-          "disabled": true
-        },
         "unlinkRelated": {
           "disabled": true
         },

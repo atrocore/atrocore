@@ -17,9 +17,6 @@
   "relationshipPanels": {
     "matchings": {
       "actions": {
-        "inheritRelated": {
-          "disabled": true
-        },
         "unlinkRelated": {
           "disabled": true
         },
