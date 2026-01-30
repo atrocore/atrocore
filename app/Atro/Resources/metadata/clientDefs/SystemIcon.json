@@ -2,7 +2,6 @@
   "controller": "controllers/record",
   "createDisabled": true,
   "recordViews": {
-    "list": "views/system-icon/record/list",
     "detail": "views/system-icon/record/detail"
   },
   "modalViews": {

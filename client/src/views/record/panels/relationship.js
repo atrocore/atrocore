@@ -147,10 +147,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
-            if (!canUnlink) {
-                this.rowActionsView = 'views/record/row-actions/relationship-no-unlink';
-            }
-
             this.filterList = this.defs.filterList || this.filterList || null;
 
             if (this.filterList && this.filterList.length) {

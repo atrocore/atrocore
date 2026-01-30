@@ -36,7 +36,15 @@
     "executions": {
       "create": false,
       "select": false,
-      "rowActionsView": "views/action/record/row-actions/action-executions",
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "allLogs": {
+          "action": "allLogs",
+          "sortOrder": 10
+        }
+      },
       "view": "views/action/record/panels/executions"
     }
   }

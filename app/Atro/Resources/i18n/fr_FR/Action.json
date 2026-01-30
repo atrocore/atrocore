@@ -33,7 +33,9 @@
   "labels": {
     "execute": "Exécuter",
     "Parameters": "Paramètres",
-    "fieldsPanel": "Mise à jour",
+    "fieldsPanel": "Mise à jour"
+  },
+  "actions": {
     "allLogs": "Tous les journaux"
   },
   "massActions": {

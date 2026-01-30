@@ -19,7 +19,31 @@
     "classificationAttributes": {
       "selectAction": "selectRelatedEntity",
       "view": "views/classification/record/panels/classification-attributes",
-      "rowActionsView": "views/classification/record/row-actions/classification-attribute",
+      "actions": {
+        "inheritRelated": {
+          "disabled": true
+        },
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "removeRelated": {
+          "disabled": true
+        },
+        "openInTab": {
+          "disabled": true
+        },
+        "reupload": {
+          "disabled": true
+        },
+        "unlinkRelatedAttribute": {
+          "action": "unlinkRelatedAttribute",
+          "sortOrder": 200
+        },
+        "cascadeUnlinkRelatedAttribute": {
+          "action": "cascadeUnlinkRelatedAttribute",
+          "sortOrder": 210
+        }
+      },
       "aclScopesList": [
         "Attribute",
         "AttributeGroup",
