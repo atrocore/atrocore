@@ -52,6 +52,18 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['equals', 'isNotEmpty', 'isEmpty', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'],
 
+        filterOperators: [
+            'equal',
+            'not_equal',
+            'less',
+            'less_or_equal',
+            'greater',
+            'greater_or_equal',
+            'between',
+            'is_null',
+            'is_not_null'
+        ],
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -309,17 +321,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'integer',
                 optgroup: this.getLanguage().translate('Fields'),
-                operators: [
-                    'equal',
-                    'not_equal',
-                    'less',
-                    'less_or_equal',
-                    'greater',
-                    'greater_or_equal',
-                    'between',
-                    'is_null',
-                    'is_not_null'
-                ],
+                operators: this.filterOperators,
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {

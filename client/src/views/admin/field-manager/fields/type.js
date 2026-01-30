@@ -24,7 +24,7 @@ Espo.define('views/admin/field-manager/fields/type', 'views/fields/enum', Dep =>
             this.translatedOptions = {'': ''};
 
             $.each(this.getMetadata().get('fields'), (type, typeDefs) => {
-                if (!typeDefs.notCreatable && !(scopeType === 'ReferenceData' && ['link', 'linkMultiple', 'script'].includes(type))) {
+                if (!typeDefs.notCreatable && !(scopeType === 'ReferenceData' && ['link', 'linkMultiple', 'script', 'autoincrement'].includes(type))) {
                     this.params.options.push(type);
 
                     const group = typeDefs.group || 'other'

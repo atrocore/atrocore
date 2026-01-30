@@ -19,7 +19,9 @@
             <strong>{{label}}</strong>
             {{/if}}
         </div>
-        <div class="list-container">&nbsp;{{translate 'Loading...'}}</div>
+        <div class="list-container">
+            <div class="no-data-container">{{translate 'Loading...'}}</div>
+        </div>
     </div>
     {{/each}}
 </div>

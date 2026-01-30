@@ -17,6 +17,10 @@
   },
   "labels": {
     "manufacturer": "Hersteller",
-    "other": "Andere"
+    "other": "Andere",
+    "MasterData": "Stammdaten",
+    "Description": "Beschreibung",
+    "State": "Zustand",
+    "Placement": "Platzierung"
   }
 }

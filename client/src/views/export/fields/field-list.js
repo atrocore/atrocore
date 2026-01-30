@@ -35,8 +35,7 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
                 'attachmentMultiple',
                 'currencyConverted',
                 'linkParent',
-                'personName',
-                'autoincrement'
+                'personName'
             ];
 
             let notAvailableFieldsList = [
