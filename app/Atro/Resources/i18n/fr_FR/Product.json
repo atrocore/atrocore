@@ -21,6 +21,7 @@
     "MasterData": "Données de base",
     "Description": "Description",
     "State": "État",
-    "Placement": "Emplacement"
+    "Placement": "Emplacement",
+    "ProductLifeCycle": "Cycle de vie du produit"
   }
 }
