@@ -11,8 +11,6 @@
 Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/relationship', 'views/search/search-filter-opener', 'search-manager'],
     (Dep, SearchFilterOpener, SearchManager) => Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-view-only',
-
         readOnly: true,
 
         additionalBoolFilterList: [],

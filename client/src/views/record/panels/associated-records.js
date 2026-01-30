@@ -15,7 +15,7 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
 
         template: 'record/panels/associated-records',
 
-        rowActionsView: 'views/record/row-actions/relationship-no-remove',
+        rowActionsView: 'views/record/row-actions/relationship',
 
         groups: [],
 

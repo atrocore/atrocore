@@ -2,7 +2,11 @@
   "relationshipPanels": {
     "scopes": {
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
     },
     "users": {
       "create": false,

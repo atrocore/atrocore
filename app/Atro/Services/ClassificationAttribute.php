@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityCollection;
 
 class ClassificationAttribute extends Base
@@ -135,6 +136,19 @@ class ClassificationAttribute extends Base
         }
 
         return $result;
+    }
+
+    public function putAclMetaForLink(OrmEntity $entityFrom, string $link, OrmEntity $entity): void
+    {
+        if ($entityFrom->getEntityName() !== 'Classification' || $link !== 'classificationAttributes') {
+            parent::putAclMetaForLink($entityFrom, $link, $entity);
+            return;
+        }
+
+        $this->putAclMeta($entity);
+
+        $entity->setMetaPermission('unlinkRelatedAttribute',  $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'delete'));
+        $entity->setMetaPermission('cascadeUnlinkRelatedAttribute', $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'delete'));
     }
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void

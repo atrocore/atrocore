@@ -33,7 +33,9 @@
   "labels": {
     "execute": "Eseguire",
     "Parameters": "Parametri",
-    "fieldsPanel": "Aggiornamento",
+    "fieldsPanel": "Aggiornamento"
+  },
+  "actions": {
     "allLogs": "Tutti i registri"
   },
   "massActions": {

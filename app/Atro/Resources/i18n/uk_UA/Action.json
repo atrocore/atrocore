@@ -33,7 +33,9 @@
   "labels": {
     "execute": "Виконати",
     "Parameters": "Параметри",
-    "fieldsPanel": "Оновлення",
+    "fieldsPanel": "Оновлення"
+  },
+  "actions": {
     "allLogs": "Всі журнали"
   },
   "massActions": {

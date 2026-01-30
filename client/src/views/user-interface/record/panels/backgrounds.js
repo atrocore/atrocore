@@ -12,8 +12,6 @@ Espo.define('views/user-interface/record/panels/backgrounds', 'views/record/pane
 
     return Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-no-unlink',
-
         setup() {
             this.defs.create = false;
             this.defs.select = false;

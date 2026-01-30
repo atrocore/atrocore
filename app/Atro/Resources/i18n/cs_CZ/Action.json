@@ -33,7 +33,9 @@
   "labels": {
     "execute": "Provést",
     "Parameters": "Parametry",
-    "fieldsPanel": "Aktualizace",
+    "fieldsPanel": "Aktualizace"
+  },
+  "actions": {
     "allLogs": "Všechny protokoly"
   },
   "massActions": {

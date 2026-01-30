@@ -7,13 +7,21 @@
     "matchingRules": {
       "select": false,
       "limit": 2000,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      },
       "hideShowFullList": true
     },
     "matchedRecords": {
       "create": false,
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
     }
   }
 }

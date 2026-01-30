@@ -19,7 +19,22 @@
     "classificationAttributes": {
       "selectAction": "selectRelatedEntity",
       "view": "views/classification/record/panels/classification-attributes",
-      "rowActionsView": "views/classification/record/row-actions/classification-attribute",
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "removeRelated": {
+          "disabled": true
+        },
+        "unlinkRelatedAttribute": {
+          "action": "unlinkRelatedAttribute",
+          "sortOrder": 200
+        },
+        "cascadeUnlinkRelatedAttribute": {
+          "action": "cascadeUnlinkRelatedAttribute",
+          "sortOrder": 210
+        }
+      },
       "aclScopesList": [
         "Attribute",
         "AttributeGroup",

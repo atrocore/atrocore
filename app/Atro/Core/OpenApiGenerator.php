@@ -72,6 +72,52 @@ class OpenApiGenerator
                 continue;
             }
 
+            $properties = [
+                'edit'   => [
+                    'type'    => 'boolean',
+                    'example' => true,
+                ],
+                'delete' => [
+                    'type'    => 'boolean',
+                    'example' => true,
+                ],
+                'unlink' => [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ],
+                'stream' => [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ],
+            ];
+
+            if ($entityName === 'SelectionItem') {
+                $properties['replaceItem'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+            } else if ($entityName === 'ClusterItem') {
+                $properties['reject'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+
+                $properties['confirm'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+            } else if ($entityName === 'ClassificationAttribute') {
+                $properties['unlinkRelatedAttribute'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+
+                $properties['cascadeUnlinkRelatedAttribute'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+            }
+
             $result['components']['schemas'][$entityName] = [
                 'type'       => 'object',
                 'properties' => [
@@ -84,24 +130,7 @@ class OpenApiGenerator
                             'permissions' => [
                                 'type'       => 'object',
                                 'required'   => ['edit', 'delete'],
-                                'properties' => [
-                                    'edit'   => [
-                                        'type'    => 'boolean',
-                                        'example' => true,
-                                    ],
-                                    'delete' => [
-                                        'type'    => 'boolean',
-                                        'example' => true,
-                                    ],
-                                    'unlink' => [
-                                        'type'    => 'boolean',
-                                        'example' => false,
-                                    ],
-                                    'stream' => [
-                                        'type'    => 'boolean',
-                                        'example' => false,
-                                    ],
-                                ],
+                                'properties' => $properties,
                             ],
                         ],
                         'example'    => [

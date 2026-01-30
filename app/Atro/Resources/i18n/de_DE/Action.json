@@ -33,7 +33,9 @@
   "labels": {
     "execute": "Ausführen",
     "Parameters": "Parameter",
-    "fieldsPanel": "Aktualisieren",
+    "fieldsPanel": "Aktualisieren"
+  },
+  "actions": {
     "allLogs": "Alle Protokolle"
   },
   "massActions": {
