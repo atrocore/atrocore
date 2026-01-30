@@ -370,7 +370,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 });
 
-                new Svelte.JobManagerIcon({
+                new Svelte.JobManagerButton({
                     target: this.$el.find('.navbar-header .queue-badge-container').get(0),
                     props: {
                         renderTable: () => {
@@ -379,7 +379,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 });
 
-                new Svelte.JobManagerIcon({
+                new Svelte.JobManagerButton({
                     target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
                     props: {
                         renderTable: () => {
