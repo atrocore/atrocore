@@ -27,7 +27,6 @@ use Atro\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Atro\Core\Utils\Util;
 use Atro\Repositories\Matching as MatchingRepository;
-use Espo\ORM\EntityCollection;
 
 class Metadata extends AbstractListener
 {
@@ -216,17 +215,20 @@ class Metadata extends AbstractListener
         }
 
         try {
-            $res = $this->getEntityManager()->getRepository('MasterDataEntity')
-                ->select(['id', 'sourceEntity'])
-                ->where(['sourceEntity!=' => null])
-                ->find();
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('id, source_entity')
+                ->from('master_data_entity')
+                ->where('deleted=:false')
+                ->andWhere('source_entity IS NOT NULL')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
         } catch (\Throwable $e) {
-            $res = new EntityCollection([], 'MasterDataEntity');
+            $res = [];
         }
 
         foreach ($res as $item) {
-            $stagingEntity = $item->id;
-            $sourceEntity = $item->get('sourceEntity');
+            $stagingEntity = $item['id'];
+            $sourceEntity = $item['source_entity'];
 
             $foreign = Util::pluralize(lcfirst($stagingEntity));
 
