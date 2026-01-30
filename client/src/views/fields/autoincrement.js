@@ -44,6 +44,16 @@ Espo.define('views/fields/autoincrement', 'views/fields/int', function (Dep) {
 
         disableFormatting: true,
 
+        filterOperators: [
+            'equal',
+            'not_equal',
+            'less',
+            'less_or_equal',
+            'greater',
+            'greater_or_equal',
+            'between'
+        ],
+
         parse: function (value) {
             value = (value !== '') ? value : null;
             if (value !== null) {
