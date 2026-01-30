@@ -2323,8 +2323,10 @@ class Base
                     $value = str_replace($decimalMark, '.', $value);
                     $value = $attributeType === 'int' ? intval($value) : floatval($value);
 
+                    $int32Max = (2 ** 31) - 1;
+
                     // avoid the range limit for INTEGER in database
-                    if ($attributeType === 'int' && abs($value) > ((2 ** 31) - 1)) {
+                    if ($attributeType === 'int' && abs($value) > $int32Max) {
                         continue;
                     }
                     $group[$field] = $value;
