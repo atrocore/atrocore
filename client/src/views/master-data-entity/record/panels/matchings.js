@@ -12,8 +12,6 @@
 Espo.define('views/master-data-entity/record/panels/matchings', ['views/record/panels/relationship', 'search-manager'],
     (Dep, SearchManager) => Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-view-and-edit',
-
         setup() {
             this.scope = 'Matching';
             this.url = 'Matching';

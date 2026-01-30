@@ -46,6 +46,29 @@
         }
       },
       "view": "views/action/record/panels/executions"
+    },
+    "entityFilterResult": {
+      "dynamicActionDisabled": true,
+      "actions": {
+        "quickEdit": {
+          "disabled": true
+        },
+        "inheritRelated": {
+          "disabled": true
+        },
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "removeRelated": {
+          "disabled": true
+        },
+        "openInTab": {
+          "disabled": true
+        },
+        "reupload": {
+          "disabled": true
+        }
+      }
     }
   }
 }

@@ -2398,7 +2398,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 view: this.rowActionsView,
                 options: {
                     parentModelName: this.getParentModel()?.name ?? this.options.parentModelName,
-                    relationName: this?.relationName,
+                    relationName: this.relationName ?? this.options.relationName ?? this.options.panelView?.panelName,
                     defs: {
                         params: {}
                     }
