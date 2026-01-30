@@ -72,7 +72,7 @@ class OpenApiGenerator
                 continue;
             }
 
-            $properties =  [
+            $properties = [
                 'edit'   => [
                     'type'    => 'boolean',
                     'example' => true,
@@ -91,22 +91,22 @@ class OpenApiGenerator
                 ],
             ];
 
-            if($entityName === 'SelectionItem') {
-                $properties['replaceItem'] =  [
+            if ($entityName === 'SelectionItem') {
+                $properties['replaceItem'] = [
                     'type'    => 'boolean',
                     'example' => false,
                 ];
-            }else if ($entityName === 'ClusterItem') {
-                $properties['reject'] =  [
+            } else if ($entityName === 'ClusterItem') {
+                $properties['reject'] = [
                     'type'    => 'boolean',
                     'example' => false,
                 ];
 
-                $properties['confirm'] =  [
+                $properties['confirm'] = [
                     'type'    => 'boolean',
                     'example' => false,
                 ];
-            }else if ($entityName === 'ClassificationAttribute') {
+            } else if ($entityName === 'ClassificationAttribute') {
                 $properties['unlinkRelatedAttribute'] = [
                     'type'    => 'boolean',
                     'example' => false,
