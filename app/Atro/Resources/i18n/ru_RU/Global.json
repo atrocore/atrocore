@@ -673,7 +673,6 @@
   "fields": {
     "number": "Номер",
     "field": "Поле",
-    "primaryRecord": "Первичная запись",
     "derivedRecords": "Производные записи",
     "goldenRecord": "Золотая запись",
     "sourceRecords": "Источники записи",

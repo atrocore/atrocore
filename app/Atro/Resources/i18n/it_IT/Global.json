@@ -982,7 +982,6 @@
   "fields": {
     "__currentUser": "Utente attuale",
     "number": "Numero",
-    "primaryRecord": "Record primario",
     "derivedRecords": "Registri derivati",
     "goldenRecord": "Record d'oro",
     "sourceRecords": "Fonte: i registri",

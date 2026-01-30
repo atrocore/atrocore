@@ -639,7 +639,7 @@ class Record extends RecordService
             throw new NotFound("{$this->getEntityType()} with id $id not found");
         }
 
-        $input->primaryRecordId = $primaryEntity->get('id');
+        $input->goldenRecordId = $primaryEntity->get('id');
 
         foreach ($primaryEntity->toArray() as $field => $value) {
             if (in_array($field, ['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'])) {
@@ -658,7 +658,7 @@ class Record extends RecordService
 
         // create many-to-many relations
         foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']) as $link => $linkDef) {
-            if (!empty($linkDef['relationName'])) {
+            if (!empty($linkDef['relationName']) && !in_array($link, ['children', 'parents'])) {
                 $data = $primaryEntity->get($link) ?? [];
                 foreach ($data as $item) {
                     try {
