@@ -279,20 +279,13 @@ class Metadata
                 continue;
             }
 
-            $data->entityDefs->$entityType->fields->_meta = Util::arrayToObject([
-                'type'                 => 'jsonObject',
-                'notStorable'          => true,
-                'protected'            => true,
-                'layoutListDisabled'   => true,
-                'layoutDetailDisabled' => true,
-                'massUpdateDisabled'   => true,
-                'filterDisabled'       => true,
-                'importDisabled'       => true,
-                'exportDisabled'       => true,
-                'emHidden'             => true,
-            ]);
-
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
+                if (!empty($fieldDefsItem->type) && !empty($fieldDefinitionList[$fieldDefsItem->type]['fieldTypeDefs'])) {
+                    foreach ($fieldDefinitionList[$fieldDefsItem->type]['fieldTypeDefs'] as $param => $value) {
+                        $data->entityDefs->$entityType->fields->$field->$param = $value;
+                    }
+                }
+
                 $additionalFields = $this->helper->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList);
                 if (!$additionalFields) {
                     continue;
@@ -306,6 +299,19 @@ class Metadata
                     }
                 }
             }
+
+            $data->entityDefs->$entityType->fields->_meta = Util::arrayToObject([
+                'type'                 => 'jsonObject',
+                'notStorable'          => true,
+                'protected'            => true,
+                'layoutListDisabled'   => true,
+                'layoutDetailDisabled' => true,
+                'massUpdateDisabled'   => true,
+                'filterDisabled'       => true,
+                'importDisabled'       => true,
+                'exportDisabled'       => true,
+                'emHidden'             => true,
+            ]);
         }
 
         return $data;
