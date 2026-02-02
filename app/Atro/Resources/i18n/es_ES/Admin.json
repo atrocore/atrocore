@@ -181,7 +181,7 @@
     "roles": "Gestión de roles.",
     "outboundEmails": "Ajustes para los correos del sistema y de envíos masivos.",
     "layoutManager": "Personalizar diseños (listas, detalles, editar, buscar, actualización masiva).",
-    "userInterface": "Seleccione su estilo CSS, configure los elementos de navegación principales, los cuadros de mando y las entidades predeterminados, disponibles para crear rápidamente, así como gestionar otros ajustes de las interfaces de usuario.",
+    "userInterface": "Seleccione su estilo CSS, configure los elementos principales de navegación, los cuadros de mando y las entidades predeterminadas, disponibles para crear rápidamente, así como gestionar otros ajustes de las interfaces de usuario.",
     "authTokens": "Sesiones de usuarios activas. Direcciones IP y última fecha de acceso.",
     "authentication": "Ajustes de autenticación.",
     "currency": "Defina las monedas admitidas que se utilizarán en todo el sistema para la fijación de precios, las transacciones y otras operaciones financieras.",
