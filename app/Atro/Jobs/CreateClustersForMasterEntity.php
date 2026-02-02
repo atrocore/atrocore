@@ -69,7 +69,7 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
             }
         }
 
-        // create clusters for rest of the records
+        // create clusters for the rest of the records
         $entitiesNames = [];
         foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $masterEntity && !empty($scopeDefs['matchMasterRecords'])) {
@@ -83,10 +83,12 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
                 foreach ($recordsIds as $recordId) {
                     $cluster = $this->createCluster($masterEntity);
                     $clusterItem = $this->createClusterItem($cluster->get('id'), $entityName, $recordId);
-                    $cluster->_clusterItems = [$clusterItem];
+
+                    $clusterItem->set('cluster', $cluster);
+                    $cluster->set('clusterItems', [$clusterItem]);
 
                     try {
-                        $clusterItemService->confirm($clusterItem, $cluster);
+                        $clusterItemService->confirm($clusterItem);
                     } catch (\Exception $e) {
                         $GLOBALS['log']->error("Impossible to automatically confirm cluster " . $cluster->get('id') . " : " . $e->getMessage());
                     }

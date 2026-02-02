@@ -15,6 +15,7 @@ namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Controllers\Base;
 
 class ClusterItem extends Base
@@ -56,7 +57,7 @@ class ClusterItem extends Base
         }
 
 
-        return $this->getRecordService()->unreject((string)$data->id,(string)$data->relationId);
+        return $this->getRecordService()->unreject((string)$data->id, (string)$data->relationId);
     }
 
     public function actionConfirm($params, $data, $request)
@@ -65,7 +66,7 @@ class ClusterItem extends Base
             throw new BadRequest();
         }
 
-        if (!property_exists($data, 'id')) {
+        if (!property_exists($data, 'id') || empty($data->id)) {
             throw new BadRequest('ID is required.');
         }
 
@@ -73,6 +74,13 @@ class ClusterItem extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->confirm((string)$data->id);
+        $recordService = $this->getRecordService();
+
+        $entity = $recordService->getEntity((string)$data->id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        return $recordService->confirm($entity);
     }
 }

@@ -26,23 +26,10 @@ class ClusterItem extends Base
 {
     protected $mandatorySelectAttributeList = ['entityName', 'entityId'];
 
-    public function confirm(string|Entity $id, ?\Atro\Entities\Cluster $cluster = null): bool
+    public function confirm(Entity $entity): bool
     {
-        if (is_string($id)) {
-            $entity = $this->getEntity($id);
-            if (empty($entity)) {
-                throw new NotFound();
-            }
-        } else {
-            $entity = $id;
-        }
-
-        if (empty($cluster)) {
-            $cluster = $entity->get('cluster');
-        }
-
-        if (empty($cluster)) {
-            throw new Exception("Cluster is not set for item {$id}");
+        if (empty($cluster = $entity->get('cluster'))) {
+            throw new Exception("Cluster is not set for item " . $entity->get('id'));
         }
 
         if ($entity->get('entityName') === $cluster->get('masterEntity')) {
@@ -56,13 +43,8 @@ class ClusterItem extends Base
                 throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
             }
 
-            if (!empty($cluster->_clusterItems)) {
-                $allClusterItems = $cluster->_clusterItems;
-                unset($cluster->_clusterItems);
-            } else {
-                $allClusterItems = $cluster->get('clusterItems');
-            }
 
+            $allClusterItems = $cluster->get('clusterItems');
             $confirmedClusterItems = [$entity];
 
             if (empty($goldenRecord)) {
