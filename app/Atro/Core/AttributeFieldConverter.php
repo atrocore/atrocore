@@ -17,6 +17,7 @@ use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\Config;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
@@ -127,7 +128,7 @@ class AttributeFieldConverter
         $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
         $alias = $mapper->getQueryConverter()::TABLE_ALIAS;
         foreach ($attributes as $attribute) {
-            $attributeAlias = Util::generateId();
+            $attributeAlias = IdGenerator::unsortableId();
             $qb->leftJoin(
                 $alias,
                 "{$tableName}_attribute_value",

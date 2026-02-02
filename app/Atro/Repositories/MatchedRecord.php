@@ -15,7 +15,7 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
-use Atro\Core\Utils\Util;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Entities\Matching as MatchingEntity;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -150,7 +150,7 @@ class MatchedRecord extends Base
 
         $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
 
-        $stmt->bindValue(':id', Util::generateId());
+        $stmt->bindValue(':id', IdGenerator::uuid());
         $stmt->bindValue(':type', $matching->get('type'));
         $stmt->bindValue(':sourceEntity', $matching->get('entity'));
         $stmt->bindValue(':sourceEntityId', $sourceId);

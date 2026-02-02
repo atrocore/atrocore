@@ -14,6 +14,7 @@ namespace Atro\Core\Mail;
 use Atro\ConnectionType\ConnectionSmtp;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Entities\Connection;
 use Atro\Entities\File;
 use Atro\Core\Utils\Config;
@@ -184,7 +185,7 @@ class Sender
 
     public function getAttachmentTmpDirectory(): string
     {
-        return \Atro\Jobs\MassDownload::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'mailSender' . DIRECTORY_SEPARATOR . Util::generateId();
+        return \Atro\Jobs\MassDownload::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'mailSender' . DIRECTORY_SEPARATOR . IdGenerator::unsortableId();
     }
 
     protected function prepareBodyPlain(string $body): string

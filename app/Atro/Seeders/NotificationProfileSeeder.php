@@ -12,7 +12,7 @@
 namespace Atro\Seeders;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
-use Atro\Core\Utils\Util;
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 
@@ -106,7 +106,7 @@ class NotificationProfileSeeder extends AbstractSeeder
 
         return [
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => IdGenerator::unsortableId(),
                 "name"                    => "Entity Update",
                 "entity"                  => '',
                 "occurrence"              => 'updating',
@@ -1024,7 +1024,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ]
             ],
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => IdGenerator::unsortableId(),
                 "name"                    => "Note Creation Without parent",
                 "entity"                  => 'Note',
                 "occurrence"              => 'creation',
@@ -1046,7 +1046,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ],
             ],
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => IdGenerator::unsortableId(),
                 "name"                    => "Note Creation in Entity",
                 "entity"                  => '',
                 "occurrence"              => 'note_created',
@@ -1125,7 +1125,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ]
             ],
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => IdGenerator::unsortableId(),
                 "name"                    => "Mention",
                 "entity"                  => '',
                 "occurrence"              => 'mentioned',
@@ -1221,7 +1221,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ]
             ],
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => IdGenerator::unsortableId(),
                 "name"                    => "Assignment/Ownership",
                 "entity"                  => '',
                 "occurrence"              => 'ownership_assignment',
@@ -1343,7 +1343,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
 
         return [
             'emailPasswordChangeRequest' => [
-                'id'               => Util::generateId(),
+                'id'               => IdGenerator::unsortableId(),
                 'name'             => 'Password Change Request',
                 'nameDeDe'         => 'Anforderung zur Passwortänderung',
                 'nameUkUa'         => 'Запит на зміну пароля',
@@ -1362,7 +1362,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
                 'createdById'      => 'system'
             ],
             'emailPasswordReset'         => [
-                'id'               => Util::generateId(),
+                'id'               => IdGenerator::unsortableId(),
                 'name'             => 'Password Reset',
                 'nameDeDe'         => 'Passwort zurücksetzen',
                 'nameUkUa'         => 'Пароль скинуто',

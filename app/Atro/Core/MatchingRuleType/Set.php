@@ -12,6 +12,7 @@
 
 namespace Atro\Core\MatchingRuleType;
 
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
@@ -52,7 +53,7 @@ class Set extends AbstractMatchingRule
         $table = Util::toUnderScore(lcfirst($this->rule->getMatching()->get('masterEntity')));
 
         $subQb = $this->getConnection()->createQueryBuilder();
-        $subAlias = Util::generateId();
+        $subAlias = IdGenerator::unsortableId();
         $subQb
             ->select("{$subAlias}.id")
             ->from($this->getConnection()->quoteIdentifier($table), $subAlias)

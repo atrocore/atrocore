@@ -16,7 +16,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Utils\Util;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Espo\ORM\Entity;
 
@@ -178,7 +178,7 @@ class User extends Record
             throw new Forbidden();
         }
 
-        $requestId = Util::generateId();
+        $requestId = IdGenerator::uuid();
 
         $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
         $passwordChangeRequest->set([

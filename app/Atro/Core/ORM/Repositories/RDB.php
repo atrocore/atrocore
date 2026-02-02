@@ -15,6 +15,7 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Interfaces\Injectable;
@@ -757,7 +758,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
-                $entity->set('id', Util::generateId());
+                $entity->set('id', self::generateId());
             } else {
                 // delete deleted record
                 $qb = $this->getConnection()->createQueryBuilder()
@@ -789,6 +790,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         return parent::save($entity, $options);
+    }
+
+    public static function generateId(): string
+    {
+        return IdGenerator::uuid();
     }
 
     protected function getFieldByTypeList($type)
@@ -1223,7 +1229,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 'created_by_id'                           => ':userId',
                 'modified_by_id'                          => ':userId',
             ])
-            ->setParameter('id', Util::generateId())
+            ->setParameter('id', IdGenerator::uuid())
             ->setParameter('name', $versionName)
             ->setParameter('entityId', $entity->get('id'))
             ->setParameter('now', date('Y-m-d H:i:s'))

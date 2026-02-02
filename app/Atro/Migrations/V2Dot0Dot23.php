@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Utils\Util;
 
@@ -213,7 +214,7 @@ class V2Dot0Dot23 extends Base
                 ->setValue('id', ':id')
                 ->setValue('extensible_enum_id', ':enumId')
                 ->setValue('extensible_enum_option_id', ':optionId')
-                ->setParameter('id', Util::generateId())
+                ->setParameter('id', IdGenerator::uuid())
                 ->setParameter('enumId', $option['extensibleEnumId'])
                 ->setParameter('optionId', $option['id']);
 

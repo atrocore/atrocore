@@ -13,6 +13,7 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\Container;
 use Atro\Core\Utils\Config;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Entities\User;
@@ -163,7 +164,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
             "innerSql" => [
                 "sql"        => str_replace(
                     $this->em->getRepository($entity->getEntityType())->getMapper()->getQueryConverter()->getMainTableAlias(),
-                    'sbq_' . Util::generateId(), $qb1->getSql()
+                    'sbq_' . IdGenerator::unsortableId(), $qb1->getSql()
                 ),
                 "parameters" => $qb1->getParameters()
             ]

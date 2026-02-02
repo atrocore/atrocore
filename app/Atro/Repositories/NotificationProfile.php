@@ -13,14 +13,17 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
-use Atro\Core\DataManager;
-use Atro\Core\Utils\Util;
+use Atro\Core\Utils\IdGenerator;
 use Espo\ORM\Entity;
 
 class NotificationProfile extends Base
 {
+    public static function generateId(): string
+    {
+        return IdGenerator::unsortableId();
+    }
+
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);

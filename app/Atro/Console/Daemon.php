@@ -16,7 +16,7 @@ namespace Atro\Console;
 use Atro\Core\Application;
 use Atro\Core\JobManager;
 use Atro\Core\PseudoTransactionManager;
-use Atro\Core\Utils\Util;
+use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\EntityManager;
@@ -116,7 +116,7 @@ class Daemon extends AbstractConsole
                         ->setValue('created_by_id', ':createdById')
                         ->setValue('created_at', ':date')
                         ->setValue('modified_at', ':date')
-                        ->setParameter('id', Util::generateId())
+                        ->setParameter('id', IdGenerator::uuid())
                         ->setParameter('type', 'composerUpdate')
                         ->setParameter('parentType', 'ModuleManager')
                         ->setParameter('data', json_encode([

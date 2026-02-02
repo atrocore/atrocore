@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\PseudoTransactionManager;
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Utils\Util;
@@ -31,7 +32,7 @@ class Relation extends Base
 
         foreach ($this->getMetadata()->get("entityDefs.$this->entityName.fields") ?? [] as $field => $fieldDefs) {
             if (!empty($fieldDefs['relationField'])) {
-                $alias = Util::generateId();
+                $alias = IdGenerator::unsortableId();
                 $relEntity = $this->getMetadata()->get("entityDefs.$this->entityName.links.$field.entity");
                 $relTable = $this->getEntityManager()->getMapper()->toDb($relEntity);
 
@@ -57,7 +58,7 @@ class Relation extends Base
 
         foreach ($this->getMetadata()->get("entityDefs.$this->entityName.fields") ?? [] as $field => $fieldDefs) {
             if (!empty($fieldDefs['relationField'])) {
-                $alias = Util::generateId();
+                $alias = IdGenerator::unsortableId();
                 $relEntity = $this->getMetadata()->get("entityDefs.$this->entityName.links.$field.entity");
                 $relTable = $this->getEntityManager()->getMapper()->toDb($relEntity);
 

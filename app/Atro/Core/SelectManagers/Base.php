@@ -12,6 +12,7 @@
 namespace Atro\Core\SelectManagers;
 
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Connection;
@@ -1507,7 +1508,7 @@ class Base
                 $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp, true);
                 $item['value'] = [
                     "innerSql" => [
-                        "sql"        => str_replace($this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias(), 'sbq_' . Util::generateId(), $qb1->getSql()),
+                        "sql"        => str_replace($this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias(), 'sbq_' . IdGenerator::unsortableId(), $qb1->getSql()),
                         "parameters" => $qb1->getParameters()
                     ]
                 ];

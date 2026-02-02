@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\FolderPathGenerator;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
@@ -539,7 +540,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             $id = $xattr->get($dir, 'atroId');
 
             $entityData = [
-                'id'       => $id ?? Util::generateId(),
+                'id'       => $id ?? IdGenerator::uuid(),
                 'name'     => $dirName,
                 '_dirName' => $dir
             ];

@@ -17,6 +17,7 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
@@ -226,7 +227,7 @@ class ReferenceData extends Repository implements Injectable
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
-                $entity->set('id', Util::generateId());
+                $entity->set('id', self::generateId());
             }
 
             if ($entity->hasAttribute('createdAt')) {
@@ -276,6 +277,11 @@ class ReferenceData extends Repository implements Injectable
         $entity->setAsNotBeingSaved();
 
         return $result;
+    }
+
+    public static function generateId(): string
+    {
+        return IdGenerator::unsortableId();
     }
 
     protected function getNewEntity()
