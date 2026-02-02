@@ -18581,6 +18581,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .modal-body > .list-buttons-container {
     position: sticky;
     left: 0;
+    z-index: 10;
 }
 
 .list-buttons-container {
