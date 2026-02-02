@@ -17,7 +17,6 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
-use function GuzzleHttp\Psr7\uri_for;
 
 class Cluster extends Base
 {
@@ -168,7 +167,9 @@ class Cluster extends Base
         } else if ($item['type'] == 'isNotNull') {
             $innerSql = "($countSql) > 0";
         } else if ($item['type'] == 'between') {
-            $innerSql = "($countSql) >= {$item['value'][0]} AND ($countSql) <= {$item['value'][1]}";
+            $from = intval($item['value'][0]);
+            $to = intval($item['value'][1]);
+            $innerSql = "($countSql) >= $from AND ($countSql) <= $to";
         }
 
         if (empty($innerSql)) {
@@ -196,7 +197,8 @@ class Cluster extends Base
             if (empty($sqlOperator)) {
                 throw new \Exception("Invalid filter type '${item['type']}' for field '$field'");
             }
-            $innerSql = "($countSql) $sqlOperator {$item['value']}";
+            $value = intval($item['value']);
+            $innerSql = "($countSql) $sqlOperator $value";
         }
 
         return [

@@ -26,6 +26,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Espo\Services\RecordService;
 
@@ -53,6 +54,15 @@ class Record extends RecordService
                     break;
                 }
             }
+        }
+    }
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        foreach ($collection as $entity) {
+            $entity->_fromCollection = true;
         }
     }
 
