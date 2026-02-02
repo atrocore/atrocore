@@ -9,9 +9,6 @@
     "symbol": "Symbol",
     "isActive": "Aktiv"
   },
-  "labels": {
-    "unitSetDefault": "Als Default setzen"
-  },
   "exceptions": {
     "defaultIsRequired": "Das Maß soll eine Standardeinheit haben.",
     "unitIsUsed": "Die Einheit '%s' wird im Feld '%s' aus der Entität '%s' für den Datensatz '%s' verwendet.",

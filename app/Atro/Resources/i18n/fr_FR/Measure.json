@@ -5,6 +5,9 @@
     "units": "Unités",
     "displayFormat": "Format d'affichage"
   },
+  "actions": {
+    "setDefault": "Défini comme valeur par défaut"
+  },
   "exceptions": {
     "measureIsUsed": "La mesure \"%s\" est utilisée par le champ \"%s\" dans l'entité \"%s\"."
   },

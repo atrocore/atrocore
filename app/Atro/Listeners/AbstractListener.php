@@ -15,6 +15,7 @@ namespace Atro\Listeners;
 
 use Atro\Core\Container;
 use Atro\Core\Twig\Twig;
+use Espo\Core\Acl;
 use Espo\Core\ORM\EntityManager;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
@@ -81,5 +82,10 @@ abstract class AbstractListener
     protected function getTwig(): Twig
     {
         return $this->getContainer()->get('twig');
+    }
+
+    protected function getAcl(): Acl
+    {
+        return $this->getContainer()->get('acl');
     }
 }
