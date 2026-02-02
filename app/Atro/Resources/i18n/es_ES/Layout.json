@@ -13,7 +13,7 @@
   },
   "tooltips": {
     "entity": "Es la entidad para la que está configurada la maqueta.",
-    "relatedEntity": "Se trata de la entidad principal desde cuya página se muestra el diseño de la entidad seleccionada anteriormente."
+    "relatedEntity": "Se trata de la entidad principal desde cuya página se muestra la maqueta de la entidad seleccionada anteriormente."
   },
   "messages": {
     "cannotRemoveFieldFromLayout": "No puede eliminar el campo '%s' de la presentación."
