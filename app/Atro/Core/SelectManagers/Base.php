@@ -11,6 +11,7 @@
 
 namespace Atro\Core\SelectManagers;
 
+use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
@@ -25,7 +26,6 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Entity;
-use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\SelectManagerFactory;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
@@ -1524,6 +1524,11 @@ class Base
                     $value = $item['value'];
                 }
                 return $this->$methodName($value, $result);
+            }
+
+            $methodName = 'getWherePartFor' . ucfirst($attribute);
+            if (method_exists($this, $methodName)) {
+                return $this->$methodName($item, $result);
             }
         }
 

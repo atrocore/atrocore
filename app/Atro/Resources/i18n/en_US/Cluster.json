@@ -3,7 +3,9 @@
     "number": "Number",
     "masterEntity": "Master Entity",
     "clusterItems": "Cluster Items",
-    "rejectedClusterItems": "Rejected Cluster Items"
+    "rejectedClusterItems": "Rejected Cluster Items",
+    "stagingItemCount": "Staging Item Count",
+    "masterItemCount": "Master Item Count"
   },
   "actions": {
     "reject": "Reject",

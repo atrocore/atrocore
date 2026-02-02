@@ -21,6 +21,14 @@
         }
       }
     },
+    "stagingItemCount": {
+      "type": "int",
+      "notStorable": true
+    },
+    "masterItemCount": {
+      "type": "int",
+      "notStorable": true
+    },
     "clusterItems": {
       "type": "linkMultiple",
       "auditableEnabled": true

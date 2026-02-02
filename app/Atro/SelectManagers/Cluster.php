@@ -12,10 +12,12 @@
 namespace Atro\SelectManagers;
 
 use Atro\Core\SelectManagers\Base;
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
+use function GuzzleHttp\Psr7\uri_for;
 
 class Cluster extends Base
 {
@@ -25,6 +27,60 @@ class Cluster extends Base
 
         if (!$this->getUser()->isAdmin()) {
             $result['callbacks'][] = [$this, 'onlyAllowedRecords'];
+        }
+    }
+
+    public function applyAdditional(array &$result, array $params)
+    {
+        parent::applyAdditional($result, $params);
+
+        if (!empty($this->selectParameters['select'])) {
+            if (in_array('stagingItemCount', $this->selectParameters['select'])) {
+                $result['subQueryCallbacks'][] = [$this, 'stagingItemCountCallback'];
+            }
+
+            if (in_array('masterItemCount', $this->selectParameters['select'])) {
+                $result['subQueryCallbacks'][] = [$this, 'masterItemCountCallback'];
+            }
+        }
+    }
+
+    public function stagingItemCountCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $this->itemCountCallback($qb, $relEntity, $params, $mapper, 'stagingItemCount');;
+    }
+
+    public function masterItemCountCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $this->itemCountCallback($qb, $relEntity, $params, $mapper, 'masterItemCount');;
+    }
+
+
+    public function itemCountCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper, string $field): void
+    {
+        if (!empty($params['aggregation'])) {
+            return;
+        }
+
+        $mtAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([], true, true);
+        $sp['aggregation'] = 'COUNT';
+        $sp['aggregationBy'] = 'id';
+        $sp['skipBelongsToJoins'] = true;
+
+        $column = $mapper->getQueryConverter()->fieldToAlias($field);
+        $operator = $field === 'masterItemCount' ? '=' : '<>';
+        $tableAlias = $field === 'masterItemCount' ? 'mic' : 'sic';
+
+        $countQb = $mapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp, true);
+        $countQb->andwhere("$mtAlias.cluster_id = mt_alias.id and $mtAlias.entity_name $operator mt_alias.atro_master_entity");
+
+        $countSql = str_replace([$mtAlias, 'mt_alias'], [$tableAlias, $mtAlias], $countQb->getSQL());
+        $qb->addSelect("({$countSql})  AS $column");
+
+        foreach ($countQb->getParameters() as $pName => $pValue) {
+            $qb->setParameter($pName, $pValue, $mapper::getParameterType($pValue));
         }
     }
 
@@ -78,5 +134,76 @@ class Cluster extends Base
         if (!empty($andWhereParts)) {
             $qb->andWhere(implode(' OR ', $andWhereParts));
         }
+    }
+
+    public function getWherePartForStagingItemCount(array $item, array $result): array
+    {
+        return $this->getItemCountPart($item, 'stagingItemCount');
+    }
+
+    public function getWherePartForMasterItemCount(array $item, array $result): array
+    {
+        return $this->getItemCountPart($item, 'masterItemCount');
+    }
+
+    public function getItemCountPart(array $item, string $field)
+    {
+        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([], true, true);
+        $sp['aggregation'] = 'COUNT';
+        $sp['aggregationBy'] = 'id';
+        $sp['skipBelongsToJoins'] = true;
+
+        $ciMapper = $this->getEntityManager()->getRepository('ClusterItem')->getMapper();
+        $mtAlias = $ciMapper->getQueryConverter()->getMainTableAlias();
+
+        $operator = $field === 'masterItemCount' ? '=' : '<>';
+
+        $countQb = $ciMapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp, true);
+        $countQb->andwhere("$mtAlias.cluster_id = mt_alias.id and $mtAlias.entity_name $operator mt_alias.master_entity");
+
+        $countSql = str_replace([$mtAlias, 'mt_alias'], ['sbq_' . IdGenerator::unsortableId(), $mtAlias], $countQb->getSQL());
+
+        if ($item['type'] == 'isNull') {
+            $innerSql = "($countSql) = 0";
+        } else if ($item['type'] == 'isNotNull') {
+            $innerSql = "($countSql) > 0";
+        } else if ($item['type'] == 'between') {
+            $innerSql = "($countSql) >= {$item['value'][0]} AND ($countSql) <= {$item['value'][1]}";
+        }
+
+        if (empty($innerSql)) {
+            switch ($item['type']) {
+                case 'equals':
+                    $sqlOperator = '=';
+                    break;
+                case "notEqual":
+                    $sqlOperator = '<>';
+                    break;
+                case "greaterThan":
+                    $sqlOperator = '>';
+                    break;
+                case "greaterThanOrEquals":
+                    $sqlOperator = '>=';
+                    break;
+                case "lessThan":
+                    $sqlOperator = '<';
+                    break;
+                case "lessThanOrEquals":
+                    $sqlOperator = '<=';
+                    break;
+            }
+
+            if (empty($sqlOperator)) {
+                throw new \Exception("Invalid filter type '${item['type']}' for field '$field'");
+            }
+            $innerSql = "($countSql) $sqlOperator {$item['value']}";
+        }
+
+        return [
+            'innerSql' => [
+                'sql'        => $innerSql,
+                'parameters' => $countQb->getParameters(),
+            ]
+        ];
     }
 }
