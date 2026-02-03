@@ -59,6 +59,21 @@ class ClusterItem extends Base
             ->executeQuery();
     }
 
+    public function getRecordsWithNoClusterItems(string $stagingEntityName, int $limit = PHP_INT_MAX): array
+    {
+        return $this->getConnection()->createQueryBuilder()
+            ->select('id')
+            ->from(Util::toUnderScore(lcfirst($stagingEntityName)), 'se')
+            ->where('se.deleted = :false')
+            ->andWhere('se.id not in (select entity_id from cluster_item where entity_name=:stagingEntityType and deleted=:false)')
+            ->setParameter('stagingEntityType', $stagingEntityName)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setFirstResult(0)
+            ->setMaxResults($limit)
+            ->addOrderBy('se.id', 'ASC')
+            ->fetchFirstColumn();
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);

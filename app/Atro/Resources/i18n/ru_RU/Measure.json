@@ -11,6 +11,9 @@
       "format2": "€10"
     }
   },
+  "actions": {
+    "setDefault": "Установите по умолчанию"
+  },
   "exceptions": {
     "measureIsUsed": "Мера '%s' используется полем '%s' в сущности '%s'."
   }

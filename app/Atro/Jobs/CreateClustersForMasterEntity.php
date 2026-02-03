@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
+use Atro\Entities\Cluster;
 use Atro\Entities\Job;
 use Atro\Repositories\ClusterItem;
 use Atro\Repositories\MatchedRecord;
@@ -67,20 +68,50 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
                 }
             }
         }
+
+        // create clusters for the rest of the records
+        $entitiesNames = [];
+        foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $masterEntity && !empty($scopeDefs['matchMasterRecords'])) {
+                $entitiesNames[] = $scope;
+            }
+        }
+
+        $clusterItemService = $this->getServiceFactory()->create('ClusterItem');
+        foreach ($entitiesNames as $entityName) {
+            while (!empty($recordsIds = $clusterItemRepo->getRecordsWithNoClusterItems($entityName, 20000))) {
+                foreach ($recordsIds as $recordId) {
+                    $cluster = $this->createCluster($masterEntity);
+                    $clusterItem = $this->createClusterItem($cluster->get('id'), $entityName, $recordId);
+
+                    $clusterItem->set('cluster', $cluster);
+                    $cluster->set('clusterItems', [$clusterItem]);
+
+                    try {
+                        $clusterItemService->confirm($clusterItem);
+                    } catch (\Exception $e) {
+                        $GLOBALS['log']->error("Impossible to automatically confirm cluster " . $cluster->get('id') . " : " . $e->getMessage());
+                    }
+                }
+            }
+        }
     }
 
-    protected function createClusterItem(string $clusterId, string $entityName, string $entityId, string $matchedRecordId): void
+    protected function createClusterItem(string $clusterId, string $entityName, string $entityId, ?string $matchedRecordId = null): Entity
     {
         $clusterItem = $this->getEntityManager()->getRepository('ClusterItem')->get();
         $clusterItem->set('clusterId', $clusterId);
         $clusterItem->set('entityName', $entityName);
         $clusterItem->set('entityId', $entityId);
-        $clusterItem->set('matchedRecordId', $matchedRecordId);
+        if (!empty($matchedRecordId)) {
+            $clusterItem->set('matchedRecordId', $matchedRecordId);
+        }
 
         $this->getEntityManager()->saveEntity($clusterItem);
+        return $clusterItem;
     }
 
-    protected function createCluster(string $masterEntity): Entity
+    protected function createCluster(string $masterEntity): Cluster
     {
         $cluster = $this->getEntityManager()->getRepository('Cluster')->get();
         $cluster->set('masterEntity', $masterEntity);

@@ -9,9 +9,6 @@
     "symbol": "Simbolo",
     "isActive": "Attivo"
   },
-  "labels": {
-    "unitSetDefault": "Imposta come predefinito"
-  },
   "exceptions": {
     "defaultIsRequired": "La misura deve avere un'unità predefinita.",
     "unitIsUsed": "L'unità '%s' è utilizzata dal campo '%s' nell'Entità '%s' per il Record '%s'.",
