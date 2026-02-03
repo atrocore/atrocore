@@ -5,7 +5,16 @@
     "clusterItems": "Cluster Items",
     "rejectedClusterItems": "Rejected Cluster Items",
     "stagingItemCount": "Staging Item Count",
-    "masterItemCount": "Master Item Count"
+    "masterItemCount": "Master Item Count",
+    "state": "State"
+  },
+  "options": {
+    "state": {
+      "review": "Review",
+      "empty": "Empty",
+      "merged": "Merged",
+      "invalid": "Invalid"
+    }
   },
   "actions": {
     "reject": "Reject",

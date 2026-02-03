@@ -57,8 +57,10 @@ class Cluster extends Base
         parent::prepareCollectionForOutput($collection, $selectParams);
 
         $entityIds = [];
+        $ids = [];
         foreach ($collection as $key => $entity) {
             $entityIds[$entity->get('masterEntity')][$key] = $entity;
+            $ids[] = $entity->get('id');
         }
 
         foreach ($entityIds as $entityType => $records) {
@@ -75,10 +77,28 @@ class Cluster extends Base
             foreach ($records as $key => $record) {
                 foreach ($entities as $entity) {
                     if ($record->get('goldenRecordId') === $entity->get('id')) {
+                        $entity->set('goldenRecord', $entity);
                         $record->set('goldenRecordName', $entity->get($nameField) ?? $entity->get('id'));
                     }
                 }
             }
+        }
+
+        $sp = $this->getSelectManager('ClusterItem')->getSelectParams(['where' => [
+            'attribute' => 'clusterId',
+            'type'      => 'in',
+        ]]);
+        $itemCollection = $this->getEntityManager()->getRepository('ClusterItem')->find($sp);
+        $items = [];
+        $itemEntityIds
+
+        foreach ($itemCollection as $item) {
+            $items[$item->get('clusterId')][] = $item;
+        }
+
+        foreach ($collection as $entity) {
+            $entity->set('clusterItems', $items[$entity->get('id')] ?? []);
+            $entity->set('state', $entity->getState());
         }
     }
 }

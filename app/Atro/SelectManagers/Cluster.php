@@ -147,7 +147,7 @@ class Cluster extends Base
 
     public function getItemCountPart(array $item, string $field)
     {
-        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([], true, true);
+        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([], true);
         $sp['aggregation'] = 'COUNT';
         $sp['aggregationBy'] = 'id';
         $sp['skipBelongsToJoins'] = true;
@@ -207,5 +207,76 @@ class Cluster extends Base
                 'parameters' => $countQb->getParameters(),
             ]
         ];
+    }
+
+    public function getWherePartForState(array $item, array $result): array
+    {
+        if ($item['type'] === 'isNull') {
+            return ['id=' => null];
+        }
+
+        if ($item['type'] === 'isNotNull') {
+            return [];
+        }
+
+        if (!in_array($item['type'], ['in', 'notIn'])) {
+            throw new \Exception("Invalid filter type '${item['type']}' for field 'state'");
+        }
+
+        if (empty($item['value'])) {
+            return [];
+        }
+
+        $sqlParts = [];
+        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([]);
+        $sp['aggregation'] = 'COUNT';
+        $sp['aggregationBy'] = 'id';
+        $sp['skipBelongsToJoins'] = true;
+
+        $ciMapper = $this->getEntityManager()->getRepository('ClusterItem')->getMapper();
+        $mtAlias = $ciMapper->getQueryConverter()->getMainTableAlias();
+
+        $countQb = $ciMapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp, true);
+        $countQb->andwhere("$mtAlias.cluster_id = mt_alias.id");
+
+
+        foreach ($item['value'] as $v) {
+            switch ($v) {
+                case 'empty':
+                    $countSql = $this->getCountSql($countQb, $mtAlias);;
+                    $part = "($countSql) = 0";
+                    break;
+                case 'invalid':
+                    $masterCountQb = clone $countQb;
+                    $stagingCountQb = clone $countQb;
+
+                    $masterCountQb->andWhere("$mtAlias.entity_name = mt_alias.master_entity");
+                    $stagingCountQb->andWhere("$mtAlias.entity_name <> mt_alias.master_entity");
+
+                    $stagingCountSql = $this->getCountSql($stagingCountQb, $mtAlias);
+                    $masterCountSql = $this->getCountSql($masterCountQb, $mtAlias);
+
+                    $part = "($stagingCountSql) = 0 OR ($masterCountSql) > 1";
+                    break;
+                case 'review':
+                    break;
+                case 'merged':
+                    break;
+                default:
+                    throw new \Exception("Filter for value '${v}' is not implemented");
+            }
+        }
+
+        return [
+            'innerSql' => [
+                'sql'        => $innerSql,
+                'parameters' => $countQb->getParameters(),
+            ]
+        ];
+    }
+
+    protected function getCountSql(QueryBuilder $qb, $mtAlias): string
+    {
+        return str_replace([$mtAlias, 'mt_alias'], ['sbq_' . IdGenerator::unsortableId(), $mtAlias], $qb->getSQL());
     }
 }
