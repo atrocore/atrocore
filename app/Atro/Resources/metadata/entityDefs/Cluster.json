@@ -31,17 +31,6 @@
       "notStorable": true,
       "protected": true
     },
-    "state": {
-      "type": "enum",
-      "notStorable": true,
-      "protected": true,
-      "options": [
-        "review",
-        "empty",
-        "merged",
-        "invalid"
-      ]
-    },
     "clusterItems": {
       "type": "linkMultiple",
       "auditableEnabled": true

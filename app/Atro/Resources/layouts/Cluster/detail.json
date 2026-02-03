@@ -15,9 +15,7 @@
         {
           "name": "goldenRecord"
         },
-        {
-          "name": "state"
-        }
+        false
       ],
       [
         {

@@ -209,26 +209,107 @@ class Cluster extends Base
         ];
     }
 
-    public function getWherePartForState(array $item, array $result): array
+    public function boolFilterOnlyEmpty(&$result)
     {
-        if ($item['type'] === 'isNull') {
-            return ['id=' => null];
-        }
+        $result['callbacks'][] = [$this, 'onlyEmptyCallback'];
+    }
 
-        if ($item['type'] === 'isNotNull') {
-            return [];
-        }
+    public function boolFilterOnlyInvalid(&$result)
+    {
+        $result['callbacks'][] = [$this, 'onlyInvalidCallback'];
+    }
 
-        if (!in_array($item['type'], ['in', 'notIn'])) {
-            throw new \Exception("Invalid filter type '${item['type']}' for field 'state'");
-        }
+    public function boolFilterOnlyMerged(&$result)
+    {
+        $result['callbacks'][] = [$this, 'onlyMergedCallback'];;
+    }
 
-        if (empty($item['value'])) {
-            return [];
-        }
+    public function boolFilterOnlyReview(&$result){
+        $result['callbacks'][] = [$this, 'onlyReviewCallback'];
+    }
 
-        $sqlParts = [];
-        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([]);
+    public function onlyEmptyCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $countQb = $this->getClusterItemQb();
+        $countSql = $this->getCountSql($countQb, $mapper->getQueryConverter()->getMainTableAlias());
+
+        $qb->andWhere("($countSql) = 0");
+
+        foreach ($countQb->getParameters() as $param => $val) {
+            $qb->setParameter($param, $val, Mapper::getParameterType($val));
+        }
+    }
+
+    public function onlyInvalidCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $mtAlias = $mapper->getQueryConverter()->getMainTableAlias();
+        $masterCountQb = $this->getClusterItemQb();
+        $stagingCountQb = clone $masterCountQb;
+
+        $masterCountQb->andWhere("$mtAlias.entity_name = mt_alias.master_entity");
+        $stagingCountQb->andWhere("$mtAlias.entity_name <> mt_alias.master_entity");
+
+        $stagingCountSql = $this->getCountSql($stagingCountQb, $mtAlias);
+        $masterCountSql = $this->getCountSql($masterCountQb, $mtAlias);
+
+        $qb->andWhere("($stagingCountSql) = 0 OR ($masterCountSql) > 1");
+
+        foreach ($masterCountQb->getParameters() as $param => $val) {
+            $qb->setParameter($param, $val, Mapper::getParameterType($val));
+        }
+    }
+
+    public function onlyMergedCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $mtAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $masterCountQb = $this->getClusterItemQb();
+        $masterCountQb->andWhere("$mtAlias.entity_name = mt_alias.master_entity")
+        ->select("SUM(CASE WHEN $mtAlias.entity_id = mt_alias.golden_record_id THEN 1 ELSE 2 END)");
+        $masterCountSql = $this->getCountSql($masterCountQb, $mtAlias);
+
+        $stagingCountQb = $this->getClusterItemQb();
+        $stagingCountQb->andWhere("$mtAlias.entity_name <> mt_alias.master_entity");
+        $stagingCountSql = $this->getCountSql($stagingCountQb, $mtAlias);
+
+        $stagingCountQb = $this->getClusterItemQb("golden_record_id = mt_alias.golden_record_id");
+        $stagingCountQb->andWhere("$mtAlias.entity_name <> mt_alias.master_entity");
+        $mergedStagingCountSql = $this->getCountSql($stagingCountQb, $mtAlias);
+
+        $qb->andWhere("($masterCountSql) = 1 and ($stagingCountSql) > 0 and ($stagingCountSql) = ($mergedStagingCountSql)");
+
+        foreach ($masterCountQb->getParameters() as $param => $val) {
+            $qb->setParameter($param, $val, Mapper::getParameterType($val));
+        }
+    }
+
+    public function onlyReviewCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $mtAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $masterCountQb = $this->getClusterItemQb();
+        $masterCountQb->andWhere("$mtAlias.entity_name = mt_alias.master_entity")
+        ->select("SUM(CASE WHEN $mtAlias.entity_id = mt_alias.golden_record_id THEN 1 ELSE 2 END)");
+        $masterCountSql = $this->getCountSql($masterCountQb, $mtAlias);
+
+        $stagingCountQb = $this->getClusterItemQb();
+        $stagingCountQb->andWhere("$mtAlias.entity_name <> mt_alias.master_entity");
+        $stagingCountSql = $this->getCountSql($stagingCountQb, $mtAlias);
+
+        $stagingCountQb = $this->getClusterItemQb("golden_record_id = mt_alias.golden_record_id");
+        $stagingCountQb->andWhere("$mtAlias.entity_name <> mt_alias.master_entity");
+        $mergedStagingCountSql = $this->getCountSql($stagingCountQb, $mtAlias);
+
+        $qb->andWhere("($masterCountSql) = 0 or ($stagingCountSql) <> ($mergedStagingCountSql)");
+
+        foreach ($masterCountQb->getParameters() as $param => $val) {
+            $qb->setParameter($param, $val, Mapper::getParameterType($val));
+        }
+    }
+
+    public function getClusterItemQb(?string $condition = null): QueryBuilder
+    {
+        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams(['recordCondition' => $condition]);
         $sp['aggregation'] = 'COUNT';
         $sp['aggregationBy'] = 'id';
         $sp['skipBelongsToJoins'] = true;
@@ -236,43 +317,10 @@ class Cluster extends Base
         $ciMapper = $this->getEntityManager()->getRepository('ClusterItem')->getMapper();
         $mtAlias = $ciMapper->getQueryConverter()->getMainTableAlias();
 
-        $countQb = $ciMapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp, true);
+        $countQb = $ciMapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp);
         $countQb->andwhere("$mtAlias.cluster_id = mt_alias.id");
 
-
-        foreach ($item['value'] as $v) {
-            switch ($v) {
-                case 'empty':
-                    $countSql = $this->getCountSql($countQb, $mtAlias);;
-                    $part = "($countSql) = 0";
-                    break;
-                case 'invalid':
-                    $masterCountQb = clone $countQb;
-                    $stagingCountQb = clone $countQb;
-
-                    $masterCountQb->andWhere("$mtAlias.entity_name = mt_alias.master_entity");
-                    $stagingCountQb->andWhere("$mtAlias.entity_name <> mt_alias.master_entity");
-
-                    $stagingCountSql = $this->getCountSql($stagingCountQb, $mtAlias);
-                    $masterCountSql = $this->getCountSql($masterCountQb, $mtAlias);
-
-                    $part = "($stagingCountSql) = 0 OR ($masterCountSql) > 1";
-                    break;
-                case 'review':
-                    break;
-                case 'merged':
-                    break;
-                default:
-                    throw new \Exception("Filter for value '${v}' is not implemented");
-            }
-        }
-
-        return [
-            'innerSql' => [
-                'sql'        => $innerSql,
-                'parameters' => $countQb->getParameters(),
-            ]
-        ];
+        return $countQb;
     }
 
     protected function getCountSql(QueryBuilder $qb, $mtAlias): string
