@@ -11,6 +11,9 @@
       "format2": "€10"
     }
   },
+  "actions": {
+    "setDefault": "Set as default"
+  },
   "exceptions": {
     "measureIsUsed": "The measure '%s' is used by the field '%s' in the Entity '%s'."
   }

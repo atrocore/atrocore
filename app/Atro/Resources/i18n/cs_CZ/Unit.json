@@ -9,9 +9,6 @@
     "symbol": "Symbol",
     "isActive": "Aktivní"
   },
-  "labels": {
-    "unitSetDefault": "Nastavit jako výchozí"
-  },
   "exceptions": {
     "defaultIsRequired": "Opatření musí mít výchozí jednotku.",
     "unitIsUsed": "Jednotka \"%s\" je použita polem \"%s\" v entitě \"%s\" pro záznam \"%s\".",

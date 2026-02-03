@@ -9,9 +9,6 @@
     "symbol": "Symbol",
     "isActive": "Aktywny"
   },
-  "labels": {
-    "unitSetDefault": "Ustaw jako domyślną"
-  },
   "exceptions": {
     "defaultIsRequired": "Miara musi mieć domyślną jednostkę.",
     "unitIsUsed": "Jednostka '%s' jest używana przez pole '%s' w jednostce '%s' dla rekordu '%s'.",

@@ -11,6 +11,9 @@
       "format2": "€10"
     }
   },
+  "actions": {
+    "setDefault": "Establecer como predeterminado"
+  },
   "exceptions": {
     "measureIsUsed": "La medida '%s' es utilizada por el campo '%s' en la Entidad '%s'."
   }

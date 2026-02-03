@@ -118,6 +118,13 @@ class OpenApiGenerator
                 ];
             }
 
+            if ($entityName === 'Unit') {
+                $properties['setDefault'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+            }
+
             $result['components']['schemas'][$entityName] = [
                 'type'       => 'object',
                 'properties' => [

@@ -14,8 +14,5 @@
     "unitIsUsedOnEntityAttribute": "Единица '%s' используется атрибутом '%s' в %s '%s'.",
     "unitIsUsed": "Единица '%s' используется полем '%s' в сущности '%s' для записи '%s'.",
     "unitIsUsedOnClassificationAttribute": "Единица '%s' используется атрибутом '%s' в классификации '%s'."
-  },
-  "labels": {
-    "unitSetDefault": "Установите по умолчанию"
   }
 }

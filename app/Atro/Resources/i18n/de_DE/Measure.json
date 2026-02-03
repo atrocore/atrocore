@@ -11,6 +11,9 @@
       "format2": "€10"
     }
   },
+  "actions": {
+    "setDefault": "Als Default setzen"
+  },
   "exceptions": {
     "measureIsUsed": "Das Maß '%s' wird im Feld '%s' aus der Entität '%s' verwendet."
   }

@@ -16,6 +16,7 @@ namespace Atro\Services;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Espo\ORM\Entity;
+use Espo\ORM\Entity as OrmEntity;
 
 class Unit extends Base
 {
@@ -51,6 +52,18 @@ class Unit extends Base
         }
 
         $this->dispatchEvent('afterSetUnitAsDefault', new Event(['entity' => $unit, 'service' => $this]));
+    }
+
+    public function putAclMetaForLink(OrmEntity $entityFrom, string $link, OrmEntity $entity): void
+    {
+        if ($entityFrom->getEntityName() !== 'Measure' || $link !== 'units') {
+            parent::putAclMetaForLink($entityFrom, $link, $entity);
+            return;
+        }
+
+        $this->putAclMeta($entity);
+
+        $entity->setMetaPermission('setDefault',  $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'edit'));
     }
 
     protected function init()
