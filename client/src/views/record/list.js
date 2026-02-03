@@ -2591,7 +2591,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                             const icons = $('<sup class="status-icons icons-container"></sup>');
                             (this.getStatusIcons(view.model) || []).forEach(el => icons.append(el));
                             this.afterRenderStatusIcons(icons, view.model);
-                            el?.parent().append('&nbsp;');
                             el?.parent().append(icons);
                         })
 
