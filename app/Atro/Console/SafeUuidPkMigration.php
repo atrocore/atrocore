@@ -11,6 +11,7 @@
 
 namespace Atro\Console;
 
+use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 
 class SafeUuidPkMigration extends AbstractConsole
@@ -34,12 +35,19 @@ class SafeUuidPkMigration extends AbstractConsole
         /** @var \PDO $pdo */
         $pdo = $this->getContainer()->get('pdo');
 
+        /** @var Metadata $metadata */
+        $metadata = $this->getContainer()->get('metadata');
+
         /** @var \Espo\Core\Utils\Metadata\OrmMetadata $ormMetadata */
         $ormMetadata = $this->getContainer()->get('ormMetadata');
 
         foreach ($ormMetadata->getData() as $entityName => $entityParams) {
             $tableName = Util::toUnderScore(lcfirst($entityName));
             if (in_array($tableName, $nonUuidTables)) {
+                continue;
+            }
+
+            if ($metadata->get("scopes.$entityName.uuid") === false) {
                 continue;
             }
 
