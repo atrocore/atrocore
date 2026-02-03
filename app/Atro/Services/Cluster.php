@@ -27,11 +27,28 @@ class Cluster extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        if (empty($record->_preparedInCollection) && !empty($entity->get('goldenRecordId'))) {
-            $goldenRecord = $this->getEntityManager()->getEntity($entity->get('masterEntity'), $entity->get('goldenRecordId'));
-            if (!empty($goldenRecord)) {
-                $entity->set('goldenRecordName', $goldenRecord->get('name'));
+        if (empty($entity->_fromCollection)) {
+            if (!empty($entity->get('goldenRecordId'))) {
+                $goldenRecord = $this->getEntityManager()->getEntity($entity->get('masterEntity'), $entity->get('goldenRecordId'));
+                if (!empty($goldenRecord)) {
+                    $entity->set('goldenRecordName', $goldenRecord->get('name'));
+                }
             }
+
+            $stagingItemCount = 0;
+            $masterItemCount = 0;
+
+            $clusterItems = $this->findLinkedEntities($entity->get('id'), 'clusterItems', ['select' => ['entityName'], 'collectionOnly' => true])['collection'];
+            foreach ($clusterItems as $clusterItem) {
+                if ($clusterItem->get('entityName') === $entity->get('masterEntity')) {
+                    $masterItemCount++;
+                } else {
+                    $stagingItemCount++;
+                }
+            }
+
+            $entity->set('stagingItemCount', $stagingItemCount);
+            $entity->set('masterItemCount', $masterItemCount);
         }
     }
 
@@ -59,7 +76,6 @@ class Cluster extends Base
                 foreach ($entities as $entity) {
                     if ($record->get('goldenRecordId') === $entity->get('id')) {
                         $record->set('goldenRecordName', $entity->get($nameField) ?? $entity->get('id'));
-                        $record->_preparedInCollection = true;
                     }
                 }
             }

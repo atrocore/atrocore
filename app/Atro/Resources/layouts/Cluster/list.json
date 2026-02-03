@@ -8,5 +8,11 @@
   },
   {
     "name": "goldenRecord"
+  },
+  {
+    "name": "stagingItemCount"
+  },
+  {
+    "name": "masterItemCount"
   }
 ]

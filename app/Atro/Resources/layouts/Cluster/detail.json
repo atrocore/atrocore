@@ -19,6 +19,14 @@
       ],
       [
         {
+          "name": "stagingItemCount"
+        },
+        {
+          "name": "masterItemCount"
+        }
+      ],
+      [
+        {
           "name": "description",
           "fullWidth": true
         }
