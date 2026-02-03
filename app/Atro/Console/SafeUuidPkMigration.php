@@ -47,7 +47,7 @@ class SafeUuidPkMigration extends AbstractConsole
                 continue;
             }
 
-            if ($metadata->get("scopes.$entityName.uuid") === false) {
+            if ($metadata->get("scopes.$entityName.uuid") === false || $metadata->get("scopes.$entityName.type") === 'ReferenceData') {
                 continue;
             }
 
