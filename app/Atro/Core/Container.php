@@ -54,6 +54,7 @@ class Container
             'actionManager'            => \Atro\Core\ActionManager::class,
             'fieldManager'             => \Atro\Core\Utils\FieldManager::class,
             'fieldManagerUtil'         => \Atro\Core\Utils\FieldManager::class,
+            'idGenerator'              => \Atro\Core\Utils\IdGenerator::class,
             'dataManager'              => \Atro\Core\DataManager::class,
             'schema'                   => \Atro\Core\Utils\Database\Schema\Schema::class,
             'themeManager'             => \Atro\Core\Factories\ThemeManager::class,

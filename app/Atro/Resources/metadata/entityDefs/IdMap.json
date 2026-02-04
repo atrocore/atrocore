@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "value": {
+      "type": "varchar",
+      "len": 36,
+      "notNull": true,
+      "unique": true
+    }
+  }
+}

@@ -33,7 +33,7 @@ class FileStorageSeeder extends AbstractSeeder
             ->setValue('path', ':path')
             ->setValue('is_active', ':true')
             ->setValue('created_by_id', ':system')
-            ->setParameter('id', IdGenerator::toUuid('a_base'))
+            ->setParameter('id', $this->getIdGenerator()->toUuid('a_base'))
             ->setParameter('name', 'Base')
             ->setParameter('empty', '')
             ->setParameter('type', 'local')
@@ -105,7 +105,7 @@ class FileStorageSeeder extends AbstractSeeder
                 ->setValue('modified_by_id', ':system')
                 ->setValue('extensions', ':extensions')
                 ->setParameter('extensions', json_encode($default['extensions']))
-                ->setParameter('id', IdGenerator::toUuid($default['id']))
+                ->setParameter('id', $this->getIdGenerator()->toUuid($default['id']))
                 ->setParameter('name', $default['name'])
                 ->setParameter('system', 'system');
             try {

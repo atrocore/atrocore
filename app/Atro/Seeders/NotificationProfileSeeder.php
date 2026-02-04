@@ -20,7 +20,7 @@ class NotificationProfileSeeder extends AbstractSeeder
 {
     public function run(): void
     {
-        $defaultProfileId = IdGenerator::toUuid('defaultProfileId');
+        $defaultProfileId = $this->getIdGenerator()->toUuid('defaultProfileId');
         $defaultProfileName = 'Default Notification Profile';
         $emailTemplates = [];
 
@@ -69,7 +69,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                                 'name' => ':name',
                                 'data' => ':data'
                             ])
-                            ->setParameter('id', IdGenerator::toUuid($template['id']))
+                            ->setParameter('id', $this->getIdGenerator()->toUuid($template['id']))
                             ->setParameter('name', $template['name'])
                             ->setParameter('data', json_encode($template['data']))
                             ->executeStatement();
@@ -102,7 +102,7 @@ class NotificationProfileSeeder extends AbstractSeeder
 
     private function getDefaultRules(): array
     {
-        $defaultProfileId = IdGenerator::toUuid('defaultProfileId');
+        $defaultProfileId = $this->getIdGenerator()->toUuid('defaultProfileId');
 
         return [
             [
