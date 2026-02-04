@@ -94,9 +94,9 @@ class SelectionItem extends Base
         }
     }
 
-    protected  function getEntities(): array
+    public function getEntities(): array
     {
-       $entities =   $this->getEntityManager()->getConnection()->createQueryBuilder()
+        $entities = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('entity_name')
             ->distinct()
             ->from(Util::toUnderScore($this->getEntityType()))
@@ -104,15 +104,15 @@ class SelectionItem extends Base
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchFirstColumn();
 
-       $filtered = [];
+        $filtered = [];
 
-       foreach ($entities as $entity) {
-           $type = $this->getMetadata()->get(['scopes', $entity, 'type']);
-           if(in_array($type, ['Base', 'Hierarchy'])) {
-               $filtered[] = $entity;
-           }
-       }
+        foreach ($entities as $entity) {
+            $type = $this->getMetadata()->get(['scopes', $entity, 'type']);
+            if (in_array($type, ['Base', 'Hierarchy'])) {
+                $filtered[] = $entity;
+            }
+        }
 
-       return $filtered;
+        return $filtered;
     }
 }
