@@ -20,7 +20,7 @@ class NotificationProfileSeeder extends AbstractSeeder
 {
     public function run(): void
     {
-        $defaultProfileId = 'defaultProfileId';
+        $defaultProfileId = IdGenerator::toUuid('defaultProfileId');
         $defaultProfileName = 'Default Notification Profile';
         $emailTemplates = [];
 
@@ -36,7 +36,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                     'name'      => ':name',
                     'is_active' => ':is_active',
                 ])
-                ->setParameter('id', 'defaultProfileId')
+                ->setParameter('id', $defaultProfileId)
                 ->setParameter('name', $defaultProfileName)
                 ->setParameter('is_active', true, ParameterType::BOOLEAN)
                 ->executeStatement();
@@ -69,7 +69,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                                 'name' => ':name',
                                 'data' => ':data'
                             ])
-                            ->setParameter('id', $template['id'])
+                            ->setParameter('id', IdGenerator::toUuid($template['id']))
                             ->setParameter('name', $template['name'])
                             ->setParameter('data', json_encode($template['data']))
                             ->executeStatement();
@@ -102,11 +102,11 @@ class NotificationProfileSeeder extends AbstractSeeder
 
     private function getDefaultRules(): array
     {
-        $defaultProfileId = 'defaultProfileId';
+        $defaultProfileId = IdGenerator::toUuid('defaultProfileId');
 
         return [
             [
-                "id"                      => IdGenerator::unsortableId(),
+                "id"                      => IdGenerator::uuid(),
                 "name"                    => "Entity Update",
                 "entity"                  => '',
                 "occurrence"              => 'updating',
@@ -1024,7 +1024,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ]
             ],
             [
-                "id"                      => IdGenerator::unsortableId(),
+                "id"                      => IdGenerator::uuid(),
                 "name"                    => "Note Creation Without parent",
                 "entity"                  => 'Note',
                 "occurrence"              => 'creation',
@@ -1046,7 +1046,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ],
             ],
             [
-                "id"                      => IdGenerator::unsortableId(),
+                "id"                      => IdGenerator::uuid(),
                 "name"                    => "Note Creation in Entity",
                 "entity"                  => '',
                 "occurrence"              => 'note_created',
@@ -1125,7 +1125,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ]
             ],
             [
-                "id"                      => IdGenerator::unsortableId(),
+                "id"                      => IdGenerator::uuid(),
                 "name"                    => "Mention",
                 "entity"                  => '',
                 "occurrence"              => 'mentioned',
@@ -1221,7 +1221,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ]
             ],
             [
-                "id"                      => IdGenerator::unsortableId(),
+                "id"                      => IdGenerator::uuid(),
                 "name"                    => "Assignment/Ownership",
                 "entity"                  => '',
                 "occurrence"              => 'ownership_assignment',

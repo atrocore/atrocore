@@ -21,6 +21,11 @@ final class IdGenerator
         return (Uuid::uuid7())->toString();
     }
 
+    public static function toUuid(string $value): string
+    {
+        return Uuid::uuid5(Uuid::NAMESPACE_URL, $value);
+    }
+
     public static function sortableId(): string
     {
         $crockford = new Base32([

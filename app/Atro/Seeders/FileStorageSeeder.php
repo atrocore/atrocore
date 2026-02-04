@@ -11,6 +11,7 @@
 
 namespace Atro\Seeders;
 
+use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\ParameterType;
 
 class FileStorageSeeder extends AbstractSeeder
@@ -32,7 +33,7 @@ class FileStorageSeeder extends AbstractSeeder
             ->setValue('path', ':path')
             ->setValue('is_active', ':true')
             ->setValue('created_by_id', ':system')
-            ->setParameter('id', 'a_base')
+            ->setParameter('id', IdGenerator::toUuid('a_base'))
             ->setParameter('name', 'Base')
             ->setParameter('empty', '')
             ->setParameter('type', 'local')
@@ -104,7 +105,7 @@ class FileStorageSeeder extends AbstractSeeder
                 ->setValue('modified_by_id', ':system')
                 ->setValue('extensions', ':extensions')
                 ->setParameter('extensions', json_encode($default['extensions']))
-                ->setParameter('id', $default['id'])
+                ->setParameter('id', IdGenerator::toUuid($default['id']))
                 ->setParameter('name', $default['name'])
                 ->setParameter('system', 'system');
             try {

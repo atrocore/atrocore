@@ -12,6 +12,7 @@
 namespace Atro\Seeders;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 
 class HtmlSanitizerSeeder extends AbstractSeeder
@@ -35,7 +36,7 @@ class HtmlSanitizerSeeder extends AbstractSeeder
     private function getStandardSanitizer(): array
     {
         return [
-            "id"            => Util::generateUniqueHash(),
+            "id"            => IdGenerator::unsortableId(),
             "code"          => "standard",
             "name"          => "Standard",
             "configuration" => "allow_elements:

@@ -19,11 +19,6 @@ use Espo\ORM\Entity;
 
 class NotificationProfile extends Base
 {
-    public static function generateId(): string
-    {
-        return IdGenerator::unsortableId();
-    }
-
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
