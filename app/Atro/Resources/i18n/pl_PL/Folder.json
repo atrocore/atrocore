@@ -5,7 +5,7 @@
     "storages": "Przechowywanie plików"
   },
   "exceptions": {
-    "folderStorageCannotBeChanged": "Folder Storage nie może zostać zmieniony.",
+    "folderStorageCannotBeChanged": "Pamięci masowej nie można zmienić.",
     "folderCreateFailed": "Tworzenie folderu nie powiodło się.",
     "folderRenameFailed": "Zmiana nazwy folderu nie powiodła się.",
     "folderMoveFailed": "Przenoszenie folderu nie powiodło się.",
