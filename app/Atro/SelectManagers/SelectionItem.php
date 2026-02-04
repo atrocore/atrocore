@@ -83,11 +83,7 @@ class SelectionItem extends Base
         foreach ($entities as $k => $entityName) {
             $tableName = $this->getEntityManager()->getConnection()->quoteIdentifier(Util::toUnderScore($entityName));
 
-            $recordCondition = '';
-            if (!empty($this->selectParameters['recordCondition'])) {
-                $recordCondition = 'AND ' . $this->selectParameters['recordCondition'];
-            }
-            $andWhereParts[] = "({$tableAlias}.entity_name=:entityName{$k} AND EXISTS (SELECT 1 FROM $tableName WHERE id = {$tableAlias}.entity_id AND deleted = :false $recordCondition))";
+            $andWhereParts[] = "({$tableAlias}.entity_name=:entityName{$k} AND EXISTS (SELECT 1 FROM $tableName WHERE id = {$tableAlias}.entity_id AND deleted = :false))";
 
             $qb->setParameter("entityName{$k}", $entityName);
             $qb->setParameter("false", false, ParameterType::BOOLEAN);
@@ -98,7 +94,7 @@ class SelectionItem extends Base
         }
     }
 
-    protected function getEntities(): array
+    public function getEntities(): array
     {
         $entities = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('entity_name')
