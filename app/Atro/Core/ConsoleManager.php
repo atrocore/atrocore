@@ -99,7 +99,6 @@ class ConsoleManager
             "refresh translations"                      => Console\RefreshTranslations::class,
             "install demo-project"                      => Console\InstallDemoProject::class,
             "clear cache"                               => Console\ClearCache::class,
-            "safe uuid pk migration"                    => Console\SafeUuidPkMigration::class,
             "sql diff --show"                           => Console\SqlDiff::class,
             "sql diff --run"                            => Console\SqlDiffRun::class,
             "cron"                                      => Console\Cron::class,
