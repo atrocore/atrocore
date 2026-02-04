@@ -12,13 +12,15 @@
 namespace Atro\Seeders;
 
 use Atro\Core\Utils\Config;
+use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 
 abstract class AbstractSeeder
 {
     public function __construct(
         private readonly Config     $config,
-        private readonly Connection $connection
+        private readonly Connection $connection,
+        private readonly IdGenerator $idGenerator
     )
     {
     }
@@ -33,5 +35,10 @@ abstract class AbstractSeeder
     protected function getConnection(): Connection
     {
         return $this->connection;
+    }
+
+    protected function getIdGenerator(): IdGenerator
+    {
+        return $this->idGenerator;
     }
 }

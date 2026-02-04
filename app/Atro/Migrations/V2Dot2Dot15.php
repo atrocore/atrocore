@@ -34,5 +34,21 @@ class V2Dot2Dot15 extends Base
 
             file_put_contents($fileName, json_encode($data));
         }
+
+        if ($this->isPgSQL()) {
+            $this->exec("CREATE TABLE id_map (id UUID NOT NULL, deleted BOOLEAN DEFAULT 'false', value VARCHAR(36) NOT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_D0942E11D775834EB3B4E33 ON id_map (value, deleted)");
+        } else {
+            $this->exec("CREATE TABLE id_map (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', value VARCHAR(36) NOT NULL, UNIQUE INDEX UNIQ_D0942E11D775834EB3B4E33 (value, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+        }
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+            // ignore
+        }
     }
 }

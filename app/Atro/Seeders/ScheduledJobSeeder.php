@@ -11,6 +11,7 @@
 
 namespace Atro\Seeders;
 
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 
 class ScheduledJobSeeder extends AbstractSeeder
@@ -21,7 +22,7 @@ class ScheduledJobSeeder extends AbstractSeeder
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
-                    'id'             => 'ComposerAutoUpdate',
+                    'id'             => $this->getIdGenerator()->toUuid('ComposerAutoUpdate'),
                     'name'           => 'Update system automatically',
                     'type'           => 'ComposerAutoUpdate',
                     'is_active'      => false,
@@ -35,7 +36,7 @@ class ScheduledJobSeeder extends AbstractSeeder
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
-                    'id'             => 'UpdateCurrencyExchangeViaECB',
+                    'id'             => $this->getIdGenerator()->toUuid('UpdateCurrencyExchangeViaECB'),
                     'name'           => 'Update currency exchange via ECB',
                     'type'           => 'UpdateCurrencyExchangeViaECB',
                     'is_active'      => true,
@@ -49,7 +50,7 @@ class ScheduledJobSeeder extends AbstractSeeder
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
-                    'id'             => 'ClearEntities',
+                    'id'             => $this->getIdGenerator()->toUuid('ClearEntities'),
                     'name'           => 'Clear deleted data',
                     'type'           => 'ClearEntities',
                     'is_active'      => true,
@@ -63,7 +64,7 @@ class ScheduledJobSeeder extends AbstractSeeder
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
-                    'id'             => 'CheckUpdates',
+                    'id'             => $this->getIdGenerator()->toUuid('CheckUpdates'),
                     'name'           => 'Check system updates',
                     'type'           => 'CheckUpdates',
                     'is_active'      => true,
