@@ -17,6 +17,8 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
 
         listInlineEditModeEnabled: false,
 
+        checkboxes: false,
+
         data() {
             return _.extend({
                 groups: this.groups,
