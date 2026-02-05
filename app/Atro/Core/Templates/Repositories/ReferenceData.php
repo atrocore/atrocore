@@ -227,7 +227,7 @@ class ReferenceData extends Repository implements Injectable
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
-                $entity->set('id', self::generateId());
+                $entity->set('id', $this->generateId());
             }
 
             if ($entity->hasAttribute('createdAt')) {
@@ -279,7 +279,7 @@ class ReferenceData extends Repository implements Injectable
         return $result;
     }
 
-    public static function generateId(): string
+    public function generateId(): string
     {
         return IdGenerator::unsortableId();
     }
