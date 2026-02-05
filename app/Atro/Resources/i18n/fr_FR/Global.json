@@ -104,6 +104,7 @@
     "url": "URL",
     "goldenRecord": "Enregistrement d'or",
     "sourceRecords": "Éléments source",
+    "stagingRecords": "Éléments en staging",
     "derivedRecords": "Enregistrements dérivés",
     "createdCountFilterActionExecution": "Créé par l'exécution d'une action",
     "updatedCountFilterActionExecution": "Mise à jour par l'exécution de l'action",

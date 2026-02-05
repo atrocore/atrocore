@@ -1020,12 +1020,12 @@ class Metadata extends AbstractListener
                                 && empty($data['entityDefs'][$scope]['links'][$relFieldName])) {
                                 $res[$entityName]['links'][$left]['foreign'] = $relFieldName;
                                 $data['entityDefs'][$scope]['fields'][$relFieldName] = [
-                                    'type'                      => 'linkMultiple',
-                                    'linkToRelationEntity'      => $relationParams['entity'],
-                                    'layoutDetailDisabled'      => true,
+                                    'type'                     => 'linkMultiple',
+                                    'linkToRelationEntity'     => $relationParams['entity'],
+                                    'layoutDetailDisabled'     => true,
                                     'layoutNavigationDisabled' => true,
-                                    'massUpdateDisabled'        => true,
-                                    'noLoad'                    => true
+                                    'massUpdateDisabled'       => true,
+                                    'noLoad'                   => true
                                 ];
                                 $data['entityDefs'][$scope]['links'][$relFieldName] = [
                                     'type'    => 'hasMany',
@@ -1058,12 +1058,12 @@ class Metadata extends AbstractListener
                             && empty($data['entityDefs'][$relationParams['entity']]['links'][$relFieldName])) {
                             $res[$entityName]['links'][$right]['foreign'] = $relFieldName;
                             $data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName] = [
-                                'type'                      => 'linkMultiple',
-                                'linkToRelationEntity'      => $scope,
+                                'type'                     => 'linkMultiple',
+                                'linkToRelationEntity'     => $scope,
                                 'layoutNavigationDisabled' => true,
-                                'layoutDetailDisabled'      => true,
-                                'massUpdateDisabled'        => true,
-                                'noLoad'                    => true
+                                'layoutDetailDisabled'     => true,
+                                'massUpdateDisabled'       => true,
+                                'noLoad'                   => true
                             ];
                             $data['entityDefs'][$relationParams['entity']]['links'][$relFieldName] = [
                                 'type'    => 'hasMany',
@@ -1282,26 +1282,26 @@ class Metadata extends AbstractListener
 
             if (empty($data['scopes'][$scope]['multiParents'])) {
                 $data['entityDefs'][$scope]['fields']['parent'] = [
-                    "type"                      => "link",
-                    "notStorable"               => true,
-                    "entity"                    => $scope,
-                    "emHidden"                  => true,
+                    "type"                     => "link",
+                    "notStorable"              => true,
+                    "entity"                   => $scope,
+                    "emHidden"                 => true,
                     "layoutNavigationDisabled" => true,
-                    "exportDisabled"            => false,
-                    "importDisabled"            => false,
-                    "openApiDisabled"           => true
+                    "exportDisabled"           => false,
+                    "importDisabled"           => false,
+                    "openApiDisabled"          => true
                 ];
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge(
                     $data['entityDefs'][$scope]['fields']['parents'],
                     [
-                        "layoutListDisabled"        => true,
-                        "layoutDetailDisabled"      => true,
+                        "layoutListDisabled"       => true,
+                        "layoutDetailDisabled"     => true,
                         "layoutNavigationDisabled" => true,
-                        "massUpdateDisabled"        => true,
-                        "filterDisabled"            => true,
-                        "importDisabled"            => true,
-                        "emHidden"                  => true
+                        "massUpdateDisabled"       => true,
+                        "filterDisabled"           => true,
+                        "importDisabled"           => true,
+                        "emHidden"                 => true
                     ]
                 );
             }
@@ -1487,7 +1487,7 @@ class Metadata extends AbstractListener
                     "layoutDetailDisabled"        => true,
                     "layoutListDisabled"          => true,
                     "layoutRelationshipsDisabled" => true,
-                    "layoutNavigationDisabled"   => true,
+                    "layoutNavigationDisabled"    => true,
                     "massUpdateDisabled"          => true,
                     "importDisabled"              => true,
                     "exportDisabled"              => true,
@@ -1499,7 +1499,7 @@ class Metadata extends AbstractListener
                     "layoutDetailDisabled"        => true,
                     "layoutListDisabled"          => true,
                     "layoutRelationshipsDisabled" => true,
-                    "layoutNavigationDisabled"   => true,
+                    "layoutNavigationDisabled"    => true,
                     "massUpdateDisabled"          => true,
                     "importDisabled"              => true,
                     "exportDisabled"              => true,
@@ -2168,48 +2168,48 @@ class Metadata extends AbstractListener
                 $additionalScopeDefs = [
                     "fields" => [
                         "associatedItemRelations"  => [
-                            "type"                      => "linkMultiple",
-                            "layoutDetailDisabled"      => true,
-                            "layoutListDisabled"        => true,
+                            "type"                     => "linkMultiple",
+                            "layoutDetailDisabled"     => true,
+                            "layoutListDisabled"       => true,
                             "layoutNavigationDisabled" => true,
-                            "massUpdateDisabled"        => true,
-                            "filterDisabled"            => false,
-                            "noLoad"                    => true,
-                            "importDisabled"            => true,
-                            "exportDisabled"            => false
+                            "massUpdateDisabled"       => true,
+                            "filterDisabled"           => false,
+                            "noLoad"                   => true,
+                            "importDisabled"           => true,
+                            "exportDisabled"           => false
                         ],
                         "associatingItemRelations" => [
-                            "type"                      => "linkMultiple",
-                            "layoutDetailDisabled"      => true,
-                            "layoutListDisabled"        => true,
+                            "type"                     => "linkMultiple",
+                            "layoutDetailDisabled"     => true,
+                            "layoutListDisabled"       => true,
                             "layoutNavigationDisabled" => true,
-                            "massUpdateDisabled"        => true,
-                            "filterDisabled"            => false,
-                            "noLoad"                    => true,
-                            "exportDisabled"            => false,
-                            "importDisabled"            => true
+                            "massUpdateDisabled"       => true,
+                            "filterDisabled"           => false,
+                            "noLoad"                   => true,
+                            "exportDisabled"           => false,
+                            "importDisabled"           => true
                         ],
                         "associatedItems"          => [
-                            "type"                      => "linkMultiple",
-                            "layoutDetailDisabled"      => true,
-                            "layoutListDisabled"        => true,
+                            "type"                     => "linkMultiple",
+                            "layoutDetailDisabled"     => true,
+                            "layoutListDisabled"       => true,
                             "layoutNavigationDisabled" => true,
-                            "massUpdateDisabled"        => true,
-                            "filterDisabled"            => false,
-                            "noLoad"                    => true,
-                            "importDisabled"            => true,
-                            "exportDisabled"            => false
+                            "massUpdateDisabled"       => true,
+                            "filterDisabled"           => false,
+                            "noLoad"                   => true,
+                            "importDisabled"           => true,
+                            "exportDisabled"           => false
                         ],
                         "associatingItems"         => [
-                            "type"                      => "linkMultiple",
-                            "layoutDetailDisabled"      => true,
-                            "layoutListDisabled"        => true,
+                            "type"                     => "linkMultiple",
+                            "layoutDetailDisabled"     => true,
+                            "layoutListDisabled"       => true,
                             "layoutNavigationDisabled" => true,
-                            "massUpdateDisabled"        => true,
-                            "filterDisabled"            => false,
-                            "noLoad"                    => true,
-                            "exportDisabled"            => false,
-                            "importDisabled"            => true
+                            "massUpdateDisabled"       => true,
+                            "filterDisabled"           => false,
+                            "noLoad"                   => true,
+                            "exportDisabled"           => false,
+                            "importDisabled"           => true
                         ]
                     ],
                     "links"  => [
@@ -2532,11 +2532,13 @@ class Metadata extends AbstractListener
                 'entity'  => $primaryEntity
             ];
 
-            $data['entityDefs'][$primaryEntity]['fields']['derivedRecords'] = [
+            $linkName = 'derived' . ucfirst($scope) . 'Records';
+
+            $data['entityDefs'][$primaryEntity]['fields'][$linkName] = [
                 'type'   => 'linkMultiple',
                 'noLoad' => true
             ];
-            $data['entityDefs'][$primaryEntity]['links']['derivedRecords'] = [
+            $data['entityDefs'][$primaryEntity]['links'][$linkName] = [
                 'type'         => 'hasMany',
                 'foreign'      => 'goldenRecord',
                 'entity'       => $scope,

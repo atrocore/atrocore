@@ -12,9 +12,9 @@
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Util;
-use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
@@ -34,7 +34,7 @@ class ClusterItem extends Base
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchOne();
 
-        if (!empty($res)){
+        if (!empty($res)) {
             return;
         }
 
@@ -80,6 +80,15 @@ class ClusterItem extends Base
 
         if (!empty($entity->get('matchedRecordId'))) {
             $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('matchedRecordId'));
+        }
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if ($entity->isNew() && $this->getMetadata()->get(['scopes', $entity->get('entityName'), 'role']) === 'changeRequest') {
+            throw new BadRequest("Change request can't be assigned to cluster item.");
         }
     }
 

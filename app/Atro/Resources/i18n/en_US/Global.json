@@ -696,6 +696,7 @@
     "derivedRecords": "Derived Records",
     "goldenRecord": "Golden Record",
     "sourceRecords": "Source Records",
+    "stagingRecords": "Staging Records",
     "field": "Field",
     "routes": "Route(s)",
     "width": "Width",

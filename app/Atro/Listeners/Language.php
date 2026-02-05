@@ -96,7 +96,7 @@ class Language extends AbstractListener
                         && !empty($entityDefs['links'][$field]['entity'])
                         && $entityDefs['links'][$field]['foreign'] === 'goldenRecord'
                     ) {
-                        $fieldLabel = $this->getLabel($data, $locale, 'Global', 'sourceRecords');
+                        $fieldLabel = $this->getLabel($data, $locale, 'Global', 'stagingRecords');
                         $entityLabel = $this->getLabel($data, $locale, 'Global', $entityDefs['links'][$field]['entity'], 'scopeNames');
 
                         $data[$locale][$entity]['fields'][$field] = "$fieldLabel ($entityLabel)";
