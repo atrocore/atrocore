@@ -100,10 +100,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             });
 
             this.listenTo(this.model, 'after:unrelate refresh after:relate', () => {
-               this.refresh();
+                this.refresh();
             });
 
-            this.listenTo(this, 'refresh', () =>  {
+            this.listenTo(this, 'refresh', () => {
                 this.refresh();
             });
 
@@ -157,7 +157,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             if (this.availableModes.includes('merge')) {
-                this.addMenuItem('buttons', {name: 'merge', style: 'hidden'}, true, false, true);
+                this.addMenuItem('buttons', { name: 'merge', style: 'hidden' }, true, false, true);
             }
 
             if (this.isActiveMerge()) {
@@ -200,7 +200,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         updateUrl(mode = null) {
             mode = mode ?? this.selectionViewMode;
             const link = '#' + this.scope + '/view/' + this.model.id + '/selectionViewMode=' + mode;
-            this.getRouter().navigate(link, {trigger: false});
+            this.getRouter().navigate(link, { trigger: false });
         },
 
         actionShowSelectionView: function (data) {
@@ -252,30 +252,30 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         reloadModels(callback) {
             this.loadSelectionItemModels(this.model.id).then(models => {
-                if(models.length === 0) {
-                    return;
-                }
-                this.selectionItemModels = models;
-                let allIds = models.map(m => m.id);
-                // remove dead Ids
-                this.hiddenIds = this.hiddenIds.filter(id => allIds.includes(id));
+                if (models.length > 0) {
+                    this.selectionItemModels = models;
+                    let allIds = models.map(m => m.id);
+                    // remove dead Ids
+                    this.hiddenIds = this.hiddenIds.filter(id => allIds.includes(id));
 
-                for (const id of allIds.reverse()) {
-                    if ((allIds.length - this.hiddenIds.length) <= this.maxForComparison) {
-                        break;
+                    for (const id of allIds.reverse()) {
+                        if ((allIds.length - this.hiddenIds.length) <= this.maxForComparison) {
+                            break;
+                        }
+
+                        if (this.hiddenIds.includes(id)) {
+                            continue;
+                        }
+
+                        this.hiddenIds.push(id);
                     }
 
-                    if(this.hiddenIds.includes(id)) {
-                        continue;
+                    if (window.leftSidePanel) {
+                        window.leftSidePanel?.setRecords(this.getRecordForPanels());
+                        window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
                     }
-
-                    this.hiddenIds.push(id);
                 }
 
-                if (window.leftSidePanel) {
-                    window.leftSidePanel?.setRecords(this.getRecordForPanels());
-                    window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
-                }
 
                 if (callback) {
                     callback();
@@ -469,7 +469,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         this.standardPanelList = data.list;
                     }
                     this.panelsList = data.list;
-                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                 });
 
                 if (this.selectionViewMode === 'standard') {
@@ -477,15 +477,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.panelsList = this.standardPanelList;
 
                     if (view.isRendered()) {
-                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                     }
 
                     this.listenTo(view.model, 'change', () => {
-                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                     });
 
                     this.listenTo(view, 'after:render', view => {
-                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                     });
                 }
 
@@ -615,7 +615,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 let scope = this.itemScope;
                 let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
-                let attributes = {_entityFrom: _.extend(this.model.attributes, {_entityName: this.model.name})};
+                let attributes = { _entityFrom: _.extend(this.model.attributes, { _entityName: this.model.name }) };
 
                 if (this.getMetadata().get(['scopes', scope, 'hasOwner'])) {
                     attributes.ownerUserId = this.getUser().id;
@@ -641,7 +641,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.listenToOnce(view, 'after:save', () => {
                         let model = view.getView('record')?.model;
                         if (model) {
-                            if(this.getSelectedIds().length >= this.maxForComparison) {
+                            if (this.getSelectedIds().length >= this.maxForComparison) {
                                 this.toggleSelected(model.get('entityId'));
                             }
                             window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
@@ -676,7 +676,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         selectionId: this.model.id
                     }).then(() => {
                         this.model.trigger('after:relate', this.link);
-                        if(this.getSelectedIds().length >= this.maxForComparison) {
+                        if (this.getSelectedIds().length >= this.maxForComparison) {
                             this.toggleSelected(model.get('entityId'));
                         }
                         window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
@@ -761,7 +761,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
                                         if (this.toggleSelected(itemId)) {
                                             window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
-                                            if(this.getView('record')) {
+                                            if (this.getView('record')) {
                                                 this.getView('record').showLoader();
                                             }
                                             this.trigger('refresh');
@@ -778,7 +778,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
-                                            if(this.getView('record')) {
+                                            if (this.getView('record')) {
                                                 this.getView('record').showLoader();
                                             }
                                             window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
@@ -796,7 +796,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
-                                            if(this.getView('record')) {
+                                            if (this.getView('record')) {
                                                 this.getView('record').showLoader();
                                             }
                                             window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
@@ -941,7 +941,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.getMainRecord()?.applyMerge((result) => {
-                this.getRouter().navigate(`#${this.getEntityTypes()[0]}/view/${result.id}`, {trigger: true});
+                this.getRouter().navigate(`#${this.getEntityTypes()[0]}/view/${result.id}`, { trigger: true });
             });
         },
 
@@ -983,7 +983,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         }
                     }
 
-                    this.layoutData[entityType] = {detailLayout: layout, layoutData: data.layout};
+                    this.layoutData[entityType] = { detailLayout: layout, layoutData: data.layout };
 
                     count++;
                     if (count === this.getEntityTypes().length) {
