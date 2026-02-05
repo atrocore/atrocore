@@ -26,7 +26,25 @@
       "type": "enum",
       "optionsType": "entityName",
       "options": [],
-      "customizable": false
+      "customizable": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
     },
     "mergingScript": {
       "type": "text",
