@@ -758,7 +758,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
-                $entity->set('id', static::generateId());
+                $entity->set('id', $this->generateId());
             } else {
                 // delete deleted record
                 $qb = $this->getConnection()->createQueryBuilder()
@@ -792,7 +792,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return parent::save($entity, $options);
     }
 
-    public static function generateId(): string
+    public function generateId(): string
     {
         return IdGenerator::uuid();
     }
