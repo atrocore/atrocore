@@ -13,6 +13,7 @@ namespace Atro\SelectManagers;
 
 use Atro\Core\SelectManagers\Base;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -72,7 +73,7 @@ class Cluster extends Base
         $operator = $field === 'masterItemCount' ? '=' : '<>';
         $tableAlias = $field === 'masterItemCount' ? 'mic' : 'sic';
 
-        $countQb = $mapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp, true);
+        $countQb = $mapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp);
         $countQb->andwhere("$mtAlias.cluster_id = mt_alias.id and $mtAlias.entity_name $operator mt_alias.atro_master_entity");
 
         $countSql = str_replace([$mtAlias, 'mt_alias'], [$tableAlias, $mtAlias], $countQb->getSQL());
@@ -147,7 +148,7 @@ class Cluster extends Base
 
     public function getItemCountPart(array $item, string $field)
     {
-        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([], true, true);
+        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([], true);
         $sp['aggregation'] = 'COUNT';
         $sp['aggregationBy'] = 'id';
         $sp['skipBelongsToJoins'] = true;
@@ -207,5 +208,144 @@ class Cluster extends Base
                 'parameters' => $countQb->getParameters(),
             ]
         ];
+    }
+
+    public function boolFilterOnlyEmpty(&$result)
+    {
+        $result['callbacks'][] = [$this, 'onlyEmptyCallback'];
+    }
+
+    public function boolFilterOnlyInvalid(&$result)
+    {
+        $result['callbacks'][] = [$this, 'onlyInvalidCallback'];
+    }
+
+    public function boolFilterOnlyMerged(&$result)
+    {
+        $result['callbacks'][] = [$this, 'onlyMergedCallback'];;
+    }
+
+    public function boolFilterOnlyReview(&$result)
+    {
+        $result['callbacks'][] = [$this, 'onlyReviewCallback'];
+    }
+
+    public function onlyEmptyCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        if (empty($this->applyClusterItemFilter($qb, $tableAlias))) {
+            return;
+        }
+
+        $qb->having("COUNT(ci.id) = 0");
+    }
+
+    public function onlyInvalidCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        if (empty($this->applyClusterItemFilter($qb, $tableAlias))) {
+            $qb->where("$tableAlias.id is null");
+            return;
+        }
+
+        $qb->having("COUNT(ci.id) > 0 AND (COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity THEN 1 END) = 0 OR " .
+            "COUNT(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN 1 END) > 1)");
+    }
+
+    public function onlyMergedCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $goldenRecordCase = $this->applyClusterItemFilter($qb, $tableAlias);
+
+        if (empty($goldenRecordCase)) {
+            $qb->where("$tableAlias.id is null");
+            return;
+        }
+
+        $qb->andWhere("$tableAlias.golden_record_id IS NOT NULL")
+            ->having(  // Only one master item
+                "COUNT(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN 1 END) = 1 " .
+                // Master entity_id matches golden_record_id
+                "AND MAX(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN ci.entity_id END) = $tableAlias.golden_record_id " .
+                // Has staging items
+                "AND COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity THEN 1 END) > 0 " .
+                // All staging items have their entity golden_record_id = cluster golden_record_id
+                "AND COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity AND ({$goldenRecordCase}) <> $tableAlias.golden_record_id THEN 1 END) = 0"
+            );
+    }
+
+    public function onlyReviewCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $goldenRecordCase = $this->applyClusterItemFilter($qb, $tableAlias);
+
+        if (empty($goldenRecordCase)) {
+            $qb->where("$tableAlias.id is null");
+            return;
+        }
+
+        $qb->having(
+        // Has less than 1 master item
+            "COUNT(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN 1 END) <= 1 " .
+            // Has staging items
+            "AND COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity THEN 1 END) > 0 " .
+            // NOT merged
+            "AND (" .
+            // No master exists
+            "COUNT(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN 1 END) = 0 " .
+            // Or master exists but entity_id doesn't match cluster golden_record_id
+            "OR MAX(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN ci.entity_id END) <> $tableAlias.golden_record_id " .
+            // Or at least one staging record doesn't match
+            "OR COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity AND ({$goldenRecordCase}) <> $tableAlias.golden_record_id THEN 1 END) > 0" .
+            ")"
+        );
+    }
+
+    public function applyClusterItemFilter(QueryBuilder $qb, string $tableAlias): ?string
+    {
+        if (!empty($qb->_ciFilterApplied)) {
+            // we should return an empty result if multiple filters are applied
+            $qb->where("$tableAlias.id is null");
+            return null;
+        }
+        $qb->_ciFilterApplied = true;
+
+        $entities = $this->getSelectManagerFactory()->create('ClusterItem')->getEntities();
+
+        if (empty($entities)) {
+            return null;
+        }
+
+        $qb->groupBy("$tableAlias.id");
+
+        $goldenRecordCaseParts = [];
+        $andWhereParts = [];
+
+        foreach ($entities as $k => $entityName) {
+            $tableName = $this->getEntityManager()->getConnection()->quoteIdentifier(Util::toUnderScore($entityName));
+
+            $andWhereParts[] = "(ci.entity_name=:entityName{$k} AND EXISTS (SELECT 1 FROM $tableName WHERE id = ci.entity_id AND deleted = :false))";
+
+            $goldenRecordCaseParts[] = sprintf(
+                "WHEN %s.entity_name = :entityName%d THEN " .
+                "(SELECT golden_record_id FROM %s WHERE id = %s.entity_id)",
+                'ci',
+                $k,
+                $tableName,
+                'ci'
+            );
+
+            $qb->setParameter("entityName{$k}", $entityName);
+        }
+
+        $qb->setParameter("false", false, ParameterType::BOOLEAN);
+
+        $qb->leftJoin($tableAlias, 'cluster_item', 'ci', "$tableAlias.id = ci.cluster_id and ci.deleted = :false and (" . implode(' OR ', $andWhereParts) . ")");
+
+        return 'CASE ' . implode(' ', $goldenRecordCaseParts) . ' ELSE null END';
     }
 }

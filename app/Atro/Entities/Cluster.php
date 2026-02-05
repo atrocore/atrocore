@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Entities;
 
 use Atro\Core\Templates\Entities\Base;
-use Espo\Core\Utils\Json;
 use Espo\ORM\IEntity;
 
 class Cluster extends Base
@@ -25,6 +24,10 @@ class Cluster extends Base
             return null;
         }
 
-        return $this->getEntityManager()->getEntity($this->get('masterEntity'), $this->get('goldenRecordId'));
+        if (!isset($this->relationsContainer['goldenRecord'])) {
+            $this->setRelationValue('goldenRecord', $this->getEntityManager()->getEntity($this->get('masterEntity'), $this->get('goldenRecordId')));
+        }
+
+        return $this->relationsContainer['goldenRecord'];
     }
 }
