@@ -13,7 +13,14 @@
       "hideShowFullList": true,
       "canClose": false,
       "view": "views/layout-profile/record/panels/layouts",
-      "rowActionsView": "views/record/row-actions/edit-and-remove"
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "quickView": {
+          "disabled": true
+        }
+      }
     }
   },
   "confirm": {
