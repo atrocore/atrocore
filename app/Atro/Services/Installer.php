@@ -208,7 +208,7 @@ class Installer extends HasContainer
 
             // create anonymous error reports job
             $data = [
-                'id'             => 'SendReports',
+                'id'             => '019c2cb5-1746-71ac-bdb2-9f65c3682235',
                 'name'           => 'Send anonymous error reports to AtroCore',
                 'type'           => 'SendReports',
                 'is_active'      => !empty($params['reportingEnabled']),

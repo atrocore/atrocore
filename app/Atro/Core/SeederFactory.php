@@ -31,10 +31,11 @@ class SeederFactory
             throw new Error($className . ' is not a valid seeder class.');
         }
 
-        $config = $this->getContainer()->get('config');
-        $connection = $this->getContainer()->get('entityManager')->getConnection();
-
-        return new $className($config, $connection);
+        return new $className(
+            $this->getContainer()->get('config'),
+            $this->getContainer()->get('connection'),
+            $this->getContainer()->get('idGenerator')
+        );
     }
 
     private function getContainer(): Container
