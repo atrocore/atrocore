@@ -148,7 +148,7 @@ class LayoutManager
 
         if ($viewType === 'list') {
             foreach ($layout as $k => $row) {
-                if (!empty($row['name']) && empty($row['notSortable']) && !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $row['name'], 'notStorable']))) {
+                if (!empty($row['name']) && !isset($row['notSortable']) && !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $row['name'], 'notStorable']))) {
                     $layout[$k]['notSortable'] = true;
                 }
             }
