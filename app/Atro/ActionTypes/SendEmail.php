@@ -82,11 +82,13 @@ class SendEmail extends AbstractAction
                 $where = @json_decode($whereJson, true);
             }
 
+            $searchEntity = $action->get('searchEntity') ?? $targetEntity;
+
             /** @var \Espo\Core\SelectManagers\Base $selectManager */
-            $selectManager = $this->container->get('selectManagerFactory')->create($action->get('searchEntity'));
+            $selectManager = $this->container->get('selectManagerFactory')->create($searchEntity);
 
             /** @var \Atro\Core\Templates\Repositories\Base $repository */
-            $repository = $this->getEntityManager()->getRepository($action->get('searchEntity'));
+            $repository = $this->getEntityManager()->getRepository($searchEntity);
 
             $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
             $repository->handleSelectParams($selectParams);
