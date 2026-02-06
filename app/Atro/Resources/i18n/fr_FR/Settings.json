@@ -47,8 +47,8 @@
   "tooltips": {
     "recordsPerPage": "Nombre d'enregistrements initialement affichés dans les vues liste.",
     "recordsPerPageSmall": "Nombre d'enregistrements initialement affichés dans les panneaux de relation.",
-    "authTokenLifetime": " Définit la durée de vie des jetons.\n0 signifie qu'il n'y a pas d'expiration.",
-    "authTokenMaxIdleTime": "Définit la durée d'existence des derniers jetons d'accès.\n0 signifie qu'il n'y a pas d'expiration.",
+    "authTokenLifetime": "Définit la durée de vie des jetons. 0 (zéro) signifie qu'il n'y a pas d'expiration.",
+    "authTokenMaxIdleTime": "Définit la durée de validité des jetons d'accès depuis le dernier accès. Une valeur de 0 (zéro) signifie qu'il n'y a pas d'expiration.",
     "userThemesDisabled": "Si cette case est cochée, les utilisateurs ne pourront pas sélectionner un autre thème.",
     "aclStrictMode": "Activé : L'accès aux champs d'application sera interdit s'il n'est pas spécifié dans les rôles.\n\nDésactivé : L'accès aux champs d'application sera autorisé s'il n'est pas précisé dans les rôles : L'accès aux champs d'application sera autorisé s'il n'est pas spécifié dans les rôles.",
     "textFilterUseContainsForVarchar": "Si cette case n'est pas cochée, l'opérateur \"commence par\" est utilisé. Vous pouvez utiliser le caractère générique \"%\".",

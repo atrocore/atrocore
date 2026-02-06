@@ -419,7 +419,7 @@
     "Select Image": "Select existing image",
     "Upload Image": "Upload image from a local filesystem",
     "copyConfigurations": "Copy Configurations",
-    "youMustConfigureNotificationConnection": "You must first configure the email notification connection for notifications to be sent.",
+    "youMustConfigureNotificationConnection": "First, you must configure the email notification connection in order to receive notifications.",
     "Bookmarking": "Bookmarking",
     "Unbookmark": "Unbookmark",
     "Bookmark": "Bookmark",
@@ -1256,7 +1256,7 @@
     "massDeleteSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
     "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
     "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked.",
-    "integerValueValidationFailed": "Integer value for field/attribute '%s' must be between %s and %s"
+    "integerValueValidationFailed": "Integer value for field/attribute '%s' must be between %s and %s."
   },
   "firstStepsDashlet": {
     "title": {

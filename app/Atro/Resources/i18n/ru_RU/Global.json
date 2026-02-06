@@ -84,7 +84,9 @@
     "SelectionItem": "Запись о выборе",
     "ActionExecution": "Выполнение действий",
     "ActionExecutionLog": "Журнал выполнения действий",
-    "Layout": "Макет"
+    "Layout": "Макет",
+    "Cluster": "Кластер",
+    "ClusterItem": "Кластерный элемент"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сущности основных данных",
@@ -130,7 +132,7 @@
     "MatchedRecord": "Сопоставленные записи",
     "Matching": "Соответствия",
     "ThumbnailType": "Типы миниатюр",
-    "IncomingWebhook": "Входящие Webhooks",
+    "IncomingWebhook": "Входящий Webhook",
     "ClassificationAttribute": "Атрибуты классификации",
     "RoleScopeAttributePanel": "Панели атрибутов",
     "Classification": "Классификации",
@@ -156,7 +158,9 @@
     "SelectionItem": "Записи о выборе",
     "ActionExecutionLog": "Журналы выполнения действий",
     "ActionExecution": "Выполнение действий",
-    "Layout": "Лейауты"
+    "Layout": "Лейауты",
+    "Cluster": "Кластеры",
+    "ClusterItem": "Предметы кластера"
   },
   "labels": {
     "matchings": "Соответствия",
@@ -382,7 +386,7 @@
     "Select Image": "Выберите существующее изображение",
     "Upload Image": "Загрузите изображение из локальной файловой системы",
     "copyConfigurations": "Конфигурации копирования",
-    "youMustConfigureNotificationConnection": "Для отправки уведомлений Вам необходимо сначала настроить соединение для отправки уведомлений по электронной почте.",
+    "youMustConfigureNotificationConnection": "Сначала необходимо настроить подключение для получения уведомлений по электронной почте.",
     "Bookmarking": "Закладка",
     "Unbookmark": "Снимите закладку",
     "Bookmark": "Закладка",
@@ -439,7 +443,7 @@
     "recalculateScript": "Сценарий пересчета",
     "color": "Цвет",
     "editLabels": "Редактирование этикеток",
-    "Duplicates": "Дубликаты",
+    "Duplicates": "Дубликат",
     "matchedRecords": "Сопоставленные записи",
     "noMatches": "Нет совпадений",
     "script": "Скрипт",
@@ -511,17 +515,18 @@
     "Items": "Предметы",
     "hideAll": "Скрыть все",
     "Relations": "Отношения",
-    "Saved Filters": "Сохраненные фильтры",
+    "Saved Filters": "Сохранить фильтр",
     "Support": "Поддержите",
-    "replaceItem": "Заменить предмет",
-    "removeItem": "Remove Item",
+    "replaceItem": "Заменить",
+    "removeItem": "Удалить",
     "Contact Us": "Свяжитесь с нами",
     "Open Dashboard": "Откройте приборную панель",
     "pageNotFound": "Страница не найдена",
     "pageNotFoundDescription": "Возможно, ресурс, который Вы ищете, был перемещен, удален или не существует.",
     "errorCode": "Код ошибки",
     "accessDeniedDescription": "Ваша учетная запись не имеет необходимых прав для просмотра этого ресурса. Если Вы считаете, что у Вас должен быть доступ, пожалуйста, свяжитесь с Вашим администратором.",
-    "accessDenied": "В доступе отказано"
+    "accessDenied": "В доступе отказано",
+    "isLinked": "Связано"
   },
   "messages": {
     "confirmInheritAllForChildren": "Вы уверены, что хотите, чтобы все дочерние элементы унаследовали значения полей (и атрибутов), а также отношения от этого родительского элемента? Существующие значения не будут заменены.",
@@ -543,7 +548,7 @@
     "inheritAllConfirmation": "Вы уверены, что хотите унаследовать все записи?",
     "unlinkAllConfirmation": "Вы действительно хотите убрать все связанные записи?",
     "deleteAllConfirmation": "Вы действительно хотите удалить все записи?",
-    "removeRecordConfirmation": "Вы уверены, что хотите удалить запись?",
+    "removeRecordConfirmation": "Вы действительно хотите удалить все записи?",
     "unlinkRecordConfirmation": "Вы действительно хотите убрать связанную запись?",
     "removeRecordConfirmationHierarchically": "Вы действительно хотите удалить записи иерархично?",
     "removeSelectedRecordsConfirmation": "Вы уверены, что хотите удалить выбранные записи?",
@@ -602,7 +607,7 @@
     "closePanelConfirmation": "Вы уверены, что хотите закрыть панель?",
     "removeRelatedRecords": "Вы уверены, что хотите удалить все записи для выбранной Ассоциации из текущей записи? Все связанные записи будут сохранены.",
     "queryHasErrors": "В Вашем запросе есть несколько ошибок",
-    "confirmInheritAllFromParent": "Вы уверены, что хотите, чтобы все элементы унаследовали значения полей (и атрибутов), а также отношения от элементов родительской записи? Существующие значения не будут заменены.",
+    "confirmInheritAllFromParent": "Вы уверены, что хотите, чтобы все дочерние элементы унаследовали значения полей (и атрибутов), а также отношения от этого родительского элемента? Существующие значения не будут заменены.",
     "fieldShouldAfterOrEqual": "{поле} должно быть после или равно {другому полю}.",
     "fieldShouldBeforeOrEqual": "{поле} должно быть раньше или равно {другому полю}.",
     "restoreRecordConfirmation": "Выбранная запись будет восстановлена. Вы уверены, что хотите восстановить ее?",
@@ -636,7 +641,7 @@
     "onlyMy": "Только мои",
     "onlyArchived": "Без неархивированных",
     "withArchived": "С архивными",
-    "onlyMyTeams": "Мои команды",
+    "onlyMyTeams": "Только моя группа",
     "onlyBookmarked": "В закладки",
     "multipleClassifications": "Несколько классификаций",
     "notActive": "Неактивный",
@@ -665,7 +670,7 @@
     "download": "Скачать",
     "compare": "Сравнить",
     "removeAttribute": "Удалить атрибут",
-    "update": "Массовое обновление",
+    "update": "Обновить массово",
     "delete": "Удалить",
     "select": "Выбрать",
     "cancel": "Отменить"
@@ -778,7 +783,8 @@
     "end": "Конец",
     "emailAddress": "Эл. почта",
     "createdCountFilterActionExecution": "Создано с помощью Action Execution",
-    "updatedCountFilterActionExecution": "Обновлено выполнением действия"
+    "updatedCountFilterActionExecution": "Обновлено выполнением действия",
+    "derivativeStatus": "Статус производного"
   },
   "dashlets": {
     "Stream": "Действия",
@@ -1226,14 +1232,14 @@
     "massDeleteSomeRecordNotProceed": "Некоторую запись(и) не удалось успешно удалить.",
     "massRestoreSomeRecordNotProceed": "Некоторые записи не удалось успешно восстановить.",
     "entityCannotBeBookmarked": "Записи этой организации не могут быть помещены в закладки.",
-    "integerValueValidationFailed": "Целочисленное значение для поля/атрибута '%s' должно быть между %s и %s",
+    "integerValueValidationFailed": "Целочисленное значение для поля/атрибута '%s' должно быть между %s и %s.",
     "singleClassificationAllowed": "Допускается только одна классификация",
     "childsMustBeArchived": "(Родительский) элемент может быть заархивирован только в том случае, если все дочерние элементы тоже заархивированы.",
     "imageScaleWidthValidationFailed": "Ширина изображения должна быть больше, чем %spx.",
     "imageScaleHeightValidationFailed": "Высота изображения должна быть больше, чем %spx.",
     "imageMinSizeValidationFailed": "Размер файла должен быть больше %skb.",
     "imageMaxSizeValidationFailed": "Размер файла должен быть меньше %skb.",
-    "dateIsInvalid": "Дата для поля '%s' не является действительной.",
+    "dateIsInvalid": "Файл для поля '%s' не допустим.",
     "datetimeIsInvalid": "Дата-время для поля '%s' не является действительной."
   },
   "queryBuilderFilter": {

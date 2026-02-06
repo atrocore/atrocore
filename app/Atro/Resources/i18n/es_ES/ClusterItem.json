@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "entityName": "Nombre de la entidad",
+    "entityId": "ID de la entidad",
+    "record": "Registre",
+    "cluster": "Cluster",
+    "matchedRecord": "Registro coincidente"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "clusterItems": "Предметы кластера",
+    "number": "Номер",
+    "masterEntity": "Мастер сущность"
+  }
+}

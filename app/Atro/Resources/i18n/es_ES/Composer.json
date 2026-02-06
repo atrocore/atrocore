@@ -14,12 +14,12 @@
     }
   },
   "exceptions": {
-    "hasRequireds": "El módulo no tiene los requisitos satisfechos",
-    "hasRequiredsDelete": "No puede eliminar el módulo requerido",
-    "suchModuleIsAlreadyInstalled": "Este módulo ya está instalado",
-    "suchModuleVersionAlreadyInstalled": "Esta versión del módulo ya está instalada",
-    "noSuchModuleVersion": "No existe esta versión del módulo",
-    "versionIsInvalid": "La versión no es válida",
+    "hasRequireds": "Module has not satisfied requireds",
+    "hasRequiredsDelete": "No se puede eliminar un módulo obligatorio.",
+    "suchModuleIsAlreadyInstalled": "Such module is already installed",
+    "suchModuleVersionAlreadyInstalled": "Such module version already installed",
+    "noSuchModuleVersion": "No such module version",
+    "versionIsInvalid": "Version is invalid",
     "invalidVersion": "La versión del módulo no es válida.",
     "downgradeProhibited": "La versión del módulo no es válida. El downgrade está prohibido."
   },

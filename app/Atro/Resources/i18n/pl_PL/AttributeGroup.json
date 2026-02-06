@@ -3,7 +3,7 @@
     "name": "Nazwa grupy",
     "description": "Description",
     "code": "Kod",
-    "isActive": "Active",
+    "isActive": "Aktywny",
     "attributes": "Atrybuty",
     "sortOrder": "Sort Order"
   },
@@ -12,6 +12,6 @@
   },
   "exceptions": {
     "attributeGroupSsLinkedWithAttributes": "Grupa atrybutów jest nadal powiązana z niektórymi atrybutami. Najpierw należy usunąć powiązania z atrybutami.",
-    "entityIsUsed": "Grupa atrybutów nie może zostać usunięta, ponieważ jest używana w kilku atrybutach."
+    "entityIsUsed": "Grupa atrybutów nie może zostać usunięta, ponieważ korzysta z niej jeden lub więcej atrybutów."
   }
 }

@@ -19,6 +19,7 @@
     }
   },
   "exceptions": {
-    "notValidCode": "Kód musí obsahovat pouze písmena, číslice, podtržítka a pomlčky."
+    "notValidCode": "Kód musí obsahovat pouze písmena, číslice, podtržítka a pomlčky.",
+    "notValidMatchingActivation": "Pravidlo přiřazování lze změnit pouze u neaktivního přiřazování."
   }
 }

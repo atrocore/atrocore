@@ -17,7 +17,7 @@
     "invalidVersion": "La versione del modulo non è valida.",
     "downgradeProhibited": "La versione del modulo non è valida. Il downgrade è vietato.",
     "hasRequireds": "Il modulo non ha soddisfatto i requisiti",
-    "hasRequiredsDelete": "Non può eliminare il modulo richiesto",
+    "hasRequiredsDelete": "Non è possibile eliminare un modulo obbligatorio.",
     "suchModuleIsAlreadyInstalled": "Tale modulo è già installato",
     "suchModuleVersionAlreadyInstalled": "Tale versione del modulo è già installata",
     "noSuchModuleVersion": "Nessuna versione del modulo",

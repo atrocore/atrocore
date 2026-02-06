@@ -17,7 +17,7 @@
     "Favorites": "Preferiti"
   },
   "exceptions": {
-    "defaultIsRequired": "Nel sistema deve esistere un profilo di layout predefinito"
+    "defaultIsRequired": "Nel sistema deve esistere un profilo di layout predefinito."
   },
   "messages": {
     "profileWillBeNewDefault": "Questo profilo sarà il nuovo predefinito, ne è sicuro?",

@@ -40,7 +40,8 @@
     "preparedName": "Название",
     "channel": "Канал",
     "conditionalRequired": "Обязательный",
-    "entity": "Сущность"
+    "entity": "Сущность",
+    "modifiedExtendedDisabled": "Нет записи как модификация"
   },
   "labels": {
     "addNewValue": "Добавить новое значение",

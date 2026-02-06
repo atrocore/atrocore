@@ -141,7 +141,7 @@
   "fields": {
     "fontSize": "Rozmiar czcionki",
     "type": "Typ",
-    "name": "Code",
+    "name": "Kod",
     "label": "Etykieta",
     "defaultDate": "Domyślny",
     "link": "Link",
@@ -192,7 +192,7 @@
     "outboundEmails": "Ustawienia serwera SMTP dla wychodzących e-maili.",
     "layoutManager": "Zarządzaj standardowymi układami systemowymi dla widoku listy (boczny), widoku szczegółów (boczny), paneli relacji i ich kolejności sortowania, masowej aktualizacji itp.",
     "entityManager": "Konfiguracja modelu danych poprzez zarządzanie istniejącymi jednostkami i tworzenie nowych. Zarządzanie i tworzenie pól i relacji między jednostkami.",
-    "userInterface": "Proszę wybrać styl CSS, skonfigurować główne elementy nawigacyjne, domyślne pulpity nawigacyjne i encje, dostępne do szybkiego tworzenia, a także zarządzać innymi ustawieniami interfejsu użytkownika.",
+    "userInterface": "Proszę wybrać styl CSS, skonfigurować główne elementy nawigacyjne, domyślne pulpity nawigacyjne i encje, dostępne do szybkiego tworzenia, a także zarządzać innymi ustawieniami interfejsów użytkownika.",
     "authTokens": "Sprawdź aktywne sesje autoryzacyjne, w tym adresy IP użytkowników oraz datę i godzinę ostatniego dostępu.",
     "authentication": "Zarządzaj metodami i ustawieniami autoryzacji.",
     "notifications": "Zarządzaj ustawieniami powiadomień w aplikacji i e-mailowych.",

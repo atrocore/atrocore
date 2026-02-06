@@ -12,6 +12,6 @@
   },
   "exceptions": {
     "attributeGroupSsLinkedWithAttributes": "El grupo de atributos sigue vinculado a algún atributo o atributos. Por favor, desvincule primero los atributos.",
-    "entityIsUsed": "El Grupo de Atributos no se puede eliminar porque se utiliza en varios Atributos."
+    "entityIsUsed": "El grupo de atributos no puede eliminarse porque uno o varios atributos lo utilizan."
   }
 }

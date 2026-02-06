@@ -19,6 +19,7 @@
     }
   },
   "exceptions": {
-    "notValidCode": "Kod musi zawierać wyłącznie litery, cyfry, podkreślniki i myślniki."
+    "notValidCode": "Kod musi zawierać wyłącznie litery, cyfry, podkreślniki i myślniki.",
+    "notValidMatchingActivation": "Regułę dopasowania można zmienić tylko dla nieaktywnego dopasowania."
   }
 }

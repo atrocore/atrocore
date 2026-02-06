@@ -7,7 +7,7 @@
     "latestVersion": "Letzte Version"
   },
   "exceptions": {
-    "hasRequiredsDelete": "Sie dürfen das gewünschte Modul nicht löschen, da dieses mit einem anderen verknüpft ist.",
+    "hasRequiredsDelete": "Sie können ein erforderliches Modul nicht löschen.",
     "suchModuleIsAlreadyInstalled": "Dieses Modul ist schon installiert",
     "suchModuleVersionAlreadyInstalled": "Diese Modul-Version ist schon installiert",
     "noSuchModuleVersion": "Es gibt diese Modul-Version nicht",
@@ -17,12 +17,12 @@
     "downgradeProhibited": "Die Modulversion ist ungültig. Ein Downgrade ist verboten."
   },
   "labels": {
-    "purchased": "Erworben ",
+    "purchased": "Erworben",
     "rented": "Gemietet",
     "purchasedUntil": "Erworben, Updates bis",
     "rentUntil": "Gemietet, Updates bis",
     "Installed": "Installiert",
-    "Store": "Store",
+    "Store": "Onlineshop",
     "cancelModule": "Stornieren",
     "password": "Passwort",
     "updateStarted": "Update wurde gestartet",
@@ -39,9 +39,9 @@
     "Log": "Protokoll",
     "removeModule": "Modul löschen",
     "Run Update": "Update",
-    "settingModuleForInstalling": "Einstellung des Moduls für die Installation",
-    "settingModuleForUpdating": "Einstellung des Moduls für die Aktualisierung",
-    "settingModuleForRemoving": "Einstellung des Moduls für das Entfernen",
+    "settingModuleForInstalling": "Einstellung des Moduls für die Installation...",
+    "settingModuleForUpdating": "Einstellung des Moduls für die Aktualisierung...",
+    "settingModuleForRemoving": "Einstellung des Moduls für das Entfernen...",
     "updating": "wird aktualisiert...",
     "username": "Benutzername",
     "setModuleForInstalling": "Das Modul wurde für die Installation vorbereitet. Klicken Sie auf die Schaltfläche „Update“, um die Modulinstallation oder -entfernung anzuwenden.",

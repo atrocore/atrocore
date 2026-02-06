@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "польовий",
+    "name": "Поле",
     "roleScope": "Область застосування",
     "readAction": "Читання",
     "editAction": "Редагувати"

@@ -1,13 +1,13 @@
 {
   "fields": {
-    "name": "Ім'я",
+    "name": "Назва",
     "firstName": "Ім'я",
     "secondName": "Прізвище",
-    "gender": "Стать",
+    "gender": "родовий",
     "title": "Назва",
     "jobPosition": "Посада",
-    "email": "Email",
-    "phone": "Телефон",
+    "email": "Електронна пошта",
+    "phone": "звук мови",
     "mobile": "мобільний",
     "street": "Вулиця",
     "zip": "Поштовий індекс",

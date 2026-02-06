@@ -9,7 +9,7 @@
     "user": "Uživatel",
     "authToken": "Vytvořený autentizační token",
     "requestUrl": "Adresa URL žádosti",
-    "requestMethod": "Způsob vyžádání",
+    "requestMethod": "Metoda žádosti",
     "authTokenIsActive": "Auth Token je aktivní",
     "actionHistoryRecords": "Historie akce"
   },

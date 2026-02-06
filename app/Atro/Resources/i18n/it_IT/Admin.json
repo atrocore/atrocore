@@ -124,7 +124,7 @@
     "listOfSupportedFilesTypes": "Gestisce i tipi di file per un'ulteriore convalida dei file (ad esempio, immagini, documenti, video, ecc.) e classificazione.",
     "thumbnailTypes": "Gestisca i tipi di miniature per modificare la larghezza o l'altezza di una miniatura, o per crearne una nuova.",
     "folders": "Mantenere le cartelle virtuali per salvare i file caricati.",
-    "locale": "Gestisce le impostazioni locali come la lingua, il formato della data e dell'ora, il separatore decimale, il separatore delle migliaia, nonché le unità di misura specifiche della zona.",
+    "locale": "Gestisce le impostazioni locali come la lingua, il formato della data e dell'ora, il separatore decimale, il separatore delle migliaia e le unità di misura specifiche della zona.",
     "multiLanguagesSettings": "Configuri le lingue da utilizzare.",
     "composer": "Aggiorna il sistema e tutti i moduli installati, installa o rimuove i moduli disponibili pubblicamente o privatamente. La dipendenza dalla versione del modulo viene considerata automaticamente.",
     "measure": "Gestisce le sue misure e le unità di misura, imposta unità di misura predefinite e moltiplicatori per la conversione automatica delle unità di misura.",

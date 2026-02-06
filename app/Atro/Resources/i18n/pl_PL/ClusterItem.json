@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "entityName": "Nazwa podmiotu",
+    "entityId": "Identyfikator podmiotu",
+    "record": "Rekord",
+    "cluster": "Klaster",
+    "matchedRecord": "Dopasowany rekord"
+  }
+}

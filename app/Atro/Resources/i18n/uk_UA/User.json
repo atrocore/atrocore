@@ -35,7 +35,7 @@
     "receiveNotifications": "Отримувати сповіщення",
     "followEntityOnAssignment": "Автоматичне відстеження за призначенням",
     "style": "Стиль інтерфейсу користувача",
-    "notificationProfile": "Профіль сповіщення",
+    "notificationProfile": "Профіль сповіщень",
     "layoutProfile": "Лейаут профіль",
     "locale": "Локаль"
   },
@@ -51,7 +51,7 @@
     "External Accounts": "Зовнішні облікові записи",
     "Email Accounts": "Облікові записи ел. пошти",
     "Preferences": "Уподобання",
-    "Notifications": "Повідомлення"
+    "Notifications": "Сповіщення"
   },
   "tooltips": {
     "defaultTeam": "Усі записи, створені цим користувачем, за промовчанням будуть відноситися до цієї групи.",
@@ -67,7 +67,7 @@
     "passwordResetEmailBody": "Ви можете відновити свій пароль за посиланням {link}. Строк дії цього посилання скоро завершиться.",
     "passwordExpiredForm": "Строк дії Вашого пароля завершився. Будь ласка, оновіть його у формі нижчу",
     "passwordChanged": "Пароль був змінений",
-    "userCantBeEmpty": "Ім'я користувача не може бути порожнім",
+    "userCantBeEmpty": "Ім'я користувача не може бути порожнім.",
     "wrongUsernamePasword": "Неправильне ім'я користувача/пароль",
     "emailAddressCantBeEmpty": "Адреса електронної пошти не може бути порожньою",
     "userNameEmailAddressNotFound": "Ім'я користувача/Адреса електронної пошти не знайдено",

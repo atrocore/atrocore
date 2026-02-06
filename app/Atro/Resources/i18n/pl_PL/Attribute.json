@@ -76,7 +76,7 @@
     "removeAttribute(s)": "Wszystkie wartości dla tego(tych) atrybutu(ów) również zostaną usunięte. Czy naprawdę chce Pan(i) usunąć ten(te) atrybut(y)?"
   },
   "filterLabels": {
-    "All": "Wszystkie"
+    "All": "Wszystko"
   },
   "tooltips": {
     "pattern": "Aby włączyć tylko wielkie litery o długości 10 znaków, proszę użyć \"/^[A-Z]{1,10}$/\".",

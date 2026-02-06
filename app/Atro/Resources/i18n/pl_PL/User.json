@@ -68,7 +68,7 @@
     "passwordChangeLinkEmailSubject": "Prośba o Zmianę Hasła",
     "passwordChangeLinkEmailBody": "Możesz zmienić swoje hasło, klikając w ten link {link}. Ten unikalny URL wygaśnie wkrótce.",
     "passwordChanged": "Hasło zostało zmienione",
-    "userCantBeEmpty": "Nazwa Użytkownika nie może być pusta",
+    "userCantBeEmpty": "Nazwa użytkownika nie może pozostać pusta.",
     "wrongUsernamePasword": "Zła nazwa użytkownika/hasło",
     "emailAddressCantBeEmpty": "Adres Email nie może być pusty",
     "userNameEmailAddressNotFound": "Nazwa Użytkownika/Adres Email nie znaleziony",

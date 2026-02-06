@@ -34,6 +34,6 @@
   },
   "exceptions": {
     "styleIsUsed": "El estilo en uso no se puede quitar.",
-    "codeShouldBeString": "El código debe ser una cadena válida sin caracteres especiales ni espacios"
+    "codeShouldBeString": "El código debe ser una cadena válida sin caracteres especiales ni espacios."
   }
 }

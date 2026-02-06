@@ -108,7 +108,8 @@
     "derivedRecords": "Enregistrements dérivés",
     "createdCountFilterActionExecution": "Créé par l'exécution d'une action",
     "updatedCountFilterActionExecution": "Mise à jour par l'exécution de l'action",
-    "field": "Champ"
+    "field": "Champ",
+    "derivativeStatus": "Statut du dérivé"
   },
   "scopeNames": {
     "Classification": "Classification",
@@ -195,7 +196,9 @@
     "MasterDataEntity": "Entité de reférence",
     "ActionExecution": "Exécution de l'action",
     "ActionExecutionLog": "Journal d'exécution de l'action",
-    "Layout": "Disposition"
+    "Layout": "Disposition",
+    "Cluster": "Groupement d'entreprises",
+    "ClusterItem": "Poste de la grappe"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
@@ -487,7 +490,7 @@
     "Added": "Ajouté",
     "RememberUsername": "Mémoriser le nom d'utilisateur",
     "Clear": "Effacer",
-    "youMustConfigureNotificationConnection": "Vous devez d'abord configurer la connexion de notification par e-mail pour que les notifications soient envoyées.",
+    "youMustConfigureNotificationConnection": "Tout d'abord, vous devez configurer la connexion de notification par e-mail afin de recevoir les notifications.",
     "Bookmarking": "Signets",
     "Unbookmark": "Supprimer les signets",
     "Bookmark": "Signet",
@@ -555,11 +558,11 @@
     "Contact Us": "Contactez nous",
     "pageNotFoundDescription": "La ressource que vous recherchez a peut-être été déplacée, supprimée ou n'existe pas.",
     "errorCode": "Code d'erreur",
-    "replaceItem": "Remplacer l'élément",
+    "replaceItem": "Remplacer",
     "Open Dashboard": "Ouvrir le tableau de bord",
     "pageNotFound": "Page non trouvée",
     "accessDeniedDescription": "Votre compte ne dispose pas des autorisations nécessaires pour consulter cette ressource. Si vous pensez que vous devriez y avoir accès, veuillez contacter votre administrateur.",
-    "removeItem": "Supprimer l'élément",
+    "removeItem": "Supprimer",
     "accessDenied": "Accès refusé",
     "currentSelection": "Sélection Courante"
   },
@@ -743,7 +746,9 @@
     "MasterDataEntity": "Entités de reference",
     "ActionExecution": "Exécutions de l'action",
     "ActionExecutionLog": "Journaux d'exécution de l'action",
-    "Layout": "Dispositions"
+    "Layout": "Dispositions",
+    "Cluster": "Groupes d'entreprises",
+    "ClusterItem": "Éléments de la grappe"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
@@ -1184,7 +1189,7 @@
     "datetimeIsInvalid": "La date et l'heure du champ \"%s\" ne sont pas valides.",
     "notUniqueRecordField": "L'enregistrement ne peut pas être sauvegardé, l'enregistrement avec un tel \"%s\" existe déjà.",
     "entityCannotBeBookmarked": "Les enregistrements de cette entité ne peuvent pas être mis en signet.",
-    "integerValueValidationFailed": "La valeur entière du champ/attribut \"%s\" doit être comprise entre %s et %s",
+    "integerValueValidationFailed": "La valeur entière du champ/attribut \"%s\" doit être comprise entre %s et %s.",
     "notUniqueCreatedValue": "Ces relations existent déjà et ne peuvent donc pas être ajoutées."
   },
   "queryBuilderFilter": {

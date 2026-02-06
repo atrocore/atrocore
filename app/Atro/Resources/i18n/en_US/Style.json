@@ -34,6 +34,6 @@
   },
   "exceptions": {
     "styleIsUsed": "Style in use cannot be removed.",
-    "codeShouldBeString": "Code should be valid string without special character and space"
+    "codeShouldBeString": "Code should be valid string without special character and space."
   }
 }

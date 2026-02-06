@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "entityName": "Název subjektu",
+    "entityId": "ID subjektu",
+    "record": "Záznam",
+    "cluster": "Cluster",
+    "matchedRecord": "Shodný záznam"
+  }
+}

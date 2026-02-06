@@ -46,9 +46,9 @@
   },
   "tooltips": {
     "recordsPerPage": "Número de registros a mostrar inicialmente en las vistas.",
-    "recordsPerPageSmall": "Número de registros a mostrar inicialmente en los paneles relacionados",
-    "authTokenLifetime": "Define cuanto tiempo de vida tienen los tokens.\n0 - significa que no caduca.",
-    "authTokenMaxIdleTime": "Define cuándo caduca el Token luego del último acceso.\n0 - significa que no caduca.",
+    "recordsPerPageSmall": "Número de registros que se muestran inicialmente en los paneles de relaciones.",
+    "authTokenLifetime": "Define el período de vigencia de los tokens. 0 (cero) significa que no caducan.",
+    "authTokenMaxIdleTime": "Define cuánto tiempo pueden existir los tokens de acceso desde el último acceso. Un valor de 0 (cero) significa que no hay caducidad.",
     "userThemesDisabled": "Si está marcado, los usuarios no podrán seleccionar otro tema.",
     "aclStrictMode": "Activado: el acceso a los ámbitos estará prohibido si no está especificado en roles.\n\nDeshabilitado: se permitirá el acceso a ámbitos si no está especificado en roles.",
     "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",

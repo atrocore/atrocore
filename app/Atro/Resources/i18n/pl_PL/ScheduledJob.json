@@ -24,7 +24,8 @@
       "ScanStorage": "Przechowywanie skanów",
       "FindMatches": "Proszę znaleźć dopasowania",
       "CalculateScriptFieldsForEntities": "Obliczanie pól skryptu",
-      "SendReports": "Wysyłanie anonimowych raportów o błędach"
+      "SendReports": "Wysyłanie anonimowych raportów o błędach",
+      "CreateClusters": "Tworzenie klastrów"
     }
   },
   "tooltips": {

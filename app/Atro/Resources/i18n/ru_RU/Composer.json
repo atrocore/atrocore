@@ -15,7 +15,7 @@
   },
   "exceptions": {
     "hasRequireds": "Модуль не отвечает требованиям",
-    "hasRequiredsDelete": "Вы не можете удалить требуемый модуль",
+    "hasRequiredsDelete": "Необходимый модуль удалить нельзя.",
     "suchModuleIsAlreadyInstalled": "Данный модуль уже установлен",
     "suchModuleVersionAlreadyInstalled": "Данная версия модуля уже установлена",
     "noSuchModuleVersion": "Такой версии модуля нет",

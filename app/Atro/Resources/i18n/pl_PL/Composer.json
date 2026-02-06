@@ -15,7 +15,7 @@
   },
   "exceptions": {
     "hasRequireds": "Moduł nie spełnia wymagań",
-    "hasRequiredsDelete": "Nie można usunąć wymaganego modułu",
+    "hasRequiredsDelete": "Nie można usunąć modułu wymaganego.",
     "suchModuleIsAlreadyInstalled": "Taki moduł jest już zainstalowany",
     "suchModuleVersionAlreadyInstalled": "Taka wersja modułu jest już zainstalowana",
     "noSuchModuleVersion": "Brak takiej wersji modułu",

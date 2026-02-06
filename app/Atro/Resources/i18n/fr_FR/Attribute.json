@@ -99,6 +99,6 @@
     "entityCannotBeChanged": "L'entité ne peut être modifiée.",
     "compositeAttributeNotFound": "L'attribut composite est introuvable.",
     "compositeAttributeCannotBeChild": "Un attribut composite ne peut pas être un enfant.",
-    "entityNotAllowToChoose": "L'entité n'est pas autorisée à choisir"
+    "entityNotAllowToChoose": "L'entité ne peut pas être choisie."
   }
 }

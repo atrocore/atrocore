@@ -84,7 +84,9 @@
     "MasterDataEntity": "Subjekt kmenových dat",
     "ActionExecution": "Provedení akce",
     "ActionExecutionLog": "Protokol o provedení akce",
-    "Layout": "Rozložení"
+    "Layout": "Rozložení",
+    "Cluster": "Cluster",
+    "ClusterItem": "Položka klastru"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
@@ -156,7 +158,9 @@
     "MasterDataEntity": "Subjekty kmenových dat",
     "ActionExecution": "Provádění akcí",
     "ActionExecutionLog": "Protokoly o provádění akcí",
-    "Layout": "Rozložení"
+    "Layout": "Rozložení",
+    "Cluster": "Klastry",
+    "ClusterItem": "Položky klastru"
   },
   "labels": {
     "basic": "Basic",
@@ -408,7 +412,7 @@
     "Select Image": "Výběr existujícího obrázku",
     "Upload Image": "Nahrání obrázku z místního souborového systému",
     "copyConfigurations": "Kopírování konfigurací",
-    "youMustConfigureNotificationConnection": "Aby bylo možné odesílat oznámení, je třeba nejprve nakonfigurovat připojení pro e-mailová oznámení.",
+    "youMustConfigureNotificationConnection": "Nejprve musíte nakonfigurovat připojení pro e-mailová oznámení, abyste mohli oznámení přijímat.",
     "Unbookmark": "Zrušit záložku",
     "Bookmark": "Záložka",
     "Unbookmarking": "Zrušení záložky",
@@ -426,7 +430,7 @@
     "addGroup": "Začátek / konec skupiny",
     "Summary": "Souhrn",
     "Activities": "Aktivity",
-    "enableAutomaticClosing": "Povolit automatické otevírání a zavírání tohoto panelu při najetí myší.",
+    "enableAutomaticClosing": "Zakázat automatické otevírání a zavírání tohoto panelu při přejetí myší.",
     "disableAutomaticClosing": "Zakázat automatické otevírání a zavírání tohoto panelu při přejetí myší.",
     "actionFollow": "Klikněte pro sledování",
     "actionUnfollow": "Sledujete, Kliknutím zrušíte sledování",
@@ -511,7 +515,7 @@
     "hideAll": "Skrýt vše",
     "Relations": "Vztahy",
     "view": "Zobrazit",
-    "Saved Filters": "Uložené filtry",
+    "Saved Filters": "Uložený filtr",
     "Support": "Podpora",
     "Contact Us": "Kontaktujte nás",
     "Open Dashboard": "Otevřít přístrojový panel",
@@ -520,8 +524,9 @@
     "errorCode": "Kód chyby",
     "accessDeniedDescription": "Váš účet nemá potřebná oprávnění k zobrazení tohoto zdroje. Pokud se domníváte, že byste měli mít přístup, obraťte se na svého správce.",
     "accessDenied": "Přístup odepřen",
-    "replaceItem": "Nahradit položku",
-    "removeItem": "Odebrat položku"
+    "replaceItem": "Vyměňte stránky",
+    "removeItem": "Smazat",
+    "isLinked": "Je propojen"
   },
   "fields": {
     "number": "Číslo",
@@ -631,7 +636,8 @@
     "derivedRecords": "Odvozené záznamy",
     "createdCountFilterActionExecution": "Vytvořil Action Execution",
     "updatedCountFilterActionExecution": "Aktualizováno provedením akce",
-    "field": "Pole"
+    "field": "Pole",
+    "derivativeStatus": "Stav derivátu"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
@@ -830,7 +836,7 @@
     "updateFromToThis": "{user} v tomto {entityType} aktualizováno",
     "changed": "byl změněn",
     "ownThis": "{user} nastaví {owner} jako vlastníka pro tento {entityType}",
-    "ownYou": "{uživatel} vás nastavil jako vlastníka pro {entityType} {entity}",
+    "ownYou": "{user} nastavil(a) {owner} jako vlastníka pro {entityType} {entity}",
     "ownThisVoid": "{user} zruší nastavení vlastníka pro tento {entityType}.",
     "ownVoid": "{user} zruší nastavení vlastníka pro {entityType} {entity}.",
     "ownThisSelf": "{user} se nastavil jako vlastník pro tento {entityType}.",
@@ -840,7 +846,7 @@
     "statusThis": "{uživatel} aktualizoval {pole}",
     "createRelated": "{uživatel} vytvořil {relatedEntityType} {relatedEntity} související s {entityType} {entita}",
     "relate": "{user} propojený s {relatedEntityType} {relatedEntity} s {entityType} {entity}",
-    "relateThis": "{user} propojený s {relatedEntityType} {relatedEntity} s tímto {entityType}",
+    "relateThis": "{user} odpojeno {relatedEntityType} {relatedEntity} z tohoto {entityType}.",
     "emailReceivedInitialThis": "Přijatý e-mail, tento {entityType} vytvořen",
     "emailReceivedFrom": "E-mail přijatý od {od}, týkající se {entityType} {entita}",
     "updateOneInThis": "{user} aktualizoval {relatedEntityType} {relatedEntity} v tomto {entityType}.",
@@ -1120,7 +1126,7 @@
   },
   "exceptions": {
     "reverseAssociationError": "Chyba zpětného přiřazení: %s",
-    "integerValueValidationFailed": "Celočíselná hodnota pole/atributu \"%s\" musí být mezi %s a %s",
+    "integerValueValidationFailed": "Celočíselná hodnota pole/atributu \"%s\" musí být mezi %s a %s.",
     "singleClassificationAllowed": "Je povolena pouze jedna klasifikace",
     "moreThanOneClassification": "Některé záznamy mají více než jednu klasifikaci.",
     "noSuchAssociation": "Ověření se nezdařilo. Žádná taková asociace neexistuje.",
@@ -1263,7 +1269,7 @@
     "delete_group": "Odstranit"
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sám sebe",
+    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
     "composerUpdateThis": "{uživatel}"
   },
   "twig": {
@@ -1302,7 +1308,7 @@
     }
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sama",
+    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
     "composerUpdateThis": "{uživatel}"
   },
   "listViewModes": {

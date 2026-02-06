@@ -12,12 +12,12 @@
     "accessData": "Dane dostępu",
     "createAttributeValueAction": "Tworzenie wartości atrybutu",
     "deleteAttributeValueAction": "Usuń wartość atrybutu",
-    "attributes": "Atrybuty",
+    "attributes": "Atrybut",
     "attributePanels": "Panele atrybutów"
   },
   "labels": {
-    "all": "Wszystko",
-    "team": "Zespół",
+    "all": "Wszystkie",
+    "team": "Team",
     "own": "Własny",
     "no": "Nie",
     "yes": "Tak"

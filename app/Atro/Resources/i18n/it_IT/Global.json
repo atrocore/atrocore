@@ -84,7 +84,9 @@
     "MasterDataEntity": "Entità di dati master",
     "ActionExecution": "Esecuzione dell'azione",
     "ActionExecutionLog": "Registro di esecuzione dell'azione",
-    "Layout": "Layout"
+    "Layout": "Layout",
+    "Cluster": "Cluster",
+    "ClusterItem": "Articolo del cluster"
   },
   "labels": {
     "inherited": "Ereditato",
@@ -344,7 +346,7 @@
     "Select Image": "Seleziona l'immagine esistente",
     "Upload Image": "Carica l'immagine da un filesystem locale",
     "copyConfigurations": "Copiare le configurazioni",
-    "youMustConfigureNotificationConnection": "Per inviare le notifiche, deve prima configurare la connessione di notifica e-mail.",
+    "youMustConfigureNotificationConnection": "Per prima cosa, devi configurare la connessione per le notifiche via e-mail per poter ricevere le notifiche.",
     "Bookmarking": "Segnalibro",
     "Unbookmark": "Non segnare",
     "Bookmark": "Segnalibro",
@@ -442,14 +444,15 @@
     "Saved Filters": "Filtri salvati",
     "Support": "Supporto",
     "accessDeniedDescription": "Il suo account non dispone dei permessi necessari per visualizzare questa risorsa. Se ritiene di dover accedere, contatti il suo amministratore.",
-    "replaceItem": "Sostituire l'articolo",
-    "removeItem": "Rimuovi articolo",
+    "replaceItem": "Sostituire",
+    "removeItem": "Rimuovere",
     "Contact Us": "Contatti",
     "Open Dashboard": "Aprire il Dashboard",
     "pageNotFound": "Pagina non trovata",
     "pageNotFoundDescription": "La risorsa che sta cercando potrebbe essere stata spostata, cancellata o non esistere.",
     "errorCode": "Codice di errore",
-    "accessDenied": "Accesso negato"
+    "accessDenied": "Accesso negato",
+    "isLinked": "È collegato"
   },
   "messages": {
     "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",
@@ -906,7 +909,7 @@
     "Team": "Squadre",
     "Role": "Ruoli",
     "OutboundEmail": "Email in uscita",
-    "ScheduledJob": "Lavori programmati",
+    "ScheduledJob": "Lavoro programmato",
     "Job": "Offerte di lavoro",
     "LayoutProfile": "Profili di layout",
     "ScheduledJobLogRecord": "Registri del registro dei lavori programmati",
@@ -929,7 +932,9 @@
     "MasterDataEntity": "Entità di dati master",
     "ActionExecution": "Esecuzioni di azioni",
     "ActionExecutionLog": "Registri di esecuzione delle azioni",
-    "Layout": "Layout"
+    "Layout": "Layout",
+    "Cluster": "Cluster",
+    "ClusterItem": "Articoli del cluster"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."
@@ -1087,7 +1092,8 @@
     "conditionalProperties": "Proprietà condizionali",
     "createdCountFilterActionExecution": "Creato da Esecuzione azione",
     "updatedCountFilterActionExecution": "Aggiornato dall'esecuzione dell'azione",
-    "field": "Campo"
+    "field": "Campo",
+    "derivativeStatus": "Stato derivato"
   },
   "tooltips": {
     "groupEnd": "Selezioni per utilizzare questo elemento per contrassegnare la fine degli elementi di navigazione raggruppati. Tutti gli elementi successivi a questa voce saranno disaggregati."
@@ -1133,7 +1139,7 @@
     "createThis": "{utente} ha creato questa {entitàTipo}",
     "own": "{utente} ha impostato {proprietario} come proprietario per {entityType} {entity}",
     "ownThis": "{user} ha impostato {owner} come proprietario per questo {entityType}",
-    "ownYou": "{utente} l'ha impostata come proprietario per {entityType} {entità}",
+    "ownYou": "{utente} ha impostato {proprietario} come proprietario per {entityType} {entity}",
     "ownThisVoid": "{user} ha disattivato il proprietario per questo {entityType}.",
     "ownVoid": "{user} ha disattivato il proprietario di {entityType} {entity}.",
     "ownThisSelf": "{user} ha impostato se stesso come proprietario per questo {entityType}.",
@@ -1152,7 +1158,7 @@
     "createRelatedThis": "{utente} ha creato {entityType correlata} {entità correlata} correlata a questa {entitàTipo}",
     "createRelated": "{utente} ha creato {entityType correlato} {entityEntity} correlata a {entityType} {entità}",
     "relate": "{user} ha collegato {relatedEntityType} {entità correlata} con {entitàTipo} {entità}",
-    "relateThis": "{user} ha collegato {relatedEntityType} {entityEntity correlata} con questo {entityType}",
+    "relateThis": "{user} ha scollegato {relatedEntityType} {entityEntity} correlata da questo {entityType}.",
     "emailReceivedFromThis": "Email ricevuta da {da}",
     "emailReceivedInitialFromThis": "Email ricevuta da {da}, questa {entitàTipo} creata",
     "emailReceivedThis": "Email ricevuta",

@@ -17,7 +17,7 @@
     "invalidVersion": "Module version is invalid.",
     "downgradeProhibited": "Module version is invalid. Downgrade is prohibited.",
     "hasRequireds": "Module has not satisfied requireds",
-    "hasRequiredsDelete": "You cann't delete required module",
+    "hasRequiredsDelete": "You cannot delete a required module.",
     "suchModuleIsAlreadyInstalled": "Such module is already installed",
     "suchModuleVersionAlreadyInstalled": "Such module version already installed",
     "noSuchModuleVersion": "No such module version",

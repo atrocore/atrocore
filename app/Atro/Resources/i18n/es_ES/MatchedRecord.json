@@ -7,7 +7,9 @@
     "source": "Fuente",
     "sourceEntity": "Entidad de origen",
     "sourceEntityId": "ID de la entidad de origen",
-    "hash": "Hash único"
+    "hash": "Hash único",
+    "hasCluster": "Tiene Cluster",
+    "clusterItems": "Partidas agrupadas"
   },
   "options": {
     "type": {

@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "entityName": "Название организации",
+    "entityId": "ID субъекта",
+    "record": "Запись",
+    "cluster": "Кластер",
+    "matchedRecord": "Сопоставленная запись"
+  }
+}

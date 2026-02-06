@@ -24,7 +24,8 @@
       "ScanStorage": "Escanear almacenamiento",
       "FindMatches": "Buscar coincidencias",
       "CalculateScriptFieldsForEntities": "Calcular campos de script",
-      "SendReports": "Enviar informes de error anónimos"
+      "SendReports": "Enviar informes de error anónimos",
+      "CreateClusters": "Crear agrupaciones"
     }
   },
   "tooltips": {

@@ -4,7 +4,7 @@
     "isDefault": "Standard",
     "description": "Beschreibung",
     "hideShowFullList": "„Vollständige Liste anzeigen“ auf Beziehungsfeldern ausblenden",
-    "layouts": "Layout",
+    "layouts": "Layouts",
     "parent": "Eltern-Layout-Profil",
     "navigation": "Menü Navigation",
     "dashboardLayout": "Dashboard-Layout",
@@ -12,12 +12,12 @@
   },
   "labels": {
     "addGroup": "Gruppe hinzufügen",
-    "Menu": "Menu",
+    "Menu": "Menü",
     "Dashboards": "Dashboards",
     "Favorites": "Favoriten"
   },
   "exceptions": {
-    "defaultIsRequired": "Ein Standard-Layoutprofil sollte im System vorhanden sein"
+    "defaultIsRequired": "Ein Standard-Layoutprofil sollte im System vorhanden sein."
   },
   "messages": {
     "profileWillBeNewDefault": "Dieses Profil wird das neue Standardprofil sein, sind Sie sicher?",

@@ -11,7 +11,7 @@
     "unlinkAttributeGroupConfirmation": "È sicuro di voler scollegare tutti gli Attributi del Gruppo Attributi?"
   },
   "exceptions": {
-    "attributeGroupSsLinkedWithAttributes": "Il gruppo di attributi è collegato ad uno o più attributi. Per favore, scolleghi prima l'attributo o gli attributi.",
-    "entityIsUsed": "Il Gruppo di attributi non può essere eliminato perché viene utilizzato in diversi Attributi."
+    "attributeGroupSsLinkedWithAttributes": "Il Gruppo di attributi è ancora collegato ad alcuni attributi. La preghiamo di scollegare prima l'attributo o gli attributi.",
+    "entityIsUsed": "Il Gruppo di attributi non può essere eliminato perché uno o più attributi lo utilizzano."
   }
 }

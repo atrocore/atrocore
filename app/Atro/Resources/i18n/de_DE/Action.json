@@ -2,7 +2,7 @@
   "fields": {
     "isActive": "Aktiv",
     "type": "Typ",
-    "sourceEntity": "Quell-Entität",
+    "sourceEntity": "Quellentität",
     "inBackground": "Im Hintergrund ausführen",
     "usage": "Verwendung",
     "massAction": "Massenaktion",
@@ -72,7 +72,7 @@
       "entity": "Entitäts-Aktionsbutton"
     },
     "mode": {
-      "basic": "Basic",
+      "basic": "Grundlegend",
       "script": "Skript"
     }
   },

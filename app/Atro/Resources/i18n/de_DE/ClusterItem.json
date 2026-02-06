@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "entityName": "Entitäts-Name",
+    "entityId": "Entitäts-ID",
+    "record": "Datensatz",
+    "cluster": "Cluster",
+    "matchedRecord": "Übereinstimmender Datensatz"
+  }
+}

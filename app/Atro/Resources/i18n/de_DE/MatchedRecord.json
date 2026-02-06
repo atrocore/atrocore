@@ -7,7 +7,9 @@
     "masterEntity": "Stammdaten-Entität",
     "masterEntityId": "Stammdaten-Entitäts-ID",
     "score": "Punktzahl",
-    "hash": "Eindeutiger Hash"
+    "hash": "Eindeutiger Hash",
+    "hasCluster": "Hat Cluster",
+    "clusterItems": "Cluster-Artikel"
   },
   "options": {
     "type": {

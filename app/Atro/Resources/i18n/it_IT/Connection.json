@@ -17,7 +17,7 @@
     "oauthConsumerKey": "Chiave consumatore Oauth",
     "oauthConsumerSecret": "Segreto del consumatore Oauth",
     "requestTokenUrl": "URL del token di richiesta",
-    "accessTokenUrl": "URL del token di accesso",
+    "accessTokenUrl": "Url del token di accesso",
     "oauthVerifier": "Verificatore Oauth",
     "oauthToken": "Gettone di accesso",
     "oauthTokenSecret": "Token di accesso segreto",

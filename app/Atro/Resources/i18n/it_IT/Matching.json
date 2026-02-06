@@ -17,6 +17,9 @@
     "configureMatching": "Configurare la corrispondenza"
   },
   "tooltips": {
-    "matchedRecordsMax": "Lasci questo campo vuoto per consentire un numero illimitato di record abbinati. Se il numero di record abbinati supera questo valore, la corrispondenza sarà disattivata."
+    "matchedRecordsMax": "Se il numero di record abbinati per qualsiasi record supera questo valore, l'abbinamento sarà disattivato. Lasci questo campo vuoto per consentire un numero illimitato di record abbinati. "
+  },
+  "exceptions": {
+    "noRules": "L'attivazione è bloccata. Non sono state definite regole di abbinamento per questo abbinamento."
   }
 }
