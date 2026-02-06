@@ -103,6 +103,16 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
 
             return buttons;
         },
+
+        getStagingEntities(masterEntity) {
+            let result = [];
+            _.each(this.getMetadata().get(['scopes']), (scopeDefs, scope) => {
+                if (scopeDefs.primaryEntityId === masterEntity && scopeDefs.role !== 'changeRequest') {
+                    result.push(scope);
+                }
+            })
+            return result;
+        },
     })
 });
 
