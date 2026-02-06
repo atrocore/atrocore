@@ -10,9 +10,11 @@
     "name": "goldenRecord"
   },
   {
-    "name": "stagingItemCount"
+    "name": "stagingItemCount",
+    "notSortable": false
   },
   {
-    "name": "masterItemCount"
+    "name": "masterItemCount",
+    "notSortable": false
   }
 ]

@@ -35,12 +35,18 @@ class Cluster extends Base
         parent::applyAdditional($result, $params);
 
         if (!empty($this->selectParameters['select'])) {
+            // For performance, we have to calculate count on the filtered result
+            $callbackParam = 'subQueryCallbacks';
+            if (in_array($this->selectParameters['sortBy'] ?? '', ['stagingItemCount', 'masterItemCount'])) {
+                // We have to calculate count on the main query
+                $callbackParam = 'callbacks';
+            }
             if (in_array('stagingItemCount', $this->selectParameters['select'])) {
-                $result['subQueryCallbacks'][] = [$this, 'stagingItemCountCallback'];
+                $result[$callbackParam][] = [$this, 'stagingItemCountCallback'];
             }
 
             if (in_array('masterItemCount', $this->selectParameters['select'])) {
-                $result['subQueryCallbacks'][] = [$this, 'masterItemCountCallback'];
+                $result[$callbackParam][] = [$this, 'masterItemCountCallback'];
             }
         }
     }
@@ -73,8 +79,14 @@ class Cluster extends Base
         $operator = $field === 'masterItemCount' ? '=' : '<>';
         $tableAlias = $field === 'masterItemCount' ? 'mic' : 'sic';
 
+        $masterEntityColumn = 'atro_master_entity';
+        if (in_array($this->selectParameters['sortBy'] ?? '', ['stagingItemCount', 'masterItemCount'])) {
+            $qb->orderBy($mapper->getQueryConverter()->fieldToAlias($this->selectParameters['sortBy']), !empty($this->selectParameters['asc']) ? 'ASC' : 'DESC');
+            $masterEntityColumn = 'master_entity';
+        }
+
         $countQb = $mapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp);
-        $countQb->andwhere("$mtAlias.cluster_id = mt_alias.id and $mtAlias.entity_name $operator mt_alias.atro_master_entity");
+        $countQb->andwhere("$mtAlias.cluster_id = mt_alias.id and $mtAlias.entity_name $operator mt_alias.$masterEntityColumn");
 
         $countSql = str_replace([$mtAlias, 'mt_alias'], [$tableAlias, $mtAlias], $countQb->getSQL());
         $qb->addSelect("({$countSql})  AS $column");
