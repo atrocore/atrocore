@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotModified;
+use Atro\Core\FieldMetadataManager;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -680,6 +682,57 @@ class Record extends RecordService
             }
         }
 
+
+        return $entity;
+    }
+
+    public function unlockField(string $entityId, string $field): Entity
+    {
+        if (!$this->getMetadata()->get(['scopes', $this->getEntityType(), 'enableFieldValueLock'])) {
+            throw new NotFound();
+        }
+
+        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $entityId);
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAttribute'])) {
+            $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
+        }
+
+        $this->getInjection(FieldMetadataManager::class)->prepareEntityMetadata($entity);
+
+        $entity->setMeta('locked', $field, false);
+        $this->getEntityManager()->saveEntity($entity);
+
+        return $entity;
+    }
+
+    public function lockField(string $entityId, string $field): Entity
+    {
+        if (!$this->getMetadata()->get(['scopes', $this->getEntityType(), 'enableFieldValueLock'])) {
+            throw new NotFound();
+        }
+
+        /** @var Entity $entity */
+        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $entityId);
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field, 'disableFieldValueLock'])) {
+            throw new BadRequest("Field $field is not allowed to be locked");
+        }
+
+        if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'hasAttribute'])) {
+            $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
+        }
+
+        $this->getInjection(FieldMetadataManager::class)->prepareEntityMetadata($entity);
+
+        $entity->setMeta('locked', $field, true);
+        $this->getEntityManager()->saveEntity($entity);
 
         return $entity;
     }

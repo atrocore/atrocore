@@ -19392,6 +19392,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: var(--field-inline-edit-color);
 }
 
+.list-container > .list[data-editable=true] > table tr td.cell[data-visible=false] > * {
+    display: none !important;
+}
+
 .list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit],
 .compare-records .compare-panel table tr td.cell[data-mode=edit] {
     padding: 5px;

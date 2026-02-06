@@ -207,6 +207,10 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             this.$el.find('.unit-select select').selectize({
                 plugins: ['clear_button']
             });
+        },
+
+        getLockedFieldName() {
+            return this.originalName;
         }
 
     });

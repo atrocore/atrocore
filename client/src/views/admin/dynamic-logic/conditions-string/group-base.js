@@ -98,7 +98,8 @@ Espo.define('views/admin/dynamic-logic/conditions-string/group-base', 'view', fu
                 el: this.getSelector() + ' [data-view-key="'+key+'"]',
                 number: number,
                 operator: operator,
-                operatorString: operatorString
+                operatorString: operatorString,
+                hasFieldLocking: false
             });
         },
 

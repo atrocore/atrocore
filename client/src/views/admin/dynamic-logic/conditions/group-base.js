@@ -142,7 +142,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 type: type,
                 field: field,
                 attributeId: attributeId,
-                fieldType: fieldType
+                fieldType: fieldType,
+                hasFieldLocking: false
             }, function (view) {
                 if (this.isRendered()) {
                     view.render()

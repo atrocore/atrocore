@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Slim\Http\Request;
 
 abstract class AbstractRecordController extends AbstractController
 {
@@ -664,5 +665,39 @@ abstract class AbstractRecordController extends AbstractController
         }
 
         return $result;
+    }
+
+    public function actionUnlockField(array $params, \stdClass $data, Request $request)
+    {
+        if (!$this->getMetadata()->get(['scopes', $this->name, 'enableFieldValueLock'])) {
+            throw new NotFound();
+        }
+
+        if (!$request->isPost() || !property_exists($data, 'entityId') || !property_exists($data, 'field')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->unlockField($data->entityId, $data->field)->toArray();
+    }
+
+    public function actionLockField(array $params, \stdClass $data, Request $request)
+    {
+        if (!$this->getMetadata()->get(['scopes', $this->name, 'enableFieldValueLock'])) {
+            throw new NotFound();
+        }
+
+        if (!$request->isPost() || !property_exists($data, 'entityId') || !property_exists($data, 'field')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->lockField($data->entityId, $data->field)->toArray();
     }
 }
