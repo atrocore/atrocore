@@ -71,13 +71,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 name: 'edit',
                 label: 'Edit',
                 style: 'primary',
+                sortOrder: 100,
             }
         ],
 
         dropdownItemList: [
             {
                 name: 'delete',
-                label: 'Remove'
+                label: 'Remove',
+                sortOrder: 110,
             }
         ],
 
@@ -280,6 +282,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        actionSelect: function (data) {
+            this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
+                entityName: this.model.name,
+                entityId: this.model.id
+            }).then( _ => {
+                this.notify(this.translate('Success'), 'success')
+            })
+        },
+
         showReloadPageMessage() {
             Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);
         },
@@ -408,6 +419,51 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        actionUniversalAction(data) {
+            data = data || {};
+
+            const name = data.name;
+            if (!name) {
+                return;
+            }
+
+            let model = this.model;
+            if (!model) {
+                return;
+            }
+
+            const scope = model.name || this.scope;
+            const id = model.id;
+
+            let actionDefs = this.getMetadata().get(['clientDefs', scope, 'detailActions', name]) || {};
+
+            if (!actionDefs || !actionDefs.url) {
+                return;
+            }
+
+            let runAction = () => {
+                this.notify(this.translate('Loading...'));
+                this.ajaxPostRequest(actionDefs.url, {action: name, scope: scope, id: id})
+                    .then(response => {
+                        this.notify(this.translate('Done'), 'success');
+                        if (actionDefs.refresh) {
+                            this.model.fetch();
+                        }
+                    });
+            }
+
+            if (actionDefs.confirm) {
+                this.confirm({
+                    message: this.translate(actionDefs.name, 'actionConfirms', scope),
+                    confirmText: this.translate('Apply')
+                }, function () {
+                    runAction();
+                }, this);
+            } else {
+                runAction();
+            }
+        },
+
         executeActionRequest(payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
@@ -527,8 +583,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.duplicateAction) {
                 if (this.getAcl().check(this.entityType, 'create')) {
                     this.dropdownItemList.push({
-                        'label': 'Duplicate',
-                        'name': 'duplicate'
+                        label: 'Duplicate',
+                        name: 'duplicate',
+                        sortOrder: 120
                     });
                 }
             }
@@ -536,7 +593,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && !this.getMetadata().get(`scopes.${this.model.name}.disableAttributeLinking`) && this.getAcl().check(this.entityType, 'createAttributeValue')) {
                 this.dropdownItemList.push({
                     label: 'addAttribute',
-                    name: 'addAttribute'
+                    name: 'addAttribute',
+                    sortOrder: 130
+                });
+            }
+
+            if(this.getAcl().check('Selection', 'create')) {
+                this.dropdownItemList.push({
+                    label: 'Select',
+                    name: 'select',
+                    sortOrder: 140
                 });
             }
 
@@ -556,7 +622,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.dropdownItemList.push({
                             'label': this.translate('Compare with') + ' ' + instances[0].name,
                             'name': 'compareInstance',
-                            'action': 'compareInstance'
+                            'action': 'compareInstance',
+                            sortOrder: 150
                         });
                     }
                 }
@@ -566,14 +633,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (this.getAcl().check(this.entityType, 'edit') && this.model.get('hasChildren')) {
                     this.dropdownItemList.push({
                         'label': 'inheritAllForChildren',
-                        'name': 'inheritAllForChildren'
+                        'name': 'inheritAllForChildren',
+                        sortOrder: 160
                     });
                 }
 
                 if (this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true && this.model.get('parentId')) {
                     this.dropdownItemList.push({
                         'label': 'inheritAllFromParent',
-                        'name': 'inheritAllFromParent'
+                        'name': 'inheritAllFromParent',
+                        sortOrder: 170
                     });
                 }
             }
@@ -604,7 +673,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.dropdownItemList.push({
                             'label': 'Self-Assign',
                             'name': 'selfAssign',
-                            'hidden': !!this.model.get('assignedUserId')
+                            'hidden': !!this.model.get('assignedUserId'),
+                            sortOrder: 180
                         });
                         this.listenTo(this.model, 'change:assignedUserId', function () {
                             if (!this.model.get('assignedUserId')) {
@@ -621,7 +691,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (this.getAcl().get('dataPrivacyPermission') !== 'no') {
                     this.dropdownItemList.push({
                         'label': 'View Personal Data',
-                        'name': 'viewPersonalData'
+                        'name': 'viewPersonalData',
+                        sortOrder: 190
                     });
                 }
             }
@@ -721,9 +792,64 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.getMetadata().get(['scopes', this.scope, 'enabledCopyConfigurations']) && this.getAcl().check(this.entityType, 'read')) {
                 this.dropdownItemList.push({
                     'label': this.translate('copyConfigurations', 'labels', 'Global'),
-                    'name': 'copyConfigurations'
+                    'name': 'copyConfigurations',
+                    sortOrder: 180
                 });
             }
+
+            const buttonGroups = ['buttonList', 'dropdownItemList'];
+
+            let actionsSortOrder = [];
+            buttonGroups.forEach(key => {
+                actionsSortOrder[key] = [];
+                (this[key] || []).forEach(item => {
+                    actionsSortOrder[key][item.name] = item.sortOrder || 100;
+                });
+            })
+
+            $.each(this.getMetadata().get(['clientDefs', this.scope, 'detailActions']) || {}, (actionName, actionData) => {
+                let key = actionData.singleButton ? 'buttonList' : 'dropdownItemList';
+
+                if (actionData.sortOrder) {
+                    actionsSortOrder[key][actionName] = actionData.sortOrder;
+                }
+                if (!actionsSortOrder[key][actionName]) {
+                    actionsSortOrder[key][actionName] = 100;
+                }
+                if (actionData.disabled === true && actionsSortOrder[key][actionName]) {
+                    delete actionsSortOrder[key][actionName];
+                }
+            });
+
+            buttonGroups.forEach(key => {
+                let sortedActionKeys = Object.keys(actionsSortOrder[key]).sort((a, b) => actionsSortOrder[key][a] - actionsSortOrder[key][b]);
+
+                let actionItems = {};
+                this[key].forEach(item => {
+                    actionItems[item.name] = item;
+                });
+
+                let preparedActionItemList = [];
+                sortedActionKeys.forEach(actionName => {
+                    if (actionItems[actionName]) {
+                        preparedActionItemList.push(actionItems[actionName]);
+                    } else {
+                        let actionData = this.getMetadata().get(['clientDefs', this.scope, 'detailActions', actionName]);
+                        if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
+                            let row = {
+                                name: actionName,
+                                action: actionData.action || 'universalAction',
+                                label: this.translate(actionName, 'actions', this.scope)
+                            };
+                            if (actionData.singleButton) {
+                                row.style = actionData.style || 'default';
+                            }
+                            preparedActionItemList.push(row)
+                        }
+                    }
+                });
+                this[key] = preparedActionItemList;
+            })
         },
 
         isHierarchical() {

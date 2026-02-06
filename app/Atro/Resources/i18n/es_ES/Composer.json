@@ -1,16 +1,16 @@
 {
   "fields": {
-    "status": "Status",
-    "settingVersion": "Setting Version",
-    "currentVersion": "Current Version",
-    "availableVersions": "Available Versions",
+    "status": "Estado",
+    "settingVersion": "Versión de configuración",
+    "currentVersion": "Versión actual",
+    "availableVersions": "Versiones disponibles",
     "latestVersion": "Última versión"
   },
   "options": {
     "status": {
-      "install": "Install",
-      "update": "Update",
-      "delete": "Remove"
+      "install": "Instalar",
+      "update": "Actualizar",
+      "delete": "Eliminar"
     }
   },
   "exceptions": {
@@ -24,30 +24,30 @@
     "downgradeProhibited": "La versión del módulo no es válida. El downgrade está prohibido."
   },
   "labels": {
-    "available": "available",
-    "Installed": "Installed",
-    "Store": "Store",
-    "removeModule": "Remove",
-    "cancelModule": "Cancel",
-    "username": "Username",
-    "password": "Password",
-    "anotherActionInProgress": "An another action is in progress. Wait until it get finished",
-    "updating": "Updating...",
-    "updateStarted": "Update has been started",
-    "canceling": "Canceling...",
-    "canceled": "Canceled",
-    "dependencies": "Dependencies",
-    "version": "Version",
-    "Run Update": "Update",
-    "updateFailed": "Update failed. Can't create connect to modules server. Please, try again",
-    "settingModuleForRemoving": "Setting module for removing...",
-    "settingModuleForInstalling": "Setting module for installing...",
-    "settingModuleForUpdating": "Setting module for updating...",
-    "cancelingModuleInstall": "Canceling module install...",
-    "canceledModuleInstall": "Module install has been canceled",
-    "Log": "Log",
-    "confirmRun": "After update action all users would logout from system. Are you sure you want to update you system?",
-    "daemonDisabled": "<b>The composer daemon is not running!</b><br>Probably the daemon is reloading now and you should wait a minute or the crontab is not configured. Instructions on how to configure the crontab you can find <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">here</a>.",
+    "available": "disponible",
+    "Installed": "Instalado",
+    "Store": "Tienda",
+    "removeModule": "Eliminar",
+    "cancelModule": "Cancelar",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "anotherActionInProgress": "Otra acción está en progreso. Espere hasta que termine",
+    "updating": "Actualizando...",
+    "updateStarted": "La actualización ha comenzado",
+    "canceling": "Cancelando...",
+    "canceled": "Cancelado",
+    "dependencies": "Dependencias",
+    "version": "Versión",
+    "Run Update": "Actualizar",
+    "updateFailed": "La actualización falló. No se puede conectar al servidor de módulos. Por favor, inténtelo de nuevo",
+    "settingModuleForRemoving": "Configurando módulo para eliminar...",
+    "settingModuleForInstalling": "Configurando módulo para instalar...",
+    "settingModuleForUpdating": "Configurando módulo para actualizar...",
+    "cancelingModuleInstall": "Cancelando instalación del módulo...",
+    "canceledModuleInstall": "La instalación del módulo ha sido cancelada",
+    "Log": "Registro",
+    "confirmRun": "Después de la actualización, todos los usuarios serán desconectados del sistema. ¿Está seguro de que desea actualizar el sistema?",
+    "daemonDisabled": "<b>¡El daemon de composer no está ejecutándose!</b><br>Probablemente el daemon se está recargando ahora y debería esperar un minuto o el crontab no está configurado. Las instrucciones sobre cómo configurar el crontab las puede encontrar <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">aquí</a>.",
     "showReleaseNotes": "Notas de lanzamiento",
     "rentUntil": "Alquilado, actualizaciones hasta",
     "rented": "Alquilado",
@@ -59,12 +59,12 @@
     "purchased": "Comprado"
   },
   "notifications": {
-    "Module update": "Module {module} has been updated. From version {from} to {to}",
-    "System update": "System has been updated. From version {from} to {to}",
-    "Module install": "Module {module} v.{version} has been installed",
-    "Module delete": "Module {module} has been removed",
-    "Module downgrade": "Module {module} has been downgraded. From version {from} to {to}",
-    "System downgrade": "System has been downgraded. From version {from} to {to}",
-    "Composer updated!": "Module manager dependencies has been updated! <a href=\"/#Composer/list\">See details</a>"
+    "Module update": "El módulo {module} ha sido actualizado. De la versión {from} a {to}",
+    "System update": "El sistema ha sido actualizado. De la versión {from} a {to}",
+    "Module install": "El módulo {module} v.{version} ha sido instalado",
+    "Module delete": "El módulo {module} ha sido eliminado",
+    "Module downgrade": "El módulo {module} ha sido degradado. De la versión {from} a {to}",
+    "System downgrade": "El sistema ha sido degradado. De la versión {from} a {to}",
+    "Composer updated!": "¡Las dependencias del gestor de módulos han sido actualizadas! <a href=\"/#Composer/list\">Ver detalles</a>"
   }
 }

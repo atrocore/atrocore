@@ -1,0 +1,20 @@
+[
+  {
+    "style": "default",
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "entityName"
+        },
+        false
+      ],
+      [
+        {
+          "name": "record"
+        },
+        false
+      ]
+    ]
+  }
+]

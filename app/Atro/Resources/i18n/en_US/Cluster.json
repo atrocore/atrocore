@@ -2,6 +2,20 @@
   "fields": {
     "number": "Number",
     "masterEntity": "Master Entity",
-    "clusterItems": "Cluster Items"
+    "clusterItems": "Cluster Items",
+    "rejectedClusterItems": "Rejected Cluster Items",
+    "stagingItemCount": "Staging Item Count",
+    "masterItemCount": "Master Item Count"
+  },
+  "boolFilters": {
+    "onlyReview": "Only Review",
+    "onlyEmpty": "Only Empty",
+    "onlyMerged": "Only Merged",
+    "onlyInvalid": "Only Invalid"
+  },
+  "actions": {
+    "reject": "Reject",
+    "confirm": "Confirm",
+    "unreject": "Unreject"
   }
 }

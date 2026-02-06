@@ -19,6 +19,7 @@ use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -206,7 +207,7 @@ class Attribute extends Base
                     ->executeQuery();
 
 
-                $attr['id'] = Util::generateId();
+                $attr['id'] = IdGenerator::uuid();
                 $attr["{$tableName}_id"] = $entity->get('id');
 
                 $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
@@ -267,7 +268,7 @@ class Attribute extends Base
             ->setValue('id', ':id')
             ->setValue('attribute_id', ':attributeId')
             ->setValue("{$name}_id", ':entityId')
-            ->setParameter('id', Util::generateId())
+            ->setParameter('id', IdGenerator::uuid())
             ->setParameter('attributeId', $attributeId)
             ->setParameter('entityId', $entityId);
 
@@ -375,7 +376,7 @@ class Attribute extends Base
 
             $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
 
-            $stmt->bindValue(':id', Util::generateId());
+            $stmt->bindValue(':id', IdGenerator::uuid());
             $stmt->bindValue(':entityId', $entity->id);
             $stmt->bindValue(':attributeId', $entity->fields[$fieldName]['attributeId']);
 

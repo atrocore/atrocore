@@ -29,6 +29,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         canReset: true,
                         afterSave: () => {
                             this.getPreferences().trigger('favorites:update');
+                            window.dispatchEvent(new CustomEvent('favorites:update', { detail: this.getPreferences().get('favoritesList') }));
                         },
                     }, view => {
                         this.notify(false)
@@ -56,7 +57,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled'),
                 hasLocaleSwitcher: this.hasLocaleSwitcher(),
-                hasLogo: !this.getConfig().get('disableToolbarLogo')
+                hasLogo: !this.getConfig().get('disableToolbarLogo'),
+                showCurrentSelection: true,
             }, Dep.prototype.data.call(this));
         },
 
@@ -147,6 +149,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.setupTabDefsList();
 
             this.setupBookmark();
+
+            this.setupCurrentSelection();
 
             this.once('remove', function () {
                 $(window).off('resize.navbar');
@@ -337,7 +341,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 collection.url = 'Job';
                 collection.sortBy = 'priority';
                 collection.asc = false;
-                collection.where = [{ type: 'bool', value: ['jobManagerItems'] }];
+                collection.where = [{type: 'bool', value: ['jobManagerItems']}];
                 this.listenToOnce(collection, 'sync', () => {
                     this.createView('list', 'views/record/list', {
                         el: this.options.el + ' .list-container',
@@ -345,7 +349,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         rowActionsDisabled: true,
                         checkboxes: false,
                         headerDisabled: true,
-                        layoutName: 'listInQueueManager'
+                        layoutName: 'listInQueueManager',
+                        resizable: false
                     }, view => {
                         view.render();
                         this.jmInterval = window.setInterval(() => {
@@ -366,7 +371,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 });
 
-                new Svelte.JobManagerIcon({
+                new Svelte.JobManagerButton({
                     target: this.$el.find('.navbar-header .queue-badge-container').get(0),
                     props: {
                         renderTable: () => {
@@ -375,7 +380,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 });
 
-                new Svelte.JobManagerIcon({
+                new Svelte.JobManagerButton({
                     target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
                     props: {
                         renderTable: () => {
@@ -423,10 +428,52 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.createView('bookmarkBadge', 'views/bookmark/badge', {
                 el: this.options.el + ' .bookmark-badge-container'
             });
+        },
+
+        setupCurrentSelection: function () {
+            if (!this.getAcl().check('Selection', 'read')) {
+                return;
+            }
+            this.listenToOnce(this, 'after:render', () => {
+                this.initCurrentSelectionButton();
+            });
+        },
+
+        initCurrentSelectionButton: function () {
+            const container = this.$el.find('.current-selection-badge-container').get(0);
+            if (!container) {
+                return;
+            }
+
+            this.currentSelectionButton = new Svelte.CurrentSelectionButton({
+                target: container,
+                props: {
+                    userModel: this.getUser(),
+                    renderLinkField: (fieldContainer) => {
+                        fieldContainer.id = 'current-selection-link-field';
+                        this.createView('currentSelectionField', 'views/fields/link', {
+                            el: '#current-selection-link-field',
+                            foreignScope: 'Selection',
+                            defs: {
+                                name: 'currentSelection'
+                            },
+                            mode: 'edit',
+                            model: this.getUser()
+                        }, (view) => {
+                            view.render();
+                            this.listenTo(view.model, 'change:currentSelectionId', () => {
+                                view.model.save();
+                                this.currentSelectionButton.handleSelectionChange();
+                            });
+                        });
+                    },
+                    onSelectionChange: () => {
+                        // Handle selection change if needed
+                    }
+                }
+            });
         }
-
     });
-
 });
 
 

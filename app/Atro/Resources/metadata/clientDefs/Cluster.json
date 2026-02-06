@@ -1,4 +1,5 @@
 {
+  "iconClass": "copy",
   "controller": "controllers/record",
   "views": {
     "detail": "views/cluster/detail"
@@ -6,15 +7,75 @@
   "recordViews": {
     "detail": "views/cluster/record/detail"
   },
+  "boolFilterList": [
+    "onlyEmpty" ,
+    "onlyReview",
+    "onlyMerged",
+    "onlyInvalid"
+  ],
   "relationshipPanels": {
     "clusterItems": {
       "checkboxes": false,
-      "rowActionsView": "views/record/row-actions/relationship-remove-only",
-      "view": "views/cluster/record/panels/cluster-items",
+      "actions": {
+        "quickView": {
+          "disabled": true
+        },
+        "quickEdit": {
+          "disabled": true
+        },
+        "confirm": {
+          "url": "ClusterItem/action/confirm",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-check",
+          "sortOrder": 10
+        },
+        "reject": {
+          "url": "ClusterItem/action/reject",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-x",
+          "sortOrder": 20
+        },
+        "unlinkRelated": {
+          "url": "ClusterItem/{{id}}"
+        },
+        "removeRelated": {
+          "url": "{{entityName}}/{{entityId}}"
+        }
+      },
       "hideShowFullList": true,
+      "create": false,
       "select": false,
       "unlink": false,
       "canClose": false,
+      "sortBy": "createdAt",
+      "asc": false
+    },
+    "rejectedClusterItems": {
+      "actions": {
+        "quickView": {
+          "disabled": true
+        },
+        "quickEdit": {
+          "disabled": true
+        },
+        "removeRelated": {
+          "disabled": true
+        },
+        "unreject": {
+          "url": "ClusterItem/action/unreject",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-arrow-u-up-left",
+          "sortOrder": 20
+        }
+      },
+      "checkboxes": false,
+      "create": false,
+      "hideShowFullList": true,
+      "select": false,
+      "unlink": false,
       "sortBy": "createdAt",
       "asc": false
     }

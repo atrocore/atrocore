@@ -2,16 +2,16 @@
   "fields": {
     "matching": "Відповідність",
     "weight": "Вага",
-    "matchingRuleSet": "Set",
+    "matchingRuleSet": "Набір",
     "matchingRules": "Правила збігу",
     "operator": "Оператор"
   },
   "options": {
     "type": {
-      "equal": "Equal",
-      "like": "Like",
-      "contains": "містить",
-      "set": "Set"
+      "equal": "Рівний",
+      "similar": "Схожий",
+      "contains": "Містить",
+      "set": "Набір"
     },
     "operator": {
       "and": "AND",
@@ -20,6 +20,8 @@
   },
   "exceptions": {
     "notValidCode": "Код повинен містити лише літери, цифри, підкреслення та тире.",
-    "notValidMatchingActivation": "Правило збігу може бути змінено лише в не активної відповідності."
+    "notValidMatchingActivation": "Правило збігу може бути змінено лише в не активної відповідності.",
+    "notValidMatching": "Збіг недійсний",
+    "notValidMatchingRuleSet": "Відповідний набір правил недійсний"
   }
 }

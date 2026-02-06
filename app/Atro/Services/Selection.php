@@ -26,22 +26,24 @@ use Espo\ORM\IEntity;
 
 class Selection extends Base
 {
-    protected $mandatorySelectAttributeList = ['name', 'entityTypes', 'type'];
+    protected $mandatorySelectAttributeList = ['number', 'entity', 'entityTypes', 'type'];
 
     public function createSelectionWithRecords(string $scope, array $entityIds)
     {
-        $selection = $this->getEntityManager()->getEntity('Selection');
-        $selection->set('type', 'single');
-        $selection->set('entityTypes', [$scope]);
-        $this->getEntityManager()->saveEntity($selection);
+        $selection = $this->createSelection($scope);
 
+        $items = [];
         foreach ($entityIds as $entityId) {
-            $record = $this->getEntityManager()->getEntity('SelectionRecord');
+            $record = $this->getEntityManager()->getEntity('SelectionItem');
             $record->set('entityId', $entityId);
-            $record->set('entityType', $scope);
+            $record->set('entityName', $scope);
             $record->set('selectionId', $selection->get('id'));
             $this->getEntityManager()->saveEntity($record);
+
+            $items[] = $record->getValueMap();
         }
+
+        $selection->set('selectionItems', $items);
 
         return $selection;
     }
@@ -65,5 +67,17 @@ class Selection extends Base
         }
 
         parent::prepareEntityForOutput($entity);
+    }
+
+    protected function createSelection(string $scope): Entity
+    {
+        $selection = $this->getEntityManager()->getEntity('Selection');
+        $selection->set('type', 'single');
+        $selection->set('entity', $scope);
+        if(!empty($masterEntity = $this->getMetadata()->get(['scopes', $scope, 'primaryEntityId']))) {
+            $selection->set('entity', $masterEntity);
+        }
+        $this->getEntityManager()->saveEntity($selection);
+        return $selection;
     }
 }

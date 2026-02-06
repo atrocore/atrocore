@@ -93,6 +93,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         listInlineEditModeEnabled: false,
 
+        resizable: true,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -225,7 +227,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (selectAttributeList) {
                         this.collection.data.select = selectAttributeList.join(',');
                     }
-                    this.collection.fetch({ keepSelected: true })
+                    this.collection.fetch({keepSelected: true})
                     this.collection.once('sync', () => {
                         this.notify(false);
                     })
@@ -287,7 +289,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.notify('Please wait...');
             this.collection.once('sync', function () {
                 this.notify(false);
-                this.trigger('sort', { sortBy: field, asc: asc });
+                this.trigger('sort', {sortBy: field, asc: asc});
             }, this);
             var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
             while (this.collection.length > maxSizeLimit) {
@@ -379,7 +381,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.length && !fixedHeaderRow,
-                listInlineEditModeEnabled: this.listInlineEditModeEnabled
+                listInlineEditModeEnabled: this.listInlineEditModeEnabled,
+                resizable: this.resizable,
             };
         },
 
@@ -625,7 +628,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 requestData.where = this.collection.getWhereForCheckedRecords();
                 requestData.massAction = true;
             } else if (this.checkedList && this.checkedList.length > 0) {
-                requestData.where = [{ type: "in", attribute: "id", value: this.checkedList }];
+                requestData.where = [{type: "in", attribute: "id", value: this.checkedList}];
                 requestData.massAction = true;
             }
 
@@ -660,7 +663,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
-                var data = { permanently: permanently };
+                var data = {permanently: permanently};
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhereForCheckedRecords();
                     data.selectData = this.collection.data || {};
@@ -881,8 +884,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }).then(result => {
                 this.getModelFactory().create('Selection', (selectionModel) => {
                     selectionModel.set(result);
-                    this.getRouter().navigate('#Selection/view/' + result.id, { trigger: false });
-                    this.getRouter().dispatch('Selection', 'view', { model: selectionModel })
+                    this.getRouter().navigate('#Selection/view/' + result.id, {trigger: false});
+                    this.getRouter().dispatch('Selection', 'view', {model: selectionModel})
                 });
             });
         },
@@ -973,7 +976,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                 collection.maxSize = 10;
 
-                if(this.getMetadata().get(['scopes', this.entityType, 'hasAttribute'])) {
+                if (this.getMetadata().get(['scopes', this.entityType, 'hasAttribute'])) {
                     collection.data.allAttributes = true;
                     collection.data.completeAttrDefs = true;
                 }
@@ -1025,12 +1028,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.buttonList = Espo.Utils.clone(this.buttonList);
             this.relationScope = this.getRelationScope()
 
-            if('listInlineEditModeEnabled' in this.options)  {
-                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            if ('listInlineEditModeEnabled' in this.options) {
+                this.listInlineEditModeEnabled = this.options.listInlineEditModeEnabled;
+            }
+
+            if (typeof this.options.resizable === 'boolean') {
+                this.resizable = this.options.resizable;
             }
 
             if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'Archive') {
-                this.rowActionsView = 'views/record/row-actions/view-only';
                 this.massActionList = ['export'];
             }
 
@@ -1071,9 +1077,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled'])) {
-               this.removeMassAction('select');
-               this.removeMassAction('compare');
-               this.removeMassAction('merge');
+                this.removeMassAction('select');
+                this.removeMassAction('compare');
+                this.removeMassAction('merge');
             }
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
@@ -1150,7 +1156,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 dynamicActions = dynamicActions.sort((v1, v2) => {
                     return v1.label.localeCompare(v2.label);
                 })
-                dynamicActions.unshift({ divider: true })
+                dynamicActions.unshift({divider: true})
                 this.massActionList.push(...dynamicActions);
                 this.checkAllResultMassActionList.push(...dynamicActions);
             }
@@ -1345,7 +1351,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 },
                 handleSelectAll: (e) => {
                     this.handleSelectAll(e);
-                    component.$set({ selected: this.allResultIsChecked });
+                    component.$set({selected: this.allResultIsChecked});
                 }
             };
         },
@@ -1494,11 +1500,91 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
                 this.reRender()
             }
+
+            if (this.resizable) {
+                this.$el.find('table[data-resizable=true] th:not([data-name="r-checkbox"]):not([data-name="draggableIcon"]):not(.table-spacer):not(:last-child)').each((i, el) => {
+                    const $th = $(el);
+                    const name = $th.data('name');
+                    let widthData = this.getStorage().get('list-column-width', this.getColumnWidthKey());
+                    if (!widthData || typeof widthData !== 'object') {
+                        widthData = {};
+                    }
+
+                    if (name && widthData[name]) {
+                        $th.width(widthData[name]);
+                    } else {
+                        $th.width($th.outerWidth() - 40);
+                    }
+
+                    $th.attr('width', null);
+
+                    if ($th.find('.resizer').length) {
+                        return;
+                    }
+
+                    const $resizer = $('<div class="resizer"></div>');
+                    $th.append($resizer);
+
+                    let startX;
+                    let startWidth;
+
+                    $resizer.on('mousedown', e => {
+                        if (e.which !== 1) {
+                            return;
+                        }
+
+                        startX = e.pageX;
+                        startWidth = $th.outerWidth();
+
+                        $(document).on('mousemove.tableResize', function (e) {
+                            const delta = e.pageX - startX;
+                            const newWidth = Math.min(800, Math.max(50, startWidth + delta));
+
+                            $th.width(newWidth - 40);
+                        });
+
+                        $(document).on('mouseup.tableResize', () => {
+                            $(document).off('.tableResize');
+
+                            const width = $th.width() - 20;
+                            if (!name) {
+                                return;
+                            }
+
+                            const key = this.getColumnWidthKey();
+                            let widthData = this.getStorage().get('list-column-width', key);
+                            if (!widthData || typeof widthData !== 'object') {
+                                widthData = {};
+                            }
+
+                            widthData[name] = width;
+
+                            this.getStorage().set(`list-column-width`, key, widthData);
+                        });
+
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+            }
+        },
+
+        getColumnWidthKey: function () {
+            let key = this.scope;
+            if (this.relationName) {
+                key += `.${this.relationName}`;
+            }
+            if (this.layoutData?.selectedProfileId) {
+                key = `${this.layoutData.selectedProfileId}.${key}`;
+            }
+
+            return key;
         },
 
         isHierarchical() {
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
         },
+
         loadMore(btn) {
             if (btn.length && !btn.hasClass('disabled')) {
                 btn.click();
@@ -1868,7 +1954,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({ number: k, relEntity: parts[0] });
+                        toRemove.push({number: k, relEntity: parts[0]});
                     }
                 });
 
@@ -1944,7 +2030,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let attributesIds = [];
             (this.listLayout || []).forEach(item => {
                 let conditionFieldItems = this.getConditionGroupFields(item);
-                if (conditionFieldItems.length ) {
+                if (conditionFieldItems.length) {
                     for (const conditionFieldItem of conditionFieldItems) {
                         if (conditionFieldItem.attributeId && !attributesIds.includes(conditionFieldItem.attributeId)) {
                             attributesIds.push(conditionFieldItem.attributeId);
@@ -2016,7 +2102,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
                     if (!fieldType) return;
                     this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
-                        if(list.includes(attribute)) {
+                        if (list.includes(attribute)) {
                             return;
                         }
                         if (fieldType === 'link' || fieldType === 'linkMultiple') {
@@ -2051,13 +2137,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let conditionChecker = new ConditionsChecker(this);
             ['required', 'visible', 'protected', 'readOnly'].forEach((type) => {
                 let defs = item.attributeDefs ?? this.getMetadata().get(['entityDefs', this.scope, 'fields', item.name])
-                let conditions =  defs?.['conditionalProperties']?.[type]?.['conditionGroup'];
-                if(!conditions) {
+                let conditions = defs?.['conditionalProperties']?.[type]?.['conditionGroup'];
+                if (!conditions) {
                     return;
                 }
 
-                for (let field of conditionChecker.getConditionGroupFields(conditions)){
-                    if(!list.includes(field)) {
+                for (let field of conditionChecker.getConditionGroupFields(conditions)) {
+                    if (!list.includes(field)) {
                         list.push(field);
                     }
                 }
@@ -2120,7 +2206,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
                 defs.push(item);
             }
-            ;
+
+            if (this.resizable) {
+                defs.push({
+                    name: 'table-spacer',
+                    resizeSpacer: true,
+                    width: 0
+                });
+            }
+
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 defs.push({
                     width: this.rowActionsColumnWidth,
@@ -2226,6 +2320,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 layout[this.checkboxes ? 1 : 0].options.statusIconsCallback = this.getStatusIcons;
             }
 
+            if (this.resizable) {
+                layout.push({
+                    columnName: 'table-spacer',
+                    name: 'table-spacer'
+                });
+            }
+
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 layout.push(this.getRowActionsDefs());
             }
@@ -2296,6 +2397,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 name: 'buttonsField',
                 view: this.rowActionsView,
                 options: {
+                    parentModelName: this.getParentModel()?.name ?? this.options.parentModelName,
+                    relationName: this.relationName ?? this.options.relationName ?? this.options.panelView?.panelName,
                     defs: {
                         params: {}
                     }
@@ -2488,7 +2591,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                             const icons = $('<sup class="status-icons icons-container"></sup>');
                             (this.getStatusIcons(view.model) || []).forEach(el => icons.append(el));
                             this.afterRenderStatusIcons(icons, view.model);
-                            el?.parent().append('&nbsp;');
                             el?.parent().append(icons);
                         })
 
@@ -2610,6 +2712,19 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             return htmlIcons;
         },
 
+        actionSelect: function (data) {
+            if (!data.id || !this.collection) {
+                this.notify('Wrong input data', 'error');
+            }
+
+            this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
+                entityName: this.collection.name,
+                entityId: data.id
+            }).then(_ => {
+                this.notify(this.translate('Success'), 'success')
+            })
+        },
+
         actionQuickView: function (data) {
             data = data || {};
             var id = data.id;
@@ -2658,7 +2773,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, this);
 
                     this.listenToOnce(view, 'after:edit-cancel', function () {
-                        this.actionQuickView({ id: view.model.id, scope: view.model.name });
+                        this.actionQuickView({id: view.model.id, scope: view.model.name});
                     }, this);
 
                     this.listenToOnce(view, 'after:save', function (model) {
@@ -2666,7 +2781,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, this);
                 }, this);
             } else {
-                this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: true });
+                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
             }
         },
 
@@ -2687,7 +2802,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 fullFormDisabled: true,
                 layoutName: 'upload',
                 multiUpload: false,
-                attributes: _.extend(model.attributes, { reupload: model.id }),
+                attributes: _.extend(model.attributes, {reupload: model.id}),
             }, view => {
                 view.render();
                 this.notify(false);
@@ -2785,7 +2900,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
-                this.getRouter().navigate('#' + scope + '/edit/' + id, { trigger: false });
+                this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
                 this.getRouter().dispatch(scope, 'edit', options);
             }
         },
@@ -2819,7 +2934,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (response.success) {
                         this.notify(response.message, 'success');
                         if (response.redirect) {
-                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, { trigger: false });
+                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, {trigger: false});
                             this.getRouter().dispatch(response.scope, 'view', {
                                 id: response.entityId,
                             })
@@ -2960,6 +3075,53 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }, this);
         },
 
+        actionUniversalAction(data) {
+            data = data || {};
+            let id = data.id;
+            let name = data.name;
+
+            if (!id || !name) return;
+
+            let model = null;
+
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+
+            if (!model) {
+                return;
+            }
+
+            const scope = model.name || this.scope;
+            let actionDefs = this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
+
+            if (!actionDefs || !actionDefs.url) {
+                return;
+            }
+
+            let runAction = () => {
+                this.notify(this.translate('Loading...'));
+                this.ajaxPostRequest(actionDefs.url, {action: name, scope: scope, id: id})
+                    .then(response => {
+                        this.notify(this.translate('Done'), 'success');
+                        if (actionDefs.refresh) {
+                            this.collection.fetch();
+                        }
+                    });
+            }
+
+            if (actionDefs.confirm) {
+                this.confirm({
+                    message: this.translate(actionDefs.name, 'actionConfirms', scope),
+                    confirmText: this.translate('Apply')
+                }, function () {
+                    runAction();
+                }, this);
+            } else {
+                runAction();
+            }
+        },
+
         actionQuickRestore: function (data) {
             data = data || {}
             var id = data.id;
@@ -2990,7 +3152,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 $.ajax({
                     url: this.entityType + '/action/restore',
                     type: 'POST',
-                    data: JSON.stringify({ id: id })
+                    data: JSON.stringify({id: id})
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);
@@ -3003,7 +3165,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         actionDeletePermanently(data) {
-            let id = (data || { id: null }).id;
+            let id = (data || {id: null}).id;
             if (!id) {
                 return;
             }
@@ -3093,7 +3255,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         this.notify(false)
                     });
                 }, this);
-                model.fetch({ main: true });
+                model.fetch({main: true});
             }, this);
         },
 
@@ -3115,7 +3277,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
 
             this.listenTo(view.model, 'change', () => {
-                if ( this.inlineEditModeIsOn) {
+                if (this.inlineEditModeIsOn) {
                     this.setIsChanged();
                 }
             });
@@ -3125,11 +3287,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 for (let field in view.nestedViews) {
                     let fieldView = view.nestedViews[field];
 
-                    if(typeof fieldView.setReadOnly !== 'function') {
+                    if (typeof fieldView.setReadOnly !== 'function') {
                         continue;
                     }
 
-                    if(!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
+                    if (!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
                         fieldView.setReadOnly(true);
                     }
 

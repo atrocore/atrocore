@@ -12,6 +12,7 @@
 namespace Atro\Seeders;
 
 use Atro\Core\Utils\Config;
+use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 
 abstract class AbstractSeeder

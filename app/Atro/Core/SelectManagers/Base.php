@@ -11,7 +11,9 @@
 
 namespace Atro\Core\SelectManagers;
 
+use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Connection;
@@ -24,7 +26,6 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Entity;
-use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\SelectManagerFactory;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
@@ -1507,7 +1508,7 @@ class Base
                 $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp, true);
                 $item['value'] = [
                     "innerSql" => [
-                        "sql"        => str_replace($this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias(), 'sbq_' . Util::generateId(), $qb1->getSql()),
+                        "sql"        => str_replace($this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias(), 'sbq_' . IdGenerator::unsortableId(), $qb1->getSql()),
                         "parameters" => $qb1->getParameters()
                     ]
                 ];
@@ -1523,6 +1524,11 @@ class Base
                     $value = $item['value'];
                 }
                 return $this->$methodName($value, $result);
+            }
+
+            $methodName = 'getWherePartFor' . ucfirst($attribute);
+            if (method_exists($this, $methodName)) {
+                return $this->$methodName($item, $result);
             }
         }
 
@@ -2322,8 +2328,11 @@ class Base
                     $value = str_replace($thousandSeparator, '', $textFilter);
                     $value = str_replace($decimalMark, '.', $value);
                     $value = $attributeType === 'int' ? intval($value) : floatval($value);
-                    //avoid the range limit for INTEGER in database
-                    if ($attributeType === 'int' && abs($value) > (2 ^ 31)) {
+
+                    $int32Max = (2 ** 31) - 1;
+
+                    // avoid the range limit for INTEGER in database
+                    if ($attributeType === 'int' && abs($value) > $int32Max) {
                         continue;
                     }
                     $group[$field] = $value;

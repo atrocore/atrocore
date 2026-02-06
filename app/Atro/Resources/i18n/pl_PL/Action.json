@@ -33,7 +33,9 @@
   "labels": {
     "execute": "Wykonaj",
     "Parameters": "Parametry",
-    "fieldsPanel": "Aktualizuj",
+    "fieldsPanel": "Aktualizuj"
+  },
+  "actions": {
     "allLogs": "Wszystkie dzienniki"
   },
   "massActions": {

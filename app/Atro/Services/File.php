@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -121,7 +122,7 @@ class File extends Base
         // for single upload
         if (!property_exists($attachment, 'piecesCount')) {
             if (empty($attachment->id)) {
-                $attachment->id = Util::generateId();
+                $attachment->id = IdGenerator::uuid();
             }
 
             return $this->createFileEntity($attachment);

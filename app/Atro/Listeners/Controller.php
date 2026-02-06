@@ -14,31 +14,26 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\EventManager\Manager as EventManager;
 
-/**
- * Class Controller
- */
 class Controller extends AbstractListener
 {
-    /**
-     * @param Event $event
-     */
-    public function beforeAction(Event $event)
+    public function beforeAction(Event $event): void
     {
         $this
-            ->getContainer()
-            ->get('eventManager')
+            ->getEventManager()
             ->dispatch($event->getArgument('controller') . 'Controller', $event->getArgument('action'), $event);
     }
 
-    /**
-     * @param Event $event
-     */
-    public function afterAction(Event $event)
+    public function afterAction(Event $event): void
     {
         $this
-            ->getContainer()
-            ->get('eventManager')
+            ->getEventManager()
             ->dispatch($event->getArgument('controller') . 'Controller', $event->getArgument('action'), $event);
+    }
+
+    protected function getEventManager(): EventManager
+    {
+        return $this->getContainer()->get('eventManager');
     }
 }

@@ -8,14 +8,15 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "duplicatableRelations": [
-    "selectionRecords"
+    "selectionItems"
   ],
   "modifiedExtendedRelations": [
-    "selectionRecords"
+    "selectionItems"
   ],
   "aclLevelList": [
     "no",
     "all"
   ],
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "nameField": "number"
 }

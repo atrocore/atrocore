@@ -1,16 +1,39 @@
 {
+  "iconClass": "copy-simple",
   "controller": "controllers/record",
   "relationshipPanels": {
-    "selectionRecords": {
+    "selectionItems": {
       "checkboxes": false,
-      "rowActionsView": "views/record/row-actions/relationship-remove-only",
-      "view": "views/selection/record/panels/selection-records",
       "hideShowFullList": true,
+      "create": false,
       "select": false,
       "unlink": false,
       "canClose": false,
       "sortBy": "createdAt",
-      "asc": false
+      "asc": false,
+      "actions": {
+        "quickView": {
+          "disabled": true
+        },
+        "quickEdit": {
+          "disabled": true
+        },
+        "replaceItem": {
+          "url": "SelectionItem/action/replaceItem",
+          "confirm": false,
+          "refresh": true,
+          "modalSelectEntity": "{{entityName}}",
+          "modalSelectMultiple": false,
+          "iconClass": "ph ph-swap",
+          "sortOrder": 10
+        },
+        "unlinkRelated": {
+          "url": "SelectionItem/{{id}}"
+        },
+        "removeRelated": {
+          "url": "{{entityName}}/{{entityId}}"
+        }
+      }
     }
   },
   "views": {

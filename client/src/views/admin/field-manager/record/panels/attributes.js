@@ -11,8 +11,6 @@
 Espo.define('views/admin/field-manager/record/panels/attributes', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-no-unlink',
-
         setup() {
             if (!this.panelVisible()) {
                 return;

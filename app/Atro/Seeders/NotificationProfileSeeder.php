@@ -12,7 +12,7 @@
 namespace Atro\Seeders;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
-use Atro\Core\Utils\Util;
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 
@@ -20,7 +20,7 @@ class NotificationProfileSeeder extends AbstractSeeder
 {
     public function run(): void
     {
-        $defaultProfileId = 'defaultProfileId';
+        $defaultProfileId = '019c3209-6531-70bb-87b5-91597ba9c80b';
         $defaultProfileName = 'Default Notification Profile';
         $emailTemplates = [];
 
@@ -36,7 +36,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                     'name'      => ':name',
                     'is_active' => ':is_active',
                 ])
-                ->setParameter('id', 'defaultProfileId')
+                ->setParameter('id', $defaultProfileId)
                 ->setParameter('name', $defaultProfileName)
                 ->setParameter('is_active', true, ParameterType::BOOLEAN)
                 ->executeStatement();
@@ -102,11 +102,11 @@ class NotificationProfileSeeder extends AbstractSeeder
 
     private function getDefaultRules(): array
     {
-        $defaultProfileId = 'defaultProfileId';
+        $defaultProfileId = '019c3209-6531-70bb-87b5-91597ba9c80b';
 
         return [
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => '019c320e-dc54-71e6-a693-aa64589aa8c4',
                 "name"                    => "Entity Update",
                 "entity"                  => '',
                 "occurrence"              => 'updating',
@@ -122,13 +122,13 @@ class NotificationProfileSeeder extends AbstractSeeder
                     "field" => [
                         "systemActive"     => true,
                         "emailActive"      => true,
-                        "systemTemplateId" => "systemUpdateEntity",
-                        "emailTemplateId"  => "emailUpdateEntity"
+                        "systemTemplateId" => "019c320e-0ea0-71d2-89ca-1456d8715944",
+                        "emailTemplateId"  => "019c320e-370d-73ec-a9de-91757a6179bf"
                     ],
                 ],
                 "templates"               => [
                     "system" => [
-                        "id"   => "systemUpdateEntity",
+                        "id"   => "019c320e-0ea0-71d2-89ca-1456d8715944",
                         "name" => "Entity Updated",
                         "data" => [
                             "field" => [
@@ -601,7 +601,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                         ]
                     ],
                     "email"  => [
-                        "id"   => "emailUpdateEntity",
+                        "id"   => "019c320e-370d-73ec-a9de-91757a6179bf",
                         "name" => "Entity Updated",
                         "data" => [
                             "field" => [
@@ -1024,7 +1024,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ]
             ],
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => '019c320f-0cb7-7365-abee-3605365e2b80',
                 "name"                    => "Note Creation Without parent",
                 "entity"                  => 'Note',
                 "occurrence"              => 'creation',
@@ -1040,13 +1040,13 @@ class NotificationProfileSeeder extends AbstractSeeder
                     "field" => [
                         "systemActive"     => true,
                         "emailActive"      => true,
-                        "systemTemplateId" => "systemNotePost",
-                        "emailTemplateId"  => "emailNotePost"
+                        "systemTemplateId" => "019c320f-88ad-730c-a623-52795947faa8",
+                        "emailTemplateId"  => "019c320f-37cd-7191-9780-1ab816ea9121"
                     ],
                 ],
             ],
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => '019c320f-ba9e-721c-8c09-8d64314f4bb1',
                 "name"                    => "Note Creation in Entity",
                 "entity"                  => '',
                 "occurrence"              => 'note_created',
@@ -1062,13 +1062,13 @@ class NotificationProfileSeeder extends AbstractSeeder
                     "field" => [
                         "systemActive"     => true,
                         "emailActive"      => true,
-                        "systemTemplateId" => "systemNotePost",
-                        "emailTemplateId"  => "emailNotePost"
+                        "systemTemplateId" => "019c320f-88ad-730c-a623-52795947faa8",
+                        "emailTemplateId"  => "019c320f-37cd-7191-9780-1ab816ea9121"
                     ],
                 ],
                 "templates"               => [
                     "system" => [
-                        'id'   => 'systemNotePost',
+                        'id'   => '019c320f-88ad-730c-a623-52795947faa8',
                         'name' => 'Note Creation',
                         'data' => [
                             'field' => [
@@ -1091,7 +1091,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                         ]
                     ],
                     "email"  => [
-                        'id'   => 'emailNotePost',
+                        'id'   => '019c320f-37cd-7191-9780-1ab816ea9121',
                         "name" => "Note creation",
                         "data" => [
                             "field" => [
@@ -1125,7 +1125,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ]
             ],
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => '019c3210-2442-72a9-bfb7-8a527c00c47e',
                 "name"                    => "Mention",
                 "entity"                  => '',
                 "occurrence"              => 'mentioned',
@@ -1141,13 +1141,13 @@ class NotificationProfileSeeder extends AbstractSeeder
                     "field" => [
                         "systemActive"     => true,
                         "emailActive"      => true,
-                        "systemTemplateId" => "systemMention",
-                        "emailTemplateId"  => "emailMention"
+                        "systemTemplateId" => "019c3210-4e4d-700f-85bc-90b62af75cd4",
+                        "emailTemplateId"  => "019c3210-7374-72be-a2ed-bd38c062268a"
                     ]
                 ],
                 "templates"               => [
                     "system" => [
-                        "id"   => "systemMention",
+                        "id"   => "019c3210-4e4d-700f-85bc-90b62af75cd4",
                         "name" => 'Mention',
                         "data" => [
                             "field" => [
@@ -1178,7 +1178,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                         ]
                     ],
                     "email"  => [
-                        "id"   => "emailMention",
+                        "id"   => "019c3210-7374-72be-a2ed-bd38c062268a",
                         "name" => "Mention",
                         "data" => [
                             "field" => [
@@ -1221,7 +1221,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                 ]
             ],
             [
-                "id"                      => Util::generateUniqueHash(),
+                "id"                      => '019c3210-a899-7176-92fa-5cbb01ccc090',
                 "name"                    => "Assignment/Ownership",
                 "entity"                  => '',
                 "occurrence"              => 'ownership_assignment',
@@ -1237,13 +1237,13 @@ class NotificationProfileSeeder extends AbstractSeeder
                     "field" => [
                         "systemActive"     => true,
                         "emailActive"      => true,
-                        "systemTemplateId" => "systemOwnerAssign",
-                        "emailTemplateId"  => "emailOwnerAssign"
+                        "systemTemplateId" => "019c3210-ce7e-728e-aa47-cfbd4eeb0d20",
+                        "emailTemplateId"  => "019c3210-fe2f-7064-bee0-965b91d4bd37"
                     ],
                 ],
                 "templates"               => [
                     "system" => [
-                        "id"   => 'systemOwnerAssign',
+                        "id"   => '019c3210-ce7e-728e-aa47-cfbd4eeb0d20',
                         "type" => "system",
                         "name" => "Assignment/Ownership",
                         "data" => [
@@ -1278,7 +1278,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                         ]
                     ],
                     "email"  => [
-                        "id"   => 'emailOwnerAssign',
+                        "id"   => '019c3210-fe2f-7064-bee0-965b91d4bd37',
                         "type" => "system",
                         "name" => "Assignment/Ownership",
                         "data" => [
@@ -1343,7 +1343,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
 
         return [
             'emailPasswordChangeRequest' => [
-                'id'               => Util::generateId(),
+                'id'               => IdGenerator::unsortableId(),
                 'name'             => 'Password Change Request',
                 'nameDeDe'         => 'Anforderung zur Passwortänderung',
                 'nameUkUa'         => 'Запит на зміну пароля',
@@ -1362,7 +1362,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
                 'createdById'      => 'system'
             ],
             'emailPasswordReset'         => [
-                'id'               => Util::generateId(),
+                'id'               => IdGenerator::unsortableId(),
                 'name'             => 'Password Reset',
                 'nameDeDe'         => 'Passwort zurücksetzen',
                 'nameUkUa'         => 'Пароль скинуто',

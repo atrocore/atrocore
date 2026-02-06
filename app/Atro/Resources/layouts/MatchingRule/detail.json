@@ -5,6 +5,12 @@
     "rows": [
       [
         {
+          "name": "number"
+        },
+        false
+      ],
+      [
+        {
           "name": "type"
         },
         {
@@ -24,12 +30,6 @@
         {
           "name": "matching"
         }
-      ],
-      [
-        {
-          "name": "code"
-        },
-        false
       ]
     ]
   }

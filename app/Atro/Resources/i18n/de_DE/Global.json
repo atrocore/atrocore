@@ -81,7 +81,7 @@
     "RoleScope": "Geltungsbereich",
     "RoleScopeField": "Feld",
     "Selection": "Auswahl",
-    "SelectionRecord": "Auswahl-Datensatz",
+    "SelectionItem": "Auswahlelement",
     "ActionExecution": "Aktions-Ausführung",
     "ActionExecutionLog": "Aktions-Ausführungsprotokoll",
     "Layout": "Layout",
@@ -155,7 +155,7 @@
     "Job": "Aufträge",
     "LayoutProfile": "Layoutprofile",
     "Selection": "Auswahlen",
-    "SelectionRecord": "Auswahldatensätze",
+    "SelectionItem": "Auswahlelemente",
     "ActionExecution": "Aktions-Ausführungen",
     "ActionExecutionLog": "Protokolle der Aktionsausführung",
     "Layout": "Layouts",
@@ -529,7 +529,9 @@
     "Saved Filters": "Gespeicherte Filter",
     "replaceItem": "Ersetzen",
     "removeItem": "Entfernen",
-    "isLinked": "Ist verknüpft"
+    "openStagingEntity": "Staging-Entität öffnen",
+    "openPrimaryEntity": "Master-Entität öffnen",
+    "currentSelection": "Aktuelle Auswahl"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
@@ -727,11 +729,12 @@
     "select": "Wählen"
   },
   "fields": {
+    "number": "Nummer",
     "field": "Feld",
-    "primaryRecord": "Primärer Datensatz",
     "derivedRecords": "Abgeleitete Datensätze",
     "goldenRecord": "Goldener Datensatz",
     "sourceRecords": "Quelldatensätze",
+    "stagingRecords": "Staging Datensätze",
     "width": "Breite",
     "height": "Höhe",
     "action": "Aktion",

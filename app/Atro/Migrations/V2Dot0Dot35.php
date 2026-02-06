@@ -12,6 +12,7 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 
 class V2Dot0Dot35 extends Base
@@ -91,7 +92,7 @@ class V2Dot0Dot35 extends Base
 
                         foreach ($keyTranslations as $code => $value) {
                             $translations[$code] = [
-                                "id" => Util::generateId(),
+                                "id" => IdGenerator::uuid(),
                                 "code" => $code,
                                 "isCustomized" => true,
                                 "createdAt" => date('Y-m-d H:i:s'),

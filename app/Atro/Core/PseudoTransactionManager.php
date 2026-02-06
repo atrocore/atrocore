@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
-use Atro\Core\Utils\Util;
 use Espo\Entities\User;
 use Atro\Services\Record;
 use Espo\ORM\EntityManager;
@@ -203,7 +203,7 @@ class PseudoTransactionManager
 
     protected function push(string $entityType, string $entityId, string $action, string $input, string $parentId = null): string
     {
-        $id = Util::generateId();
+        $id = IdGenerator::uuid();
         $parentId = empty($parentId) ? null : $parentId;
         $md5 = md5("{$entityType}_{$entityId}_{$action}_{$input}_{$parentId}");
 

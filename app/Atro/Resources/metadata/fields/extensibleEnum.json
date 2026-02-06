@@ -46,7 +46,7 @@
   "filter": true,
   "auditable": true,
   "fieldDefs": {
-    "type": "varchar"
+    "type": "foreignId"
   },
   "fields": {
     "name": {

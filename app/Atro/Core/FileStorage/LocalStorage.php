@@ -17,6 +17,8 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\Core\Utils\FolderPathGenerator;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
@@ -24,7 +26,6 @@ use Atro\Entities\Folder;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
-use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Util;
@@ -83,7 +84,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         $input = $file->_input ?? new \stdClass();
 
         if (!$file->getStorage()->get('syncFolders')) {
-            $file->set('path', $this->getPathBuilder()->createPath($file->getStorage()->get('path') . DIRECTORY_SEPARATOR));
+            $file->set('path', FolderPathGenerator::generate($this->getConfig()->get('uploadRootPath') ?? '', true));
             $file->set('thumbnailsPath', $file->get('path'));
         }
 
@@ -111,6 +112,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
                 fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
             }
             fclose($f);
+
+            Util::removeDir($chunkDirPath);
 
             $result = true;
         }
@@ -537,7 +540,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             $id = $xattr->get($dir, 'atroId');
 
             $entityData = [
-                'id'       => $id ?? Util::generateId(),
+                'id'       => $id ?? IdGenerator::uuid(),
                 'name'     => $dirName,
                 '_dirName' => $dir
             ];
@@ -848,11 +851,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     protected function getFileManager(): FileManager
     {
         return $this->container->get('fileManager');
-    }
-
-    protected function getPathBuilder(): FilePathBuilder
-    {
-        return $this->container->get('filePathBuilder');
     }
 
     public function getMemoryStorage(): StorageInterface

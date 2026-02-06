@@ -81,7 +81,7 @@
     "RoleScopeAttributePanel": "Панель атрибутів",
     "RoleScopeField": "Поле",
     "Selection": "Вибірка",
-    "SelectionRecord": "Запис вибірки",
+    "SelectionItem": "Елемент виборки",
     "ActionExecution": "Виконання дій Виконання дій",
     "ActionExecutionLog": "Журнал виконання дій",
     "Layout": "Лейаут",
@@ -155,7 +155,7 @@
     "RoleScopeAttribute": "Атрибути",
     "Entity": "Управління сутностями",
     "Selection": "Вибірки",
-    "SelectionRecord": "Записи вибірки",
+    "SelectionItem": "Елементи вибірки",
     "ActionExecution": "Виконання дій Виконання дій",
     "ActionExecutionLog": "Журнали виконання дій",
     "Layout": "Лейаути",
@@ -526,10 +526,12 @@
     "Items": "Предмети",
     "hideAll": "Сховати все",
     "Relations": "Стосунки",
-    "Saved Filters": "Збережений фільтр",
-    "replaceItem": "Замінювати",
+    "Saved Filters": "Збережені фільтри",
+    "replaceItem": "Замінити",
     "removeItem": "Видалити",
-    "isLinked": "Пов'язано"
+    "openStagingEntity": "Відкрити мастер сутність",
+    "openPrimaryEntity": "Відкрити стейджинг сутність",
+    "currentSelection": "Поточний вибір"
   },
   "insightsPanels": {
     "summary": "Підсумок",
@@ -683,11 +685,12 @@
     "deletePermanently": "Видалити назавжди"
   },
   "fields": {
+    "number": "Номер",
     "field": "Поле",
-    "primaryRecord": "Первинний запис",
     "derivedRecords": "Похідні записи",
     "goldenRecord": "Золотий запис",
     "sourceRecords": "Джерела запису",
+    "stagingRecords": "Стейджинг записи",
     "classifications": "Класифікації",
     "classification": "Класифікація",
     "status": "Статус",

@@ -48,6 +48,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         inlineEditDisabled: false,
 
+        recordActionView: false,
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -58,6 +60,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             'click a[data-action="openOverviewFilter"]': function () {
                 this.openOverviewFilter();
+            },
+
+            'click a.action': function (e) {
+                const $el = $(e.currentTarget);
+                const name = $el.data('action');
+                if (name) {
+                    const functionName = 'action' + Espo.Utils.upperCaseFirst(name);
+                    if (typeof this[functionName] === 'function') {
+                        this[functionName]($(e.currentTarget).data(), e)
+                    }
+                }
             }
         },
 
@@ -132,14 +145,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.merging) {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 this.merging = false;
-                this.reRender();
-                this.renderFieldsPanels();
                 if (relationshipsPanels) {
                     relationshipsPanels.changeViewMode('detail');
                     relationshipsPanels.merging = false;
+                    relationshipsPanels.reRender();
                 }
-                this.$el.find('div.compare-records').attr('data-mode', 'compare')
 
+                this.reRender();
+                this.renderFieldsPanels();
+                this.$el.find('div.compare-records').attr('data-mode', 'compare')
             }
         },
 
@@ -148,16 +162,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (!this.merging) {
                 this.notify('Loading...')
                 this.merging = true;
+                if (relationshipsPanels) {
+                    relationshipsPanels.merging = true;
+                    relationshipsPanels.changeViewMode('edit');
+                    relationshipsPanels.reRender();
+                }
+
                 this.reRender();
                 this.renderFieldsPanels();
                 this.listenTo(this, 'after:fields-panel-rendered', () => {
                     this.handleRadioButtonsDisableState(false)
                 })
-
-                if (relationshipsPanels) {
-                    relationshipsPanels.merging = true;
-                    relationshipsPanels.changeViewMode('edit');
-                }
 
                 this.$el.find('div.compare-records').attr('data-mode', 'merge')
                 return;
@@ -177,7 +192,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                attributes = { ...attributes, ...fieldsPanels.fetch() };
+                attributes = {...attributes, ...fieldsPanels.fetch()};
             }
 
             $.each(attributes, (name, value) => {
@@ -294,7 +309,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                     const type = fieldDef['type'];
 
-                    if ((!fieldDef['ignoreTypeForMerge'] && !this.isValidType(type, field)) || !this.isFieldEnabled(this.model, field)) {
+                    if ((!fieldDef['ignoreTypeForMerge'] && !this.isValidType(type, field))) {
                         continue;
                     }
 
@@ -379,6 +394,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         renderFieldsPanels() {
             this.renderedPanels = this.renderedPanels.filter(panel => !this.fieldPanels.map(f => f.name).includes(panel));
+            let count = 0;
             this.fieldPanels.forEach((panel, index) => {
                 let fieldList = this.fieldsArr.filter(panel.filter);
                 fieldList.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
@@ -439,6 +455,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     });
 
                     view.render(() => {
+                        count++;
+                        if (count === this.fieldPanels.length) {
+                            this.trigger('all-fields-panel-rendered')
+                        }
                         this.handlePanelRendering(panel.name);
                         this.trigger('after:fields-panel-rendered', panel.name);
                         this.createView('layoutConfiguratorSelection', "views/record/layout-configurator", {
@@ -590,7 +610,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 merging: this.merging,
                 hideButtonPanel: this.hideButtonPanel,
                 showOverlay: this.showOverlay,
-                overlayLogo: this.getFavicon()
+                overlayLogo: this.getFavicon(),
+                hasRecordAction: !!this.recordActionView
             };
         },
 
@@ -601,10 +622,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         areEquals(current, others, field, fieldDef) {
+            current = current.clone();
+            others = others.map(o => o.clone());
             let result = false;
             if (fieldDef['type'] === 'linkMultiple') {
                 const fieldId = field + 'Ids';
-                const fieldName = field + 'Names'
 
                 if (
                     (current.get(fieldId) && current.get(fieldId).length === 0)
@@ -614,10 +636,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 result = true;
                 for (const other of others) {
-                    result = result && current.get(fieldId)?.toString() === other.get(fieldId)?.toString()
-                        && current.get(fieldName)?.toString() === other.get(fieldName)?.toString();
+                    result = result && current.get(fieldId)?.sort()?.toString() === other.get(fieldId)?.sort()?.toString();
                 }
                 return result
+            }
+
+            if (fieldDef['type'] === 'jsonArray' || this.getMetadata().get(['fields', fieldDef['type'], 'fieldDefs', 'type']) === 'jsonArray') {
+                current.get(field)?.sort();
+                others.forEach(o => o.get(field)?.sort());
             }
 
             if (['rangeFloat', 'rangeInt'].includes(fieldDef['type'])) {
@@ -625,6 +651,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     && this.areEquals(current, others, field + 'To', this.model.defs.fields[field + 'To']);
 
                 if (fieldDef['measureId']) {
+                    if (current.get(field + 'Unit') === "") {
+                        current.set(field + 'Unit', null)
+                    }
+                    others.forEach(o => {
+                        if (o.get(field + 'Unit') === "") {
+                            o.set(field + 'Unit', null)
+                        }
+                    });
                     result = result && this.areEquals(current, others, field + 'Unit', this.model.defs.fields[field + 'Unit']);
                 }
 
@@ -682,7 +716,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.notify(false)
                     })
                 }, this);
-                model.fetch({ main: true });
+                model.fetch({main: true});
             });
         },
 
@@ -701,7 +735,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return columns.push({
                     id: model.id,
                     entityType: model.name,
-                    selectionRecordId: model.get('_selectionRecordId'),
+                    selectionItemId: model.get('_selectionItemId'),
+                    action: model.id + 'Action',
                     label: this.getModelTitle(model) ?? model.get('id'),
                     name: `<a href="#/${model.name}/view/${model.id}"  title="${name}" target="_blank"> ${name} </a>`,
                 });
@@ -715,18 +750,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return false;
             }
             return type && !['composite'].includes(type);
-        },
-
-        isFieldEnabled(model, name) {
-            const disabledParameters = ['disabled', 'layoutDetailDisabled'];
-
-            for (let param of disabledParameters) {
-                if (model.getFieldParam(name, param)) {
-                    return false
-                }
-            }
-
-            return true;
         },
 
         isAllowFieldUsingFilter(field, fieldDef, equalValueForModels) {
@@ -1099,7 +1122,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             models.forEach(model => {
                 if (!this.disableModelFetch) {
-                    model.fetch({ async: false })
+                    model.fetch({async: false})
                 }
                 $.each(model.defs.fields, (name, defs) => {
                     if (defs.attributeId) {
@@ -1163,6 +1186,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         isPanelsLoading() {
             return this.renderedPanels.length < this.fieldPanels.length + 1;
-        }
+        },
+
+        showLoader() {
+            this.$el.find('.overlay').removeClass('hidden');
+        },
     });
 });

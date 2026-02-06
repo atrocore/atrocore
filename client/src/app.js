@@ -645,6 +645,7 @@ Espo.define(
                         if (self.language.localeId) {
                             xhr.setRequestHeader('Locale-Id', self.language.localeId);
                         }
+                        xhr.setRequestHeader('Flatten-Attributes', 'true');
                     },
                     dataType: 'json',
                     timeout: 120000,

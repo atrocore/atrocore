@@ -4,7 +4,9 @@
   "filter": true,
   "fieldDefs": {
     "type": "int",
-    "autoincrement": true,
+    "autoincrement": true
+  },
+  "fieldTypeDefs": {
     "unique": true,
     "protected": true
   },

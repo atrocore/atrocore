@@ -11,8 +11,6 @@
 Espo.define('views/action/record/panels/entity-filter-result', ['views/record/panels/relationship','views/search/search-filter-opener'],
     (Dep, SearchFilterOpener) => Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-view-only',
-
         readOnly: true,
 
         setup() {

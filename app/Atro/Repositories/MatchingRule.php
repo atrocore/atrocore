@@ -32,7 +32,17 @@ class MatchingRule extends Base
      */
     protected function beforeSave(OrmEntity $entity, array $options = [])
     {
-        $this->validateCode($entity);
+        if (!empty($entity->get('matchingId')) && empty($this->getEntityManager()->getRepository('Matching')->get($entity->get('matchingId')))) {
+            throw new BadRequest($this->getInjection('language')->translate('notValidMatching', 'exceptions', 'MatchingRule'));
+        }
+
+        if (!empty($entity->get('matchingRuleSetId'))) {
+            $set = $this->getEntityManager()->getRepository('MatchingRule')->get($entity->get('matchingRuleSetId'));
+            if (empty($set) || $set->get('type') !== 'set') {
+                throw new BadRequest($this->getInjection('language')->translate('notValidMatchingRuleSet', 'exceptions', 'MatchingRule'));
+            }
+        }
+
         $this->validateIsMatchingActive($entity);
 
         parent::beforeSave($entity, $options);
@@ -53,13 +63,6 @@ class MatchingRule extends Base
         }
 
         return $this->getEntityManager()->getRepository('Matching')->get($rule->get('matchingId'));
-    }
-
-    public function validateCode(MatchingRuleEntity $entity): void
-    {
-        if (!preg_match('/^[A-Za-z0-9_-]*$/', $entity->get('code'))) {
-            throw new BadRequest($this->getInjection('language')->translate('notValidCode', 'exceptions', 'MatchingRule'));
-        }
     }
 
     public function validateIsMatchingActive(MatchingRuleEntity $entity): void

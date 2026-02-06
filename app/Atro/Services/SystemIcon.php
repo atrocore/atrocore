@@ -28,4 +28,12 @@ class SystemIcon extends ReferenceData
             ]);
         }
     }
+
+    public function putAclMeta(Entity $entity): void
+    {
+        parent::putAclMeta($entity);
+
+        $entity->setMetaPermission('edit', false);
+        $entity->setMetaPermission('delete', false);
+    }
 }

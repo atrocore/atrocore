@@ -96,7 +96,7 @@ class Language extends AbstractListener
                         && !empty($entityDefs['links'][$field]['entity'])
                         && $entityDefs['links'][$field]['foreign'] === 'goldenRecord'
                     ) {
-                        $fieldLabel = $this->getLabel($data, $locale, 'Global', 'sourceRecords');
+                        $fieldLabel = $this->getLabel($data, $locale, 'Global', 'stagingRecords');
                         $entityLabel = $this->getLabel($data, $locale, 'Global', $entityDefs['links'][$field]['entity'], 'scopeNames');
 
                         $data[$locale][$entity]['fields'][$field] = "$fieldLabel ($entityLabel)";
@@ -224,6 +224,20 @@ class Language extends AbstractListener
                 foreach ($data as $locale => $rows) {
                     if (!empty($rows[$scopeDefs['derivativeForRelation']])) {
                         $data[$locale][$scope] = Util::merge($rows[$scopeDefs['derivativeForRelation']], $rows[$scope] ?? []);
+                    }
+                }
+            }
+        }
+
+        // prepare translation via labelKey
+        foreach ($this->getMetadata()->get('entityDefs') ?? [] as $entityName => $entityDefs) {
+            foreach ($entityDefs['fields'] ?? [] as $fieldName => $fieldDefs) {
+                if (!empty($fieldDefs['labelKey'])) {
+                    $parts = explode('.', $fieldDefs['labelKey']);
+                    foreach ($data as $locale => $rows) {
+                        if (isset($rows[$parts[0]][$parts[1]][$parts[2]])) {
+                            $data[$locale][$entityName]['fields'][$fieldName] = $rows[$parts[0]][$parts[1]][$parts[2]];
+                        }
                     }
                 }
             }

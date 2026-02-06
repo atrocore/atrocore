@@ -21,9 +21,25 @@
         }
       }
     },
+    "stagingItemCount": {
+      "type": "int",
+      "notStorable": true,
+      "protected": true
+    },
+    "masterItemCount": {
+      "type": "int",
+      "notStorable": true,
+      "protected": true
+    },
     "clusterItems": {
       "type": "linkMultiple",
       "auditableEnabled": true
+    },
+    "goldenRecord": {
+      "type": "link",
+      "layoutNavigationDisabled": true,
+      "protected": true,
+      "entityNameField": "masterEntity"
     },
     "createdAt": {
       "type": "datetime",
@@ -51,6 +67,12 @@
       "type": "hasMany",
       "entity": "ClusterItem",
       "foreign": "cluster"
+    },
+    "rejectedClusterItems": {
+      "type": "hasMany",
+      "relationName": "RejectedClusterItem",
+      "entity": "ClusterItem",
+      "foreign": "rejectedClusters"
     },
     "createdBy": {
       "type": "belongsTo",

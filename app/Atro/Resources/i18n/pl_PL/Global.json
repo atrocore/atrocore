@@ -80,7 +80,7 @@
     "Language": "Język",
     "RoleScopeAttribute": "Atrybut",
     "Selection": "Wybór",
-    "SelectionRecord": "Rekord wyboru",
+    "SelectionItem": "Rekord wyboru",
     "MasterDataEntity": "Podmiot danych podstawowych",
     "ActionExecution": "Wykonanie akcji",
     "ActionExecutionLog": "Dziennik wykonania akcji",
@@ -154,7 +154,7 @@
     "Language": "Języki",
     "RoleScopeField": "Pola",
     "Selection": "Wybór",
-    "SelectionRecord": "Rekordy selekcji",
+    "SelectionItem": "Rekordy selekcji",
     "MasterDataEntity": "Podmioty danych podstawowych",
     "ActionExecution": "Wykonywanie akcji",
     "ActionExecutionLog": "Dzienniki wykonania akcji",
@@ -676,6 +676,7 @@
     "select": "Wybierz"
   },
   "fields": {
+    "number": "Numer",
     "status": "Status",
     "conditionsType": "Typ warunków",
     "conditions": "Warunki",
@@ -779,7 +780,6 @@
     "sorting": "Sort Order",
     "goldenRecord": "Złota płyta",
     "sourceRecords": "Zapisy źródłowe",
-    "primaryRecord": "Główny rekord",
     "derivedRecords": "Rekordy pochodne",
     "createdCountFilterActionExecution": "Stworzone przez Action Execution",
     "updatedCountFilterActionExecution": "Aktualizacja przez wykonanie akcji",

@@ -8,10 +8,10 @@
   },
   "options": {
     "type": {
-      "equal": "Equal",
-      "like": "Like",
-      "contains": "cодержит",
-      "set": "Set"
+      "equal": "Равный",
+      "similar": "Похожий",
+      "contains": "Содержит",
+      "set": "Набор"
     },
     "operator": {
       "and": "AND",

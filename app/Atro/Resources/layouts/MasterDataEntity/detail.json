@@ -19,11 +19,13 @@
         {
           "name": "masterEntity"
         },
-        false
+        {
+          "name": "sourceEntity"
+        }
       ],
       [
         {
-          "name": "mappingScript",
+          "name": "mergingScript",
           "fullWidth": true
         }
       ]

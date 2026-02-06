@@ -33,7 +33,9 @@
   "labels": {
     "execute": "Ejecute",
     "Parameters": "Parámetros",
-    "fieldsPanel": "Guardar",
+    "fieldsPanel": "Guardar"
+  },
+  "actions": {
     "allLogs": "Todos los registros"
   },
   "massActions": {

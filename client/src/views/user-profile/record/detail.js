@@ -81,6 +81,7 @@ Espo.define('views/user-profile/record/detail', 'views/record/detail', Dep => {
                 model: this.getPreferences(),
                 canReset: true,
                 afterSave: () => {
+                    window.dispatchEvent(new CustomEvent('favorites:update', { detail: this.getPreferences().get('favoritesList') }));
                     this.getPreferences().trigger('favorites:update');
                 }
             }, view => {

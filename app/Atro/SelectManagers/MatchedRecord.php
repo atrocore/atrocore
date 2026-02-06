@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\SelectManagers;
 
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Atro\Core\SelectManagers\Base;
 use Atro\ORM\DB\RDB\Mapper;
@@ -41,7 +42,7 @@ class MatchedRecord extends Base
 
                 $subQb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
 
-                $param = Util::generateId();
+                $param = IdGenerator::unsortableId();
 
                 $subQb->setParameter($param, $matching->get($field));
 
@@ -77,7 +78,7 @@ class MatchedRecord extends Base
             ->getMapper()
             ->createSelectQueryBuilder($this->getRepository()->get(), $sp, true);
 
-        $qb->andWhere("mr.id IN (".str_replace($alias, Util::generateId(), $subQb->getSql()).")");
+        $qb->andWhere("mr.id IN (".str_replace($alias, IdGenerator::unsortableId(), $subQb->getSql()).")");
         foreach ($subQb->getParameters() as $parameterName => $value) {
             $qb->setParameter($parameterName, $value, Mapper::getParameterType($value));
         }

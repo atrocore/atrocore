@@ -12,6 +12,7 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
@@ -125,7 +126,7 @@ class V2Dot2Dot0 extends Base
 
         foreach ($res as $row) {
             try {
-                $id = Util::generateId();
+                $id = IdGenerator::uuid();
                 $this->getConnection()->createQueryBuilder()
                     ->insert('layout')
                     ->values([
@@ -148,7 +149,7 @@ class V2Dot2Dot0 extends Base
                         'name'       => ':name',
                         'sort_order' => ':sortOrder'
                     ])
-                    ->setParameter('id', Util::generateId())
+                    ->setParameter('id', IdGenerator::uuid())
                     ->setParameter('layoutId', $id)
                     ->setParameter('name', 'summary')
                     ->setParameter('sortOrder', 10)
@@ -165,7 +166,7 @@ class V2Dot2Dot0 extends Base
                                 'name'       => ':name',
                                 'sort_order' => ':sortOrder'
                             ])
-                            ->setParameter('id', Util::generateId())
+                            ->setParameter('id', IdGenerator::uuid())
                             ->setParameter('layoutId', $id)
                             ->setParameter('name', 'dataQuality')
                             ->setParameter('sortOrder', 20)

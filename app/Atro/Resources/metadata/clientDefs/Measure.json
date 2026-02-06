@@ -17,8 +17,15 @@
   "relationshipPanels": {
     "units": {
       "select": false,
-      "rowActionsView": "views/unit/row-actions/relationship-unit",
-      "view": "views/measure/record/panels/units"
+      "actions": {
+        "setDefault": {
+          "url": "Unit/action/setDefault",
+          "sortOrder": 10
+        },
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
     }
   }
 }

@@ -154,6 +154,11 @@
                 {{{lastViewedBadge}}}
             </li>
             {{/if}}
+            {{#if showCurrentSelection}}
+            <li class="dropdown hidden-xs current-selection-badge-container">
+                {{{currentSelectionBadge}}}
+            </li>
+            {{/if}}
             {{#if showBookmarked }}
             <li class="dropdown hidden-xs bookmark-badge-container">
                 {{{bookmarkBadge}}}

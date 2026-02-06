@@ -117,14 +117,17 @@ class IntType extends AbstractFieldType
             ];
             $entity->fields[$name . 'UnitName'] = [
                 'type'        => 'varchar',
+                'attributeId' => $row['id'],
                 'notStorable' => true
             ];
             $entity->fields[$name . 'UnitData'] = [
                 'type'        => 'jsonObject',
+                'attributeId' => $row['id'],
                 'notStorable' => true
             ];
             $entity->fields[$name . 'AllUnits'] = [
                 'type'        => 'jsonObject',
+                'attributeId' => $row['id'],
                 'notStorable' => true
             ];
 

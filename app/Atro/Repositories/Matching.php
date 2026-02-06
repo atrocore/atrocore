@@ -283,7 +283,7 @@ class Matching extends Base
             $qb->andWhere(implode(' OR ', $rulesParts));
         }
 
-        return $qb->fetchAllAssociative();
+        return Util::arrayKeysToCamelCase($qb->fetchAllAssociative());
     }
 
     protected function rebuild(): void

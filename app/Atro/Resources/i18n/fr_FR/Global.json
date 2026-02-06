@@ -1,5 +1,6 @@
 {
   "fields": {
+    "number": "Numéro",
     "classifications": "Classifications",
     "status": "Statut",
     "conditionsType": "Type de conditions",
@@ -103,7 +104,7 @@
     "url": "URL",
     "goldenRecord": "Enregistrement d'or",
     "sourceRecords": "Éléments source",
-    "primaryRecord": "Enregistrement pincipal",
+    "stagingRecords": "Éléments en staging",
     "derivedRecords": "Enregistrements dérivés",
     "createdCountFilterActionExecution": "Créé par l'exécution d'une action",
     "updatedCountFilterActionExecution": "Mise à jour par l'exécution de l'action",
@@ -191,7 +192,7 @@
     "Language": "Langue",
     "LayoutProfile": "Profil de Disposition",
     "Selection": "Sélection",
-    "SelectionRecord": "Élément de sélection",
+    "SelectionItem": "Élément de sélection",
     "MasterDataEntity": "Entité de reférence",
     "ActionExecution": "Exécution de l'action",
     "ActionExecutionLog": "Journal d'exécution de l'action",
@@ -563,7 +564,7 @@
     "accessDeniedDescription": "Votre compte ne dispose pas des autorisations nécessaires pour consulter cette ressource. Si vous pensez que vous devriez y avoir accès, veuillez contacter votre administrateur.",
     "removeItem": "Supprimer",
     "accessDenied": "Accès refusé",
-    "isLinked": "Est lié"
+    "currentSelection": "Sélection Courante"
   },
   "insightsPanels": {
     "summary": "Sommaire",
@@ -741,7 +742,7 @@
     "RoleScopeAttribute": "Attributs",
     "RoleScopeField": "Champs",
     "Selection": "Sélections",
-    "SelectionRecord": "Elements de sélection",
+    "SelectionItem": "Elements de sélection",
     "MasterDataEntity": "Entités de reference",
     "ActionExecution": "Exécutions de l'action",
     "ActionExecutionLog": "Journaux d'exécution de l'action",

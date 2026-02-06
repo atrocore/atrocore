@@ -17,6 +17,11 @@
   },
   "labels": {
     "manufacturer": "Fabricante",
-    "other": "Otros"
+    "other": "Otros",
+    "MasterData": "Datos maestros",
+    "Description": "Descripción",
+    "State": "Estado",
+    "Taxonomy": "Taxonomía",
+    "ProductLifeCycle": "Ciclo de vida del producto"
   }
 }

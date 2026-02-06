@@ -2,19 +2,20 @@
   "fields": {
     "name": "Ім'я",
     "description": "Опис",
-    "selectionRecords": "Записи вибору"
+    "selectionItems": "Елементи вибірки"
   },
   "options": {
     "type": {
-      "single": "Одна сутність",
-      "multiple": "Кілька сутностей"
+      "single": "Уніфіковані",
+      "multiple": "Змішані"
     }
   },
   "labels": {
     "createSelection": "Створити виділення"
   },
   "messages": {
-    "cannotSetToSingle": "Ви не можете встановити 'Одинарну сутність', оскільки у ваших записах є багато сутностей.",
-    "youNeedAtLeastTwoItem": "Вам потрібно щонайменше два елементи для порівняння."
+    "cannotSetToSingle": "Ви не можете встановити 'Одинарну сутність'.",
+    "youNeedAtLeastTwoItem": "Вам потрібно щонайменше два елементи для порівняння.",
+    "entityIsRequired": "Поле 'Сутність' обов'язкове."
   }
 }

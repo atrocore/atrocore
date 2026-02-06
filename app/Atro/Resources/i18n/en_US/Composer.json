@@ -53,7 +53,7 @@
     "cancelingModuleInstall": "Canceling module installation...",
     "canceledModuleInstall": "Module installation has been canceled",
     "Log": "Log",
-    "confirmRun": "After update action all users would logout from system. Are you sure you want to update you system?",
+    "confirmRun": "After the update, all users will be logged out of the system. Are you sure you want to update the system?",
     "daemonDisabled": "<b>The composer daemon is not running!</b><br>Probably the daemon is reloading now and you should wait a minute or the crontab is not configured. Instructions on how to configure the crontab you can find <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">here</a>.",
     "jobManagerRunning": "The ability to update modules is blocked. Please try later.",
     "showReleaseNotes": "Release Notes"

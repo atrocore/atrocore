@@ -72,24 +72,118 @@ class OpenApiGenerator
                 continue;
             }
 
+            $properties = [
+                'edit'   => [
+                    'type'    => 'boolean',
+                    'example' => true,
+                ],
+                'delete' => [
+                    'type'    => 'boolean',
+                    'example' => true,
+                ],
+                'unlink' => [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ],
+                'stream' => [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ],
+            ];
+
+            if ($entityName === 'SelectionItem') {
+                $properties['replaceItem'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+            } else if ($entityName === 'ClusterItem') {
+                $properties['reject'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+
+                $properties['confirm'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+            } else if ($entityName === 'ClassificationAttribute') {
+                $properties['unlinkRelatedAttribute'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+
+                $properties['cascadeUnlinkRelatedAttribute'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+            }
+
+            if ($entityName === 'Unit') {
+                $properties['setDefault'] = [
+                    'type'    => 'boolean',
+                    'example' => false,
+                ];
+            }
+
             $result['components']['schemas'][$entityName] = [
                 'type'       => 'object',
                 'properties' => [
                     'id'      => ['type' => 'string'],
                     'deleted' => ['type' => 'boolean'],
+                    '_meta'   => [
+                        'type'       => 'object',
+                        'required'   => ['permissions'],
+                        'properties' => [
+                            'permissions' => [
+                                'type'       => 'object',
+                                'required'   => ['edit', 'delete'],
+                                'properties' => $properties,
+                            ],
+                        ],
+                        'example'    => [
+                            'permissions' => [
+                                'edit'   => true,
+                                'delete' => true
+                            ],
+                        ],
+                    ],
                 ],
             ];
 
             foreach ($data['fields'] as $fieldName => $fieldData) {
+                if ($fieldName === '_meta') {
+                    continue;
+                }
+
                 $this->getFieldSchema($result, $entityName, $fieldName, $fieldData);
             }
 
             if ($this->getMetadata()->get(['scopes', $entityName, 'hasAttribute'])) {
-                $attributes = $this->getEntityManager()->getRepository('Attribute')->getEntityAttributes($entityName);
-                foreach ($attributes as $attribute) {
-                    $this->getFieldSchema($result, $entityName, AttributeFieldConverter::prepareFieldName($attribute), ['type' => $attribute['type'], 'outputType' => $attribute['output_type'] ?? null]);
-                }
                 $result['components']['schemas'][$entityName]['properties']['attributesDefs'] = ["type" => "object", "forRead" => true];
+                $result['components']['schemas'][$entityName]['properties']['attributesValues'] = [
+                    "type"  => "array",
+                    "items" => [
+                        "type"       => "object",
+                        'properties' => [
+                            'attributeId'      => ['type' => 'string'],
+                            'attributeValueId' => ['type' => 'string'],
+                            'value'            => ['nullable' => true, 'example' => null],
+                            'valueName'        => ['type' => 'string', 'nullable' => true],
+                            'valueUnitId'      => ['type' => 'string', 'nullable' => true],
+                            'valueUnitName'    => ['type' => 'string', 'nullable' => true],
+                            'valueId'          => ['type' => 'string', 'nullable' => true],
+                            'valueIds'         => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
+                            'valueNames'       => ['type' => 'object', 'nullable' => true],
+                            'valueOptionsData' => ['type' => 'object', 'nullable' => true],
+                            'valueOptionData'  => ['type' => 'object', 'nullable' => true],
+                            'valuePathsData'   => ['type' => 'object', 'nullable' => true],
+                            'valueUnitData'    => ['type' => 'object', 'nullable' => true],
+                            'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
+                            'valueFrom'        => ['nullable' => true, 'example' => 1],
+                            'valueTo'          => ['nullable' => true, 'example' => 2],
+                        ]
+                    ],
+                ];
             }
 
             $schemas[$entityName] = $result['components']['schemas'][$entityName];
@@ -237,8 +331,8 @@ class OpenApiGenerator
                 $result['paths']["/{$scopeName}"]['get']['parameters'][] = $languageParam;
             }
 
-            if($this->getMetadata()->get(['scopes', $scopeName, 'hasAttribute'])) {
-                $result['paths']["/{$scopeName}"]['get']['parameters'][] =   [
+            if ($this->getMetadata()->get(['scopes', $scopeName, 'hasAttribute'])) {
+                $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
                     "name"        => "attributes",
                     "in"          => "query",
                     "required"    => false,
@@ -249,7 +343,7 @@ class OpenApiGenerator
                     ]
                 ];
 
-                $result['paths']["/{$scopeName}"]['get']['parameters'][] =   [
+                $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
                     "name"        => "allAttributes",
                     "in"          => "query",
                     "required"    => false,
@@ -260,11 +354,21 @@ class OpenApiGenerator
                     ]
                 ];
 
-                $result['paths']["/{$scopeName}"]['get']['parameters'][] =   [
+                $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
                     "name"        => "completeAttrDefs",
                     "in"          => "query",
                     "required"    => false,
                     "description" => "Load the complete attributeDefs for the loaded attributes $scopeName",
+                    "schema"      => [
+                        "type"    => "boolean",
+                        "example" => "false"
+                    ]
+                ];
+                $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
+                    "name"        => "Flatten-Attributes",
+                    "in"          => "header",
+                    "required"    => false,
+                    "description" => "When true, flattens attribute values into the product object. When false or omitted, attributes are in the attributeValues array.",
                     "schema"      => [
                         "type"    => "boolean",
                         "example" => "false"
@@ -303,6 +407,19 @@ class OpenApiGenerator
 
             if (!empty($languageParam)) {
                 $result['paths']["/{$scopeName}/{id}"]['get']['parameters'][] = $languageParam;
+            }
+
+            if ($this->getMetadata()->get(['scopes', $scopeName, 'hasAttribute'])) {
+                $result['paths']["/{$scopeName}/{id}"]['get']['parameters'][] = [
+                    "name"        => "Flatten-Attributes",
+                    "in"          => "header",
+                    "required"    => false,
+                    "description" => "When true, flattens attribute values into the product object. When false or omitted, attributes are in the attributeValues array.",
+                    "schema"      => [
+                        "type"    => "boolean",
+                        "example" => "false"
+                    ]
+                ];
             }
 
             if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive' && $scopeName !== 'MatchedRecord') {
@@ -656,7 +773,7 @@ class OpenApiGenerator
                                 'schema' => [
                                     "type"       => "object",
                                     "properties" => [
-                                        "ids" => [
+                                        "ids"        => [
                                             "type"    => "array",
                                             "items"   => [
                                                 "type" => "string"
@@ -701,7 +818,7 @@ class OpenApiGenerator
                                 'schema' => [
                                     "type"       => "object",
                                     "properties" => [
-                                        "ids" => [
+                                        "ids"        => [
                                             "type"    => "array",
                                             "items"   => [
                                                 "type" => "string"
@@ -1161,7 +1278,7 @@ class OpenApiGenerator
         $response['200']['content'] = [
             "application/octet-stream" => [
                 'schema' => [
-                    'type' => 'string',
+                    'type'   => 'string',
                     'format' => 'binary'
                 ]
             ]
@@ -1177,19 +1294,19 @@ class OpenApiGenerator
                 'content'  => [
                     'application/json' => [
                         'schema' => [
-                            'type' => 'object',
+                            'type'       => 'object',
                             'properties' => [
                                 'url' => [
-                                    'type' => 'string',
+                                    'type'    => 'string',
                                     'example' => 'https://your-website.com/image.png'
                                 ]
                             ],
-                            'required' => ['url']
+                            'required'   => ['url']
                         ]
                     ]
                 ],
             ],
-            'responses' => $response
+            'responses'   => $response
         ];
     }
 
@@ -1203,7 +1320,7 @@ class OpenApiGenerator
             return;
         }
 
-        if($fieldData['type'] === 'script') {
+        if ($fieldData['type'] === 'script') {
             $fieldData['type'] = $fieldData['outputType'] ?? 'text';
         }
 
@@ -1257,7 +1374,7 @@ class OpenApiGenerator
             case "link":
             case "linkParent":
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
-                if(!empty($fieldData['protected'])) {
+                if (!empty($fieldData['protected'])) {
                     $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"]['forRead'] = true;
                 }
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
@@ -1301,7 +1418,7 @@ class OpenApiGenerator
                     'items' => ['type' => 'string']
                 ];
 
-                if(!empty($fieldData['protected'])) {
+                if (!empty($fieldData['protected'])) {
                     $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"]['forRead'] = true;
                 }
 
@@ -1314,7 +1431,7 @@ class OpenApiGenerator
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
         }
 
-        if(!empty($fieldData['protected']) && !empty($result['components']['schemas'][$entityName]['properties'][$fieldName])) {
+        if (!empty($fieldData['protected']) && !empty($result['components']['schemas'][$entityName]['properties'][$fieldName])) {
             $result['components']['schemas'][$entityName]['properties'][$fieldName]['forRead'] = true;
         }
     }

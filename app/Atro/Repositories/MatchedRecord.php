@@ -15,7 +15,7 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
-use Atro\Core\Utils\Util;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Entities\Matching as MatchingEntity;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -85,6 +85,27 @@ class MatchedRecord extends Base
             ->fetchAllAssociative();
     }
 
+    public function getForEntityRecord(string $entityName, string $entityId, string $rejectedClusterItemId, array $rejectedClusterIds): array
+    {
+        return $this->getConnection()->createQueryBuilder()
+            ->select('mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id')
+            ->from('matched_record', 'mr')
+            ->leftJoin('mr', 'cluster_item', 'ci', 'ci.id <> :itemId and ci.entity_name = mr.source_entity AND ci.entity_id = mr.source_entity_id AND ci.deleted=:false')
+            ->leftJoin(
+                'mr', 'cluster_item', 'ci1', 'ci1.id <> :itemId and ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false'
+            )
+            ->where('(mr.source_entity=:entityName AND mr.source_entity_id=:entityId) or (mr.master_entity=:entityName AND mr.master_entity_id=:entityId)')
+            ->andWhere('(ci.cluster_id is not null or ci1.cluster_id is not null) and (ci.cluster_id is null or ci.cluster_id not in (:clusterIds)) and (ci1.cluster_id is null or ci1.cluster_id not in (:clusterIds)) and mr.deleted = :false')
+            ->setParameter('entityName', $entityName)
+            ->setParameter('entityId', $entityId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('clusterIds', $rejectedClusterIds, Connection::PARAM_STR_ARRAY)
+            ->setParameter('itemId', $rejectedClusterItemId)
+            ->addOrderBy('mr.source_entity', 'ASC')
+            ->addOrderBy('mr.source_entity_id', 'ASC')
+            ->fetchAllAssociative();
+    }
+
     public function afterRemoveRecord(string $entityName, string $entityId): void
     {
         $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates") || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords");
@@ -109,12 +130,13 @@ class MatchedRecord extends Base
 
     public function createMatchedRecord(
         MatchingEntity $matching,
-        string $sourceId,
-        string $masterId,
-        int $score,
-        string $matchedAt,
-        bool $skipBidirectional = false
-    ): void {
+        string         $sourceId,
+        string         $masterId,
+        int            $score,
+        string         $matchedAt,
+        bool           $skipBidirectional = false
+    ): void
+    {
         $sql
             = "INSERT INTO matched_record (id, type, source_entity, source_entity_id, master_entity, master_entity_id, score, matching_id, hash, created_at, modified_at, created_by_id, modified_by_id) VALUES (:id, :type, :sourceEntity, :sourceEntityId, :masterEntity, :masterEntityId, :score, :matchingId, :hash, :createdAt, :modifiedAt, :createdById, :modifiedById)";
         if (Converter::isPgSQL($this->getConnection())) {
@@ -128,7 +150,7 @@ class MatchedRecord extends Base
 
         $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
 
-        $stmt->bindValue(':id', Util::generateId());
+        $stmt->bindValue(':id', IdGenerator::uuid());
         $stmt->bindValue(':type', $matching->get('type'));
         $stmt->bindValue(':sourceEntity', $matching->get('entity'));
         $stmt->bindValue(':sourceEntityId', $sourceId);
@@ -149,13 +171,18 @@ class MatchedRecord extends Base
         }
     }
 
-    public function removeOldMatches(MatchingEntity $matching, string $matchedAt): void
+    public function removeOldMatches(MatchingEntity $matching, string $matchedAt, string $sourceEntityName, string $sourceEntityId): void
     {
         $this->getConnection()->createQueryBuilder()
             ->delete('matched_record')
-            ->where('matching_id=:matchingId AND modified_at<:matchedAt')
+            ->where('matching_id=:matchingId')
+            ->andWhere('modified_at<:matchedAt')
+            ->andWhere('source_entity=:sourceEntity')
+            ->andWhere('source_entity_id=:sourceEntityId')
             ->setParameter('matchingId', $matching->id)
             ->setParameter('matchedAt', $matchedAt)
+            ->setParameter('sourceEntity', $sourceEntityName)
+            ->setParameter('sourceEntityId', $sourceEntityId)
             ->executeQuery();
 
         // delete cluster items

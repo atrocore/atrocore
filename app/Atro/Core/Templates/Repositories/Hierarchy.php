@@ -428,6 +428,10 @@ class Hierarchy extends Base
     {
         $entity = $this->get($id);
 
+        if (empty($entity)) {
+            return [];
+        }
+
         $res = [];
         foreach ($this->getRoutes($entity) as $ids) {
             $res = array_merge($res, $ids);
@@ -717,7 +721,7 @@ class Hierarchy extends Base
                 throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
             }
             $foreign = is_string($foreign) ? $this->get($foreign) : $foreign;
-            if (in_array($foreign->get('id'), $this->getChildrenRecursivelyArray($entity->get('id')))) {
+            if (!empty($foreign) && in_array($foreign->get('id'), $this->getChildrenRecursivelyArray($entity->get('id')))) {
                 throw new BadRequest("Child record cannot be chosen as a parent.");
             }
         }
@@ -727,7 +731,7 @@ class Hierarchy extends Base
                 throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
             }
             $foreign = is_string($foreign) ? $this->get($foreign) : $foreign;
-            if (in_array($foreign->get('id'), $this->getParentsRecursivelyArray($entity->get('id')))) {
+            if (!empty($foreign) && in_array($foreign->get('id'), $this->getParentsRecursivelyArray($entity->get('id')))) {
                 throw new BadRequest("Parent record cannot be chosen as a child.");
             }
         }

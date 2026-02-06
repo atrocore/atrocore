@@ -26,6 +26,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Espo\Services\RecordService;
 
@@ -53,6 +54,15 @@ class Record extends RecordService
                     break;
                 }
             }
+        }
+    }
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        foreach ($collection as $entity) {
+            $entity->_fromCollection = true;
         }
     }
 
@@ -639,9 +649,9 @@ class Record extends RecordService
             throw new NotFound("{$this->getEntityType()} with id $id not found");
         }
 
-        $input->primaryRecordId = $primaryEntity->get('id');
+        $input->goldenRecordId = $primaryEntity->get('id');
 
-        foreach ($primaryEntity->getValueMap() as $field => $value) {
+        foreach ($primaryEntity->toArray() as $field => $value) {
             if (in_array($field, ['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'])) {
                 continue;
             }
@@ -658,7 +668,7 @@ class Record extends RecordService
 
         // create many-to-many relations
         foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']) as $link => $linkDef) {
-            if (!empty($linkDef['relationName'])) {
+            if (!empty($linkDef['relationName']) && !in_array($link, ['children', 'parents'])) {
                 $data = $primaryEntity->get($link) ?? [];
                 foreach ($data as $item) {
                     try {

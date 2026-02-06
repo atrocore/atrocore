@@ -1,10 +1,13 @@
 [
   {
-    "name": "name",
+    "name": "number",
     "link": true
   },
   {
     "name": "type"
+  },
+  {
+    "name": "entity"
   },
   {
     "name": "createdAt"

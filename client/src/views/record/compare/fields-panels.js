@@ -75,6 +75,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             modelForView = model.clone();
                             modelForView.defs = model.defs;
                         }
+
                         this.createView(row.key, viewName, {
                             el: this.options.el + ` [data-field="${field}"]  .${row.class}`,
                             model: modelForView,
@@ -93,7 +94,8 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             inlineEditDisabled: fieldData.inlineEditDisabled || false,
                             fieldActionsDisabled: true,
                             disabled: this.merging || !this.getAcl().check(model.name, 'edit'),
-                            disableToggle: true
+                            disableToggle: true,
+                            disableToggleVisibility: true
                         }, view => {
                             let viewKey = row.key;
 

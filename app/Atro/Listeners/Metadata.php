@@ -20,6 +20,7 @@ use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Entities\File;
+use Atro\Repositories\MasterDataEntity;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -36,6 +37,8 @@ class Metadata extends AbstractListener
 
         $this->addFollowersField($data);
         $this->prepareUserProfile($data);
+
+        $this->prepareMasterDataEntity($data);
 
         $event->setArgument('data', $data);
     }
@@ -195,6 +198,55 @@ class Metadata extends AbstractListener
                     'className'  => $className,
                 ];
             }
+        }
+    }
+
+    protected function prepareMasterDataEntity(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        // Prepare options for the 'sourceEntity' field of the 'MasterDataEntity' entity.
+        $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'] = [];
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && $scope !== 'MasterDataEntity') {
+                $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'][] = $scope;
+            }
+        }
+
+        try {
+            $res = MasterDataEntity::getRecordsWithSourceEntities($this->getConnection());
+        } catch (\Throwable $e) {
+            $res = [];
+        }
+
+        foreach ($res as $item) {
+            $stagingEntity = $item['id'];
+            $sourceEntity = $item['source_entity'];
+
+            $foreign = Util::pluralize(lcfirst($stagingEntity));
+
+            $data['entityDefs'][$stagingEntity]['fields']['sourceRecord'] = [
+                'type'   => 'link',
+                'unique' => true,
+            ];
+            $data['entityDefs'][$stagingEntity]['links']['sourceRecord'] = [
+                'type'    => 'belongsTo',
+                'foreign' => $foreign,
+                'entity'  => $sourceEntity
+            ];
+
+            $data['entityDefs'][$sourceEntity]['fields'][$foreign] = [
+                'type'     => 'linkMultiple',
+                'labelKey' => "Global.scopeNamesPlural.{$stagingEntity}",
+                'noLoad'   => true,
+            ];
+            $data['entityDefs'][$sourceEntity]['links'][$foreign] = [
+                'type'    => 'hasMany',
+                'foreign' => 'sourceRecord',
+                'entity'  => $stagingEntity
+            ];
         }
     }
 
@@ -968,12 +1020,12 @@ class Metadata extends AbstractListener
                                 && empty($data['entityDefs'][$scope]['links'][$relFieldName])) {
                                 $res[$entityName]['links'][$left]['foreign'] = $relFieldName;
                                 $data['entityDefs'][$scope]['fields'][$relFieldName] = [
-                                    'type'                      => 'linkMultiple',
-                                    'linkToRelationEntity'      => $relationParams['entity'],
-                                    'layoutDetailDisabled'      => true,
-                                    'layoutLeftSidebarDisabled' => true,
-                                    'massUpdateDisabled'        => true,
-                                    'noLoad'                    => true
+                                    'type'                     => 'linkMultiple',
+                                    'linkToRelationEntity'     => $relationParams['entity'],
+                                    'layoutDetailDisabled'     => true,
+                                    'layoutNavigationDisabled' => true,
+                                    'massUpdateDisabled'       => true,
+                                    'noLoad'                   => true
                                 ];
                                 $data['entityDefs'][$scope]['links'][$relFieldName] = [
                                     'type'    => 'hasMany',
@@ -1006,12 +1058,12 @@ class Metadata extends AbstractListener
                             && empty($data['entityDefs'][$relationParams['entity']]['links'][$relFieldName])) {
                             $res[$entityName]['links'][$right]['foreign'] = $relFieldName;
                             $data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName] = [
-                                'type'                      => 'linkMultiple',
-                                'linkToRelationEntity'      => $scope,
-                                'layoutLeftSidebarDisabled' => true,
-                                'layoutDetailDisabled'      => true,
-                                'massUpdateDisabled'        => true,
-                                'noLoad'                    => true
+                                'type'                     => 'linkMultiple',
+                                'linkToRelationEntity'     => $scope,
+                                'layoutNavigationDisabled' => true,
+                                'layoutDetailDisabled'     => true,
+                                'massUpdateDisabled'       => true,
+                                'noLoad'                   => true
                             ];
                             $data['entityDefs'][$relationParams['entity']]['links'][$relFieldName] = [
                                 'type'    => 'hasMany',
@@ -1145,8 +1197,8 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope]['fields']['parents']['view'] = 'views/fields/hierarchy-parents';
             }
             $data['entityDefs'][$scope]['fields']['parents']['layoutDetailDisabled'] = false;
-            $data['entityDefs'][$scope]['fields']['parents']['layoutLeftSidebarDisabled'] = true;
-            $data['entityDefs'][$scope]['fields']['children']['layoutLeftSidebarDisabled'] = true;
+            $data['entityDefs'][$scope]['fields']['parents']['layoutNavigationDisabled'] = true;
+            $data['entityDefs'][$scope]['fields']['children']['layoutNavigationDisabled'] = true;
 
             $data['entityDefs'][$scope]['fields']['routes'] = [
                 "type"               => "jsonArray",
@@ -1230,29 +1282,28 @@ class Metadata extends AbstractListener
 
             if (empty($data['scopes'][$scope]['multiParents'])) {
                 $data['entityDefs'][$scope]['fields']['parent'] = [
-                    "type"                      => "link",
-                    "notStorable"               => true,
-                    "entity"                    => $scope,
-                    "emHidden"                  => true,
-                    "layoutLeftSidebarDisabled" => true,
-                    "exportDisabled"            => false,
-                    "importDisabled"            => false,
-                    "openApiDisabled"           => true
+                    "type"                     => "link",
+                    "notStorable"              => true,
+                    "entity"                   => $scope,
+                    "emHidden"                 => true,
+                    "layoutNavigationDisabled" => true,
+                    "exportDisabled"           => false,
+                    "importDisabled"           => false,
+                    "openApiDisabled"          => true
                 ];
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge(
                     $data['entityDefs'][$scope]['fields']['parents'],
                     [
-                        "layoutListDisabled"        => true,
-                        "layoutDetailDisabled"      => true,
-                        "layoutLeftSidebarDisabled" => true,
-                        "massUpdateDisabled"        => true,
-                        "filterDisabled"            => true,
-                        "importDisabled"            => true,
-                        "emHidden"                  => true
+                        "layoutListDisabled"       => true,
+                        "layoutDetailDisabled"     => true,
+                        "layoutNavigationDisabled" => true,
+                        "massUpdateDisabled"       => true,
+                        "filterDisabled"           => true,
+                        "importDisabled"           => true,
+                        "emHidden"                 => true
                     ]
                 );
-                $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
             }
         }
 
@@ -1436,7 +1487,7 @@ class Metadata extends AbstractListener
                     "layoutDetailDisabled"        => true,
                     "layoutListDisabled"          => true,
                     "layoutRelationshipsDisabled" => true,
-                    "layoutLeftSidebarDisabled"   => true,
+                    "layoutNavigationDisabled"    => true,
                     "massUpdateDisabled"          => true,
                     "importDisabled"              => true,
                     "exportDisabled"              => true,
@@ -1448,7 +1499,7 @@ class Metadata extends AbstractListener
                     "layoutDetailDisabled"        => true,
                     "layoutListDisabled"          => true,
                     "layoutRelationshipsDisabled" => true,
-                    "layoutLeftSidebarDisabled"   => true,
+                    "layoutNavigationDisabled"    => true,
                     "massUpdateDisabled"          => true,
                     "importDisabled"              => true,
                     "exportDisabled"              => true,
@@ -2117,48 +2168,48 @@ class Metadata extends AbstractListener
                 $additionalScopeDefs = [
                     "fields" => [
                         "associatedItemRelations"  => [
-                            "type"                      => "linkMultiple",
-                            "layoutDetailDisabled"      => true,
-                            "layoutListDisabled"        => true,
-                            "layoutLeftSidebarDisabled" => true,
-                            "massUpdateDisabled"        => true,
-                            "filterDisabled"            => false,
-                            "noLoad"                    => true,
-                            "importDisabled"            => true,
-                            "exportDisabled"            => false
+                            "type"                     => "linkMultiple",
+                            "layoutDetailDisabled"     => true,
+                            "layoutListDisabled"       => true,
+                            "layoutNavigationDisabled" => true,
+                            "massUpdateDisabled"       => true,
+                            "filterDisabled"           => false,
+                            "noLoad"                   => true,
+                            "importDisabled"           => true,
+                            "exportDisabled"           => false
                         ],
                         "associatingItemRelations" => [
-                            "type"                      => "linkMultiple",
-                            "layoutDetailDisabled"      => true,
-                            "layoutListDisabled"        => true,
-                            "layoutLeftSidebarDisabled" => true,
-                            "massUpdateDisabled"        => true,
-                            "filterDisabled"            => false,
-                            "noLoad"                    => true,
-                            "exportDisabled"            => false,
-                            "importDisabled"            => true
+                            "type"                     => "linkMultiple",
+                            "layoutDetailDisabled"     => true,
+                            "layoutListDisabled"       => true,
+                            "layoutNavigationDisabled" => true,
+                            "massUpdateDisabled"       => true,
+                            "filterDisabled"           => false,
+                            "noLoad"                   => true,
+                            "exportDisabled"           => false,
+                            "importDisabled"           => true
                         ],
                         "associatedItems"          => [
-                            "type"                      => "linkMultiple",
-                            "layoutDetailDisabled"      => true,
-                            "layoutListDisabled"        => true,
-                            "layoutLeftSidebarDisabled" => true,
-                            "massUpdateDisabled"        => true,
-                            "filterDisabled"            => false,
-                            "noLoad"                    => true,
-                            "importDisabled"            => true,
-                            "exportDisabled"            => false
+                            "type"                     => "linkMultiple",
+                            "layoutDetailDisabled"     => true,
+                            "layoutListDisabled"       => true,
+                            "layoutNavigationDisabled" => true,
+                            "massUpdateDisabled"       => true,
+                            "filterDisabled"           => false,
+                            "noLoad"                   => true,
+                            "importDisabled"           => true,
+                            "exportDisabled"           => false
                         ],
                         "associatingItems"         => [
-                            "type"                      => "linkMultiple",
-                            "layoutDetailDisabled"      => true,
-                            "layoutListDisabled"        => true,
-                            "layoutLeftSidebarDisabled" => true,
-                            "massUpdateDisabled"        => true,
-                            "filterDisabled"            => false,
-                            "noLoad"                    => true,
-                            "exportDisabled"            => false,
-                            "importDisabled"            => true
+                            "type"                     => "linkMultiple",
+                            "layoutDetailDisabled"     => true,
+                            "layoutListDisabled"       => true,
+                            "layoutNavigationDisabled" => true,
+                            "massUpdateDisabled"       => true,
+                            "filterDisabled"           => false,
+                            "noLoad"                   => true,
+                            "exportDisabled"           => false,
+                            "importDisabled"           => true
                         ]
                     ],
                     "links"  => [
@@ -2209,12 +2260,16 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope] = Util::merge($data['entityDefs'][$scope] ?? [], $additionalScopeDefs);
 
                 $data['clientDefs'][$scope]['relationshipPanels']["associatedItems"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associatedItems"] ?? [], [
-                    "view" => "views/record/panels/associated-records"
+                    "view"   => "views/record/panels/associated-records",
+                    "sortBy" => Util::toUnderScore(lcfirst($relationName)) . '_mm.sorting',
+                    "asc"    => true
                 ]);
 
                 $data['clientDefs'][$scope]['relationshipPanels']["associatingItems"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associatingItems"] ?? [], [
                     "view"   => "views/record/panels/related-records",
                     "create" => false,
+                    "sortBy" => Util::toUnderScore(lcfirst($relationName)) . '_mm.sorting',
+                    "asc"    => true
                 ]);
             }
         }
@@ -2320,7 +2375,7 @@ class Metadata extends AbstractListener
                 }
 
                 // disable notNull
-                if (!empty($fieldDefs['notNull'])) {
+                if (!empty($fieldDefs['notNull']) && $fieldDefs['type'] !== 'bool') {
                     $fieldDefs['notNull'] = false;
                 }
 
@@ -2341,10 +2396,14 @@ class Metadata extends AbstractListener
                         if (!empty($linkDefs['foreign'])) {
                             $foreign = lcfirst($scope) . 'sDerivatives';
 
-                            $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
-                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
-                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
-                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+                            if (!empty($data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']])) {
+                                $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                            }
+                            if (!empty($data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']])) {
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+                            }
 
                             $linkDefs['foreign'] = $foreign;
                         }
@@ -2463,23 +2522,25 @@ class Metadata extends AbstractListener
             ];
 
             // add link to the primary entity
-            $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
+            $data['entityDefs'][$scope]['fields']['goldenRecord'] = [
                 'type'     => 'link',
                 'required' => false
             ];
-            $data['entityDefs'][$scope]['links']['primaryRecord'] = [
+            $data['entityDefs'][$scope]['links']['goldenRecord'] = [
                 'type'    => 'belongsTo',
                 'foreign' => 'derivedRecords',
                 'entity'  => $primaryEntity
             ];
 
-            $data['entityDefs'][$primaryEntity]['fields']['derivedRecords'] = [
+            $linkName = 'derived' . ucfirst($scope) . 'Records';
+
+            $data['entityDefs'][$primaryEntity]['fields'][$linkName] = [
                 'type'   => 'linkMultiple',
                 'noLoad' => true
             ];
-            $data['entityDefs'][$primaryEntity]['links']['derivedRecords'] = [
+            $data['entityDefs'][$primaryEntity]['links'][$linkName] = [
                 'type'         => 'hasMany',
-                'foreign'      => 'primaryRecord',
+                'foreign'      => 'goldenRecord',
                 'entity'       => $scope,
                 'notMergeable' => true
             ];
@@ -2518,34 +2579,6 @@ class Metadata extends AbstractListener
                     "emHidden"             => true
                 ];
             }
-
-            if (empty($defs['matchMasterRecords'])) {
-                continue;
-            }
-
-            $sourceRecords = 'sourceRecords' . $sourceEntity;
-
-            $data['entityDefs'][$sourceEntity]['fields']['goldenRecord'] = [
-                'type'         => 'link',
-                'customizable' => false,
-            ];
-            $data['entityDefs'][$sourceEntity]['links']['goldenRecord'] = [
-                'type'    => 'belongsTo',
-                'foreign' => $sourceRecords,
-                'entity'  => $defs['primaryEntityId'],
-            ];
-
-            $data['entityDefs'][$defs['primaryEntityId']]['fields'][$sourceRecords] = [
-                'type'         => 'linkMultiple',
-                'noLoad'       => true,
-                'customizable' => false,
-            ];
-
-            $data['entityDefs'][$defs['primaryEntityId']]['links'][$sourceRecords] = [
-                'type'    => 'hasMany',
-                'foreign' => 'goldenRecord',
-                'entity'  => $sourceEntity,
-            ];
         }
 
         // set matching rules types

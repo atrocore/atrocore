@@ -17,5 +17,6 @@
   "actionDisabled": true,
   "emHidden": true,
   "openApiHidden": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "selectionDisabled": true
 }

@@ -9,7 +9,7 @@
   "options": {
     "type": {
       "equal": "Égal à",
-      "like": "Comme",
+      "similar": "Similaire",
       "contains": "Contient",
       "set": "Ensemble"
     },

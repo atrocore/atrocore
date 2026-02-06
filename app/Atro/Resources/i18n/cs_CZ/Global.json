@@ -80,7 +80,7 @@
     "Dashboard": "Dashboard",
     "NotificationTemplate": "Šablona oznámení",
     "Selection": "Výběr",
-    "SelectionRecord": "Záznam o výběru",
+    "SelectionItem": "Záznam o výběru",
     "MasterDataEntity": "Subjekt kmenových dat",
     "ActionExecution": "Provedení akce",
     "ActionExecutionLog": "Protokol o provedení akce",
@@ -154,7 +154,7 @@
     "EmailTemplate": "Šablony e-mailů",
     "Folder": "Složky",
     "Selection": "Výběry",
-    "SelectionRecord": "Výběrové záznamy",
+    "SelectionItem": "Výběrové záznamy",
     "MasterDataEntity": "Subjekty kmenových dat",
     "ActionExecution": "Provádění akcí",
     "ActionExecutionLog": "Protokoly o provádění akcí",
@@ -529,6 +529,7 @@
     "isLinked": "Je propojen"
   },
   "fields": {
+    "number": "Číslo",
     "width": "Šířka",
     "height": "Výška",
     "status": "Stav",
@@ -633,7 +634,6 @@
     "goldenRecord": "Zlatý rekord",
     "sourceRecords": "Zdrojové záznamy",
     "derivedRecords": "Odvozené záznamy",
-    "primaryRecord": "Primární záznam",
     "createdCountFilterActionExecution": "Vytvořil Action Execution",
     "updatedCountFilterActionExecution": "Aktualizováno provedením akce",
     "field": "Pole",

@@ -432,7 +432,8 @@
               "attribute": "type",
               "value": [
                 "extensibleEnum",
-                "extensibleMultiEnum"
+                "extensibleMultiEnum",
+                "link"
               ]
             }
           ]

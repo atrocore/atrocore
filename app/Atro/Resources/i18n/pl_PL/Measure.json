@@ -5,6 +5,9 @@
     "units": "Jednostki",
     "displayFormat": "Format wyświetlania"
   },
+  "actions": {
+    "setDefault": "Ustaw jako domyślną"
+  },
   "exceptions": {
     "measureIsUsed": "Miarę '%s' używa pole '%s' w jednostce '%s'."
   },

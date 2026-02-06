@@ -1,0 +1,71 @@
+{
+  "fields": {
+    "entityName": {
+      "type": "enum",
+      "view": "views/selection-item/fields/entity-name",
+      "trim": true,
+      "required": true
+    },
+    "entityId": {
+      "type": "varchar",
+      "trim": true,
+      "required": true
+    },
+    "record": {
+      "type": "link",
+      "notStorable": true,
+      "view": "views/selection-item/fields/record",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true,
+      "openApiDisabled": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "entityName"
+            }
+          ]
+        }
+      }
+    },
+    "entity": {
+      "type": "jsonArray",
+      "notStorable": true
+    },
+    "selection": {
+      "type": "link",
+      "required": true
+    }
+  },
+  "links": {
+    "selection": {
+      "type": "belongsTo",
+      "entity": "Selection",
+      "foreign": "selectionItems"
+    }
+  },
+  "indexes": {
+    "entityName": {
+      "columns": [
+        "entityName",
+        "deleted"
+      ]
+    },
+    "entityId": {
+      "columns": [
+        "entityId",
+        "deleted"
+      ]
+    }
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "deleted",
+      "entity_name",
+      "entity_id",
+      "selection_id"
+    ]
+  }
+}

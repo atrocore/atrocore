@@ -7,7 +7,11 @@
     "jobs": {
       "create": false,
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
     }
   }
 }

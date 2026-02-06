@@ -17,6 +17,8 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
 
         listInlineEditModeEnabled: false,
 
+        checkboxes: false,
+
         data() {
             return _.extend({
                 groups: this.groups,
@@ -41,8 +43,8 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             this.title = this.title || this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
-            if('listInlineEditModeEnabled' in this.options)  {
-                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            if ('listInlineEditModeEnabled' in this.options) {
+                this.listInlineEditModeEnabled = this.options.listInlineEditModeEnabled;
             }
 
             if (!this.getConfig().get('scopeColorsDisabled')) {
@@ -141,19 +143,6 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             this.layoutName = layoutName;
             this.listLayout = listLayout;
 
-            var sortBy = this.defs.sortBy || null;
-            var asc = this.defs.asc || null;
-
-            if (this.defs.orderBy) {
-                sortBy = this.defs.orderBy;
-                asc = true;
-                if (this.defs.orderDirection) {
-                    if (this.defs.orderDirection && (this.defs.orderDirection === true || this.defs.orderDirection.toLowerCase() === 'DESC')) {
-                        asc = false;
-                    }
-                }
-            }
-
             this.wait(true);
             this.getCollectionFactory().create(this.scope, collection => {
                 this.collection = collection;
@@ -240,6 +229,12 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             let count = 0;
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, groupCollection => {
+                    if (this.defs.sortBy) {
+                        groupCollection.sortBy = this.defs.sortBy;
+                    }
+                    if (this.defs.asc) {
+                        groupCollection.asc = this.defs.asc;
+                    }
                     this.initGroupCollection(group, groupCollection, () => {
                         let viewName = this.defs.recordListView || 'views/record/list-in-groups';
                         let options = {
@@ -247,7 +242,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                             layoutName: this.layoutName,
                             listLayout: this.listLayout,
                             layoutRelatedScope: this.model.name + '.' + this.link,
-                            checkboxes: false,
+                            checkboxes: this.checkboxes,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                             buttonsDisabled: true,
                             el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
@@ -266,7 +261,6 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                         this.createView(group.key, viewName, options, view => {
                             view.listenTo(view, 'remove-group', (data) => this.unlinkGroup(data));
                             view.listenTo(view, 'remove-group-hierarchically', (data) => this.unlinkGroupHierarchy(data));
-
                             view.render(() => {
                                 count++;
                                 if (typeof view.getEditableFields === 'function') {

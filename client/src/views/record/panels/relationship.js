@@ -120,8 +120,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.defs.create = false;
             }
 
-            if('listInlineEditModeEnabled' in this.options)  {
-                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            if ('listInlineEditModeEnabled' in this.options) {
+                this.listInlineEditModeEnabled = this.options.listInlineEditModeEnabled;
             }
 
             let canSelect = true;
@@ -145,10 +145,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     canUnlink = false;
                     canSelect = false;
                 }
-            }
-
-            if (!canUnlink) {
-                this.rowActionsView = 'views/record/row-actions/relationship-no-unlink';
             }
 
             this.filterList = this.defs.filterList || this.filterList || null;
@@ -176,7 +172,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 && canSelect
                 && this.getAcl().check(this.scope, 'create')
                 && !~['User', 'Team'].indexOf()
-                && !(this.scope === 'EntityField' && this.model.name === 'Entity' && this.model.get('customizable') === false)
+                && !(this.scope === 'EntityField' && this.model.name === 'Entity' && this.getMetadata().get(`scopes.${this.model.id}.customizable`) === false)
             ) {
                 this.buttonList.push({
                     title: 'Create',
@@ -279,7 +275,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             var sortBy = this.defs.sortBy || null;
             var asc = null;
-            if('asc' in this.defs) {
+            if ('asc' in this.defs) {
                 asc = !!this.defs.asc;
             }
 
@@ -331,7 +327,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
                 this.collection = collection;
 
-                this.model.trigger('init-collection:'+this.link, collection);
+                this.model.trigger('init-collection:' + this.link, collection);
 
                 this.setFilter(this.filter);
 
@@ -344,6 +340,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.listenTo(this.model, 'update-all', function () {
                     collection.fetch();
                 }, this);
+
+                this.listenTo(this, 'refresh', () => {
+                    collection.fetch();
+                });
 
                 var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
 
@@ -861,6 +861,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }
                 }
 
+                let customUrl = this.getMetadata().get(`clientDefs.${this.model.name}.relationshipPanels.${link}.actions.unlinkRelated.url`);
+                if (customUrl) {
+                    url = customUrl.replace('{{id}}', id);
+                }
+
                 $.ajax({
                     url: url,
                     type: 'DELETE',
@@ -883,7 +888,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         actionRemoveRelated: function (data, evt) {
-            const model = this.getModel(data, evt)
+            const model = this.getModel(data, evt);
+
+            let link = this.collection.url.split('/').pop();
 
             let message = 'Global.messages.removeRecordConfirmation';
             if (this.isHierarchical()) {
@@ -902,18 +909,134 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 confirmText: this.translate('Remove')
             }, () => {
                 this.notify('removing');
-                model.destroy({
+
+                let url = `${model.name}/${model.id}`;
+
+                let customUrl = this.getMetadata().get(`clientDefs.${this.model.name}.relationshipPanels.${link}.actions.removeRelated.url`);
+                if (customUrl) {
+                    $.each(model.attributes || {}, (key, value) => {
+                        customUrl = customUrl.replace(`{{${key}}}`, value);
+                    });
+                    url = customUrl;
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: JSON.stringify({
+                        id: model.id
+                    }),
+                    contentType: 'application/json',
                     success: () => {
                         this.notify('Removed', 'success');
                         this.collection.fetch();
-                        this.model.trigger('after:unrelate', this.link, this.defs);
+                        if (this.mode !== 'edit') {
+                            this.model.trigger('after:unrelate', this.link, this.defs);
+                        }
                     },
-
                     error: () => {
-                        this.collection.push(model);
-                    }
+                        this.notify('Error occurred', 'error');
+                    },
                 });
             });
+        },
+
+        actionUniversalAction(data) {
+            data = data || {};
+            let id = data.id;
+            let name = data.name;
+            let parentScope = data['parentScope'];
+            let relationName = data['relationName'];
+
+            if (!id || !name || !parentScope) return;
+
+            let model = null;
+
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+
+            if (!model) {
+                return;
+            }
+
+            let actionDefs = this.getMetadata().get(['clientDefs', parentScope, 'relationshipPanels', relationName, 'actions', name]) || {};
+
+            if (!actionDefs || !actionDefs.url) {
+                return;
+            }
+
+            let runAction = () => {
+                const data = { action: name, scope: model.name, id: id }
+                if (model.relationModel) {
+                    data.relationScope = model.relationModel.name;
+                    data.relationId = model.relationModel.get('id');
+                }
+
+                if (actionDefs.modalSelectEntity) {
+                    let entityType = actionDefs.modalSelectEntity;
+                    let selectedRecords = [];
+
+                    $.each(model.attributes || {}, (key, value) => {
+                        entityType = entityType.replace(`{{${key}}}`, value);
+                    });
+
+                    const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+                    this.notify('Loading...');
+                    this.createView('select', viewName, {
+                        scope: entityType,
+                        createButton: false,
+                        multiple: !!actionDefs.modalSelectMultiple
+                    }, (dialog) => {
+                        dialog.render(() => {
+                            this.notify(false);
+                        });
+
+                        dialog.once('select', model => {
+                            if (!Array.isArray(model)) {
+                                model = [model];
+                            }
+                            model.forEach(m => {
+                                selectedRecords.push({
+                                    entityName: m.name,
+                                    entityId: m.id
+                                })
+                            });
+
+                            this.notify(this.translate('Loading...'));
+
+                            data.selectedRecords = selectedRecords;
+                            this.ajaxPostRequest(actionDefs.url, data)
+                                .then(response => {
+                                    this.notify(this.translate('Done'), 'success');
+                                    if (actionDefs.refresh) {
+                                        this.trigger('refresh');
+                                    }
+                                });
+                        });
+                    });
+                } else {
+                    this.notify(this.translate('Loading...'));
+                    this.ajaxPostRequest(actionDefs.url, data)
+                        .then(response => {
+                            this.notify(this.translate('Done'), 'success');
+                            if (actionDefs.refresh) {
+                                this.trigger('refresh');
+                            }
+                        });
+                }
+            }
+
+            if (actionDefs.confirm) {
+                this.confirm({
+                    message: this.translate(actionDefs.name, 'actionConfirms', parentScope),
+                    confirmText: this.translate('Apply')
+                }, function () {
+                    runAction();
+                }, this);
+            } else {
+                runAction();
+            }
         },
 
         actionInheritAll: function (data) {

@@ -276,7 +276,7 @@ class Util
      * Get a full path of the file
      *
      * @param string | array $folderPath - Folder path, Ex. myfolder
-     * @param string         $filePath - File path, Ex. file.json
+     * @param string         $filePath   - File path, Ex. file.json
      *
      * @return string
      */
@@ -436,7 +436,7 @@ class Util
      * Unset content items defined in the unset.json
      *
      * @param array          $content
-     * @param string | array $unsets in format
+     * @param string | array $unsets                in format
      *                                              array(
      *                                              'EntityName1' => array( 'unset1', 'unset2' ),
      *                                              'EntityName2' => array( 'unset1', 'unset2' ),
@@ -589,23 +589,21 @@ class Util
         return abs($value1 - $value2) < $epsilon;
     }
 
+    /**
+     * @return string
+     * @deprecated Use IdGenerator::sortableId() instead.
+     */
     public static function generateId(): string
     {
-        $crockford = new \Tuupola\Base32([
-            'characters' => \Tuupola\Base32::CROCKFORD,
-            'padding'    => false,
-            'crockford'  => true,
-        ]);
-
-        $uuid = \Ramsey\Uuid\Uuid::uuid7();
-        $bytes = str_pad($uuid->getBytes(), 20, "\x00", STR_PAD_LEFT);
-        $encoded = $crockford->encode($bytes);
-
-        return strtolower('a' . substr($encoded, 6));
+        return IdGenerator::sortableId();
     }
 
+    /**
+     * @return string
+     * @deprecated Use IdGenerator::unsortableId() instead.
+     */
     public static function generateUniqueHash(): string
     {
-        return uniqid(strtolower(chr(rand(65, 90)))) . substr(md5((string)rand()), 0, 3);
+        return IdGenerator::unsortableId();
     }
 }

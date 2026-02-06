@@ -152,14 +152,17 @@ class TextType extends AbstractFieldType
             ];
             $entity->fields[$name . 'UnitName'] = [
                 'type'        => 'varchar',
+                'attributeId' => $id,
                 'notStorable' => true
             ];
             $entity->fields[$name . 'UnitData'] = [
                 'type'        => 'jsonObject',
+                'attributeId' => $id,
                 'notStorable' => true
             ];
             $entity->fields[$name . 'AllUnits'] = [
                 'type'        => 'jsonObject',
+                'attributeId' => $id,
                 'notStorable' => true
             ];
             if (empty($skipValueProcessing)) {

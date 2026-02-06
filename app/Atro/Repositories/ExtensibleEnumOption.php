@@ -276,7 +276,7 @@ class ExtensibleEnumOption extends Base
             if ($index !== false) {
                 $id = $optionIds[$index];
             } else {
-                $id = Util::generateId();
+                $id = $this->generateId();
                 $item['id'] = $id;
                 $insertData[] = $item;
             }
@@ -286,7 +286,7 @@ class ExtensibleEnumOption extends Base
             }
 
             $relationData[] = [
-                'id'                     => Util::generateId(),
+                'id'                     => $this->generateId(),
                 'extensibleEnumId'       => $extensibleEnumId,
                 'extensibleEnumOptionId' => $id,
             ];

@@ -56,7 +56,7 @@ class Layout extends AbstractListener
                     $event->setArgument('result', $result);
                 }
 
-                // add _bookmark if  activated
+                // add _bookmark if activated
                 if (empty($this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled']))) {
                     $result = $event->getArgument('result');
                     $result[] = ['name' => '_bookmark'];

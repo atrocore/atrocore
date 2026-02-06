@@ -1424,5 +1424,170 @@
     "response": {
       "type": "object"
     }
+  },
+  {
+    "route": "/ClusterItem/action/reject",
+    "method": "post",
+    "description": "Reject a cluster item",
+    "operationId": "rejectClusterItem",
+    "tags": [
+      "ClusterItem"
+    ],
+    "params": {
+      "controller": "ClusterItem",
+      "action": "reject"
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
+  },
+  {
+    "route": "/ClusterItem/action/unreject",
+    "method": "post",
+    "description": "Unreject a cluster item",
+    "operationId": "unrejectClusterItem",
+    "tags": [
+      "ClusterItem"
+    ],
+    "params": {
+      "controller": "ClusterItem",
+      "action": "unreject"
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "relationId": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
+  },
+  {
+    "route": "/ClusterItem/action/confirm",
+    "method": "post",
+    "description": "Confirm a cluster item",
+    "operationId": "confirmClusterItem",
+    "tags": [
+      "ClusterItem"
+    ],
+    "params": {
+      "controller": "ClusterItem",
+      "action": "confirm"
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
+  },
+  {
+    "route": "/SelectionItem/action/createOnCurrentSelection",
+    "method": "post",
+    "params": {
+      "controller": "SelectionItem",
+      "action": "createOnCurrentSelection"
+    },
+    "summary": "Create a selection item for the current selection of the user",
+    "description": "Create a selection item for the current selection of the user",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "entityType": {
+                "type": "string",
+                "example": "Product"
+              },
+              "entityId": {
+                "type": "string",
+                "example": "example-id"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
+  },
+  {
+    "route": "/SelectionItem/action/replaceItem",
+    "method": "post",
+    "description": "Replace the entity of the item by another entity of the same scope",
+    "operationId": "replaceItem",
+    "tags": [
+      "SelectionItem"
+    ],
+    "params": {
+      "controller": "SelectionItem",
+      "action": "replaceItem"
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
   }
 ]

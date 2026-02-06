@@ -21,6 +21,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Services\ReferenceData;
 use Atro\Core\Twig\Twig;
 use Espo\ORM\Entity;
+use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityCollection;
 
 class EntityField extends ReferenceData
@@ -96,7 +97,24 @@ class EntityField extends ReferenceData
             $this->prepareFileTypesField($entity);
             $this->prepareDefaultField($entity);
         }
+
+        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
+            $entity->set('customizable', false);
+        }
     }
+
+    public function putAclMetaForLink(OrmEntity $entityFrom, string $link, OrmEntity $entity): void
+    {
+        if ($entityFrom->getEntityName() !== 'Entity' || $link !== 'fields') {
+            parent::putAclMetaForLink($entityFrom, $link, $entity);
+            return;
+        }
+
+        $this->putAclMeta($entity);
+
+        $entity->setMetaPermission('delete', $entity->get('code') !== 'id' && $entity->get('isCustom'));
+    }
+
 
     protected function prepareFileTypesField(Entity $entity): void
     {

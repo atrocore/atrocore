@@ -17,6 +17,11 @@
   },
   "labels": {
     "manufacturer": "Виробник",
-    "other": "Інше"
+    "other": "Інше",
+    "MasterData": "Основні дані",
+    "Description": "Короткий опис",
+    "State": "державний",
+    "Taxonomy": "Таксономія",
+    "ProductLifeCycle": "Життєвий цикл продукту"
   }
 }

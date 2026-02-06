@@ -12,7 +12,7 @@
     "record": {
       "type": "link",
       "notStorable": true,
-      "view": "views/cluster-item/fields/record",
+      "view": "views/selection-item/fields/record",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "protected": true,
@@ -33,11 +33,29 @@
       "notStorable": true
     },
     "cluster": {
-      "type": "link"
+      "type": "link",
+      "required": true,
+      "notNull": true
     },
     "matchedRecord": {
       "type": "link",
       "protected": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true
     }
   },
   "links": {
@@ -46,10 +64,24 @@
       "foreign": "clusterItems",
       "entity": "Cluster"
     },
+    "rejectedClusters": {
+      "type": "hasMany",
+      "relationName": "RejectedClusterItem",
+      "entity": "Cluster",
+      "foreign": "rejectedClusterItems"
+    },
     "matchedRecord": {
       "type": "belongsTo",
       "foreign": "clusterItems",
       "entity": "MatchedRecord"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
     }
   },
   "indexes": {
@@ -64,14 +96,25 @@
         "entityId",
         "deleted"
       ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
     }
   },
   "uniqueIndexes": {
     "unique": [
       "deleted",
       "entity_name",
-      "entity_id",
-      "cluster_id"
+      "entity_id"
     ]
   }
 }

@@ -17,6 +17,11 @@
   },
   "labels": {
     "manufacturer": "Manufacturer",
-    "other": "Other"
+    "other": "Other",
+    "MasterData": "Master Data",
+    "Description": "Description",
+    "State": "State",
+    "Taxonomy": "Taxonomy",
+    "ProductLifeCycle": "Product Life Cycle"
   }
 }

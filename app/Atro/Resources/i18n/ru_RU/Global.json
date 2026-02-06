@@ -81,7 +81,7 @@
     "RoleScopeField": "Поле",
     "RoleScopeAttribute": "Атрибут",
     "Selection": "Выбор",
-    "SelectionRecord": "Запись о выборе",
+    "SelectionItem": "Запись о выборе",
     "ActionExecution": "Выполнение действий",
     "ActionExecutionLog": "Журнал выполнения действий",
     "Layout": "Макет",
@@ -155,7 +155,7 @@
     "Language": "Языки",
     "Action": "Действия",
     "Selection": "Подборки",
-    "SelectionRecord": "Записи о выборе",
+    "SelectionItem": "Записи о выборе",
     "ActionExecutionLog": "Журналы выполнения действий",
     "ActionExecution": "Выполнение действий",
     "Layout": "Лейауты",
@@ -676,8 +676,8 @@
     "cancel": "Отменить"
   },
   "fields": {
+    "number": "Номер",
     "field": "Поле",
-    "primaryRecord": "Первичная запись",
     "derivedRecords": "Производные записи",
     "goldenRecord": "Золотая запись",
     "sourceRecords": "Источники записи",

@@ -16,5 +16,6 @@
   "streamDisabled": true,
   "attributesDisabled": true,
   "matchingDisabled": true,
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "bookmarkDisabled": true
 }

@@ -34,8 +34,6 @@ Espo.define('views/settings/record/panels/variables', 'views/record/panels/relat
 
     return Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-no-unlink',
-
         setup() {
             this.defs.create = false;
             this.url = 'Variable/action/list';

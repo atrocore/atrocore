@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Atro\Core\Utils\Util;
 
 class RefreshStoragesItems extends AbstractConsole
 {
@@ -58,7 +58,7 @@ class RefreshStoragesItems extends AbstractConsole
                 ->setValue('name', ':name')
                 ->setValue('parent_id', ':parentId')
                 ->setValue('folder_id', ':folderId')
-                ->setParameter('id', Util::generateId())
+                ->setParameter('id', IdGenerator::uuid())
                 ->setParameter('name', (string)$record['name'])
                 ->setParameter('parentId', (string)$record['parent_id'])
                 ->setParameter('folderId', (string)$record['id'])
@@ -89,7 +89,7 @@ class RefreshStoragesItems extends AbstractConsole
                 ->setValue('name', ':name')
                 ->setValue('parent_id', ':parentId')
                 ->setValue('file_id', ':fileId')
-                ->setParameter('id', Util::generateId())
+                ->setParameter('id', IdGenerator::uuid())
                 ->setParameter('name', (string)$record['name'])
                 ->setParameter('parentId', (string)$record['folder_id'])
                 ->setParameter('fileId', (string)$record['id'])

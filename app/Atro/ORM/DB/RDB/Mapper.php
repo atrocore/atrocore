@@ -15,6 +15,7 @@ namespace Atro\ORM\DB\RDB;
 
 use Atro\Core\Container;
 use Atro\Core\Utils\Config;
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\MapperInterface;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
@@ -419,7 +420,7 @@ class Mapper implements MapperInterface
         $qb->insert($relTable);
 
         $qb->setValue('id', ":id")
-            ->setParameter('id', Util::generateId());
+            ->setParameter('id', IdGenerator::uuid());
 
         $qb->setValue($this->toDb($nearKey), ":$nearKey")
             ->setParameter($nearKey, $entity->id);

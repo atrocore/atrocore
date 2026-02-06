@@ -42,7 +42,13 @@ class Variable extends Base
                 "id"    => $key,
                 "key"   => $key,
                 "type"  => self::defineType($value),
-                "value" => $value
+                "value" => $value,
+                "_meta" => [
+                    "permissions" => [
+                        "edit" => true,
+                        "delete" => true
+                    ]
+                ]
             ];
         }
 

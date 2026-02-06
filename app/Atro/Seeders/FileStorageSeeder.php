@@ -11,6 +11,7 @@
 
 namespace Atro\Seeders;
 
+use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\ParameterType;
 
 class FileStorageSeeder extends AbstractSeeder
@@ -32,7 +33,7 @@ class FileStorageSeeder extends AbstractSeeder
             ->setValue('path', ':path')
             ->setValue('is_active', ':true')
             ->setValue('created_by_id', ':system')
-            ->setParameter('id', 'a_base')
+            ->setParameter('id', '019c320a-707f-735f-becb-3aabd0f0c79c')
             ->setParameter('name', 'Base')
             ->setParameter('empty', '')
             ->setParameter('type', 'local')
@@ -49,47 +50,47 @@ class FileStorageSeeder extends AbstractSeeder
     {
         $defaults = [
             [
-                'id'                  => 'a_document',
+                'id'                  => '019c320b-3b1d-707d-af8c-d011190bd712',
                 'name'                => 'Document',
                 'extensions'          => ['docx', 'doc', 'odt', 'rtf', 'tex', 'txt', 'pdf']
             ],
             [
-                'id'                  => 'a_spreadsheet',
+                'id'                  => '019c320b-5a35-71f4-bd7e-9673fca98b86',
                 'name'                => 'Spreadsheet',
                 'extensions'          => ['xlsx', 'xls', 'ods', 'csv', 'tsv']
             ],
             [
-                'id'                  => 'a_image',
+                'id'                  => '019c320b-77ba-73d3-8f1b-8346dce0f7bb',
                 'name'                => 'Image',
                 'extensions'          => ['jpg', 'jpeg', 'gif', 'tiff', 'png', 'bmp', 'webp','avif']
             ],
             [
-                'id'                  => 'a_favicon',
+                'id'                  => '019c320b-8c5f-7374-880c-ce48237046cb',
                 'name'                => 'Icon',
                 'extensions'          => ['ico', 'png', 'svg']
             ],
             [
-                'id'                  => 'a_audio',
+                'id'                  => '019c320b-a0e6-7223-8bc4-b4ae7ca63e3c',
                 'name'                => 'Audio',
                 'extensions'          => ['mp3', 'wav', 'aac', 'flac', 'ogg']
             ],
             [
-                'id'                  => 'a_video',
+                'id'                  => '019c320b-b727-70d0-95b1-175ec86ca367',
                 'name'                => 'Video',
                 'extensions'          => ['mp4', 'avi', 'mkv', 'wmv', 'mov']
             ],
             [
-                'id'                  => 'a_archive',
+                'id'                  => '019c320b-cccd-7155-a5aa-f154ec2c3f62',
                 'name'                => 'Archive',
                 'extensions'          => ['zip', 'rar', '7z']
             ],
             [
-                'id'                  => 'a_graphics',
+                'id'                  => '019c320b-e4a1-71be-a909-310f11902d87',
                 'name'                => 'Graphics',
                 'extensions'          => ['ai', 'svg']
             ],
             [
-                'id'                  => 'a_presentation',
+                'id'                  => '019c320b-fa2b-7365-b8f0-585d6f9dc24f',
                 'name'                => 'Presentation',
                 'extensions'          => ['pptx', 'ppt', 'ppsx', 'odp', 'key']
             ],

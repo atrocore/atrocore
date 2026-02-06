@@ -11,6 +11,9 @@
       "format2": "€10"
     }
   },
+  "actions": {
+    "setDefault": "Nastavit jako výchozí"
+  },
   "exceptions": {
     "measureIsUsed": "Měřítko \"%s\" je použito polem \"%s\" v entitě \"%s\"."
   }

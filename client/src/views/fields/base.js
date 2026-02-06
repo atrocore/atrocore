@@ -921,7 +921,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initElement();
             }
 
-            if (['edit', 'detail'].includes(this.mode)) {
+            if (['edit', 'detail'].includes(this.mode) && !this.options.disableToggleVisibility) {
                 this.toggleVisibility();
             }
         },

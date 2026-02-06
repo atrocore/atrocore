@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Core\Container;
+use Atro\Core\Utils\Config;
 
 abstract class AbstractController
 {
@@ -70,7 +71,7 @@ abstract class AbstractController
         return $this->container->get('aclManager');
     }
 
-    protected function getConfig()
+    protected function getConfig(): Config
     {
         return $this->container->get('config');
     }

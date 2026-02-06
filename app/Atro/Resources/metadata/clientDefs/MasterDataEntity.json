@@ -13,5 +13,17 @@
         "collapseByDefault": false
       }
     ]
+  },
+  "relationshipPanels": {
+    "matchings": {
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "removeRelated": {
+          "disabled": true
+        }
+      }
+    }
   }
 }

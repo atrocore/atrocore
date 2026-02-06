@@ -9,7 +9,7 @@
   "options": {
     "type": {
       "equal": "Gleich",
-      "like": "Vergleichbar mit",
+      "similar": "Ähnlich",
       "contains": "Beinhaltet",
       "set": "Set"
     },
@@ -20,6 +20,8 @@
   },
   "exceptions": {
     "notValidCode": "Der Code darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten.",
-    "notValidMatchingActivation": "Die Übereinstimmungsregel kann nur für eine inaktive Übereinstimmung geändert werden."
+    "notValidMatchingActivation": "Die Übereinstimmungsregel kann nur für eine inaktive Übereinstimmung geändert werden.",
+    "notValidMatching": "Die Übereinstimmung ist ungültig",
+    "notValidMatchingRuleSet": "Der übereinstimmende Regelsatz ist ungültig"
   }
 }

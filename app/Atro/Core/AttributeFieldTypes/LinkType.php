@@ -38,16 +38,17 @@ class LinkType extends AbstractFieldType
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name . 'Id'] = [
-            'type'        => 'varchar',
-            'name'        => $name,
-            'attributeId' => $id,
-            'column'      => 'reference_value',
-            'required'    => !empty($row['is_required']),
+            'type'                     => 'varchar',
+            'name'                     => $name,
+            'attributeId'              => $id,
+            'column'                   => 'reference_value',
+            'required'                 => !empty($row['is_required']),
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         $entity->fields[$name . 'Name'] = [
             'type'        => 'varchar',
+            'attributeId' => $id,
             'notStorable' => true
         ];
 
@@ -82,7 +83,7 @@ class LinkType extends AbstractFieldType
                 'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
                 'conditionalProperties'     => $this->prepareConditionalProperties($row),
-                'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+                'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
             ];
 
             if (!empty($attributeData['dropdown'])) {

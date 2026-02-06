@@ -5,5 +5,16 @@
   },
   {
     "name": "masterEntity"
+  },
+  {
+    "name": "goldenRecord"
+  },
+  {
+    "name": "stagingItemCount",
+    "notSortable": false
+  },
+  {
+    "name": "masterItemCount",
+    "notSortable": false
   }
 ]

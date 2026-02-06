@@ -1,9 +1,14 @@
 {
   "fields": {
     "masterEntity": "Master Entity",
-    "mappingScript": "Mapping Script"
+    "sourceEntity": "Source Entity",
+    "mergingScript": "Merging Script"
   },
   "tooltips": {
-    "mappingScript": "Configure how source data is transformed, unified, and mapped to the master record."
+    "mergingScript": "Configure how source data is transformed, unified, and mapped to the master record."
+  },
+  "exceptions": {
+    "mergingScriptIsMissing": "Merging script is missing for master entity",
+    "mergingScriptIsNotValid": "Merging script return invalid payload: %s"
   }
 }

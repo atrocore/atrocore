@@ -35,90 +35,142 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
     return Dep.extend({
 
         getActionList: function () {
-            let list = [];
+            const parentModelName = this.options?.parentModelName || null;
+            const relationName = this.options?.relationName || null;
 
-            list.push({
-                action: 'quickView',
-                label: 'View',
-                data: {
-                    id: this.model.id,
-                    cid: this.model.cid
-                },
-                link: '#' + this.model.name + '/view/' + this.model.id
+            let actionsSortOrder = {
+                "quickView": 110,
+                "openInTab": 120,
+                "reupload": 130,
+                "quickEdit": 140,
+                "inheritRelated": 150,
+                "unlinkRelated": 160,
+                "removeRelated": 170
+            };
+
+            $.each(this.getMetadata().get(['clientDefs', parentModelName, 'relationshipPanels', relationName, 'actions']) || {}, (actionName, actionData) => {
+                if (actionData.sortOrder) {
+                    actionsSortOrder[actionName] = actionData.sortOrder;
+                }
+                if (!actionsSortOrder[actionName]) {
+                    actionsSortOrder[actionName] = 100;
+                }
+                if (actionData.disabled === true && actionsSortOrder[actionName]) {
+                    delete actionsSortOrder[actionName];
+                }
             });
 
-            // if entity can be open in tab
-            if (this.model.get('hasOpen') && this.model.get('downloadUrl')) {
-                list.push({
-                    action: 'openInTab',
-                    label: 'Open',
-                    data: {
-                        url: this.model.get('downloadUrl')
-                    },
-                });
-            }
+            const sortedActionKeys = Object.keys(actionsSortOrder)
+                .sort((a, b) => actionsSortOrder[a] - actionsSortOrder[b]);
 
-            if (this.options.acl.edit) {
-                if (this.model.name === 'File') {
+            let list = [];
+
+            sortedActionKeys.forEach(actionName => {
+                if (actionName === 'quickView') {
                     list.push({
-                        action: 'reupload',
-                        label: 'Reupload',
+                        action: 'quickView',
+                        label: 'View',
                         data: {
-                            id: this.model.get('id')
+                            id: this.model.id
                         },
-                    });
-                }
-                list.push({
-                    action: 'quickEdit',
-                    label: 'Edit',
-                    data: {
-                        id: this.model.id,
-                        cid: this.model.cid
-                    },
-                    link: '#' + this.model.name + '/edit/' + this.model.id
-                });
-
-                if (this.model.has('isInherited') && !this.model.get('isInherited')) {
-                    list.push({
-                        action: 'inheritRelated',
-                        label: 'inherit',
-                        data: {
-                            id: this.model.id,
-                            cid: this.model.cid
-                        }
-                    });
-                }
-            }
-
-            if (this.options.acl.unlink) {
-                list.push({
-                    action: 'unlinkRelated',
-                    label: 'Unlink',
-                    data: {
-                        id: this.model.id,
-                        cid: this.model.cid
+                        link: '#' + this.model.name + '/view/' + this.model.id
+                    })
+                } else if (actionName === 'openInTab') {
+                    if (this.model.get('hasOpen') && this.model.get('downloadUrl')) {
+                        list.push({
+                            action: 'openInTab',
+                            label: 'Open',
+                            data: {
+                                url: this.model.get('downloadUrl')
+                            },
+                        });
                     }
-                });
-            }
-
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'removeRelated',
-                    label: 'Delete',
-                    data: {
-                        id: this.model.id,
-                        cid: this.model.cid
+                } else if (actionName === 'reupload') {
+                    if (this.model.name === 'File' && this.model.get('_meta')?.permissions?.edit) {
+                        list.push({
+                            action: 'reupload',
+                            label: 'Reupload',
+                            data: {
+                                id: this.model.get('id')
+                            },
+                        });
                     }
-                });
-            }
+                } else if (actionName === 'quickEdit') {
+                    if (this.model.get('_meta')?.permissions?.edit) {
+                        list.push({
+                            action: 'quickEdit',
+                            label: 'Edit',
+                            data: {
+                                id: this.model.id,
+                                cid: this.model.cid
+                            },
+                            link: '#' + this.model.name + '/edit/' + this.model.id
+                        });
+                    }
+                } else if (actionName === 'inheritRelated') {
+                    if (this.model.has('isInherited') && !this.model.get('isInherited') && this.model.get('_meta')?.permissions?.edit) {
+                        list.push({
+                            action: 'inheritRelated',
+                            label: 'inherit',
+                            data: {
+                                id: this.model.id,
+                                cid: this.model.cid
+                            }
+                        });
+                    }
+                } else if (actionName === 'unlinkRelated') {
+                    if (this.model.get('_meta')?.permissions?.unlink) {
+                        list.push({
+                            action: 'unlinkRelated',
+                            iconClass: "ph ph-link-break",
+                            label: 'Unlink',
+                            data: {
+                                id: this.model.id,
+                                cid: this.model.cid
+                            }
+                        });
+                    }
+                } else if (actionName === 'removeRelated') {
+                    if (this.model.get('_meta')?.permissions?.delete) {
+                        list.push({
+                            action: 'removeRelated',
+                            iconClass: 'ph ph-trash-simple',
+                            label: 'Delete',
+                            data: {
+                                id: this.model.id,
+                                cid: this.model.cid
+                            }
+                        });
+                    }
+                } else {
+                    let actionData = this.getMetadata().get(['clientDefs', parentModelName, 'relationshipPanels', relationName, 'actions', actionName]);
+                    if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
+                        list.push({
+                            action: actionData.action || 'universalAction',
+                            iconClass: actionData.iconClass,
+                            label: this.translate(actionName, 'actions', parentModelName),
+                            data: {
+                                'name': actionName,
+                                'id': this.model.id,
+                                'cid': this.model.cid,
+                                'parent-scope': parentModelName,
+                                'relation-name': relationName
+                            }
+                        })
+                    }
+                }
+            });
 
             list.push({
                 divider: true
             });
 
-            list.push({
-                preloader: true
-            });
+            if (!this.getMetadata().get(['clientDefs', parentModelName, 'relationshipPanels', relationName, 'dynamicActionDisabled'])) {
+                list.push({
+                    preloader: true
+                });
+            }
+
 
             return list;
         }

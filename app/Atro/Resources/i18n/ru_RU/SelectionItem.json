@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "name": "Название",
+    "record": "Запись",
+    "entityName": "Сущность"
+  },
+  "messages": {
+    "selectionDisabledForEntity": "Выбор отключен для сущности '%s'."
+  }
+}

@@ -17,6 +17,11 @@
   },
   "labels": {
     "manufacturer": "Hersteller",
-    "other": "Sonstige"
+    "other": "Sonstige",
+    "MasterData": "Stammdaten",
+    "Description": "Beschreibung",
+    "State": "Zustand",
+    "Taxonomy": "Taxonomie",
+    "ProductLifeCycle": "Produktlebenszyklus"
   }
 }

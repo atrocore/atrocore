@@ -1,13 +1,53 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "trim": true
+    "number": {
+      "type": "autoincrement"
+    },
+    "entity": {
+      "type": "enum",
+      "view": "views/selection/fields/entity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "single"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "single"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "single"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "attribute": "entity",
+              "type": "isNotEmpty"
+            }
+          ]
+        }
+      }
     },
     "description": {
       "type": "text"
     },
-    "selectionRecords": {
+    "selectionItems": {
       "type": "linkMultiple",
       "auditableEnabled": true
     },
@@ -19,14 +59,9 @@
         "readOnly": {
           "conditionGroup": [
             {
-              "type": "equals",
-              "attribute": "type",
-              "value": "multiple"
-            },
-            {
               "type": "greaterThan",
               "attribute": "entityTypesCount",
-              "value": 1
+              "value": 0
             }
           ]
         }
@@ -62,9 +97,9 @@
     }
   },
   "links": {
-    "selectionRecords": {
+    "selectionItems": {
       "type": "hasMany",
-      "entity": "SelectionRecord",
+      "entity": "SelectionItem",
       "foreign": "selection"
     },
     "createdBy": {

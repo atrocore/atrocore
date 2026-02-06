@@ -80,7 +80,7 @@
     "File": "Archivo",
     "Action": "Acción",
     "Selection": "Selección",
-    "SelectionRecord": "Registro de selección",
+    "SelectionItem": "Registro de selección",
     "MasterDataEntity": "Entidad de datos maestros",
     "ActionExecution": "Ejecución de la acción",
     "ActionExecutionLog": "Registro de ejecución de acciones",
@@ -154,7 +154,7 @@
     "Action": "Acciones",
     "ExtensibleEnum": "Listas",
     "Selection": "Selecciones",
-    "SelectionRecord": "Registros de selección",
+    "SelectionItem": "Registros de selección",
     "MasterDataEntity": "Entidades de datos maestros",
     "ActionExecution": "Ejecución de acciones",
     "ActionExecutionLog": "Registros de ejecución de acciones",
@@ -676,6 +676,7 @@
     "cancel": "Cancelar"
   },
   "fields": {
+    "number": "Número",
     "name": "Nombre",
     "firstName": "Nombre",
     "lastName": "Apellidos",
@@ -779,7 +780,6 @@
     "team": "Equipo",
     "goldenRecord": "Disco de oro",
     "sourceRecords": "Registros de origen",
-    "primaryRecord": "Registro primario",
     "derivedRecords": "Registros derivados",
     "updatedCountFilterActionExecution": "Actualizado por Ejecución de la acción",
     "createdCountFilterActionExecution": "Creado por Ejecución de acciones",

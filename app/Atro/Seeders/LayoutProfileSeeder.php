@@ -17,7 +17,7 @@ class LayoutProfileSeeder extends AbstractSeeder
 {
     public function run(): void
     {
-        $defaultId = 'default';
+        $defaultId = '019c0a6a-6ecb-70d3-8427-cbc546cad873';
         $menus = $this->getDefaultMenu();
         $favList = $this->getFavorites();
         $defaultDashboards = $this->getDefaultDashboards();

@@ -7,7 +7,7 @@
     </div>
     <div class="panel-body">
         {{#if loadingGroups}}
-        <div>{{translate 'Loading...'}}</div>
+        <div style="padding: 5px 20px;">{{translate 'Loading...'}}</div>
         {{else}}
         {{#if groups.length}}
 
@@ -23,7 +23,7 @@
                     </div>
                    <div class="action"></div>
                 </div>
-                <div class="list-container"><div>{{translate 'Loading...'}}</div></div>
+                <div class="list-container"><div class="no-data-container">{{translate 'Loading...'}}</div></div>
             </div>
             {{/each}}
         </div>

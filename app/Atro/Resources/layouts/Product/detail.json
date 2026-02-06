@@ -1,78 +1,84 @@
 [
-    {
-        "rows": [
-            [
-                {
-                    "name": "name",
-                    "fullWidth": true
-                }
-            ],
-            [
-                {
-                    "name": "description",
-                    "fullWidth": true
-                }
-            ],
-            [
-                {
-                    "name": "isActive"
-                },
-                {
-                    "name": "image"
-                }
-            ],
-            [
-                {
-                    "name": "number"
-                },
-                {
-                    "name": "unitPrice"
-                }
-            ],
-            [
-                {
-                    "name": "parent"
-                },
-                {
-                    "name": "sortOrder"
-                }
-            ]
-        ],
-        "style": "default",
-        "label": "Details"
-    },
-    {
-        "label": "manufacturer",
-        "style": "default",
-        "rows": [
-            [
-                {
-                    "name": "mpn"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "customsNumber"
-                },
-                {
-                    "name": "countryOfOrigin"
-                }
-            ]
-        ]
-    },
-    {
-        "label": "other",
-        "style": "default",
-        "rows": [
-            [
-                {
-                    "name": "defaultSupplier"
-                },
-                {
-                    "name": "note"
-                }
-            ]
-        ]
-    }
+  {
+    "label": "MasterData",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name",
+          "fullwidth": true
+        }
+      ],
+      [
+        {
+          "name": "number"
+        },
+        false
+      ],
+      [
+        {
+          "name": "countryOfOrigin"
+        },
+        {
+          "name": "customsNumber"
+        }
+      ],
+      [
+        {
+          "name": "unitPrice"
+        },
+        false
+      ],
+      [
+        {
+          "name": "sortOrder"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "State",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "isActive"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "Description",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "description"
+        },
+        false
+      ],
+      [
+        {
+          "name": "longDescription",
+          "fullWidth": true
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Taxonomy",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "parent"
+        },
+        {
+          "name": "productGroup"
+        }
+      ]
+    ]
+  }
 ]

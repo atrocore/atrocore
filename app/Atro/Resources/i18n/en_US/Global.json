@@ -85,7 +85,7 @@
     "AccountGroup": "Account Group",
     "ProductGroup": "Product Group",
     "Selection": "Selection",
-    "SelectionRecord": "Selection Record",
+    "SelectionItem": "Selection Item",
     "Layout": "Layout"
   },
   "scopeNamesPlural": {
@@ -159,7 +159,7 @@
     "AccountGroup": "Account Groups",
     "ProductGroup": "Product Groups",
     "Selection": "Selections",
-    "SelectionRecord": "Selection Records",
+    "SelectionItem": "Selection Items",
     "Layout": "Layouts"
   },
   "descriptions": {
@@ -529,7 +529,11 @@
     "Saved Filters": "Saved Filters",
     "replaceItem": "Replace",
     "removeItem": "Remove",
-    "isLinked": "Is Linked"
+    "rejectItem": "Reject",
+    "isLinked": "Is Linked",
+    "openStagingEntity": "Open Staging Entity",
+    "openPrimaryEntity": "Open Master Entity",
+    "currentSelection": "Current Selection"
   },
   "insightsPanels": {
     "summary": "Summary",
@@ -684,13 +688,15 @@
   },
   "fields": {
     "__currentUser": "Current User",
+    "sourceRecord": "Source Record",
+    "number": "Number",
     "createdCountFilterActionExecution": "Created by Action Execution",
     "updatedCountFilterActionExecution": "Updated by Action Execution",
-    "primaryRecord": "Primary Record",
     "derivativeStatus": "Derivative Status",
     "derivedRecords": "Derived Records",
     "goldenRecord": "Golden Record",
     "sourceRecords": "Source Records",
+    "stagingRecords": "Staging Records",
     "field": "Field",
     "routes": "Route(s)",
     "width": "Width",

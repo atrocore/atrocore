@@ -11,8 +11,12 @@
   "relationshipPanels": {
     "users": {
       "create": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-remove",
-      "selectPrimaryFilterName": "active"
+      "selectPrimaryFilterName": "active",
+      "actions": {
+        "removeRelated": {
+          "disabled": true
+        }
+      }
     }
   },
   "recordViews": {

@@ -3,17 +3,29 @@
   "relationshipPanels": {
     "fields": {
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+       "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      },
       "view": "views/role-scope/record/panels/fields"
     },
     "attributePanels": {
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+       "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      },
       "view": "views/role-scope/record/panels/attribute-panels"
     },
     "attributes": {
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+       "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      },
       "view": "views/role-scope/record/panels/attributes"
     }
   }

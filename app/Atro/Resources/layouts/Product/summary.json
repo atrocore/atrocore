@@ -1,0 +1,42 @@
+[
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "image",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "created",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "modified",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "followers",
+          "fullWidth": true
+        }
+      ]
+    ]
+  },
+  {
+    "label": "ProductLifeCycle",
+    "rows": [
+      [
+        {
+          "name": "isActive"
+        },
+        false
+      ]
+    ]
+  }
+]

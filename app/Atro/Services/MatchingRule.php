@@ -18,13 +18,26 @@ use Espo\ORM\Entity;
 
 class MatchingRule extends Base
 {
-    protected $mandatorySelectAttributeList = ['matchingId'];
+    protected $mandatorySelectAttributeList = ['matchingId', 'matchingRuleSetId'];
 
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
-        $matching = $entity->get('matching');
+        $checkEntity = $entity;
+        while (true) {
+            if (empty($checkEntity->get('matchingRuleSetId'))) {
+                break;
+            }
+            $res = $this->getRepository()->get($checkEntity->get('matchingRuleSetId'));
+            if (!empty($res)) {
+                $checkEntity = $res;
+            } else {
+                break;
+            }
+        }
+
+        $matching = $checkEntity->get('matching');
         if (!empty($matching)) {
             $entity->set('editable', $this->getAcl()->check($matching, 'edit'));
         }
