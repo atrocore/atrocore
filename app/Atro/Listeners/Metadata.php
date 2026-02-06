@@ -2375,7 +2375,7 @@ class Metadata extends AbstractListener
                 }
 
                 // disable notNull
-                if (!empty($fieldDefs['notNull'])) {
+                if (!empty($fieldDefs['notNull']) && $fieldDefs['type'] !== 'bool') {
                     $fieldDefs['notNull'] = false;
                 }
 
