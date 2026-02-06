@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/stream/row-actions/default', 'views/record/row-actions/edit-and-remove', function (Dep) {
+Espo.define('views/stream/row-actions/default', 'views/record/row-actions/default', function (Dep) {
 
     return Dep.extend({
 

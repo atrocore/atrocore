@@ -52,7 +52,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         itemViewName: 'views/record/kanban-item',
 
-        rowActionsView: 'views/record/row-actions/default-kanban',
+        rowActionsView: 'views/record/row-actions/default',
 
         minColumnWidthPx: 125,
 

@@ -136,7 +136,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
         },
 
         getActionList: function () {
-            const scope = this.options.scope;
+            const scope = this.options.scope ?? this.model.name;
             const filters = this.getStorage().get('listQueryBuilder', scope);
 
             let actionsSortOrder = {
