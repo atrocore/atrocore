@@ -19,8 +19,7 @@ abstract class AbstractSeeder
 {
     public function __construct(
         private readonly Config     $config,
-        private readonly Connection $connection,
-        private readonly IdGenerator $idGenerator
+        private readonly Connection $connection
     )
     {
     }
@@ -35,10 +34,5 @@ abstract class AbstractSeeder
     protected function getConnection(): Connection
     {
         return $this->connection;
-    }
-
-    protected function getIdGenerator(): IdGenerator
-    {
-        return $this->idGenerator;
     }
 }

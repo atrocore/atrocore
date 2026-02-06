@@ -33,8 +33,7 @@ class SeederFactory
 
         return new $className(
             $this->getContainer()->get('config'),
-            $this->getContainer()->get('connection'),
-            $this->getContainer()->get('idGenerator')
+            $this->getContainer()->get('connection')
         );
     }
 
