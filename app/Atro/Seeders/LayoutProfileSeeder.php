@@ -11,14 +11,13 @@
 
 namespace Atro\Seeders;
 
-use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\ParameterType;
 
 class LayoutProfileSeeder extends AbstractSeeder
 {
     public function run(): void
     {
-        $defaultId = $this->getIdGenerator()->toUuid('default');
+        $defaultId = '019c0a6a-6ecb-70d3-8427-cbc546cad873';
         $menus = $this->getDefaultMenu();
         $favList = $this->getFavorites();
         $defaultDashboards = $this->getDefaultDashboards();

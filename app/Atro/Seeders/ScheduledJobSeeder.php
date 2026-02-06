@@ -22,7 +22,7 @@ class ScheduledJobSeeder extends AbstractSeeder
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
-                    'id'             => $this->getIdGenerator()->toUuid('ComposerAutoUpdate'),
+                    'id'             => '019c320c-3b3c-72f3-bafc-5611287c8dd0',
                     'name'           => 'Update system automatically',
                     'type'           => 'ComposerAutoUpdate',
                     'is_active'      => false,
@@ -36,7 +36,7 @@ class ScheduledJobSeeder extends AbstractSeeder
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
-                    'id'             => $this->getIdGenerator()->toUuid('UpdateCurrencyExchangeViaECB'),
+                    'id'             => '019c320c-5fc0-7186-8a68-099bcbc02c39',
                     'name'           => 'Update currency exchange via ECB',
                     'type'           => 'UpdateCurrencyExchangeViaECB',
                     'is_active'      => true,
@@ -50,7 +50,7 @@ class ScheduledJobSeeder extends AbstractSeeder
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
-                    'id'             => $this->getIdGenerator()->toUuid('ClearEntities'),
+                    'id'             => '019c320c-814b-71dc-8905-b26630c53a79',
                     'name'           => 'Clear deleted data',
                     'type'           => 'ClearEntities',
                     'is_active'      => true,
@@ -64,7 +64,7 @@ class ScheduledJobSeeder extends AbstractSeeder
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
-                    'id'             => $this->getIdGenerator()->toUuid('CheckUpdates'),
+                    'id'             => '019c320c-af2a-701d-9218-594437574559',
                     'name'           => 'Check system updates',
                     'type'           => 'CheckUpdates',
                     'is_active'      => true,
@@ -77,7 +77,7 @@ class ScheduledJobSeeder extends AbstractSeeder
                 [
                     'tableName' => 'scheduled_job',
                     'data'      => [
-                        'id'             => 'RecalculateScriptFieldForEntities',
+                        'id'             => '019c320c-d70c-723c-bf09-9497b2be355c',
                         'name'           => 'Calculate script fields',
                         'type'           => 'RecalculateScriptFieldForEntities',
                         'is_active'      => true,
@@ -91,7 +91,7 @@ class ScheduledJobSeeder extends AbstractSeeder
                 [
                     'tableName' => 'scheduled_job',
                     'data'      => [
-                        'id'             => 'FindMatches',
+                        'id'             => '019c320d-0e6b-719b-87b0-c09443372da3',
                         'name'           => 'Find matches',
                         'type'           => 'FindMatches',
                         'is_active'      => true,
