@@ -690,6 +690,12 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                             $li.find('.jqtree-title').addClass('more-label');
                         }
                     }
+
+                    const $element = $li.find('> .jqtree-element');
+
+                    if ($element.children('.jqtree-toggler').length === 0) {
+                        $element.prepend('<i class="jqtree-toggler jqtree_common jqtree-toggler-left" role="presentation"></i>')
+                    }
                 }.bind(this)
             };
             if (data) {

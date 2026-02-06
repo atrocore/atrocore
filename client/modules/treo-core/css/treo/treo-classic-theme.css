@@ -14989,7 +14989,7 @@ ul.jqtree-tree .jqtree-toggler {
     z-index: 1;
     display: inline-block;
     width: 14px;
-    background-color: var(--sidebar-color);
+    background-color: var(--sidebar-color, #fff);
 }
 
 ul.jqtree-tree .jqtree-toggler .ph {
