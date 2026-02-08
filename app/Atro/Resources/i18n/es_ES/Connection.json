@@ -32,7 +32,7 @@
     "smtpServer": "Servidor",
     "smtpPort": "Port",
     "smtpSecurity": "Seguridad",
-    "smtpUsername": "Nombre de usuario",
+    "smtpUsername": "Username",
     "smtpPassword": "Contraseña",
     "outboundEmailFromName": "De Nombre",
     "outboundEmailFromAddress": "De la dirección",
