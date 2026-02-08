@@ -8,7 +8,7 @@
     "ftpSsl": "TLS/SSL",
     "password": "Heslo",
     "oauthUrl": "Adresa URL OAuth",
-    "oauthGrantType": "Typ grantu OAuth",
+    "oauthGrantType": "Type of grant for OAuth",
     "oauthClientId": "ID klienta OAuth",
     "oauthClientSecret": "Tajemství klienta OAuth",
     "oauthScope": "Oauth Scope",
@@ -41,7 +41,7 @@
     "smtpOauthTokenUrl": "Adresa URL tokenu Oauth",
     "smtpClientId": "ID klienta",
     "smtpClientSecret": "Tajemství klienta",
-    "smtpAuthType": "Typ ověření",
+    "smtpAuthType": "Type ověření",
     "dsn": "Dsn",
     "server": "Server",
     "headers": "Záhlaví"
