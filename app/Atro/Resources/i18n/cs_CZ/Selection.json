@@ -11,7 +11,7 @@
     }
   },
   "messages": {
-    "cannotSetToSingle": "Nemůžete nastavit \"Single Entity\", protože v záznamech máte mnoho entit.",
+    "cannotSetToSingle": "Nelze nastavit možnost 'Uniform'",
     "youNeedAtLeastTwoItem": "Pro srovnání potřebujete alespoň dvě položky.",
     "entityIsRequired": "Pole \"Entita\" je povinné."
   },
