@@ -8,7 +8,6 @@
     "type": {
       "single": "Einheitlich",
       "multiple": "Gemischt"
-
     }
   },
   "labels": {
@@ -18,5 +17,8 @@
     "cannotSetToSingle": "Sie können 'Einheitlich' nicht auswählen.",
     "youNeedAtLeastTwoItem": "Sie benötigen mindestens zwei Artikel zum Vergleich.",
     "entityIsRequired": "Das Feld 'Entität' ist erforderlich."
+  },
+  "customActions": {
+    "replaceItem": "Artikel austauschen"
   }
 }
