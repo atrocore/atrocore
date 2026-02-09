@@ -15,7 +15,7 @@
     "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",
     "pattern": "Vzor regexu",
     "defaultUnit": "Výchozí jednotka",
-    "default": "Výchozí",
+    "default": "Výchozí hodnota",
     "defaultValueType": "Výchozí hodnota Type",
     "tooltip": "Nápověda k nástrojům",
     "tooltipText": "Text nápovědy k nástroji",
@@ -126,6 +126,7 @@
     "conditionalProperties": "Podmíněné vlastnosti"
   },
   "exceptions": {
-    "nullValuesExist": "Některé záznamy mají nulové hodnoty"
+    "nullValuesExist": "Některé záznamy mají nulové hodnoty",
+    "cannotAddRequiredFieldWithExistingRecords": "Nelze přidat povinné pole s existujícími záznamy bez výchozí hodnoty"
   }
 }
