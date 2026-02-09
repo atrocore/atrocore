@@ -20,6 +20,8 @@
   },
   "exceptions": {
     "notValidCode": "Kód musí obsahovat pouze písmena, číslice, podtržítka a pomlčky.",
-    "notValidMatchingActivation": "Pravidlo přiřazování lze změnit pouze u neaktivního přiřazování."
+    "notValidMatchingActivation": "Pravidlo přiřazování lze změnit pouze u neaktivního přiřazování.",
+    "notValidMatching": "Shoda je neplatná",
+    "notValidMatchingRuleSet": "Sada odpovídajících pravidel je neplatná"
   }
 }
