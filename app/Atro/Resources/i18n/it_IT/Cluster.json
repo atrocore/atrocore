@@ -2,6 +2,20 @@
   "fields": {
     "clusterItems": "Articoli del cluster",
     "number": "Numero",
-    "masterEntity": "Entità master"
+    "masterEntity": "Entità master",
+    "rejectedClusterItems": "Articoli del cluster rifiutati",
+    "stagingItemCount": "Conteggio degli articoli in fase di allestimento",
+    "masterItemCount": "Conteggio articoli master"
+  },
+  "boolFilters": {
+    "onlyReview": "Solo recensione",
+    "onlyEmpty": "Solo vuoto",
+    "onlyMerged": "Solo uniti",
+    "onlyInvalid": "Solo Invalido"
+  },
+  "actions": {
+    "reject": "Rifiuta",
+    "confirm": "Confermare",
+    "unreject": "Non rifiutare"
   }
 }
