@@ -75,11 +75,12 @@
     "Maintenance": "Konserwacja",
     "ThumbnailTypes": "Thumbnail Types",
     "rebuildDbWarning": "Struktura bazy danych uległa zmianie. Wymagana jest przebudowa, aby zapewnić prawidłowe działanie.",
-    "incomingWebhook": "Przychodzący Webhook",
+    "incomingWebhook": "Przychodzące webhooki",
     "matchings": "Dopasowania",
     "Available": "Dostępny",
     "execute": "Wykonaj",
-    "status": "Status"
+    "status": "Status",
+    "clusters": "Klastry"
   },
   "layouts": {
     "relationships": "Relacje",
@@ -214,7 +215,8 @@
     "scheduledJob": "Zarządzanie zaplanowanymi zadaniami systemowymi.",
     "notificationTemplates": "Proszę zarządzać szablonem standardowego powiadomienia systemu.",
     "notificationProfiles": "Skonfiguruj profile powiadomień i reguły powiadomień, aby skutecznie usprawnić proces zarządzania alertami, tak aby były one aktualne i istotne.",
-    "layoutProfiles": "Zarządzanie i dostosowywanie różnych konfiguracji układu interfejsu użytkownika systemu"
+    "layoutProfiles": "Zarządzanie i dostosowywanie różnych konfiguracji układu interfejsu użytkownika systemu",
+    "clusters": "Klastry służą do grupowania podobnych rekordów w ramach zarządzania danymi podstawowymi i dopasowywania ich do siebie."
   },
   "logicalOperators": {
     "and": "ORAZ",
