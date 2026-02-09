@@ -17,6 +17,8 @@
   },
   "labels": {
     "manufacturer": "Výrobce",
-    "other": "Další"
+    "other": "Další",
+    "State": "Stát",
+    "Description": "Popis"
   }
 }
