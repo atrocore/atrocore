@@ -6,15 +6,19 @@
   },
   "options": {
     "type": {
-      "single": "Entidad única",
-      "multiple": "Entidades múltiples"
+      "single": "Uniforme",
+      "multiple": "Mixto"
     }
   },
   "messages": {
-    "cannotSetToSingle": "No puede establecer 'Entidad única', porque tiene muchas entidades en sus registros.",
-    "youNeedAtLeastTwoItem": "Necesita al menos dos artículos para comparar."
+    "cannotSetToSingle": "No puede establecer 'Uniforme'",
+    "youNeedAtLeastTwoItem": "Necesita al menos dos artículos para comparar.",
+    "entityIsRequired": "El campo \"Entidad\" es obligatorio."
   },
   "labels": {
     "createSelection": "Crear selección"
+  },
+  "customActions": {
+    "replaceItem": "Sustituir elemento"
   }
 }
