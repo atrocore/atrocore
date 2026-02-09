@@ -170,29 +170,6 @@ class Base extends RDB
         }
 
         $qb->executeQuery();
-
-        if ($this->getMetadata()->get(['scopes', $this->entityName, 'hasAttribute'])) {
-            $name = Util::toUnderScore(lcfirst($this->entityName));
-            while (true) {
-                $ids = $this->getConnection()->createQueryBuilder()
-                    ->select('av.id')
-                    ->from("{$name}_attribute_value", 'av')
-                    ->leftJoin('av', $name, 'e', "e.id=av.{$name}_id")
-                    ->leftJoin('av', $this->getConnection()->quoteIdentifier('attribute'), 'a', "a.id=av.attribute_id")
-                    ->where('e.id IS NULL OR a.id IS NULL')
-                    ->setFirstResult(0)
-                    ->setMaxResults(20000)
-                    ->fetchFirstColumn();
-                if (empty($ids)) {
-                    break;
-                }
-                $this->getConnection()->createQueryBuilder()
-                    ->delete("{$name}_attribute_value")
-                    ->where('id IN (:ids)')
-                    ->setParameter('ids', $ids, $this->getConnection()::PARAM_STR_ARRAY)
-                    ->executeQuery();
-            }
-        }
     }
 
     protected function init()

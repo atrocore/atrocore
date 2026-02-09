@@ -1565,15 +1565,17 @@ class Metadata extends AbstractListener
                     ],
                     "links"         => [
                         lcfirst($scope) => [
-                            "type"     => "belongsTo",
-                            "entity"   => $scope,
-                            "foreign"  => lcfirst($scope) . "AttributeValues",
-                            "emHidden" => true
+                            "type"          => "belongsTo",
+                            "entity"        => $scope,
+                            "foreign"       => lcfirst($scope) . "AttributeValues",
+                            "emHidden"      => true,
+                            "cascadeDelete" => true
                         ],
                         "attribute"     => [
-                            "type"     => "belongsTo",
-                            "entity"   => "Attribute",
-                            "emHidden" => true
+                            "type"          => "belongsTo",
+                            "entity"        => "Attribute",
+                            "emHidden"      => true,
+                            "cascadeDelete" => true
                         ]
                     ],
                     "uniqueIndexes" => [
