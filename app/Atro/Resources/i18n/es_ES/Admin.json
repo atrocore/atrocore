@@ -59,12 +59,12 @@
     "updatesAvailable": "¡Nuevas actualizaciones disponibles!",
     "Maintenance": "Mantenimiento",
     "Account": "Gestión de cuentas",
-    "incomingWebhook": "Webhook entrante",
+    "incomingWebhook": "Webhooks entrantes",
     "Storage": "Almacenes",
     "FileTypes": "Tipos de archivo",
     "Folders": "Carpetas",
     "Connection": "Conexiones",
-    "Measure": "Medida",
+    "Measure": "Medidas",
     "FileManagement": "Gestión de archivos",
     "notificationTemplates": "Plantillas de notificación",
     "notificationProfiles": "Perfiles de notificación",
@@ -79,7 +79,8 @@
     "AccessManagement": "Access Management",
     "Action": "Acciones",
     "Locale": "Localización",
-    "multiLanguages": "Languages"
+    "multiLanguages": "Languages",
+    "clusters": "Agrupaciones"
   },
   "layouts": {
     "list": "Lista",
@@ -214,7 +215,8 @@
     "layoutProfiles": "Gestione y personalice diferentes configuraciones de diseño para la interfaz de usuario del sistema",
     "apiRequest": "Utilice esta función para crear rápidamente estructuras de datos complejas, como feeds de importación o exportación configurados.",
     "style": "Cree, actualice y personalice nuevos estilos para realizar ajustes en el CSS estándar",
-    "incomingWebhook": "Los Webhooks entrantes le permiten desencadenar Acciones predefinidas a través de peticiones HTTP externas, con seguridad opcional como verificación de hash y listas blancas de IP."
+    "incomingWebhook": "Los Webhooks entrantes le permiten desencadenar Acciones predefinidas a través de peticiones HTTP externas, con seguridad opcional como verificación de hash y listas blancas de IP.",
+    "clusters": "Utilice los clústeres para agrupar registros similares dentro de la gestión de datos maestros y hacerlos coincidir entre sí."
   },
   "logicalOperators": {
     "and": "Y",
