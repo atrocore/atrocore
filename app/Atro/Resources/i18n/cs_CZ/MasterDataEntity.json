@@ -6,5 +6,9 @@
   },
   "tooltips": {
     "mergingScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu."
+  },
+  "exceptions": {
+    "mergingScriptIsMissing": "Chybí skript pro sloučení pro hlavní entitu",
+    "mergingScriptIsNotValid": "Slučovací skript vrací neplatné užitečné zatížení: %s"
   }
 }
