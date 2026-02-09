@@ -79,7 +79,8 @@
     "Upgrading...": "Upgraden...",
     "Jobs": "Aufträge",
     "GeneralSetting": "Allgemeine Einstellungen",
-    "System": "System"
+    "System": "System",
+    "clusters": "Cluster"
   },
   "logicalOperators": {
     "and": "UND",
@@ -219,6 +220,7 @@
     "matchings": "Übereinstimmungen helfen dabei, ähnliche Datensätze über verschiedene Entitäten hinweg anhand benutzerdefinierter Regeln zu identifizieren.",
     "thumbnailTypes": "Verwalten Sie die Vorschaubild-Typen, um die Breite oder Höhe eines Vorschaubildes zu ändern oder um ein neues zu erstellen.",
     "scheduledJob": "Verwalten Sie geplante System-Aufträge.",
-    "jobs": "Verwalten Sie System-Aufträge, die ohne direkte Benutzerinteraktion im Hintergrund laufen."
+    "jobs": "Verwalten Sie System-Aufträge, die ohne direkte Benutzerinteraktion im Hintergrund laufen.",
+    "clusters": "Verwenden Sie Cluster, um ähnliche Datensätze in der Stammdatenverwaltung zu gruppieren und sie miteinander abzugleichen."
   }
 }
