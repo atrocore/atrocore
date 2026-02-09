@@ -15,7 +15,7 @@
     "countBytesInsteadOfCharacters": "Contar bytes en lugar de caracteres",
     "pattern": "Patrón Regex",
     "defaultUnit": "Unidad por defecto",
-    "default": "Por defecto",
+    "default": "Valor por defecto",
     "defaultValueType": "Valor por defecto Type",
     "tooltip": "Información sobre herramientas",
     "tooltipText": "Texto de información sobre herramientas",
@@ -126,6 +126,7 @@
     "conditionalProperties": "Propiedades condicionales"
   },
   "exceptions": {
-    "nullValuesExist": "Algunos registros tienen valores nulos"
+    "nullValuesExist": "Algunos registros tienen valores nulos",
+    "cannotAddRequiredFieldWithExistingRecords": "No se puede añadir un campo obligatorio con registros existentes sin valor por defecto"
   }
 }
