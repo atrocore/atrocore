@@ -6,5 +6,9 @@
   },
   "tooltips": {
     "mergingScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego."
+  },
+  "exceptions": {
+    "mergingScriptIsMissing": "Brakuje skryptu scalającego dla jednostki master",
+    "mergingScriptIsNotValid": "Skrypt scalania zwraca nieprawidłowy ładunek: %s"
   }
 }
