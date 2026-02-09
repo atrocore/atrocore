@@ -6,15 +6,19 @@
   },
   "options": {
     "type": {
-      "single": "Pojedynczy podmiot",
-      "multiple": "Wiele podmiotów"
+      "single": "Mundur",
+      "multiple": "Mieszane"
     }
   },
   "messages": {
-    "cannotSetToSingle": "Nie można ustawić opcji \"Pojedynczy podmiot\", ponieważ w rekordach znajduje się wiele podmiotów.",
-    "youNeedAtLeastTwoItem": "Potrzebują Państwo co najmniej dwóch przedmiotów do porównania."
+    "cannotSetToSingle": "Nie można ustawić \"Jednolity",
+    "youNeedAtLeastTwoItem": "Potrzebują Państwo co najmniej dwóch przedmiotów do porównania.",
+    "entityIsRequired": "Pole \"Podmiot\" jest wymagane."
   },
   "labels": {
     "createSelection": "Utwórz wybór"
+  },
+  "customActions": {
+    "replaceItem": "Proszę wymienić element"
   }
 }
