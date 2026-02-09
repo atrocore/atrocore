@@ -47,7 +47,7 @@ class EntityField extends ReferenceData
         return null;
     }
 
-    protected function prepareItem(string $entityName, string $fieldName, array $fieldDefs = null): ?array
+    protected function prepareItem(string $entityName, string $fieldName, ?array $fieldDefs = null): ?array
     {
         if (empty($fieldDefs)) {
             $fieldDefs = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName");
@@ -57,7 +57,7 @@ class EntityField extends ReferenceData
             return null;
         }
 
-        if (!empty($fieldDefs['emHidden'])) {
+        if (!empty($fieldDefs['emHidden']) || !empty($this->getMetadata()->get("scopes.$entityName.emHidden"))) {
             return null;
         }
 
@@ -139,6 +139,10 @@ class EntityField extends ReferenceData
 
         if (!empty($translatedOptions)) {
             $result["translatedOptions"] = $translatedOptions;
+        }
+
+        if ($this->getMetadata()->get(['scopes', $entityName, 'enableFieldValueLock'])) {
+            $result['hasFieldValueLock'] = true;
         }
 
         return $result;

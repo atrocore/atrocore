@@ -99,6 +99,10 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
 
         initUnitSelector() {
             Varchar.prototype.initUnitSelector.call(this);
+        },
+
+        getLockedFieldName() {
+            return Varchar.prototype.getLockedFieldName.call(this);
         }
 
     });
