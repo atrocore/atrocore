@@ -531,7 +531,8 @@
     "removeItem": "Entfernen",
     "openStagingEntity": "Staging-Entität öffnen",
     "openPrimaryEntity": "Master-Entität öffnen",
-    "currentSelection": "Aktuelle Auswahl"
+    "currentSelection": "Aktuelle Auswahl",
+    "isLinked": "Ist verknüpft"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
