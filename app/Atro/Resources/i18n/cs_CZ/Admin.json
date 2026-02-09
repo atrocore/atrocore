@@ -79,7 +79,8 @@
     "apiRequest": "Požadavek API",
     "style": "Styly",
     "incomingWebhook": "Příchozí Webhooks",
-    "matchings": "Shody"
+    "matchings": "Shody",
+    "clusters": "Klastry"
   },
   "layouts": {
     "relationships": "Vztahy",
@@ -214,7 +215,8 @@
     "notificationProfiles": "Konfigurací profilů a pravidel pro oznámení můžete efektivně zefektivnit proces správy upozornění tak, aby byl včasný a relevantní.",
     "layoutProfiles": "Správa a přizpůsobení různých konfigurací rozvržení uživatelského rozhraní systému.",
     "apiRequest": "Pomocí této funkce můžete rychle vytvářet složité datové struktury, například konfigurované importní nebo exportní kanály.",
-    "style": "Vytváření, aktualizace a přizpůsobení nových stylů pro úpravy standardního CSS"
+    "style": "Vytváření, aktualizace a přizpůsobení nových stylů pro úpravy standardního CSS",
+    "clusters": "Pomocí shluků můžete seskupovat podobné záznamy v rámci správy hlavních dat a vzájemně je přiřazovat."
   },
   "logicalOperators": {
     "and": "A",
