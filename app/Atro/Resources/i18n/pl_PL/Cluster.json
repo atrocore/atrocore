@@ -2,6 +2,20 @@
   "fields": {
     "clusterItems": "Elementy klastra",
     "number": "Numer",
-    "masterEntity": "Podmiot główny"
+    "masterEntity": "Podmiot główny",
+    "rejectedClusterItems": "Odrzucone elementy klastra",
+    "stagingItemCount": "Liczba elementów etapu",
+    "masterItemCount": "Główna liczba pozycji"
+  },
+  "boolFilters": {
+    "onlyReview": "Tylko recenzja",
+    "onlyEmpty": "Tylko puste",
+    "onlyMerged": "Tylko połączone",
+    "onlyInvalid": "Tylko nieważne"
+  },
+  "actions": {
+    "reject": "Proszę odrzucić",
+    "confirm": "Proszę potwierdzić",
+    "unreject": "Odrzucić"
   }
 }
