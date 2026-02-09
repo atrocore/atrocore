@@ -17,6 +17,9 @@
   },
   "labels": {
     "manufacturer": "Producent",
-    "other": "Inne"
+    "other": "Inne",
+    "MasterData": "Dane podstawowe",
+    "Taxonomy": "Taksonomia",
+    "ProductLifeCycle": "Cykl życia produktu"
   }
 }
