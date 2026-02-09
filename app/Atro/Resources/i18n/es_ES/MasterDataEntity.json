@@ -1,7 +1,8 @@
 {
   "fields": {
     "masterEntity": "Entidad principal",
-    "mergingScript": "Guión cartográfico"
+    "mergingScript": "Guión cartográfico",
+    "sourceEntity": "Entidad de origen"
   },
   "tooltips": {
     "mergingScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro."
