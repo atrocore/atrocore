@@ -52,8 +52,8 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
             // we select records that are linked or not linked with the attribute
             $operator = $item['type'] === 'isLinked' ? 'EXISTS' : 'NOT EXISTS';
             $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
-            $attributeAlias = Util::generateUniqueHash();
-            $aliasMiddle = Util::generateUniqueHash();
+            $attributeAlias = IdGenerator::unsortableId();
+            $aliasMiddle = IdGenerator::unsortableId();
             $subQb = $this->em->getConnection()->createQueryBuilder()
                 ->select('1')
                 ->from("{$tableName}_attribute_value", $aliasMiddle)
@@ -103,7 +103,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
             $operator = 'NOT IN';
         }
 
-        $innerSql = str_replace($mainTableAlias, "t_{$attributeId}", $qb1->getSql());
+        $innerSql = str_replace($mainTableAlias, IdGenerator::unsortableId(), $qb1->getSql());
 
         $item = [
             'type'  => 'innerSql',

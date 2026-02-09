@@ -384,6 +384,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 });
             }
 
+            if (this.hasLockedControls()) {
+                this.listenTo(this.model, 'sync', () => {
+                    this.setLockedControls();
+                });
+
+                this.listenTo(this, 'after:render', () => {
+                    this.setLockedControls();
+                });
+            }
+
             if (this.mode != 'search') {
                 this.attributeList = this.getAttributeList();
 
@@ -930,7 +940,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.listInlineEditModeEnabled()) {
-                this.buildElementForInlineEditView();
                 this.initStatusContainer();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
@@ -945,13 +954,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         },
 
-        buildElementForInlineEditView() {
-            if(this.$el.children('div:not(.inline-actions):not(.text-length-counter)').size() === 0) {
-                this.$el.html(`<div class="inline-container">${this.$el.html()}</div>`);
-                this.$element = this.$el.find('[name="' + this.name + '"]');
-            }
-        },
-
         checkConditionGroup(conditions) {
             return new ConditionsChecker(this).checkConditionGroup(conditions);
         },
@@ -961,16 +963,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (conditions) {
                 if (this.checkConditionGroup(conditions)) {
                     if (this.isListView()) {
-                        this.getCellElement().find('.inline-container').show();
                         this.getCellElement()?.removeAttr('data-visible');
                     } else {
                         this.getCellElement().show();
                     }
                 } else {
-                    if(this.isListView()){
-                        this.getCellElement().find('.inline-container').hide();
+                    if (this.isListView()) {
                         this.getCellElement()?.attr('data-visible', false);
-                    }else{
+                    } else {
                         this.getCellElement().hide();
                     }
                 }
@@ -1284,6 +1284,22 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             // this.trigger('after:save'); // ignored because saving needs to be silent
             // model.trigger('after:save'); // ignored because saving needs to be silent
 
+            if (this.hasLockedControls()) {
+                const metaValue = res['_meta']?.locked?.[this.getLockedFieldName()];
+                if (metaValue !== undefined) {
+                    const meta = model.get('_meta') || {};
+                    if (!meta.locked) {
+                        meta.locked = {};
+                    }
+
+                    meta.locked[this.getLockedFieldName()] = metaValue;
+
+                    this.model.set('_meta', meta);
+                }
+
+                this.setLockedControls();
+            }
+
             model.trigger('after:inlineEditSave');
             this.trigger('after:inlineEditSave');
 
@@ -1475,6 +1491,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (!$el.size() && this.$element) {
                 $el = this.$element;
             }
+
+            $el[0]?.scrollIntoView({behavior: 'smooth', block: 'center'});
 
             $el.popover({
                 placement: 'bottom',
@@ -1835,6 +1853,66 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         listInlineEditModeEnabled() {
             return this.getRecordView() && this.getRecordView().listInlineEditModeEnabled;
+        },
+
+        setLockedControls: function () {
+            this.getStatusIconsContainer().find('.value-locked').remove();
+            this.getInlineActionsContainer().find('.value-lock').remove();
+            this.getCellElement().off('mouseover.value-lock-' + this.name);
+            this.getCellElement().off('mouseleave.value-lock-' + this.name);
+
+            if (!this.hasLockedControls() || this.options.hasFieldLocking === false) {
+                return;
+            }
+
+            if (this.mode === 'detail' && this.isLocked()) {
+                this.getStatusIconsContainer().append(`<i class="ph ph-lock value-locked" title="${this.translate('fieldValueLocked', 'tooltips')}"></i>`);
+            }
+
+            if (this.readOnly) {
+                return;
+            }
+
+            if (this.mode === 'detail' || (this.isListView() && this.listInlineEditModeEnabled())) {
+                const action = $(`<a href="javascript:" class="value-lock hidden"><i class="ph ${this.isLocked() ? 'ph-lock-open' : 'ph-lock'}" title="${this.translate(this.isLocked() ? 'unlockFieldValue' : 'lockFieldValue', 'labels')}"></i></a>`);
+
+                action.on('click', (e) => {
+                    e.preventDefault();
+
+                    this.notify('Saving...');
+
+                    const url = this.model.urlRoot + '/action/' + (this.isLocked() ? 'unlockField' : 'lockField');
+                    this.ajaxPostRequest(url, {
+                        entityId: this.model.get('id'),
+                        field: this.getLockedFieldName(),
+                    }).then(() => {
+                        Espo.Ui.success('Success');
+                        this.model.fetch();
+                    });
+                });
+
+                this.getInlineActionsContainer().prepend(action);
+                this.getCellElement().on('mouseover.value-lock-' + this.name, () => {
+                    this.getInlineActionsContainer().find('.value-lock').removeClass('hidden');
+                });
+
+                this.getCellElement().on('mouseleave.value-lock-' + this.name, () => {
+                    this.getInlineActionsContainer().find('.value-lock').addClass('hidden');
+                });
+            }
+        },
+
+        getLockedFieldName() {
+            return this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'mainField']) || this.name;
+        },
+
+        isLocked() {
+            return !!this.model.get('_meta')?.locked?.[this.getLockedFieldName()];
+        },
+
+        hasLockedControls: function () {
+            return this.getMetadata().get(['scopes', this.model.urlRoot, 'enableFieldValueLock']) &&
+                !this.getMetadata().get(['entityDefs', this.model.urlRoot, this.getLockedFieldName(), 'disableFieldValueLock']);
         }
     });
 });

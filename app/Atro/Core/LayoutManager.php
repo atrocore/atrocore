@@ -155,13 +155,20 @@ class LayoutManager
         }
 
         if (!empty($derivativeScope)) {
+            $hasSourceRecordField = !empty($this->getMetadata()->get(['entityDefs', $derivativeScope, 'fields', 'sourceRecord']));
             if ($viewType === 'detail') {
-                array_unshift($layout[0]['rows'], [['name' => 'goldenRecord'], ['name' => 'sourceRecord']]);
+                if ($hasSourceRecordField) {
+                    array_unshift($layout[0]['rows'], [['name' => 'goldenRecord'], ['name' => 'sourceRecord']]);
+                } else {
+                    array_unshift($layout[0]['rows'], [['name' => 'goldenRecord'], false]);
+                }
                 array_unshift($layout[0]['rows'], [['name' => 'derivativeStatus'], false]);
             } elseif ($viewType === 'list') {
                 $layout[] = ['name' => 'derivativeStatus'];
                 $layout[] = ['name' => 'goldenRecord'];
-                $layout[] = ['name' => 'sourceRecord'];
+                if ($hasSourceRecordField) {
+                    $layout[] = ['name' => 'sourceRecord'];
+                }
             }
         }
 

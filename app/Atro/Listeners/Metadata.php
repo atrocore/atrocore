@@ -1565,15 +1565,17 @@ class Metadata extends AbstractListener
                     ],
                     "links"         => [
                         lcfirst($scope) => [
-                            "type"     => "belongsTo",
-                            "entity"   => $scope,
-                            "foreign"  => lcfirst($scope) . "AttributeValues",
-                            "emHidden" => true
+                            "type"          => "belongsTo",
+                            "entity"        => $scope,
+                            "foreign"       => lcfirst($scope) . "AttributeValues",
+                            "emHidden"      => true,
+                            "cascadeDelete" => true
                         ],
                         "attribute"     => [
-                            "type"     => "belongsTo",
-                            "entity"   => "Attribute",
-                            "emHidden" => true
+                            "type"          => "belongsTo",
+                            "entity"        => "Attribute",
+                            "emHidden"      => true,
+                            "cascadeDelete" => true
                         ]
                     ],
                     "uniqueIndexes" => [
@@ -2475,6 +2477,8 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
                 }
 
+                $fieldDefs['customizable'] = false;
+
                 $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
             }
 
@@ -2487,22 +2491,23 @@ class Metadata extends AbstractListener
 
             // clone scope defs
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
-                'primaryEntityId'    => $primaryEntity,
-                'isCustom'           => true,
-                'customizable'       => false,
-                'role'               => $scopeDefs['role'] ?? null,
-                'description'        => $scopeDefs['description'] ?? null,
-                'sortBy'             => $scopeDefs['sortBy'] ?? null,
-                'sortDirection'      => $scopeDefs['sortDirection'] ?? null,
-                'matchDuplicates'    => $scopeDefs['matchDuplicates'] ?? false,
-                'matchMasterRecords' => $scopeDefs['matchMasterRecords'] ?? false,
-                'createdAt'          => $scopeDefs['createdAt'] ?? null,
-                'modifiedAt'         => $scopeDefs['modifiedAt'] ?? null,
-                'createdById'        => $scopeDefs['createdById'] ?? null,
-                'modifiedById'       => $scopeDefs['modifiedById'] ?? null,
-                'enableVersioning'   => $scopeDefs['enableVersioning'] ?? false,
-                'defaultVersionName' => $scopeDefs['defaultVersionName'] ?? null,
-                'layouts'            => false
+                'primaryEntityId'      => $primaryEntity,
+                'isCustom'             => true,
+                'customizable'         => false,
+                'role'                 => $scopeDefs['role'] ?? null,
+                'description'          => $scopeDefs['description'] ?? null,
+                'sortBy'               => $scopeDefs['sortBy'] ?? null,
+                'sortDirection'        => $scopeDefs['sortDirection'] ?? null,
+                'matchDuplicates'      => $scopeDefs['matchDuplicates'] ?? false,
+                'matchMasterRecords'   => $scopeDefs['matchMasterRecords'] ?? false,
+                'createdAt'            => $scopeDefs['createdAt'] ?? null,
+                'modifiedAt'           => $scopeDefs['modifiedAt'] ?? null,
+                'createdById'          => $scopeDefs['createdById'] ?? null,
+                'modifiedById'         => $scopeDefs['modifiedById'] ?? null,
+                'enableVersioning'     => $scopeDefs['enableVersioning'] ?? false,
+                'defaultVersionName'   => $scopeDefs['defaultVersionName'] ?? null,
+                'enableFieldValueLock' => $scopeDefs['enableFieldValueLock'] ?? false,
+                'layouts'              => false
             ]);
             if (array_key_exists('module', $data['scopes'][$scope])) {
                 unset($data['scopes'][$scope]['module']);
