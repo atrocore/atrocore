@@ -2,6 +2,20 @@
   "fields": {
     "clusterItems": "Кластерні елементи",
     "number": "Номер",
-    "masterEntity": "Мастер"
+    "masterEntity": "Мастер",
+    "rejectedClusterItems": "Відхилені елементи кластера",
+    "stagingItemCount": "Підрахунок елементів постановки",
+    "masterItemCount": "Основний підрахунок елементів"
+  },
+  "boolFilters": {
+    "onlyInvalid": "Тільки недійсний",
+    "onlyReview": "Єдиний відгук",
+    "onlyEmpty": "Тільки порожній",
+    "onlyMerged": "Тільки об'єднані"
+  },
+  "actions": {
+    "reject": "Відхилити",
+    "confirm": "Підтвердити",
+    "unreject": "Відхилити"
   }
 }
