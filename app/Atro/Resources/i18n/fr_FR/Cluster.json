@@ -2,6 +2,20 @@
   "fields": {
     "clusterItems": "Éléments de la grappe",
     "number": "Numéro",
-    "masterEntity": "Entité de référence"
+    "masterEntity": "Entité de référence",
+    "rejectedClusterItems": "Éléments de la grappe rejetés",
+    "stagingItemCount": "Nombre d'articles de mise à disposition",
+    "masterItemCount": "Nombre d'articles de référence"
+  },
+  "boolFilters": {
+    "onlyReview": "Seule la révision",
+    "onlyEmpty": "Seulement vide",
+    "onlyMerged": "Uniquement fusionné",
+    "onlyInvalid": "Seulement Invalide"
+  },
+  "actions": {
+    "reject": "Rejeter",
+    "confirm": "Confirmer",
+    "unreject": "Ne pas rejeter"
   }
 }
