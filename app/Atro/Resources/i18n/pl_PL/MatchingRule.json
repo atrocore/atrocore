@@ -20,6 +20,8 @@
   },
   "exceptions": {
     "notValidCode": "Kod musi zawierać wyłącznie litery, cyfry, podkreślniki i myślniki.",
-    "notValidMatchingActivation": "Regułę dopasowania można zmienić tylko dla nieaktywnego dopasowania."
+    "notValidMatchingActivation": "Regułę dopasowania można zmienić tylko dla nieaktywnego dopasowania.",
+    "notValidMatching": "Dopasowanie jest nieprawidłowe",
+    "notValidMatchingRuleSet": "Zestaw reguł dopasowania jest nieprawidłowy"
   }
 }
