@@ -430,7 +430,7 @@
     "addGroup": "Začátek / konec skupiny",
     "Summary": "Souhrn",
     "Activities": "Aktivity",
-    "enableAutomaticClosing": "Zakázat automatické otevírání a zavírání tohoto panelu při přejetí myší.",
+    "enableAutomaticClosing": "Povolit automatické otevírání a zavírání tohoto panelu při najetí myší.",
     "disableAutomaticClosing": "Zakázat automatické otevírání a zavírání tohoto panelu při přejetí myší.",
     "actionFollow": "Klikněte pro sledování",
     "actionUnfollow": "Sledujete, Kliknutím zrušíte sledování",
@@ -515,7 +515,7 @@
     "hideAll": "Skrýt vše",
     "Relations": "Vztahy",
     "view": "Zobrazit",
-    "Saved Filters": "Uložený filtr",
+    "Saved Filters": "Uložené filtry",
     "Support": "Podpora",
     "Contact Us": "Kontaktujte nás",
     "Open Dashboard": "Otevřít přístrojový panel",
@@ -526,7 +526,11 @@
     "accessDenied": "Přístup odepřen",
     "replaceItem": "Vyměňte stránky",
     "removeItem": "Smazat",
-    "isLinked": "Je propojen"
+    "isLinked": "Je propojen",
+    "openStagingEntity": "Otevřený subjekt etapizace",
+    "openPrimaryEntity": "Otevřený hlavní subjekt",
+    "currentSelection": "Aktuální výběr",
+    "rejectItem": "Odmítnout"
   },
   "fields": {
     "number": "Číslo",
@@ -637,7 +641,9 @@
     "createdCountFilterActionExecution": "Vytvořil Action Execution",
     "updatedCountFilterActionExecution": "Aktualizováno provedením akce",
     "field": "Pole",
-    "derivativeStatus": "Stav derivátu"
+    "derivativeStatus": "Stav derivátu",
+    "sourceRecord": "Zdroj Záznam",
+    "stagingRecords": "Záznamy o etapách"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
@@ -836,7 +842,7 @@
     "updateFromToThis": "{user} v tomto {entityType} aktualizováno",
     "changed": "byl změněn",
     "ownThis": "{user} nastaví {owner} jako vlastníka pro tento {entityType}",
-    "ownYou": "{user} nastavil(a) {owner} jako vlastníka pro {entityType} {entity}",
+    "ownYou": "{uživatel} vás nastavil jako vlastníka pro {entityType} {entity}",
     "ownThisVoid": "{user} zruší nastavení vlastníka pro tento {entityType}.",
     "ownVoid": "{user} zruší nastavení vlastníka pro {entityType} {entity}.",
     "ownThisSelf": "{user} se nastavil jako vlastník pro tento {entityType}.",
@@ -846,7 +852,7 @@
     "statusThis": "{uživatel} aktualizoval {pole}",
     "createRelated": "{uživatel} vytvořil {relatedEntityType} {relatedEntity} související s {entityType} {entita}",
     "relate": "{user} propojený s {relatedEntityType} {relatedEntity} s {entityType} {entity}",
-    "relateThis": "{user} odpojeno {relatedEntityType} {relatedEntity} z tohoto {entityType}.",
+    "relateThis": "{user} propojený s {relatedEntityType} {relatedEntity} s tímto {entityType}",
     "emailReceivedInitialThis": "Přijatý e-mail, tento {entityType} vytvořen",
     "emailReceivedFrom": "E-mail přijatý od {od}, týkající se {entityType} {entita}",
     "updateOneInThis": "{user} aktualizoval {relatedEntityType} {relatedEntity} v tomto {entityType}.",
@@ -1269,7 +1275,7 @@
     "delete_group": "Odstranit"
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sám sebe",
     "composerUpdateThis": "{uživatel}"
   },
   "twig": {
@@ -1308,7 +1314,7 @@
     }
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sama",
     "composerUpdateThis": "{uživatel}"
   },
   "listViewModes": {
@@ -1379,12 +1385,12 @@
     },
     "description": {
       "readDocumentation": "Prozkoumejte naši komplexní dokumentaci pro správce a uživatele, abyste lépe porozuměli tomu, jak systém efektivně konfigurovat a používat.",
-      "customizeDesign": "Nahrajte logo společnosti a favicon a vyberte si styl systému. Přizpůsobte uživatelské rozhraní tak, aby odpovídalo vaší firemní značce.",
+      "customizeDesign": "Nahrajte logo své společnosti a favicon a vyberte si styl systému. Přizpůsobte uživatelské rozhraní tak, aby odpovídalo vaší firemní značce.",
       "configureLocale": "Nastavení výchozího prostředí pro uživatelské rozhraní, včetně jazyka systému, formátů data, oddělovače tisíců a dalších regionálních předvoleb.",
       "addLanguages": "Povolení a konfigurace dalších jazyků pro vytváření a správu vícejazyčného obsahu v celém systému.",
       "configureRoles": "Definujte uživatelské role pro řízení přístupu a odpovědností v systému.",
       "createUsers": "Přidejte uživatele systému, přiřaďte role a definujte správce pro správu přístupu a oprávnění.",
-      "configureDataModel": "Zkontrolujte výchozí datové entity, které jsou k dispozici po vybalení. Podle potřeby vytvořte nové entity (datové tabulky), nová pole nebo definujte vztahy mezi entitami.",
+      "configureDataModel": "Prohlédněte si výchozí datové entity, které jsou k dispozici po vybalení z krabice. Podle potřeby vytvořte nové entity (datové tabulky), nová pole nebo definujte vztahy mezi entitami.",
       "importData": "Nastavte první importní kanál, který přinese data do systému ze souborů CSV nebo XLSX.",
       "configureFileTypes": "Zkontrolujte, které standardní typy souborů jsou ve výchozím nastavení k dispozici. V případě potřeby upravte jejich nastavení a nakonfigurujte nové typy souborů pro ověřování a správu nahrávání uživateli.",
       "configureLayouts": "Přizpůsobte si seznamy, podrobnosti a další zobrazení pro libovolnou entitu tak, aby vyhovovaly vašim preferencím ohledně pracovního postupu a prezentace dat uživatelského rozhraní."
