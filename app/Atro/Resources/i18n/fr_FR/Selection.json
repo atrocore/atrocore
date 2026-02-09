@@ -11,11 +11,14 @@
     }
   },
   "messages": {
-    "cannotSetToSingle": "Vous ne pouvez pas définir \"Entité unique\", car vous avez plusieurs entités dans vos enregistrements.",
+    "cannotSetToSingle": "Vous ne pouvez pas définir \"Uniform",
     "youNeedAtLeastTwoItem": "Vous avez besoin d'au moins deux éléments pour la comparaison.",
     "entityIsRequired": "Le champ 'Entité' est requis."
   },
   "labels": {
     "createSelection": "Créer une sélection"
+  },
+  "customActions": {
+    "replaceItem": "Remplacer l'article"
   }
 }
