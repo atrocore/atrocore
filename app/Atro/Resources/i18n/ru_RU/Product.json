@@ -20,6 +20,8 @@
     "other": "Другие",
     "MasterData": "Основные данные",
     "Taxonomy": "Таксономия",
-    "ProductLifeCycle": "Жизненный цикл продукта"
+    "ProductLifeCycle": "Жизненный цикл продукта",
+    "Description": "Описание",
+    "State": "Регион"
   }
 }
