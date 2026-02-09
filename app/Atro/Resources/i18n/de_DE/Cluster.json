@@ -2,6 +2,20 @@
   "fields": {
     "clusterItems": "Cluster-Artikel",
     "number": "Nummer",
-    "masterEntity": "Stammdaten-Entität"
+    "masterEntity": "Stammdaten-Entität",
+    "rejectedClusterItems": "Abgelehnte Cluster Items",
+    "stagingItemCount": "Anzahl der Artikel bei der Inszenierung",
+    "masterItemCount": "Master Item Count"
+  },
+  "boolFilters": {
+    "onlyReview": "Nur Rezension",
+    "onlyEmpty": "Nur Leere",
+    "onlyMerged": "Nur verschmolzen",
+    "onlyInvalid": "Nur ungültig"
+  },
+  "actions": {
+    "reject": "Ablehnen",
+    "confirm": "Bestätigen Sie",
+    "unreject": "Ablehnen"
   }
 }
