@@ -3,7 +3,7 @@
     "type": "Тип",
     "entity": "Сущность",
     "isMultilang": "Многоязычный",
-    "required": "Обязательный",
+    "required": "Обязательно",
     "notNull": "Отключите нулевое значение",
     "readOnly": "Только для чтения",
     "protected": "Защищенный",
@@ -15,7 +15,7 @@
     "countBytesInsteadOfCharacters": "Считайте байты вместо символов",
     "pattern": "Regex Pattern",
     "defaultUnit": "Единица измерения по умолчанию",
-    "default": "По умолчанию",
+    "default": "Значение по умолчанию",
     "defaultValueType": "Значение по умолчанию Тип",
     "tooltip": "Текст подсказки",
     "tooltipText": "Текст всплывающей подсказки",
@@ -62,7 +62,7 @@
     "modifiedExtendedEnabled": "Запишите изменение как модификацию",
     "duplicateIgnore": "Не дублируется",
     "recordRelatedChangesInStream": "Запишите изменения в связанных записях для текущей сущности.",
-    "conditionalRequired": "Обязательный",
+    "conditionalRequired": "Обязательно",
     "conditionalVisible": "Видимый",
     "conditionalReadOnly": "Только для чтения",
     "conditionalProtected": "Защищенный",
@@ -121,7 +121,7 @@
     "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
   },
   "labels": {
-    "resetToDefault": "Восстановить по умолчанию",
+    "resetToDefault": "Восстановить настройки по умолчанию",
     "relationManagement": "Управление отношениями",
     "conditionalProperties": "Условные свойства"
   },
