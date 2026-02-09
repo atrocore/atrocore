@@ -126,6 +126,7 @@
     "conditionalProperties": "Условные свойства"
   },
   "exceptions": {
-    "nullValuesExist": "Некоторые записи имеют нулевые значения"
+    "nullValuesExist": "Некоторые записи имеют нулевые значения",
+    "cannotAddRequiredFieldWithExistingRecords": "Вы не можете добавить обязательное поле к существующим записям без значения по умолчанию"
   }
 }
