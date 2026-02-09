@@ -53,7 +53,7 @@
     "cancelingModuleInstall": "Annullare l'installazione del modulo...",
     "canceledModuleInstall": "L'installazione del modulo è stata annullata",
     "Log": "Diario",
-    "confirmRun": "Dopo l'azione di aggiornamento, tutti gli utenti si disconnettono dal sistema. È sicuro di voler aggiornare il sistema?",
+    "confirmRun": "Dopo l'aggiornamento, tutti gli utenti saranno disconnessi dal sistema. È sicuro di voler aggiornare il sistema?",
     "daemonDisabled": "<b>Il demone Composer non è in esecuzione!</b><br>Probabilmente il demone si sta ricaricando ora e deve aspettare un minuto, oppure il crontab non è configurato. Le istruzioni su come configurare il crontab si trovano <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">qui</a>.",
     "jobManagerRunning": "La possibilità di aggiornare i moduli è bloccata. Provi più tardi.",
     "showReleaseNotes": "Note di rilascio"
