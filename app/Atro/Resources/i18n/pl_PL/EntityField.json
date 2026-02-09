@@ -126,6 +126,7 @@
     "conditionalProperties": "Właściwości warunkowe"
   },
   "exceptions": {
-    "nullValuesExist": "Niektóre rekordy mają wartości null"
+    "nullValuesExist": "Niektóre rekordy mają wartości null",
+    "cannotAddRequiredFieldWithExistingRecords": "Nie można dodać pola wymaganego z istniejącymi rekordami bez wartości domyślnej"
   }
 }
