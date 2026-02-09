@@ -12,8 +12,5 @@
   "multiParents": false,
   "dragAndDrop": true,
   "fieldValueInheritance": true,
-  "unInheritedFields": [
-    "name"
-  ],
   "relationInheritance": true
 }

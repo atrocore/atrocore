@@ -76,8 +76,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             if (this.getMetadata().get(`scopes.${this.model.name}.relationInheritance`) === true && this.model.get('isRoot') === false) {
                 let unInheritedRelations = ['parents', 'children'];
-                (this.getMetadata().get(`scopes.${this.model.name}.unInheritedRelations`) || []).forEach(field => {
-                    unInheritedRelations.push(field);
+                $.each((this.getMetadata().get(`entityDefs.${this.model.name}.fields`) || {}), (field, fieldDefs) => {
+                    if (fieldDefs.isUninheritableRelation) {
+                        unInheritedRelations.push(field);
+                    }
                 });
                 if (!unInheritedRelations.includes(this.link)) {
                     this.rowActionsColumnWidth = 70;
@@ -614,8 +616,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 unInheritedRelations.push(field);
             });
 
-            (this.getMetadata().get(`scopes.${scope}.unInheritedRelations`) || []).forEach(field => {
-                unInheritedRelations.push(field);
+            $.each((this.getMetadata().get(`entityDefs.${scope}.fields`) || {}), (field, fieldDefs) => {
+                if (fieldDefs.isUninheritableRelation) {
+                    unInheritedRelations.push(field);
+                }
             });
 
             $.each(this.getMetadata().get(`entityDefs.${scope}.links`), (link, linkDefs) => {

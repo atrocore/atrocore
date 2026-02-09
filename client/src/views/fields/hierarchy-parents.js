@@ -81,8 +81,10 @@ Espo.define('views/fields/hierarchy-parents', 'views/fields/link-multiple',
                 (this.getMetadata().get(['scopes', scope, 'mandatoryUnInheritedFields']) || []).forEach(field => {
                     this.pushFieldViaType(scope, field, nonInheritedFields);
                 });
-                (this.getMetadata().get(['scopes', scope, 'unInheritedFields']) || []).forEach(field => {
-                    this.pushFieldViaType(scope, field, nonInheritedFields);
+                $.each((this.getMetadata().get(`entityDefs.${scope}.fields`) || {}), (field, fieldDefs) => {
+                    if (fieldDefs.isUninheritableField) {
+                        unInheritedRelations.push(field);
+                    }
                 });
 
                 this.ajaxPostRequest(`${scope}/action/getDuplicateAttributes`, {id: parentsIds.shift()}).then(data => {

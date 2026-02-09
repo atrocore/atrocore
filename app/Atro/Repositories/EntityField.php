@@ -897,6 +897,38 @@ class EntityField extends ReferenceData
             }
         }
 
+        if ($entity->isAttributeChanged('isUninheritableField') && !in_array($entity->get('type'), ['linkMultiple', 'autoincrement'])) {
+            if ($loadedData['scopes'][$entity->get('entityId')]['type'] === 'Hierarchy'
+                && !in_array($entity->get('code'), $loadedData['app']['nonInheritedFields'] ?? [])
+                && !in_array($entity->get('code'), $loadedData['scopes'][$entity->get('entityId')]['mandatoryUnInheritedFields'] ?? [])) {
+                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                    'fields' => [
+                        $entity->get('code') => [
+                            'isUninheritableField' => $entity->get('isUninheritableField')
+                        ]
+                    ]
+                ]);
+
+                $saveMetadata = true;
+            }
+        }
+
+        if ($entity->isAttributeChanged('isUninheritableRelation') && $entity->get('type') === 'linkMultiple') {
+            if ($loadedData['scopes'][$entity->get('entityId')]['type'] === 'Hierarchy'
+                && !in_array($entity->get('code'), $loadedData['app']['nonInheritedRelations'] ?? [])
+                && !in_array($entity->get('code'), $loadedData['scopes'][$entity->get('entityId')]['mandatoryUnInheritedRelations'] ?? [])) {
+                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                    'fields' => [
+                        $entity->get('code') => [
+                            'isUninheritableRelation' => $entity->get('isUninheritableRelation')
+                        ]
+                    ]
+                ]);
+
+                $saveMetadata = true;
+            }
+        }
+
         if ($saveMetadata) {
             $this->getMetadata()->save();
             $this->getDataManager()->rebuild();
@@ -939,8 +971,6 @@ class EntityField extends ReferenceData
         $virtualToEntityFields = [
             "isNonComparable"         => "nonComparableFields",
             "isDuplicatableRelation"  => "duplicatableRelations",
-            "isUninheritableField"    => "unInheritedFields",
-            "isUninheritableRelation" => "unInheritedRelations",
             "modifiedExtendedEnabled" => "modifiedExtendedRelations"
         ];
 
@@ -980,8 +1010,6 @@ class EntityField extends ReferenceData
         $virtualToEntityFields = [
             "isNonComparable"         => "nonComparableFields",
             "isDuplicatableRelation"  => "duplicatableRelations",
-            "isUninheritableField"    => "unInheritedFields",
-            "isUninheritableRelation" => "unInheritedRelations",
             "modifiedExtendedEnabled" => "modifiedExtendedRelations"
         ];
 

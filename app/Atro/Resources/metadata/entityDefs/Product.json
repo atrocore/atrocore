@@ -70,7 +70,8 @@
       "required": true,
       "trim": true,
       "index": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "isUninheritableField": true
     },
     "price": {
       "type": "float",
@@ -102,7 +103,8 @@
     "mpn": {
       "type": "varchar",
       "trim": true,
-      "index": true
+      "index": true,
+      "isUninheritableField": true
     },
     "note": {
       "type": "text"

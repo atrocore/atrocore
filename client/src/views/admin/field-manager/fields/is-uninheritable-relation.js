@@ -22,6 +22,7 @@ Espo.define('views/admin/field-manager/fields/is-uninheritable-relation', 'views
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
+
             let scope = this.model.get('entityId');
             let field = this.model.get('code');
             let shouldHide = true;
@@ -39,7 +40,7 @@ Espo.define('views/admin/field-manager/fields/is-uninheritable-relation', 'views
                 }
             }
 
-            if(shouldHide) {
+            if (shouldHide) {
                 this.hide();
             }
         }
