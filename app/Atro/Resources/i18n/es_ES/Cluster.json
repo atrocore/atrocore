@@ -2,6 +2,20 @@
   "fields": {
     "clusterItems": "Partidas agrupadas",
     "number": "Número",
-    "masterEntity": "Entidad principal"
+    "masterEntity": "Entidad principal",
+    "rejectedClusterItems": "Partidas agrupadas rechazadas",
+    "stagingItemCount": "Recuento de elementos de puesta en escena",
+    "masterItemCount": "Recuento maestro de artículos"
+  },
+  "boolFilters": {
+    "onlyReview": "Sólo Revisión",
+    "onlyEmpty": "Sólo vacío",
+    "onlyMerged": "Sólo fusionados",
+    "onlyInvalid": "Sólo inválido"
+  },
+  "actions": {
+    "reject": "Rechace",
+    "confirm": "Confirme",
+    "unreject": "Rechazar"
   }
 }
