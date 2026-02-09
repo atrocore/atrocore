@@ -1,7 +1,8 @@
 {
   "fields": {
     "masterEntity": "Podmiot główny",
-    "mergingScript": "Skrypt mapowania"
+    "mergingScript": "Skrypt mapowania",
+    "sourceEntity": "Źródłowa Jednostka"
   },
   "tooltips": {
     "mergingScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego."
