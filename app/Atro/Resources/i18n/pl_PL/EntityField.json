@@ -15,7 +15,7 @@
     "countBytesInsteadOfCharacters": "Zliczanie bajtów zamiast znaków",
     "pattern": "Wzorzec Regex",
     "defaultUnit": "Jednostka domyślna",
-    "default": "Domyślny",
+    "default": "Wartość domyślna",
     "defaultValueType": "Wartość domyślna Type",
     "tooltip": "Tooltip",
     "tooltipText": "Tekst podpowiedzi",
