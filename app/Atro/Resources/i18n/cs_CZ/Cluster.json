@@ -2,6 +2,20 @@
   "fields": {
     "clusterItems": "Položky klastru",
     "number": "Číslo",
-    "masterEntity": "Hlavní subjekt"
+    "masterEntity": "Hlavní subjekt",
+    "rejectedClusterItems": "Odmítnuté položky klastru",
+    "stagingItemCount": "Počet položek etapizace",
+    "masterItemCount": "Hlavní počet položek"
+  },
+  "boolFilters": {
+    "onlyReview": "Pouze recenze",
+    "onlyEmpty": "Pouze prázdné",
+    "onlyMerged": "Pouze sloučené",
+    "onlyInvalid": "Pouze neplatné"
+  },
+  "actions": {
+    "reject": "Odmítnout",
+    "confirm": "Potvrďte",
+    "unreject": "Odmítnout"
   }
 }
