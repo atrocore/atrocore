@@ -5,5 +5,10 @@
     "record": "Datensatz",
     "cluster": "Cluster",
     "matchedRecord": "Übereinstimmender Datensatz"
+  },
+  "exceptions": {
+    "notFound": "Cluster-Element-Datensatz nicht gefunden",
+    "cannotReject": "Dieses Clusterelement kann nicht abgelehnt werden",
+    "cannotUnreject": "Dieses Clusterelement kann nicht abgelehnt werden"
   }
 }
