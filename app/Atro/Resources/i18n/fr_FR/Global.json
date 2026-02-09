@@ -568,7 +568,8 @@
     "currentSelection": "Sélection Courante",
     "rejectItem": "Rejeter",
     "openStagingEntity": "Entité de transit ouverte",
-    "openPrimaryEntity": "Entité maître ouverte"
+    "openPrimaryEntity": "Entité maître ouverte",
+    "isLinked": "Est lié"
   },
   "insightsPanels": {
     "summary": "Sommaire",
