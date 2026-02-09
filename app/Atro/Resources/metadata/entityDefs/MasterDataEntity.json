@@ -5,6 +5,20 @@
       "notStorable": true,
       "protected": true
     },
+    "updateMasterAutomatically": {
+      "type": "bool",
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
     "masterEntity": {
       "type": "varchar",
       "notStorable": true,
