@@ -17,5 +17,8 @@
     "cannotSetToSingle": "Ви не можете встановити 'Одинарну сутність'.",
     "youNeedAtLeastTwoItem": "Вам потрібно щонайменше два елементи для порівняння.",
     "entityIsRequired": "Поле 'Сутність' обов'язкове."
+  },
+  "customActions": {
+    "replaceItem": "Замінити елемент"
   }
 }
