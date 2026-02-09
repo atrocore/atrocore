@@ -25,4 +25,11 @@ class MasterDataEntity extends Base
         $entity->set('name', $this->getInjection('language')->translate($entity->id, 'scopeNames', 'Global'));
         $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->id}.primaryEntityId"));
     }
+
+    protected function checkProtectedFields(Entity $entity, \stdClass $data): void
+    {
+        $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->id}.primaryEntityId"));
+
+        parent::checkProtectedFields($entity, $data);
+    }
 }
