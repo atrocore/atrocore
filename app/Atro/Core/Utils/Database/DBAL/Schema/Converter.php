@@ -26,6 +26,10 @@ class Converter
     protected Metadata $metadata;
     protected Connection $connection;
 
+    /** @var array<string, Table> $tables */
+    private array $tables = [];
+    private array $foreignKeys = [];
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -47,6 +51,16 @@ class Converter
         }
 
         return 'IDX_' . strtoupper($res);
+    }
+
+    public static function generateForeignKeyName(string $entityName, string $fieldName): string
+    {
+        $res = Util::toUnderScore($entityName) . '_' . Util::toUnderScore($fieldName);
+        if (strlen($res) > 55) {
+            $res = md5($res);
+        }
+
+        return 'FK_' . strtoupper($res);
     }
 
     public static function isPgSQL(Connection $connection): bool
@@ -84,7 +98,7 @@ class Converter
 
         $schema = new Schema();
 
-        $tables = [];
+        $this->tables = [];
         foreach ($ormMetadata as $entityName => $entityDefs) {
             if (empty($entityDefs['fields'])) {
                 continue;
@@ -130,6 +144,23 @@ class Converter
                     }
                     $uniqueFields[] = $columnNames;
                 }
+
+                $originalName = $fieldDefs['originalName'] ?? null;
+                if ($originalName && !empty($entityDefs['relations'][$originalName])) {
+                    $link = $entityDefs['relations'][$originalName];
+
+                    if (($link['type'] ?? null) !== 'belongsTo' || !($link['cascadeDelete'] ?? false)) {
+                        continue;
+                    }
+
+                    if ($entity = $link['entity'] ?? null) {
+                        $this->foreignKeys[$entityName][] = [
+                            'entity'        => $entity,
+                            'fieldName'     => $link['key'],
+                            'cascadeDelete' => $link['cascadeDelete'] ?? false
+                        ];
+                    }
+                }
             }
 
             foreach ($uniqueFields as $columnNames) {
@@ -165,7 +196,22 @@ class Converter
 
             $table->setPrimaryKey($primaryColumns);
 
-            $tables[$entityName] = $table;
+            $this->tables[$entityName] = $table;
+        }
+
+        foreach ($this->foreignKeys as $entityName => $fkDefs) {
+            foreach ($fkDefs as $def) {
+                $table = $this->tables[$def['entity']];
+                $column = Util::toUnderScore($def['fieldName']);
+                $options = [];
+
+                if (!empty($def['cascadeDelete'])) {
+                    $options['onDelete'] = 'CASCADE';
+                }
+
+                $this->tables[$entityName]->addForeignKeyConstraint($table, [$column], ['id'], $options, self::generateForeignKeyName($entityName, $def['fieldName']));
+                $this->tables[$entityName]->addIndex([$column], self::generateForeignKeyName($entityName, $def['fieldName']));
+            }
         }
 
         return $schema;
