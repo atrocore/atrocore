@@ -75,7 +75,7 @@
     "rebuildDbWarning": "La estructura de la base de datos ha cambiado. Es necesario reconstruirla para garantizar su correcto funcionamiento.",
     "matchings": "Partidos",
     "Selected": "Selección",
-    "status": "Status",
+    "status": "Estado",
     "AccessManagement": "Access Management",
     "Action": "Acciones",
     "Locale": "Localización",
@@ -135,7 +135,7 @@
     "script": "Guión",
     "extensibleMultiEnum": "Lista multivalor",
     "markdown": "Markdown",
-    "extensibleEnum": "List",
+    "extensibleEnum": "Lista",
     "multiLanguage": "Códigos lingüísticos",
     "measure": "Medida"
   },
