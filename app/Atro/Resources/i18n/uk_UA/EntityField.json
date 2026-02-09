@@ -126,6 +126,7 @@
     "conditionalProperties": "Умовні властивості"
   },
   "exceptions": {
-    "nullValuesExist": "Деякі записи мають нульові значення"
+    "nullValuesExist": "Деякі записи мають нульові значення",
+    "cannotAddRequiredFieldWithExistingRecords": "Ви не можете додати обов'язкове поле до існуючих записів без значення за замовчуванням"
   }
 }
