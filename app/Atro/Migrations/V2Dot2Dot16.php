@@ -12,7 +12,6 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 
@@ -28,30 +27,47 @@ class V2Dot2Dot16 extends Base
         $fromSchema = $this->getCurrentSchema();
         $toSchema = clone $fromSchema;
 
-        /** @var Metadata $metadata */
-        $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
+        $dir = 'data/metadata/scopes';
 
-        foreach ($metadata->get('scopes') ?? [] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['primaryEntityId'])) {
-                $tableName = Util::toUnderScore(lcfirst($scope));
-                if ($toSchema->hasTable($tableName)) {
-                    $table = $toSchema->getTable($tableName);
-                    foreach ($metadata->get(['entityDefs', $scopeDefs['primaryEntityId'], 'fields']) ?? [] as $field => $fieldDefs) {
-                        if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'bool' && !empty($fieldDefs['notNull'])) {
-                            $columnName = Util::toUnderScore(lcfirst($field));
-                            if ($table->hasColumn($columnName)) {
-                                $column = $table->getColumn($columnName);
-                                $column->setNotnull(true);
-                                $column->setDefault(false);
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (!in_array($item, ['.', '..'])) {
+                    $parts = explode('.', $item);
+                    $scope = $parts[0];
 
-                                try {
-                                    $this->getConnection()->createQueryBuilder()
-                                        ->update($this->getConnection()->quoteIdentifier($tableName))
-                                        ->set($this->getConnection()->quoteIdentifier($columnName), ':false')
-                                        ->where($this->getConnection()->quoteIdentifier($columnName) . ' IS NULL')
-                                        ->setParameter('false', false, ParameterType::BOOLEAN)
-                                        ->executeStatement();
-                                } catch (\Exception $e) {
+                    $content = @json_decode(file_get_contents($dir . '/' . $item), true);
+                    if (!empty($content) && !empty($content['primaryEntityId'])) {
+                        $tableName = Util::toUnderScore(lcfirst($scope));
+
+                        $primaryEntityDefs = [];
+                        $path = 'data/metadata/entityDefs/' . $content['primaryEntityId'] . '.json';
+                        if (file_exists($path)) {
+                            $primaryEntityDefs = @json_decode(file_get_contents($path), true);
+                        }
+
+                        if ($toSchema->hasTable($tableName)) {
+                            $table = $toSchema->getTable($tableName);
+
+                            foreach ($table->getColumns() as $column) {
+                                $columnName = $column->getName();
+
+                                if ($column->getType()->getName() === 'boolean' && $columnName !== 'deleted') {
+                                    if (($primaryEntityDefs['fields'][Util::toCamelCase($columnName)]['notNull'] ?? null) === false) {
+                                        continue;
+                                    }
+
+                                    $column->setNotnull(true);
+                                    $column->setDefault(false);
+
+                                    try {
+                                        $this->getConnection()->createQueryBuilder()
+                                            ->update($this->getConnection()->quoteIdentifier($tableName))
+                                            ->set($this->getConnection()->quoteIdentifier($columnName), ':false')
+                                            ->where($this->getConnection()->quoteIdentifier($columnName) . ' IS NULL')
+                                            ->setParameter('false', false, ParameterType::BOOLEAN)
+                                            ->executeStatement();
+                                    } catch (\Exception $e) {
+                                    }
                                 }
                             }
                         }
