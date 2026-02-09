@@ -20,6 +20,8 @@
   },
   "exceptions": {
     "notValidCode": "Il codice deve contenere solo lettere, numeri, trattini e trattini bassi.",
-    "notValidMatchingActivation": "La regola di abbinamento può essere modificata solo per un abbinamento inattivo."
+    "notValidMatchingActivation": "La regola di abbinamento può essere modificata solo per un abbinamento inattivo.",
+    "notValidMatching": "La corrispondenza non è valida",
+    "notValidMatchingRuleSet": "Il set di regole di corrispondenza non è valido"
   }
 }
