@@ -20,6 +20,8 @@
     "other": "Inne",
     "MasterData": "Dane podstawowe",
     "Taxonomy": "Taksonomia",
-    "ProductLifeCycle": "Cykl życia produktu"
+    "ProductLifeCycle": "Cykl życia produktu",
+    "Description": "Description",
+    "State": "Stan"
   }
 }
