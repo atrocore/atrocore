@@ -142,7 +142,7 @@
   "fields": {
     "fontSize": "Rozmiar czcionki",
     "type": "Typ",
-    "name": "Kod",
+    "name": "Code",
     "label": "Etykieta",
     "defaultDate": "Domyślny",
     "link": "Link",
