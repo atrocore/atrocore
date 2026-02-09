@@ -79,7 +79,8 @@
     "apiRequest": "Richiesta API",
     "style": "Stili",
     "incomingWebhook": "Webhook in arrivo",
-    "matchings": "Abbinamenti"
+    "matchings": "Abbinamenti",
+    "clusters": "Cluster"
   },
   "fields": {
     "isPersonalData": "I dati personali",
@@ -157,7 +158,8 @@
     "notificationProfiles": "Configuri i Profili di notifica e le Regole di notifica per semplificare efficacemente il processo di gestione degli avvisi, in modo che siano tempestivi e pertinenti.",
     "layoutProfiles": "Gestisce e personalizza diverse configurazioni di layout per l'interfaccia utente del sistema.",
     "apiRequest": "Utilizzi questa funzione per creare rapidamente strutture di dati complesse, come i feed di importazione o esportazione configurati.",
-    "style": "Creare, aggiornare e personalizzare nuovi stili per apportare modifiche ai CSS standard."
+    "style": "Creare, aggiornare e personalizzare nuovi stili per apportare modifiche ai CSS standard.",
+    "clusters": "Utilizza i cluster per raggruppare record simili all'interno della gestione dei dati master e abbinarli tra loro."
   },
   "logicalOperators": {
     "and": "E",
