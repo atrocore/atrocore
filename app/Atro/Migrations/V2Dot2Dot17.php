@@ -50,6 +50,7 @@ class V2Dot2Dot17 extends Base
 
                     if (!empty($content['hasAttribute'])) {
                         $entities[] = $scope;
+                        continue;
                     }
 
                     if (!empty($content['primaryEntityId']) && in_array($content['primaryEntityId'], $entities)) {
