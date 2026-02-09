@@ -15,7 +15,7 @@
     "countBytesInsteadOfCharacters": "Conta i byte invece dei caratteri",
     "pattern": "Modello Regex",
     "defaultUnit": "Unità predefinita",
-    "default": "Predefinito",
+    "default": "Valore predefinito",
     "defaultValueType": "Valore predefinito Tipo",
     "tooltip": "Tooltip",
     "tooltipText": "Testo del tooltip",
@@ -126,6 +126,7 @@
     "conditionalProperties": "Proprietà condizionali"
   },
   "exceptions": {
-    "nullValuesExist": "Alcuni record hanno valori nulli"
+    "nullValuesExist": "Alcuni record hanno valori nulli",
+    "cannotAddRequiredFieldWithExistingRecords": "Non può aggiungere un campo obbligatorio con record esistenti senza valore predefinito."
   }
 }
