@@ -5,11 +5,19 @@
     "masterEntity": "Stammdaten-Entität",
     "rejectedClusterItems": "Abgelehnte Cluster Items",
     "stagingItemCount": "Anzahl der Artikel bei der Inszenierung",
-    "masterItemCount": "Master Item Count"
+    "masterItemCount": "Master Item Count",
+    "state": "Bundesland/Kanton"
   },
   "actions": {
     "reject": "Ablehnen",
     "confirm": "Bestätigen Sie",
     "unreject": "Ablehnen"
+  },
+  "options": {
+    "state": {
+      "empty": "Leere Werte",
+      "review": "Review",
+      "merged": "Zusammengeführt"
+    }
   }
 }
