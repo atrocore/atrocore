@@ -1420,5 +1420,8 @@
   "insightsPanels": {
     "summary": "Podsumowanie",
     "accessManagement": "Zarządzanie dostępem"
+  },
+  "actions": {
+    "updateMasterRecord": "Aktualizacja rekordu głównego"
   }
 }
