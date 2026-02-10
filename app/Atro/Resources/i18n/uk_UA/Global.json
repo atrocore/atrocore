@@ -1420,5 +1420,8 @@
   "unit Thermodynamic Temperature": {
     "C": "C",
     "K": "K"
+  },
+  "actions": {
+    "updateMasterRecord": "Оновлення основного запису"
   }
 }
