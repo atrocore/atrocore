@@ -7,7 +7,7 @@
   },
   "options": {
     "dateTimeDefault": {
-      "": "Žádný",
+      "": "Žádná",
       "javascript: return this.dateTime.getNow(1);": "Nyní",
       "javascript: return this.dateTime.getNow(5);": "Nyní (5m)",
       "javascript: return this.dateTime.getNow(15);": "Nyní (15 m)",
