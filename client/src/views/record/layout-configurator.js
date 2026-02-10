@@ -74,42 +74,6 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
             };
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.dropdown) {
-                this.dropdown.destroy();
-            }
-
-            const button = this.$el.find('.dropdown-toggle')[0];
-            const dropdown = this.$el.find('.dropdown-menu')[0];
-
-            if (!button || !dropdown) {
-                return;
-            }
-
-            this.dropdown = new window.Dropdown(button, dropdown, {
-                placement: 'bottom-start',
-                onDropdownShow: dropdown => {
-                    dropdown.parentElement?.classList.add('open');
-                },
-                onDropdownHide: dropdown => {
-                    dropdown.parentElement?.classList.remove('open');
-                },
-                strategy: 'fixed',
-                offset: {
-                    mainAxis: 5
-                },
-                flip: {
-                    crossAxis: 'alignment',
-                    fallbackAxisSideDirection: 'start'
-                },
-                shift: {
-                    mainAxis: true
-                }
-            });
-        },
-
         showLayoutEditorModal() {
             let layoutProfileId = this.layoutData?.selectedProfileId || this.layoutData?.storedProfile?.id;
             let layoutProfileName = ''

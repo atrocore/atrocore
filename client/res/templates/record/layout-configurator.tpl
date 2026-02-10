@@ -1,5 +1,5 @@
 {{#if showLayoutEditor}}
-    <a class="dropdown-toggle btn-link {{ linkClass }}" style="cursor: pointer; position:relative;">
+    <a class="dropdown-toggle btn-link {{ linkClass }}" data-toggle="dropdown" style="cursor: pointer; position:relative;">
         <i class="ph ph-gear-six"></i> {{#if label}} <span>{{label}}</span> {{/if}}
     </a>
     <ul class="dropdown-menu {{#if alignRight}}pull-right{{/if}}" style="position:fixed;">

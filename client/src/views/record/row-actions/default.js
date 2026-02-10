@@ -54,7 +54,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
             dropdown.style.position = 'fixed';
 
-            this.dropdown = new window.Dropdown(button, dropdown, {
+            this.dropdown = window.Dropdown.create(button, dropdown, {
                 placement: 'bottom-end',
                 strategy: 'fixed',
                 onDropdownShow: dropdown => {
