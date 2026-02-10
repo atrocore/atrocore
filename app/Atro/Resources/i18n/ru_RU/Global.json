@@ -1420,5 +1420,8 @@
   "insightsPanels": {
     "accessManagement": "Управление доступом",
     "summary": "Резюме"
+  },
+  "actions": {
+    "updateMasterRecord": "Обновление основной записи"
   }
 }
