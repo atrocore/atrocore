@@ -1420,5 +1420,8 @@
   "insightsPanels": {
     "accessManagement": "Access Management",
     "summary": "Resumen"
+  },
+  "actions": {
+    "updateMasterRecord": "Actualizar registro maestro"
   }
 }
