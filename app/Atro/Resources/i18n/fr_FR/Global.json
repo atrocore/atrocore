@@ -1420,5 +1420,8 @@
     "small": "Petit",
     "medium": "Moyen",
     "large": "Large"
+  },
+  "actions": {
+    "updateMasterRecord": "Mise à jour de la fiche"
   }
 }
