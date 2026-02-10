@@ -8,7 +8,7 @@
     "payload": "Payload (užitečná data)",
     "scheduledJob": "Naplánovaná úloha",
     "message": "Zpráva",
-    "startedAt": "Začínáme v",
+    "startedAt": "Začato v",
     "endedAt": "Ukončeno v"
   },
   "labels": {
