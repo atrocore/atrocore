@@ -2,7 +2,8 @@
   "fields": {
     "masterEntity": "Hlavní subjekt",
     "mergingScript": "Mapovací skript",
-    "sourceEntity": "Zdrojová entita"
+    "sourceEntity": "Zdrojová entita",
+    "updateMasterAutomatically": "Automatická aktualizace předlohy"
   },
   "tooltips": {
     "mergingScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu."
