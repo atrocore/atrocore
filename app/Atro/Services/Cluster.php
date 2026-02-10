@@ -35,20 +35,18 @@ class Cluster extends Base
                 }
             }
 
-            $stagingItemCount = 0;
-            $masterItemCount = 0;
+            $sp = $this->getSelectParams([
+                'select' => ['state', 'stagingItemCount', 'masterItemCount'],
+            ]);
+            $sp['whereClause']['id'] = $entity->get('id');
+            $sp['noCache'] = true;
 
-            $clusterItems = $this->findLinkedEntities($entity->get('id'), 'clusterItems', ['select' => ['entityName'], 'collectionOnly' => true])['collection'];
-            foreach ($clusterItems as $clusterItem) {
-                if ($clusterItem->get('entityName') === $entity->get('masterEntity')) {
-                    $masterItemCount++;
-                } else {
-                    $stagingItemCount++;
-                }
+            $record = $this->getRepository()->findOne($sp);
+            if (!empty($record)) {
+                $entity->set('stagingItemCount', $record->get('stagingItemCount'));
+                $entity->set('masterItemCount', $record->get('masterItemCount'));
+                $entity->set('state', $record->get('state'));
             }
-
-            $entity->set('stagingItemCount', $stagingItemCount);
-            $entity->set('masterItemCount', $masterItemCount);
         }
     }
 
