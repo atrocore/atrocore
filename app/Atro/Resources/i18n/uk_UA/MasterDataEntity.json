@@ -2,7 +2,8 @@
   "fields": {
     "masterEntity": "Мастер",
     "mergingScript": "Скрипт трансформації",
-    "sourceEntity": "Джерело"
+    "sourceEntity": "Джерело",
+    "updateMasterAutomatically": "Автоматично оновлювати майстер"
   },
   "tooltips": {
     "mergingScript": "Налаштуйте спосіб перетворення, уніфікації та зіставлення вихідних даних з мастер-записом."
