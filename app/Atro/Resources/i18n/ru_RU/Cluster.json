@@ -5,11 +5,19 @@
     "masterEntity": "Мастер сущность",
     "rejectedClusterItems": "Отклоненные элементы кластера",
     "stagingItemCount": "Счетчик предметов постановки",
-    "masterItemCount": "Мастер подсчета предметов"
+    "masterItemCount": "Мастер подсчета предметов",
+    "state": "Регион"
   },
   "actions": {
     "reject": "Отклонить",
     "confirm": "Подтвердите",
     "unreject": "Отклонить"
+  },
+  "options": {
+    "state": {
+      "empty": "Пустые значения",
+      "review": "Проверка",
+      "merged": "Объединено"
+    }
   }
 }
