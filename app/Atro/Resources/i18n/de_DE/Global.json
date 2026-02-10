@@ -1420,5 +1420,8 @@
     "uiRecordFromName": "Der Name der Entität, von der aus Sie die aktuelle Entität öffnen.",
     "uiRecordFrom": "Datensatz-Array der Entität, von der aus Sie die aktuelle Entität öffnen.",
     "config": "Konfigurationsobjekt des Systems"
+  },
+  "actions": {
+    "updateMasterRecord": "Stammsatz aktualisieren"
   }
 }
