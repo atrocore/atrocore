@@ -21,6 +21,10 @@ class Base extends AbstractRecordController
 {
     public function actionUpdateMasterRecord($params, $data, $request): bool
     {
+        if (empty($this->getMetadata()->get("scopes.{$this->name}.primaryEntityId"))) {
+            throw new NotFound();
+        }
+
         if (!$request->isPost() || !property_exists($data, 'id')) {
             throw new BadRequest();
         }
