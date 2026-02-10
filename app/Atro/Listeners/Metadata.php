@@ -2536,6 +2536,8 @@ class Metadata extends AbstractListener
                 "extensibleEnumId" => "derivative_status"
             ];
 
+            $linkName = 'derived' . ucfirst($scope) . 'Records';
+
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['goldenRecord'] = [
                 'type'     => 'link',
@@ -2543,11 +2545,9 @@ class Metadata extends AbstractListener
             ];
             $data['entityDefs'][$scope]['links']['goldenRecord'] = [
                 'type'    => 'belongsTo',
-                'foreign' => 'derivedRecords',
+                'foreign' => $linkName,
                 'entity'  => $primaryEntity
             ];
-
-            $linkName = 'derived' . ucfirst($scope) . 'Records';
 
             $data['entityDefs'][$primaryEntity]['fields'][$linkName] = [
                 'type'   => 'linkMultiple',

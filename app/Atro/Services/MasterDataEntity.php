@@ -20,6 +20,7 @@ use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class MasterDataEntity extends Base
 {
@@ -59,7 +60,7 @@ class MasterDataEntity extends Base
         $templateData = [
             'staging'  => $staging,
             'master'   => $master,
-            'stagings' => $master->get('derivedRecords')
+            'stagings' => $master->get("derived{$staging->getEntityName()}Records")
         ];
 
         $res = $this->getTwig()->renderTemplate($mergingScript, $templateData);
@@ -70,7 +71,7 @@ class MasterDataEntity extends Base
         }
 
         try {
-            $master = $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), $input);
+            $master = $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode($res));
         } catch (NotModified) {
             // ignore
         }

@@ -64,7 +64,7 @@
       "type": "text",
       "view": "views/fields/script",
       "language": "json",
-      "default": "{# { \"name\": \"{{ sourceEntity.name }}\" } #}",
+      "default": "{# { \"name\": \"{{ staging.name }}\" } #}",
       "editorActions": {
         "addFields": {
           "entityNameField": "masterEntity"
@@ -74,7 +74,9 @@
         }
       },
       "twigVariables": [
-        "sourceEntity"
+        "staging",
+        "master",
+        "stagings"
       ],
       "customizable": false,
       "layoutRemoveDisabled": true,
