@@ -255,10 +255,10 @@ class ClusterItem extends Base
         }
 
         $templateData = [
-            'staging'               => $stagingEntity,
+            'stagingRecord'         => $stagingEntity,
             'confirmedClusterItems' => $confirmedClusterItems,
             'cluster'               => $cluster,
-            'master'                => $goldenRecord,
+            'masterRecord'          => $goldenRecord,
         ];
         $res = $this->getEntityManager()->getContainer()->get('twig')->renderTemplate($mergingScript, $templateData);
         $input = json_decode($res);

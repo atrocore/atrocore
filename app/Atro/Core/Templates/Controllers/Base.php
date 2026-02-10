@@ -30,6 +30,8 @@ class Base extends AbstractRecordController
             throw new NotFound();
         }
 
-        return $this->getServiceFactory()->create('MasterDataEntity')->updateMasterRecord($staging);
+        $this->getServiceFactory()->create('MasterDataEntity')->updateMasterRecord($staging);
+
+        return true;
     }
 }

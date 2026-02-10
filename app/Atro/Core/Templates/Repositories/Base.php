@@ -99,7 +99,7 @@ class Base extends RDB
         }
 
         try {
-            $this->getInjection('serviceFactory')->create('MasterDataEntity')->updateMasterRecordByStagingEntity($entity);
+            $this->getInjection('serviceFactory')->create('MasterDataEntity')->updateMasterRecord($entity);
         } catch (Forbidden|BadRequest $e) {
             // ignore
         }
