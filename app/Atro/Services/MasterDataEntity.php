@@ -15,41 +15,26 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 
 class MasterDataEntity extends Base
 {
-    public function updateMasterRecordByStagingEntity(string $stagingEntityName, string $stagingEntityId): bool
+    public function updateMasterRecord(Entity $staging, ?Entity $master = null): Entity
     {
-        $staging = $this->getEntityManager()->getRepository($stagingEntityName)->get($stagingEntityId);
-        if (empty($staging)) {
-            throw new NotFound();
+        if ($master === null) {
+            $master = $staging->get('goldenRecord');
         }
 
-        $master = $staging->get('goldenRecord');
-        if (empty($master)) {
+        if (empty($master) || !$this->getAcl()->check($master->getEntityName(), 'edit')) {
             throw new Forbidden();
         }
 
-        $this->updateMasterRecord($staging, $master);
-
-        return true;
-    }
-
-    public function updateMasterRecord(Entity $staging, Entity $master): Entity
-    {
-        if (!$this->getAcl()->check($master->getEntityName(), 'edit')) {
-            throw new Forbidden();
-        }
-
-        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $staging->getEntityType());
+        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $staging->getEntityName());
         if (empty($masterDataEntity)) {
-            throw new BadRequest("MasterDataEntity with entityType {$staging->getEntityType()} not found.");
+            throw new BadRequest("MasterDataEntity with entityType {$staging->getEntityName()} not found.");
         }
 
         $mergingScript = $masterDataEntity->get('mergingScript');

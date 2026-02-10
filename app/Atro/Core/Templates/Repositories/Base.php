@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\PseudoTransactionManager;
 use Atro\Core\Utils\Util;
@@ -73,6 +75,33 @@ class Base extends RDB
                     $entity->set('attributesDefs', $attributesDefs);
                 }
             }
+        }
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->has('modifiedAt') && $entity->isAttributeChanged('modifiedAt')) {
+            $this->updateMasterRecord($entity);
+        }
+    }
+
+    protected function updateMasterRecord(Entity $entity): void
+    {
+        if (!$this->getMetadata()->get("scopes.{$entity->getEntityName()}.primaryEntityId")) {
+            return;
+        }
+
+        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $entity->getEntityName());
+        if (empty($masterDataEntity) && empty($masterDataEntity->get('updateMasterAutomatically'))) {
+            return;
+        }
+
+        try {
+            $this->getInjection('serviceFactory')->create('MasterDataEntity')->updateMasterRecordByStagingEntity($entity);
+        } catch (Forbidden|BadRequest $e) {
+            // ignore
         }
     }
 
@@ -179,6 +208,7 @@ class Base extends RDB
         $this->addDependency(AttributeFieldConverter::class);
         $this->addDependency('language');
         $this->addDependency('pseudoTransactionManager');
+        $this->addDependency('serviceFactory');
     }
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter
