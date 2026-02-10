@@ -2,7 +2,8 @@
   "fields": {
     "masterEntity": "Entità master",
     "mergingScript": "Script di mappatura",
-    "sourceEntity": "Entità sorgente"
+    "sourceEntity": "Entità sorgente",
+    "updateMasterAutomatically": "Aggiorna automaticamente il Master"
   },
   "tooltips": {
     "mergingScript": "Configura il modo in cui i dati di origine vengono trasformati, unificati e mappati nel record master."
