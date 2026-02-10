@@ -2515,8 +2515,18 @@ class Metadata extends AbstractListener
 
             // clone client defs
             $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
-                'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null
+                'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null,
             ]);
+
+            // add additional actions
+            $data['clientDefs'][$scope]['detailActions']['updateMasterRecord'] = [
+                "url"       => "$scope/action/updateMasterRecord",
+                "sortOrder" => 250
+            ];
+            $data['clientDefs'][$scope]['listActions']['updateMasterRecord'] = [
+                "url"       => "$scope/action/updateMasterRecord",
+                "sortOrder" => 250
+            ];
 
             // add status field
             $data['entityDefs'][$scope]['fields']['derivativeStatus'] = [
@@ -2526,6 +2536,8 @@ class Metadata extends AbstractListener
                 "extensibleEnumId" => "derivative_status"
             ];
 
+            $linkName = 'derived' . ucfirst($scope) . 'Records';
+
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['goldenRecord'] = [
                 'type'     => 'link',
@@ -2533,11 +2545,9 @@ class Metadata extends AbstractListener
             ];
             $data['entityDefs'][$scope]['links']['goldenRecord'] = [
                 'type'    => 'belongsTo',
-                'foreign' => 'derivedRecords',
+                'foreign' => $linkName,
                 'entity'  => $primaryEntity
             ];
-
-            $linkName = 'derived' . ucfirst($scope) . 'Records';
 
             $data['entityDefs'][$primaryEntity]['fields'][$linkName] = [
                 'type'   => 'linkMultiple',

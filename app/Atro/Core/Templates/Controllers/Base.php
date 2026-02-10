@@ -14,7 +14,22 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Controllers;
 
 use Atro\Controllers\AbstractRecordController;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 
 class Base extends AbstractRecordController
 {
+    public function actionUpdateMasterRecord($params, $data, $request): bool
+    {
+        if (!$request->isPost() || !property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+
+        $staging = $this->getEntityManager()->getRepository($this->name)->get((string)$data->id);
+        if (empty($staging)) {
+            throw new NotFound();
+        }
+
+        return $this->getServiceFactory()->create('MasterDataEntity')->updateMasterRecord($staging);
+    }
 }

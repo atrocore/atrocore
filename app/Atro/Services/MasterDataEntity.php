@@ -13,11 +13,57 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\Twig\Twig;
 use Espo\ORM\Entity;
 
 class MasterDataEntity extends Base
 {
+    public function updateMasterRecord(Entity $staging, ?Entity $master = null): Entity
+    {
+        if ($master === null) {
+            $master = $staging->get('goldenRecord');
+        }
+
+        if (empty($master) || !$this->getAcl()->check($master->getEntityName(), 'edit')) {
+            throw new Forbidden();
+        }
+
+        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $staging->getEntityName());
+        if (empty($masterDataEntity)) {
+            throw new BadRequest("MasterDataEntity with entityType {$staging->getEntityName()} not found.");
+        }
+
+        $mergingScript = $masterDataEntity->get('mergingScript');
+        if (empty($mergingScript)) {
+            throw new BadRequest($this->translate('mergingScriptIsMissing', 'exceptions', 'MasterDataEntity'));
+        }
+
+        $templateData = [
+            'staging'  => $staging,
+            'master'   => $master,
+            'stagings' => $master->get("derived{$staging->getEntityName()}Records")
+        ];
+
+        $res = $this->getTwig()->renderTemplate($mergingScript, $templateData);
+        $input = json_decode($res, true);
+
+        if (!is_array($input) || empty($input)) {
+            throw new BadRequest(sprintf($this->translate('mergingScriptIsNotValid', 'exceptions', 'MasterDataEntity'), $res));
+        }
+
+        try {
+            $master = $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode($res));
+        } catch (NotModified) {
+            // ignore
+        }
+
+        return $master;
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -31,5 +77,22 @@ class MasterDataEntity extends Base
         $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->id}.primaryEntityId"));
 
         parent::checkProtectedFields($entity, $data);
+    }
+
+    protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
+    {
+        return $this->getInjection('language')->translate($label, $category, $scope);
+    }
+
+    protected function getTwig(): Twig
+    {
+        return $this->getInjection('twig');
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('twig');
     }
 }

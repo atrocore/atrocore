@@ -165,6 +165,9 @@
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
+  "actions": {
+    "updateMasterRecord": "Update Master Record"
+  },
   "labels": {
     "matchings": "Matchings",
     "addFields": "Add Fields",
