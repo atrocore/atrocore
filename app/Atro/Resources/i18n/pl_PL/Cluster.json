@@ -5,11 +5,18 @@
     "masterEntity": "Podmiot główny",
     "rejectedClusterItems": "Odrzucone elementy klastra",
     "stagingItemCount": "Liczba elementów etapu",
-    "masterItemCount": "Główna liczba pozycji"
+    "masterItemCount": "Główna liczba pozycji",
+    "state": "State"
   },
   "actions": {
     "reject": "Proszę odrzucić",
     "confirm": "Proszę potwierdzić",
     "unreject": "Odrzucić"
+  },
+  "options": {
+    "state": {
+      "empty": "Puste",
+      "merged": "Scalony"
+    }
   }
 }
