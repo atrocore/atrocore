@@ -15,7 +15,10 @@
   },
   "options": {
     "state": {
-      "merged": "Fusionado"
+      "merged": "Fusionado",
+      "empty": "Vacío",
+      "review": "Revise",
+      "invalid": "No válido"
     }
   }
 }
