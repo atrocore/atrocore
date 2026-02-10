@@ -2515,8 +2515,18 @@ class Metadata extends AbstractListener
 
             // clone client defs
             $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
-                'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null
+                'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null,
             ]);
+
+            // add additional actions
+            $data['clientDefs'][$scope]['detailActions']['updateMasterRecord'] = [
+                "url"       => "$scope/action/updateMasterRecord",
+                "sortOrder" => 250
+            ];
+            $data['clientDefs'][$scope]['listActions']['updateMasterRecord'] = [
+                "url"       => "$scope/action/updateMasterRecord",
+                "sortOrder" => 250
+            ];
 
             // add status field
             $data['entityDefs'][$scope]['fields']['derivativeStatus'] = [
