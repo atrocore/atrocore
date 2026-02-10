@@ -48,6 +48,10 @@ class Cluster extends Base
             if (in_array('masterItemCount', $this->selectParameters['select'])) {
                 $result[$callbackParam][] = [$this, 'masterItemCountCallback'];
             }
+
+            if (in_array('state', $this->selectParameters['select'])) {
+                $result['subQueryCallbacks'][] = [$this, 'stateCallback'];
+            }
         }
     }
 
@@ -222,142 +226,124 @@ class Cluster extends Base
         ];
     }
 
-    public function boolFilterOnlyEmpty(&$result)
+    public function stateCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
-        $result['callbacks'][] = [$this, 'onlyEmptyCallback'];
-    }
-
-    public function boolFilterOnlyInvalid(&$result)
-    {
-        $result['callbacks'][] = [$this, 'onlyInvalidCallback'];
-    }
-
-    public function boolFilterOnlyMerged(&$result)
-    {
-        $result['callbacks'][] = [$this, 'onlyMergedCallback'];;
-    }
-
-    public function boolFilterOnlyReview(&$result)
-    {
-        $result['callbacks'][] = [$this, 'onlyReviewCallback'];
-    }
-
-    public function onlyEmptyCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
-    {
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-
-        if (empty($this->applyClusterItemFilter($qb, $tableAlias))) {
+        if (!empty($params['aggregation'])) {
             return;
         }
 
-        $qb->having("COUNT(ci.id) = 0");
+        $column = $mapper->getQueryConverter()->fieldToAlias('state');
+        $stateQueryData = $this->getStateQueryData($mapper, true);
+
+        $qb->addSelect("({$stateQueryData['sql']})  AS $column");
+
+        foreach ($stateQueryData['parameters'] as $pName => $pValue) {
+            $qb->setParameter($pName, $pValue, $mapper::getParameterType($pValue));
+        }
     }
 
-    public function onlyInvalidCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    private function getStateQueryData(Mapper $mapper, bool $inSubQueryCallback = false): array
     {
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-
-        if (empty($this->applyClusterItemFilter($qb, $tableAlias))) {
-            $qb->where("$tableAlias.id is null");
-            return;
-        }
-
-        $qb->having("COUNT(ci.id) > 0 AND (COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity THEN 1 END) = 0 OR " .
-            "COUNT(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN 1 END) > 1)");
-    }
-
-    public function onlyMergedCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
-    {
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-
-        $goldenRecordCase = $this->applyClusterItemFilter($qb, $tableAlias);
-
-        if (empty($goldenRecordCase)) {
-            $qb->where("$tableAlias.id is null");
-            return;
-        }
-
-        $qb->andWhere("$tableAlias.golden_record_id IS NOT NULL")
-            ->having(  // Only one master item
-                "COUNT(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN 1 END) = 1 " .
-                // Master entity_id matches golden_record_id
-                "AND MAX(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN ci.entity_id END) = $tableAlias.golden_record_id " .
-                // Has staging items
-                "AND COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity THEN 1 END) > 0 " .
-                // All staging items have their entity golden_record_id = cluster golden_record_id
-                "AND COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity AND ({$goldenRecordCase}) <> $tableAlias.golden_record_id THEN 1 END) = 0"
-            );
-    }
-
-    public function onlyReviewCallback(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
-    {
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-
-        $goldenRecordCase = $this->applyClusterItemFilter($qb, $tableAlias);
-
-        if (empty($goldenRecordCase)) {
-            $qb->where("$tableAlias.id is null");
-            return;
-        }
-
-        $qb->having(
-        // Has less than 1 master item
-            "COUNT(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN 1 END) <= 1 " .
-            // Has staging items
-            "AND COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity THEN 1 END) > 0 " .
-            // NOT merged
-            "AND (" .
-            // No master exists
-            "COUNT(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN 1 END) = 0 " .
-            // Or master exists but entity_id doesn't match cluster golden_record_id
-            "OR MAX(CASE WHEN ci.entity_name = $tableAlias.master_entity THEN ci.entity_id END) <> $tableAlias.golden_record_id " .
-            // Or at least one staging record doesn't match
-            "OR COUNT(CASE WHEN ci.entity_name <> $tableAlias.master_entity AND ({$goldenRecordCase}) <> $tableAlias.golden_record_id THEN 1 END) > 0" .
-            ")"
-        );
-    }
-
-    public function applyClusterItemFilter(QueryBuilder $qb, string $tableAlias): ?string
-    {
-        if (!empty($qb->_ciFilterApplied)) {
-            // we should return an empty result if multiple filters are applied
-            $qb->where("$tableAlias.id is null");
-            return null;
-        }
-        $qb->_ciFilterApplied = true;
+        $mtAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
         $entities = $this->getSelectManagerFactory()->create('ClusterItem')->getEntities();
 
         if (empty($entities)) {
-            return null;
+            return [
+                'sql'        => "'empty'",
+                'parameters' => []
+            ];
         }
 
-        $qb->groupBy("$tableAlias.id");
+        $sp = $this->getSelectManagerFactory()->create('ClusterItem')->getSelectParams([]);
+        $sp['skipBelongsToJoins'] = true;
 
+        $stateQb = $mapper->createSelectQueryBuilder($this->getEntityManager()->getEntity('ClusterItem'), $sp);
         $goldenRecordCaseParts = [];
-        $andWhereParts = [];
 
         foreach ($entities as $k => $entityName) {
             $tableName = $this->getEntityManager()->getConnection()->quoteIdentifier(Util::toUnderScore($entityName));
 
-            $andWhereParts[] = "(ci.entity_name=:entityName{$k} AND EXISTS (SELECT 1 FROM $tableName WHERE id = ci.entity_id AND deleted = :false))";
+            if (!empty($this->getMetadata()->get(['scopes', $entityName, 'primaryEntityId']))) {
+                $goldenRecordCaseParts[] = sprintf(
+                    "WHEN %s.entity_name = :entityName%d THEN " .
+                    "(SELECT golden_record_id FROM %s WHERE id = %s.entity_id)",
+                    $mtAlias,
+                    $k,
+                    $tableName,
+                    $mtAlias
+                );
+            }
 
-            $goldenRecordCaseParts[] = sprintf(
-                "WHEN %s.entity_name = :entityName%d THEN " .
-                "(SELECT golden_record_id FROM %s WHERE id = %s.entity_id)",
-                'ci',
-                $k,
-                $tableName,
-                'ci'
-            );
-
-            $qb->setParameter("entityName{$k}", $entityName);
+            $stateQb->setParameter("entityName{$k}", $entityName);
         }
 
-        $qb->setParameter("false", false, ParameterType::BOOLEAN);
+        $goldenRecordCase = 'CASE ' . implode(' ', $goldenRecordCaseParts) . ' ELSE null END';
 
-        $qb->leftJoin($tableAlias, 'cluster_item', 'ci', "$tableAlias.id = ci.cluster_id and ci.deleted = :false and (" . implode(' OR ', $andWhereParts) . ")");
+        $masterEntityColumn = 'master_entity';
+        $goldenRecordColumn = 'golden_record_id';
+        if ($inSubQueryCallback){
+            $masterEntityColumn = 'atro_master_entity';
+            $goldenRecordColumn = 'atro_golden_record_id';
+        }
 
-        return 'CASE ' . implode(' ', $goldenRecordCaseParts) . ' ELSE null END';
+        $stateQb->select("CASE " .
+            // Empty state
+            "WHEN COUNT($mtAlias.id) = 0 THEN 'empty' " .
+
+            // Invalid state
+            "WHEN COUNT($mtAlias.id) > 0 AND (COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn THEN 1 END) = 0 OR " .
+            "COUNT(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN 1 END) > 1) THEN 'invalid' " .
+
+            // Merged state
+            "WHEN mt_alias.$goldenRecordColumn IS NOT NULL AND " .
+            "COUNT(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN 1 END) = 1 AND " .
+            "MAX(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN $mtAlias.entity_id END) = mt_alias.$goldenRecordColumn AND " .
+            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn THEN 1 END) > 0 AND " .
+            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn AND ({$goldenRecordCase}) <> mt_alias.$goldenRecordColumn THEN 1 END) = 0 THEN 'merged' " .
+
+            // Review state (default for everything else)
+            "ELSE 'review' END")
+            ->andwhere("$mtAlias.cluster_id = mt_alias.id")
+            ->resetqueryparts(['orderBy', 'limit', 'offset']);
+
+        return [
+            'sql'        => str_replace([$mtAlias, 'mt_alias'], [ 'sbq_' . IdGenerator::unsortableId(), $mtAlias], $stateQb->getSQL()),
+            'parameters' => $stateQb->getParameters(),
+        ];
     }
+
+    public function getWherePartForState(array $item, array $result): array
+    {
+        $stateQueryData = $this->getStateQueryData($this->getEntityManager()->getRepository('ClusterItem')->getMapper() );
+
+        if ($item['type'] == 'isNull') {
+            return [
+                'id' => null
+            ];
+        } else if ($item['type'] == 'isNotNull') {
+            return [];
+        }
+
+        $sql = $stateQueryData['sql'];
+        $paramName = 'state_' . IdGenerator::unsortableId();
+        $stateQueryData['parameters'][$paramName] = $item['value'];
+
+
+        if ($item['type'] == 'in') {
+            $innerSql = "({$sql}) IN (:$paramName)";
+        } else if ($item['type'] == 'notIn') {
+            $innerSql = "({$sql}) NOT IN (:$paramName)";
+        } else {
+            throw new \Exception("Invalid filter type '${item['type']}' for field 'state'");
+        }
+
+        return [
+            'innerSql' => [
+                'sql'        => $innerSql,
+                'parameters' => $stateQueryData['parameters'],
+            ]
+        ];
+    }
+
 }
