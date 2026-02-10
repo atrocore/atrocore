@@ -5,11 +5,18 @@
     "masterEntity": "Hlavní subjekt",
     "rejectedClusterItems": "Odmítnuté položky klastru",
     "stagingItemCount": "Počet položek etapizace",
-    "masterItemCount": "Hlavní počet položek"
+    "masterItemCount": "Hlavní počet položek",
+    "state": "Stát"
   },
   "actions": {
     "reject": "Odmítnout",
     "confirm": "Potvrďte",
     "unreject": "Odmítnout"
+  },
+  "options": {
+    "state": {
+      "empty": "Prázdný",
+      "merged": "Sloučené"
+    }
   }
 }
