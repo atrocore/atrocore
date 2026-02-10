@@ -14,26 +14,26 @@
     "displayField": "Zobrazovací pole",
     "focusField": "Pole",
     "changeFields": "Pole",
-    "targetEntity": "Cílový subjekt",
+    "targetEntity": "Cílová entita",
     "mode": "Režim",
     "emailScript": "Skript",
     "showEmailPreview": "Náhled před odesláním",
     "emailTemplate": "Šablona e-mailu",
-    "emailTo": "Příjemce emailu",
-    "emailCc": "Kopie",
-    "emailBcc": "E-mail BCC",
-    "hideTextLabel": "Skrytí textového popisku na tlačítku",
+    "emailTo": "Příjemce e-mailu",
+    "emailCc": "Kopie (CC)",
+    "emailBcc": "Skrytá kopie (BCC)",
+    "hideTextLabel": "Skrýt textový popis tlačítka",
     "updateScript": "Skript",
     "updateFields": "Aktualizace polí",
     "applyToPreselectedRecords": "Použít na předem vybrané záznamy",
     "updateType": "Typ aktualizace",
-    "searchEntity": "Vyhledávací subjekt",
-    "executions": "Exekuce"
+    "searchEntity": "Vyhledávání entit",
+    "executions": "Provedení"
   },
   "labels": {
     "execute": "Provést",
     "Parameters": "Parametry",
-    "fieldsPanel": "Aktualizace"
+    "fieldsPanel": "Aktualizovat"
   },
   "actions": {
     "allLogs": "Všechny protokoly"
@@ -49,20 +49,20 @@
       "entity": "Tlačítko akce Entita",
       "record": "Tlačítko akce Záznam",
       "field": "Akční tlačítko pole",
-      "onFieldFocus": "Zaměření v terénu",
-      "onFieldChange": "Změna pole",
+      "onFieldFocus": "Při zaměření na pole",
+      "onFieldChange": "Při změně pole",
       "onRecordLoad": "Při vytváření / aktualizaci záznamu"
     },
     "display": {
       "dropdown": "Rozbalovací nabídka",
-      "single": "Jednotlivé stránky"
+      "single": "Jednoduché"
     },
     "type": {
       "set": "Akční sada",
       "webhook": "Webhook",
       "customCode": "Vlastní kód",
       "email": "Odeslat e-mail",
-      "update": "Aktualizace",
+      "update": "Aktualizovat",
       "create": "Vytvořit",
       "delete": "Odstranit",
       "createOrUpdate": "Vytvořit nebo aktualizovat"
@@ -77,9 +77,9 @@
     }
   },
   "tooltips": {
-    "inBackground": "Akce se provede na pozadí bez přímé zprávy o úspěchu/chybě. Použijte ji, pokud provedení akce trvá déle než 30 sekund.",
+    "inBackground": "Akce bude provedena na pozadí bez přímé zprávy o úspěchu/chybě. Použijte to, pokud provedení akce bude trvat déle než 30 sekund.",
     "usage": "Použití předepisuje umístění akce. Akce záznamu vyžaduje, aby byly předem vybrány záznamy, kterých se akce týká.",
-    "executeAs": "Určete uživatele, kterého systém použije k provedení akce."
+    "executeAs": "Určete uživatele, kterého systém použije k provedení akce"
   },
   "exceptions": {
     "forEditModeOnly": "Akce \"%s\" je k dispozici pouze v režimu úprav a nelze ji zde použít."
