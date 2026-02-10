@@ -1420,5 +1420,8 @@
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "Sta per sostituire uno o più valori con un valore vuoto. Ne è sicuro?"
+  },
+  "actions": {
+    "updateMasterRecord": "Aggiornare il record master"
   }
 }
