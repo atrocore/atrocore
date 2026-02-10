@@ -3,7 +3,7 @@
     "navigationManuBackgroundColor": "Pozadí navigační nabídky",
     "navigationMenuFontColor": "Barva písma navigace",
     "linkFontColor": "Barva odkazu",
-    "customStylesheetPath": "Cesta k souboru SSS",
+    "customStylesheetPath": "Cesta k souboru CSS",
     "customStylesheet": "CSS",
     "primaryColor": "Základní barva",
     "secondaryColor": "Sekundární barva",
@@ -23,7 +23,7 @@
     "actionIconColor": "Barva ikony akce",
     "navigationIconColor": "Barva navigační ikony",
     "statusIconColor": "Barva ikony stavu",
-    "customHeadCode": "Kód hlavy",
+    "customHeadCode": "Kód v hlavičce",
     "highlightingColorForRequired": "Zvýraznění barvy pro požadovaná data",
     "toolbarBackgroundColor": "Barva pozadí panelu nástrojů",
     "toolbarFontColor": "Barva písma panelu nástrojů"
