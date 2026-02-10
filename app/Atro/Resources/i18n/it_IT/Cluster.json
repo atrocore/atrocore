@@ -7,12 +7,6 @@
     "stagingItemCount": "Conteggio degli articoli in fase di allestimento",
     "masterItemCount": "Conteggio articoli master"
   },
-  "boolFilters": {
-    "onlyReview": "Solo recensione",
-    "onlyEmpty": "Solo vuoto",
-    "onlyMerged": "Solo uniti",
-    "onlyInvalid": "Solo Invalido"
-  },
   "actions": {
     "reject": "Rifiuta",
     "confirm": "Confermare",

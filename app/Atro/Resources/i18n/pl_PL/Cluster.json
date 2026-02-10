@@ -7,12 +7,6 @@
     "stagingItemCount": "Liczba elementów etapu",
     "masterItemCount": "Główna liczba pozycji"
   },
-  "boolFilters": {
-    "onlyReview": "Tylko recenzja",
-    "onlyEmpty": "Tylko puste",
-    "onlyMerged": "Tylko połączone",
-    "onlyInvalid": "Tylko nieważne"
-  },
   "actions": {
     "reject": "Proszę odrzucić",
     "confirm": "Proszę potwierdzić",

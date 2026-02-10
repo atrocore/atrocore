@@ -7,12 +7,6 @@
     "stagingItemCount": "Nombre d'articles de mise à disposition",
     "masterItemCount": "Nombre d'articles de référence"
   },
-  "boolFilters": {
-    "onlyReview": "Seule la révision",
-    "onlyEmpty": "Seulement vide",
-    "onlyMerged": "Uniquement fusionné",
-    "onlyInvalid": "Seulement Invalide"
-  },
   "actions": {
     "reject": "Rejeter",
     "confirm": "Confirmer",
