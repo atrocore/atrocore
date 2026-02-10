@@ -4,11 +4,11 @@
     "action": "Akce",
     "createdAt": "Datum",
     "controllerName": "Název ovladače",
-    "controllerAction": "Akce řídicí jednotky",
+    "controllerAction": "Akce kontroleru",
     "authToken": "Auth Token",
     "ipAddress": "IP adresa",
     "authLogRecord": "Záznam protokolu ověření",
-    "target": "Cílová stránka",
+    "target": "Cíl",
     "targetName": "Název cíle",
     "targetId": "ID cíle",
     "data": "Data"
