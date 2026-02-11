@@ -13196,7 +13196,7 @@ table.table {
 .modal-footer {
     padding-top: 10px;
     padding-bottom: 10px;
-    z-index: 100;
+    z-index: 101;
 }
 
 @media (min-width: 768px) {
@@ -18439,6 +18439,17 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .modal-footer .btn-group .btn:not(:last-child) {
     margin-right: 10px;
+}
+
+.modal-footer #compare-button-container button:first-child{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.modal-footer #compare-button-container button:last-child{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: 0;
 }
 
 .modal-dialog .main-content .modal-footer {

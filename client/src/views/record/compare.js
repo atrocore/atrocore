@@ -80,12 +80,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.merging = this.options.merging || this.merging;
             this.renderedPanels = [];
             this.hideButtonPanel = false;
-            this.selectedFilters = this.selectedFilters || this.getStorage().get('compareFilters', this.scope) || {};
             this.selectionModel = this.options.selectionModel || this.selectionModel;
             this.collection = this.options.collection;
             this.models = this.options.models || this.models;
             this.model = this.getModels().length ? this.getModels()[0] : null;
             this.scope = this.name = this.options.scope || this.model?.name;
+            this.selectedFilters = this.selectedFilters || this.getStorage().get('compareFieldFilters', this.scope) || [];
+
 
             if (typeof this.options.inlineEditDisabled === 'boolean') {
                 this.inlineEditDisabled = this.options.inlineEditDisabled;
@@ -117,9 +118,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.wait(false);
             });
 
+            this.listenTo(this, 'switchToCompare', (dialog) => {
+                this.setCompareMode();
+            });
+
+            this.listenTo(this, 'switchToMerge', (dialog) => {
+                this.setMergeMode();
+            });
+
             this.listenTo(this, 'cancel', (dialog) => {
                 if (this.merging) {
-                    this.cancelMerging();
+                    this.setCompareMode();
                     return;
                 }
                 dialog.close();
@@ -137,11 +146,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.listenTo(this, 'open-filter', () => {
                 this.openOverviewFilter();
             });
-
-
         },
 
-        cancelMerging() {
+        setCompareMode() {
             if (this.merging) {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 this.merging = false;
@@ -157,9 +164,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }
         },
 
-        applyMerge(doneCallback) {
-            let relationshipsPanels = this.getView('relationshipsPanels');
+        setMergeMode() {
             if (!this.merging) {
+                let relationshipsPanels = this.getView('relationshipsPanels');
                 this.notify('Loading...')
                 this.merging = true;
                 if (relationshipsPanels) {
@@ -175,6 +182,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 })
 
                 this.$el.find('div.compare-records').attr('data-mode', 'merge')
+            }
+        },
+
+        applyMerge(doneCallback) {
+            let relationshipsPanels = this.getView('relationshipsPanels');
+            if (!this.merging) {
                 return;
             }
 
@@ -192,7 +205,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                attributes = {...attributes, ...fieldsPanels.fetch()};
+                attributes = { ...attributes, ...fieldsPanels.fetch() };
             }
 
             $.each(attributes, (name, value) => {
@@ -716,7 +729,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.notify(false)
                     })
                 }, this);
-                model.fetch({main: true});
+                model.fetch({ main: true });
             });
         },
 
@@ -753,10 +766,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         isAllowFieldUsingFilter(field, fieldDef, equalValueForModels) {
-
-            const fieldFilter = this.selectedFilters['fieldFilter'] || ['allValues'];
-            const languageFilter = this.selectedFilters['languageFilter'] || ['allLanguages'];
-
             let fields = this.getFieldManager().getActualAttributeList(this.model.getFieldType(field), field);
             let fieldValues = fields.map(field => this.model.get(field));
             if (fieldDef['unitField']) {
@@ -767,45 +776,24 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }
             let hide = false;
 
-            if (!fieldFilter.includes('allValues')) {
-                // hide filled
-                if (!hide && fieldFilter.includes('filled')) {
-                    hide = fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels;
-                }
-
-                // hide empty
-                if (!hide && fieldFilter.includes('empty')) {
-                    hide = !(fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels);
-                }
-
-                // hide optional
-                if (!hide && fieldFilter.includes('optional')) {
-                    hide = this.model.getFieldParam(field, 'required')
-                }
-
-                // hide required
-                if (!hide && fieldFilter.includes('required')) {
-                    hide = !this.model.getFieldParam(field, 'required');
-                }
+            // hide filled
+            if (!hide && this.selectedFilters.includes('filled')) {
+                hide = fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels;
             }
 
-            if (!languageFilter.includes('allLanguages')) {
-                // for languages
-                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                    let fieldLanguage = this.model.getFieldParam(field, 'multilangLocale');
+            // hide empty
+            if (!hide && this.selectedFilters.includes('empty')) {
+                hide = !(fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels);
+            }
 
-                    if (!languageFilter.includes(fieldLanguage ?? 'main')) {
-                        hide = true;
-                    }
+            // hide optional
+            if (!hide && this.selectedFilters.includes('optional')) {
+                hide = this.model.getFieldParam(field, 'required')
+            }
 
-                    if (!hide && this.isUniLingualField(field, fieldLanguage)) {
-                        hide = true
-                    }
-
-                    if (hide && languageFilter.includes('unilingual') && this.isUniLingualField(field, fieldLanguage)) {
-                        hide = false;
-                    }
-                }
+            // hide required
+            if (!hide && this.selectedFilters.includes('required')) {
+                hide = !this.model.getFieldParam(field, 'required');
             }
 
             return !hide;
@@ -948,120 +936,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             })
         },
 
-        getOverviewFiltersList: function () {
-            if (this.overviewFilterList) {
-                return this.overviewFilterList;
-            }
-            let result = [
-                {
-                    name: "fieldFilter",
-                    label: this.translate('fieldStatus'),
-                    options: ["allValues", "filled", "empty", "optional", "required"],
-                    selfExcludedFieldsMap: {
-                        filled: 'empty',
-                        empty: 'filled',
-                        optional: 'required',
-                        required: 'optional'
-                    },
-                    defaultValue: 'allValues'
-                }
-            ];
-
-            if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                let referenceData = this.getConfig().get('referenceData');
-
-                if (referenceData && referenceData['Language']) {
-                    let languages = referenceData['Language'] || {},
-                        options = ['allLanguages', 'unilingual'],
-                        translatedOptions = {};
-
-                    options.forEach(option => {
-                        translatedOptions[option] = this.getLanguage().translateOption(option, 'languageFilter', 'Global');
-                    });
-
-                    Object.keys(languages || {}).forEach((lang) => {
-                        if (languages[lang]['role'] === 'main') {
-                            options.push('main');
-                            translatedOptions['main'] = languages[lang]['name'];
-                        } else {
-                            options.push(lang);
-                            translatedOptions[lang] = languages[lang]['name'];
-                        }
-                    });
-
-                    result.push({
-                        name: "languageFilter",
-                        label: this.translate('language'),
-                        options,
-                        translatedOptions,
-                        defaultValue: 'allLanguages'
-                    });
-                }
-            }
-
-            return this.overviewFilterList = result;
-        },
-
-        isOverviewFilterApply() {
-            for (const filter of this.getOverviewFiltersList()) {
-                let selected = this.selectedFilters[filter.name] ?? [];
-                if (!Array.isArray(selected) || selected.length === 0) {
-                    continue;
-                }
-                if (selected && selected.join('') !== filter.defaultValue) {
-                    return true;
-                }
-            }
-
-            return false;
-        },
-
-        openOverviewFilter: function () {
-            this.notify('Loading...');
-            let currentValues = {};
-            let overviewFilterList = this.getOverviewFiltersList();
-            overviewFilterList.forEach((filter) => {
-                currentValues[filter.name] = this.selectedFilters[filter.name];
-            });
-            this.createView('compareOverviewFilter', this.overviewFilterView, {
-                scope: this.scope,
-                model: this.model,
-                overviewFilters: overviewFilterList,
-                currentValues: currentValues
-            }, view => {
-                this.listenTo(view, 'after:render', () => {
-                    this.notify(false)
-                });
-
-                this.listenTo(view, 'save', (filterModel) => {
-                    let filterChanged = false;
-                    this.getOverviewFiltersList().forEach((filter) => {
-                        if (filterModel.get(filter.name)) {
-                            filterChanged = true;
-                            this.selectedFilters[filter.name] = filterModel.get(filter.name);
-                        }
-                    });
-
-                    if (filterChanged) {
-                        this.model.trigger('overview-filters-changed', this.selectedFilters);
-                        this.getStorage().set('compareFilters', this.scope, this.selectedFilters)
-                        this.reRenderFieldsPanels();
-                        this.notify(false)
-                    }
-                });
-
-                view.render()
-            });
-        },
-
         reRenderFieldsPanels() {
-            let filterButton = $('a[data-action="openOverviewFilter"]');
-            if (this.isOverviewFilterApply()) {
-                filterButton.css('color', 'white').addClass('btn-danger').removeClass('btn-default')
-            } else {
-                filterButton.css('color', 'black').addClass('btn-default').removeClass('btn-danger')
-            }
-
             this.prepareFieldsData();
             this.renderFieldsPanels();
             this.toggleFieldPanels();
@@ -1074,23 +949,23 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
-            let filterButton = $('a[data-action="openOverviewFilter"]');
-            if (!filterButton.length && this.getParentView()) {
-                filterButton = $('<a href="javascript:" class="btn btn-default action pull-right" data-action="openOverviewFilter"' +
-                    ' data-original-title="Click to filter" style="color: black;">\n' +
-                    '                <i class="ph ph-funnel"></i>\n' +
-                    '            </a>');
+            $('.compare-content-filter-container').remove()
+            if (this.getParentView()) {
+                const filterButton = $('<div class="compare-content-filter-container" style="display: inline-block;margin-left: 10px"><div></div></div>');
                 this.getParentView().$el.find('.modal-footer').append(filterButton);
-            } else {
-                filterButton.off('click');
-            }
-
-            filterButton.on('click', () => this.trigger('open-filter'))
-
-            if (this.isOverviewFilterApply()) {
-                filterButton.css('color', 'white').addClass('btn-danger').removeClass('btn-default')
-            } else {
-                filterButton.css('color', 'black').addClass('btn-default').removeClass('btn-danger')
+                new Svelte.ContentFilter({
+                    target: filterButton.children().get(0),
+                    props: {
+                        scope: this.scope,
+                        storageKey: 'compareFieldFilters',
+                        onExecute: (evt, selectedFilters) => {
+                            this.selectedFilters = selectedFilters;
+                            this.model.trigger('overview-filters-changed', this.selectedFilters);
+                            this.reRenderFieldsPanels();
+                            this.notify(false)
+                        }
+                    }
+                });
             }
 
             this.notify('Loading...');
@@ -1122,7 +997,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             models.forEach(model => {
                 if (!this.disableModelFetch) {
-                    model.fetch({async: false})
+                    model.fetch({ async: false })
                 }
                 $.each(model.defs.fields, (name, defs) => {
                     if (defs.attributeId) {

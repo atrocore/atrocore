@@ -86,7 +86,7 @@ class ClusterItem extends Base
                 $this->getEntityManager()->saveEntity($cluster);
             }
 
-            $record->set('goldenRecordId', $goldenRecord->get('id'));
+            $record->set('masterRecordId', $goldenRecord->get('id'));
             $this->getEntityManager()->saveEntity($record);
         }
 

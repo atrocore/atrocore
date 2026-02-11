@@ -2539,11 +2539,21 @@ class Metadata extends AbstractListener
             $linkName = 'derived' . ucfirst($scope) . 'Records';
 
             // add link to the primary entity
-            $data['entityDefs'][$scope]['fields']['goldenRecord'] = [
-                'type'     => 'link',
-                'required' => false
+            $data['entityDefs'][$scope]['fields']['masterRecord'] = [
+                'type'                  => 'link',
+                'required'              => false,
+                'conditionalProperties' => [
+                    'protected' => [
+                        "conditionGroup" => [
+                            [
+                                'attribute' => 'id',
+                                'type'      => 'isNotEmpty'
+                            ]
+                        ]
+                    ]
+                ]
             ];
-            $data['entityDefs'][$scope]['links']['goldenRecord'] = [
+            $data['entityDefs'][$scope]['links']['masterRecord'] = [
                 'type'    => 'belongsTo',
                 'foreign' => $linkName,
                 'entity'  => $primaryEntity
@@ -2555,7 +2565,7 @@ class Metadata extends AbstractListener
             ];
             $data['entityDefs'][$primaryEntity]['links'][$linkName] = [
                 'type'         => 'hasMany',
-                'foreign'      => 'goldenRecord',
+                'foreign'      => 'masterRecord',
                 'entity'       => $scope,
                 'notMergeable' => true
             ];

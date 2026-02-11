@@ -646,7 +646,7 @@ class Record extends RecordService
             throw new NotFound("{$this->getEntityType()} with id $id not found");
         }
 
-        $input->goldenRecordId = $primaryEntity->get('id');
+        $input->masterRecordId = $primaryEntity->get('id');
 
         foreach ($primaryEntity->toArray() as $field => $value) {
             if (in_array($field, ['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'])) {

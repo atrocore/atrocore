@@ -37,10 +37,7 @@ Espo.define('views/selection/record/detail/compare', [
             this.selectionModel = this.options.model;
             this.selectionId = this.selectionModel.id;
             this.hidePanelNavigation = true;
-            if (!this.selectedFilters) {
-                this.selectedFilters = {}
-            }
-            this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', this.selectionModel.name);
+            this.selectedFilters = this.getStorage().get('fieldFilter', this.selectionModel.name) || [];
 
             Dep.prototype.setup.call(this);
 
@@ -49,8 +46,7 @@ Espo.define('views/selection/record/detail/compare', [
             })
 
             this.listenTo(this.selectionModel, 'overview-filters-changed', () => {
-
-                this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', this.selectionModel.name);
+                this.selectedFilters = this.getStorage().get('fieldFilter', this.selectionModel.name);
                 this.listenToOnce(this, 'all-fields-panel-rendered', () => {
                     this.notify(false)
                 });
