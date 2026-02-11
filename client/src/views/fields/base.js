@@ -76,7 +76,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         initialAttributes: null,
 
-        VALIDATION_POPOVER_TIMEOUT: 3000,
+        VALIDATION_POPOVER_TIMEOUT: 5000,
 
         fieldActions: true,
 
@@ -1498,7 +1498,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             $el.popover({
                 placement: 'bottom',
-                container: 'body',
                 content: message,
                 trigger: 'manual'
             }).popover('show');
