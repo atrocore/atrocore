@@ -281,21 +281,18 @@ class Hierarchy extends Base
     {
         $fields = array_merge($this->getMetadata()->get('app.nonInheritedFields', []), $this->getMetadata()->get(['scopes', $this->entityType, 'mandatoryUnInheritedFields'], []));
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
-            if (!in_array($defs['type'], ['linkMultiple', 'autoincrement']) && !empty($defs['isUninheritableField'])) {
+            if (!empty($defs['inheritanceDisabled'])) {
                 $fields[] = $field;
             }
         }
-
-        // add relations
-        $fields = array_merge($fields, $this->getUnInheritedRelations());
 
         return $fields;
     }
 
     public function getUnInheritableRelations(): array
     {
-        $result = array_merge([], $this->getMetadata()->get('app.nonInheritedRelations', []));
-        $result = array_merge($result, $this->getMetadata()->get(['scopes', $this->entityType, 'mandatoryUnInheritedRelations'], []));
+        $result = array_merge([], $this->getMetadata()->get('app.nonInheritedFields', []));
+        $result = array_merge($result, $this->getMetadata()->get(['scopes', $this->entityType, 'mandatoryUnInheritedFields'], []));
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
             if ($defs['type'] == 'linkMultiple' && !empty($defs['isUninheritableRelation'])) {
                 $result[] = $field;

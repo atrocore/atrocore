@@ -727,7 +727,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled'];
 
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
@@ -898,38 +898,6 @@ class EntityField extends ReferenceData
                 $this->getLanguage()
                     ->setOption($entity->get('entityId'), $entity->get('code'), $option, $newTranslationOptions->{$option});
                 $saveLanguage = true;
-            }
-        }
-
-        if ($entity->isAttributeChanged('isUninheritableField') && !in_array($entity->get('type'), ['linkMultiple', 'autoincrement'])) {
-            if ($loadedData['scopes'][$entity->get('entityId')]['type'] === 'Hierarchy'
-                && !in_array($entity->get('code'), $loadedData['app']['nonInheritedFields'] ?? [])
-                && !in_array($entity->get('code'), $loadedData['scopes'][$entity->get('entityId')]['mandatoryUnInheritedFields'] ?? [])) {
-                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
-                    'fields' => [
-                        $entity->get('code') => [
-                            'isUninheritableField' => $entity->get('isUninheritableField')
-                        ]
-                    ]
-                ]);
-
-                $saveMetadata = true;
-            }
-        }
-
-        if ($entity->isAttributeChanged('isUninheritableRelation') && $entity->get('type') === 'linkMultiple') {
-            if ($loadedData['scopes'][$entity->get('entityId')]['type'] === 'Hierarchy'
-                && !in_array($entity->get('code'), $loadedData['app']['nonInheritedRelations'] ?? [])
-                && !in_array($entity->get('code'), $loadedData['scopes'][$entity->get('entityId')]['mandatoryUnInheritedRelations'] ?? [])) {
-                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
-                    'fields' => [
-                        $entity->get('code') => [
-                            'isUninheritableRelation' => $entity->get('isUninheritableRelation')
-                        ]
-                    ]
-                ]);
-
-                $saveMetadata = true;
             }
         }
 

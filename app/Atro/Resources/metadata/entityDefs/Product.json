@@ -71,7 +71,7 @@
       "trim": true,
       "index": true,
       "massUpdateDisabled": true,
-      "isUninheritableField": true
+      "inheritanceDisabled": true
     },
     "price": {
       "type": "float",
@@ -104,7 +104,7 @@
       "type": "varchar",
       "trim": true,
       "index": true,
-      "isUninheritableField": true
+      "inheritanceDisabled": true
     },
     "note": {
       "type": "text"

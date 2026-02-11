@@ -77,7 +77,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (this.getMetadata().get(`scopes.${this.model.name}.relationInheritance`) === true && this.model.get('isRoot') === false) {
                 let unInheritedRelations = ['parents', 'children'];
                 $.each((this.getMetadata().get(`entityDefs.${this.model.name}.fields`) || {}), (field, fieldDefs) => {
-                    if (fieldDefs.isUninheritableRelation) {
+                    if (fieldDefs.inheritanceDisabled) {
                         unInheritedRelations.push(field);
                     }
                 });
@@ -608,16 +608,16 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             let unInheritedRelations = [];
 
-            (this.getMetadata().get(`app.nonInheritedRelations`) || []).forEach(field => {
+            (this.getMetadata().get(`app.nonInheritedFields`) || []).forEach(field => {
                 unInheritedRelations.push(field);
             });
 
-            (this.getMetadata().get(`scopes.${scope}.mandatoryUnInheritedRelations`) || []).forEach(field => {
+            (this.getMetadata().get(`scopes.${scope}.mandatoryUnInheritedFields`) || []).forEach(field => {
                 unInheritedRelations.push(field);
             });
 
             $.each((this.getMetadata().get(`entityDefs.${scope}.fields`) || {}), (field, fieldDefs) => {
-                if (fieldDefs.isUninheritableRelation) {
+                if (fieldDefs.inheritanceDisabled) {
                     unInheritedRelations.push(field);
                 }
             });

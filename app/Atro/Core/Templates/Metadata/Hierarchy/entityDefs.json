@@ -4,7 +4,7 @@
       "type": "varchar",
       "required": true,
       "trim": true,
-      "isUninheritableField": true
+      "inheritanceDisabled": true
     },
     "description": {
       "type": "text"

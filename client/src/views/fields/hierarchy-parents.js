@@ -82,7 +82,7 @@ Espo.define('views/fields/hierarchy-parents', 'views/fields/link-multiple',
                     this.pushFieldViaType(scope, field, nonInheritedFields);
                 });
                 $.each((this.getMetadata().get(`entityDefs.${scope}.fields`) || {}), (field, fieldDefs) => {
-                    if (fieldDefs.isUninheritableField) {
+                    if (fieldDefs.inheritanceDisabled) {
                         unInheritedRelations.push(field);
                     }
                 });

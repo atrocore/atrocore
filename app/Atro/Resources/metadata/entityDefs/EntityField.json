@@ -783,13 +783,8 @@
         }
       }
     },
-    "isUninheritableField": {
-      "view": "views/admin/field-manager/fields/is-uninherited-field",
-      "type": "bool",
-      "tooltip": true
-    },
-    "isUninheritableRelation": {
-      "view": "views/admin/field-manager/fields/is-uninheritable-relation",
+    "inheritanceDisabled": {
+      "view": "views/admin/field-manager/fields/inheritance-disabled",
       "type": "bool",
       "tooltip": true
     },

@@ -532,16 +532,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 nonInheritedFields.push(field);
             });
 
-            (this.getMetadata().get(`app.nonInheritedRelations`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
-            (this.getMetadata().get(`scopes.${scope}.mandatoryUnInheritedRelations`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
             $.each((this.getMetadata().get(`entityDefs.${scope}.fields`) || {}), (field, fieldDefs) => {
-                if (fieldDefs.isUninheritableField || fieldDefs.isUninheritableRelation) {
+                if (fieldDefs.inheritanceDisabled) {
                     nonInheritedFields.push(field);
                 }
             });
