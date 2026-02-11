@@ -32,7 +32,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected $dependencies
         = [
             'container',
-            'connection',
+            'dbal',
             'metadata',
             'config',
             'fieldManagerUtil',
@@ -1100,9 +1100,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->getInjection('eventManager')->dispatch('Entity', $action, $event);
     }
 
-    public function getConnection(): \Doctrine\DBAL\Connection
+    public function getDbal(): Connection
     {
-        return $this->getInjection('connection');
+        return $this->getInjection('dbal');
+    }
+
+    /**
+     * @return Connection
+     * @deprecated use getDbal() instead
+     */
+    public function getConnection(): Connection
+    {
+        return $this->getDbal();
     }
 
     public function calculateScriptFields(Entity $entity, $save = true): bool
@@ -1115,7 +1124,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $contents = $this->getInjection('container')->get('twig')
                     ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
 
-                if($entity->get($field) === $contents) {
+                if ($entity->get($field) === $contents) {
                     continue;
                 }
 
@@ -1219,15 +1228,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->insert(Util::toUnderScore(lcfirst("{$entity->getEntityType()}Version")))
             ->values([
-                'id'                                      => ':id',
-                'name'                                    => ':name',
+                'id'                                                          => ':id',
+                'name'                                                        => ':name',
                 Util::toUnderScore(lcfirst($entity->getEntityType())) . '_id' => ':entityId',
-                'data'                                    => ':data',
-                'metadata'                                => ':metadata',
-                'created_at'                              => ':now',
-                'modified_at'                             => ':now',
-                'created_by_id'                           => ':userId',
-                'modified_by_id'                          => ':userId',
+                'data'                                                        => ':data',
+                'metadata'                                                    => ':metadata',
+                'created_at'                                                  => ':now',
+                'modified_at'                                                 => ':now',
+                'created_by_id'                                               => ':userId',
+                'modified_by_id'                                              => ':userId',
             ])
             ->setParameter('id', IdGenerator::uuid())
             ->setParameter('name', $versionName)
@@ -1269,5 +1278,20 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->setParameter('name', $versionName)
             ->setParameter('entityId', $entityId)
             ->fetchAssociative();
+    }
+
+    public function deleteVersion(string $entityId, string $versionName): bool
+    {
+        $entityType = $this->entityType;
+
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->delete(Util::toUnderScore(lcfirst("{$entityType}Version")))
+            ->where('name = :name')
+            ->andWhere(Util::toUnderScore(lcfirst($entityType) . 'Id') . ' = :entityId')
+            ->setParameter('name', $versionName)
+            ->setParameter('entityId', $entityId)
+            ->executeStatement();
+
+        return true;
     }
 }

@@ -63,10 +63,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name);
             } else if (this.versionComparison) {
                 this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareVersion']) ?? 'versioning:views/record/compare-version'
-                this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with previous versions'));
+                this.header = this.options.header ?? (this.getLanguage().translate('Version comparison'));
             } else if (this.derivativeComparison) {
                 this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareVersion']) ?? 'versioning:views/record/compare-derivative'
-                this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with change request'));
+                this.header = this.options.header ?? (this.getLanguage().translate('Change Request comparison'));
             } else {
                 this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
                 this.header = this.options.header ?? (this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison'));
@@ -74,6 +74,16 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             this.listenTo(this, 'after:render', () => {
                 this.$el.find('.modal-body.body').css('overflow-y', 'hidden');
+
+                // move buttons to the right
+                let $compareButtonContainer = $('#compare-button-container');
+                if ($compareButtonContainer.length === 0) {
+                    $compareButtonContainer = $('<div id="compare-button-container" style="display: inline-block"></div>');
+                    this.$el.find('.modal-footer').append($compareButtonContainer);
+                    this.$el.find('.modal-footer').find('[data-name="switchToCompare"]').appendTo($compareButtonContainer);
+                    this.$el.find('.modal-footer').find('[data-name="switchToMerge"]').appendTo($compareButtonContainer);
+                }
+
                 this.setupRecord();
             });
 
@@ -85,6 +95,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     style: 'primary',
                     label: 'Merge',
                     disabled: true,
+                    hidden: !this.options.merging,
                     onClick: (dialog) => {
                         this.trigger('merge', dialog)
                     }
@@ -121,16 +132,40 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             (this.options.additionalButtons || []).forEach(button => this.buttonList.push(button))
 
             this.buttonList.push({
-                name: 'cancel',
-                label: 'Cancel',
+                name: 'close',
+                label: 'Close',
                 onClick: (dialog) => {
-                    this.trigger('cancel', dialog)
+                    dialog.close();
                 }
             });
 
+            if (this.getAcl().check(this.scope, 'create')) {
+                this.buttonList.push({
+                    name: 'switchToCompare',
+                    style: this.options.merging ? '' : 'primary',
+                    label: '<i class="ph ph-arrows-left-right"></i>',
+                    onClick: (dialog) => {
+                        this.getView('modalRecord').trigger('switchToCompare', dialog)
+                        $('#compare-button-container').find('[data-name="switchToCompare"]').addClass('btn-primary').siblings().removeClass('btn-primary');
+                        this.$el.find('.modal-footer [data-name="merge"]').addClass('hidden')
+                    }
+                });
+
+                this.buttonList.push({
+                    name: 'switchToMerge',
+                    style: this.options.merging ? 'primary' : '',
+                    label: '<i class="ph ph-arrows-merge"></i>',
+                    onClick: (dialog) => {
+                        this.trigger('switchToMerge', dialog)
+                        $('#compare-button-container').find('[data-name="switchToMerge"]').addClass('btn-primary').siblings().removeClass('btn-primary');
+                        this.$el.find('.modal-footer [data-name="merge"]').removeClass('hidden')
+                    }
+                });
+            }
+
         },
 
-        getComparisonScope: function() {
+        getComparisonScope: function () {
             const scopeDefs = this.getMetadata().get(['scopes', this.scope]) || {};
             if (scopeDefs.primaryEntityId && scopeDefs.role === 'staging') {
                 return scopeDefs.primaryEntityId;
@@ -214,37 +249,6 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                         this.createModalView(options);
                     });
                 });
-
-                if (this.$el.find('.version-selector').length === 0) {
-                    const container = $('<div class="version-selector" style="max-width: 400px; display: inline-block;margin-right: 20px"></div>');
-
-                    container.insertAfter(this.$el.find('.modal-footer > .extra-content'))
-                    this.getModelFactory().create(this.scope + 'Version', model => {
-                        model.set('name', this.currentVersion)
-                        this.createView('versionSelector', 'views/fields/enum', {
-                            el: container.get(0),
-                            name: 'name',
-                            model: model,
-                            scope: this.scope,
-                            inlineEditDisabled: true,
-                            mode: 'edit',
-                            required: true,
-                            params: {
-                                options: this.versions.map(v => v.name),
-                            }
-                        }, (view) => {
-                            view.render();
-                            view.on('change', () => {
-                                this.currentVersion = model.get('name')
-                                const recordView = this.getView('modalRecord')
-                                if (recordView) {
-                                    recordView.remove()
-                                }
-                                this.setupRecord()
-                            })
-                        });
-                    })
-                }
             } else {
                 if (this.getModels().length < 2) {
                     this.notify(this.translate('youShouldHaveAtLeastOneRecord'));
@@ -286,6 +290,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
                 this.listenTo(this, 'merge', (dialog) => {
                     view.trigger('merge', dialog);
+                });
+
+                this.listenTo(this, 'switchToMerge', (dialog) => {
+                    view.trigger('switchToMerge', dialog);
                     if (!this.versionComparison && !this.options.disableSelection) {
                         this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
                             scope: this.scope,

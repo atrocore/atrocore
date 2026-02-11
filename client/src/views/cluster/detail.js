@@ -80,7 +80,7 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
         },
 
         getCompareButtons() {
-            let buttons = {
+            return {
                 additionalButtons: [],
                 buttons: [],
                 dropdownButtons: [
@@ -91,17 +91,6 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
                 ],
                 hasLayoutEditor: true
             }
-
-            if (this.getAcl().check('Cluster', 'edit')) {
-                buttons.additionalButtons.push({
-                    action: 'addItem',
-                    name: 'addItem',
-                    label: this.translate('addItem'),
-                    dropdownItems: this.getDropdownItems()
-                })
-            }
-
-            return buttons;
         },
 
         getStagingEntities(masterEntity) {

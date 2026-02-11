@@ -5,6 +5,20 @@
       "notStorable": true,
       "protected": true
     },
+    "updateMasterAutomatically": {
+      "type": "bool",
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
     "masterEntity": {
       "type": "varchar",
       "notStorable": true,
@@ -50,7 +64,7 @@
       "type": "text",
       "view": "views/fields/script",
       "language": "json",
-      "default": "{# { \"name\": \"{{ sourceEntity.name }}\" } #}",
+      "default": "{# { \"name\": \"{{ stagingRecord.name }}\" } #}",
       "editorActions": {
         "addFields": {
           "entityNameField": "masterEntity"
@@ -60,7 +74,9 @@
         }
       },
       "twigVariables": [
-        "sourceEntity"
+        "stagingRecord",
+        "masterRecord",
+        "stagingRecords"
       ],
       "customizable": false,
       "layoutRemoveDisabled": true,

@@ -12,6 +12,7 @@
 
 namespace Atro\Core\MatchingRuleType;
 
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
@@ -40,15 +41,16 @@ class Similar extends AbstractMatchingRule
         $columnName = Util::toUnderScore($this->rule->get('field'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
         $value = $stageEntity->get($field);
+        $parameter = IdGenerator::unsortableId();
 
         if (empty($value)) {
             $sqlPart = "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
         } elseif (is_array($value)) {
-            $sqlPart = "{$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
-            $qb->setParameter($this->rule->get('id'), '%"' . reset($value) . '"%');
+            $sqlPart = "{$alias}.{$escapedColumnName} LIKE :$parameter";
+            $qb->setParameter($parameter, '%"' . reset($value) . '"%');
         } else {
-            $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :{$this->rule->get('id')}";
-            $qb->setParameter($this->rule->get('id'), str_replace(' ', '', strtolower(trim($value))));
+            $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :$parameter";
+            $qb->setParameter($parameter, str_replace(' ', '', strtolower(trim($value))));
         }
 
         return $sqlPart;

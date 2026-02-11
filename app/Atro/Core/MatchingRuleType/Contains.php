@@ -12,6 +12,7 @@
 
 namespace Atro\Core\MatchingRuleType;
 
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
@@ -40,15 +41,16 @@ class Contains extends AbstractMatchingRule
         $columnName = Util::toUnderScore($this->rule->get('field'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
         $value = $stageEntity->get($field);
+        $parameter = IdGenerator::unsortableId();
 
         if (empty($value)) {
             $sqlPart = "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
         } elseif (is_array($value)) {
-            $sqlPart = "{$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
-            $qb->setParameter($this->rule->get('id'), '%"' . reset($value) . '"%');
+            $sqlPart = "{$alias}.{$escapedColumnName} LIKE :$parameter";
+            $qb->setParameter($parameter, '%"' . reset($value) . '"%');
         } else {
-            $sqlPart = "{$alias}.{$escapedColumnName} IS NOT NULL AND {$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
-            $qb->setParameter($this->rule->get('id'), "%" . $stageEntity->get($this->rule->get('field')) . "%");
+            $sqlPart = "{$alias}.{$escapedColumnName} IS NOT NULL AND {$alias}.{$escapedColumnName} LIKE :$parameter";
+            $qb->setParameter($parameter, "%" . $stageEntity->get($this->rule->get('field')) . "%");
         }
 
         return $sqlPart;

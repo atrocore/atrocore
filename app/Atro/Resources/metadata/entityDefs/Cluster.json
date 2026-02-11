@@ -31,6 +31,23 @@
       "notStorable": true,
       "protected": true
     },
+    "state": {
+      "type": "enum",
+      "notStorable": true,
+      "protected": true,
+      "options": [
+        "empty",
+        "review",
+        "merged",
+        "invalid"
+      ],
+      "optionColors": [
+        "eeeeee",
+        "b5e8ff",
+        "8fff87",
+        "ff6262"
+      ]
+    },
     "clusterItems": {
       "type": "linkMultiple",
       "auditableEnabled": true

@@ -23,7 +23,7 @@ use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer;
 
-class Application
+final class Application
 {
     public const COMPOSER_LOG_FILE = 'public/data/composer.log';
 

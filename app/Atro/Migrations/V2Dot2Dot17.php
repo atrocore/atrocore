@@ -26,23 +26,48 @@ class V2Dot2Dot17 extends Base
 
     public function up(): void
     {
+        $entities = [];
+
+        if (class_exists("\\Pim\\Module")) {
+            $entities = ['Product', 'Listing'];
+        }
+
+        if (class_exists("\\Components\\Module")) {
+            $entities[] = 'Component';
+        }
+
+        $dir = 'data/metadata/scopes';
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (!in_array($item, ['.', '..'])) {
+                    $parts = explode('.', $item);
+                    $scope = $parts[0];
+
+                    $content = @json_decode(file_get_contents($dir . '/' . $item), true);
+                    if (empty($content)) {
+                        continue;
+                    }
+
+                    if (!empty($content['hasAttribute'])) {
+                        $entities[] = $scope;
+                        continue;
+                    }
+
+                    if (!empty($content['primaryEntityId']) && in_array($content['primaryEntityId'], $entities)) {
+                        $entities[] = $scope;
+                    }
+                }
+            }
+        }
+
         $fromSchema = $this->getCurrentSchema();
         $toSchema = clone $fromSchema;
 
-        /** @var Metadata $metadata */
-        $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
-
-        foreach ($metadata->get('scopes') ?? [] as $scope => $scopeDefs) {
-            $tableName = Util::toUnderScore(lcfirst($scope));
-
-            if (empty($scopeDefs['attributeValueFor'])) {
-                continue;
-            }
-
-            $targetEntity = $scopeDefs['attributeValueFor'];
+        foreach ($entities as $targetEntity) {
+            $avEntity = $targetEntity . 'AttributeValue';
             $fieldName = lcfirst($targetEntity) . 'Id';
-            $targetTableName = Util::toUnderScore(lcfirst($targetEntity));
 
+            $tableName = Util::toUnderScore(lcfirst($avEntity));
             if (!$toSchema->hasTable($tableName)) {
                 continue;
             }
@@ -50,11 +75,11 @@ class V2Dot2Dot17 extends Base
             $this->cleanAttributeValues($targetEntity);
 
             $table = $toSchema->getTable($tableName);
-            $table->addForeignKeyConstraint($targetTableName, [Util::toUnderScore($fieldName)], ['id'], ['onDelete' => 'CASCADE'], Converter::generateForeignKeyName($scope, $fieldName));
-            $table->addForeignKeyConstraint('attribute', ['attribute_id'], ['id'], ['onDelete' => 'CASCADE'], Converter::generateForeignKeyName($scope, 'attributeId'));
+            $table->addForeignKeyConstraint(Util::toUnderScore(lcfirst($targetEntity)), [Util::toUnderScore($fieldName)], ['id'], ['onDelete' => 'CASCADE'], Converter::generateForeignKeyName($avEntity, $fieldName));
+            $table->addIndex([Util::toUnderScore($fieldName)], Converter::generateForeignKeyName($avEntity, $fieldName));
 
-            $table->addIndex([Util::toUnderScore($fieldName)], Converter::generateForeignKeyName($scope, $fieldName));
-            $table->addIndex(['attribute_id'], Converter::generateForeignKeyName($scope, 'attributeId'));
+            $table->addForeignKeyConstraint('attribute', ['attribute_id'], ['id'], ['onDelete' => 'CASCADE'], Converter::generateForeignKeyName($avEntity, 'attributeId'));
+            $table->addIndex(['attribute_id'], Converter::generateForeignKeyName($avEntity, 'attributeId'));
         }
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {

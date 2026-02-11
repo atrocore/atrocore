@@ -7,12 +7,6 @@
   "recordViews": {
     "detail": "views/cluster/record/detail"
   },
-  "boolFilterList": [
-    "onlyEmpty" ,
-    "onlyReview",
-    "onlyMerged",
-    "onlyInvalid"
-  ],
   "relationshipPanels": {
     "clusterItems": {
       "checkboxes": false,

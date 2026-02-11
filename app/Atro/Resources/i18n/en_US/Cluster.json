@@ -5,13 +5,16 @@
     "clusterItems": "Cluster Items",
     "rejectedClusterItems": "Rejected Cluster Items",
     "stagingItemCount": "Staging Item Count",
-    "masterItemCount": "Master Item Count"
+    "masterItemCount": "Master Item Count",
+    "state": "State"
   },
-  "boolFilters": {
-    "onlyReview": "Only Review",
-    "onlyEmpty": "Only Empty",
-    "onlyMerged": "Only Merged",
-    "onlyInvalid": "Only Invalid"
+  "options": {
+    "state": {
+      "empty": "Empty",
+      "review": "Review",
+      "merged": "Merged",
+      "invalid": "Invalid"
+    }
   },
   "actions": {
     "reject": "Reject",

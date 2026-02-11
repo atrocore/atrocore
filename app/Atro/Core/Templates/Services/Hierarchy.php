@@ -28,7 +28,7 @@ use Atro\Services\Record;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Entities\Hierarchy as HierarchyEntity;
 
-class Hierarchy extends Record
+class Hierarchy extends Base
 {
     protected $mandatorySelectAttributeList = ['routes'];
     private array $parentsCache = [];
