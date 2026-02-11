@@ -19,31 +19,35 @@ Espo.define('views/selection/record/detail', 'views/record/detail', function (De
             Dep.prototype.setup.call(this);
 
            this.onModelReady(() => {
-               if( this.getAcl().check(this.scope, 'edit')) {
-                   let dropdownItems = null;
-                   if(this.shouldShowDropdownItem()) {
-                       let stagingEntities = this.getStagingEntities(this.model.get(this.entityTypeField))
-                       stagingEntities.forEach((e,key) => {
-                           if(!dropdownItems) {
-                               dropdownItems = [];
-                           }
-                           dropdownItems.push({
-                               action: 'addStagingItem',
-                               name: 'addStagingItem'+key,
-                               label: this.translate('Add') + ' ' + e,
-                               id: e
-                           });
-                       });
-                   }
-
-                   this.additionalButtons.push({
-                       action: 'addItem',
-                       name: 'addItem',
-                       label: this.translate('addItem'),
-                       dropdownItems: dropdownItems
-                   });
-               }
+               this.prepareAdditionalButtons();
            })
+        },
+
+        prepareAdditionalButtons() {
+            if (this.getAcl().check(this.scope, 'edit')) {
+                let dropdownItems = null;
+                if (this.shouldShowDropdownItem()) {
+                    let stagingEntities = this.getStagingEntities(this.model.get(this.entityTypeField))
+                    stagingEntities.forEach((e, key) => {
+                        if (!dropdownItems) {
+                            dropdownItems = [];
+                        }
+                        dropdownItems.push({
+                            action: 'addStagingItem',
+                            name: 'addStagingItem' + key,
+                            label: this.translate('Add') + ' ' + e,
+                            id: e
+                        });
+                    });
+                }
+
+                this.additionalButtons.push({
+                    action: 'addItem',
+                    name: 'addItem',
+                    label: this.translate('addItem'),
+                    dropdownItems: dropdownItems
+                });
+            }
         },
 
         shouldShowDropdownItem() {

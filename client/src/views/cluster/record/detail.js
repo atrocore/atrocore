@@ -17,6 +17,11 @@ Espo.define('views/cluster/record/detail', 'views/selection/record/detail', func
         shouldShowDropdownItem() {
             return true;
         },
+
+        prepareAdditionalButtons() {
+            // do nothing
+        },
+
     })
 });
 

@@ -43,6 +43,10 @@ abstract class AbstractRecordController extends AbstractController
 
     public function actionCreate($params, $data, $request)
     {
+        if ($this->getMetadata()->get("clientDefs.{$this->name}.createDisabled")) {
+            throw new NotFound();
+        }
+
         if (!$request->isPost()) {
             throw new BadRequest();
         }
