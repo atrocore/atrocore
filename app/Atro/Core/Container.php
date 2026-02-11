@@ -16,16 +16,18 @@ namespace Atro\Core;
 use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Factories\FactoryInterface as Factory;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
 use Doctrine\DBAL\Connection;
 use Espo\Core\Interfaces\Injectable;
 use Espo\ORM\EntityManager;
 
-class Container
+final class Container
 {
-    protected array $data = [];
+    private array $data = [];
 
-    protected array $classAliases
+    private array $classAliases
         = [
             'route'                    => \Atro\Core\Factories\RouteFactory::class,
             'fileManager'              => \Atro\Core\Utils\FileManager::class,
@@ -36,9 +38,7 @@ class Container
             'pseudoTransactionManager' => \Atro\Core\PseudoTransactionManager::class,
             'connectionFactory'        => \Atro\Core\Factories\ConnectionFactory::class,
             'eventManager'             => \Atro\Core\Factories\EventManager::class,
-            EventManager::class        => \Atro\Core\Factories\EventManager::class,
-            'connection'               => \Atro\Core\Factories\Connection::class,
-            Connection::class          => \Atro\Core\Factories\Connection::class,
+            'dbal'                     => \Atro\Core\Factories\DbalConnection::class,
             'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
             'memcachedStorage'         => \Atro\Core\Factories\MemcachedStorage::class,
             'log'                      => \Atro\Core\Factories\Log::class,
@@ -53,7 +53,6 @@ class Container
             'htmlSanitizer'            => \Atro\Core\Utils\HTMLSanitizer::class,
             'actionManager'            => \Atro\Core\ActionManager::class,
             'fieldManager'             => \Atro\Core\Utils\FieldManager::class,
-            'fieldManagerUtil'         => \Atro\Core\Utils\FieldManager::class,
             'idGenerator'              => \Atro\Core\Utils\IdGenerator::class,
             'dataManager'              => \Atro\Core\DataManager::class,
             'schema'                   => \Atro\Core\Utils\Database\Schema\Schema::class,
@@ -71,7 +70,6 @@ class Container
             'aclManager'               => \Espo\Core\Factories\AclManager::class,
             'dateTime'                 => \Espo\Core\Factories\DateTime::class,
             'entityManager'            => \Espo\Core\Factories\EntityManager::class,
-            EntityManager::class       => \Espo\Core\Factories\EntityManager::class,
             'injectableFactory'        => \Espo\Core\Factories\InjectableFactory::class,
             'number'                   => \Espo\Core\Factories\Number::class,
             'ormMetadata'              => \Espo\Core\Factories\OrmMetadata::class,
@@ -80,6 +78,15 @@ class Container
             'serviceFactory'           => \Espo\Core\ServiceFactory::class,
             'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
+        ];
+
+    private array $aliases
+        = [
+            'connection'         => 'dbal',
+            Connection::class    => 'dbal',
+            EventManager::class  => 'eventManager',
+            EntityManager::class => 'entityManager',
+            'fieldManagerUtil'   => 'fieldManager'
         ];
 
     public function __construct()
@@ -104,6 +111,10 @@ class Container
      */
     public function get(string $name)
     {
+        if (array_key_exists($name, $this->aliases)) {
+            $name = $this->aliases[$name];
+        }
+
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
@@ -152,6 +163,36 @@ class Container
         }
 
         return null;
+    }
+
+    public function getDbal(): Connection
+    {
+        return $this->get('dbal');
+    }
+
+    public function getEntityManager(): EntityManager
+    {
+        return $this->get('entityManager');
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->get('config');
+    }
+
+    public function getMetadata(): Metadata
+    {
+        return $this->get('metadata');
+    }
+
+    public function getUser(): User
+    {
+        return $this->get('user');
+    }
+
+    public function getDataManager(): DataManager
+    {
+        return $this->get('dataManager');
     }
 
     /**

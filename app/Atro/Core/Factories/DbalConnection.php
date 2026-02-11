@@ -18,7 +18,7 @@ use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonArrayType;
 use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonObjectType;
 use Doctrine\DBAL\Types\Type;
 
-class Connection implements FactoryInterface
+class DbalConnection implements FactoryInterface
 {
     protected static array $drivers
         = [
