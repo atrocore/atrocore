@@ -12,6 +12,7 @@
 
 namespace Atro\Core\MatchingRuleType;
 
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -67,8 +68,10 @@ class Equal extends AbstractMatchingRule
             }
         }
 
-        $sqlPart = "{$alias}.{$escapedColumnName} = :{$this->rule->get('id')}";
-        $qb->setParameter($this->rule->get('id'), $value, Mapper::getParameterType($value));
+        $parameter = IdGenerator::unsortableId();
+
+        $sqlPart = "{$alias}.{$escapedColumnName} = :$parameter";
+        $qb->setParameter($parameter, $value, Mapper::getParameterType($value));
 
         return $sqlPart;
     }
