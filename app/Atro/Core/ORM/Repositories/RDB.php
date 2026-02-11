@@ -32,7 +32,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected $dependencies
         = [
             'container',
-            'connection',
+            'dbal',
             'metadata',
             'config',
             'fieldManagerUtil',
@@ -1100,9 +1100,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->getInjection('eventManager')->dispatch('Entity', $action, $event);
     }
 
-    public function getConnection(): \Doctrine\DBAL\Connection
+    public function getDbal(): Connection
     {
-        return $this->getInjection('connection');
+        return $this->getInjection('dbal');
+    }
+
+    /**
+     * @return Connection
+     * @deprecated use getDbal() instead
+     */
+    public function getConnection(): Connection
+    {
+        return $this->getDbal();
     }
 
     public function calculateScriptFields(Entity $entity, $save = true): bool

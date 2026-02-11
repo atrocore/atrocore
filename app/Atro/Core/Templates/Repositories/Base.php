@@ -109,8 +109,10 @@ class Base extends RDB
     {
         parent::afterRemove($entity, $options);
 
+        $this->unlinkAllStagings($entity);
+
         // update modifiedAt for related entities
-        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'links'], []) as $link => $defs) {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links'], []) as $link => $defs) {
             if (empty($defs['entity']) || empty($defs['relationName']) || empty($defs['foreign'])) {
                 continue;
             }
@@ -126,6 +128,29 @@ class Base extends RDB
         }
 
         $this->getEntityManager()->getRepository('MatchedRecord')->afterRemoveRecord($entity->getEntityName(), $entity->get('id'));
+    }
+
+    /**
+     * Unlinks all staging records associated with the given entity by setting
+     * the `master_record` field to null where it matches the entity's ID.
+     *
+     * @param Entity $entity The entity whose associated staging records should be unlinked.
+     *
+     * @return void
+     */
+    public function unlinkAllStagings(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeData) {
+            if (!empty($scopeData['primaryEntityId']) && $scopeData['primaryEntityId'] === $this->entityName) {
+                $this->getDbal()->createQueryBuilder()
+                    ->update($this->getDbal()->quoteIdentifier(Util::toUnderScore(lcfirst($scope))))
+                    ->set('master_record_id', ':null')
+                    ->where('master_record_id=:id')
+                    ->setParameter('id', $entity->id)
+                    ->setParameter('null', null, ParameterType::NULL)
+                    ->executeQuery();
+            }
+        }
     }
 
     public function hasDeletedRecordsToClear(): bool
