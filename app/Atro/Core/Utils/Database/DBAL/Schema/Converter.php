@@ -209,8 +209,16 @@ class Converter
                     $options['onDelete'] = 'CASCADE';
                 }
 
-                $this->tables[$entityName]->addForeignKeyConstraint($table, [$column], ['id'], $options, self::generateForeignKeyName($entityName, $def['fieldName']));
-                $this->tables[$entityName]->addIndex([$column], self::generateForeignKeyName($entityName, $def['fieldName']));
+                $fkTable = $this->tables[$entityName] ?? null;
+                if (!$fkTable) {
+                    continue;
+                }
+
+                $fkName = self::generateForeignKeyName($entityName, $def['fieldName']);
+                if (!$fkTable->hasForeignKey($fkName)) {
+                    $fkTable->addForeignKeyConstraint($table, [$column], ['id'], $options, $fkName);
+                    $fkTable->addIndex([$column], $fkName);
+                }
             }
         }
 
