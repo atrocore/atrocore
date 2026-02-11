@@ -10670,7 +10670,7 @@ td.cell > .field {
 }
 
 main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]):not(.colored-enum),
-.cell > .field > *:not([type=checkbox]):not([type=radio]):not(a):not(.label) {
+.cell > .field > *:not([type=checkbox]):not([type=radio]):not(a):not(.label):not(.popover) {
     width: 100%;
 }
 
@@ -10695,6 +10695,13 @@ td.cell > div .selectize-control > .selectize-input {
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: transparent;
+}
+
+.cell.has-error > .field :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
+td.cell.has-error :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
+td.cell.has-error > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]),
+.cell.has-error > .field > input:not([type=radio]):not([type=checkbox]) {
+    background-color: #f2e4e4;
 }
 
 .cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])) {
@@ -19416,6 +19423,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit],
 .compare-records:not([data-mode=merge]) .compare-panel table tr td.cell[data-mode=edit] {
     border-color: #06c;
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell.has-error[data-mode=edit],
+.compare-records:not([data-mode=merge]) .compare-panel table tr td.cell.has-error[data-mode=edit] {
+    border-color: #a94442;
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit]:first-child {

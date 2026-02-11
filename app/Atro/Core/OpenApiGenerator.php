@@ -905,7 +905,41 @@ class OpenApiGenerator
 
         $this->removeForRead($result);
 
+        $this->pushUpdateMasterRecordAction($result);
+
         return $result;
+    }
+
+    protected function pushUpdateMasterRecordAction(array &$array): void
+    {
+        foreach ($this->getMetadata()->get(['scopes'], []) as $scopeName => $scopeData) {
+            if (!empty($scopeData['primaryEntityId'])) {
+                $array['paths']["/{$scopeName}/action/updateMasterRecord"]['post'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Update Master Record from $scopeName Staging",
+                    "description" => "Update Master Record from $scopeName Staging",
+                    "operationId" => "updateMasterRecordFrom{$scopeName}",
+                    'security'    => [['Authorization-Token' => []]],
+                    'requestBody' => [
+                        'required' => true,
+                        'content'  => [
+                            'application/json' => [
+                                'schema' => [
+                                    "type"       => "object",
+                                    "properties" => [
+                                        'id' => [
+                                            'type'    => 'string',
+                                            'example' => '019c1da3-1b14-7339-84c1-ca38ae4719d7'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    "responses"   => self::prepareResponses(['type' => 'boolean'])
+                ];
+            }
+        }
     }
 
     protected function removeForRead(array &$array): void

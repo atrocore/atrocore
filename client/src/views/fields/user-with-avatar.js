@@ -92,7 +92,7 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
                 }
 
                 if (tooltipTrigger) {
-                    window.tippy(tooltipTrigger, {
+                    this.tooltipInstance = window.Tooltip.create(tooltipTrigger, {
                         allowHTML: true,
                         appendTo: () => document.body,
                         arrow: true,
@@ -101,7 +101,7 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
                         hideOnClick: true,
                         interactive: true,
                         maxWidth: 350,
-                        onShow: (instance, event) => {
+                        onShow: (instance) => {
                             if (this.hasView('tooltip')) {
                                 return;
                             }

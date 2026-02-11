@@ -2,7 +2,8 @@
   "fields": {
     "masterEntity": "Master Entity",
     "sourceEntity": "Source Entity",
-    "mergingScript": "Merging Script"
+    "mergingScript": "Merging Script",
+    "updateMasterAutomatically": "Update Master Automatically"
   },
   "tooltips": {
     "mergingScript": "Configure how source data is transformed, unified, and mapped to the master record."

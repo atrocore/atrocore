@@ -194,7 +194,7 @@ class Installer extends HasContainer
             $this->createFakeSystemUser();
 
             // prepare database for installation
-            $this->prepareDataBase();
+            $this->prepareDatabase();
 
             // create user
             $user = $this->createSuperAdminUser($params['username'], $params['password']);
@@ -564,39 +564,46 @@ class Installer extends HasContainer
     /**
      * Remove all existing tables and run rebuild
      */
-    protected function prepareDataBase()
+    protected function prepareDatabase(): void
     {
         /** @var array $dbParams */
         $dbParams = $this->getConfig()->get('database');
 
-        $tableSchema = $dbParams['driver'] === 'pdo_pgsql' ? 'public' : $dbParams['dbname'];
+        $isPgsql = $dbParams['driver'] === 'pdo_pgsql';
+        $tableSchema = $isPgsql ? 'public' : $dbParams['dbname'];
 
         // get existing db tables
-        $tables = $this
-            ->getEntityManager()
-            ->getPDO()
-            ->query("SELECT table_name FROM information_schema.tables WHERE table_schema='$tableSchema'")
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        $tables = $this->getContainer()->getDbal()
+            ->executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='$tableSchema'")
+            ->fetchAllAssociative();
 
         // drop all existing tables if it needs
         if (!empty($tables)) {
             foreach ($tables as $row) {
                 $tableName = null;
-                if (!empty($row['table_name'])) {
-                    $tableName = $row['table_name'];
-                }
-                if (!empty($row['TABLE_NAME'])) {
-                    $tableName = $row['TABLE_NAME'];
+                foreach (['table_name', 'TABLE_NAME'] as $key) {
+                    if (!empty($row[$key])) {
+                        $tableName = $this->getEntityManager()->getConnection()->quoteIdentifier($row[$key]);
+                        break;
+                    }
                 }
 
-                if ($tableName) {
-                    $this->getEntityManager()->getPDO()->exec("DROP TABLE " . $this->getEntityManager()->getConnection()->quoteIdentifier($tableName));
+                if ($tableName === null) {
+                    continue;
+                }
+
+                if ($isPgsql) {
+                    $this->getContainer()->getDbal()
+                        ->executeStatement("DROP TABLE IF EXISTS $tableName CASCADE");
+                } else {
+                    $this->getContainer()->getDbal()
+                        ->executeStatement("SET FOREIGN_KEY_CHECKS = 0;DROP TABLE IF EXISTS $tableName;SET FOREIGN_KEY_CHECKS = 1");
                 }
             }
         }
 
         // rebuild database
-        $this->getContainer()->get('dataManager')->rebuild();
+        $this->getContainer()->getDataManager()->rebuild();
     }
 
     /**

@@ -38,7 +38,7 @@ class PseudoTransactionManager
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->connection = \Atro\Core\Factories\Connection::createConnection($container->get('config')->get('database'));
+        $this->connection = \Atro\Core\Factories\DbalConnection::createConnection($container->get('config')->get('database'));
     }
 
     public static function hasJobs(): bool
