@@ -224,7 +224,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 let record = this.getMainRecord();
                 if (record) {
                     this.reloadStyle(this.selectionViewMode);
-                    data.name === 'merge' ? record.applyMerge() : record.cancelMerging();
+                    data.name === 'merge' ? record.applyMerge() : record.setCompareMode();
                     this.setupCustomButtons();
                     window.dispatchEvent(new CustomEvent('record:buttons-update', {
                         detail: Object.assign({

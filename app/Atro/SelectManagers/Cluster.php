@@ -267,7 +267,7 @@ class Cluster extends Base
             if (!empty($this->getMetadata()->get(['scopes', $entityName, 'primaryEntityId']))) {
                 $goldenRecordCaseParts[] = sprintf(
                     "WHEN %s.entity_name = :entityName%d THEN " .
-                    "(SELECT golden_record_id FROM %s WHERE id = %s.entity_id)",
+                    "(SELECT master_record_id FROM %s WHERE id = %s.entity_id)",
                     $mtAlias,
                     $k,
                     $tableName,
