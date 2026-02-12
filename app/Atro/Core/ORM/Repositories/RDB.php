@@ -1100,6 +1100,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->getInjection('eventManager')->dispatch('Entity', $action, $event);
     }
 
+    /**
+     * Get DBAL connection
+     *
+     * @return Connection
+     */
     public function getDbal(): Connection
     {
         return $this->getInjection('dbal');

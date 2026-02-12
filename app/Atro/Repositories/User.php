@@ -50,9 +50,9 @@ class User extends RDB
 
     public function getAdminUsers(): array
     {
-        return $this->getConnection()->createQueryBuilder()
+        return $this->getDbal()->createQueryBuilder()
             ->select('id')
-            ->from($this->getConnection()->quoteIdentifier('user'))
+            ->from($this->getDbal()->quoteIdentifier('user'))
             ->where('deleted = :false')
             ->andWhere('is_admin = :true')
             ->andWhere('is_active = :true')
