@@ -34,7 +34,7 @@ class Cluster extends Base
     {
         parent::applyAdditional($result, $params);
 
-        if (!empty($this->selectParameters['select'])) {
+        if (!empty($this->selectParameters['select']) && !empty($this->selectParameters['aggregation'])) {
             // For performance, we have to calculate count on the filtered result
             $callbackParam = 'subQueryCallbacks';
             if (in_array($this->selectParameters['sortBy'] ?? '', ['stagingItemCount', 'masterItemCount'])) {
