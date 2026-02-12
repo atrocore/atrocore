@@ -26,7 +26,7 @@ class MasterDataEntity extends Base
     public function updateMasterRecord(Entity $staging, ?Entity $master = null): Entity
     {
         if ($master === null) {
-            $master = $staging->get('goldenRecord');
+            $master = $staging->get('masterRecord');
         }
 
         if (empty($master) || !$this->getAcl()->check($master->getEntityName(), 'edit')) {
