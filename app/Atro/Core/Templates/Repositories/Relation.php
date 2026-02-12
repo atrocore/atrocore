@@ -431,7 +431,7 @@ class Relation extends Base
             return false;
         }
 
-        if (in_array($hierarchicalEntityLink, $this->getEntityManager()->getRepository($hierarchicalEntity)->getUnInheritedRelations())) {
+        if (in_array($hierarchicalEntityLink, $this->getEntityManager()->getRepository($hierarchicalEntity)->getUnInheritableFields())) {
             return false;
         }
 

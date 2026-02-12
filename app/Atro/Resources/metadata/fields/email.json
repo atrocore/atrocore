@@ -46,6 +46,12 @@
     {
       "name": "index",
       "type": "bool"
+    },
+    {
+      "name": "inheritanceDisabled",
+      "type": "bool",
+      "default": false,
+      "tooltip": true
     }
   ],
   "fieldDefs": {

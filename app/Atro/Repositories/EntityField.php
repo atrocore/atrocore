@@ -727,7 +727,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled'];
 
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
@@ -943,8 +943,6 @@ class EntityField extends ReferenceData
         $virtualToEntityFields = [
             "isNonComparable"         => "nonComparableFields",
             "isDuplicatableRelation"  => "duplicatableRelations",
-            "isUninheritableField"    => "unInheritedFields",
-            "isUninheritableRelation" => "unInheritedRelations",
             "modifiedExtendedEnabled" => "modifiedExtendedRelations"
         ];
 
@@ -984,8 +982,6 @@ class EntityField extends ReferenceData
         $virtualToEntityFields = [
             "isNonComparable"         => "nonComparableFields",
             "isDuplicatableRelation"  => "duplicatableRelations",
-            "isUninheritableField"    => "unInheritedFields",
-            "isUninheritableRelation" => "unInheritedRelations",
             "modifiedExtendedEnabled" => "modifiedExtendedRelations"
         ];
 

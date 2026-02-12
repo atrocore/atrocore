@@ -326,7 +326,7 @@ class Hierarchy extends Base
 
         $relationEntityName = ucfirst($relationName);
 
-        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+        if (in_array($link, $this->getRepository()->getUnInheritableFields())) {
             return false;
         }
 
@@ -529,7 +529,7 @@ class Hierarchy extends Base
         if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance']))) {
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links']) as $link => $linkDefs) {
                 $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
-                if (!empty($relationName) && !in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+                if (!empty($relationName) && !in_array($link, $this->getRepository()->getUnInheritableFields())) {
                     $parentsIds = $entity->getLinkMultipleIdList('parents');
                     if (!empty($parentsIds[0])) {
                         $this->unlinkAll($entity->get('id'), $link);
@@ -865,7 +865,7 @@ class Hierarchy extends Base
             return;
         }
 
-        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+        if (in_array($link, $this->getRepository()->getUnInheritableFields())) {
             return;
         }
 
@@ -1011,7 +1011,7 @@ class Hierarchy extends Base
             return;
         }
 
-        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+        if (in_array($link, $this->getRepository()->getUnInheritableFields())) {
             return;
         }
 
@@ -1030,7 +1030,7 @@ class Hierarchy extends Base
 
     public function createPseudoTransactionUnlinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
-        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+        if (in_array($link, $this->getRepository()->getUnInheritableFields())) {
             return;
         }
 
