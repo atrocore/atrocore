@@ -790,7 +790,8 @@
     "updatedCountFilterActionExecution": "Обновлено выполнением действия",
     "derivativeStatus": "Статус производного",
     "sourceRecord": "Источник записи",
-    "stagingRecords": "Постановочные записи"
+    "stagingRecords": "Постановочные записи",
+    "masterRecord": "Мастер запись"
   },
   "dashlets": {
     "Stream": "Действия",
