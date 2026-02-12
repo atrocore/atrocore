@@ -790,7 +790,8 @@
     "field": "Pole",
     "derivativeStatus": "Status instrumentu pochodnego",
     "sourceRecord": "Źródło: Record",
-    "stagingRecords": "Staging Records"
+    "stagingRecords": "Staging Records",
+    "masterRecord": "Główny rekord"
   },
   "dashlets": {
     "Stream": "Aktywności",
