@@ -790,7 +790,8 @@
     "field": "Campo",
     "derivativeStatus": "Estado derivado",
     "sourceRecord": "Fuente Registro",
-    "stagingRecords": "Registros de puesta en escena"
+    "stagingRecords": "Registros de puesta en escena",
+    "masterRecord": "Registro maestro"
   },
   "dashlets": {
     "Stream": "Actividades planeadas",
