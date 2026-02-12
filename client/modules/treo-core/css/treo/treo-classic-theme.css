@@ -19121,6 +19121,31 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     font-weight: 500;
 }
 
+
+.compare-records table tr th.confirmed,
+.compare-records table tr th.golden {
+    position: relative;
+}
+
+.compare-records table tr th.confirmed:before,
+.compare-records table tr th.golden:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2px);
+    height: 3px;
+}
+
+.compare-records table tr th.confirmed:before {
+    background-color: #06c;
+}
+
+.compare-records table tr th.golden:before {
+    background-color: #daa520;
+}
+
 .compare-records table tr .merge-radio {
     padding-left: 15px;
     padding-right: 15px;
