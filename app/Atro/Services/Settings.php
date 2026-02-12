@@ -25,7 +25,7 @@ class Settings extends AbstractService
 {
     public function getConfigData(): array
     {
-        if ($this->getUser()->id == 'system') {
+        if ($this->getUser()->isSystem()) {
             $data = $this->getConfig()->getData();
         } else {
             $data = $this->getConfig()->getData($this->getUser()->isAdmin());

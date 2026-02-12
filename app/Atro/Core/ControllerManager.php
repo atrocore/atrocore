@@ -137,7 +137,7 @@ class ControllerManager
             $this->getConfig()->get('isInstalled')
             && empty($this->getConfig()->get('disableActionHistory'))
             && empty($this->getUser()->get('disableActionHistory'))
-            && $this->getUser()->id !== 'system'
+            && !$this->getUser()->isSystem()
             && (!in_array($controllerName, ['ActionHistoryRecord', 'App', 'Metadata']) || ($controllerName === 'App' && $actionName === 'logNavigation'))
             && !(in_array($controllerName, ['Layout', 'I18n', 'Settings']) && $request->getMethod() === 'GET')
             && empty($this->getMetadata()->get("scopes.{$controllerName}.disableActionHistory"))

@@ -195,7 +195,7 @@ class ActionManager
         if (empty($user)) {
             return false;
         }
-        if ($userId === 'system') {
+        if ($user->isSystem()) {
             $user->set('isAdmin', true);
             $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
         }

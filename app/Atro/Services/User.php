@@ -73,7 +73,7 @@ class User extends Record
         }
         $params['where'][] = [
             'type'  => 'notEquals',
-            'field' => 'id',
+            'field' => 'userName',
             'value' => 'system'
         ];
 

@@ -85,7 +85,7 @@ Espo.define('views/notification/items/base', 'view', function (Dep) {
         getAvatarHtml: function () {
             var id = this.userId;
             if (this.isSystemAvatar) {
-                id = 'system';
+                id = this.getConfig().get('systemUserId');
             }
             return this.getHelper().getAvatarHtml(id, 'small', 32);
         }

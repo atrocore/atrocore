@@ -1359,7 +1359,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
                 'bodyUkUa'         => '<h2>Ви надіслали запит на зміну пароля</h2><p>Якщо це були Ви, перейдіть за <a href="{{ link }}" target="_blank">посиланням</a> та змініть свій пароль. В іншому випадку ви можете проігнорувати цей лист.</p><p>Надана унікальна URL-адреса має обмежений термін дії, який незабаром спливе.</p>',
                 'allowAttachments' => false,
                 'createdAt'        => $datetime,
-                'createdById'      => 'system'
+                'createdById'      => $this->getConfig()->get('systemUserId')
             ],
             'emailPasswordReset'         => [
                 'id'               => IdGenerator::unsortableId(),
@@ -1378,7 +1378,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
                 'bodyUkUa'         => '<h2>Ваш пароль більше не дійсний</h2><p>Щоб встановити новий пароль, перейдіть за <a href="{{ link }}" target="_blank">посиланням</a></p><p>Надана унікальна URL-адреса має обмежений термін дії, який незабаром спливе.</p>',
                 'allowAttachments' => false,
                 'createdAt'        => $datetime,
-                'createdById'      => 'system'
+                'createdById'      => $this->getConfig()->get('systemUserId')
             ]
         ];
     }

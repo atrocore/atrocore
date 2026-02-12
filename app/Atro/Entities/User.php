@@ -23,7 +23,7 @@ class User extends \Espo\Core\ORM\Entity
 
     public function isSystem()
     {
-        return $this->id === 'system';
+        return $this->get('userName') === 'system';
     }
 
     public function isActive()

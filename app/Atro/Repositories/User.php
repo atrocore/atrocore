@@ -14,12 +14,40 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\ORM\Repositories\RDB;
+use Atro\Entities\User as UserEntity;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
 
 class User extends RDB
 {
+    protected ?UserEntity $systemUser = null;
+
+    public function getSystemUser(): UserEntity
+    {
+        if ($this->systemUser === null) {
+            $this->systemUser = $this->where(['userName' => 'system'])->findOne();
+            if (empty($this->systemUser)) {
+                $user = $this->get();
+                $user->set('userName', 'system');
+                $user->set('lastName', 'System');
+                $user->set('isActive', true);
+                $user->set('followEntityOnStreamPost', false);
+                $user->set('isAdmin', true);
+                $this->save($user);
+
+                $this->systemUser = $user;
+            }
+        }
+
+        if (empty($this->getConfig()->get('systemUserId')) || $this->getConfig()->get('systemUserId') !== $this->systemUser->id) {
+            $this->getConfig()->set('systemUserId', $this->systemUser->id);
+            $this->getConfig()->save();
+        }
+
+        return $this->systemUser;
+    }
+
     public function getAdminUsers(): array
     {
         return $this->getConnection()->createQueryBuilder()

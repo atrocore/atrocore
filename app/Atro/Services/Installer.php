@@ -215,8 +215,8 @@ class Installer extends HasContainer
                 'scheduling'     => '*/15 * * * *',
                 'created_at'     => date('Y-m-d H:i:s'),
                 'modified_at'    => date('Y-m-d H:i:s'),
-                'created_by_id'  => 'system',
-                'modified_by_id' => 'system',
+                'created_by_id'  => $this->getConfig()->get('systemUserId'),
+                'modified_by_id' => $this->getConfig()->get('systemUserId'),
             ];
 
             $conn = $this->getEntityManager()->getConnection();
@@ -555,7 +555,7 @@ class Installer extends HasContainer
     protected function createFakeSystemUser(): void
     {
         $systemUser = $this->getEntityManager()->getEntity('User');
-        $systemUser->set('id', 'system');
+        $systemUser->set('id', $this->getConfig()->get('systemUserId'));
 
         // set system user to container
         $this->getContainer()->setUser($systemUser);
