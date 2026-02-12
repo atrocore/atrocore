@@ -17,10 +17,11 @@ use Atro\Core\SeederFactory;
 use Atro\Core\Templates\Services\HasContainer;
 use Atro\Console\AbstractConsole;
 use Atro\Core\ModuleManager\Manager;
+use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Utils\Language;
-use Atro\Core\Utils\Util;
 use Atro\Core\Exceptions;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
@@ -109,7 +110,7 @@ class Installer extends HasContainer
 
     public function getLicenseAndLanguages(): array
     {
-        $license = $this->getContents('LICENSE.txt');
+        $license = $this->getFileManager()->getContents('LICENSE.txt');
 
         $languages = [
             "de_DE" => "Deutsch",
@@ -270,7 +271,7 @@ class Installer extends HasContainer
     {
         $config = $this->getConfig();
 
-        return $this->fileExists($config->getConfigPath()) && $config->get('isInstalled');
+        return file_exists($config->getConfigPath()) && $config->get('isInstalled');
     }
 
     /**
@@ -281,14 +282,12 @@ class Installer extends HasContainer
      */
     public function checkPermissions(): bool
     {
-        $this->setMapPermission();
+        $this->getFileManager()->getPermissionUtils()->setMapPermission();
 
-        $error = $this->getLastError();
+        $error = $this->getFileManager()->getPermissionUtils()->getLastError();
 
         if (!empty($error)) {
-            $message = is_array($error) ? implode($error, ' ;') : (string)$error;
-
-            throw new Exceptions\InternalServerError($message);
+            throw new Exceptions\InternalServerError(is_array($error) ? implode(' ;', $error) : $error);
         }
 
         return true;
@@ -490,11 +489,13 @@ class Installer extends HasContainer
      */
     protected function createSuperAdminUser(string $username, string $password): User
     {
-        $connection = $this->getEntityManager()->getConnection();
+        $connection = $this->getEntityManager()->getDbal();
 
         // prepare data
         $passwordHash = $this->getPasswordHash()->hash($password);
         $today = (new \DateTime())->format('Y-m-d H:i:s');
+
+        $userId = IdGenerator::uuid();
 
         $connection->createQueryBuilder()
             ->insert($connection->quoteIdentifier('user'))
@@ -506,45 +507,16 @@ class Installer extends HasContainer
             ->setValue('is_admin', ':isAdmin')
             ->setValue('created_at', ':createdAt')
             ->setParameters([
-                'id'        => '1',
+                'id'        => $userId,
                 'name'      => 'Admin',
                 'userName'  => $username,
                 'password'  => $passwordHash,
                 'createdAt' => $today
             ])
-            ->setParameter('isAdmin', true, Mapper::getParameterType(true))
+            ->setParameter('isAdmin', true, ParameterType::BOOLEAN)
             ->executeQuery();
 
-        return $this->getEntityManager()->getEntity('User', 1);
-    }
-
-    protected function putPhpContents(string $path, array $data, bool $withObjects = false): bool
-    {
-        return $this->getFileManager()->putPhpContents($path, $path, $withObjects);
-    }
-
-    /**
-     * Checks whether a file or directory exists
-     *
-     * @param string $filename
-     *
-     * @return bool
-     */
-    protected function fileExists(string $filename): bool
-    {
-        return file_exists($filename);
-    }
-
-    /**
-     * Get file contents into the string
-     *
-     * @param string $path
-     *
-     * @return mixed
-     */
-    protected function getContents(string $path)
-    {
-        return $this->getFileManager()->getContents($path);
+        return $this->getEntityManager()->getEntity('User', $userId);
     }
 
     /**
@@ -604,24 +576,6 @@ class Installer extends HasContainer
 
         // rebuild database
         $this->getContainer()->getDataManager()->rebuild();
-    }
-
-    /**
-     * Set permission
-     */
-    protected function setMapPermission(): void
-    {
-        $this->getFileManager()->getPermissionUtils()->setMapPermission();
-    }
-
-    /**
-     * Get last permission error
-     *
-     * @return array|string
-     */
-    protected function getLastError()
-    {
-        return $this->getFileManager()->getPermissionUtils()->getLastError();
     }
 
     protected function getLanguage(): Language
@@ -684,7 +638,7 @@ class Installer extends HasContainer
     protected function generateAppId(): void
     {
         // generate id
-        $appId = substr(md5(md5(Util::generateUniqueHash() . "-atro-salt-") . Util::generateUniqueHash()), 0, 21);
+        $appId = substr(md5(md5(IdGenerator::unsortableId() . "-atro-salt-") . IdGenerator::unsortableId()), 0, 21);
 
         // set to config
         $this->getConfig()->set('appId', $appId);
