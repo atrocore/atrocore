@@ -110,7 +110,8 @@
     "updatedCountFilterActionExecution": "Mise à jour par l'exécution de l'action",
     "field": "Champ",
     "derivativeStatus": "Statut du dérivé",
-    "sourceRecord": "Source Record"
+    "sourceRecord": "Source Record",
+    "masterRecord": "Enregistrement de référence"
   },
   "scopeNames": {
     "Classification": "Classification",
