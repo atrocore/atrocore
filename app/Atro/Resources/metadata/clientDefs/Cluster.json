@@ -32,10 +32,12 @@
           "sortOrder": 20
         },
         "unlinkRelated": {
-          "url": "ClusterItem/{{id}}"
+          "url": "ClusterItem/{{id}}",
+          "refresh": true
         },
         "removeRelated": {
-          "url": "{{entityName}}/{{entityId}}"
+          "url": "{{entityName}}/{{entityId}}",
+          "refresh": true
         }
       },
       "hideShowFullList": true,

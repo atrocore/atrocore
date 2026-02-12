@@ -43,12 +43,8 @@ class ClusterItem extends Base
                 throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
             }
 
-
-            $allClusterItems = $cluster->get('clusterItems');
-            $confirmedClusterItems = [$entity];
-
             if (empty($goldenRecord)) {
-                foreach ($allClusterItems as $clusterItem) {
+                foreach ($cluster->get('clusterItems') as $clusterItem) {
                     if ($clusterItem->get('entityName') === $cluster->get('masterEntity')) {
                         if (!empty($itemRecord = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId')))) {
                             $goldenRecord = $itemRecord;
@@ -59,22 +55,14 @@ class ClusterItem extends Base
                         }
                     }
                 }
-            } else {
-                foreach ($allClusterItems as $clusterItem) {
-                    if ($clusterItem->get('id') !== $entity->get('id') && $clusterItem->get('entityName') !== $cluster->get('masterEntity')) {
-                        if (!empty($itemRecord = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId')))) {
-                            if ($itemRecord->get('goldenRecordId') === $goldenRecord->get('id')) {
-                                $confirmedClusterItems[] = $itemRecord;
-                            }
-                        }
-                    }
-                }
             }
 
-            $res = $this->createOrUpdateGoldenRecord($record, $cluster, $confirmedClusterItems, $goldenRecord);
-
             if (empty($goldenRecord)) {
-                $goldenRecord = $res;
+                $goldenRecord = $this->getRecordService('MasterDataEntity')->createMasterRecord($record);
+
+                if (empty($goldenRecord)) {
+                    return false;
+                }
 
                 $clusterItem = $this->getEntityManager()->getEntity('ClusterItem');
                 $clusterItem->set('clusterId', $cluster->get('id'));
@@ -84,6 +72,8 @@ class ClusterItem extends Base
 
                 $cluster->set('goldenRecordId', $goldenRecord->get('id'));
                 $this->getEntityManager()->saveEntity($cluster);
+            } else {
+                $this->getRecordService('MasterDataEntity')->updateMasterRecord($record, $goldenRecord);
             }
 
             $record->set('masterRecordId', $goldenRecord->get('id'));
@@ -239,45 +229,6 @@ class ClusterItem extends Base
             $entity->setMetaPermission('confirm', $this->getAcl()->check($record, 'edit'));
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
         }
-    }
-
-    public function createOrUpdateGoldenRecord(IEntity $stagingEntity, IEntity $cluster, array $confirmedClusterItems, ?IEntity $goldenRecord): Entity
-    {
-        $masterEntity = $cluster->get('masterEntity');
-        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $stagingEntity->getEntityType());
-        if (empty($masterDataEntity)) {
-            throw new BadRequest("MasterDataEntity with entityType {$stagingEntity->getEntityType()} not found");
-        }
-
-        $mergingScript = $masterDataEntity->get('mergingScript');
-        if (empty($mergingScript)) {
-            throw new BadRequest($this->getInjection('language')->translate('mergingScriptIsMissing', 'exceptions', 'MasterDataEntity'));
-        }
-
-        $templateData = [
-            'stagingRecord'         => $stagingEntity,
-            'confirmedClusterItems' => $confirmedClusterItems,
-            'cluster'               => $cluster,
-            'masterRecord'          => $goldenRecord,
-        ];
-        $res = $this->getEntityManager()->getContainer()->get('twig')->renderTemplate($mergingScript, $templateData);
-        $input = json_decode($res);
-
-        if (empty($input)) {
-            throw new BadRequest(str_replace('%s', $res, $this->getInjection('language')->translate('mergingScriptIsInvalid', 'exceptions', 'MasterDataEntity')));
-        }
-
-        if (empty($goldenRecord)) {
-            return $this->getRecordService($masterEntity)->createEntity($input);
-        }
-
-        try {
-            $goldenRecord = $this->getRecordService($masterEntity)->updateEntity($goldenRecord->get('id'), $input);
-        } catch (NotModified) {
-            // ignore
-        }
-
-        return $goldenRecord;
     }
 
     public function prepareEntityForOutput(Entity $entity)

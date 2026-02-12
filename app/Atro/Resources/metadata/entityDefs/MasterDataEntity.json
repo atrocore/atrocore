@@ -64,7 +64,7 @@
       "type": "text",
       "view": "views/fields/script",
       "language": "json",
-      "default": "{# { \"name\": \"{{ stagingRecord.name }}\" } #}",
+      "default": "{# { \"skipped\": false, \"masterRecordData\": { \"name\" : \"{{ stagingRecord.name }}\" } } #}",
       "editorActions": {
         "addFields": {
           "entityNameField": "masterEntity"
