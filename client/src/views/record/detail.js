@@ -286,7 +286,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
                 entityName: this.model.name,
                 entityId: this.model.id
-            }).then( _ => {
+            }).then(_ => {
                 this.notify(this.translate('Success'), 'success')
             })
         },
@@ -443,7 +443,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             let runAction = () => {
                 this.notify(this.translate('Loading...'));
-                this.ajaxPostRequest(actionDefs.url, {action: name, scope: scope, id: id})
+                this.ajaxPostRequest(actionDefs.url, { action: name, scope: scope, id: id })
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
                         if (actionDefs.refresh) {
@@ -598,7 +598,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
             }
 
-            if(this.getAcl().check('Selection', 'create')) {
+            if (!this.getMetadata().get(`scopes.${this.model.name}.selectionDisabled`) && this.getAcl().check('Selection', 'create')) {
                 this.dropdownItemList.push({
                     label: 'Select',
                     name: 'select',
@@ -3003,19 +3003,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         view.reRender();
                     });
 
-                        if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getUser().isAdmin() && this.mode === 'detail') {
-                            parentView.createView('insightsLayoutConfigurator', "views/record/layout-configurator", {
-                                scope: this.scope,
-                                viewType: 'insights',
-                                layoutData: view.layoutData,
-                                el: $(`${parentView.options.el} .right-side-view .layout-editor-container`).get(0),
-                            }, (v) => {
-                                v.on("refresh", () => {
-                                    loadInsights()
-                                })
-                                v.render()
+                    if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getUser().isAdmin() && this.mode === 'detail') {
+                        parentView.createView('insightsLayoutConfigurator', "views/record/layout-configurator", {
+                            scope: this.scope,
+                            viewType: 'insights',
+                            layoutData: view.layoutData,
+                            el: $(`${parentView.options.el} .right-side-view .layout-editor-container`).get(0),
+                        }, (v) => {
+                            v.on("refresh", () => {
+                                loadInsights()
                             })
-                        }
+                            v.render()
+                        })
+                    }
 
                 });
             }

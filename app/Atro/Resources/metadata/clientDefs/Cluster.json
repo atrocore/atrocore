@@ -1,6 +1,7 @@
 {
   "iconClass": "copy",
   "controller": "controllers/record",
+  "createDisabled": true,
   "views": {
     "detail": "views/cluster/detail"
   },
