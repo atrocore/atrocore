@@ -1099,7 +1099,8 @@
     "field": "Campo",
     "derivativeStatus": "Stato derivato",
     "sourceRecord": "Fonte Record",
-    "stagingRecords": "Registri di allestimento"
+    "stagingRecords": "Registri di allestimento",
+    "masterRecord": "Record principale"
   },
   "tooltips": {
     "groupEnd": "Selezioni per utilizzare questo elemento per contrassegnare la fine degli elementi di navigazione raggruppati. Tutti gli elementi successivi a questa voce saranno disaggregati."
