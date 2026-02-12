@@ -20,7 +20,8 @@
       "maxLength": 50,
       "required": true,
       "view": "views/user/fields/user-name",
-      "tooltip": true
+      "tooltip": true,
+      "unique": true
     },
     "name": {
       "type": "varchar",
