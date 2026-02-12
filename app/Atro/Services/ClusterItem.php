@@ -77,7 +77,7 @@ class ClusterItem extends Base
             }
 
             $record->set('masterRecordId', $goldenRecord->get('id'));
-            $this->getEntityManager()->saveEntity($record);
+            $this->getEntityManager()->saveEntity($record, ['skipAll' => true]);
         }
 
         return true;
