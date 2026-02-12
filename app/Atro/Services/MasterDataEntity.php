@@ -19,6 +19,7 @@ use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class MasterDataEntity extends Base
 {
@@ -51,17 +52,59 @@ class MasterDataEntity extends Base
         $res = $this->getTwig()->renderTemplate($mergingScript, $templateData);
         $input = json_decode($res, true);
 
-        if (!is_array($input) || empty($input)) {
+        if (!is_array($input) || empty($input['masterRecordData'])) {
             throw new BadRequest(sprintf($this->translate('mergingScriptIsNotValid', 'exceptions', 'MasterDataEntity'), $res));
         }
 
+        if (!empty($input['skipped'])) {
+            return $master;
+        }
+
         try {
-            $master = $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode($res));
+            $master = $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($input['masterRecordData'])));
         } catch (NotModified) {
             // ignore
         }
 
         return $master;
+    }
+
+    public function createMasterRecord(Entity $staging): ?Entity
+    {
+        $masterEntity = $this->getMetadata()->get(['scopes', $staging->getEntityName(), 'primaryEntityId']);
+
+        if (empty($masterEntity) || !$this->getAcl()->check($masterEntity, 'create')) {
+            throw new Forbidden();
+        }
+
+        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $staging->getEntityName());
+        if (empty($masterDataEntity)) {
+            throw new BadRequest("MasterDataEntity with entityType {$staging->getEntityName()} not found.");
+        }
+
+        $mergingScript = $masterDataEntity->get('mergingScript');
+        if (empty($mergingScript)) {
+            throw new BadRequest($this->translate('mergingScriptIsMissing', 'exceptions', 'MasterDataEntity'));
+        }
+
+        $templateData = [
+            'stagingRecord'  => $staging,
+            'masterRecord'   => null,
+            'stagingRecords' => new EntityCollection([], $staging->getEntityName())
+        ];
+
+        $res = $this->getTwig()->renderTemplate($mergingScript, $templateData);
+        $input = json_decode($res, true);
+
+        if (!is_array($input) || empty($input['masterRecordData'])) {
+            throw new BadRequest(sprintf($this->translate('mergingScriptIsNotValid', 'exceptions', 'MasterDataEntity'), $res));
+        }
+
+        if (!empty($input['skipped'])) {
+            return null;
+        }
+
+        return $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($input['masterRecordData'])));
     }
 
     public function prepareEntityForOutput(Entity $entity)

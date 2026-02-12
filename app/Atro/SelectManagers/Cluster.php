@@ -34,7 +34,7 @@ class Cluster extends Base
     {
         parent::applyAdditional($result, $params);
 
-        if (!empty($this->selectParameters['select']) && !empty($this->selectParameters['aggregation'])) {
+        if (!empty($this->selectParameters['select'])  && empty($this->selectParameters['totalOnly'])) {
             // For performance, we have to calculate count on the filtered result
             $callbackParam = 'subQueryCallbacks';
             if (in_array($this->selectParameters['sortBy'] ?? '', ['stagingItemCount', 'masterItemCount'])) {
@@ -300,7 +300,7 @@ class Cluster extends Base
             "COUNT(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN 1 END) = 1 AND " .
             "MAX(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN $mtAlias.entity_id END) = mt_alias.$goldenRecordColumn AND " .
             "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn THEN 1 END) > 0 AND " .
-            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn AND ({$goldenRecordCase}) <> mt_alias.$goldenRecordColumn THEN 1 END) = 0 THEN 'merged' " .
+            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn AND COALESCE($goldenRecordCase, '') <> mt_alias.$goldenRecordColumn THEN 1 END) = 0 THEN 'merged' " .
 
             // Review state (default for everything else)
             "ELSE 'review' END")
