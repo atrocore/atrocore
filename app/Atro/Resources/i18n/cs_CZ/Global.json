@@ -643,7 +643,8 @@
     "field": "Pole",
     "derivativeStatus": "Stav derivátu",
     "sourceRecord": "Zdroj Záznam",
-    "stagingRecords": "Záznamy o etapách"
+    "stagingRecords": "Záznamy o etapách",
+    "masterRecord": "Hlavní záznam"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
