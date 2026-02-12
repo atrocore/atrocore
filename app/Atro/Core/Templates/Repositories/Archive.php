@@ -21,35 +21,9 @@ class Archive extends Base
 {
     protected const MAPPER_CLASS = '\ClickHouseIntegration\ORM\DB\ClickHouse\Mapper';
 
-    protected bool $moveDataOnFind = true;
-
     public function hasClickHouse(): bool
     {
         return class_exists(self::MAPPER_CLASS) && !empty($this->getConfig()->get('clickhouse')['active']);
-    }
-
-    public function find(array $params = [])
-    {
-        if ($this->hasClickHouse() && $this->moveDataOnFind) {
-            $this
-                ->getInjection('container')
-                ->get('\ClickHouseIntegration\Console\SyncEntity')
-                ->moveData($this->entityName);
-        }
-
-        return parent::find($params);
-    }
-
-    public function count(array $params = [])
-    {
-        if ($this->hasClickHouse() && $this->moveDataOnFind) {
-            $this
-                ->getInjection('container')
-                ->get('\ClickHouseIntegration\Console\SyncEntity')
-                ->moveData($this->entityName);
-        }
-
-        return parent::count($params);
     }
 
     public function hasDeletedRecordsToClear(): bool
@@ -81,7 +55,7 @@ class Archive extends Base
             return;
         }
 
-        $this->getConnection()->createQueryBuilder()
+        $this->getDbal()->createQueryBuilder()
             ->delete(Util::toUnderScore(lcfirst($this->entityName)))
             ->where('created_at < :date')
             ->setParameter('date', (new \DateTime())->modify("-$autoDeleteAfterDays days")->format('Y-m-d H:i:s'))
