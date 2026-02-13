@@ -23,6 +23,8 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
 
         unlinkGroup: true,
 
+        showMore: true,
+
         getCreateLink() {
             return 'associatedItemRelations';
         },
@@ -57,8 +59,17 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
         },
 
         afterGroupRender() {
+            this.updateCollectionTotal()
+            this.trigger('after-groupPanels-rendered')
+        },
+
+        updateCollectionTotal() {
+            let total = 0
             this.groups.forEach(group => {
-                const groupCollection = this.getView(group.key).collection;
+                const groupCollection = this.getView(group.key)?.collection;
+                if (!groupCollection) return;
+
+                total += groupCollection.total;
                 groupCollection.forEach(item => {
                     item = item.relationModel
                     if (this.collection.get(item.get('id'))) {
@@ -68,9 +79,8 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
                 });
             })
 
-            this.collection.total = this.collection.length
+            this.collection.total = total
             this.collection.trigger('update-total', this.collection)
-            this.trigger('after-groupPanels-rendered')
         },
 
         getLayoutLink() {
@@ -84,10 +94,10 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
         },
 
         initGroupCollection(group, groupCollection, callback) {
+            groupCollection.on('update-total sync', () => this.updateCollectionTotal())
             this.getHelper().layoutManager.get(this.scope, this.layoutName, this.getLayoutLink(), null, data => {
                 groupCollection.url = this.model.name + '/' + this.model.id + '/' + this.link;
-                groupCollection.collectionOnly = true;
-                groupCollection.maxSize = 999
+                groupCollection.maxSize = 20
                 groupCollection.data.whereRelation = [
                     {
                         type: 'equals',
