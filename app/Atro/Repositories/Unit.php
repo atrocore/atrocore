@@ -66,7 +66,7 @@ class Unit extends Base
         parent::beforeSave($entity, $options);
 
         // recalculate multiplier
-        if ($entity->getFetched('isMain') === false && $entity->get('isMain') === true && !empty($entity->get('multiplier'))) {
+        if ($entity->getFetched('isMain') === false && $entity->get('isMain') === true && !empty($entity->getFetched('multiplier'))) {
             $k = 1 / $entity->getFetched('multiplier');
             foreach ($this->where(['measureId' => $entity->get('measureId'), 'id!=' => $entity->get('id')])->find() as $unit) {
                 $unit->set('multiplier', round($k * $unit->get('multiplier'), 4));
