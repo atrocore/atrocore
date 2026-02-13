@@ -320,7 +320,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 items = [];
                 link = `#${tab}`;
 
-                if (!this.getAcl().check(tab, 'create')) {
+                if (!this.getAcl().check(tab, 'create') || this.getMetadata().get(['clientDefs', tab, 'createDisabled'])) {
                     createDisabled = true;
                 }
             }
