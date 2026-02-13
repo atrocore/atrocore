@@ -12,6 +12,7 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\ParameterType;
 
 class V2Dot2Dot21 extends Base
 {
@@ -25,9 +26,11 @@ class V2Dot2Dot21 extends Base
         $this->getDbal()->createQueryBuilder()
             ->update($this->getDbal()->quoteIdentifier('user'))
             ->set('type', ':type')
+            ->set('is_admin', ':true')
             ->where('user_name = :userName')
             ->setParameter('userName', 'system')
             ->setParameter('type', 'System')
+            ->setParameter('true', true, ParameterType::BOOLEAN)
             ->executeQuery();
 
         $systemUser = $this->getDbal()->createQueryBuilder()

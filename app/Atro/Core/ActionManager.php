@@ -12,10 +12,10 @@
 namespace Atro\Core;
 
 use Atro\ActionTypes\TypeInterface;
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Utils\Metadata;
+use Atro\Entities\User;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
 use Atro\Core\Utils\Config;
@@ -30,16 +30,13 @@ class ActionManager
         $this->container = $container;
     }
 
-    public function getExecuteAsUserId(Entity $action, \stdClass $input): ?string
+    public function getExecuteAsUser(Entity $action): User
     {
-        switch ($action->get('executeAs')) {
-            case 'system':
-                return 'system';
-            case 'sameUser':
-                return null;
+        if ($action->get('executeAs') === 'system') {
+            return $this->getEntityManager()->getRepository('User')->getGlobalSystemUser();
         }
 
-        return null;
+        return $this->container->get('user')->getSystemUser();
     }
 
     public function canExecute(Entity $action, \stdClass $input): bool
@@ -89,14 +86,13 @@ class ActionManager
         }
 
         // prepare current user ID
-        $currentUserId = $this->container->get('user')->get('id');
-        $userChanged = false;
+        $currentUser = $this->container->get('user');
+        $user = $this->getExecuteAsUser($action);
 
-        if (
-            empty($this->getMemoryStorage()->get('importJobId'))
-            && !empty($userId = $this->getExecuteAsUserId($action, $input))
-        ) {
-            $userChanged = $this->auth($userId);
+        $userChanged = $currentUser !== $user;
+
+        if ($userChanged) {
+            $this->auth($user);
         }
 
         $execution = $this->getEntityManager()->getRepository('ActionExecution')->get();
@@ -144,7 +140,7 @@ class ActionManager
 
         if ($userChanged) {
             // auth as current user again
-            $this->auth($currentUserId);
+            $this->auth($currentUser);
         }
 
         if (!empty($e)) {
@@ -189,21 +185,15 @@ class ActionManager
         return $data;
     }
 
-    protected function auth(string $userId): bool
+    protected function auth(User $user): void
     {
-        $user = $this->getEntityManager()->getRepository('User')->get($userId);
-        if (empty($user)) {
-            return false;
-        }
-        if ($user->isGlobalSystemUser()) {
-            $user->set('isAdmin', true);
+        if ($user->isSystemUser()) {
             $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
         }
+
         $this->getEntityManager()->setUser($user);
         $this->container->setUser($user);
         $this->container->get('acl')->setUser($user);
-
-        return true;
     }
 
     protected function getEntityManager(): EntityManager
