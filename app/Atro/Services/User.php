@@ -25,8 +25,9 @@ class User extends Record
     protected $internalAttributeList = ['password'];
 
     protected $mandatorySelectAttributeList = [
-        'isActive',
+        'type',
         'userName',
+        'isActive',
         'isAdmin'
     ];
 
@@ -73,8 +74,8 @@ class User extends Record
         }
         $params['where'][] = [
             'type'  => 'notEquals',
-            'field' => 'userName',
-            'value' => 'system'
+            'field' => 'type',
+            'value' => 'System'
         ];
 
         return parent::findEntities($params);

@@ -70,7 +70,7 @@ class Schema
 
     protected function createSystemUser(): bool
     {
-        $this->entityManager->getRepository('User')->getSystemUser();
+        $this->entityManager->getRepository('User')->getGlobalSystemUser();
 
         return true;
     }

@@ -14,6 +14,7 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\ORM\Repositories\RDB;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Entities\User as UserEntity;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\AclManager;
@@ -23,7 +24,7 @@ class User extends RDB
 {
     protected ?UserEntity $systemUser = null;
 
-    public function getSystemUser(): UserEntity
+    public function getGlobalSystemUser(): UserEntity
     {
         if ($this->systemUser === null) {
             $this->systemUser = $this->where(['userName' => 'system'])->findOne();
@@ -34,6 +35,7 @@ class User extends RDB
                 $user->set('isActive', true);
                 $user->set('followEntityOnStreamPost', false);
                 $user->set('isAdmin', true);
+                $user->set('type', 'System');
                 $this->save($user);
 
                 $this->systemUser = $user;
@@ -46,6 +48,37 @@ class User extends RDB
         }
 
         return $this->systemUser;
+    }
+
+    public function getSystemUser(UserEntity $user): UserEntity
+    {
+        if ($user->get('type') === 'System') {
+            throw new Error('It is already the system user.');
+        }
+
+        $globalSystemUserId = $this->getGlobalSystemUser()->id;
+
+        $systemUser = $this
+            ->where([
+                'type'        => 'System',
+                'actorId'     => $globalSystemUserId,
+                'delegatorId' => $user->id
+            ])
+            ->findOne();
+
+        if (empty($systemUser)) {
+            $systemUser = $this->get();
+            $systemUser->set('type', 'System');
+            $systemUser->set('userName', IdGenerator::unsortableId());
+            $systemUser->set('isActive', true);
+            $systemUser->set('followEntityOnStreamPost', false);
+            $systemUser->set('isAdmin', false);
+            $systemUser->set('actorId', $globalSystemUserId);
+            $systemUser->set('delegatorId', $user->id);
+            $this->save($systemUser);
+        }
+
+        return $systemUser;
     }
 
     public function getAdminUsers(): array
@@ -142,8 +175,8 @@ class User extends RDB
         }
 
         if ($entity->isAttributeChanged('isActive')
-        ||  $entity->isAttributeChanged('receiveNotifications')
-        || $entity->isAttributeChanged('notificationProfileId')) {
+            || $entity->isAttributeChanged('receiveNotifications')
+            || $entity->isAttributeChanged('notificationProfileId')) {
             $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
         }
 

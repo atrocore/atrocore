@@ -46,7 +46,7 @@ class User extends AbstractRecordController
 
         $user = $this->getUser();
         $expireDays = $this->getConfig()->get('passwordExpireDays', 0);
-        if ($user->isSystem() || !$user->needToUpdatePassword($expireDays)) {
+        if ($user->isSystemUser() || !$user->needToUpdatePassword($expireDays)) {
             throw new Forbidden();
         }
 
