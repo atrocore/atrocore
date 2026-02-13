@@ -94,7 +94,7 @@ class Base extends RDB
         }
 
         $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $entity->getEntityName());
-        if (empty($masterDataEntity) && empty($masterDataEntity->get('updateMasterAutomatically'))) {
+        if (empty($masterDataEntity) || empty($masterDataEntity->get('updateMasterAutomatically'))) {
             return;
         }
 
