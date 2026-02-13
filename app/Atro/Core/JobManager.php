@@ -42,6 +42,9 @@ class JobManager
                 $GLOBALS['log']->error("User $userId not found. Cannot execute job " . $job->get('id'));
                 return false;
             }
+
+            $user = $user->getSystemUser();
+
             $this->getEntityManager()->setUser($user);
             $this->container->setUser($user);
         }
