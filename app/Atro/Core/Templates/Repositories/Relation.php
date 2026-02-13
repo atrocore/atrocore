@@ -325,6 +325,13 @@ class Relation extends Base
         $this->deleteHierarchical($entity);
 
         $this->updateModifiedAtForRelatedEntity($entity);
+
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityName, 'isHierarchyEntity']))) {
+            $this
+                ->getEntityManager()
+                ->getRepository($this->getHierarchicalEntity())
+                ->buildRoutes($entity->get('entityId'));
+        }
     }
 
     public function getHierarchicalRelation(): ?string
