@@ -166,6 +166,7 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "System": "System",
     "matchings": "Übereinstimmungen",
     "addFields": "Felder hinzufügen",
     "addAttributes": "Attribute hinzufügen",
