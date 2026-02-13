@@ -187,7 +187,7 @@ Espo.define('views/stream/note', 'view', function (Dep) {
         getAvatarHtml: function () {
             var id = this.model.get('createdById');
             if (this.isSystemAvatar) {
-                id = 'system';
+                id = this.getConfig().get('systemUserId');
             }
             return this.getHelper().getAvatarHtml(id, 'small', 32);
         },

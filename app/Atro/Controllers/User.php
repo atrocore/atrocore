@@ -35,7 +35,7 @@ class User extends AbstractRecordController
             throw new Forbidden();
         }
 
-        return $this->getAclManager()->getMap($user);
+        return $this->getAclManager()->getMap($user->get('delegator'));
     }
 
     public function postActionChangeExpiredPassword($params, $data, $request)
@@ -46,7 +46,7 @@ class User extends AbstractRecordController
 
         $user = $this->getUser();
         $expireDays = $this->getConfig()->get('passwordExpireDays', 0);
-        if ($user->isSystem() || !$user->needToUpdatePassword($expireDays)) {
+        if ($user->isSystemUser() || !$user->needToUpdatePassword($expireDays)) {
             throw new Forbidden();
         }
 

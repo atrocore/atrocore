@@ -165,6 +165,11 @@ final class Container
         return null;
     }
 
+    /**
+     * Get DBAL connection
+     *
+     * @return Connection
+     */
     public function getDbal(): Connection
     {
         return $this->get('dbal');

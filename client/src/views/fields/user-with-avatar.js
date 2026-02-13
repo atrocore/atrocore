@@ -80,7 +80,7 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
                     return;
                 }
 
-                if (this.model.get(this.idName) === 'system') {
+                if (this.model.get(this.idName) === this.getConfig().get('systemUserId')) {
                     return;
                 }
 

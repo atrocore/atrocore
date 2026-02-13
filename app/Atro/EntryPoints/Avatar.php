@@ -88,7 +88,7 @@ class Avatar extends Image
 
                 $hash = $userId;
                 $color = $this->getColor($userId);
-                if ($hash === 'system') {
+                if ($hash === $this->getConfig()->get('systemUserId')) {
                     $color = $this->systemColor;
                 }
 

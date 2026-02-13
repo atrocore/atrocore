@@ -32,9 +32,9 @@ class ThumbnailType extends ReferenceData
                 "height"         => $data["size"][1] ?? null,
                 "deleteDisabled" => !empty($data["deleteDisabled"]),
                 "createdAt"      => $data["createdAt"] ?? null,
-                "createdById"    => $data["createdById"] ?? 'system',
+                "createdById"    => $data["createdById"] ?? $this->getConfig()->get('systemUserId'),
                 "modifiedAt"     => $data["modifiedAt"] ?? null,
-                "modifiedById"   => $data["modifiedById"] ?? 'system',
+                "modifiedById"   => $data["modifiedById"] ?? $this->getConfig()->get('systemUserId'),
             ];
         }
 

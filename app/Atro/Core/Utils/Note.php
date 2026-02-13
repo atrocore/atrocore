@@ -436,7 +436,7 @@ class Note
     protected function isFollowCreatedEntities(): bool
     {
         if ($this->followCreatedEntities === null) {
-            if ($this->getUser()->isSystem()) {
+            if ($this->getUser()->isSystemUser()) {
                 $this->followCreatedEntities = false;
             } else {
                 $this->followCreatedEntities = !empty($this->getUser()->get('followCreatedEntities'));

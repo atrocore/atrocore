@@ -39,7 +39,7 @@ class FileStorageSeeder extends AbstractSeeder
             ->setParameter('type', 'local')
             ->setParameter('path', 'upload/files')
             ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('system', 'system');
+            ->setParameter('system', $this->getConfig()->get('systemUserId'));
         try {
             $qb->executeQuery();
         } catch (\Throwable $e) {
@@ -107,7 +107,7 @@ class FileStorageSeeder extends AbstractSeeder
                 ->setParameter('extensions', json_encode($default['extensions']))
                 ->setParameter('id', $default['id'])
                 ->setParameter('name', $default['name'])
-                ->setParameter('system', 'system');
+                ->setParameter('system', $this->getConfig()->get('systemUserId'));
             try {
                 $qb->executeQuery();
             } catch (\Throwable $e) {

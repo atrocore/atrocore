@@ -107,7 +107,6 @@ class Translation extends ReferenceData
                     $records[$key]['module'] = $module;
                     $records[$key]['isCustomized'] = $module === 'custom';
                     $records[$key]['createdAt'] = date('Y-m-d H:i:s');
-                    $records[$key]['createdById'] = 'system';
                     $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
                 }
             }

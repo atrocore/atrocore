@@ -84,7 +84,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             let idValue = this.model.get(this.idName),
                 nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : idValue;
 
-            if (idValue === 'system') {
+            if (idValue === this.getConfig().get('systemUserId')) {
                 nameValue = this.getLanguage().translate('System')
             }
 

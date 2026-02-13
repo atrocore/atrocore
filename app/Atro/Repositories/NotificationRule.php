@@ -97,7 +97,6 @@ class NotificationRule extends Base
 
     public static function getNotificationProfileUsers($notificationProfileId, Config $config, Connection $connection): array
     {
-
         $profileParam = $config->get('defaultNotificationProfileId') === $notificationProfileId
             ? 'default'
             : $notificationProfileId;
@@ -112,7 +111,7 @@ class NotificationRule extends Base
             ->andWhere('receive_notifications = :true')
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('system', 'system')
+            ->setParameter('system', $config->get('systemUserId'))
             ->setParameter('notificationProfileId', $profileParam)
             ->fetchAllAssociative();
 
