@@ -35,7 +35,7 @@ class User extends AbstractRecordController
             throw new Forbidden();
         }
 
-        return $this->getAclManager()->getMap($user);
+        return $this->getAclManager()->getMap($user->get('delegator'));
     }
 
     public function postActionChangeExpiredPassword($params, $data, $request)

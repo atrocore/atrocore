@@ -60,8 +60,8 @@ class User extends Record
 
     public function getEntity($id = null)
     {
-        if (isset($id) && $id == 'system') {
-            throw new Forbidden();
+        if ($id !== null) {
+            $this->getUserById($id);
         }
 
         return parent::getEntity($id);
@@ -109,10 +109,7 @@ class User extends Record
         $currentPassword = null,
         $sendAccessInfo = false
     ) {
-        $user = $this->getEntityManager()->getEntity('User', $userId);
-        if (!$user) {
-            throw new NotFound();
-        }
+        $user = $this->getUserById($userId);
 
         if ($this->getUser()->id != $userId && !$this->getAcl()->check($user, 'edit')) {
             throw new Forbidden();
@@ -166,7 +163,11 @@ class User extends Record
         }
 
         if (!$user->isActive()) {
-            throw new NotFound();
+            throw new Forbidden();
+        }
+
+        if ($user->isSystemUser()) {
+            throw new Forbidden();
         }
 
         $userId = $user->id;
@@ -229,9 +230,7 @@ class User extends Record
 
     public function updateEntity($id, $data)
     {
-        if ($id == 'system') {
-            throw new Forbidden();
-        }
+        $this->getUserById($id);
 
         if (property_exists($data, 'password')) {
             unset($data->password);
@@ -284,11 +283,7 @@ class User extends Record
 
     public function resetPassword(string $userId): bool
     {
-        /** @var \Atro\Entities\User $user */
-        $user = $this->getRepository()->get($userId);
-        if (!$user) {
-            throw new NotFound();
-        }
+        $user = $this->getUserById($userId);
 
         if ($userId != $this->getUser()->id && !$this->getAcl()->check($user, 'edit')) {
             throw new Forbidden();
@@ -355,7 +350,9 @@ class User extends Record
 
     public function deleteEntity($id)
     {
-        if ($id == 'system' || $id == $this->getUser()->id) {
+        $this->getUserById($id);
+
+        if ($id === $this->getUser()->id) {
             throw new Forbidden();
         }
 
@@ -445,6 +442,20 @@ class User extends Record
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         return [];
+    }
+
+    protected function getUserById(string $userId): \Atro\Entities\User
+    {
+        $user = $this->getRepository()->get($userId);
+        if (!$user) {
+            throw new NotFound();
+        }
+
+        if ($user->isSystemUser()) {
+            throw new Forbidden();
+        }
+
+        return $user;
     }
 
     protected function init()
