@@ -13,6 +13,7 @@
     "defaultIsRequired": "La medida debe tener una unidad por defecto.",
     "unitIsUsed": "La unidad \"%s\" es utilizada por el campo \"%s\" en la entidad \"%s\" para el registro \"%s\".",
     "unitIsUsedOnClassificationAttribute": "La unidad '%s' es utilizada por el Atributo '%s' en la Clasificación '%s'.",
-    "unitIsUsedOnEntityAttribute": "La unidad '%s' es utilizada por el atributo '%s' en el %s '%s'."
+    "unitIsUsedOnEntityAttribute": "La unidad '%s' es utilizada por el atributo '%s' en el %s '%s'.",
+    "multiplierCannotBeZero": "El multiplicador de la unidad no puede ser cero."
   }
 }

@@ -13,6 +13,7 @@
     "defaultIsRequired": "La mesure doit avoir une unité par défaut.",
     "unitIsUsed": "L'unité '%s' est utilisée par le champ '%s' dans l'entité '%s' pour l'enregistrement '%s'.",
     "unitIsUsedOnClassificationAttribute": "L'unité \"%s\" est utilisée par l'attribut \"%s\" dans la classification \"%s\".",
-    "unitIsUsedOnEntityAttribute": "L'unité \"%s\" est utilisée par l'attribut \"%s\" dans le %s \"%s\"."
+    "unitIsUsedOnEntityAttribute": "L'unité \"%s\" est utilisée par l'attribut \"%s\" dans le %s \"%s\".",
+    "multiplierCannotBeZero": "Le multiplicateur unitaire ne peut pas être égal à zéro."
   }
 }
