@@ -31,6 +31,24 @@ class User extends \Espo\Core\ORM\Entity
         return $this->get('type') === 'System';
     }
 
+    public function _getActor(): User
+    {
+        if ($this->id === $this->get('actorId')) {
+            return $this;
+        }
+
+        return $this->getEntityManager()->getRepository('User')->get($this->get('actorId'));
+    }
+
+    public function _getDelegator(): User
+    {
+        if ($this->id === $this->get('delegatorId')) {
+            return $this;
+        }
+
+        return $this->getEntityManager()->getRepository('User')->get($this->get('delegatorId'));
+    }
+
     public function getSystemUser(): User
     {
         return $this->getEntityManager()->getRepository('User')->getSystemUser($this);

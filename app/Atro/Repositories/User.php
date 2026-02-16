@@ -53,7 +53,7 @@ class User extends RDB
     public function getSystemUser(UserEntity $user): UserEntity
     {
         if ($user->get('type') === 'System') {
-            throw new Error('It is already the system user.');
+            return $user;
         }
 
         $globalSystemUserId = $this->getGlobalSystemUser()->id;

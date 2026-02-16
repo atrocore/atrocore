@@ -211,7 +211,7 @@ abstract class AbstractConsole
      */
     protected function translate(string $label, string $category, string $scope, $requiredOptions = null): string
     {
-        return $this->getContainer()->get('language')->translate($label, $category, $scope, $requiredOptions);
+        return $this->getContainer()->getLanguage()->translate($label, $category, $scope, $requiredOptions);
     }
 
     /**
