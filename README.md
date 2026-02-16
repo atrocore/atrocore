@@ -50,7 +50,7 @@ We also offer SaaS Editions, hosted in the cloud, which include some or all prem
 
 ## Feature Overview
 
-![Feature Overview](_assets/atrocore-feature-overview-tags.png)
+![Feature Overview](_assets/atrocore-feature-overview.png)
 
 Please refer to [this page](https://www.atrocore.com/en/atrocore) to read the full feature description.
 
