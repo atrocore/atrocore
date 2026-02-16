@@ -62,7 +62,7 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
                     if (!!!aMeta.confirmed && !!bMeta.confirmed) return 1;
                     return 0;
                 })
-                .sort((a, b) => a.item?.get('_meta')?.cluster.golden ? -1 : 1);
+                .sort((a, b) => a.item?.get('_meta')?.cluster?.golden ? -1 : 1);
         }
     })
 })
