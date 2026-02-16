@@ -39,6 +39,9 @@ abstract class AbstractService implements Injectable
     public function hasMetaHeader(): bool
     {
         $meta = self::getHeader('With-Meta');
+        if (empty($meta)) {
+            return false;
+        }
 
         return $meta == 1 || $meta == '1' || strtolower(trim($meta)) == 'true';
     }
