@@ -164,13 +164,9 @@ class ClusterItem extends Base
     }
 
 
-    public function isClusterItemConfirmed(IEntity $clusterItem, ?IEntity $cluster = null): bool
+    public function isClusterItemConfirmed(IEntity $clusterItem): bool
     {
-        if ($cluster === null) {
-            $cluster = $clusterItem->get('cluster');
-        }
-
-        if (empty($cluster)) {
+        if (empty($cluster = $clusterItem->get('cluster'))) {
             return false;
         }
 
@@ -195,7 +191,9 @@ class ClusterItem extends Base
         parent::putMetaForLink($entityFrom, $link, $entity);
 
         if ($entityFrom->getEntityName() === 'Cluster' && $link === 'clusterItems') {
-            $entity->setMeta('cluster', 'confirmed', $this->isClusterItemConfirmed($entity, $entityFrom));
+            $entity->set('cluster', $entityFrom);
+
+            $entity->setMeta('cluster', 'confirmed', $this->isClusterItemConfirmed($entity));
             $entity->setMeta('cluster', 'golden', !empty($entityFrom->get('goldenRecordId')) && $entity->get('entityId') === $entityFrom->get('goldenRecordId'));
         }
     }
