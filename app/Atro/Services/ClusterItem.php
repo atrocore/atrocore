@@ -164,9 +164,13 @@ class ClusterItem extends Base
     }
 
 
-    public function isClusterItemConfirmed(IEntity $clusterItem): bool
+    public function isClusterItemConfirmed(IEntity $clusterItem, ?IEntity $cluster = null): bool
     {
-        if (empty($cluster = $clusterItem->get('cluster'))) {
+        if ($cluster === null) {
+            $cluster = $clusterItem->get('cluster');
+        }
+
+        if (empty($cluster)) {
             return false;
         }
 
@@ -177,7 +181,7 @@ class ClusterItem extends Base
                 }
             } else {
                 $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId'));
-                if (!empty($record) && $record->get('goldenRecordId') === $cluster->get('goldenRecordId')) {
+                if (!empty($record) && $record->get('masterRecordId') === $cluster->get('goldenRecordId')) {
                     return true;
                 }
             }
@@ -185,6 +189,17 @@ class ClusterItem extends Base
 
         return false;
     }
+
+    public function putMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
+    {
+        parent::putMetaForLink($entityFrom, $link, $entity);
+
+        if ($entityFrom->getEntityName() === 'Cluster' && $link === 'clusterItems') {
+            $entity->setMeta('cluster', 'confirmed', $this->isClusterItemConfirmed($entity, $entityFrom));
+            $entity->setMeta('cluster', 'golden', !empty($entityFrom->get('goldenRecordId')) && $entity->get('entityId') === $entityFrom->get('goldenRecordId'));
+        }
+    }
+
 
     public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
     {
@@ -234,7 +249,7 @@ class ClusterItem extends Base
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
-        $this->getRecordService('SelectionItem')->prepareEntityRecord($entity);;
+        $this->getRecordService('SelectionItem')->prepareEntityRecord($entity);
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
