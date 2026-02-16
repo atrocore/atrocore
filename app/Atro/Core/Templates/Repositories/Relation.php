@@ -36,10 +36,10 @@ class Relation extends Base
                 $relEntity = $this->getMetadata()->get("entityDefs.$this->entityName.links.$field.entity");
                 $relTable = $this->getEntityManager()->getMapper()->toDb($relEntity);
 
-                $res = $this->getConnection()->createQueryBuilder()
+                $res = $this->getDbal()->createQueryBuilder()
                     ->select('t.id')
-                    ->from($this->getConnection()->quoteIdentifier($tableName), 't')
-                    ->leftJoin('t', $relTable, $alias, "$alias.id=t.{$relTable}_id")
+                    ->from($this->getDbal()->quoteIdentifier($tableName), 't')
+                    ->leftJoin('t', $this->getDbal()->quoteIdentifier($relTable), $alias, "$alias.id=t.{$relTable}_id")
                     ->where("$alias.id IS NULL")
                     ->fetchOne();
 
@@ -63,10 +63,10 @@ class Relation extends Base
                 $relTable = $this->getEntityManager()->getMapper()->toDb($relEntity);
 
                 while (true) {
-                    $ids = $this->getConnection()->createQueryBuilder()
+                    $ids = $this->getDbal()->createQueryBuilder()
                         ->select('t.id')
-                        ->from($this->getConnection()->quoteIdentifier($tableName), 't')
-                        ->leftJoin('t', $relTable, $alias, "$alias.id=t.{$relTable}_id")
+                        ->from($this->getDbal()->quoteIdentifier($tableName), 't')
+                        ->leftJoin('t', $this->getDbal()->quoteIdentifier($relTable), $alias, "$alias.id=t.{$relTable}_id")
                         ->where("$alias.id IS NULL")
                         ->setFirstResult(0)
                         ->setMaxResults(10000)
@@ -76,10 +76,10 @@ class Relation extends Base
                         break;
                     }
 
-                    $this->getConnection()->createQueryBuilder()
-                        ->delete($this->getConnection()->quoteIdentifier($tableName))
+                    $this->getDbal()->createQueryBuilder()
+                        ->delete($this->getDbal()->quoteIdentifier($tableName))
                         ->where('id IN (:ids)')
-                        ->setParameter('ids', $ids, $this->getConnection()::PARAM_STR_ARRAY)
+                        ->setParameter('ids', $ids, $this->getDbal()::PARAM_STR_ARRAY)
                         ->executeQuery();
                 }
             }
@@ -104,8 +104,8 @@ class Relation extends Base
             throw new \Error('No unique column found.');
         }
 
-        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
-        $qb->delete($this->getEntityManager()->getConnection()->quoteIdentifier($this->getMapper()->toDb($entity->getEntityType())));
+        $qb = $this->getEntityManager()->getDbal()->createQueryBuilder();
+        $qb->delete($this->getEntityManager()->getDbal()->quoteIdentifier($this->getMapper()->toDb($entity->getEntityType())));
         $qb->where('deleted = :true');
         $qb->setParameter("true", true, ParameterType::BOOLEAN);
         foreach ($uniqueColumns as $column) {
@@ -283,7 +283,7 @@ class Relation extends Base
 
         if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'isHierarchyEntity']))) {
             if (empty($this->getMetadata()->get(['scopes', $this->getHierarchicalEntity(), 'multiParents']))) {
-                $this->getConnection()->createQueryBuilder()
+                $this->getDbal()->createQueryBuilder()
                     ->delete($this->getEntityManager()->getMapper()->toDB($this->entityType))
                     ->where('entity_id=:entityId AND parent_id <> :parentId')
                     ->setParameter('entityId', $entity->get('entityId'))
