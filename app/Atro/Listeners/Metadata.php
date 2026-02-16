@@ -1392,6 +1392,11 @@ class Metadata extends AbstractListener
                     continue 1;
                 }
 
+                /**
+                 * Save the field configuration in advance in case it is later added to the metadata.
+                 */
+                $newFields[$field] = $params;
+
                 if (empty($params['type'])) {
                     continue;
                 }
@@ -1399,7 +1404,6 @@ class Metadata extends AbstractListener
                 $fieldParams = $data['fields'][$params['type']]['params'] ?? [];
                 $multilingual = in_array('isMultilang', array_column($fieldParams, 'name'));
 
-                $newFields[$field] = $params;
                 if ($multilingual && !empty($params['isMultilang'])) {
                     $newFields[$field]['lingualFields'] = [];
                     foreach ($locales as $locale) {
