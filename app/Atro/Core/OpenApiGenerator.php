@@ -76,7 +76,6 @@ class OpenApiGenerator
                 'type'       => 'object',
                 'properties' => [
                     'id'      => ['type' => 'string'],
-                    'deleted' => ['type' => 'boolean'],
                     '_meta'   => ['type' => 'object'],
                 ],
             ];
