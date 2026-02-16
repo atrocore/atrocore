@@ -72,81 +72,12 @@ class OpenApiGenerator
                 continue;
             }
 
-            $properties = [
-                'edit'   => [
-                    'type'    => 'boolean',
-                    'example' => true,
-                ],
-                'delete' => [
-                    'type'    => 'boolean',
-                    'example' => true,
-                ],
-                'unlink' => [
-                    'type'    => 'boolean',
-                    'example' => false,
-                ],
-                'stream' => [
-                    'type'    => 'boolean',
-                    'example' => false,
-                ],
-            ];
-
-            if ($entityName === 'SelectionItem') {
-                $properties['replaceItem'] = [
-                    'type'    => 'boolean',
-                    'example' => false,
-                ];
-            } else if ($entityName === 'ClusterItem') {
-                $properties['reject'] = [
-                    'type'    => 'boolean',
-                    'example' => false,
-                ];
-
-                $properties['confirm'] = [
-                    'type'    => 'boolean',
-                    'example' => false,
-                ];
-            } else if ($entityName === 'ClassificationAttribute') {
-                $properties['unlinkRelatedAttribute'] = [
-                    'type'    => 'boolean',
-                    'example' => false,
-                ];
-
-                $properties['cascadeUnlinkRelatedAttribute'] = [
-                    'type'    => 'boolean',
-                    'example' => false,
-                ];
-            }
-
-            if ($entityName === 'Unit') {
-                $properties['setDefault'] = [
-                    'type'    => 'boolean',
-                    'example' => false,
-                ];
-            }
-
             $result['components']['schemas'][$entityName] = [
                 'type'       => 'object',
                 'properties' => [
                     'id'      => ['type' => 'string'],
                     'deleted' => ['type' => 'boolean'],
-                    '_meta'   => [
-                        'type'       => 'object',
-                        'required'   => ['permissions'],
-                        'properties' => [
-                            'permissions' => [
-                                'type'       => 'object',
-                                'required'   => ['edit', 'delete'],
-                                'properties' => $properties,
-                            ],
-                        ],
-                        'example'    => [
-                            'permissions' => [
-                                'edit'   => true,
-                                'delete' => true
-                            ],
-                        ],
-                    ],
+                    '_meta'   => ['type' => 'object'],
                 ],
             ];
 
@@ -376,6 +307,17 @@ class OpenApiGenerator
                 ];
             }
 
+            $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
+                "name"        => "With-Meta",
+                "in"          => "header",
+                "required"    => false,
+                "description" => "When true, _meta will be added to the response.",
+                "schema"      => [
+                    "type"    => "boolean",
+                    "example" => "false"
+                ]
+            ];
+
             $result['paths']["/{$scopeName}/{id}"]['get'] = [
                 'tags'        => [$scopeName],
                 "summary"     => "Returns a record of the $scopeName",
@@ -401,6 +343,16 @@ class OpenApiGenerator
                             "type" => "string"
                         ]
                     ],
+                    [
+                        "name"        => "With-Meta",
+                        "in"          => "header",
+                        "required"    => false,
+                        "description" => "When true, _meta will be added to the response.",
+                        "schema"      => [
+                            "type"    => "boolean",
+                            "example" => "false"
+                        ]
+                    ]
                 ],
                 "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
             ];
