@@ -16,12 +16,6 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
 
         relationName: 'clusterItems',
 
-        setup: function () {
-            this.clusterModel = this.options.model;
-
-            Dep.prototype.setup.call(this);
-        },
-
         isComparisonAcrossScopes() {
             return false;
         },
@@ -42,30 +36,33 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            (this.options.models || [])
-                .filter(model => !!model.get('masterRecordId'))
+            (this.getModels() || [])
                 .forEach(model => {
-                    this.$el.find(`th[data-id="${model.id}"]`).addClass('confirmed');
-                });
+                    const meta = model.item?.get('_meta')?.cluster || {};
 
-            if (this.clusterModel.get('goldenRecordId')) {
-                this.$el.find(`th[data-id="${this.clusterModel.get('goldenRecordId')}"]`).addClass('golden');
-            }
+                    if (meta.confirmed) {
+                        this.$el.find(`th[data-id="${model.id}"]`).addClass('confirmed');
+                    }
+
+                    if (meta.golden) {
+                        this.$el.find(`th[data-id="${model.id}"]`).addClass('golden');
+                    }
+                });
         },
 
         getModels() {
-            const models = Dep.prototype.getModels.call(this);
+            const models = Dep.prototype.getModels.call(this) || [];
 
             return models
                 .sort((a, b) => {
-                    const aHasMaster = !!a.get('masterRecordId');
-                    const bHasMaster = !!b.get('masterRecordId');
+                    const aMeta = a.item?.get('_meta')?.cluster || {};
+                    const bMeta = b.item?.get('_meta')?.cluster || {};
 
-                    if (aHasMaster && !bHasMaster) return -1;
-                    if (!aHasMaster && bHasMaster) return 1;
+                    if (!!aMeta.confirmed && !!!bMeta.confirmed) return -1;
+                    if (!!!aMeta.confirmed && !!bMeta.confirmed) return 1;
                     return 0;
                 })
-                .sort((a, b) => a.get('id') === this.clusterModel.get('goldenRecordId') ? -1 : 1);
+                .sort((a, b) => a.item?.get('_meta')?.cluster?.golden ? -1 : 1);
         }
     })
 })
