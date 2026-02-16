@@ -125,7 +125,7 @@ class AttributeFieldConverter
 
         $attributesDefs = [];
 
-        $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
+        $tableName = Util::toUnderScore(lcfirst($entity->getEntityName()));
         $alias = $mapper->getQueryConverter()::TABLE_ALIAS;
         foreach ($attributes as $attribute) {
             $attributeAlias = IdGenerator::unsortableId();
@@ -147,11 +147,18 @@ class AttributeFieldConverter
 
     public function putAdditionalDataAfterSelect(IEntity $entity, array $attributeIds): void
     {
+        $attributesDefs = $entity->get('attributesDefs');
+
         foreach ($entity->entityDefs['fields'] as $key => $defs) {
             if (!empty($defs['attributeId']) && in_array($defs['attributeId'], $attributeIds)) {
                 $entity->entityDefs['fields'][$key]['attributeValueId'] = $entity->rowData[$this->getAttributeValueIdField($defs['mainField'] ?? $defs['multilangField'] ?? $key)] ?? null;
+                if (!empty($attributesDefs[$key])) {
+                    $attributesDefs[$key]['attributeValueId'] = $entity->entityDefs['fields'][$key]['attributeValueId'];
+                }
             }
         }
+
+        $entity->set('attributesDefs', $attributesDefs);
     }
 
     public function putAttributesToEntity(IEntity $entity): void
@@ -284,9 +291,14 @@ class AttributeFieldConverter
 
         // it needs because we should be able to create attribute value on entity update
         if (!empty($entity->_originalInput)) {
-            $attributesIds = $entity->_originalInput->__attributes ?? [];
+            $attributesIds = [];
+
+            if (empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
+                $attributesIds = $entity->_originalInput->__attributes ?? [];
+            }
+
             foreach ($entity->_originalInput as $field => $value) {
-                $attributeId = $this->metadata->get("entityDefs.{$entity->getEntityType()}.fields.{$field}.attributeId");
+                $attributeId = $this->metadata->get("entityDefs.{$entity->getEntityName()}.fields.{$field}.attributeId");
                 if ($attributeId) {
                     $attributesIds[] = $attributeId;
                 }
@@ -334,7 +346,7 @@ class AttributeFieldConverter
 
         $attributesDefs = [];
 
-        $isDerivative = !empty($this->metadata->get("scopes.{$entity->getEntityType()}.primaryEntityId"));
+        $isDerivative = !empty($this->metadata->get("scopes.{$entity->getEntityName()}.primaryEntityId"));
 
         foreach ($res as $row) {
             // set null if attribute-panel does not exist

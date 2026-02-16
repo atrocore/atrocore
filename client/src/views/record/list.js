@@ -2045,6 +2045,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             if (attributesIds.length > 0) {
                 this.collection.data.attributes = attributesIds.join(',');
+                this.collection.data.completeAttrDefs = true
             }
         },
 
