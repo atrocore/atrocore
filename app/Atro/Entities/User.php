@@ -33,7 +33,7 @@ class User extends \Espo\Core\ORM\Entity
 
     public function _getActor(): User
     {
-        if ($this->id === $this->get('actorId')) {
+        if ($this->id === $this->get('actorId') || $this->get('actorId') === null) {
             return $this;
         }
 
@@ -42,7 +42,7 @@ class User extends \Espo\Core\ORM\Entity
 
     public function _getDelegator(): User
     {
-        if ($this->id === $this->get('delegatorId')) {
+        if ($this->id === $this->get('delegatorId') || $this->get('delegatorId') === null) {
             return $this;
         }
 

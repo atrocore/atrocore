@@ -500,6 +500,8 @@ class Installer extends HasContainer
         $connection->createQueryBuilder()
             ->insert($connection->quoteIdentifier('user'))
             ->setValue('id', ':id')
+            ->setValue('actor_id', ':id')
+            ->setValue('delegator_id', ':id')
             ->setValue($connection->quoteIdentifier('name'), ':name')
             ->setValue('last_name', ':name')
             ->setValue('user_name', ':userName')

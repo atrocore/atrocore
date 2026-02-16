@@ -29,7 +29,12 @@ class User extends RDB
         if ($this->systemUser === null) {
             $this->systemUser = $this->where(['userName' => 'system'])->findOne();
             if (empty($this->systemUser)) {
+                $id = IdGenerator::uuid();
+
                 $user = $this->get();
+                $user->id = $id;
+                $user->set('actorId', $id);
+                $user->set('delegatorId', $id);
                 $user->set('userName', 'system');
                 $user->set('lastName', 'System');
                 $user->set('isActive', true);
