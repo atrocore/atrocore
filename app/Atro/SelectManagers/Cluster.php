@@ -34,7 +34,7 @@ class Cluster extends Base
     {
         parent::applyAdditional($result, $params);
 
-        if (!empty($this->selectParameters['select'])  && empty($this->selectParameters['totalOnly'])) {
+        if (!empty($this->selectParameters['select']) && empty($this->selectParameters['totalOnly'])) {
             // For performance, we have to calculate count on the filtered result
             $callbackParam = 'subQueryCallbacks';
             if (in_array($this->selectParameters['sortBy'] ?? '', ['stagingItemCount', 'masterItemCount'])) {
@@ -278,11 +278,15 @@ class Cluster extends Base
             $stateQb->setParameter("entityName{$k}", $entityName);
         }
 
-        $goldenRecordCase = 'CASE ' . implode(' ', $goldenRecordCaseParts) . ' ELSE null END';
+        if (empty($goldenRecordCaseParts)) {
+            $goldenRecordCase = 'null';
+        } else {
+            $goldenRecordCase = 'CASE ' . implode(' ', $goldenRecordCaseParts) . ' ELSE null END';
+        }
 
         $masterEntityColumn = 'master_entity';
         $goldenRecordColumn = 'golden_record_id';
-        if ($inSubQueryCallback){
+        if ($inSubQueryCallback) {
             $masterEntityColumn = 'atro_master_entity';
             $goldenRecordColumn = 'atro_golden_record_id';
         }
@@ -308,14 +312,14 @@ class Cluster extends Base
             ->resetqueryparts(['orderBy', 'limit', 'offset']);
 
         return [
-            'sql'        => str_replace([$mtAlias, 'mt_alias'], [ 'sbq_' . IdGenerator::unsortableId(), $mtAlias], $stateQb->getSQL()),
+            'sql'        => str_replace([$mtAlias, 'mt_alias'], ['sbq_' . IdGenerator::unsortableId(), $mtAlias], $stateQb->getSQL()),
             'parameters' => $stateQb->getParameters(),
         ];
     }
 
     public function getWherePartForState(array $item, array $result): array
     {
-        $stateQueryData = $this->getStateQueryData($this->getEntityManager()->getRepository('ClusterItem')->getMapper() );
+        $stateQueryData = $this->getStateQueryData($this->getEntityManager()->getRepository('ClusterItem')->getMapper());
 
         if ($item['type'] == 'isNull') {
             return [
