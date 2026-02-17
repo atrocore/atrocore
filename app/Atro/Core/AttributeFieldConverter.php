@@ -370,7 +370,7 @@ class AttributeFieldConverter
             ->getArgument('attributesDefs');
 
         $entity->set('attributesDefs', $attributesDefs);
-        $entity->setAsFetched();
+        $entity->setAllAttributesAsFetched();
 
         foreach ($entity->_originalInput->__attributes ?? [] as $attributeId) {
             foreach ($entity->fields ?? [] as $name => $defs) {

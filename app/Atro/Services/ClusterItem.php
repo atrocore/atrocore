@@ -85,6 +85,7 @@ class ClusterItem extends Base
 
     public function reject(string $id): bool
     {
+        /** @var \Atro\Entities\ClusterItem $entity */
         $entity = $this->getEntity($id);
 
         if (empty($entity)) {
@@ -96,7 +97,10 @@ class ClusterItem extends Base
         }
 
         if ($this->isClusterItemConfirmed($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
+            foreach ($entity->getStagingRecords() as $stagingRecord) {
+                $stagingRecord->set('masterRecordId', null);
+                $this->getEntityManager()->saveEntity($stagingRecord);
+            }
         }
 
         $rci = $this->getEntityManager()->getEntity('RejectedClusterItem');
