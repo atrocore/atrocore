@@ -79,6 +79,11 @@ class ExtensibleEnumType extends AbstractFieldType
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
+        if (class_exists('\\AdvancedDataManagement\\Module')) {
+            $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = !empty($row['disable_field_value_lock']);
+        }
+
+
         if (!empty($attributeData['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-enum-dropdown";
         }

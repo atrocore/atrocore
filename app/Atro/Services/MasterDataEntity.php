@@ -60,11 +60,18 @@ class MasterDataEntity extends Base
             return $master;
         }
 
+        $user = $this->getInjection('container')->getUser();
+        if ($user->get('type') !== 'System') {
+            $this->getInjection('container')->setUser($user->getSystemUser());
+        }
+
         try {
             $master = $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($input['masterRecordData'])));
         } catch (NotModified) {
             // ignore
         }
+
+        $this->getInjection('container')->setUser($user);
 
         return $master;
     }
@@ -104,7 +111,16 @@ class MasterDataEntity extends Base
             return null;
         }
 
-        return $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($input['masterRecordData'])));
+        $user = $this->getInjection('container')->getUser();
+        if ($user->get('type') !== 'System') {
+            $this->getInjection('container')->setUser($user->getSystemUser());
+        }
+
+        $result = $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($input['masterRecordData'])));
+
+        $this->getInjection('container')->setUser($user);
+
+        return $result;
     }
 
     public function prepareEntityForOutput(Entity $entity)
@@ -137,5 +153,6 @@ class MasterDataEntity extends Base
         parent::init();
 
         $this->addDependency('twig');
+        $this->addDependency('container');
     }
 }

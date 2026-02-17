@@ -100,6 +100,10 @@ class IntType extends AbstractFieldType
             }
         }
 
+        if (class_exists('\\AdvancedDataManagement\\Module')) {
+            $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = !empty($row['disable_field_value_lock']);
+        }
+
         if (isset($row['measure_id'])) {
             $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
             $entity->entityDefs['fields'][$name]['mainField'] = $name;
