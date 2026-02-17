@@ -1161,7 +1161,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const name = this.originalName || this.name;
             if (this.isListView() && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
                 if (!this.model.get('attributesDefs')[name]['attributeValueId']) {
-                    data.__attributes = [this.model.get('attributesDefs')[this.name]['attributeId']]
+                    data.__attributes = [this.model.get('attributesDefs')[name]['attributeId']]
                 }
             }
 
