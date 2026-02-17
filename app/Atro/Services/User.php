@@ -458,6 +458,11 @@ class User extends Record
         return $user;
     }
 
+    protected function getRepository()
+    {
+        return $this->getEntityManager()->getRepository('User');
+    }
+
     protected function init()
     {
         parent::init();
