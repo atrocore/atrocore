@@ -28,7 +28,7 @@ class V2Dot2Dot23 extends Base
             ->select('entity_name')
             ->distinct()
             ->from('cluster_item')
-            ->fetchFistColumn();
+            ->fetchFirstColumn();
 
         foreach ($entityNames as $entityName) {
             $tableName = $this->getDbal()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName)));
