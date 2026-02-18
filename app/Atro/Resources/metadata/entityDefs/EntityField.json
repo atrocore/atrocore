@@ -1019,6 +1019,15 @@
       "type": "jsonObject",
       "notStorable": true,
       "view": "views/fields/conditional-properties"
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     }
   },
   "links": {

@@ -145,6 +145,10 @@ class EntityField extends ReferenceData
             $result['hasFieldValueLock'] = true;
         }
 
+        if (!empty($where = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.where"))) {
+            $result['data']['where'] = $where;
+        }
+
         return $result;
     }
 
@@ -727,7 +731,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where'];
 
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
@@ -761,11 +765,26 @@ class EntityField extends ReferenceData
                 $field .= 'Id';
             }
 
-            if (!$entity->isAttributeChanged($field)) {
+            $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
+
+            if ($field === 'where') {
+                $value = !empty($where = $entity->get('data')?->where) ? json_decode(json_encode($where), true) : [];
+                if ($loadedVal !== $value) {
+                    $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                        'fields' => [
+                            $entity->get('code') => [
+                                $field => $value
+                            ]
+                        ]
+                    ]);
+                    $saveMetadata = true;
+                }
                 continue;
             }
 
-            $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
+            if (!$entity->isAttributeChanged($field)) {
+                continue;
+            }
 
             if ($loadedVal === $entity->get($field)) {
                 $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
