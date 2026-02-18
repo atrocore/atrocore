@@ -9,7 +9,7 @@
  */
 
 
-Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compare', function (Dep) {
+Espo.define('views/cluster/record/compare', ['views/selection/record/detail/compare', 'views/fields/colored-enum'], function (Dep, ColoredEnum) {
     return Dep.extend({
 
         itemScope: 'ClusterItem',
@@ -23,7 +23,7 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
         actionRejectItem(e) {
             const id = $(e.currentTarget).data('selection-item-id');
 
-            this.ajaxPostRequest(`ClusterItem/action/reject`, {id: id})
+            this.ajaxPostRequest(`ClusterItem/action/reject`, { id: id })
                 .then(response => {
                     this.notify('Item rejected', 'success');
                     this.notify(this.translate('Loading...'));
@@ -47,6 +47,15 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
                     if (meta.golden) {
                         this.$el.find(`th[data-id="${model.id}"]`).addClass('golden');
                     }
+
+                    if (model.item?.get('confirmedAutomatically')) {
+                        this.$el.find(`th[data-id="${model.id}"]`).append('<i class="ph ph-sparkle">')
+                    }
+
+                    this.createView(`score-${model.id}`, 'views/cluster-item/fields/matched-score', {
+                        model: model.item,
+                        el: this.$el.find(`tr.score-row > th[data-model-id="${model.id}"]`)[0],
+                    })
                 });
         },
 
@@ -63,6 +72,56 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
                     return 0;
                 })
                 .sort((a, b) => a.item?.get('_meta')?.cluster?.golden ? -1 : 1);
+        },
+
+        getAdditionalHeaderHtml() {
+            let html = `<tr class="matched-score-row">`;
+
+            html += '<th>' + this.translate('matchedScore', 'fields', 'ClusterItem') + '</th>'
+
+            for (let model of this.getModels()) {
+                html += '<th>' + this.getMatchedScoreHtml(model.item.get('matchedScore')) + '</th>'
+            }
+
+            return html + '</tr>'
+        },
+
+        getMatchedScoreHtml(value) {
+            let backgroundColor = '#CCCCCC';
+            let text = ''
+
+            if (value === null) {
+                text = this.translate('N/A');
+            } else {
+                text = value + '%'
+
+                if (value === 100) {
+                    backgroundColor = '#CAF2C2';
+                } else if (value > 74) {
+                    backgroundColor = '#E0FFCC';
+                } else if (value > 49) {
+                    backgroundColor = '#FFF8B8';
+                } else if (value > 24) {
+                    backgroundColor = '#FEFFD6';
+                } else {
+                    backgroundColor = '#FFE7D1';
+                }
+            }
+
+            let style = {
+                'font-weight': 'normal',
+                'background-color': backgroundColor,
+                'color': ColoredEnum.prototype.getFontColor.call(this, backgroundColor),
+                'border': ColoredEnum.prototype.getBorder.call(this, backgroundColor),
+                'padding': '2px 5px',
+                'font-size': '100%'
+            };
+
+            const styleString = Object.entries(style)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join('; ');
+
+            return `<span class="colored-enum label" style="${styleString}">${text}</span>`
         }
     })
 })
