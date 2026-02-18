@@ -74,9 +74,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }
         },
 
+        init() {
+            Dep.prototype.init.call(this);
+            this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
+        },
+
         setup() {
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
-            this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
             this.merging = this.options.merging || this.merging;
             this.renderedPanels = [];
             this.hideButtonPanel = false;
@@ -295,6 +299,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.fieldPanels.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
             });
 
+            this.originalFieldPanels = Espo.utils.cloneDeep(this.fieldPanels);
         },
 
         prepareFieldsData(callback) {
@@ -373,7 +378,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     });
                 }
 
-                this.fieldPanels = this.fieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0);
+                this.fieldPanels = this.originalFieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0);
             }
 
             if (this.layoutData) {
@@ -615,7 +620,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         data() {
             let column = this.buildComparisonTableHeaderColumn()
             return {
-                fieldPanels: this.fieldPanels,
+                fieldPanels: this.originalFieldPanels,
                 columns: column,
                 columnLength: column.length,
                 scope: this.scope,
@@ -779,29 +784,32 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 fields = [mainField, unitIdField];
                 fieldValues = fields.map(field => this.model.get(field));
             }
-            let hide = false;
 
-            // hide filled
-            if (!hide && this.selectedFilters.includes('filled')) {
-                hide = fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels;
+
+            for (const filter of this.selectedFilters) {
+                let success = true;
+
+                switch (filter) {
+                    case 'filled':
+                        success = !equalValueForModels || !fieldValues.every(value => this.isEmptyValue(value))
+                        break;
+                    case 'empty':
+                        success = fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels
+                        break;
+                    case 'optional':
+                        success = !this.model.getFieldParam(field, 'required')
+                        break
+                    case 'required':
+                        success = this.model.getFieldParam(field, 'required')
+                        break;
+                }
+
+                if (!success) {
+                    return false;
+                }
             }
 
-            // hide empty
-            if (!hide && this.selectedFilters.includes('empty')) {
-                hide = !(fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels);
-            }
-
-            // hide optional
-            if (!hide && this.selectedFilters.includes('optional')) {
-                hide = this.model.getFieldParam(field, 'required')
-            }
-
-            // hide required
-            if (!hide && this.selectedFilters.includes('required')) {
-                hide = !this.model.getFieldParam(field, 'required');
-            }
-
-            return !hide;
+            return true;
         },
 
         isUniLingualField(name, fieldLanguage) {
@@ -968,7 +976,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                             this.model.trigger('overview-filters-changed', this.selectedFilters);
                             this.reRenderFieldsPanels();
                             this.notify(false)
-                        }
+                        },
+                        style: 'padding-bottom: 0 !important;'
                     }
                 });
             }
@@ -1039,16 +1048,16 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         getPanelWithFields() {
-            return this.fieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0)
+            return this.originalFieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0)
         },
 
         toggleFieldPanels() {
-            this.fieldPanels.forEach(panel => {
+            this.originalFieldPanels.forEach(panel => {
                 let view = $(`${this.options.el} [data-name="${panel.name}"]`)
                 if (this.fieldsArr.filter(panel.filter).length > 0) {
-                    view.parent().show();
+                    view.show();
                 } else {
-                    view.parent().hide();
+                    view.hide();
                 }
             })
         },

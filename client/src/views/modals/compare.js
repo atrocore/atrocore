@@ -78,7 +78,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 // move buttons to the right
                 let $compareButtonContainer = $('#compare-button-container');
                 if ($compareButtonContainer.length === 0) {
-                    $compareButtonContainer = $('<div id="compare-button-container" style="display: inline-block"></div>');
+                    $compareButtonContainer = $('<div id="compare-button-container" style="display: inline-block; vertical-align: bottom"></div>');
                     this.$el.find('.modal-footer').append($compareButtonContainer);
                     this.$el.find('.modal-footer').find('[data-name="switchToCompare"]').appendTo($compareButtonContainer);
                     this.$el.find('.modal-footer').find('[data-name="switchToMerge"]').appendTo($compareButtonContainer);

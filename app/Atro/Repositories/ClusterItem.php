@@ -13,14 +13,35 @@
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class ClusterItem extends Base
 {
+    public function getStagingRecords(\Atro\Entities\ClusterItem $clusterItem): EntityCollection
+    {
+        $masterEntityName = $this->getMetadata()->get("scopes.{$clusterItem->get('entityName')}.primaryEntityId");
+
+        // if cluster item is staging record, return it
+        if (!empty($masterEntityName)) {
+            $stagingRecord = $this->getEntityManager()->getRepository($clusterItem->get('entityName'))->get($clusterItem->get('entityId'));
+            return new EntityCollection([$stagingRecord], $clusterItem->get('entityName'));
+        } else {
+            // otherwise find all stagings for master record
+            foreach ($this->getMetadata()->get('scopes') ?? [] as $scope => $scopeDefs) {
+                if (($scopeDefs['primaryEntityId'] ?? null) === $clusterItem->get('entityName')) {
+                    return $this->getEntityManager()->getRepository($scope)->where(['masterRecordId' => $clusterItem->get('entityId')])->find();
+                }
+            }
+        }
+        throw new Error('No stagings found for cluster item');
+    }
+
     public function moveAllToCluster(string $clusterIdFrom, string $clusterIdTo): void
     {
         // check if 'From' cluster has no rejected items that are in 'To' cluster

@@ -594,7 +594,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
 
                 otherRows.forEach(row => {
                     let view = this.getView(row.entityValueKeys[selectedIndex].key);
-                    if (!view) {
+                    if (!view || view.readOnly) {
                         return;
                     }
                     validate = validate || view.validate();

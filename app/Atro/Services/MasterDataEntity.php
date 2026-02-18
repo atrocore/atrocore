@@ -175,7 +175,7 @@ class MasterDataEntity extends Base
 
     protected function getContainer(): \Atro\Core\Container
     {
-        return $this->getEntityManager()->getContainer();
+        return $this->getInjection('container');
     }
 
     protected function init()
@@ -183,5 +183,6 @@ class MasterDataEntity extends Base
         parent::init();
 
         $this->addDependency('twig');
+        $this->addDependency('container');
     }
 }

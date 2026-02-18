@@ -87,6 +87,11 @@ class FileType extends AbstractFieldType
             'conditionalProperties'     => $this->prepareConditionalProperties($row),
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
+
+
+        if (class_exists('\\AdvancedDataManagement\\Module')) {
+            $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = !empty($row['disable_field_value_lock']);
+        }
     }
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void

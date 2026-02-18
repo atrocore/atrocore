@@ -1881,7 +1881,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.mode === 'detail' || (this.isListView() && this.listInlineEditModeEnabled())) {
-                const action = $(`<a href="javascript:" class="value-lock hidden"><i class="ph ${this.isLocked() ? 'ph-lock-open' : 'ph-lock'}" title="${this.translate(this.isLocked() ? 'unlockFieldValue' : 'lockFieldValue', 'labels')}"></i></a>`);
+                const action = $(`<a href="javascript:" class="value-lock hidden"><i class="ph ${this.isLocked() ? 'ph-lock-open' : 'ph-lock'}" title="${this.translate(this.isLocked() ? 'unlockFieldValue' : 'lockFieldValue', 'tooltips')}"></i></a>`);
 
                 action.on('click', (e) => {
                     e.preventDefault();
@@ -1890,7 +1890,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
                     const url = this.model.urlRoot + '/action/' + (this.isLocked() ? 'unlockField' : 'lockField');
                     this.ajaxPostRequest(url, {
-                        entityId: this.model.get('id'),
+                        id: this.model.get('id'),
                         field: this.getLockedFieldName(),
                     }).then(() => {
                         Espo.Ui.success('Success');
@@ -1919,7 +1919,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         hasLockedControls: function () {
             return this.getMetadata().get(['scopes', this.model.urlRoot, 'enableFieldValueLock']) &&
-                !this.getMetadata().get(['entityDefs', this.model.urlRoot, this.getLockedFieldName(), 'disableFieldValueLock']);
+                !this.getMetadata().get(['entityDefs', this.model.urlRoot, this.getLockedFieldName(), 'disableFieldValueLock']) &&
+                this.model.get('_meta')?.locked?._loaded && !this.model.get('attributesDefs')?.[this.getLockedFieldName()]?.disableFieldValueLock;
         }
     });
 });
