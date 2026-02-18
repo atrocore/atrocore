@@ -158,18 +158,20 @@ class ClusterItem extends Base
             $qb->addSelect("GROUP_CONCAT(ci.id SEPARATOR ',') AS cluster_item_ids");
         }
 
-        return $qb->from('cluster_item', 'ci')
+        $qb->from('cluster_item', 'ci')
             ->innerJoin('ci', 'cluster', 'c', 'c.id=ci.cluster_id and c.deleted=:false')
             ->innerJoin('ci', $stagingTableName, 'se', 'se.id=ci.entity_id and se.deleted=:false')
-            ->where('ci.entity_name=:stagingEntityType and ci.matched_score>=:minimumScore and se.master_record_id is null and ci.deleted=:false')
-            ->setParameter('stagingEntityType', $stagingEntityName)
+            ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and se.master_record_id is null and ci.deleted=:false')
+            ->setParameter('stagingEntityName', $stagingEntityName)
             ->setParameter('minimumScore', $minimumScore)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setFirstResult($offset)
             ->setMaxResults($limit)
-            ->orderBy('ci.id', 'DESC')
-            ->groupBy('ci.cluster_id')
-            ->fetchAllAssociative();
+            ->orderBy('ci.cluster_id', 'DESC')
+            ->groupBy('ci.cluster_id');
+
+
+        return $qb->fetchAllAssociative();
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
