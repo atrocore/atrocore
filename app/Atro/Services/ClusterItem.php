@@ -186,6 +186,8 @@ class ClusterItem extends Base
         }
 
         $this->getRepository()->moveToCluster($entity->get('id'), $newClusterId);
+
+        $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newClusterId]);
         return true;
     }
 
@@ -208,6 +210,8 @@ class ClusterItem extends Base
         }
 
         $this->getRepository()->moveToCluster($clusterItem->get('id'), $cluster->get('id'));
+
+        $this->getRepository()->updateMatchedScoresInClusters([$clusterItem->get('clusterId'), $cluster->get('id')]);
 
         $this->getEntityManager()->removeEntity($rejectedClusterItem);
 

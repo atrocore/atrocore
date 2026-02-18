@@ -47,11 +47,10 @@ class ClusterItem extends Base
     {
         // check if 'From' cluster has no rejected items that are in 'To' cluster
         $res = $this->getDbal()->createQueryBuilder()
-            ->select('id')
+            ->select('rci.id')
             ->from('rejected_cluster_item', 'rci')
-            ->join('rci', 'cluster_item', 'ci', 'ci.id=rejected_cluster_item.cluster_item_id')
+            ->join('rci', 'cluster_item', 'ci', 'ci.id=rci.cluster_item_id')
             ->where('rci.cluster_id=:clusterIdFrom and ci.cluster_id= :clusterIdTo and rci.deleted = :false and ci.deleted = :false')
-            ->andWhere('')
             ->setParameter('clusterIdFrom', $clusterIdFrom)
             ->setParameter('clusterIdTo', $clusterIdTo)
             ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -102,7 +101,7 @@ class ClusterItem extends Base
         $this->getDbal()->createQueryBuilder()
             ->update('cluster_item', 'ci')
             ->set(
-                'score',
+                'matched_score',
                 '(SELECT MAX(mr.score) 
               FROM matched_record mr 
               WHERE (
@@ -110,8 +109,8 @@ class ClusterItem extends Base
                   OR 
                   (mr.master_entity = ci.entity_name AND mr.master_entity_id = ci.entity_id)
               )
-              AND ci.id = (SELECT MAX(ci2.id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.source_entity AND ci2.entity_id = mr.source_entity_id)
-              AND ci.id = (SELECT MAX(ci3.id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.master_entity AND ci3.entity_id = mr.master_entity_id)
+              AND ci.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.source_entity AND ci2.entity_id = mr.source_entity_id)
+              AND ci.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.master_entity AND ci3.entity_id = mr.master_entity_id)
               AND mr.deleted = :false 
               AND mr.has_cluster = :true
             )'
