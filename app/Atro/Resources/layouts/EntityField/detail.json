@@ -330,6 +330,12 @@
         {
           "name": "linkMultipleField"
         }
+      ],
+      [
+        {
+          "name": "linkExtensibleEnum"
+        },
+        false
       ]
     ]
   },

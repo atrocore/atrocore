@@ -66,7 +66,8 @@
     "conditionalReadOnly": "Read-only",
     "conditionalProtected": "Protected",
     "conditionalDisableOptions": "Disabled Options",
-    "urlLabel": "URL Label"
+    "urlLabel": "URL Label",
+    "linkExtensibleEnum": "List"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",

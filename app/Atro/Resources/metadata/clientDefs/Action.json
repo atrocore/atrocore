@@ -15,7 +15,8 @@
       {
         "name": "entityFilterResult",
         "label": "entityFilterResult",
-        "view": "views/action/record/panels/entity-filter-result",
+        "view": "views/record/panels/entity-filter-result",
+        "entityField": "searchEntity",
         "canClose": false
       }
     ]

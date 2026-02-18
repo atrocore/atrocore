@@ -283,6 +283,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 boolFilterList: this.getSelectBoolFilterList(),
                 boolFilterData: this.getBoolFilterData(),
                 primaryFilterName: this.getSelectPrimaryFilterName(),
+                whereAdditional: this.model.getFieldParam(this.name, 'where') || undefined,
                 createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                 mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                 forceSelectAllAttributes: this.forceSelectAllAttributes,

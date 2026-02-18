@@ -40,6 +40,12 @@
       "type": "bool",
       "default": false,
       "tooltip": true
+    },
+    {
+      "name": "linkExtensibleEnum",
+      "required": true,
+      "entity": "ExtensibleEnum",
+      "type": "link"
     }
   ],
   "actualFields": [

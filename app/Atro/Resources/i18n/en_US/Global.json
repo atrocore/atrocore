@@ -169,6 +169,7 @@
     "updateMasterRecord": "Update Master Record"
   },
   "labels": {
+    "entityFilterResult": "Filter Result",
     "System": "System",
     "matchings": "Matchings",
     "addFields": "Add Fields",
