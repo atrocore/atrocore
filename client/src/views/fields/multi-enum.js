@@ -405,6 +405,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         createQueryBuilderFilter() {
             const scope = this.model.urlRoot;
+
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.originalName || this.name, 'fields', scope),

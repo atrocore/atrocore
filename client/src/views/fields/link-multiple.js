@@ -977,7 +977,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
             return {
                 id: this.name,
-                label: this.getLanguage().translate(this.originalName || this.name, 'fields', this.model.urlRoot),
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 realType: type,
                 optgroup: this.getLanguage().translate('Fields'),
