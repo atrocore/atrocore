@@ -89,31 +89,21 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
             $offset = 0;
             $limit = 10000;
 
-            while (!empty($clusterIds = $clusterItemRepo->getClustersToConfirmAutomatically($entityName, $offset, $limit))) {
+            while (!empty($clustersData = $clusterItemRepo->getClustersToConfirmAutomatically($entityName, $offset, $limit))) {
                 $offset += $limit;
 
-                foreach ($clusterIds as $clusterId) {
-                    $cluster = $this->getEntityManager()->getEntity('Cluster', $clusterId);
-                    if (empty($cluster)) {
+                foreach ($clustersData as $item) {
+                    $clusterItemIds = explode(',', $item['cluster_item_ids']);
+                    if (empty($clusterItemIds)) {
                         continue;
                     }
 
-                    $items = [];
-                    foreach ($cluster->get('clusterItems') as $clusterItem) {
-                        if ($clusterItem->get('entityName') === $entityName) {
-                            $clusterItem->set('cluster', $cluster);
-                            $items[] = $clusterItem;
-                        }
-                    }
-
-                    if (empty($item)) {
-                        continue;
-                    }
+                    $clusterItems = iterator_to_array($clusterItemRepo->findByIds($clusterItemIds));
 
                     try {
-                        $clusterItemService->confirmAll($items, true);
+                        $clusterItemService->confirmAll($clusterItems, true);
                     } catch (\Exception $e) {
-                        $GLOBALS['log']->error("Impossible to automatically confirm cluster " . $cluster->get('id') . " : " . $e->getMessage());
+                        $GLOBALS['log']->error("Impossible to automatically confirm cluster " . $item['cluster_id'] . " : " . $e->getMessage());
                     }
                 }
             }

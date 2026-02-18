@@ -51,11 +51,6 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                     if (model.item?.get('confirmedAutomatically')) {
                         this.$el.find(`th[data-id="${model.id}"]`).append('<i class="ph ph-sparkle">')
                     }
-
-                    this.createView(`score-${model.id}`, 'views/cluster-item/fields/matched-score', {
-                        model: model.item,
-                        el: this.$el.find(`tr.score-row > th[data-model-id="${model.id}"]`)[0],
-                    })
                 });
         },
 

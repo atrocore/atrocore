@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
@@ -148,9 +149,16 @@ class ClusterItem extends Base
         $minimumScore = $masterDataEntity->get('minimumMatchingScore');
         $stagingTableName = Util::toUnderScore(lcfirst($stagingEntityName));
 
-        return $this->getDbal()->createQueryBuilder()
-            ->select('ci.cluster_id')
-            ->from('cluster_item', 'ci')
+        $qb = $this->getDbal()->createQueryBuilder()
+            ->select('ci.cluster_id');
+
+        if (Converter::isPgSQL($this->getDbal())) {
+            $qb->addSelect("string_agg(ci.id::text, ',') AS cluster_item_ids");
+        } else {
+            $qb->addSelect("GROUP_CONCAT(ci.id SEPARATOR ',') AS cluster_item_ids");
+        }
+
+        return $qb->from('cluster_item', 'ci')
             ->innerJoin('ci', 'cluster', 'c', 'c.id=ci.cluster_id and c.deleted=:false')
             ->innerJoin('ci', $stagingTableName, 'se', 'se.id=ci.entity_id and se.deleted=:false')
             ->where('ci.entity_name=:stagingEntityType and ci.matched_score>=:minimumScore and se.master_record_id is null and ci.deleted=:false')
@@ -160,8 +168,8 @@ class ClusterItem extends Base
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->orderBy('ci.id', 'DESC')
-            ->distinct()
-            ->fetchFirstColumn();
+            ->groupBy('ci.cluster_id')
+            ->fetchAllAssociative();
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
