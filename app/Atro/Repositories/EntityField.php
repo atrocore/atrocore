@@ -767,8 +767,8 @@ class EntityField extends ReferenceData
 
             $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
 
-            if ($field === 'where') {
-                $value = !empty($where = $entity->get('data')?->where) ? json_decode(json_encode($where), true) : [];
+            if ($field === 'where' && isset($entity->_input->data)) {
+                $value = !empty($where = $entity->_input->data?->where) ? json_decode(json_encode($where), true) : [];
                 if ($loadedVal !== $value) {
                     $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                         'fields' => [

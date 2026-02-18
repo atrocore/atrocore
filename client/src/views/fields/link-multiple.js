@@ -239,6 +239,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     boolFilterData: this.getBoolFilterData(),
                     primaryFilterName: this.getSelectPrimaryFilterName(),
                     multiple: this.linkMultiple,
+                    whereAdditional: this.model.getFieldParam(this.name, 'where') || undefined,
                     massRelateEnabled: true,
                     createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                     mandatorySelectAttributeList: this.mandatorySelectAttributeList,
