@@ -108,6 +108,23 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
                 }
             }
 
+            // Confirm clusters for rest records that failed confirmation on the previous run
+            $offset = 0;
+            $limit = 2000;
+
+            while (count($clusterItems = $clusterItemRepo->getSingleClusterItemsToConfirmAutomatically($entityName, $offset, $limit)) > 0) {
+                $offset += $limit;
+
+                foreach ($clusterItems as $clusterItem) {
+                    try {
+                        $clusterItemService->confirm($clusterItem, true);
+                    } catch (\Exception $e) {
+                        $GLOBALS['log']->error("Impossible to automatically confirm cluster " . $clusterItem->get('clusterId') . " : " . $e->getMessage());
+                    }
+                }
+            }
+
+
             // create clusters for the rest of the records
             while (!empty($recordsIds = $clusterItemRepo->getRecordsWithNoClusterItems($entityName, 20000))) {
                 foreach ($recordsIds as $recordId) {
@@ -124,8 +141,6 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
                     }
                 }
             }
-
-            // TODO: Confirm single clusters who failed previously
         }
     }
 
