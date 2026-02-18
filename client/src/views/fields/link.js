@@ -835,7 +835,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         mode: 'search',
                         foreignScope: foreignScope,
                         hideSearchType: true,
-                        params: this.defs.params
+                        params: this.defs.params,
+                        whereAdditional: this.model.getFieldParam(this.name, 'where') || undefined,
                     }, view => {
                         this.addCustomDataToView(view, rule);
 

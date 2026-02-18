@@ -239,7 +239,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     boolFilterData: this.getBoolFilterData(),
                     primaryFilterName: this.getSelectPrimaryFilterName(),
                     multiple: this.linkMultiple,
-                    whereAdditional: this.model.getFieldParam(this.name, 'where') || undefined,
+                    whereAdditional: this?.options?.whereAdditional || this.model.getFieldParam(this.name, 'where') || undefined,
                     massRelateEnabled: true,
                     createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                     mandatorySelectAttributeList: this.mandatorySelectAttributeList,
@@ -804,7 +804,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         model: model,
                         mode: 'search',
                         foreignScope: foreignScope,
-                        hideSearchType: true
+                        hideSearchType: true,
+                        whereAdditional: this.model.getFieldParam(this.name, 'where') || undefined,
                     }, view => {
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
