@@ -70,7 +70,7 @@ Espo.define('views/fields/classifications', 'views/fields/link-multiple',
             this.inlineEditClose(true);
         },
 
-        hasLockedControl() {
+        hasLockedControls() {
             return false;
         }
     })
