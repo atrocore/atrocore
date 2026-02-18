@@ -890,7 +890,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             if (!rule.data) {
                                 rule.data = {};
                             }
-                            rule.data['nameHash'] = view.nameHash ?? model.get('valueNameHash');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         view.render();
@@ -903,26 +902,29 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.getModelFactory().create(null, model => {
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
-                        let nameHash = rule.data?.nameHash
-                        if (nameHash?._localeId &&
-                            nameHash?._localeId !== this.getUser().get('localeId') &&
-                            (rule.value || []).length > 0) {
-                            const resp = this.ajaxGetRequest(this.foreignScope, {
-                                where: [
-                                    {
-                                        type: 'in',
-                                        attribute: 'id',
-                                        value: rule.value
-                                    }
-                                ]
-                            }, { async: false })
+                        let nameHash = { '_localeId': this.getUser().get('localeId') }
+                        if ((rule.value || []).length > 0) {
+                            try{
+                                const resp = this.ajaxGetRequest(this.foreignScope, {
+                                    select: this.getForeignName(),
+                                    collectionOnly: true,
+                                    where: [
+                                        {
+                                            type: 'in',
+                                            attribute: 'id',
+                                            value: rule.value
+                                        }
+                                    ]
+                                }, { async: false })
 
-                            nameHash = { '_localeId': this.getUser().get('localeId') }
-                            const foreignName = this.getForeignName();
-                            const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
-                            resp.responseJSON.list.forEach(record => {
-                                nameHash[record.id] = record[localizedForeignName] || record[foreignName]
-                            })
+                                const foreignName = this.getForeignName();
+                                const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                                resp.responseJSON.list.forEach(record => {
+                                    nameHash[record.id] = record[localizedForeignName] || record[foreignName]
+                                })
+                            }catch (e) {
+                                console.error(e);
+                            }
                         }
                         model.set('valueNames', nameHash);
                         model.set('valueIds', rule.value);
@@ -1025,9 +1027,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                         this.listenTo(this.model, 'afterUpdateRuleFilter', rule => {
                             const view = this.getView(inputName);
-                            if (view && rule.data && rule.data.nameHash) {
-                                view.model.set('valueNames', rule.data.nameHash);
-                            }
                         });
 
                         this.isNotListeningToOperatorChange[inputName] = true;
