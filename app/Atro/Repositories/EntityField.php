@@ -731,7 +731,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where', 'linkExtensibleEnumId'];
 
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
@@ -766,6 +766,33 @@ class EntityField extends ReferenceData
             }
 
             $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
+
+            if ($field === 'linkExtensibleEnumId' && !empty($entity->get($field))) {
+                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                    'fields' => [
+                        $entity->get('code') => [
+                            "where" => [
+                                [
+                                    "condition" => "AND",
+                                    "rules"     => [
+                                        [
+                                            "id"       => "extensibleEnums",
+                                            "field"    => "extensibleEnums",
+                                            "type"     => "string",
+                                            "operator" => "linked_with",
+                                            "value"    => [$entity->get($field)],
+                                        ]
+                                    ],
+                                    "valid"     => true
+                                ]
+                            ]
+                        ]
+                    ]
+                ]);
+
+                $saveMetadata = true;
+                continue;
+            }
 
             if ($field === 'where' && isset($entity->_input->data)) {
                 $value = !empty($where = $entity->_input->data?->where) ? json_decode(json_encode($where), true) : [];

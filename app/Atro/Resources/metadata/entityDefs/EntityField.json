@@ -532,6 +532,35 @@
       "readOnly": true,
       "view": "views/admin/field-manager/fields/extensible-enum-options"
     },
+    "linkExtensibleEnum": {
+      "type": "link",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "foreignEntityId"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "foreignEntityId"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
     "fileType": {
       "type": "link",
       "conditionalProperties": {
@@ -1045,6 +1074,10 @@
       "entity": "Measure"
     },
     "extensibleEnum": {
+      "type": "belongsTo",
+      "entity": "ExtensibleEnum"
+    },
+    "linkExtensibleEnum": {
       "type": "belongsTo",
       "entity": "ExtensibleEnum"
     },
