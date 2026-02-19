@@ -408,7 +408,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
             return {
                 id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
+                label: this.getLanguage().translate(this.originalName || this.name, 'fields', scope),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
                 operators: [
