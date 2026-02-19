@@ -69,7 +69,8 @@
       "rangeInt": "Plage de nombres entiers",
       "rangeFloat": "Plage de flottaison",
       "file": "Fichier",
-      "composite": "Composite"
+      "composite": "Composite",
+      "link": "Lien"
     }
   },
   "messages": {

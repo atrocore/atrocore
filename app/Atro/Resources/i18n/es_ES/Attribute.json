@@ -69,7 +69,8 @@
       "wysiwyg": "Área de texto con editor",
       "rangeInt": "Rango de enteros",
       "rangeFloat": "Rango de decimales",
-      "file": "Archivo"
+      "file": "Archivo",
+      "link": "Enlace"
     }
   },
   "messages": {

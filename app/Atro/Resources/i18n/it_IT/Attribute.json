@@ -87,7 +87,8 @@
       "wysiwyg": "HTML",
       "rangeInt": "Intervallo di numeri interi",
       "rangeFloat": "Intervallo del galleggiante",
-      "file": "File"
+      "file": "File",
+      "link": "Link"
     }
   },
   "messages": {

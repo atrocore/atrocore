@@ -69,7 +69,8 @@
       "wysiwyg": "HTML",
       "rangeInt": "Rozsah celých čísel",
       "rangeFloat": "Rozsah plováku",
-      "file": "Soubor"
+      "file": "Soubor",
+      "link": "Odkaz"
     }
   },
   "messages": {

@@ -69,7 +69,8 @@
       "wysiwyg": "HTML",
       "rangeInt": "Zakres liczb całkowitych",
       "rangeFloat": "Zakres liczb zmiennoprzecinkowych",
-      "file": "Plik"
+      "file": "Plik",
+      "link": "Link"
     }
   },
   "messages": {

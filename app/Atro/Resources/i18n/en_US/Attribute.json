@@ -69,7 +69,8 @@
       "wysiwyg": "HTML",
       "rangeInt": "Integer Range",
       "rangeFloat": "Float Range",
-      "file": "File"
+      "file": "File",
+      "link": "Link"
     }
   },
   "messages": {

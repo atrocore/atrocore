@@ -69,7 +69,8 @@
       "file": "Datei",
       "composite": "Komposit",
       "rangeInt": "Ganzzahlbereich",
-      "rangeFloat": "Gleitkommabereich"
+      "rangeFloat": "Gleitkommabereich",
+      "link": "Link"
     }
   },
   "messages": {
