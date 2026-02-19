@@ -868,11 +868,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
 
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            this.filterValue = rule.value ?? [];
+                            this.filterValue = (rule.value ?? []).filter(v => v !== 'subquery');
                             if (!rule.data) {
                                 rule.data = {}
                             }
                             rule.data['subQuery'] = subQuery;
+
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
@@ -936,6 +937,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             let data = { where: rule.data['subQuery'] };
                             view.addLinkSubQuery(data, true);
                         }
+                        if(rule.data && rule.data['nameHash']) {
+
+                        }
+
                         if (view) {
                             view.reRender();
                         }
@@ -1009,7 +1014,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             if (this.name !== rule.filter.id) {
                                 return;
                             }
-
 
                             if (rule.operator.type === this.initialOperatorType[inputName]) {
                                 this.initialOperatorType[inputName] = null;

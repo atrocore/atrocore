@@ -840,9 +840,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     }, view => {
                         this.addCustomDataToView(view, rule);
 
-
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            this.filterValue = rule.value ?? [];
+                            this.filterValue = (rule.value ?? []).filter(v => v !== 'subquery');
                             if (!rule.data) {
                                 rule.data = {}
                             }
@@ -864,7 +863,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             if (!rule.data) {
                                 rule.data = {};
                             }
-                            rule.data['nameHash'] = view.nameHash ?? view.get('nameHash');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
