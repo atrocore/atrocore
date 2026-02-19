@@ -888,9 +888,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                         this.listenTo(view, 'change', () => {
                             this.filterValue = view.ids ?? model.get('valueIds');
-                            if (!rule.data) {
-                                rule.data = {};
-                            }
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         view.render();
@@ -929,16 +926,20 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
                         model.set('valueNames', nameHash);
                         model.set('valueIds', rule.value);
+
                         if (type === 'extensibleMultiEnum') {
                             model.set('value', rule.value);
                         }
+
                         let view = this.getView(inputName);
+
                         if (rule.data && rule.data['subQuery'] && view) {
                             let data = { where: rule.data['subQuery'] };
                             view.addLinkSubQuery(data, true);
                         }
-                        if(rule.data && rule.data['nameHash']) {
 
+                        if(rule.data && rule.data['nameHash']) {
+                            delete  rule.data['nameHash'];
                         }
 
                         if (view) {

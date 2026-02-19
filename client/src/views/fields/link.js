@@ -860,9 +860,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
                         this.listenTo(view, 'change', () => {
                             this.filterValue = view.ids ?? model.get('valueIds');
-                            if (!rule.data) {
-                                rule.data = {};
-                            }
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
@@ -909,13 +906,20 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         if (type === 'extensibleEnum') {
                             model.set('value', rule.value);
                         }
+
                         view = this.getView(inputName);
+
                         if (rule.data && rule.data['subQuery'] && view) {
                             let data = { where: rule.data['subQuery'] };
                             this.listenToOnce(view, 'after:render', () => {
                                 view.addLinkSubQuery(data);
                             })
                         }
+
+                        if(rule.data && rule.data['nameHash']) {
+                            delete  rule.data['nameHash'];
+                        }
+
                         if (view) {
                             view.reRender();
                         }
