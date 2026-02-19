@@ -208,6 +208,28 @@ class ClusterItem extends Base
         }
     }
 
+    public function afterRemoveRecord(string $entityName, string $entityId): void
+    {
+        $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates") || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords");
+        if (!$toRemove) {
+            foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
+                if (!empty($scopeDefs['masterEntity']) && $scopeDefs['masterEntity'] === $entityName) {
+                    $toRemove = true;
+                    break;
+                }
+            }
+        }
+
+        if ($toRemove) {
+            $this->getDbal()->createQueryBuilder()
+                ->delete('cluster_item')
+                ->where('entity_name=:entityName AND entity_id=:entityId')
+                ->setParameter('entityName', $entityName)
+                ->setParameter('entityId', $entityId)
+                ->executeQuery();
+        }
+    }
+
     public function hasDeletedRecordsToClear(): bool
     {
         return true;
@@ -217,7 +239,7 @@ class ClusterItem extends Base
     {
         parent::clearDeletedRecords();
 
-        $records = $this->getConnection()->createQueryBuilder()
+        $records = $this->getDbal()->createQueryBuilder()
             ->select('entity_name')
             ->distinct()
             ->from('cluster_item')
@@ -225,12 +247,13 @@ class ClusterItem extends Base
 
         foreach ($records as $record) {
             $entityName = $record['entity_name'];
-            $tableName = $this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName)));
+            $tableName = $this->getDbal()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName)));
 
-            $this->getConnection()->createQueryBuilder()
+            $this->getDbal()->createQueryBuilder()
                 ->delete('cluster_item', 'ci')
-                ->where("ci.entity_name=:entityName AND NOT EXISTS (SELECT 1 FROM $tableName e WHERE e.id=ci.entity_id)")
+                ->where("ci.entity_name=:entityName AND NOT EXISTS (SELECT 1 FROM $tableName e WHERE e.id=ci.entity_id and deleted=:false)")
                 ->setParameter('entityName', $entityName)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->executeQuery();
         }
     }
