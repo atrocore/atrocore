@@ -90,8 +90,8 @@ class LinkType extends AbstractFieldType
                 $entity->entityDefs['fields'][$name]['view'] = 'views/fields/link-dropdown';
             }
 
-            if (class_exists('\\AdvancedDataManagement\\Module')) {
-                $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = !empty($row['disable_field_value_lock']);
+            if (!empty($row['disable_field_value_lock'])) {
+                $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = true;
             }
 
             if (empty($skipValueProcessing)) {
