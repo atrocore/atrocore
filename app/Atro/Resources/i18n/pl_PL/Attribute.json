@@ -70,7 +70,8 @@
       "rangeInt": "Zakres liczb całkowitych",
       "rangeFloat": "Zakres liczb zmiennoprzecinkowych",
       "file": "Plik",
-      "link": "Link"
+      "link": "Link",
+      "linkMultiple": "Wielokrotny link"
     }
   },
   "messages": {

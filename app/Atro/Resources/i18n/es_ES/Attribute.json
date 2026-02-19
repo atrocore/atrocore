@@ -70,7 +70,8 @@
       "rangeInt": "Rango de enteros",
       "rangeFloat": "Rango de decimales",
       "file": "Archivo",
-      "link": "Enlace"
+      "link": "Enlace",
+      "linkMultiple": "Enlace múltiple"
     }
   },
   "messages": {

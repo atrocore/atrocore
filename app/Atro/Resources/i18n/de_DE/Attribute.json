@@ -70,7 +70,8 @@
       "composite": "Komposit",
       "rangeInt": "Ganzzahlbereich",
       "rangeFloat": "Gleitkommabereich",
-      "link": "Link"
+      "link": "Link",
+      "linkMultiple": "Link mit Mehrfachauswahl"
     }
   },
   "messages": {

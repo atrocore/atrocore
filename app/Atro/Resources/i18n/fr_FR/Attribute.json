@@ -70,7 +70,8 @@
       "rangeFloat": "Plage de flottaison",
       "file": "Fichier",
       "composite": "Composite",
-      "link": "Lien"
+      "link": "Lien",
+      "linkMultiple": "Lien multiple"
     }
   },
   "messages": {

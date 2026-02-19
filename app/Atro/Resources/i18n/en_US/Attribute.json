@@ -70,7 +70,8 @@
       "rangeInt": "Integer Range",
       "rangeFloat": "Float Range",
       "file": "File",
-      "link": "Link"
+      "link": "Link",
+      "linkMultiple": "Multiple link"
     }
   },
   "messages": {

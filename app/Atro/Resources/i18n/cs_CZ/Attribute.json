@@ -70,7 +70,8 @@
       "rangeInt": "Rozsah celých čísel",
       "rangeFloat": "Rozsah plováku",
       "file": "Soubor",
-      "link": "Odkaz"
+      "link": "Odkaz",
+      "linkMultiple": "Více odkazů"
     }
   },
   "messages": {
