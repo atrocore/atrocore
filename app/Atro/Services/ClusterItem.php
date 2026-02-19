@@ -148,6 +148,11 @@ class ClusterItem extends Base
                 $stagingRecord->set('masterRecordId', null);
                 $this->getEntityManager()->saveEntity($stagingRecord);
             }
+
+            if ($entity->get('entityName') === $cluster->get('masterEntity')) {
+                $cluster->set('goldenRecordId', null);
+                $this->getEntityManager()->saveEntity($cluster);
+            }
         }
 
         $rci = $this->getEntityManager()->getEntity('RejectedClusterItem');
@@ -206,7 +211,16 @@ class ClusterItem extends Base
         }
 
         if ($this->isClusterItemConfirmed($clusterItem)) {
-            throw new BadRequest($this->getInjection('language')->translate("cannotUnreject", "exceptions", "ClusterItem"));
+            foreach ($clusterItem->getStagingRecords() as $stagingRecord) {
+                $stagingRecord->set('masterRecordId', null);
+                $this->getEntityManager()->saveEntity($stagingRecord);
+            }
+
+            $previousCluster = $clusterItem->get('cluster');
+            if ($clusterItem->get('entityName') === $previousCluster->get('masterEntity')) {
+                $previousCluster->set('goldenRecordId', null);
+                $this->getEntityManager()->saveEntity($previousCluster);
+            }
         }
 
         $this->getRepository()->moveToCluster($clusterItem->get('id'), $cluster->get('id'));
@@ -280,8 +294,11 @@ class ClusterItem extends Base
             return;
         }
 
+        $entity->set('cluster', $entityFrom);
+        $isConfirmed = $this->isClusterItemConfirmed($entity);
+
         if ($this->getUser()->isAdmin()) {
-            $entity->setMetaPermission('confirm', true);
+            $entity->setMetaPermission('confirm', !$isConfirmed);
             $entity->setMetaPermission('reject', true);
             $entity->setMetaPermission('unlink', true);
             $entity->setMetaPermission('delete', true);
@@ -294,7 +311,7 @@ class ClusterItem extends Base
         $entity->setMetaPermission('delete', false);
 
         if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
-            $entity->setMetaPermission('confirm', $this->getAcl()->check($record, 'edit'));
+            $entity->setMetaPermission('confirm', !$isConfirmed && $this->getAcl()->check($record, 'edit'));
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
         }
     }

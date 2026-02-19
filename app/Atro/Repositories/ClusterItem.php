@@ -35,7 +35,7 @@ class ClusterItem extends Base
         } else {
             // otherwise find all stagings for master record
             foreach ($this->getMetadata()->get('scopes') ?? [] as $scope => $scopeDefs) {
-                if (($scopeDefs['primaryEntityId'] ?? null) === $clusterItem->get('entityName')) {
+                if (($scopeDefs['primaryEntityId'] ?? null) === $clusterItem->get('entityName') && $scopeDefs['role'] !== 'changeRequest') {
                     return $this->getEntityManager()->getRepository($scope)->where(['masterRecordId' => $clusterItem->get('entityId')])->find();
                 }
             }
