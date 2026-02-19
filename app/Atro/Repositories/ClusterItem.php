@@ -19,8 +19,10 @@ use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\IEntity;
 
 class ClusterItem extends Base
 {
@@ -135,6 +137,21 @@ class ClusterItem extends Base
             ->setMaxResults($limit)
             ->addOrderBy('se.id', 'ASC')
             ->fetchFirstColumn();
+    }
+
+    public function getSingleClusterItemsToConfirmAutomatically($stagingEntityName, $offset = 0, $limit = 2000): EntityCollection
+    {
+        return $this->limit($offset, $limit)->find([
+            'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($stagingEntityName) {
+                $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+                $stagingTableName = $mapper->toDb($stagingEntityName);
+
+                $qb->andWhere("$tableAlias.entity_name = :stagingEntityName and $tableAlias.matched_score is null")
+                    ->andWhere("(select count(id) from cluster_item ci where ci.cluster_id=$tableAlias.cluster_id and deleted=:false) = 1")
+                    ->andWhere("(select count(id) from $stagingTableName st where st.id=$tableAlias.entity_id and st.master_record_id is null and st.deleted=:false) = 1")
+                    ->setParameter('stagingEntityName', $stagingEntityName);
+            }]
+        ]);
     }
 
     public function getClustersToConfirmAutomatically(string $stagingEntityName, int $offset = 0, int $limit = PHP_INT_MAX): array
