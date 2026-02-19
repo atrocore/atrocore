@@ -18,6 +18,8 @@ use Espo\ORM\IEntity;
 
 class LinkMultipleType extends AbstractFieldType
 {
+    private array $cachedCollection = [];
+
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
@@ -111,6 +113,46 @@ class LinkMultipleType extends AbstractFieldType
         $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->addSelect("{$alias}.json_value as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Ids'));
+    }
+
+    public function afterSelect(IEntity $entity, string $name, array $dataArr): void
+    {
+        $ids = $entity->get($name . 'Ids');
+        if (empty($ids)) {
+            return;
+        }
+
+        $entityName = $entity->entityDefs['fields'][$name]['entity'] ?? null;
+        if (empty($entityName)) {
+            return;
+        }
+
+        $names = [];
+        foreach ($ids as $id) {
+            if (!isset($this->cachedCollection[$entityName][$id])) {
+                $this->cachedCollection[$entityName][$id] = null;
+
+                $allIds = [];
+                foreach ($dataArr as $row) {
+                    $rowIds = @json_decode($row[$name . 'Ids'], true);
+                    if (is_array($rowIds)) {
+                        $allIds = array_merge($ids, $rowIds);
+                    }
+                }
+
+                if (!empty($allIds)) {
+                    foreach ($this->em->getRepository($entityName)->select(['id', 'name'])->where(['id' => $allIds])->find() as $foreign) {
+                        $this->cachedCollection[$entityName][$foreign->id] = $foreign;
+                    }
+                }
+            }
+
+            $names[$id] = !empty($this->cachedCollection[$entityName][$id]) ? $this->cachedCollection[$entityName][$id]->get('name') : $id;
+        }
+
+        if (!empty($names)) {
+            $entity->set($name . 'Names', $names);
+        }
     }
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array

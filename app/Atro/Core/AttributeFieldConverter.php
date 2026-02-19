@@ -145,7 +145,7 @@ class AttributeFieldConverter
         $entity->set('attributesDefs', $attributesDefs);
     }
 
-    public function putAdditionalDataAfterSelect(IEntity $entity, array $attributeIds): void
+    public function putAdditionalDataAfterSelect(IEntity $entity, array $attributeIds, array $dataArr): void
     {
         $attributesDefs = $entity->get('attributesDefs');
 
@@ -155,6 +155,7 @@ class AttributeFieldConverter
                 if (!empty($attributesDefs[$key])) {
                     $attributesDefs[$key]['attributeValueId'] = $entity->entityDefs['fields'][$key]['attributeValueId'];
                 }
+                $this->getFieldType($entity->entityDefs['fields'][$key]['type'])->afterSelect($entity, $key, $dataArr);
             }
         }
 
