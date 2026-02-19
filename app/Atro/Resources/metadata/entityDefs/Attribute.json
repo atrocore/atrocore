@@ -311,7 +311,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "link"
+                "link",
+                "linkMultiple"
               ]
             }
           ]
@@ -322,7 +323,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "link"
+                "link",
+                "linkMultiple"
               ]
             }
           ]
@@ -341,7 +343,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "link"
+                "link",
+                "linkMultiple"
               ]
             }
           ]
@@ -352,7 +355,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "link"
+                "link",
+                "linkMultiple"
               ]
             }
           ]
@@ -531,7 +535,8 @@
               "value": [
                 "extensibleEnum",
                 "extensibleMultiEnum",
-                "link"
+                "link",
+                "linkMultiple"
               ]
             }
           ]
