@@ -805,7 +805,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         mode: 'search',
                         foreignScope: foreignScope,
                         hideSearchType: true,
-                        whereAdditional: this.model.getFieldParam(this.name, 'where') || undefined,
+                        whereAdditional: this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
                     }, view => {
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
