@@ -261,6 +261,66 @@
         }
       }
     },
+    "entityType": {
+      "type": "varchar",
+      "notStorable": true,
+      "virtualField": true,
+      "view": "views/attribute/fields/entity-type",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "entityField": {
+      "type": "varchar",
+      "notStorable": true,
+      "virtualField": true,
+      "view": "views/attribute/fields/entity-field-type",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "data": {
       "type": "jsonObject",
       "layoutListDisabled": true,

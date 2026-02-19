@@ -41,7 +41,9 @@
     "conditionalProtected": "Protegé",
     "channel": "Canal",
     "entity": "Entité",
-    "modifiedExtendedDisabled": "Pas d'enregistrement en tant que modification"
+    "modifiedExtendedDisabled": "Pas d'enregistrement en tant que modification",
+    "entityType": "Entité associée",
+    "entityField": "Champ de l'entité"
   },
   "labels": {
     "Classification": "Classification",

@@ -41,7 +41,9 @@
     "conditionalReadOnly": "Tylko do odczytu",
     "conditionalProtected": "Chroniony",
     "conditionalDisableOptions": "Wyłączone opcje",
-    "modifiedExtendedDisabled": "Brak zapisu jako modyfikacja"
+    "modifiedExtendedDisabled": "Brak zapisu jako modyfikacja",
+    "entityType": "Podmiot powiązany",
+    "entityField": "Pole podmiotu"
   },
   "labels": {
     "Classification": "Klasyfikacja",

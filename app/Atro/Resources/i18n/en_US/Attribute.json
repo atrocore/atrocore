@@ -41,7 +41,9 @@
     "conditionalReadOnly": "Read-only",
     "conditionalProtected": "Protected",
     "conditionalDisableOptions": "Disabled Options",
-    "modifiedExtendedDisabled": "No recording as modification"
+    "modifiedExtendedDisabled": "No recording as modification",
+    "entityType": "Linked Entity",
+    "entityField": "Entity Field"
   },
   "labels": {
     "Classification": "Classification",

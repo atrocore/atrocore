@@ -41,7 +41,9 @@
     "channel": "Канал",
     "conditionalRequired": "Обязательный",
     "entity": "Сущность",
-    "modifiedExtendedDisabled": "Нет записи как модификация"
+    "modifiedExtendedDisabled": "Нет записи как модификация",
+    "entityType": "Связанная сущность",
+    "entityField": "Поле сущности"
   },
   "labels": {
     "addNewValue": "Добавить новое значение",

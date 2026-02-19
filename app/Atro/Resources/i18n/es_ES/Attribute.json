@@ -41,7 +41,9 @@
     "conditionalReadOnly": "Sólo lectura",
     "conditionalProtected": "Protegido",
     "conditionalDisableOptions": "Opciones para discapacitados",
-    "modifiedExtendedDisabled": "No se registra como modificación"
+    "modifiedExtendedDisabled": "No se registra como modificación",
+    "entityType": "Entidad vinculada",
+    "entityField": "Campo de entidad"
   },
   "labels": {
     "Classification": "Clasificación",

@@ -41,7 +41,9 @@
     "conditionalRequired": "Erforderlich",
     "conditionalReadOnly": "Schreibgeschützt",
     "conditionalProtected": "Geschützt",
-    "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung"
+    "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung",
+    "entityType": "Verknüpfte Entität",
+    "entityField": "Entitätsfeld"
   },
   "labels": {
     "addNewValue": "Neuen Wert hinzufügen",

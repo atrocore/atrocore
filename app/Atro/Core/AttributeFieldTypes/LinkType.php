@@ -58,6 +58,8 @@ class LinkType extends AbstractFieldType
 
 
         if (!empty($attributeData['entityType'])) {
+            $data = @json_decode($row['data'], true);
+
             $entity->entityDefs['fields'][$name] = [
                 'attributeId'               => $id,
                 'attributeValueId'          => $row['av_id'] ?? null,
@@ -83,7 +85,8 @@ class LinkType extends AbstractFieldType
                 'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
                 'conditionalProperties'     => $this->prepareConditionalProperties($row),
-                'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
+                'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
+                'where'                     => $data['where'] ?? []
             ];
 
             if (!empty($attributeData['dropdown'])) {

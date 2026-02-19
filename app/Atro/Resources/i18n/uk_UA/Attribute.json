@@ -41,7 +41,9 @@
     "entity": "Сутність",
     "classifications": "Класифікації",
     "channel": "Ла-Манш",
-    "modifiedExtendedDisabled": "Не фіксувати як зміну"
+    "modifiedExtendedDisabled": "Не фіксувати як зміну",
+    "entityType": "Пов'язана сутність",
+    "entityField": "Поле сутності"
   },
   "labels": {
     "addNewValue": "Додати нове значення",
