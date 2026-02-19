@@ -48,6 +48,13 @@
         "name": "extensibleEnumOptions",
         "label": "extensibleEnumOptions",
         "view": "views/attribute/record/panels/extensible-enum-options"
+      },
+      {
+        "name": "entityFilterResult",
+        "label": "entityFilterResult",
+        "view": "views/record/panels/entity-filter-result",
+        "entityField": "entityType",
+        "canClose": false
       }
     ]
   },

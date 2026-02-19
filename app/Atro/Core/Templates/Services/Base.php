@@ -23,12 +23,12 @@ class Base extends Record
         parent::putAclMeta($entity);
 
         // set permissions for additional actions of derivative entity
-        if (!empty($masterEntity = $this->getMetadata()->get("scopes.{$entity->getEntityName()}.primaryEntityId")) && !empty($entity->get('goldenRecordId'))) {
+        if (!empty($masterEntity = $this->getMetadata()->get("scopes.{$entity->getEntityName()}.primaryEntityId")) && !empty($entity->get('masterRecordId'))) {
             $entity->setMetaPermission('updateMasterRecord', false);
             if ($this->getUser()->isAdmin()) {
                 $entity->setMetaPermission('updateMasterRecord', true);
             } else {
-                $masterRecord = $this->getEntityManager()->getRepository($masterEntity)->get($entity->get('goldenRecordId'));
+                $masterRecord = $this->getEntityManager()->getRepository($masterEntity)->get($entity->get('masterRecordId'));
                 if ($masterRecord) {
                     $entity->setMetaPermission('updateMasterRecord', $this->getAcl()->check($masterRecord, 'edit'));
                 }

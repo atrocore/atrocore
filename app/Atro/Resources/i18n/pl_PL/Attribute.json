@@ -41,7 +41,9 @@
     "conditionalReadOnly": "Tylko do odczytu",
     "conditionalProtected": "Chroniony",
     "conditionalDisableOptions": "Wyłączone opcje",
-    "modifiedExtendedDisabled": "Brak zapisu jako modyfikacja"
+    "modifiedExtendedDisabled": "Brak zapisu jako modyfikacja",
+    "entityType": "Podmiot powiązany",
+    "entityField": "Pole podmiotu"
   },
   "labels": {
     "Classification": "Klasyfikacja",
@@ -67,7 +69,9 @@
       "wysiwyg": "HTML",
       "rangeInt": "Zakres liczb całkowitych",
       "rangeFloat": "Zakres liczb zmiennoprzecinkowych",
-      "file": "Plik"
+      "file": "Plik",
+      "link": "Link",
+      "linkMultiple": "Wielokrotny link"
     }
   },
   "messages": {

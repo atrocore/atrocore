@@ -28,14 +28,16 @@ class LinkType extends AbstractFieldType
     {
         parent::__construct($container);
 
-        $this->conn = $container->get('connection');
+        $this->conn = $container->get('dbal');
     }
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $id = $row['id'];
         $name = AttributeFieldConverter::prepareFieldName($row);
-        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+        $data = @json_decode($row['data'], true);
+        $attributeData = $data['field'] ?? null;
+        $entityName = $attributeData['entityType'] ?? null;
 
         $entity->fields[$name . 'Id'] = [
             'type'                     => 'varchar',
@@ -57,7 +59,7 @@ class LinkType extends AbstractFieldType
         }
 
 
-        if (!empty($attributeData['entityType'])) {
+        if (!empty($entityName)) {
             $entity->entityDefs['fields'][$name] = [
                 'attributeId'               => $id,
                 'attributeValueId'          => $row['av_id'] ?? null,
@@ -73,7 +75,7 @@ class LinkType extends AbstractFieldType
                 'channelId'                 => $row['channel_id'] ?? null,
                 'channelName'               => $row['channel_name'] ?? null,
                 'type'                      => 'link',
-                'entity'                    => $attributeData['entityType'],
+                'entity'                    => $entityName,
                 'dropdown'                  => $attributeData['dropdown'] ?? null,
                 'required'                  => !empty($row['is_required']),
                 'readOnly'                  => !empty($row['is_read_only']),
@@ -83,7 +85,8 @@ class LinkType extends AbstractFieldType
                 'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
                 'conditionalProperties'     => $this->prepareConditionalProperties($row),
-                'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
+                'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
+                'where'                     => $data['where'] ?? []
             ];
 
             if (!empty($attributeData['dropdown'])) {
@@ -95,7 +98,7 @@ class LinkType extends AbstractFieldType
             }
 
             if (empty($skipValueProcessing)) {
-                $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
+                $referenceTable = Util::toUnderScore(lcfirst($entityName));
 
                 if (!empty($row['reference_value'])) {
                     try {

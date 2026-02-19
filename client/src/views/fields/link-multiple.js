@@ -536,7 +536,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.$element.selectize(selectizeOptions);
 
                 if (this.mode === 'search') {
-                    this.addLinkSubQueryHtml(this.searchData.subQuery);
+                    this.addLinkSubQuery(this.searchData.subQuery);
                     const type = this.$el.find('select.search-type').val();
                     this.handleSearchType(type);
                 }
@@ -588,6 +588,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             let subQuery = Espo.Utils.clone(data.where ?? []);
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
+
             if (!silent) {
                 this.trigger('add-subquery', subQuery);
             }
@@ -617,7 +618,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         deleteLinkSubQueryHtml: function () {
-            this.deleteLink('subquery');
+            this.deleteLinkHtml('subquery');
         },
 
         addLinkSubQueryHtml: function (subQuery) {
@@ -805,7 +806,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         mode: 'search',
                         foreignScope: foreignScope,
                         hideSearchType: true,
-                        whereAdditional: this.model.getFieldParam(this.name, 'where') || undefined,
+                        whereAdditional: this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
                     }, view => {
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
@@ -860,19 +861,27 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             }
                         }
 
-                        if (rule.data && rule.data['subQuery']) {
-                            let data = { where: rule.data['subQuery'] };
-                            this.listenTo(view, 'after:render', () => {
-                                view.addLinkSubQuery(data);
-                            })
-                        }
-
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            this.filterValue = rule.value ?? [];
-                            if (!rule.data) {
+                            if(!subQuery || subQuery.length === 0 ) {
+                                return;
+                            }
+                            rule.value = null;
+                            this.filterValue = rule.value;
+
+                            (view.ids || []).forEach(id => {
+                                if(id === 'subquery') {
+                                    return;
+                                }
+
+                                view.deleteLink(id);
+                            });
+
+                            if (!rule.data || Array.isArray(rule.data)) {
                                 rule.data = {}
                             }
+
                             rule.data['subQuery'] = subQuery;
+
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
@@ -881,16 +890,15 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             if (rule.value !== null && rule.length === 0) {
                                 this.filterValue = null;
                             }
-                            delete rule.data['subQuery'];
+
+                            if (rule.data) {
+                                delete rule.data['subQuery'];
+                            }
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
                         this.listenTo(view, 'change', () => {
-                            this.filterValue = view.ids ?? model.get('valueIds');
-                            if (!rule.data) {
-                                rule.data = {};
-                            }
-                            rule.data['nameHash'] = view.nameHash ?? model.get('valueNameHash');
+                            this.filterValue = (view.ids ?? model.get('valueIds') ?? []).filter(v => v !== 'subquery');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         view.render();
@@ -903,37 +911,49 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.getModelFactory().create(null, model => {
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
-                        let nameHash = rule.data?.nameHash
-                        if (nameHash?._localeId &&
-                            nameHash?._localeId !== this.getUser().get('localeId') &&
-                            (rule.value || []).length > 0) {
-                            const resp = this.ajaxGetRequest(this.foreignScope, {
-                                where: [
-                                    {
-                                        type: 'in',
-                                        attribute: 'id',
-                                        value: rule.value
-                                    }
-                                ]
-                            }, { async: false })
+                        let nameHash = { '_localeId': this.getUser().get('localeId') }
+                        if ((rule.value || []).length > 0) {
+                            try{
+                                const resp = this.ajaxGetRequest(this.foreignScope, {
+                                    select: this.getForeignName(),
+                                    collectionOnly: true,
+                                    where: [
+                                        {
+                                            type: 'in',
+                                            attribute: 'id',
+                                            value: rule.value
+                                        }
+                                    ]
+                                }, { async: false })
 
-                            nameHash = { '_localeId': this.getUser().get('localeId') }
-                            const foreignName = this.getForeignName();
-                            const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
-                            resp.responseJSON.list.forEach(record => {
-                                nameHash[record.id] = record[localizedForeignName] || record[foreignName]
-                            })
+                                const foreignName = this.getForeignName();
+                                const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                                resp.responseJSON.list.forEach(record => {
+                                    nameHash[record.id] = record[localizedForeignName] || record[foreignName]
+                                })
+                            }catch (e) {
+                                console.error(e);
+                            }
                         }
                         model.set('valueNames', nameHash);
                         model.set('valueIds', rule.value);
+
                         if (type === 'extensibleMultiEnum') {
                             model.set('value', rule.value);
                         }
+
                         let view = this.getView(inputName);
+
                         if (rule.data && rule.data['subQuery'] && view) {
-                            let data = { where: rule.data['subQuery'] };
+                            let data = { where: Espo.utils.clone(rule.data['subQuery']) };
+                            view.searchData.subQuery = Espo.utils.clone(rule.data['subQuery']);
                             view.addLinkSubQuery(data, true);
                         }
+
+                        if(rule.data && rule.data['nameHash']) {
+                            delete  rule.data['nameHash'];
+                        }
+
                         if (view) {
                             view.reRender();
                         }
@@ -1008,7 +1028,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                 return;
                             }
 
-
                             if (rule.operator.type === this.initialOperatorType[inputName]) {
                                 this.initialOperatorType[inputName] = null;
                                 return;
@@ -1025,9 +1044,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                         this.listenTo(this.model, 'afterUpdateRuleFilter', rule => {
                             const view = this.getView(inputName);
-                            if (view && rule.data && rule.data.nameHash) {
-                                view.model.set('valueNames', rule.data.nameHash);
-                            }
                         });
 
                         this.isNotListeningToOperatorChange[inputName] = true;
@@ -1038,7 +1054,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if (!Array.isArray(value) || (value.length === 0 && !rule.data?.subQuery)) {
+                        if ((!Array.isArray(value) || value.length === 0) && !rule.data?.subQuery) {
                             return 'bad list';
                         }
 

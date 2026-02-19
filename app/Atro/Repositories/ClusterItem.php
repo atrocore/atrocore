@@ -239,19 +239,18 @@ class ClusterItem extends Base
     {
         parent::clearDeletedRecords();
 
-        $records = $this->getDbal()->createQueryBuilder()
+        $entityNames = $this->getDbal()->createQueryBuilder()
             ->select('entity_name')
             ->distinct()
             ->from('cluster_item')
-            ->fetchAllAssociative();
+            ->fetchFirstColumn();
 
-        foreach ($records as $record) {
-            $entityName = $record['entity_name'];
+        foreach ($entityNames as $entityName) {
             $tableName = $this->getDbal()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName)));
 
             $this->getDbal()->createQueryBuilder()
-                ->delete('cluster_item', 'ci')
-                ->where("ci.entity_name=:entityName AND NOT EXISTS (SELECT 1 FROM $tableName e WHERE e.id=ci.entity_id and deleted=:false)")
+                ->delete('cluster_item')
+                ->where("cluster_item.entity_name=:entityName AND NOT EXISTS (SELECT 1 FROM $tableName e WHERE e.id=cluster_item.entity_id and deleted=:false)")
                 ->setParameter('entityName', $entityName)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->executeQuery();

@@ -41,7 +41,9 @@
     "conditionalReadOnly": "Sólo lectura",
     "conditionalProtected": "Protegido",
     "conditionalDisableOptions": "Opciones para discapacitados",
-    "modifiedExtendedDisabled": "No se registra como modificación"
+    "modifiedExtendedDisabled": "No se registra como modificación",
+    "entityType": "Entidad vinculada",
+    "entityField": "Campo de entidad"
   },
   "labels": {
     "Classification": "Clasificación",
@@ -67,7 +69,9 @@
       "wysiwyg": "Área de texto con editor",
       "rangeInt": "Rango de enteros",
       "rangeFloat": "Rango de decimales",
-      "file": "Archivo"
+      "file": "Archivo",
+      "link": "Enlace",
+      "linkMultiple": "Enlace múltiple"
     }
   },
   "messages": {

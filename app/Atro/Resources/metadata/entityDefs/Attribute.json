@@ -47,11 +47,30 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "in",
-              "attribute": "type",
+              "type": "or",
               "value": [
-                "extensibleEnum",
-                "extensibleMultiEnum"
+                {
+                  "type": "in",
+                  "attribute": "type",
+                  "value": [
+                    "extensibleEnum",
+                    "extensibleMultiEnum"
+                  ]
+                },
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "equals",
+                      "attribute": "entityType",
+                      "value": "ExtensibleEnumOption"
+                    },
+                    {
+                      "type": "isEmpty",
+                      "attribute": "id"
+                    }
+                  ]
+                }
               ]
             }
           ]
@@ -59,11 +78,30 @@
         "required": {
           "conditionGroup": [
             {
-              "type": "in",
-              "attribute": "type",
+              "type": "or",
               "value": [
-                "extensibleEnum",
-                "extensibleMultiEnum"
+                {
+                  "type": "in",
+                  "attribute": "type",
+                  "value": [
+                    "extensibleEnum",
+                    "extensibleMultiEnum"
+                  ]
+                },
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "equals",
+                      "attribute": "entityType",
+                      "value": "ExtensibleEnumOption"
+                    },
+                    {
+                      "type": "isEmpty",
+                      "attribute": "id"
+                    }
+                  ]
+                }
               ]
             }
           ]
@@ -261,6 +299,70 @@
         }
       }
     },
+    "entityType": {
+      "type": "varchar",
+      "notStorable": true,
+      "virtualField": true,
+      "view": "views/attribute/fields/entity-type",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "entityField": {
+      "type": "varchar",
+      "notStorable": true,
+      "virtualField": true,
+      "view": "views/attribute/fields/entity-field-type",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "data": {
       "type": "jsonObject",
       "layoutListDisabled": true,
@@ -433,7 +535,8 @@
               "value": [
                 "extensibleEnum",
                 "extensibleMultiEnum",
-                "link"
+                "link",
+                "linkMultiple"
               ]
             }
           ]

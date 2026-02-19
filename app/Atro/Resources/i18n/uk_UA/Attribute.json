@@ -41,7 +41,9 @@
     "entity": "Сутність",
     "classifications": "Класифікації",
     "channel": "Ла-Манш",
-    "modifiedExtendedDisabled": "Не фіксувати як зміну"
+    "modifiedExtendedDisabled": "Не фіксувати як зміну",
+    "entityType": "Пов'язана сутність",
+    "entityField": "Поле сутності"
   },
   "labels": {
     "addNewValue": "Додати нове значення",
@@ -98,7 +100,9 @@
       "int": "Ціле число",
       "text": "Текст",
       "wysiwyg": "HTML",
-      "file": "Файл"
+      "file": "Файл",
+      "link": "Посилання",
+      "linkMultiple": "Кілька посилань"
     }
   }
 }
