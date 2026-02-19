@@ -841,11 +841,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         this.addCustomDataToView(view, rule);
 
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            this.filterValue = (rule.value ?? []).filter(v => v !== 'subquery');
-                            if (!rule.data) {
+                            rule.value = (rule.value ?? []).filter(v => v !== 'subquery');
+                            this.filterValue = rule.value;
+
+                            if (!rule.data || Array.isArray(rule.data)) {
                                 rule.data = {}
                             }
+
                             rule.data['subQuery'] = subQuery;
+
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
@@ -859,7 +863,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         });
 
                         this.listenTo(view, 'change', () => {
-                            this.filterValue = view.ids ?? model.get('valueIds');
+                            this.filterValue = (view.ids ?? model.get('valueIds') ?? []).filter(v !== 'subquery');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
@@ -983,9 +987,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
                         rule.value = null;
-                        if (rule.data?.nameHash) {
-                            rule.data.nameHash = {}
-                        }
                         let view = this.getView(inputName);
                         if (rule.data && rule.data['subQuery']) {
                             delete rule.data['subQuery'];

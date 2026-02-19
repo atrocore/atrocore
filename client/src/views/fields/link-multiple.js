@@ -868,10 +868,16 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
 
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            this.filterValue = (rule.value ?? []).filter(v => v !== 'subquery');
-                            if (!rule.data) {
+                            rule.value = (rule.value ?? []).filter(v => v !== 'subquery');
+                            this.filterValue = rule.value;
+                            if (rule.value !== null && rule.value.length === 0) {
+                                this.filterValue = null;
+                            }
+
+                            if (!rule.data || Array.isArray(rule.data)) {
                                 rule.data = {}
                             }
+
                             rule.data['subQuery'] = subQuery;
 
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
@@ -887,7 +893,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         });
 
                         this.listenTo(view, 'change', () => {
-                            this.filterValue = view.ids ?? model.get('valueIds');
+                            this.filterValue = (view.ids ?? model.get('valueIds') ?? []).filter(v !== 'subquery');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         view.render();
