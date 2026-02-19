@@ -42,7 +42,7 @@
       "tooltip": true
     },
     {
-      "name": "linkExtensibleEnum",
+      "name": "extensibleEnum",
       "required": true,
       "entity": "ExtensibleEnum",
       "type": "link"
