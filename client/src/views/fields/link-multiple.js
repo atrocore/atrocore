@@ -536,7 +536,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.$element.selectize(selectizeOptions);
 
                 if (this.mode === 'search') {
-                    this.addLinkSubQueryHtml(this.searchData.subQuery);
+                    this.addLinkSubQuery(this.searchData.subQuery);
                     const type = this.$el.find('select.search-type').val();
                     this.handleSearchType(type);
                 }
@@ -588,6 +588,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             let subQuery = Espo.Utils.clone(data.where ?? []);
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
+
             if (!silent) {
                 this.trigger('add-subquery', subQuery);
             }
@@ -617,7 +618,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         deleteLinkSubQueryHtml: function () {
-            this.deleteLink('subquery');
+            this.deleteLinkHtml('subquery');
         },
 
         addLinkSubQueryHtml: function (subQuery) {
@@ -860,19 +861,20 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             }
                         }
 
-                        if (rule.data && rule.data['subQuery']) {
-                            let data = { where: rule.data['subQuery'] };
-                            this.listenTo(view, 'after:render', () => {
-                                view.addLinkSubQuery(data);
-                            })
-                        }
-
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            rule.value = (rule.value ?? []).filter(v => v !== 'subquery');
-                            this.filterValue = rule.value;
-                            if (rule.value !== null && rule.value.length === 0) {
-                                this.filterValue = null;
+                            if(!subQuery || subQuery.length === 0 ) {
+                                return;
                             }
+                            rule.value = null;
+                            this.filterValue = rule.value;
+
+                            (view.ids || []).forEach(id => {
+                                if(id === 'subquery') {
+                                    return;
+                                }
+
+                                view.deleteLink(id);
+                            });
 
                             if (!rule.data || Array.isArray(rule.data)) {
                                 rule.data = {}
@@ -888,12 +890,15 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             if (rule.value !== null && rule.length === 0) {
                                 this.filterValue = null;
                             }
-                            delete rule.data['subQuery'];
+
+                            if (rule.data) {
+                                delete rule.data['subQuery'];
+                            }
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
                         this.listenTo(view, 'change', () => {
-                            this.filterValue = (view.ids ?? model.get('valueIds') ?? []).filter(v !== 'subquery');
+                            this.filterValue = (view.ids ?? model.get('valueIds') ?? []).filter(v => v !== 'subquery');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         view.render();
@@ -940,7 +945,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         let view = this.getView(inputName);
 
                         if (rule.data && rule.data['subQuery'] && view) {
-                            let data = { where: rule.data['subQuery'] };
+                            let data = { where: Espo.utils.clone(rule.data['subQuery']) };
+                            view.searchData.subQuery = Espo.utils.clone(rule.data['subQuery']);
                             view.addLinkSubQuery(data, true);
                         }
 
@@ -1048,7 +1054,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if (!Array.isArray(value) || (value.length === 0 && !rule.data?.subQuery)) {
+                        if ((!Array.isArray(value) || value.length === 0) && !rule.data?.subQuery) {
                             return 'bad list';
                         }
 
