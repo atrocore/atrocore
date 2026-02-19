@@ -4119,7 +4119,7 @@ tbody.collapse.in {
     border-top-right-radius: 0;
 }
 
-.btn-group .dropdown-toggle {
+.btn-group:not(.note-btn-group) .dropdown-toggle {
     border-left: transparent;
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
