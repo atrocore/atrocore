@@ -41,7 +41,9 @@
     "conditionalReadOnly": "Pouze pro čtení",
     "conditionalProtected": "Chráněné stránky",
     "conditionalDisableOptions": "Možnosti pro osoby se zdravotním postižením",
-    "modifiedExtendedDisabled": "Žádný záznam jako změna"
+    "modifiedExtendedDisabled": "Žádný záznam jako změna",
+    "entityType": "Propojený subjekt",
+    "entityField": "Pole entity"
   },
   "labels": {
     "Classification": "Klasifikace",
@@ -67,7 +69,9 @@
       "wysiwyg": "HTML",
       "rangeInt": "Rozsah celých čísel",
       "rangeFloat": "Rozsah plováku",
-      "file": "Soubor"
+      "file": "Soubor",
+      "link": "Odkaz",
+      "linkMultiple": "Více odkazů"
     }
   },
   "messages": {

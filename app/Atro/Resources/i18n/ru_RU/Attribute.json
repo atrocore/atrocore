@@ -41,7 +41,9 @@
     "channel": "Канал",
     "conditionalRequired": "Обязательный",
     "entity": "Сущность",
-    "modifiedExtendedDisabled": "Нет записи как модификация"
+    "modifiedExtendedDisabled": "Нет записи как модификация",
+    "entityType": "Связанная сущность",
+    "entityField": "Поле сущности"
   },
   "labels": {
     "addNewValue": "Добавить новое значение",
@@ -98,7 +100,9 @@
       "date": "Дата",
       "extensibleEnum": "Список",
       "file": "Файл",
-      "text": "Текст"
+      "text": "Текст",
+      "link": "Ссылка",
+      "linkMultiple": "Множественная ссылка"
     }
   }
 }

@@ -41,7 +41,9 @@
     "conditionalReadOnly": "In sola lettura",
     "conditionalProtected": "Protetto",
     "conditionalDisableOptions": "Opzioni disabilitate",
-    "modifiedExtendedDisabled": "Nessuna registrazione come modifica"
+    "modifiedExtendedDisabled": "Nessuna registrazione come modifica",
+    "entityType": "Entità collegata",
+    "entityField": "Campo Entità"
   },
   "exceptions": {
     "attributeIsUsedInProducts": "L'attributo è utilizzato nei prodotti. Per favore, aggiorni prima i prodotti.",
@@ -85,7 +87,9 @@
       "wysiwyg": "HTML",
       "rangeInt": "Intervallo di numeri interi",
       "rangeFloat": "Intervallo del galleggiante",
-      "file": "File"
+      "file": "File",
+      "link": "Link",
+      "linkMultiple": "Collegamento multiplo"
     }
   },
   "messages": {
