@@ -66,8 +66,7 @@
     "tooltip": "Hinweis",
     "conditionalVisible": "Sichtbar",
     "conditionalDisableOptions": "Deaktivierte Optionen",
-    "urlLabel": "URL Label",
-    "linkExtensibleEnum": "Liste"
+    "urlLabel": "URL Label"
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
