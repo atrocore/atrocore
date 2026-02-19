@@ -47,11 +47,30 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "in",
-              "attribute": "type",
+              "type": "or",
               "value": [
-                "extensibleEnum",
-                "extensibleMultiEnum"
+                {
+                  "type": "in",
+                  "attribute": "type",
+                  "value": [
+                    "extensibleEnum",
+                    "extensibleMultiEnum"
+                  ]
+                },
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "equals",
+                      "attribute": "entityType",
+                      "value": "ExtensibleEnumOption"
+                    },
+                    {
+                      "type": "isEmpty",
+                      "attribute": "id"
+                    }
+                  ]
+                }
               ]
             }
           ]
@@ -59,11 +78,30 @@
         "required": {
           "conditionGroup": [
             {
-              "type": "in",
-              "attribute": "type",
+              "type": "or",
               "value": [
-                "extensibleEnum",
-                "extensibleMultiEnum"
+                {
+                  "type": "in",
+                  "attribute": "type",
+                  "value": [
+                    "extensibleEnum",
+                    "extensibleMultiEnum"
+                  ]
+                },
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "equals",
+                      "attribute": "entityType",
+                      "value": "ExtensibleEnumOption"
+                    },
+                    {
+                      "type": "isEmpty",
+                      "attribute": "id"
+                    }
+                  ]
+                }
               ]
             }
           ]
