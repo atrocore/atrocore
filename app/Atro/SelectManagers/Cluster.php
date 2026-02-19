@@ -309,7 +309,7 @@ class Cluster extends Base
             // Review state (default for everything else)
             "ELSE 'review' END")
             ->andWhere("$mtAlias.cluster_id = mt_alias.id")
-            ->resetQueryPart(['orderBy', 'limit', 'offset']);
+            ->resetQueryParts(['orderBy', 'limit', 'offset']);
 
         return [
             'sql'        => str_replace([$mtAlias, 'mt_alias'], ['sbq_' . IdGenerator::unsortableId(), $mtAlias], $stateQb->getSQL()),
