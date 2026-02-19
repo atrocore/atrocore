@@ -629,8 +629,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 hideButtonPanel: this.hideButtonPanel,
                 showOverlay: this.showOverlay,
                 overlayLogo: this.getFavicon(),
-                hasRecordAction: !!this.recordActionView
+                hasRecordAction: !!this.recordActionView,
+                additionalHeaderHtml: this.getAdditionalHeaderHtml()
             };
+        },
+
+        getAdditionalHeaderHtml() {
+            return '';
         },
 
         actionReset() {

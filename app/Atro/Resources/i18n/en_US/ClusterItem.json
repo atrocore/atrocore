@@ -4,7 +4,9 @@
     "entityId": "Entity ID",
     "record": "Record",
     "cluster": "Cluster",
-    "matchedRecord": "Matched Record"
+    "matchedRecord": "Matched Record",
+    "confirmedAutomatically": "Confirmed Automatically",
+    "matchedScore": "Matched Score"
   },
   "exceptions": {
     "notFound": "Cluster item record not found",

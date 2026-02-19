@@ -31,9 +31,19 @@
       ],
       [
         {
-          "name": "updateMasterAutomatically"
+          "name": "executeMergeAs"
         },
-        false
+        {
+          "name": "updateMasterAutomatically"
+        }
+      ],
+      [
+        {
+          "name": "confirmAutomatically"
+        },
+        {
+          "name": "minimumMatchingScore"
+        }
       ]
     ]
   }

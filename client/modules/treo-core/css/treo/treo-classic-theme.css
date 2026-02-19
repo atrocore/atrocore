@@ -18984,6 +18984,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
+.compare-records tr.matched-score-row {
+    background-color: white;
+}
+
+.compare-records tr.matched-score-row th:hover {
+    background-color: white !important;
+}
+
 .compare-panel table > tbody > tr > td {
     border-color: transparent;
 }

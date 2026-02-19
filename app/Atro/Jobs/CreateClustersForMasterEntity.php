@@ -52,24 +52,30 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
 
                 $matchedRecordRepo->markHasCluster($item['id']);
 
-                if (!empty($sourceClusterId) && !empty($masterClusterId) && $sourceClusterId !== $masterClusterId) {
-                    $clusterItemRepo->moveAllToCluster($sourceClusterId, $masterClusterId);
+                if (!empty($sourceClusterId) && !empty($masterClusterId)) {
+                    if ($sourceClusterId !== $masterClusterId) {
+                        $clusterItemRepo->moveAllToCluster($sourceClusterId, $masterClusterId);
+                    }
                     continue;
                 }
 
                 if (empty($sourceClusterId)) {
                     $clustersIds[$item['source_entity']][$item['source_entity_id']] = $clusterId;
-                    $this->createClusterItem($clusterId, $item['source_entity'], $item['source_entity_id'], $item['id']);
+                    $this->createClusterItem($clusterId, $item['source_entity'], $item['source_entity_id'], $item['id'], $item['score']);
+                } else {
+                    $clusterItemRepo->updateMatchedScore($item['source_entity'], $item['source_entity_id'], $item['score']);
                 }
 
                 if (empty($masterClusterId)) {
                     $clustersIds[$item['master_entity']][$item['master_entity_id']] = $clusterId;
-                    $this->createClusterItem($clusterId, $item['master_entity'], $item['master_entity_id'], $item['id']);
+                    $this->createClusterItem($clusterId, $item['master_entity'], $item['master_entity_id'], $item['id'], $item['score']);
+                } else {
+                    $clusterItemRepo->updateMatchedScore($item['master_entity'], $item['master_entity_id'], $item['score']);
                 }
             }
         }
 
-        // create clusters for the rest of the records
+
         $entitiesNames = [];
         foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $masterEntity && !empty($scopeDefs['matchMasterRecords'])) {
@@ -79,6 +85,30 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
 
         $clusterItemService = $this->getServiceFactory()->create('ClusterItem');
         foreach ($entitiesNames as $entityName) {
+            // Confirm automatically cluster items
+            $offset = 0;
+            $limit = 10000;
+
+            while (!empty($clustersData = $clusterItemRepo->getClustersToConfirmAutomatically($entityName, $offset, $limit))) {
+                $offset += $limit;
+
+                foreach ($clustersData as $item) {
+                    $clusterItemIds = explode(',', $item['cluster_item_ids']);
+                    if (empty($clusterItemIds)) {
+                        continue;
+                    }
+
+                    $clusterItems = iterator_to_array($clusterItemRepo->findByIds($clusterItemIds));
+
+                    try {
+                        $clusterItemService->confirmAll($clusterItems, true);
+                    } catch (\Exception $e) {
+                        $GLOBALS['log']->error("Impossible to automatically confirm cluster " . $item['cluster_id'] . " : " . $e->getMessage());
+                    }
+                }
+            }
+
+            // create clusters for the rest of the records
             while (!empty($recordsIds = $clusterItemRepo->getRecordsWithNoClusterItems($entityName, 20000))) {
                 foreach ($recordsIds as $recordId) {
                     $cluster = $this->createCluster($masterEntity);
@@ -88,16 +118,18 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
                     $cluster->set('clusterItems', [$clusterItem]);
 
                     try {
-                        $clusterItemService->confirm($clusterItem);
+                        $clusterItemService->confirm($clusterItem, true);
                     } catch (\Exception $e) {
                         $GLOBALS['log']->error("Impossible to automatically confirm cluster " . $cluster->get('id') . " : " . $e->getMessage());
                     }
                 }
             }
+
+            // TODO: Confirm single clusters who failed previously
         }
     }
 
-    protected function createClusterItem(string $clusterId, string $entityName, string $entityId, ?string $matchedRecordId = null): Entity
+    protected function createClusterItem(string $clusterId, string $entityName, string $entityId, ?string $matchedRecordId = null, ?int $score = null): Entity
     {
         $clusterItem = $this->getEntityManager()->getRepository('ClusterItem')->get();
         $clusterItem->set('clusterId', $clusterId);
@@ -105,6 +137,9 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
         $clusterItem->set('entityId', $entityId);
         if (!empty($matchedRecordId)) {
             $clusterItem->set('matchedRecordId', $matchedRecordId);
+        }
+        if (!empty($score)) {
+            $clusterItem->set('matchedScore', $score);
         }
 
         $this->getEntityManager()->saveEntity($clusterItem);

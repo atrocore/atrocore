@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
+use Atro\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
@@ -60,20 +61,14 @@ class MasterDataEntity extends Base
             return $master;
         }
 
-        $user = $this->getInjection('container')->getUser();
-        if ($user->get('type') !== 'System') {
-            $this->getInjection('container')->setUser($user->getSystemUser());
-        }
-
-        try {
-            $master = $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($input['masterRecordData'])));
-        } catch (NotModified) {
-            // ignore
-        }
-
-        $this->getInjection('container')->setUser($user);
-
-        return $master;
+        return $this->executeAsMergeUser($masterDataEntity, function () use ($input, $master) {
+            try {
+                $master = $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($input['masterRecordData'])));
+            } catch (NotModified) {
+                // ignore
+            }
+            return $master;
+        });
     }
 
     public function createMasterRecord(Entity $staging): ?Entity
@@ -111,16 +106,46 @@ class MasterDataEntity extends Base
             return null;
         }
 
-        $user = $this->getInjection('container')->getUser();
-        if ($user->get('type') !== 'System') {
-            $this->getInjection('container')->setUser($user->getSystemUser());
+        return $this->executeAsMergeUser($masterDataEntity, function () use ($input, $masterEntity) {
+            return $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($input['masterRecordData'])));
+        });
+    }
+
+    private function executeAsMergeUser(Entity $masterDataEntity, $callback): ?Entity
+    {
+        if ($masterDataEntity->get('executeMergeAs') === 'system') {
+            $executeAsUser = $this->getEntityManager()->getRepository('User')->getGlobalSystemUser();
+        } else {
+            $executeAsUser = $this->getContainer()->get('user')->getSystemUser();
         }
 
-        $result = $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($input['masterRecordData'])));
+        $currentUser = $this->getContainer()->get('user');
 
-        $this->getInjection('container')->setUser($user);
+        $userChanged = $currentUser !== $executeAsUser;
 
-        return $result;
+        if ($userChanged) {
+            $this->auth($executeAsUser);
+        }
+
+        $res = $callback();
+
+        if ($userChanged) {
+            // auth as current user again
+            $this->auth($currentUser);
+        }
+
+        return $res;
+    }
+
+    protected function auth(User $user): void
+    {
+        if ($user->isSystemUser()) {
+            $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
+        }
+
+        $this->getEntityManager()->setUser($user);
+        $this->getContainer()->setUser($user);
+        $this->getContainer()->get('acl')->setUser($user);
     }
 
     public function prepareEntityForOutput(Entity $entity)
@@ -146,6 +171,11 @@ class MasterDataEntity extends Base
     protected function getTwig(): Twig
     {
         return $this->getInjection('twig');
+    }
+
+    protected function getContainer(): \Atro\Core\Container
+    {
+        return $this->getInjection('container');
     }
 
     protected function init()
