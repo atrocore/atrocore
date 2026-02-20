@@ -267,13 +267,18 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 }
             });
 
-            list.push({
-                divider: true
-            });
+            // avoid mass action when onlyDeleted
 
-            list.push({
-                preloader: true
-            });
+            if(!filters?.bool?.onlyDeleted) {
+                list.push({
+                    divider: true
+                });
+
+                list.push({
+                    preloader: true
+                });
+            }
+
 
             return list;
         },
