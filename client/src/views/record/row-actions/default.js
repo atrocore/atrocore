@@ -269,7 +269,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
             // avoid mass action when onlyDeleted
 
-            if(!filters?.bool?.onlyDeleted) {
+            if (!filters?.bool?.onlyDeleted) {
                 list.push({
                     divider: true
                 });
