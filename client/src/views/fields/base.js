@@ -829,7 +829,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             let attributeId = this.model.get('attributesDefs')[fieldName]['attributeId'] || null;
 
-            if (!attributeId) {
+            if (!attributeId || !this.model.get('attributesDefs')[fieldName]['attributeValueId']) {
                 return;
             }
 
@@ -875,6 +875,18 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: () => {
+                            if (['list', 'listLink'].includes(this.mode)) {
+                                const attributesDefs = this.model.get('attributesDefs') || {};
+                                for (let key in attributesDefs) {
+                                    if (attributesDefs[key]['attributeId'] === attributeId) {
+                                        this.model.unset(key);
+                                        attributesDefs[key]['attributeValueId'] = null;
+                                    }
+                                }
+                                this.model.set('attributesDefs', attributesDefs);
+                                this.reRender();
+                                return
+                            }
                             this.model.fetch().then(() => {
                                 this.notify('Done', 'success');
                             });
@@ -888,12 +900,17 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 if (this.disabled) {
                     return;
                 }
-                if (this.mode === 'detail') {
+
+                if (this.isListView() && !this.isVisibleViaConditions()) {
+                    return;
+                }
+
+                if (['detail', 'list', 'listLink'].includes(this.mode)) {
                     $removeLink.removeClass('hidden');
                 }
             }).on('mouseleave', e => {
                 e.stopPropagation();
-                if (this.mode === 'detail') {
+                if (['detail', 'list', 'listLink'].includes(this.mode)) {
                     $removeLink.addClass('hidden');
                 }
             });
@@ -924,6 +941,17 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (['edit', 'detail'].includes(this.mode) && !this.options.disableToggleVisibility) {
                 this.toggleVisibility();
             }
+
+            const name = this.originalName || this.name;
+            if (this.isListView() && ['list', 'listLink'].includes(this.mode) && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
+                if (!this.model.get('attributesDefs')[name]['attributeValueId']) {
+                    let html = `${this.translate('N/A')}`
+                    if (this.mode === 'listLink') {
+                        html = `<a href="#${this.model.name}/view/${this.model.id}" class="link" data-id="${this.model.id}" title="${this.translate('N/A')}">${this.translate('N/A')}</a>`
+                    }
+                    this.$el.html(html);
+                }
+            }
         },
 
         initListViewInlineEdit() {
@@ -935,6 +963,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initStatusContainer();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
+                    this.initRemoveAttributeValue()
                 }
             }
 
@@ -1280,6 +1309,18 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         onInlineEditSave(res, attrs, model) {
             if (res.inheritedFields !== undefined) {
                 attrs.inheritedFields = res.inheritedFields;
+            }
+
+            if (attrs.__attributes && res.attributesDefs) {
+                const attributesDefs = model.get('attributesDefs') || {};
+                for (const key in res.attributesDefs) {
+                    if (attrs.__attributes.includes(res.attributesDefs[key]['attributeId'])) {
+                        attributesDefs[key] = res.attributesDefs[key];
+                    }
+                }
+
+                model.set('attributesDefs', attributesDefs)
+                delete attrs.__attributes;
             }
 
             model.set(attrs);
