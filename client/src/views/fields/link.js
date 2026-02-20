@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
+Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enum'], function (Dep, ColoredEnum) {
 
     return Dep.extend({
 
@@ -109,7 +109,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
             }
 
-            return _.extend({
+            let data = _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
                 idValue: idValue,
@@ -119,6 +119,34 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 iconHtml: iconHtml,
                 createDisabled: this.createDisabled,
             }, Dep.prototype.data.call(this));
+
+            if (
+                ['list', 'detail'].includes(this.mode)
+                && data.foreignScope === 'ExtensibleEnumOption'
+                && this.idName !== this.name
+                && this.model.get('_meta')?.options?.[this.name]
+            ) {
+                const optionData = this.model.get('_meta').options[this.name];
+                if (optionData.color){
+                    const fontSize = this.model.getFieldParam(this.name, 'fontSize');
+                    data.description = optionData.description || '';
+                    data.fontSize = fontSize ? fontSize + 'em' : '100%';
+                    data.fontWeight = 'normal';
+                    data.backgroundColor = optionData.color;
+                    data.color = ColoredEnum.prototype.getFontColor.call(this, data.backgroundColor || '#ececec');
+                    data.border = ColoredEnum.prototype.getBorder.call(this, data.backgroundColor || '#ececec');
+                }
+            }
+
+            return data;
+        },
+
+        onInlineEditSave(res, attrs, model) {
+            if (res?._meta?.options?.[this.name]) {
+                model.set('_meta', res._meta);
+            }
+
+            Dep.prototype.onInlineEditSave.call(this, res, attrs, model);
         },
 
         getSelectFilters: function () {
@@ -157,6 +185,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getCreateAttributes: function () {
+            let extensibleEnumId = this.getExtensibleEnumId();
+            if (extensibleEnumId) {
+                return {
+                    "extensibleEnumsIds": [extensibleEnumId],
+                    "extensibleEnumsNames": {
+                        [extensibleEnumId]: this.getExtensibleEnumName()
+                    }
+                }
+            }
         },
 
         setup: function () {

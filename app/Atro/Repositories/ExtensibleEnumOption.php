@@ -36,6 +36,43 @@ class ExtensibleEnumOption extends Base
         return $options[0] ?? null;
     }
 
+    public function getPreparedOptionsByIds(array $ids): array
+    {
+        $notCachedIds = array_diff($ids, array_keys($this->cachedOptions));
+        if (!empty($notCachedIds)) {
+            foreach ($this->where(['id' => $ids])->find() as $option) {
+                $this->cachedOptions[$option->id] = $option->toArray();
+            }
+        }
+
+        $metaFields = [
+            'deleted',
+            'createdAt',
+            'modifiedAt',
+            'createdById',
+            'createdByName',
+            'modifiedById',
+            'modifiedByName',
+            'ownerUserId',
+            'ownerUserName',
+            'assignedUserId',
+            'assignedUserName'
+        ];
+
+        $res = [];
+        foreach ($ids as $id) {
+            if (isset($this->cachedOptions[$id])) {
+                $row = $this->cachedOptions[$id];
+                foreach ($metaFields as $key) {
+                    unset($row[$key]);
+                }
+                $res[] = $row;
+            }
+        }
+
+        return $res;
+    }
+
     public function getPreparedOptions(string $extensibleEnumId, ?array $ids): ?array
     {
         if (!is_array($ids)) {

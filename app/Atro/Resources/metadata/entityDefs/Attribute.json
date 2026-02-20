@@ -58,18 +58,9 @@
                   ]
                 },
                 {
-                  "type": "and",
-                  "value": [
-                    {
-                      "type": "equals",
-                      "attribute": "entityType",
-                      "value": "ExtensibleEnumOption"
-                    },
-                    {
-                      "type": "isEmpty",
-                      "attribute": "id"
-                    }
-                  ]
+                  "type": "equals",
+                  "attribute": "entityType",
+                  "value": "ExtensibleEnumOption"
                 }
               ]
             }
@@ -89,18 +80,9 @@
                   ]
                 },
                 {
-                  "type": "and",
-                  "value": [
-                    {
-                      "type": "equals",
-                      "attribute": "entityType",
-                      "value": "ExtensibleEnumOption"
-                    },
-                    {
-                      "type": "isEmpty",
-                      "attribute": "id"
-                    }
-                  ]
+                  "type": "equals",
+                  "attribute": "entityType",
+                  "value": "ExtensibleEnumOption"
                 }
               ]
             }
