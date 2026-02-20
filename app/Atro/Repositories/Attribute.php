@@ -635,8 +635,8 @@ class Attribute extends Base
 
             $entity->set('extensibleEnumId', null);
 
-            $data = $entity->get('data') ?? [];
-            $data['where'] = $where;
+            $data = $entity->get('data') ?? new \stdClass();
+            $data->where = $where;
 
             $entity->set('data', $data);
         }
