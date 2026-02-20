@@ -145,7 +145,38 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
             res.isNull = ids === null || ids === undefined;
 
+            if (
+                ['list', 'detail'].includes(this.mode)
+                && res.foreignScope === 'ExtensibleEnumOption'
+                && this.idsName !== this.name
+                && this.model.get('_meta')?.options?.[this.name]
+            ) {
+                const fontSize = this.model.getFieldParam(this.name, 'fontSize');
+
+                res.selectedValues = [];
+                this.model.get('_meta').options[this.name].forEach(option => {
+                    let backgroundColor = option.color;
+                    res.selectedValues.push({
+                        description: option.description || '',
+                        fontSize: fontSize ? fontSize + 'em' : '100%',
+                        fontWeight: 'normal',
+                        backgroundColor: backgroundColor,
+                        color: ColoredEnum.prototype.getFontColor.call(this, backgroundColor || '#ececec'),
+                        border: ColoredEnum.prototype.getBorder.call(this, backgroundColor || '#ececec'),
+                        optionName: this.model.get(this.nameHashName)[option.id]
+                    });
+                });
+            }
+
             return res;
+        },
+
+        onInlineEditSave(res, attrs, model) {
+            if (res?._meta?.options?.[this.name]) {
+                model.set('_meta', res._meta);
+            }
+
+            Dep.prototype.onInlineEditSave.call(this, res, attrs, model);
         },
 
         getSelectFilters: function () {
@@ -160,6 +191,15 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getCreateAttributes: function () {
+            let extensibleEnumId = this.getExtensibleEnumId();
+            if (extensibleEnumId) {
+                return {
+                    "extensibleEnumsIds": [extensibleEnumId],
+                    "extensibleEnumsNames": {
+                        [extensibleEnumId]: this.getExtensibleEnumName()
+                    }
+                }
+            }
         },
 
         setup: function () {

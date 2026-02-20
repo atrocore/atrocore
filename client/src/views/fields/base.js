@@ -1979,5 +1979,30 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return originalName;
         },
 
+        getExtensibleEnumId() {
+            let extensibleEnumId = this.model.getFieldParam(this.name, 'extensibleEnumId') ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            if (this.params.extensibleEnumId) {
+                extensibleEnumId = this.params.extensibleEnumId;
+            }
+
+            return extensibleEnumId;
+        },
+
+        getExtensibleEnumName() {
+            const extensibleEnumId = this.getExtensibleEnumId();
+            if (!extensibleEnumId) {
+                return null
+            }
+            let key = 'extensible_enum_name_' + extensibleEnumId;
+
+            if (!Espo[key]) {
+                this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}`, {}, { async: false }).then(res => {
+                    Espo[key] = res['name'];
+                });
+            }
+
+            return Espo[key];
+        },
+
     });
 });
