@@ -375,8 +375,9 @@ class Attribute extends Base
             }
 
             $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
+            $attributeValueId = IdGenerator::uuid();
 
-            $stmt->bindValue(':id', IdGenerator::uuid());
+            $stmt->bindValue(':id', $attributeValueId);
             $stmt->bindValue(':entityId', $entity->id);
             $stmt->bindValue(':attributeId', $entity->fields[$fieldName]['attributeId']);
 
@@ -388,6 +389,17 @@ class Attribute extends Base
 
             try {
                 $stmt->execute();
+
+                $attributesDefs = $entity->get('attributesDefs');
+                if (empty($attributesDefs[$fieldName]['attributeValueId'])) {
+                    foreach ($attributesDefs as $key => $attributeDef) {
+                        if ($attributeDef['attributeId'] === $entity->fields[$fieldName]['attributeId']) {
+                            $attributesDefs[$key]['attributeValueId'] = $attributeValueId;
+                            $entity->entityDefs['fields'][$fieldName]['attributeValueId'] = $attributeValueId;
+                        }
+                    }
+                    $entity->set('attributesDefs', $attributesDefs);
+                }
 
                 if ($this->shouldLinkAddedAttributeToClassification($entity->getEntityType())) {
                     if (Converter::isPgSQL($this->getConnection())) {
@@ -620,6 +632,8 @@ class Attribute extends Base
                     ]
                 ];
             }
+
+            $entity->set('extensibleEnumId', null);
 
             $data = $entity->get('data') ?? new \stdClass();
             $data->where = $where;
