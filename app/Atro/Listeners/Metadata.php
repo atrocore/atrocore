@@ -2429,6 +2429,24 @@ class Metadata extends AbstractListener
                         $foreign = lcfirst($scope) . 'Derivative';
 
                         $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                        if (!empty($data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']]['required'])) {
+                            unset($data['entityDefs'][$linkDefs['entity']]['fields'][$foreign]['required']);
+                            unset($data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']]['required']);
+
+                            $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign]['conditionalProperties']['required']['conditionGroup'] = [
+                                [
+                                    'type'      => 'isEmpty',
+                                    'attribute' => $linkDefs['foreign'] . 'Id'
+                                ]
+                            ];
+                            $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']]['conditionalProperties']['required']['conditionGroup'] = [
+                                [
+                                    'type'      => 'isEmpty',
+                                    'attribute' => $foreign . 'Id'
+                                ]
+                            ];
+                        }
+
                         $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
                         $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
 
