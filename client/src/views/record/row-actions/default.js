@@ -278,7 +278,6 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 });
             }
 
-
             return list;
         },
         handleDataBeforeRender: function (data) {
