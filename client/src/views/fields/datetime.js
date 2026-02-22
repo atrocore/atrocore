@@ -233,7 +233,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                 validation: {
                     callback: function (value, rule) {
                         if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
-                            if (value == null || isNaN(value)) {
+                            if (value == null || isNaN(value) || value <= 0) {
                                 return 'bad int';
                             }
                             return true;
