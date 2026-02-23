@@ -551,7 +551,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     }
                 });
 
-                console.log('typesss collection', types)
 
                 return types.length === 1;
             }
@@ -568,11 +567,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
             });
 
-            return
-
-            console.log('typesss compare', types)
-
-            return !(this.comparisonAcrossEntities() || this.hasStaging());
+            return types.length === 1;
         },
 
         enableButtons() {
