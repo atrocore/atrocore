@@ -215,6 +215,8 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                     'between',
                     'last_x_days',
                     'next_x_days',
+                    'older_than_x_days',
+                    'after_x_days',
                     'current_month',
                     'last_month',
                     'next_month',
@@ -229,21 +231,21 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
-                    callback: function(value, rule) {
-                        if(['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
-                            if(value == null || isNaN(value)) {
+                    callback: function (value, rule) {
+                        if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
+                            if (value == null || isNaN(value) || value <= 0) {
                                 return 'bad int';
                             }
-                            return  true;
+                            return true;
                         }
-                        if(rule.operator.type ==='between') {
-                            if((!Array.isArray(value) || value.length !== 2)) {
+                        if (rule.operator.type === 'between') {
+                            if ((!Array.isArray(value) || value.length !== 2)) {
                                 return 'bad between';
                             }
-                            return  true;
+                            return true;
                         }
 
-                        if(value === null) {
+                        if (value === null) {
                             return 'bad date';
                         }
                         return true;

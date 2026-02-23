@@ -1784,11 +1784,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         }
 
-                        if (['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                        if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
                             createValueField(rule.operator.type)
                         }
 
-                        if (!['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                        if (!['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
                             createValueField(rule.operator.type)
                         }
                     } else {
@@ -1814,8 +1814,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         view = 'views/fields/int';
                     }
 
-                    if (['last_x_days', 'next_x_days'].includes(this.previousOperatorType)) {
-                        view = 'views/fields/int'
+                    if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType)) {
+                        view = 'views/fields/int';
                     }
                     this.createView(viewKey, view, {
                         name: 'value',

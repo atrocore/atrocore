@@ -525,6 +525,12 @@ class Base
             case 'last_x_days':
                 $operator = 'lastXDays';
                 break;
+            case 'older_than_x_days':
+                $operator = 'olderThanXDays';
+                break;
+            case 'after_x_days':
+                $operator = 'afterXDays';
+                break;
             case 'next_x_days':
                 $operator = 'nextXDays';
                 break;

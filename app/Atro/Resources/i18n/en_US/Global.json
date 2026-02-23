@@ -1332,6 +1332,8 @@
       "is_attribute_not_linked": "is not linked",
       "last_x_days": "last x days",
       "next_x_days": "next x days",
+      "older_than_x_days": "older than x days",
+      "after_x_days": "after x days",
       "current_month": "current month",
       "last_month": "last month",
       "next_month": "next month",
