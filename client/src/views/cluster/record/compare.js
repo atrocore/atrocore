@@ -71,7 +71,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             html += '<th>' + this.translate('matchedScore', 'fields', 'ClusterItem') + '</th>'
 
             for (let model of this.getModels()) {
-                html += '<th>' + this.getMatchedScoreHtml(model.item.get('matchedScore'), model.item.get('confirmedAutomatically')) + '</th>'
+                html += '<th>' + this.getMatchedScoreHtml(model.item.get('matchedScore'), model.item.get('_meta')?.cluster?.confirmed && model.item.get('confirmedAutomatically')) + '</th>'
             }
 
             return html + '</tr>'
@@ -112,7 +112,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 .map(([key, value]) => `${key}: ${value}`)
                 .join('; ');
 
-            return `<span class="colored-enum label" style="${styleString}">${text}</span><i style="font-size: 14px;position: relative;margin-left: 2px;top: -0.5em;color: var(--label-color)" class="ph ph-sparkle"></i>`
+            return `<span class="colored-enum label" style="${styleString}">${text}</span>` + (confirmedAutomatically ? '<i style="font-size: 14px;position: relative;margin-left: 2px;top: -0.5em;color: var(--label-color)" class="ph ph-sparkle"></i>' : '');
         }
     })
 })
