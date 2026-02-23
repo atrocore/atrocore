@@ -232,6 +232,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                     }.bind(this));
             }
 
+            this.createDisabled = this.createDisabled || this.model.getFieldParam(this.name, 'createDisabled');
+
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
             }
