@@ -190,6 +190,11 @@ class ClusterItem extends Base
             $newClusterId = $newCluster->get('id');
         }
 
+        if (!empty($entity->get('confirmedAutomatically'))) {
+            $entity->set('confirmedAutomatically', false);
+            $this->getEntityManager()->saveEntity($entity);
+        }
+
         $this->getRepository()->moveToCluster($entity->get('id'), $newClusterId);
 
         $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newClusterId]);
@@ -221,6 +226,11 @@ class ClusterItem extends Base
                 $previousCluster->set('goldenRecordId', null);
                 $this->getEntityManager()->saveEntity($previousCluster);
             }
+        }
+
+        if (!empty($clusterItem->get('confirmedAutomatically'))) {
+            $clusterItem->set('confirmedAutomatically', false);
+            $this->getEntityManager()->saveEntity($clusterItem);
         }
 
         $this->getRepository()->moveToCluster($clusterItem->get('id'), $cluster->get('id'));

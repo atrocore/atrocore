@@ -47,10 +47,6 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                     if (meta.golden) {
                         this.$el.find(`th[data-id="${model.id}"]`).addClass('golden');
                     }
-
-                    if (model.item?.get('confirmedAutomatically')) {
-                        this.$el.find(`th[data-id="${model.id}"]`).append('<i class="ph ph-sparkle">')
-                    }
                 });
         },
 
@@ -75,13 +71,13 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             html += '<th>' + this.translate('matchedScore', 'fields', 'ClusterItem') + '</th>'
 
             for (let model of this.getModels()) {
-                html += '<th>' + this.getMatchedScoreHtml(model.item.get('matchedScore')) + '</th>'
+                html += '<th>' + this.getMatchedScoreHtml(model.item.get('matchedScore'), model.item.get('confirmedAutomatically')) + '</th>'
             }
 
             return html + '</tr>'
         },
 
-        getMatchedScoreHtml(value) {
+        getMatchedScoreHtml(value, confirmedAutomatically) {
             let backgroundColor = '#CCCCCC';
             let text = ''
 
@@ -116,7 +112,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 .map(([key, value]) => `${key}: ${value}`)
                 .join('; ');
 
-            return `<span class="colored-enum label" style="${styleString}">${text}</span>`
+            return `<span class="colored-enum label" style="${styleString}">${text}</span><i style="font-size: 14px;position: relative;margin-left: 2px;top: -0.5em;color: var(--label-color)" class="ph ph-sparkle"></i>`
         }
     })
 })
