@@ -214,6 +214,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
             this.foreignScope = this.options.foreignScope || this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
 
+            this.createDisabled = this.createDisabled || this.model.getFieldParam(this.name, 'createDisabled');
+
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
             }
