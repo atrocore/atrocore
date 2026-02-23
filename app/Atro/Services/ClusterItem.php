@@ -243,6 +243,24 @@ class ClusterItem extends Base
     }
 
 
+    public function massReject( array $params): array
+    {
+        $params['action'] = 'reject';
+        $params['maxCountWithoutJob'] = 2 ?? $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+
+        list($count, $errors, $sync) = $this->executeMassAction($params, function ($id) {
+            try {
+                $this->reject($id);
+            } catch (NotModified $e) {
+            }
+        });
+
+        return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
+    }
+
+
     public function isClusterItemConfirmed(IEntity $clusterItem): bool
     {
         if (empty($cluster = $clusterItem->get('cluster'))) {

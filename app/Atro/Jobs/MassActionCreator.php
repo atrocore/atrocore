@@ -59,9 +59,9 @@ class MassActionCreator extends AbstractJob implements JobInterface
         if (!empty($actionEntity)) {
             $name = $actionEntity->get('name');
         } else if ($action === 'custom') {
-            $name = $this->translate($data['type'], 'massActions');
+            $name = $this->translate($data['type'], 'massActions', $entityName);
         } else {
-            $name = $this->translate($action, 'massActions');
+            $name = $this->translate($action, 'massActions', $entityName);
         }
 
         while (true) {

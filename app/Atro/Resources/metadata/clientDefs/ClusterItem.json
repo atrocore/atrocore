@@ -1,4 +1,12 @@
 {
   "controller": "controllers/record",
-  "createDisabled": true
+  "createDisabled": true,
+  "massActionList": ["reject"],
+  "checkAllResultMassActionList": ["reject"],
+  "massActionDefs": {
+    "reject": {
+      "url": "ClusterItem/action/massReject",
+      "successMessage": "rejectJobsCreated"
+    }
+  }
 }

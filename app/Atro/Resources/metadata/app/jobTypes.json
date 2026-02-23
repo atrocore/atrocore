@@ -112,5 +112,9 @@
     "scheduledJob": true,
     "unique": true,
     "handler": "\\Atro\\Jobs\\SendReports"
+  },
+  "MassReject": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassReject"
   }
 }

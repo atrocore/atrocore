@@ -11,5 +11,11 @@
   "exceptions": {
     "notFound": "Cluster item record not found",
     "cannotUnreject": "This cluster item cannot be unrejected"
+  },
+  "massActions": {
+    "reject": "Reject"
+  },
+  "messages": {
+    "rejectJobsCreated": "The selected Cluster Items are been deleted in the background"
   }
 }

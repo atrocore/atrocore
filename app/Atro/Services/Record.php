@@ -179,7 +179,14 @@ class Record extends RecordService
         $minChunkSize = $params['minChunkSize'];
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
 
-        if (!in_array($action, ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'])) {
+        $allowMassActions =  ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
+
+        $allowMassActions = array_merge(
+            $allowMassActions,
+            $this->getMetadata()->get(['clientDefs', $this->getEntityType(), 'massActionList'], [])
+        );
+
+        if (!in_array($action, $allowMassActions)) {
             return [];
         }
 

@@ -10,5 +10,11 @@
     "notFound": "Il record dell'articolo del cluster non è stato trovato",
     "cannotReject": "Questo articolo del cluster non può essere rifiutato",
     "cannotUnreject": "Questo articolo del cluster non può essere rifiutato"
+  },
+  "massActions": {
+    "reject": "Rifiuta"
+  },
+  "messages": {
+    "rejectJobsCreated": "Gli elementi del cluster selezionati vengono eliminati in background"
   }
 }

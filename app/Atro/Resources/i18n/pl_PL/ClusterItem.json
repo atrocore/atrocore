@@ -10,5 +10,11 @@
     "notFound": "Nie znaleziono rekordu elementu klastra",
     "cannotReject": "Ten element klastra nie może zostać odrzucony",
     "cannotUnreject": "Ten element klastra nie może zostać odrzucony"
+  },
+  "massActions": {
+    "reject": "Odrzuć"
+  },
+  "messages": {
+    "rejectJobsCreated": "Wybrane elementy klastra są usuwane w tle"
   }
 }

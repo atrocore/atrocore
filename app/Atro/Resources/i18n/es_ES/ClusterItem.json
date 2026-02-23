@@ -10,5 +10,11 @@
     "notFound": "No se ha encontrado el registro de artículos del cluster",
     "cannotReject": "Este elemento de agrupación no puede ser rechazado",
     "cannotUnreject": "Este elemento del conglomerado no puede ser rechazado"
+  },
+  "massActions": {
+    "reject": "Rechazar"
+  },
+  "messages": {
+    "rejectJobsCreated": "Los elementos del clúster seleccionados se están eliminando en segundo plano"
   }
 }
