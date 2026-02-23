@@ -310,14 +310,12 @@ class ClusterItem extends Base
         if ($this->getUser()->isAdmin()) {
             $entity->setMetaPermission('confirm', !$isConfirmed);
             $entity->setMetaPermission('reject', true);
-            $entity->setMetaPermission('unlink', true);
             $entity->setMetaPermission('delete', true);
             return;
         }
 
         $entity->setMetaPermission('confirm', false);
         $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));
         $entity->setMetaPermission('delete', false);
 
         if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
