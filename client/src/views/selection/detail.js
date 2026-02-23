@@ -114,9 +114,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         window.leftSidePanel?.setRecords(this.getRecordForPanels());
                     }
 
-                    if (collection.models.length > 1) {
-                        this.enableButtons()
-                    }
+                    this.enableButtons();
                 });
             });
 
@@ -536,16 +534,48 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         canMerge() {
-            if (this.selectionViewMode === 'standard'
-                && (!this.collection || this.collection.models.length <= 1)
-                || (this.selectionViewMode !== 'standard' && (!this.selectionItemModels || this.selectionItemModels.length <= 1))
-            ) {
+
+            if(this.comparisonAcrossEntities()) {
                 return false;
             }
-            return !(this.comparisonAcrossEntities() || this.hasStaging());
+
+            if( this.selectionViewMode === 'standard') {
+                if ((!this.collection || this.collection.models.length <= 1)) {
+                    return false;
+                }
+
+                let types = [];
+                this.collection.models.forEach(m => {
+                    if(!types.includes(m.get('entityName'))) {
+                        types.push(m.get('entityName'));
+                    }
+                });
+
+
+                return types.length === 1;
+            }
+
+
+            if((!this.selectionItemModels || this.selectionItemModels.length <= 1)) {
+                return false;
+            }
+
+            let types = [];
+            this.selectionItemModels.forEach(m => {
+                if(!types.includes(m.name)) {
+                    types.push(m.name);
+                }
+            });
+
+            return types.length === 1;
         },
 
         enableButtons() {
+            this.availableModes.forEach(action => {
+                $(`button[data-name="${action}"]`).addClass('disabled');
+                $(`button[data-name="${action}"]`).attr('disabled', true);
+            });
+
             this.availableModes.forEach(action => {
 
                 if (action === 'merge' && !this.canMerge()) {
