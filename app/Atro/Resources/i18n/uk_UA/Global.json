@@ -166,6 +166,7 @@
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
   },
   "labels": {
+    "System": "Система",
     "matchings": "Відповідності",
     "addFields": "Додати поля",
     "addAttributes": "Додати атрибути",
@@ -1322,6 +1323,8 @@
       "is_attribute_not_linked": "не пов'язано",
       "last_x_days": "останні x днів",
       "next_x_days": "наступні x днів",
+      "older_than_x_days": "старші за x днів",
+      "after_x_days": "після x днів",
       "current_month": "поточний місяць",
       "last_month": "минулий місяць",
       "next_month": "наступний місяць",

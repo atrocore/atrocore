@@ -134,20 +134,10 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
                 nonInheritedFields.push(field);
             });
 
-            (this.getMetadata().get(`scopes.${this.scope}.unInheritedFields`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
-            (this.getMetadata().get(`app.nonInheritedRelations`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
-            (this.getMetadata().get(`scopes.${this.scope}.mandatoryUnInheritedRelations`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
-            (this.getMetadata().get(`scopes.${this.scope}.unInheritedRelations`) || []).forEach(field => {
-                nonInheritedFields.push(field);
+            $.each((this.getMetadata().get(`entityDefs.${this.scope}.fields`) || {}), (field, fieldDefs) => {
+                if (fieldDefs.inheritanceDisabled) {
+                    nonInheritedFields.push(field);
+                }
             });
 
             $.each((this.getMetadata().get(`entityDefs.${this.scope}.links`) || {}), (link, linkDefs) => {

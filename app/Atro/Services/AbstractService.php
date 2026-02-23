@@ -36,6 +36,16 @@ abstract class AbstractService implements Injectable
         $this->injections[$name] = $object;
     }
 
+    public function hasMetaHeader(): bool
+    {
+        $meta = self::getHeader('With-Meta');
+        if (empty($meta)) {
+            return false;
+        }
+
+        return $meta == 1 || $meta == '1' || strtolower(trim($meta)) == 'true';
+    }
+
     public static function getHeader(string $name): ?string
     {
         try {

@@ -33,6 +33,9 @@
         "cascadeUnlinkRelatedAttribute": {
           "action": "cascadeUnlinkRelatedAttribute",
           "sortOrder": 210
+        },
+        "inheritRelated": {
+          "disabled": true
         }
       },
       "aclScopesList": [

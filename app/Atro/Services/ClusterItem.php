@@ -24,9 +24,9 @@ use Espo\ORM\IEntity;
 
 class ClusterItem extends Base
 {
-    protected $mandatorySelectAttributeList = ['entityName', 'entityId'];
+    protected $mandatorySelectAttributeList = ['entityName', 'entityId', 'confirmedAutomatically'];
 
-    public function confirm(Entity $entity): bool
+    public function confirm(Entity $entity, bool $automatically = false): bool
     {
         if (empty($cluster = $entity->get('cluster'))) {
             throw new Exception("Cluster is not set for item " . $entity->get('id'));
@@ -80,11 +80,59 @@ class ClusterItem extends Base
             $this->getEntityManager()->saveEntity($record);
         }
 
+        $entity->set('confirmedAutomatically', $automatically);
+        $this->getEntityManager()->saveEntity($entity);
+
+        return true;
+    }
+
+    public function confirmAll(array $clusterItems, bool $automatically = false): bool
+    {
+        if (empty($clusterItems)) {
+            return false;
+        }
+
+        $goldenRecord = $clusterItems[0]->get('cluster')->get('goldenRecord');
+
+        if (empty($goldenRecord)) {
+            $firstItem = array_shift($clusterItems);
+            $this->confirm($firstItem, $automatically);
+
+            $goldenRecord = $clusterItems[0]->get('cluster')->get('goldenRecord');
+        }
+
+        if (empty($clusterItems)) {
+            return true;
+        }
+
+        if (empty($goldenRecord)) {
+            return false;
+        }
+
+        $lastItem = array_pop($clusterItems);
+
+        foreach ($clusterItems as $clusterItem) {
+            $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId'));
+
+            if (empty($record)) {
+                throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
+            }
+
+            $record->set('masterRecordId', $goldenRecord->get('id'));
+            $this->getEntityManager()->saveEntity($record);
+
+            $clusterItem->set('confirmedAutomatically', $automatically);
+            $this->getEntityManager()->saveEntity($clusterItem);
+        }
+
+        $this->confirm($lastItem, $automatically);
+
         return true;
     }
 
     public function reject(string $id): bool
     {
+        /** @var \Atro\Entities\ClusterItem $entity */
         $entity = $this->getEntity($id);
 
         if (empty($entity)) {
@@ -96,7 +144,15 @@ class ClusterItem extends Base
         }
 
         if ($this->isClusterItemConfirmed($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate("cannotReject", "exceptions", "ClusterItem"));
+            foreach ($entity->getStagingRecords() as $stagingRecord) {
+                $stagingRecord->set('masterRecordId', null);
+                $this->getEntityManager()->saveEntity($stagingRecord);
+            }
+
+            if ($entity->get('entityName') === $cluster->get('masterEntity')) {
+                $cluster->set('goldenRecordId', null);
+                $this->getEntityManager()->saveEntity($cluster);
+            }
         }
 
         $rci = $this->getEntityManager()->getEntity('RejectedClusterItem');
@@ -134,7 +190,14 @@ class ClusterItem extends Base
             $newClusterId = $newCluster->get('id');
         }
 
+        if (!empty($entity->get('confirmedAutomatically'))) {
+            $entity->set('confirmedAutomatically', false);
+            $this->getEntityManager()->saveEntity($entity);
+        }
+
         $this->getRepository()->moveToCluster($entity->get('id'), $newClusterId);
+
+        $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newClusterId]);
         return true;
     }
 
@@ -153,10 +216,26 @@ class ClusterItem extends Base
         }
 
         if ($this->isClusterItemConfirmed($clusterItem)) {
-            throw new BadRequest($this->getInjection('language')->translate("cannotUnreject", "exceptions", "ClusterItem"));
+            foreach ($clusterItem->getStagingRecords() as $stagingRecord) {
+                $stagingRecord->set('masterRecordId', null);
+                $this->getEntityManager()->saveEntity($stagingRecord);
+            }
+
+            $previousCluster = $clusterItem->get('cluster');
+            if ($clusterItem->get('entityName') === $previousCluster->get('masterEntity')) {
+                $previousCluster->set('goldenRecordId', null);
+                $this->getEntityManager()->saveEntity($previousCluster);
+            }
+        }
+
+        if (!empty($clusterItem->get('confirmedAutomatically'))) {
+            $clusterItem->set('confirmedAutomatically', false);
+            $this->getEntityManager()->saveEntity($clusterItem);
         }
 
         $this->getRepository()->moveToCluster($clusterItem->get('id'), $cluster->get('id'));
+
+        $this->getRepository()->updateMatchedScoresInClusters([$clusterItem->get('clusterId'), $cluster->get('id')]);
 
         $this->getEntityManager()->removeEntity($rejectedClusterItem);
 
@@ -177,7 +256,7 @@ class ClusterItem extends Base
                 }
             } else {
                 $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId'));
-                if (!empty($record) && $record->get('goldenRecordId') === $cluster->get('goldenRecordId')) {
+                if (!empty($record) && $record->get('masterRecordId') === $cluster->get('goldenRecordId')) {
                     return true;
                 }
             }
@@ -185,6 +264,19 @@ class ClusterItem extends Base
 
         return false;
     }
+
+    public function putMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
+    {
+        parent::putMetaForLink($entityFrom, $link, $entity);
+
+        if ($entityFrom->getEntityName() === 'Cluster' && $link === 'clusterItems') {
+            $entity->set('cluster', $entityFrom);
+
+            $entity->setMeta('cluster', 'confirmed', $this->isClusterItemConfirmed($entity));
+            $entity->setMeta('cluster', 'golden', !empty($entityFrom->get('goldenRecordId')) && $entity->get('entityId') === $entityFrom->get('goldenRecordId'));
+        }
+    }
+
 
     public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
     {
@@ -212,8 +304,11 @@ class ClusterItem extends Base
             return;
         }
 
+        $entity->set('cluster', $entityFrom);
+        $isConfirmed = $this->isClusterItemConfirmed($entity);
+
         if ($this->getUser()->isAdmin()) {
-            $entity->setMetaPermission('confirm', true);
+            $entity->setMetaPermission('confirm', !$isConfirmed);
             $entity->setMetaPermission('reject', true);
             $entity->setMetaPermission('unlink', true);
             $entity->setMetaPermission('delete', true);
@@ -226,7 +321,7 @@ class ClusterItem extends Base
         $entity->setMetaPermission('delete', false);
 
         if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
-            $entity->setMetaPermission('confirm', $this->getAcl()->check($record, 'edit'));
+            $entity->setMetaPermission('confirm', !$isConfirmed && $this->getAcl()->check($record, 'edit'));
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
         }
     }
@@ -234,7 +329,7 @@ class ClusterItem extends Base
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
-        $this->getRecordService('SelectionItem')->prepareEntityRecord($entity);;
+        $this->getRecordService('SelectionItem')->prepareEntityRecord($entity);
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void

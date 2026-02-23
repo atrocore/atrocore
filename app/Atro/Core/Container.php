@@ -17,6 +17,7 @@ use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Factories\FactoryInterface as Factory;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
 use Doctrine\DBAL\Connection;
@@ -165,6 +166,11 @@ final class Container
         return null;
     }
 
+    /**
+     * Get DBAL connection
+     *
+     * @return Connection
+     */
     public function getDbal(): Connection
     {
         return $this->get('dbal');
@@ -193,6 +199,11 @@ final class Container
     public function getDataManager(): DataManager
     {
         return $this->get('dataManager');
+    }
+
+    public function getLanguage(): Language
+    {
+        return $this->get('language');
     }
 
     /**

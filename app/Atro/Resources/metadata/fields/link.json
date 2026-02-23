@@ -34,6 +34,18 @@
     {
       "name": "duplicateIgnore",
       "type": "bool"
+    },
+    {
+      "name": "inheritanceDisabled",
+      "type": "bool",
+      "default": false,
+      "tooltip": true
+    },
+    {
+      "name": "extensibleEnum",
+      "required": true,
+      "entity": "ExtensibleEnum",
+      "type": "link"
     }
   ],
   "actualFields": [

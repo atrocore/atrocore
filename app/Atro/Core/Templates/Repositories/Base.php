@@ -94,7 +94,7 @@ class Base extends RDB
         }
 
         $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $entity->getEntityName());
-        if (empty($masterDataEntity) && empty($masterDataEntity->get('updateMasterAutomatically'))) {
+        if (empty($masterDataEntity) || empty($masterDataEntity->get('updateMasterAutomatically'))) {
             return;
         }
 
@@ -128,6 +128,8 @@ class Base extends RDB
         }
 
         $this->getEntityManager()->getRepository('MatchedRecord')->afterRemoveRecord($entity->getEntityName(), $entity->get('id'));
+
+        $this->getEntityManager()->getRepository('ClusterItem')->afterRemoveRecord($entity->getEntityName(), $entity->get('id'));
     }
 
     /**

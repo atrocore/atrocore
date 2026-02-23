@@ -33,16 +33,32 @@ Espo.define('views/fields/datetime-with-user', 'views/fields/base',
                 el: `${this.options.el} > [data-name="datetimeField"]`,
                 ...options
             });
-
-            this.createView('userField', 'views/fields/link', {
-                ...options,
-                el: `${this.options.el} > [data-name="userField"]`,
-                name: this.getUserField(),
-            })
         },
 
         getUserField(){
             return this.name === 'createdAt' ? 'createdBy' : 'modifiedBy'
+        },
+
+        data() {
+            let data = Dep.prototype.data.call(this);
+
+            const auditMeta = this.model.get('_meta')?.audit?.[this.getUserField()];
+
+            if (auditMeta) {
+                data.actorIsLink = !auditMeta.actor.isSystem;
+                data.actorId = auditMeta.actor.id;
+                data.actorName = auditMeta.actor.name;
+
+                data.delegatorIsLink = !auditMeta.delegator.isSystem;
+                data.delegatorId = auditMeta.delegator.id;
+                data.delegatorName = auditMeta.delegator.name;
+            } else {
+                data.actorIsLink = this.model.get(this.getUserField() + 'Id') !== this.getConfig().get('systemUserId');
+                data.actorId = this.model.get(this.getUserField() + 'Id');
+                data.actorName = this.model.get(this.getUserField() + 'Name');
+            }
+
+            return data;
         },
 
         afterRender() {

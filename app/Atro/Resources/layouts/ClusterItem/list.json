@@ -10,6 +10,9 @@
     "name": "record"
   },
   {
+    "name": "matchedScore"
+  },
+  {
     "name": "cluster"
   }
 ]

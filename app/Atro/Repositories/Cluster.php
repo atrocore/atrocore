@@ -12,17 +12,20 @@
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 class Cluster extends Base
 {
-    protected function afterRemove(Entity $entity, array $options = [])
+    protected function beforeRemove(Entity $entity, array $options = [])
     {
-        parent::afterRemove($entity, $options);
+        parent::beforeRemove($entity, $options);
 
-        $this->getEntityManager()->getRepository('ClusterItem')
-            ->where(['clusterId' => $entity->get('id')])
-            ->removeCollection();
+        $item = $this->getEntityManager()->getRepository('ClusterItem')->where(['clusterId' => $entity->get('id')])->findOne();
+
+        if (!empty($item)) {
+            throw new BadRequest($this->getLanguage()->translate('cannotDelete', 'exceptions', 'Cluster'));
+        }
     }
 }

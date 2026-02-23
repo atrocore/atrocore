@@ -223,6 +223,11 @@ class RangeIntType extends AbstractFieldType
                 'conditionalProperties'     => $this->prepareConditionalProperties($row)
             ];
         }
+
+        if (!empty($row['disable_field_value_lock'])) {
+            $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = true;
+        }
+
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
 
         $entity->entityDefs['fields'][$name . 'UnitId'] = [

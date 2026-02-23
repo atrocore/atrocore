@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/action/record/detail', ['views/record/detail', 'views/action/record/panels/entity-filter-result'],
+Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/panels/entity-filter-result'],
     (Dep, EntityFilter) => Dep.extend({
 
         setup() {

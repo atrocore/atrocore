@@ -13,6 +13,7 @@
     "defaultIsRequired": "The measure must have a default unit.",
     "unitIsUsed": "The unit '%s' is used by the field '%s' in the Entity '%s' for the Record '%s'.",
     "unitIsUsedOnClassificationAttribute": "The unit '%s' is used by the Attribute '%s' in the Classification '%s'.",
-    "unitIsUsedOnEntityAttribute": "The unit '%s' is used by the Attribute '%s' in the %s '%s'."
+    "unitIsUsedOnEntityAttribute": "The unit '%s' is used by the Attribute '%s' in the %s '%s'.",
+    "multiplierCannotBeZero": "The unit multiplier cannot be zero."
   }
 }

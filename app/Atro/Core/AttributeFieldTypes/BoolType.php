@@ -69,6 +69,10 @@ class BoolType extends AbstractFieldType
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
+        if (!empty($row['disable_field_value_lock'])) {
+            $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = true;
+        }
+
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }
 

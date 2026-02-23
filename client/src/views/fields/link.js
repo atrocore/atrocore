@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
+Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enum'], function (Dep, ColoredEnum) {
 
     return Dep.extend({
 
@@ -84,7 +84,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             let idValue = this.model.get(this.idName),
                 nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : idValue;
 
-            if (idValue === 'system') {
+            if (idValue === this.getConfig().get('systemUserId')) {
                 nameValue = this.getLanguage().translate('System')
             }
 
@@ -109,7 +109,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
             }
 
-            return _.extend({
+            let data = _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
                 idValue: idValue,
@@ -119,6 +119,34 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 iconHtml: iconHtml,
                 createDisabled: this.createDisabled,
             }, Dep.prototype.data.call(this));
+
+            if (
+                ['list', 'detail'].includes(this.mode)
+                && data.foreignScope === 'ExtensibleEnumOption'
+                && this.idName !== this.name
+                && this.model.get('_meta')?.options?.[this.name]
+            ) {
+                const optionData = this.model.get('_meta').options[this.name];
+                if (optionData.color){
+                    const fontSize = this.model.getFieldParam(this.name, 'fontSize');
+                    data.description = optionData.description || '';
+                    data.fontSize = fontSize ? fontSize + 'em' : '100%';
+                    data.fontWeight = 'normal';
+                    data.backgroundColor = optionData.color;
+                    data.color = ColoredEnum.prototype.getFontColor.call(this, data.backgroundColor || '#ececec');
+                    data.border = ColoredEnum.prototype.getBorder.call(this, data.backgroundColor || '#ececec');
+                }
+            }
+
+            return data;
+        },
+
+        onInlineEditSave(res, attrs, model) {
+            if (res?._meta?.options?.[this.name]) {
+                model.set('_meta', res._meta);
+            }
+
+            Dep.prototype.onInlineEditSave.call(this, res, attrs, model);
         },
 
         getSelectFilters: function () {
@@ -157,6 +185,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getCreateAttributes: function () {
+            let extensibleEnumId = this.getExtensibleEnumId();
+            if (extensibleEnumId) {
+                return {
+                    "extensibleEnumsIds": [extensibleEnumId],
+                    "extensibleEnumsNames": {
+                        [extensibleEnumId]: this.getExtensibleEnumName()
+                    }
+                }
+            }
         },
 
         setup: function () {
@@ -283,6 +320,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 boolFilterList: this.getSelectBoolFilterList(),
                 boolFilterData: this.getBoolFilterData(),
                 primaryFilterName: this.getSelectPrimaryFilterName(),
+                whereAdditional: this.model.getFieldParam(this.name, 'where') || undefined,
                 createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                 mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
@@ -834,17 +872,32 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         mode: 'search',
                         foreignScope: foreignScope,
                         hideSearchType: true,
-                        params: this.defs.params
+                        params: this.defs.params,
+                        whereAdditional: this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
                     }, view => {
                         this.addCustomDataToView(view, rule);
 
-
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            this.filterValue = rule.value ?? [];
-                            if (!rule.data) {
+                            if(!subQuery || subQuery.length === 0 ) {
+                                return;
+                            }
+                            rule.value = null;
+                            this.filterValue = rule.value;
+
+                            (view.ids || []).forEach(id => {
+                                if(id === 'subquery') {
+                                    return;
+                                }
+
+                                view.deleteLink(id);
+                            });
+
+                            if (!rule.data || Array.isArray(rule.data)) {
                                 rule.data = {}
                             }
+
                             rule.data['subQuery'] = subQuery;
+
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
@@ -853,16 +906,14 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             if (rule.value !== null && rule.value.length === 0) {
                                 this.filterValue = null;
                             }
-                            delete rule.data['subQuery'];
+                            if (rule.data) {
+                                delete rule.data['subQuery'];
+                            }
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
                         this.listenTo(view, 'change', () => {
-                            this.filterValue = view.ids ?? model.get('valueIds');
-                            if (!rule.data) {
-                                rule.data = {};
-                            }
-                            rule.data['nameHash'] = view.nameHash ?? view.get('nameHash');
+                            this.filterValue = (view.ids ?? model.get('valueIds') ?? []).filter(v => v !== 'subquery');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
@@ -877,26 +928,30 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
-                        let nameHash = rule.data?.nameHash
-                        if (nameHash?._localeId &&
-                            nameHash?._localeId !== this.getUser().get('localeId') &&
-                            (rule.value || []).length > 0) {
-                            const resp = this.ajaxGetRequest(this.foreignScope, {
-                                where: [
-                                    {
-                                        type: 'in',
-                                        attribute: 'id',
-                                        value: rule.value
-                                    }
-                                ]
-                            }, { async: false })
-
-                            nameHash = { '_localeId': this.getUser().get('localeId') }
+                        let nameHash = { '_localeId': this.getUser().get('localeId') }
+                        try{
                             const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName']) ?? 'name';
-                            const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
-                            resp.responseJSON.list.forEach(record => {
-                                nameHash[record.id] = record[localizedForeignName] || record[foreignName]
-                            })
+
+                            if ((rule.value || []).length > 0 && foreignName) {
+                                const resp = this.ajaxGetRequest(this.foreignScope, {
+                                    select: foreignName,
+                                    collectionOnly: true,
+                                    where: [
+                                        {
+                                            type: 'in',
+                                            attribute: 'id',
+                                            value: rule.value
+                                        }
+                                    ]
+                                }, { async: false })
+
+                                const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                                resp.responseJSON.list.forEach(record => {
+                                    nameHash[record.id] = record[localizedForeignName] || record[foreignName]
+                                })
+                            }
+                        }catch (e) {
+                            console.error(e)
                         }
 
                         model.set('valueNames', nameHash);
@@ -905,13 +960,19 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         if (type === 'extensibleEnum') {
                             model.set('value', rule.value);
                         }
+
                         view = this.getView(inputName);
+
                         if (rule.data && rule.data['subQuery'] && view) {
-                            let data = { where: rule.data['subQuery'] };
-                            this.listenToOnce(view, 'after:render', () => {
-                                view.addLinkSubQuery(data);
-                            })
+                            let data = { where: Espo.utils.clone(rule.data['subQuery']) };
+                            view.searchData.subQuery = Espo.utils.clone(rule.data['subQuery']);
+                            view.addLinkSubQuery(data, true);
                         }
+
+                        if(rule.data && rule.data['nameHash']) {
+                            delete  rule.data['nameHash'];
+                        }
+
                         if (view) {
                             view.reRender();
                         }
@@ -975,9 +1036,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
                         rule.value = null;
-                        if (rule.data?.nameHash) {
-                            rule.data.nameHash = {}
-                        }
                         let view = this.getView(inputName);
                         if (rule.data && rule.data['subQuery']) {
                             delete rule.data['subQuery'];
@@ -986,7 +1044,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }
                         }
                         if (view) {
-                            view.model.set('valueNames', rule.data?.nameHash);
                             view.model.set('valueIds', rule.value);
                             // view.reRender()
                             this.renderAfterEl(view, `#${rule.id} .field-container`);
@@ -1026,9 +1083,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
                         this.listenTo(this.model, 'afterUpdateRuleFilter', rule => {
                             const view = this.getView(inputName);
-                            if (view && rule.data && rule.data.nameHash) {
-                                view.model.set('valueNames', rule.data.nameHash);
-                            }
                         });
 
                         this.isNotListeningToOperatorChange[inputName] = true;
@@ -1039,7 +1093,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if (!Array.isArray(value) || (value.length === 0 && !rule.data?.subQuery)) {
+                        if ((!Array.isArray(value) || value.length === 0) && !rule.data?.subQuery) {
                             return 'bad list';
                         }
 

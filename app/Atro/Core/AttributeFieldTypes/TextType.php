@@ -78,6 +78,10 @@ class TextType extends AbstractFieldType
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
+        if (!empty($row['disable_field_value_lock'])) {
+            $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = true;
+        }
+
         if ($this->type === 'varchar') {
             $entity->entityDefs['fields'][$name]['fullWidth'] = !empty($attributeData['fullWidth']);
 

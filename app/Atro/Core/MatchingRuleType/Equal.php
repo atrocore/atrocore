@@ -86,7 +86,14 @@ class Equal extends AbstractMatchingRule
             $fieldName .= 'Id';
         }
 
-        if ($stageEntity->get($fieldName) === $masterEntityData[$fieldName]) {
+        $value = $stageEntity->get($fieldName);
+        if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
+            if ($value !== null) {
+                $value = json_encode($value);
+            }
+        }
+
+        if ($value === $masterEntityData[$fieldName]) {
             return $this->rule->get('weight') ?? 0;
         }
 

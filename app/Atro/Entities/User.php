@@ -21,9 +21,37 @@ class User extends \Espo\Core\ORM\Entity
         return $this->get('isAdmin');
     }
 
-    public function isSystem()
+    public function isGlobalSystemUser(): bool
     {
-        return $this->id === 'system';
+        return $this->get('userName') === 'system';
+    }
+
+    public function isSystemUser(): bool
+    {
+        return $this->get('type') === 'System';
+    }
+
+    public function _getActor(): User
+    {
+        if ($this->id === $this->get('actorId') || $this->get('actorId') === null) {
+            return $this;
+        }
+
+        return $this->getEntityManager()->getRepository('User')->get($this->get('actorId'));
+    }
+
+    public function _getDelegator(): User
+    {
+        if ($this->id === $this->get('delegatorId') || $this->get('delegatorId') === null) {
+            return $this;
+        }
+
+        return $this->getEntityManager()->getRepository('User')->get($this->get('delegatorId'));
+    }
+
+    public function getSystemUser(): User
+    {
+        return $this->getEntityManager()->getRepository('User')->getSystemUser($this);
     }
 
     public function isActive()

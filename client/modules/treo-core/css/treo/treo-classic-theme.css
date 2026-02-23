@@ -4119,7 +4119,7 @@ tbody.collapse.in {
     border-top-right-radius: 0;
 }
 
-.btn-group .dropdown-toggle {
+.btn-group:not(.note-btn-group) .dropdown-toggle {
     border-left: transparent;
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
@@ -18984,6 +18984,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
+.compare-records tr.matched-score-row {
+    background-color: white;
+}
+
+.compare-records tr.matched-score-row th:hover {
+    background-color: white !important;
+}
+
 .compare-panel table > tbody > tr > td {
     border-color: transparent;
 }
@@ -19047,7 +19055,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .compare-records .compare-panel table td.cell .inline-actions .ph,
-.compare-panel table th .inline-actions > a > .ph {
+.compare-panel table th div.inline-actions .list-row-buttons .ph {
     font-size: 14px;
 }
 
@@ -19398,6 +19406,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .compare-panel table th div.inline-actions,
 .compare-panel table th div.inline-actions {
+    top: 5px;
+    right: 5px;
     display: none;
 }
 
@@ -19408,7 +19418,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .list-container > .list[data-editable=true] > table tr td.cell div.inline-actions > a,
 .compare-records .compare-panel table tr td.cell div.inline-actions > a,
-.compare-panel table th div.inline-actions > a {
+.compare-panel table th div.inline-actions .list-row-buttons button,
+.compare-panel table th div.inline-actions .list-row-buttons.open button.btn-link {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 5px;
     padding: 1px 3px;

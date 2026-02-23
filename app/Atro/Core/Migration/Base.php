@@ -23,14 +23,14 @@ use Atro\Core\Utils\Config;
 class Base
 {
     private Schema $schema;
-    private Connection $connection;
+    private Connection $dbal;
     private Config $config;
     private Comparator $comparator;
 
     public function __construct(\PDO $pdo, Config $config, ?Schema $schema)
     {
         $this->schema = $schema;
-        $this->connection = $schema->getConnection();
+        $this->dbal = $schema->getConnection();
         $this->config = $config;
         $this->comparator = new Comparator();
     }
@@ -49,9 +49,22 @@ class Base
         throw new Error('Downgrade is prohibited.');
     }
 
+    /**
+     * Get DBAL connection
+     *
+     * @return Connection
+     */
+    protected function getDbal(): Connection
+    {
+        return $this->dbal;
+    }
+
+    /**
+     * @deprecated use getDbal instead
+     */
     protected function getConnection(): Connection
     {
-        return $this->connection;
+        return $this->getDbal();
     }
 
     protected function getConfig(): Config
@@ -86,17 +99,17 @@ class Base
 
     protected function getPDO(): \PDO
     {
-        return $this->getConnection()->getWrappedConnection()->getWrappedConnection();
+        return $this->getDbal()->getWrappedConnection()->getWrappedConnection();
     }
 
     protected function schemasDiffToSql(DoctrineSchema $fromSchema, DoctrineSchema $toSchema): array
     {
-        return $this->getComparator()->compareSchemas($fromSchema, $toSchema)->toSql($this->getConnection()->getDatabasePlatform());
+        return $this->getComparator()->compareSchemas($fromSchema, $toSchema)->toSql($this->getDbal()->getDatabasePlatform());
     }
 
     protected function isPgSQL(): bool
     {
-        return $this->getSchemaConverter()::isPgSQL($this->getConnection());
+        return $this->getSchemaConverter()::isPgSQL($this->getDbal());
     }
 
     protected function rebuild()

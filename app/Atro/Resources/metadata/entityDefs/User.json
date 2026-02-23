@@ -4,7 +4,8 @@
       "type": "enum",
       "default": "Token",
       "options": [
-        "Token"
+        "Token",
+        "System"
       ]
     },
     "disableActionHistory": {
@@ -20,7 +21,8 @@
       "maxLength": 50,
       "required": true,
       "view": "views/user/fields/user-name",
-      "tooltip": true
+      "tooltip": true,
+      "unique": true
     },
     "name": {
       "type": "varchar",
@@ -303,9 +305,37 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true
+    },
+    "actor": {
+      "type": "link",
+      "protected": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
+    "delegator": {
+      "type": "link",
+      "protected": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     }
   },
   "links": {
+    "actor": {
+      "type": "belongsTo",
+      "entity": "User",
+      "cascadeDelete": true
+    },
+    "delegator": {
+      "type": "belongsTo",
+      "entity": "User",
+      "cascadeDelete": true
+    },
     "notificationProfile": {
       "type": "belongsTo",
       "entity": "NotificationProfile"
@@ -352,7 +382,14 @@
     }
   },
   "collection": {
-    "sortBy": "userName",
+    "sortBy": "id",
     "asc": true
+  },
+  "uniqueIndexes": {
+    "unique_actor": [
+      "deleted",
+      "actor_id",
+      "delegator_id"
+    ]
   }
 }

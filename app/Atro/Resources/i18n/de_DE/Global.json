@@ -166,6 +166,8 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "entityFilterResult": "Ergebnis filtern",
+    "System": "System",
     "matchings": "Übereinstimmungen",
     "addFields": "Felder hinzufügen",
     "addAttributes": "Attribute hinzufügen",
@@ -1327,6 +1329,8 @@
       "is_attribute_not_linked": "ist nicht verknüpft",
       "last_x_days": "letzte x Tage",
       "next_x_days": "nächste x Tage",
+      "older_than_x_days": "älter als X Tage",
+      "after_x_days": "nach X Tagen",
       "current_month": "aktueller Monat",
       "last_month": "letzter Monat",
       "next_month": "nächster Monat",

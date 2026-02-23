@@ -129,6 +129,10 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         }
     }
 
+    public function afterSelect(IEntity $entity, string $name, array $dataArr): void
+    {
+    }
+
     protected function prepareKey(string $nameKey, array $row): string
     {
         if (!empty($localeId = Language::detectLocale($this->config, $this->user))) {

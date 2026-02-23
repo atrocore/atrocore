@@ -11,13 +11,14 @@
 
 namespace Atro\SelectManagers;
 
-use Atro\Core\SelectManagers\Base;
 use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class ClusterItem extends SelectionItem
 {
-
+    public function filterDeletedRecords(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        // Do nothing
+    }
 }

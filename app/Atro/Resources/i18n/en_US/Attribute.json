@@ -41,7 +41,9 @@
     "conditionalReadOnly": "Read-only",
     "conditionalProtected": "Protected",
     "conditionalDisableOptions": "Disabled Options",
-    "modifiedExtendedDisabled": "No recording as modification"
+    "modifiedExtendedDisabled": "No recording as modification",
+    "entityType": "Linked Entity",
+    "entityField": "Entity Field"
   },
   "labels": {
     "Classification": "Classification",
@@ -67,7 +69,9 @@
       "wysiwyg": "HTML",
       "rangeInt": "Integer Range",
       "rangeFloat": "Float Range",
-      "file": "File"
+      "file": "File",
+      "link": "Link",
+      "linkMultiple": "Multiple link"
     }
   },
   "messages": {

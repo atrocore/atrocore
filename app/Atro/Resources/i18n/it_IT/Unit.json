@@ -13,6 +13,7 @@
     "defaultIsRequired": "La misura deve avere un'unità predefinita.",
     "unitIsUsed": "L'unità '%s' è utilizzata dal campo '%s' nell'Entità '%s' per il Record '%s'.",
     "unitIsUsedOnClassificationAttribute": "L'unità '%s' è utilizzata dall'attributo '%s' nella classificazione '%s'.",
-    "unitIsUsedOnEntityAttribute": "L'unità '%s' è utilizzata dall'Attributo '%s' nel %s '%s'."
+    "unitIsUsedOnEntityAttribute": "L'unità '%s' è utilizzata dall'Attributo '%s' nel %s '%s'.",
+    "multiplierCannotBeZero": "Il moltiplicatore dell'unità non può essere zero."
   }
 }

@@ -131,6 +131,14 @@
       ],
       [
         {
+          "name": "entityType"
+        },
+        {
+          "name": "entityField"
+        }
+      ],
+      [
+        {
           "name": "extensibleEnum"
         },
         {

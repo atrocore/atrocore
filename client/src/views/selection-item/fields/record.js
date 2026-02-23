@@ -24,12 +24,20 @@ Espo.define('views/selection-item/fields/record', 'views/fields/link', Dep => {
             this.listenTo(this.model, 'change:entityName', () => {
                 this.foreignScope = this.model.get('entityName');
                 this.reRenderByConditionalProperties();
-                if(!this.readOnly) {
+                if (!this.readOnly) {
                     this.setMode('edit');
                 }
                 this.reRender();
             })
         },
+
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+            if (this.model.name === 'ClusterItem' && this.model.get('confirmedAutomatically')) {
+                this.getCellElement().append('<i style="font-size: 14px;position: relative;margin-left: 2px;top: -0.5em;color: var(--label-color)" class="ph ph-sparkle"></i>')
+            }
+        }
 
     });
 });

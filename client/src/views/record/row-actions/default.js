@@ -145,9 +145,14 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 "select": 130,
                 "quickCompare": 140,
                 "quickRemove": 150,
-                "quickRestore": 160,
-                "deletePermanently": 170
-            };
+            }
+
+            if(filters?.bool?.onlyDeleted === true) {
+                actionsSortOrder = {
+                    "quickRestore": 160,
+                    "deletePermanently": 170
+                };
+            }
 
             $.each(this.getMetadata().get(['clientDefs', scope, 'listActions']) || {}, (actionName, actionData) => {
                 if (actionData.sortOrder) {
@@ -262,13 +267,16 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 }
             });
 
-            list.push({
-                divider: true
-            });
+            // avoid mass action when onlyDeleted
+            if (!filters?.bool?.onlyDeleted) {
+                list.push({
+                    divider: true
+                });
 
-            list.push({
-                preloader: true
-            });
+                list.push({
+                    preloader: true
+                });
+            }
 
             return list;
         },

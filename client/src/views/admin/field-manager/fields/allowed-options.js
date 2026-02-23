@@ -32,7 +32,7 @@ Espo.define('views/admin/field-manager/fields/allowed-options', 'views/fields/ex
 
                 this.$el.parent().hide();
 
-                if (this.getExtensibleEnumId()) {
+                if (this.getExtensibleEnumId() && !['link', 'linkMultiple'].includes(this.model.get('type'))) {
                     this.$el.parent().show();
                 }
             },

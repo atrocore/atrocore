@@ -13,6 +13,7 @@
     "defaultIsRequired": "Miara musi mieć domyślną jednostkę.",
     "unitIsUsed": "Jednostka '%s' jest używana przez pole '%s' w jednostce '%s' dla rekordu '%s'.",
     "unitIsUsedOnEntityAttribute": "Jednostka \"%s\" jest używana przez atrybut \"%s\" w %s \"%s\".",
-    "unitIsUsedOnClassificationAttribute": "Jednostka \"%s\" jest używana przez atrybut \"%s\" w klasyfikacji \"%s\"."
+    "unitIsUsedOnClassificationAttribute": "Jednostka \"%s\" jest używana przez atrybut \"%s\" w klasyfikacji \"%s\".",
+    "multiplierCannotBeZero": "Współczynnik jednostkowy nie może wynosić zero."
   }
 }

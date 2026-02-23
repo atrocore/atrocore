@@ -70,17 +70,7 @@ class Schema
 
     protected function createSystemUser(): bool
     {
-        $entity = $this->entityManager->getEntity('User', 'system');
-        if (!isset($entity)) {
-            $entity = $this->entityManager->getEntity('User');
-            $entity->set([
-                'id'        => 'system',
-                'userName'  => 'system',
-                'firstName' => '',
-                'lastName'  => 'System',
-            ]);
-            $this->entityManager->saveEntity($entity);
-        }
+        $this->entityManager->getRepository('User')->getGlobalSystemUser();
 
         return true;
     }

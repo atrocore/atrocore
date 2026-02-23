@@ -70,8 +70,8 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                     optionData = this.getOptionsData()
                 }
                 const fontSize = this.model.getFieldParam(this.name, 'fontSize');
-                if (optionData.preparedName) {
-                    data.nameValue = optionData.preparedName;
+                if (optionData.name || optionData.preparedName) {
+                    data.nameValue = optionData.preparedName ?? optionData.name;
                 }
                 data.description = optionData.description || '';
                 data.fontSize = fontSize ? fontSize + 'em' : '100%';

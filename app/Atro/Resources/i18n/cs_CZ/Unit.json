@@ -13,6 +13,7 @@
     "defaultIsRequired": "Opatření musí mít výchozí jednotku.",
     "unitIsUsed": "Jednotka \"%s\" je použita polem \"%s\" v entitě \"%s\" pro záznam \"%s\".",
     "unitIsUsedOnClassificationAttribute": "Jednotka \"%s\" je použita atributem \"%s\" v klasifikaci \"%s\".",
-    "unitIsUsedOnEntityAttribute": "Jednotka \"%s\" je použita atributem \"%s\" v %s \"%s\"."
+    "unitIsUsedOnEntityAttribute": "Jednotka \"%s\" je použita atributem \"%s\" v %s \"%s\".",
+    "multiplierCannotBeZero": "Násobitel jednotky nemůže být nulový."
   }
 }

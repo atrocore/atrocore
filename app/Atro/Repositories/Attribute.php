@@ -375,8 +375,9 @@ class Attribute extends Base
             }
 
             $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
+            $attributeValueId = IdGenerator::uuid();
 
-            $stmt->bindValue(':id', IdGenerator::uuid());
+            $stmt->bindValue(':id', $attributeValueId);
             $stmt->bindValue(':entityId', $entity->id);
             $stmt->bindValue(':attributeId', $entity->fields[$fieldName]['attributeId']);
 
@@ -388,6 +389,17 @@ class Attribute extends Base
 
             try {
                 $stmt->execute();
+
+                $attributesDefs = $entity->get('attributesDefs');
+                if (empty($attributesDefs[$fieldName]['attributeValueId'])) {
+                    foreach ($attributesDefs as $key => $attributeDef) {
+                        if ($attributeDef['attributeId'] === $entity->fields[$fieldName]['attributeId']) {
+                            $attributesDefs[$key]['attributeValueId'] = $attributeValueId;
+                            $entity->entityDefs['fields'][$fieldName]['attributeValueId'] = $attributeValueId;
+                        }
+                    }
+                    $entity->set('attributesDefs', $attributesDefs);
+                }
 
                 if ($this->shouldLinkAddedAttributeToClassification($entity->getEntityType())) {
                     if (Converter::isPgSQL($this->getConnection())) {
@@ -599,6 +611,35 @@ class Attribute extends Base
         parent::beforeSave($entity, $options);
 
         $this->validateMinMax($entity);
+
+        if ($entity->isAttributeChanged('extensibleEnumId') && in_array($entity->get('type'), ['link', 'linkMultiple'])) {
+            if (empty($entity->get('extensibleEnumId'))) {
+                $where = [];
+            } else {
+                $where = [
+                    [
+                        "condition" => "AND",
+                        "rules"     => [
+                            [
+                                "id"       => "extensibleEnums",
+                                "field"    => "extensibleEnums",
+                                "type"     => "string",
+                                "operator" => "linked_with",
+                                "value"    => [$entity->get('extensibleEnumId')],
+                            ]
+                        ],
+                        "valid"     => true
+                    ]
+                ];
+            }
+
+            $entity->set('extensibleEnumId', null);
+
+            $data = $entity->get('data') ?? new \stdClass();
+            $data->where = $where;
+
+            $entity->set('data', $data);
+        }
     }
 
     public function validateMinMax(Entity $entity): void

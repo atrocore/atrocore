@@ -89,6 +89,10 @@ Espo.define('views/fields/classifications-single', ['views/fields/link', 'views/
 
         createQueryBuilderFilter(type = null) {
             return Classifications.prototype.createQueryBuilderFilter.call(this, type);
+        },
+
+        hasLockedControls() {
+            return false;
         }
     })
 );

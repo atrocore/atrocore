@@ -741,7 +741,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
             return {
                 id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
+                label: this.getLanguage().translate(this.originalName || this.name, 'fields', scope),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
                 operators: [

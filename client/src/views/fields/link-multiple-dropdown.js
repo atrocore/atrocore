@@ -93,7 +93,8 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
         },
 
         getWhereFilter() {
-            return [];
-        }
+            return Link.prototype.getWhereFilter.call(this);
+        },
+
     });
 });

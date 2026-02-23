@@ -56,6 +56,7 @@
                                     </th>
                                 {{/each}}
                             </tr>
+                            {{{ additionalHeaderHtml }}}
                             </thead>
                             {{#each fieldPanels}}
                                 <tbody class="panel-{{name}}" id="panel-{{name}}" data-name="{{name}}">

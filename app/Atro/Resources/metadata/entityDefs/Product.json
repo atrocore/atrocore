@@ -70,7 +70,8 @@
       "required": true,
       "trim": true,
       "index": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "inheritanceDisabled": true
     },
     "price": {
       "type": "float",
@@ -102,7 +103,8 @@
     "mpn": {
       "type": "varchar",
       "trim": true,
-      "index": true
+      "index": true,
+      "inheritanceDisabled": true
     },
     "note": {
       "type": "text"

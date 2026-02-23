@@ -99,6 +99,11 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'conditionalProperties'     => $this->prepareConditionalProperties($row),
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
+
+        if (!empty($row['disable_field_value_lock'])) {
+            $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = true;
+        }
+
         if (!empty($attributeData['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";
         }

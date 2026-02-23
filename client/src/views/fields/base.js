@@ -418,7 +418,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
                 this.listenTo(this, 'change', function () {
                     var attributes = this.fetch();
-                    this.model.set(attributes, {ui: true});
+                    this.model.set(attributes, { ui: true });
                 });
             }
         },
@@ -532,20 +532,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 nonInheritedFields.push(field);
             });
 
-            (this.getMetadata().get(`scopes.${scope}.unInheritedFields`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
-            (this.getMetadata().get(`app.nonInheritedRelations`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
-            (this.getMetadata().get(`scopes.${scope}.mandatoryUnInheritedRelations`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
-            (this.getMetadata().get(`scopes.${scope}.unInheritedRelations`) || []).forEach(field => {
-                nonInheritedFields.push(field);
+            $.each((this.getMetadata().get(`entityDefs.${scope}.fields`) || {}), (field, fieldDefs) => {
+                if (fieldDefs.inheritanceDisabled) {
+                    nonInheritedFields.push(field);
+                }
             });
 
             $.each(this.getMetadata().get(`entityDefs.${scope}.links`), (link, linkDefs) => {
@@ -747,16 +737,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     return;
                 }
 
-                if(this.isListView() && !this.isVisibleViaConditions()) {
+                if (this.isListView() && !this.isVisibleViaConditions()) {
                     return;
                 }
 
-                if (['detail', 'list','listLink'].includes(this.mode)) {
+                if (['detail', 'list', 'listLink'].includes(this.mode)) {
                     $editLink.removeClass('hidden');
                 }
             }.bind(this)).on('mouseleave', function (e) {
                 e.stopPropagation();
-                if (['detail', 'list','listLink'].includes(this.mode)) {
+                if (['detail', 'list', 'listLink'].includes(this.mode)) {
                     $editLink.addClass('hidden');
                 }
             }.bind(this));
@@ -791,7 +781,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 $button.on('click', () => {
-                    recordView.actionDynamicAction({id: action.data.action_id})
+                    recordView.actionDynamicAction({ id: action.data.action_id })
                 });
             })
 
@@ -839,11 +829,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             let attributeId = this.model.get('attributesDefs')[fieldName]['attributeId'] || null;
 
-            if (!attributeId) {
+            if (!attributeId || !this.model.get('attributesDefs')[fieldName]['attributeValueId']) {
                 return;
             }
 
-            if(this.model.defs.fields[this.name] && this.model.defs.fields[this.name].disableAttributeRemove) {
+            if (this.model.defs.fields[this.name] && this.model.defs.fields[this.name].disableAttributeRemove) {
                 return;
             }
 
@@ -885,6 +875,18 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: () => {
+                            if (['list', 'listLink'].includes(this.mode)) {
+                                const attributesDefs = this.model.get('attributesDefs') || {};
+                                for (let key in attributesDefs) {
+                                    if (attributesDefs[key]['attributeId'] === attributeId) {
+                                        this.model.unset(key);
+                                        attributesDefs[key]['attributeValueId'] = null;
+                                    }
+                                }
+                                this.model.set('attributesDefs', attributesDefs);
+                                this.reRender();
+                                return
+                            }
                             this.model.fetch().then(() => {
                                 this.notify('Done', 'success');
                             });
@@ -898,12 +900,17 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 if (this.disabled) {
                     return;
                 }
-                if (this.mode === 'detail') {
+
+                if (this.isListView() && !this.isVisibleViaConditions()) {
+                    return;
+                }
+
+                if (['detail', 'list', 'listLink'].includes(this.mode)) {
                     $removeLink.removeClass('hidden');
                 }
             }).on('mouseleave', e => {
                 e.stopPropagation();
-                if (this.mode === 'detail') {
+                if (['detail', 'list', 'listLink'].includes(this.mode)) {
                     $removeLink.addClass('hidden');
                 }
             });
@@ -934,10 +941,21 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (['edit', 'detail'].includes(this.mode) && !this.options.disableToggleVisibility) {
                 this.toggleVisibility();
             }
+
+            const name = this.originalName || this.name;
+            if (this.isListView() && ['list', 'listLink'].includes(this.mode) && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
+                if (!this.model.get('attributesDefs')[name]['attributeValueId']) {
+                    let html = `${this.translate('N/A')}`
+                    if (this.mode === 'listLink') {
+                        html = `<a href="#${this.model.name}/view/${this.model.id}" class="link" data-id="${this.model.id}" title="${this.translate('N/A')}">${this.translate('N/A')}</a>`
+                    }
+                    this.$el.html(html);
+                }
+            }
         },
 
         initListViewInlineEdit() {
-            if(!this.isListView()) {
+            if (!this.isListView()) {
                 return;
             }
 
@@ -945,11 +963,21 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initStatusContainer();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
+                    this.initRemoveAttributeValue()
                 }
             }
 
-            if(!this.listInlineEditModeEnabled()) {
+            if (!this.listInlineEditModeEnabled()) {
                 this.setReadOnly(true);
+            }
+
+            const name = this.originalName || this.name;
+            if (this.getMetadata().get(['scopes', this.model.urlRoot, 'hasAttribute']) && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
+                if (!this.model.get('attributesDefs')[name]['attributeValueId']) {
+                    if (this.getMetadata().get(['scopes', this.model.urlRoot, 'disableAttributeLinking']) || !this.getAcl().check(this.model.name, 'createAttributeValue')) {
+                        this.setReadOnly(true);
+                    }
+                }
             }
 
             this.toggleVisibility();
@@ -1032,7 +1060,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     } else {
                         this.setMode('edit');
                     }
-                }else if (this.mode === 'edit' && readOnly) {
+                } else if (this.mode === 'edit' && readOnly) {
                     this.inlineEditClose()
                 }
 
@@ -1115,20 +1143,20 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             });
 
-            if(this.model && this.model.getFieldParam(this.name, 'mainField')) {
+            if (this.model && this.model.getFieldParam(this.name, 'mainField')) {
                 let name = this.name;
-                if(this.model.getFieldParam(this.name, 'unitIdField')) {
-                    name +='Id';
+                if (this.model.getFieldParam(this.name, 'unitIdField')) {
+                    name += 'Id';
                 }
-                this.listenTo(this.model, 'change:'+name, () => {
+                this.listenTo(this.model, 'change:' + name, () => {
                     this.reRender();
                 });
                 this.listenTo(this, 'change', () => {
-                    this.model.trigger('partFieldChange:'+this.model.getFieldParam(this.name, 'mainField'));
+                    this.model.trigger('partFieldChange:' + this.model.getFieldParam(this.name, 'mainField'));
                 });
             }
 
-            if(this.isListView()) {
+            if (this.isListView()) {
                 this.listenTo(this, 'after:render', () => {
                     this.initListViewInlineEdit();
                 });
@@ -1159,11 +1187,18 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         inlineEditSave: function () {
             var data = this.fetch();
 
+            const name = this.originalName || this.name;
+            if (this.isListView() && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
+                if (!this.model.get('attributesDefs')[name]['attributeValueId']) {
+                    data.__attributes = [this.model.get('attributesDefs')[name]['attributeId']]
+                }
+            }
+
             var self = this;
             var model = this.model;
             var prev = Espo.Utils.cloneDeep(this.initialAttributes);
 
-            model.set(data, {silent: true});
+            model.set(data, { silent: true });
             data = model.attributes;
 
             var attrs = false;
@@ -1182,7 +1217,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.validate()) {
                 this.notify(this.translate('Record cannot be saved'), 'error');
-                model.set(prev, {silent: true});
+                model.set(prev, { silent: true });
                 return;
             }
 
@@ -1274,6 +1309,18 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         onInlineEditSave(res, attrs, model) {
             if (res.inheritedFields !== undefined) {
                 attrs.inheritedFields = res.inheritedFields;
+            }
+
+            if (attrs.__attributes && res.attributesDefs) {
+                const attributesDefs = model.get('attributesDefs') || {};
+                for (const key in res.attributesDefs) {
+                    if (attrs.__attributes.includes(res.attributesDefs[key]['attributeId'])) {
+                        attributesDefs[key] = res.attributesDefs[key];
+                    }
+                }
+
+                model.set('attributesDefs', attributesDefs)
+                delete attrs.__attributes;
             }
 
             model.set(attrs);
@@ -1388,7 +1435,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return false;
             }
 
-            if(this.isListView() && !this.isVisibleViaConditions()) {
+            if (this.isListView() && !this.isVisibleViaConditions()) {
                 return;
             }
 
@@ -1494,7 +1541,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 $el = this.$element;
             }
 
-            $el[0]?.scrollIntoView({behavior: 'smooth', block: 'center'});
+            $el[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             $el.popover({
                 placement: 'bottom',
@@ -1569,7 +1616,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         fetchToModel: function () {
-            this.model.set(this.fetch(), {silent: true});
+            this.model.set(this.fetch(), { silent: true });
         },
 
         fetch: function () {
@@ -1603,7 +1650,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (!Espo[key]) {
                 Espo[key] = [];
-                this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, {extensibleEnumId: extensibleEnumId}, {async: false}).then(res => {
+                this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, { extensibleEnumId: extensibleEnumId }, { async: false }).then(res => {
                     Espo[key] = res;
                 });
             }
@@ -1626,10 +1673,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 };
 
                 if (customOptions) {
-                    options = {...options, ...customOptions}
+                    options = { ...options, ...customOptions }
                 }
 
-                this.ajaxGetRequest(scope, options, {async: false}).then(res => {
+                this.ajaxGetRequest(scope, options, { async: false }).then(res => {
                     if (res.list) {
                         Espo[key] = res.list;
                     }
@@ -1655,7 +1702,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             let key = 'measure_data_' + measureId;
             if (!Espo[key]) {
                 Espo[key] = {};
-                this.ajaxGetRequest(`Measure/action/measureWithUnits`, {id: measureId}, {async: false}).then(res => {
+                this.ajaxGetRequest(`Measure/action/measureWithUnits`, { id: measureId }, { async: false }).then(res => {
                     Espo[key] = res;
                 });
             }
@@ -1673,8 +1720,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         loadUnitOptions() {
             this.unitList = [''];
-            this.unitListTranslates = {'': ''};
-            this.unitListSymbols = {'': ''};
+            this.unitListTranslates = { '': '' };
+            this.unitListSymbols = { '': '' };
 
             if (this.measureId) {
                 let nameField = 'name'
@@ -1737,11 +1784,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         }
 
-                        if (['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                        if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
                             createValueField(rule.operator.type)
                         }
 
-                        if (!['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                        if (!['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
                             createValueField(rule.operator.type)
                         }
                     } else {
@@ -1767,8 +1814,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         view = 'views/fields/int';
                     }
 
-                    if (['last_x_days', 'next_x_days'].includes(this.previousOperatorType)) {
-                        view = 'views/fields/int'
+                    if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType)) {
+                        view = 'views/fields/int';
                     }
                     this.createView(viewKey, view, {
                         name: 'value',
@@ -1862,7 +1909,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.getCellElement().off('mouseover.value-lock-' + this.name);
             this.getCellElement().off('mouseleave.value-lock-' + this.name);
 
-            if (!this.hasLockedControls() || this.options.hasFieldLocking === false) {
+            if (!this.hasLockedControls()) {
                 return;
             }
 
@@ -1875,7 +1922,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.mode === 'detail' || (this.isListView() && this.listInlineEditModeEnabled())) {
-                const action = $(`<a href="javascript:" class="value-lock hidden"><i class="ph ${this.isLocked() ? 'ph-lock-open' : 'ph-lock'}" title="${this.translate(this.isLocked() ? 'unlockFieldValue' : 'lockFieldValue', 'labels')}"></i></a>`);
+                const action = $(`<a href="javascript:" class="value-lock hidden"><i class="ph ${this.isLocked() ? 'ph-lock-open' : 'ph-lock'}" title="${this.translate(this.isLocked() ? 'unlockFieldValue' : 'lockFieldValue', 'tooltips')}"></i></a>`);
 
                 action.on('click', (e) => {
                     e.preventDefault();
@@ -1884,7 +1931,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
                     const url = this.model.urlRoot + '/action/' + (this.isLocked() ? 'unlockField' : 'lockField');
                     this.ajaxPostRequest(url, {
-                        entityId: this.model.get('id'),
+                        id: this.model.get('id'),
                         field: this.getLockedFieldName(),
                     }).then(() => {
                         Espo.Ui.success('Success');
@@ -1911,9 +1958,51 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return !!this.model.get('_meta')?.locked?.[this.getLockedFieldName()];
         },
 
-        hasLockedControls: function () {
+        hasLockedControls() {
+            if (this.options.hasFieldLocking === false) {
+                return false;
+            }
+
             return this.getMetadata().get(['scopes', this.model.urlRoot, 'enableFieldValueLock']) &&
-                !this.getMetadata().get(['entityDefs', this.model.urlRoot, this.getLockedFieldName(), 'disableFieldValueLock']);
-        }
+                !this.getMetadata().get(['entityDefs', this.model.urlRoot, this.getLockedFieldName(), 'disableFieldValueLock']) &&
+                this.model.get('_meta')?.locked?._loaded && !this.model.get('attributesDefs')?.[this.getLockedFieldName()]?.disableFieldValueLock;
+        },
+
+        getAttributeFieldName() {
+            let originalName = this.name;
+            $.each((this.model.defs.fields || {}), (field, fieldDefs) => {
+                if (fieldDefs.attributeId && `attr_${fieldDefs.attributeId}` === this.name) {
+                    originalName = field;
+                }
+            });
+
+            return originalName;
+        },
+
+        getExtensibleEnumId() {
+            let extensibleEnumId = this.model.getFieldParam(this.name, 'extensibleEnumId') ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            if (this.params.extensibleEnumId) {
+                extensibleEnumId = this.params.extensibleEnumId;
+            }
+
+            return extensibleEnumId;
+        },
+
+        getExtensibleEnumName() {
+            const extensibleEnumId = this.getExtensibleEnumId();
+            if (!extensibleEnumId) {
+                return null
+            }
+            let key = 'extensible_enum_name_' + extensibleEnumId;
+
+            if (!Espo[key]) {
+                this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}`, {}, { async: false }).then(res => {
+                    Espo[key] = res['name'];
+                });
+            }
+
+            return Espo[key];
+        },
+
     });
 });

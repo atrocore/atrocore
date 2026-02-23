@@ -516,7 +516,53 @@
       "layoutDetailDisabled": true
     },
     "extensibleEnum": {
-      "type": "link"
+      "type": "link",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "in",
+                  "attribute": "type",
+                  "value": [
+                    "extensibleEnum",
+                    "extensibleMultiEnum"
+                  ]
+                },
+                {
+                  "type": "equals",
+                  "attribute": "foreignEntityId",
+                  "value": "ExtensibleEnumOption"
+                }
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "in",
+                  "attribute": "type",
+                  "value": [
+                    "extensibleEnum",
+                    "extensibleMultiEnum"
+                  ]
+                },
+                {
+                  "type": "equals",
+                  "attribute": "foreignEntityId",
+                  "value": "ExtensibleEnumOption"
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "allowedOptions": {
       "type": "array",
@@ -783,13 +829,8 @@
         }
       }
     },
-    "isUninheritableField": {
-      "view": "views/admin/field-manager/fields/is-uninherited-field",
-      "type": "bool",
-      "tooltip": true
-    },
-    "isUninheritableRelation": {
-      "view": "views/admin/field-manager/fields/is-uninheritable-relation",
+    "inheritanceDisabled": {
+      "view": "views/admin/field-manager/fields/inheritance-disabled",
       "type": "bool",
       "tooltip": true
     },
@@ -1024,6 +1065,15 @@
       "type": "jsonObject",
       "notStorable": true,
       "view": "views/fields/conditional-properties"
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     }
   },
   "links": {

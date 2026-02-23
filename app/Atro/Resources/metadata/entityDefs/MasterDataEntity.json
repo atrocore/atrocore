@@ -60,6 +60,25 @@
         }
       }
     },
+    "executeMergeAs": {
+      "type": "enum",
+      "default": "system",
+      "options": [
+        "system",
+        "sameUser"
+      ],
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
     "mergingScript": {
       "type": "text",
       "view": "views/fields/script",
@@ -84,6 +103,51 @@
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
+    "confirmAutomatically": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
+    "minimumMatchingScore": {
+      "type": "int",
+      "default": 100,
+      "min": 1,
+      "max": 100,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "confirmAutomatically"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "confirmAutomatically"
+            },
             {
               "type": "isNotEmpty",
               "attribute": "masterEntity"

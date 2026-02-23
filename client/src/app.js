@@ -646,6 +646,7 @@ Espo.define(
                             xhr.setRequestHeader('Locale-Id', self.language.localeId);
                         }
                         xhr.setRequestHeader('Flatten-Attributes', 'true');
+                        xhr.setRequestHeader('With-Meta', 'true');
                     },
                     dataType: 'json',
                     timeout: 120000,

@@ -20,5 +20,8 @@
     "reject": "Reject",
     "confirm": "Confirm",
     "unreject": "Unreject"
+  },
+  "exceptions": {
+    "cannotDelete": "Only empty clusters can be deleted"
   }
 }

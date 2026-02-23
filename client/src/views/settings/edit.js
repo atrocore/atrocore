@@ -63,6 +63,7 @@ Espo.define('views/settings/edit', ['views/edit', 'lib!JsTree'], function (Dep) 
                     model: this.model,
                     noLayout: true,
                     mode: 'detail',
+                    isAdminPage: true,
                     callbacks: {
 
                     }

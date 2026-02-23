@@ -89,7 +89,7 @@ abstract class AbstractJob
 
     protected function createNotification(Entity $job, string $message): void
     {
-        if ($job->get('ownerUserId') === 'system') {
+        if ($job->get('ownerUserId') === $this->getConfig()->get('systemUserId')) {
             return;
         }
 

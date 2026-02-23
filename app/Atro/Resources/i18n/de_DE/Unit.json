@@ -13,6 +13,7 @@
     "defaultIsRequired": "Das Maß soll eine Standardeinheit haben.",
     "unitIsUsed": "Die Einheit '%s' wird im Feld '%s' aus der Entität '%s' für den Datensatz '%s' verwendet.",
     "unitIsUsedOnClassificationAttribute": "Die Einheit '%s' wird im Attribut '%s' aus der Klassifikation '%s' verwendet.",
-    "unitIsUsedOnEntityAttribute": "Die Einheit '%s' wird im Attribut '%s' aus dem %s '%s' verwendet."
+    "unitIsUsedOnEntityAttribute": "Die Einheit '%s' wird im Attribut '%s' aus dem %s '%s' verwendet.",
+    "multiplierCannotBeZero": "Der Einheitsmultiplikator darf nicht Null sein."
   }
 }

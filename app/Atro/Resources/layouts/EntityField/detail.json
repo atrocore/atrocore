@@ -275,7 +275,7 @@
           "name": "isNonComparable"
         },
         {
-          "name": "isUninheritableField"
+          "name": "inheritanceDisabled"
         }
       ],
       [
@@ -288,9 +288,7 @@
         {
           "name": "isDuplicatableRelation"
         },
-        {
-          "name": "isUninheritableRelation"
-        }
+        false
       ],
       [
         {

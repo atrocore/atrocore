@@ -102,12 +102,14 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
         },
 
         getWhereFilter() {
-            return [];
+            return this.model.getFieldParam(this.originalName, 'where') || [];
         },
+
         fetch: function () {
             let data = Dep.prototype.fetch.call(this);
             data[this.name + 'Name'] = this.translatedOptions[data[this.name]]
             return data;
-        }
+        },
+
     });
 });

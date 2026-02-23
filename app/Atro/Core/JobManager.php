@@ -33,7 +33,7 @@ class JobManager
     public function executeJob(Entity $job): bool
     {
         $userId = $job->get('ownerUserId');
-        if (empty($userId) || $userId == 'system') {
+        if (empty($userId) || $userId == $this->container->get('config')->get('systemUserId')) {
             $auth = new \Espo\Core\Utils\Auth($this->container);
             $auth->useNoAuth();
         } else {
@@ -42,6 +42,9 @@ class JobManager
                 $GLOBALS['log']->error("User $userId not found. Cannot execute job " . $job->get('id'));
                 return false;
             }
+
+            $user = $user->getSystemUser();
+
             $this->getEntityManager()->setUser($user);
             $this->container->setUser($user);
         }

@@ -56,7 +56,7 @@ Espo.define('views/selection/record/detail/compare', [
             this.listenToOnce(this, 'all-panels-rendered', () => {
                 this.prepareRelationshipPanels((panelList) => {
                     panelList = this.getPanelWithFields().concat(panelList);
-                    this.trigger('detailPanelsLoaded', {list: panelList});
+                    this.trigger('detailPanelsLoaded', { list: panelList });
                     this.getParentView().setupLayoutEditorButton();
                 });
             });
@@ -121,6 +121,23 @@ Espo.define('views/selection/record/detail/compare', [
             this.prepareAndExecuteAction(data, (self) => {
                 Relationship.prototype.actionUniversalAction.call(self, data);
             });
+        },
+
+        executeAction: function (action, data = null, e = null) {
+            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] == 'function') {
+                this[method].call(this, data, e);
+            }
+        },
+
+        actionDelete() {
+            const self = Espo.Utils.clone(this);
+            self.model = this.selectionModel;
+            self.isHierarchical = () => false;
+            self.delete = Detail.prototype.delete.bind(self);
+            self.exit = Detail.prototype.exit.bind(self);
+
+            self.delete();
         },
 
         getModels() {

@@ -11,6 +11,12 @@
     {
       "name": "duplicateIgnore",
       "type": "bool"
+    },
+    {
+      "name": "inheritanceDisabled",
+      "type": "bool",
+      "default": false,
+      "tooltip": true
     }
   ],
   "notCreatable": true,

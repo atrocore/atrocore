@@ -54,6 +54,12 @@
     {
       "name": "urlLabel",
       "type": "enum"
+    },
+    {
+      "name": "inheritanceDisabled",
+      "type": "bool",
+      "default": false,
+      "tooltip": true
     }
   ],
   "filter": true,

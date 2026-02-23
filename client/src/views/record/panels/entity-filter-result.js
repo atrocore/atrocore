@@ -8,17 +8,21 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/action/record/panels/entity-filter-result', ['views/record/panels/relationship','views/search/search-filter-opener'],
+Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/relationship','views/search/search-filter-opener'],
     (Dep, SearchFilterOpener) => Dep.extend({
 
         readOnly: true,
+
+        entityField: 'searchEntity',
 
         setup() {
             this.wait(true);
 
             this.onModelReady(() => {
-                this.scope = this.model.get('searchEntity');
-                this.url = this.model.get('searchEntity');
+                this.entityField = this?.options?.defs?.entityField || 'searchEntity';
+
+                this.scope = this.model.get(this.entityField);
+                this.url = this.model.get(this.entityField);
                 this.model.defs.links.entityFilterResult = {
                     entity: this.scope,
                     type: "hasMany"
@@ -49,12 +53,8 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
                     html: this.getFilterButtonHtml()
                 });
 
-                this.listenTo(this.model, 'change:searchEntity', () => {
-                    this.reRender();
-                });
-
-                this.listenTo(this.model, 'change:searchEntity', () => {
-                    let scope = this.model.get('searchEntity');
+                this.listenTo(this.model, `change:${this.entityField}`, () => {
+                    let scope = this.model.get(this.entityField);
 
                     let data = {};
                     if (this.model.get('data')) {
@@ -68,6 +68,8 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
                         });
                         this.model.set('data', data);
                     }
+
+                    this.reRender();
                 });
 
                 this.wait(false)
@@ -85,7 +87,7 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
         },
 
         actionOpenSearchFilter() {
-            if(!this.model.get('searchEntity') || !this.getMetadata().get(['scopes', this.model.get('searchEntity')])) {
+            if(!this.model.get(this.entityField) || !this.getMetadata().get(['scopes', this.model.get(this.entityField)])) {
                 this.notify(this.translate('The search entity is not valid'), 'error');
                 return;
             }
@@ -102,11 +104,11 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
                 whereData = this.model.get('data')?.whereData;
             }
 
-            SearchFilterOpener.prototype.open.call(this, this.model.get('searchEntity'), whereData,  ({where, whereData}) => {
+            SearchFilterOpener.prototype.open.call(this, this.model.get(this.entityField), whereData,  ({where, whereData}) => {
                 this.model.set('data', _.extend({}, this.model.get('data'), {
                     where,
                     whereData,
-                    whereScope: this.model.get('searchEntity')
+                    whereScope: this.model.get(this.entityField)
                 }));
                 this.notify(this.translate('saving', 'messages'));
                 this.model.save({_prev: null}).then(() =>  {
@@ -140,7 +142,7 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
         },
 
         panelVisible() {
-            return !!(this.model.get('searchEntity'));
+            return !!(this.model.get(this.entityField));
         },
 
     })

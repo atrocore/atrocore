@@ -3,10 +3,20 @@
     "masterEntity": "Master Entity",
     "sourceEntity": "Source Entity",
     "mergingScript": "Merging Script",
-    "updateMasterAutomatically": "Update Master Automatically"
+    "updateMasterAutomatically": "Update Master Automatically",
+    "minimumMatchingScore": "Minimum Matching Score",
+    "confirmAutomatically": "Confirm Automatically",
+    "executeMergeAs": "Execute Merge As"
   },
   "tooltips": {
-    "mergingScript": "Configure how source data is transformed, unified, and mapped to the master record."
+    "mergingScript": "Configure how source data is transformed, unified, and mapped to the master record.",
+    "executeMergeAs": "The user account that will be used to execute the merge script."
+  },
+  "options": {
+    "executeMergeAs": {
+      "system": "System",
+      "sameUser": "Same User"
+    }
   },
   "exceptions": {
     "mergingScriptIsMissing": "Merging script is missing for master entity",

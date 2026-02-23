@@ -212,15 +212,7 @@
           "name": "fieldValueInheritance"
         },
         {
-          "name": "unInheritedFields"
-        }
-      ],
-      [
-        {
           "name": "relationInheritance"
-        },
-        {
-          "name": "unInheritedRelations"
         }
       ]
     ]

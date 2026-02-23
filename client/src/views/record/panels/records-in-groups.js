@@ -19,6 +19,8 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
 
         checkboxes: false,
 
+        showMore: false,
+
         data() {
             return _.extend({
                 groups: this.groups,
@@ -246,7 +248,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                             buttonsDisabled: true,
                             el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
-                            showMore: false,
+                            showMore: this.showMore,
                             groupId: group.id,
                             groupName: group.label,
                             groupScope: this.groupScope,

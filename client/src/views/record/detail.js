@@ -1373,6 +1373,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.onModelReady(() => {
                 this.setupActionItems();
                 window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
+
+                this.listenTo(this.model, 'sync', () => {
+                    this.setupActionItems();
+                    window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
+                });
             })
 
             if (this.collection) {

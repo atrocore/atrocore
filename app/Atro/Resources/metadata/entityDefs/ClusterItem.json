@@ -41,6 +41,14 @@
       "type": "link",
       "protected": true
     },
+    "matchedScore": {
+      "type": "int",
+      "protected": true
+    },
+    "confirmedAutomatically": {
+      "type": "bool",
+      "protected": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

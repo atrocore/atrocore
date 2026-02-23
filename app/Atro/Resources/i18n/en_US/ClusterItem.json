@@ -4,11 +4,12 @@
     "entityId": "Entity ID",
     "record": "Record",
     "cluster": "Cluster",
-    "matchedRecord": "Matched Record"
+    "matchedRecord": "Matched Record",
+    "confirmedAutomatically": "Confirmed Automatically",
+    "matchedScore": "Matched Score"
   },
   "exceptions": {
     "notFound": "Cluster item record not found",
-    "cannotReject": "This cluster item cannot be rejected",
     "cannotUnreject": "This cluster item cannot be unrejected"
   }
 }

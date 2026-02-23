@@ -117,7 +117,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
         if ($entity->hasAttribute('modifiedById')) {
             $user = $this->getEntityManager()->getUser();
-            $modifiedById = empty($user) ? 'system' : $user->id;
+            $modifiedById = empty($user) ? $this->getConfig()->get('systemUserId') : $user->id;
             $entity->set('modifiedById', $modifiedById);
         }
     }
@@ -1100,6 +1100,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->getInjection('eventManager')->dispatch('Entity', $action, $event);
     }
 
+    /**
+     * Get DBAL connection
+     *
+     * @return Connection
+     */
     public function getDbal(): Connection
     {
         return $this->getInjection('dbal');

@@ -424,11 +424,6 @@
         }
       }
     },
-    "unInheritedFields": {
-      "type": "array",
-      "view": "views/admin/entity-manager/fields/un-inherited-fields",
-      "tooltip": true
-    },
     "relationInheritance": {
       "type": "bool",
       "default": false,
@@ -439,30 +434,6 @@
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
-            },
-            {
-              "type": "isEmpty",
-              "attribute": "primaryEntityId"
-            }
-          ]
-        }
-      }
-    },
-    "unInheritedRelations": {
-      "type": "array",
-      "view": "views/admin/entity-manager/fields/un-inherited-relations",
-      "tooltip": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "Hierarchy"
-            },
-            {
-              "type": "isTrue",
-              "attribute": "relationInheritance"
             },
             {
               "type": "isEmpty",
