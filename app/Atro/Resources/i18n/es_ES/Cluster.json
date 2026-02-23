@@ -2,6 +2,23 @@
   "fields": {
     "clusterItems": "Partidas agrupadas",
     "number": "Número",
-    "masterEntity": "Entidad principal"
+    "masterEntity": "Entidad principal",
+    "rejectedClusterItems": "Partidas agrupadas rechazadas",
+    "stagingItemCount": "Recuento de elementos de puesta en escena",
+    "masterItemCount": "Recuento maestro de artículos",
+    "state": "Estado"
+  },
+  "actions": {
+    "reject": "Rechace",
+    "confirm": "Confirme",
+    "unreject": "Rechazar"
+  },
+  "options": {
+    "state": {
+      "merged": "Fusionado",
+      "empty": "Vacío",
+      "review": "Revise",
+      "invalid": "No válido"
+    }
   }
 }

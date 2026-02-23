@@ -15,7 +15,7 @@
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
     "pattern": "Regex-Muster",
     "defaultUnit": "Standard-Einheit",
-    "default": "Standard",
+    "default": "Standardwert",
     "defaultValueType": "Typ des Standardwertes",
     "tooltipText": "Tooltip-Text",
     "tooltipLink": "Tooltip-Link",

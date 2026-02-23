@@ -53,7 +53,7 @@
     "cancelingModuleInstall": "Rušení instalace modulu…",
     "canceledModuleInstall": "Instalace modulu byla zrušena",
     "Log": "Log",
-    "confirmRun": "Po aktualizaci se všichni uživatelé odhlásí ze systému. Jste si jisti, že chcete aktualizovat systém?",
+    "confirmRun": "Po aktualizaci budou všichni uživatelé ze systému odhlášeni. Jste si jisti, že chcete systém aktualizovat?",
     "daemonDisabled": "<b>Služba Composeru neběží!</b><br>Pravděpodobně se služba právě znovu načítá, takže chvíli vyčkejte, nebo není nakonfigurován crontab. Pokyny k nastavení crontabu najdete <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">here</a>.",
     "jobManagerRunning": "Možnost aktualizace modulů je zablokována. Zkuste to prosím později.",
     "showReleaseNotes": "Poznámky k vydání"

@@ -6,15 +6,19 @@
   },
   "options": {
     "type": {
-      "single": "Единое целое",
-      "multiple": "Многочисленные субъекты"
+      "single": "Униформа",
+      "multiple": "Смешанные"
     }
   },
   "messages": {
-    "cannotSetToSingle": "Вы не можете установить значение 'Single Entity', потому что в Ваших записях есть много сущностей.",
-    "youNeedAtLeastTwoItem": "Вам нужно как минимум два предмета для сравнения."
+    "cannotSetToSingle": "Вы не можете установить 'Uniform'",
+    "youNeedAtLeastTwoItem": "Вам нужно как минимум два предмета для сравнения.",
+    "entityIsRequired": "Поле 'Entity' является обязательным."
   },
   "labels": {
     "createSelection": "Создать выбор"
+  },
+  "customActions": {
+    "replaceItem": "Заменить предмет"
   }
 }

@@ -79,7 +79,8 @@
     "Available": "Disponible",
     "upsert": "Ajout/Insert",
     "execute": "Exécuter",
-    "status": "Statut"
+    "status": "Statut",
+    "clusters": "Groupes d'entreprises"
   },
   "fieldTypes": {
     "datetime": "Date et heure",
@@ -201,7 +202,8 @@
     "scheduledJob": "Gérer les tâches planifiées du système",
     "jobs": "Gérer les tâches du système qui s'exécutent en arrière-plan sans interaction directe avec l'utilisateur.",
     "apiRequest": "Utiliser cette fonction pour créer rapidement des structures de données complexes telles que des flux d'importation ou d'exportation configurés.",
-    "style": "Créer, mettre à jour et personnaliser de nouveaux styles afin d'apporter des ajustements aux feuilles de style standard"
+    "style": "Créer, mettre à jour et personnaliser de nouveaux styles afin d'apporter des ajustements aux feuilles de style standard",
+    "clusters": "Utilisez les clusters pour regrouper les enregistrements similaires dans la gestion des données de référence et les faire correspondre les uns aux autres."
   },
   "logicalOperators": {
     "and": "ET",

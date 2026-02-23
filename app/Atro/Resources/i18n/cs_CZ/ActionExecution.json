@@ -2,12 +2,12 @@
   "fields": {
     "incomingWebhook": "Příchozí Webhook",
     "scheduledJob": "Naplánovaná úloha",
-    "workflow": "Pracovní postupy",
+    "workflow": "Pracovní postup",
     "statusMessage": "Stavová zpráva",
-    "startedAt": "Začínáme v",
+    "startedAt": "Začato v",
     "finishedAt": "Dokončeno v",
     "updatedCount": "Aktualizováno",
-    "logs": "Logy",
+    "logs": "Protokoly",
     "createdCount": "Vytvořeno",
     "failedCount": "Neúspěšný"
   },
@@ -20,7 +20,7 @@
     },
     "status": {
       "failed": "Neúspěšný",
-      "running": "Běh",
+      "running": "Probíhá",
       "done": "Hotovo"
     }
   }

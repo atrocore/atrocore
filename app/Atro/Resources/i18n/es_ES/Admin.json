@@ -75,11 +75,12 @@
     "rebuildDbWarning": "La estructura de la base de datos ha cambiado. Es necesario reconstruirla para garantizar su correcto funcionamiento.",
     "matchings": "Partidos",
     "Selected": "Selección",
-    "status": "Status",
+    "status": "Estado",
     "AccessManagement": "Access Management",
     "Action": "Acciones",
     "Locale": "Localización",
-    "multiLanguages": "Languages"
+    "multiLanguages": "Languages",
+    "clusters": "Agrupaciones"
   },
   "layouts": {
     "list": "Lista",
@@ -134,7 +135,7 @@
     "script": "Guión",
     "extensibleMultiEnum": "Lista multivalor",
     "markdown": "Markdown",
-    "extensibleEnum": "List",
+    "extensibleEnum": "Lista",
     "multiLanguage": "Códigos lingüísticos",
     "measure": "Medida"
   },
@@ -181,7 +182,7 @@
     "roles": "Gestión de roles.",
     "outboundEmails": "Ajustes para los correos del sistema y de envíos masivos.",
     "layoutManager": "Personalizar diseños (listas, detalles, editar, buscar, actualización masiva).",
-    "userInterface": "Seleccione su estilo CSS, configure los elementos de navegación principales, los cuadros de mando y las entidades predeterminados, disponibles para crear rápidamente, así como gestionar otros ajustes de las interfaces de usuario.",
+    "userInterface": "Seleccione su estilo CSS, configure los elementos principales de navegación, los cuadros de mando y las entidades predeterminadas, disponibles para crear rápidamente, así como gestionar otros ajustes de las interfaces de usuario.",
     "authTokens": "Sesiones de usuarios activas. Direcciones IP y última fecha de acceso.",
     "authentication": "Ajustes de autenticación.",
     "currency": "Defina las monedas admitidas que se utilizarán en todo el sistema para la fijación de precios, las transacciones y otras operaciones financieras.",
@@ -214,7 +215,8 @@
     "layoutProfiles": "Gestione y personalice diferentes configuraciones de diseño para la interfaz de usuario del sistema",
     "apiRequest": "Utilice esta función para crear rápidamente estructuras de datos complejas, como feeds de importación o exportación configurados.",
     "style": "Cree, actualice y personalice nuevos estilos para realizar ajustes en el CSS estándar",
-    "incomingWebhook": "Los Webhooks entrantes le permiten desencadenar Acciones predefinidas a través de peticiones HTTP externas, con seguridad opcional como verificación de hash y listas blancas de IP."
+    "incomingWebhook": "Los Webhooks entrantes le permiten desencadenar Acciones predefinidas a través de peticiones HTTP externas, con seguridad opcional como verificación de hash y listas blancas de IP.",
+    "clusters": "Utilice los clústeres para agrupar registros similares dentro de la gestión de datos maestros y hacerlos coincidir entre sí."
   },
   "logicalOperators": {
     "and": "Y",

@@ -1,9 +1,14 @@
 {
   "fields": {
-    "entityName": "Název subjektu",
-    "entityId": "ID subjektu",
+    "entityName": "Název entity",
+    "entityId": "ID entity",
     "record": "Záznam",
     "cluster": "Cluster",
     "matchedRecord": "Shodný záznam"
+  },
+  "exceptions": {
+    "notFound": "Záznam o položce clusteru nebyl nalezen",
+    "cannotReject": "Tuto položku shluku nelze odmítnout",
+    "cannotUnreject": "Tuto položku shluku nelze odmítnout"
   }
 }

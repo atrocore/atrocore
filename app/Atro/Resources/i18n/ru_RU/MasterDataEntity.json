@@ -1,9 +1,15 @@
 {
   "fields": {
     "masterEntity": "Мастер",
-    "mergingScript": "Скрипт трансформации"
+    "mergingScript": "Скрипт трансформации",
+    "sourceEntity": "Исходная сущность",
+    "updateMasterAutomatically": "Автоматическое обновление мастера"
   },
   "tooltips": {
     "mergingScript": "Настройте преобразование, унификацию и сопоставление исходных данных с мастер-записью."
+  },
+  "exceptions": {
+    "mergingScriptIsMissing": "Скрипт слияния отсутствует для главной сущности",
+    "mergingScriptIsNotValid": "Скрипт слияния возвращает недопустимую полезную нагрузку: %s"
   }
 }

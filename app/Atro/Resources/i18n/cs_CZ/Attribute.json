@@ -17,8 +17,8 @@
     "defaultDate": "Výchozí datum",
     "isRequired": "Požadované",
     "isReadOnly": "Pouze pro čtení",
-    "isProtected": "Chráněné stránky",
-    "tooltip": "Nápověda k nástrojům",
+    "isProtected": "Chráněno",
+    "tooltip": "Popis",
     "maxLength": "Maximální délka",
     "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",
     "useDisabledTextareaInViewMode": "Použití vypnuté textové oblasti v režimu zobrazení",
@@ -29,18 +29,18 @@
     "min": "Min",
     "max": "Max",
     "notNull": "Zakázat nulovou hodnotu",
-    "trim": "Odstranění počátečních a koncových bílých znaků",
+    "trim": "Odstranit počáteční a koncové bílé znaky",
     "classificationAttributes": "Atributy klasifikace",
     "preparedName": "Jméno",
-    "htmlSanitizer": "HTML Sanitizer",
+    "htmlSanitizer": "Čištění HTML",
     "fullWidth": "Na celou šířku",
     "channel": "Kanál",
     "attributeGroupSortOrder": "Pořadí řazení ve skupině atributů",
     "conditionalRequired": "Požadované",
     "conditionalVisible": "Viditelné",
     "conditionalReadOnly": "Pouze pro čtení",
-    "conditionalProtected": "Chráněné stránky",
-    "conditionalDisableOptions": "Možnosti pro osoby se zdravotním postižením",
+    "conditionalProtected": "Chráněno",
+    "conditionalDisableOptions": "Zakázané možnosti",
     "modifiedExtendedDisabled": "Žádný záznam jako změna",
     "entityType": "Propojený subjekt",
     "entityField": "Pole entity"
@@ -68,7 +68,7 @@
       "varchar": "Řetězec",
       "wysiwyg": "HTML",
       "rangeInt": "Rozsah celých čísel",
-      "rangeFloat": "Rozsah plováku",
+      "rangeFloat": "Rozsah desetinných čísel",
       "file": "Soubor",
       "link": "Odkaz",
       "linkMultiple": "Více odkazů"
@@ -80,7 +80,7 @@
     "removeAttribute(s)": "Všechny hodnoty tohoto(těchto) atributu(ů) jsou rovněž odstraněny. Opravdu chcete tento(tyto) atribut(y) odstranit?"
   },
   "filterLabels": {
-    "All": "Všechno"
+    "All": "Všechny"
   },
   "tooltips": {
     "pattern": "Chcete-li povolit pouze velká písmena s délkou 10 znaků, použijte \"/^[A-Z]{1,10}$/\".",

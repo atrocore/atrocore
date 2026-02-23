@@ -4,7 +4,7 @@
     "description": "Descripción",
     "code": "Código",
     "isActive": "Activo",
-    "attributes": "Atributos",
+    "attributes": "Atributo",
     "sortOrder": "ordenar Orden"
   },
   "messages": {

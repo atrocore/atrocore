@@ -41,7 +41,7 @@
     "fileStorageCannotBeChanged": "Pamięci masowej nie można zmienić.",
     "fileCreateFailed": "Tworzenie pliku nie powiodło się.",
     "fileRenameFailed": "Zmiana nazwy pliku nie powiodła się.",
-    "fileDeleteFailed": "Usuwanie pliku nie powiodło się.",
+    "fileDeleteFailed": "Usunięcie pliku nie powiodło się.",
     "fileNameNotValidByUserRegex": "Nazwa pliku jest nieprawidłowa. Powinna pasować do wyrażenia regularnego '%s'.",
     "notAllowToFileWithEntity": "Nie mogą Państwo połączyć pliku typu '%s' z plikiem '%s'. Jedynymi dozwolonymi typami są '%s'",
     "fileFolderCannotBeChanged": "Folder plików nie może zostać zmieniony.",

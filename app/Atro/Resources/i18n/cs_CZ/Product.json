@@ -17,6 +17,11 @@
   },
   "labels": {
     "manufacturer": "Výrobce",
-    "other": "Další"
+    "other": "Další",
+    "State": "Stát",
+    "Description": "Popis",
+    "Taxonomy": "Taxonomie",
+    "ProductLifeCycle": "Životní cyklus výrobku",
+    "MasterData": "Základní údaje"
   }
 }

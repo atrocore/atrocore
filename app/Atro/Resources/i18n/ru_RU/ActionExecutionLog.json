@@ -1,7 +1,7 @@
 {
   "fields": {
     "actionExecution": "Выполнение действий",
-    "type": "Type",
+    "type": "Тип",
     "entityRecord": "Запись о сущности",
     "entityName": "Название организации",
     "entityId": "ID субъекта",

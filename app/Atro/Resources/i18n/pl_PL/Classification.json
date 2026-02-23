@@ -4,7 +4,7 @@
     "description": "Description",
     "release": "Zwolnienie",
     "synonyms": "Synonimy",
-    "code": "Kod",
+    "code": "Code",
     "isActive": "Aktywny",
     "classifications": "Klasyfikacje",
     "classificationAttributes": "Atrybuty klasyfikacji",
@@ -20,7 +20,7 @@
   },
   "exceptions": {
     "entityCannotBeChanged": "Podmiot nie może zostać zmieniony.",
-    "classificationForToAnotherEntity": "Klasyfikacja nie może być powiązana z tym rekordem, ponieważ jest używana dla innego Podmiotu.",
+    "classificationForToAnotherEntity": "Klasyfikacja nie może być powiązana z tym rekordem, ponieważ jest używana dla innego podmiotu.",
     "classificationHasRecords": "Klasyfikacja z powiązanymi rekordami nie może zostać usunięta.",
     "entityNotAllowToChoose": "Nie można wybrać podmiotu."
   }

@@ -10,7 +10,7 @@
     "scopes": "Scopi"
   },
   "tooltips": {
-    "assignmentPermission": "Permette di limitare la possibilità di assegnare record e di pubblicare messaggi ad altri utenti.\n\ntutti - nessuna restrizione\n\nteam - può assegnare e postare solo ai compagni di squadra\n\nno - può assegnare e postare solo a se stesso",
+    "assignmentPermission": "Consente di limitare la capacità di assegnare record e di pubblicare messaggi ad altri utenti.\n\ntutti - nessuna restrizione\n\nteam - può assegnare e postare solo ai compagni di squadra\n\nno - può assegnare e postare solo a se stesso",
     "dataPrivacyPermission": "Permette di visualizzare e cancellare i dati personali."
   },
   "labels": {

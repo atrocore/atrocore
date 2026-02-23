@@ -79,7 +79,8 @@
     "matchings": "Dopasowania",
     "Available": "Dostępny",
     "execute": "Wykonaj",
-    "status": "Status"
+    "status": "Status",
+    "clusters": "Klastry"
   },
   "layouts": {
     "relationships": "Relacje",
@@ -141,7 +142,7 @@
   "fields": {
     "fontSize": "Rozmiar czcionki",
     "type": "Typ",
-    "name": "Kod",
+    "name": "Code",
     "label": "Etykieta",
     "defaultDate": "Domyślny",
     "link": "Link",
@@ -192,7 +193,7 @@
     "outboundEmails": "Ustawienia serwera SMTP dla wychodzących e-maili.",
     "layoutManager": "Zarządzaj standardowymi układami systemowymi dla widoku listy (boczny), widoku szczegółów (boczny), paneli relacji i ich kolejności sortowania, masowej aktualizacji itp.",
     "entityManager": "Konfiguracja modelu danych poprzez zarządzanie istniejącymi jednostkami i tworzenie nowych. Zarządzanie i tworzenie pól i relacji między jednostkami.",
-    "userInterface": "Proszę wybrać styl CSS, skonfigurować główne elementy nawigacyjne, domyślne pulpity nawigacyjne i encje, dostępne do szybkiego tworzenia, a także zarządzać innymi ustawieniami interfejsów użytkownika.",
+    "userInterface": "Proszę wybrać styl CSS, skonfigurować główne elementy nawigacyjne, domyślne pulpity nawigacyjne i encje, dostępne do szybkiego tworzenia, a także zarządzać innymi ustawieniami interfejsu użytkownika.",
     "authTokens": "Sprawdź aktywne sesje autoryzacyjne, w tym adresy IP użytkowników oraz datę i godzinę ostatniego dostępu.",
     "authentication": "Zarządzaj metodami i ustawieniami autoryzacji.",
     "notifications": "Zarządzaj ustawieniami powiadomień w aplikacji i e-mailowych.",
@@ -202,7 +203,7 @@
     "accounts": "Reprezentuje podmioty biznesowe, takie jak klienci, dostawcy lub partnerzy, wykorzystywane do zarządzania relacjami i transakcjami w systemie.",
     "contacts": "Przechowywanie poszczególnych osób powiązanych z kontami, w tym ich ról i szczegółów komunikacji w celu interakcji i koordynacji.",
     "addresses": "Są to ustrukturyzowane szczegóły lokalizacji dla kont, umożliwiające dokładną identyfikację, fakturowanie i operacje wysyłkowe.",
-    "currency": "Określenie obsługiwanych walut używanych w systemie do ustalania cen, transakcji i innych operacji finansowych.",
+    "currency": "Zdefiniowanie obsługiwanych walut używanych w systemie do ustalania cen, transakcji i innych operacji finansowych.",
     "lists": "Zarządzaj listami i ich opcjami dla list prostych lub wielowartościowych.",
     "emailTemplates": "Zarządzaj szablonami wiadomości e-mail w celu ręcznego lub automatycznego dostarczania wiadomości e-mail (nie dla standardowych powiadomień).",
     "thumbnailTypes": "Proszę zarządzać typami miniatur, aby zmienić szerokość lub wysokość miniatury lub utworzyć nową.",
@@ -214,7 +215,8 @@
     "scheduledJob": "Zarządzanie zaplanowanymi zadaniami systemowymi.",
     "notificationTemplates": "Proszę zarządzać szablonem standardowego powiadomienia systemu.",
     "notificationProfiles": "Skonfiguruj profile powiadomień i reguły powiadomień, aby skutecznie usprawnić proces zarządzania alertami, tak aby były one aktualne i istotne.",
-    "layoutProfiles": "Zarządzanie i dostosowywanie różnych konfiguracji układu interfejsu użytkownika systemu"
+    "layoutProfiles": "Zarządzanie i dostosowywanie różnych konfiguracji układu interfejsu użytkownika systemu",
+    "clusters": "Klastry służą do grupowania podobnych rekordów w ramach zarządzania danymi podstawowymi i dopasowywania ich do siebie."
   },
   "logicalOperators": {
     "and": "ORAZ",

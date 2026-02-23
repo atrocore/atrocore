@@ -2,7 +2,7 @@
   "fields": {
     "name": "Jméno singulární",
     "namePlural": "Jméno v množném čísle",
-    "disabled": "Bezbariérový",
+    "disabled": "Zakázáno",
     "customizable": "Přizpůsobitelné",
     "hasArchive": "Archivovatelné",
     "hasActive": "Aktivovatelné",
@@ -30,21 +30,21 @@
     "unInheritedRelations": "Nedědičné vztahy",
     "fields": "Pole",
     "auditedDisabledFields": "Žádné zaznamenávání aktivit pro pole",
-    "auditedEnabledRelations": "Záznam aktivity pro vztahy",
+    "auditedEnabledRelations": "Zaznamenávání aktivity pro vztahy",
     "hasAttribute": "Má atributy",
     "hasClassification": "Má klasifikace",
     "singleClassification": "Pouze jednotlivá klasifikace",
     "disableAttributeLinking": "Zakázat přímé propojení atributů",
-    "hasAssociate": "Má spolupracovníky",
+    "hasAssociate": "Má přidružené",
     "textFilterFields": "Pole textového filtru",
-    "nonDuplicatableFields": "Neduplikovaná pole",
+    "nonDuplicatableFields": "Neduplikovatelná pole",
     "deleteValuesAfterUnlinkingClassification": "Odstranění hodnot atributů po zrušení propojení klasifikací",
     "linkAttributesWithClassificationAutomatically": "Automatické propojení atributů s klasifikací",
-    "primaryEntity": "Primární subjekt",
+    "primaryEntity": "Primární entita",
     "hasStaging": "Povolení etapizace",
-    "stagingEntity": "Subjekt etapizace",
-    "matchDuplicates": "Shoda duplicit",
-    "matchMasterRecords": "Hlavní záznamy o zápasech",
+    "stagingEntity": "Entita etapizace",
+    "matchDuplicates": "Párování duplikátů",
+    "matchMasterRecords": "Párování hlavních záznamů",
     "role": "Role"
   },
   "options": {
@@ -56,10 +56,10 @@
     },
     "sortDirection": {
       "asc": "Vzestupně",
-      "desc": "Sestupné"
+      "desc": "Sestupně"
     },
     "role": {
-      "staging": "Inscenace"
+      "staging": "Etapizace"
     }
   },
   "labels": {

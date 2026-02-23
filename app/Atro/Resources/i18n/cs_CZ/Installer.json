@@ -20,7 +20,7 @@
     "databaseName": "Název databáze",
     "databaseUserName": "Uživatelské jméno databáze",
     "databaseUserPassword": "Heslo uživatele databáze",
-    "port": "Přístav",
+    "port": "Port",
     "testConnection": "Testovací připojení",
     "reCheck": "Znovu zkontrolujte",
     "userName": "Uživatelské jméno",
@@ -41,7 +41,7 @@
   },
   "messages": {
     "youMustAgreeToTheLicenseAgreement": "Musíte souhlasit s licenční smlouvou",
-    "fieldIsRequired": "{pole} je povinné",
+    "fieldIsRequired": "{field} je povinné",
     "connectionSuccessful": "Připojení proběhlo úspěšně!",
     "pleaseConfigureYourSystemToStart": "Nakonfigurujte svůj systém tak, aby se spustil"
   },

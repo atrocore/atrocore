@@ -1,9 +1,15 @@
 {
   "fields": {
     "masterEntity": "Entité de référence",
-    "mergingScript": "Script de mapping"
+    "mergingScript": "Script de mapping",
+    "sourceEntity": "Entité source",
+    "updateMasterAutomatically": "Mise à jour automatique du master"
   },
   "tooltips": {
     "mergingScript": "Configurez la façon dont les données sources sont transformées, unifiées et mises en correspondance avec la fiche."
+  },
+  "exceptions": {
+    "mergingScriptIsMissing": "Le script de fusion n'est pas disponible pour l'entité maître",
+    "mergingScriptIsNotValid": "Le script de fusion renvoie une charge utile invalide : %s"
   }
 }

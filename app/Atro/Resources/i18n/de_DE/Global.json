@@ -533,7 +533,9 @@
     "removeItem": "Entfernen",
     "openStagingEntity": "Staging-Entität öffnen",
     "openPrimaryEntity": "Master-Entität öffnen",
-    "currentSelection": "Aktuelle Auswahl"
+    "currentSelection": "Aktuelle Auswahl",
+    "isLinked": "Ist verknüpft",
+    "rejectItem": "Ablehnen"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
@@ -840,7 +842,9 @@
     "end": "Ende",
     "createdCountFilterActionExecution": "Erstellt durch Aktionsausführung",
     "updatedCountFilterActionExecution": "Aktualisiert durch Aktionsausführung",
-    "derivativeStatus": "Derivat-Status"
+    "derivativeStatus": "Derivat-Status",
+    "sourceRecord": "Quelle Rekord",
+    "masterRecord": "Stammdatensatz"
   },
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."
@@ -1421,5 +1425,8 @@
     "uiRecordFromName": "Der Name der Entität, von der aus Sie die aktuelle Entität öffnen.",
     "uiRecordFrom": "Datensatz-Array der Entität, von der aus Sie die aktuelle Entität öffnen.",
     "config": "Konfigurationsobjekt des Systems"
+  },
+  "actions": {
+    "updateMasterRecord": "Stammsatz aktualisieren"
   }
 }

@@ -6,15 +6,19 @@
   },
   "options": {
     "type": {
-      "single": "Jeden subjekt",
-      "multiple": "Více subjektů"
+      "single": "Uniforma",
+      "multiple": "Smíšené"
     }
   },
   "messages": {
-    "cannotSetToSingle": "Nemůžete nastavit \"Single Entity\", protože v záznamech máte mnoho entit.",
-    "youNeedAtLeastTwoItem": "Pro srovnání potřebujete alespoň dvě položky."
+    "cannotSetToSingle": "Nelze nastavit možnost 'Uniform'",
+    "youNeedAtLeastTwoItem": "Pro srovnání potřebujete alespoň dvě položky.",
+    "entityIsRequired": "Pole \"Entita\" je povinné."
   },
   "labels": {
     "createSelection": "Vytvořit výběr"
+  },
+  "customActions": {
+    "replaceItem": "Nahradit položku"
   }
 }

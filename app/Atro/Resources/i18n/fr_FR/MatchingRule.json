@@ -20,6 +20,8 @@
   },
   "exceptions": {
     "notValidCode": "Le code ne doit contenir que des lettres, des chiffres, des traits de soulignement et des tirets.",
-    "notValidMatchingActivation": "La règle de correspondance ne peut être modifiée que pour une correspondance inactive."
+    "notValidMatchingActivation": "La règle de correspondance ne peut être modifiée que pour une correspondance inactive.",
+    "notValidMatching": "La correspondance n'est pas valide",
+    "notValidMatchingRuleSet": "L'ensemble de règles de correspondance n'est pas valide"
   }
 }

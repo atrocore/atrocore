@@ -7,9 +7,9 @@
   },
   "options": {
     "dateTimeDefault": {
-      "": "Žádné",
+      "": "Žádná",
       "javascript: return this.dateTime.getNow(1);": "Nyní",
-      "javascript: return this.dateTime.getNow(5);": "Nyní (5 m)",
+      "javascript: return this.dateTime.getNow(5);": "Nyní (5m)",
       "javascript: return this.dateTime.getNow(15);": "Nyní (15 m)",
       "javascript: return this.dateTime.getNow(30);": "Nyní (30m)",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 hodina",
@@ -33,7 +33,7 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 týden"
     },
     "dateDefault": {
-      "": "Žádné",
+      "": "Žádný",
       "javascript: return this.dateTime.getToday();": "Dnes",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 den",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dny",

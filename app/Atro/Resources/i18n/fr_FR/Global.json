@@ -109,7 +109,9 @@
     "createdCountFilterActionExecution": "Créé par l'exécution d'une action",
     "updatedCountFilterActionExecution": "Mise à jour par l'exécution de l'action",
     "field": "Champ",
-    "derivativeStatus": "Statut du dérivé"
+    "derivativeStatus": "Statut du dérivé",
+    "sourceRecord": "Source Record",
+    "masterRecord": "Enregistrement de référence"
   },
   "scopeNames": {
     "Classification": "Classification",
@@ -564,7 +566,11 @@
     "accessDeniedDescription": "Votre compte ne dispose pas des autorisations nécessaires pour consulter cette ressource. Si vous pensez que vous devriez y avoir accès, veuillez contacter votre administrateur.",
     "removeItem": "Supprimer",
     "accessDenied": "Accès refusé",
-    "currentSelection": "Sélection Courante"
+    "currentSelection": "Sélection Courante",
+    "rejectItem": "Rejeter",
+    "openStagingEntity": "Entité de transit ouverte",
+    "openPrimaryEntity": "Entité maître ouverte",
+    "isLinked": "Est lié"
   },
   "insightsPanels": {
     "summary": "Sommaire",
@@ -1415,5 +1421,8 @@
     "small": "Petit",
     "medium": "Moyen",
     "large": "Large"
+  },
+  "actions": {
+    "updateMasterRecord": "Mise à jour de la fiche"
   }
 }

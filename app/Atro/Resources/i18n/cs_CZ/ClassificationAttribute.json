@@ -4,12 +4,12 @@
     "attribute": "Atribut",
     "isRequired": "Požadované",
     "isReadOnly": "Pouze pro čtení",
-    "isProtected": "Chráněné stránky",
+    "isProtected": "Chráněno",
     "maxLength": "Maximální délka",
     "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",
     "value": "Výchozí hodnota",
-    "valueFrom": "Výchozí hodnota Od",
-    "valueTo": "Výchozí hodnota Do",
+    "valueFrom": "Výchozí hodnota od",
+    "valueTo": "Výchozí hodnota do",
     "varcharValue": "Výchozí hodnota: Řetězec",
     "referenceValue": "Výchozí hodnota: Referenční",
     "textValue": "Výchozí hodnota: Text",
@@ -28,8 +28,8 @@
     "conditionalRequired": "Požadované",
     "conditionalVisible": "Viditelné",
     "conditionalReadOnly": "Pouze pro čtení",
-    "conditionalProtected": "Chráněné stránky",
-    "conditionalDisableOptions": "Možnosti pro osoby se zdravotním postižením"
+    "conditionalProtected": "Chráněno",
+    "conditionalDisableOptions": "Zakázané možnosti"
   },
   "labels": {
     "classificationAttribute": "Atribut z klasifikace",

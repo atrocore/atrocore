@@ -1,9 +1,15 @@
 {
   "fields": {
     "masterEntity": "Stammdaten-Entität",
-    "mergingScript": "Skript zusammenführen"
+    "mergingScript": "Skript zusammenführen",
+    "sourceEntity": "Quellentität",
+    "updateMasterAutomatically": "Master automatisch aktualisieren"
   },
   "tooltips": {
     "mergingScript": "Konfigurieren Sie, wie Quelldaten transformiert, vereinheitlicht und dem Stammsatz zugeordnet werden."
+  },
+  "exceptions": {
+    "mergingScriptIsMissing": "Zusammenführungsskript fehlt für Master-Entität",
+    "mergingScriptIsNotValid": "Skript zum Zusammenführen gibt ungültige Nutzdaten zurück: %s"
   }
 }

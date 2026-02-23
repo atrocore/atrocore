@@ -15,7 +15,7 @@
     "countBytesInsteadOfCharacters": "Zliczanie bajtów zamiast znaków",
     "pattern": "Wzorzec Regex",
     "defaultUnit": "Jednostka domyślna",
-    "default": "Domyślny",
+    "default": "Wartość domyślna",
     "defaultValueType": "Wartość domyślna Type",
     "tooltip": "Tooltip",
     "tooltipText": "Tekst podpowiedzi",
@@ -41,7 +41,7 @@
     "preview": "Podgląd",
     "rowsMax": "Maksymalna liczba wierszy obszaru tekstowego",
     "rowsMin": "Minimalna liczba wierszy obszaru tekstowego",
-    "useDisabledTextareaInViewMode": "Używanie wyłączonego obszaru tekstowego w trybie widoku",
+    "useDisabledTextareaInViewMode": "Proszę używać wyłączonego obszaru tekstowego w trybie widoku",
     "strip": "Pasek",
     "height": "Wysokość (px)",
     "useIframe": "Używanie ramki iframe w trybie widoku",
@@ -89,7 +89,7 @@
     "linkMultipleField": "Ta opcja umożliwia wygodny sposób edycji relacji. Proszę jej nie używać, jeśli mają Państwo dużą liczbę powiązanych rekordów.",
     "modifiedExtendedEnabled": "Zmiany w tej relacji spowodują aktualizację daty i godziny \"Modified At\".",
     "inheritanceDisabled": "Wartości dla tego pola nie będą dziedziczone z elementu nadrzędnego.",
-    "modifiedExtendedDisabled": "Jeśli ustawione, zmiany w tym polu nie będą aktualizować znacznika czasu \"Zmodyfikowano w\".",
+    "modifiedExtendedDisabled": "Jeśli ustawione, zmiany w tym polu nie będą aktualizować znacznika czasu \"Modified At\".",
     "auditableDisabled": "Zmiany w tym polu nie są wyświetlane jako Aktywność."
   },
   "options": {
@@ -124,6 +124,7 @@
     "conditionalProperties": "Właściwości warunkowe"
   },
   "exceptions": {
-    "nullValuesExist": "Niektóre rekordy mają wartości null"
+    "nullValuesExist": "Niektóre rekordy mają wartości null",
+    "cannotAddRequiredFieldWithExistingRecords": "Nie można dodać pola wymaganego z istniejącymi rekordami bez wartości domyślnej"
   }
 }

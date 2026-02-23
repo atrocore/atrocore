@@ -16,12 +16,12 @@
     "align": {
       "left": "Vlevo",
       "right": "Vpravo",
-      "center": "Středisko"
+      "center": "Střed"
     },
     "style": {
       "default": "Výchozí",
       "success": "Úspěch",
-      "danger": "Nebezpečí",
+      "danger": "Chyba",
       "info": "Informace",
       "warning": "Varování",
       "primary": "Primární"

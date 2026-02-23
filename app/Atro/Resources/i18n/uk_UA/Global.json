@@ -63,8 +63,8 @@
     "SystemIcon": "Системний значок",
     "AccountGroup": "Група рахунків",
     "ProductGroup": "Група продуктів",
-    "Matching": "Відповідності",
-    "ThumbnailType": "Тип мініатюри",
+    "Matching": "Відповідність",
+    "ThumbnailType": "Type мініатюри",
     "ProductHierarchy": "Ієрархія продуктів",
     "IncomingWebhook": "Вхідний веб-хук",
     "ExtensibleEnumExtensibleEnumOption": "Список (опція \"Список\")",
@@ -138,15 +138,15 @@
     "SystemIcon": "Системні значки",
     "AccountGroup": "Групи рахунків",
     "ProductGroup": "Групи товарів",
-    "RoleScopeAttributePanel": "Панель атрибутів",
+    "RoleScopeAttributePanel": "Панелі атрибутів",
     "MatchedRecord": "Співставлені записи",
     "Matching": "Відповідності",
     "ThumbnailType": "Типи мініатюр",
-    "AttributePanel": "Панель атрибутів",
+    "AttributePanel": "Панелі атрибутів",
     "RoleScope": "Сфери застосування",
     "UserProfile": "Профілі користувачів",
-    "Background": "Фон",
-    "EntityField": "Поле сутності",
+    "Background": "Передумови",
+    "EntityField": "Поля сутності",
     "EntityRelation": "Відносини між сутностями",
     "RoleScopeField": "Поля",
     "Language": "Мови",
@@ -427,7 +427,7 @@
     "Summary": "Підсумок",
     "Insights": "Інсайти",
     "Activities": "Діяльність",
-    "enableAutomaticClosing": "вимкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
+    "enableAutomaticClosing": "Увімкніть автоматичне відкриття та закриття цієї панелі при наведенні миші.",
     "disableAutomaticClosing": "вимкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
     "accessManagement": "Керування доступом",
     "sidebarUnpin": "Автоматичне розкриття панелі неактивне",
@@ -490,14 +490,14 @@
     "authenticate": "Автентифікація",
     "Load data": "Завантажте дані",
     "floatPart": "(Поплавок)",
-    "inheritedFromParent": "Унаслідувати від батька",
+    "inheritedFromParent": "Успадковано від батьків",
     "Action Forbidden": "Дія заборонена",
     "Duplicate and Select": "Дублюйте та виділяйте",
-    "actionFollow": "Натисніть, щоб приєднатися",
+    "actionFollow": "Натисніть, щоб продовжити",
     "actionUnfollow": "Ви стежите за нами, натисніть, щоб скасувати підписку",
     "collapseAll": "Згорнути все",
     "relatedAssociates": "Відсталі асоціації",
-    "Duplicates": "Дублікат",
+    "Duplicates": "Дублікати",
     "phpCode": "Код PHP",
     "_addAttribute": "[Додати атрибут].",
     "fieldValueFilters": "Фільтри значень полів",
@@ -532,7 +532,9 @@
     "removeItem": "Видалити",
     "openStagingEntity": "Відкрити мастер сутність",
     "openPrimaryEntity": "Відкрити стейджинг сутність",
-    "currentSelection": "Поточний вибір"
+    "currentSelection": "Поточний вибір",
+    "rejectItem": "Відхилити",
+    "isLinked": "Пов'язано"
   },
   "insightsPanels": {
     "summary": "Підсумок",
@@ -564,11 +566,11 @@
     "inheritAllConfirmation": "Ви впевнені, що хочете успадкувати всі записи?",
     "unlinkAllConfirmation": "Ви дійсно хочете прибрати всі пов'язані записи?",
     "deleteAllConfirmation": "Ви дійсно хочете видалити всі записи?",
-    "removeRecordConfirmation": "Ви дійсно хочете видалити всі записи?",
+    "removeRecordConfirmation": "Ви впевнені, що хочете видалити запис?",
     "restoreRecordConfirmation": "Вибраний запис буде відновлено. Ви впевнені, що бажаєте його відновити?",
     "unlinkRecordConfirmation": "Ви дійсно хочете прибрати пов'язаний запис?",
     "removeRecordConfirmationHierarchically": "Ви дійсно хочете видалити записи ієрархічно?",
-    "removeSelectedRecordsConfirmation": "Ви впевнені, що бажаєте остаточно відновити вибрані?",
+    "removeSelectedRecordsConfirmation": "Ви впевнені, що хочете видалити вибрані записи?",
     "restoreSelectedRecordsConfirmation": "Ви впевнені, що бажаєте остаточно відновити вибрані?",
     "massUpdateResult": "{count} записів було оновлено",
     "massUpdateResultSingle": "{count} запис було оновлено",
@@ -638,7 +640,7 @@
     "youHaveErrorsInFilter": "У фільтрі є деякі помилки.",
     "theSavedFilterMightBeCorrupt": "Формат не підтримується, збережений фільтр може бути пошкоджений.",
     "closePanelConfirmation": "Ви дійсно хочете закрити панель?",
-    "removeRelatedRecords": "Ви впевнені, що бажаєте видалити всі продукти для вибраної асоціації з поточного продукту? Усі супутні товари будуть збережені.",
+    "removeRelatedRecords": "Ви впевнені, що хочете видалити всі записи для вибраної Асоціації з поточного запису? Всі пов'язані записи будуть збережені.",
     "deletePermanentlyRecordConfirmation": "Ви впевнені, що хочете назавжди видалити запис?",
     "deletePermanentlyRecordsConfirmation": "Ви впевнені, що хочете назавжди видалити вибрані записи?",
     "minimumRecordForComparison": "Ви не можете мати менше {count} записів",
@@ -795,7 +797,9 @@
     "followers": "Передплатники",
     "createdCountFilterActionExecution": "Створено командою Action Execution",
     "updatedCountFilterActionExecution": "Оновлено за даними Виконання заходів",
-    "derivativeStatus": "Статус похідного інструменту"
+    "derivativeStatus": "Статус похідного інструменту",
+    "sourceRecord": "Вихідний запис",
+    "masterRecord": "Мастер запис"
   },
   "tooltips": {
     "groupEnd": "Виберіть, щоб використовувати цей пункт для позначення кінця згрупованих елементів навігації. Всі елементи після цього пункту будуть негруповані."
@@ -1420,5 +1424,8 @@
   "unit Thermodynamic Temperature": {
     "C": "C",
     "K": "K"
+  },
+  "actions": {
+    "updateMasterRecord": "Оновлення основного запису"
   }
 }

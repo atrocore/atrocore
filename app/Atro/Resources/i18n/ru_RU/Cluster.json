@@ -2,6 +2,23 @@
   "fields": {
     "clusterItems": "Предметы кластера",
     "number": "Номер",
-    "masterEntity": "Мастер сущность"
+    "masterEntity": "Мастер сущность",
+    "rejectedClusterItems": "Отклоненные элементы кластера",
+    "stagingItemCount": "Счетчик предметов постановки",
+    "masterItemCount": "Мастер подсчета предметов",
+    "state": "Регион"
+  },
+  "actions": {
+    "reject": "Отклонить",
+    "confirm": "Подтвердите",
+    "unreject": "Отклонить"
+  },
+  "options": {
+    "state": {
+      "empty": "Пустые значения",
+      "review": "Проверка",
+      "merged": "Объединено",
+      "invalid": "Неверный"
+    }
   }
 }

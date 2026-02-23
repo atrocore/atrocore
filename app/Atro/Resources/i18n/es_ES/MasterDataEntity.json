@@ -1,9 +1,15 @@
 {
   "fields": {
     "masterEntity": "Entidad principal",
-    "mergingScript": "Guión cartográfico"
+    "mergingScript": "Guión cartográfico",
+    "sourceEntity": "Entidad de origen",
+    "updateMasterAutomatically": "Actualizar maestro automáticamente"
   },
   "tooltips": {
     "mergingScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro."
+  },
+  "exceptions": {
+    "mergingScriptIsMissing": "Falta el script de fusión para la entidad maestra",
+    "mergingScriptIsNotValid": "El script de fusión devuelve una carga útil no válida: %s"
   }
 }
