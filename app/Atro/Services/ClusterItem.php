@@ -160,6 +160,10 @@ class ClusterItem extends Base
         } else {
             // cancel if only one cluster item remains
             if (empty($this->getRepository()->where(['clusterId' => $cluster->get('id'), 'id!=' => $entity->get('id')])->findOne())) {
+                if ($entity->isAttributeChanged('confirmedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
+                    $this->getEntityManager()->saveEntity($entity);
+                }
+
                 return true;
             }
         }

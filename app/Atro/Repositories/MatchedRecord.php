@@ -85,9 +85,9 @@ class MatchedRecord extends Base
             ->fetchAllAssociative();
     }
 
-    public function getForEntityRecord(string $entityName, string $entityId, string $rejectedClusterItemId, array $rejectedClusterIds): bool|array
+    public function getForEntityRecord(string $entityName, string $entityId, string $rejectedClusterItemId, array $rejectedClusterIds): array
     {
-        return $this->getConnection()->createQueryBuilder()
+        $res = $this->getDbal()->createQueryBuilder()
             ->select('mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id')
             ->from('matched_record', 'mr')
             ->leftJoin('mr', 'cluster_item', 'ci', 'ci.id <> :itemId and ci.entity_name = mr.source_entity AND ci.entity_id = mr.source_entity_id AND ci.deleted=:false')
@@ -103,6 +103,12 @@ class MatchedRecord extends Base
             ->setParameter('itemId', $rejectedClusterItemId)
             ->addOrderBy('mr.score', 'DESC')
             ->fetchAssociative();
+
+        if (empty($res)) {
+            return [];
+        }
+
+        return $res;
     }
 
     public function afterRemoveRecord(string $entityName, string $entityId): void
