@@ -258,7 +258,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     return item;
                 }, this);
 
-                let streamAllowed = this.model
+                let streamAllowed = this.model?.get('_meta')
                     ? this.getAcl().checkModel(this.model, 'stream', true)
                     : this.getAcl().check(this.scope, 'stream');
 
