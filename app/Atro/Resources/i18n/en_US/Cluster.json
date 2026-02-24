@@ -12,7 +12,8 @@
     "state": {
       "empty": "Empty",
       "review": "Review",
-      "merged": "Merged",
+      "mergedAutomatically": "Merged Automatically",
+      "mergedManually": "Merged Manually",
       "invalid": "Invalid"
     }
   },
