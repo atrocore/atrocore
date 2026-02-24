@@ -563,6 +563,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupActionItems: function () {
+            // we reset the list before building them again
+            let buttonTypes = ['buttonList', 'dropdownItemList', 'buttonEditList', 'dropdownEditItemList', 'additionalButtons'];
+            buttonTypes.forEach(type => {
+                let defaultValue = type + 'Default';
+                if(!this[defaultValue]) {
+                    this[defaultValue] = Espo.utils.clone(this[type] || [])
+                }
+                this[type] =  Espo.utils.clone( this[defaultValue])
+            });
+
             if (this.getMetadata().get(['scopes', this.model.name, 'disabled']) || this.getMetadata().get(['scopes', this.model.name, 'type']) === 'Archive') {
                 this.buttonList = []
                 this.dropdownItemList = []
