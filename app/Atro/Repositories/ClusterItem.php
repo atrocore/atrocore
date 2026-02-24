@@ -190,6 +190,31 @@ class ClusterItem extends Base
         return $qb->fetchAllAssociative();
     }
 
+    public function getClusterItemsToRemoveFromClusters(int $offset = 0, int $limit = PHP_INT_MAX): EntityCollection
+    {
+        return $this->limit($offset, $limit)->find([
+            'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) {
+                $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+                $qb->andWhere("$tableAlias.matched_record_id is not null and NOT EXISTS (SELECT 1 
+              FROM matched_record mr 
+              WHERE (
+                  (mr.source_entity = $tableAlias.entity_name AND mr.source_entity_id = $tableAlias.entity_id) 
+                  OR 
+                  (mr.master_entity = $tableAlias.entity_name AND mr.master_entity_id = $tableAlias.entity_id)
+              )
+              AND $tableAlias.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.source_entity AND ci2.entity_id = mr.source_entity_id)
+              AND $tableAlias.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.master_entity AND ci3.entity_id = mr.master_entity_id)
+              AND mr.deleted = :false 
+              AND mr.has_cluster = :true
+            )")
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('true', true, ParameterType::BOOLEAN);
+
+            }]
+        ]);
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);

@@ -405,18 +405,18 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         createQueryBuilderFilter() {
             const scope = this.model.urlRoot;
+            let operations =  [ 'in', 'not_in', 'is_null', 'is_not_null'];
+
+            if(this.fieldType === 'linkMultiple') {
+                operations = [ 'linked_with', 'not_linked_with', 'is_not_linked', 'is_linked']
+            }
 
             return {
-                id: this.name,
+                id: this.originalName || this.name,
                 label: this.getLanguage().translate(this.originalName || this.name, 'fields', scope),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
-                operators: [
-                    'in',
-                    'not_in',
-                    'is_null',
-                    'is_not_null'
-                ],
+                operators: operations,
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {
                         return '';

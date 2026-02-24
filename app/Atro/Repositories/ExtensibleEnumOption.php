@@ -210,6 +210,9 @@ class ExtensibleEnumOption extends Base
                 continue;
             }
             foreach ($entityDefs['fields'] as $field => $fieldDef) {
+                if ($fieldDef['type'] === 'linkMultiple') {
+                    continue;
+                }
                 foreach ($entity->get('extensibleEnums') as $extensibleEnum) {
                     if (empty($fieldDef['notStorable']) && !empty($fieldDef['extensibleEnumId']) && $fieldDef['extensibleEnumId'] === $extensibleEnum->get('id')) {
                         if ($entityName == 'Settings') {

@@ -87,7 +87,7 @@ class MatchedRecord extends Base
 
     public function getForEntityRecord(string $entityName, string $entityId, string $rejectedClusterItemId, array $rejectedClusterIds): array
     {
-        return $this->getConnection()->createQueryBuilder()
+        $res = $this->getDbal()->createQueryBuilder()
             ->select('mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id')
             ->from('matched_record', 'mr')
             ->leftJoin('mr', 'cluster_item', 'ci', 'ci.id <> :itemId and ci.entity_name = mr.source_entity AND ci.entity_id = mr.source_entity_id AND ci.deleted=:false')
@@ -101,9 +101,14 @@ class MatchedRecord extends Base
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('clusterIds', $rejectedClusterIds, Connection::PARAM_STR_ARRAY)
             ->setParameter('itemId', $rejectedClusterItemId)
-            ->addOrderBy('mr.source_entity', 'ASC')
-            ->addOrderBy('mr.source_entity_id', 'ASC')
-            ->fetchAllAssociative();
+            ->addOrderBy('mr.score', 'DESC')
+            ->fetchAssociative();
+
+        if (empty($res)) {
+            return [];
+        }
+
+        return $res;
     }
 
     public function afterRemoveRecord(string $entityName, string $entityId): void
@@ -139,10 +144,10 @@ class MatchedRecord extends Base
     {
         $sql
             = "INSERT INTO matched_record (id, type, source_entity, source_entity_id, master_entity, master_entity_id, score, matching_id, hash, created_at, modified_at, created_by_id, modified_by_id) VALUES (:id, :type, :sourceEntity, :sourceEntityId, :masterEntity, :masterEntityId, :score, :matchingId, :hash, :createdAt, :modifiedAt, :createdById, :modifiedById)";
-        if (Converter::isPgSQL($this->getConnection())) {
-            $sql .= " ON CONFLICT (deleted, hash) DO UPDATE SET score = EXCLUDED.score, modified_at = EXCLUDED.modified_at, modified_by_id = EXCLUDED.modified_by_id RETURNING xmax";
+        if (Converter::isPgSQL($this->getDbal())) {
+            $sql .= " ON CONFLICT (deleted, hash) DO UPDATE SET score = EXCLUDED.score, has_cluster = CASE WHEN matched_record.score != EXCLUDED.score THEN :false ELSE matched_record.has_cluster END, modified_at = EXCLUDED.modified_at, modified_by_id = EXCLUDED.modified_by_id RETURNING xmax";
         } else {
-            $sql .= " ON DUPLICATE KEY UPDATE score = VALUES(score), modified_at = VALUES(modified_at), modified_by_id = VALUES(modified_by_id)";
+            $sql .= " ON DUPLICATE KEY UPDATE score = VALUES(score), has_cluster = CASE WHEN score != VALUES(score) THEN :false ELSE has_cluster END, modified_at = VALUES(modified_at), modified_by_id = VALUES(modified_by_id)";
         }
 
         $userId = $this->getEntityManager()->getUser()->id;
@@ -163,6 +168,7 @@ class MatchedRecord extends Base
         $stmt->bindValue(':modifiedAt', $matchedAt);
         $stmt->bindValue(':createdById', $userId);
         $stmt->bindValue(':modifiedById', $userId);
+        $stmt->bindValue(':false', false, ParameterType::BOOLEAN);
 
         $stmt->execute();
 
@@ -184,8 +190,5 @@ class MatchedRecord extends Base
             ->setParameter('sourceEntity', $sourceEntityName)
             ->setParameter('sourceEntityId', $sourceEntityId)
             ->executeQuery();
-
-        // delete cluster items
-        $this->getPDO()->exec("DELETE FROM cluster_item WHERE id IN (SELECT ci.id FROM cluster_item ci LEFT JOIN matched_record mr ON ci.matched_record_id = mr.id WHERE mr.id IS NULL AND ci.matched_record_id IS NOT NULL)");
     }
 }

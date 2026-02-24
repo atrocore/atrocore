@@ -20,14 +20,18 @@ use Atro\Core\Templates\Controllers\Base;
 
 class ClusterItem extends Base
 {
-
     public function actionReject($params, $data, $request)
     {
         if (!$request->isPost()) {
             throw new BadRequest();
         }
 
+        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
+            throw new Forbidden();
+        }
+
         $params = [];
+        $recordService = $this->getRecordService();
 
         if (property_exists($data, 'where')) {
             $where = json_decode(json_encode($data->where), true);
@@ -40,21 +44,20 @@ class ClusterItem extends Base
             $params['massAction'] = true;
         }
 
-
-        if (empty($params['massAction']) && !empty($data->id)) {
-            $params['ids'][] = $data->id;
-        }
-
         if (empty($params['massAction']) && empty($data->id)) {
             throw new BadRequest('You should at least provide an ID, or an IdList or where filter.');
         }
 
-        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
-            throw new Forbidden();
+
+        if (empty($params['massAction']) && !empty($data->id)) {
+            $entity = $recordService->getEntity((string)$data->id);
+            if (empty($entity)) {
+                throw new NotFound();
+            }
+            $params['ids'][] = $data->id;
         }
 
-
-        return $this->getRecordService()->reject($params);
+        return $recordService->reject($params);
     }
 
     public function actionUnreject($params, $data, $request)

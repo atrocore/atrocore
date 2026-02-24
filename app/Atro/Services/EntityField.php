@@ -98,6 +98,7 @@ class EntityField extends ReferenceData
             $this->prepareDefaultField($entity);
         }
 
+        $entity->set('customizable', true);
         if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
             $entity->set('customizable', false);
         }
