@@ -45,6 +45,6 @@ class File extends Base
             }
         }
 
-        return parent::checkEntity($user, $entity, $data, 'read');
+        return parent::checkEntity($user, $entity, $data, $action);
     }
 }
