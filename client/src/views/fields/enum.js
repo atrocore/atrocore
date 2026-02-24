@@ -739,8 +739,16 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         createQueryBuilderFilter() {
             const scope = this.model.urlRoot;
 
+            let fieldName = this.originalName || this.name;
+
+            if(this.fieldType === 'link') {
+                if (!fieldName.includes('attr_')) {
+                    fieldName = fieldName + 'Id'
+                }
+            }
+
             return {
-                id: this.name,
+                id: fieldName,
                 label: this.getLanguage().translate(this.originalName || this.name, 'fields', scope),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
@@ -796,7 +804,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     }.bind(this),
                 }
             };
-        },
+        }
     });
 });
 

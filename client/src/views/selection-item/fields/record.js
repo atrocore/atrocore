@@ -34,7 +34,7 @@ Espo.define('views/selection-item/fields/record', 'views/fields/link', Dep => {
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
-            if (this.model.name === 'ClusterItem' && this.model.get('confirmedAutomatically')) {
+            if (this.model.name === 'ClusterItem' && this.model.get('_meta')?.cluster?.confirmed && this.model.get('confirmedAutomatically')) {
                 this.getCellElement().append('<i style="font-size: 14px;position: relative;margin-left: 2px;top: -0.5em;color: var(--label-color)" class="ph ph-sparkle"></i>')
             }
         }

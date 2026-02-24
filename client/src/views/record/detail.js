@@ -1778,16 +1778,22 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         view.$el.find('.panel:first').prepend(`<div class="panel-heading">${html}</div>`)
                     }
 
-                    this.createView('layoutConfigurator', "views/record/layout-configurator", {
-                        scope: this.model.name,
-                        viewType: this.layoutName,
-                        layoutData: this.layoutData,
-                        relatedScope: this.options.layoutRelatedScope,
-                        el: this.getSelector() + '.panel-heading .layout-editor-container',
-                    }, (view) => {
-                        view.on("refresh", () => this.refreshLayout(true))
-                        view.render()
-                    })
+                    if (!this.layoutConfiguratorCreated){
+                        this.layoutConfiguratorCreated = true
+                        this.createView('layoutConfigurator', "views/record/layout-configurator", {
+                            scope: this.model.name,
+                            viewType: this.layoutName,
+                            layoutData: this.layoutData,
+                            relatedScope: this.options.layoutRelatedScope,
+                            el: this.getSelector() + '.panel-heading .layout-editor-container',
+                        }, (view) => {
+                            view.on("refresh", () => this.refreshLayout(true))
+                            view.render()
+                            this.layoutConfiguratorCreated = false
+                        })
+                    }
+
+
                 }
 
                 // Add buttons on attribute panels
