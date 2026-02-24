@@ -468,14 +468,17 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             let notValid = false;
 
             $.each(this.getFields(), (name, fieldData) => {
-                if (fieldData.mode === 'edit') {
-                    if (!fieldData.disabled && !fieldData.readOnly && !fieldData.$el.hasClass('hidden')) {
-                        notValid = fieldData.validate() || notValid;
+                if (!fieldData.disabled && !fieldData.readOnly && !fieldData.$el.hasClass('hidden')) {
+                    const result = fieldData.validate();
+                    if (result && fieldData.mode !== 'edit' && this.mode !== 'edit') {
+                        fieldData.inlineEdit();
                     }
+
+                    notValid = result || notValid;
                 }
             });
 
-            return notValid
+            return notValid;
         },
 
         afterSave: function () {
@@ -639,8 +642,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 this.attributes = model.getClonedAttributes();
                 model._updatedById = self.getUser().id;
                 self.afterSave();
-                self.trigger('after:save');
-                model.trigger('after:save');
+
+                if (this.mode === 'edit') {
+                    model.trigger('after:save');
+                    self.trigger('after:save');
+                }
+
                 if (!callback) {
                     if (!skipExit) {
                         if (isNew) {
