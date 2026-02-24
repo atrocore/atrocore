@@ -21,39 +21,32 @@ use Atro\Core\Templates\Controllers\Base;
 class ClusterItem extends Base
 {
 
-    public function actionMassReject($params, $data, $request)
-    {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $params = [];
-        if (property_exists($data, 'where')) {
-            $where = json_decode(json_encode($data->where), true);
-            $params['where'] = $where;
-            if (property_exists($data, 'selectData')) {
-                $params['selectData'] = json_decode(json_encode($data->selectData), true);
-            }
-        }
-        if (property_exists($data, 'idList')) {
-            $params['ids'] = $data->idList;
-        }
-
-        return $this->getRecordService()->massReject($params);
-    }
-
     public function actionReject($params, $data, $request)
     {
         if (!$request->isPost()) {
             throw new BadRequest();
         }
 
-        if (!property_exists($data, 'id')) {
-            throw new BadRequest('ID is required.');
+        $params = [];
+
+        if (property_exists($data, 'where')) {
+            $where = json_decode(json_encode($data->where), true);
+            $params['where'] = $where;
+            $params['massAction'] = true;
+        }
+
+        if (property_exists($data, 'idList')) {
+            $params['ids'] = $data->idList;
+            $params['massAction'] = true;
+        }
+
+
+        if (empty($params['massAction']) && !empty($data->id)) {
+            $params['ids'][] = $data->id;
+        }
+
+        if (empty($params['massAction']) && empty($data->id)) {
+            throw new BadRequest('You should at least provide an ID, or an IdList or where filter.');
         }
 
         if (!$this->getAcl()->check('ClusterItem', 'edit')) {
@@ -61,7 +54,7 @@ class ClusterItem extends Base
         }
 
 
-        return $this->getRecordService()->reject((string)$data->id);
+        return $this->getRecordService()->reject($params);
     }
 
     public function actionUnreject($params, $data, $request)

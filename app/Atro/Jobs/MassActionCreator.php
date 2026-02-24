@@ -100,6 +100,8 @@ class MassActionCreator extends AbstractJob implements JobInterface
                 'totalChunks' => $totalChunks,
                 'ids'         => $collectionIds,
                 'part'        => $part + 1,
+                'singleActionMethod' => $data['params']['singleActionMethod'] ?? null,
+                'action' => $action,
             ]);
 
             if ($action === 'delete' && !empty($data['params']['permanently'])) {
@@ -111,6 +113,10 @@ class MassActionCreator extends AbstractJob implements JobInterface
             } else {
                 $type = $action === 'action' ? 'ActionHandler' : 'Mass' . ucfirst($action);
             }
+
+            if (!$this->getMetadata()->get(['app', 'jobTypes', $type])) {
+                $type = 'UniversalMassAction';
+            };
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
