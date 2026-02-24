@@ -1189,7 +1189,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.addMassAction('unfollow', true);
             }
 
-
             this.setupMassActionItems();
 
             let dynamicActions = [];
