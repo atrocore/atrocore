@@ -291,6 +291,13 @@ class Cluster extends Base
             $goldenRecordColumn = 'atro_golden_record_id';
         }
 
+        $lastConfirmedAuto = "(SELECT ci.confirmed_automatically " .
+            "FROM cluster_item ci " .
+            "WHERE ci.cluster_id = mt_alias.id " .
+            "AND ci.entity_name <> mt_alias.$masterEntityColumn " .
+            "ORDER BY ci.modified_at DESC " .
+            "LIMIT 1)";
+
         $stateQb->select("CASE " .
             // Empty state
             "WHEN COUNT($mtAlias.id) = 0 THEN 'empty' " .
@@ -304,11 +311,14 @@ class Cluster extends Base
             "COUNT(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN 1 END) = 1 AND " .
             "MAX(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN $mtAlias.entity_id END) = mt_alias.$goldenRecordColumn AND " .
             "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn THEN 1 END) > 0 AND " .
-            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn AND COALESCE($goldenRecordCase, '') <> mt_alias.$goldenRecordColumn THEN 1 END) = 0 THEN 'merged' " .
+            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn AND COALESCE($goldenRecordCase, '') <> mt_alias.$goldenRecordColumn THEN 1 END) = 0 THEN ".
+            "(CASE WHEN $lastConfirmedAuto = :true THEN 'mergedAutomatically' ELSE 'mergedManually' END) " .
+
 
             // Review state (default for everything else)
             "ELSE 'review' END")
             ->andWhere("$mtAlias.cluster_id = mt_alias.id")
+            ->setParameter('true', true, ParameterType::BOOLEAN)
             ->resetQueryParts(['orderBy', 'limit', 'offset']);
 
         return [
