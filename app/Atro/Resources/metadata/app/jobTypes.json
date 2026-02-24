@@ -48,14 +48,6 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\MassUpdate"
   },
-  "MassDelete": {
-    "scheduledJob": false,
-    "handler": "\\Atro\\Jobs\\MassDelete"
-  },
-  "MassRestore": {
-    "scheduledJob": false,
-    "handler": "\\Atro\\Jobs\\MassRestore"
-  },
   "MassDownload": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\MassDownload"
@@ -112,5 +104,9 @@
     "scheduledJob": true,
     "unique": true,
     "handler": "\\Atro\\Jobs\\SendReports"
+  },
+  "UniversalMassAction": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\UniversalMassAction"
   }
 }

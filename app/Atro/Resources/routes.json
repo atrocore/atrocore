@@ -1428,7 +1428,7 @@
   {
     "route": "/ClusterItem/action/reject",
     "method": "post",
-    "description": "Reject a cluster item",
+    "description": "Reject a cluster item or a list of cluster items using idList or using a query where ",
     "operationId": "rejectClusterItem",
     "tags": [
       "ClusterItem"
@@ -1446,6 +1446,18 @@
             "properties": {
               "id": {
                 "type": "string"
+              },
+              "idList": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "where": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
               }
             }
           }

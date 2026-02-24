@@ -8,8 +8,21 @@
     "confirmedAutomatically": "Confirmed Automatically",
     "matchedScore": "Matched Score"
   },
+  "actions": {
+    "reject": "Reject",
+    "confirm": "Confirm"
+  },
   "exceptions": {
     "notFound": "Cluster item record not found",
     "cannotUnreject": "This cluster item cannot be unrejected"
+  },
+  "massActions": {
+    "reject": "Reject"
+  },
+  "massActionSuccessMessages": {
+    "reject": "The selected Cluster Items are been deleted in the background"
+  },
+  "massActionConfirmMessages": {
+    "reject": "Are you sure you want to reject the selected Items?"
   }
 }

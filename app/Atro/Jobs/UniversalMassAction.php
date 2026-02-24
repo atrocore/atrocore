@@ -13,33 +13,35 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\Error;
 use Atro\Entities\Job;
+use Atro\Services\ClusterItem;
 
-class MassDelete extends AbstractJob implements JobInterface
+class UniversalMassAction extends AbstractJob implements JobInterface
 {
     public function run(Job $job): void
     {
         $data = $job->getPayload();
-        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids'])) {
+        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids']) || empty($data['singleActionMethod'])) {
             return;
         }
 
         $entityType = $data['entityType'];
-        $service = $this->getServiceFactory()->create($data['entityType']);
+        $singleActionMethod = $data['singleActionMethod'];
+        $action = $data['action'] ?? null;
 
-        $method = 'deleteEntity';
-        if (!empty($data['deletePermanently'])) {
-            $method = 'deleteEntityPermanently';
+        /** @var ClusterItem $service */
+        $service = $this->getServiceFactory()->create($entityType);
+
+        if(!method_exists($service, $singleActionMethod)) {
+            throw  new Error($singleActionMethod. ' method does not exist in the service '.$entityType);
         }
 
         foreach ($data['ids'] as $id) {
             try {
-                $service->$method($id);
-            } catch (NotFound $e) {
-                // ignore
+                $service->{$singleActionMethod}($id);
             } catch (\Throwable $e) {
-                $message = "MassDelete {$entityType} '$id', failed: {$e->getMessage()}";
+                $message = ucfirst($action)." {$entityType} '$id' failed: {$e->getTraceAsString()}";
                 $GLOBALS['log']->error($message);
                 $this->createNotification($job, $message);
             }

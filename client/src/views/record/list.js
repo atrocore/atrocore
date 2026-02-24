@@ -539,7 +539,50 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }, this);
         },
 
-        massAction: function (name) {
+        massAction: function(name) {
+            if(this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name])) {
+                this.massActionUsingDefs(name);
+                return;
+            }
+
+            if(this.getMetadata().get(['clientDefs', this.scope, 'listActions', name, 'massAction'])) {
+                var proceed = function () {
+                    var idList = [];
+                    var data = {};
+
+                    if (this.allResultIsChecked) {
+                        data.where = this.collection.getWhereForCheckedRecords();
+                        data.selectData = this.collection.data || {};
+                        data.byWhere = true;
+                    } else {
+                        data.idList = idList;
+                    }
+
+                    for (var i in this.checkedList) {
+                        idList.push(this.checkedList[i]);
+                    }
+
+                    data.entityType = this.entityType;
+
+                    Espo.Ui.notify(this.translate('pleaseWait', 'messages', this.scope));
+
+                    var url = this.getMetadata().get(['clientDefs', this.scope, 'listActions', name, 'url']);
+
+                    this.ajaxPostRequest(url, data).then(function (result) {
+                        this.collection.fetch().then(function () {
+                            var message = this.translate(name, 'massActionSuccessMessages', this.scope);
+                            if (typeof result === 'object' && 'count' in result) {
+                                message = message.replace('{count}', result.count);
+                            }
+                            Espo.Ui.success(message);
+                        }.bind(this));
+                    }.bind(this));
+                }
+
+                this.confirm(this.translate(name, 'massActionConfirmMessages', this.scope), proceed, this);
+            }
+        },
+        massActionUsingDefs: function (name) {
             var bypassConfirmation = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'bypassConfirmation']);
             var confirmationMsg = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'confirmationMessage']) || 'confirmation';
 
@@ -1129,6 +1172,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.checkAllResultMassActionList.push(item);
                 }
             }, this);
+
+            $.each(this.getMetadata().get(['clientDefs', this.scope, 'listActions']) || {}, (actionName, actionData) => {
+               if(actionData.massAction) {
+                   this.massActionList.push(actionName);
+                   this.checkAllResultMassActionList.push(actionName);
+               }
+            });
 
             if (
                 !this.massFollowDisabled &&

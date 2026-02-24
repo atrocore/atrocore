@@ -10,5 +10,14 @@
     "notFound": "Cluster-Element-Datensatz nicht gefunden",
     "cannotReject": "Dieses Clusterelement kann nicht abgelehnt werden",
     "cannotUnreject": "Dieses Clusterelement kann nicht abgelehnt werden"
+  },
+  "massActions": {
+    "reject": "Ablehnen"
+  },
+  "massActionSuccessMessages": {
+    "reject": "Die ausgewählten Cluster-Elemente werden im Hintergrund gelöscht"
+  },
+  "massActionConfirmMessages": {
+    "reject": "Sind Sie sicher, dass Sie die ausgewählten Elemente ablehnen möchten?"
   }
 }

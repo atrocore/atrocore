@@ -119,6 +119,7 @@ class Record extends RecordService
         $params['maxCountWithoutJob'] = $this->getConfig()->get('massDeleteMaxCountWithoutJob', 200);
         $params['maxChunkSize'] = $this->getConfig()->get('massDeleteMaxChunkSize', 3000);
         $params['minChunkSize'] = $this->getConfig()->get('massDeleteMinChunkSize', 400);
+        $params['singleActionMethod'] = !empty($params['permanently']) ?  'deleteEntityPermanently' : 'deleteEntity';
 
         if (!empty($params['permanently'])) {
             $callback = function ($id) {
@@ -179,7 +180,17 @@ class Record extends RecordService
         $minChunkSize = $params['minChunkSize'];
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
 
-        if (!in_array($action, ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'])) {
+        $allowMassActions =  ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
+
+        $allowMassActions = array_merge(
+            $allowMassActions,
+            $this->getMetadata()->get(['clientDefs', $this->getEntityType(), 'massActionList'], [])
+        );
+
+        if (
+            !in_array($action, $allowMassActions)
+            && !$this->getMetadata()->get(['clientDefs', $this->getEntityType(), 'listActions', $action, 'massAction'], [])
+        ) {
             return [];
         }
 

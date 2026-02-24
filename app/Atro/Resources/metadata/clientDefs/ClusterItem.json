@@ -1,4 +1,24 @@
 {
   "controller": "controllers/record",
-  "createDisabled": true
+  "createDisabled": true,
+  "listActions": {
+    "quickEdit": {
+      "disabled": true
+    },
+    "confirm": {
+      "url": "ClusterItem/action/confirm",
+      "confirm": false,
+      "refresh": true,
+      "iconClass": "ph ph-check",
+      "sortOrder": 10
+    },
+    "reject": {
+      "url": "ClusterItem/action/reject",
+      "confirm": false,
+      "massAction": true,
+      "refresh": true,
+      "iconClass": "ph ph-x",
+      "sortOrder": 20
+    }
+  }
 }

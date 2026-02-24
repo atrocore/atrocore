@@ -5,6 +5,12 @@
     "rows": [
       [
         {
+          "name": "cluster",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
           "name": "entityName"
         },
         false

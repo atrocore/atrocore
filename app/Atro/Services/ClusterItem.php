@@ -130,7 +130,26 @@ class ClusterItem extends Base
         return true;
     }
 
-    public function reject(\Atro\Entities\ClusterItem $entity, bool $persistRejection = true): bool
+    public function reject(array $params): array
+    {
+        $params['action'] = 'reject';
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['singleActionMethod'] = 'rejectItem';
+
+        list($count, $errors, $sync) = $this->executeMassAction($params, function ($id) {
+            try {
+                $this->rejectItem($id);
+            } catch (NotModified $e) {
+
+            }
+        });
+
+        return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
+    }
+
+    public function rejectItem(\Atro\Entities\ClusterItem $entity, bool $persistRejection = true): bool
     {
         if (empty($cluster = $entity->get('cluster'))) {
             throw new Exception("Cluster is not set for item {$entity->get('id')}");
@@ -245,7 +264,6 @@ class ClusterItem extends Base
         return true;
     }
 
-
     public function isClusterItemConfirmed(IEntity $clusterItem): bool
     {
         if (empty($cluster = $clusterItem->get('cluster'))) {
@@ -280,6 +298,28 @@ class ClusterItem extends Base
         }
     }
 
+    public function putAclMeta(Entity $entity): void
+    {
+        parent::putAclMeta($entity);
+
+        $isConfirmed = $this->isClusterItemConfirmed($entity);
+
+        if ($this->getUser()->isAdmin()) {
+            $entity->setMetaPermission('confirm', !$isConfirmed);
+            $entity->setMetaPermission('reject', true);
+            $entity->setMetaPermission('delete', true);
+            return;
+        }
+
+        $entity->setMetaPermission('confirm', false);
+        $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
+        $entity->setMetaPermission('delete', false);
+
+        if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
+            $entity->setMetaPermission('confirm', !$isConfirmed && $this->getAcl()->check($record, 'edit'));
+            $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
+        }
+    }
 
     public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
     {
@@ -308,23 +348,6 @@ class ClusterItem extends Base
         }
 
         $entity->set('cluster', $entityFrom);
-        $isConfirmed = $this->isClusterItemConfirmed($entity);
-
-        if ($this->getUser()->isAdmin()) {
-            $entity->setMetaPermission('confirm', !$isConfirmed);
-            $entity->setMetaPermission('reject', true);
-            $entity->setMetaPermission('delete', true);
-            return;
-        }
-
-        $entity->setMetaPermission('confirm', false);
-        $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('delete', false);
-
-        if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
-            $entity->setMetaPermission('confirm', !$isConfirmed && $this->getAcl()->check($record, 'edit'));
-            $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
-        }
     }
 
     public function prepareEntityForOutput(Entity $entity)

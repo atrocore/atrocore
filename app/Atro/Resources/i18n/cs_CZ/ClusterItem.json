@@ -10,5 +10,14 @@
     "notFound": "Záznam o položce clusteru nebyl nalezen",
     "cannotReject": "Tuto položku shluku nelze odmítnout",
     "cannotUnreject": "Tuto položku shluku nelze odmítnout"
+  },
+  "massActions": {
+    "reject": "Odmítnout"
+  },
+  "massActionSuccessMessages": {
+    "reject": "Vybrané položky clusteru jsou mazány na pozadí"
+  },
+  "massActionConfirmMessages": {
+    "reject": "Jste si jisti, že chcete odmítnout vybrané položky?"
   }
 }
