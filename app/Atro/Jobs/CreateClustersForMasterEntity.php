@@ -88,7 +88,7 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
 
             foreach ($clusterItems as $clusterItem) {
                 try {
-                    $clusterItemService->reject($clusterItem, false);
+                    $clusterItemService->rejectItem($clusterItem, false);
                 } catch (\Exception $e) {
                     $GLOBALS['log']->error("Impossible to automatically reject cluster item " . $clusterItem->get('id') . " : " . $e->getMessage());
                 }
