@@ -133,7 +133,7 @@ class ClusterItem extends Base
     public function reject(array $params): array
     {
         $params['action'] = 'reject';
-        $params['maxCountWithoutJob'] = 2 ?? $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
         $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
         $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
         $params['singleActionMethod'] = 'rejectItem';
