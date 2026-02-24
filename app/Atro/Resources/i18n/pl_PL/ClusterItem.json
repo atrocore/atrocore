@@ -14,7 +14,10 @@
   "massActions": {
     "reject": "Odrzuć"
   },
-  "messages": {
-    "rejectJobsCreated": "Wybrane elementy klastra są usuwane w tle"
+  "massActionSuccessMessages": {
+    "reject": "Wybrane elementy klastra są usuwane w tle"
+  },
+  "massActionConfirmMessages": {
+    "reject": "Czy na pewno chcesz odrzucić wybrane elementy?"
   }
 }

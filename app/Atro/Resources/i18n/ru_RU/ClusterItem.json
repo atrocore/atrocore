@@ -14,7 +14,10 @@
   "massActions": {
     "reject": "Отклонить"
   },
-  "messages": {
-    "rejectJobsCreated": "Выбранные элементы кластера удаляются в фоновом режиме"
+  "massActionSuccessMessages": {
+    "reject": "Выбранные элементы кластера удаляются в фоновом режиме"
+  },
+  "massActionConfirmMessages": {
+    "reject": "Вы уверены, что хотите отклонить выбранные элементы?"
   }
 }

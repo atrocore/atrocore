@@ -14,7 +14,10 @@
   "massActions": {
     "reject": "Rifiuta"
   },
-  "messages": {
-    "rejectJobsCreated": "Gli elementi del cluster selezionati vengono eliminati in background"
+  "massActionSuccessMessages": {
+    "reject": "Gli elementi del cluster selezionati vengono eliminati in background"
+  },
+  "massActionConfirmMessages": {
+    "reject": "Sei sicuro di voler rifiutare gli elementi selezionati?"
   }
 }

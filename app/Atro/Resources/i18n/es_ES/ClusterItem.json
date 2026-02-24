@@ -14,7 +14,10 @@
   "massActions": {
     "reject": "Rechazar"
   },
-  "messages": {
-    "rejectJobsCreated": "Los elementos del clúster seleccionados se están eliminando en segundo plano"
+  "massActionSuccessMessages": {
+    "reject": "Los elementos del clúster seleccionados se están eliminando en segundo plano"
+  },
+  "massActionConfirmMessages": {
+    "reject": "¿Está seguro de que desea rechazar los elementos seleccionados?"
   }
 }

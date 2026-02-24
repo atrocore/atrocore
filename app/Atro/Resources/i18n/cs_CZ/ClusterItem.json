@@ -14,7 +14,10 @@
   "massActions": {
     "reject": "Odmítnout"
   },
-  "messages": {
-    "rejectJobsCreated": "Vybrané položky clusteru jsou mazány na pozadí"
+  "massActionSuccessMessages": {
+    "reject": "Vybrané položky clusteru jsou mazány na pozadí"
+  },
+  "massActionConfirmMessages": {
+    "reject": "Jste si jisti, že chcete odmítnout vybrané položky?"
   }
 }

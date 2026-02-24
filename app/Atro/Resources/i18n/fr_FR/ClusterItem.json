@@ -14,7 +14,10 @@
   "massActions": {
     "reject": "Rejeter"
   },
-  "messages": {
-    "rejectJobsCreated": "Les éléments de cluster sélectionnés sont en cours de suppression en arrière-plan"
+  "massActionSuccessMessages": {
+    "reject": "Les éléments de cluster sélectionnés sont en cours de suppression en arrière-plan"
+  },
+  "massActionConfirmMessages": {
+    "reject": "Êtes-vous sûr de vouloir rejeter les éléments sélectionnés ?"
   }
 }

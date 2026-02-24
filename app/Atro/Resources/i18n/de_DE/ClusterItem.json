@@ -14,7 +14,10 @@
   "massActions": {
     "reject": "Ablehnen"
   },
-  "messages": {
-    "rejectJobsCreated": "Die ausgewählten Cluster-Elemente werden im Hintergrund gelöscht"
+  "massActionSuccessMessages": {
+    "reject": "Die ausgewählten Cluster-Elemente werden im Hintergrund gelöscht"
+  },
+  "massActionConfirmMessages": {
+    "reject": "Sind Sie sicher, dass Sie die ausgewählten Elemente ablehnen möchten?"
   }
 }
