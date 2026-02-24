@@ -130,17 +130,10 @@ class ClusterItem extends Base
         return true;
     }
 
-    public function reject(string $id): bool
+    public function reject(\Atro\Entities\ClusterItem $entity, bool $persistRejection = true): bool
     {
-        /** @var \Atro\Entities\ClusterItem $entity */
-        $entity = $this->getEntity($id);
-
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
         if (empty($cluster = $entity->get('cluster'))) {
-            throw new Exception("Cluster is not set for item {$id}");
+            throw new Exception("Cluster is not set for item {$entity->get('id')}");
         }
 
         if ($this->isClusterItemConfirmed($entity)) {
@@ -155,31 +148,42 @@ class ClusterItem extends Base
             }
         }
 
-        $rci = $this->getEntityManager()->getEntity('RejectedClusterItem');
-        $rci->set('clusterItemId', $entity->get('id'));
-        $rci->set('clusterId', $entity->get('clusterId'));
+        $entity->set('confirmedAutomatically', false);
+        $entity->set('matchedRecordId', null);
 
-        $this->getEntityManager()->saveEntity($rci);
+        if ($persistRejection) {
+            $rci = $this->getEntityManager()->getEntity('RejectedClusterItem');
+            $rci->set('clusterItemId', $entity->get('id'));
+            $rci->set('clusterId', $entity->get('clusterId'));
+
+            $this->getEntityManager()->saveEntity($rci);
+        } else {
+            // cancel if only one cluster item remains
+            if (empty($this->getRepository()->where(['clusterId' => $cluster->get('id'), 'id!=' => $entity->get('id')])->findOne())) {
+                if ($entity->isAttributeChanged('confirmedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
+                    $this->getEntityManager()->saveEntity($entity);
+                }
+
+                return true;
+            }
+        }
 
         $rejectedClusterIds = array_column($entity->get('rejectedClusters')->toArray(), 'id');
 
         /* @var $matchedRecordRepo \Atro\Repositories\MatchedRecord */
         $matchedRecordRepo = $this->getEntityManager()->getRepository('MatchedRecord');
 
-        $items = $matchedRecordRepo
+        $item = $matchedRecordRepo
             ->getForEntityRecord($entity->get('entityName'), $entity->get('entityId'), $entity->get('id'), $rejectedClusterIds);
 
-        $newClusterId = null;
-        foreach ($items as $item) {
+        if (!empty($item)) {
             if ($item['source_entity'] === $entity->get('entityName') && $item['source_entity_id'] === $entity->get('entityId')) {
                 $newClusterId = $item['master_cluster_id'];
-            } else if ($item['master_entity'] === $entity->get('entityName') && $item['master_entity_id'] === $entity->get('entityId')) {
+            } else {
                 $newClusterId = $item['source_cluster_id'];
             }
 
-            if (!empty($newClusterId)) {
-                break;
-            }
+            $entity->set('matchedRecordId', $item['id']);
         }
 
         if (empty($newClusterId)) {
@@ -190,8 +194,7 @@ class ClusterItem extends Base
             $newClusterId = $newCluster->get('id');
         }
 
-        if (!empty($entity->get('confirmedAutomatically'))) {
-            $entity->set('confirmedAutomatically', false);
+        if ($entity->isAttributeChanged('confirmedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
             $this->getEntityManager()->saveEntity($entity);
         }
 
