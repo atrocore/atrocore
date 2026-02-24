@@ -165,7 +165,7 @@ class Note
 
     protected function getAuditedFieldsData(OrmEntity $entity): array
     {
-        $entityType = $entity->getEntityType();
+        $entityType = $entity->getEntityName();
 
         if (!array_key_exists($entityType, $this->auditedFieldsCache)) {
             $auditableTypes = [];
@@ -186,7 +186,8 @@ class Note
                     continue;
                 }
 
-                if (!empty($d['type']) && in_array($d['type'], $auditableTypes) && !in_array($field, $systemFields) && empty($d['notStorable'])) {
+                if (!empty($d['type']) && (in_array($d['type'], $auditableTypes) || ($d['type'] === 'linkMultiple' && !empty($d['attributeId'])))
+                    && !in_array($field, $systemFields) && empty($d['notStorable'])) {
                     $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field, $entity);
                     $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field, $entity);
                     $auditedFields[$field]['fieldType'] = $d['type'];
