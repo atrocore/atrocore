@@ -77,6 +77,23 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
             }
         }
 
+        $clusterItemService = $this->getServiceFactory()->create('ClusterItem');
+
+        // reject cluster items who do not belong to cluster anymore
+        $offset = 0;
+        $limit = 2000;
+
+        while (count($clusterItems = $clusterItemRepo->getClusterItemsToRemoveFromClusters($offset, $limit)) > 0) {
+            $offset += $limit;
+
+            foreach ($clusterItems as $clusterItem) {
+                try {
+                    $clusterItemService->reject($clusterItem, false);
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error("Impossible to automatically reject cluster item " . $clusterItem->get('id') . " : " . $e->getMessage());
+                }
+            }
+        }
 
         $entitiesNames = [];
         foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
@@ -85,7 +102,6 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
             }
         }
 
-        $clusterItemService = $this->getServiceFactory()->create('ClusterItem');
         foreach ($entitiesNames as $entityName) {
             // Confirm automatically cluster items
             $offset = 0;

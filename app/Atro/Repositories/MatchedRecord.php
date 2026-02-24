@@ -85,7 +85,7 @@ class MatchedRecord extends Base
             ->fetchAllAssociative();
     }
 
-    public function getForEntityRecord(string $entityName, string $entityId, string $rejectedClusterItemId, array $rejectedClusterIds): array
+    public function getForEntityRecord(string $entityName, string $entityId, string $rejectedClusterItemId, array $rejectedClusterIds): bool|array
     {
         return $this->getConnection()->createQueryBuilder()
             ->select('mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id')
@@ -101,9 +101,8 @@ class MatchedRecord extends Base
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('clusterIds', $rejectedClusterIds, Connection::PARAM_STR_ARRAY)
             ->setParameter('itemId', $rejectedClusterItemId)
-            ->addOrderBy('mr.source_entity', 'ASC')
-            ->addOrderBy('mr.source_entity_id', 'ASC')
-            ->fetchAllAssociative();
+            ->addOrderBy('mr.score', 'DESC')
+            ->fetchAssociative();
     }
 
     public function afterRemoveRecord(string $entityName, string $entityId): void
@@ -185,8 +184,5 @@ class MatchedRecord extends Base
             ->setParameter('sourceEntity', $sourceEntityName)
             ->setParameter('sourceEntityId', $sourceEntityId)
             ->executeQuery();
-
-        // delete cluster items
-        $this->getPDO()->exec("DELETE FROM cluster_item WHERE id IN (SELECT ci.id FROM cluster_item ci LEFT JOIN matched_record mr ON ci.matched_record_id = mr.id WHERE mr.id IS NULL AND ci.matched_record_id IS NOT NULL)");
     }
 }

@@ -34,8 +34,14 @@ class ClusterItem extends Base
             throw new Forbidden();
         }
 
+        $recordService = $this->getRecordService();
 
-        return $this->getRecordService()->reject((string)$data->id);
+        $entity = $recordService->getEntity((string)$data->id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        return $this->getRecordService()->reject($entity);
     }
 
     public function actionUnreject($params, $data, $request)
