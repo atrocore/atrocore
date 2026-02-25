@@ -85,7 +85,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         }, Dep.prototype.events),
 
         getForeignName() {
-            return this.model.defs.fields[this.name]?.[foreignName] ?? this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName'])
+            return this.model.defs.fields[this.name]?.foreignName ?? this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName'])
                 ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'foreignName']) ?? 'name'
         },
 
