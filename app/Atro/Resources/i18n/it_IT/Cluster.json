@@ -17,7 +17,12 @@
     "state": {
       "empty": "Vuoto",
       "review": "Recensione",
-      "invalid": "Non valido"
+      "invalid": "Non valido",
+      "mergedAutomatically": "Fusione automatica",
+      "mergedManually": "Unita manualmente"
     }
+  },
+  "exceptions": {
+    "cannotDelete": "Solo i cluster vuoti possono essere eliminati"
   }
 }
