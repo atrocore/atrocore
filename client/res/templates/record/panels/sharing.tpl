@@ -16,15 +16,6 @@
         margin-bottom: -5px !important;
     }
 
-    .sharing-panel > .list > table thead {
-        display: none;
-    }
-
-    .sharing-panel > .list > table {
-        position: relative;
-        top: -6px;
-    }
-
     .sharing-panel > .list > table .cell[data-name=link],
     .sharing-panel > .list > table .cell[data-name=available] {
         padding-right: 0;
@@ -48,7 +39,7 @@
     }
 
     .sharing-panel .cell[data-name="name"] {
-        max-width: 95px;
+        word-break: break-all;
     }
 
     .sharing-panel.no-data + .share-button {
