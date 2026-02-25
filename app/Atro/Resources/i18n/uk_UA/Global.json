@@ -534,7 +534,8 @@
     "openPrimaryEntity": "Відкрити стейджинг сутність",
     "currentSelection": "Поточний вибір",
     "rejectItem": "Відхилити",
-    "isLinked": "Пов'язано"
+    "isLinked": "Пов'язано",
+    "entityFilterResult": "Результат фільтрації"
   },
   "insightsPanels": {
     "summary": "Підсумок",
