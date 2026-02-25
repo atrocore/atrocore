@@ -22,6 +22,7 @@
     "reject": "Jste si jisti, že chcete odmítnout vybrané položky?"
   },
   "actions": {
-    "confirm": "Potvrďte"
+    "confirm": "Potvrďte",
+    "reject": "Odmítnout"
   }
 }
