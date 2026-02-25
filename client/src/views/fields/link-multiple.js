@@ -245,7 +245,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.createDisabled = true;
             }
 
-
             if (!this.createDisabled) {
                 if (
                     !this.getAcl().check(this.foreignScope, 'create')
