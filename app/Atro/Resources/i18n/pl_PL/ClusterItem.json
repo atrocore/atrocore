@@ -18,5 +18,8 @@
   },
   "massActionConfirmMessages": {
     "reject": "Czy na pewno chcesz odrzucić wybrane elementy?"
+  },
+  "actions": {
+    "reject": "Proszę odrzucić"
   }
 }
