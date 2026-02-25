@@ -179,12 +179,12 @@ class Language
         if (!empty($this->deletedData)) {
             foreach ($this->deletedData as $scope => $unsetData) {
                 foreach ($unsetData as $category => $names) {
-                    if($category === 'options') {
+                    if ($category === 'options') {
                         $newNames = [];
                         foreach ($names as $field => $options) {
-                           foreach ($options as $option) {
-                               $newNames[] = "$field.$option";
-                           }
+                            foreach ($options as $option) {
+                                $newNames[] = "$field.$option";
+                            }
                         }
                         $names = $newNames;
                     }
@@ -415,6 +415,13 @@ class Language
                 }
 
                 $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+
+                if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
+                    $key = $locales[$this->localeId]['language'] . '_with_labels_in_content_language';
+                    if (array_key_exists($key, $this->data)) {
+                        $language = $key;
+                    }
+                }
 
                 if (array_key_exists($language, $this->data)) {
                     $data = Util::merge($data, $this->data[$language]);

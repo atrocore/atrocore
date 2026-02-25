@@ -64,16 +64,17 @@ class Config extends \Espo\Core\Utils\Config
                     foreach ($items as $row) {
                         if (!empty($row['id'])) {
                             $this->data['locales'][$row['id']] = [
-                                'code'              => $row['code'],
-                                'name'              => $row['name'] ?? 'en_US',
-                                'language'          => $row['languageCode'] ?? 'en_US',
-                                'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
-                                'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
-                                'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
-                                'timeFormat'        => $row['timeFormat'] ?? 'HH:mm',
-                                'timeZone'          => $row['timeZone'] ?? 'UTC',
-                                'thousandSeparator' => $row['thousandSeparator'] ?? '',
-                                'decimalMark'       => $row['decimalMark'] ?? '.',
+                                'code'                           => $row['code'],
+                                'name'                           => $row['name'] ?? 'en_US',
+                                'language'                       => $row['languageCode'] ?? 'en_US',
+                                'fallbackLanguage'               => $row['fallbackLanguageCode'] ?? null,
+                                'weekStart'                      => $row['weekStart'] === 'monday' ? 1 : 0,
+                                'dateFormat'                     => $row['dateFormat'] ?? 'MM/DD/YYYY',
+                                'timeFormat'                     => $row['timeFormat'] ?? 'HH:mm',
+                                'timeZone'                       => $row['timeZone'] ?? 'UTC',
+                                'thousandSeparator'              => $row['thousandSeparator'] ?? '',
+                                'decimalMark'                    => $row['decimalMark'] ?? '.',
+                                'displayLabelsInContentLanguage' => $row['displayLabelsInContentLanguage'] ?? false,
                             ];
                         }
 

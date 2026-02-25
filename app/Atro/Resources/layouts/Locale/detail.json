@@ -26,9 +26,11 @@
       ],
       [
         {
-          "name": "timeZone"
+          "name": "displayLabelsInContentLanguage"
         },
-        false
+        {
+          "name": "timeZone"
+        }
       ],
       [
         {
