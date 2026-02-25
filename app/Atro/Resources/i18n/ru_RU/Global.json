@@ -1307,7 +1307,9 @@
       "is_not_linked": "пустая строка",
       "future": "будущее",
       "past": "прошлое",
-      "today": "сегодня"
+      "today": "сегодня",
+      "older_than_x_days": "старше x дней",
+      "after_x_days": "через x дней"
     },
     "errors": {
       "no_filter": "Фильтр не выбран",
