@@ -62,7 +62,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                 ];
                 this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
 
-                if (this.dashboardLayout.length == 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
+                if (this.dashboardLayout.length === 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
                     this.dashboardLayout = defaultLayout;
                 }
             }
@@ -73,7 +73,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                 this.currentTab = 0;
             }
 
-            var tabLayout = dashboardLayout[this.currentTab].layout || [];
+            let tabLayout = (dashboardLayout[this.currentTab].layout || []).filter(e => e.name && this.getMetadata().get(['dashlets', e.name]));
 
             tabLayout = GridStackUI.Utils.sort(tabLayout);
 
