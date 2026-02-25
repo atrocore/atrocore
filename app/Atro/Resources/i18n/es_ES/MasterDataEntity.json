@@ -3,13 +3,22 @@
     "masterEntity": "Entidad principal",
     "mergingScript": "Guión cartográfico",
     "sourceEntity": "Entidad de origen",
-    "updateMasterAutomatically": "Actualizar maestro automáticamente"
+    "updateMasterAutomatically": "Actualizar maestro automáticamente",
+    "executeMergeAs": "Ejecutar fusión como",
+    "minimumMatchingScore": "Puntuación mínima de concordancia",
+    "confirmAutomatically": "Confirmar automáticamente"
   },
   "tooltips": {
-    "mergingScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro."
+    "mergingScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro.",
+    "executeMergeAs": "La cuenta de usuario que se utilizará para ejecutar el script de fusión."
   },
   "exceptions": {
     "mergingScriptIsMissing": "Falta el script de fusión para la entidad maestra",
     "mergingScriptIsNotValid": "El script de fusión devuelve una carga útil no válida: %s"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Mismo usuario"
+    }
   }
 }
