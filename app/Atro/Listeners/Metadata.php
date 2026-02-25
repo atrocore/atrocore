@@ -2266,16 +2266,18 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope] = Util::merge($data['entityDefs'][$scope] ?? [], $additionalScopeDefs);
 
                 $data['clientDefs'][$scope]['relationshipPanels']["associatedItems"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associatedItems"] ?? [], [
-                    "view"   => "views/record/panels/associated-records",
-                    "sortBy" => Util::toUnderScore(lcfirst($relationName)) . '_mm.sorting',
-                    "asc"    => true
+                    "view"          => "views/record/panels/associated-records",
+                    "sortBy"        => Util::toUnderScore(lcfirst($relationName)) . '_mm.sorting',
+                    "asc"           => true,
+                    "aclScopesList" => ['Association', $scope]
                 ]);
 
                 $data['clientDefs'][$scope]['relationshipPanels']["associatingItems"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associatingItems"] ?? [], [
-                    "view"   => "views/record/panels/related-records",
-                    "create" => false,
-                    "sortBy" => Util::toUnderScore(lcfirst($relationName)) . '_mm.sorting',
-                    "asc"    => true
+                    "view"          => "views/record/panels/related-records",
+                    "create"        => false,
+                    "sortBy"        => Util::toUnderScore(lcfirst($relationName)) . '_mm.sorting',
+                    "asc"           => true,
+                    "aclScopesList" => ['Association', $scope]
                 ]);
             }
         }
@@ -2562,8 +2564,8 @@ class Metadata extends AbstractListener
 
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['masterRecord'] = [
-                'type'                  => 'link',
-                'required'              => false
+                'type'     => 'link',
+                'required' => false
             ];
             $data['entityDefs'][$scope]['links']['masterRecord'] = [
                 'type'    => 'belongsTo',
