@@ -136,6 +136,8 @@ class LinkMultipleType extends AbstractFieldType
         if (empty($entityName)) {
             return;
         }
+        $foreignName = $entity->entityDefs['fields'][$name]['foreignName'] ?? 'name';
+        $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $entityName, $foreignName);
 
         $names = [];
         foreach ($ids as $id) {
@@ -151,13 +153,16 @@ class LinkMultipleType extends AbstractFieldType
                 }
 
                 if (!empty($allIds)) {
-                    foreach ($this->em->getRepository($entityName)->select(['id', 'name'])->where(['id' => $allIds])->find() as $foreign) {
+                    $columns = array_unique(['id', $foreignName, $localizedNameColumn]);
+
+                    foreach ($this->em->getRepository($entityName)->select($columns)->where(['id' => $allIds])->find() as $foreign) {
                         $this->cachedCollection[$entityName][$foreign->id] = $foreign;
                     }
                 }
             }
 
-            $names[$id] = !empty($this->cachedCollection[$entityName][$id]) ? $this->cachedCollection[$entityName][$id]->get('name') : $id;
+            $foreign = $this->cachedCollection[$entityName][$id] ?? null;
+            $names[$id] = !empty($foreign) ? (empty($foreign->get($localizedNameColumn)) ? $foreign->get($foreignName) : $foreign->get($localizedNameColumn)) : $id;
         }
 
         if (!empty($names)) {

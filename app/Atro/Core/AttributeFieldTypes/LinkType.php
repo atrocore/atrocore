@@ -136,14 +136,23 @@ class LinkType extends AbstractFieldType
 
         if (!empty($attributeData['entityType'])) {
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
+            $foreignName = $attributeData['entityField'] ?? 'name';
 
             $name = AttributeFieldConverter::prepareFieldName($row);
 
             $referenceAlias = "{$alias}{$referenceTable}";
             $qb->leftJoin($alias, $this->conn->quoteIdentifier($referenceTable), $referenceAlias, "{$referenceAlias}.id={$alias}.reference_value AND {$referenceAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");
 
-            $qb->addSelect("{$referenceAlias}.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
-            $qb->addSelect("{$referenceAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
+            $fieldPath = "{$referenceAlias}." . $mapper->toDb($foreignName);
+            $localizedField = Language::getLocalizedFieldName($this->em->getContainer(), $attributeData['entityType'], $foreignName);
+
+            if ($localizedField !== $foreignName) {
+                $localizedFieldPath = "{$referenceAlias}." . $mapper->toDb($localizedField);
+                $fieldPath = "COALESCE(NULLIF(TRIM($localizedFieldPath), ''), $fieldPath)";
+            }
+
+            $qb->addSelect("$referenceAlias.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
+            $qb->addSelect("$fieldPath as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
 
             if ($name === $params['orderBy']) {
                 $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name . 'Name') . ' ' . $params['order']);
