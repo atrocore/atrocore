@@ -1075,7 +1075,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.listInlineEditModeEnabled = this.options.listInlineEditModeEnabled;
             }
 
-            if (typeof this.options.resizable === 'boolean') {
+            if (!this.header) {
+                this.resizable = false;
+            } else if (typeof this.options.resizable === 'boolean') {
                 this.resizable = this.options.resizable;
             }
 
