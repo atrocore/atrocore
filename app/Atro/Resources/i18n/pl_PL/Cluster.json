@@ -17,7 +17,12 @@
     "state": {
       "empty": "Puste",
       "review": "Recenzja",
-      "invalid": "Nieprawidłowy"
+      "invalid": "Nieprawidłowy",
+      "mergedAutomatically": "Połączone automatycznie",
+      "mergedManually": "Połączone ręcznie"
     }
+  },
+  "exceptions": {
+    "cannotDelete": "Usunąć można tylko puste klastry"
   }
 }
