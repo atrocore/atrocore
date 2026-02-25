@@ -564,13 +564,16 @@ Espo.define(
                             const data = this.settings.get('locales')?.[storedLocale]
                             // update preferences with stored locale data
                             if (data) {
-                                ['thousandSeparator', 'decimalMark', 'timeFormat', 'dateFormat', 'timeZone', 'weekStart','language','fallbackLanguage'].forEach(key => {
-                                    options.preferences[key]= data[key]
+                                ['thousandSeparator', 'decimalMark', 'timeFormat', 'dateFormat', 'timeZone', 'weekStart', 'language', 'fallbackLanguage'].forEach(key => {
+                                    options.preferences[key] = data[key]
                                 })
                                 this.language.localeId = storedLocale
                             }
                         }
 
+                        if (!this.language.localeId){
+                            this.language.localeId = options.preferences.locale;
+                        }
                         this.language.name = options.preferences.language;
                         this.language.fallbackName = options.preferences.fallbackLanguage;
                         this.language.load(function () {

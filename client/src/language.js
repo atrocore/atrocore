@@ -91,7 +91,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
         },
 
         loadFromCache: function (loadDefault) {
-            var name = this.name;
+            var name = this.getKey();
             if (loadDefault) {
                 name = 'default';
             }
@@ -109,12 +109,20 @@ Espo.define('language', ['ajax'], function (Ajax) {
 
         clearCache: function () {
             if (this.cache) {
-                this.cache.clear('app', 'language-' + this.name);
+                this.cache.clear('app', 'language-' + this.getKey());
             }
         },
 
+        getKey: function () {
+            let key = this.name
+            if (this.localeId) {
+                key = key + '-' + this.localeId
+            }
+            return key
+        },
+
         storeToCache: function (loadDefault) {
-            var name = this.name;
+            var name = this.getKey();
             if (loadDefault) {
                 name = 'default';
             }
