@@ -18,5 +18,8 @@
   },
   "massActionConfirmMessages": {
     "reject": "Êtes-vous sûr de vouloir rejeter les éléments sélectionnés ?"
+  },
+  "actions": {
+    "reject": "Rejeter"
   }
 }
