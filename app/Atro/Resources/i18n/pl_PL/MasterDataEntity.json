@@ -18,7 +18,8 @@
   },
   "options": {
     "executeMergeAs": {
-      "sameUser": "Ten sam użytkownik"
+      "sameUser": "Ten sam użytkownik",
+      "system": "System"
     }
   }
 }
