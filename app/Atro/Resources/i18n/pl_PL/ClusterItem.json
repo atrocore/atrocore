@@ -4,7 +4,9 @@
     "entityId": "Identyfikator podmiotu",
     "record": "Rekord",
     "cluster": "Klaster",
-    "matchedRecord": "Dopasowany rekord"
+    "matchedRecord": "Dopasowany rekord",
+    "confirmedAutomatically": "Potwierdzone automatycznie",
+    "matchedScore": "Dopasowany wynik"
   },
   "exceptions": {
     "notFound": "Nie znaleziono rekordu elementu klastra",
@@ -20,6 +22,7 @@
     "reject": "Czy na pewno chcesz odrzucić wybrane elementy?"
   },
   "actions": {
-    "reject": "Proszę odrzucić"
+    "reject": "Proszę odrzucić",
+    "confirm": "Proszę potwierdzić"
   }
 }
