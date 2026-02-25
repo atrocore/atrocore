@@ -1198,6 +1198,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             }
 
+            if (!this.model.get('attributesDefs')[name] && this.model.defs['fields'][name].attributeId ) {
+                data.__attributes = [this.model.defs['fields'][name].attributeId];
+            }
+
             var self = this;
             var model = this.model;
             var prev = Espo.Utils.cloneDeep(this.initialAttributes);
