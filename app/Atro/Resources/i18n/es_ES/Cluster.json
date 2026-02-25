@@ -17,7 +17,12 @@
     "state": {
       "empty": "Vacío",
       "review": "Revise",
-      "invalid": "No válido"
+      "invalid": "No válido",
+      "mergedManually": "Fusionado manualmente",
+      "mergedAutomatically": "Fusionados automáticamente"
     }
+  },
+  "exceptions": {
+    "cannotDelete": "Sólo se pueden borrar los clusters vacíos"
   }
 }
