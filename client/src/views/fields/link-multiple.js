@@ -78,6 +78,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         sortAsc: null,
 
+        allowSelectAllResult: true,
+
         events: _.extend({
             'click [data-action="loadData"]': function (e) {
                 this.actionLoadData();
@@ -243,6 +245,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.createDisabled = true;
             }
 
+
             if (!this.createDisabled) {
                 if (
                     !this.getAcl().check(this.foreignScope, 'create')
@@ -251,6 +254,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 ) {
                     this.createDisabled = true;
                 }
+            }
+
+            if ('allowSelectAllResult' in this.options) {
+                this.allowSelectAllResult = this.options.allowSelectAllResult;
             }
 
             if (this.foreignScope === 'File') {
@@ -276,7 +283,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.ids = Espo.Utils.clone(this.searchParams.value) || [];
             }
             this.nameHash._localeId = this.getUser().get('localeId')
-            this.model.set(this.nameHashName, this.nameHash, { silent: true });
+            this.model.set(this.nameHashName, this.nameHash, {silent: true});
 
             this.listenTo(this.model, 'change:' + this.idsName, function () {
                 this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
@@ -306,6 +313,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                     forceSelectAllAttributes: this.forceSelectAllAttributes,
                     selectAllByDefault: this.getSelectAllByDefault(),
+                    allowSelectAllResult: this.allowSelectAllResult,
                     sortBy: this.sortBy,
                     sortAsc: this.sortAsc
                 }, function (dialog) {
@@ -319,7 +327,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         if (models.massRelate) {
                             if (models.where.length === 0) {
                                 // force subquery if primary filter "all" is used in modal
-                                models.where = [{ asc: true }]
+                                models.where = [{asc: true}]
                             }
                             this.model.set(this.idsName, null);
                             this.model.set(this.nameHashName, null);
@@ -464,14 +472,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
 
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
-                url += '&' + $.param({ 'boolFilterList': boolList });
+                url += '&' + $.param({'boolFilterList': boolList});
             }
             var primary = this.getSelectPrimaryFilterName();
             if (primary) {
-                url += '&' + $.param({ 'primaryFilter': primary });
+                url += '&' + $.param({'primaryFilter': primary});
             }
 
-            where.push({ 'type': 'textFilter', value: 'AUTOCOMPLETE:' + q });
+            where.push({'type': 'textFilter', value: 'AUTOCOMPLETE:' + q});
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
             if (Array.isArray(additionalWhere) && additionalWhere.length) {
@@ -481,7 +489,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             }
 
             if (where.length) {
-                url += '&' + $.param({ 'where': where });
+                url += '&' + $.param({'where': where});
             }
 
             return url;
@@ -868,6 +876,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         foreignScope: foreignScope,
                         hideSearchType: true,
                         whereAdditional: this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
+                        allowSelectAllResult: !this.defs.params?.attribute?.id
                     }, view => {
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
@@ -893,7 +902,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                 queryBuilder = queryBuilder.rules[0];
                             }
 
-                            return { bool, queryBuilder, queryBuilderApplied: true }
+                            return {bool, queryBuilder, queryBuilderApplied: true}
                         }
 
                         view.getAutocompleteAdditionalWhereConditions = () => {
@@ -923,14 +932,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
 
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            if(!subQuery || subQuery.length === 0 ) {
+                            if (!subQuery || subQuery.length === 0) {
                                 return;
                             }
                             rule.value = null;
                             this.filterValue = rule.value;
 
                             (view.ids || []).forEach(id => {
-                                if(id === 'subquery') {
+                                if (id === 'subquery') {
                                     return;
                                 }
 
@@ -972,9 +981,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.getModelFactory().create(null, model => {
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
-                        let nameHash = { '_localeId': this.getUser().get('localeId') }
+                        let nameHash = {'_localeId': this.getUser().get('localeId')}
                         if ((rule.value || []).length > 0) {
-                            try{
+                            try {
                                 const resp = this.ajaxGetRequest(this.foreignScope, {
                                     select: this.getForeignName(),
                                     collectionOnly: true,
@@ -985,14 +994,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                             value: rule.value
                                         }
                                     ]
-                                }, { async: false })
+                                }, {async: false})
 
                                 const foreignName = this.getForeignName();
                                 const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
                                 resp.responseJSON.list.forEach(record => {
                                     nameHash[record.id] = record[localizedForeignName] || record[foreignName]
                                 })
-                            }catch (e) {
+                            } catch (e) {
                                 console.error(e);
                             }
                         }
@@ -1006,13 +1015,13 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         let view = this.getView(inputName);
 
                         if (rule.data && rule.data['subQuery'] && view) {
-                            let data = { where: Espo.utils.clone(rule.data['subQuery']) };
+                            let data = {where: Espo.utils.clone(rule.data['subQuery'])};
                             view.searchData.subQuery = Espo.utils.clone(rule.data['subQuery']);
                             view.addLinkSubQuery(data, true);
                         }
 
-                        if(rule.data && rule.data['nameHash']) {
-                            delete  rule.data['nameHash'];
+                        if (rule.data && rule.data['nameHash']) {
+                            delete rule.data['nameHash'];
                         }
 
                         if (view) {
