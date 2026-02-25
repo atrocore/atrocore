@@ -633,8 +633,6 @@ class Attribute extends Base
                 ];
             }
 
-            $entity->set('extensibleEnumId', null);
-
             $data = $entity->get('data') ?? [];
             if ($data instanceof \stdClass) {
                 $data = json_decode(json_encode($data), true);
