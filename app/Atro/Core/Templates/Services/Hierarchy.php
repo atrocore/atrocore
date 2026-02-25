@@ -1088,10 +1088,13 @@ class Hierarchy extends Base
                     break;
                 case 'linkMultiple':
                     if (!in_array($field, $this->getRepository()->getUnInheritedFields())) {
-                        $parentIds = $parent->getLinkMultipleIdList($field);
-                        sort($parentIds);
-                        $entityIds = $child->getLinkMultipleIdList($field);
-                        sort($entityIds);
+                        if(!empty($fieldDefs['attributeId'])) {
+                            $parentIds = $parent->get($field . 'Ids') ?? [];
+                            $entityIds = $child->get($field . 'Ids') ?? [];
+                        }else{
+                            $parentIds = $parent->getLinkMultipleIdList($field);
+                            $entityIds = $child->getLinkMultipleIdList($field);
+                        }
                         if ($this->areValuesEqual($parent, $field . 'Ids', $parentIds, $entityIds)) {
                             $inheritedFields[] = $field;
                         }
