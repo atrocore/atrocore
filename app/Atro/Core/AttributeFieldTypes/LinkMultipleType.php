@@ -12,6 +12,7 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
@@ -27,6 +28,7 @@ class LinkMultipleType extends AbstractFieldType
         $data = @json_decode($row['data'], true);
         $attributeData = $data['field'] ?? null;
         $entityName = $attributeData['entityType'] ?? null;
+        $foreignName = $attributeData['entityField'] ?? 'name';
 
         $entity->fields[$name . 'Ids'] = [
             'type'                     => 'jsonArray',
@@ -57,14 +59,20 @@ class LinkMultipleType extends AbstractFieldType
             }
 
             if (!empty($value) && !empty($entityName)) {
-                $names = $this->em->getRepository($entityName)
-                    ->select(['id', 'name'])
+                $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $entityName, $foreignName);
+                $columns = array_unique(['id', $foreignName, $localizedNameColumn]);
+
+                $collection = $this->em->getRepository($entityName)
+                    ->select($columns)
                     ->where(['id' => $value])
                     ->find();
 
-                if (!empty($names)) {
-                    $entity->set($name . 'Names', array_column($names->toArray(), 'name', 'id'));
+                $names = [];
+                foreach ($collection as $foreign) {
+                    $names[$foreign->get('id')] = empty($foreign->get($localizedNameColumn)) ? $foreign->get($foreignName) : $foreign->get($localizedNameColumn);
                 }
+
+                $entity->set($name . 'Names', $names);
             }
         }
 
@@ -84,6 +92,7 @@ class LinkMultipleType extends AbstractFieldType
             'channelName'               => $row['channel_name'] ?? null,
             'type'                      => 'linkMultiple',
             'entity'                    => $entityName,
+            'foreignName'               => $foreignName,
             'required'                  => !empty($row['is_required']),
             'readOnly'                  => !empty($row['is_read_only']),
             'protected'                 => !empty($row['is_protected']),
