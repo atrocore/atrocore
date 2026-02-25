@@ -3,10 +3,14 @@
     "masterEntity": "Stammdaten-Entität",
     "mergingScript": "Skript zusammenführen",
     "sourceEntity": "Quellentität",
-    "updateMasterAutomatically": "Master automatisch aktualisieren"
+    "updateMasterAutomatically": "Master automatisch aktualisieren",
+    "minimumMatchingScore": "Minimum Matching Score",
+    "confirmAutomatically": "Automatisch bestätigen",
+    "executeMergeAs": "Zusammenführung ausführen als"
   },
   "tooltips": {
-    "mergingScript": "Konfigurieren Sie, wie Quelldaten transformiert, vereinheitlicht und dem Stammsatz zugeordnet werden."
+    "mergingScript": "Konfigurieren Sie, wie Quelldaten transformiert, vereinheitlicht und dem Stammsatz zugeordnet werden.",
+    "executeMergeAs": "Das Benutzerkonto, das für die Ausführung des Zusammenführungsskripts verwendet werden soll."
   },
   "exceptions": {
     "mergingScriptIsMissing": "Zusammenführungsskript fehlt für Master-Entität",
