@@ -17,7 +17,12 @@
     "state": {
       "empty": "Vide",
       "review": "Révision",
-      "invalid": "Invalide"
+      "invalid": "Invalide",
+      "mergedAutomatically": "Fusionné automatiquement",
+      "mergedManually": "Fusionné manuellement"
     }
+  },
+  "exceptions": {
+    "cannotDelete": "Seules les grappes vides peuvent être supprimées"
   }
 }
