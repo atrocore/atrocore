@@ -1137,6 +1137,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             });
 
+            this.listenTo(this.model, 'after:inlineEditSave', () => {
+                this.inlineEditClose(true);
+            });
+
             this.listenTo(this.model, 'change', () => {
                 if (['edit', 'detail'].includes(this.mode) || this.isListView()) {
                     this.reRenderByConditionalProperties();
@@ -1212,6 +1216,15 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (!attrs) {
                 this.inlineEditClose();
                 model.trigger('after:inlineEditClose');
+                return;
+            }
+
+            if (this.getRecordView() && typeof this.getRecordView().save === 'function') {
+                this.getRecordView().save(() => {
+                    this.model.trigger('after:inlineEditSave');
+                    this.trigger('after:inlineEditSave');
+                });
+
                 return;
             }
 
@@ -1404,7 +1417,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         inlineEditClose: function (dontReset) {
             this.trigger('inline-edit-off');
             this.killAfterOutsideClickListener();
-            if (this.mode != 'edit') {
+            if (this.mode !== 'edit') {
                 return;
             }
 
@@ -1424,7 +1437,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }, this);
 
             if (!dontReset) {
-                this.model.set(this.initialAttributes);
+                const fetched = this.fetch();
+                if (typeof fetched === 'object') {
+                    this.model.set(Object.fromEntries(
+                        Object.keys(fetched).map(key => [key, this.initialAttributes[key] ?? null])
+                    ));
+                } else {
+                    this.model.set(this.initialAttributes);
+                }
             }
 
             this.reRender(true);
@@ -1460,6 +1480,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         this.inlineEditClose();
                     }
                 });
+
+                this.validate();
             }, this);
 
             this.inlineEditModeIsOn = true;
@@ -1468,32 +1490,15 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         killAfterOutsideClickListener() {
-            const name = this.originalName || this.name;
-            this.getElementForOutsideClick().off(`click.anywhere-for-${name}`);
+            this.getElementForOutsideClick().off(`click.anywhere`);
         },
 
         initSaveAfterOutsideClick() {
             this.killAfterOutsideClickListener();
-            const name = this.originalName || this.name;
-            this.getElementForOutsideClick().on(`click.anywhere-for-${name}`, e => {
+            this.getElementForOutsideClick().on(`click.anywhere`, e => {
                 if (this.mode === 'edit') {
-                    let selector = '';
-                    if (this.isListView()) {
-                        selector = `[data-id=${this.model.id}] .cell[data-name=${this.name}]`;
-
-                        if (this.originalName) {
-                            selector += `, [data-id=${this.model.id}] .cell[data-name="${this.originalName}"]`;
-                        }
-                    } else {
-                        selector = `.cell[data-name=${this.name}]`;
-
-                        if (this.originalName) {
-                            selector += `, .cell[data-name="${this.originalName}"]`;
-                        }
-                    }
-
                     const $target = $(e.target);
-                    const $cell = $target.parents(selector);
+                    const $cell = $target.parents('.cell[data-mode=edit]');
 
                     if (
                         $cell.size() === 0
@@ -1541,7 +1546,23 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 $el = this.$element;
             }
 
-            $el[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if ($el.length > 0) {
+                const target = $el[0];
+                let didScroll = false;
+
+                const observer = new IntersectionObserver((entries) => {
+                    const entry = entries[0];
+                    if (!entry) return;
+
+                    if (!entry.isIntersecting && !didScroll) {
+                        didScroll = true;
+                        target.scrollIntoView({ behavior: "smooth", block: "center" });
+                        observer.disconnect();
+                    }
+                }, { threshold: 0 });
+
+                observer.observe(target);
+            }
 
             $el.popover({
                 placement: 'bottom',
