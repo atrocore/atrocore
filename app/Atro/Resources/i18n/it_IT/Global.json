@@ -456,7 +456,9 @@
     "rejectItem": "Rifiuta",
     "openStagingEntity": "Entità di stazionamento aperta",
     "openPrimaryEntity": "Entità master aperta",
-    "currentSelection": "Selezione attuale"
+    "currentSelection": "Selezione attuale",
+    "System": "Sistema",
+    "entityFilterResult": "Risultato del filtro"
   },
   "messages": {
     "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",
@@ -830,7 +832,9 @@
       "is_not_my_team": "non è la mia squadra",
       "future": "futuro",
       "past": "passato",
-      "today": "oggi"
+      "today": "oggi",
+      "after_x_days": "dopo x giorni",
+      "older_than_x_days": "più vecchio di x giorni"
     },
     "errors": {
       "no_filter": "Non è stato selezionato alcun filtro",
