@@ -16,7 +16,6 @@
   "options": {
     "state": {
       "empty": "Puste",
-      "merged": "Scalony",
       "review": "Recenzja",
       "invalid": "Nieprawidłowy"
     }
