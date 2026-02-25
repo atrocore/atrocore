@@ -29,7 +29,7 @@ use Espo\ORM\Entity;
 
 class Action extends Base
 {
-    protected $mandatorySelectAttributeList = ['searchEntity', 'targetEntity', 'data'];
+    protected $mandatorySelectAttributeList = ['searchEntity', 'targetEntity', 'data', 'type'];
 
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
