@@ -3,10 +3,14 @@
     "masterEntity": "Entité de référence",
     "mergingScript": "Script de mapping",
     "sourceEntity": "Entité source",
-    "updateMasterAutomatically": "Mise à jour automatique du master"
+    "updateMasterAutomatically": "Mise à jour automatique du master",
+    "executeMergeAs": "Exécuter la fusion en tant que",
+    "minimumMatchingScore": "Score minimum de correspondance",
+    "confirmAutomatically": "Confirmer automatiquement"
   },
   "tooltips": {
-    "mergingScript": "Configurez la façon dont les données sources sont transformées, unifiées et mises en correspondance avec la fiche."
+    "mergingScript": "Configurez la façon dont les données sources sont transformées, unifiées et mises en correspondance avec la fiche.",
+    "executeMergeAs": "Le compte d'utilisateur qui sera utilisé pour exécuter le script de fusion."
   },
   "exceptions": {
     "mergingScriptIsMissing": "Le script de fusion n'est pas disponible pour l'entité maître",
