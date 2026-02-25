@@ -17,7 +17,12 @@
     "state": {
       "empty": "Порожні значення",
       "review": "Перевірка",
-      "invalid": "Недійсний"
+      "invalid": "Недійсний",
+      "mergedAutomatically": "Об'єднано автоматично",
+      "mergedManually": "Об'єднано вручну"
     }
+  },
+  "exceptions": {
+    "cannotDelete": "Видаляти можна лише порожні кластери"
   }
 }
