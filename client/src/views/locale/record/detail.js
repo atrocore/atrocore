@@ -15,7 +15,7 @@ Espo.define('views/locale/record/detail', 'views/record/detail', Dep => {
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'after:save', () => {
+            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 setTimeout(() => {
                     this.showReloadPageMessage()
                 }, 2000);

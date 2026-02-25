@@ -52,6 +52,14 @@ class Locale extends ReferenceData
         parent::beforeRemove($entity, $options);
     }
 
+    protected function afterSave(Entity $entity, array $options = []){
+        parent::afterSave($entity, $options);
+
+        if ($entity->isAttributeChanged('displayLabelsInContentLanguage')) {
+            $this->refreshCache();
+        }
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
