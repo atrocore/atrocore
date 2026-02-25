@@ -15,5 +15,11 @@
   "exceptions": {
     "mergingScriptIsMissing": "Le script de fusion n'est pas disponible pour l'entité maître",
     "mergingScriptIsNotValid": "Le script de fusion renvoie une charge utile invalide : %s"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Même utilisateur",
+      "system": "Système"
+    }
   }
 }
