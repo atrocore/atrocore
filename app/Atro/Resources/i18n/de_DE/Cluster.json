@@ -17,7 +17,12 @@
     "state": {
       "empty": "Leere Werte",
       "review": "Review",
-      "invalid": "Ungültig"
+      "invalid": "Ungültig",
+      "mergedAutomatically": "Automatisch zusammengeführt",
+      "mergedManually": "Manuell zusammengeführt"
     }
+  },
+  "exceptions": {
+    "cannotDelete": "Nur leere Cluster können gelöscht werden"
   }
 }
