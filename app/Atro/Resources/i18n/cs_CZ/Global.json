@@ -530,7 +530,8 @@
     "openStagingEntity": "Otevřený subjekt etapizace",
     "openPrimaryEntity": "Otevřený hlavní subjekt",
     "currentSelection": "Aktuální výběr",
-    "rejectItem": "Odmítnout"
+    "rejectItem": "Odmítnout",
+    "entityFilterResult": "Výsledek filtru"
   },
   "fields": {
     "number": "Číslo",
@@ -1237,7 +1238,9 @@
       "equal": "rovná se",
       "future": "budoucnost",
       "past": "minulost",
-      "today": "dnes"
+      "today": "dnes",
+      "older_than_x_days": "starší než x dní",
+      "after_x_days": "po x dnech"
     },
     "errors": {
       "number_exceed_max": "Musí být nižší než {0}",
