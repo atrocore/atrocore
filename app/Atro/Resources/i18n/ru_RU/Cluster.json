@@ -17,7 +17,12 @@
     "state": {
       "empty": "Пустые значения",
       "review": "Проверка",
-      "invalid": "Неверный"
+      "invalid": "Неверный",
+      "mergedManually": "Объединение вручную",
+      "mergedAutomatically": "Автоматическое объединение"
     }
+  },
+  "exceptions": {
+    "cannotDelete": "Удалять можно только пустые кластеры"
   }
 }
