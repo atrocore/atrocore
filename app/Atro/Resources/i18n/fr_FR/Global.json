@@ -1248,7 +1248,9 @@
       "is_not_my_team": "n'est pas mon équipe",
       "future": "futur",
       "past": "passé",
-      "today": "aujourd'hui"
+      "today": "aujourd'hui",
+      "older_than_x_days": "plus de x jours",
+      "after_x_days": "après x jours"
     },
     "errors": {
       "number_exceed_min": "Doit être supérieur à {0}",
