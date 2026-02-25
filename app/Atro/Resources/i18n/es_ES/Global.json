@@ -530,7 +530,8 @@
     "openPrimaryEntity": "Entidad maestra abierta",
     "currentSelection": "Selección actual",
     "rejectItem": "Rechace",
-    "openStagingEntity": "Entidad de puesta en escena abierta"
+    "openStagingEntity": "Entidad de puesta en escena abierta",
+    "entityFilterResult": "Resultado del filtrado"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -1305,7 +1306,9 @@
       "array_any_of": "en",
       "future": "futuro",
       "past": "pasado",
-      "today": "hoy"
+      "today": "hoy",
+      "older_than_x_days": "más de x días",
+      "after_x_days": "después de x días"
     },
     "errors": {
       "no_filter": "No se ha seleccionado ningún filtro",
