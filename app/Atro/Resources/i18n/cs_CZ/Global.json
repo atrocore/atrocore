@@ -531,7 +531,8 @@
     "openPrimaryEntity": "Otevřený hlavní subjekt",
     "currentSelection": "Aktuální výběr",
     "rejectItem": "Odmítnout",
-    "entityFilterResult": "Výsledek filtru"
+    "entityFilterResult": "Výsledek filtru",
+    "System": "Systém"
   },
   "fields": {
     "number": "Číslo",
