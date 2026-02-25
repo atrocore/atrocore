@@ -7,7 +7,8 @@
     "weekStart": "Erster Tag der Woche",
     "timeFormat": "Zeitformat",
     "thousandSeparator": "Tausendertrennzeichen",
-    "decimalMark": "Dezimaltrennzeichen"
+    "decimalMark": "Dezimaltrennzeichen",
+    "displayLabelsInContentLanguage": "Beschriftungen in Inhaltssprache anzeigen"
   },
   "labels": {
     "sunday": "Sonntag",
