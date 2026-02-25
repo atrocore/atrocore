@@ -17,7 +17,12 @@
     "state": {
       "empty": "Prázdný",
       "review": "Recenze",
-      "invalid": "Neplatný"
+      "invalid": "Neplatný",
+      "mergedAutomatically": "Automatické sloučení",
+      "mergedManually": "Ruční sloučení"
     }
+  },
+  "exceptions": {
+    "cannotDelete": "Odstranit lze pouze prázdné shluky"
   }
 }
