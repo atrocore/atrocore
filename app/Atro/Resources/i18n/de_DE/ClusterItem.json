@@ -22,6 +22,7 @@
     "reject": "Sind Sie sicher, dass Sie die ausgewählten Elemente ablehnen möchten?"
   },
   "actions": {
-    "confirm": "Bestätigen Sie"
+    "confirm": "Bestätigen Sie",
+    "reject": "Ablehnen"
   }
 }
