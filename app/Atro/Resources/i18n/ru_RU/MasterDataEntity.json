@@ -18,7 +18,8 @@
   },
   "options": {
     "executeMergeAs": {
-      "sameUser": "Тот же пользователь"
+      "sameUser": "Тот же пользователь",
+      "system": "Система"
     }
   }
 }
