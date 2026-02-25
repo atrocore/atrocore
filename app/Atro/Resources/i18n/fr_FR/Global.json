@@ -570,7 +570,9 @@
     "rejectItem": "Rejeter",
     "openStagingEntity": "Entité de transit ouverte",
     "openPrimaryEntity": "Entité maître ouverte",
-    "isLinked": "Est lié"
+    "isLinked": "Est lié",
+    "entityFilterResult": "Résultat du filtre",
+    "System": "Système"
   },
   "insightsPanels": {
     "summary": "Sommaire",
