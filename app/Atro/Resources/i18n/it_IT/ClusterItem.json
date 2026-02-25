@@ -4,7 +4,9 @@
     "entityId": "ID dell'entità",
     "record": "Record",
     "cluster": "Cluster",
-    "matchedRecord": "Record abbinato"
+    "matchedRecord": "Record abbinato",
+    "matchedScore": "Punteggio abbinato",
+    "confirmedAutomatically": "Confermato automaticamente"
   },
   "exceptions": {
     "notFound": "Il record dell'articolo del cluster non è stato trovato",
@@ -18,5 +20,8 @@
   },
   "massActionConfirmMessages": {
     "reject": "Sei sicuro di voler rifiutare gli elementi selezionati?"
+  },
+  "actions": {
+    "confirm": "Confermare"
   }
 }
