@@ -151,11 +151,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 && this.idsName !== this.name
             ) {
                 const options = this.model.get('_meta')?.options?.[this.name] || this.getOptionsData();
-                if (options) {
+                if (options && options.length > 0) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
 
                     res.selectedValues = [];
-                    this.model.get('_meta').options[this.name].forEach(option => {
+                    options.forEach(option => {
                         let backgroundColor = option.color;
                         res.selectedValues.push({
                             description: option.description || '',
