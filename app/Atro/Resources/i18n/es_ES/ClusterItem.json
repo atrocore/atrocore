@@ -4,7 +4,9 @@
     "entityId": "ID de la entidad",
     "record": "Registre",
     "cluster": "Cluster",
-    "matchedRecord": "Registro coincidente"
+    "matchedRecord": "Registro coincidente",
+    "confirmedAutomatically": "Confirmado automáticamente",
+    "matchedScore": "Puntuación igualada"
   },
   "exceptions": {
     "notFound": "No se ha encontrado el registro de artículos del cluster",
@@ -18,5 +20,8 @@
   },
   "massActionConfirmMessages": {
     "reject": "¿Está seguro de que desea rechazar los elementos seleccionados?"
+  },
+  "actions": {
+    "confirm": "Confirme"
   }
 }
