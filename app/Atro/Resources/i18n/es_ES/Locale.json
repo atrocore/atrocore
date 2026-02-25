@@ -7,7 +7,8 @@
     "weekStart": "Primer día de la semana",
     "timeFormat": "Formato de hora",
     "thousandSeparator": "Separador de mil",
-    "decimalMark": "Marca decimal"
+    "decimalMark": "Marca decimal",
+    "displayLabelsInContentLanguage": "Mostrar etiquetas en el idioma del contenido"
   },
   "labels": {
     "sunday": "Domingo",
