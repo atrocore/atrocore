@@ -559,6 +559,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        actionShowPdfDialog: function () {
+            const scope = this.model.name || this.scope;
+
+            let defs = this.getMetadata().get(['clientDefs', scope, 'additionalPdfGeneratorRowActionItem']) || {
+                actionViewPath: 'pdf-generator:views/record/actions/show-pdf-generator',
+                action: 'showPdfGenerator'
+            }
+
+            this.createView('action', defs.actionViewPath, {
+                model: this.model,
+                scope: this.model.name
+            }, view => view[defs.action]());
+        },
+
         getSelfAssignAttributes: function () {
         },
 
