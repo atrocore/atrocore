@@ -124,10 +124,9 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 ['list', 'detail'].includes(this.mode)
                 && data.foreignScope === 'ExtensibleEnumOption'
                 && this.idName !== this.name
-                && this.model.get('_meta')?.options?.[this.name]
             ) {
-                const optionData = this.model.get('_meta').options[this.name];
-                if (optionData.color){
+                const optionData = this.model.get('_meta')?.options?.[this.name] || this.getOptionsData();
+                if (optionData.color) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
                     data.description = optionData.description || '';
                     data.fontSize = fontSize ? fontSize + 'em' : '100%';
@@ -139,6 +138,20 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             }
 
             return data;
+        },
+
+        getOptionsData() {
+            let res = {};
+            let id = this.model.get(this.idName);
+            if (id) {
+                this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
+                    if (option.id === id) {
+                        res = option;
+                    }
+                });
+            }
+
+            return res;
         },
 
         onInlineEditSave(res, attrs, model) {

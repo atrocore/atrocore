@@ -86,6 +86,7 @@ class LinkType extends AbstractFieldType
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
                 'conditionalProperties'     => $this->prepareConditionalProperties($row),
                 'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
+                'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
                 'where'                     => $data['where'] ?? []
             ];
 

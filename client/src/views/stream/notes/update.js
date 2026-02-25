@@ -226,7 +226,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
                     let htmlTag = 'code';
 
-                    if (['bool', 'color', 'enum', 'multiEnum', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
+                    if (['bool', 'color', 'enum', 'multiEnum', 'extensibleEnum', 'extensibleMultiEnum', 'link', 'linkMultiple'].includes(type)) {
                         htmlTag = 'span';
                     }
 

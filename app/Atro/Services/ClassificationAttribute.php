@@ -41,6 +41,7 @@ class ClassificationAttribute extends Base
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
         if (!empty($attribute)) {
+            $entity->set('attributeData', $attribute->get('data'));
             $entity->set('attributeEntityId', $attribute->get('entityId'));
             $entity->set('attributeType', $attribute->get('type'));
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
@@ -92,6 +93,20 @@ class ClassificationAttribute extends Base
                 }
                 if (!empty($attribute->get('entityField'))) {
                     $entity->set('attributeEntityField', $attribute->get('entityField'));
+                }
+            }
+
+            if ($attribute->get('type') === 'linkMultiple' && !empty($attribute->get('entityType'))) {
+                $entity->set('attributeEntityType', $attribute->get('entityType'));
+
+                if (!empty($entity->get('valueIds'))) {
+                    $values = $this->getEntityManager()->getRepository($attribute->get('entityType'))
+                        ->where(['id' => $entity->get('valueIds')])
+                        ->find();
+
+                    if (isset($values[0])) {
+                        $entity->set('valueNames', array_column($values->toArray(), 'name', 'id'));
+                    }
                 }
             }
 

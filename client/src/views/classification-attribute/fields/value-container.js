@@ -141,6 +141,14 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
                     }
                 }
 
+                if (['link', 'linkMultiple'].includes(attributeType)) {
+                    this.model.defs['fields']['value']['where'] = this.model.get('attributeData')?.where;
+
+                    if (this.model.get('attributeExtensibleEnumId')) {
+                        params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
+                    }
+                }
+
                 if (this.model.get('attributeType') === 'varchar') {
                     params.trim = this.model.get('attributeTrim');
                 }
@@ -156,7 +164,7 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
                     ...customOptions
                 };
 
-                if (attributeType === 'link') {
+                if (['link', 'linkMultiple'].includes(attributeType)) {
                     options.foreignScope = this.model.get('attributeEntityType');
                     options.params.foreignName = this.model.get('attributeEntityField');
                 }

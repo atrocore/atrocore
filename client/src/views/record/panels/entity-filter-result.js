@@ -31,6 +31,7 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                 this.defs.create = false;
                 this.defs.select = false;
                 this.defs.unlinkAll = false;
+                this.defs.hasLayoutEditor = false;
 
                 Dep.prototype.setup.call(this);
 
