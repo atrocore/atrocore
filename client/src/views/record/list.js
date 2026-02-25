@@ -3310,6 +3310,29 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }, this);
         },
 
+        actionShowPdfDialog: function (data) {
+            data = data || {};
+
+            let id = data.id;
+            if (!id) {
+                return;
+            }
+
+            let model = this.collection.get(id);
+
+            const scope = model.name || this.scope;
+
+            let defs = this.getMetadata().get(['clientDefs', scope, 'additionalPdfGeneratorRowActionItem']) || {
+                actionViewPath: 'pdf-generator:views/record/actions/show-pdf-generator',
+                action: 'showPdfGenerator'
+            }
+
+            this.createView('action', defs.actionViewPath, {
+                model: model,
+                scope: model.name
+            }, view => view[defs.action]());
+        },
+
         setConfirmLeaveOut: function (value) {
             this.getRouter().confirmLeaveOut = value;
         },
