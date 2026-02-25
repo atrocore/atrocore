@@ -391,6 +391,9 @@ class Attribute extends Base
                 $stmt->execute();
 
                 $attributesDefs = $entity->get('attributesDefs');
+                if ($attributesDefs instanceof \stdClass) {
+                    $attributesDefs = json_decode(json_encode($attributesDefs), true);
+                }
                 if (empty($attributesDefs[$fieldName]['attributeValueId'])) {
                     foreach ($attributesDefs as $key => $attributeDef) {
                         if ($attributeDef['attributeId'] === $entity->fields[$fieldName]['attributeId']) {
