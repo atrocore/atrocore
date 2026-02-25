@@ -8,7 +8,6 @@
   },
   "exceptions": {
     "notFound": "Záznam o položce clusteru nebyl nalezen",
-    "cannotReject": "Tuto položku shluku nelze odmítnout",
     "cannotUnreject": "Tuto položku shluku nelze odmítnout"
   },
   "massActions": {

@@ -8,7 +8,6 @@
   },
   "exceptions": {
     "notFound": "Il record dell'articolo del cluster non è stato trovato",
-    "cannotReject": "Questo articolo del cluster non può essere rifiutato",
     "cannotUnreject": "Questo articolo del cluster non può essere rifiutato"
   },
   "massActions": {

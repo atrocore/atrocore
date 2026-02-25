@@ -8,7 +8,6 @@
   },
   "exceptions": {
     "notFound": "L'enregistrement de l'élément du cluster n'a pas été trouvé",
-    "cannotReject": "Ce point de la grappe ne peut être rejeté",
     "cannotUnreject": "Cet élément du cluster ne peut pas être rejeté"
   },
   "massActions": {
