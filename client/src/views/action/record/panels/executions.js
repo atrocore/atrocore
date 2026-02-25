@@ -12,7 +12,21 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
     Dep => Dep.extend({
 
         setup() {
-            this.defs.layout = [
+            this.defs.layout = this.getLayout();
+
+            Dep.prototype.setup.call(this);
+
+            this.onModelReady(() => {
+                const listView = this.getView('list');
+                if (listView) {
+                    listView.listLayout = this.getLayout();
+                    listView.reRender();
+                }
+            });
+        },
+
+        getLayout: function () {
+            const layout = [
                 {
                     "name": "name",
                     "link": true
@@ -32,7 +46,7 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
             ];
 
             if (['create', 'createOrUpdate'].includes(this.model.get('type'))) {
-                this.defs.layout.push({
+                layout.push({
                     "name": "createdCount",
                     "notSortable": true,
                     "width": 10
@@ -40,7 +54,7 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
             }
 
             if (['update', 'createOrUpdate'].includes(this.model.get('type'))) {
-                this.defs.layout.push({
+                layout.push({
                     "name": "updatedCount",
                     "notSortable": true,
                     "width": 10
@@ -48,14 +62,14 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
             }
 
             if (['create', 'update', 'createOrUpdate'].includes(this.model.get('type'))) {
-                this.defs.layout.push({
+                layout.push({
                     "name": "failedCount",
                     "notSortable": true,
                     "width": 10
                 });
             }
 
-            Dep.prototype.setup.call(this);
+            return layout;
         },
 
         actionAllLogs(data) {
