@@ -975,7 +975,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         let nameHash = { '_localeId': this.getUser().get('localeId') }
                         if ((rule.value || []).length > 0) {
                             try{
-                                const resp = this.ajaxGetRequest(this.foreignScope, {
+                                const resp = this.ajaxGetRequest(this.getForeignScope(), {
                                     select: this.getForeignName(),
                                     collectionOnly: true,
                                     where: [
@@ -1130,7 +1130,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return this.defs.params.foreignScope
                 ?? this.foreignScope
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
-                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);
+                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
+                ?? this.defs.params?.attribute?.entityType;
         },
 
         listInlineEditModeEnabled() {
