@@ -1285,9 +1285,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.enabledFixedHeader = this.options.enabledFixedHeader || this.enabledFixedHeader;
             this.baseWidth = [];
 
-
-            this.hasLayoutEditor = !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && 'list' === this.layoutName &&
-                this.getAcl().check('LayoutProfile', 'read');
+            if ('hasLayoutEditor' in (this.options || {})) {
+                this.hasLayoutEditor = this.options.hasLayoutEditor;
+            } else {
+                this.hasLayoutEditor = !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && 'list' === this.layoutName && this.getAcl().check('LayoutProfile', 'read');
+            }
 
             this.listenTo(this, 'after:save', () => {
                 this.afterSave();
