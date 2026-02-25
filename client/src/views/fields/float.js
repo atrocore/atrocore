@@ -131,6 +131,110 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
             return value;
         },
 
+        filterInput(rule, inputName) {
+            const viewKey = inputName + this.type;
+            if (!rule || !inputName) {
+                return '';
+            }
+            if (!this.isNotListeningToOperatorChange) {
+                this.isNotListeningToOperatorChange = {};
+            }
+
+            if (!this.isNotListeningToOperatorChange[inputName]) {
+                this.listenTo(this.model, 'afterUpdateRuleOperator', (rule, previous) => {
+                    if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
+                        return;
+                    }
+                    rule.rightValue = null;
+                    rule.leftValue = null;
+                    let view = this.getView(viewKey);
+
+
+                    if (!['is_null', 'is_not_null', 'current_month', 'last_month', 'next_month', 'current_year', 'last_year'].includes(rule.operator.type)) {
+                        if (rule.operator.type !== 'between' && view) {
+                            this.filterValue = view.model.get('value');
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        }
+
+                        if (['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
+                            createValueField(rule.operator.type)
+                        }
+
+                        if (!['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days', 'older_than_x_days', 'after_x_days'].includes(rule.operator.type)) {
+                            createValueField(rule.operator.type)
+                        }
+                    } else {
+                        rule.value = this.defaultFilterValue;
+                        if (view) {
+                            view.model.set('value', this.defaultFilterValue);
+                        }
+                    }
+                    this.previousOperatorType = rule.operator.type;
+                    this.isNotListeningToOperatorChange[inputName] = true;
+                })
+            }
+            this.filterValue = this.defaultFilterValue;
+            let createValueField = (type) => this.getModelFactory().create(null, model => {
+                model.set('value', this.defaultFilterValue);
+                setTimeout(() => {
+                    this.previousOperatorType = type ?? rule.operator.type;
+                    let view = `views/fields/${this.type}`
+
+                    if (['wysiwyg', 'markdown', 'text'].includes(this.type)) {
+                        view = 'views/fields/varchar';
+                    } else if (this.type === 'autoincrement') {
+                        view = 'views/fields/int';
+                    }
+
+                    if(model.getFieldParam(this.name, 'measureId')) {
+                        view = `views/fields/unit-${this.type}`
+                    }
+
+                    this.createView(viewKey, view, {
+                        name: 'value',
+                        el: `#${rule.id} .field-container.${inputName}`,
+                        model: model,
+                        mode: 'edit',
+                        params: {
+                            notNull: true
+                        }
+                    }, view => {
+                        view.render();
+                        this.listenTo(model, 'change', () => {
+                            if (rule.operator.type === 'between') {
+                                if (inputName.endsWith('value_1')) {
+                                    rule.rightValue = model.get('value')
+                                } else {
+                                    rule.leftValue = model.get('value')
+                                }
+
+                                if (rule.rightValue != null && rule.leftValue != null) {
+                                    this.filterValue = [rule.leftValue, rule.rightValue];
+                                }
+                            } else {
+                                this.filterValue = model.get('value')
+                            }
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        });
+                        this.renderAfterEl(view, `#${rule.id} .field-container`);
+                    });
+                }, 50);
+                this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                    if (rule.operator.type === 'between' && Array.isArray(rule.value) && rule.value.length === 2) {
+                        rule.leftValue = rule.value[0];
+                        rule.rightValue = rule.value[1];
+                        model.set('value', inputName.endsWith('value_1') ? rule.value[1] : rule.value[0]);
+                    } else {
+                        model.set('value', rule.value);
+                    }
+                });
+            });
+
+            createValueField();
+
+            return `<div class="field-container ${inputName}"></div><input type="hidden" real-name="${viewKey}" name="${inputName}" />`;
+        },
+
         createQueryBuilderFilter() {
             return {
                 id: this.name,
