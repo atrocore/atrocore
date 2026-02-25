@@ -11,5 +11,11 @@
   "exceptions": {
     "mergingScriptIsMissing": "Zusammenführungsskript fehlt für Master-Entität",
     "mergingScriptIsNotValid": "Skript zum Zusammenführen gibt ungültige Nutzdaten zurück: %s"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Gleicher Benutzer",
+      "system": "System"
+    }
   }
 }
