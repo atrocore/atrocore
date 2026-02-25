@@ -22,6 +22,7 @@
     "reject": "¿Está seguro de que desea rechazar los elementos seleccionados?"
   },
   "actions": {
-    "confirm": "Confirme"
+    "confirm": "Confirme",
+    "reject": "Rechace"
   }
 }
