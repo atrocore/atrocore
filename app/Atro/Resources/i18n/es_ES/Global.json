@@ -531,7 +531,8 @@
     "currentSelection": "Selección actual",
     "rejectItem": "Rechace",
     "openStagingEntity": "Entidad de puesta en escena abierta",
-    "entityFilterResult": "Resultado del filtrado"
+    "entityFilterResult": "Resultado del filtrado",
+    "System": "Sistema"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
