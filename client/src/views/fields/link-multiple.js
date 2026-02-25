@@ -85,7 +85,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         }, Dep.prototype.events),
 
         getForeignName() {
-            return this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName']) ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'foreignName']) ?? 'name'
+            return this.model.defs.fields[this.name]?.[foreignName] ?? this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName'])
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'foreignName']) ?? 'name'
         },
 
         actionLoadData() {
@@ -1131,13 +1132,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 ?? this.foreignScope
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                 ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);
-        },
-
-        listInlineEditModeEnabled() {
-            let res = Dep.prototype.listInlineEditModeEnabled.call(this);
-
-            return res && this.model.get(this.idsName) !== null && this.model.get(this.idsName) !== undefined;
-        },
+        }
     });
 });
 
