@@ -15,5 +15,11 @@
   "exceptions": {
     "mergingScriptIsMissing": "Chybí skript pro sloučení pro hlavní entitu",
     "mergingScriptIsNotValid": "Slučovací skript vrací neplatné užitečné zatížení: %s"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Stejný uživatel",
+      "system": "Systém"
+    }
   }
 }
