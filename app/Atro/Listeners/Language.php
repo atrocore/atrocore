@@ -167,7 +167,20 @@ class Language extends AbstractListener
         }
 
         if (!empty($languages)) {
+            $suffixKey = '_with_labels_in_content_language';
+
+            foreach ($this->getConfig()->get('referenceData.Locale', []) as $item) {
+                if (!empty($item['displayLabelsInContentLanguage'])) {
+                    $data[$item['languageCode'] . $suffixKey] = $data[$item['languageCode']];
+                    if (empty($originalData)) {
+                        // clone data to access translation before transformation
+                        $originalData = $data;
+                    }
+                }
+            }
+
             foreach ($data as $locale => $rows) {
+                $displayLabelsInContentLanguage = str_ends_with($locale, $suffixKey);
                 foreach ($rows as $scope => $items) {
                     // add name translation if field exists
                     if (empty($items['fields']['name']) && !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name']))) {
@@ -180,7 +193,7 @@ class Language extends AbstractListener
                                     if (empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $field, 'isMultilang']))) {
                                         continue;
                                     }
-                                    if (array_key_exists($locale, $languages) && !empty($mainLanguageName)) {
+                                    if (array_key_exists($locale, $languages) && $type == 'fields' && !empty($mainLanguageName) && !$displayLabelsInContentLanguage) {
                                         $data[$locale][$scope][$type][$field] = $value . ' / ' . $mainLanguageName;
                                     }
                                 }
@@ -188,11 +201,15 @@ class Language extends AbstractListener
                                 foreach ($languages as $code => $name) {
                                     $mField = $field . ucfirst(Util::toCamelCase(strtolower($code)));
                                     if (!isset($data[$locale][$scope][$type][$mField])) {
-                                        if ($type == 'fields' && $code !== $locale) {
-                                            $data[$locale][$scope][$type][$mField] = $value . ' / ' . $name;
-                                        } else {
-                                            $data[$locale][$scope][$type][$mField] = $value;
+                                        if ($type == 'fields' && $code !== ($displayLabelsInContentLanguage ? str_replace($suffixKey, '', $locale) : $locale)) {
+                                            if ($displayLabelsInContentLanguage) {
+                                                $data[$locale][$scope][$type][$mField] = $this->getLabel($originalData ?? [], $code, $scope, $field);
+                                            } else {
+                                                $data[$locale][$scope][$type][$mField] = $value . ' / ' . $name;
+                                            }
+                                            continue;
                                         }
+                                        $data[$locale][$scope][$type][$mField] = $value;
                                     }
                                 }
                             }

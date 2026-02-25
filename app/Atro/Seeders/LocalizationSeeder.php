@@ -21,26 +21,27 @@ class LocalizationSeeder extends AbstractSeeder
             @mkdir(ReferenceData::DIR_PATH);
         }
 
-        if (!file_exists(ReferenceData::DIR_PATH.DIRECTORY_SEPARATOR.'Locale.json')) {
-            @file_put_contents(ReferenceData::DIR_PATH.DIRECTORY_SEPARATOR.'Locale.json', json_encode([
+        if (!file_exists(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Locale.json')) {
+            @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Locale.json', json_encode([
                 'en_US' => [
-                    'id'                => 'main',
-                    'name'              => 'Main',
-                    'code'              => 'en_US',
-                    'languageCode'      => 'en_US',
-                    'dateFormat'        => 'DD.MM.YYYY',
-                    'timeZone'          => 'UTC',
-                    'weekStart'         => 'monday',
-                    'timeFormat'        => 'HH:mm',
-                    'thousandSeparator' => '.',
-                    'decimalMark'       => ',',
-                    'createdAt'         => date('Y-m-d H:i:s'),
+                    'id'                             => 'main',
+                    'name'                           => 'Main',
+                    'code'                           => 'en_US',
+                    'languageCode'                   => 'en_US',
+                    'dateFormat'                     => 'DD.MM.YYYY',
+                    'timeZone'                       => 'UTC',
+                    'weekStart'                      => 'monday',
+                    'timeFormat'                     => 'HH:mm',
+                    'thousandSeparator'              => '.',
+                    'decimalMark'                    => ',',
+                    'createdAt'                      => date('Y-m-d H:i:s'),
+                    'displayLabelsInContentLanguage' => false
                 ],
             ]));
         }
 
-        if (!file_exists(ReferenceData::DIR_PATH.DIRECTORY_SEPARATOR.'Language.json')) {
-            @file_put_contents(ReferenceData::DIR_PATH.DIRECTORY_SEPARATOR.'Language.json', json_encode([
+        if (!file_exists(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Language.json')) {
+            @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Language.json', json_encode([
                 'en_US' => [
                     'id'        => 'main',
                     'name'      => 'English',
