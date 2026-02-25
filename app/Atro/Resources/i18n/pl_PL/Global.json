@@ -530,7 +530,9 @@
     "currentSelection": "Bieżący wybór",
     "rejectItem": "Proszę odrzucić",
     "openStagingEntity": "Open Staging Entity",
-    "openPrimaryEntity": "Otwarty podmiot główny"
+    "openPrimaryEntity": "Otwarty podmiot główny",
+    "entityFilterResult": "Wynik filtra",
+    "System": "System"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
