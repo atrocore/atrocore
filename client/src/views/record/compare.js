@@ -220,10 +220,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             buttons.addClass('disabled');
             this.handleRadioButtonsDisableState(true);
             $.ajax({
-                url: this.getCompareUrl(),
+                url: this.getMergeUrl(),
                 type: 'POST',
                 selectionId: this.selectionModel?.id,
-                data: JSON.stringify(this.getCompareData(id, attributes, relationshipData)),
+                data: JSON.stringify(this.getMergeData(id, attributes, relationshipData)),
                 error: (xhr, status, error) => {
                     this.notify(false);
                     buttons.removeClass('disabled');
@@ -238,11 +238,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
         },
 
-        getCompareUrl() {
+        getMergeUrl() {
             return 'App/action/merge'
         },
 
-        getCompareData(targetId, attributes, relationshipData) {
+        getMergeData(targetId, attributes, relationshipData) {
             return {
                 scope: this.scope,
                 attributes: {

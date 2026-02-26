@@ -23,6 +23,10 @@
     "unreject": "Unreject"
   },
   "exceptions": {
-    "cannotDelete": "Only empty clusters can be deleted"
+    "cannotDelete": "Only empty clusters can be deleted",
+    "cannotMergeWithoutGoldenRecord": "It is not possible to merge without a golden record"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Unconfirmed items cannot be added to the merging"
   }
 }

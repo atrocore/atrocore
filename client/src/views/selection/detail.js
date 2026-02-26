@@ -217,7 +217,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             // if we change from compare to merge or vis-versa
-            if (['compare', 'merge'].includes(this.selectionViewMode) && ['compare', 'merge'].includes(data.name)) {
+            if (['compare', 'merge'].includes(this.selectionViewMode)
+                && ['compare', 'merge'].includes(data.name)
+                && this.scope === 'Selection') {
                 this.selectionViewMode = data.name;
                 let record = this.getMainRecord();
                 if (record) {
@@ -448,7 +450,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 rootUrl: this.options.params.rootUrl,
                 hasNext: this.hasNext,
                 entityTypes: this.getEntityTypes(),
-                scope: this.selectionViewMode === 'standard' ? this.scope : this.getEntityTypes()[0]
+                scope: this.selectionViewMode === 'standard' ? this.scope : this.getEntityTypes()[0],
+                merging: this.selectionViewMode === 'merge'
             };
 
             if (this.selectionItemModels) {
@@ -617,7 +620,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             if (this.selectionViewMode === 'merge') {
-                return 'views/selection/record/detail/merge';
+                return 'views/selection/record/detail/compare';
             }
 
             return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
