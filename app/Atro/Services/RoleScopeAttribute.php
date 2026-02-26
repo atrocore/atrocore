@@ -50,8 +50,8 @@ class RoleScopeAttribute extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        if (empty($entity->_fromCollection)) {
-            if (class_exists("\\Pim\\Module")) {
+        if (class_exists("\\Pim\\Module")) {
+            if (empty($entity->_fromCollection)) {
                 $attribute = $this->getEntityManager()->getRepository('Attribute')
                     ->select(['id', 'name', 'channelId', 'channelName'])
                     ->where(['id' => $entity->get('attributeId'), 'channelId!=' => null])
