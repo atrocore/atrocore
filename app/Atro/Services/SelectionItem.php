@@ -104,6 +104,7 @@ class SelectionItem extends Base
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
                             $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
                         }
+
                         $service->loadAdditionalFields($entity);
                         $service->prepareEntityForOutput($entity);
 
