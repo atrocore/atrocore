@@ -134,6 +134,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 let relationEntityName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
                 canSelect = this.getAcl().check(relationEntityName, 'create');
                 canUnlink = this.getAcl().check(relationEntityName, 'delete');
+            }else{
+                let foreignEntity = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.link, 'entity']);
+                if(foreignEntity) {
+                    canSelect = this.getAcl().check(foreignEntity, 'edit');
+                    canUnlink = this.getAcl().check(foreignEntity, 'edit');
+                }
             }
 
             if (this.readOnly) {
