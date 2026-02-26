@@ -2833,6 +2833,10 @@ th {
     min-width: 12em;
 }
 
+.list-container.sharing-panel .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]) {
+    min-width: auto;
+}
+
 .table > tbody > tr > td.cell {
     border: 1px solid transparent;
 }
