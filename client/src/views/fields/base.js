@@ -556,7 +556,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             const nonInheritedFields = this.getNonInheritedFields();
 
-            return !nonInheritedFields.includes(this.name);
+            return !nonInheritedFields.includes(this.originalName || this.name);
         },
 
         initClassificationFieldMarker: function () {
@@ -1198,7 +1198,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             }
 
-            if (!this.model.get('attributesDefs')[name] && this.model.defs['fields']?.[name]?.attributeId ) {
+            if (!this.model.get('attributesDefs')[name] && this.model.defs['fields']?.[name]?.attributeId) {
                 data.__attributes = [this.model.defs['fields'][name].attributeId];
             }
 
@@ -1637,7 +1637,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             const inheritedFields = this.model.get('inheritedFields');
 
-            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.name);
+            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.originalName || this.name);
         },
 
         fetchToModel: function () {

@@ -420,7 +420,11 @@ class Hierarchy extends Base
                     }
                     break;
                 case 'linkMultiple':
-                    $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
+                    if (!empty($fieldDefs['attributeId'])) {
+                        $input->{$field . 'Ids'} = $parent->get($field . 'Ids');
+                    } else {
+                        $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
+                    }
                     break;
                 case 'int':
                 case 'float':
@@ -1088,10 +1092,10 @@ class Hierarchy extends Base
                     break;
                 case 'linkMultiple':
                     if (!in_array($field, $this->getRepository()->getUnInheritedFields())) {
-                        if(!empty($fieldDefs['attributeId'])) {
+                        if (!empty($fieldDefs['attributeId'])) {
                             $parentIds = $parent->get($field . 'Ids') ?? [];
                             $entityIds = $child->get($field . 'Ids') ?? [];
-                        }else{
+                        } else {
                             $parentIds = $parent->getLinkMultipleIdList($field);
                             $entityIds = $child->getLinkMultipleIdList($field);
                         }
