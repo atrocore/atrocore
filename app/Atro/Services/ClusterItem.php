@@ -149,8 +149,13 @@ class ClusterItem extends Base
         return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
     }
 
-    public function rejectItem(\Atro\Entities\ClusterItem $entity, bool $persistRejection = true): bool
+    public function rejectItem(\Atro\Entities\ClusterItem|string $entity, bool $persistRejection = true): bool
     {
+        if(is_string($entity)) {
+            /** @var \Atro\Entities\ClusterItem $entity */
+            $entity = $this->getEntity($entity);
+        }
+
         if (empty($cluster = $entity->get('cluster'))) {
             throw new Exception("Cluster is not set for item {$entity->get('id')}");
         }
