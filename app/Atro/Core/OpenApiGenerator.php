@@ -88,34 +88,6 @@ class OpenApiGenerator
                 $this->getFieldSchema($result, $entityName, $fieldName, $fieldData);
             }
 
-            if ($this->getMetadata()->get(['scopes', $entityName, 'hasAttribute'])) {
-                $result['components']['schemas'][$entityName]['properties']['attributesDefs'] = ["type" => "object", "forRead" => true];
-                $result['components']['schemas'][$entityName]['properties']['attributesValues'] = [
-                    "type"  => "array",
-                    "items" => [
-                        "type"       => "object",
-                        'properties' => [
-                            'attributeId'      => ['type' => 'string'],
-                            'attributeValueId' => ['type' => 'string'],
-                            'value'            => ['nullable' => true, 'example' => null],
-                            'valueName'        => ['type' => 'string', 'nullable' => true],
-                            'valueUnitId'      => ['type' => 'string', 'nullable' => true],
-                            'valueUnitName'    => ['type' => 'string', 'nullable' => true],
-                            'valueId'          => ['type' => 'string', 'nullable' => true],
-                            'valueIds'         => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
-                            'valueNames'       => ['type' => 'object', 'nullable' => true],
-                            'valueOptionsData' => ['type' => 'object', 'nullable' => true],
-                            'valueOptionData'  => ['type' => 'object', 'nullable' => true],
-                            'valuePathsData'   => ['type' => 'object', 'nullable' => true],
-                            'valueUnitData'    => ['type' => 'object', 'nullable' => true],
-                            'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
-                            'valueFrom'        => ['nullable' => true, 'example' => 1],
-                            'valueTo'          => ['nullable' => true, 'example' => 2],
-                        ]
-                    ],
-                ];
-            }
-
             $schemas[$entityName] = $result['components']['schemas'][$entityName];
         }
 
@@ -261,51 +233,6 @@ class OpenApiGenerator
                 $result['paths']["/{$scopeName}"]['get']['parameters'][] = $languageParam;
             }
 
-            if ($this->getMetadata()->get(['scopes', $scopeName, 'hasAttribute'])) {
-                $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
-                    "name"        => "attributes",
-                    "in"          => "query",
-                    "required"    => false,
-                    "description" => "Attributes Ids according to $scopeName attributes",
-                    "schema"      => [
-                        "type"    => "string",
-                        "example" => "a01k4pyczndebktndtacfv3055c,a01k4pwfb59e76tcrndz11n7s6b"
-                    ]
-                ];
-
-                $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
-                    "name"        => "allAttributes",
-                    "in"          => "query",
-                    "required"    => false,
-                    "description" => "Load data with all the existing attributes for $scopeName",
-                    "schema"      => [
-                        "type"    => "boolean",
-                        "example" => "false"
-                    ]
-                ];
-
-                $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
-                    "name"        => "completeAttrDefs",
-                    "in"          => "query",
-                    "required"    => false,
-                    "description" => "Load the complete attributeDefs for the loaded attributes $scopeName",
-                    "schema"      => [
-                        "type"    => "boolean",
-                        "example" => "false"
-                    ]
-                ];
-                $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
-                    "name"        => "Flatten-Attributes",
-                    "in"          => "header",
-                    "required"    => false,
-                    "description" => "When true, flattens attribute values into the product object. When false or omitted, attributes are in the attributeValues array.",
-                    "schema"      => [
-                        "type"    => "boolean",
-                        "example" => "false"
-                    ]
-                ];
-            }
-
             $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
                 "name"        => "With-Meta",
                 "in"          => "header",
@@ -358,19 +285,6 @@ class OpenApiGenerator
 
             if (!empty($languageParam)) {
                 $result['paths']["/{$scopeName}/{id}"]['get']['parameters'][] = $languageParam;
-            }
-
-            if ($this->getMetadata()->get(['scopes', $scopeName, 'hasAttribute'])) {
-                $result['paths']["/{$scopeName}/{id}"]['get']['parameters'][] = [
-                    "name"        => "Flatten-Attributes",
-                    "in"          => "header",
-                    "required"    => false,
-                    "description" => "When true, flattens attribute values into the product object. When false or omitted, attributes are in the attributeValues array.",
-                    "schema"      => [
-                        "type"    => "boolean",
-                        "example" => "false"
-                    ]
-                ];
             }
 
             if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive' && $scopeName !== 'MatchedRecord') {
@@ -543,6 +457,166 @@ class OpenApiGenerator
                 ];
 
                 if (!empty($scopeData['hasAttribute'])) {
+                    $result['paths']["/{$scopeName}/{id}/attributeValues"]['get'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Get attribute values for a $scopeName record",
+                        "description" => "Returns all attribute values assigned to a $scopeName record",
+                        "operationId" => "get{$scopeName}AttributeValues",
+                        'security'    => [['Authorization-Token' => []]],
+                        'parameters'  => [
+                            [
+                                'name'     => 'id',
+                                'in'       => 'path',
+                                'required' => true,
+                                'schema'   => ['type' => 'string'],
+                                'example'  => '613219736ca7a1c68'
+                            ]
+                        ],
+                        "responses" => self::prepareResponses([
+                            'type'  => 'array',
+                            "items" => [
+                                "type"       => "object",
+                                'properties' => [
+                                    'attributeId'      => ['type' => 'string'],
+                                    'type'        => ['type' => 'string'],
+                                    'required'    => ['type' => 'boolean'],
+                                    'visible'     => ['type' => 'boolean'],
+                                    'readOnly'    => ['type' => 'boolean'],
+                                    'protected'   => ['type' => 'boolean'],
+                                    'value'            => ['nullable' => true, 'example' => null],
+                                    'valueName'        => ['type' => 'string', 'nullable' => true],
+                                    'valueUnitId'      => ['type' => 'string', 'nullable' => true],
+                                    'valueUnitName'    => ['type' => 'string', 'nullable' => true],
+                                    'valueId'          => ['type' => 'string', 'nullable' => true],
+                                    'valueIds'         => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
+                                    'valueNames'       => ['type' => 'object', 'nullable' => true],
+                                    'valueOptionsData' => ['type' => 'object', 'nullable' => true],
+                                    'valueOptionData'  => ['type' => 'object', 'nullable' => true],
+                                    'valuePathsData'   => ['type' => 'object', 'nullable' => true],
+                                    'valueUnitData'    => ['type' => 'object', 'nullable' => true],
+                                    'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
+                                    'valueFrom'        => ['nullable' => true, 'example' => 1],
+                                    'valueTo'          => ['nullable' => true, 'example' => 2],
+                                ]
+                            ]
+                        ])
+                    ];
+
+                    $result['paths']["/{$scopeName}/{id}/addAttributes"]['post'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Add attributes to a $scopeName record",
+                        "description" => "Assigns one or more attributes to a $scopeName record without setting values",
+                        "operationId" => "add{$scopeName}Attributes",
+                        'security'    => [['Authorization-Token' => []]],
+                        'parameters'  => [
+                            [
+                                'name'     => 'id',
+                                'in'       => 'path',
+                                'required' => true,
+                                'schema'   => ['type' => 'string'],
+                                'example'  => '613219736ca7a1c68'
+                            ]
+                        ],
+                        'requestBody' => [
+                            'required' => true,
+                            'content'  => [
+                                'application/json' => [
+                                    'schema' => [
+                                        'type'       => 'object',
+                                        'properties' => [
+                                            'attributeIds' => [
+                                                'type'    => 'array',
+                                                'items'   => ['type' => 'string'],
+                                                'example' => ['613219736ca7a1c68', '6132197390d69afa5']
+                                            ]
+                                        ],
+                                        'required' => ['attributeIds']
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "responses" => self::prepareResponses(['type' => 'boolean'])
+                    ];
+
+                    $result['paths']["/{$scopeName}/{id}/upsertAttributeValues"]['post'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Upsert attribute values for a $scopeName record",
+                        "description" => "Creates or updates attribute values for a $scopeName record. Only specified attributes are affected.",
+                        "operationId" => "upsert{$scopeName}AttributeValues",
+                        'security'    => [['Authorization-Token' => []]],
+                        'parameters'  => [
+                            [
+                                'name'     => 'id',
+                                'in'       => 'path',
+                                'required' => true,
+                                'schema'   => ['type' => 'string'],
+                                'example'  => '613219736ca7a1c68'
+                            ]
+                        ],
+                        'requestBody' => [
+                            'required' => true,
+                            'content'  => [
+                                'application/json' => [
+                                    'schema' => [
+                                        'type'  => 'array',
+                                        'items' => [
+                                            'type'       => 'object',
+                                            'properties' => [
+                                                'attributeId'  => ['type' => 'string', 'example' => '613219736ca7a1c68'],
+                                                'value'        => ['nullable' => true, 'example' => 'Some text'],
+                                                'valueUnitId'  => ['type' => 'string', 'nullable' => true, 'example' => 'usd'],
+                                            ],
+                                            'required' => ['attributeId']
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "responses" => self::prepareResponses(['type' => 'boolean'])
+                    ];
+
+                    $result['paths']["/{$scopeName}/{id}/attributeValues"]['delete'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Delete attribute values from a $scopeName record",
+                        "description" => "Removes one or more attribute assignments from a $scopeName record",
+                        "operationId" => "delete{$scopeName}AttributeValues",
+                        'security'    => [['Authorization-Token' => []]],
+                        'parameters'  => [
+                            [
+                                'name'     => 'id',
+                                'in'       => 'path',
+                                'required' => true,
+                                'schema'   => ['type' => 'string'],
+                                'example'  => '613219736ca7a1c68'
+                            ]
+                        ],
+                        'requestBody' => [
+                            'required' => true,
+                            'content'  => [
+                                'application/json' => [
+                                    'schema' => [
+                                        'type'       => 'object',
+                                        'properties' => [
+                                            'attributeIds' => [
+                                                'type'    => 'array',
+                                                'items'   => ['type' => 'string'],
+                                                'example' => ['613219736ca7a1c68', '6132197390d69afa5']
+                                            ]
+                                        ],
+                                        'required' => ['attributeIds']
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "responses" => self::prepareResponses([
+                            'type'       => 'object',
+                            'properties' => [
+                                'count'  => ['type' => 'integer'],
+                                'errors' => ['type' => 'array', 'items' => ['type' => 'string']]
+                            ]
+                        ])
+                    ];
+
                     $result['paths']["/{$scopeName}/action/massRemoveAttribute"]['post'] = [
                         'tags'        => [$scopeName],
                         "summary"     => "Mass remove attribute on $scopeName record",

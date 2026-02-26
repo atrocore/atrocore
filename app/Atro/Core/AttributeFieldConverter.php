@@ -384,14 +384,14 @@ class AttributeFieldConverter
         $entity->hasAllEntityAttributes = true;
     }
 
-    public function prepareInputForAttributesValuesArray(IEntity $entity, \stdClass $input): void
+    public function prepareInputForAttributeValuesArray(IEntity $entity, \stdClass $input): void
     {
-        if (!isset($input->attributesValues)) {
+        if (!isset($input->attributeValues)) {
             return;
         }
 
         // flat attribute values from array
-        foreach ($input->attributesValues ?? [] as $attributeValue) {
+        foreach ($input->attributeValues as $attributeValue) {
             if (!empty($attributeValue->attributeId)) {
                 $attributeField = null;
                 foreach ($entity->entityDefs['fields'] as $field => $defs) {
@@ -416,7 +416,7 @@ class AttributeFieldConverter
             }
         }
 
-        unset($input->attributesValues);
+        unset($input->attributeValues);
     }
 
     public function getAttributesRowsByIds(array $attributesIds): array
