@@ -73,6 +73,10 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                     this.reRender();
                 });
 
+                if(this.isRendered())  {
+                    this.trigger('panel:rebuild', this.options.defs);
+                }
+
                 this.wait(false)
             })
 
