@@ -75,8 +75,8 @@ class OpenApiGenerator
             $result['components']['schemas'][$entityName] = [
                 'type'       => 'object',
                 'properties' => [
-                    'id'      => ['type' => 'string'],
-                    '_meta'   => ['type' => 'object'],
+                    'id'    => ['type' => 'string'],
+                    '_meta' => ['type' => 'object'],
                 ],
             ];
 
@@ -472,17 +472,17 @@ class OpenApiGenerator
                                 'example'  => '613219736ca7a1c68'
                             ]
                         ],
-                        "responses" => self::prepareResponses([
+                        "responses"   => self::prepareResponses([
                             'type'  => 'array',
                             "items" => [
                                 "type"       => "object",
                                 'properties' => [
                                     'attributeId'      => ['type' => 'string'],
-                                    'type'        => ['type' => 'string'],
-                                    'required'    => ['type' => 'boolean'],
-                                    'visible'     => ['type' => 'boolean'],
-                                    'readOnly'    => ['type' => 'boolean'],
-                                    'protected'   => ['type' => 'boolean'],
+                                    'type'             => ['type' => 'string'],
+                                    'required'         => ['type' => 'boolean'],
+                                    'visible'          => ['type' => 'boolean'],
+                                    'readOnly'         => ['type' => 'boolean'],
+                                    'protected'        => ['type' => 'boolean'],
                                     'value'            => ['nullable' => true, 'example' => null],
                                     'valueName'        => ['type' => 'string', 'nullable' => true],
                                     'valueUnitId'      => ['type' => 'string', 'nullable' => true],
@@ -530,12 +530,12 @@ class OpenApiGenerator
                                                 'example' => ['613219736ca7a1c68', '6132197390d69afa5']
                                             ]
                                         ],
-                                        'required' => ['attributeIds']
+                                        'required'   => ['attributeIds']
                                     ]
                                 ]
                             ]
                         ],
-                        "responses" => self::prepareResponses(['type' => 'boolean'])
+                        "responses"   => self::prepareResponses(['type' => 'boolean'])
                     ];
 
                     $result['paths']["/{$scopeName}/{id}/upsertAttributeValues"]['post'] = [
@@ -562,17 +562,17 @@ class OpenApiGenerator
                                         'items' => [
                                             'type'       => 'object',
                                             'properties' => [
-                                                'attributeId'  => ['type' => 'string', 'example' => '613219736ca7a1c68'],
-                                                'value'        => ['nullable' => true, 'example' => 'Some text'],
-                                                'valueUnitId'  => ['type' => 'string', 'nullable' => true, 'example' => 'usd'],
+                                                'attributeId' => ['type' => 'string', 'example' => '613219736ca7a1c68'],
+                                                'value'       => ['nullable' => true, 'example' => 'Some text'],
+                                                'valueUnitId' => ['type' => 'string', 'nullable' => true, 'example' => 'usd'],
                                             ],
-                                            'required' => ['attributeId']
+                                            'required'   => ['attributeId']
                                         ]
                                     ]
                                 ]
                             ]
                         ],
-                        "responses" => self::prepareResponses(['type' => 'boolean'])
+                        "responses"   => self::prepareResponses(['type' => 'boolean'])
                     ];
 
                     $result['paths']["/{$scopeName}/{id}/attributeValues"]['delete'] = [
@@ -603,12 +603,12 @@ class OpenApiGenerator
                                                 'example' => ['613219736ca7a1c68', '6132197390d69afa5']
                                             ]
                                         ],
-                                        'required' => ['attributeIds']
+                                        'required'   => ['attributeIds']
                                     ]
                                 ]
                             ]
                         ],
-                        "responses" => self::prepareResponses([
+                        "responses"   => self::prepareResponses([
                             'type'       => 'object',
                             'properties' => [
                                 'count'  => ['type' => 'integer'],
