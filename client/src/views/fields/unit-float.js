@@ -148,7 +148,7 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
                         mode: 'edit',
                         params: {
                             notNull: true,
-                            measureId: this.defs.params?.attribute?.measureId
+                            measureId: this.measureId || this.defs.params?.attribute?.measureId
                         }
                     }, view => {
                         view.render();
@@ -201,19 +201,29 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
             return {
                 callback: function (value, rule) {
                     if (rule.operator.type === 'between') {
-                        if (Array.isArray(value) && value.length === 2
-                            && Array.isArray(value[0]) && value[0].length === 2
-                            && Array.isArray(value[1]) && value[1].length === 2) {
-                            return true;
+                        if (!Array.isArray(value) || value.length !== 2
+                            || !Array.isArray(value[0]) || value[0].length !== 2
+                            || !Array.isArray(value[1]) || value[1].length !== 2) {
+                            return 'bad between';
                         }
-                        return 'bad between';
-                    }
-
-                    if (Array.isArray(value) && value.length === 2) {
+                        if (value[0][0] === null || value[0][0] === '' || !value[0][1]) {
+                            return 'bad value';
+                        }
+                        if (value[1][0] === null || value[1][0] === '' || !value[1][1]) {
+                            return 'bad value';
+                        }
                         return true;
                     }
 
-                    return 'bad value';
+                    if (!Array.isArray(value) || value.length !== 2) {
+                        return 'bad value';
+                    }
+
+                    if (value[0] === null || value[0] === '' || !value[1]) {
+                        return 'bad value';
+                    }
+
+                    return true;
                 }.bind(this),
             }
         }
