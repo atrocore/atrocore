@@ -103,8 +103,10 @@ class SelectionItem extends Base
                     foreach ($entities as $entity) {
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
                             $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
-                            $service->prepareEntityForOutput($entity);
                         }
+
+                        $service->loadAdditionalFields($entity);
+                        $service->prepareEntityForOutput($entity);
 
                         if ($record->get('entityId') === $entity->get('id')) {
                             $record->set('recordId', $entity->get('id'));
