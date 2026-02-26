@@ -13,8 +13,10 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
@@ -199,6 +201,10 @@ class IntType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
+        if (!empty($item['unitField'])) {
+            return $this->convertUnitFieldWhere($entity, $attribute, $item);
+        }
+
         if (str_ends_with($item['attribute'], 'UnitId')) {
             if ($item['type'] === 'isNull') {
                 $item = [
@@ -226,5 +232,154 @@ class IntType extends AbstractFieldType
         }
 
         return $item;
+    }
+
+    protected function convertUnitFieldWhere(IEntity $entity, array $attribute, array $item): array
+    {
+        $type = $item['type'];
+        $value = $item['value'] ?? null;
+        $valueColumn = "{$this->type}Value";
+        $isInt = $this->type === 'int';
+
+        if ($type === 'isNull') {
+            return [
+                'type'  => 'and',
+                'value' => [
+                    ['type' => 'isNull', 'attribute' => $valueColumn],
+                    [
+                        'type'  => 'or',
+                        'value' => [
+                            ['type' => 'isNull', 'attribute' => 'referenceValue'],
+                            ['type' => 'equals', 'attribute' => 'referenceValue', 'value' => ''],
+                        ]
+                    ],
+                ]
+            ];
+        }
+
+        if ($type === 'isNotNull') {
+            return [
+                'type'  => 'and',
+                'value' => [
+                    ['type' => 'isNotNull', 'attribute' => $valueColumn],
+                    ['type' => 'isNotNull', 'attribute' => 'referenceValue'],
+                    ['type' => 'notEquals', 'attribute' => 'referenceValue', 'value' => ''],
+                ]
+            ];
+        }
+
+        $measureUnits = $this->getAttributeMeasureUnitsData($entity, $attribute['id']);
+        if (empty($measureUnits)) {
+            return ['type' => 'equals', 'attribute' => 'referenceValue', 'value' => '__impossible__'];
+        }
+
+        if ($type === 'between') {
+            if (!is_array($value) || count($value) < 2) {
+                return [];
+            }
+
+            $baseFrom = $this->resolveUnitFilterValue($value[0], $measureUnits);
+            $baseTo = $this->resolveUnitFilterValue($value[1], $measureUnits);
+            if ($baseFrom === null || $baseTo === null) {
+                return [];
+            }
+
+            $orConditions = [];
+            foreach ($measureUnits as $unitId => $multiplier) {
+                $convertedFrom = $baseFrom / $multiplier;
+                $convertedTo = $baseTo / $multiplier;
+                $orConditions[] = [
+                    'type'  => 'and',
+                    'value' => [
+                        ['type' => 'equals', 'attribute' => 'referenceValue', 'value' => $unitId],
+                        ['type' => 'greaterThanOrEquals', 'attribute' => $valueColumn, 'value' => $isInt ? (int)round($convertedFrom) : $convertedFrom],
+                        ['type' => 'lessThanOrEquals', 'attribute' => $valueColumn, 'value' => $isInt ? (int)round($convertedTo) : $convertedTo],
+                    ]
+                ];
+            }
+
+            return ['type' => 'or', 'value' => $orConditions];
+        }
+
+        $baseValue = $this->resolveUnitFilterValue($value, $measureUnits);
+        if ($baseValue === null) {
+            return [];
+        }
+
+        $orConditions = [];
+        foreach ($measureUnits as $unitId => $multiplier) {
+            $convertedValue = $baseValue / $multiplier;
+            $orConditions[] = [
+                'type'  => 'and',
+                'value' => [
+                    ['type' => 'equals', 'attribute' => 'referenceValue', 'value' => $unitId],
+                    ['type' => $type, 'attribute' => $valueColumn, 'value' => $isInt ? (int)round($convertedValue) : $convertedValue],
+                ]
+            ];
+        }
+
+        return ['type' => 'or', 'value' => $orConditions];
+    }
+
+    protected function getAttributeMeasureUnitsData(IEntity $entity, string $attributeId): array
+    {
+        $tableName = Util::toUnderScore(lcfirst($entity->getEntityName()));
+
+        $rows = $this->conn->createQueryBuilder()
+            ->select('u.id', 'u.multiplier')
+            ->from('unit', 'u')
+            ->innerJoin('u',
+                "(SELECT DISTINCT reference_value AS uid FROM {$tableName}_attribute_value WHERE attribute_id = :attrId AND reference_value IS NOT NULL AND reference_value != '' AND deleted = :false)",
+                'used',
+                'u.id = used.uid'
+            )
+            ->where('u.deleted = :false')
+            ->setParameter('attrId', $attributeId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        $units = [];
+        foreach ($rows as $row) {
+            $multiplier = (float)$row['multiplier'];
+            if ($multiplier != 0) {
+                $units[$row['id']] = $multiplier;
+            }
+        }
+
+        return $units;
+    }
+
+    protected function resolveUnitFilterValue($value, array $measureUnits): ?float
+    {
+        if (!is_array($value) || count($value) < 2) {
+            return null;
+        }
+
+        $amount = $value[0];
+        $unitId = $value[1];
+
+        if (!is_numeric($amount) || empty($unitId)) {
+            return null;
+        }
+
+        if (isset($measureUnits[$unitId])) {
+            $multiplier = $measureUnits[$unitId];
+        } else {
+            $row = $this->conn->createQueryBuilder()
+                ->select('multiplier')
+                ->from('unit')
+                ->where('id = :id AND deleted = :false')
+                ->setParameter('id', $unitId)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAssociative();
+
+            $multiplier = !empty($row) ? (float)$row['multiplier'] : null;
+        }
+
+        if (empty($multiplier)) {
+            return null;
+        }
+
+        return (float)$amount * $multiplier;
     }
 }

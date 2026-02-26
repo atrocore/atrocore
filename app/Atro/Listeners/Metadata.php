@@ -763,7 +763,7 @@ class Metadata extends AbstractListener
                         "mainField"          => $field,
                         "unitField"          => true,
                         "required"           => false,
-                        "filterDisabled"     => true,
+                        "filterDisabled"     => $fieldDefs['type'] === 'varchar',
                         "massUpdateDisabled" => true,
                         "importDisabled"     => true,
                         "emHidden"           => true

@@ -1992,7 +1992,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         getAttributeFieldName() {
             let originalName = this.name;
             $.each((this.model.defs.fields || {}), (field, fieldDefs) => {
-                if (fieldDefs.attributeId && `attr_${fieldDefs.attributeId}` === this.name) {
+                if (fieldDefs.attributeId && [`attr_${fieldDefs.attributeId}`, `unitattr_${fieldDefs.attributeId}`].include(this.name)) {
                     originalName = field;
                 }
             });

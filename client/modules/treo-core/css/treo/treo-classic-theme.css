@@ -16917,7 +16917,7 @@ div.list-kanban > div > table .item .panel .form-group {
 }
 
 .query-builder .form-control.selectize-control {
-    min-width: auto;
+    min-width: 90px;
 }
 
 .query-builder-container .checkboxes-filter > ul {

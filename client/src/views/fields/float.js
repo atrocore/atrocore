@@ -131,89 +131,6 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
             return value;
         },
 
-        filterInput(rule, inputName) {
-            const viewKey = inputName + this.type;
-            if (!rule || !inputName) {
-                return '';
-            }
-            if (!this.isNotListeningToOperatorChange) {
-                this.isNotListeningToOperatorChange = {};
-            }
-
-            if (!this.isNotListeningToOperatorChange[inputName]) {
-                this.listenTo(this.model, 'afterUpdateRuleOperator', (rule, previous) => {
-                    if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
-                        return;
-                    }
-                    rule.rightValue = null;
-                    rule.leftValue = null;
-                    let view = this.getView(viewKey);
-
-
-                    if (!['is_null', 'is_not_null', 'current_month'].includes(rule.operator.type)) {
-                        if ( view) {
-                            this.filterValue = view.model.get('value');
-                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                        }
-
-                    } else {
-                        rule.value = this.defaultFilterValue;
-                        if (view) {
-                            view.model.set('value', this.defaultFilterValue);
-                        }
-                    }
-                    this.previousOperatorType = rule.operator.type;
-                    this.isNotListeningToOperatorChange[inputName] = true;
-                })
-            }
-            this.filterValue = this.defaultFilterValue;
-            let createValueField = (type) => this.getModelFactory().create(null, model => {
-                model.set('value', this.defaultFilterValue);
-                setTimeout(() => {
-                    this.previousOperatorType = type ?? rule.operator.type;
-                    let view = `views/fields/${this.type}`
-                    if(this.model.getFieldParam(this.name, 'measureId')) {
-                        view = `views/fields/unit-${this.type}`
-                    }
-                    this.createView(viewKey, view, {
-                        name: 'value',
-                        el: `#${rule.id} .field-container.${inputName}`,
-                        model: model,
-                        mode: 'edit',
-                        params: {
-                            notNull: true
-                        }
-                    }, view => {
-                        view.render();
-                        this.listenTo(model, 'change', () => {
-                            if (rule.operator.type === 'between') {
-                                if (inputName.endsWith('value_1')) {
-                                    rule.rightValue = model.get('value')
-                                } else {
-                                    rule.leftValue = model.get('value')
-                                }
-
-                                if (rule.rightValue != null && rule.leftValue != null) {
-                                    this.filterValue = [rule.leftValue, rule.rightValue];
-                                }
-                            } else {
-                                this.filterValue = model.get('value')
-                            }
-                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                        });
-                        this.renderAfterEl(view, `#${rule.id} .field-container`);
-                    });
-                }, 50);
-                this.listenTo(this.model, 'afterInitQueryBuilder', () => {
-                        model.set('value', rule.value);
-                });
-            });
-
-            createValueField();
-
-            return `<div class="field-container ${inputName}"></div><input type="hidden" real-name="${viewKey}" name="${inputName}" />`;
-        },
-
         createQueryBuilderFilter() {
             return {
                 id: this.name,
@@ -233,24 +150,28 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 ],
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
-                validation: {
-                    callback: function (value, rule) {
-                        if (rule.operator.type === 'between') {
-                            if ((!Array.isArray(value) || value.length !== 2)) {
-                                return 'bad between';
-                            }
-                            return true;
-                        }
-
-                        if (isNaN(value) || value === null) {
-                            return 'bad float';
-                        }
-
-                        return true;
-                    }.bind(this),
-                }
+                validation: this.queryBuilderValidation()
             };
         },
+
+        queryBuilderValidation() {
+            return {
+                callback: function (value, rule) {
+                    if (rule.operator.type === 'between') {
+                        if ((!Array.isArray(value) || value.length !== 2)) {
+                            return 'bad between';
+                        }
+                        return true;
+                    }
+
+                    if (isNaN(value) || value === null) {
+                        return 'bad float';
+                    }
+
+                    return true;
+                }.bind(this),
+            }
+        }
 
     });
 });
