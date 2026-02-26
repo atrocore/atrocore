@@ -83,6 +83,7 @@ Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relati
                         checkboxes: false,
                         rowActionsView: "views/record/row-actions/relationship",
                         buttonsDisabled: true,
+                        headerDisabled: true,
                         el: this.options.el + ' .list-container',
                         skipBuildRows: true,
                         listRowsOrderSaveUrl: this.listRowsOrderSaveUrl,
