@@ -87,7 +87,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         }, Dep.prototype.events),
 
         getForeignName() {
-            return this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName']) ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'foreignName']) ?? 'name'
+            return this.model.defs.fields[this.name]?.foreignName ?? this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName'])
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'foreignName']) ?? 'name'
         },
 
         actionLoadData() {
@@ -306,13 +307,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     boolFilterData: this.getBoolFilterData(),
                     primaryFilterName: this.getSelectPrimaryFilterName(),
                     multiple: this.linkMultiple,
-                    whereAdditional: this?.options?.whereAdditional || this.model.getFieldParam(this.name, 'where') || undefined,
+                    whereAdditional: this.getWhereAdditional() || undefined,
                     massRelateEnabled: true,
                     createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                     mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                     forceSelectAllAttributes: this.forceSelectAllAttributes,
                     selectAllByDefault: this.getSelectAllByDefault(),
-                    allowSelectAllResult: this.allowSelectAllResult,
                     sortBy: this.sortBy,
                     sortAsc: this.sortAsc
                 }, function (dialog) {
@@ -406,6 +406,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             });
         },
 
+        getWhereAdditional() {
+            return this?.options?.whereAdditional || this.model.getFieldParam(this.name, 'where') || undefined
+        },
+
         uploadLink: function () {
             let attributes = this.getCreateAttributes() || {};
 
@@ -481,6 +485,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             where.push({'type': 'textFilter', value: 'AUTOCOMPLETE:' + q});
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
+            additionalWhere = additionalWhere.concat(this.getWhereAdditional() || []);
+
             if (Array.isArray(additionalWhere) && additionalWhere.length) {
                 additionalWhere.forEach(whereClause => {
                     where.push(whereClause);
@@ -983,7 +989,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         let nameHash = {'_localeId': this.getUser().get('localeId')}
                         if ((rule.value || []).length > 0) {
                             try {
-                                const resp = this.ajaxGetRequest(this.getForeignScope(), {
+                                const resp = this.ajaxGetRequest(this.foreignScope, {
                                     select: this.getForeignName(),
                                     collectionOnly: true,
                                     where: [
@@ -1140,13 +1146,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                 ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
                 ?? this.defs.params?.attribute?.entityType;
-        },
-
-        listInlineEditModeEnabled() {
-            let res = Dep.prototype.listInlineEditModeEnabled.call(this);
-
-            return res && this.model.get(this.idsName) !== null && this.model.get(this.idsName) !== undefined;
-        },
+        }
     });
 });
 

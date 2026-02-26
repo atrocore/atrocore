@@ -335,7 +335,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 boolFilterList: this.getSelectBoolFilterList(),
                 boolFilterData: this.getBoolFilterData(),
                 primaryFilterName: this.getSelectPrimaryFilterName(),
-                whereAdditional: this.model.getFieldParam(this.name, 'where') || undefined,
+                whereAdditional: this.getWhereAdditional(),
                 createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                 mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
@@ -349,6 +349,10 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                     this.select(model);
                 }, this);
             }, this);
+        },
+
+        getWhereAdditional() {
+            return this?.options?.whereAdditional || this.model.getFieldParam(this.name, 'where') || undefined
         },
 
         clearLink: function () {
@@ -411,6 +415,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             where.push({ 'type': 'textFilter', value: 'AUTOCOMPLETE:' + q });
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
+            additionalWhere = additionalWhere.concat(this.getWhereAdditional() || []);
+
             if (Array.isArray(additionalWhere) && additionalWhere.length) {
                 additionalWhere.forEach(whereClause => {
                     where.push(whereClause);
