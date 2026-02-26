@@ -96,26 +96,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.inlineEditDisabled = this.options.inlineEditDisabled;
             }
 
-            this.getModels().forEach(model => {
-                this.listenTo(model, 'before:save', (attrs) => {
-                    $.each(attrs, (name, value) => {
-                        if (!model.defs['fields'][name]) {
-                            return;
-                        }
-                        if ((model.get('attributesDefs') || {})[name]) {
-                            return;
-                        }
-                        if (model.defs['fields'][name].attributeId) {
-                            if (!attrs['__attributes']) {
-                                attrs['__attributes'] = [model.defs['fields'][name].attributeId];
-                            } else {
-                                attrs['__attributes'].push(model.defs['fields'][name].attributeId);
-                            }
-                        }
-                    });
-                });
-            });
-
             this.setupFieldPanels();
             this.wait(true);
             this.prepareFieldsData(() => {
