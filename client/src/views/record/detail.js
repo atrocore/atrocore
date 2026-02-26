@@ -563,16 +563,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupActionItems: function () {
-            // we reset the list before building them again
-            let buttonTypes = ['buttonList', 'dropdownItemList', 'buttonEditList', 'dropdownEditItemList', 'additionalButtons'];
-            buttonTypes.forEach(type => {
-                let defaultValue = type + 'Default';
-                if(!this[defaultValue]) {
-                    this[defaultValue] = Espo.utils.clone(this[type] || [])
-                }
-                this[type] =  Espo.utils.clone( this[defaultValue])
-            });
-
             if (this.getMetadata().get(['scopes', this.model.name, 'disabled']) || this.getMetadata().get(['scopes', this.model.name, 'type']) === 'Archive') {
                 this.buttonList = []
                 this.dropdownItemList = []
@@ -2165,6 +2155,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return null;
             }
 
+            this.cleanDuplicatedButtons();
+
             return {
                 buttons: this.buttonList,
                 editButtons: this.buttonEditList,
@@ -2173,6 +2165,23 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 additionalButtons: this.additionalButtons,
                 additionalEditButtons: this.additionalEditButtons,
             }
+        },
+
+        cleanDuplicatedButtons() {
+            let buttonTypes = ['additionalButtons', 'additionalEditButtons', 'dropdownItemList', 'dropdownEditItemList', 'buttonList',  'buttonEditList'];
+            buttonTypes.forEach((type) => {
+                if(!Array.isArray(this[type])) {
+                    return;
+                }
+                let existing = [];
+                this[type] =  this[type].filter(el => {
+                    if(!existing.includes(el.name)) {
+                        existing.push(el.name);
+                        return true;
+                    }
+                    return false;
+                });
+            });
         },
 
         convertDetailLayout: function (simplifiedLayout, el) {
