@@ -313,6 +313,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                     forceSelectAllAttributes: this.forceSelectAllAttributes,
                     selectAllByDefault: this.getSelectAllByDefault(),
+                    allowSelectAllResult: this.allowSelectAllResult,
                     sortBy: this.sortBy,
                     sortAsc: this.sortAsc
                 }, function (dialog) {
