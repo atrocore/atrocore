@@ -1198,7 +1198,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             }
 
-            if (!this.model.get('attributesDefs')[name] && this.model.defs['fields']?.[name]?.attributeId) {
+            if (!this.model.get('attributesDefs')?.[name] && this.model.defs['fields']?.[name]?.attributeId ) {
                 data.__attributes = [this.model.defs['fields'][name].attributeId];
             }
 

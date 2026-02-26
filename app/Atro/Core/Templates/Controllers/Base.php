@@ -15,7 +15,10 @@ namespace Atro\Core\Templates\Controllers;
 
 use Atro\Controllers\AbstractRecordController;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Slim\Http\Request;
 
 class Base extends AbstractRecordController
 {
@@ -38,4 +41,127 @@ class Base extends AbstractRecordController
 
         return true;
     }
+
+    public function actionGetAttributeValues($params, $data, Request $request): array
+    {
+        if (empty($this->getMetadata()->get("scopes.{$this->name}.hasAttribute"))) {
+            throw new BadRequest();
+        }
+
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        $id = $params['id'];
+
+        if (!empty($entity = $this->getRecordService()->getEntity($id))) {
+            return $entity->getAttributeValuesArray();
+        }
+
+        throw new Error();
+    }
+
+    public function actionAddAttributes($params, $data, Request $request): bool
+    {
+        if (empty($this->getMetadata()->get("scopes.{$this->name}.hasAttribute")) ||
+            !empty($this->getMetadata()->get(['scopes', $data->entityName, 'disableAttributeLinking']))) {
+            throw new BadRequest();
+        }
+
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit') || !$this->getAcl()->check($this->name, 'createAttributeValue')) {
+            throw new Forbidden();
+        }
+
+
+        $id = $params['id'];
+        $attributesIds = $data->attributeIds ?? [];
+
+        if (!is_array($attributesIds) || empty($attributesIds)) {
+            throw new BadRequest();
+        }
+
+        $entity = $this->getRecordService()->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+
+        return $this->getService('Attribute')->addAttributeValue($entity->getEntityName(), $entity->get('id'), null, $attributesIds);
+    }
+
+    public function actionUpsertAttributeValues($params, $data, Request $request): bool
+    {
+        if (empty($this->getMetadata()->get("scopes.{$this->name}.hasAttribute"))) {
+            throw new BadRequest();
+        }
+
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $id = $params['id'];
+
+        $attributeValues = $data->attributeValues ?? null;
+        if (empty($attributeValues) || !is_array($attributeValues)) {
+            throw new BadRequest();
+        }
+
+        $input = new \stdClass();
+        $input->attributeValues = $attributeValues;
+
+        $this->getRecordService()->updateEntity($id, $input);
+
+        return true;
+    }
+
+    public function actionDeleteAttributeValues($params, $data, Request $request): array
+    {
+        if (empty($this->getMetadata()->get("scopes.{$this->name}.hasAttribute")) ||
+            !empty($this->getMetadata()->get(['scopes', $data->entityName, 'disableAttributeLinking']))) {
+            throw new BadRequest();
+        }
+
+        if (!$request->isDelete()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit') || !$this->getAcl()->check($this->name, 'deleteAttributeValue')) {
+            throw new Forbidden();
+        }
+
+        $id = $params['id'];
+
+        $attributeIds = $data->attributeIds ?? [];
+        if (!is_array($attributeIds) || empty($attributeIds)) {
+            throw new BadRequest();
+        }
+
+        $entity = $this->getRecordService()->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getService('Attribute')->removeAttributeValues($entity->getEntityName(), $entity->get('id'), $attributeIds);
+    }
+
 }

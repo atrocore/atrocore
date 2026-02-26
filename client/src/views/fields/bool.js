@@ -36,24 +36,21 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
 
         type: 'bool',
 
-        listTemplate: 'fields/bool/list',
+        _template: '',
 
-        detailTemplate: 'fields/bool/detail',
-
-        editTemplate: 'fields/bool/edit',
-
-        searchTemplate: 'fields/bool/search',
-
-        validations: [],
+        notNull: true,
 
         defaultFilterValue: false,
 
-        notNull: true,
+        svelteComponent: null,
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.notNull = this.model.getFieldParam(this.name, 'notNull') ?? this.params?.notNull ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']) ?? true;
+            this.notNull = this.model.getFieldParam(this.name, 'notNull')
+                ?? this.params?.notNull
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull'])
+                ?? true;
         },
 
         setupSearch() {
@@ -68,8 +65,6 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
                 if (this.searchParams.type === 'isFalse') {
                     if ('fieldParams' in this.searchParams && this.searchParams.fieldParams.isAttribute) {
                         value = 'false';
-                    } else {
-                        value = null;
                     }
                 }
             }
@@ -77,89 +72,82 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
             this.model.set(this.name, value);
         },
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
-            data.valueIsSet = this.model.has(this.name);
-            data.notNull = this.notNull
-            data.isNull = this.model.get(this.name) === null || this.model.get(this.name) === undefined;
-
-            if (['edit', 'search'].includes(this.mode)) {
-                data.options = ['null', 'false', 'true'];
-                data.translatedOptions = {
-                    'null': 'NULL',
-                    'false': this.translate('No'),
-                    'true': this.translate('Yes'),
-                }
-                if (data.isNull) {
-                    data['value'] = this.notNull ? '' : 'null';
-                }
-                if (!this.notNull && !data.isNull) {
-                    data['value'] = this.model.get(this.name).toString()
-                }
-            }
-
-            if (this.mode === 'search') {
-                let value = '';
-                value = data.searchParams?.type === 'isNull' ? '' : data.searchParams?.type === 'isTrue';
-                if (!this.notNull) {
-                    value = value.toString();
-                }
-                data['value'] = value
-            }
-
-            return data;
-        },
-
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.find('select').selectize();
-        },
+            const target = this.$el[0];
 
-        fetch: function () {
-            let value = null;
-            if (this.notNull) {
-                value = this.$el.find('input[name=' + this.name + ']').is(":checked");
-            } else {
-                let val = this.$el.find('[name="' + this.name + '"]').val();
+            if (!target) return;
 
-                if (val === 'null') {
-                    val = null;
+            this.removeSvelteComponent();
+
+            // For search mode derive the correct boolean initial value from searchParams
+            // rather than the string set on the model by setupSearch.
+            let initialValue;
+            if (this.mode === 'search') {
+                const type = this.searchParams?.type;
+                if (type === 'isTrue') {
+                    initialValue = true;
+                } else if (type === 'isFalse') {
+                    initialValue = false;
+                } else {
+                    initialValue = null;
                 }
-
-                value = val ? val === "true" : null;
-            }
-            var data = {};
-            data[this.name] = value;
-            return data;
-        },
-
-        clearSearch: function () {
-            this.$el.find('input[name=' + this.name + ']').prop('checked', true);
-        },
-
-        fetchSearch: function () {
-            let value = null;
-            if (this.notNull) {
-                value = this.$element.get(0).checked;
             } else {
-                let val = this.$element.get(0).value;
-
-                if (val === 'null') {
-                    val = null;
-                }
-
-                value = val ? val === "true" : null;
+                initialValue = this.model.get(this.name) ?? null;
             }
 
-            var data = {
-                type: value === null ? 'isNull' : (value ? 'isTrue' : 'isFalse')
+            this.svelteComponent = new Svelte.BoolField({
+                target,
+                props: {
+                    name: this.name,
+                    value: initialValue,
+                    mode: this.mode,
+                    notNull: this.notNull,
+                    scope: this.model.name,
+                    params: this.params || {},
+                },
+            });
+        },
+
+        removeSvelteComponent() {
+            if (this.svelteComponent) {
+                try {
+                    this.svelteComponent.$destroy();
+                } catch (e) {}
+                this.svelteComponent = null;
+            }
+        },
+
+        fetch() {
+            if (this.svelteComponent) {
+                return this.svelteComponent.fetch();
+            }
+            return { [this.name]: null };
+        },
+
+        clearSearch() {
+            // Original only reset the checkbox (notNull=true case).
+            if (this.svelteComponent && this.notNull) {
+                this.svelteComponent.$set({ value: true });
+            }
+        },
+
+        fetchSearch() {
+            if (!this.svelteComponent) return {};
+
+            const fetched = this.svelteComponent.fetch();
+            const value = fetched[this.name];
+
+            return {
+                type: value === null || value === undefined ? 'isNull' : (value ? 'isTrue' : 'isFalse'),
             };
-            return data;
         },
 
-        populateSearchDefaults: function () {
-            this.$element.get(0).checked = true;
+        populateSearchDefaults() {
+            if (this.svelteComponent) {
+                this.svelteComponent.$set({ value: true });
+            }
         },
 
         createQueryBuilderFilter() {
@@ -175,10 +163,13 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
                     'is_not_null'
                 ],
                 input: this.filterInput.bind(this),
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
             };
         },
 
+        remove(dontEmpty) {
+            this.removeSvelteComponent();
+            Dep.prototype.remove.call(this, dontEmpty);
+        },
     });
 });
-
