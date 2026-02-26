@@ -115,7 +115,8 @@ class Cluster extends Base
 
         $linksDefs = $this->getMetadata()->get(['entityDefs', $goldenRecord->getEntityType(), 'links']);
         foreach ($linksDefs as $link => $linkDefs) {
-            if ($linkDefs['type'] !== 'hasMany' /*|| !empty($linkDefs['relationName'])*/) {
+
+            if ($linkDefs['type'] !== 'hasMany' || !empty($linkDefs['relationName'])) {
                 continue;
             }
             $method = 'applyMergeFor' . ucfirst($link);

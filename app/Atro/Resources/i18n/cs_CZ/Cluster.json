@@ -20,5 +20,11 @@
       "review": "Recenze",
       "invalid": "Neplatný"
     }
+  },
+  "exceptions": {
+    "cannotMergeWithoutGoldenRecord": "Sloučení bez zlatého záznamu není možné"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Nepotvrzené položky nelze přidat ke sloučení"
   }
 }

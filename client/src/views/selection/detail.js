@@ -883,7 +883,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             if (this.getAcl().check(this.scope, 'edit')) {
-
                 buttons.additionalButtons.push({
                     action: 'addItem',
                     name: 'addItem',

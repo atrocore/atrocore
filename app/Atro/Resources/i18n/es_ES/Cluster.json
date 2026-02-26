@@ -20,5 +20,11 @@
       "review": "Revise",
       "invalid": "No válido"
     }
+  },
+  "exceptions": {
+    "cannotMergeWithoutGoldenRecord": "No es posible fusionar sin un registro maestro"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "No se pueden añadir elementos no confirmados a la fusión"
   }
 }

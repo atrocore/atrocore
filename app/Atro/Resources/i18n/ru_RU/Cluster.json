@@ -20,5 +20,11 @@
       "merged": "Объединено",
       "invalid": "Неверный"
     }
+  },
+  "exceptions": {
+    "cannotMergeWithoutGoldenRecord": "Объединение без эталонной записи невозможно"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Неподтверждённые элементы не могут быть добавлены к объединению"
   }
 }

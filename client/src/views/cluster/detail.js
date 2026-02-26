@@ -157,7 +157,7 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
             if(this.selectionViewMode === 'merge') {
                 let model = this.selectionItemModels.find(m => m.id === itemId);
                 if (model.item.get('_meta')?.cluster?.confirmed === false) {
-                    this.notify(this.translate('cannotMergeUnconfirmedItems', 'messages', 'Cluster'), 'error');
+                    this.notify(this.translate('cannotMergeUnconfirmedItems', 'messages', 'Cluster'), 'warning');
                     return;
                 }
             }
