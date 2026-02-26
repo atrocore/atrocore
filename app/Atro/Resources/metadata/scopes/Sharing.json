@@ -13,5 +13,6 @@
   "bookmarkDisabled": true,
   "emHidden": true,
   "matchingDisabled": true,
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "actionDisabled": true
 }
