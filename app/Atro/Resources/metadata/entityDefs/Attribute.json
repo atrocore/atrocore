@@ -328,6 +328,13 @@
                 "link",
                 "linkMultiple"
               ]
+            },
+            {
+              "type": "notIn",
+              "attribute": "entityType",
+              "value": [
+                "ExtensibleEnumOption"
+              ]
             }
           ]
         },
@@ -339,6 +346,13 @@
               "value": [
                 "link",
                 "linkMultiple"
+              ]
+            },
+            {
+              "type": "notIn",
+              "attribute": "entityType",
+              "value": [
+                "ExtensibleEnumOption"
               ]
             }
           ]

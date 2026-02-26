@@ -13,6 +13,7 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -38,6 +39,7 @@ class LinkType extends AbstractFieldType
         $data = @json_decode($row['data'], true);
         $attributeData = $data['field'] ?? null;
         $entityName = $attributeData['entityType'] ?? null;
+        $foreignName = $attributeData['entityField'] ?? 'name';
 
         $entity->fields[$name . 'Id'] = [
             'type'                     => 'varchar',
@@ -76,6 +78,7 @@ class LinkType extends AbstractFieldType
                 'channelName'               => $row['channel_name'] ?? null,
                 'type'                      => 'link',
                 'entity'                    => $entityName,
+                'foreignName'               => $foreignName,
                 'dropdown'                  => $attributeData['dropdown'] ?? null,
                 'required'                  => !empty($row['is_required']),
                 'readOnly'                  => !empty($row['is_read_only']),
@@ -102,9 +105,12 @@ class LinkType extends AbstractFieldType
                 $referenceTable = Util::toUnderScore(lcfirst($entityName));
 
                 if (!empty($row['reference_value'])) {
+                    $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $entityName, $foreignName);
+                    $columns = array_unique(['id', $foreignName, $localizedNameColumn]);
+
                     try {
                         $referenceItem = $this->conn->createQueryBuilder()
-                            ->select('id, name')
+                            ->select(join(', ', $columns))
                             ->from($referenceTable)
                             ->where('id=:id')
                             ->andWhere('deleted=:false')
@@ -113,7 +119,7 @@ class LinkType extends AbstractFieldType
                             ->fetchAssociative();
 
 
-                        $entity->set($name . 'Name', $referenceItem['name'] ?? null);
+                        $entity->set($name . 'Name', $referenceItem[$localizedNameColumn] ?? $referenceItem[$foreignName] ?? null);
                     } catch (\Throwable $e) {
                         // ignore all
                     }
@@ -130,14 +136,23 @@ class LinkType extends AbstractFieldType
 
         if (!empty($attributeData['entityType'])) {
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
+            $foreignName = $attributeData['entityField'] ?? 'name';
 
             $name = AttributeFieldConverter::prepareFieldName($row);
 
             $referenceAlias = "{$alias}{$referenceTable}";
             $qb->leftJoin($alias, $this->conn->quoteIdentifier($referenceTable), $referenceAlias, "{$referenceAlias}.id={$alias}.reference_value AND {$referenceAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");
 
-            $qb->addSelect("{$referenceAlias}.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
-            $qb->addSelect("{$referenceAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
+            $fieldPath = "{$referenceAlias}." . $mapper->toDb($foreignName);
+            $localizedField = Language::getLocalizedFieldName($this->em->getContainer(), $attributeData['entityType'], $foreignName);
+
+            if ($localizedField !== $foreignName) {
+                $localizedFieldPath = "{$referenceAlias}." . $mapper->toDb($localizedField);
+                $fieldPath = "COALESCE(NULLIF(TRIM($localizedFieldPath), ''), $fieldPath)";
+            }
+
+            $qb->addSelect("$referenceAlias.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
+            $qb->addSelect("$fieldPath as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
 
             if ($name === $params['orderBy']) {
                 $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name . 'Name') . ' ' . $params['order']);
