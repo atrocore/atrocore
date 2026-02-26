@@ -986,6 +986,42 @@
     }
   },
   {
+    "route": "/:controller/:id/attributeValues",
+    "method": "get",
+    "params": {
+      "controller": ":controller",
+      "id": ":id",
+      "action": "getAttributeValues"
+    }
+  },
+  {
+    "route": "/:controller/:id/addAttributes",
+    "method": "post",
+    "params": {
+      "controller": ":controller",
+      "id": ":id",
+      "action": "addAttributes"
+    }
+  },
+  {
+    "route": "/:controller/:id/upsertAttributeValues",
+    "method": "post",
+    "params": {
+      "controller": ":controller",
+      "id": ":id",
+      "action": "upsertAttributeValues"
+    }
+  },
+  {
+    "route": "/:controller/:id/attributeValues",
+    "method": "delete",
+    "params": {
+      "controller": ":controller",
+      "id": ":id",
+      "action": "deleteAttributeValues"
+    }
+  },
+  {
     "route": "/:controller/:id/:link",
     "method": "get",
     "params": {
