@@ -76,7 +76,10 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             this.params.options = [];
             this.translatedOptions = {};
             this.params.optionColors = {};
-            const name = this.getNameField(this.foreignScope)
+            let name = this.foreignName
+            if (!name || name === 'name') {
+                name = this.getNameField(this.foreignScope)
+            }
             const [localizedName] = this.getLocalizedFieldData(this.foreignScope, name);
 
             this.params.linkOptions = this.getLinkOptions(this.foreignScope, {
