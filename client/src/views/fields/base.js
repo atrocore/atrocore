@@ -1216,7 +1216,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
                 (attrs || (attrs = {}))[attr] = data[attr];
             }
-            debugger
 
             if (!attrs) {
                 this.inlineEditClose();

@@ -379,8 +379,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             if (this.options.attributes) {
                 this.model.set(this.options.attributes);
             }
-
-
+            
             this.listenTo(this.model, 'sync after:inlineEditSave', function () {
                 this.attributes = this.model.getClonedAttributes();
             }, this);

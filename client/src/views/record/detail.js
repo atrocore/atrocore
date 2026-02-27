@@ -1116,7 +1116,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         resetModelChanges: function () {
-            debugger
             var attributes = this.model.attributes;
             for (var attr in attributes) {
                 if (!(attr in this.attributes)) {
