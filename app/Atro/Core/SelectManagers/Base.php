@@ -447,7 +447,7 @@ class Base
                                 $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute]);
                                 if (!empty($fieldDefs['mainField']) && !empty($fieldDefs['measureId'])) {
                                     $item['unitField'] = true;
-                                    $item['mainField'] = $fieldDefs['mainField'];
+                                    $item['attribute'] = $fieldDefs['mainField'];
                                 }
                             }
                         }
@@ -1376,7 +1376,7 @@ class Base
     {
         $type = $item['type'];
         $value = $item['value'] ?? null;
-        $mainField = $item['mainField'];
+        $mainField = $item['attribute'];
         $mainFieldColumn = Util::toUnderScore($mainField);
         $unitColumn = $mainFieldColumn . '_unit_id';
         $ta = QueryConverter::TABLE_ALIAS;
