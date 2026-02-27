@@ -2183,14 +2183,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         cleanDuplicatedButtons() {
             let buttonTypes = ['additionalButtons', 'additionalEditButtons', 'dropdownItemList', 'dropdownEditItemList', 'buttonList',  'buttonEditList'];
+
             buttonTypes.forEach((type) => {
                 if(!Array.isArray(this[type])) {
                     return;
                 }
                 let existing = [];
                 this[type] =  this[type].filter(el => {
-                    if(!existing.includes(el.name)) {
-                        existing.push(el.name);
+                    if(!existing.includes(el.action)) {
+                        existing.push(el.action);
                         return true;
                     }
                     return false;
