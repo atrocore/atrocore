@@ -19,7 +19,7 @@ use Espo\ORM\EntityCollection;
 
 class RoleScopeAttribute extends Base
 {
-    protected $mandatorySelectAttributeList = ["roleScopeId", "roleScopeName", "attributeId"];
+    protected $mandatorySelectAttributeList = ["roleScopeId", "attributeId"];
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
@@ -29,7 +29,6 @@ class RoleScopeAttribute extends Base
             $this->prepareAttributeNames($collection->getInnerContainer());
         }
     }
-
 
     public function prepareEntityForOutput(Entity $entity)
     {
