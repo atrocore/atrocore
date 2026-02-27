@@ -20,5 +20,11 @@
       "merged": "Fusione",
       "invalid": "Non valido"
     }
+  },
+  "exceptions": {
+    "cannotMergeWithoutGoldenRecord": "Non è possibile effettuare la fusione senza un record di riferimento"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Gli elementi non confermati non possono essere aggiunti alla fusione"
   }
 }

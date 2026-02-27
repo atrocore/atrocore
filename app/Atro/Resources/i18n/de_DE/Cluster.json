@@ -20,5 +20,11 @@
       "merged": "Zusammengeführt",
       "invalid": "Ungültig"
     }
+  },
+  "exceptions": {
+    "cannotMergeWithoutGoldenRecord": "Eine Zusammenführung ohne Golden Record ist nicht möglich"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Unbestätigte Einträge können nicht zur Zusammenführung hinzugefügt werden"
   }
 }

@@ -113,6 +113,16 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 .join('; ');
 
             return `<span class="colored-enum label" style="${styleString}">${text}</span>` + (confirmedAutomatically ? '<i style="font-size: 14px;position: relative;margin-left: 2px;top: -0.5em;color: var(--label-color)" class="ph ph-sparkle"></i>' : '');
-        }
+        },
+
+        getMergeUrl() {
+            return 'Cluster/action/merge'
+        },
+
+        getMergeData(targetId, attributes, relationshipData) {
+            let data = Dep.prototype.getMergeData.call(this, targetId, attributes, relationshipData);
+            data.clusterId = this.selectionId;
+            return data;
+        },
     })
 })

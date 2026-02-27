@@ -603,7 +603,7 @@ class Record extends RecordService
                 continue;
             }
 
-            if (!empty($d['type']) && in_array($d['type'], ['hasMany', 'hasChildren'])) {
+            if (!empty($d['type']) && in_array($d['type'], ['hasMany'])) {
                 if (empty($d['entity']) || empty($d['foreign'])) {
                     continue;
                 }

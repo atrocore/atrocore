@@ -20,5 +20,11 @@
       "review": "Recenzja",
       "invalid": "Nieprawidłowy"
     }
+  },
+  "exceptions": {
+    "cannotMergeWithoutGoldenRecord": "Scalanie bez rekordu wzorcowego nie jest możliwe"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Niepotwierdzone elementy nie mogą być dodane do scalania"
   }
 }

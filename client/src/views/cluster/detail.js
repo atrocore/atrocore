@@ -12,7 +12,7 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
 
     return Dep.extend({
 
-        availableModes: ['standard', 'compare'],
+        availableModes: ['standard', 'compare', 'merge'],
 
         scope: 'Cluster',
 
@@ -72,7 +72,7 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
         },
 
         getRecordViewName: function () {
-            if (this.selectionViewMode === 'compare') {
+            if (['compare', 'merge'].includes(this.selectionViewMode)) {
                 return 'views/cluster/record/compare';
             }
 
@@ -102,6 +102,18 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
             })
             return result;
         },
+
+        isActiveMerge() {
+            return true;
+        },
+
+        canMerge() {
+            if (this.selectionViewMode === 'standard') {
+                return !(!this.collection || this.collection.models.length <= 1);
+            }
+
+            return (!(!this.selectionItemModels || this.selectionItemModels.length <= 1));
+        }
     })
 });
 
