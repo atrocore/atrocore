@@ -3030,6 +3030,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
             model.set('bookmarkId', bookmarkId);
+            const hasOnlyBookmarkedFilter = (this.collection.where ?? []).some(where =>
+                where.type === 'bool' && (where.value ?? []).includes('onlyBookmarked')
+            );
             if (bookmarkId) {
                 this.notify(this.translate('Unbookmarking') + '...');
                 $.ajax({
@@ -3042,8 +3045,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.notify(this.translate('Done'), 'success')
                     this.trigger('unbookmarked-' + model.urlRoot, model.get('bookmarkId'))
                     model.set('bookmarkId', null)
-                    this.reRender()
-                    this.collection.fetch()
+
+                    if (hasOnlyBookmarkedFilter) {
+                        this.collection.fetch()
+                    }
                 }.bind(this));
             } else {
                 this.notify(this.translate('Bookmarking') + '...');
@@ -3059,18 +3064,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     model.set('bookmarkId', result.id)
                     this.notify(this.translate('Done'), 'success')
                     this.trigger('bookmarked-' + model.urlRoot, model.get('bookmarkId'))
-                    let shouldNotReRender = false;
 
-                    for (const where of (this.collection.where ?? [])) {
-                        if (where.type === 'bool' && (where.value ?? []).includes('onlyBookmarked')) {
-                            this.collection.fetch()
-                            shouldNotReRender = true;
-                            break;
-                        }
-                    }
-
-                    if (!shouldNotReRender) {
-                        this.reRender();
+                    if (hasOnlyBookmarkedFilter) {
+                        this.collection.fetch()
                     }
 
                 }.bind(this));
