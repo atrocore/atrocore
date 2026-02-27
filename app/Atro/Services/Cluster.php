@@ -111,7 +111,6 @@ class Cluster extends Base
             }
         }
 
-
         $goldenRecord = $cluster->get('goldenRecord');
 
         if (empty($goldenRecord)) {
@@ -149,7 +148,6 @@ class Cluster extends Base
                 }
 
                 $linkedList = $this->getEntityManager()->getRepository($source->getEntityName())->findRelated($source, $link);
-
 
                 foreach ($linkedList as $linked) {
                     try {
