@@ -62,6 +62,8 @@ class Base
 
     protected array $actionExecutionFilter = [];
 
+    protected array $cachedData = [];
+
     public function __construct(EntityManager $entityManager, User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory)
     {
         $this->entityManager = $entityManager;
@@ -250,7 +252,7 @@ class Base
                 $attribute = "";
                 if (!empty($item['id'])) {
                     $attribute = $item['id'];
-                    if (strpos($item['id'], 'attr_') !== false) {
+                    if (str_contains($item['id'], 'attr_')) {
                         $parts = explode('_', $item['id']);
                         $additionForAttribute['attribute'] = $result['attributesIds'][] = $parts[1];
                         $additionForAttribute['isAttribute'] = true;
@@ -432,11 +434,23 @@ class Base
                             $item = [];
                         }
                     } else {
+                        $isUnitField = !empty($item['data']['unitField']);
                         $item = [
                             'attribute' => $attribute,
                             'type'      => $type,
                             'value'     => $item['value'],
                         ];
+                        if ($isUnitField) {
+                            if (!empty($additionForAttribute['isAttribute'])) {
+                                $item['unitField'] = true;
+                            } else {
+                                $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute]);
+                                if (!empty($fieldDefs['mainField']) && !empty($fieldDefs['measureId'])) {
+                                    $item['unitField'] = true;
+                                    $item['attribute'] = $fieldDefs['mainField'];
+                                }
+                            }
+                        }
                     }
 
                     $item = array_merge($item, $additionForAttribute);
@@ -1358,6 +1372,178 @@ class Base
         return $result;
     }
 
+    protected function convertUnitFieldWhere(array $item): array
+    {
+        $type = $item['type'];
+        $value = $item['value'] ?? null;
+        $mainField = $item['attribute'];
+        $mainFieldColumn = Util::toUnderScore($mainField);
+        $unitColumn = $mainFieldColumn . '_unit_id';
+        $ta = QueryConverter::TABLE_ALIAS;
+        $isInt = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $mainField, 'type']) === 'int';
+
+        if ($type === 'isNull') {
+            return [
+                'AND' => [
+                    [$mainField . '=' => null],
+                    [$mainField . 'UnitId=' => null],
+                ],
+            ];
+        }
+
+        if ($type === 'isNotNull') {
+            return [
+                'AND' => [
+                    [$mainField . '!=' => null],
+                    [$mainField . 'UnitId!=' => null],
+                ],
+            ];
+        }
+
+        // Pre-convert filter value into each unit used in the table for sargable (index-friendly) queries
+        $tableName = Util::toUnderScore($this->entityType);
+        $measureUnits = $this->getMeasureUnitsData($tableName, $unitColumn);
+        if (empty($measureUnits)) {
+            return [];
+        }
+
+        if ($type === 'between') {
+            if (!is_array($value) || count($value) < 2) {
+                return [];
+            }
+
+            $baseFrom = $this->resolveUnitFilterValue($value[0], $measureUnits);
+            $baseTo = $this->resolveUnitFilterValue($value[1], $measureUnits);
+            if ($baseFrom === null || $baseTo === null) {
+                return [];
+            }
+
+            $orParts = [];
+            $parameters = [];
+            foreach ($measureUnits as $uid => $multiplier) {
+                $pUid = 'uf_uid_' . IdGenerator::unsortableId();
+                $pFrom = 'uf_from_' . IdGenerator::unsortableId();
+                $pTo = 'uf_to_' . IdGenerator::unsortableId();
+                $orParts[] = "($ta.$unitColumn = :$pUid AND $ta.$mainFieldColumn >= :$pFrom AND $ta.$mainFieldColumn <= :$pTo)";
+                $parameters[$pUid] = $uid;
+                $parameters[$pFrom] = $isInt ? (int)round($baseFrom / $multiplier) : $baseFrom / $multiplier;
+                $parameters[$pTo] = $isInt ? (int)round($baseTo / $multiplier) : $baseTo / $multiplier;
+            }
+
+            return [
+                'innerSql' => [
+                    'sql'        => '(' . implode(' OR ', $orParts) . ')',
+                    'parameters' => $parameters,
+                ],
+            ];
+        }
+
+        $sqlOperator = $this->getUnitFilterSqlOperator($type);
+        if ($sqlOperator === null) {
+            return [];
+        }
+
+        $baseValue = $this->resolveUnitFilterValue($value, $measureUnits);
+        if ($baseValue === null) {
+            return [];
+        }
+
+        $orParts = [];
+        $parameters = [];
+        foreach ($measureUnits as $uid => $multiplier) {
+            $pUid = 'uf_uid_' . IdGenerator::unsortableId();
+            $pVal = 'uf_val_' . IdGenerator::unsortableId();
+            $orParts[] = "($ta.$unitColumn = :$pUid AND $ta.$mainFieldColumn $sqlOperator :$pVal)";
+            $parameters[$pUid] = $uid;
+            $parameters[$pVal] = $isInt ? (int)round($baseValue / $multiplier) : $baseValue / $multiplier;
+        }
+
+        return [
+            'innerSql' => [
+                'sql'        => '(' . implode(' OR ', $orParts) . ')',
+                'parameters' => $parameters,
+            ],
+        ];
+    }
+
+    protected function getMeasureUnitsData(string $tableName, string $unitColumn): array
+    {
+        $cacheKey = $tableName . '.' . $unitColumn;
+
+        if (!isset($this->cachedData['measureUnits'][$cacheKey])) {
+            $rows = $this->getEntityManager()->getDbal()->createQueryBuilder()
+                ->select('u.id', 'u.multiplier')
+                ->from('unit', 'u')
+                ->innerJoin('u', "(SELECT DISTINCT $unitColumn AS uid FROM $tableName WHERE $unitColumn IS NOT NULL)", 'used', 'u.id = used.uid')
+                ->where('u.deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            $units = [];
+            foreach ($rows as $row) {
+                $multiplier = (float)$row['multiplier'];
+                if ($multiplier != 0) {
+                    $units[$row['id']] = $multiplier;
+                }
+            }
+            $this->cachedData['measureUnits'][$cacheKey] = $units;
+        }
+
+        return $this->cachedData['measureUnits'][$cacheKey];
+    }
+
+    protected function resolveUnitFilterValue($value, array $measureUnits): ?float
+    {
+        if (!is_array($value) || count($value) < 2) {
+            return null;
+        }
+
+        $amount = $value[0];
+        $unitId = $value[1];
+
+        if (!is_numeric($amount) || empty($unitId)) {
+            return null;
+        }
+
+        // The filter unit might not be used in the table — look it up if needed
+        if (!isset($measureUnits[$unitId])) {
+            if (!isset($this->cachedData['unitMultiplier'][$unitId])) {
+                $row = $this->getEntityManager()->getDbal()->createQueryBuilder()
+                    ->select('multiplier')
+                    ->from('unit')
+                    ->where('id = :id AND deleted = :false')
+                    ->setParameter('id', $unitId)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAssociative();
+
+                $this->cachedData['unitMultiplier'][$unitId] = !empty($row) ? (float)$row['multiplier'] : null;
+            }
+            $multiplier = $this->cachedData['unitMultiplier'][$unitId];
+        } else {
+            $multiplier = $measureUnits[$unitId];
+        }
+
+        if (empty($multiplier)) {
+            return null;
+        }
+
+        return (float)$amount * $multiplier;
+    }
+
+    protected function getUnitFilterSqlOperator(string $type): ?string
+    {
+        $map = [
+            'equals'              => '=',
+            'notEquals'           => '<>',
+            'greaterThan'         => '>',
+            'greaterThanOrEquals' => '>=',
+            'lessThan'            => '<',
+            'lessThanOrEquals'    => '<=',
+        ];
+
+        return $map[$type] ?? null;
+    }
+
     protected function modifyPartForHierarchy(array &$item): void
     {
         $this->modifyRoutesField($item);
@@ -1495,6 +1681,10 @@ class Base
             && $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'type']) === 'datetime'
         ) {
             $item['dateTime'] = true;
+        }
+
+        if (!empty($item['unitField']) && empty($item['isAttribute']) && !empty($attribute) && !empty($item['type'])) {
+            return $this->convertUnitFieldWhere($item);
         }
 
         if (!empty($item['isAttribute']) && $this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute'])) {

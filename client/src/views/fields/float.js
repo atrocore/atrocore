@@ -150,24 +150,28 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 ],
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
-                validation: {
-                    callback: function (value, rule) {
-                        if (rule.operator.type === 'between') {
-                            if ((!Array.isArray(value) || value.length !== 2)) {
-                                return 'bad between';
-                            }
-                            return true;
-                        }
-
-                        if (isNaN(value) || value === null) {
-                            return 'bad float';
-                        }
-
-                        return true;
-                    }.bind(this),
-                }
+                validation: this.queryBuilderValidation()
             };
         },
+
+        queryBuilderValidation() {
+            return {
+                callback: function (value, rule) {
+                    if (rule.operator.type === 'between') {
+                        if ((!Array.isArray(value) || value.length !== 2)) {
+                            return 'bad between';
+                        }
+                        return true;
+                    }
+
+                    if (isNaN(value) || value === null) {
+                        return 'bad float';
+                    }
+
+                    return true;
+                }.bind(this),
+            }
+        }
 
     });
 });
