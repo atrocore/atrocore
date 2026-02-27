@@ -12,24 +12,12 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
-use Atro\Core\Container;
 use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
-class RangeIntType extends AbstractFieldType
+class RangeIntType extends IntType
 {
-    protected string $type = 'int';
-
-    protected Connection $conn;
-
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-
-        $this->conn = $container->get('connection');
-    }
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
@@ -262,6 +250,11 @@ class RangeIntType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
+        if (!empty($item['unitField']) && !str_ends_with($item['attribute'], 'UnitId')) {
+            $item['valueColumn'] = str_ends_with($item['attribute'], 'From') ? "{$this->type}Value" : "{$this->type}Value1";
+            return $this->convertUnitFieldWhere($entity, $attribute, $item);
+        }
+
         if (str_ends_with($item['attribute'], 'UnitId')) {
             if ($item['type'] === 'isNull') {
                 $item = [
