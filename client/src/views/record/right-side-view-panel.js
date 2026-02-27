@@ -134,6 +134,26 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
             this.initDependancy();
 
             this.setupFieldLevelSecurity();
+
+            this.attributes = this.model.getClonedAttributes();
+
+            if (this.options.attributes) {
+                this.model.set(this.options.attributes);
+            }
+
+            this.listenTo(this.model, 'sync after:inlineEditSave', function (model, data) {
+                this.attributes = this.model.getClonedAttributes();
+
+                if (data) {
+                    Object.keys(data).forEach(field => {
+                        if (!Array.isArray(this.attributes[field]) && !(this.attributes[field] !== null && typeof this.attributes[field] === 'object')) {
+                            if (data[field] && data[field] !== this.attributes[field]) {
+                                this.attributes[field] = data[field];
+                            }
+                        }
+                    });
+                }
+            }, this);
         },
 
         afterRender: function () {
