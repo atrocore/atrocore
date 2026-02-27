@@ -1198,7 +1198,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             }
 
-            if (!this.model.get('attributesDefs')?.[name] && this.model.defs['fields']?.[name]?.attributeId ) {
+            if (!this.model.get('attributesDefs')?.[name] && this.model.defs['fields']?.[name]?.attributeId) {
                 data.__attributes = [this.model.defs['fields'][name].attributeId];
             }
 
@@ -1223,8 +1223,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
-            if (this.getRecordView() && typeof this.getRecordView().save === 'function') {
-                this.getRecordView().save(() => {
+            const recordView = this.getRecordView()
+            if (recordView && !recordView.saveDisabled && typeof recordView.save === 'function') {
+                recordView.save(() => {
                     this.model.trigger('after:inlineEditSave');
                     this.trigger('after:inlineEditSave');
                 });
