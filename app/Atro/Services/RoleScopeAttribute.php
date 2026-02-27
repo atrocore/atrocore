@@ -26,25 +26,10 @@ class RoleScopeAttribute extends Base
         parent::prepareCollectionForOutput($collection, $selectParams);
 
         if (class_exists("\\Pim\\Module")) {
-            $attributesById = [];
-            foreach ($collection as $entity) {
-                $attributesById[$entity->get('attributeId')] = $entity;
-            }
-
-            $attributes = $this->getEntityManager()->getRepository('Attribute')
-                ->select(['id', 'name', 'channelId', 'channelName'])
-                ->where(['id' => array_keys($attributesById), 'channelId!=' => null])
-                ->find();
-
-            foreach ($attributes as $attribute) {
-                if (!empty($attributesById[$attribute->get('id')])) {
-                    $attributesById[$attribute->get('id')]->set('attributeName', $attribute->get('name') . ' / ' . $attribute->get('channelName'));
-                }
-            }
-
+           $this->updateAttributeNames($collection->getInnerContainer());
         }
-
     }
+
 
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -52,14 +37,26 @@ class RoleScopeAttribute extends Base
 
         if (empty($entity->_fromCollection)) {
             if (class_exists("\\Pim\\Module")) {
-                $attribute = $this->getEntityManager()->getRepository('Attribute')
-                    ->select(['id', 'name', 'channelId', 'channelName'])
-                    ->where(['id' => $entity->get('attributeId'), 'channelId!=' => null])
-                    ->findOne();
+                $this->updateAttributeNames([$entity]);
+            }
+        }
+    }
 
-                if (!empty($attribute)) {
-                    $entity->set('attributeName', $attribute->get('name') . ' / ' . $attribute->get('channelName'));
-                }
+    protected  function updateAttributeNames(array $entities): void
+    {
+        $attributesById = [];
+        foreach ($entities as $entity) {
+            $attributesById[$entity->get('attributeId')] = $entity;
+        }
+
+        $attributes = $this->getEntityManager()->getRepository('Attribute')
+            ->select(['id', 'name', 'channelId', 'channelName'])
+            ->where(['id' => array_keys($attributesById), 'channelId!=' => null])
+            ->find();
+
+        foreach ($attributes as $attribute) {
+            if (!empty($attributesById[$attribute->get('id')])) {
+                $attributesById[$attribute->get('id')]->set('attributeName', $attribute->get('name') . ' / ' . $attribute->get('channelName'));
             }
         }
     }

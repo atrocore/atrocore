@@ -68,7 +68,7 @@ class RoleScope extends Base
                 continue;
             }
             $accessData['attributesData'][$attribute->get('id')] = [
-                'name'       => $attribute->get('name'),
+                'name'       => $attribute->get('name') . (!empty($attribute->get('channelName')) ? ' / ' . $attribute->get('channelName') : ''),
                 'accessData' => [
                     'read' => !empty($row->get("readAction")) ? 'yes' : 'no',
                     'edit' => !empty($row->get("editAction")) ? 'yes' : 'no'
