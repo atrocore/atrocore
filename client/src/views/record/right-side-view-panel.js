@@ -18,6 +18,8 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
 
         layoutName: 'summary',
 
+        saveDisabled: true,
+
         setup: function () {
             if (typeof this.model === 'undefined') {
                 throw new Error('Model has not been injected into record view.');
