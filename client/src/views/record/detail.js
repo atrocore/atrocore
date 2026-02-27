@@ -2190,8 +2190,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
                 let existing = [];
                 this[type] =  this[type].filter(el => {
-                    if(!existing.includes(el.action)) {
-                        existing.push(el.action);
+                    if(!existing.includes(el.action || el.name)) {
+                        existing.push(el.action || el.name);
                         return true;
                     }
                     return false;
