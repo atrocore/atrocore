@@ -238,7 +238,7 @@ class IntType extends AbstractFieldType
     {
         $type = $item['type'];
         $value = $item['value'] ?? null;
-        $valueColumn = "{$this->type}Value";
+        $valueColumn = $item['valueColumn'] ?? "{$this->type}Value";
         $isInt = $this->type === 'int';
 
         if ($type === 'isNull') {
