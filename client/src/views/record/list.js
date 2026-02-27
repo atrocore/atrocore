@@ -1020,21 +1020,27 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 collection.maxSize = 10;
 
                 if (this.getMetadata().get(['scopes', this.entityType, 'hasAttribute'])) {
-                    collection.data.allAttributes = true;
                     collection.data.completeAttrDefs = true;
                 }
 
-                collection.fetch().then(() => {
-                    let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
-                    this.createView('dialog', view, {
-                        models: collection.models,
-                        scope: this.entityType,
-                        merging: merging
-                    }, function (dialog) {
-                        this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
-                        dialog.render();
-                    })
-                })
+                this.getHelper().layoutManager.get(this.scope, 'selection', null, null, data => {
+                    let other = Espo.Utils.clone(this);
+                    other.listLayout = data.layout;
+                    other.collection = collection;
+                    other.putAttributesToSelect();
+                    collection.data.select = other.fetchAttributeListFromLayout().join(',');
+                    collection.fetch().then(() => {
+                        let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+                        this.createView('dialog', view, {
+                            models: collection.models,
+                            scope: this.entityType,
+                            merging: merging
+                        }, function (dialog) {
+                            this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
+                            dialog.render();
+                        })
+                    });
+                });
             });
         },
 
