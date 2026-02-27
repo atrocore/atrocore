@@ -107,62 +107,12 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
             return true;
         },
 
-
         canMerge() {
             if (this.selectionViewMode === 'standard') {
-                if ((!this.collection || this.collection.models.length <= 1)) {
-                    return false;
-                }
-
-                let confirmed = [];
-                this.collection.models.forEach(item => {
-                    if (item.get('_meta')?.cluster?.confirmed) {
-                        confirmed.push(item);
-                    }
-                });
-
-                return confirmed.length >= 2;
+                return !(!this.collection || this.collection.models.length <= 1);
             }
 
-
-            if ((!this.selectionItemModels || this.selectionItemModels.length <= 1)) {
-                return false;
-            }
-
-            let confirmed = [];
-            this.selectionItemModels.forEach(model => {
-                if (model.item.get('_meta')?.cluster?.confirmed) {
-                    confirmed.push(model);
-                }
-            });
-
-            return confirmed.length >= 2;
-        },
-
-        reloadModels(callback) {
-            Dep.prototype.reloadModels.call(this, () => {
-                if (this.selectionViewMode === 'merge') {
-                    this.selectionItemModels.forEach(model => {
-                        if (model.item.get('_meta')?.cluster?.confirmed === false) {
-                            this.hiddenIds.push(model.id);
-                        }
-                    });
-                }
-
-                callback();
-            })
-        },
-
-        toggleSelected(itemId) {
-            if(this.selectionViewMode === 'merge') {
-                let model = this.selectionItemModels.find(m => m.id === itemId);
-                if (model.item.get('_meta')?.cluster?.confirmed === false) {
-                    this.notify(this.translate('cannotMergeUnconfirmedItems', 'messages', 'Cluster'), 'warning');
-                    return;
-                }
-            }
-
-            Dep.prototype.toggleSelected(itemId);
+            return (!(!this.selectionItemModels || this.selectionItemModels.length <= 1));
         }
     })
 });

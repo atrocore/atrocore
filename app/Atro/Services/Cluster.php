@@ -16,6 +16,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -85,21 +86,18 @@ class Cluster extends Base
     {
         $cluster = $this->getEntity($clusterId);
 
-        $goldenRecord = $cluster->get('goldenRecord');
-
-        if (empty($goldenRecord)) {
-            throw new BadRequest($this->getInjection('language')->translate('cannotMergeWithoutGoldenRecord', 'exceptions', 'Cluster'));
+        if(empty($cluster)) {
+            throw new BadRequest("Cluster $clusterId not found");
         }
 
         if (!$this->getAcl()->check($cluster->get('masterEntity'), 'create')) {
             throw new Forbidden();
         }
 
-        $repository = $this->getEntityManager()->getRepository($cluster->get('masterEntity'));
-        $service = $this->getRecordService($cluster->get('masterEntity'));
-
-
-        $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
+        /** @var RDB $masterRepository */
+        $masterRepository = $this->getEntityManager()->getRepository($cluster->get('masterEntity'));
+        /** @var Record $masterService */
+        $masterService = $this->getRecordService($cluster->get('masterEntity'));
 
         $sourceList = [];
 
@@ -113,6 +111,25 @@ class Cluster extends Base
             }
         }
 
+
+        $goldenRecord = $cluster->get('goldenRecord');
+
+        if (empty($goldenRecord)) {
+            foreach ($sourceList as $source) {
+                if($source->getEntityName() === $cluster->get('masterEntity')) {
+                    $goldenRecord = $source;
+                }
+            }
+
+            if(empty($goldenRecord)) {
+                $goldenRecord = $masterService->createEntity($attributes->input);
+                $cluster->set('goldenRecordId', $goldenRecord->get('id'));
+                $this->getRepository()->save($cluster);
+            }
+        }
+
+        $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
+
         $linksDefs = $this->getMetadata()->get(['entityDefs', $goldenRecord->getEntityType(), 'links']);
         foreach ($linksDefs as $link => $linkDefs) {
 
@@ -121,7 +138,7 @@ class Cluster extends Base
             }
             $method = 'applyMergeFor' . ucfirst($link);
             if (method_exists($this, $method)) {
-                $service->$method($goldenRecord, $sourceList);
+                $masterService->$method($goldenRecord, $sourceList);
                 continue;
             }
 
@@ -136,7 +153,7 @@ class Cluster extends Base
 
                 foreach ($linkedList as $linked) {
                     try {
-                        $repository->relate($goldenRecord, $link, $linked);
+                        $masterRepository->relate($goldenRecord, $link, $linked);
                     } catch (NotUnique $e) {
                     }
                 }
@@ -169,14 +186,17 @@ class Cluster extends Base
 
         try {
             $attributes->input->_skipCheckForConflicts = true;
-            $goldenRecord = $service->updateEntity($goldenRecord->get('id'), $attributes->input);
+            $goldenRecord = $masterService->updateEntity($goldenRecord->get('id'), $attributes->input);
         } catch (NotModified $e) {
 
         }
 
-//        foreach ($sourceList as $source) {
-//            $this->getEntityManager()->removeEntity($source);
-//        }
+        foreach ($sourceList as $source) {
+            if($source->getEntityName() !== $cluster->get('masterEntity')) {
+                $source->set('masterRecordId', $goldenRecord->get('id'));
+                $this->getEntityManager()->saveEntity($source);
+            }
+        }
 
         return $goldenRecord;
     }
