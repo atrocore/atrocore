@@ -26,7 +26,7 @@ class RoleScopeAttribute extends Base
         parent::prepareCollectionForOutput($collection, $selectParams);
 
         if (class_exists("\\Pim\\Module")) {
-           $this->updateAttributeNames($collection->getInnerContainer());
+            $this->prepareAttributeNames($collection->getInnerContainer());
         }
     }
 
@@ -37,12 +37,12 @@ class RoleScopeAttribute extends Base
 
         if (empty($entity->_fromCollection)) {
             if (class_exists("\\Pim\\Module")) {
-                $this->updateAttributeNames([$entity]);
+                $this->prepareAttributeNames([$entity]);
             }
         }
     }
 
-    protected  function updateAttributeNames(array $entities): void
+    protected function prepareAttributeNames(array $entities): void
     {
         $attributesById = [];
         foreach ($entities as $entity) {
@@ -55,7 +55,7 @@ class RoleScopeAttribute extends Base
             ->find();
 
         foreach ($attributes as $attribute) {
-            if (!empty($attributesById[$attribute->get('id')])) {
+            if (!empty($attributesById[$attribute->get('id')]) && !empty($attribute->get('channelName'))) {
                 $attributesById[$attribute->get('id')]->set('attributeName', $attribute->get('name') . ' / ' . $attribute->get('channelName'));
             }
         }
