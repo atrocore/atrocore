@@ -1505,6 +1505,66 @@
     }
   },
   {
+    "route": "/ClusterItem/action/unmerge",
+    "method": "post",
+    "description": "Unmerge one or multiple cluster items into a new cluster. Accepts a single id, a list of ids, or a query where clause.",
+    "operationId": "unmergeClusterItems",
+    "tags": [
+      "ClusterItem"
+    ],
+    "params": {
+      "controller": "ClusterItem",
+      "action": "unmerge"
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "idList": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "where": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Number of items unmerged"
+        },
+        "sync": {
+          "type": "boolean",
+          "description": "Whether the operation was executed synchronously"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "description": "List of errors if any occurred"
+        }
+      }
+    }
+  },
+  {
     "route": "/ClusterItem/action/unreject",
     "method": "post",
     "description": "Unreject a cluster item",

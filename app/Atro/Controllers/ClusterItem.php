@@ -60,6 +60,39 @@ class ClusterItem extends Base
         return $recordService->reject($params);
     }
 
+    public function actionUnmerge($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
+            throw new Forbidden();
+        }
+
+        $params = [];
+        $recordService = $this->getRecordService();
+
+        if (property_exists($data, 'where')) {
+            $where = json_decode(json_encode($data->where), true);
+            $params['where'] = $where;
+        }
+
+        if (property_exists($data, 'idList')) {
+            $params['ids'] = $data->idList;
+        }
+
+        if (property_exists($data, 'id')) {
+            $params['ids'] = [$data->id];
+        }
+
+        if (empty($params)) {
+            throw new BadRequest('You should at least provide an ID, or an IdList or where filter.');
+        }
+
+        return $recordService->unmerge($params);
+    }
+
     public function actionUnreject($params, $data, $request)
     {
         if (!$request->isPost()) {

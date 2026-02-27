@@ -10,19 +10,25 @@
   },
   "actions": {
     "reject": "Reject",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "unmerge": "Unmerge"
   },
   "exceptions": {
     "notFound": "Cluster item record not found",
-    "cannotUnreject": "This cluster item cannot be unrejected"
+    "cannotUnreject": "This cluster item cannot be unrejected",
+    "itemsMustBelongToTheSameCluster": "All items must belong to the same cluster to unmerge together.",
+    "cannotUnmergeMasterEntityItem": "Cannot unmerge the master entity item."
   },
   "massActions": {
-    "reject": "Reject"
+    "reject": "Reject",
+    "unmerge": "Unmerge"
   },
   "massActionSuccessMessages": {
-    "reject": "The selected Cluster Items are been deleted in the background"
+    "reject": "The selected Cluster Items are been deleted in the background",
+    "unmerge": "The selected Cluster Items are unmerged"
   },
   "massActionConfirmMessages": {
-    "reject": "Are you sure you want to reject the selected Items?"
+    "reject": "Are you sure you want to reject the selected Items?",
+    "unmerge": "Are you sure you want to unmerge the selected Items?"
   }
 }

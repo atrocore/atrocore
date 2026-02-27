@@ -19,6 +19,14 @@
       "refresh": true,
       "iconClass": "ph ph-x",
       "sortOrder": 20
+    },
+    "unmerge": {
+      "url": "ClusterItem/action/unmerge",
+      "confirm": false,
+      "massAction": true,
+      "refresh": true,
+      "iconClass": "ph ph-arrows-split",
+      "sortOrder": 30
     }
   }
 }

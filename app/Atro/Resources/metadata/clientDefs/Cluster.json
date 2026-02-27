@@ -10,7 +10,6 @@
   },
   "relationshipPanels": {
     "clusterItems": {
-      "checkboxes": false,
       "actions": {
         "quickView": {
           "disabled": true
@@ -31,6 +30,13 @@
           "refresh": true,
           "iconClass": "ph ph-x",
           "sortOrder": 20
+        },
+        "unmerge": {
+          "url": "ClusterItem/action/unmerge",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-arrows-split",
+          "sortOrder": 30
         },
         "removeRelated": {
           "url": "{{entityName}}/{{entityId}}",
