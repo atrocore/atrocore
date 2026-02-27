@@ -151,7 +151,7 @@ class ClusterItem extends Base
 
     public function rejectItem(\Atro\Entities\ClusterItem|string $entity, bool $persistRejection = true): bool
     {
-        if(is_string($entity)) {
+        if (is_string($entity)) {
             /** @var \Atro\Entities\ClusterItem $entity */
             $entity = $this->getEntity($entity);
         }
@@ -228,6 +228,51 @@ class ClusterItem extends Base
         return true;
     }
 
+    public function unmerge(array $params): array
+    {
+        if (!empty($params['where'])) {
+            $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
+            $collection = $this->getRepository()->find($selectParams);
+        } else {
+            if (empty($ids = $params['ids'])) {
+                throw new BadRequest("No ids provided.");
+            }
+            $collection = $this->getRepository()->findByIds($ids);
+        }
+
+        $entities = iterator_to_array($collection);
+
+        // All items must belong to the same cluster
+        $clusterIds = array_unique(array_map(fn($e) => $e->get('clusterId'), $entities));
+        if (count($clusterIds) > 1) {
+            throw new BadRequest($this->getInjection('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
+        }
+
+        $cluster = $entities[0]->get('cluster');
+        // Cannot unmerge the master entity item
+        foreach ($entities as $entity) {
+            if ($entity->get('entityName') === $cluster->get('masterEntity')) {
+                throw new BadRequest($this->getInjection('language')->translate('cannotUnmergeMasterEntityItem', 'exceptions', 'ClusterItem'));;
+            }
+        }
+
+        $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
+        $newCluster->set('masterEntity', $cluster->get('masterEntity'));
+        $this->getEntityManager()->saveEntity($newCluster);
+
+        foreach ($entities as $entity) {
+            if ($this->isClusterItemConfirmed($entity)) {
+                $this->unConfirmClusterItem($entity);
+            }
+
+            $this->getRepository()->moveToCluster($entity->get('id'), $newCluster->get('id'));
+        }
+
+        $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newCluster->get('id')]);
+
+        return ['count' => count($entities), 'sync' => true, 'errors' => []];
+    }
+
     public function unreject(string $clusterItemId, string $rejectedClusterItemId): bool
     {
         $clusterItem = $this->getEntity($clusterItemId);
@@ -291,6 +336,21 @@ class ClusterItem extends Base
         return false;
     }
 
+    public function unConfirmClusterItem(\Atro\Entities\ClusterItem $clusterItem): void
+    {
+        foreach ($clusterItem->getStagingRecords() as $stagingRecord) {
+            $stagingRecord->set('masterRecordId', null);
+            if ($stagingRecord->isAttributeChanged('masterRecordId')) {
+                $this->getEntityManager()->saveEntity($stagingRecord);
+            }
+        }
+
+        if (!empty($clusterItem->get('confirmedAutomatically'))) {
+            $clusterItem->set('confirmedAutomatically', false);
+            $this->getEntityManager()->saveEntity($clusterItem);
+        }
+    }
+
     public function putMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
     {
         parent::putMetaForLink($entityFrom, $link, $entity);
@@ -308,16 +368,20 @@ class ClusterItem extends Base
         parent::putAclMeta($entity);
 
         $isConfirmed = $this->isClusterItemConfirmed($entity);
+        $isStaging = !empty($this->getMetadata()->get(['scopes', $entity->get('entityName'), 'primaryEntityId']));
 
         if ($this->getUser()->isAdmin()) {
             $entity->setMetaPermission('confirm', !$isConfirmed);
             $entity->setMetaPermission('reject', true);
+            $entity->setMetaPermission('unmerge', $isStaging);
             $entity->setMetaPermission('delete', true);
             return;
         }
 
+
         $entity->setMetaPermission('confirm', false);
         $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
+        $entity->setMetaPermission('unmerge', $isStaging && $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('delete', false);
 
         if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {

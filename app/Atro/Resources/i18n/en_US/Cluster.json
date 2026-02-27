@@ -20,7 +20,8 @@
   "actions": {
     "reject": "Reject",
     "confirm": "Confirm",
-    "unreject": "Unreject"
+    "unreject": "Unreject",
+    "unmerge": "Unmerge"
   },
   "exceptions": {
     "cannotDelete": "Only empty clusters can be deleted",
