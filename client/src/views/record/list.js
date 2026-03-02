@@ -1417,7 +1417,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getActionsComponent: function () {
-            return Svelte.ListActionsContainer;
+            return Svelte.ListToolbar;
         },
 
         getCounters: function () {

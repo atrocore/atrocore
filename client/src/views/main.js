@@ -328,9 +328,9 @@ Espo.define('views/main', 'view', function (Dep) {
 
         setupRightSideView: function () {
             if (this.shouldSetupRightSideView()) {
-                if (window.SvelteRightSideView) {
+                if (window.SvelteDetailSidePanel) {
                     try {
-                        window.SvelteRightSideView.$destroy();
+                        window.SvelteDetailSidePanel.$destroy();
                     } catch (e) {
 
                     }
@@ -363,7 +363,7 @@ Espo.define('views/main', 'view', function (Dep) {
                     props = recordView.getSvelteSideViewProps(this);
                 }
 
-                window.SvelteRightSideView = new Svelte.RightSideView({
+                window.SvelteDetailSidePanel = new Svelte.DetailSidePanel({
                     target: $(`${this.options.el} .content-wrapper`).get(0),
                     props: props
                 })
