@@ -20,7 +20,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Atro\Services\Record;
 use Espo\ORM\EntityManager;
 

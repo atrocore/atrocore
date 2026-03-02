@@ -19,7 +19,7 @@ use Espo\Core\ORM\EntityManager;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\Services\Stream as StreamService;
-use Espo\Entities\User;
+use Atro\Entities\User;
 
 class Note
 {

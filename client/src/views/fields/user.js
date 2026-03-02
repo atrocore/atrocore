@@ -36,7 +36,27 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
 
         searchTemplate: 'fields/user/search',
 
+        listTemplate: 'fields/user/list',
+
+        detailTemplate: 'fields/user/detail',
+
         foreignScope: 'User',
+
+        data: function () {
+            const data = Dep.prototype.data.call(this);
+
+            const auditMeta = this.model.getMeta('audit', this.name);
+            if (auditMeta) {
+                data.actorId = auditMeta.actor.id;
+                data.actorName = auditMeta.actor.name;
+                data.actorIsLink = !auditMeta.actor.isSystem;
+                data.delegatorId = auditMeta.delegator.id;
+                data.delegatorName = auditMeta.delegator.name;
+                data.delegatorIsLink = !auditMeta.delegator.isSystem;
+            }
+
+            return data;
+        },
 
         setupSearch: function () {
             Dep.prototype.setupSearch.call(this);

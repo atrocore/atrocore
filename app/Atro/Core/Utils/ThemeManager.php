@@ -12,7 +12,7 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Utils\Config;
-use Espo\Entities\User;
+use Atro\Entities\User;
 
 class ThemeManager
 {

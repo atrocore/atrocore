@@ -19,7 +19,7 @@ use Atro\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 
 abstract class AbstractEntryPoint
