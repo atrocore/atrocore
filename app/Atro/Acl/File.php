@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Acl;
 
 use Espo\Core\Acl\Base;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\Entity;
 
 class File extends Base

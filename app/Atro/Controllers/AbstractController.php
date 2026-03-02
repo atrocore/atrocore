@@ -56,7 +56,7 @@ abstract class AbstractController
         return $this->container;
     }
 
-    protected function getUser(): \Espo\Entities\User
+    protected function getUser(): \Atro\Entities\User
     {
         return $this->container->get('user');
     }
