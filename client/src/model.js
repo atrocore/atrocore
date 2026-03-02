@@ -287,6 +287,26 @@ Espo.define('model', [], function () {
             return true;
         },
 
+        setMeta: function (category, key, value) {
+            var meta = this.get('_meta') || {};
+            if (!meta[category]) {
+                meta[category] = {};
+            }
+            meta[category][key] = value;
+            this.set('_meta', meta);
+        },
+
+        getMeta: function (category, key) {
+            var meta = this.get('_meta');
+            if (!meta || !meta[category]) {
+                return null;
+            }
+            if (key === undefined) {
+                return meta[category];
+            }
+            return meta[category][key] ?? null;
+        },
+
         getEntityType: function () {
             return this.name;
         },

@@ -15,10 +15,9 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\StorageInterface;
-use Atro\Core\Utils\NotificationManager;
 use Espo\Core\Interfaces\Injectable;
 use Atro\Core\Utils\Config;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 
 abstract class AbstractService implements Injectable
@@ -136,5 +135,14 @@ abstract class AbstractService implements Injectable
     public function getMemoryStorage(): StorageInterface
     {
         return $this->getInjection('memoryStorage');
+    }
+
+    protected function getUserDisplayName(User $user): string
+    {
+        if ($user->isSystemUser()) {
+            return $this->getInjection('language')->translate('System');
+        }
+
+        return (string)$user->get('name');
     }
 }

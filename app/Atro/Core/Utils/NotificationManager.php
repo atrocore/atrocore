@@ -23,7 +23,7 @@ use Espo\ORM\Entity;
 use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 use Atro\Entities\NotificationRule as RuleEntity;
 use Atro\Core\Utils\Note as NoteUtil;

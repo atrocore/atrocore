@@ -17,7 +17,7 @@ use Atro\Entities\File;
 use Atro\Core\Container;
 use Espo\Core\Utils\Language;
 use Espo\Core\ORM\EntityManager;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\Entity;
 
 abstract class Base

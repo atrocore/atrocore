@@ -18,7 +18,7 @@ use Atro\Core\EventManager\Manager;
 use Atro\Repositories\Translation as TranslationRepository;
 use Atro\Services\AbstractService;
 use Espo\Core\Utils\File\Unifier;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 
 class Language
