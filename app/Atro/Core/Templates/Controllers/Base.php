@@ -117,13 +117,12 @@ class Base extends AbstractRecordController
 
         $id = $params['id'];
 
-        $attributeValues = $data->attributeValues ?? null;
-        if (empty($attributeValues) || !is_array($attributeValues)) {
+        if (empty($data) || !is_array($data)) {
             throw new BadRequest();
         }
 
         $input = new \stdClass();
-        $input->attributeValues = $attributeValues;
+        $input->attributeValues = $data;
 
         $this->getRecordService()->updateEntity($id, $input);
 
