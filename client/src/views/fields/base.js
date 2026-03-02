@@ -1354,14 +1354,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (this.hasLockedControls()) {
                 const metaValue = res['_meta']?.locked?.[this.getLockedFieldName()];
                 if (metaValue !== undefined) {
-                    const meta = model.get('_meta') || {};
-                    if (!meta.locked) {
-                        meta.locked = {};
-                    }
-
-                    meta.locked[this.getLockedFieldName()] = metaValue;
-
-                    this.model.set('_meta', meta);
+                    this.model.setMeta('locked', this.getLockedFieldName(), metaValue);
                 }
 
                 this.setLockedControls();

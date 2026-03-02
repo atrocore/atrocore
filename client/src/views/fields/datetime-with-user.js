@@ -42,7 +42,7 @@ Espo.define('views/fields/datetime-with-user', 'views/fields/base',
         data() {
             let data = Dep.prototype.data.call(this);
 
-            const auditMeta = this.model.get('_meta')?.audit?.[this.getUserField()];
+            const auditMeta = this.model.getMeta('audit', this.getUserField());
 
             if (auditMeta) {
                 data.actorIsLink = !auditMeta.actor.isSystem;

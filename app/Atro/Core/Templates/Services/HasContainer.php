@@ -17,7 +17,7 @@ use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Services\Base;
 use Atro\Core\Utils\Config;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 
 /**
