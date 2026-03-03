@@ -345,7 +345,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 const props = recordView.getSvelteSideViewProps(this);
                 this.destroySveltePanel()
 
-                window['SvelteDetailSidePanel' + this.dialog.id] = new Svelte.DetailSidePanel({
+                window['SvelteContextPanel' + this.dialog.id] = new Svelte.ContextPanel({
                     target: rightContainer,
                     props: props
                 });
@@ -357,9 +357,9 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         destroySveltePanel: function () {
-            if (window['SvelteDetailSidePanel' + this.dialog.id]) {
+            if (window['SvelteContextPanel' + this.dialog.id]) {
                 try {
-                    window['SvelteDetailSidePanel' + this.dialog.id].$destroy()
+                    window['SvelteContextPanel' + this.dialog.id].$destroy()
                 } catch (e) {
                 }
             }

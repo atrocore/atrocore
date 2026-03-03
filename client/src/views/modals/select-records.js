@@ -381,7 +381,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             [
                 'SvelteFilterSearchBar' + this.dialog.id,
                 'SvelteFilterSearchBar' + this.dialog.id + 'tree',
-                'SvelteDetailSidePanel' + this.dialog.id
+                'SvelteContextPanel' + this.dialog.id
             ]
                 .forEach(key => {
                     if (window[key]) {
@@ -509,9 +509,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     showFilter: true,
                     uniqueKey: this.dialog.id
                 }
-                if (!window['SvelteDetailSidePanel' + this.dialog.id]) {
+                if (!window['SvelteContextPanel' + this.dialog.id]) {
 
-                    window['SvelteDetailSidePanel' + this.dialog.id] = new Svelte.DetailSidePanel({
+                    window['SvelteContextPanel' + this.dialog.id] = new Svelte.ContextPanel({
                         target: rightContainer,
                         props: rightViewOption
                     });
@@ -521,7 +521,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         $(rightContainer).hide();
                     }
                 } else {
-                    window['SvelteDetailSidePanel' + this.dialog.id].$set(rightViewOption)
+                    window['SvelteContextPanel' + this.dialog.id].$set(rightViewOption)
                 }
             }
         },
