@@ -106,7 +106,7 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
 
         $entitiesNames = [];
         foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $masterEntity) {
+            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $masterEntity && $scopeDefs['role'] !== 'changeRequest') {
                 $entitiesNames[] = $scope;
             }
         }
@@ -152,21 +152,19 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
             }
 
 
-            if (!empty($this->getMetadata()->get(['scopes', $entityName, 'matchMasterRecords']))) {
-                // create clusters for the rest of the records
-                while (!empty($recordsIds = $clusterItemRepo->getRecordsWithNoClusterItems($entityName, 20000))) {
-                    foreach ($recordsIds as $recordId) {
-                        $cluster = $this->createCluster($masterEntity);
-                        $clusterItem = $this->createClusterItem($cluster->get('id'), $entityName, $recordId);
+            // create clusters for the rest of the records
+            while (!empty($recordsIds = $clusterItemRepo->getRecordsWithNoClusterItems($entityName, 20000))) {
+                foreach ($recordsIds as $recordId) {
+                    $cluster = $this->createCluster($masterEntity);
+                    $clusterItem = $this->createClusterItem($cluster->get('id'), $entityName, $recordId);
 
-                        $clusterItem->set('cluster', $cluster);
-                        $cluster->set('clusterItems', [$clusterItem]);
+                    $clusterItem->set('cluster', $cluster);
+                    $cluster->set('clusterItems', [$clusterItem]);
 
-                        try {
-                            $clusterItemService->confirm($clusterItem, true);
-                        } catch (\Exception $e) {
-                            $GLOBALS['log']->error("Impossible to automatically confirm cluster " . $cluster->get('id') . " : " . $e->getMessage());
-                        }
+                    try {
+                        $clusterItemService->confirm($clusterItem, true);
+                    } catch (\Exception $e) {
+                        $GLOBALS['log']->error("Impossible to automatically confirm cluster " . $cluster->get('id') . " : " . $e->getMessage());
                     }
                 }
             }
