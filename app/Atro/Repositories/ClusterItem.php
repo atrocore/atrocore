@@ -193,6 +193,7 @@ class ClusterItem extends Base
     public function getClusterItemsWithInvalidMatchedRecords(int $offset = 0, int $limit = PHP_INT_MAX): EntityCollection
     {
         return $this->limit($offset, $limit)->find([
+            'skipBelongsToJoins' => true,
             'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) {
                 $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
