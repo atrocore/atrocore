@@ -108,6 +108,11 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
                     params: this.params || {},
                 },
             });
+
+            this.svelteComponent.$on('change', (event) => {
+                const { name, value } = event.detail;
+                this.model.set(name, value);
+            });
         },
 
         removeSvelteComponent() {
