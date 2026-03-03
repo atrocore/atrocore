@@ -471,36 +471,49 @@ class OpenApiGenerator
                                 'schema'   => ['type' => 'string'],
                                 'example'  => '613219736ca7a1c68'
                             ]
-                        ],
-                        "responses"   => self::prepareResponses([
-                            'type'  => 'array',
-                            "items" => [
-                                "type"       => "object",
-                                'properties' => [
-                                    'attributeId'      => ['type' => 'string'],
-                                    'type'             => ['type' => 'string'],
-                                    'required'         => ['type' => 'boolean'],
-                                    'visible'          => ['type' => 'boolean'],
-                                    'readOnly'         => ['type' => 'boolean'],
-                                    'protected'        => ['type' => 'boolean'],
-                                    'value'            => ['nullable' => true, 'example' => null],
-                                    'valueName'        => ['type' => 'string', 'nullable' => true],
-                                    'valueUnitId'      => ['type' => 'string', 'nullable' => true],
-                                    'valueUnitName'    => ['type' => 'string', 'nullable' => true],
-                                    'valueId'          => ['type' => 'string', 'nullable' => true],
-                                    'valueIds'         => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
-                                    'valueNames'       => ['type' => 'object', 'nullable' => true],
-                                    'valueOptionsData' => ['type' => 'object', 'nullable' => true],
-                                    'valueOptionData'  => ['type' => 'object', 'nullable' => true],
-                                    'valuePathsData'   => ['type' => 'object', 'nullable' => true],
-                                    'valueUnitData'    => ['type' => 'object', 'nullable' => true],
-                                    'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
-                                    'valueFrom'        => ['nullable' => true, 'example' => 1],
-                                    'valueTo'          => ['nullable' => true, 'example' => 2],
-                                ]
-                            ]
-                        ])
+                        ]
                     ];
+
+                    $successResponse = [
+                        'type'  => 'array',
+                        "items" => [
+                            "type"       => "object",
+                            'properties' => [
+                                'attributeId'      => ['type' => 'string'],
+                                'type'             => ['type' => 'string'],
+                                'required'         => ['type' => 'boolean'],
+                                'visible'          => ['type' => 'boolean'],
+                                'readOnly'         => ['type' => 'boolean'],
+                                'protected'        => ['type' => 'boolean'],
+                                'value'            => ['nullable' => true, 'example' => null],
+                                'valueName'        => ['type' => 'string', 'nullable' => true],
+                                'valueUnitId'      => ['type' => 'string', 'nullable' => true],
+                                'valueUnitName'    => ['type' => 'string', 'nullable' => true],
+                                'valueId'          => ['type' => 'string', 'nullable' => true],
+                                'valueIds'         => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
+                                'valueNames'       => ['type' => 'object', 'nullable' => true],
+                                'valueOptionsData' => ['type' => 'object', 'nullable' => true],
+                                'valueOptionData'  => ['type' => 'object', 'nullable' => true],
+                                'valuePathsData'   => ['type' => 'object', 'nullable' => true],
+                                'valueUnitData'    => ['type' => 'object', 'nullable' => true],
+                                'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
+                                'valueFrom'        => ['nullable' => true, 'example' => 1],
+                                'valueTo'          => ['nullable' => true, 'example' => 2],
+                            ]
+                        ]
+                    ];
+
+                    if (!empty($languageParam)) {
+                        $result['paths']["/{$scopeName}/{id}/attributeValues"]['get']['parameters'][] = $languageParam;
+                        foreach ($config->get('inputLanguageList') ?? [] as $language) {
+                            $successResponse['items']['properties']['value' . ucfirst(Util::toCamelCase(strtolower($language)))] = [
+                                'type'     => 'string',
+                                'nullable' => true
+                            ];
+                        }
+                    }
+
+                    $result['paths']["/{$scopeName}/{id}/attributeValues"]['get']['responses'] = self::prepareResponses($successResponse);
 
                     $result['paths']["/{$scopeName}/{id}/addAttributes"]['post'] = [
                         'tags'        => [$scopeName],
