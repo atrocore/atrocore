@@ -1049,7 +1049,15 @@ class Hierarchy extends Base
 
     protected function createInputDataForPseudoTransactionJob(Entity $entity, array $parent, array $child, \stdClass $data): \stdClass
     {
-        $unInheritedFields = $this->getRepository()->getUnInheritedFields();
+        $unInheritedFields = [];
+        foreach ($this->getRepository()->getUnInheritedFields() as $field) {
+            $list = $this->getFieldManagerUtil()->getActualAttributeList($this->entityName, $field, $entity);
+
+            $unInheritedFields = array_merge($unInheritedFields, $list);
+            $unInheritedFields[] = $field;
+        }
+
+
         $inputData = new \stdClass();
         foreach ($data as $field => $value) {
             if (in_array($field, $unInheritedFields)) {
