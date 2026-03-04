@@ -15,7 +15,8 @@ Espo.define('views/settings/fields/company-logo', 'views/fields/file', function 
             return [{
                 type: 'anyOf',
                 attribute: 'typeId',
-                value: ['a_image', 'a_favicon']
+                // images and icons
+                value: ['019c320b-77ba-73d3-8f1b-8346dce0f7bb', '019c320b-8c5f-7374-880c-ce48237046cb']
             }];
         }
     })
