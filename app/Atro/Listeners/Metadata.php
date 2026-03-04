@@ -1168,6 +1168,7 @@ class Metadata extends AbstractListener
                 $data['scopes'][$entityName]['layouts'] = true;
             }
             $data['scopes'][$entityName]['customizable'] = false;
+            $data['scopes'][$entityName]['mergeDisabled'] = true;
         }
     }
 
