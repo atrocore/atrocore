@@ -227,7 +227,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (selectAttributeList) {
                         this.collection.data.select = selectAttributeList.join(',');
                     }
-                    this.collection.fetch({keepSelected: true})
+                    this.collection.fetch({ keepSelected: true })
                     this.collection.once('sync', () => {
                         this.notify(false);
                     })
@@ -289,7 +289,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.notify('Please wait...');
             this.collection.once('sync', function () {
                 this.notify(false);
-                this.trigger('sort', {sortBy: field, asc: asc});
+                this.trigger('sort', { sortBy: field, asc: asc });
             }, this);
             var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
             while (this.collection.length > maxSizeLimit) {
@@ -539,13 +539,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }, this);
         },
 
-        massAction: function(name) {
-            if(this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name])) {
+        massAction: function (name) {
+            if (this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name])) {
                 this.massActionUsingDefs(name);
                 return;
             }
 
-            if(this.getMetadata().get(['clientDefs', this.scope, 'listActions', name, 'massAction'])) {
+            if (this.getMetadata().get(['clientDefs', this.scope, 'listActions', name, 'massAction'])) {
                 var proceed = function () {
                     var idList = [];
                     var data = {};
@@ -671,7 +671,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 requestData.where = this.collection.getWhereForCheckedRecords();
                 requestData.massAction = true;
             } else if (this.checkedList && this.checkedList.length > 0) {
-                requestData.where = [{type: "in", attribute: "id", value: this.checkedList}];
+                requestData.where = [{ type: "in", attribute: "id", value: this.checkedList }];
                 requestData.massAction = true;
             }
 
@@ -706,7 +706,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
-                var data = {permanently: permanently};
+                var data = { permanently: permanently };
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhereForCheckedRecords();
                     data.selectData = this.collection.data || {};
@@ -927,8 +927,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }).then(result => {
                 this.getModelFactory().create('Selection', (selectionModel) => {
                     selectionModel.set(result);
-                    this.getRouter().navigate('#Selection/view/' + result.id, {trigger: false});
-                    this.getRouter().dispatch('Selection', 'view', {model: selectionModel})
+                    this.getRouter().navigate('#Selection/view/' + result.id, { trigger: false });
+                    this.getRouter().dispatch('Selection', 'view', { model: selectionModel })
                 });
             });
         },
@@ -1127,7 +1127,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.removeMassAction('massUpdate');
             }
 
-            if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled'])) {
+            if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled']) || this.getMetadata().get(['scopes', this.entityType, 'mergeDisabled'])) {
                 this.removeMassAction('select');
                 this.removeMassAction('compare');
                 this.removeMassAction('merge');
@@ -1182,10 +1182,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }, this);
 
             $.each(this.getMetadata().get(['clientDefs', this.scope, 'listActions']) || {}, (actionName, actionData) => {
-               if(actionData.massAction) {
-                   this.massActionList.push(actionName);
-                   this.checkAllResultMassActionList.push(actionName);
-               }
+                if (actionData.massAction) {
+                    this.massActionList.push(actionName);
+                    this.checkAllResultMassActionList.push(actionName);
+                }
             });
 
             if (
@@ -1214,7 +1214,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 dynamicActions = dynamicActions.sort((v1, v2) => {
                     return v1.label.localeCompare(v2.label);
                 })
-                dynamicActions.unshift({divider: true})
+                dynamicActions.unshift({ divider: true })
                 this.massActionList.push(...dynamicActions);
                 this.checkAllResultMassActionList.push(...dynamicActions);
             }
@@ -1411,7 +1411,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 },
                 handleSelectAll: (e) => {
                     this.handleSelectAll(e);
-                    component.$set({selected: this.allResultIsChecked});
+                    component.$set({ selected: this.allResultIsChecked });
                 }
             };
         },
@@ -2014,7 +2014,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({number: k, relEntity: parts[0]});
+                        toRemove.push({ number: k, relEntity: parts[0] });
                     }
                 });
 
@@ -2834,7 +2834,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, this);
 
                     this.listenToOnce(view, 'after:edit-cancel', function () {
-                        this.actionQuickView({id: view.model.id, scope: view.model.name});
+                        this.actionQuickView({ id: view.model.id, scope: view.model.name });
                     }, this);
 
                     this.listenToOnce(view, 'after:save', function (model) {
@@ -2842,7 +2842,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, this);
                 }, this);
             } else {
-                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
+                this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: true });
             }
         },
 
@@ -2863,7 +2863,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 fullFormDisabled: true,
                 layoutName: 'upload',
                 multiUpload: false,
-                attributes: _.extend(model.attributes, {reupload: model.id}),
+                attributes: _.extend(model.attributes, { reupload: model.id }),
             }, view => {
                 view.render();
                 this.notify(false);
@@ -2961,7 +2961,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
-                this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
+                this.getRouter().navigate('#' + scope + '/edit/' + id, { trigger: false });
                 this.getRouter().dispatch(scope, 'edit', options);
             }
         },
@@ -2995,7 +2995,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (response.success) {
                         this.notify(response.message, 'success');
                         if (response.redirect) {
-                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, {trigger: false});
+                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, { trigger: false });
                             this.getRouter().dispatch(response.scope, 'view', {
                                 id: response.entityId,
                             })
@@ -3158,7 +3158,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             let runAction = () => {
                 this.notify(this.translate('Loading...'));
-                this.ajaxPostRequest(actionDefs.url, {action: name, scope: scope, id: id})
+                this.ajaxPostRequest(actionDefs.url, { action: name, scope: scope, id: id })
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
                         if (actionDefs.refresh) {
@@ -3209,7 +3209,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 $.ajax({
                     url: this.entityType + '/action/restore',
                     type: 'POST',
-                    data: JSON.stringify({id: id})
+                    data: JSON.stringify({ id: id })
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);
@@ -3222,7 +3222,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         actionDeletePermanently(data) {
-            let id = (data || {id: null}).id;
+            let id = (data || { id: null }).id;
             if (!id) {
                 return;
             }
@@ -3312,7 +3312,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         this.notify(false)
                     });
                 }, this);
-                model.fetch({main: true});
+                model.fetch({ main: true });
             }, this);
         },
 
