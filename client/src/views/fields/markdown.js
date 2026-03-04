@@ -142,7 +142,8 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                                             id: 'typeId',
                                             field: 'typId',
                                             operator: 'in',
-                                            value: ['a_image', 'a_favicon']
+                                            // images and icons
+                                            value: ['019c320b-77ba-73d3-8f1b-8346dce0f7bb', '019c320b-8c5f-7374-880c-ce48237046cb']
                                         }
                                     ]
                                 }

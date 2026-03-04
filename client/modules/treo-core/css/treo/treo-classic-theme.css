@@ -18986,6 +18986,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .compare-records .compare-panel table td.cell {
     overflow: inherit;
     position: relative;
+    word-break: break-all;
 }
 
 .compare-records tr.matched-score-row {

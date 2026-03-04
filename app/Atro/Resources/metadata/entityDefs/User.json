@@ -147,7 +147,7 @@
     },
     "avatar": {
       "type": "file",
-      "fileTypeId": "a_image",
+      "fileTypeId": "019c320b-77ba-73d3-8f1b-8346dce0f7bb",
       "view": "views/user/fields/avatar",
       "previewSize": "small"
     },
