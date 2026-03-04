@@ -100,28 +100,55 @@ class ClusterItem extends Base
 
     public function updateMatchedScoresInClusters(array $clusterIds): void
     {
-        $this->getDbal()->createQueryBuilder()
-            ->update('cluster_item', 'ci')
-            ->set(
-                'matched_score',
-                '(SELECT MAX(mr.score) 
-              FROM matched_record mr 
-              WHERE (
-                  (mr.source_entity = ci.entity_name AND mr.source_entity_id = ci.entity_id) 
-                  OR 
-                  (mr.master_entity = ci.entity_name AND mr.master_entity_id = ci.entity_id)
-              )
-              AND ci.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.source_entity AND ci2.entity_id = mr.source_entity_id)
-              AND ci.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.master_entity AND ci3.entity_id = mr.master_entity_id)
-              AND mr.deleted = :false 
-              AND mr.has_cluster = :true
-            )'
-            )
-            ->where('ci.cluster_id in (:clusterIds) AND ci.deleted = :false')
-            ->setParameter('clusterIds', $clusterIds, Mapper::getParameterType($clusterIds))
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->executeStatement();
+        if (Converter::isPgSQL($this->getDbal())) {
+            $this->getDbal()->createQueryBuilder()
+                ->update('cluster_item', 'ci')
+                ->set(
+                    'matched_score',
+                    '(SELECT MAX(mr.score)
+                  FROM matched_record mr
+                  WHERE (
+                      (mr.source_entity = ci.entity_name AND mr.source_entity_id = ci.entity_id)
+                      OR
+                      (mr.master_entity = ci.entity_name AND mr.master_entity_id = ci.entity_id)
+                  )
+                  AND ci.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.source_entity AND ci2.entity_id = mr.source_entity_id)
+                  AND ci.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.master_entity AND ci3.entity_id = mr.master_entity_id)
+                  AND mr.deleted = :false
+                  AND mr.has_cluster = :true
+                )'
+                )
+                ->where('ci.cluster_id in (:clusterIds) AND ci.deleted = :false')
+                ->setParameter('clusterIds', $clusterIds, Mapper::getParameterType($clusterIds))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('true', true, ParameterType::BOOLEAN)
+                ->executeStatement();
+        } else {
+            // MySQL does not allow referencing the UPDATE target table in subqueries within the SET clause (error 1093).
+            // Wrapping the logic in a derived table JOIN forces MySQL to materialise it first.
+            $placeholders = implode(',', array_fill(0, count($clusterIds), '?'));
+            $this->getDbal()->executeStatement(
+                "UPDATE cluster_item ci
+                INNER JOIN (
+                    SELECT ci_inner.id, MAX(mr.score) AS max_score
+                    FROM cluster_item ci_inner
+                    LEFT JOIN matched_record mr
+                        ON mr.deleted = 0
+                        AND mr.has_cluster = 1
+                        AND (
+                            (mr.source_entity = ci_inner.entity_name AND mr.source_entity_id = ci_inner.entity_id)
+                            OR
+                            (mr.master_entity = ci_inner.entity_name AND mr.master_entity_id = ci_inner.entity_id)
+                        )
+                        AND ci_inner.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr.source_entity AND ci2.entity_id = mr.source_entity_id)
+                        AND ci_inner.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr.master_entity AND ci3.entity_id = mr.master_entity_id)
+                    WHERE ci_inner.cluster_id IN ($placeholders) AND ci_inner.deleted = 0
+                    GROUP BY ci_inner.id
+                ) AS scores ON scores.id = ci.id
+                SET ci.matched_score = scores.max_score",
+                $clusterIds
+            );
+        }
     }
 
     public function getRecordsWithNoClusterItems(string $stagingEntityName, int $limit = PHP_INT_MAX): array
