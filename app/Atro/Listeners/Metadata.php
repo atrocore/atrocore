@@ -223,30 +223,37 @@ class Metadata extends AbstractListener
 
         foreach ($res as $item) {
             $stagingEntity = $item['id'];
-            $sourceEntity = $item['source_entity'];
+            $sourceEntities = json_decode($item['source_entity'], true) ?? [];
 
-            $foreign = Util::pluralize(lcfirst($stagingEntity));
+            foreach ($sourceEntities as $sourceEntity) {
+                $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
 
-            $data['entityDefs'][$stagingEntity]['fields']['sourceRecord'] = [
-                'type'   => 'link',
-                'unique' => true,
-            ];
-            $data['entityDefs'][$stagingEntity]['links']['sourceRecord'] = [
-                'type'    => 'belongsTo',
-                'foreign' => $foreign,
-                'entity'  => $sourceEntity
-            ];
+                $data['entityDefs'][$sourceEntity]['fields']['stagingRecord'] = [
+                    'type' => 'link',
+                ];
 
-            $data['entityDefs'][$sourceEntity]['fields'][$foreign] = [
-                'type'     => 'linkMultiple',
-                'labelKey' => "Global.scopeNamesPlural.{$stagingEntity}",
-                'noLoad'   => true,
-            ];
-            $data['entityDefs'][$sourceEntity]['links'][$foreign] = [
-                'type'    => 'hasMany',
-                'foreign' => 'sourceRecord',
-                'entity'  => $stagingEntity
-            ];
+                $data['entityDefs'][$sourceEntity]['links']['stagingRecord'] = [
+                    'type'    => 'belongsTo',
+                    'foreign' => $foreign,
+                    'entity'  => $stagingEntity
+                ];
+
+                $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_staging_record'] = [
+                    "deleted",
+                    "staging_record_id"
+                ];
+
+                $data['entityDefs'][$stagingEntity]['fields'][$foreign] = [
+                    'type'     => 'linkMultiple',
+                    'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
+                    'noLoad'   => true,
+                ];
+                $data['entityDefs'][$stagingEntity]['links'][$foreign] = [
+                    'type'    => 'hasMany',
+                    'foreign' => 'stagingRecord',
+                    'entity'  => $sourceEntity
+                ];
+            }
         }
     }
 

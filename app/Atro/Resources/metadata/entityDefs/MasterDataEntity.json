@@ -37,7 +37,7 @@
       }
     },
     "sourceEntity": {
-      "type": "enum",
+      "type": "multiEnum",
       "optionsType": "entityName",
       "options": [],
       "customizable": false,
