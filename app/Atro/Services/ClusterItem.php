@@ -92,17 +92,26 @@ class ClusterItem extends Base
             return false;
         }
 
+        if (count($clusterItems) === 1) {
+            return $this->confirm($clusterItems[0], $automatically);
+        }
+
         $goldenRecord = $clusterItems[0]->get('cluster')->get('goldenRecord');
 
         if (empty($goldenRecord)) {
-            $firstItem = array_shift($clusterItems);
-            $this->confirm($firstItem, $automatically);
+            foreach ($clusterItems as $index => $clusterItem) {
+                try {
+                    $this->confirm($clusterItem, $automatically);
+                    unset($clusterItems[$index]);
+                    break;
+                } catch (\Exception $e) {
+                    $GLOBALS['log']->error('Failed to confirm cluster item ' . $clusterItem->get('id') . ' : ' . $e->getMessage());
+                }
+            }
+
+            $clusterItems = array_values($clusterItems);
 
             $goldenRecord = $clusterItems[0]->get('cluster')->get('goldenRecord');
-        }
-
-        if (empty($clusterItems)) {
-            return true;
         }
 
         if (empty($goldenRecord)) {
