@@ -155,19 +155,17 @@ class LayoutManager
         }
 
         if (!empty($derivativeScope)) {
-            $hasSourceRecordField = !empty($this->getMetadata()->get(['entityDefs', $derivativeScope, 'fields', 'sourceRecord']));
             if ($viewType === 'detail') {
-                if ($hasSourceRecordField) {
-                    array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], ['name' => 'sourceRecord']]);
-                } else {
-                    array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], false]);
-                }
+                array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], false]);
                 array_unshift($layout[0]['rows'], [['name' => 'derivativeStatus'], false]);
             } elseif ($viewType === 'list') {
                 $layout[] = ['name' => 'derivativeStatus'];
                 $layout[] = ['name' => 'masterRecord'];
-                if ($hasSourceRecordField) {
-                    $layout[] = ['name' => 'sourceRecord'];
+            } elseif ($viewType === 'relationships') {
+                foreach ($this->getMetadata()->get(['entityDefs', $derivativeScope, 'links']) ?? [] as $link => $linkDefs) {
+                    if (!empty($linkDefs['foreign']) && $linkDefs['foreign'] === 'stagingRecord') {
+                        $layout[] = ['name' => $link];
+                    }
                 }
             }
         }
