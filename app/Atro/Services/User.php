@@ -446,7 +446,7 @@ class User extends Record
 
     protected function getUserById(string $userId): \Atro\Entities\User
     {
-        $user = $this->getRepository()->get($userId);
+        $user = $this->getEntityManager()->getRepository('User')->get($userId);
         if (!$user) {
             throw new NotFound();
         }
@@ -456,11 +456,6 @@ class User extends Record
         }
 
         return $user;
-    }
-
-    protected function getRepository()
-    {
-        return $this->getEntityManager()->getRepository('User');
     }
 
     protected function init()
