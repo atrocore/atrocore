@@ -11,6 +11,7 @@
 
 namespace Atro\Migrations;
 
+use Atro\Core\Application;
 use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
@@ -41,6 +42,57 @@ class V2Dot2Dot23 extends Base
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->executeQuery();
             } catch (\Exception $e) {
+            }
+        }
+
+        $this->rebuildHierarchyRoutes();
+    }
+
+    private function rebuildHierarchyRoutes(): void
+    {
+        $container = (new Application())->getContainer();
+        $em = $container->getEntityManager();
+        $dbal = $container->getDbal();
+
+        foreach ($container->getMetadata()->get("scopes") ?? [] as $entityName => $defs) {
+            if (!empty($defs['type']) && $defs['type'] === 'Hierarchy') {
+                try {
+                    $tableName = Util::toUnderScore(lcfirst($entityName));
+
+                    echo "Rebuilding routes for entity $entityName...\n";
+
+                    $dbal->createQueryBuilder()
+                        ->update($dbal->quoteIdentifier($tableName))
+                        ->set('routes', ':null')
+                        ->setParameter('null', null, ParameterType::NULL)
+                        ->executeQuery();
+
+                    /** @var \Atro\Core\Templates\Repositories\Hierarchy $repository */
+                    $repository = $em->getRepository($entityName);
+
+                    while (true) {
+                        $res = $dbal->createQueryBuilder()
+                            ->select('t.*')
+                            ->from($dbal->quoteIdentifier($tableName), 't')
+                            ->leftJoin('t', $tableName . '_hierarchy', 'h', 't.id=h.entity_id')
+                            ->where('h.id IS NULL AND t.routes IS NULL')
+                            ->andWhere('t.deleted = :false')
+                            ->setParameter('false', false, ParameterType::BOOLEAN)
+                            ->setFirstResult(0)
+                            ->setMaxResults(20000)
+                            ->fetchAllAssociative();
+
+                        if (empty($res)) {
+                            break;
+                        }
+
+                        foreach ($res as $row) {
+                            $repository->buildRoutes($row['id']);
+                        }
+                    }
+                } catch (\Exception $e) {
+                    echo "Failed to rebuild routes for entity $entityName: " . $e->getMessage();
+                }
             }
         }
     }
