@@ -30,7 +30,8 @@
     },
     "entity": {
       "type": "jsonArray",
-      "notStorable": true
+      "notStorable": true,
+      "filterDisabled": true
     },
     "cluster": {
       "type": "link",

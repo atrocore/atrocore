@@ -116,7 +116,7 @@ class MatchedRecord extends Base
         $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates") || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords");
         if (!$toRemove) {
             foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
-                if (!empty($scopeDefs['masterEntity']) && $scopeDefs['masterEntity'] === $entityName) {
+                if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $entityName) {
                     $toRemove = true;
                     break;
                 }
