@@ -372,7 +372,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         panelView: this,
                         openInTab: !!this.defs.isInSmallView,
                         canUnlink: canUnlink,
-                        hasLayoutEditor: !!this.defs.hasLayoutEditor,
+                        hasLayoutEditor: this.defs.hasLayoutEditor ?? true,
                         listInlineEditModeEnabled: this.listInlineEditModeEnabled
                     }, (view) => {
                         view.getSelectAttributeList(function (selectAttributeList) {
