@@ -82,9 +82,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 },
             });
 
-            this.svelteComponent.$on('change', (event) => {
-                const { name, value } = event.detail;
-                this.model.set(name, value);
+            this.svelteComponent.$on('change', () => {
+                this.trigger('change');
             });
         },
 
