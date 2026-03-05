@@ -946,7 +946,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.getParentView()) {
                 const filterButton = $('<div class="compare-content-filter-container" style="display: inline-block;margin-left: 10px"><div></div></div>');
                 this.getParentView().$el.find('.modal-footer').append(filterButton);
-                new Svelte.ContentFilter({
+                new Svelte.FieldStateFilter({
                     target: filterButton.children().get(0),
                     props: {
                         scope: this.scope,

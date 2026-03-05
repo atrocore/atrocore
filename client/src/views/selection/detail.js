@@ -759,7 +759,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                 }
                             }
 
-                            window.leftSidePanel = new Svelte.SelectionLeftSidePanel({
+                            window.leftSidePanel = new Svelte.SelectionItemList({
                                 target: element,
                                 props: {
                                     records: this.getRecordForPanels(),

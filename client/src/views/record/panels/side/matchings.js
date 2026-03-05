@@ -66,7 +66,7 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
             afterRender() {
                 Dep.prototype.afterRender.call(this);
 
-                new Svelte.ContentFilter({
+                new Svelte.FieldStateFilter({
                     target: this.$el.find('.mr-content-filter').get(0),
                     props: {
                         scope: this.model.name,
