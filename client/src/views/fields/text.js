@@ -64,7 +64,10 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
             this.removeSvelteComponent();
 
-            const searchType = this.getSearchType();
+            const searchType = this.mode === 'search' ? (this.getSearchType() || 'startsWith') : 'startsWith';
+            const searchValue = (this.mode === 'search' && typeof this.searchParams?.value === 'string')
+                ? this.searchParams.value
+                : '';
 
             this.svelteComponent = new Svelte.TextField({
                 target,
@@ -74,10 +77,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                     mode: this.mode,
                     scope: this.model.name,
                     params: this.params || {},
-                    searchType: searchType || 'startsWith',
-                    searchValue: (this.mode === 'search' && typeof this.searchParams.value === 'string')
-                        ? this.searchParams.value
-                        : '',
+                    searchType,
+                    searchValue,
                 },
             });
 
