@@ -67,6 +67,13 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                             whereData: null,
                             whereScope: scope,
                         });
+
+                        if (data.field){
+                            for (const key in data.field){
+                                data.field[key] = this.model.get(key);
+                            }
+                        }
+
                         this.model.set('data', data);
                     }
 
@@ -79,7 +86,6 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
 
                 this.wait(false)
             })
-
         },
 
         setFilter(filter) {
