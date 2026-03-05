@@ -1456,7 +1456,7 @@ class Metadata extends AbstractListener
                         }
 
                         //remove conditional required for multi lang field
-                        if(!empty($mParams['conditionalProperties']['required'])) {
+                        if (!empty($mParams['conditionalProperties']['required'])) {
                             unset($mParams['conditionalProperties']['required']);
                         }
 
