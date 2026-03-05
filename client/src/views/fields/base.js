@@ -1677,13 +1677,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return Espo[key];
         },
 
-        getLinkOptions(scope, customOptions = {}) {
+        getLinkOptions(scope, customOptions = {}, clearCache = false) {
             if (!scope) {
                 return [];
             }
 
             let hash = this.simpleHash(JSON.stringify(customOptions.where ?? []))
             let key = 'link_' + scope + hash;
+            if(clearCache && Espo[key]) {
+                Espo[key] = null;
+            }
             if (!Espo[key]) {
                 Espo[key] = [];
                 let options = {
