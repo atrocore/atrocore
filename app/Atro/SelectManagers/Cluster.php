@@ -311,7 +311,7 @@ class Cluster extends Base
             "COUNT(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN 1 END) = 1 AND " .
             "MAX(CASE WHEN $mtAlias.entity_name = mt_alias.$masterEntityColumn THEN $mtAlias.entity_id END) = mt_alias.$goldenRecordColumn AND " .
             "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn THEN 1 END) > 0 AND " .
-            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn AND COALESCE($goldenRecordCase, '') <> mt_alias.$goldenRecordColumn THEN 1 END) = 0 THEN ".
+            "COUNT(CASE WHEN $mtAlias.entity_name <> mt_alias.$masterEntityColumn AND COALESCE($goldenRecordCase, '') <> mt_alias.$goldenRecordColumn THEN 1 END) = 0 THEN " .
             "(CASE WHEN $lastConfirmedAuto = :true THEN 'mergedAutomatically' ELSE 'mergedManually' END) " .
 
 
@@ -319,7 +319,9 @@ class Cluster extends Base
             "ELSE 'review' END")
             ->andWhere("$mtAlias.cluster_id = mt_alias.id")
             ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->resetQueryParts(['orderBy', 'limit', 'offset']);
+            ->resetQueryPart('orderBy')
+            ->setFirstResult(0)
+            ->setMaxResults(null);
 
         return [
             'sql'        => str_replace([$mtAlias, 'mt_alias'], ['sbq_' . IdGenerator::unsortableId(), $mtAlias], $stateQb->getSQL()),
