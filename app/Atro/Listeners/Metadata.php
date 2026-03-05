@@ -1455,6 +1455,11 @@ class Metadata extends AbstractListener
                             }
                         }
 
+                        //remove conditional required for multi lang field
+                        if(!empty($mParams['conditionalProperties']['required'])) {
+                            unset($mParams['conditionalProperties']['required']);
+                        }
+
                         $newFields[$mField] = $mParams;
                     }
                     $newFields[$field]['lingualFields'] = array_values($newFields[$field]['lingualFields']);
