@@ -139,7 +139,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 }
             });
 
-            if (this.getAcl().check(this.scope, 'create')) {
+            if (this.getAcl().check(this.scope, 'create') && !this.getMetadata().get(`scopes.${this.scope}.mergeDisabled`)) {
                 this.buttonList.push({
                     name: 'switchToCompare',
                     style: this.options.merging ? '' : 'primary',
