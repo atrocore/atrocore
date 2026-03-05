@@ -1127,9 +1127,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.removeMassAction('massUpdate');
             }
 
-            if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled']) || this.getMetadata().get(['scopes', this.entityType, 'mergeDisabled'])) {
+            if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled'])) {
                 this.removeMassAction('select');
                 this.removeMassAction('compare');
+                this.removeMassAction('merge');
+            }
+
+            if (this.getMetadata().get(['scopes', this.entityType, 'mergeDisabled'])) {
                 this.removeMassAction('merge');
             }
 
