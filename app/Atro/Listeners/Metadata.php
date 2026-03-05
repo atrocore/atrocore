@@ -1432,6 +1432,10 @@ class Metadata extends AbstractListener
                         $mParams['isCustom'] = false;
                         $mParams['required'] = false;
                         $mParams['unique'] = false;
+                        //remove conditional required for multi lang field
+                        if (!empty($mParams['conditionalProperties']['required'])) {
+                            unset($mParams['conditionalProperties']['required']);
+                        }
                         if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
                             $mParams['notStorable'] = true;
                             $mParams['optionsOriginal'] = $params['options'];
@@ -1453,11 +1457,6 @@ class Metadata extends AbstractListener
                             if (array_key_exists($key, $mParams)) {
                                 unset($mParams[$key]);
                             }
-                        }
-
-                        //remove conditional required for multi lang field
-                        if (!empty($mParams['conditionalProperties']['required'])) {
-                            unset($mParams['conditionalProperties']['required']);
                         }
 
                         $newFields[$mField] = $mParams;
