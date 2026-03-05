@@ -64,12 +64,12 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
             Dep.prototype.setup.call(this);
 
-            // we reload the option list everytime list any time a field to pass in param change
             this.onModelReady(() => {
+                // we reload the option list everytime any time a field to pass in param change
                 if (this.model.getFieldParam(this.originalName, 'reloadListOnFieldParamChange')) {
                     this.fieldsToPassInParams.forEach(field => {
                         this.listenTo(this.model, `change:${field}`, () => {
-                            this.notify('Loading');
+                            this.notify('Loading..');
                             this.prepareOptionsList(true);
                             this.notify(false);
                             this.reRender();
