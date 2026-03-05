@@ -1432,6 +1432,11 @@ class Metadata extends AbstractListener
                         $mParams['isCustom'] = false;
                         $mParams['required'] = false;
                         $mParams['unique'] = false;
+
+                        if (!empty($mParams['conditionalProperties']['required'])) {
+                            unset($mParams['conditionalProperties']['required']);
+                        }
+
                         if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
                             $mParams['notStorable'] = true;
                             $mParams['optionsOriginal'] = $params['options'];
