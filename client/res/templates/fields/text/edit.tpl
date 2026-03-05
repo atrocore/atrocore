@@ -1,1 +1,0 @@
-<textarea class="main-element form-control auto-height {{#if params.maxLength}}with-text-length{{/if}}" name="{{name}}" rows="{{rows}}">{{value}}</textarea>{{#if params.maxLength}}<div class="text-length-counter"><span class="current-length">0</span> / <span class="max-length">{{params.maxLength}}</span></div>{{/if}}
