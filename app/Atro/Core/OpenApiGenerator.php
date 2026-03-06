@@ -1574,6 +1574,11 @@ class OpenApiGenerator
                         'type' => 'apiKey',
                         'name' => 'Authorization-Token',
                         'in'   => 'header'
+                    ],
+                    'cookieAuth'          => [
+                        'type' => 'apiKey',
+                        'name' => 'auth-token',
+                        'in'   => 'cookie'
                     ]
                 ]
             ]
