@@ -40,7 +40,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         defaultFilterValue: '',
 
-        searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notLike', 'isEmpty', 'isNotEmpty'],
+        searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notEquals', 'notLike', 'isEmpty', 'isNotEmpty'],
 
         svelteComponent: null,
 

@@ -138,14 +138,31 @@ Espo.define('utils', [], function () {
         },
 
         cloneDeep: function (data) {
-            data = Espo.Utils.clone(data);
+            var seen = new WeakMap();
 
-            if (Espo.Utils.isObject(data) || _.isArray(data)) {
-                for (var i in data) {
-                    data[i] = this.cloneDeep(data[i]);
+            function clone(val) {
+                if (val === null || typeof val !== 'object') return val;
+                if (seen.has(val)) return seen.get(val);
+
+                var copy;
+                if (Array.isArray(val)) {
+                    copy = [];
+                    seen.set(val, copy);
+                    for (var i = 0; i < val.length; i++) {
+                        copy[i] = clone(val[i]);
+                    }
+                } else {
+                    copy = {};
+                    seen.set(val, copy);
+                    var keys = Object.keys(val);
+                    for (var j = 0; j < keys.length; j++) {
+                        copy[keys[j]] = clone(val[keys[j]]);
+                    }
                 }
+                return copy;
             }
-            return data;
+
+            return clone(data);
         },/**
          * Compose class name.
          * @param {String} module
