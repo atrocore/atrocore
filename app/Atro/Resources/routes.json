@@ -566,9 +566,9 @@
       "type": "object",
       "properties": {
         "layout": {
-          "type": [
-            "array",
-            "object"
+          "oneOf": [
+            {"type": "array", "items": {}},
+            {"type": "object"}
           ]
         },
         "storedProfiles": {
@@ -668,43 +668,34 @@
       "action": "resetToDefault"
     },
     "description": "Remove configuration for a layout",
-    "requestParameters": [
-      {
-        "name": "scope",
-        "in": "body",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "example": "Product"
-        }
-      },
-      {
-        "name": "viewType",
-        "in": "body",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "example": "list"
-        }
-      },
-      {
-        "name": "relatedScope",
-        "in": "body",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "example": "Category"
-        }
-      },
-      {
-        "name": "layoutProfileId",
-        "in": "body",
-        "required": false,
-        "schema": {
-          "type": "string"
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["scope", "viewType"],
+            "properties": {
+              "scope": {
+                "type": "string",
+                "example": "Product"
+              },
+              "viewType": {
+                "type": "string",
+                "example": "list"
+              },
+              "relatedScope": {
+                "type": "string",
+                "example": "Category"
+              },
+              "layoutProfileId": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
-    ],
+    },
     "response": {
       "type": "object",
       "properties": {
