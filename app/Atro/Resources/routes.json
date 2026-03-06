@@ -284,6 +284,32 @@
     "params": {
       "controller": "Composer",
       "action": "updateModule"
+    },
+    "description": "Update module settings (e.g. set a specific version). Changes are queued until runUpdate is called.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "atrocore/pim"
+              },
+              "version": {
+                "type": "string",
+                "example": "1.2.3",
+                "description": "Specific version constraint. Omit to use the latest available version."
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
     }
   },
   {
