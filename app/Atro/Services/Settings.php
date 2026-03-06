@@ -78,7 +78,7 @@ class Settings extends AbstractService
         // clear cache
         $this->getDataManager()->clearCache();
 
-        if (property_exists($data, 'siteUrl')) {
+        if (!empty($data->siteUrl)) {
             $data->siteUrl = rtrim($data->siteUrl, '/');
         }
 
