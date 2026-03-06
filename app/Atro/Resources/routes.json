@@ -767,55 +767,6 @@
     }
   },
   {
-    "route": "/Admin/fieldManager/:scope/:name",
-    "method": "get",
-    "params": {
-      "controller": "FieldManager",
-      "action": "read",
-      "scope": ":scope",
-      "name": ":name"
-    }
-  },
-  {
-    "route": "/Admin/fieldManager/:scope",
-    "method": "post",
-    "params": {
-      "controller": "FieldManager",
-      "action": "create",
-      "scope": ":scope"
-    }
-  },
-  {
-    "route": "/Admin/fieldManager/:scope/:name",
-    "method": "put",
-    "params": {
-      "controller": "FieldManager",
-      "action": "update",
-      "scope": ":scope",
-      "name": ":name"
-    }
-  },
-  {
-    "route": "/Admin/fieldManager/:scope/:name",
-    "method": "patch",
-    "params": {
-      "controller": "FieldManager",
-      "action": "update",
-      "scope": ":scope",
-      "name": ":name"
-    }
-  },
-  {
-    "route": "/Admin/fieldManager/:scope/:name",
-    "method": "delete",
-    "params": {
-      "controller": "FieldManager",
-      "action": "delete",
-      "scope": ":scope",
-      "name": ":name"
-    }
-  },
-  {
     "route": "/:controller/:id",
     "method": "get",
     "params": {
@@ -1040,14 +991,6 @@
       "action": "removeLink",
       "id": ":id",
       "link": ":link"
-    }
-  },
-  {
-    "route": "/Attribute/action/getAttributesIdsFilter",
-    "method": "get",
-    "params": {
-      "controller": "Attribute",
-      "action": "getAttributesIdsFilter"
     }
   },
   {
