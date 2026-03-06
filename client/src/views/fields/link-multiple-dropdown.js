@@ -27,6 +27,8 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
 
         boolFilterData: {},
 
+        fieldsToPassInParams: [],
+
         setup: function () {
             if (this.namesName === null) {
                 this.namesName = this.name + 'Names';
@@ -58,6 +60,8 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
             this.params.disableCreate = true
 
             Dep.prototype.setup.call(this);
+
+            Link.prototype.reloadListener.call(this);
         },
 
         prepareDefaultValue: function () {
