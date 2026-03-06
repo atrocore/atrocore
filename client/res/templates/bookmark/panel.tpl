@@ -3,7 +3,7 @@
         <div class="pull-right">
             <a href="javascript:" class="close" data-action="close"><span aria-hidden="true">×</span></a>
         </div>
-        <span class="panel-heading-title">{{translate 'Bookmark' category='scopeNames' scope="Global"}}</span>
+        <span class="panel-heading-title">{{translate 'Bookmark' category='scopeNamesPlural' scope="Global"}}</span>
     </div>
     <div class="panel-body">
         {{#if loadingGroups}}
