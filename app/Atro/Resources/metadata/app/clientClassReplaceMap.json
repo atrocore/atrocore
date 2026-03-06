@@ -47,13 +47,7 @@
   "views/fields/varchar-column": [
     "treo-core"
   ],
-  "views/fields/text": [
-    "treo-core"
-  ],
-  "views/fields/wysiwyg": [
-    "treo-core"
-  ],
-  "views/site/header": [
+"views/site/header": [
     "treo-core"
   ],
   "views/site/navbar": [
