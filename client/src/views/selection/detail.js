@@ -846,6 +846,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getCompareButtons() {
+            debugger
             let buttons = {
                 additionalButtons: [],
                 buttons: [],
@@ -875,6 +876,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getMergeButtons(disabled = true) {
+            debugger
             return Object.assign(this.getCompareButtons(), this.getEntityTypes().length && this.getAcl().check(this.getEntityTypes()[0], 'create') ? {
                 buttons: [{
                     label: this.translate('Merge'),
@@ -886,6 +888,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getDropdownItems() {
+            debugger
             if (this.shouldOpenSelectDialog()) {
                 let dropdownItems = null;
                 this.getStagingEntities(this.model.get(this.entityTypeField)).forEach((e, key) => {

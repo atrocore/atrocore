@@ -14,8 +14,10 @@ Espo.define('views/selection/fields/entity', 'views/fields/entity-type', Dep => 
 
         setup() {
             Dep.prototype.setup.call(this);
-            this.listenTo(this.model, 'change:type', () => {
-                this.model.set('entity', null);
+            this.onModelReady(() => {
+                this.listenTo(this.model, 'change:type', () => {
+                    this.model.set('entity', null);
+                });
             });
         },
 

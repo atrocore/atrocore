@@ -145,6 +145,7 @@ Espo.define('views/selection/record/detail/compare', [
         },
 
         getRecordButtons() {
+            debugger
             if(this.merging) {
                 return  this.getParentView().getMergeButtons();
             }
