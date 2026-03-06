@@ -360,6 +360,10 @@
     "method": "get",
     "params": {
       "controller": "Metadata"
+    },
+    "description": "Returns all metadata for the current user",
+    "response": {
+      "type": "object"
     }
   },
   {
@@ -370,6 +374,24 @@
     },
     "conditions": {
       "auth": false
+    },
+    "description": "Returns all translation labels for the UI",
+    "requestParameters": [
+      {
+        "name": "locale",
+        "in": "query",
+        "required": false,
+        "schema": {"type": "string", "example": "de_DE"}
+      },
+      {
+        "name": "default",
+        "in": "query",
+        "required": false,
+        "schema": {"type": "boolean", "example": false}
+      }
+    ],
+    "response": {
+      "type": "object"
     }
   },
   {
@@ -397,6 +419,10 @@
     "params": {
       "controller": "Settings",
       "action": "patch"
+    },
+    "description": "Update Settings (alias for PATCH /Settings)",
+    "response": {
+      "$ref": "#/components/schemas/Settings"
     }
   },
   {
@@ -408,6 +434,26 @@
     },
     "conditions": {
       "auth": false
+    },
+    "description": "Sends a password reset link to the user's email address",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["userName", "emailAddress"],
+            "properties": {
+              "userName": {"type": "string", "example": "admin"},
+              "emailAddress": {"type": "string", "example": "admin@example.com"},
+              "url": {"type": "string", "example": "https://your-instance.com/reset-password"}
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
     }
   },
   {
@@ -419,6 +465,25 @@
     },
     "conditions": {
       "auth": false
+    },
+    "description": "Sets a new password using a password reset token",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["requestId", "password"],
+            "properties": {
+              "requestId": {"type": "string", "example": "a1b2c3d4e5f6"},
+              "password": {"type": "string", "example": "newSecurePassword123"}
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
     }
   },
   {
@@ -748,6 +813,11 @@
     "params": {
       "controller": "Admin",
       "action": "getSchemaDiff"
+    },
+    "description": "Returns SQL queries needed to synchronize the database schema with the current metadata",
+    "response": {
+      "type": "string",
+      "example": "ALTER TABLE product ADD COLUMN sku VARCHAR(255);"
     }
   },
   {
@@ -756,6 +826,10 @@
     "params": {
       "controller": "Admin",
       "action": "clearCache"
+    },
+    "description": "Clears the application cache",
+    "response": {
+      "type": "boolean"
     }
   },
   {
@@ -764,6 +838,10 @@
     "params": {
       "controller": "Admin",
       "action": "rebuildDb"
+    },
+    "description": "Rebuilds the database schema to match current metadata",
+    "response": {
+      "type": "boolean"
     }
   },
   {
