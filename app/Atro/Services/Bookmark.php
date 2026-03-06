@@ -15,6 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -46,17 +47,29 @@ class Bookmark extends Base
 
         $result = [];
 
-        foreach ($groupedCollections as $entityType => $items) {
-            $hasName = !empty($this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'name', 'type']));
+        $language = Language::detectLanguage($this->getConfig(), $this->getUser());
+        $languageCode = Util::toCamelCase(strtolower($language), '_', true);
 
+        foreach ($groupedCollections as $entityType => $items) {
             /** @var Connection $connection */
             $connection = $this->getEntityManager()->getConnection();
             if ($this->getMetadata()->get(['scopes', $entityType, 'type']) === 'ReferenceData') {
                 $entityNames = $this->getReferenceDataBookmarkedEntities($entityType, array_keys($items));
                 $entityNames = !empty($entityNames) ? $entityNames->toArray() : [];
             } else {
+                $hasName = !empty($this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'name', 'type']));
+                if ($hasName) {
+                    $nameField = 'name';
+
+                    if (!empty($this->getMetadata()->get(['entityDefs', $entityType, 'fields', $nameField . $languageCode]))) {
+                        $nameField .= '_' . strtolower($language);
+                    }
+                } else {
+                    $nameField = 'id';
+                }
+
                 $entityNames = $connection->createQueryBuilder()
-                    ->select('id, deleted, ' . ($hasName ? 'name' : 'id as name'))
+                    ->select('id, deleted, ' . $nameField . ' as name')
                     ->from($connection->quoteIdentifier(strtolower(Util::toUnderScore($entityType))))
                     ->where('id IN (:ids)')
                     ->setParameter('ids', array_keys($items), Connection::PARAM_STR_ARRAY)

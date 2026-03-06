@@ -12,7 +12,9 @@
 namespace Atro\Services;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Repositories\UserProfile;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -118,10 +120,20 @@ class LastViewed extends AbstractService
         $repository = $this->getEntityManager()->getRepository('ActionHistoryRecord');
         $entities = $repository->find($sp);
 
+        $language = Language::detectLanguage($this->getConfig(), $this->getUser());
+        $languageCode = Util::toCamelCase(strtolower($language), '_', true);
+
         foreach ($entities as $i => $entity) {
             if ($this->getEntityManager()->hasRepository($entity->get('controllerName')) && !empty($entity->get('targetId'))) {
                 $repository = $this->getEntityManager()->getRepository($entity->get('controllerName'));
                 $nameField = $this->getMetadata()->get(['scopes', $entity->get('controllerName'), 'nameField']) ?? 'name';
+                if (!empty($languageCode)) {
+                    $languageNameField = $nameField . $languageCode;
+
+                    if (!empty($this->getMetadata()->get(['entityDefs', $entity->get('controllerName'), 'fields', $languageNameField]))) {
+                        $nameField = $languageNameField;
+                    }
+                }
 
                 if ($repository instanceof ReferenceData || $repository instanceof UserProfile) {
                     $foreignEntity = $repository->get($entity->get('targetId'));
@@ -199,10 +211,20 @@ class LastViewed extends AbstractService
             'targetId', 'controllerName'
         ])->find()->count();
 
+        $language = Language::detectLanguage($this->getConfig(), $this->getUser());
+        $languageCode = Util::toCamelCase(strtolower($language), '_', true);
+
         foreach ($collection as $i => $entity) {
             if ($this->getEntityManager()->hasRepository($entity->get('controllerName')) && !empty($entity->get('targetId'))) {
                 $repository = $this->getEntityManager()->getRepository($entity->get('controllerName'));
                 $nameField = $this->getMetadata()->get(['scopes', $entity->get('controllerName'), 'nameField']) ?? 'name';
+                if (!empty($languageCode)) {
+                    $languageNameField = $nameField . $languageCode;
+
+                    if (!empty($this->getMetadata()->get(['entityDefs', $entity->get('controllerName'), 'fields', $languageNameField]))) {
+                        $nameField = $languageNameField;
+                    }
+                }
 
                 if ($repository instanceof ReferenceData || $repository instanceof UserProfile) {
                     $foreignEntity = $repository->get($entity->get('targetId'));
