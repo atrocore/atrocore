@@ -1324,7 +1324,7 @@ class OpenApiGenerator
             'summary'     => 'Returns a record of Settings',
             'description' => 'Returns a record of Settings',
             'operationId' => 'getSettings',
-            'security'    => [['Authorization-Token' => []]],
+            'security'    => [],
             'responses'   => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
         ];
 
@@ -1363,7 +1363,7 @@ class OpenApiGenerator
             'summary'     => 'Read file from URL',
             'operationId' => 'uploadProxy',
             'description' => 'Reading the contents of a file provided via a URL link',
-            'security'    => [['Authorization-Token' => []]],
+            'security'    => [],
             'requestBody' => [
                 'required' => true,
                 'content'  => [
