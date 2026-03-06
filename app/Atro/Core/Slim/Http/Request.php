@@ -48,6 +48,8 @@ class Request extends \Slim\Http\Request
             $psr7Request = $psr7Request->withAddedHeader($name, $value);
         }
 
-        return $psr7Request->withBody($psr17Factory->createStream($this->getBody()));
+        return $psr7Request
+            ->withCookieParams($_COOKIE)
+            ->withBody($psr17Factory->createStream($this->getBody()));
     }
 }
