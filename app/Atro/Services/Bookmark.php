@@ -69,7 +69,7 @@ class Bookmark extends Base
                 }
 
                 $entityNames = $connection->createQueryBuilder()
-                    ->select('id, deleted, ' . $nameField . ' as name')
+                    ->select('id, deleted, ' . ($hasName && $nameField !== 'name' ? 'COALESCE(' . $nameField . ', name)' : $nameField) . ' as name')
                     ->from($connection->quoteIdentifier(strtolower(Util::toUnderScore($entityType))))
                     ->where('id IN (:ids)')
                     ->setParameter('ids', array_keys($items), Connection::PARAM_STR_ARRAY)
