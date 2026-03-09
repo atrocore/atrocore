@@ -3,7 +3,8 @@
     "entityName": {
       "type": "varchar",
       "view": "views/cluster-item/fields/entity-type",
-      "required": true
+      "required": true,
+      "protected": true
     },
     "entityId": {
       "type": "varchar",
