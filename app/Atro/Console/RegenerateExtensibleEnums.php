@@ -83,7 +83,7 @@ class RegenerateExtensibleEnums extends AbstractConsole
                 $eeeeo = $em->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
                 $eeeeo->set('extensibleEnumId', $extensibleEnumId);
                 $eeeeo->set('extensibleEnumOptionId', $extensibleEnumOptionData['id']);
-                $eeeeo->set('sorting', $extensibleEnumOptionData['sortOrder']);
+                $eeeeo->set('sorting', $extensibleEnumOptionData['sortOrder'] ?? 0);
 
                 try {
                     $em->saveEntity($eeeeo);
