@@ -657,7 +657,7 @@
       "type": "object",
       "properties": {
         "layout": {
-          "oneOf": [
+          "anyOf": [
             {"type": "array", "items": {}},
             {"type": "object"}
           ]
@@ -669,7 +669,10 @@
           }
         },
         "storedProfile": {
-          "type": "object"
+          "anyOf": [
+            {"type": "array", "items": {}},
+            {"type": "object"}
+          ]
         },
         "selectedProfileId": {
           "type": "string",
@@ -742,7 +745,10 @@
           }
         },
         "storedProfile": {
-          "type": "object"
+          "anyOf": [
+            {"type": "array", "items": {}},
+            {"type": "object"}
+          ]
         },
         "selectedProfileId": {
           "type": "string",
@@ -802,7 +808,10 @@
           }
         },
         "storedProfile": {
-          "type": "object"
+          "anyOf": [
+            {"type": "array", "items": {}},
+            {"type": "object"}
+          ]
         },
         "selectedProfileId": {
           "type": "string",
