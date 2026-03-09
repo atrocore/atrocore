@@ -44,4 +44,32 @@ class Selection extends Base
 
         return array_column($result, 'entity_name');
     }
+
+    public function createActivityNote(
+        string $parentId,
+        string $parentType,
+        string $noteType,
+        string $action,
+        string $relatedType = '',
+        string $relatedId = ''
+    ): void {
+        try {
+            $data = new \stdClass();
+            $data->action = $action;
+
+            $note = $this->getEntityManager()->getEntity('Note');
+            $note->set('type', $noteType);
+            $note->set('parentId', $parentId);
+            $note->set('parentType', $parentType);
+            $note->set('data', $data);
+            if ($relatedType !== '' && $relatedId !== '') {
+                $note->set('relatedType', $relatedType);
+                $note->set('relatedId', $relatedId);
+            }
+            $this->getEntityManager()->saveEntity($note);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("Failed to create $noteType note '$action': " . $e->getMessage());
+        }
+    }
+
 }

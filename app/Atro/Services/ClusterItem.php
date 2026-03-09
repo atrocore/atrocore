@@ -32,9 +32,12 @@ class ClusterItem extends Base
             throw new Exception("Cluster is not set for item " . $entity->get('id'));
         }
 
+        $goldenRecordChanged = false;
+
         if ($entity->get('entityName') === $cluster->get('masterEntity')) {
             $cluster->set('goldenRecordId', $entity->get('entityId'));
             $this->getEntityManager()->saveEntity($cluster);
+            $goldenRecordChanged = true;
         } else {
             $goldenRecord = $cluster->get('goldenRecord');
             $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
@@ -51,6 +54,7 @@ class ClusterItem extends Base
 
                             $cluster->set('goldenRecordId', $goldenRecord->get('id'));
                             $this->getEntityManager()->saveEntity($cluster);
+                            $goldenRecordChanged = true;
                             break;
                         }
                     }
@@ -72,6 +76,7 @@ class ClusterItem extends Base
 
                 $cluster->set('goldenRecordId', $goldenRecord->get('id'));
                 $this->getEntityManager()->saveEntity($cluster);
+                $goldenRecordChanged = true;
             } else {
                 $this->getRecordService('MasterDataEntity')->updateMasterRecord($record, $goldenRecord);
             }
@@ -82,6 +87,11 @@ class ClusterItem extends Base
 
         $entity->set('confirmedAutomatically', $automatically);
         $this->getEntityManager()->saveEntity($entity);
+
+        $this->createClusterNote($cluster->get('id'), 'confirmed', $entity->get('entityName'), $entity->get('entityId'));
+        if ($goldenRecordChanged) {
+            $this->createClusterNote($cluster->get('id'), 'goldenRecord', $entity->get('entityName'), $entity->get('entityId'));
+        }
 
         return true;
     }
@@ -231,7 +241,12 @@ class ClusterItem extends Base
             $this->getEntityManager()->saveEntity($entity);
         }
 
+        $this->createClusterNote($cluster->get('id'), 'rejected', $entity->get('entityName'), $entity->get('entityId'));
+        $this->createClusterNote($cluster->get('id'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
+
         $this->getRepository()->moveToCluster($entity->get('id'), $newClusterId);
+
+        $this->createClusterNote($newClusterId, 'linked', $entity->get('entityName'), $entity->get('entityId'));
 
         $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newClusterId]);
         return true;
@@ -274,7 +289,9 @@ class ClusterItem extends Base
                 $this->unConfirmClusterItem($entity);
             }
 
+            $this->createClusterNote($cluster->get('id'), 'moved', $entity->get('entityName'), $entity->get('entityId'));
             $this->getRepository()->moveToCluster($entity->get('id'), $newCluster->get('id'));
+            $this->createClusterNote($newCluster->get('id'), 'linked', $entity->get('entityName'), $entity->get('entityId'));
         }
 
         $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newCluster->get('id')]);
@@ -315,6 +332,8 @@ class ClusterItem extends Base
         }
 
         $this->getRepository()->moveToCluster($clusterItem->get('id'), $cluster->get('id'));
+
+        $this->createClusterNote($cluster->get('id'), 'reincluded', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
 
         $this->getRepository()->updateMatchedScoresInClusters([$clusterItem->get('clusterId'), $cluster->get('id')]);
 
@@ -439,5 +458,12 @@ class ClusterItem extends Base
         parent::prepareCollectionForOutput($collection, $selectParams);
 
         $this->getRecordService('SelectionItem')->prepareCollectionRecords($collection, $selectParams);
+    }
+
+    private function createClusterNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = ''): void
+    {
+        $this->getEntityManager()->getRepository('Selection')->createActivityNote(
+            $clusterId, 'Cluster', 'ClusterActivity', $action, $relatedType, $relatedId
+        );
     }
 }

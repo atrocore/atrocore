@@ -29,5 +29,25 @@
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "Unconfirmed items cannot be added to the merging"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} linked {relatedEntity} to this cluster",
+    "clusterLinkedThis": "{user} linked {relatedEntity} to this cluster",
+    "clusterUnlinked": "{user} unlinked {relatedEntity} from this cluster",
+    "clusterUnlinkedThis": "{user} unlinked {relatedEntity} from this cluster",
+    "clusterRejected": "{user} rejected {relatedEntity} in this cluster",
+    "clusterRejectedThis": "{user} rejected {relatedEntity} in this cluster",
+    "clusterReincluded": "{user} re-included {relatedEntity} in this cluster",
+    "clusterReincludedThis": "{user} re-included {relatedEntity} in this cluster",
+    "clusterMoved": "{user} moved {relatedEntity} out of this cluster",
+    "clusterMovedThis": "{user} moved {relatedEntity} out of this cluster",
+    "clusterConfirmed": "{user} confirmed {relatedEntity} in this cluster",
+    "clusterConfirmedThis": "{user} confirmed {relatedEntity} in this cluster",
+    "clusterGoldenRecord": "{user} set {relatedEntity} as golden record in this cluster",
+    "clusterGoldenRecordThis": "{user} set {relatedEntity} as golden record in this cluster",
+    "clusterDeleted": "{user} deleted this cluster",
+    "clusterDeletedThis": "{user} deleted this cluster",
+    "clusterRecordDeleted": "{user} deleted {relatedEntity} from this cluster",
+    "clusterRecordDeletedThis": "{user} deleted {relatedEntity} from this cluster"
   }
 }

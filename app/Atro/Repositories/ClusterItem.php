@@ -246,6 +246,15 @@ class ClusterItem extends Base
         ]);
     }
 
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->isNew()) {
+            $this->createClusterActivityNote($entity->get('clusterId'), 'linked', $entity->get('entityName'), $entity->get('entityId'));
+        }
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
@@ -253,6 +262,8 @@ class ClusterItem extends Base
         if (!empty($entity->get('matchedRecordId'))) {
             $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('matchedRecordId'));
         }
+
+        $this->createClusterActivityNote($entity->get('clusterId'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -266,7 +277,9 @@ class ClusterItem extends Base
 
     public function afterRemoveRecord(string $entityName, string $entityId): void
     {
-        $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates") || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords");
+        $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates")
+            || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords")
+            || !empty($this->getMetadata()->get("scopes.$entityName.primaryEntityId")); // staging entity
         if (!$toRemove) {
             foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
                 if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $entityName) {
@@ -277,13 +290,33 @@ class ClusterItem extends Base
         }
 
         if ($toRemove) {
+            $affectedClusterIds = $this->getDbal()->createQueryBuilder()
+                ->select('cluster_id')
+                ->from('cluster_item')
+                ->where('entity_name=:entityName AND entity_id=:entityId AND deleted=:false')
+                ->setParameter('entityName', $entityName)
+                ->setParameter('entityId', $entityId)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchFirstColumn();
+
             $this->getDbal()->createQueryBuilder()
                 ->delete('cluster_item')
                 ->where('entity_name=:entityName AND entity_id=:entityId')
                 ->setParameter('entityName', $entityName)
                 ->setParameter('entityId', $entityId)
                 ->executeQuery();
+
+            foreach ($affectedClusterIds as $clusterId) {
+                $this->createClusterActivityNote($clusterId, 'recordDeleted', $entityName, $entityId);
+            }
         }
+    }
+
+    private function createClusterActivityNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = ''): void
+    {
+        $this->getEntityManager()->getRepository('Selection')->createActivityNote(
+            $clusterId, 'Cluster', 'ClusterActivity', $action, $relatedType, $relatedId
+        );
     }
 
     public function hasDeletedRecordsToClear(): bool

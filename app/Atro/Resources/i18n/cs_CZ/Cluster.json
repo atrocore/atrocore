@@ -26,5 +26,25 @@
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "Nepotvrzené položky nelze přidat ke sloučení"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} propojil {relatedEntity} s tímto clusterem",
+    "clusterLinkedThis": "{user} propojil {relatedEntity} s tímto clusterem",
+    "clusterUnlinked": "{user} odpojil {relatedEntity} od tohoto clusteru",
+    "clusterUnlinkedThis": "{user} odpojil {relatedEntity} od tohoto clusteru",
+    "clusterRejected": "{user} zamítl {relatedEntity} v tomto clusteru",
+    "clusterRejectedThis": "{user} zamítl {relatedEntity} v tomto clusteru",
+    "clusterReincluded": "{user} znovu zahrnul {relatedEntity} do tohoto clusteru",
+    "clusterReincludedThis": "{user} znovu zahrnul {relatedEntity} do tohoto clusteru",
+    "clusterMoved": "{user} přesunul {relatedEntity} z tohoto clusteru",
+    "clusterMovedThis": "{user} přesunul {relatedEntity} z tohoto clusteru",
+    "clusterConfirmed": "{user} potvrdil {relatedEntity} v tomto clusteru",
+    "clusterConfirmedThis": "{user} potvrdil {relatedEntity} v tomto clusteru",
+    "clusterGoldenRecord": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
+    "clusterGoldenRecordThis": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
+    "clusterDeleted": "{user} smazal tento cluster",
+    "clusterDeletedThis": "{user} smazal tento cluster",
+    "clusterRecordDeleted": "{user} smazal {relatedEntity} z tohoto clusteru",
+    "clusterRecordDeletedThis": "{user} smazal {relatedEntity} z tohoto clusteru"
   }
 }

@@ -17,6 +17,8 @@
     "CreateRecordAssociation": "views/stream/notes/create-record-association",
     "DeleteRecordAssociation": "views/stream/notes/delete-record-association",
     "CreateAssociationRecord": "views/stream/notes/create-association-record",
-    "DeleteAssociationRecord": "views/stream/notes/delete-association-record"
+    "DeleteAssociationRecord": "views/stream/notes/delete-association-record",
+    "ClusterActivity": "views/stream/notes/cluster-note",
+    "SelectionActivity": "views/stream/notes/cluster-note"
   }
 }

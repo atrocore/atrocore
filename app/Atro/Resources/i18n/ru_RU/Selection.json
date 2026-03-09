@@ -20,5 +20,13 @@
   },
   "customActions": {
     "replaceItem": "Заменить предмет"
+  },
+  "streamMessages": {
+    "selectionLinked": "{user} связал {relatedEntity} с этой выборкой",
+    "selectionLinkedThis": "{user} связал {relatedEntity} с этой выборкой",
+    "selectionUnlinked": "{user} отвязал {relatedEntity} от этой выборки",
+    "selectionUnlinkedThis": "{user} отвязал {relatedEntity} от этой выборки",
+    "selectionDeleted": "{user} удалил {relatedEntity} из этой выборки",
+    "selectionDeletedThis": "{user} удалил эту выборку"
   }
 }

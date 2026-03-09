@@ -20,5 +20,13 @@
   },
   "customActions": {
     "replaceItem": "Proszę wymienić element"
+  },
+  "streamMessages": {
+    "selectionLinked": "{user} powiązał {relatedEntity} z tym wyborem",
+    "selectionLinkedThis": "{user} powiązał {relatedEntity} z tym wyborem",
+    "selectionUnlinked": "{user} odłączył {relatedEntity} od tego wyboru",
+    "selectionUnlinkedThis": "{user} odłączył {relatedEntity} od tego wyboru",
+    "selectionDeleted": "{user} usunął {relatedEntity} z tego wyboru",
+    "selectionDeletedThis": "{user} usunął ten wybór"
   }
 }

@@ -26,5 +26,25 @@
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "Непідтверджені елементи не можуть бути додані до об'єднання"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} пов'язав {relatedEntity} з цим кластером",
+    "clusterLinkedThis": "{user} пов'язав {relatedEntity} з цим кластером",
+    "clusterUnlinked": "{user} відв'язав {relatedEntity} від цього кластера",
+    "clusterUnlinkedThis": "{user} відв'язав {relatedEntity} від цього кластера",
+    "clusterRejected": "{user} відхилив {relatedEntity} у цьому кластері",
+    "clusterRejectedThis": "{user} відхилив {relatedEntity} у цьому кластері",
+    "clusterReincluded": "{user} повторно включив {relatedEntity} у цей кластер",
+    "clusterReincludedThis": "{user} повторно включив {relatedEntity} у цей кластер",
+    "clusterMoved": "{user} перемістив {relatedEntity} з цього кластера",
+    "clusterMovedThis": "{user} перемістив {relatedEntity} з цього кластера",
+    "clusterConfirmed": "{user} підтвердив {relatedEntity} у цьому кластері",
+    "clusterConfirmedThis": "{user} підтвердив {relatedEntity} у цьому кластері",
+    "clusterGoldenRecord": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
+    "clusterGoldenRecordThis": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
+    "clusterDeleted": "{user} видалив цей кластер",
+    "clusterDeletedThis": "{user} видалив цей кластер",
+    "clusterRecordDeleted": "{user} видалив {relatedEntity} з цього кластера",
+    "clusterRecordDeletedThis": "{user} видалив {relatedEntity} з цього кластера"
   }
 }

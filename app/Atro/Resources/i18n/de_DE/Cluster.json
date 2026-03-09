@@ -26,5 +26,25 @@
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "Unbestätigte Einträge können nicht zur Zusammenführung hinzugefügt werden"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",
+    "clusterLinkedThis": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",
+    "clusterUnlinked": "{user} hat {relatedEntity} von diesem Cluster getrennt",
+    "clusterUnlinkedThis": "{user} hat {relatedEntity} von diesem Cluster getrennt",
+    "clusterRejected": "{user} hat {relatedEntity} in diesem Cluster abgelehnt",
+    "clusterRejectedThis": "{user} hat {relatedEntity} in diesem Cluster abgelehnt",
+    "clusterReincluded": "{user} hat {relatedEntity} in diesem Cluster wieder aufgenommen",
+    "clusterReincludedThis": "{user} hat {relatedEntity} in diesem Cluster wieder aufgenommen",
+    "clusterMoved": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
+    "clusterMovedThis": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
+    "clusterConfirmed": "{user} hat {relatedEntity} in diesem Cluster bestätigt",
+    "clusterConfirmedThis": "{user} hat {relatedEntity} in diesem Cluster bestätigt",
+    "clusterGoldenRecord": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
+    "clusterGoldenRecordThis": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
+    "clusterDeleted": "{user} hat diesen Cluster gelöscht",
+    "clusterDeletedThis": "{user} hat diesen Cluster gelöscht",
+    "clusterRecordDeleted": "{user} hat {relatedEntity} aus diesem Cluster gelöscht",
+    "clusterRecordDeletedThis": "{user} hat {relatedEntity} aus diesem Cluster gelöscht"
   }
 }

@@ -20,5 +20,13 @@
   },
   "customActions": {
     "replaceItem": "Artikel austauschen"
+  },
+  "streamMessages": {
+    "selectionLinked": "{user} hat {relatedEntity} mit dieser Auswahl verknüpft",
+    "selectionLinkedThis": "{user} hat {relatedEntity} mit dieser Auswahl verknüpft",
+    "selectionUnlinked": "{user} hat {relatedEntity} von dieser Auswahl getrennt",
+    "selectionUnlinkedThis": "{user} hat {relatedEntity} von dieser Auswahl getrennt",
+    "selectionDeleted": "{user} hat {relatedEntity} aus dieser Auswahl gelöscht",
+    "selectionDeletedThis": "{user} hat diese Auswahl gelöscht"
   }
 }
