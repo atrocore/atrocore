@@ -103,7 +103,7 @@ class OpenApiGenerator
             $clientDefs = $this->getMetadata()->get(['clientDefs', $scopeName]);
             $entityDefs = $this->getMetadata()->get(['entityDefs', $scopeName]);
 
-            $result['tags'][] = ['name' => $scopeName];
+            $result['tags'][] = ['name' => $scopeName, 'description' => "$scopeName entity endpoints."];
 
             // prepare schema data
             $schema = null;
@@ -120,6 +120,13 @@ class OpenApiGenerator
                         || !empty($v['forRead'])
                     ) {
                         unset($schema['properties'][$k]);
+                    }
+                }
+
+                if (!empty($schema['required'])) {
+                    $schema['required'] = array_values(array_filter($schema['required'], fn($k) => isset($schema['properties'][$k])));
+                    if (empty($schema['required'])) {
+                        unset($schema['required']);
                     }
                 }
             }
@@ -209,7 +216,7 @@ class OpenApiGenerator
                         "required" => false,
                         "schema"   => [
                             "type"    => "boolean",
-                            "example" => "true"
+                            "example" => true
                         ]
                     ],
                 ],
@@ -240,7 +247,7 @@ class OpenApiGenerator
                 "description" => "When true, _meta will be added to the response.",
                 "schema"      => [
                     "type"    => "boolean",
-                    "example" => "false"
+                    "example" => false
                 ]
             ];
 
@@ -276,7 +283,7 @@ class OpenApiGenerator
                         "description" => "When true, _meta will be added to the response.",
                         "schema"      => [
                             "type"    => "boolean",
-                            "example" => "false"
+                            "example" => false
                         ]
                     ]
                 ],
@@ -1014,7 +1021,7 @@ class OpenApiGenerator
 
     protected function pushComposerActions(array &$result, array $schemas): void
     {
-        $result['tags'][] = ['name' => 'Composer'];
+        $result['tags'][] = ['name' => 'Composer', 'description' => 'Module management endpoints.'];
 
         $result['paths']["/Composer/runUpdate"]['post'] = [
             'tags'        => ['Composer'],
@@ -1083,7 +1090,7 @@ class OpenApiGenerator
                     "required" => false,
                     "schema"   => [
                         "type"    => "boolean",
-                        "example" => "true"
+                        "example" => true
                     ]
                 ],
             ],
@@ -1227,7 +1234,7 @@ class OpenApiGenerator
                     "required" => false,
                     "schema"   => [
                         "type"    => "boolean",
-                        "example" => "true"
+                        "example" => true
                     ]
                 ],
             ],
@@ -1248,7 +1255,7 @@ class OpenApiGenerator
 
     protected function pushDashletActions(array &$result, array $schemas): void
     {
-        $result['tags'][] = ['name' => 'Dashlet'];
+        $result['tags'][] = ['name' => 'Dashlet', 'description' => 'Dashlet data endpoints.'];
 
         $result['paths']["/Dashlet/{dashletName}"]['get'] = [
             'tags'        => ['Dashlet'],
@@ -1304,7 +1311,7 @@ class OpenApiGenerator
 
     protected function pushSettingsActions(array &$result, array $schemas): void
     {
-        $result['tags'][] = ['name' => 'Settings'];
+        $result['tags'][] = ['name' => 'Settings', 'description' => 'Application settings endpoints.'];
 
         foreach ($this->getMetadata()->get(['entityDefs', 'Settings', 'fields']) as $fieldName => $fieldData) {
             $this->getFieldSchema($result, 'Settings', $fieldName, $fieldData);
@@ -1554,7 +1561,11 @@ class OpenApiGenerator
             'info'       => [
                 'version'     => Composer::getCoreVersion(),
                 'title'       => 'AtroCore REST API documentation',
-                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>"
+                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>",
+                'license'     => [
+                    'name' => 'GPLv3',
+                    'url'  => 'https://www.gnu.org/licenses/gpl-3.0.html',
+                ],
             ],
             'servers'    => [
                 [
@@ -1562,7 +1573,7 @@ class OpenApiGenerator
                 ]
             ],
             'tags'       => [
-                ['name' => 'App']
+                ['name' => 'App', 'description' => 'Application and authentication endpoints.']
             ],
             'paths'      => [],
             'components' => [
