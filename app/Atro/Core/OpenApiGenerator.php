@@ -1023,6 +1023,18 @@ class OpenApiGenerator
         ];
     }
 
+    public static function prepareRouteResponses(array $responseSchema): array
+    {
+        $responses = self::prepareResponses($responseSchema);
+        // Plain-text responses are sent with Content-Type: application/json by the framework,
+        // but the body is not JSON-encoded. Remove the content schema so the validator
+        // does not attempt JSON parsing on the body.
+        if (($responseSchema['type'] ?? '') === 'string') {
+            unset($responses['200']['content']);
+        }
+        return $responses;
+    }
+
     protected function pushComposerActions(array &$result, array $schemas): void
     {
         $result['tags'][] = ['name' => 'Composer', 'description' => 'Module management endpoints.'];
@@ -1615,7 +1627,7 @@ class OpenApiGenerator
                 'summary'     => $route['summary'] ?? $route['description'],
                 'description' => $route['description'],
                 'operationId' => md5("{$routePath}_{$route['method']}"),
-                "responses"   => self::prepareResponses($route['response'])
+                "responses"   => self::prepareRouteResponses($route['response'])
             ];
 
             if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
