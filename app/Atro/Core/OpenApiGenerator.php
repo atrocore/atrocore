@@ -103,7 +103,7 @@ class OpenApiGenerator
             $clientDefs = $this->getMetadata()->get(['clientDefs', $scopeName]);
             $entityDefs = $this->getMetadata()->get(['entityDefs', $scopeName]);
 
-            $result['tags'][] = ['name' => $scopeName];
+            $result['tags'][] = ['name' => $scopeName, 'description' => "$scopeName entity endpoints."];
 
             // prepare schema data
             $schema = null;
@@ -120,6 +120,13 @@ class OpenApiGenerator
                         || !empty($v['forRead'])
                     ) {
                         unset($schema['properties'][$k]);
+                    }
+                }
+
+                if (!empty($schema['required'])) {
+                    $schema['required'] = array_values(array_filter($schema['required'], fn($k) => isset($schema['properties'][$k])));
+                    if (empty($schema['required'])) {
+                        unset($schema['required']);
                     }
                 }
             }
@@ -209,7 +216,7 @@ class OpenApiGenerator
                         "required" => false,
                         "schema"   => [
                             "type"    => "boolean",
-                            "example" => "true"
+                            "example" => true
                         ]
                     ],
                 ],
@@ -240,7 +247,7 @@ class OpenApiGenerator
                 "description" => "When true, _meta will be added to the response.",
                 "schema"      => [
                     "type"    => "boolean",
-                    "example" => "false"
+                    "example" => false
                 ]
             ];
 
@@ -276,7 +283,7 @@ class OpenApiGenerator
                         "description" => "When true, _meta will be added to the response.",
                         "schema"      => [
                             "type"    => "boolean",
-                            "example" => "false"
+                            "example" => false
                         ]
                     ]
                 ],
@@ -483,7 +490,7 @@ class OpenApiGenerator
                             'visible'          => ['type' => 'boolean'],
                             'readOnly'         => ['type' => 'boolean'],
                             'protected'        => ['type' => 'boolean'],
-                            'value'            => ['nullable' => true, 'example' => null],
+                            'value'            => ['type' => 'string', 'nullable' => true, 'example' => null],
                             'valueName'        => ['type' => 'string', 'nullable' => true],
                             'valueUnitId'      => ['type' => 'string', 'nullable' => true],
                             'valueUnitName'    => ['type' => 'string', 'nullable' => true],
@@ -495,8 +502,8 @@ class OpenApiGenerator
                             'valuePathsData'   => ['type' => 'object', 'nullable' => true],
                             'valueUnitData'    => ['type' => 'object', 'nullable' => true],
                             'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
-                            'valueFrom'        => ['nullable' => true, 'example' => 1],
-                            'valueTo'          => ['nullable' => true, 'example' => 2],
+                            'valueFrom'        => ['type' => 'number', 'nullable' => true, 'example' => 1],
+                            'valueTo'          => ['type' => 'number', 'nullable' => true, 'example' => 2],
                         ]
                     ];
 
@@ -923,9 +930,7 @@ class OpenApiGenerator
         $this->pushComposerActions($result, $schemas);
         $this->pushDashletActions($result, $schemas);
 
-        $this->prepareUserProfileDocs($result, $schemas);
-
-        unset($result['paths']["/ActionLog"]['post']);
+        $this->cleanupPaths($result);
 
         $this->pushSettingsActions($result, $schemas);
         $this->pushFileActions($result, $schemas);
@@ -1020,7 +1025,7 @@ class OpenApiGenerator
 
     protected function pushComposerActions(array &$result, array $schemas): void
     {
-        $result['tags'][] = ['name' => 'Composer'];
+        $result['tags'][] = ['name' => 'Composer', 'description' => 'Module management endpoints.'];
 
         $result['paths']["/Composer/runUpdate"]['post'] = [
             'tags'        => ['Composer'],
@@ -1089,7 +1094,7 @@ class OpenApiGenerator
                     "required" => false,
                     "schema"   => [
                         "type"    => "boolean",
-                        "example" => "true"
+                        "example" => true
                     ]
                 ],
             ],
@@ -1233,7 +1238,7 @@ class OpenApiGenerator
                     "required" => false,
                     "schema"   => [
                         "type"    => "boolean",
-                        "example" => "true"
+                        "example" => true
                     ]
                 ],
             ],
@@ -1254,7 +1259,7 @@ class OpenApiGenerator
 
     protected function pushDashletActions(array &$result, array $schemas): void
     {
-        $result['tags'][] = ['name' => 'Dashlet'];
+        $result['tags'][] = ['name' => 'Dashlet', 'description' => 'Dashlet data endpoints.'];
 
         $result['paths']["/Dashlet/{dashletName}"]['get'] = [
             'tags'        => ['Dashlet'],
@@ -1289,8 +1294,12 @@ class OpenApiGenerator
         ];
     }
 
-    protected function prepareUserProfileDocs(array &$result, array $schemas): void
+    protected function cleanupPaths(array &$result): void
     {
+        // ActionLog: create is not exposed via API
+        unset($result['paths']["/ActionLog"]['post']);
+
+        // UserProfile: only GET /{id} and PUT /{id} are exposed
         unset($result['paths']["/UserProfile"]['get']);
         unset($result['paths']["/UserProfile"]['post']);
         unset($result['paths']["/UserProfile/{id}"]['delete']);
@@ -1300,11 +1309,18 @@ class OpenApiGenerator
         unset($result['paths']["/UserProfile/{link}/relation"]['delete']);
         unset($result['paths']["/UserProfile/{id}/subscription"]['put']);
         unset($result['paths']["/UserProfile/{id}/subscription"]['delete']);
+
+        // Remove paths that ended up with no operations after cleanup
+        foreach ($result['paths'] as $path => $methods) {
+            if (empty($methods)) {
+                unset($result['paths'][$path]);
+            }
+        }
     }
 
     protected function pushSettingsActions(array &$result, array $schemas): void
     {
-        $result['tags'][] = ['name' => 'Settings'];
+        $result['tags'][] = ['name' => 'Settings', 'description' => 'Application settings endpoints.'];
 
         foreach ($this->getMetadata()->get(['entityDefs', 'Settings', 'fields']) as $fieldName => $fieldData) {
             $this->getFieldSchema($result, 'Settings', $fieldName, $fieldData);
@@ -1312,19 +1328,19 @@ class OpenApiGenerator
 
         $result['paths']['/Settings']['get'] = [
             'tags'        => ['Settings'],
-            'in'          => 'body',
-            'required'    => true,
             'summary'     => 'Returns a record of Settings',
             'description' => 'Returns a record of Settings',
+            'operationId' => 'getSettings',
+            'security'    => [],
             'responses'   => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
         ];
 
         $result['paths']['/Settings']['patch'] = [
             'tags'        => ['Settings'],
-            'in'          => 'body',
-            'required'    => true,
             'summary'     => 'Update a record of Settings',
             'description' => 'Update a record of Settings',
+            'operationId' => 'updateSettings',
+            'security'    => [['Authorization-Token' => []]],
             'requestBody' => [
                 'required' => true,
                 'content'  => [
@@ -1354,6 +1370,7 @@ class OpenApiGenerator
             'summary'     => 'Read file from URL',
             'operationId' => 'uploadProxy',
             'description' => 'Reading the contents of a file provided via a URL link',
+            'security'    => [],
             'requestBody' => [
                 'required' => true,
                 'content'  => [
@@ -1553,7 +1570,11 @@ class OpenApiGenerator
             'info'       => [
                 'version'     => Composer::getCoreVersion(),
                 'title'       => 'AtroCore REST API documentation',
-                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>"
+                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>",
+                'license'     => [
+                    'name' => 'GPLv3',
+                    'url'  => 'https://www.gnu.org/licenses/gpl-3.0.html',
+                ],
             ],
             'servers'    => [
                 [
@@ -1561,7 +1582,7 @@ class OpenApiGenerator
                 ]
             ],
             'tags'       => [
-                ['name' => 'App']
+                ['name' => 'App', 'description' => 'Application and authentication endpoints.']
             ],
             'paths'      => [],
             'components' => [
@@ -1599,6 +1620,8 @@ class OpenApiGenerator
 
             if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
                 $row['security'] = [['Authorization-Token' => []]];
+            } else {
+                $row['security'] = [];
             }
             if (!empty($route['security'])) {
                 $row['security'] = $route['security'];

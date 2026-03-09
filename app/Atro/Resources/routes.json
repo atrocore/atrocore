@@ -27,7 +27,7 @@
         "required": false,
         "schema": {
           "type": "boolean",
-          "example": "true"
+          "example": true
         }
       },
       {
@@ -37,7 +37,7 @@
         "description": "Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
         "schema": {
           "type": "integer",
-          "example": "0"
+          "example": 0
         }
       },
       {
@@ -47,7 +47,7 @@
         "description": "Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
         "schema": {
           "type": "integer",
-          "example": "0"
+          "example": 0
         }
       }
     ],
@@ -136,7 +136,7 @@
         "required": false,
         "schema": {
           "type": "boolean",
-          "example": "false"
+          "example": false
         }
       }
     ],
@@ -284,6 +284,32 @@
     "params": {
       "controller": "Composer",
       "action": "updateModule"
+    },
+    "description": "Update module settings (e.g. set a specific version). Changes are queued until runUpdate is called.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "atrocore/pim"
+              },
+              "version": {
+                "type": "string",
+                "example": "1.2.3",
+                "description": "Specific version constraint. Omit to use the latest available version."
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
     }
   },
   {
@@ -360,6 +386,10 @@
     "method": "get",
     "params": {
       "controller": "Metadata"
+    },
+    "description": "Returns all metadata for the current user",
+    "response": {
+      "type": "object"
     }
   },
   {
@@ -370,6 +400,24 @@
     },
     "conditions": {
       "auth": false
+    },
+    "description": "Returns all translation labels for the UI",
+    "requestParameters": [
+      {
+        "name": "locale",
+        "in": "query",
+        "required": false,
+        "schema": {"type": "string", "example": "de_DE"}
+      },
+      {
+        "name": "default",
+        "in": "query",
+        "required": false,
+        "schema": {"type": "boolean", "example": false}
+      }
+    ],
+    "response": {
+      "type": "object"
     }
   },
   {
@@ -397,6 +445,10 @@
     "params": {
       "controller": "Settings",
       "action": "patch"
+    },
+    "description": "Update Settings (alias for PATCH /Settings)",
+    "response": {
+      "$ref": "#/components/schemas/Settings"
     }
   },
   {
@@ -408,6 +460,26 @@
     },
     "conditions": {
       "auth": false
+    },
+    "description": "Sends a password reset link to the user's email address",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["userName", "emailAddress"],
+            "properties": {
+              "userName": {"type": "string", "example": "admin"},
+              "emailAddress": {"type": "string", "example": "admin@example.com"},
+              "url": {"type": "string", "example": "https://your-instance.com/reset-password"}
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
     }
   },
   {
@@ -419,6 +491,25 @@
     },
     "conditions": {
       "auth": false
+    },
+    "description": "Sets a new password using a password reset token",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["requestId", "password"],
+            "properties": {
+              "requestId": {"type": "string", "example": "a1b2c3d4e5f6"},
+              "password": {"type": "string", "example": "newSecurePassword123"}
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
     }
   },
   {
@@ -566,9 +657,9 @@
       "type": "object",
       "properties": {
         "layout": {
-          "type": [
-            "array",
-            "object"
+          "anyOf": [
+            {"type": "array", "items": {}},
+            {"type": "object"}
           ]
         },
         "storedProfiles": {
@@ -578,7 +669,10 @@
           }
         },
         "storedProfile": {
-          "type": "object"
+          "anyOf": [
+            {"type": "array", "items": {}},
+            {"type": "object"}
+          ]
         },
         "selectedProfileId": {
           "type": "string",
@@ -651,7 +745,10 @@
           }
         },
         "storedProfile": {
-          "type": "object"
+          "anyOf": [
+            {"type": "array", "items": {}},
+            {"type": "object"}
+          ]
         },
         "selectedProfileId": {
           "type": "string",
@@ -668,43 +765,34 @@
       "action": "resetToDefault"
     },
     "description": "Remove configuration for a layout",
-    "requestParameters": [
-      {
-        "name": "scope",
-        "in": "body",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "example": "Product"
-        }
-      },
-      {
-        "name": "viewType",
-        "in": "body",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "example": "list"
-        }
-      },
-      {
-        "name": "relatedScope",
-        "in": "body",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "example": "Category"
-        }
-      },
-      {
-        "name": "layoutProfileId",
-        "in": "body",
-        "required": false,
-        "schema": {
-          "type": "string"
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["scope", "viewType"],
+            "properties": {
+              "scope": {
+                "type": "string",
+                "example": "Product"
+              },
+              "viewType": {
+                "type": "string",
+                "example": "list"
+              },
+              "relatedScope": {
+                "type": "string",
+                "example": "Category"
+              },
+              "layoutProfileId": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
-    ],
+    },
     "response": {
       "type": "object",
       "properties": {
@@ -720,7 +808,10 @@
           }
         },
         "storedProfile": {
-          "type": "object"
+          "anyOf": [
+            {"type": "array", "items": {}},
+            {"type": "object"}
+          ]
         },
         "selectedProfileId": {
           "type": "string",
@@ -757,6 +848,11 @@
     "params": {
       "controller": "Admin",
       "action": "getSchemaDiff"
+    },
+    "description": "Returns SQL queries needed to synchronize the database schema with the current metadata",
+    "response": {
+      "type": "string",
+      "example": "ALTER TABLE product ADD COLUMN sku VARCHAR(255);"
     }
   },
   {
@@ -765,6 +861,10 @@
     "params": {
       "controller": "Admin",
       "action": "clearCache"
+    },
+    "description": "Clears the application cache",
+    "response": {
+      "type": "boolean"
     }
   },
   {
@@ -773,55 +873,10 @@
     "params": {
       "controller": "Admin",
       "action": "rebuildDb"
-    }
-  },
-  {
-    "route": "/Admin/fieldManager/:scope/:name",
-    "method": "get",
-    "params": {
-      "controller": "FieldManager",
-      "action": "read",
-      "scope": ":scope",
-      "name": ":name"
-    }
-  },
-  {
-    "route": "/Admin/fieldManager/:scope",
-    "method": "post",
-    "params": {
-      "controller": "FieldManager",
-      "action": "create",
-      "scope": ":scope"
-    }
-  },
-  {
-    "route": "/Admin/fieldManager/:scope/:name",
-    "method": "put",
-    "params": {
-      "controller": "FieldManager",
-      "action": "update",
-      "scope": ":scope",
-      "name": ":name"
-    }
-  },
-  {
-    "route": "/Admin/fieldManager/:scope/:name",
-    "method": "patch",
-    "params": {
-      "controller": "FieldManager",
-      "action": "update",
-      "scope": ":scope",
-      "name": ":name"
-    }
-  },
-  {
-    "route": "/Admin/fieldManager/:scope/:name",
-    "method": "delete",
-    "params": {
-      "controller": "FieldManager",
-      "action": "delete",
-      "scope": ":scope",
-      "name": ":name"
+    },
+    "description": "Rebuilds the database schema to match current metadata",
+    "response": {
+      "type": "boolean"
     }
   },
   {
@@ -1052,14 +1107,6 @@
     }
   },
   {
-    "route": "/Attribute/action/getAttributesIdsFilter",
-    "method": "get",
-    "params": {
-      "controller": "Attribute",
-      "action": "getAttributesIdsFilter"
-    }
-  },
-  {
     "route": "/App/action/recalculateScriptField",
     "method": "post",
     "params": {
@@ -1274,9 +1321,7 @@
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "example": [
-                    "example-id"
-                  ]
+                  "example": "example-id"
                 }
               }
             }

@@ -108,6 +108,7 @@ class ConsoleManager
             "kill daemons"                              => Console\KillDaemons::class,
             "daemon <name> <id>"                        => Console\Daemon::class,
             "check updates"                             => Console\CheckUpdates::class,
+            "openapi coverage"                          => Console\OpenApiCoverage::class,
             "pt --run"                                  => Console\PseudoTransactionManager::class,
             "storages --refresh-items"                  => Console\RefreshStoragesItems::class,
             "storages --scan"                           => Console\ScanStorages::class,
