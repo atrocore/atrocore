@@ -2833,10 +2833,6 @@ th {
     min-width: 12em;
 }
 
-.list-container.sharing-panel .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]) {
-    min-width: auto;
-}
-
 .table > tbody > tr > td.cell {
     border: 1px solid transparent;
 }
@@ -19636,4 +19632,9 @@ body > .error-container .error-links a {
 .header-buttons .selection-view-switcher:last-of-type {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
+
+.dashlet-body .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]),
+.list-container.sharing-panel .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]) {
+    min-width: auto;
 }
