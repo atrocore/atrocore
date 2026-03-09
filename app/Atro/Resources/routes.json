@@ -27,7 +27,7 @@
         "required": false,
         "schema": {
           "type": "boolean",
-          "example": "true"
+          "example": true
         }
       },
       {
@@ -37,7 +37,7 @@
         "description": "Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
         "schema": {
           "type": "integer",
-          "example": "0"
+          "example": 0
         }
       },
       {
@@ -47,7 +47,7 @@
         "description": "Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
         "schema": {
           "type": "integer",
-          "example": "0"
+          "example": 0
         }
       }
     ],
@@ -136,7 +136,7 @@
         "required": false,
         "schema": {
           "type": "boolean",
-          "example": "false"
+          "example": false
         }
       }
     ],
@@ -1321,9 +1321,7 @@
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "example": [
-                    "example-id"
-                  ]
+                  "example": "example-id"
                 }
               }
             }
