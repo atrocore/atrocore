@@ -9,7 +9,8 @@
   "exceptions": {
     "notFound": "Il record dell'articolo del cluster non è stato trovato",
     "cannotReject": "Questo articolo del cluster non può essere rifiutato",
-    "cannotUnreject": "Questo articolo del cluster non può essere rifiutato"
+    "cannotUnreject": "Questo articolo del cluster non può essere rifiutato",
+    "idOrIdListOrWhereRequired": "Fornire almeno uno dei seguenti: un ID, un elenco di ID o un filtro di ricerca."
   },
   "massActions": {
     "reject": "Rifiuta"

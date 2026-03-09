@@ -34,22 +34,18 @@ class ClusterItem extends Base
         $recordService = $this->getRecordService();
 
         if (property_exists($data, 'where')) {
-            $where = json_decode(json_encode($data->where), true);
-            $params['where'] = $where;
-            $params['massAction'] = true;
+            $params['where'] = json_decode(json_encode($data->where), true);
         }
 
         if (property_exists($data, 'idList')) {
             $params['ids'] = $data->idList;
-            $params['massAction'] = true;
         }
 
-        if (empty($params['massAction']) && empty($data->id)) {
-            throw new BadRequest('You should at least provide an ID, or an IdList or where filter.');
+        if (empty($params) && empty($data->id)) {
+            throw new BadRequest($this->getLanguage()->translate('idOrIdListOrWhereRequired', 'exceptions', 'ClusterItem'));
         }
 
-
-        if (empty($params['massAction']) && !empty($data->id)) {
+        if (empty($params) && !empty($data->id)) {
             $entity = $recordService->getEntity((string)$data->id);
             if (empty($entity)) {
                 throw new NotFound();
@@ -87,7 +83,7 @@ class ClusterItem extends Base
         }
 
         if (empty($params)) {
-            throw new BadRequest('You should at least provide an ID, or an IdList or where filter.');
+            throw new BadRequest($this->getLanguage()->translate('idOrIdListOrWhereRequired', 'exceptions', 'ClusterItem'));
         }
 
         return $recordService->unmerge($params);

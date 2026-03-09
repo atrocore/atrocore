@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotUnique;
@@ -224,6 +225,14 @@ class EntityField extends ReferenceData
     protected function beforeSave(OrmEntity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+
+        if (!empty($entity->get('pattern')) && ($entity->isNew() || $entity->isAttributeChanged('pattern'))) {
+            if (!RegexUtil::validate($entity->get('pattern'))) {
+                throw new BadRequest(
+                    sprintf($this->getLanguage()->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'pattern')
+                );
+            }
+        }
 
         if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.hasAttribute")) {
             $attribute = $this->getEntityManager()->getRepository('Attribute')

@@ -20,6 +20,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -525,6 +526,14 @@ class Attribute extends Base
             }
 
             $this->getInjection('container')->get($converterName)->convert($entity);
+        }
+
+        if (!empty($entity->get('pattern')) && ($entity->isNew() || $entity->isAttributeChanged('pattern'))) {
+            if (!RegexUtil::validate($entity->get('pattern'))) {
+                throw new BadRequest(
+                    sprintf($this->getInjection('language')->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'pattern')
+                );
+            }
         }
 
         if ($entity->get('code') === '') {
