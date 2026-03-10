@@ -342,9 +342,11 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         convertStrToRegex(patternString) {
             if (patternString) {
-                let flags = patternString.replace(/.*\/([gmixsuAJD]*)$/, '$1');
-                let pattern = patternString.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
-                return new RegExp(pattern, flags);
+                try {
+                    return new RegExp(patternString);
+                } catch (e) {
+                    return null;
+                }
             }
 
             return null;

@@ -12,45 +12,56 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Doctrine\DBAL\ParameterType;
+use Atro\Core\Utils\RegexUtil;
 
 class V2Dot2Dot26 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2026-03-12 10:00:00');
+        return new \DateTime('2026-03-09 12:00:00');
     }
 
     public function up(): void
     {
-        $rows = $this->getDbal()->createQueryBuilder()
-            ->select('id', 'data')
-            ->from($this->getDbal()->quoteIdentifier('attribute'))
-            ->where('type IN (:types)')
-            ->andWhere('data IS NOT NULL')
-            ->setParameter('types', ['link', 'linkMultiple'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
-            ->fetchAllAssociative();
+        // Strip // delimiters from fileNameRegexPattern and passwordRegexPattern in config
+        foreach (['fileNameRegexPattern', 'passwordRegexPattern'] as $key) {
+            $value = $this->getConfig()->get($key);
+            if (!empty($value)) {
+                $stripped = RegexUtil::stripDelimiters($value);
+                if ($stripped !== $value) {
+                    $this->getConfig()->set($key, $stripped);
+                }
+            }
+        }
+        $this->getConfig()->save();
 
-        foreach ($rows as $row) {
-            $data = @json_decode($row['data'], true);
+        // Strip // delimiters from pattern field definitions stored in custom entity metadata
+        $customPath = 'data/metadata/entityDefs';
+        if (!is_dir($customPath)) {
+            return;
+        }
 
+        foreach (glob($customPath . '/*.json') as $file) {
+            $content = file_get_contents($file);
+            $data = json_decode($content, true);
             if (!is_array($data)) {
                 continue;
             }
 
-            if (($data['field']['entityType'] ?? null) !== 'ExtensibleEnumOption') {
-                continue;
+            $changed = false;
+            foreach ($data['fields'] ?? [] as $field => $defs) {
+                if (!empty($defs['pattern'])) {
+                    $stripped = RegexUtil::stripDelimiters($defs['pattern']);
+                    if ($stripped !== $defs['pattern']) {
+                        $data['fields'][$field]['pattern'] = $stripped;
+                        $changed = true;
+                    }
+                }
             }
 
-            $data['field']['entityField'] = 'name';
-
-            $this->getDbal()->createQueryBuilder()
-                ->update('attribute')
-                ->set('data', ':data')
-                ->where('id = :id')
-                ->setParameter('data', json_encode($data))
-                ->setParameter('id', $row['id'])
-                ->executeStatement();
+            if ($changed) {
+                file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            }
         }
     }
 }
