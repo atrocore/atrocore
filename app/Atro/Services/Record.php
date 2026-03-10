@@ -669,6 +669,10 @@ class Record extends RecordService
                 continue;
             }
 
+            if ($this->getMetadata()->get(['scopes', $this->entityName, 'type']) === 'Hierarchy' && in_array($field, ['parentId', 'parentIds', 'childrenIds', 'routes'])) {
+                continue;
+            }
+
             if (isset($input->$field)) {
                 continue;
             }
