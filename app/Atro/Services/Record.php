@@ -646,6 +646,11 @@ class Record extends RecordService
             throw new NotFound("{$this->getEntityType()} with id $id not found");
         }
 
+        $this->getEntityManager()->getAttributeFieldConverter()->putAttributesToEntity($primaryEntity);
+        if ($primaryEntity->hasField('attributesDefs')){
+            $input->attributesDefs = json_decode(json_encode($primaryEntity->get('attributesDefs') ?? []));
+        }
+
         $input->masterRecordId = $primaryEntity->get('id');
 
         foreach ($primaryEntity->toArray() as $field => $value) {
