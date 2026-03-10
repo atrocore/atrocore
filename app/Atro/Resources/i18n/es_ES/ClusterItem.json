@@ -9,7 +9,8 @@
   "exceptions": {
     "notFound": "No se ha encontrado el registro de artículos del cluster",
     "cannotReject": "Este elemento de agrupación no puede ser rechazado",
-    "cannotUnreject": "Este elemento del conglomerado no puede ser rechazado"
+    "cannotUnreject": "Este elemento del conglomerado no puede ser rechazado",
+    "idOrIdListOrWhereRequired": "Proporcione al menos uno de los siguientes: un ID, una lista de IDs o un filtro de búsqueda."
   },
   "massActions": {
     "reject": "Rechazar"

@@ -17,7 +17,8 @@
     "notFound": "Cluster item record not found",
     "cannotUnreject": "This cluster item cannot be unrejected",
     "itemsMustBelongToTheSameCluster": "All items must belong to the same cluster to unmerge together.",
-    "cannotUnmergeMasterEntityItem": "Cannot unmerge the master entity item."
+    "cannotUnmergeMasterEntityItem": "Cannot unmerge the master entity item.",
+    "idOrIdListOrWhereRequired": "Please provide at least one of: an ID, a list of IDs, or a search filter."
   },
   "massActions": {
     "reject": "Reject",

@@ -9,7 +9,8 @@
   "exceptions": {
     "notFound": "Záznam o položce clusteru nebyl nalezen",
     "cannotReject": "Tuto položku shluku nelze odmítnout",
-    "cannotUnreject": "Tuto položku shluku nelze odmítnout"
+    "cannotUnreject": "Tuto položku shluku nelze odmítnout",
+    "idOrIdListOrWhereRequired": "Zadejte alespoň jedno z následujících: ID, seznam ID nebo vyhledávací filtr."
   },
   "massActions": {
     "reject": "Odmítnout"

@@ -141,12 +141,12 @@
     },
     "fileNameRegexPattern": {
       "type": "varchar",
-      "default": "/^[^\\\\\\/:\\*\\\"\\?<>%|\\s,]{1,64}/",
+      "default": "^[^\\\\/:\\*\\\"\\?<>%|\\s,]{1,64}",
       "tooltip": true
     },
     "passwordRegexPattern": {
       "type": "varchar",
-      "default": "/^(?=.*[A-Z])(?=.*[\\W_])(?=.*\\d).{8,}$/",
+      "default": "^(?=.*[A-Z])(?=.*[\\W_])(?=.*\\d).{8,}$",
       "tooltip": true,
       "view": "views/settings/fields/password-regex-pattern"
     },

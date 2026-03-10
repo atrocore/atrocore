@@ -9,7 +9,8 @@
   "exceptions": {
     "notFound": "Nie znaleziono rekordu elementu klastra",
     "cannotReject": "Ten element klastra nie może zostać odrzucony",
-    "cannotUnreject": "Ten element klastra nie może zostać odrzucony"
+    "cannotUnreject": "Ten element klastra nie może zostać odrzucony",
+    "idOrIdListOrWhereRequired": "Podaj co najmniej jedno z następujących: identyfikator, listę identyfikatorów lub filtr wyszukiwania."
   },
   "massActions": {
     "reject": "Odrzuć"

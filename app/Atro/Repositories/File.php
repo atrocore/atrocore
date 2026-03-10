@@ -24,6 +24,7 @@ use Atro\Core\FileValidator;
 use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\FolderPathGenerator;
 use Atro\Core\Utils\PDFLib;
+use Atro\Core\Utils\RegexUtil;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -263,7 +264,7 @@ class File extends Base
             $nameWithoutExt = explode('.', (string)$file->get('name'));
             array_pop($nameWithoutExt);
             $nameWithoutExt = implode('.', $nameWithoutExt);
-            return preg_match($fileNameRegexPattern, $nameWithoutExt);
+            return (bool) preg_match(RegexUtil::toPhpPattern($fileNameRegexPattern), $nameWithoutExt);
         }
 
         return true;
