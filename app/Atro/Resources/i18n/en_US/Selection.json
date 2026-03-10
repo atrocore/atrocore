@@ -20,5 +20,13 @@
   },
   "customActions": {
     "replaceItem": "Replace Item"
+  },
+  "streamMessages": {
+    "selectionLinked": "{user} linked {relatedEntity} to this selection",
+    "selectionLinkedThis": "{user} linked {relatedEntity} to this selection",
+    "selectionUnlinked": "{user} unlinked {relatedEntity} from this selection",
+    "selectionUnlinkedThis": "{user} unlinked {relatedEntity} from this selection",
+    "selectionDeleted": "{user} deleted {relatedEntity} from this selection",
+    "selectionDeletedThis": "{user} deleted this selection"
   }
 }

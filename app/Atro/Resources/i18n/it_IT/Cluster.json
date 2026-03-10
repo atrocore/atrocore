@@ -26,5 +26,25 @@
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "Gli elementi non confermati non possono essere aggiunti alla fusione"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} ha collegato {relatedEntity} a questo cluster",
+    "clusterLinkedThis": "{user} ha collegato {relatedEntity} a questo cluster",
+    "clusterUnlinked": "{user} ha scollegato {relatedEntity} da questo cluster",
+    "clusterUnlinkedThis": "{user} ha scollegato {relatedEntity} da questo cluster",
+    "clusterRejected": "{user} ha rifiutato {relatedEntity} in questo cluster",
+    "clusterRejectedThis": "{user} ha rifiutato {relatedEntity} in questo cluster",
+    "clusterReincluded": "{user} ha reintegrato {relatedEntity} in questo cluster",
+    "clusterReincludedThis": "{user} ha reintegrato {relatedEntity} in questo cluster",
+    "clusterMoved": "{user} ha spostato {relatedEntity} fuori da questo cluster",
+    "clusterMovedThis": "{user} ha spostato {relatedEntity} fuori da questo cluster",
+    "clusterConfirmed": "{user} ha confermato {relatedEntity} in questo cluster",
+    "clusterConfirmedThis": "{user} ha confermato {relatedEntity} in questo cluster",
+    "clusterGoldenRecord": "{user} ha impostato {relatedEntity} come record dorato in questo cluster",
+    "clusterGoldenRecordThis": "{user} ha impostato {relatedEntity} come record dorato in questo cluster",
+    "clusterDeleted": "{user} ha eliminato questo cluster",
+    "clusterDeletedThis": "{user} ha eliminato questo cluster",
+    "clusterRecordDeleted": "{user} ha eliminato {relatedEntity} da questo cluster",
+    "clusterRecordDeletedThis": "{user} ha eliminato {relatedEntity} da questo cluster"
   }
 }

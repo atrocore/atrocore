@@ -17,6 +17,10 @@ Espo.define('views/selection/record/detail', 'views/record/detail', function (De
         setupActionItems() {
             Dep.prototype.setupActionItems.call(this);
 
+            this.prepareAdditionalButtons();
+        },
+
+        prepareAdditionalButtons() {
             if (this.getAcl().check(this.scope, 'edit')) {
                 let dropdownItems = null;
                 if (this.shouldShowDropdownItem()) {

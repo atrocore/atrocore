@@ -20,5 +20,13 @@
   },
   "customActions": {
     "replaceItem": "Sustituir elemento"
+  },
+  "streamMessages": {
+    "selectionLinked": "{user} vinculó {relatedEntity} a esta selección",
+    "selectionLinkedThis": "{user} vinculó {relatedEntity} a esta selección",
+    "selectionUnlinked": "{user} desvinculó {relatedEntity} de esta selección",
+    "selectionUnlinkedThis": "{user} desvinculó {relatedEntity} de esta selección",
+    "selectionDeleted": "{user} eliminó {relatedEntity} de esta selección",
+    "selectionDeletedThis": "{user} eliminó esta selección"
   }
 }

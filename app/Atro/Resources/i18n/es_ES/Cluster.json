@@ -26,5 +26,25 @@
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "No se pueden añadir elementos no confirmados a la fusión"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} vinculó {relatedEntity} a este clúster",
+    "clusterLinkedThis": "{user} vinculó {relatedEntity} a este clúster",
+    "clusterUnlinked": "{user} desvinculó {relatedEntity} de este clúster",
+    "clusterUnlinkedThis": "{user} desvinculó {relatedEntity} de este clúster",
+    "clusterRejected": "{user} rechazó {relatedEntity} en este clúster",
+    "clusterRejectedThis": "{user} rechazó {relatedEntity} en este clúster",
+    "clusterReincluded": "{user} reincorporó {relatedEntity} en este clúster",
+    "clusterReincludedThis": "{user} reincorporó {relatedEntity} en este clúster",
+    "clusterMoved": "{user} movió {relatedEntity} fuera de este clúster",
+    "clusterMovedThis": "{user} movió {relatedEntity} fuera de este clúster",
+    "clusterConfirmed": "{user} confirmó {relatedEntity} en este clúster",
+    "clusterConfirmedThis": "{user} confirmó {relatedEntity} en este clúster",
+    "clusterGoldenRecord": "{user} estableció {relatedEntity} como registro dorado en este clúster",
+    "clusterGoldenRecordThis": "{user} estableció {relatedEntity} como registro dorado en este clúster",
+    "clusterDeleted": "{user} eliminó este clúster",
+    "clusterDeletedThis": "{user} eliminó este clúster",
+    "clusterRecordDeleted": "{user} eliminó {relatedEntity} de este clúster",
+    "clusterRecordDeletedThis": "{user} eliminó {relatedEntity} de este clúster"
   }
 }

@@ -130,6 +130,8 @@ class Base extends RDB
         $this->getEntityManager()->getRepository('MatchedRecord')->afterRemoveRecord($entity->getEntityName(), $entity->get('id'));
 
         $this->getEntityManager()->getRepository('ClusterItem')->afterRemoveRecord($entity->getEntityName(), $entity->get('id'));
+
+        $this->getEntityManager()->getRepository('SelectionItem')->afterRemoveRecord($entity->getEntityName(), $entity->get('id'));
     }
 
     /**
