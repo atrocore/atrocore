@@ -825,7 +825,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.renderedPanels.push(name);
             }
 
-            if (this.renderedPanels.length === this.fieldPanels.length) {
+            if (this.renderedPanels.length === this.fieldPanels.length && this.options.hideLoaderOnFieldsLoaded) {
                 this.$el.find('.overlay').addClass('hidden');
             }
 
