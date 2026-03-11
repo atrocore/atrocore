@@ -273,6 +273,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.createView('modalRecord', this.recordView, options, (view) => {
                 this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
 
+                this.listenTo(view, 'all-fields-panel-rendered', () => {
+                    this.$el.find('.modal-body.body').css('overflow-y', 'auto');
+                })
+
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.$el.find('.modal-body.body').css('overflow-y', 'auto');
                     ['merge', 'createSelection'].forEach(action => {
