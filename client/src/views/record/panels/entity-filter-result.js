@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/relationship','views/search/search-filter-opener'],
+Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/relationship', 'views/search/search-filter-opener'],
     (Dep, SearchFilterOpener) => Dep.extend({
 
         readOnly: true,
@@ -35,12 +35,12 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
 
                 Dep.prototype.setup.call(this);
 
-                if(!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
+                if (!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
                     this.actionList.push({
                         label: 'showFullList',
                         action: 'showFullList'
                     });
-                    if(this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])){
+                    if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
                         this.actionList.push({
                             label: 'showKanban',
                             action: 'showKanban'
@@ -68,8 +68,8 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                             whereScope: scope,
                         });
 
-                        if (data.field){
-                            for (const key in data.field){
+                        if (data.field) {
+                            for (const key in data.field) {
                                 data.field[key] = this.model.get(key);
                             }
                         }
@@ -77,10 +77,16 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                         this.model.set('data', data);
                     }
 
-                    this.reRender();
+                    this.trigger('panel:rebuild', this.options.defs)
                 });
 
-                if(this.isRendered())  {
+                this.listenTo(this.model, 'change:extensibleEnumId', () => {
+                    if (['Attribute', 'EntityField'].includes(this.model.name) && ['link', 'linkMultiple'].includes(this.model.get('type'))) {
+                        this.trigger('panel:rebuild', this.options.defs)
+                    }
+                })
+
+                if (this.isRendered()) {
                     this.trigger('panel:rebuild', this.options.defs);
                 }
 
@@ -90,44 +96,64 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
 
         setFilter(filter) {
             let data = this.model.get('data') || {};
+            const whereAdditional = this.getWhereAdditional();
+
             this.collection.where = data.where || [];
+            if (whereAdditional) {
+                this.collection.whereAdditional = whereAdditional;
+            }
         },
 
-        getFilterButtonHtml(){
-           return SearchFilterOpener.prototype.getFilterButtonHtml.call(this, 'data');
+        getWhereAdditional() {
+            if (['Attribute', 'EntityField'].includes(this.model.name) && ['link', 'linkMultiple'].includes(this.model.get('type')) &&
+                this.model.get('extensibleEnumId')) {
+                return [
+                    {
+                        type: 'linkedWith',
+                        attribute: "extensibleEnums",
+                        value: [this.model.get('extensibleEnumId')],
+                    }
+                ]
+            }
+            return null
+        },
+
+        getFilterButtonHtml() {
+            return SearchFilterOpener.prototype.getFilterButtonHtml.call(this, 'data');
         },
 
         actionOpenSearchFilter() {
-            if(!this.model.get(this.entityField) || !this.getMetadata().get(['scopes', this.model.get(this.entityField)])) {
+            if (!this.model.get(this.entityField) || !this.getMetadata().get(['scopes', this.model.get(this.entityField)])) {
                 this.notify(this.translate('The search entity is not valid'), 'error');
                 return;
             }
 
             let whereData = this.model.get('data')?.where;
 
-            if(this.model.get('data')?.whereData
+            if (this.model.get('data')?.whereData
                 && (this.model.get('data')?.whereData['queryBuilder']
                     || this.model.get('data')?.whereData['bool']
                     || this.model.get('data')?.whereData['textFilter']
                     || this.model.get('data')?.whereData['savedSearch']
                 )
-            ){
+            ) {
                 whereData = this.model.get('data')?.whereData;
             }
 
-            SearchFilterOpener.prototype.open.call(this, this.model.get(this.entityField), whereData,  ({where, whereData}) => {
-                this.model.set('data', _.extend({}, this.model.get('data'), {
-                    where,
-                    whereData,
-                    whereScope: this.model.get(this.entityField)
-                }));
-                this.notify(this.translate('saving', 'messages'));
-                this.model.save({_prev: null}).then(() =>  {
-                    this.notify(this.translate('Done'), 'success')
-                    this.setFilter(null);
-                    this.actionRefresh();
-                });
-            });
+            SearchFilterOpener.prototype.open.call(this, this.model.get(this.entityField), whereData,
+                ({ where, whereData }) => {
+                    this.model.set('data', _.extend({}, this.model.get('data'), {
+                        where,
+                        whereData,
+                        whereScope: this.model.get(this.entityField)
+                    }));
+                    this.notify(this.translate('saving', 'messages'));
+                    this.model.save({ _prev: null }).then(() => {
+                        this.notify(this.translate('Done'), 'success')
+                        this.setFilter(null);
+                        this.actionRefresh();
+                    });
+                }, [], {}, this.getWhereAdditional());
         },
 
         actionShowFullList(data) {

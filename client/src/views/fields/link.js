@@ -352,7 +352,24 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         },
 
         getWhereAdditional() {
-            return this?.options?.whereAdditional || this.model.getFieldParam(this.name, 'where') || undefined
+            if (this?.options?.whereAdditional) {
+                return this.options.whereAdditional;
+            }
+
+            let res = this.model.getFieldParam(this.name, 'where')
+
+            if (this.getExtensibleEnumId() && this.foreignScope === 'ExtensibleEnumOption') {
+                res = [
+                    ...(res || []),
+                    {
+                        type: 'linkedWith',
+                        attribute: 'extensibleEnums',
+                        value: [this.getExtensibleEnumId()]
+                    }
+                ]
+            }
+
+            return res || undefined
         },
 
         clearLink: function () {
@@ -899,14 +916,14 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                         this.addCustomDataToView(view, rule);
 
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            if(!subQuery || subQuery.length === 0 ) {
+                            if (!subQuery || subQuery.length === 0) {
                                 return;
                             }
                             rule.value = null;
                             this.filterValue = rule.value;
 
                             (view.ids || []).forEach(id => {
-                                if(id === 'subquery') {
+                                if (id === 'subquery') {
                                     return;
                                 }
 
@@ -950,7 +967,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
                         let nameHash = { '_localeId': this.getUser().get('localeId') }
-                        try{
+                        try {
                             const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName']) ?? 'name';
 
                             if ((rule.value || []).length > 0 && foreignName) {
@@ -971,7 +988,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                                     nameHash[record.id] = record[localizedForeignName] || record[foreignName]
                                 })
                             }
-                        }catch (e) {
+                        } catch (e) {
                             console.error(e)
                         }
 
@@ -990,8 +1007,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                             view.addLinkSubQuery(data, true);
                         }
 
-                        if(rule.data && rule.data['nameHash']) {
-                            delete  rule.data['nameHash'];
+                        if (rule.data && rule.data['nameHash']) {
+                            delete rule.data['nameHash'];
                         }
 
                         if (view) {
