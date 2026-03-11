@@ -639,16 +639,18 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        getActionDefs(id) {
-            let defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === id)
-            if (!defs) {
-                defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicEntityActions']) || []).find(defs => defs.id === id)
+        getDynamicActionDefs(id) {
+            for (let key of ['dynamicRecordActions', 'dynamicEntityActions']) {
+                let defs = (this.getMetadata().get(['clientDefs', this.entityType, key]) || []).find(defs => defs.id === id)
+                if (defs) {
+                    return defs
+                }
             }
-            return defs
+            return null
         },
 
         massActionDynamicMassAction: function (data) {
-            const defs = this.getActionDefs(data.id)
+            const defs = this.getDynamicActionDefs(data.id)
 
             if (defs && defs.type) {
                 const method = 'massActionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
@@ -676,7 +678,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', requestData).success(response => {
+
+            return this.ajaxPostRequest('Action/action/executeNow', requestData).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                     setTimeout(() => {
@@ -2988,7 +2991,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         executeActionRequest: function (payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
+
+            return this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
+                if (response.link) {
+                    window.open(response.link, '_blank');
+                    this.collection.fetch();
+                }
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
 

@@ -138,6 +138,10 @@ For detailed information about the deletion process, restoration procedures, and
 
 For information about configuring deletion settings for the File entity, see [Entity Management](../03.administration/11.entity-management/docs.md) in the Administration section.
 
+## File Transformations
+
+File Transformations allow you to automatically generate derivative files (renditions) from originals using server-side CLI tools. This feature is available with the [Renditions](https://store.atrocore.com/) premium module.
+
 ## File sharing
 
 If you want to share a file from your AtroCore, you can of course download it and share it by other means, but there is an easier way. You can create a share link for the selected file so that non-AtroCore users can see it. To do this, go to the File details view and click on the Sharing submenu in the right panel.
