@@ -404,7 +404,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 };
             }
 
-            if (this.scope === 'File') {
+            if (this.scope === 'File' && this.defs.upload !== false) {
                 this.actionList.unshift({
                     label: this.translate('upload'),
                     action: 'upload',
