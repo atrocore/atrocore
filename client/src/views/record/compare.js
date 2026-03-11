@@ -726,8 +726,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         buildComparisonTableHeaderColumn() {
             let columns = [];
 
+            const model = this.getModels()[0];
+            const nameField = model.nameField && model.hasField(model.nameField) ? model.nameField : 'id';
             columns.push({
-                name: this.translate('name', 'fields'),
+                name: this.translate(nameField, 'fields'),
                 isFirst: true,
             });
 
