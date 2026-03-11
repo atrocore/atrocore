@@ -38,10 +38,12 @@ Espo.define('views/variable/fields/value-container', 'views/fields/base', Dep =>
 
         editTemplate: 'fields/field-value-container',
 
+        optionsField: 'enumOptions',
+
         setup() {
             this.name = this.options.name || this.defs.name;
 
-            this.listenTo(this.model, 'change:type', () => {
+            this.listenTo(this.model, `change:type change:${this.optionsField}`, () => {
                 if (this.mode === 'edit') {
                     let value = '';
                     if (this.model.get('type') === 'array') {
@@ -70,6 +72,10 @@ Espo.define('views/variable/fields/value-container', 'views/fields/base', Dep =>
                     required: false,
                     readOnly: false
                 };
+
+                if (type === 'enum') {
+                    params.options = this.model.get(this.optionsField);
+                }
 
                 let options = {
                     el: `${this.options.el} > .field[data-name="valueField"]`,
