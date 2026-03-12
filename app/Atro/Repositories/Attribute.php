@@ -623,36 +623,6 @@ class Attribute extends Base
         parent::beforeSave($entity, $options);
 
         $this->validateMinMax($entity);
-
-        if ($entity->isAttributeChanged('extensibleEnumId') && in_array($entity->get('type'), ['link', 'linkMultiple'])) {
-            if (empty($entity->get('extensibleEnumId'))) {
-                $where = [];
-            } else {
-                $where = [
-                    [
-                        "condition" => "AND",
-                        "rules"     => [
-                            [
-                                "id"       => "extensibleEnums",
-                                "field"    => "extensibleEnums",
-                                "type"     => "string",
-                                "operator" => "linked_with",
-                                "value"    => [$entity->get('extensibleEnumId')],
-                            ]
-                        ],
-                        "valid"     => true
-                    ]
-                ];
-            }
-
-            $data = $entity->get('data') ?? [];
-            if ($data instanceof \stdClass) {
-                $data = json_decode(json_encode($data), true);
-            }
-            $data['where'] = $where;
-
-            $entity->set('data', $data);
-        }
     }
 
     public function validateMinMax(Entity $entity): void
