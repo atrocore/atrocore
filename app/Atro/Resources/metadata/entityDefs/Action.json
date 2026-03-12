@@ -506,8 +506,6 @@
     "emailTemplate": {
       "type": "link",
       "entity": "EmailTemplate",
-      "notStorable": true,
-      "virtualField": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,
@@ -550,34 +548,6 @@
         }
       },
       "openApiEnabled": true
-    },
-    "emailTemplateId": {
-      "type": "varchar",
-      "notStorable": true,
-      "virtualField": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true,
-      "openApiEnabled": true
-    },
-    "emailTemplateName": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
     },
     "connection": {
       "type": "link",
@@ -1062,6 +1032,11 @@
         "actionId",
         "setId"
       ]
+    },
+    "emailTemplate": {
+      "type": "belongsTo",
+      "entity": "EmailTemplate",
+      "skipOrmDefs": true
     },
     "connection": {
       "type": "belongsTo",

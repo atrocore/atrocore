@@ -537,7 +537,7 @@ class Metadata extends AbstractListener
                 $actionData = @json_decode($action['data'], true);
                 $params = array_merge($params, [
                     'showEmailPreview' => !empty($actionData['field']['showEmailPreview']),
-                    'emailTemplateId'  => $actionData['field']['emailTemplateId'] ?? '',
+                    'emailTemplateId'  => $action['emailTemplateId'] ?? '',
                 ]);
             }
 
