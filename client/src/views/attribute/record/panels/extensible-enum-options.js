@@ -22,9 +22,36 @@ Espo.define('views/attribute/record/panels/extensible-enum-options', 'views/reco
                 html: '<i class="ph ph-plus"></i>'
             });
 
+            this.actionList.unshift({
+                label: 'showFullList',
+                action: 'showFullList'
+            });
+
             this.listenTo(this.model.attributeModel, 'after:save', () => {
                 this.actionRefresh();
             });
+        },
+
+        actionShowFullList(data) {
+            let params = {
+                queryBuilder: {
+                    condition: 'AND',
+                    rules: [
+                        {
+                            id: 'extensibleEnums',
+                            field: 'extensibleEnums',
+                            value: [this.model.attributeModel.get('extensibleEnumId')],
+                            type: 'string',
+                            operator: 'linked_with'
+                        }
+                    ],
+                    valid: true
+                },
+                queryBuilderApplied: true
+            };
+
+            this.getStorage().set('listQueryBuilder', this.scope, params);
+            window.open(`#ExtensibleEnumOption`, '_blank');
         },
 
         actionCreateExtensibleEnumOption() {
