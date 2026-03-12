@@ -158,7 +158,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     onClick: (dialog) => {
                         this.trigger('switchToMerge', dialog)
                         $('#compare-button-container').find('[data-name="switchToMerge"]').addClass('btn-primary').siblings().removeClass('btn-primary');
-                        this.$el.find('.modal-footer [data-name="merge"]').removeClass('hidden')
+                        this.$el.find('.modal-footer [data-name="merge"]').removeClass('hidden').addClass('disabled').attr('disabled', true);
                     }
                 });
             }
@@ -186,6 +186,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 scope: this.getComparisonScope(),
                 merging: this.options.merging,
                 mergeCallback: this.options.mergeCallback,
+                hideLoaderOnFieldsLoaded: true
             };
 
             if (this.instanceComparison) {
@@ -272,6 +273,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
         createModalView(options) {
             this.createView('modalRecord', this.recordView, options, (view) => {
                 this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
+
+                this.listenTo(view, 'all-fields-panel-rendered', () => {
+                    this.$el.find('.modal-body.body').css('overflow-y', 'auto');
+                })
 
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.$el.find('.modal-body.body').css('overflow-y', 'auto');
