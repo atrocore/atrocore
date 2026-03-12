@@ -825,6 +825,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.renderedPanels.push(name);
             }
 
+            if (this.renderedPanels.length === this.fieldPanels.length && this.options.hideLoaderOnFieldsLoaded) {
+                this.$el.find('.overlay').addClass('hidden');
+            }
+
             if (this.renderedPanels.length === this.fieldPanels.length + 1) {
                 this.handleRadioButtonsDisableState(false);
                 this.trigger('all-panels-rendered');
@@ -888,7 +892,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 let anchorContainer = this.getParentView().$el.find('.anchor-nav-container');
                 if (!anchorContainer.length) {
                     let id = Math.floor(Math.random() * 10000);
-                    anchorContainer = $(`<div class="anchor-nav-container" style="display: flex;width: 100%;padding-top: 10px;position:sticky;left: 0;z-index: 100;"></div>`)
+                    anchorContainer = $(`<div class="anchor-nav-container" style="width: 100%;padding-top: 10px;position:sticky;left: 0;top: 0;z-index: 100;background: white"></div>`)
                     this.getParentView().$el.find('.modal-body').prepend(anchorContainer)
                 }
 
