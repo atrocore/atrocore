@@ -20,16 +20,5 @@
 Espo.define('views/extensible-enum/detail', 'views/detail',
     Dep => {
 
-        return Dep.extend({
-
-            setup() {
-                Dep.prototype.setup.call(this);
-
-                this.relatedAttributeFunctions['extensibleEnumOptions'] = () => {
-                    return {}
-                };
-
-            },
-
-        });
+        return Dep.extend({});
     });
