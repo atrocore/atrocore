@@ -390,10 +390,6 @@ class Attribute extends Base
             $entity->set('dropdown', false);
         }
 
-        if (in_array($entity->get('type'),
-                ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
-        }
-
         if (!empty($entity->get('htmlSanitizerId'))) {
             $htmlSanitizer = $this->getEntityManager()->getRepository('HtmlSanitizer')->get($entity->get('htmlSanitizerId'));
             if (!empty($htmlSanitizer)) {
