@@ -59,9 +59,7 @@ Espo.define('views/admin/field-manager/fields/extensible-enum-options', ['views/
                         this.createView('valueField', 'views/record/detail-bottom', options, view => {
                             view.render();
                             this.listenTo(view.model, 'prepareAttributesForCreateRelated', function (params, link, prepareAttributeCallback) {
-                                prepareAttributeCallback({
-                                    "listMultilingual": view.model.get('multilingual')
-                                })
+                                prepareAttributeCallback({})
                             })
                             this.listenTo(view.model, 'updateRelationshipPanel', () => {
                                 view.getView('extensibleEnumOptions').collection.fetch()

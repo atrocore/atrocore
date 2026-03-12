@@ -26,9 +26,7 @@ Espo.define('views/extensible-enum/detail', 'views/detail',
                 Dep.prototype.setup.call(this);
 
                 this.relatedAttributeFunctions['extensibleEnumOptions'] = () => {
-                    return {
-                        "listMultilingual": this.model.get('multilingual')
-                    }
+                    return {}
                 };
 
             },

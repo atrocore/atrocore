@@ -37,7 +37,6 @@ Espo.define('views/attribute/record/panels/extensible-enum-options', 'views/reco
                 attributes: {
                     extensibleEnumsIds: [this.model.attributeModel.get('extensibleEnumId')],
                     extensibleEnumsNames: extensibleEnumsNames,
-                    listMultilingual: this.model.attributeModel.get('listMultilingual')
                 },
             }, view => {
                 view.render();

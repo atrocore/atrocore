@@ -392,7 +392,6 @@ class Attribute extends Base
 
         if (in_array($entity->get('type'),
                 ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
-            $entity->set('listMultilingual', $entity->get('extensibleEnum')->get('multilingual'));
         }
 
         if (!empty($entity->get('htmlSanitizerId'))) {
