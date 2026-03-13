@@ -11,27 +11,30 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core;
+namespace Atro\Core\Container;
 
+use Atro\Core\Container as AtroContainer;
 use Atro\Core\Factories\FactoryInterface as AtroCoreFactory;
 use Espo\Core\Interfaces\Injectable;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
 use Psr\Container\ContainerInterface;
 
-class ContainerAbstractFactory implements AbstractFactoryInterface
+class AbstractFactory implements AbstractFactoryInterface
 {
-    public function __construct(private readonly Container $container)
-    {
+    public function __construct(
+        private readonly ServiceManagerConfig $smConfig,
+        private readonly AtroContainer $container
+    ) {
     }
 
     public function canCreate(ContainerInterface $container, string $requestedName): bool
     {
-        return class_exists($this->container->resolveClass($requestedName));
+        return class_exists($this->smConfig->resolveClass($requestedName));
     }
 
     public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): object
     {
-        $className = $this->container->resolveClass($requestedName);
+        $className = $this->smConfig->resolveClass($requestedName);
 
         if (is_a($className, AtroCoreFactory::class, true)) {
             return (new $className())->create($this->container);
@@ -46,7 +49,7 @@ class ContainerAbstractFactory implements AbstractFactoryInterface
                 $type = $param->getType();
                 if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
                     $depClassName = $type->getName();
-                    $input[] = is_a($depClassName, Container::class, true)
+                    $input[] = is_a($depClassName, AtroContainer::class, true)
                         ? $this->container
                         : $this->container->get($depClassName);
                 }

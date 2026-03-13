@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\Container\ServiceManagerConfig;
 use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Utils\Config;
@@ -26,115 +27,42 @@ use Psr\Container\ContainerInterface;
 
 final class Container implements ContainerInterface
 {
-    private ServiceManager $sm;
+    private ?ServiceManager $sm = null;
+    private ServiceManagerConfig $smConfig;
 
-    private array $classAliases
-        = [
-            'userContext'              => \Atro\Core\UserContext::class,
-            'route'                    => \Espo\Core\Utils\Route::class,
-            'fileManager'              => \Atro\Core\Utils\FileManager::class,
-            'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
-            'consoleManager'           => \Atro\Core\ConsoleManager::class,
-            'migration'                => \Atro\Core\Migration\Migration::class,
-            'twig'                     => \Atro\Core\Twig\Twig::class,
-            'pseudoTransactionManager' => \Atro\Core\PseudoTransactionManager::class,
-            'connectionFactory'        => \Atro\Core\ConnectionFactory::class,
-            'eventManager'             => \Atro\Core\Factories\EventManager::class,
-            'dbal'                     => \Atro\Core\Factories\DbalConnection::class,
-            'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
-            'memcachedStorage'         => \Atro\Core\Factories\MemcachedStorage::class,
-            'log'                      => \Atro\Core\Factories\Log::class,
-            'mailSender'               => \Atro\Core\Mail\Sender::class,
-            'pdo'                      => \Atro\Core\Factories\Pdo::class,
-            'controllerManager'        => \Atro\Core\ControllerManager::class,
-            'slim'                     => \Atro\Core\Slim\Slim::class,
-            'language'                 => \Atro\Core\Utils\Language::class,
-            'baseLanguage'             => \Atro\Core\Utils\Language::class,
-            'defaultLanguage'          => \Atro\Core\Factories\DefaultLanguage::class,
-            'config'                   => \Atro\Core\Utils\Config::class,
-            'htmlSanitizer'            => \Atro\Core\Utils\HTMLSanitizer::class,
-            'actionManager'            => \Atro\Core\ActionManager::class,
-            'fieldManager'             => \Atro\Core\Utils\FieldManager::class,
-            'idGenerator'              => \Atro\Core\Utils\IdGenerator::class,
-            'dataManager'              => \Atro\Core\DataManager::class,
-            'schema'                   => \Atro\Core\Utils\Database\Schema\Schema::class,
-            'themeManager'             => \Atro\Core\Utils\ThemeManager::class,
-            'clientManager'            => \Atro\Core\Utils\ClientManager::class,
-            'layoutManager'            => \Atro\Core\LayoutManager::class,
-            'metadata'                 => \Atro\Core\Utils\Metadata::class,
-            'realtimeManager'          => \Atro\Core\RealtimeManager::class,
-            'seederFactory'            => \Atro\Core\SeederFactory::class,
-            'condition'                => \Atro\Core\ConditionChecker::class,
-            'matchingManager'          => \Atro\Core\MatchingManager::class,
-            'crypt'                    => \Espo\Core\Utils\Crypt::class,
-            'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
-            'aclManager'               => \Espo\Core\AclManager::class,
-            'dateTime'                 => \Espo\Core\Factories\DateTime::class,
-            'entityManager'            => \Espo\Core\Factories\EntityManager::class,
-            'injectableFactory'        => \Espo\Core\InjectableFactory::class,
-            'number'                   => \Espo\Core\Factories\Number::class,
-            'ormMetadata'              => \Espo\Core\Utils\Metadata\OrmMetadata::class,
-            'output'                   => \Espo\Core\Utils\Api\Output::class,
-            'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
-            'serviceFactory'           => \Espo\Core\ServiceFactory::class,
-            'templateFileManager'      => \Espo\Core\Utils\TemplateFileManager::class,
-            'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
-        ];
-
-    private array $aliases
-        = [
-            'connection'                                    => 'dbal',
-            Connection::class                               => 'dbal',
-            EventManager::class                             => 'eventManager',
-            EntityManager::class                            => 'entityManager',
-            'fieldManagerUtil'                              => 'fieldManager',
-            \Atro\Core\Utils\Config::class                  => 'config',
-            \Espo\Core\Utils\Config::class                  => 'config',
-            \Atro\Core\Utils\Metadata::class                => 'metadata',
-            \Espo\Core\Utils\Metadata::class                => 'metadata',
-            \Atro\Core\Utils\FileManager::class             => 'fileManager',
-            \Espo\Core\Utils\File\Manager::class            => 'fileManager',
-            \Atro\Core\DataManager::class                   => 'dataManager',
-            \Atro\Core\ModuleManager\Manager::class         => 'moduleManager',
-            \Atro\Core\Slim\Slim::class                     => 'slim',
-            \Atro\Core\Utils\ThemeManager::class            => 'themeManager',
-            \Atro\Entities\User::class                      => 'user',
-        ];
-
-    public function __construct()
+    public function __construct(ServiceManagerConfig $smConfig)
     {
-        $this->sm = new ServiceManager(
-            [
-                'abstract_factories' => [new ContainerAbstractFactory($this)],
-                'aliases'            => $this->aliases,
-                'services'           => ['container' => $this],
-                'factories'          => [
-                    'user' => fn($c) => $c->getUser(),
-                ],
-                'shared'             => ['user' => false],
-            ],
-            $this
-        );
+        $this->smConfig = $smConfig;
+    }
 
-        $moduleManager = new ModuleManager($this);
-        $this->sm->setService('moduleManager', $moduleManager);
-        foreach ($moduleManager->getModules() as $module) {
-            $module->onLoad();
-        }
+    /**
+     * Called by Application after the ServiceManager is fully configured.
+     * Two-phase init: Container is created first (so it can be passed to ContainerAbstractFactory
+     * and registered as SM creationContext), then SM is injected here.
+     */
+    public function setSm(ServiceManager $sm): void
+    {
+        $this->sm = $sm;
     }
 
     /**
      * Resolve a service name to its implementing class name.
-     * Used by ContainerAbstractFactory.
+     * Used by ContainerAbstractFactory (via ServiceManagerConfig) and available for external callers.
      */
     public function resolveClass(string $name): string
     {
-        return $this->classAliases[$name] ?? $name;
+        return $this->smConfig->resolveClass($name);
     }
 
+    /**
+     * Register a short alias → FQCN mapping so the SM can lazily create that service.
+     *
+     * @deprecated Prefer registering services directly in the ServiceManager. This method
+     *             remains for backwards-compatible module registration via AbstractModule::onLoad().
+     */
     public function setClassAlias(string $alias, string $className): void
     {
-        $this->classAliases[$alias] = $className;
+        $this->smConfig->addClassAlias($alias, $className);
     }
 
     /**
