@@ -204,6 +204,25 @@ Depending on the [field/attribute type](../03.administration/11.entity-managemen
 |                                             | Is Null/Is Not Null  | –                    |
 
 
+### Filtering Values with Measures
+
+Fields that store values with measures (e.g., length, weight, volume) can be filtered with consideration of the measurement unit assigned to the value. During filtering, the system automatically recalculates values based on the configured conversion rules to ensure accurate comparison across different units.
+
+To enable correct filtering across multiple measurement units, conversion factors must be defined in the Measures configuration. Navigate to [Measures](../03.administration/09.measure-units/docs.md) and configure the `Multiplier` parameter for each unit. The multiplier defines the conversion ratio relative to the base unit of the measure.
+
+When a filter condition is applied, the system uses the configured multipliers to normalize values before performing the comparison.
+
+![Filtering Values](./_assets/Filtering_Values.png){.medium}
+
+Example:
+If a filter condition is defined as Length > 1 meter, the system will also return records where the length is stored in other units that satisfy the condition after conversion. For instance, a record with 150 centimeters will be included in the result because it corresponds to 1.5 meters when recalculated.
+
+The same principle applies to currency values. When filtering monetary values, the system uses the configured currency exchange rates to normalize amounts before evaluation.
+
+![currency values](./_assets/currency_values.png){.medium}
+
+Currency exchange rates can be configured in the [Currency](../../07.erp/01.pricing/docs.md#currency-configuration) settings section. Once defined, these rates are automatically applied during filtering and comparison operations.
+
 ### Subfilters
 
 Additional sub-filters can be added when creating filters. For example, to filter products by specific Files (main filter) and limit those files to a certain type—such as only Image Files—a sub-filter within the main filter is needed. This sub-filter refines the main filter criteria to include only the desired file types.
