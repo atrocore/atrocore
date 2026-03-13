@@ -14,22 +14,23 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Core\EventManager\Manager as EventManager;
-use Atro\Core\Factories\FactoryInterface as Factory;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
 use Doctrine\DBAL\Connection;
-use Espo\Core\Interfaces\Injectable;
 use Espo\ORM\EntityManager;
+use Laminas\ServiceManager\ServiceManager;
+use Psr\Container\ContainerInterface;
 
-final class Container
+final class Container implements ContainerInterface
 {
-    private array $data = [];
+    private ServiceManager $sm;
 
     private array $classAliases
         = [
+            'userContext'              => \Atro\Core\UserContext::class,
             'route'                    => \Atro\Core\Factories\RouteFactory::class,
             'fileManager'              => \Atro\Core\Utils\FileManager::class,
             'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
@@ -67,7 +68,6 @@ final class Container
             'matchingManager'          => \Atro\Core\MatchingManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
-            'acl'                      => \Espo\Core\Factories\Acl::class,
             'aclManager'               => \Espo\Core\Factories\AclManager::class,
             'dateTime'                 => \Espo\Core\Factories\DateTime::class,
             'entityManager'            => \Espo\Core\Factories\EntityManager::class,
@@ -87,15 +87,38 @@ final class Container
             Connection::class    => 'dbal',
             EventManager::class  => 'eventManager',
             EntityManager::class => 'entityManager',
-            'fieldManagerUtil'   => 'fieldManager'
+            'fieldManagerUtil'   => 'fieldManager',
         ];
 
     public function __construct()
     {
-        $this->data['moduleManager'] = new ModuleManager($this);
-        foreach ($this->data['moduleManager']->getModules() as $module) {
+        $this->sm = new ServiceManager(
+            [
+                'abstract_factories' => [new ContainerAbstractFactory($this)],
+                'aliases'            => $this->aliases,
+                'services'           => ['container' => $this],
+                'factories'          => [
+                    'user' => fn($c) => $c->get(UserContext::class)->getUser(),
+                ],
+                'shared'             => ['user' => false],
+            ],
+            $this
+        );
+
+        $moduleManager = new ModuleManager($this);
+        $this->sm->setService('moduleManager', $moduleManager);
+        foreach ($moduleManager->getModules() as $module) {
             $module->onLoad();
         }
+    }
+
+    /**
+     * Resolve a service name to its implementing class name.
+     * Used by ContainerAbstractFactory.
+     */
+    public function resolveClass(string $name): string
+    {
+        return $this->classAliases[$name] ?? $name;
     }
 
     public function setClassAlias(string $alias, string $className): void
@@ -103,74 +126,45 @@ final class Container
         $this->classAliases[$alias] = $className;
     }
 
-    /**
-     * Get class
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function get(string $name)
+    public function get(string $id): mixed
     {
-        if (array_key_exists($name, $this->aliases)) {
-            $name = $this->aliases[$name];
+        if ($id === 'user') {
+            return $this->sm->get(UserContext::class)->getUser();
         }
 
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-
-        // load itself
-        if ($name === 'container') {
-            $this->data[$name] = $this;
-            return $this->data[$name];
-        }
-
-        $className = isset($this->classAliases[$name]) ? $this->classAliases[$name] : $name;
-        if (class_exists($className)) {
-            if (is_a($className, Factory::class, true)) {
-                $this->data[$name] = (new $className())->create($this);
-                return $this->data[$name];
+        if ($id === 'acl') {
+            $user = $this->sm->get(UserContext::class)->getUser();
+            if ($user === null) {
+                throw new Exceptions\Error("ACL requires an authenticated user");
             }
-
-            $reflectionClass = new \ReflectionClass($className);
-            if (!empty($constructor = $reflectionClass->getConstructor()) && !empty($params = $constructor->getParameters())) {
-                $input = [];
-                foreach ($params as $param) {
-                    $dependencyClass = $param->getType() && !$param->getType()->isBuiltin() ? new \ReflectionClass($param->getType()->getName()) : null;
-                    if (!empty($dependencyClass)) {
-                        if ($dependencyClass->getName() === self::class) {
-                            $input[] = $this;
-                        } else {
-                            $input[] = $this->get($dependencyClass->getName());
-                        }
-                    }
-                }
-                $this->data[$name] = new $className(...$input);
-                return $this->data[$name];
-            }
-
-            if (is_a($className, Injectable::class, true)) {
-                $this->data[$name] = new $className();
-                foreach ($this->data[$name]->getDependencyList() as $dependency) {
-                    $this->data[$name]->inject($dependency, $this->get($dependency));
-                }
-                return $this->data[$name];
-            }
-
-            $this->data[$name] = new $className();
-
-            return $this->data[$name];
+            return new \Espo\Core\Acl($this->sm->get('aclManager'), $user);
         }
 
-        return null;
+        return $this->sm->get($id);
+    }
+
+    public function has(string $id): bool
+    {
+        if ($id === 'user' || $id === 'acl') {
+            return true;
+        }
+        return $this->sm->has($id);
     }
 
     /**
-     * Get DBAL connection
-     *
-     * @return Connection
+     * Force re-creation of a cached service on the next get() call.
+     * Pass the canonical service name (not an alias).
      */
+    public function reload(string $name): self
+    {
+        $fresh = $this->sm->build($name);
+        $this->sm->setAllowOverride(true);
+        $this->sm->setService($name, $fresh);
+        $this->sm->setAllowOverride(false);
+
+        return $this;
+    }
+
     public function getDbal(): Connection
     {
         return $this->get('dbal');
@@ -193,7 +187,7 @@ final class Container
 
     public function getUser(): User
     {
-        return $this->get('user');
+        return $this->sm->get(UserContext::class)->getUser();
     }
 
     public function getDataManager(): DataManager
@@ -204,42 +198,5 @@ final class Container
     public function getLanguage(): Language
     {
         return $this->get('language');
-    }
-
-    /**
-     * Set User
-     *
-     * @param User $user
-     */
-    public function setUser(User $user): Container
-    {
-        $this->set('user', $user);
-
-        return $this;
-    }
-
-    /**
-     * Set class
-     */
-    protected function set($name, $obj)
-    {
-        $this->data[$name] = $obj;
-    }
-
-    /**
-     * Reload object
-     *
-     * @param string $name
-     *
-     * @return Container
-     */
-    public function reload(string $name): Container
-    {
-        // unset
-        if (isset($this->data[$name])) {
-            unset($this->data[$name]);
-        }
-
-        return $this;
     }
 }

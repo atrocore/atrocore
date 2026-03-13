@@ -532,7 +532,7 @@ class Installer extends HasContainer
         $systemUser->set('id', $this->getConfig()->get('systemUserId'));
 
         // set system user to container
-        $this->getContainer()->setUser($systemUser);
+        $this->getContainer()->get(\Atro\Core\UserContext::class)->set($systemUser);
     }
 
     /**

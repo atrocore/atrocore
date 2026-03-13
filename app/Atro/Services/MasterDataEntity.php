@@ -144,7 +144,7 @@ class MasterDataEntity extends Base
         }
 
         $this->getEntityManager()->setUser($user);
-        $this->getContainer()->setUser($user);
+        $this->getContainer()->get(\Atro\Core\UserContext::class)->set($user);
         $this->getContainer()->get('acl')->setUser($user);
     }
 
