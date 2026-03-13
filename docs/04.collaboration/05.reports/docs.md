@@ -4,61 +4,83 @@ taxonomy:
     category: docs
 ---
 
-The Reports module allows you to create reports for any entity with grouping records by field(s) of the List or Link type. You can group records by one or more fields using different aggregations (maximum or minimum value, sum, total, and average value). The generated report will be displayed on the [Dashboard](../../01.atrocore/07.dashboards) in the form of a table.
+The [Reports](https://store.atrocore.com/en/reports/20213) module lets you create tabular summaries of any entity's data. Records are grouped by one or more fields, and aggregation functions calculate statistics across each group. Completed reports can be pinned to the [Dashboard](../../01.atrocore/07.dashboards) as dashlets.
 
-![Products by brand](./_assets/report-example.png){.large}
+Clicking a value in an aggregation column redirects to a filtered list of the underlying records — for example, clicking a product count for a specific brand opens the product list pre-filtered to that brand.
 
-Additionally, the values in the aggregation column will be clickable. That is, if you group products by a certain brand and calculate quantity, you can click on the number of products in the column "Total" and the system will redirect you to a page with products filtered by a certain brand.
+## Report types
 
-## Create a report
+Two report types are available, selected at creation and fixed thereafter.
 
-After installing the module, the Reports entity will appear in the left menu. If not, you can add it in `Administration > User interface`.
-To create a new record, go to the Reports entity and click the `Create Report` button. The following pop-up will appear:
+**Summary**
 
-![Create a report](./_assets/create-report.png){.large}
+Groups records by any number of fields and supports multiple aggregations. Each unique combination of the group-by field values forms one row. All group-by fields and aggregation columns appear as column headers. A **Total** row is appended at the bottom.
 
-- **Name** - the name of the report
-- **Type** - two types of reports are available: Summary and Crosstable.
+**Crosstable**
 
-Reports of the Crosstable type are grouped by two fields, one of which is displayed horizontally and the other vertically. The summary has no restrictions on the grouped by fields and shows a combination of all the required values. In the screenshots below, you can see the difference between these types.
+Groups records by exactly two fields: the first becomes row headers, the second becomes column headers. Exactly one aggregation is required, and its values fill the cells. All possible combinations of row and column header values are shown in the table — including combinations that have no matching records — giving a complete overview of the data space. Charts can be generated from the resulting table.
 
-![Difference between Summary and Crosstable](./_assets/summary-crosstable.png){.large}
+> Crosstable does not support period-based aggregation.
 
-- **Entity** - select the entity for which you want to create a report
-- **Group by** - select one or more fields to group records. For a Crosstable report, you need to select two fields. It is possible to select only fields of type List or Link.
+## Creating a report
 
-Click on the `Save` button to save your report.
+After installing the module, the **Reports** entity appears in the left navigation menu. If it is missing, add it under `Administration > User Interface`.
 
-![Summary report](./_assets/summary-report.png){.large}
+Open the Reports entity and click **Create**. Fill in the following fields:
 
-You can also select an additional filter for the report in the Search panel. For example, you can choose to display only active products or products of certain categories, etc.
+**Name** - Display name for the report.
+**Type** - `Summary` or `Crosstable` — cannot be changed after saving.
+**Entity** - The entity whose records the report covers (e.g. Product) — cannot be changed after saving.
+**Group By** - Fields used to group records; only List and Link field types are available. Summary accepts one or more fields; Crosstable requires exactly two.
 
-Select the aggregations that you want to apply to the report in the corresponding panel. A report of type Crosstable can contain only one aggregation, a Summary report can contain many.
+Save the record to proceed to the detail view.
 
-These types of aggregations are available:
-- **COUNT** - count the total number of grouped records
-- **COUNT(%)** - calculates the ratio of the number of records found to the total number of records in the dataset
-- **SUM** - calculates the sum value for a selected field of the float or integer type
-- **AVG** - calculates the average value for a selected field of the float or integer type
-- **MAX** - calculates the maximum value for a selected field of the float or integer type
-- **MIN** - calculates the minimum value for a selected field of the float or integer type
+## Configuring a report
 
-### Period-based aggregation for Summary Reports
+After creation, the detail view provides additional controls.
 
-For reports of type Summary, it is possible to configure period-based aggregation.
-You can define the aggregation periodicity (week, month, or year), select a date or datetime field that will be used to split records into periods, and specify how many periods should be included (from 1 to 12, with a default of 6).
+In the detail view you can set **Order By** to control how rows are sorted. Available values are the selected Group By fields and any defined aggregations, each with an `ASC` or `DESC` direction.
 
-For example, you can display the number of products created over the last six months, split by months and grouped by the product status. The Crosstable report type does not support period-based aggregation.
+### Search filter (record scope)
 
-![Period-based aggregation](./_assets/period-aggregation.png){.large}
-![Period-based aggregation](./_assets/period-aggregation-report.png){.large}
+Two filter buttons appear in the action bar above the Details panel:
 
+- **Advanced Filter** — opens the standard search filter to restrict which entity records are included in the report. For example, limit a product report to active products only.
+- **Field Value Filters** — lets you set a visibility rule for each field. Options are `Filled`, `Empty`, `Optional`, and `Required`. `Filled` and `Empty` are mutually exclusive, as are `Optional` and `Required`.
 
-## Display a report on the Dashboard
+### Aggregations
 
-Once a report has been created, you can display it on the Dashboard. To do this, create a new [Dashlet](../../01.atrocore/07.dashboards/docs.md#dashlets) of the Report type and select the desired report to display.
+Aggregations are configured in a dedicated panel below the Details panel. Each aggregation record has the following fields:
 
-![Create a dashlet](./_assets/create-dashlet.png){.large}
-![Create a dashlet](./_assets/create-dashlet-report.png){.large}
+| Field | Description |
+|---|---|
+| **Name** | Label displayed as the column header |
+| **Report** | The report this aggregation belongs to |
+| **Function** | The aggregation function (see table below) |
+| **Field** | The entity field to aggregate; not applicable for `COUNT` and `COUNT (%)` |
+| **Sort Order** | Display order among aggregation columns |
 
-Click `Options` to set the desired name for the Dashlet and select the report you want to display.
+Available functions:
+
+| Function | Description |
+|---|---|
+| **COUNT** | Total number of records in the group |
+| **COUNT (%)** | Share of the group's records relative to the total record count |
+| **SUM** | Sum of the selected numeric field |
+| **AVG** | Average of the selected numeric field |
+| **MAX** | Maximum value of the selected numeric field |
+| **MIN** | Minimum value of the selected numeric field |
+
+A Summary report supports multiple aggregations. A Crosstable report supports exactly one.
+
+### Period-based aggregation (Summary only)
+
+Summary reports support period-based aggregation. You can define a periodicity (week, month, or year), select a date or datetime field as the period basis, and specify how many periods to include (1–12, default 6). This splits records into time buckets while still respecting the Group By fields.
+
+For example: number of products created over the last six months, split by month, grouped by product status.
+
+## Displaying a report on the Dashboard
+
+Once a report is saved, add it to the Dashboard by creating a new dashlet of the **Report** type. Click **Options** on the dashlet to select which report to display and set the dashlet name.
+
+See [Dashboards and Dashlets](../../01.atrocore/07.dashboards/docs.md#dashlets) for general dashlet management.
