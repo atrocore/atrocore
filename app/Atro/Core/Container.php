@@ -31,14 +31,14 @@ final class Container implements ContainerInterface
     private array $classAliases
         = [
             'userContext'              => \Atro\Core\UserContext::class,
-            'route'                    => \Atro\Core\Factories\RouteFactory::class,
+            'route'                    => \Espo\Core\Utils\Route::class,
             'fileManager'              => \Atro\Core\Utils\FileManager::class,
             'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
             'consoleManager'           => \Atro\Core\ConsoleManager::class,
             'migration'                => \Atro\Core\Migration\Migration::class,
             'twig'                     => \Atro\Core\Twig\Twig::class,
             'pseudoTransactionManager' => \Atro\Core\PseudoTransactionManager::class,
-            'connectionFactory'        => \Atro\Core\Factories\ConnectionFactory::class,
+            'connectionFactory'        => \Atro\Core\ConnectionFactory::class,
             'eventManager'             => \Atro\Core\Factories\EventManager::class,
             'dbal'                     => \Atro\Core\Factories\DbalConnection::class,
             'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
@@ -58,8 +58,8 @@ final class Container implements ContainerInterface
             'idGenerator'              => \Atro\Core\Utils\IdGenerator::class,
             'dataManager'              => \Atro\Core\DataManager::class,
             'schema'                   => \Atro\Core\Utils\Database\Schema\Schema::class,
-            'themeManager'             => \Atro\Core\Factories\ThemeManager::class,
-            'clientManager'            => \Atro\Core\Factories\ClientManager::class,
+            'themeManager'             => \Atro\Core\Utils\ThemeManager::class,
+            'clientManager'            => \Atro\Core\Utils\ClientManager::class,
             'layoutManager'            => \Atro\Core\LayoutManager::class,
             'metadata'                 => \Atro\Core\Utils\Metadata::class,
             'realtimeManager'          => \Atro\Core\RealtimeManager::class,
@@ -68,26 +68,37 @@ final class Container implements ContainerInterface
             'matchingManager'          => \Atro\Core\MatchingManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
-            'aclManager'               => \Espo\Core\Factories\AclManager::class,
+            'aclManager'               => \Espo\Core\AclManager::class,
             'dateTime'                 => \Espo\Core\Factories\DateTime::class,
             'entityManager'            => \Espo\Core\Factories\EntityManager::class,
-            'injectableFactory'        => \Espo\Core\Factories\InjectableFactory::class,
+            'injectableFactory'        => \Espo\Core\InjectableFactory::class,
             'number'                   => \Espo\Core\Factories\Number::class,
-            'ormMetadata'              => \Espo\Core\Factories\OrmMetadata::class,
-            'output'                   => \Espo\Core\Factories\Output::class,
+            'ormMetadata'              => \Espo\Core\Utils\Metadata\OrmMetadata::class,
+            'output'                   => \Espo\Core\Utils\Api\Output::class,
             'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
             'serviceFactory'           => \Espo\Core\ServiceFactory::class,
-            'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
+            'templateFileManager'      => \Espo\Core\Utils\TemplateFileManager::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
         ];
 
     private array $aliases
         = [
-            'connection'         => 'dbal',
-            Connection::class    => 'dbal',
-            EventManager::class  => 'eventManager',
-            EntityManager::class => 'entityManager',
-            'fieldManagerUtil'   => 'fieldManager',
+            'connection'                                    => 'dbal',
+            Connection::class                               => 'dbal',
+            EventManager::class                             => 'eventManager',
+            EntityManager::class                            => 'entityManager',
+            'fieldManagerUtil'                              => 'fieldManager',
+            \Atro\Core\Utils\Config::class                  => 'config',
+            \Espo\Core\Utils\Config::class                  => 'config',
+            \Atro\Core\Utils\Metadata::class                => 'metadata',
+            \Espo\Core\Utils\Metadata::class                => 'metadata',
+            \Atro\Core\Utils\FileManager::class             => 'fileManager',
+            \Espo\Core\Utils\File\Manager::class            => 'fileManager',
+            \Atro\Core\DataManager::class                   => 'dataManager',
+            \Atro\Core\ModuleManager\Manager::class         => 'moduleManager',
+            \Atro\Core\Slim\Slim::class                     => 'slim',
+            \Atro\Core\Utils\ThemeManager::class            => 'themeManager',
+            \Atro\Entities\User::class                      => 'user',
         ];
 
     public function __construct()
@@ -129,15 +140,11 @@ final class Container implements ContainerInterface
     public function get(string $id): mixed
     {
         if ($id === 'user') {
-            return $this->sm->get(UserContext::class)->getUser();
+            return $this->getUser();
         }
 
         if ($id === 'acl') {
-            $user = $this->sm->get(UserContext::class)->getUser();
-            if ($user === null) {
-                throw new Exceptions\Error("ACL requires an authenticated user");
-            }
-            return new \Espo\Core\Acl($this->sm->get('aclManager'), $user);
+            return new \Espo\Core\Acl($this->sm->get('aclManager'), $this->getUser());
         }
 
         return $this->sm->get($id);
@@ -185,7 +192,7 @@ final class Container implements ContainerInterface
         return $this->get('metadata');
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->sm->get(UserContext::class)->getUser();
     }
