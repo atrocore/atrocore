@@ -84,7 +84,7 @@ final class Application
 
         $container->setSm($sm);
 
-        $moduleManager = new ModuleManager($container);
+        $moduleManager = new ModuleManager($sm);
         $sm->setService('moduleManager', $moduleManager);
         foreach ($moduleManager->getModules() as $module) {
             $module->onLoad();

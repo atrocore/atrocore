@@ -19,6 +19,7 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Route;
 use Atro\Core\Container;
 use Atro\Core\Utils\Util;
+use Laminas\ServiceManager\ServiceManager;
 
 abstract class AbstractModule
 {
@@ -37,10 +38,8 @@ abstract class AbstractModule
      */
     protected $package;
 
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected ServiceManager $sm;
+    protected Container $container;
 
     /**
      * @var Unifier
@@ -76,12 +75,18 @@ abstract class AbstractModule
         string $id,
         string $path,
         array $package,
-        Container $container
+        ServiceManager $sm
     ) {
         $this->id = $id;
         $this->path = $path;
         $this->package = $package;
-        $this->container = $container;
+        $this->sm = $sm;
+        $this->container = $sm->get('container');
+    }
+
+    protected function getContainer(): Container
+    {
+        return $this->container;
     }
 
     public static function afterUpdate(): void
@@ -212,7 +217,7 @@ abstract class AbstractModule
     public function loadLayouts(string $scope, string $name, array &$data)
     {
         // load layout class
-        $layoutManager = $this->container->get('layoutManager');
+        $layoutManager = $this->getContainer()->get('layoutManager');
 
         // prepare file path
         $filePath = $layoutManager->concatPath($this->getAppPath() . 'Resources/layouts', $scope);
@@ -220,7 +225,7 @@ abstract class AbstractModule
 
         if (file_exists($fileFullPath)) {
             // get file data
-            $fileData = $this->container->get('fileManager')->getContents($fileFullPath);
+            $fileData = $this->getContainer()->get('fileManager')->getContents($fileFullPath);
 
             // prepare data
             $data = array_merge_recursive($data, Json::decode($fileData, true));
@@ -312,8 +317,8 @@ abstract class AbstractModule
     {
         if (!isset($this->unifier)) {
             $this->unifier = new Unifier(
-                $this->container->get('fileManager'),
-                $this->container->get('metadata'),
+                $this->getContainer()->get('fileManager'),
+                $this->getContainer()->get('metadata'),
                 false
             );
         }
@@ -328,8 +333,8 @@ abstract class AbstractModule
     {
         if (!isset($this->objUnifier)) {
             $this->objUnifier = new Unifier(
-                $this->container->get('fileManager'),
-                $this->container->get('metadata'),
+                $this->getContainer()->get('fileManager'),
+                $this->getContainer()->get('metadata'),
                 true
             );
         }
@@ -343,7 +348,7 @@ abstract class AbstractModule
     protected function getRouteUtil(): Route
     {
         if (is_null($this->routeUtil)) {
-            $this->routeUtil = new Route($this->container->get('fileManager'), $this->container->get('moduleManager'), $this->container->get('dataManager'));
+            $this->routeUtil = new Route($this->getContainer()->get('fileManager'), $this->getContainer()->get('moduleManager'), $this->getContainer()->get('dataManager'));
         }
 
         return $this->routeUtil;
