@@ -1569,70 +1569,86 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.resizable) {
-                this.$el.find('table[data-resizable=true] th:not([data-name="r-checkbox"]):not([data-name="draggableIcon"]):not(.table-spacer):not(:last-child)').each((i, el) => {
-                    const $th = $(el);
-                    const name = $th.data('name');
-                    let widthData = this.getStorage().get('list-column-width', this.getColumnWidthKey());
-                    if (!widthData || typeof widthData !== 'object') {
-                        widthData = {};
-                    }
+                const initResizable = () => {
+                    this.$el.find('table[data-resizable=true] th:not([data-name="r-checkbox"]):not([data-name="draggableIcon"]):not(.table-spacer):not(:last-child)').each((i, el) => {
+                        const $th = $(el);
+                        const name = $th.data('name');
+                        let widthData = this.getStorage().get('list-column-width', this.getColumnWidthKey());
+                        if (!widthData || typeof widthData !== 'object') {
+                            widthData = {};
+                        }
 
-                    if (name && widthData[name]) {
-                        $th.width(widthData[name]);
-                    } else {
-                        $th.width($th.outerWidth() - 40);
-                    }
+                        if (name && widthData[name]) {
+                            $th.width(widthData[name]);
+                        } else {
+                            $th.width($th.outerWidth() - 40);
+                        }
 
-                    $th.attr('width', null);
+                        $th.attr('width', null);
 
-                    if ($th.find('.resizer').length) {
-                        return;
-                    }
-
-                    const $resizer = $('<div class="resizer"></div>');
-                    $th.append($resizer);
-
-                    let startX;
-                    let startWidth;
-
-                    $resizer.on('mousedown', e => {
-                        if (e.which !== 1) {
+                        if ($th.find('.resizer').length) {
                             return;
                         }
 
-                        startX = e.pageX;
-                        startWidth = $th.outerWidth();
+                        const $resizer = $('<div class="resizer"></div>');
+                        $th.append($resizer);
 
-                        $(document).on('mousemove.tableResize', function (e) {
-                            const delta = e.pageX - startX;
-                            const newWidth = Math.min(800, Math.max(50, startWidth + delta));
+                        let startX;
+                        let startWidth;
 
-                            $th.width(newWidth - 40);
-                        });
-
-                        $(document).on('mouseup.tableResize', () => {
-                            $(document).off('.tableResize');
-
-                            const width = $th.width() - 20;
-                            if (!name) {
+                        $resizer.on('mousedown', e => {
+                            if (e.which !== 1) {
                                 return;
                             }
 
-                            const key = this.getColumnWidthKey();
-                            let widthData = this.getStorage().get('list-column-width', key);
-                            if (!widthData || typeof widthData !== 'object') {
-                                widthData = {};
-                            }
+                            startX = e.pageX;
+                            startWidth = $th.outerWidth();
 
-                            widthData[name] = width;
+                            $(document).on('mousemove.tableResize', function (e) {
+                                const delta = e.pageX - startX;
+                                const newWidth = Math.min(800, Math.max(50, startWidth + delta));
 
-                            this.getStorage().set(`list-column-width`, key, widthData);
+                                $th.width(newWidth - 40);
+                            });
+
+                            $(document).on('mouseup.tableResize', () => {
+                                $(document).off('.tableResize');
+
+                                const width = $th.width() - 20;
+                                if (!name) {
+                                    return;
+                                }
+
+                                const key = this.getColumnWidthKey();
+                                let widthData = this.getStorage().get('list-column-width', key);
+                                if (!widthData || typeof widthData !== 'object') {
+                                    widthData = {};
+                                }
+
+                                widthData[name] = width;
+
+                                this.getStorage().set(`list-column-width`, key, widthData);
+                            });
+
+                            e.preventDefault();
+                            e.stopPropagation();
                         });
-
-                        e.preventDefault();
-                        e.stopPropagation();
                     });
-                });
+                };
+
+                const table = this.$el.find('table[data-resizable=true]')[0];
+                if (table && table.offsetParent !== null) {
+                    initResizable();
+                } else if (table) {
+                    const observer = new IntersectionObserver(entries => {
+                        if (entries[0].isIntersecting) {
+                            observer.disconnect();
+                            initResizable();
+                        }
+                    });
+                    observer.observe(table);
+                    this.listenToOnce(this, 'remove', () => observer.disconnect());
+                }
             }
         },
 

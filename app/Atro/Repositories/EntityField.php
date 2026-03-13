@@ -780,22 +780,7 @@ class EntityField extends ReferenceData
                 $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                     'fields' => [
                         $entity->get('code') => [
-                            "extensibleEnumId" => $entity->get($field),
-                            "where"            => [
-                                [
-                                    "condition" => "AND",
-                                    "rules"     => [
-                                        [
-                                            "id"       => "extensibleEnums",
-                                            "field"    => "extensibleEnums",
-                                            "type"     => "string",
-                                            "operator" => "linked_with",
-                                            "value"    => [$entity->get($field)],
-                                        ]
-                                    ],
-                                    "valid"     => true
-                                ]
-                            ]
+                            "extensibleEnumId" => $entity->get($field)
                         ]
                     ]
                 ]);
