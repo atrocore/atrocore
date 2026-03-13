@@ -1,9 +1,6 @@
 {
   "controller": "controllers/record",
   "iconClass": "list-plus",
-  "views": {
-    "detail": "views/extensible-enum/detail"
-  },
   "relationshipPanels": {
     "extensibleEnumOptions": {
       "dragDrop": {
