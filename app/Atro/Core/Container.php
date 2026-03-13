@@ -109,7 +109,7 @@ final class Container implements ContainerInterface
                 'aliases'            => $this->aliases,
                 'services'           => ['container' => $this],
                 'factories'          => [
-                    'user' => fn($c) => $c->get(UserContext::class)->getUser(),
+                    'user' => fn($c) => $c->getUser(),
                 ],
                 'shared'             => ['user' => false],
             ],
@@ -137,6 +137,11 @@ final class Container implements ContainerInterface
         $this->classAliases[$alias] = $className;
     }
 
+    /**
+     * @template T of object
+     * @param class-string<T>|string $id
+     * @return T|mixed
+     */
     public function get(string $id): mixed
     {
         if ($id === 'user') {
