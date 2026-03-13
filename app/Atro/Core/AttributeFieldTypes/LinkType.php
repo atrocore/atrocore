@@ -56,6 +56,13 @@ class LinkType extends AbstractFieldType
             'notStorable' => true
         ];
 
+        $entity->fields[$name] = [
+            'type'         => 'jsonArray',
+            'attributeId'  => $id,
+            'isLinkEntity' => true,
+            'notStorable'  => true
+        ];
+
         if (empty($skipValueProcessing)) {
             $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
         }
@@ -106,7 +113,7 @@ class LinkType extends AbstractFieldType
 
                 if (!empty($row['reference_value'])) {
                     $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $entityName, $foreignName);
-                    $columns = array_unique(['id', $foreignName, $localizedNameColumn]);
+                    $columns = array_map(fn($column) => $this->conn->quoteIdentifier(Util::toUnderScore($column)), array_unique(['id', $foreignName, $localizedNameColumn]));
 
                     try {
                         $referenceItem = $this->conn->createQueryBuilder()

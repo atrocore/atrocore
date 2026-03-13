@@ -46,6 +46,13 @@ class LinkMultipleType extends AbstractFieldType
             'notStorable' => true
         ];
 
+        $entity->fields[$name] = [
+            'type'                     => 'jsonArray',
+            'attributeId'              => $row['id'],
+            'isLinkMultipleCollection' => true,
+            'notStorable'              => true
+        ];
+
         if (empty($skipValueProcessing)) {
             $value = $row[$entity->fields[$name . 'Ids']['column']] ?? null;
             if ($value !== null) {
