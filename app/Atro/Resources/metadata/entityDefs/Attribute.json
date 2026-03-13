@@ -580,17 +580,6 @@
         }
       }
     },
-    "listMultilingual": {
-      "type": "bool",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "htmlSanitizer": {
       "type": "link",
       "entity": "HtmlSanitizer",
