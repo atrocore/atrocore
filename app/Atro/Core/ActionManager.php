@@ -192,8 +192,7 @@ class ActionManager
         }
 
         $this->getEntityManager()->setUser($user);
-        $this->container->setUser($user);
-        $this->container->get('acl')->setUser($user);
+        $this->container->get(\Atro\Core\UserContext::class)->set($user);
     }
 
     protected function getEntityManager(): EntityManager

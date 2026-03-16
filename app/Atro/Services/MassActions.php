@@ -544,21 +544,6 @@ class MassActions extends HasContainer
         return $foreignEntityType;
     }
 
-    /**
-     * @param string $name
-     * @param string $serviceName
-     * @param array  $data
-     *
-     * @return bool
-     */
-    private function qmPush(string $name, string $serviceName, array $data): bool
-    {
-        return $this
-            ->getContainer()
-            ->get('queueManager')
-            ->push($name, $serviceName, $data);
-    }
-
     private function getMetadata(): Metadata
     {
         return $this->getContainer()->get('metadata');

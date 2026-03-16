@@ -13,7 +13,7 @@ namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
 
-class LastViewed extends \Espo\Core\Controllers\Base
+class LastViewed extends \Atro\Controllers\AbstractController
 {
     public function actionGetNavigationHistory($params, $data, $request)
     {

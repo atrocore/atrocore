@@ -368,7 +368,7 @@ class PseudoTransactionManager
 
         $user = $em->getRepository('User')->get($userId);
         $em->setUser($user);
-        $this->getSystemContainer()->setUser($user);
+        $this->getSystemContainer()->get(\Atro\Core\UserContext::class)->set($user);
     }
 
     protected function getUser(): User

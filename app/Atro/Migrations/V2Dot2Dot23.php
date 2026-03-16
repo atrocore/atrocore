@@ -53,10 +53,10 @@ class V2Dot2Dot23 extends Base
     private function rebuildHierarchyRoutes(): void
     {
         $container = (new Application())->getContainer();
-        $em = $container->getEntityManager();
-        $dbal = $container->getDbal();
+        $em = $container->get('entityManager');
+        $dbal = $container->get('dbal');
 
-        foreach ($container->getMetadata()->get("scopes") ?? [] as $entityName => $defs) {
+        foreach ($container->get('metadata')->get("scopes") ?? [] as $entityName => $defs) {
             if (!empty($defs['type']) && $defs['type'] === 'Hierarchy') {
                 try {
                     $tableName = Util::toUnderScore(lcfirst($entityName));

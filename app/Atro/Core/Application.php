@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\Container\AbstractFactory as ContainerAbstractFactory;
+use Atro\Core\Container\ServiceManagerConfig;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Slim\Validator;
 use Atro\Services\Installer;
 use Espo\Core\EntryPointManager;
@@ -22,6 +25,7 @@ use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer;
+use Laminas\ServiceManager\ServiceManager;
 
 final class Application
 {
@@ -60,8 +64,34 @@ final class Application
 
         $GLOBALS['track']['start'] = microtime(true);
 
-        // set container
-        $this->container = new Container();
+        // Bootstrap DI: Application → SM (primary) → Container (legacy adapter)
+        $smConfig      = new ServiceManagerConfig();
+        $container     = new Container($smConfig);
+        $abstractFactory = new ContainerAbstractFactory($smConfig, $container);
+
+        $sm = new ServiceManager(
+            [
+                'abstract_factories' => [$abstractFactory],
+                'aliases'            => $smConfig->getAliases(),
+                'services'           => ['container' => $container],
+                'factories'          => [
+                    'user' => fn($c) => $c->get(UserContext::class)->getUser(),
+                    'acl'  => fn($c) => $c->get(UserContext::class)->getAcl($c->get('aclManager')),
+                ],
+                'shared'             => ['user' => false, 'acl' => false],
+            ],
+            $container
+        );
+
+        $container->setSm($sm);
+
+        $moduleManager = new ModuleManager($sm);
+        $sm->setService('moduleManager', $moduleManager);
+        foreach ($moduleManager->getModules() as $module) {
+            $module->onLoad();
+        }
+
+        $this->container = $container;
 
         // set log
         $GLOBALS['log'] = $this->getContainer()->get('log');

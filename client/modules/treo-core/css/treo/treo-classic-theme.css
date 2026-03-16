@@ -19008,6 +19008,9 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: flex !important;
     align-items: center;
     text-align: center;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .compare-records[data-mode="merge"] .compare-panel table td.cell .field:not(:has( input[type="checkbox"])):has(input) {
@@ -19110,10 +19113,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .compare-records table tr th,
 .compare-entities table tr th {
-    white-space: nowrap;
+    max-width: 22em;
     overflow: hidden;
-    max-width: 100%;
-    text-overflow: ellipsis;
 }
 
 .compare-records table tr th,
@@ -19129,6 +19130,15 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     font-weight: 500;
 }
 
+.compare-records table tr th > a,
+.compare-entities table tr th > a {
+    display: inline-block;
+    max-width: 22em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
 
 .compare-records table tr th.confirmed,
 .compare-records table tr th.golden {
@@ -19637,4 +19647,14 @@ body > .error-container .error-links a {
 .dashlet-body .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]),
 .list-container.sharing-panel .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]) {
     min-width: auto;
+}
+
+.preview-button-container {
+    margin-top: 20px;
+    padding: 0 20px;
+    text-align: right;
+    width: 100%;
+    position: sticky;
+    left: 0;
+    right: 0;
 }

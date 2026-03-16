@@ -2002,7 +2002,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getExtensibleEnumId() {
-            let extensibleEnumId = this.model.getFieldParam(this.name, 'extensibleEnumId') ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            const name = this.originalName || this.name;
+            let extensibleEnumId = this.model.getFieldParam(name, 'extensibleEnumId') ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', name, 'extensibleEnumId']);
             if (this.params.extensibleEnumId) {
                 extensibleEnumId = this.params.extensibleEnumId;
             }

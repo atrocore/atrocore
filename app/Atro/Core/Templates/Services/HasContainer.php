@@ -35,17 +35,6 @@ class HasContainer extends Base
         return $this->getInjection('container');
     }
 
-    protected function reloadDependency(string $name): void
-    {
-        $this->getContainer()->reload($name);
-    }
-
-    protected function rebuild(): void
-    {
-        $this->reloadDependency('entityManager');
-        $this->getContainer()->get('dataManager')->rebuild();
-    }
-
     protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
