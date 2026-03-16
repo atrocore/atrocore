@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Core\Container\ServiceManagerConfig;
+use Atro\Entities\User;
 use Laminas\ServiceManager\ServiceManager;
 use Psr\Container\ContainerInterface;
 
@@ -63,4 +64,8 @@ final class Container implements ContainerInterface
         return $this->sm->has($id);
     }
 
+    public function setUser(User $user): void
+    {
+        $this->get(UserContext::class)->set($user);
+    }
 }
