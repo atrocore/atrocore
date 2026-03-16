@@ -14,14 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Core\Container\ServiceManagerConfig;
-use Atro\Core\EventManager\Manager as EventManager;
-use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Atro\Core\Utils\Config;
-use Atro\Core\Utils\Language;
-use Atro\Core\Utils\Metadata;
-use Atro\Entities\User;
-use Doctrine\DBAL\Connection;
-use Espo\ORM\EntityManager;
 use Laminas\ServiceManager\ServiceManager;
 use Psr\Container\ContainerInterface;
 
@@ -46,15 +38,6 @@ final class Container implements ContainerInterface
     }
 
     /**
-     * Resolve a service name to its implementing class name.
-     * Used by ContainerAbstractFactory (via ServiceManagerConfig) and available for external callers.
-     */
-    public function resolveClass(string $name): string
-    {
-        return $this->smConfig->resolveClass($name);
-    }
-
-    /**
      * Register a short alias → FQCN mapping so the SM can lazily create that service.
      *
      * @deprecated Prefer registering services directly in the ServiceManager. This method
@@ -73,11 +56,11 @@ final class Container implements ContainerInterface
     public function get(string $id): mixed
     {
         if ($id === 'user') {
-            return $this->getUser();
+            return $this->sm->get(UserContext::class)->getUser();
         }
 
         if ($id === 'acl') {
-            return new \Espo\Core\Acl($this->sm->get('aclManager'), $this->getUser());
+            return new \Espo\Core\Acl($this->sm->get('aclManager'), $this->sm->get(UserContext::class)->getUser());
         }
 
         return $this->sm->get($id);
@@ -105,38 +88,4 @@ final class Container implements ContainerInterface
         return $this;
     }
 
-    public function getDbal(): Connection
-    {
-        return $this->get('dbal');
-    }
-
-    public function getEntityManager(): EntityManager
-    {
-        return $this->get('entityManager');
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->get('config');
-    }
-
-    public function getMetadata(): Metadata
-    {
-        return $this->get('metadata');
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->sm->get(UserContext::class)->getUser();
-    }
-
-    public function getDataManager(): DataManager
-    {
-        return $this->get('dataManager');
-    }
-
-    public function getLanguage(): Language
-    {
-        return $this->get('language');
-    }
 }
