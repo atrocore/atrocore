@@ -16,14 +16,14 @@ namespace Atro\Core;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Http\RequestWrapper;
 use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\Entities\User;
 use Espo\ORM\EntityManager;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Psr\Http\Message\ServerRequestInterface;
 
 class ControllerManager
 {
@@ -71,12 +71,10 @@ class ControllerManager
     }
 
     public function process(
-        string    $controllerName,
-        string    $actionName,
-        array     $params,
-                  $data,
-        ?Request  $request,
-        ?Response $response
+        string                 $controllerName,
+        string                 $actionName,
+        array                  $params,
+        ServerRequestInterface $request
     ): string
     {
         $controllerClassName = self::getControllerClassName($controllerName, $this->getMetadata());
@@ -89,9 +87,13 @@ class ControllerManager
             throw new NotFound("Action '$actionName' for controller '$controllerName' is not found");
         }
 
-        if ($data && stristr($request->getContentType(), 'application/json')) {
+        $data = (string) $request->getBody();
+        if ($data && stristr($request->getHeaderLine('Content-Type'), 'application/json')) {
             $data = json_decode($data);
         }
+
+        // Wrap PSR-7 request in a compatibility shim so legacy controllers keep working unchanged.
+        $requestWrapper = new RequestWrapper($request);
 
         $controller = new $controllerClassName($this->getContainer(), $request->getMethod(), $controllerName);
 
@@ -121,7 +123,7 @@ class ControllerManager
         }
 
         if (method_exists($controller, $beforeMethodName)) {
-            $controller->$beforeMethodName($params, $data, $request, $response);
+            $controller->$beforeMethodName($params, $data, $requestWrapper, null);
         }
 
         $this->dispatch(
@@ -130,7 +132,7 @@ class ControllerManager
             'before' . ucfirst($primaryActionMethodName),
             $params,
             $data,
-            $request
+            $requestWrapper
         );
 
         if (
@@ -155,9 +157,15 @@ class ControllerManager
             if (!empty($params['id'])) {
                 $historyRecord->set('targetId', $params['id']);
             }
+
+            $headers = $request->getHeaders();
+            foreach (['authorization-token', 'authorization'] as $sensitiveHeader) {
+                unset($headers[$sensitiveHeader], $headers[ucfirst($sensitiveHeader)]);
+            }
+
             $historyRecordData = [
                 'request' => [
-                    'headers' => $request->headers->all(),
+                    'headers' => $headers,
                     'params'  => $params
                 ]
             ];
@@ -170,16 +178,11 @@ class ControllerManager
                 $historyRecordData['request']['body'] = $data;
             }
 
-            foreach ($historyRecordData['request']['headers'] ?? [] as $k => $v) {
-                if (in_array(trim(strtolower($k)), ['authorization-token', 'authorization'])) {
-                    unset($historyRecordData['request']['headers'][$k]);
-                }
-            }
             $historyRecord->set('data', $historyRecordData);
             $this->getEntityManager()->saveEntity($historyRecord);
         }
 
-        $result = $controller->$primaryActionMethodName($params, $data, $request, $response);
+        $result = $controller->$primaryActionMethodName($params, $data, $requestWrapper, null);
 
         $this->dispatch(
             'afterAction',
@@ -187,19 +190,16 @@ class ControllerManager
             'after' . ucfirst($primaryActionMethodName),
             $params,
             $data,
-            $request,
+            $requestWrapper,
             $result
         );
 
         if (method_exists($controller, $afterMethodName)) {
-            $controller->$afterMethodName($params, $data, $request, $response);
+            $controller->$afterMethodName($params, $data, $requestWrapper, null);
         }
 
         if (!empty($historyRecord)) {
-            $historyRecordData['response'] = [
-                'status' => $response->getStatus(),
-//                'body'   => $result
-            ];
+            $historyRecordData['response'] = ['status' => 200];
             $historyRecord->set('data', $historyRecordData);
             $this->getEntityManager()->saveEntity($historyRecord);
         }

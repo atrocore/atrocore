@@ -373,15 +373,6 @@
     }
   },
   {
-    "route": "Dashlet/:dashletName",
-    "method": "get",
-    "params": {
-      "controller": "Dashlet",
-      "action": "GetDashlet",
-      "dashletName": ":dashletName"
-    }
-  },
-  {
     "route": "/Metadata",
     "method": "get",
     "params": {

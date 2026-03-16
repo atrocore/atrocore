@@ -43,7 +43,6 @@ class ServiceManagerConfig
         'mailSender'               => \Atro\Core\Mail\Sender::class,
         'pdo'                      => \Atro\Core\Factories\Pdo::class,
         'controllerManager'        => \Atro\Core\ControllerManager::class,
-        'slim'                     => \Atro\Core\Slim\Slim::class,
         'language'                 => \Atro\Core\Utils\Language::class,
         'baseLanguage'             => \Atro\Core\Utils\Language::class,
         'defaultLanguage'          => \Atro\Core\Factories\DefaultLanguage::class,
@@ -71,6 +70,7 @@ class ServiceManagerConfig
         'number'                   => \Espo\Core\Factories\Number::class,
         'ormMetadata'              => \Espo\Core\Utils\Metadata\OrmMetadata::class,
         'output'                   => \Espo\Core\Utils\Api\Output::class,
+        \Laminas\Stratigility\MiddlewarePipe::class => \Atro\Core\Factories\HttpPipeline::class,
         'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
         'serviceFactory'           => \Espo\Core\ServiceFactory::class,
         'templateFileManager'      => \Espo\Core\Utils\TemplateFileManager::class,
@@ -91,7 +91,6 @@ class ServiceManagerConfig
         \Espo\Core\Utils\File\Manager::class            => 'fileManager',
         \Atro\Core\DataManager::class                   => 'dataManager',
         \Atro\Core\ModuleManager\Manager::class         => 'moduleManager',
-        \Atro\Core\Slim\Slim::class                     => 'slim',
         \Atro\Core\Utils\ThemeManager::class            => 'themeManager',
         \Atro\Entities\User::class                      => 'user',
     ];

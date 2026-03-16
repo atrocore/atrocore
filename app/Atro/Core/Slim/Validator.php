@@ -18,6 +18,8 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\OpenApiGenerator;
 use League\OpenAPIValidation\PSR7\OperationAddress;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Validator
 {
@@ -28,25 +30,23 @@ class Validator
         $this->container = $container;
     }
 
-    public function validateRequest(array $routeConfig): void
+    public function validateRequest(array $routeConfig, ServerRequestInterface $request): void
     {
         if (!empty($validatorBuilder = $this->getValidatorBuilder($routeConfig))) {
             try {
-                $validatorBuilder->getRequestValidator()
-                    ->validate($this->getSlim()->request()->getPsrRequest());
+                $validatorBuilder->getRequestValidator()->validate($request);
             } catch (\Throwable $e) {
                 throw new BadRequest($e->getMessage());
             }
         }
     }
 
-    public function validateResponse(array $routeConfig): void
+    public function validateResponse(array $routeConfig, ResponseInterface $response): void
     {
         if (!empty($validatorBuilder = $this->getValidatorBuilder($routeConfig))) {
             try {
                 $operation = new OperationAddress(preg_replace('/:(\w+)/', '{$1}', $routeConfig['route']), $routeConfig['method']);
-                $validatorBuilder->getResponseValidator()
-                    ->validate($operation, $this->getSlim()->response()->getPsrResponse());
+                $validatorBuilder->getResponseValidator()->validate($operation, $response);
             } catch (\Throwable $e) {
                 throw new BadRequest($e->getMessage());
             }
@@ -64,8 +64,4 @@ class Validator
         return (new ValidatorBuilder())->fromJson(json_encode($schema));
     }
 
-    protected function getSlim()
-    {
-        return $this->container->get('slim');
-    }
 }
