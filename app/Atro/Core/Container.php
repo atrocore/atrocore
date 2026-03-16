@@ -74,18 +74,4 @@ final class Container implements ContainerInterface
         return $this->sm->has($id);
     }
 
-    /**
-     * Force re-creation of a cached service on the next get() call.
-     * Pass the canonical service name (not an alias).
-     */
-    public function reload(string $name): self
-    {
-        $fresh = $this->sm->build($name);
-        $this->sm->setAllowOverride(true);
-        $this->sm->setService($name, $fresh);
-        $this->sm->setAllowOverride(false);
-
-        return $this;
-    }
-
 }
