@@ -37,7 +37,8 @@ class LinkMultipleType extends AbstractFieldType
             'column'                   => "json_value",
             'required'                 => !empty($row['is_required']),
             'fullWidth'                => !empty($attributeData['fullWidth']),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled']),
+            'isLinkMultipleIdList'     => true
         ];
 
         $entity->fields[$name . 'Names'] = [
