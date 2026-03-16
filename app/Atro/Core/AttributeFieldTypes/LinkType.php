@@ -47,7 +47,8 @@ class LinkType extends AbstractFieldType
             'attributeId'              => $id,
             'column'                   => 'reference_value',
             'required'                 => !empty($row['is_required']),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled']),
+            'isLinkEntityId'           => true
         ];
 
         $entity->fields[$name . 'Name'] = [
