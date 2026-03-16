@@ -563,6 +563,12 @@ class Base
             case 'last_year':
                 $operator = 'lastYear';
                 break;
+            case 'similar':
+                $operator = 'similar';
+                break;
+            case 'word_similar':
+                $operator = 'wordSimilar';
+                break;
         }
 
         return $operator;
@@ -1790,6 +1796,32 @@ class Base
                     $part[$attribute . '!*'] = '%' . $value . '%';
                     break;
 
+                case 'similar':
+                    if (!is_null($value) && $value !== '') {
+                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+                        $colName = Util::toUnderScore($attribute);
+                        $paramVal = 'sim_v_' . IdGenerator::unsortableId();
+                        $paramThr = 'sim_t_' . IdGenerator::unsortableId();
+                        $part['innerSql'] = [
+                            'sql'        => 'similarity(' . QueryConverter::TABLE_ALIAS . '.' . $colName . ', :' . $paramVal . ') >= :' . $paramThr,
+                            'parameters' => [$paramVal => $value, $paramThr => $threshold],
+                        ];
+                    }
+                    break;
+
+                case 'wordSimilar':
+                    if (!is_null($value) && $value !== '') {
+                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+                        $colName = Util::toUnderScore($attribute);
+                        $paramVal = 'wsim_v_' . IdGenerator::unsortableId();
+                        $paramThr = 'wsim_t_' . IdGenerator::unsortableId();
+                        $part['innerSql'] = [
+                            'sql'        => 'word_similarity(:' . $paramVal . ', ' . QueryConverter::TABLE_ALIAS . '.' . $colName . ') >= :' . $paramThr,
+                            'parameters' => [$paramVal => $value, $paramThr => $threshold],
+                        ];
+                    }
+                    break;
+
                 case 'notEquals':
                 case 'notOn':
                     $part[$attribute . '!='] = $value;
@@ -2506,10 +2538,27 @@ class Base
             $textFilter = str_replace('*', '%', $textFilter);
         }
 
+        $fuzzyTextTypes = ['varchar', 'text', 'wysiwyg'];
+        $useFuzzy = !$skipWidlcards
+            && mb_strlen($textFilter) >= 3
+            && class_exists('AdvancedDataManagement\Core\FuzzySearch') &&
+            \AdvancedDataManagement\Core\FuzzySearch::isAvailable($this->getEntityManager()->getDbal());
+
+        $fuzzyFields = [];
+
         foreach ($fieldList as $field) {
             $attributeType = null;
             if (!empty($fieldDefs[$field]['type'])) {
                 $attributeType = $fieldDefs[$field]['type'];
+            }
+
+            if ($useFuzzy && in_array($attributeType, $fuzzyTextTypes)) {
+                $fuzzyFields[] = $field;
+                continue;
+            }
+
+            if ($useFuzzy && in_array($attributeType, ['int', 'float', 'bool', 'date', 'datetime', 'enum'])) {
+                continue;
             }
 
             if (in_array($attributeType, ['int', 'float'])) {
@@ -2564,8 +2613,8 @@ class Base
             if ($field === 'name' && $autocompletion) {
                 $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($expression) {
                     $ta = $mapper->getQueryConverter()->getMainTableAlias();
-                    $parameter = 'name_' . Util::generateUniqueHash();
-                    $alias = 'match_priority_' . Util::generateUniqueHash();
+                    $parameter = 'name_' . IdGenerator::unsortableId();
+                    $alias = 'match_priority_' . IdGenerator::unsortableId();
                     $qb->addSelect("CASE WHEN LOWER($ta.name) LIKE LOWER(:$parameter) THEN 1 ELSE 2 END AS $alias");
                     $qb->orderBy("$alias");
                     $qb->addOrderBy("$ta.name");
@@ -2574,15 +2623,50 @@ class Base
             }
         }
 
-        if (count($group) === 0) {
+        if (!empty($fuzzyFields)) {
+            $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+            $words = array_values(array_filter(array_map('trim', explode(' ', $textFilter))));
+            $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($fuzzyFields, $words, $textFilter, $threshold, $autocompletion) {
+                $ta = $mapper->getQueryConverter()->getMainTableAlias();
+
+                // Each word must match at least one fuzzy field (AND of OR-per-field)
+                foreach ($words as $word) {
+                    $paramVal = 'ftrgm_v_' . IdGenerator::unsortableId();
+                    $paramThr = 'ftrgm_t_' . IdGenerator::unsortableId();
+                    $conditions = [];
+                    foreach ($fuzzyFields as $f) {
+                        $colName = Util::toUnderScore($f);
+                        $conditions[] = "word_similarity(:$paramVal, $ta.$colName) >= :$paramThr";
+                    }
+                    $qb->andWhere('(' . implode(' OR ', $conditions) . ')');
+                    $qb->setParameter($paramVal, $word);
+                    $qb->setParameter($paramThr, $threshold);
+                }
+
+                // Autocomplete: order by similarity of full input to name
+                if ($autocompletion && in_array('name', $fuzzyFields)) {
+                    $paramVal  = 'ftrgm_ord_' . IdGenerator::unsortableId();
+                    $scoreAlias = 'fuzzy_name_score_' . IdGenerator::unsortableId();
+                    $colName   = Util::toUnderScore('name');
+                    $qb->addSelect("word_similarity(:$paramVal, $ta.$colName) AS $scoreAlias");
+                    $qb->orderBy($scoreAlias, 'DESC');
+                    $qb->addOrderBy("$ta.$colName");
+                    $qb->setParameter($paramVal, $textFilter);
+                }
+            };
+        }
+
+        if (empty($fuzzyFields) && count($group) === 0) {
             $result['whereClause'][] = [
                 'id' => null
             ];
         }
 
-        $result['whereClause'][] = [
-            'OR' => $group
-        ];
+        if (count($group) > 0) {
+            $result['whereClause'][] = [
+                'OR' => $group
+            ];
+        }
     }
 
     public function applyAccess(&$result)

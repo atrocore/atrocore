@@ -19,6 +19,17 @@ use Espo\ORM\Entity;
 
 class Similar extends AbstractMatchingRule
 {
+    private function isFuzzySearchAvailable(): bool
+    {
+        return class_exists('AdvancedDataManagement\Core\FuzzySearch')
+            && \AdvancedDataManagement\Core\FuzzySearch::isAvailable($this->getConnection());
+    }
+
+    private function getSimilarityScoreAlias(): string
+    {
+        return 'sim_score_' . Util::toUnderScore($this->rule->get('field'));
+    }
+
     public static function getSupportedFieldTypes(): array
     {
         return [
@@ -48,6 +59,15 @@ class Similar extends AbstractMatchingRule
         } elseif (is_array($value)) {
             $sqlPart = "{$alias}.{$escapedColumnName} LIKE :$parameter";
             $qb->setParameter($parameter, '%"' . reset($value) . '"%');
+        } elseif ($this->isFuzzySearchAvailable()) {
+            $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+            $thresholdParam = 'sim_thr_' . IdGenerator::unsortableId();
+            $scoreAlias = $this->getSimilarityScoreAlias();
+
+            $sqlPart = "similarity({$alias}.{$escapedColumnName}, :{$parameter}) >= :{$thresholdParam}";
+            $qb->setParameter($parameter, (string)$value);
+            $qb->setParameter($thresholdParam, $threshold);
+            $qb->addSelect("similarity({$alias}.{$escapedColumnName}, :{$parameter}) AS {$scoreAlias}");
         } else {
             $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :$parameter";
             $qb->setParameter($parameter, str_replace(' ', '', strtolower(trim($value))));
@@ -76,10 +96,26 @@ class Similar extends AbstractMatchingRule
 
             sort($stageValue);
             sort($masterValue);
-        } else {
-            $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
-            $masterValue = str_replace(' ', '', strtolower(trim((string)$masterEntityData[$field])));
+
+            if ($stageValue === $masterValue) {
+                return $this->rule->get('weight') ?? 0;
+            }
+
+            return 0;
         }
+
+        if ($this->isFuzzySearchAvailable()) {
+            $scoreAlias = $this->getSimilarityScoreAlias();
+            $scoreKey = Util::toCamelCase($scoreAlias);
+            $score = $masterEntityData[$scoreKey] ?? $masterEntityData[$scoreAlias] ?? null;
+
+            if ($score !== null) {
+                return (int)round((float)$score * ($this->rule->get('weight') ?? 0));
+            }
+        }
+
+        $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
+        $masterValue = str_replace(' ', '', strtolower(trim((string)$masterEntityData[$field])));
 
         if ($stageValue === $masterValue) {
             return $this->rule->get('weight') ?? 0;

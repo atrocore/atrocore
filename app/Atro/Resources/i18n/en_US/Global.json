@@ -1349,7 +1349,9 @@
       "is_not_my_team": "is not my team",
       "future": "future",
       "past": "past",
-      "today": "today"
+      "today": "today",
+      "similar": "similar to",
+      "word_similar": "word similar to"
     },
     "errors": {
       "no_filter": "No filter selected",

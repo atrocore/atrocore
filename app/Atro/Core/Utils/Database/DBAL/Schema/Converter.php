@@ -110,7 +110,7 @@ class Converter
             }
 
             $tableName = Util::toUnderScore($entityName);
-            if(empty($tableName)) {
+            if (empty($tableName)) {
                 continue;
             }
             if ($schema->hasTable($tableName)) {
@@ -121,6 +121,8 @@ class Converter
 
             $primaryColumns = [];
             $uniqueFields = [];
+            $isFuzzySearchAvailable = class_exists('AdvancedDataManagement\Core\FuzzySearch') &&
+                \AdvancedDataManagement\Core\FuzzySearch::isAvailable($this->connection);
 
             foreach ($entityDefs['fields'] as $fieldName => $fieldDefs) {
                 if (!empty($fieldDefs['notStorable']) || empty($fieldDefs['type']) || $fieldDefs['type'] === 'foreign') {
@@ -132,6 +134,10 @@ class Converter
                 }
 
                 $this->addColumn($schema, $table, $fieldName, $fieldDefs);
+
+                if ($isFuzzySearchAvailable && in_array($fieldDefs['type'], ['text', 'wysiwyg', 'script', 'varchar'])) {
+                    $table->addIndex([Util::toUnderScore($fieldName)], self::generateIndexName($entityName, 'Gin_' . $fieldName), ['gin'], ['using' => 'gin_trgm_ops']);
+                }
 
                 if (
                     !empty($fieldDefs['unique'])
@@ -224,6 +230,7 @@ class Converter
 
         return $schema;
     }
+
 
     public function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): void
     {

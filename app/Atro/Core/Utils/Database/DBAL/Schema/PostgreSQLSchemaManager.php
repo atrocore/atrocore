@@ -13,6 +13,52 @@ namespace Atro\Core\Utils\Database\DBAL\Schema;
 
 class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaManager
 {
+    protected function _getPortableTableIndexesList($tableIndexes, $tableName = null)
+    {
+        $ginIndexNames = [];
+        foreach ($tableIndexes as $row) {
+            if (($row['amname'] ?? '') === 'gin') {
+                $ginIndexNames[$row['relname']] = true;
+            }
+        }
+
+        $buffer = [];
+        foreach ($tableIndexes as $row) {
+            $colNumbers    = array_map('intval', explode(' ', $row['indkey']));
+            $columnNameSql = sprintf(
+                'SELECT attnum, attname FROM pg_attribute WHERE attrelid=%d AND attnum IN (%s) ORDER BY attnum ASC',
+                $row['indrelid'],
+                implode(' ,', $colNumbers)
+            );
+
+            $indexColumns = $this->_conn->fetchAllAssociative($columnNameSql);
+
+            foreach ($colNumbers as $colNum) {
+                foreach ($indexColumns as $colRow) {
+                    if ($colNum !== (int)$colRow['attnum']) {
+                        continue;
+                    }
+
+                    $entry = [
+                        'key_name'    => $row['relname'],
+                        'column_name' => trim($colRow['attname']),
+                        'non_unique'  => !$row['indisunique'],
+                        'primary'     => $row['indisprimary'],
+                        'where'       => $row['where'],
+                    ];
+
+                    if (isset($ginIndexNames[$row['relname']])) {
+                        $entry['flags'] = ['gin'];
+                    }
+
+                    $buffer[] = $entry;
+                }
+            }
+        }
+
+        return \Doctrine\DBAL\Schema\AbstractSchemaManager::_getPortableTableIndexesList($buffer, $tableName);
+    }
+
     protected function _getPortableTableColumnDefinition($tableColumn)
     {
         $column = parent::_getPortableTableColumnDefinition($tableColumn);
