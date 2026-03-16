@@ -75,9 +75,10 @@ final class Application
                 'aliases'            => $smConfig->getAliases(),
                 'services'           => ['container' => $container],
                 'factories'          => [
-                    'user' => fn($c) => $c->get(\Atro\Core\UserContext::class)->getUser(),
+                    'user' => fn($c) => $c->get(UserContext::class)->getUser(),
+                    'acl'  => fn($c) => new \Espo\Core\Acl($c->get('aclManager'), $c->get(UserContext::class)->getUser()),
                 ],
-                'shared'             => ['user' => false],
+                'shared'             => ['user' => false, 'acl' => false],
             ],
             $container
         );
