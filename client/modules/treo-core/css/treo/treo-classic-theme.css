@@ -19648,3 +19648,13 @@ body > .error-container .error-links a {
 .list-container.sharing-panel .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]) {
     min-width: auto;
 }
+
+.preview-button-container {
+    margin-top: 20px;
+    padding: 0 20px;
+    text-align: right;
+    width: 100%;
+    position: sticky;
+    left: 0;
+    right: 0;
+}
