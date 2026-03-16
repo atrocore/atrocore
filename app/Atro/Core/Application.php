@@ -75,7 +75,7 @@ final class Application
                 'aliases'            => $smConfig->getAliases(),
                 'services'           => ['container' => $container],
                 'factories'          => [
-                    'user' => fn($c) => $c->getUser(),
+                    'user' => fn($c) => $c->get(\Atro\Core\UserContext::class)->getUser(),
                 ],
                 'shared'             => ['user' => false],
             ],

@@ -55,10 +55,6 @@ final class Container implements ContainerInterface
      */
     public function get(string $id): mixed
     {
-        if ($id === 'user') {
-            return $this->sm->get(UserContext::class)->getUser();
-        }
-
         if ($id === 'acl') {
             return new \Espo\Core\Acl($this->sm->get('aclManager'), $this->sm->get(UserContext::class)->getUser());
         }
@@ -68,7 +64,7 @@ final class Container implements ContainerInterface
 
     public function has(string $id): bool
     {
-        if ($id === 'user' || $id === 'acl') {
+        if ($id === 'acl') {
             return true;
         }
         return $this->sm->has($id);
