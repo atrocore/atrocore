@@ -1073,7 +1073,7 @@ class Hierarchy extends Base
             }
 
             $parentValue = $parent[$underScoredField];
-            $childValue = $child[$underScoredField];
+            $childValue = $child[$underScoredField] ?? null;
 
             if ($this->areValuesEqual($entity, $field, $parentValue, $childValue)) {
                 $inputData->$field = $value;
