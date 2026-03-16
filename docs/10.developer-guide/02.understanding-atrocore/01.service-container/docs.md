@@ -41,10 +41,10 @@ Switching to Laminas ServiceManager brings several concrete advantages over main
 
 ```php
 // By class name (preferred — PhpStorm infers the return type)
-$entityManager = $container->get(\Espo\ORM\EntityManager::class);
+$entityManager = $container->get(\Atro\Core\Utils\Metadata::class);
 
 // By alias
-$entityManager = $container->get('entityManager');
+$entityManager = $container->get('metadata');
 ```
 
 ---
