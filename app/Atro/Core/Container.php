@@ -13,233 +13,54 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Atro\Core\EventManager\Manager as EventManager;
-use Atro\Core\Factories\FactoryInterface as Factory;
-use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Atro\Core\Utils\Config;
-use Atro\Core\Utils\Language;
-use Atro\Core\Utils\Metadata;
-use Atro\Entities\User;
-use Doctrine\DBAL\Connection;
-use Espo\Core\Interfaces\Injectable;
-use Espo\ORM\EntityManager;
+use Atro\Core\Container\ServiceManagerConfig;
+use Laminas\ServiceManager\ServiceManager;
+use Psr\Container\ContainerInterface;
 
-final class Container
+final class Container implements ContainerInterface
 {
-    private array $data = [];
+    private ?ServiceManager $sm = null;
+    private ServiceManagerConfig $smConfig;
 
-    private array $classAliases
-        = [
-            'route'                    => \Atro\Core\Factories\RouteFactory::class,
-            'fileManager'              => \Atro\Core\Utils\FileManager::class,
-            'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
-            'consoleManager'           => \Atro\Core\ConsoleManager::class,
-            'migration'                => \Atro\Core\Migration\Migration::class,
-            'twig'                     => \Atro\Core\Twig\Twig::class,
-            'pseudoTransactionManager' => \Atro\Core\PseudoTransactionManager::class,
-            'connectionFactory'        => \Atro\Core\Factories\ConnectionFactory::class,
-            'eventManager'             => \Atro\Core\Factories\EventManager::class,
-            'dbal'                     => \Atro\Core\Factories\DbalConnection::class,
-            'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
-            'memcachedStorage'         => \Atro\Core\Factories\MemcachedStorage::class,
-            'log'                      => \Atro\Core\Factories\Log::class,
-            'mailSender'               => \Atro\Core\Mail\Sender::class,
-            'pdo'                      => \Atro\Core\Factories\Pdo::class,
-            'controllerManager'        => \Atro\Core\ControllerManager::class,
-            'slim'                     => \Atro\Core\Slim\Slim::class,
-            'language'                 => \Atro\Core\Utils\Language::class,
-            'baseLanguage'             => \Atro\Core\Utils\Language::class,
-            'defaultLanguage'          => \Atro\Core\Factories\DefaultLanguage::class,
-            'config'                   => \Atro\Core\Utils\Config::class,
-            'htmlSanitizer'            => \Atro\Core\Utils\HTMLSanitizer::class,
-            'actionManager'            => \Atro\Core\ActionManager::class,
-            'fieldManager'             => \Atro\Core\Utils\FieldManager::class,
-            'idGenerator'              => \Atro\Core\Utils\IdGenerator::class,
-            'dataManager'              => \Atro\Core\DataManager::class,
-            'schema'                   => \Atro\Core\Utils\Database\Schema\Schema::class,
-            'themeManager'             => \Atro\Core\Factories\ThemeManager::class,
-            'clientManager'            => \Atro\Core\Factories\ClientManager::class,
-            'layoutManager'            => \Atro\Core\LayoutManager::class,
-            'metadata'                 => \Atro\Core\Utils\Metadata::class,
-            'realtimeManager'          => \Atro\Core\RealtimeManager::class,
-            'seederFactory'            => \Atro\Core\SeederFactory::class,
-            'condition'                => \Atro\Core\ConditionChecker::class,
-            'matchingManager'          => \Atro\Core\MatchingManager::class,
-            'crypt'                    => \Espo\Core\Utils\Crypt::class,
-            'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
-            'acl'                      => \Espo\Core\Factories\Acl::class,
-            'aclManager'               => \Espo\Core\Factories\AclManager::class,
-            'dateTime'                 => \Espo\Core\Factories\DateTime::class,
-            'entityManager'            => \Espo\Core\Factories\EntityManager::class,
-            'injectableFactory'        => \Espo\Core\Factories\InjectableFactory::class,
-            'number'                   => \Espo\Core\Factories\Number::class,
-            'ormMetadata'              => \Espo\Core\Factories\OrmMetadata::class,
-            'output'                   => \Espo\Core\Factories\Output::class,
-            'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
-            'serviceFactory'           => \Espo\Core\ServiceFactory::class,
-            'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
-            'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
-        ];
-
-    private array $aliases
-        = [
-            'connection'         => 'dbal',
-            Connection::class    => 'dbal',
-            EventManager::class  => 'eventManager',
-            EntityManager::class => 'entityManager',
-            'fieldManagerUtil'   => 'fieldManager'
-        ];
-
-    public function __construct()
+    public function __construct(ServiceManagerConfig $smConfig)
     {
-        $this->data['moduleManager'] = new ModuleManager($this);
-        foreach ($this->data['moduleManager']->getModules() as $module) {
-            $module->onLoad();
-        }
+        $this->smConfig = $smConfig;
     }
 
+    /**
+     * Called by Application after the ServiceManager is fully configured.
+     * Two-phase init: Container is created first (so it can be passed to ContainerAbstractFactory
+     * and registered as SM creationContext), then SM is injected here.
+     */
+    public function setSm(ServiceManager $sm): void
+    {
+        $this->sm = $sm;
+    }
+
+    /**
+     * Register a short alias → FQCN mapping so the SM can lazily create that service.
+     *
+     * @deprecated Prefer registering services directly in the ServiceManager. This method
+     *             remains for backwards-compatible module registration via AbstractModule::onLoad().
+     */
     public function setClassAlias(string $alias, string $className): void
     {
-        $this->classAliases[$alias] = $className;
+        $this->smConfig->addClassAlias($alias, $className);
     }
 
     /**
-     * Get class
-     *
-     * @param string $name
-     *
-     * @return mixed
+     * @template T of object
+     * @param class-string<T>|string $id
+     * @return T|mixed
      */
-    public function get(string $name)
+    public function get(string $id): mixed
     {
-        if (array_key_exists($name, $this->aliases)) {
-            $name = $this->aliases[$name];
-        }
-
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-
-        // load itself
-        if ($name === 'container') {
-            $this->data[$name] = $this;
-            return $this->data[$name];
-        }
-
-        $className = isset($this->classAliases[$name]) ? $this->classAliases[$name] : $name;
-        if (class_exists($className)) {
-            if (is_a($className, Factory::class, true)) {
-                $this->data[$name] = (new $className())->create($this);
-                return $this->data[$name];
-            }
-
-            $reflectionClass = new \ReflectionClass($className);
-            if (!empty($constructor = $reflectionClass->getConstructor()) && !empty($params = $constructor->getParameters())) {
-                $input = [];
-                foreach ($params as $param) {
-                    $dependencyClass = $param->getType() && !$param->getType()->isBuiltin() ? new \ReflectionClass($param->getType()->getName()) : null;
-                    if (!empty($dependencyClass)) {
-                        if ($dependencyClass->getName() === self::class) {
-                            $input[] = $this;
-                        } else {
-                            $input[] = $this->get($dependencyClass->getName());
-                        }
-                    }
-                }
-                $this->data[$name] = new $className(...$input);
-                return $this->data[$name];
-            }
-
-            if (is_a($className, Injectable::class, true)) {
-                $this->data[$name] = new $className();
-                foreach ($this->data[$name]->getDependencyList() as $dependency) {
-                    $this->data[$name]->inject($dependency, $this->get($dependency));
-                }
-                return $this->data[$name];
-            }
-
-            $this->data[$name] = new $className();
-
-            return $this->data[$name];
-        }
-
-        return null;
+        return $this->sm->get($id);
     }
 
-    /**
-     * Get DBAL connection
-     *
-     * @return Connection
-     */
-    public function getDbal(): Connection
+    public function has(string $id): bool
     {
-        return $this->get('dbal');
+        return $this->sm->has($id);
     }
 
-    public function getEntityManager(): EntityManager
-    {
-        return $this->get('entityManager');
-    }
-
-    public function getConfig(): Config
-    {
-        return $this->get('config');
-    }
-
-    public function getMetadata(): Metadata
-    {
-        return $this->get('metadata');
-    }
-
-    public function getUser(): User
-    {
-        return $this->get('user');
-    }
-
-    public function getDataManager(): DataManager
-    {
-        return $this->get('dataManager');
-    }
-
-    public function getLanguage(): Language
-    {
-        return $this->get('language');
-    }
-
-    /**
-     * Set User
-     *
-     * @param User $user
-     */
-    public function setUser(User $user): Container
-    {
-        $this->set('user', $user);
-
-        return $this;
-    }
-
-    /**
-     * Set class
-     */
-    protected function set($name, $obj)
-    {
-        $this->data[$name] = $obj;
-    }
-
-    /**
-     * Reload object
-     *
-     * @param string $name
-     *
-     * @return Container
-     */
-    public function reload(string $name): Container
-    {
-        // unset
-        if (isset($this->data[$name])) {
-            unset($this->data[$name]);
-        }
-
-        return $this;
-    }
 }

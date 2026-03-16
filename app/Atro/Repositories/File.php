@@ -648,7 +648,6 @@ class File extends Base
 
         $this->addDependency('container');
         $this->addDependency('language');
-        $this->addDependency('fileValidator');
         $this->addDependency('fileManager');
     }
 }

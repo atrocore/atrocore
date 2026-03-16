@@ -46,7 +46,7 @@ class JobManager
             $user = $user->getSystemUser();
 
             $this->getEntityManager()->setUser($user);
-            $this->container->setUser($user);
+            $this->container->get(\Atro\Core\UserContext::class)->set($user);
         }
 
         $job->set('pid', System::getPid());

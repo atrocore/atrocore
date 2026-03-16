@@ -4,175 +4,272 @@ taxonomy:
     category: docs
 ---
 
-The Service Container is a fundamental component of AtroCore, implemented in the `\Atro\Core\Container` class. It acts as a central registry for all services in the application, providing a standardized way to access core functionality and register custom services.
+The DI system in AtroCore is powered by **[Laminas ServiceManager](https://docs.laminas.dev/laminas-servicemanager/)** — a battle-tested, PSR-11 compliant container maintained by the Laminas Project.
 
-This documentation explains how to work with the Service Container to access existing services and integrate your own custom services into the AtroCore ecosystem.
+!! Core services in the container should not be confused with Entity Services where business logic lives. Learn more about Entity Services [here](../15.services).
 
-!! Core services available in service container should not be mistaken to Entity services where business logic is written. Learn more about Entity Services [here](../15.services).
+---
 
-## Core Concepts
+## A note on naming
 
-The Service Container provides several key benefits:
+Use `$container` — this is the standard name across the PHP ecosystem (PSR-11, Laminas, Symfony, Laravel). The variable name should reflect the *abstraction* (a container), not the *implementation* (ServiceManager). Type-hint against `Psr\Container\ContainerInterface`, not the concrete class.
 
-- **Centralized Service Management**: All services (both core and custom) are registered in a single location
-- **Dependency Injection**: Automatically resolves and injects service dependencies into your classes
-- **Service Discovery**: Locate and instantiate services by name or class reference
-- **Service Overriding**: Replace core services with custom implementations
-- **Global User Context**: Access the authenticated user throughout the application
+```php
+// ✅ Correct — follows PSR-11 convention
+public function __construct(private readonly \Psr\Container\ContainerInterface $container) {}
+
+// ⚠️ Legacy — still works, but ties you to the concrete class
+public function __construct(private readonly \Atro\Core\Container $container) {}
+```
+
+---
+
+## Why Laminas ServiceManager
+
+Switching to Laminas ServiceManager brings several concrete advantages over maintaining a custom container:
+
+- **Industry standard** — well-documented, widely adopted, no surprises for new developers
+- **PSR-11 compliant** — any library expecting `Psr\Container\ContainerInterface` works out of the box
+- **Zero boilerplate for simple services** — typed constructors are resolved automatically via reflection, no registration needed
+- **Native factory contracts** — `FactoryInterface` and `AbstractFactoryInterface` are standard interfaces with clear semantics
+- **Shared / non-shared lifecycle** — built-in support, no custom caching code
+- **Maintained externally** — PHP version compatibility, security, performance — not our problem
+
+---
 
 ## Accessing Services
 
-To retrieve a service from the container, use the `get()` method with either a service alias (string) or a class name:
-
 ```php
-// Access by class name
-$entityManager = $container->get(\Espo\Core\ORM\EntityManager::class);
+// By class name (preferred — PhpStorm infers the return type)
+$entityManager = $container->get(\Espo\ORM\EntityManager::class);
 
-// Access by alias (if registered)
+// By alias
 $entityManager = $container->get('entityManager');
 ```
 
-The container will instantiate the service if it hasn't been created yet, resolving any dependencies automatically.
+---
 
-## Registering Custom Services
+## Registering Services
 
-### Using Class Aliases
+### 1. Typed Constructor — no registration needed
 
-You can register your own classes in the container by creating aliases:
+The most common case. If your class has a typed constructor, the SM resolves and injects all dependencies automatically. No factory, no registration, no configuration required.
 
 ```php
-// Register your custom service with an alias
-$container->setClassAlias('myCustomService', \MyNamespace\Services\MyCustomService::class);
+namespace Pim\Services;
 
-// Later, retrieve your service
-$myService = $container->get('myCustomService');
+use Atro\Core\Utils\Config;
+use Espo\ORM\EntityManager;
+use Atro\Core\Utils\FileManager;
+
+class ProductExporter
+{
+    public function __construct(
+        private readonly EntityManager $em,
+        private readonly Config $config,
+        private readonly FileManager $fileManager
+    ) {}
+}
+
+// Anywhere in the application:
+$exporter = $container->get(ProductExporter::class);
 ```
 
-### Automatic Class Resolution
+The SM walks the constructor parameters, resolves each type via the alias map, and injects the shared instances.
 
-The container can also instantiate classes that aren't explicitly registered:
+---
+
+### 2. Named Factory — explicit instantiation logic
+
+When construction requires runtime decisions, implement `Laminas\ServiceManager\Factory\FactoryInterface`:
 
 ```php
-use Espo\Core\ORM\EntityManager;
+namespace MyModule\Core\Factories;
 
-class MyCustomClass {
-    public function __construct(protected readonly EntityManager $entityManager){
-        // Constructor receives automatically injected EntityManager
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
+
+class StorageFactory implements FactoryInterface
+{
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): StorageInterface
+    {
+        return match($container->get('config')->get('storageDriver')) {
+            's3'    => new S3Storage($container->get('config')),
+            'local' => new LocalStorage($container->get('fileManager')),
+        };
     }
 }
-
-// The container will automatically resolve dependencies when instantiating
-$object = $container->get(MyCustomClass::class);
 ```
 
-## Extending Existing Container Services
-
-You can replace existing container services with your own implementations to customize or extend functionality:
+Register it in your module's `onLoad`:
 
 ```php
-// Define your extended service
-class MyExtendedService extends CoreService {
-    // Override methods or add new functionality
+public function onLoad(): void
+{
+    $this->sm->setFactory('storage', StorageFactory::class);
+    $this->sm->setAlias(StorageInterface::class, 'storage');
+}
+```
+
+Now `$container->get('storage')` and `$container->get(StorageInterface::class)` both return the same shared instance.
+
+---
+
+### 3. Abstract Factory — handle a family of services by pattern
+
+Use an abstract factory when a group of services share a common creation pattern and you don't want to register each one individually.
+
+```php
+namespace MyModule\Core\Factories;
+
+use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
+use Psr\Container\ContainerInterface;
+
+class DriverAbstractFactory implements AbstractFactoryInterface
+{
+    public function canCreate(ContainerInterface $container, string $requestedName): bool
+    {
+        // Handles any service name matching 'driver.*'
+        return str_starts_with($requestedName, 'driver.');
+    }
+
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): DriverInterface
+    {
+        // 'driver.pdf'  → PdfDriver
+        // 'driver.xlsx' → XlsxDriver
+        $type  = ucfirst(substr($requestedName, 7));
+        $class = "MyModule\\Drivers\\{$type}Driver";
+
+        return new $class($container->get('config'));
+    }
+}
+```
+
+Register once — covers all matching service names:
+
+```php
+public function onLoad(): void
+{
+    $this->sm->configure([
+        'abstract_factories' => [DriverAbstractFactory::class],
+    ]);
 }
 
-// Replace the core service with your implementation
-$container->setClassAlias('coreService', MyExtendedService::class);
-
-// Now when code requests 'coreService', your implementation will be used
-$service = $container->get('coreService'); // Returns instance of MyExtendedService
+// Usage — no individual registration needed:
+$container->get('driver.pdf');
+$container->get('driver.xlsx');
 ```
 
-!!! Be careful when replacing existing container services with your own versions, as this can potentially break existing functionality if your implementation is incompatible.
+---
 
-## Bootstrapping Custom Services
+### 4. Aliases — map interfaces to implementations
 
-To ensure your custom services are available throughout the application, you should register them during module initialization. This is done in the `onLoad` method of your module's main class.
-
-Here's how to properly bootstrap your services:
+Aliases let you decouple consumers from concrete class names:
 
 ```php
-<?php
+public function onLoad(): void
+{
+    $this->sm->setFactory('mailer', MailerFactory::class);
 
+    // Interface → service name
+    $this->sm->setAlias(MailerInterface::class, 'mailer');
+
+    // Alternative name → service name
+    $this->sm->setAlias('emailSender', 'mailer');
+}
+```
+
+All three resolve to the same shared instance:
+
+```php
+$container->get('mailer');
+$container->get(MailerInterface::class);
+$container->get('emailSender');
+```
+
+---
+
+### 5. Non-shared services
+
+By default every service is a singleton (shared). To get a fresh instance on every `get()`:
+
+```php
+public function onLoad(): void
+{
+    $this->sm->setFactory('reportBuilder', ReportBuilderFactory::class);
+    $this->sm->configure(['shared' => ['reportBuilder' => false]]);
+}
+```
+
+---
+
+## Full module registration example
+
+```php
 namespace MyModule;
 
 use Atro\Core\ModuleManager\AbstractModule;
-use MyModule\Services\CustomService;
 
 class Module extends AbstractModule
 {
-    /**
-     * Define module load order - higher numbers load later
-     * and can override services from modules with lower numbers
-     */
     public static function getLoadOrder(): int
     {
         return 5000;
     }
 
-    /**
-     * Register services when the module loads
-     */
-    public function onLoad()
+    public function onLoad(): void
     {
-        parent::onLoad();
+        // Named factory
+        $this->sm->setFactory('storage', \MyModule\Core\Factories\StorageFactory::class);
 
-        // Register your custom services
-        $this->container->setClassAlias('myCustomService', CustomService::class);
+        // Interface alias
+        $this->sm->setAlias(\MyModule\Contracts\StorageInterface::class, 'storage');
 
-        // You can also override existing services here
-        $this->container->setClassAlias('existingService', MyImprovedService::class);
+        // Abstract factory for a whole family of services
+        $this->sm->configure([
+            'abstract_factories' => [\MyModule\Core\Factories\DriverAbstractFactory::class],
+        ]);
+
+        // Non-shared service
+        $this->sm->setFactory('queryBuilder', \MyModule\Core\Factories\QueryBuilderFactory::class);
+        $this->sm->configure(['shared' => ['queryBuilder' => false]]);
     }
 }
 ```
-
-After registration, your services can be accessed anywhere in the application:
-
-```php
-// In controllers, listeners, or other classes with container access
-$myService = $this->container->get('myCustomService');
-```
-
-## Global User Context
-
-The container provides access to the currently authenticated user:
-
-```php
-// Set the authenticated user (typically done by the authentication system)
-$container->setUser($user);
-
-// Access the authenticated user throughout the application
-$currentUser = $container->get('user');
-```
-
-## Dependency Resolution
-
-The Service Container automatically resolves dependencies for your classes based on type hints in constructor parameters:
-
-```php
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Metadata;
-
-class MyService {
-    public function __construct(
-        protected readonly EntityManager $entityManager,
-        protected readonly Metadata $metadata,
-        protected readonly string $customParameter = 'default'
-    ) {
-        // EntityManager and Metadata are automatically injected
-    }
-}
-
-// Simple instantiation with automatic dependency injection
-$myService = $container->get(MyService::class);
-```
-
-## Best Practices
-
-1. **Use type hints**: Always use type hints in your constructor parameters for proper dependency injection
-2. **Register services during initialization**: Add your services in the module's `onLoad` method
-3. **Avoid direct instantiation**: Use the container to create service instances rather than `new`
-4. **Be cautious when overriding core services**: Test thoroughly when replacing existing services or consider using [Listeners](../20.listeners) for extending
 
 ---
 
-For more information about creating custom modules in AtroCore, see the [Creating a Module](../../30.own-modules) documentation.
+## Legacy support (to be removed)
+
+The old `\Atro\Core\Container` class and `\Atro\Core\Factories\FactoryInterface` are still supported for backwards compatibility. Existing modules using them will continue to work.
+
+**Writing new code using the legacy approach is strongly discouraged.** We will be removing legacy support in a future release. Always use the native Laminas ServiceManager patterns described above.
+
+```php
+// ❌ Legacy — do not use in new code
+$this->container->setClassAlias('myService', MyService::class);
+
+// ❌ Legacy factory — do not use in new code
+class MyFactory implements \Atro\Core\Factories\FactoryInterface
+{
+    public function create(\Atro\Core\Container $container): MyService { ... }
+}
+
+// ✅ Correct — native SM factory
+class MyFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
+{
+    public function __invoke(\Psr\Container\ContainerInterface $container, string $name, ?array $options = null): MyService { ... }
+}
+
+// ✅ Correct — registration in onLoad
+$this->sm->setFactory('myService', MyFactory::class);
+```
+
+---
+
+## Further reading
+
+- [Laminas ServiceManager documentation](https://docs.laminas.dev/laminas-servicemanager/)
+- [PSR-11: Container Interface](https://www.php-fig.org/psr/psr-11/)
+- [Creating a Module](../../30.own-modules)
+- [Entity Services](../15.services)
