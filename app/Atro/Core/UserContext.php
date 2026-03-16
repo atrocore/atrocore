@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Entities\User;
+use Espo\Core\Acl;
+use Espo\Core\AclManager;
 
 /**
  * Holds the currently authenticated user for the duration of the request or job.
@@ -22,14 +24,25 @@ use Atro\Entities\User;
 class UserContext
 {
     private ?User $user = null;
+    private ?Acl $acl = null;
 
     public function set(User $user): void
     {
         $this->user = $user;
+        $this->acl = null;
     }
 
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    public function getAcl(AclManager $aclManager): Acl
+    {
+        if ($this->acl === null) {
+            $this->acl = new Acl($aclManager, $this->user);
+        }
+
+        return $this->acl;
     }
 }

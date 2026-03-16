@@ -76,7 +76,7 @@ final class Application
                 'services'           => ['container' => $container],
                 'factories'          => [
                     'user' => fn($c) => $c->get(UserContext::class)->getUser(),
-                    'acl'  => fn($c) => new \Espo\Core\Acl($c->get('aclManager'), $c->get(UserContext::class)->getUser()),
+                    'acl'  => fn($c) => $c->get(UserContext::class)->getAcl($c->get('aclManager')),
                 ],
                 'shared'             => ['user' => false, 'acl' => false],
             ],
