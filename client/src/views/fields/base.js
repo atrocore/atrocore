@@ -1061,7 +1061,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         this.setMode('edit');
                     }
                 } else if (this.mode === 'edit' && readOnly) {
-                    this.inlineEditClose()
+                    this.readOnly = readOnly;
+                    return;
                 }
 
                 if (readOnly !== this.readOnly) {
