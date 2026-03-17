@@ -80,7 +80,8 @@
     "removeAttribute(s)": "All values for this(these) attribute(s) are also deleted. Do you really want to delete this(these) attribute(s)?"
   },
   "filterLabels": {
-    "All": "All"
+    "All": "All",
+    "notLinkedWithAnyRecord": "Not linked with any record"
   },
   "tooltips": {
     "pattern": "To enable only capital letters with 10-symbol length use \"/^[A-Z]{1,10}$/\"",

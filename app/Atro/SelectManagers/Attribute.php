@@ -11,7 +11,9 @@
 
 namespace Atro\SelectManagers;
 
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 use Atro\Core\SelectManagers\Base;
@@ -161,5 +163,34 @@ class Attribute extends Base
                 'attributeTabId=' => empty($data['tabId']) ? null : $data['tabId']
             ];
         }
+    }
+
+    protected function boolFilterNotLinkedWithAnyRecord(array &$result): void
+    {
+        $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) {
+            $alias = $mapper->getQueryConverter()->getMainTableAlias();
+
+            $entityTypes = [];
+            foreach ($this->getMetadata()->get('scopes', []) as $scope => $scopeDefs) {
+                if (!empty($scopeDefs['hasAttribute'])) {
+                    $entityTypes[] = $scope;
+                }
+            }
+
+            if (empty($entityTypes)) {
+                return;
+            }
+
+            $conditions = [];
+            foreach ($entityTypes as $entityType) {
+                $avTable = Util::toUnderScore(lcfirst($entityType)) . '_attribute_value';
+                $conditions[] = "({$alias}.entity_id = '{$entityType}' AND NOT EXISTS ("
+                    . "SELECT 1 FROM {$avTable} WHERE attribute_id = {$alias}.id AND deleted = :notLinkedFalse"
+                    . "))";
+            }
+
+            $qb->andWhere('(' . implode(' OR ', $conditions) . ')');
+            $qb->setParameter('notLinkedFalse', false, ParameterType::BOOLEAN);
+        };
     }
 }

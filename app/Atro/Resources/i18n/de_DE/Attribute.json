@@ -80,7 +80,8 @@
     "removeAttribute(s)": "Alle Werte für dieses (diese) Attribut(e) werden ebenfalls gelöscht. Möchten Sie diese(n) Attribut(e) wirklich löschen?"
   },
   "filterLabels": {
-    "All": "Alle"
+    "All": "Alle",
+    "notLinkedWithAnyRecord": "Nicht mit einem Datensatz verknüpft"
   },
   "tooltips": {
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"/^[A-Z]{1,10}$/\"",
