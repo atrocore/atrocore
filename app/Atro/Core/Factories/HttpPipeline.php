@@ -15,6 +15,7 @@ namespace Atro\Core\Factories;
 
 use Atro\Core\DataManager;
 use Atro\Core\Middleware\AuthMiddleware;
+use Atro\Core\Middleware\ErrorHandlerMiddleware;
 use Atro\Core\Middleware\LegacyControllerHandler;
 use Atro\Core\Middleware\NotFoundMiddleware;
 use Atro\Core\Routing\Route as RouteAttribute;
@@ -47,6 +48,7 @@ class HttpPipeline implements FactoryInterface
         }
 
         $pipe = new MiddlewarePipe();
+        $pipe->pipe(new ErrorHandlerMiddleware());
         $pipe->pipe(new RouteMiddleware($router));
         $pipe->pipe(new AuthMiddleware($container));
         $pipe->pipe(new DispatchMiddleware());

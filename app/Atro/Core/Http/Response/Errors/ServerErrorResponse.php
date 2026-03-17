@@ -15,7 +15,7 @@ namespace Atro\Core\Http\Response\Errors;
 
 use Atro\Core\Http\Response\ErrorResponse;
 
-class InternalServerErrorResponse extends ErrorResponse
+class ServerErrorResponse extends ErrorResponse
 {
     public function __construct(string $message = 'Internal Server Error', array $extraHeaders = [])
     {
