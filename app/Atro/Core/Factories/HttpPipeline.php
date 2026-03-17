@@ -16,7 +16,8 @@ namespace Atro\Core\Factories;
 use Atro\Core\Routing\Route as RouteAttribute;
 use Atro\Core\Middleware\AuthMiddleware;
 use Atro\Core\Middleware\LegacyControllerHandler;
-use Atro\Core\Http\JsonResponse;
+use Atro\Core\Http\Response\ErrorResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Stratigility\MiddlewarePipe;
 use Mezzio\Router\FastRouteRouter;
@@ -183,7 +184,7 @@ class HttpPipeline implements FactoryInterface
         return new class implements MiddlewareInterface {
             public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
             {
-                return JsonResponse::error(404, 'Not Found');
+                return new ErrorResponse(404, 'Not Found');
             }
         };
     }

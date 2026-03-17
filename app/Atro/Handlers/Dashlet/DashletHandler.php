@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace Atro\Handlers\Dashlet;
 
 use Atro\Core\Exceptions;
-use Atro\Core\Http\JsonResponse;
+use Atro\Core\Http\Response\ErrorResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Core\Utils\Language;
 use Atro\Services\DashletInterface;
@@ -40,13 +41,13 @@ class DashletHandler implements MiddlewareInterface
         $dashletName = $routeResult ? ($routeResult->getMatchedParams()['dashletName'] ?? null) : null;
 
         if (empty($dashletName)) {
-            return JsonResponse::error(400, 'dashletName is required');
+            return new ErrorResponse(400, 'dashletName is required');
         }
 
         try {
             return new JsonResponse($this->createDashletService($dashletName)->getDashlet());
         } catch (\Throwable $e) {
-            return JsonResponse::error($e->getCode() ?: 500, $e->getMessage());
+            return new ErrorResponse($e->getCode() ?: 500, $e->getMessage());
         }
     }
 

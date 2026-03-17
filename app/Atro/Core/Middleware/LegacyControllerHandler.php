@@ -13,8 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Core\Middleware;
 
-use Atro\Core\Http\JsonResponse;
-use Atro\Core\Http\Validator;
+use Atro\Core\Http\Response\ErrorResponse;
+use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Slim\Validator;
 use Mezzio\Router\RouteResult;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -88,7 +89,7 @@ class LegacyControllerHandler implements MiddlewareInterface
 
             $this->container->get(Validator::class)->validateResponse($routeConfig, $response);
         } catch (\Throwable $e) {
-            return JsonResponse::error($e->getCode() ?: 500, $e->getMessage());
+            return new ErrorResponse($e->getCode() ?: 500, $e->getMessage());
         }
 
         return $response;

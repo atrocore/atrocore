@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Middleware;
 
 use Atro\Core\Exceptions\Unauthorized;
-use Atro\Core\Http\JsonResponse;
+use Atro\Core\Http\Response\ErrorResponse;
 use Espo\Core\Utils\Auth;
 use Mezzio\Router\RouteResult;
 use Psr\Container\ContainerInterface;
@@ -78,7 +78,7 @@ class AuthMiddleware implements MiddlewareInterface
 
             return $this->unauthorizedResponse(['Password-Expired' => 'true']);
         } catch (\Exception $e) {
-            return JsonResponse::error($e->getCode() ?: 500, $e->getMessage(), ['X-Status-Reason' => $e->getMessage()]);
+            return new ErrorResponse($e->getCode() ?: 500, $e->getMessage(), ['X-Status-Reason' => $e->getMessage()]);
         }
 
         if (!$isAuthenticated) {
@@ -114,6 +114,6 @@ class AuthMiddleware implements MiddlewareInterface
 
     private function unauthorizedResponse(array $extraHeaders = []): ResponseInterface
     {
-        return JsonResponse::error(401, 'Unauthorized', $extraHeaders);
+        return new ErrorResponse(401, 'Unauthorized', $extraHeaders);
     }
 }
