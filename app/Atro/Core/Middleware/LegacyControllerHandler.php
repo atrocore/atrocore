@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Atro\Core\Middleware;
 
 use Atro\Core\Http\Response\ErrorResponse;
+use Psr\Container\ContainerInterface;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Slim\Validator;
 use Mezzio\Router\RouteResult;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

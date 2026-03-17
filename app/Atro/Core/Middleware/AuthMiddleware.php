@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Atro\Core\Middleware;
 
 use Atro\Core\Exceptions\Unauthorized;
+use Psr\Container\ContainerInterface;
 use Atro\Core\Http\Response\Errors\UnauthorizedResponse;
 use Atro\Core\Http\Response\ErrorResponse;
 use Espo\Core\Utils\Auth;
 use Mezzio\Router\RouteResult;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

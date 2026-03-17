@@ -13,12 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Core\Factories;
 
-use Atro\Core\Routing\Route as RouteAttribute;
 use Atro\Core\DataManager;
 use Atro\Core\Middleware\AuthMiddleware;
 use Atro\Core\Middleware\LegacyControllerHandler;
 use Atro\Core\Middleware\NotFoundMiddleware;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Routing\Route as RouteAttribute;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Stratigility\MiddlewarePipe;
 use Mezzio\Router\FastRouteRouter;
@@ -89,7 +88,6 @@ class HttpPipeline implements FactoryInterface
 
     private function discoverHandlerClasses(ContainerInterface $container): array
     {
-        /** @var DataManager $dataManager */
         $dataManager = $container->get(DataManager::class);
 
         $cached = $dataManager->getCacheData('handler_routes');
