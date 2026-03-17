@@ -49,8 +49,7 @@
     "addNewValue": "Додати нове значення",
     "extensibleEnumOptions": "Опції списку",
     "conditionalProperties": "Умовні властивості",
-    "Classification": "Класифікація",
-    "viewRecordsWithAttribute": "Записи, що використовують цей атрибут"
+    "Classification": "Класифікація"
   },
   "messages": {
     "sameNumberOptions": "Ви повинні встановити таку саму кількість опцій",
