@@ -81,7 +81,9 @@
     "removeAttribute(s)": "Alle Werte für dieses (diese) Attribut(e) werden ebenfalls gelöscht. Möchten Sie diese(n) Attribut(e) wirklich löschen?"
   },
   "filterLabels": {
-    "All": "Alle",
+    "All": "Alle"
+  },
+  "boolFilters": {
     "notLinkedWithAnyRecord": "Nicht mit einem Datensatz verknüpft"
   },
   "tooltips": {

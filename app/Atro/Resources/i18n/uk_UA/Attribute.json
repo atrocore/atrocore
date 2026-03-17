@@ -58,7 +58,9 @@
     "removeAttribute(s)": "Усі значення для цього(цих) атрибуту(ів) також видаляються. Ви дійсно хочете видалити цей(ці) атрибут(и)?"
   },
   "filterLabels": {
-    "All": "All",
+    "All": "All"
+  },
+  "boolFilters": {
     "notLinkedWithAnyRecord": "Не пов'язаний з жодним записом"
   },
   "tooltips": {

@@ -81,7 +81,9 @@
     "removeAttribute(s)": "All values for this(these) attribute(s) are also deleted. Do you really want to delete this(these) attribute(s)?"
   },
   "filterLabels": {
-    "All": "All",
+    "All": "All"
+  },
+  "boolFilters": {
     "notLinkedWithAnyRecord": "Not linked with any record"
   },
   "tooltips": {
