@@ -11,6 +11,7 @@
   "stream": false,
   "streamDisabled": true,
   "disabled": false,
+  "actionDisabled": true,
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
   "disableActionHistory": true,
