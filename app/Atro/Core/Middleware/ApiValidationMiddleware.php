@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Middleware;
 
 use Atro\Core\Routing\Route as RouteAttribute;
-use Atro\Core\Slim\Validator;
+use Atro\Core\Http\Validator;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

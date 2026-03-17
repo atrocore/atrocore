@@ -16,7 +16,7 @@ namespace Atro\Core\Middleware;
 use Atro\Core\Http\Response\ErrorResponse;
 use Psr\Container\ContainerInterface;
 use Atro\Core\Http\Response\JsonResponse;
-use Atro\Core\Slim\Validator;
+use Atro\Core\Http\Validator;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

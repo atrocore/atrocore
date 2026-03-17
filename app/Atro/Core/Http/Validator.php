@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Slim;
+namespace Atro\Core\Http;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\OpenApiGenerator;
