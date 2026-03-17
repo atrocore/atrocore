@@ -110,6 +110,7 @@ class Similar extends AbstractMatchingRule
             $score = $masterEntityData[$scoreKey] ?? $masterEntityData[$scoreAlias] ?? null;
 
             if ($score !== null) {
+                // return part of the weight proportionally to the similarity score
                 return (int)round((float)$score * ($this->rule->get('weight') ?? 0));
             }
         }
