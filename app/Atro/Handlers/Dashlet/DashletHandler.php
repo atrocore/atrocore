@@ -26,7 +26,20 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-#[Route('/Dashlet/{dashletName}', methods: ['GET'])]
+#[Route(
+    path: '/Dashlet/{dashletName}',
+    methods: ['GET'],
+    summary: 'Get dashlet data',
+    description: 'Returns rendered data for the specified dashlet widget.',
+    tag: 'Dashlet',
+    parameters: [
+        ['name' => 'dashletName', 'in' => 'path', 'required' => true, 'description' => 'Dashlet service name (e.g. Activities)', 'schema' => ['type' => 'string']],
+    ],
+    responses: [
+        200 => ['description' => 'Dashlet data', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        400 => ['description' => 'dashletName is required'],
+    ],
+)]
 class DashletHandler implements MiddlewareInterface
 {
     public function __construct(

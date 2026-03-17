@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\Routing\HandlerRegistry;
+use Atro\Core\Routing\Route as RouteAttribute;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer;
@@ -40,6 +42,14 @@ class OpenApiGenerator
         return $result;
     }
 
+    public function getSchemaForHandler(RouteAttribute $routeAttr): array
+    {
+        $result = $this->getBase();
+        $this->pushHandlerRoute($result, $routeAttr);
+
+        return $result;
+    }
+
     public function getFullSchema(): array
     {
         $result = $this->getBase();
@@ -47,6 +57,8 @@ class OpenApiGenerator
         foreach ($this->container->get('route')->getAll() as $route) {
             $this->pushRoute($result, $route);
         }
+
+        $this->pushHandlerRoutes($result);
 
         /** @var Config $config */
         $config = $this->container->get('config');
@@ -1647,6 +1659,62 @@ class OpenApiGenerator
 
             $result['paths'][$routePath][$route['method']] = $row;
         }
+    }
+
+    private function pushHandlerRoutes(array &$result): void
+    {
+        foreach ($this->discoverHandlerClasses() as $className) {
+            if (!class_exists($className)) {
+                continue;
+            }
+
+            $ref        = new \ReflectionClass($className);
+            $attributes = $ref->getAttributes(RouteAttribute::class);
+
+            foreach ($attributes as $attr) {
+                $this->pushHandlerRoute($result, $attr->newInstance());
+            }
+        }
+    }
+
+    private function pushHandlerRoute(array &$result, RouteAttribute $routeAttr): void
+    {
+        if (empty($routeAttr->responses)) {
+            return;
+        }
+
+        $tag = $routeAttr->tag;
+
+        if (!in_array($tag, array_column($result['tags'], 'name'), true)) {
+            $result['tags'][] = ['name' => $tag, 'description' => "$tag endpoints."];
+        }
+
+        $responses = [];
+        foreach ($routeAttr->responses as $code => $response) {
+            $responses[(string) $code] = $response;
+        }
+
+        foreach (array_map('strtolower', (array) $routeAttr->methods) as $method) {
+            $row = [
+                'tags'        => [$tag],
+                'summary'     => $routeAttr->summary,
+                'description' => $routeAttr->description,
+                'operationId' => md5($routeAttr->path . '_' . $method),
+                'responses'   => $responses,
+                'security'    => $routeAttr->auth ? [['Authorization-Token' => []]] : [],
+            ];
+
+            if (!empty($routeAttr->parameters)) {
+                $row['parameters'] = $routeAttr->parameters;
+            }
+
+            $result['paths'][$routeAttr->path][$method] = $row;
+        }
+    }
+
+    private function discoverHandlerClasses(): array
+    {
+        return $this->container->get(HandlerRegistry::class)->getHandlerClasses();
     }
 
     protected function getMetadata(): Metadata

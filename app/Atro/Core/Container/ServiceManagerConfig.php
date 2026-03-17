@@ -77,6 +77,7 @@ class ServiceManagerConfig
     ];
 
     private array $aliases = [
+        \Psr\Container\ContainerInterface::class        => 'container',
         'connection'                                    => 'dbal',
         Connection::class                               => 'dbal',
         EventManager::class                             => 'eventManager',

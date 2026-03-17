@@ -13,11 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Core\Factories;
 
-use Atro\Core\DataManager;
+use Atro\Core\Middleware\ApiValidationMiddleware;
 use Atro\Core\Middleware\AuthMiddleware;
 use Atro\Core\Middleware\ErrorHandlerMiddleware;
 use Atro\Core\Middleware\LegacyControllerHandler;
 use Atro\Core\Middleware\NotFoundMiddleware;
+use Atro\Core\Routing\HandlerRegistry;
 use Atro\Core\Routing\Route as RouteAttribute;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Stratigility\MiddlewarePipe;
@@ -51,6 +52,7 @@ class HttpPipeline implements FactoryInterface
         $pipe->pipe(new ErrorHandlerMiddleware());
         $pipe->pipe(new RouteMiddleware($router));
         $pipe->pipe(new AuthMiddleware($container));
+        $pipe->pipe($container->get(ApiValidationMiddleware::class));
         $pipe->pipe(new DispatchMiddleware());
         $pipe->pipe(new NotFoundMiddleware());
 
@@ -59,7 +61,7 @@ class HttpPipeline implements FactoryInterface
 
     private function registerHandlerRoutes(FastRouteRouter $router, ContainerInterface $container): void
     {
-        foreach ($this->discoverHandlerClasses($container) as $className) {
+        foreach ($container->get(HandlerRegistry::class)->getHandlerClasses() as $className) {
             if (!class_exists($className)) {
                 continue;
             }
@@ -76,8 +78,13 @@ class HttpPipeline implements FactoryInterface
             foreach ($attributes as $attr) {
                 /** @var RouteAttribute $routeAttr */
                 $routeAttr = $attr->newInstance();
-                $methods   = array_map('strtoupper', (array) $routeAttr->methods);
-                $route     = new Route('/api/v1' . $routeAttr->path, $handler, $methods);
+
+                if (empty($routeAttr->responses)) {
+                    continue;
+                }
+
+                $methods = array_map('strtoupper', (array) $routeAttr->methods);
+                $route   = new Route('/api/v1' . $routeAttr->path, $handler, $methods);
 
                 if (!$routeAttr->auth) {
                     $route->setOptions(['conditions' => ['auth' => false]]);
@@ -86,54 +93,6 @@ class HttpPipeline implements FactoryInterface
                 $router->addRoute($route);
             }
         }
-    }
-
-    private function discoverHandlerClasses(ContainerInterface $container): array
-    {
-        $dataManager = $container->get(DataManager::class);
-
-        $cached = $dataManager->getCacheData('handler_routes');
-        if ($cached !== null) {
-            return $cached;
-        }
-
-        $classes = [];
-
-        // Core handlers: CORE_PATH/Atro/Handlers/ → namespace Atro\Handlers\...
-        $coreBase = CORE_PATH . '/';
-        foreach ($this->scanHandlers(CORE_PATH . '/Atro/Handlers/') as $file) {
-            $relative  = substr($file, strlen($coreBase));
-            $classes[] = str_replace('/', '\\', substr($relative, 0, -4));
-        }
-
-        // Module handlers: each module discovers its own handler classes
-        foreach ($container->get('moduleManager')->getModules() as $module) {
-            $classes = array_merge($classes, $module->getHandlerClasses());
-        }
-
-        $dataManager->setCacheData('handler_routes', $classes);
-
-        return $classes;
-    }
-
-    private function scanHandlers(string $dir): array
-    {
-        if (!is_dir($dir)) {
-            return [];
-        }
-
-        $files    = [];
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
-        );
-
-        foreach ($iterator as $file) {
-            if ($file->getExtension() === 'php') {
-                $files[] = $file->getPathname();
-            }
-        }
-
-        return $files;
     }
 
     /**
