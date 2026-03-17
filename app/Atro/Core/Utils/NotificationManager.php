@@ -18,11 +18,8 @@ use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\NotificationTransport\AbstractNotificationTransport;
 use Atro\NotificationTransport\NotificationOccurrence;
 use Atro\Repositories\NotificationRule;
-use Espo\Core\Factories\AclManager as AclManagerFactory;
 use Espo\ORM\Entity;
-use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Language;
-use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 use Atro\Entities\NotificationRule as RuleEntity;
@@ -509,7 +506,7 @@ class NotificationManager
 
     protected function checkByAclManager(User $user, Entity $parent, string $action): bool
     {
-        return (AclManagerFactory::createAclManager($this->container))->check($user, $parent, $action);
+        return $this->container->get('aclManager')->check($user, $parent, $action);
     }
 
     protected function getEntityManager(): EntityManager
