@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Core\Middleware;
 
-use Atro\Core\Container;
 use Atro\Core\Exceptions\Unauthorized;
+use Psr\Container\ContainerInterface;
 use Espo\Core\Utils\Auth;
 use GuzzleHttp\Psr7\Response;
 use Mezzio\Router\RouteResult;
@@ -31,7 +31,7 @@ class AuthMiddleware implements MiddlewareInterface
         '/api/v1/App/user',
     ];
 
-    public function __construct(private readonly Container $container)
+    public function __construct(private readonly ContainerInterface $container)
     {
     }
 

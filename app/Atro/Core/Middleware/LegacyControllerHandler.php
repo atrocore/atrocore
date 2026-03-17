@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Core\Middleware;
 
-use Atro\Core\Container;
 use Atro\Core\Slim\Validator;
 use GuzzleHttp\Psr7\Response;
 use Mezzio\Router\RouteResult;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -31,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class LegacyControllerHandler implements MiddlewareInterface
 {
-    public function __construct(private readonly Container $container)
+    public function __construct(private readonly ContainerInterface $container)
     {
     }
 

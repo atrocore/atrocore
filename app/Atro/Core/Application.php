@@ -25,6 +25,7 @@ use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer;
 use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Atro\Core\Factories\HttpPipeline;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stratigility\MiddlewarePipe;
 
@@ -76,8 +77,9 @@ final class Application
                 'aliases'            => $smConfig->getAliases(),
                 'services'           => ['container' => $container],
                 'factories'          => [
-                    'user' => fn($c) => $c->get(UserContext::class)->getUser(),
-                    'acl'  => fn($c) => $c->get(UserContext::class)->getAcl($c->get('aclManager')),
+                    MiddlewarePipe::class => HttpPipeline::class,
+                    'user'               => fn($c) => $c->get(UserContext::class)->getUser(),
+                    'acl'                => fn($c) => $c->get(UserContext::class)->getAcl($c->get('aclManager')),
                 ],
                 'shared'             => ['user' => false, 'acl' => false],
             ],

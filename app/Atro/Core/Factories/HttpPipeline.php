@@ -14,15 +14,16 @@ declare(strict_types=1);
 namespace Atro\Core\Factories;
 
 use Atro\Core\Routing\Route as RouteAttribute;
-use Atro\Core\Container;
 use Atro\Core\Middleware\AuthMiddleware;
 use Atro\Core\Middleware\LegacyControllerHandler;
 use GuzzleHttp\Psr7\Response;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Stratigility\MiddlewarePipe;
 use Mezzio\Router\FastRouteRouter;
 use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 use Mezzio\Router\Route;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -30,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class HttpPipeline implements FactoryInterface
 {
-    public function create(Container $container): MiddlewarePipe
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): MiddlewarePipe
     {
         $router        = new FastRouteRouter();
         $legacyHandler = new LegacyControllerHandler($container);
@@ -57,7 +58,7 @@ class HttpPipeline implements FactoryInterface
         return $pipe;
     }
 
-    private function registerHandlerRoutes(FastRouteRouter $router, Container $container): void
+    private function registerHandlerRoutes(FastRouteRouter $router, ContainerInterface $container): void
     {
         foreach ($this->discoverHandlerClasses($container) as $className) {
             if (!class_exists($className)) {
@@ -88,7 +89,7 @@ class HttpPipeline implements FactoryInterface
         }
     }
 
-    private function discoverHandlerClasses(Container $container): array
+    private function discoverHandlerClasses(ContainerInterface $container): array
     {
         $classes = [];
 
@@ -99,36 +100,12 @@ class HttpPipeline implements FactoryInterface
             $classes[] = str_replace('/', '\\', substr($relative, 0, -4));
         }
 
-        // Module handlers: derive base path + namespace from each module's composer.json PSR-4
+        // Module handlers: each module discovers its own handler classes
         foreach ($container->get('moduleManager')->getModules() as $module) {
-            [$namespace, $basePath] = $this->readModulePsr4($module);
-            if (!$namespace) {
-                continue;
-            }
-
-            foreach ($this->scanHandlers($basePath . 'Handlers/') as $file) {
-                $relative  = substr($file, strlen($basePath));
-                $classes[] = $namespace . '\\' . str_replace('/', '\\', substr($relative, 0, -4));
-            }
+            $classes = array_merge($classes, $module->getHandlerClasses());
         }
 
         return $classes;
-    }
-
-    private function readModulePsr4(\Atro\Core\ModuleManager\AbstractModule $module): array
-    {
-        $composerPath = $module->getPath() . 'composer.json';
-        if (!file_exists($composerPath)) {
-            return ['', ''];
-        }
-
-        $psr4 = json_decode(file_get_contents($composerPath), true)['autoload']['psr-4'] ?? [];
-        if (empty($psr4)) {
-            return ['', ''];
-        }
-
-        $namespaceKey = array_key_first($psr4);
-        return [rtrim($namespaceKey, '\\'), $module->getPath() . $psr4[$namespaceKey]];
     }
 
     private function scanHandlers(string $dir): array
