@@ -59,6 +59,6 @@
     {{#if collectionLoading }}
         <img className="preloader" style="height: 14px"  src="client/img/atro-loader.svg" alt="Loading"/>
     {{else}}
-        {{translate 'No Data'}}
+         <div class="no-data-container">{{translate 'No Data'}}</div>
     {{/if}}
 {{/if}}
