@@ -33,10 +33,27 @@ use Psr\Http\Server\RequestHandlerInterface;
     description: 'Returns rendered data for the specified dashlet widget.',
     tag: 'Dashlet',
     parameters: [
-        ['name' => 'dashletName', 'in' => 'path', 'required' => true, 'description' => 'Dashlet service name (e.g. Activities)', 'schema' => ['type' => 'string']],
+        [
+            'name'        => 'dashletName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Dashlet service name (e.g. Activities)',
+            'schema'      => [
+                'type' => 'string'
+            ]
+        ],
     ],
     responses: [
-        200 => ['description' => 'Dashlet data', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Dashlet data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object'
+                    ]
+                ]
+            ]
+        ],
         400 => ['description' => 'dashletName is required'],
     ],
 )]
@@ -57,7 +74,7 @@ class DashletHandler implements MiddlewareInterface
             return new BadRequestResponse('dashletName is required');
         }
 
-        $serviceName    = ucfirst($dashletName) . 'Dashlet';
+        $serviceName = ucfirst($dashletName) . 'Dashlet';
         $dashletService = $this->serviceFactory->create($serviceName);
 
         if (!$dashletService instanceof DashletInterface) {
