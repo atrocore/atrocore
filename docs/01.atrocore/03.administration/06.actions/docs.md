@@ -41,13 +41,14 @@ All actions share these common configuration fields:
 - **Active**: Whether the action is enabled
 - **Execute As**: Specifies the user context in which the action is executed:
   - **System**: Runs with system-level permissions.
-  - **Same User**: Runs with current user [permissions](../14.access-management/01.users/docs.md#role-based-permissions). When selected, the corresponding user appears as a link following System in the **Modified** field for changed records and in the **Created** field for newly created records in the [Summary](../../04.understanding-ui/docs.md#insights-tab) panel of the Side View for changed records. 
+  - **Same User**: Runs with current user [permissions](../14.access-management/01.users/docs.md#role-based-permissions). When selected, the corresponding user appears as a link following System in the **Modified** field for changed records and in the **Created** field for newly created records in the [Summary](../../04.understanding-ui/docs.md#insights-tab) panel of the Side View for changed records.
   
   ![Executed by User](_assets/executed-as-user.png){.medium}
 
 When **Usage** is selected (any non-empty option), an additional **Source Entity** field appears to specify which entity the action targets.
 
 **Entity action button:**
+
 - **Display** (Single, Dropdown): Defines how the action button appears on the list view header.
 
 ![Entity Level Single Display](_assets/entity-level-single.png){.small}
@@ -59,6 +60,7 @@ Single shows a direct button on the list view header.
 Dropdown groups the action in a dropdown menu.
 
 **Record action button:**
+
 - **Display** (Single, Dropdown): Defines action button on detail view (also available as single record action in list view)
 
 ![Record Level Single Display](_assets/record-level-single.png){.medium}
@@ -80,6 +82,7 @@ Actions are also available as [single record actions](../../08.record-management
 When enabled, actions appear in the mass actions menu for selected records. Read [Mass actions](../../12.mass-actions/) for more information.
 
 **Field action button:**
+
 - **Field**: Defines which field the action button will be shown near on detail view
 
 ![Field Level Configuration](_assets/field-level.png){.medium}
@@ -93,6 +96,7 @@ Actions in AtroCore support optional icon assignments to improve usability and v
 ![Action Icons](_assets/Action-Icons.png){.small}
 
 The Icon field is optional.
+
 - No icon selected – The action is displayed using only its Action Name.
 - Icon selected – The action is displayed using the selected icon, followed by the Action Name (consistent with system-defined actions).
 
@@ -101,6 +105,7 @@ The Icon field is optional.
 ![Icon selected 2](_assets/Icon-selected2.png){.small}
 
 When an icon is selected, an additional configuration option becomes available:
+
 - Hide Text Label on the Button (checkbox)
   - This checkbox is visible only if an icon has been selected.
   - When enabled, the action is rendered using the icon only, without the Action Name.
@@ -135,6 +140,7 @@ When working in the script editor, right-click anywhere in the editor area to op
 ![Script Helper](_assets/action-script-helper.png){.medium}
 
 #### Basic
+
 When `Basic` option is selected, the configuration is performed through a dedicated panel in the user interface. This panel enables users to define behavior without writing scripts.
 
 ![Create Update Panel](_assets/action-create-update-panel.png){.medium}
@@ -163,12 +169,14 @@ Actions can be triggered automatically through:
 - **[Scheduled Jobs](../05.system-jobs/01.scheduled-jobs/)**: Time-based execution at regular intervals
 
 ## Monitoring Actions
+
 AtroCore provides comprehensive monitoring capabilities for action executions, allowing you to track performance and review results.
 Use [Job Manager](../../05.toolbar/03.job-manager/) and [Action History](../14.access-management/04.action-history/) in Administration to monitor action execution and track their results.
 
 > More detailed information for Import and Export actions can be found in the related Feed documentation, such as [Import Feed](../../../02.data-exchange/01.import-feeds/docs.md#import-executions) and [Export Feed](../../../02.data-exchange/02.export-feeds/docs.md#export-executions).
 
 ### Action Execution Panel
+
 > Action Execution records are automatically created by the system whenever an action runs, and they have specific access restrictions to maintain data integrity.
 
 Each action has an `Execution` panel on its detail page that displays recent execution history. This panel provides quick access to monitor how the action has been performing over time.
@@ -192,6 +200,7 @@ Click on any execution name to open its detail view and see complete information
 - **Payload**:Execution parameters and configuration data using [Script](#script).
 
 Action executions move through different states during their lifecycle and have the following states:
+
 - **Done**:Execution completed successfully
 - **Failed**:Execution encountered an error and could not complete
 - **In Progress**:Currently executing
@@ -207,7 +216,8 @@ For actions that perform data operations such as [`Create`](#create), [`Update`]
 
 From the `Execution` panel, use the context menu of the execution record and select `All Logs`.
 
-Each `Action Execution Logs` records provides detailed information about individual operations. 
+Each `Action Execution Logs` records provides detailed information about individual operations.
+
 - **ID**:Unique log entry identifier
 - **Action Execution**: Execution reference.
 - **Type**: Action type performed.
@@ -217,6 +227,7 @@ Each `Action Execution Logs` records provides detailed information about individ
 - **Created At**: When the operation was logged.
 
 ## Action Types
+
 > Some Action Types are provided by default, while others become available through additional modules, including both commercial and free extensions.
 
 AtroCore supports various action types, each designed for specific automation scenarios. Below are all available action types and their configurations:
@@ -226,6 +237,7 @@ AtroCore supports various action types, each designed for specific automation sc
 ### Data Operations
 
 #### **Create**
+
 > Available with the base AtroCore installation.
 
 Creates new records in the system based on defined templates. This action can be used either within a Workflow or independently.
@@ -233,11 +245,13 @@ Creates new records in the system based on defined templates. This action can be
 ![Create Configuration](_assets/action-type-create.png){.medium}
 
 **Configuration:**
+
 - **Target Entity**: Entity type for new records
 - **Update Type**: Method for record creation ([Basic](#basic) or [Script](#script))
 - **Search Entity**: Defines the source entity used for bulk record creation based on filtered search results.
 
-#### **Update** 
+#### **Update**
+
 > Available with the base AtroCore installation.
 
 Modifies existing records based on specified criteria and field values.
@@ -245,6 +259,7 @@ Modifies existing records based on specified criteria and field values.
 ![Update Configuration](_assets/action-type-update.png){.medium}
 
 **Configuration:**
+
 - **Target Entity**: Entity type for records to update
 - **Update Type**: Method for record updating ([Basic](#basic) or [Script](#script))
 - **Apply to pre-selected records**: Defines the action scope:
@@ -253,6 +268,7 @@ Modifies existing records based on specified criteria and field values.
 - **Filter Result**: Available only when "Apply to pre-selected records" is unchecked. Define which records should be updated based on specific criteria and query conditions - see [Search and Filtering](../../11.search-and-filtering) for details
 
 #### **Create or Update**
+
 > Available with the base AtroCore installation.
 
 Create or Update extends the standard Create action by supporting both record creation and record updates. It creates new records or updates existing ones when matching entries already exist in the system, based on the defined templates. This action supports both [Script](#script) and [Basic](#basic) types.
@@ -260,6 +276,7 @@ Create or Update extends the standard Create action by supporting both record cr
 ![Create or Update Configuration](_assets/action-create-or-update-type.png){.medium}
 
 #### **Delete**
+
 > Available with the base AtroCore installation.
 
 Removes records from the system based on specified criteria.
@@ -267,6 +284,7 @@ Removes records from the system based on specified criteria.
 ![Delete Configuration](_assets/action-type-delete.png){.medium}
 
 **Configuration:**
+
 - **Target Entity**: Entity type for records to delete
 - **Apply to pre-selected records**: Defines the action scope:
   - **Checked**: Action deletes only the specific record it was triggered from. Source Entity becomes locked to match Target Entity, and Filter Result panel is not available.
@@ -274,6 +292,7 @@ Removes records from the system based on specified criteria.
 - **Filter Result**: Available only when "Apply to pre-selected records" is unchecked. Define which records should be deleted using query conditions - see [Search and Filtering](../../11.search-and-filtering) for details
 
 #### **Upsert**
+
 > Available with [Workflow](../../../04.collaboration/01.workflows/docs.md) module.
 
 Creates new records or updates existing ones based on matching criteria.
@@ -283,10 +302,13 @@ Creates new records or updates existing ones based on matching criteria.
 **Configuration:** defining entity mappings and field values with only [Script](#script) as Parameters and uses array syntax with entity/payload structure.
 
 **Example JSON Configuration:**
+
 ```json
 [{"entity":"Product","payload":{"name":"{{ entity.name }}"}}]
 ```
+
 **Extended example:**
+
 ```json
 [
   {
@@ -305,46 +327,8 @@ Creates new records or updates existing ones based on matching criteria.
   }
 ]
 ```
+
 The system attempts to find existing entities using identifier or unique fields. If found, records are updated; otherwise new records are created.
-
-#### **Create Version**
-> Available with [Revisions](../../../04.collaboration/03.revisions/docs.md) module.
-
-Customizes the creation of record snapshots with configurable version naming. This allows tracking changes and comparing current records with previously saved versions.
-
-![Create Version Configuration](_assets/action-type-version.png){.medium}
-
-**Key Features:**
-- Version names must be unique within the same record
-- Versions are read-only and cannot be modified or deleted individually
-- Use the `Compare Versions` action to view differences between versions
-
-> Versioning must be [enabled](../../../04.collaboration/03.revisions/docs.md#enabling-versioning) for the source entity.
-
-**Configuration:**
-- **Source Entity**: Entity type for which versions will be created
-- **Version Name**: [Script](#script) template for automatically generating version names. Leave empty to set names manually
-
-!! The system creates the `Create Version` action. For this type of action, we recommend only changing the `Version Name` field.
-
-#### **Create Change Request**
-> Available with [Revisions](../../../04.collaboration/03.revisions/docs.md) module.
-
-Customizes the creation of record snapshots with configurable version naming. It enables users to create snapshots of a record at specific points in time. Users can then develop the record and its snapshot as separate entities, with the option of merging them into one eventually.
-
-![Create Change Request Configuration](_assets/action-type-Change-Request.png){.medium}
-
-**Key Features:**
-- Change Request names must be unique within the same record
-- Use the Change Requests tab in Insights panel to view and edit different change requests
-
-> Change Requests must be [enabled](../../../04.collaboration/03.revisions/docs.md#enabling-change-request) for the source entity.
-
-**Configuration:**
-- **Source Entity**: Entity type for which change requests will be created
-- **Change Request Name**: [Script](#script) template for automatically generating change request names. Leave empty to set names manually
-
-!! The system creates the `Create Change Request` action. For this type of action, we recommend only changing the `Change Request Name` field.
 
 #### **Suggest value**
 
@@ -353,6 +337,7 @@ Suggests modifications for existing records based on defined templates. The user
 ![Suggest value Configuration](_assets/action-type-value.png){.medium}
 
 **Configuration:**
+
 - **Source Entity**: Entity type for records
 - **Update Type**: Method for record updating (Basic or Script)
 - **Usage**: Defines when the suggestion is displayed
@@ -367,11 +352,13 @@ When using [Script Mode](#script) for Suggest value action additional Twig funct
 - "uiRecordFrom": Record data array of the entity from which you open current entity.
 
 #### **Suggest value by AI**
+
 > Available with [AI Integration](../../../05.pim/11.ai-integration/docs.md) module.
 
 It uses the same method as **Suggest value** action type but uses AI for the suggested data. For implementation details and usage, refer to the [AI Integration documentation](../../../05.pim/11.ai-integration/docs.md#updating-values-in-frontend).
 
 #### **Set value by AI**
+
 > Available with [AI Integration](../../../05.pim/11.ai-integration/docs.md) module.
 
 It uses the same method as **Update** action type but uses AI for the suggested data.For related behavior and configuration, see the [AI Integration documentation](../../../05.pim/11.ai-integration/docs.md#updating-values-in-backend).
@@ -383,11 +370,13 @@ Duplicates existing records to create new copies.
 ![Copy Configuration](_assets/action-type-copy.png){.medium}
 
 **Configuration:**
+
 - **Target Entity**: Entity type to copy
 
 ### Data Exchange
 
 #### **Webhook**
+
 > Available with the base AtroCore installation.
 
 Sends HTTP requests (GET) to external systems for integration purposes.
@@ -397,14 +386,17 @@ Sends HTTP requests (GET) to external systems for integration purposes.
 ![Webhook Configuration](_assets/action-type-webhook.png){.medium}
 
 **Configuration:**
+
 - **URL**: Target endpoint for the webhook request
 
 #### **Import Feed**
+
 Imports data from external sources using configured import feeds.
 
 ![Import Feed Configuration](_assets/action-type-import-feed.png){.medium}
 
 **Configuration:**
+
 - **Execute in Background**: Option to run import as background process
 - **Import Feed**: Selection of configured import feed
 <!-- TODO: enhance with real payload example -->
@@ -415,11 +407,13 @@ For example, in the image below script {"sourceEntitiesIds": {{ sourceEntitiesId
 ![Import Feed](./_assets/import-feed.png){.large}
 
 #### **Export Feed**
+
 Exports data to external destinations using configured export feeds.
 
 ![Export Feed Configuration](_assets/demo-export-feed-configured.png){.medium}
 
 **Configuration:**
+
 - **Execute in Background**: Option to run export as background process
 - **Export Feed**: Links to a specific Export Feed entity that defines the export format, destination, and data mapping
 - **Payload**: Custom data payload for the export with [Twig](../../../10.developer-guide/80.twig-tutorial/) templating syntax
@@ -442,6 +436,7 @@ For example, the payload filters all attributes by their ids and transfers to th
 ![Export Feed](./_assets/export-feed.png){.large}
 
 #### **Synchronization**
+
 > Available with [Synchronization](../../../02.data-exchange/03.synchronization/) module
 
 Synchronizes data between AtroCore and external systems.
@@ -449,6 +444,7 @@ Synchronizes data between AtroCore and external systems.
 ![Synchronization Configuration](_assets/action-type-synchronization.png){.medium}
 
 **Configuration:**
+
 - **Execute in Background**: Option to run sync as background process
 - **Synchronization**: Selection of configured synchronization
 <!-- TODO: enhance with real payload example -->
@@ -459,6 +455,7 @@ Synchronizes data between AtroCore and external systems.
 ### Communication
 
 #### **Send E-mail**
+
 > Available with the base AtroCore installation.
 
 Sends emails to specified recipients using configured email templates and connections.
@@ -467,12 +464,14 @@ Can be used to notify users about events related to the selected entity in respo
 ![Send E-mail Configuration](_assets/demo-send-email-configured.png){.medium}
 
 **Configuration:**
+
 - **Target Entity**: Entity type that contains recipient information
 - **Preview before sending**: Option to review email content before sending
 - **Mode**: Email composition method (Basic or Script)
 - **Connection**: Email server connection configuration (required) - links to configured SMTP connections
 
 **Basic Mode:**
+
 - **Email Template**: Email template for content and formatting (required) - links to Email Templates, you can choose existing template or create your own
 - **Email To**: Primary email recipients (supports multiple addresses)
 - **Email CC**: Carbon copy recipients (optional)
@@ -482,6 +481,7 @@ Can be used to notify users about events related to the selected entity in respo
 Script mode provides advanced email configuration using [Twig](../../../10.developer-guide/80.twig-tutorial/) templating syntax. 
 ![Send E-mail Script Mode](_assets/send-email-script-mode-parameters.png){.medium}
 For example, you can send an email to all users who are related to the particular record or select a template depending on the kind of changes.
+
 - **Script**: Code editor for dynamic email configuration with Twig variables:
   - `emailTo`: Array of recipient email addresses (e.g., `['email1@domain.com', 'email2@domain.com']`)
   - `emailCc`: Array of CC recipient email addresses (can be empty: `[]`)
@@ -496,6 +496,7 @@ Can be used to send notifications to any users of the system in response to a sp
 ![Send Notification Configuration](_assets/demo-send-notification-configured.png){.medium}
 
 **Configuration:**
+
 - **System Template**: Notification template (required) - links to Notification Templates. You can choose any of the pre-configured templates or create your own
 - **System Users**: Specific users to receive notifications - links to Users
 - **Entity Users**: Role-based recipients related to the entity record. The list of available fields depends on the entity selected in the **Source Entity** field. All user-related fields from the selected entity are presented here (Owner, Assigned User, Followers, etc.)
@@ -525,13 +526,15 @@ This is an action added by **Microsoft 365 Connector** module. It downloads emai
 ### Document Generation
 
 #### **Generate PDF**
+
 > Available with [PDF Generation](../../../07.publishing/01.pdf-generator/) module.
 
-Creates PDF documents using configured PDF templates. 
+Creates PDF documents using configured PDF templates.
 
 ![Generate PDF Configuration](_assets/action-type-generate-pdf.png){.medium}
 
 **Configuration:**
+
 - **PDF Feed**: Selection of configured PDF template
 
 ### Utility Actions
@@ -543,13 +546,14 @@ Displays custom error messages to prevent operations. Primarily used with "Befor
 ![Error Message Configuration](_assets/error-message-configured.png){.medium}
 
 **Configuration:**
+
 - **Error Message**: Text content for the error message (supports dynamic content with [Twig syntax](../../../10.developer-guide/80.twig-tutorial/docs.md))
 
 This action is typically used within [Workflows](../../../04.collaboration/01.workflows/) for conditional error handling. It is usually set up with an empty **Display** field so it does not appear as an action button, and the error message is shown whenever the action is triggered in the workflow.
 
 #### **Validate Component**
 
-This is an action added by **Components** module. For more information please read [Components](../../../04.collaboration/06.components/docs.md) documentation page.
+This is an action added by **Components** module. For more information please read [Components](https://store.atrocore.com/en/components/20199) documentation page.
 
 #### **Action Set**
 
@@ -558,11 +562,13 @@ Executes multiple actions sequentially in a single operation. When triggered, th
 ![Action Set Actions Panel](_assets/action-set-actions-panel.png){.medium}
 
 **Configuration:**
+
 - **Actions Panel**: Displays all included actions with their details (Name, Type, Source Entity, etc.)
 - **Active in Action Set**: Each action has a checkbox to control its participation in action sets
 - **Sequential Execution**: Actions execute in the defined order when triggered
 
 **Use Cases:**
+
 - Execute multiple related actions as a single operation (e.g., AI content generation, translation, export)
 - Temporarily disable specific actions for testing different scenarios
-- Integrate complex workflows while maintaining control over individual components 
+- Integrate complex workflows while maintaining control over individual components
