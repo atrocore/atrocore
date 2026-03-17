@@ -49,7 +49,8 @@
     "addNewValue": "Neuen Wert hinzufügen",
     "extensibleEnumOptions": "Auswahloptionen",
     "Classification": "Klassifikation",
-    "conditionalProperties": "Bedingte Eigenschaften"
+    "conditionalProperties": "Bedingte Eigenschaften",
+    "viewRecordsWithAttribute": "Datensätze mit diesem Attribut"
   },
   "options": {
     "type": {
