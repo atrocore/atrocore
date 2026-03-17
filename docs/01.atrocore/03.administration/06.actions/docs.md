@@ -549,7 +549,7 @@ This action is typically used within [Workflows](../../../04.collaboration/01.wo
 
 #### **Validate Component**
 
-This is an action added by **Components** module. For more information please read [Components](../../../04.collaboration/06.components/docs.md) documentation page.
+This is an action added by **Components** module. For more information please read [Components](https://store.atrocore.com/en/components/20199) documentation page.
 
 #### **Action Set**
 
@@ -558,11 +558,13 @@ Executes multiple actions sequentially in a single operation. When triggered, th
 ![Action Set Actions Panel](_assets/action-set-actions-panel.png){.medium}
 
 **Configuration:**
+
 - **Actions Panel**: Displays all included actions with their details (Name, Type, Source Entity, etc.)
 - **Active in Action Set**: Each action has a checkbox to control its participation in action sets
 - **Sequential Execution**: Actions execute in the defined order when triggered
 
 **Use Cases:**
+
 - Execute multiple related actions as a single operation (e.g., AI content generation, translation, export)
 - Temporarily disable specific actions for testing different scenarios
-- Integrate complex workflows while maintaining control over individual components 
+- Integrate complex workflows while maintaining control over individual components
