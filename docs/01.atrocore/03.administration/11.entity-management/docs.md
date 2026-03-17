@@ -100,12 +100,6 @@ The Attributes panel allows you to add and configure attributes for the entity.
 
 For detailed information about attribute types and configuration, see [Fields and Attributes](../11.entity-management/03.fields-and-attributes/).
 
-### Versioning panel
-
-Versioning panel is added by [Revisions](https://store.atrocore.com/revisions/20179) module.
-
-![Enabling Versioning](_assets/Enabling-Versioning.png){.medium}
-
 ## Working with entity records
 
 For information about creating, editing, and deleting records within entities, see the [Record Management](../../08.record-management/) documentation.

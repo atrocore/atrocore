@@ -50,12 +50,6 @@ User added posts can not only be removed, but also edited. For this, click the `
 
 ![Edit post](./_assets/stream-post-editing.png){.large}
 
-### Creating a Discussion
-
-Users can either create a discussion from scratch or convert a post into one. Once a discussion has been started, any user with access to the activities can participate by posting messages to it.  Messages in a discussion are displayed in order from first to last, but a discussion is not raised in the activities panel whenever new messages appear:
-
-![Discussion](./_assets/iscussion.png){.large}
-
 ## System Activities Records
 
 System records are displayed on the `Activities` panel on the [detail view](../04.understanding-ui/docs.md#detail-view) page of the corresponding entity record:

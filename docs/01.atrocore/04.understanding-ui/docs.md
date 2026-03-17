@@ -269,8 +269,6 @@ The Activities tab allows you to track changes to the entity and leave and read 
 
  ![Activities tab](./_assets/activities2.png){.medium}
 
-Some functions, such as **Discussions** are added by modules. In this case by [Discussions](https://store.atrocore.com/en/discussions/20128) module.
-
 Other modules can add more panels to the side view panel. Please, visit our [store](https://store.atrocore.com/en/) to learn more about modules available for you.
 
 ## Left sidebar

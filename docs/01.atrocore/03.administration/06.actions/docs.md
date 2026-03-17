@@ -330,51 +330,6 @@ Creates new records or updates existing ones based on matching criteria.
 
 The system attempts to find existing entities using identifier or unique fields. If found, records are updated; otherwise new records are created.
 
-#### **Create Version**
-
-> Available with [Revisions](https://store.atrocore.com/revisions/20179) module.
-
-Customizes the creation of record snapshots with configurable version naming. This allows tracking changes and comparing current records with previously saved versions.
-
-![Create Version Configuration](_assets/action-type-version.png){.medium}
-
-**Key Features:**
-
-- Version names must be unique within the same record
-- Versions are read-only and cannot be modified or deleted individually
-- Use the `Compare Versions` action to view differences between versions
-
-> Versioning must be [enabled](https://store.atrocore.com/revisions/20179#enabling-versioning) for the source entity.
-
-**Configuration:**
-
-- **Source Entity**: Entity type for which versions will be created
-- **Version Name**: [Script](#script) template for automatically generating version names. Leave empty to set names manually
-
-!! The system creates the `Create Version` action. For this type of action, we recommend only changing the `Version Name` field.
-
-#### **Create Change Request**
-
-> Available with [Revisions](https://store.atrocore.com/revisions/20179) module.
-
-Customizes the creation of record snapshots with configurable version naming. It enables users to create snapshots of a record at specific points in time. Users can then develop the record and its snapshot as separate entities, with the option of merging them into one eventually.
-
-![Create Change Request Configuration](_assets/action-type-Change-Request.png){.medium}
-
-**Key Features:**
-
-- Change Request names must be unique within the same record
-- Use the Change Requests tab in Insights panel to view and edit different change requests
-
-> Change Requests must be [enabled](https://store.atrocore.com/revisions/20179#enabling-change-request) for the source entity.
-
-**Configuration:**
-
-- **Source Entity**: Entity type for which change requests will be created
-- **Change Request Name**: [Script](#script) template for automatically generating change request names. Leave empty to set names manually
-
-!! The system creates the `Create Change Request` action. For this type of action, we recommend only changing the `Change Request Name` field.
-
 #### **Suggest value**
 
 Suggests modifications for existing records based on defined templates. The user can then modify the result. These suggested values only appear in the front end and must be saved manually.
