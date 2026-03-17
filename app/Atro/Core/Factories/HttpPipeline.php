@@ -14,9 +14,10 @@ declare(strict_types=1);
 namespace Atro\Core\Factories;
 
 use Atro\Core\Routing\Route as RouteAttribute;
+use Atro\Core\DataManager;
 use Atro\Core\Middleware\AuthMiddleware;
 use Atro\Core\Middleware\LegacyControllerHandler;
-use Atro\Core\Http\Response\Errors\NotFoundResponse;
+use Atro\Core\Middleware\NotFoundMiddleware;
 use Atro\Core\Http\Response\JsonResponse;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Stratigility\MiddlewarePipe;
@@ -25,10 +26,6 @@ use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 use Mezzio\Router\Route;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 class HttpPipeline implements FactoryInterface
 {
@@ -54,7 +51,7 @@ class HttpPipeline implements FactoryInterface
         $pipe->pipe(new RouteMiddleware($router));
         $pipe->pipe(new AuthMiddleware($container));
         $pipe->pipe(new DispatchMiddleware());
-        $pipe->pipe($this->notFoundMiddleware());
+        $pipe->pipe(new NotFoundMiddleware());
 
         return $pipe;
     }
@@ -92,6 +89,14 @@ class HttpPipeline implements FactoryInterface
 
     private function discoverHandlerClasses(ContainerInterface $container): array
     {
+        /** @var DataManager $dataManager */
+        $dataManager = $container->get(DataManager::class);
+
+        $cached = $dataManager->getCacheData('handler_routes');
+        if ($cached !== null) {
+            return $cached;
+        }
+
         $classes = [];
 
         // Core handlers: CORE_PATH/Atro/Handlers/ → namespace Atro\Handlers\...
@@ -105,6 +110,8 @@ class HttpPipeline implements FactoryInterface
         foreach ($container->get('moduleManager')->getModules() as $module) {
             $classes = array_merge($classes, $module->getHandlerClasses());
         }
+
+        $dataManager->setCacheData('handler_routes', $classes);
 
         return $classes;
     }
@@ -179,13 +186,4 @@ class HttpPipeline implements FactoryInterface
         }, $routePath);
     }
 
-    private function notFoundMiddleware(): MiddlewareInterface
-    {
-        return new class implements MiddlewareInterface {
-            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-            {
-                return new NotFoundResponse();
-            }
-        };
-    }
 }
