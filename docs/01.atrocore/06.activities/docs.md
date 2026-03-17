@@ -11,6 +11,7 @@ Activities display can be enabled or disabled for each entity separately. To ena
 ![Disable](./_assets/Disable.png){.medium}
 
 AtroCore supports the following **types** of activities entries:
+
 - **Notes** – messages assigned to the current user by other system users, as well as his own messages posted in the Activities, irregardless of the assignee.
 - **Updates** – notifications about changes in the fields (attributes) of the user-related entries.
 - **Discussions** – threads where all users can participate.
@@ -81,7 +82,4 @@ Only administrators can remove change history records from the Activities panel 
 
 !! Beware that this action is irreversible.
 
-! The Activities functionality can be further extended with the help of the [Revisions](../../04.collaboration/03.revisions) module, which allows you to view the field changes history in the pop-up and restore previous values from the change history. Go to our [store](https://store.atrocore.com/revisions/20179) to learn more about the "Revisions" module.*
-
-
-
+! The Activities functionality can be further extended with the help of the [Revisions](https://store.atrocore.com/revisions/20179) module, which allows you to view the field changes history in the pop-up and restore previous values from the change history.

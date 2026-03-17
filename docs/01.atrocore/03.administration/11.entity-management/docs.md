@@ -62,7 +62,7 @@ After creating an entity, you can configure the following fields in the Details 
 | Has Associates                             | Enable [associations](../11.entity-management/08.associations/) for this entity |
 | Has Content Components                     | Enable [components](https://store.atrocore.com/en/components/20199) for this entity                                                                                                      |
 | Disable direct attribute linking           | When enabled, [attributes](../12.attribute-management/) can only be added to records via classification and not manually. This option is not shown if `Has Classifications` option is disabled.                                                                                            |
-| Link Attributes with the Classification automatically           | When enabled, if an [attribute](../12.attribute-management/) is directly linked to a record and that record is linked to a classification, the attribute will also be linked to the classification. This option is only available if `Has Attributes` option is enabled and `Disable direct attribute linking ` option is disabled.                                                                                            |
+| Link Attributes with the Classification automatically           | When enabled, if an [attribute](../12.attribute-management/) is directly linked to a record and that record is linked to a classification, the attribute will also be linked to the classification. This option is only available if `Has Attributes` option is enabled and `Disable direct attribute linking` option is disabled.                                                                                            |
 | Single Classification only           | When enabled, only one [classification](../12.attribute-management/04.classifications/docs.md) can be added to record. This option is not shown if `Has Classifications` option is disabled.                                                                                            |
 | Enable Field Value Lock              | Allows fields and attributes of the entity to be locked from changes performed by the system, such as imports, workflows, and other automated actions. This option is added by the [Advanced Data Management](06.advanced-data-management/docs.md#field-value-lock) module.
 
@@ -102,11 +102,10 @@ For detailed information about attribute types and configuration, see [Fields an
 
 ### Versioning panel
 
-Versioning panel is added by [Revisions](https://store.atrocore.com/revisions/20179) module. For more information, please visit the [Revisions](../../../04.collaboration/03.revisions/docs.md) page.
+Versioning panel is added by [Revisions](https://store.atrocore.com/revisions/20179) module.
 
 ![Enabling Versioning](_assets/Enabling-Versioning.png){.medium}
 
 ## Working with entity records
 
 For information about creating, editing, and deleting records within entities, see the [Record Management](../../08.record-management/) documentation.
-
