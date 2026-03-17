@@ -49,7 +49,8 @@
     "Classification": "Classification",
     "addNewValue": "Add new value",
     "extensibleEnumOptions": "List Options",
-    "conditionalProperties": "Conditional Properties"
+    "conditionalProperties": "Conditional Properties",
+    "viewRecordsWithAttribute": "Records with this attribute"
   },
   "options": {
     "type": {
