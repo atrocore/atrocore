@@ -2626,37 +2626,47 @@ class Base
         if (!empty($fuzzyFields)) {
             $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
             $words = array_values(array_filter(array_map('trim', explode(' ', $textFilter))));
-            $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($fuzzyFields, $words, $textFilter, $threshold, $autocompletion) {
-                $ta = $mapper->getQueryConverter()->getMainTableAlias();
+            $ta = QueryConverter::TABLE_ALIAS;
 
-                // Each word must match at least one fuzzy field (AND of OR-per-field)
-                foreach ($words as $word) {
-                    $paramVal = 'ftrgm_v_' . IdGenerator::unsortableId();
-                    $paramThr = 'ftrgm_t_' . IdGenerator::unsortableId();
-                    $conditions = [];
-                    foreach ($fuzzyFields as $f) {
-                        $colName = Util::toUnderScore($f);
-                        $conditions[] = "word_similarity(:$paramVal, $ta.$colName) >= :$paramThr";
-                    }
-                    $qb->andWhere('(' . implode(' OR ', $conditions) . ')');
-                    $qb->setParameter($paramVal, $word);
-                    $qb->setParameter($paramThr, $threshold);
+            $groupItem = [
+                'AND' => []
+            ];
+
+            // Each word must match at least one fuzzy field (AND of OR-per-field), added via innerSql
+            foreach ($words as $word) {
+                $paramVal = 'ftrgm_v_' . IdGenerator::unsortableId();
+                $paramThr = 'ftrgm_t_' . IdGenerator::unsortableId();
+                $conditions = [];
+                foreach ($fuzzyFields as $f) {
+                    $colName = Util::toUnderScore($f);
+                    $conditions[] = "word_similarity(:$paramVal, $ta.$colName) >= :$paramThr";
                 }
+                $groupItem['AND'][] = [
+                    'innerSql' => [
+                        'sql'        => '(' . implode(' OR ', $conditions) . ')',
+                        'parameters' => [$paramVal => $word, $paramThr => $threshold],
+                    ],
+                ];
+            }
 
-                // Autocomplete: order by similarity of full input to name
-                if ($autocompletion && in_array('name', $fuzzyFields)) {
-                    $paramVal  = 'ftrgm_ord_' . IdGenerator::unsortableId();
-                    $scoreAlias = 'fuzzy_name_score_' . IdGenerator::unsortableId();
-                    $colName   = Util::toUnderScore('name');
+            $group[] = $groupItem;
+
+            // Autocomplete: order by similarity of full input to name (requires callback for addSelect/orderBy)
+            if ($autocompletion && in_array('name', $fuzzyFields)) {
+                $paramVal = 'ftrgm_ord_' . IdGenerator::unsortableId();
+                $scoreAlias = 'fuzzy_name_score_' . IdGenerator::unsortableId();
+                $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($paramVal, $scoreAlias, $textFilter) {
+                    $ta = $mapper->getQueryConverter()->getMainTableAlias();
+                    $colName = Util::toUnderScore('name');
                     $qb->addSelect("word_similarity(:$paramVal, $ta.$colName) AS $scoreAlias");
                     $qb->orderBy($scoreAlias, 'DESC');
                     $qb->addOrderBy("$ta.$colName");
                     $qb->setParameter($paramVal, $textFilter);
-                }
-            };
+                };
+            }
         }
 
-        if (empty($fuzzyFields) && count($group) === 0) {
+        if (count($group) === 0) {
             $result['whereClause'][] = [
                 'id' => null
             ];
