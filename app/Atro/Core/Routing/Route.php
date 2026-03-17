@@ -18,12 +18,11 @@ class Route
 {
     public function __construct(
         public readonly string       $path,
-        public readonly string|array $methods     = ['GET'],
-        public readonly bool         $auth        = true,
-        // OpenAPI documentation fields — required to register the route
         public readonly string       $summary,
         public readonly string       $description,
         public readonly string       $tag,
+        public readonly string|array $methods     = ['GET'],
+        public readonly bool         $auth        = true,
         public readonly array        $parameters  = [],
         public readonly array        $responses   = [],
     ) {
