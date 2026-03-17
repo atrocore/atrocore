@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Middleware;
 
 use Atro\Core\Exceptions\Unauthorized;
+use Atro\Core\Http\Response\Errors\UnauthorizedResponse;
 use Atro\Core\Http\Response\ErrorResponse;
 use Espo\Core\Utils\Auth;
 use Mezzio\Router\RouteResult;
@@ -81,6 +82,7 @@ class AuthMiddleware implements MiddlewareInterface
             return new ErrorResponse($e->getCode() ?: 500, $e->getMessage(), ['X-Status-Reason' => $e->getMessage()]);
         }
 
+
         if (!$isAuthenticated) {
             return $this->unauthorizedResponse();
         }
@@ -114,6 +116,6 @@ class AuthMiddleware implements MiddlewareInterface
 
     private function unauthorizedResponse(array $extraHeaders = []): ResponseInterface
     {
-        return new ErrorResponse(401, 'Unauthorized', $extraHeaders);
+        return new UnauthorizedResponse('Unauthorized', $extraHeaders);
     }
 }
