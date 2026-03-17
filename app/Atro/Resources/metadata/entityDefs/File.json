@@ -71,6 +71,7 @@
     },
     "fileSize": {
       "type": "int",
+      "dbType": "bigint",
       "readOnly": true,
       "layoutMassUpdateDisabled": true,
       "importDisabled": true,
