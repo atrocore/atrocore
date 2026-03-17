@@ -478,8 +478,10 @@ Can be used to notify users about events related to the selected entity in respo
 
 **Script Mode:**
 
-Script mode provides advanced email configuration using [Twig](../../../10.developer-guide/80.twig-tutorial/) templating syntax. 
+Script mode provides advanced email configuration using [Twig](../../../10.developer-guide/80.twig-tutorial/) templating syntax.
+
 ![Send E-mail Script Mode](_assets/send-email-script-mode-parameters.png){.medium}
+
 For example, you can send an email to all users who are related to the particular record or select a template depending on the kind of changes.
 
 - **Script**: Code editor for dynamic email configuration with Twig variables:
@@ -489,7 +491,7 @@ For example, you can send an email to all users who are related to the particula
 
 #### **Send Notification**  
 
-Sends internal system notifications to users within the AtroCore application. 
+Sends internal system notifications to users within the AtroCore application.
 
 Can be used to send notifications to any users of the system in response to a specific trigger (record modification, changing of the specific field, etc.). You can select a specific user from the list of all system users, as well as select users associated with a specific entity.
 
@@ -550,10 +552,6 @@ Displays custom error messages to prevent operations. Primarily used with "Befor
 - **Error Message**: Text content for the error message (supports dynamic content with [Twig syntax](../../../10.developer-guide/80.twig-tutorial/docs.md))
 
 This action is typically used within [Workflows](../../../04.collaboration/01.workflows/) for conditional error handling. It is usually set up with an empty **Display** field so it does not appear as an action button, and the error message is shown whenever the action is triggered in the workflow.
-
-#### **Validate Component**
-
-This is an action added by **Components** module. For more information please read [Components](https://store.atrocore.com/en/components/20199) documentation page.
 
 #### **Action Set**
 
