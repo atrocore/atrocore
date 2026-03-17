@@ -4,7 +4,7 @@ taxonomy:
     category: docs
 ---
 
-Actions in AtroCore are automated operations that can be executed manually through the user interface or automatically via [scheduled jobs](../05.system-jobs/01.scheduled-jobs/) and [workflows](../../../04.collaboration/01.workflows/). They provide a powerful framework for automating business processes, data transformations, integrations, and AI-powered operations.
+Actions in AtroCore are automated operations that can be executed manually through the user interface or automatically via [scheduled jobs](../05.system-jobs/01.scheduled-jobs/) and [workflows](https://store.atrocore.com/en/workflows/20194). They provide a powerful framework for automating business processes, data transformations, integrations, and AI-powered operations.
 
 ## Key Features
 
@@ -165,7 +165,7 @@ Actions can be executed manually through the user interface:
 
 Actions can be triggered automatically through:
 
-- **[Workflows](../../../04.collaboration/01.workflows/)**: Event-driven execution based on entity changes
+- **[Workflows](https://store.atrocore.com/en/workflows/20194)**: Event-driven execution based on entity changes
 - **[Scheduled Jobs](../05.system-jobs/01.scheduled-jobs/)**: Time-based execution at regular intervals
 
 ## Monitoring Actions
@@ -290,45 +290,6 @@ Removes records from the system based on specified criteria.
   - **Checked**: Action deletes only the specific record it was triggered from. Source Entity becomes locked to match Target Entity, and Filter Result panel is not available.
   - **Unchecked**: Action can target different entities and use filtering criteria. For example, Source Entity can be "Category" while the action deletes all "Products" filtered by that category.
 - **Filter Result**: Available only when "Apply to pre-selected records" is unchecked. Define which records should be deleted using query conditions - see [Search and Filtering](../../11.search-and-filtering) for details
-
-#### **Upsert**
-
-> Available with [Workflow](../../../04.collaboration/01.workflows/docs.md) module.
-
-Creates new records or updates existing ones based on matching criteria.
-
-![Upsert Configuration](_assets/action-type-upsert.png){.medium}
-
-**Configuration:** defining entity mappings and field values with only [Script](#script) as Parameters and uses array syntax with entity/payload structure.
-
-**Example JSON Configuration:**
-
-```json
-[{"entity":"Product","payload":{"name":"{{ entity.name }}"}}]
-```
-
-**Extended example:**
-
-```json
-[
-  {
-    "entity": "Product",
-    "payload": {
-      "name": "Apple iPhone 15",
-      "sku": "iphone15"
-    }
-  },
-  {
-    "entity": "Product",
-    "payload": {
-      "id": "2348924928743",
-      "name": "Apple iPhone 15 Pro Max"
-    }
-  }
-]
-```
-
-The system attempts to find existing entities using identifier or unique fields. If found, records are updated; otherwise new records are created.
 
 #### **Suggest value**
 
@@ -551,7 +512,9 @@ Displays custom error messages to prevent operations. Primarily used with "Befor
 
 - **Error Message**: Text content for the error message (supports dynamic content with [Twig syntax](../../../10.developer-guide/80.twig-tutorial/docs.md))
 
-This action is typically used within [Workflows](../../../04.collaboration/01.workflows/) for conditional error handling. It is usually set up with an empty **Display** field so it does not appear as an action button, and the error message is shown whenever the action is triggered in the workflow.
+! This action is typically used within [Workflows](https://store.atrocore.com/en/workflows/20194) for conditional error handling.
+
+It is usually set up with an empty **Display** field so it does not appear as an action button, and the error message is shown whenever the action is triggered in the workflow.
 
 #### **Action Set**
 

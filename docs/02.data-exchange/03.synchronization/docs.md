@@ -22,7 +22,7 @@ To create a synchronization click `Create` button. You will see next menu
 
 ![Creating Synchronization](_assets/creating.png){.medium}
 
-! You can create a synchonization [Action](../../01.atrocore/03.administration/06.actions/docs.md#synchronization) to operate with your synchronization in [Scheduled jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) or [Workflows](../../04.collaboration/01.workflows/docs.md).
+! You can create a synchonization [Action](../../01.atrocore/03.administration/06.actions/docs.md#synchronization) to operate with your synchronization in [Scheduled jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) or [Workflows](https://store.atrocore.com/en/workflows/20194).
 
 Set the name, description and press the checkbox if you want it to be active. Then press `Save`. The menu next is the same as editing menu.
 
