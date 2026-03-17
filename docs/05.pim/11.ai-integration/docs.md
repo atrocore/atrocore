@@ -104,7 +104,7 @@ It can be used in the single record, as a mass action, or as a part of a workflo
 
 ### Using AI for translations
 
-The [Translations](../../04.collaboration/04.translations) module uses the AI capabilities of the DeepL translation tool. However, if you only want to use the AI Integration module, you can still translate into different languages. The possibilities for translation are limited only by the capabilities of the AI you are using.
+The [Translations](https://store.atrocore.com/en/translations/20191) module uses the AI capabilities of the DeepL translation tool and allows you to fine-tune translation quality through flexible configuration, rather than relying solely on automatic translation. However, if you only want to use the AI Integration module, you can still translate into different languages. The possibilities for translation are limited only by the capabilities of the AI you are using.
 
 Here you can see an example of how you can use AI Integration module as a translation tool:
 
