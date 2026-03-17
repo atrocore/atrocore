@@ -18377,6 +18377,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     justify-content: space-between;
     align-items: baseline;
     flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 
 .panel-stream .header .filter {
