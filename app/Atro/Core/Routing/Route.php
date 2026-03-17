@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Routing;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class Route
 {
     public function __construct(
@@ -21,10 +21,10 @@ class Route
         public readonly string       $summary,
         public readonly string       $description,
         public readonly string       $tag,
-        public readonly string|array $methods     = ['GET'],
+        public readonly string|array $methods,
+        public readonly array        $responses   = [],
         public readonly bool         $auth        = true,
         public readonly array        $parameters  = [],
-        public readonly array        $responses   = [],
     ) {
     }
 }
