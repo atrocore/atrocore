@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Core\Middleware;
 
-use Atro\Core\Slim\Validator;
-use GuzzleHttp\Psr7\Response;
+use Atro\Core\Http\JsonResponse;
+use Atro\Core\Http\Validator;
 use Mezzio\Router\RouteResult;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -49,7 +49,7 @@ class LegacyControllerHandler implements MiddlewareInterface
         $params       = $routeConfig['params'] ?? [];
 
         if (!is_array($params)) {
-            return $this->jsonResponse(200, json_encode($params));
+            return JsonResponse::raw(json_encode($params));
         }
 
         // Resolve :placeholder values inside route params from matched URL segments
@@ -66,7 +66,7 @@ class LegacyControllerHandler implements MiddlewareInterface
 
         // Routes without a controller just echo their params (legacy behaviour)
         if (empty($controllerParams['controller'])) {
-            return $this->jsonResponse(200, json_encode($controllerParams));
+            return JsonResponse::raw(json_encode($controllerParams));
         }
 
         $controllerName = ucfirst($controllerParams['controller']);
@@ -84,38 +84,15 @@ class LegacyControllerHandler implements MiddlewareInterface
             $result   = $this->container->get('controllerManager')
                 ->process($controllerName, $actionName, $params, $request);
 
-            $response = $this->jsonResponse(200, $result);
+            $response = JsonResponse::raw($result);
 
             $this->container->get(Validator::class)->validateResponse($routeConfig, $response);
         } catch (\Throwable $e) {
-            return $this->errorResponse($e);
+            return JsonResponse::error($e->getCode() ?: 500, $e->getMessage());
         }
 
         return $response;
     }
 
-    private function jsonResponse(int $status, string $body): ResponseInterface
-    {
-        return new Response(
-            $status,
-            [
-                'Content-Type'  => 'application/json; charset=utf-8',
-                'Expires'       => '0',
-                'Cache-Control' => 'no-store, no-cache, must-revalidate',
-                'Pragma'        => 'no-cache',
-            ],
-            $body
-        );
-    }
 
-    private function errorResponse(\Throwable $e): ResponseInterface
-    {
-        $code = $e->getCode() ?: 500;
-
-        return new Response(
-            $code,
-            ['Content-Type' => 'application/json; charset=utf-8'],
-            json_encode(['message' => $e->getMessage()])
-        );
-    }
 }

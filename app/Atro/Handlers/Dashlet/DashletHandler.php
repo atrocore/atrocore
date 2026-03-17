@@ -13,11 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Dashlet;
 
-use Atro\Core\Container;
 use Atro\Core\Exceptions;
+use Atro\Core\Http\JsonResponse;
 use Atro\Core\Routing\Route;
+use Atro\Core\Utils\Language;
 use Atro\Services\DashletInterface;
-use GuzzleHttp\Psr7\Response;
+use Espo\Core\ServiceFactory;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,8 +28,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 #[Route('/Dashlet/{dashletName}', methods: ['GET'])]
 class DashletHandler implements MiddlewareInterface
 {
-    public function __construct(private readonly Container $container)
-    {
+    public function __construct(
+        private readonly ServiceFactory $serviceFactory,
+        private readonly Language $language,
+    ) {
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -37,51 +40,26 @@ class DashletHandler implements MiddlewareInterface
         $dashletName = $routeResult ? ($routeResult->getMatchedParams()['dashletName'] ?? null) : null;
 
         if (empty($dashletName)) {
-            return $this->errorResponse(400, 'dashletName is required');
+            return JsonResponse::error(400, 'dashletName is required');
         }
 
         try {
-            $result = $this->createDashletService($dashletName)->getDashlet();
-
-            return $this->jsonResponse(json_encode($result));
+            return new JsonResponse($this->createDashletService($dashletName)->getDashlet());
         } catch (\Throwable $e) {
-            return $this->errorResponse($e->getCode() ?: 500, $e->getMessage());
+            return JsonResponse::error($e->getCode() ?: 500, $e->getMessage());
         }
     }
 
     private function createDashletService(string $dashletName): DashletInterface
     {
         $serviceName    = ucfirst($dashletName) . 'Dashlet';
-        $dashletService = $this->container->get('serviceFactory')->create($serviceName);
+        $dashletService = $this->serviceFactory->create($serviceName);
 
         if (!$dashletService instanceof DashletInterface) {
-            $language = $this->container->get('language');
-            throw new Exceptions\Error(sprintf($language->translate('notDashletService'), $serviceName));
+            throw new Exceptions\Error(sprintf($this->language->translate('notDashletService'), $serviceName));
         }
 
         return $dashletService;
     }
 
-    private function jsonResponse(string $body): ResponseInterface
-    {
-        return new Response(
-            200,
-            [
-                'Content-Type'  => 'application/json; charset=utf-8',
-                'Expires'       => '0',
-                'Cache-Control' => 'no-store, no-cache, must-revalidate',
-                'Pragma'        => 'no-cache',
-            ],
-            $body
-        );
-    }
-
-    private function errorResponse(int $code, string $message): ResponseInterface
-    {
-        return new Response(
-            $code,
-            ['Content-Type' => 'application/json; charset=utf-8'],
-            json_encode(['message' => $message])
-        );
-    }
 }
