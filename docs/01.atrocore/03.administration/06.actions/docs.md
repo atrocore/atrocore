@@ -465,20 +465,6 @@ Here is an example of a script that determines the user ID:
 
 This is an action added by **Microsoft 365 Connector** module. It downloads emails from your Microsoft mailbox and saves them in **Emails** entity. For more information please read [Microsoft 365 Connector](../../../03.integration/01.microsoft-connector/docs.md) documentation page.
 
-### Document Generation
-
-#### **Generate PDF**
-
-> Available with [PDF Generation](../../../07.publishing/01.pdf-generator/) module.
-
-Creates PDF documents using configured PDF templates.
-
-![Generate PDF Configuration](_assets/action-type-generate-pdf.png){.medium}
-
-**Configuration:**
-
-- **PDF Feed**: Selection of configured PDF template
-
 ### Utility Actions
 
 #### **Error Message**
