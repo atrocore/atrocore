@@ -251,7 +251,7 @@ When multiple modules register middleware, they are piped in module **load order
 
 ## Entity Type Handlers
 
-AtroCore provides a ready-made set of PSR-15 handlers that cover all standard CRUD and action endpoints for entity records. These handlers live in `Atro\Core\EntityTypeHandlers\` and `Atro\Core\Templates\Handlers\`.
+AtroCore provides a ready-made set of PSR-15 handlers that cover all standard CRUD and action endpoints for entity records. These handlers live in `Atro\Core\EntityTypeHandlers\`.
 
 ### How Entity Type Membership Works
 
