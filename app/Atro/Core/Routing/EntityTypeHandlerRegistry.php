@@ -72,50 +72,71 @@ class EntityTypeHandlerRegistry
             }
         };
 
+        // Collect all route entries first, then sort by specificity before registering.
+        // FastRoute matches in registration order when multiple patterns could match the same path
+        // (e.g. /{a}/action/tree vs /{a}/{b}/{c}). More specific routes must be registered first.
+        $entries = $this->collectRouteEntries();
+
+        usort($entries, fn(array $a, array $b) => $this->pathSpecificity($b['path']) <=> $this->pathSpecificity($a['path']));
+
         $registered = [];
-        foreach ($this->scanCoreHandlerClasses() as $className) {
-            $this->registerClass($className, $stub, $registered);
+        foreach ($entries as $entry) {
+            $routeKey = $entry['key'];
+            if (!isset($registered[$routeKey])) {
+                $this->router->addRoute(new MezzioRoute($entry['path'], $stub, $entry['methods'], $routeKey));
+                $registered[$routeKey] = true;
+            }
+            $this->handlerList[$routeKey][] = ['class' => $entry['class'], 'types' => $entry['types']];
         }
 
         return $this->router;
     }
 
-    private function registerClass(string $className, MiddlewareInterface $stub, array &$registered): void
+    /** @return array<array{class: string, methods: string[], path: string, key: string, types: string[]}> */
+    private function collectRouteEntries(): array
     {
-        if (!class_exists($className)) {
-            return;
-        }
+        $entries = [];
 
-        $ref = new \ReflectionClass($className);
-
-        $routeAttrs      = $ref->getAttributes(Route::class);
-        $entityTypeAttrs = $ref->getAttributes(EntityType::class);
-
-        if (empty($routeAttrs) || empty($entityTypeAttrs)) {
-            return;
-        }
-
-        /** @var EntityType $entityTypeAttr */
-        $entityTypeAttr = $entityTypeAttrs[0]->newInstance();
-        $types          = $entityTypeAttr->types;
-
-        foreach ($routeAttrs as $attrObj) {
-            /** @var Route $routeAttr */
-            $routeAttr = $attrObj->newInstance();
-
-            $methods  = array_map('strtoupper', (array) $routeAttr->methods);
-            $fullPath = '/api/v1' . $routeAttr->path;
-
-            // Unique key: used as route name and handlerList key
-            $routeKey = implode(',', $methods) . ':' . $fullPath;
-
-            if (!isset($registered[$routeKey])) {
-                $this->router->addRoute(new MezzioRoute($fullPath, $stub, $methods, $routeKey));
-                $registered[$routeKey] = true;
+        foreach ($this->scanCoreHandlerClasses() as $className) {
+            if (!class_exists($className)) {
+                continue;
             }
 
-            $this->handlerList[$routeKey][] = ['class' => $className, 'types' => $types];
+            $ref             = new \ReflectionClass($className);
+            $routeAttrs      = $ref->getAttributes(Route::class);
+            $entityTypeAttrs = $ref->getAttributes(EntityType::class);
+
+            if (empty($routeAttrs) || empty($entityTypeAttrs)) {
+                continue;
+            }
+
+            /** @var EntityType $entityTypeAttr */
+            $types = $entityTypeAttrs[0]->newInstance()->types;
+
+            foreach ($routeAttrs as $attrObj) {
+                /** @var Route $routeAttr */
+                $routeAttr = $attrObj->newInstance();
+                $methods   = array_map('strtoupper', (array) $routeAttr->methods);
+                $fullPath  = '/api/v1' . $routeAttr->path;
+                $routeKey  = implode(',', $methods) . ':' . $fullPath;
+
+                $entries[] = ['class' => $className, 'methods' => $methods, 'path' => $fullPath, 'key' => $routeKey, 'types' => $types];
+            }
         }
+
+        return $entries;
+    }
+
+    /** Returns number of static (non-placeholder) segments — higher means register first. */
+    private function pathSpecificity(string $path): int
+    {
+        $score = 0;
+        foreach (explode('/', trim($path, '/')) as $segment) {
+            if ($segment !== '' && !str_starts_with($segment, '{')) {
+                $score++;
+            }
+        }
+        return $score;
     }
 
     /** @return string[] */
