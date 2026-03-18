@@ -303,7 +303,7 @@ Shows only attributes that have no values linked to any record of the entity the
 
 ## Records with this attribute
 
-On the detail page of an Attribute, a dropdown action button **"Records with this attribute"** is available when the attribute has an entity type assigned.
+On the detail page of an Attribute, an action button **"Records with this attribute"** is available when the attribute has an entity type assigned.
 
 ![Records with this attribute button](./_assets/records-with-this-attribute.png)
 
