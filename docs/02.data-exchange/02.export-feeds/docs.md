@@ -16,7 +16,7 @@ Data export can be performed:
 The base module supports file-based exports (CSV, Excel, JSON, XML, SQL). Additional modules extend export feed capabilities:
 
 - [Export: HTTP Request](../09.export-feeds-http-request/docs.md) – exports data via HTTP request.
-- [Export: Remote File](../07.export-feeds-remote-file/docs.md) – exports files to FTP, sFTP, or SSH servers.
+- [Export: Remote File](https://store.atrocore.com/en/export-remote-file/20144) – exports files to FTP, sFTP, or SSH servers.
 - [Export: Database](https://store.atrocore.com/en/export-database/20138) – exports data to MSSQL, MySQL, PostgreSQL, Oracle, or HANA databases.
 - [Synchronization](../03.synchronization/docs.md) – orchestrates multiple import and export feeds for complex data exchange.
 
@@ -63,7 +63,7 @@ For type-specific configuration, see:
 
 - [Export: Database](https://store.atrocore.com/en/export-database/20138)
 - [Export: HTTP Request](../09.export-feeds-http-request/docs.md)
-- [Export: Remote File](../07.export-feeds-remote-file/docs.md)
+- [Export: Remote File](https://store.atrocore.com/en/export-remote-file/20144)
 
 ! It is recommended to create a dedicated folder for each export feed to keep files organized.
 
