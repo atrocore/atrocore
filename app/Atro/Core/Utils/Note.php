@@ -129,7 +129,7 @@ class Note
                 }
 
                 if ($item['fieldType'] === 'link') {
-                    $fieldDef = $fields[$field] ?? [];
+                    $fieldDef = $this->getMetadata()->get("entityDefs.{$entity->getEntityType()}.fields.$field", []);
                     if (!empty($fieldDef['entityNameField'])) {
                         $entityType = $entity->get($fieldDef['entityNameField']);
                         if ($entityType && $this->getEntityManager()->hasRepository($entityType)) {
