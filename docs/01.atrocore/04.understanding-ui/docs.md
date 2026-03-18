@@ -16,11 +16,11 @@ The list view is a default view page that appears when any entity is selected in
 
 The list view page shows a table of records with main fields configured for each entity and includes:
 
-  - *[left sidebar](#left-sidebar) (1);*
-  - *[taskbar](../05.toolbar/docs.md) (2);*
-  - *[breadcrumb navigation](#breadcrumb-navigation) including the page name (3);*
-  - *[search and filtering panel](../11.search-and-filtering/docs.md) (4);*
-  - *records list (5).*
+- *[left sidebar](#left-sidebar) (1);*
+- *[taskbar](../05.toolbar/docs.md) (2);*
+- *[breadcrumb navigation](#breadcrumb-navigation) including the page name (3);*
+- *[search and filtering panel](../11.search-and-filtering/docs.md) (4);*
+- *records list (5).*
 
 ![Default List View](./_assets/default-list-view-core.png){.large}
 
@@ -119,11 +119,11 @@ The detail view page appears when the  entity record name is clicked in the corr
 
 The detail view page shows detailed information about the selected entity record and all its relations and includes:
 
-  - *[Left sidebar](#left-sidebar) (1);*
-  - *[taskbar](../05.toolbar/) (2);*
-  - *[breadcrumb navigation](#breadcrumb-navigation) including the page name (3);*
-  - *actions and tabs panel (4);*
-  - *record details, where detailed information about the currently open entity record is displayed (5).*
+- *[Left sidebar](#left-sidebar) (1);*
+- *[taskbar](../05.toolbar/) (2);*
+- *[breadcrumb navigation](#breadcrumb-navigation) including the page name (3);*
+- *actions and tabs panel (4);*
+- *record details, where detailed information about the currently open entity record is displayed (5).*
 
 ![Detail View](./_assets/detail-view-core.png){.large}
 
@@ -221,17 +221,17 @@ The Insights tab contains panels with information about the record. By default, 
 
 The **Summary** panel typically shows basic record information, such as:
 
- - **Created** – when (and by whom) the record was created.
- - **Modified** – when the record was last updated.
- - **Followers** – users who follow changes to the record.
+- **Created** – when (and by whom) the record was created.
+- **Modified** – when the record was last updated.
+- **Followers** – users who follow changes to the record.
 
 > If a record is created or modified by an [action](../03.administration/06.actions/docs.md) or [import](../../02.data-exchange/01.import-feeds/docs.md), the **Created** or **Modified** field displays System < User, indicating that the operation was executed by the system on behalf of the specified user. When changes are made manually in the UI, the field displays only the user link without the System mention.
 
 The **Access Management** panel (if available) typically shows who is responsible for the record and who can access it, such as:
 
- - **Owner** – the person responsible for the record.
- - **Assigned User** – the user expected to work on the record.
- - **Teams** – teams that can access the record.
+- **Owner** – the person responsible for the record.
+- **Assigned User** – the user expected to work on the record.
+- **Teams** – teams that can access the record.
 
 The exact set of panels and fields depends on the entity and enabled features. An administrator can configure both the Insights layout (which panels are shown and in which order) and the Summary panel contents (which fields are displayed).
 

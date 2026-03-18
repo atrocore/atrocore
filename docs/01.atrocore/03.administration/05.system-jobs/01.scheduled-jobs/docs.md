@@ -101,7 +101,7 @@ They will be shown in additional panel Retrials.
 
 ### Clear deleted data
 
-Add this job to regularly clean the database of deleted records, relations with deleted records or records that have not been modified for a long time. It will remove garbage from all entities that have required parameters set. 
+Add this job to regularly clean the database of deleted records, relations with deleted records or records that have not been modified for a long time. It will remove garbage from all entities that have required parameters set.
 
 ![Clear deleted data](./_assets/clear-data.png){.large}
 
