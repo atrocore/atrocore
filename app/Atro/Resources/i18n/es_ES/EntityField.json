@@ -66,7 +66,8 @@
     "conditionalReadOnly": "Sólo lectura",
     "conditionalProtected": "Protegido",
     "conditionalDisableOptions": "Opciones para discapacitados",
-    "urlLabel": "Etiqueta URL"
+    "urlLabel": "Etiqueta URL",
+    "selectPageSize": "Registros por página (diálogo de selección)"
   },
   "tooltips": {
     "foreignCode": "Este nombre en clave se utiliza para el campo creado en la entidad relacionada para la relación hacia atrás.",
@@ -90,7 +91,8 @@
     "modifiedExtendedEnabled": "Los cambios en esta relación provocarán la actualización de la fecha y hora de \"Modificado en\".",
     "inheritanceDisabled": "Los valores de este campo no se heredarán del artículo padre.",
     "modifiedExtendedDisabled": "Si se establece, los cambios en este campo no actualizarán la marca de tiempo \"Modificado en\".",
-    "auditableDisabled": "Los cambios en este campo no se muestran como Actividad."
+    "auditableDisabled": "Los cambios en este campo no se muestran como Actividad.",
+    "selectPageSize": "Número de registros mostrados por página en el diálogo de selección. Evite valores demasiado altos, ya que pueden ralentizar o bloquear el navegador del usuario."
   },
   "options": {
     "outputType": {

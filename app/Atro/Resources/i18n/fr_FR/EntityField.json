@@ -66,7 +66,8 @@
     "conditionalReadOnly": "Lecture seule",
     "conditionalProtected": "Protegé",
     "conditionalDisableOptions": "Options désactivées",
-    "urlLabel": "Label de l'URL"
+    "urlLabel": "Label de l'URL",
+    "selectPageSize": "Enregistrements par page (dialogue de sélection)"
   },
   "tooltips": {
     "foreignCode": "Ce nom de code est utilisé pour le champ créé dans l’entité étrangère pour la relation inverse.",
@@ -90,7 +91,8 @@
     "modifiedExtendedEnabled": "Tout changement dans cette relation entraînera la mise à jour de la date et de l’heure « Modifié le ».",
     "inheritanceDisabled": "Les valeurs de ce champ ne seront pas héritées de l'élément parent.",
     "modifiedExtendedDisabled": "Lorsque cette option est définie, les changements dans ce champ ne mettront pas à jour la date et l’heure « Modifié le ».",
-    "auditableDisabled": "Les modifications apportées à ce champ ne sont pas affichées dans le panneau Activités."
+    "auditableDisabled": "Les modifications apportées à ce champ ne sont pas affichées dans le panneau Activités.",
+    "selectPageSize": "Nombre d'enregistrements affichés par page dans la boîte de dialogue de sélection. Évitez une valeur trop élevée, car cela peut ralentir ou bloquer le navigateur de l'utilisateur."
   },
   "options": {
     "outputType": {

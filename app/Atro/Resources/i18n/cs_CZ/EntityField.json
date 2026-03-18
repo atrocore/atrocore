@@ -66,7 +66,8 @@
     "conditionalReadOnly": "Pouze pro čtení",
     "conditionalProtected": "Chráněno",
     "conditionalDisableOptions": "Zakázané možnosti",
-    "urlLabel": "Označení URL"
+    "urlLabel": "Označení URL",
+    "selectPageSize": "Záznamů na stránce (dialog výběru)"
   },
   "tooltips": {
     "foreignCode": "Tento kódový název se používá pro pole vytvořené v související entitě pro zpětný vztah.",
@@ -90,7 +91,8 @@
     "modifiedExtendedEnabled": "Změny v tomto vztahu způsobí aktualizaci data a času \"Modified At\".",
     "inheritanceDisabled": "Hodnoty tohoto pole nebudou zděděny z nadřazené položky.",
     "modifiedExtendedDisabled": "Pokud je nastaveno, změny v tomto poli neaktualizují časové razítko \"Modified At\".",
-    "auditableDisabled": "Změny v tomto poli se nezobrazují jako Aktivita."
+    "auditableDisabled": "Změny v tomto poli se nezobrazují jako Aktivita.",
+    "selectPageSize": "Počet záznamů zobrazených na stránce v dialogu výběru. Vyhněte se příliš vysokým hodnotám, protože by to mohlo zpomalit nebo zmrazit prohlížeč uživatele."
   },
   "options": {
     "outputType": {

@@ -43,7 +43,8 @@
     "conditionalDisableOptions": "Wyłączone opcje",
     "modifiedExtendedDisabled": "Brak zapisu jako modyfikacja",
     "entityType": "Podmiot powiązany",
-    "entityField": "Pole podmiotu"
+    "entityField": "Pole podmiotu",
+    "selectPageSize": "Rekordów na stronie (okno dialogowe wyboru)"
   },
   "labels": {
     "Classification": "Klasyfikacja",
@@ -85,7 +86,8 @@
   "tooltips": {
     "pattern": "Aby włączyć tylko wielkie litery o długości 10 znaków, proszę użyć \"/^[A-Z]{1,10}$/\".",
     "defaultDate": "Modyfikator wartości atrybutu (np. +5 dni, -3 miesiące)",
-    "dropdown": "Proszę nie używać listy rozwijanej, jeśli na liście znajduje się więcej niż 300 opcji."
+    "dropdown": "Proszę nie używać listy rozwijanej, jeśli na liście znajduje się więcej niż 300 opcji.",
+    "selectPageSize": "Liczba rekordów na stronie w oknie dialogowym wyboru. Unikaj zbyt wysokich wartości, ponieważ może to spowolnić lub zawiesić przeglądarkę użytkownika."
   },
   "exceptions": {
     "wrongAttributeEntity": "Wybrany podmiot nie jest dozwolony. Podmiot musi być taki sam jak w panelu atrybutów i grupie atrybutów.",

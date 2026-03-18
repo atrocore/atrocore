@@ -43,7 +43,8 @@
     "conditionalDisableOptions": "Disabled Options",
     "modifiedExtendedDisabled": "No recording as modification",
     "entityType": "Linked Entity",
-    "entityField": "Entity Field"
+    "entityField": "Entity Field",
+    "selectPageSize": "Records per page (select dialog)"
   },
   "labels": {
     "Classification": "Classification",
@@ -89,7 +90,8 @@
   "tooltips": {
     "pattern": "To enable only capital letters with 10-symbol length use \"/^[A-Z]{1,10}$/\"",
     "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)",
-    "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
+    "dropdown": "Do not use the dropdown if there are more than 300 options in the list.",
+    "selectPageSize": "Number of records shown per page in the selection dialog. Avoid setting this value too high, as it may slow down or freeze the user's browser."
   },
   "exceptions": {
     "entityNotAllowToChoose": "The entity cannot be chosen.",

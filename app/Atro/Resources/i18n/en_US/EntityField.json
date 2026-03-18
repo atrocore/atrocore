@@ -66,7 +66,8 @@
     "conditionalReadOnly": "Read-only",
     "conditionalProtected": "Protected",
     "conditionalDisableOptions": "Disabled Options",
-    "urlLabel": "URL Label"
+    "urlLabel": "URL Label",
+    "selectPageSize": "Records per page (select dialog)"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
@@ -90,7 +91,8 @@
     "modifiedExtendedEnabled": "Changes in this relation will cause the update of \"Modified At\" date and time.",
     "inheritanceDisabled": "Values for this field will not be inherited from the parent item.",
     "modifiedExtendedDisabled": "If set the changes in this field will not update the \"Modified At\" timestamp.",
-    "auditableDisabled": "Changes in this field are not displayed as Activity."
+    "auditableDisabled": "Changes in this field are not displayed as Activity.",
+    "selectPageSize": "Number of records shown per page in the selection dialog. Avoid setting this value too high, as it may slow down or freeze the user's browser."
   },
   "options": {
     "outputType": {

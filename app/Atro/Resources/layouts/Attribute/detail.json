@@ -147,6 +147,12 @@
       ],
       [
         {
+          "name": "selectPageSize"
+        },
+        false
+      ],
+      [
+        {
           "name": "allowedOptions"
         },
         false

@@ -43,7 +43,8 @@
     "conditionalDisableOptions": "Opzioni disabilitate",
     "modifiedExtendedDisabled": "Nessuna registrazione come modifica",
     "entityType": "Entità collegata",
-    "entityField": "Campo Entità"
+    "entityField": "Campo Entità",
+    "selectPageSize": "Record per pagina (finestra di selezione)"
   },
   "exceptions": {
     "attributeIsUsedInProducts": "L'attributo è utilizzato nei prodotti. Per favore, aggiorni prima i prodotti.",
@@ -103,6 +104,7 @@
   "tooltips": {
     "pattern": "Per abilitare solo le lettere maiuscole con lunghezza di 10 simboli, usi \"/^[A-Z]{1,10}$/\".",
     "defaultDate": "Modificatore del valore dell'attributo (ad esempio +5 giorni, -3 mesi)",
-    "dropdown": "Non utilizzi il menu a tendina se l'elenco contiene più di 300 opzioni."
+    "dropdown": "Non utilizzi il menu a tendina se l'elenco contiene più di 300 opzioni.",
+    "selectPageSize": "Numero di record per pagina nella finestra di selezione. Evitare valori troppo alti, poiché potrebbero rallentare o bloccare il browser dell'utente."
   }
 }

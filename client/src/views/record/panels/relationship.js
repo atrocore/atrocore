@@ -997,7 +997,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.createView('select', viewName, {
                         scope: entityType,
                         createButton: false,
-                        multiple: !!actionDefs.modalSelectMultiple
+                        multiple: !!actionDefs.modalSelectMultiple,
                     }, (dialog) => {
                         dialog.render(() => {
                             this.notify(false);

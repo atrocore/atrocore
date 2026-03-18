@@ -66,7 +66,8 @@
     "conditionalReadOnly": "In sola lettura",
     "conditionalProtected": "Protetto",
     "conditionalDisableOptions": "Opzioni disabilitate",
-    "urlLabel": "Etichetta URL"
+    "urlLabel": "Etichetta URL",
+    "selectPageSize": "Record per pagina (finestra di selezione)"
   },
   "tooltips": {
     "maxLength": "Lunghezza massima accettabile del testo.",
@@ -90,7 +91,8 @@
     "modifiedExtendedEnabled": "Le modifiche di questa relazione causeranno l'aggiornamento della data e dell'ora di \"Modified At\".",
     "inheritanceDisabled": "I valori di questo campo non saranno ereditati dall'elemento padre.",
     "modifiedExtendedDisabled": "Se impostato, le modifiche in questo campo non aggiorneranno il timestamp \"Modified At\".",
-    "auditableDisabled": "Le modifiche in questo campo non vengono visualizzate come Attività."
+    "auditableDisabled": "Le modifiche in questo campo non vengono visualizzate come Attività.",
+    "selectPageSize": "Numero di record visualizzati per pagina nella finestra di selezione. Evitare valori troppo alti, poiché potrebbero rallentare o bloccare il browser dell'utente."
   },
   "options": {
     "relationType": {
