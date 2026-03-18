@@ -91,14 +91,6 @@ This job is used when you use dynamically calculated prices. This job starts rec
 
 This job inserts current exchange rates taken from ECB to AtroCore currencies. Only currencies and rates supported by ECB are affected by this job.
 
-### Synchronization
-
-Available with [Synchronization](../../../../02.data-exchange/03.synchronization/docs.md) module.
-
-This job starts the selected synchronization on the schedule you set. The settings set by the feed are taken from the synchronization menu, so it is essentially pressing the `Execute` button on the set time.
-
-![Synchronization Scheduled](_assets/scheduled-jobs-synchronization.png){.large}
-
 ### Failed jobs retrial
 
 This job looks for the selected jobs done by import and export feeds and/or other scheduled jobs and then starts ones of them that had failed status in the last hours set in `Maximum hours to look back` field.
@@ -109,7 +101,7 @@ They will be shown in additional panel Retrials.
 
 ### Clear deleted data
 
-Add this job to regularly clean the database of deleted records, relations with deleted records or records that have not been modified for a long time. It will remove garbage from all entities that have required parameters set. 
+Add this job to regularly clean the database of deleted records, relations with deleted records or records that have not been modified for a long time. It will remove garbage from all entities that have required parameters set.
 
 ![Clear deleted data](./_assets/clear-data.png){.large}
 
