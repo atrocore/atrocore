@@ -50,16 +50,6 @@ This job starts the selected import feed on the schedule you set. The settings s
 <!-- TODO: what 'Maximum hours to look back' param stands for? -->
 ![Import feed Scheduled](_assets/scheduled-jobs-import-feed.png){.medium}
 
-### Automatic PDF generation
-
-Available with [PDF Generation](../../../../07.publishing/01.pdf-generator/) module.
-
-This job starts generating PDFs as assets that are appropriate for selected PDF Feed.
-
-> Note that this job may take a lot of time and server resources, so please schedule its execution when you do not need to work in the system.
-
-![Connector PDF](_assets/scheduled-jobs-PDF.png){.medium}
-
 ### Refresh Cache for Dynamic Relations
 
 Available with [Advanced Data Management](../../11.entity-management/06.advanced-data-management/) module.
