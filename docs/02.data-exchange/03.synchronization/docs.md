@@ -22,7 +22,7 @@ To create a synchronization click `Create` button. You will see next menu
 
 ![Creating Synchronization](_assets/creating.png){.medium}
 
-! You can create a synchonization [Action](../../01.atrocore/03.administration/06.actions/docs.md#synchronization) to operate with your synchronization in [Scheduled jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) or [Workflows](../../04.collaboration/01.workflows/docs.md).
+! You can create a synchonization [Action](../../01.atrocore/03.administration/06.actions/docs.md#synchronization) to operate with your synchronization in [Scheduled jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) or [Workflows](https://store.atrocore.com/en/workflows/20194).
 
 Set the name, description and press the checkbox if you want it to be active. Then press `Save`. The menu next is the same as editing menu.
 
@@ -136,6 +136,6 @@ All these settings are set separately for each sheet. An excel export feed can h
 
 ### Remote File Processing and Scheduled Updates
 
-Combine [Remote File](../06.import-feeds-remote-file/docs.md) import feeds to process files from different FTP/SFTP locations or network paths in a coordinated sequence. Configure synchronizations to run automatically via [Scheduled Jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) for regular data updates without manual intervention. 
+Combine [Remote File](https://store.atrocore.com/en/import-remote-file/20154) import feeds to process files from different FTP/SFTP locations or network paths in a coordinated sequence. Configure synchronizations to run automatically via [Scheduled Jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) for regular data updates without manual intervention.
 
 For example, a nightly refresh synchronization can import updated product data from an ERP system, import new asset files from a shared network drive, update product attributes from a marketing database, and export the refreshed catalog to multiple sales channels - all executed automatically in the correct sequence.

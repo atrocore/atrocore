@@ -51,11 +51,15 @@ class Selection extends Base
         string $noteType,
         string $action,
         string $relatedType = '',
-        string $relatedId = ''
+        string $relatedId = '',
+        array $extraData = []
     ): void {
         try {
             $data = new \stdClass();
             $data->action = $action;
+            foreach ($extraData as $key => $value) {
+                $data->$key = $value;
+            }
 
             $note = $this->getEntityManager()->getEntity('Note');
             $note->set('type', $noteType);

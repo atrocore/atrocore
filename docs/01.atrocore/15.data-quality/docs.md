@@ -92,10 +92,9 @@ Link an Action that will change the status of the product to "Ready" when the co
 
 Learn more about how you can use Workflow for data enrichment [here](https://store.atrocore.com/en/workflows/20193).
 
+### Translation Completeness
 
-### Translation Completeness 
-
-If the [Translations](../../04.collaboration/04.translations/docs.md) module is installed for your entity, you can create a Quality Check with the [Translation Completeness](../../04.collaboration/04.translations/docs.md#translation-completeness) rule. This rule allows you to monitor the percentage of translated or approved multilingual fields for each record in the entity.
+If the [Translations](https://store.atrocore.com/en/translations/20191) module is installed for your entity, you can create a Quality Check with the **Translation Completeness** rule. This rule allows you to monitor the percentage of translated or approved multilingual fields for each record in the entity.
 
 - If the Approved checkbox is enabled for multilingual fields, the percentage shows how many fields are "Approved" relative to all multilingual fields.
 - If the Approved checkbox is disabled, the percentage shows how many fields have the "To translate" status relative to all multilingual fields.

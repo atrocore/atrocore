@@ -131,12 +131,16 @@ Espo.define('views/fields/wysiwyg', ['views/fields/base', 'lib!Summernote'], fun
         },
 
         createQueryBuilderFilter() {
+            let operators = ['contains', 'not_contains', 'equal', 'not_equal', 'is_null', 'is_not_null'];
+            if (this.getConfig().get('fuzzySearchAvailable')) {
+                operators.push('similar', 'word_similar');
+            }
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
-                operators: ['contains', 'not_contains', 'equal', 'not_equal', 'is_null', 'is_not_null'],
+                operators: operators,
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {

@@ -27,6 +27,10 @@
   "messages": {
     "cannotMergeUnconfirmedItems": "Unbestätigte Einträge können nicht zur Zusammenführung hinzugefügt werden"
   },
+  "labels": {
+    "stagingRecord": "Staging-Datensatz",
+    "masterRecord": "Master-Datensatz"
+  },
   "streamMessages": {
     "clusterLinked": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",
     "clusterLinkedThis": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",

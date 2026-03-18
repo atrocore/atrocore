@@ -109,7 +109,7 @@ They will be shown in additional panel Retrials.
 
 ### Action
 
-Available in [Workflows](../../../../04.collaboration/01.workflows/) module.
+> Available with [Workflows](https://store.atrocore.com/en/workflows/20194) module.
 
 This job type allows for custom actions to be executed on a schedule. It provides flexibility for executing specific business logic or custom operations.
 

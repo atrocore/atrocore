@@ -24,7 +24,7 @@ The following mass actions are available by default in the AtroCore system:
 - **[Remove relation](#remove-relation)** – to remove the relations that have been added to the selected entity records.
 - **[Delete attribute](#delete-attribute)** – to remove attributes from records of entities that have attributes enabled.
 
-Additional options may be added by additional modules, such as **Translate** option added by [Translations](../../04.collaboration/04.translations) module. You can also [create](#custom-mass-actions) your own mass actions.
+Additional options may be added by additional modules, such as **Translate** option added by [Translations](https://store.atrocore.com/en/translations/20191) module. You can also [create](#custom-mass-actions) your own mass actions.
 
 Mass actions are also available in the [small list](../04.understanding-ui/docs.md#small-list-view) view. To select one or more records, hover over the items in the list and check the boxes next to the records you want to include. You can also select all records at once by using the checkbox located at the top of the panel.
 
@@ -48,7 +48,7 @@ Merge is a tool used to merge multiple different records. For more information v
 
 ## Select
 
-Select is a tool used to add records to a Selection for further comparison or merging. For more information visit [Merge and comparison](../09.comparison-and-merge/docs.md#creating-a-selection) article.
+Select is a tool used to add records to a Selection for further comparison or merging. For more information visit [Merge and comparison](../09.comparison-and-merge/docs.md#selection) article.
 
 ## Mass Update
 
@@ -118,7 +118,7 @@ Add relation is a tool used to quickly add relations that is the same for differ
 
 You can now select an entity that is linked to the selected entity (Select Entity), and then select the record(s) of that entity. The type of link is determined by the system settings. Records of the entity you selected can be filtered.
 
-For more information on relation management go to [Record Management](../08.record-management/#linking-and-unlinking-related-records) documentation.
+For more information on relation management go to [Record Management](../08.record-management/docs.md#linking-and-unlinking-related-records) documentation.
 
 ## Remove relation
 
@@ -128,7 +128,7 @@ Remove relation is a tool used to quickly remove relations that are the same for
 
 You can now select an entity that is linked to the selected entity (Select Entity), and then select the record(s) of that entity. The type of link is determined by the system settings. All additional fields of the relationship (except ID) can also be edited. Records of the entity you selected can be filtered. Any relations that did not exist prior to removal will be ignored.
 
-For more information on relation management go to [Record Management](../08.record-management/#linking-and-unlinking-related-records) documentation.
+For more information on relation management go to [Record Management](../08.record-management/docs.md#linking-and-unlinking-related-records) documentation.
 
 ## Delete attribute
 
