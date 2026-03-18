@@ -15,6 +15,7 @@ namespace Atro\Core\Factories;
 
 use Atro\Core\Middleware\ApiValidationMiddleware;
 use Atro\Core\Middleware\AuthMiddleware;
+use Atro\Core\Middleware\EntityTypeDispatchMiddleware;
 use Atro\Core\Middleware\ErrorHandlerMiddleware;
 use Atro\Core\Middleware\LegacyControllerHandler;
 use Atro\Core\Middleware\NotFoundMiddleware;
@@ -60,6 +61,7 @@ class HttpPipeline implements FactoryInterface
             $pipe->pipe($middleware);
         }
 
+        $pipe->pipe($container->get(EntityTypeDispatchMiddleware::class));
         $pipe->pipe(new DispatchMiddleware());
         $pipe->pipe(new NotFoundMiddleware());
 

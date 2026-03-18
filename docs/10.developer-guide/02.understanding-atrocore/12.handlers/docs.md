@@ -9,20 +9,46 @@ taxonomy:
 AtroCore's HTTP layer is built on open standards: **PSR-7** (HTTP messages), **PSR-15** (middleware pipeline), and **FastRoute** (routing). Every HTTP request passes through a chain of middleware:
 
 ```
-ErrorHandlerMiddleware       ← catches all unexpected exceptions
-RouteMiddleware              ← matches the request path via FastRoute
-AuthMiddleware               ← validates the Authorization-Token
-ApiValidationMiddleware      ← validates request input and response output
-[module middlewares]         ← optional, registered via Module.php
-DispatchMiddleware           ← dispatches to the matched handler
-NotFoundMiddleware           ← returns 404 if nothing matched
+ErrorHandlerMiddleware          ← catches all unexpected exceptions
+RouteMiddleware                 ← matches the request path via FastRoute
+AuthMiddleware                  ← validates the Authorization-Token
+ApiValidationMiddleware         ← validates request input and response output
+[module middlewares]            ← optional, registered via Module.php
+EntityTypeDispatchMiddleware    ← dispatches to an EntityTypeHandler when applicable
+DispatchMiddleware              ← dispatches to the matched direct handler
+NotFoundMiddleware              ← returns 404 if nothing matched
 ```
 
 ---
 
-## Creating a Handler
+## Dispatch Priority
 
-A handler is a PHP class that implements `Psr\Http\Server\MiddlewareInterface` and is annotated with the `#[Route]` attribute.
+Every incoming request is dispatched using a three-tier priority system:
+
+### 1. Direct handlers (`Handlers/`)
+
+A handler in a module's `Handlers/` directory is registered directly in FastRoute at startup. It is matched **only by path and HTTP method**, regardless of entity type. Direct handlers always win.
+
+Modules take advantage of this to intercept or extend specific routes. A module's handlers are added after those of previously loaded modules and the core — so a later module can shadow an earlier one by claiming the same route pattern.
+
+### 2. EntityType handlers (`Atro\Core\EntityTypeHandlers\`)
+
+When no direct handler matched, `EntityTypeDispatchMiddleware` checks whether an **EntityType handler** applies. A match requires **two conditions to be true simultaneously**:
+
+- the request path and method match the handler's `#[Route]` pattern, and
+- the entity's template type (e.g. `Base`, `Hierarchy`) is listed in the handler's `#[EntityType]` attribute.
+
+This is how AtroCore provides generic CRUD endpoints for all standard entity types without any per-entity code.
+
+### 3. Legacy controller handler
+
+If neither tier matched, the request falls through to `LegacyControllerHandler`, which delegates to the old `Controllers/` system. This is technical debt and will be removed in a future release.
+
+---
+
+## Creating a Direct Handler
+
+A direct handler is a PHP class that implements `Psr\Http\Server\MiddlewareInterface` and is annotated with the `#[Route]` attribute.
 
 ### Directory Structure
 
@@ -39,8 +65,6 @@ The `Handlers/` directory is scanned automatically by `HandlerRegistry`. All cla
 ```
 src/mymodule/app/Handlers/Product/ProductReadHandler.php
 src/mymodule/app/Handlers/Product/ProductCreateHandler.php
-src/mymodule/app/Handlers/Product/ProductUpdateHandler.php
-src/mymodule/app/Handlers/Product/ProductDeleteHandler.php
 ```
 Namespace: `MyModule\Handlers\Product\ProductReadHandler`
 
@@ -53,6 +77,7 @@ Every handler **must** declare a `#[Route]` attribute. This attribute serves as 
 ```php
 #[Route(
     path: '/MyEntity/{id}/stats',
+    methods: ['GET'],
     summary: 'Get MyEntity statistics',
     description: 'Returns statistics for the specified MyEntity record.',
     tag: 'MyEntity',
@@ -81,10 +106,10 @@ The most common response is `application/json`. Always define the `schema` insid
 | Field | Type | Description |
 |---|---|---|
 | `path` | `string` | Route path. Use `{param}` for path parameters. |
+| `methods` | `string\|array` | HTTP methods, e.g. `['GET']`, `['POST']`, `['GET', 'POST']`. |
 | `summary` | `string` | Short one-line description shown in API docs. |
 | `description` | `string` | Full description of what the endpoint does. |
 | `tag` | `string` | Groups the endpoint in API docs (usually the entity name). |
-| `methods` | `string\|array` | HTTP methods, e.g. `['GET']`, `['POST']`, `['GET', 'POST']`. |
 | `responses` | `array` | Map of HTTP status code → response description. |
 
 ### Optional Fields
@@ -132,6 +157,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Product/{id}/stats',
+    methods: ['GET'],
     summary: 'Get product statistics',
     description: 'Returns sales and inventory statistics for the specified product.',
     tag: 'Product',
@@ -183,6 +209,38 @@ class ProductStatsHandler implements MiddlewareInterface
 
 > After adding a new handler in production, always run `php console.php clear-cache` to ensure it is picked up.
 
+### Controlling Handler Registration from a Module
+
+`HandlerRegistry` calls `registerHandlerClasses(array &$classes)` on each module in load order, passing the **full accumulated list** of handler FQCNs collected from core and all previously loaded modules. The default implementation appends the module's own `Handlers/` classes.
+
+Override this method when you need more control:
+
+```php
+// src/mymodule/app/MyModule/Module.php
+
+public function registerHandlerClasses(array &$classes): void
+{
+    // 1. Add this module's own handlers (default behaviour)
+    parent::registerHandlerClasses($classes);
+
+    // 2. Remove a core or earlier-module handler
+    $classes = array_filter(
+        $classes,
+        fn(string $c) => $c !== \Atro\Handlers\SomeCoreHandler::class
+    );
+
+    // 3. Replace a handler with your own implementation
+    $classes = array_map(
+        fn(string $c) => $c === \Atro\Handlers\AnotherCoreHandler::class
+            ? \MyModule\Handlers\ReplacementHandler::class
+            : $c,
+        $classes
+    );
+}
+```
+
+Because modules are processed in load order, a module with a higher `getLoadOrder()` value can override decisions made by earlier modules or the core.
+
 ---
 
 ## API Documentation
@@ -193,7 +251,7 @@ All handlers with complete `#[Route]` annotations appear automatically in `/apid
 
 ## Module Middleware
 
-Modules can add their own PSR-15 middleware to the HTTP pipeline by overriding `getMiddlewares()` in their `Module.php`. Module middlewares are placed **after** `ApiValidationMiddleware` and **before** `DispatchMiddleware`, which means they receive a fully authenticated and validated request, and can inspect or modify the response after the handler has run.
+Modules can add their own PSR-15 middleware to the HTTP pipeline by overriding `getMiddlewares()` in their `Module.php`. Module middlewares are placed **after** `ApiValidationMiddleware` and **before** `EntityTypeDispatchMiddleware`, which means they receive a fully authenticated and validated request, and can inspect or modify the response after the handler has run.
 
 ### Registering Middleware
 
@@ -251,11 +309,21 @@ When multiple modules register middleware, they are piped in module **load order
 
 ## Entity Type Handlers
 
-AtroCore provides a ready-made set of PSR-15 handlers that cover all standard CRUD and action endpoints for entity records. These handlers live in `Atro\Core\EntityTypeHandlers\`.
+AtroCore provides a ready-made set of PSR-15 handlers that cover all standard CRUD and action endpoints for entity records. These handlers live in `Atro\Core\EntityTypeHandlers\` and are dispatched by `EntityTypeDispatchMiddleware`.
 
-### How Entity Type Membership Works
+### How Dispatch Works
 
-Each built-in handler declares which entity template types it applies to via the `#[EntityType]` attribute:
+`EntityTypeDispatchMiddleware` runs after module middlewares. When a request was matched by FastRoute to the legacy handler (meaning no direct handler claimed the route), the middleware:
+
+1. Reads the `entityName` from the route parameters.
+2. Looks up the entity's template type from metadata (`scopes.{entityName}.type`).
+3. Queries `EntityTypeHandlerRegistry` — which holds a secondary FastRoute router built from all `EntityTypeHandler` classes — for a handler whose `#[Route]` pattern matches the request **and** whose `#[EntityType]` types list includes the entity's type.
+4. If found, forwards the request to that handler (with `entityName` set as a request attribute).
+5. If not found, passes the request to `DispatchMiddleware` → `LegacyControllerHandler`.
+
+### The `#[EntityType]` Attribute
+
+Each built-in handler declares which entity template types it applies to:
 
 ```php
 use Atro\Core\Routing\EntityType;
@@ -273,7 +341,7 @@ Always list types **explicitly** — there is no wildcard shorthand.
 
 ### Available Types and Their Handler Sets
 
-All built-in entity type handlers live in a single namespace: `Atro\Core\EntityTypeHandlers\`.
+All built-in entity type handlers live in `Atro\Core\EntityTypeHandlers\`.
 
 | Type | Handler set |
 |---|---|
@@ -283,35 +351,46 @@ All built-in entity type handlers live in a single namespace: `Atro\Core\EntityT
 | `Relation` | Full CRUD + `InheritRelationHandler`, `RemoveAssociatesHandler` |
 | `ReferenceData` | Reduced CRUD (no mass mutations, no follow/link); admin-only |
 
-### Extending from a Module
+### Overriding an EntityType Handler from a Module
 
-To add a custom handler for a specific entity type, create a handler in your module's `Handlers/` directory, give it a `#[Route]` and an `#[EntityType]` attribute:
+To replace a core EntityType handler for a **specific entity** (e.g. only for `Product`), create a direct handler in your module's `Handlers/` directory with a concrete path. Direct handlers have higher priority than EntityType handlers and always win:
 
 ```php
+// src/mymodule/app/Handlers/Product/ProductListHandler.php
+
 #[Route(
-    path: '/{entityName}/action/myCustomAction',
-    methods: ['POST'],
-    summary: 'My custom action',
-    description: 'Does something specific for Hierarchy entities.',
-    tag: '{entityName}',
-    parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-    ],
-    responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-    ],
+    path: '/Product',
+    methods: ['GET'],
+    summary: 'List products',
+    description: 'Returns a customised product collection.',
+    tag: 'Product',
+    responses: [200 => [...]],
 )]
-#[EntityType(types: ['Hierarchy'])]
-class MyCustomActionHandler extends AbstractHandler
+class ProductListHandler implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        // ...
+        // custom logic ...
     }
 }
 ```
 
-The handler will be auto-discovered by `HandlerRegistry` and automatically associated with the declared entity types.
+This handler will be matched **before** `ListHandler` for `GET /api/v1/Product`, while all other entities continue to use the core `ListHandler`.
+
+### `AbstractHandler` Base Class
+
+EntityType handlers extend `Atro\Core\EntityTypeHandlers\AbstractHandler`, which provides convenience methods:
+
+| Method | Description |
+|---|---|
+| `getEntityName(request)` | Returns the `entityName` request attribute set by `EntityTypeDispatchMiddleware`. |
+| `getRecordService(entityName)` | Returns the entity's service (falls back to the generic `Record` service). |
+| `getAcl()` | Returns the current user's ACL instance. |
+| `getUser()` | Returns the current `User` entity. |
+| `getRequestBody(request)` | Decodes the JSON request body. |
+| `buildListParams(request)` | Parses common list query parameters (`where`, `offset`, `maxSize`, `sortBy`, etc.). |
+| `buildListResult(result, params)` | Formats a list service result into the standard `{total, list}` response shape. |
+| `buildMassParams(data)` | Parses mass-action parameters (`ids` or `where`+`byWhere`). |
 
 ---
 

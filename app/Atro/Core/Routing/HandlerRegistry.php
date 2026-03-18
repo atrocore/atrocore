@@ -40,7 +40,7 @@ class HandlerRegistry
         }
 
         foreach ($this->moduleManager->getModules() as $module) {
-            $classes = array_merge($classes, $module->getHandlerClasses());
+            $module->registerHandlerClasses($classes);
         }
 
         $this->dataManager->setCacheData('handler_routes', $classes);

@@ -315,19 +315,22 @@ abstract class AbstractModule
     }
 
     /**
-     * Returns FQCN list of all PSR-15 handler classes in this module's Handlers/ directory.
+     * Registers this module's PSR-15 handler classes into the accumulated $classes list.
      *
-     * @return string[]
+     * The list already contains handlers from core and all previously loaded modules.
+     * Override this method to: add new handlers (append), remove a core handler (unset by value),
+     * or redirect a route to a different handler class (replace the FQCN in the array).
+     *
+     * @param string[] $classes Accumulated handler FQCN list, passed by reference.
      */
-    public function getHandlerClasses(): array
+    public function registerHandlerClasses(array &$classes): void
     {
         $dir = $this->getAppPath() . 'Handlers';
 
         if (!is_dir($dir)) {
-            return [];
+            return;
         }
 
-        $classes  = [];
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
         );
@@ -340,8 +343,6 @@ abstract class AbstractModule
             $relative  = substr($file->getPathname(), strlen($dir) + 1, -4);
             $classes[] = $this->id . '\\Handlers\\' . str_replace('/', '\\', $relative);
         }
-
-        return $classes;
     }
 
     /**
