@@ -297,7 +297,7 @@ The Attribute list view provides the following filters in the filter panel:
 Shows only attributes created by or assigned to the currently logged-in user.
 
 **Not linked with any record**
-Shows only attributes that have no values linked to any record of the entity they belong to. This is useful for identifying unused attributes that can be reviewed or cleaned up — for example, after removing records or reorganising the data model.
+Only attributes that are not linked to the record of the entity they belong to are shown. This is useful for identifying unused attributes that can be reviewed or cleaned up - for example, after removing records or reorganising the data model.
 
 ![Not linked with any record filter](./_assets/not-linked-with-any-record.png)
 
@@ -307,6 +307,6 @@ On the detail page of an Attribute, an action button **"Records with this attrib
 
 ![Records with this attribute button](./_assets/records-with-this-attribute.png)
 
-Clicking it opens the list view of the corresponding entity (e.g. Products) in a new tab, pre-filtered to show only records that have a value for this attribute. The filter is applied automatically and does not need to be configured manually.
+Clicking on it opens a list view of the relevant entity (e.g. Products) in a new tab. This view is pre-filtered to show only records that have a value (including an empty value) for this attribute. The filter is applied automatically and does not need to be configured manually.
 
 This is useful for quickly auditing which records are using a specific attribute, or for navigating from the attribute definition directly to its related data.
