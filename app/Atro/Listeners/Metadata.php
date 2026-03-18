@@ -1605,61 +1605,61 @@ class Metadata extends AbstractListener
                     "indexes"       => [
                         "boolValue"      => [
                             "columns" => [
-                                "boolValue",
+                                "bool_value",
                                 "deleted"
                             ]
                         ],
                         "dateValue"      => [
                             "columns" => [
-                                "dateValue",
+                                "date_value",
                                 "deleted"
                             ]
                         ],
                         "datetimeValue"  => [
                             "columns" => [
-                                "datetimeValue",
+                                "datetime_value",
                                 "deleted"
                             ]
                         ],
                         "intValue"       => [
                             "columns" => [
-                                "intValue",
+                                "int_value",
                                 "deleted"
                             ]
                         ],
                         "intValue1"      => [
                             "columns" => [
-                                "intValue1",
+                                "int_value1",
                                 "deleted"
                             ]
                         ],
                         "floatValue"     => [
                             "columns" => [
-                                "floatValue",
+                                "float_value",
                                 "deleted"
                             ]
                         ],
                         "floatValue1"    => [
                             "columns" => [
-                                "floatValue1",
+                                "float_value1",
                                 "deleted"
                             ]
                         ],
                         "varcharValue"   => [
                             "columns" => [
-                                "varcharValue",
+                                "varchar_value",
                                 "deleted"
                             ]
                         ],
                         "textValue"      => [
                             "columns" => [
-                                "textValue",
+                                "text_value",
                                 "deleted"
                             ]
                         ],
                         "referenceValue" => [
                             "columns" => [
-                                "referenceValue",
+                                "reference_value",
                                 "deleted"
                             ]
                         ]

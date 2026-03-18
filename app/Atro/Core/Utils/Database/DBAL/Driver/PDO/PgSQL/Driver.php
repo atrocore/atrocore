@@ -13,11 +13,22 @@ declare(strict_types=1);
 
 namespace Atro\Core\Utils\Database\DBAL\Driver\PDO\PgSQL;
 
+use Atro\Core\Utils\Database\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Driver\AbstractPostgreSQLDriver;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 final class Driver extends AbstractPostgreSQLDriver
 {
+    public function createDatabasePlatformForVersion($version): PostgreSQLPlatform
+    {
+        return new PostgreSQLPlatform();
+    }
+
+    public function getDatabasePlatform(): PostgreSQLPlatform
+    {
+        return new PostgreSQLPlatform();
+    }
+
     public function connect(array $params)
     {
         return (new \Doctrine\DBAL\Driver\PDO\PgSQL\Driver())->connect($params);

@@ -8,134 +8,105 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/api-request/index', ['view', 'lib!JsTree'], function (Dep) {
+Espo.define('views/admin/api-request/index', ['views/admin/page'], function (Dep) {
+
     return Dep.extend({
-        template: 'admin/api-request/index',
-        setup() {
-            this.once('after:render', () => {
-                new Svelte.ApiRequestComponent({
-                    target: $('#api-request-content').get(0),
-                    props: {
-                        afterOnMount: (model) => {
-                            model.set('response', '  ');
 
-                            this.createView('type', 'views/fields/enum', {
-                                model: model,
-                                el: `#api-request-content .field[data-name="type"]`,
-                                params: {
-                                    options: ['upsert'],
-                                    translatedOptions: {
-                                        upsert: this.getLanguage().translate('upsert', 'labels', 'Admin')
-                                    },
-                                    required: true,
-                                },
-                                defs: {
-                                    name: 'type'
-                                },
-                                mode: 'edit'
-                            }, view => view.render());
+        renderSvelteComponent() {
+            new Svelte.ApiRequestComponent({
+                target: this.$el.find('#admin-page-content').get(0),
+                props: {
+                    afterOnMount: (model) => {
+                        model.set('response', '  ');
 
-                            this.createView('request', 'views/fields/text', {
-                                model: model,
-                                el: `#api-request-content .field[data-name="request"]`,
-                                mode: 'edit',
-                                defs: {
-                                    name: 'request'
+                        this.createView('type', 'views/fields/enum', {
+                            model: model,
+                            el: `#admin-page-content .field[data-name="type"]`,
+                            params: {
+                                options: ['upsert'],
+                                translatedOptions: {
+                                    upsert: this.getLanguage().translate('upsert', 'labels', 'Admin')
                                 },
-                                params: {
-                                    seeMoreDisabled: false,
-                                    rowsMin: 40,
-                                    rowsMax: 40
-                                }
-                            }, view => {
-                                view.render()
-                                view.listenTo(view, 'after:render', () => $(view.$el).find('textarea').css('resize', 'none'));
-                                $(view.$el).on('paste', (e) => {
-                                    e.preventDefault();
-                                    let content = (e.clipboardData || e.originalEvent.clipboardData || window.clipboardData).getData("text");
-                                    try {
-                                        content = JSON.stringify(JSON.parse(content), undefined, 4);
-                                        $(e.currentTarget).find('textarea').val(content);
-                                    } catch (e) {
-                                        this.notify(this.translate('You should paste only JSON content'), 'danger')
-                                    }
-                                    model.set('request', $(e.currentTarget).find('textarea').val())
-                                })
-                            });
+                                required: true,
+                            },
+                            defs: {name: 'type'},
+                            mode: 'edit'
+                        }, view => view.render());
 
-                            this.createView('response', 'views/fields/text', {
-                                model: model,
-                                defs: {
-                                    name: 'response'
-                                },
-                                params: {
-                                    rowsMin: 40,
-                                    rowsMax: 40
-                                },
-                                mode: 'edit',
-                                el: `#api-request-content .field[data-name="response"]`
-                            }, view => {
-                                view.render()
-                                view.listenTo(view, 'after:render', () => {
-                                    $(view.$el).find('textarea').css('resize', 'none')
-                                    $(view.$el).find('textarea').attr('readonly', true)
-                                });
-                                view.listenTo(model, 'change:response', () => view.reRender());
-                                view.listenTo(model, 'change:status', () => {
-                                    $('[data-name="response"] .status')
-                                        .removeClass('hidden')
-                                        .css('color', model.get('status') === 200 ? 'green': 'red')
-                                        .find('span').text(model.get('status'))
-                                });
-                            });
-                        },
-                        sendRequest: (model) => {
-                            if (!model.get('request')) {
-                                this.notify(this.translate('No data provided'), 'danger');
-                                return;
+                        this.createView('request', 'views/fields/text', {
+                            model: model,
+                            el: `#admin-page-content .field[data-name="request"]`,
+                            mode: 'edit',
+                            defs: {name: 'request'},
+                            params: {
+                                seeMoreDisabled: false,
+                                rowsMin: 40,
+                                rowsMax: 40
                             }
-                            this.notify(this.translate('Please Wait...'))
-                            this.ajaxPostRequest('MassActions/action/upsert', JSON.parse(model.get('request')))
-                                .success(res => {
-                                    this.notify(false)
-                                    if (res) {
-                                        model.set('response', JSON.stringify(res, undefined, 4))
-                                    }
-                                    model.set('status', 200)
+                        }, view => {
+                            view.render();
+                            view.listenTo(view, 'after:render', () => $(view.$el).find('textarea').css('resize', 'none'));
+                            $(view.$el).on('paste', (e) => {
+                                e.preventDefault();
+                                let content = (e.clipboardData || e.originalEvent.clipboardData || window.clipboardData).getData('text');
+                                try {
+                                    content = JSON.stringify(JSON.parse(content), undefined, 4);
+                                    $(e.currentTarget).find('textarea').val(content);
+                                } catch (e) {
+                                    this.notify(this.translate('You should paste only JSON content'), 'danger');
+                                }
+                                model.set('request', $(e.currentTarget).find('textarea').val());
+                            });
+                        });
 
-                                }).error((e) => {
+                        this.createView('response', 'views/fields/text', {
+                            model: model,
+                            defs: {name: 'response'},
+                            params: {rowsMin: 40, rowsMax: 40},
+                            mode: 'edit',
+                            el: `#admin-page-content .field[data-name="response"]`
+                        }, view => {
+                            view.render();
+                            view.listenTo(view, 'after:render', () => {
+                                $(view.$el).find('textarea').css('resize', 'none');
+                                $(view.$el).find('textarea').attr('readonly', true);
+                            });
+                            view.listenTo(model, 'change:response', () => view.reRender());
+                            view.listenTo(model, 'change:status', () => {
+                                $('[data-name="response"] .status')
+                                    .removeClass('hidden')
+                                    .css('color', model.get('status') === 200 ? 'green' : 'red')
+                                    .find('span').text(model.get('status'));
+                            });
+                        });
+                    },
+
+                    sendRequest: (model) => {
+                        if (!model.get('request')) {
+                            this.notify(this.translate('No data provided'), 'danger');
+                            return;
+                        }
+                        this.notify(this.translate('Please Wait...'));
+                        this.ajaxPostRequest('MassActions/action/upsert', JSON.parse(model.get('request')))
+                            .success(res => {
+                                this.notify(false);
+                                if (res) {
+                                    model.set('response', JSON.stringify(res, undefined, 4));
+                                }
+                                model.set('status', 200);
+                            })
+                            .error((e) => {
                                 console.error(e);
                                 model.set('status', e.status);
                                 try {
-                                    model.set('response', JSON.stringify(e.responseText, undefined, 4))
+                                    model.set('response', JSON.stringify(e.responseText, undefined, 4));
                                 } catch (e) {
                                     model.set('response', e.responseText);
                                 }
-                            })
-                        }
+                            });
                     }
-                });
-
-                new Svelte.TreePanel({
-                    target: $(`${this.options.el} .content-wrapper`).get(0),
-                    anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
-                    props: {
-                        scope: 'Settings',
-                        model: this.model,
-                        mode: 'detail',
-                        isAdminPage: true,
-                        callbacks: {
-
-                        }
-                    }
-                });
-
-                this.logToNavigationHistory('apiRequest');
-            })
-        },
-
-        updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('apiRequest', 'labels', 'Admin'));
+                }
+            });
         }
-    })
-})
+    });
+});

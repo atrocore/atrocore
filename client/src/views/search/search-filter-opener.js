@@ -64,6 +64,8 @@ Espo.define('views/search/search-filter-opener', ['view', 'search-manager'], fun
                     arrayNoneOf: 'array_none_of',
                     arrayIsEmpty: 'is_null',
                     arrayIsNotEmpty: 'is_not_null',
+                    similar: 'similar',
+                    wordSimilar: 'word_similar',
                 }
                 return data[type] ?? type;
             }
