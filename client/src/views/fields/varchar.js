@@ -47,6 +47,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'notContains', 'notEquals', 'notLike', 'isEmpty', 'isNotEmpty'],
 
         validationPattern: null,
+        validationPatternString: null,
 
         defaultFilterValue: '',
 
@@ -110,6 +111,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             let patternString = this.model.getFieldParam(this.name, 'pattern') || this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']) || null;
 
             this.validationPattern = this.convertStrToRegex(patternString);
+            this.validationPatternString = patternString;
 
             this.setScriptDefaultValue();
 
@@ -337,12 +339,16 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         getPatternValidationMessage() {
             return this.translate('dontMatchToPattern', 'exceptions', this.model.name)
                 .replace('{field}', this.translate(this.name, 'fields', this.model.name))
-                .replace('{pattern}', this.validationPattern);
+                .replace('{pattern}', this.validationPatternString);
         },
 
         convertStrToRegex(patternString) {
             if (patternString) {
                 try {
+                    const match = patternString.match(/^\/(.*)\/([gmixsuAJD]*)$/);
+                    if (match) {
+                        return new RegExp(match[1], match[2]);
+                    }
                     return new RegExp(patternString);
                 } catch (e) {
                     return null;
