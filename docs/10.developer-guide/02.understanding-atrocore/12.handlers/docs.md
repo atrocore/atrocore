@@ -249,6 +249,72 @@ When multiple modules register middleware, they are piped in module **load order
 
 ---
 
+## Entity Type Handlers
+
+AtroCore provides a ready-made set of PSR-15 handlers that cover all standard CRUD and action endpoints for entity records. These handlers live in `Atro\Core\EntityTypeHandlers\` and `Atro\Core\Templates\Handlers\`.
+
+### How Entity Type Membership Works
+
+Each built-in handler declares which entity template types it applies to via the `#[EntityType]` attribute:
+
+```php
+use Atro\Core\Routing\EntityType;
+
+#[Route(path: '/{entityName}', methods: ['GET'], ...)]
+#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation', 'ReferenceData'])]
+class ListHandler extends AbstractHandler { ... }
+
+#[Route(path: '/{entityName}/action/inheritField', methods: ['POST'], ...)]
+#[EntityType(types: ['Hierarchy'])]
+class InheritFieldHandler extends AbstractHandler { ... }
+```
+
+Always list types **explicitly** — there is no wildcard shorthand.
+
+### Available Types and Their Handler Sets
+
+All built-in entity type handlers live in a single namespace: `Atro\Core\EntityTypeHandlers\`.
+
+| Type | Handler set |
+|---|---|
+| `Base` | Full CRUD + actions + attribute operations |
+| `Hierarchy` | Same as Base + tree navigation (`TreeHandler`, `TreeDataHandler`) + field/relation inheritance (`InheritField`, `InheritAll`, `InheritAllForChildren`, `InheritAllFromParent`) |
+| `Archive` | Read-only: `list` and `read` only |
+| `Relation` | Full CRUD + `InheritRelationHandler`, `RemoveAssociatesHandler` |
+| `ReferenceData` | Reduced CRUD (no mass mutations, no follow/link); admin-only |
+
+### Extending from a Module
+
+To add a custom handler for a specific entity type, create a handler in your module's `Handlers/` directory, give it a `#[Route]` and an `#[EntityType]` attribute:
+
+```php
+#[Route(
+    path: '/{entityName}/action/myCustomAction',
+    methods: ['POST'],
+    summary: 'My custom action',
+    description: 'Does something specific for Hierarchy entities.',
+    tag: '{entityName}',
+    parameters: [
+        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+    ],
+    responses: [
+        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+    ],
+)]
+#[EntityType(types: ['Hierarchy'])]
+class MyCustomActionHandler extends AbstractHandler
+{
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        // ...
+    }
+}
+```
+
+The handler will be auto-discovered by `HandlerRegistry` and automatically associated with the declared entity types.
+
+---
+
 ## Legacy Controllers
 
 Some modules still contain a `Controllers/` directory with classes extending `Atro\Core\Templates\Controllers\Base` (and similar). These are supported via `LegacyControllerHandler`, which bridges the old system into the PSR-15 pipeline.

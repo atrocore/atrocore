@@ -11,9 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Templates\Handlers\Hierarchy;
+namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\EntityTypeHandlers\AbstractHandler;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -23,31 +24,35 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Atro\Core\Routing\EntityType;
 
 #[Route(
-    path: '/{entityName}/action/inheritAll',
+    path: '/{entityName}/action/inheritAllForChildren',
     methods: ['POST'],
-    summary: 'Inherit all linked records for a relation',
-    description: 'Copies all linked records for a specific relation from the parent record to the current record.',
+    summary: 'Inherit all fields for children',
+    description: 'Pushes all inheritable field values from a parent record down to all its children.',
     tag: '{entityName}',
     parameters: [
         ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['anyOf' => [['type' => 'boolean'], ['type' => 'integer']]]]]],
+        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
 #[EntityType(types: ['Hierarchy'])]
-class InheritAllHandler extends AbstractHandler
+class InheritAllForChildrenHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
         $data       = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'id') || !property_exists($data, 'link')) {
+        if (!property_exists($data, 'id')) {
             throw new BadRequest();
         }
 
-        $result = $this->getRecordService($entityName)->inheritAllForLink((string) $data->id, (string) $data->link);
+        if (!$this->getAcl()->check($entityName, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $result = $this->getRecordService($entityName)->inheritAllForChildren((string) $data->id);
 
         return new JsonResponse($result);
     }

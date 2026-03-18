@@ -11,9 +11,8 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Templates\Handlers\Hierarchy;
+namespace Atro\Core\EntityTypeHandlers;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\EntityTypeHandlers\AbstractHandler;
 use Atro\Core\Http\Response\JsonResponse;
@@ -24,36 +23,32 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Atro\Core\Routing\EntityType;
 
 #[Route(
-    path: '/{entityName}/action/inheritAllForChildren',
-    methods: ['POST'],
-    summary: 'Inherit all fields for children',
-    description: 'Pushes all inheritable field values from a parent record down to all its children.',
+    path: '/{entityName}/action/inheritRelation',
+    methods: ['PUT'],
+    summary: 'Inherit a relation record',
+    description: 'Creates an inherited copy of a relation record from a parent entity.',
     tag: '{entityName}',
     parameters: [
         ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => ['description' => 'Inherited relation record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
     ],
 )]
-#[EntityType(types: ['Hierarchy'])]
-class InheritAllForChildrenHandler extends AbstractHandler
+#[EntityType(types: ['Relation'])]
+class InheritRelationHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
-        $data       = $this->getRequestBody($request);
-
-        if (!property_exists($data, 'id')) {
-            throw new BadRequest();
-        }
 
         if (!$this->getAcl()->check($entityName, 'edit')) {
             throw new Forbidden();
         }
 
-        $result = $this->getRecordService($entityName)->inheritAllForChildren((string) $data->id);
+        $data   = $this->getRequestBody($request);
+        $entity = $this->getRecordService($entityName)->inheritRelation($data);
 
-        return new JsonResponse($result);
+        return new JsonResponse($entity->toArray());
     }
 }

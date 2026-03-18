@@ -11,8 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Templates\Handlers\Relation;
+namespace Atro\Core\EntityTypeHandlers;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\EntityTypeHandlers\AbstractHandler;
 use Atro\Core\Http\Response\JsonResponse;
@@ -23,32 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Atro\Core\Routing\EntityType;
 
 #[Route(
-    path: '/{entityName}/action/inheritRelation',
-    methods: ['PUT'],
-    summary: 'Inherit a relation record',
-    description: 'Creates an inherited copy of a relation record from a parent entity.',
+    path: '/{entityName}/action/removeAssociates',
+    methods: ['POST'],
+    summary: 'Remove associated records',
+    description: 'Removes associations between main and related records, optionally filtered by association ID.',
     tag: '{entityName}',
     parameters: [
         ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],
     responses: [
-        200 => ['description' => 'Inherited relation record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
 #[EntityType(types: ['Relation'])]
-class InheritRelationHandler extends AbstractHandler
+class RemoveAssociatesHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
+        $data       = $this->getRequestBody($request);
 
-        if (!$this->getAcl()->check($entityName, 'edit')) {
+        if (!property_exists($data, 'mainRecordId') || !property_exists($data, 'relatedRecordId')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($entityName, 'delete')) {
             throw new Forbidden();
         }
 
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService($entityName)->inheritRelation($data);
+        $associationId = property_exists($data, 'associationId') ? (string) $data->associationId : '';
+        $result        = $this->getRecordService($entityName)->removeAssociates(
+            (string) $data->mainRecordId,
+            (string) $data->relatedRecordId,
+            $associationId
+        );
 
-        return new JsonResponse($entity->toArray());
+        return new JsonResponse($result);
     }
 }

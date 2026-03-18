@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Templates\Handlers\Hierarchy;
+namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\EntityTypeHandlers\AbstractHandler;
