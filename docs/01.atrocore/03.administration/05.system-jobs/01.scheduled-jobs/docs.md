@@ -6,7 +6,7 @@ taxonomy:
 
 Scheduled Jobs are configurations that automatically create [Jobs](../) at specified intervals. They allow you to orchestrate multiple actions, such as import and export feeds, job retrials, system updates, etc. to be executed automatically by the Job Manager subsystem.
 
-> Some job types are available only with additional modules purchase.
+> Some job types are available only with additional modules purchase. To execute custom [Actions](../../06.actions/) on a schedule, use the **Action** job type, available with the [Workflows](https://store.atrocore.com/en/workflows/20194) module.
 
 ## Main functions
 
@@ -85,7 +85,7 @@ Available with [Pricing](../../../../06.erp/01.pricing/) module.
 
 This job is used when you use dynamically calculated prices. This job starts recalculating action for all products.
 
-> Note that this job may take a lot of time and server resources, so please schedule its execution when you do not need to work in the system.
+> This job may take a lot of time and server resources, so please schedule its execution when you do not need to work in the system.
 
 ### Update currency exchange via ECB
 
@@ -106,12 +106,6 @@ This job looks for the selected jobs done by import and export feeds and/or othe
 They will be shown in additional panel Retrials.
 
 ![Retrial Scheduled](_assets/scheduled-jobs-retrials.png){.medium}
-
-### Action
-
-> Available with [Workflows](https://store.atrocore.com/en/workflows/20194) module.
-
-This job type allows for custom actions to be executed on a schedule. It provides flexibility for executing specific business logic or custom operations.
 
 ### Clear deleted data
 

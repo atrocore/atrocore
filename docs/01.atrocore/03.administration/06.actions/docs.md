@@ -163,10 +163,7 @@ Actions can be executed manually through the user interface:
 
 ### Automatic Execution
 
-Actions can be triggered automatically through:
-
-- **[Workflows](https://store.atrocore.com/en/workflows/20194)**: Event-driven execution based on entity changes
-- **[Scheduled Jobs](../05.system-jobs/01.scheduled-jobs/)**: Time-based execution at regular intervals
+Actions can be triggered automatically through the [Workflows](https://store.atrocore.com/en/workflows/20194) module, which supports both event-driven execution based on entity changes and time-based scheduled execution.
 
 ## Monitoring Actions
 
