@@ -27,6 +27,10 @@
   "messages": {
     "cannotMergeUnconfirmedItems": "Niepotwierdzone elementy nie mogą być dodane do scalania"
   },
+  "labels": {
+    "stagingRecord": "rekord etapu",
+    "masterRecord": "rekord główny"
+  },
   "streamMessages": {
     "clusterLinked": "{user} powiązał {relatedEntity} z tym klastrem",
     "clusterLinkedThis": "{user} powiązał {relatedEntity} z tym klastrem",

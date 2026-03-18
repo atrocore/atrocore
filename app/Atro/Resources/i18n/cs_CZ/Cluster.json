@@ -27,6 +27,10 @@
   "messages": {
     "cannotMergeUnconfirmedItems": "Nepotvrzené položky nelze přidat ke sloučení"
   },
+  "labels": {
+    "stagingRecord": "záznam etapizace",
+    "masterRecord": "hlavní záznam"
+  },
   "streamMessages": {
     "clusterLinked": "{user} propojil {relatedEntity} s tímto clusterem",
     "clusterLinkedThis": "{user} propojil {relatedEntity} s tímto clusterem",

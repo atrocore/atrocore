@@ -27,6 +27,10 @@
   "messages": {
     "cannotMergeUnconfirmedItems": "Gli elementi non confermati non possono essere aggiunti alla fusione"
   },
+  "labels": {
+    "stagingRecord": "record di allestimento",
+    "masterRecord": "record master"
+  },
   "streamMessages": {
     "clusterLinked": "{user} ha collegato {relatedEntity} a questo cluster",
     "clusterLinkedThis": "{user} ha collegato {relatedEntity} a questo cluster",
