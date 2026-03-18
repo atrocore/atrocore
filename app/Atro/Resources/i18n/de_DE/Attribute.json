@@ -83,6 +83,9 @@
   "filterLabels": {
     "All": "Alle"
   },
+  "boolFilters": {
+    "notLinkedWithAnyRecord": "Nicht mit einem Datensatz verknüpft"
+  },
   "tooltips": {
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"/^[A-Z]{1,10}$/\"",
     "defaultDate": "Attributwertmodifikator (z. B. +5 Tage, -3 Monate)",

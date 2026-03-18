@@ -60,6 +60,9 @@
   "filterLabels": {
     "All": "All"
   },
+  "boolFilters": {
+    "notLinkedWithAnyRecord": "Не пов'язаний з жодним записом"
+  },
   "tooltips": {
     "pattern": "Щоб дозволити лише великі літери довжиною 10 символів використовуйте \"/^[A-Z]{1,10}$/\"",
     "defaultDate": "Модифікатор значення атрибута (наприклад, +5 days, -3 months)",
