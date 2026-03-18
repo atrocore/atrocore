@@ -285,6 +285,28 @@ Composite attributes cannot be imported or exported. In all other ways, they beh
 
 ## Conditional Properties for Attributes
 
-Certain attribute options can be dynamically controlled using Conditional Properties. These properties define how a field behaves based on specific conditions or context. One or more conditional properties can be applied simultaneously. 
+Certain attribute options can be dynamically controlled using Conditional Properties. These properties define how a field behaves based on specific conditions or context. One or more conditional properties can be applied simultaneously.
 
 The configuration of conditional properties for attributes is the same as for [fields](../../11.entity-management/03.fields-and-attributes/docs.md#conditional-properties).
+
+## Filters
+
+The Attribute list view provides the following filters in the filter panel:
+
+**Only My**
+Shows only attributes created by or assigned to the currently logged-in user.
+
+**Not linked with any record**
+Shows only attributes that have no values linked to any record of the entity they belong to. This is useful for identifying unused attributes that can be reviewed or cleaned up — for example, after removing records or reorganising the data model.
+
+![Not linked with any record filter](./_assets/not-linked-with-any-record.png)
+
+## Records with this attribute
+
+On the detail page of an Attribute, an action button **"Records with this attribute"** is available when the attribute has an entity type assigned.
+
+![Records with this attribute button](./_assets/records-with-this-attribute.png)
+
+Clicking it opens the list view of the corresponding entity (e.g. Products) in a new tab, pre-filtered to show only records that have a value for this attribute. The filter is applied automatically and does not need to be configured manually.
+
+This is useful for quickly auditing which records are using a specific attribute, or for navigating from the attribute definition directly to its related data.
