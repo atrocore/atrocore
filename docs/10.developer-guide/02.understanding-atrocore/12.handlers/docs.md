@@ -13,6 +13,7 @@ ErrorHandlerMiddleware       ← catches all unexpected exceptions
 RouteMiddleware              ← matches the request path via FastRoute
 AuthMiddleware               ← validates the Authorization-Token
 ApiValidationMiddleware      ← validates request input and response output
+[module middlewares]         ← optional, registered via Module.php
 DispatchMiddleware           ← dispatches to the matched handler
 NotFoundMiddleware           ← returns 404 if nothing matched
 ```
@@ -187,6 +188,64 @@ class ProductStatsHandler implements MiddlewareInterface
 ## API Documentation
 
 All handlers with complete `#[Route]` annotations appear automatically in `/apidocs/`. No separate OpenAPI registration is needed — the documentation is generated directly from the attribute.
+
+---
+
+## Module Middleware
+
+Modules can add their own PSR-15 middleware to the HTTP pipeline by overriding `getMiddlewares()` in their `Module.php`. Module middlewares are placed **after** `ApiValidationMiddleware` and **before** `DispatchMiddleware`, which means they receive a fully authenticated and validated request, and can inspect or modify the response after the handler has run.
+
+### Registering Middleware
+
+Override `getMiddlewares()` in your module class:
+
+```php
+// src/mymodule/app/MyModule/Module.php
+
+public function getMiddlewares(): array
+{
+    return [
+        \MyModule\Middleware\MyMiddleware::class,
+    ];
+}
+```
+
+The service container resolves each class automatically, so constructor injection works the same way as in handlers.
+
+### Example: Adding a Custom Response Header
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace MyModule\Middleware;
+
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+
+class AddVersionHeaderMiddleware implements MiddlewareInterface
+{
+    public function __construct(private readonly \Psr\Container\ContainerInterface $container)
+    {
+    }
+
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $version = $this->container->get('moduleManager')->getModule('MyModule')?->getVersion() ?? 'unknown';
+
+        return $handler->handle($request)->withHeader('X-MyModule-Version', $version);
+    }
+}
+```
+
+The call to `$handler->handle($request)` runs the rest of the pipeline — including the actual handler — and returns the fully-built response. Anything done **after** that call modifies the final response.
+
+### Execution Order
+
+When multiple modules register middleware, they are piped in module **load order** (as defined by each module's `getLoadOrder()`).
 
 ---
 

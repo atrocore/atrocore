@@ -18,6 +18,7 @@ use Atro\Core\Middleware\AuthMiddleware;
 use Atro\Core\Middleware\ErrorHandlerMiddleware;
 use Atro\Core\Middleware\LegacyControllerHandler;
 use Atro\Core\Middleware\NotFoundMiddleware;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Routing\HandlerRegistry;
 use Atro\Core\Routing\Route as RouteAttribute;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -52,11 +53,33 @@ class HttpPipeline implements FactoryInterface
         $pipe->pipe(new ErrorHandlerMiddleware());
         $pipe->pipe(new RouteMiddleware($router));
         $pipe->pipe(new AuthMiddleware($container));
+
         $pipe->pipe($container->get(ApiValidationMiddleware::class));
+
+        foreach ($this->collectModuleMiddlewares($container) as $middleware) {
+            $pipe->pipe($middleware);
+        }
+
         $pipe->pipe(new DispatchMiddleware());
         $pipe->pipe(new NotFoundMiddleware());
 
         return $pipe;
+    }
+
+    private function collectModuleMiddlewares(ContainerInterface $container): array
+    {
+        $middlewares = [];
+
+        /** @var ModuleManager $moduleManager */
+        $moduleManager = $container->get('moduleManager');
+
+        foreach ($moduleManager->getModules() as $module) {
+            foreach ($module->getMiddlewares() as $class) {
+                $middlewares[] = $container->get($class);
+            }
+        }
+
+        return $middlewares;
     }
 
     private function registerHandlerRoutes(FastRouteRouter $router, ContainerInterface $container): void

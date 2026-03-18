@@ -304,6 +304,17 @@ abstract class AbstractModule
     }
 
     /**
+     * Returns FQCN list of PSR-15 middleware classes this module wants to add to the HTTP pipeline.
+     * Middlewares are piped after authentication, in the order returned.
+     *
+     * @return string[]
+     */
+    public function getMiddlewares(): array
+    {
+        return [];
+    }
+
+    /**
      * Returns FQCN list of all PSR-15 handler classes in this module's Handlers/ directory.
      *
      * @return string[]
