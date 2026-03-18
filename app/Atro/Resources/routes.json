@@ -1325,69 +1325,6 @@
     }
   },
   {
-    "route": "/LastViewed/action/Tree",
-    "method": "get",
-    "params": {
-      "controller": "LastViewed",
-      "action": "tree"
-    },
-    "operationId": "tree",
-    "summary": "Get last viewed data for a scope for tree panels",
-    "description": "Get last viewed data for a scope for tree panels",
-    "security": [
-      {
-        "Authorization-Token": []
-      }
-    ],
-    "requestParameters": [
-      {
-        "name": "scope",
-        "in": "query",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "example": "Product"
-        }
-      }
-    ],
-    "response": {
-      "type": "object",
-      "properties": {
-        "total": {
-          "type": "integer"
-        },
-        "list": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "offset": {
-                "type": "integer"
-              },
-              "disabled": {
-                "type": "boolean",
-                "example": false
-              },
-              "load_on_demand": {
-                "type": "boolean",
-                "example": false
-              },
-              "total": {
-                "type": "integer"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  {
     "route": "/App/action/merge",
     "method": "post",
     "params": {
