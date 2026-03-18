@@ -26,7 +26,11 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (\Throwable $e) {
-            $code = $e->getCode() ?: 500;
+            $code = $e->getCode();
+
+            if ($code < 100 || $code >= 600) {
+                $code = 500;
+            }
 
             if ($code >= 500) {
                 $GLOBALS['log']->error('Uncaught Exception ' . get_class($e) . ': "' . $e->getMessage() . '" at ' . $e->getFile() . ' line ' . $e->getLine(), ['exception' => $e]);
