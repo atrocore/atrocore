@@ -17,7 +17,7 @@ The base module supports file-based exports (CSV, Excel, JSON, XML, SQL). Additi
 
 - [Export: HTTP Request](../09.export-feeds-http-request/docs.md) – exports data via HTTP request.
 - [Export: Remote File](../07.export-feeds-remote-file/docs.md) – exports files to FTP, sFTP, or SSH servers.
-- [Export: Database](../05.export-feeds-database/docs.md) – exports data to MSSQL, MySQL, PostgreSQL, Oracle, or HANA databases.
+- [Export: Database](https://store.atrocore.com/en/export-database/20138) – exports data to MSSQL, MySQL, PostgreSQL, Oracle, or HANA databases.
 - [Synchronization](../03.synchronization/docs.md) – orchestrates multiple import and export feeds for complex data exchange.
 
 ## Administrator Functions
@@ -61,7 +61,7 @@ Module-specific fields:
 
 For type-specific configuration, see:
 
-- [Export: Database](../05.export-feeds-database/docs.md)
+- [Export: Database](https://store.atrocore.com/en/export-database/20138)
 - [Export: HTTP Request](../09.export-feeds-http-request/docs.md)
 - [Export: Remote File](../07.export-feeds-remote-file/docs.md)
 
@@ -69,7 +69,7 @@ For type-specific configuration, see:
 
 **General fields:**
 
-- **Format** – output file format: **CSV**, **Excel**, **JSON** or **XML**. The **SQL** format is intended for use with the [Export Database](../05.export-feeds-database/docs.md) module.
+- **Format** – output file format: **CSV**, **Excel**, **JSON** or **XML**. The **SQL** format is intended for use with the [Export Database](https://store.atrocore.com/en/export-database/20138) module.
 - **Folder** – [folder](../../01.atrocore/03.administration/15.file-management/docs.md#folder-management) where exported files will be stored. Required.
 - **File Name Mask** – filename template using [Twig syntax](../../10.developer-guide/80.twig-tutorial/docs.md)
 
