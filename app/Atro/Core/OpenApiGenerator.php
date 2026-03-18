@@ -45,6 +45,11 @@ class OpenApiGenerator
     public function getSchemaForHandler(RouteAttribute $routeAttr): array
     {
         $result = $this->getBase();
+
+        foreach ($routeAttr->entities as $entityName) {
+            $this->buildEntitySchema($result, $entityName);
+        }
+
         $this->pushHandlerRoute($result, $routeAttr);
 
         return $result;
@@ -84,21 +89,7 @@ class OpenApiGenerator
                 continue;
             }
 
-            $result['components']['schemas'][$entityName] = [
-                'type'       => 'object',
-                'properties' => [
-                    'id'    => ['type' => 'string'],
-                    '_meta' => ['type' => 'object'],
-                ],
-            ];
-
-            foreach ($data['fields'] as $fieldName => $fieldData) {
-                if ($fieldName === '_meta') {
-                    continue;
-                }
-
-                $this->getFieldSchema($result, $entityName, $fieldName, $fieldData);
-            }
+            $this->buildEntitySchema($result, $entityName);
 
             $schemas[$entityName] = $result['components']['schemas'][$entityName];
         }
@@ -1416,6 +1407,45 @@ class OpenApiGenerator
         ];
     }
 
+    protected function buildEntitySchema(array &$result, string $entityName): void
+    {
+        if (isset($result['components']['schemas'][$entityName])) {
+            return;
+        }
+
+        $data = $this->getMetadata()->get(['entityDefs', $entityName]);
+
+        if (empty($data['fields'])) {
+            return;
+        }
+
+        $result['components']['schemas'][$entityName] = [
+            'type'       => 'object',
+            'properties' => [
+                'id'    => ['type' => 'string'],
+                '_meta' => ['type' => 'object'],
+            ],
+        ];
+
+        foreach ($data['fields'] as $fieldName => $fieldData) {
+            if ($fieldName === '_meta') {
+                continue;
+            }
+
+            $this->getFieldSchema($result, $entityName, $fieldName, $fieldData);
+        }
+
+        // Mark all non-required typed properties as nullable so the response validator
+        // accepts null values for optional fields (which the API commonly returns).
+        $required = $result['components']['schemas'][$entityName]['required'] ?? [];
+        foreach ($result['components']['schemas'][$entityName]['properties'] as $prop => &$propSchema) {
+            if (!in_array($prop, $required, true) && isset($propSchema['type'])) {
+                $propSchema['nullable'] = true;
+            }
+        }
+        unset($propSchema);
+    }
+
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
     {
         if (!empty($fieldData['openApiDisabled'])) {
@@ -1701,7 +1731,7 @@ class OpenApiGenerator
                 'description' => $routeAttr->description,
                 'operationId' => md5($routeAttr->path . '_' . $method),
                 'responses'   => $responses,
-                'security'    => $routeAttr->auth ? [['Authorization-Token' => []]] : [],
+                'security'    => $routeAttr->auth ? [['Authorization-Token' => []], ['basicAuth' => []], ['cookieAuth' => []]] : [],
             ];
 
             if (!empty($routeAttr->parameters)) {

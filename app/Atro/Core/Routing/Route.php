@@ -25,6 +25,7 @@ class Route
         public readonly bool         $auth        = true,
         public readonly array        $parameters  = [],
         public readonly array        $responses   = [],
+        public readonly array        $entities    = [],
     ) {
     }
 }
