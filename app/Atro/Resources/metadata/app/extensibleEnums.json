@@ -1,47 +1,38 @@
 [
   {
     "id": "gender",
-    "name": "Gender",
-    "multilingual": false
+    "name": "Gender"
   },
   {
     "id": "role",
-    "name": "Role",
-    "multilingual": false
+    "name": "Role"
   },
   {
     "id": "addressType",
-    "name": "Address Type",
-    "multilingual": false
+    "name": "Address Type"
   },
   {
     "id": "fileTags",
-    "name": "File Tags",
-    "multilingual": false
+    "name": "File Tags"
   },
   {
     "id": "update_type",
-    "name": "Update Type",
-    "multilingual": false
+    "name": "Update Type"
   },
   {
     "id": "conditions_type",
-    "name": "Conditions Type",
-    "multilingual": false
+    "name": "Conditions Type"
   },
   {
     "id": "team_position",
-    "name": "Team Position",
-    "multilingual": false
+    "name": "Team Position"
   },
   {
     "id": "product_group_item_type",
-    "name": "Product Group Item Type",
-    "multilingual": false
+    "name": "Product Group Item Type"
   },
   {
     "id": "derivative_status",
-    "name": "Derivative Status",
-    "multilingual": false
+    "name": "Derivative Status"
   }
 ]

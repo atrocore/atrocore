@@ -26,10 +26,6 @@ class ExtensibleEnum extends Base
         }
 
         parent::beforeSave($entity, $options);
-
-        if ($entity->isAttributeChanged('multilingual') && empty($entity->get('multilingual'))) {
-            $this->clearLingualOptions($entity);
-        }
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -57,22 +53,6 @@ class ExtensibleEnum extends Base
                     );
                 }
             }
-        }
-    }
-
-
-    public function clearLingualOptions(Entity $entity): void
-    {
-        $fields = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getLingualFields();
-        if (empty($fields)) {
-            return;
-        }
-
-        foreach ($entity->get('extensibleEnumOptions') as $option) {
-            foreach ($fields as $field) {
-                $option->set($field, null);
-            }
-            $this->getEntityManager()->saveEntity($option);
         }
     }
 }
