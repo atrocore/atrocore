@@ -23,7 +23,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Atro\Core\Routing\EntityType;
 
 #[Route(
-    path: '/{entityName}/action/tree',
+    path: '/{entityName}/action/Tree',
     methods: ['GET'],
     summary: 'Get hierarchy tree',
     description: 'Returns tree-structured data for a hierarchy entity. Supports node-based navigation and selected node expansion.',

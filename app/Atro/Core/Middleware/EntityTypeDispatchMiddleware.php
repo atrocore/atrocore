@@ -65,15 +65,8 @@ class EntityTypeDispatchMiddleware implements MiddlewareInterface
         // Determine the entity's template type from metadata (defaults to 'Base')
         $entityType = (string) $this->metadata->get(['scopes', $entityName, 'type'], 'Base');
 
-        // Normalize path to lowercase for case-insensitive matching against EntityTypeHandler routes
-        // (e.g. /Foo/action/Tree → /foo/action/tree). The entityName is taken from route params,
-        // so lowercasing the URI only affects static path segments used for pattern matching.
-        $normalizedRequest = $request->withUri(
-            $request->getUri()->withPath(strtolower($request->getUri()->getPath()))
-        );
-
         // Try to find a matching EntityTypeHandler
-        $handlerClass = $this->registry->findHandlerClass($normalizedRequest, $entityType);
+        $handlerClass = $this->registry->findHandlerClass($request, $entityType);
 
         if ($handlerClass === null) {
             return $handler->handle($request);
