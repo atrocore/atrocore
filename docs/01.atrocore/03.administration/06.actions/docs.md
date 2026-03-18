@@ -390,25 +390,7 @@ For example, the payload filters all attributes by their ids and transfers to th
       ]
     }
 
-
 ![Export Feed](./_assets/export-feed.png){.large}
-
-#### **Synchronization**
-
-> Available with [Synchronization](../../../02.data-exchange/03.synchronization/) module
-
-Synchronizes data between AtroCore and external systems.
-
-![Synchronization Configuration](_assets/action-type-synchronization.png){.medium}
-
-**Configuration:**
-
-- **Execute in Background**: Option to run sync as background process
-- **Synchronization**: Selection of configured synchronization
-<!-- TODO: enhance with real payload example -->
-- **Payload**: Custom data payload for the synchronization with [Twig](../../../10.developer-guide/80.twig-tutorial/) templating syntax
-
-> The payload structure is identical to [Import Feed](#import-feed) and [Export Feed](#export-feed) actions.
 
 ### Communication
 

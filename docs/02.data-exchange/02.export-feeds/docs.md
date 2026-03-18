@@ -18,7 +18,7 @@ The base module supports file-based exports (CSV, Excel, JSON, XML, SQL). Additi
 - [Export: HTTP Request](../09.export-feeds-http-request/docs.md) – exports data via HTTP request.
 - [Export: Remote File](https://store.atrocore.com/en/export-remote-file/20144) – exports files to FTP, sFTP, or SSH servers.
 - [Export: Database](https://store.atrocore.com/en/export-database/20138) – exports data to MSSQL, MySQL, PostgreSQL, Oracle, or HANA databases.
-- [Synchronization](../03.synchronization/docs.md) – orchestrates multiple import and export feeds for complex data exchange.
+- [Synchronization](https://store.atrocore.com/en/synchronization/20124) – orchestrates multiple import and export feeds for complex data exchange.
 
 ## Administrator Functions
 
@@ -48,9 +48,9 @@ Navigate to **Export Feeds** and click `Create`. Enter a name, select a type, an
 - **Maximum Number of Workers** – number of workers that can execute this feed in parallel; if not set, all available workers are used.
 - **Replace Existing File** – when enabled, the previously exported file is replaced on each run.
 
-Module-specific fields:
+Available with the [Synchronization](https://store.atrocore.com/en/synchronization/20124) module fields:
 
-- **Priority** – execution priority: `Low`, `Normal`, or `High`. Available with the [Synchronization](../03.synchronization/docs.md) module.
+- **Priority** – execution priority: `Low`, `Normal`, or `High`.
 - **Scheduled Job** – links the feed to a [Scheduled Job](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) for automated execution.
 
 ### Export Data Settings
@@ -78,7 +78,7 @@ For type-specific configuration, see:
 **CSV and Excel:**
 
 - **Header Row** – when enabled, column names are included in the first row. Enabled by default for Excel.
-- **Has Multiple Sheets** – enables multi-sheet Excel export. Requires the [Synchronization](../03.synchronization/docs.md) module. See [Multi-Sheet Excel Export](../03.synchronization/docs.md#multi-sheet-excel-export).
+- **Has Multiple Sheets** – enables multi-sheet Excel export. Requires the [Synchronization](https://store.atrocore.com/en/synchronization/20124) module.
 
 CSV-specific:
 

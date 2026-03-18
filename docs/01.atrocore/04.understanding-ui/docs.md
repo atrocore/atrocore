@@ -157,7 +157,7 @@ The following actions are available for all entity records by default on the det
 - **Delete** – select the `Delete` option from the actions menu to remove the given record.
 - **Duplicate** – select the `Duplicate` option from the actions menu to go to the record creation page and enter the unique values for the record fields to be used for duplication.
 
-Some actions, such as **Translate** and  **Compare** are added by modules. In this case by [Translations](https://store.atrocore.com/en/translations/20191) and [Synchronization](../../02.data-exchange/03.synchronization) modules.
+Some actions, such as **Translate** and  **Compare** are added by modules. In this case by [Translations](https://store.atrocore.com/en/translations/20191) module.
 
 ### Create View
 

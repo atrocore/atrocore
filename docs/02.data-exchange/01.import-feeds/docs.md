@@ -16,7 +16,7 @@ The free module supports file-based imports (CSV, Excel, JSON, XML). Additional 
 - [Import: Database](https://store.atrocore.com/en/import-database/20148) – MSSQL, MySQL, PostgreSQL, Oracle, HANA database imports
 - [Import: HTTP Request](../08.import-feeds-http-request/) – REST API and HTTP request imports
 - [Import: Remote File](https://store.atrocore.com/en/import-remote-file/20154) – automated imports from FTP, sFTP, or URL sources
-- [Synchronization](../03.synchronization/) – orchestrates multiple import and export feeds for complex data exchange
+- [Synchronization](https://store.atrocore.com/en/synchronization/20124) – orchestrates multiple import and export feeds for complex data exchange
 
 
 ## Administrator Functions
