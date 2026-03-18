@@ -27,6 +27,10 @@
   "messages": {
     "cannotMergeUnconfirmedItems": "No se pueden añadir elementos no confirmados a la fusión"
   },
+  "labels": {
+    "stagingRecord": "registro de ensayo",
+    "masterRecord": "registro maestro"
+  },
   "streamMessages": {
     "clusterLinked": "{user} vinculó {relatedEntity} a este clúster",
     "clusterLinkedThis": "{user} vinculó {relatedEntity} a este clúster",

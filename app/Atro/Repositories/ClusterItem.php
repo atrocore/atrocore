@@ -251,7 +251,9 @@ class ClusterItem extends Base
         parent::afterSave($entity, $options);
 
         if ($entity->isNew()) {
-            $this->createClusterActivityNote($entity->get('clusterId'), 'linked', $entity->get('entityName'), $entity->get('entityId'));
+            $this->createClusterActivityNote($entity->get('clusterId'), 'linked', $entity->get('entityName'), $entity->get('entityId'), [
+                'entityRole' => $this->getEntityRole($entity->get('clusterId'), $entity->get('entityName')),
+            ]);
         }
     }
 
@@ -263,7 +265,9 @@ class ClusterItem extends Base
             $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('matchedRecordId'));
         }
 
-        $this->createClusterActivityNote($entity->get('clusterId'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
+        $this->createClusterActivityNote($entity->get('clusterId'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'), [
+            'entityRole' => $this->getEntityRole($entity->get('clusterId'), $entity->get('entityName')),
+        ]);
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -312,10 +316,16 @@ class ClusterItem extends Base
         }
     }
 
-    private function createClusterActivityNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = ''): void
+    private function getEntityRole(string $clusterId, string $entityName): string
+    {
+        $cluster = $this->getEntityManager()->getEntity('Cluster', $clusterId);
+        return ($cluster && $cluster->get('masterEntity') === $entityName) ? 'master' : 'staging';
+    }
+
+    private function createClusterActivityNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = '', array $extraData = []): void
     {
         $this->getEntityManager()->getRepository('Selection')->createActivityNote(
-            $clusterId, 'Cluster', 'ClusterActivity', $action, $relatedType, $relatedId
+            $clusterId, 'Cluster', 'ClusterActivity', $action, $relatedType, $relatedId, $extraData
         );
     }
 

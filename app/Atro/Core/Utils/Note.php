@@ -127,6 +127,29 @@ class Note
                         }
                     }
                 }
+
+                if ($item['fieldType'] === 'link') {
+                    $fieldDef = $this->getMetadata()->get("entityDefs.{$entity->getEntityType()}.fields.$field", []);
+                    if (!empty($fieldDef['entityNameField'])) {
+                        $entityType = $entity->get($fieldDef['entityNameField']);
+                        if ($entityType && $this->getEntityManager()->hasRepository($entityType)) {
+                            $wasId = $was[$field . 'Id'] ?? null;
+                            if ($wasId) {
+                                $wasRecord = $this->getEntityManager()->getEntity($entityType, $wasId);
+                                if ($wasRecord) {
+                                    $was[$field . 'Name'] = $wasRecord->get('name');
+                                }
+                            }
+                            $becameId = $became[$field . 'Id'] ?? null;
+                            if ($becameId) {
+                                $becameRecord = $this->getEntityManager()->getEntity($entityType, $becameId);
+                                if ($becameRecord) {
+                                    $became[$field . 'Name'] = $becameRecord->get('name');
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 

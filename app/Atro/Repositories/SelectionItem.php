@@ -49,7 +49,8 @@ class SelectionItem extends Base
         if ($entity->isNew()) {
             $this->getEntityManager()->getRepository('Selection')->createActivityNote(
                 $entity->get('selectionId'), 'Selection', 'SelectionActivity', 'linked',
-                $entity->get('entityName'), $entity->get('entityId')
+                $entity->get('entityName'), $entity->get('entityId'),
+                ['entityRole' => $this->getEntityRole($entity->get('entityName'))]
             );
         }
     }
@@ -60,7 +61,8 @@ class SelectionItem extends Base
 
         $this->getEntityManager()->getRepository('Selection')->createActivityNote(
             $entity->get('selectionId'), 'Selection', 'SelectionActivity', 'unlinked',
-            $entity->get('entityName'), $entity->get('entityId')
+            $entity->get('entityName'), $entity->get('entityId'),
+            ['entityRole' => $this->getEntityRole($entity->get('entityName'))]
         );
     }
 
@@ -120,5 +122,10 @@ class SelectionItem extends Base
                 ->setParameter('entityName', $entityName)
                 ->executeQuery();
         }
+    }
+
+    private function getEntityRole(string $entityName): string
+    {
+        return !empty($this->getMetadata()->get("scopes.$entityName.primaryEntityId")) ? 'staging' : 'master';
     }
 }
