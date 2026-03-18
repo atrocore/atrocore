@@ -95,7 +95,6 @@ class ExtensibleEnumOption extends Base
                 if ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields', 'description'])) {
                     $select[] = 'eeo.description';
                 }
-                $select[] = 'ee.multilingual AS multilingual';
 
                 $records = $this
                     ->getConnection()
@@ -117,16 +116,14 @@ class ExtensibleEnumOption extends Base
 
                 foreach ($records as $item) {
                     $row = Util::arrayKeysToCamelCase($item);
-                    if (!empty($row['multilingual'])) {
-                        $localizedName = \Atro\Core\Utils\Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), 'ExtensibleEnumOption', 'name');
-                        if ($localizedName !== 'name' && !empty($row[$localizedName])) {
-                            $row['preparedName'] = $row[$localizedName];
-                        } else {
-                            $row['preparedName'] = $row[$this->getOptionName()];
-                        }
+
+                    $localizedName = \Atro\Core\Utils\Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), 'ExtensibleEnumOption', 'name');
+                    if ($localizedName !== 'name' && !empty($row[$localizedName])) {
+                        $row['preparedName'] = $row[$localizedName];
                     } else {
-                        $row['preparedName'] = $row['name'];
+                        $row['preparedName'] = $row[$this->getOptionName()];
                     }
+
                     $this->cachedOptions[$row['id']] = $row;
 
                     if ($id == $row['id']) {

@@ -16,12 +16,6 @@
           "name": "description",
           "fullWidth": true
         }
-      ],
-      [
-        {
-          "name": "multilingual"
-        },
-        false
       ]
     ]
   }
