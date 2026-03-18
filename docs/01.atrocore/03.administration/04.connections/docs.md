@@ -89,10 +89,11 @@ Connection to Vertica analytics database, optimized for large-scale data warehou
 
 ### File Transfer Connections
 
-#### FTP
-File Transfer Protocol connections for uploading and downloading files to/from remote servers. This connection type supports both active and passive modes for file transfer operations.
+These connection types (FTP and SFTP) are used by the [Import: Remote File](https://store.atrocore.com/en/import-remote-file/20154) and [Export: Remote File](https://store.atrocore.com/en/export-remote-file/20144) modules to [exchange data](https://help.atrocore.com/latest/data-exchange) with remote files.
 
-This connection type is used by the [Import: Remote File](../../../02.data-exchange/06.import-feeds-remote-file/) module to allow importing data from remote files.
+#### FTP
+
+File Transfer Protocol connections for uploading and downloading files to/from remote servers. This connection type supports both active and passive modes for file transfer operations.
 
 ![ftp](./_assets/ftp.png)
 
@@ -103,9 +104,8 @@ This connection type is used by the [Import: Remote File](../../../02.data-excha
 - **TLS/SSL**: A checkbox to enable TLS/SSL encryption for secure file transfer
 
 #### SFTP
-Secure File Transfer Protocol connections that provide encrypted file transfer capabilities. SFTP connections ensure secure data transmission over SSH protocol with authentication and encryption.
 
-This connection type is used by the [Import: Remote File](../../../02.data-exchange/06.import-feeds-remote-file/) module to allow importing data from remote files.
+Secure File Transfer Protocol connections that provide encrypted file transfer capabilities. SFTP connections ensure secure data transmission over SSH protocol with authentication and encryption.
 
 ![sftp](./_assets/sftp.png)
 

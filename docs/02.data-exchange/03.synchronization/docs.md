@@ -136,6 +136,6 @@ All these settings are set separately for each sheet. An excel export feed can h
 
 ### Remote File Processing and Scheduled Updates
 
-Combine [Remote File](../06.import-feeds-remote-file/docs.md) import feeds to process files from different FTP/SFTP locations or network paths in a coordinated sequence. Configure synchronizations to run automatically via [Scheduled Jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) for regular data updates without manual intervention. 
+Combine [Remote File](https://store.atrocore.com/en/import-remote-file/20154) import feeds to process files from different FTP/SFTP locations or network paths in a coordinated sequence. Configure synchronizations to run automatically via [Scheduled Jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) for regular data updates without manual intervention.
 
 For example, a nightly refresh synchronization can import updated product data from an ERP system, import new asset files from a shared network drive, update product attributes from a marketing database, and export the refreshed catalog to multiple sales channels - all executed automatically in the correct sequence.
