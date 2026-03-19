@@ -11,13 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Admin;
 
-use Psr\Container\ContainerInterface;
-use Atro\Core\DataManager;
 use Atro\Core\Exceptions\Forbidden;
+use Psr\Container\ContainerInterface;
 use Atro\Core\Http\Response\BoolResponse;
-use Atro\Core\JobManager;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,17 +23,17 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/jobManagerUpdate',
+    path: '/Admin/clearCache',
     methods: ['POST'],
-    summary: 'Pause or resume the job manager',
-    description: 'Pauses or resumes background job processing. Admin only.',
-    tag: 'App',
+    summary: 'Clear application cache',
+    description: 'Clears the application cache. Admin only.',
+    tag: 'Admin',
     responses: [
-        200 => ['description' => 'true if updated', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => ['description' => 'true on success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
         403 => ['description' => 'Forbidden'],
     ],
 )]
-class JobManagerUpdateHandler implements MiddlewareInterface
+class ClearCacheHandler implements MiddlewareInterface
 {
     public function __construct(
         private readonly ContainerInterface $container
@@ -48,22 +46,6 @@ class JobManagerUpdateHandler implements MiddlewareInterface
             throw new Forbidden();
         }
 
-        $data = json_decode((string)$request->getBody()) ?? new \stdClass();
-
-        if (!property_exists($data, 'pause')) {
-            return new BoolResponse(false);
-        }
-
-        if (!empty($data->pause)) {
-            file_put_contents(JobManager::PAUSE_FILE, '1');
-        } else {
-            if (file_exists(JobManager::PAUSE_FILE)) {
-                unlink(JobManager::PAUSE_FILE);
-            }
-        }
-
-        DataManager::pushPublicData('jmPaused', file_exists(JobManager::PAUSE_FILE));
-
-        return new BoolResponse(true);
+        return new BoolResponse($this->container->get('dataManager')->clearCache());
     }
 }

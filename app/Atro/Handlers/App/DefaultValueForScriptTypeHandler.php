@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\App;
 
-use Atro\Core\Container;
+use Psr\Container\ContainerInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -47,7 +47,7 @@ class DefaultValueForScriptTypeHandler implements MiddlewareInterface
 {
     public function __construct(
         private readonly Metadata  $metadata,
-        private readonly Container $container
+        private readonly ContainerInterface $container
     ) {
     }
 

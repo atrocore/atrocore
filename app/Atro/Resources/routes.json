@@ -768,43 +768,6 @@
     }
   },
   {
-    "route": "/Admin/getSchemaDiff",
-    "method": "get",
-    "params": {
-      "controller": "Admin",
-      "action": "getSchemaDiff"
-    },
-    "description": "Returns SQL queries needed to synchronize the database schema with the current metadata",
-    "response": {
-      "type": "string",
-      "example": "ALTER TABLE product ADD COLUMN sku VARCHAR(255);"
-    }
-  },
-  {
-    "route": "/Admin/clearCache",
-    "method": "post",
-    "params": {
-      "controller": "Admin",
-      "action": "clearCache"
-    },
-    "description": "Clears the application cache",
-    "response": {
-      "type": "boolean"
-    }
-  },
-  {
-    "route": "/Admin/rebuildDb",
-    "method": "post",
-    "params": {
-      "controller": "Admin",
-      "action": "rebuildDb"
-    },
-    "description": "Rebuilds the database schema to match current metadata",
-    "response": {
-      "type": "boolean"
-    }
-  },
-  {
     "route": "/:controller/:id",
     "method": "get",
     "params": {

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\App;
 
-use Atro\Core\Container;
+use Psr\Container\ContainerInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
@@ -43,7 +43,7 @@ class MergeHandler implements MiddlewareInterface
 {
     public function __construct(
         private readonly ServiceFactory $serviceFactory,
-        private readonly Container      $container
+        private readonly ContainerInterface      $container
     ) {
     }
 

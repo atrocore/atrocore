@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\App;
 
-use Atro\Core\Container;
+use Psr\Container\ContainerInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
@@ -37,7 +37,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class DestroyAuthTokenHandler implements MiddlewareInterface
 {
     public function __construct(
-        private readonly Container $container
+        private readonly ContainerInterface $container
     ) {
     }
 

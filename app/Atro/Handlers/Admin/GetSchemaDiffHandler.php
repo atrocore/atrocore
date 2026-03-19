@@ -11,34 +11,33 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Admin;
 
-use Psr\Container\ContainerInterface;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\BoolResponse;
+use Psr\Container\ContainerInterface;
+use Atro\Core\Http\Response\TextResponse;
 use Atro\Core\Routing\Route;
-use Espo\Core\ServiceFactory;
+use Atro\Core\Utils\Database\Schema\Schema;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/sendTestEmail',
-    methods: ['POST'],
-    summary: 'Send a test email',
-    description: 'Sends a test email using the current outbound email settings. Admin only.',
-    tag: 'App',
+    path: '/Admin/getSchemaDiff',
+    methods: ['GET'],
+    summary: 'Get database schema diff',
+    description: 'Returns SQL queries needed to synchronize the database schema with the current metadata. Admin only.',
+    tag: 'Admin',
     responses: [
-        200 => ['description' => 'true if sent successfully', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => ['description' => 'SQL diff queries as plain text', 'content' => ['text/plain' => ['schema' => ['type' => 'string', 'example' => 'ALTER TABLE product ADD COLUMN sku VARCHAR(255);']]]],
         403 => ['description' => 'Forbidden'],
     ],
 )]
-class SendTestEmailHandler implements MiddlewareInterface
+class GetSchemaDiffHandler implements MiddlewareInterface
 {
     public function __construct(
-        private readonly ServiceFactory $serviceFactory,
-        private readonly ContainerInterface      $container
+        private readonly ContainerInterface $container
     ) {
     }
 
@@ -48,10 +47,14 @@ class SendTestEmailHandler implements MiddlewareInterface
             throw new Forbidden();
         }
 
-        $data = json_decode((string)$request->getBody(), true) ?? [];
+        /** @var Schema $schema */
+        $schema = $this->container->get('schema');
 
-        return new BoolResponse(
-            $this->serviceFactory->create('App')->sendTestEmail($data)
-        );
+        $result = '';
+        foreach ($schema->getDiffQueries() as $query) {
+            $result .= $query . PHP_EOL;
+        }
+
+        return new TextResponse($result);
     }
 }
