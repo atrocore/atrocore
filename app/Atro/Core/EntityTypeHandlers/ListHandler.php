@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\EntityTypeHandlers;
 
-use Atro\Core\Http\Response\Errors\ForbiddenResponse;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
@@ -42,7 +42,7 @@ class ListHandler extends AbstractHandler
         $entityName = $this->getEntityName($request);
 
         if (!$this->getAcl()->check($entityName, 'read')) {
-            return new ForbiddenResponse();
+            throw new Forbidden();
         }
 
         $params = $this->buildListParams($request);

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Middleware;
 
-use Atro\Core\Http\Response\Errors\NotFoundResponse;
+use Atro\Core\Exceptions\NotFound;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -23,6 +23,6 @@ class NotFoundMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new NotFoundResponse();
+        throw new NotFound();
     }
 }

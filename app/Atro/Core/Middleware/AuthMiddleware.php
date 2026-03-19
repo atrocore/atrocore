@@ -15,7 +15,7 @@ namespace Atro\Core\Middleware;
 
 use Atro\Core\Exceptions\Unauthorized;
 use Psr\Container\ContainerInterface;
-use Atro\Core\Http\Response\Errors\UnauthorizedResponse;
+use Atro\Core\Http\Response\ErrorResponse;
 use Atro\Core\Http\Response\ErrorResponse;
 use Espo\Core\Utils\Auth;
 use Mezzio\Router\RouteResult;
@@ -116,6 +116,6 @@ class AuthMiddleware implements MiddlewareInterface
 
     private function unauthorizedResponse(array $extraHeaders = []): ResponseInterface
     {
-        return new UnauthorizedResponse('Unauthorized', $extraHeaders);
+        return new ErrorResponse(401, 'Unauthorized', $extraHeaders);
     }
 }

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Dashlet;
 
-use Atro\Core\Http\Response\Errors\BadRequestResponse;
-use Atro\Core\Http\Response\Errors\ServerErrorResponse;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\InternalServerError;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Core\Utils\Language;
@@ -71,14 +71,14 @@ class DashletHandler implements MiddlewareInterface
         $dashletName = $routeResult ? ($routeResult->getMatchedParams()['dashletName'] ?? null) : null;
 
         if (empty($dashletName)) {
-            return new BadRequestResponse('dashletName is required');
+            throw new BadRequest('dashletName is required');
         }
 
         $serviceName = ucfirst($dashletName) . 'Dashlet';
         $dashletService = $this->serviceFactory->create($serviceName);
 
         if (!$dashletService instanceof DashletInterface) {
-            return new ServerErrorResponse(sprintf($this->language->translate('notDashletService'), $dashletService));
+            throw new InternalServerError(sprintf($this->language->translate('notDashletService'), $dashletService));
         }
 
         return new JsonResponse($dashletService->getDashlet());

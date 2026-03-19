@@ -5,122 +5,6 @@
     "params": "REST API"
   },
   {
-    "route": "/App/user",
-    "method": "get",
-    "params": {
-      "controller": "App",
-      "action": "user"
-    },
-    "description": "Generate authorization token and return authorized user data.",
-    "security": [
-      {
-        "basicAuth": []
-      },
-      {
-        "Authorization-Token": []
-      }
-    ],
-    "requestParameters": [
-      {
-        "name": "Authorization-Token-Only",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "boolean",
-          "example": true
-        }
-      },
-      {
-        "name": "Authorization-Token-Lifetime",
-        "in": "header",
-        "required": false,
-        "description": "Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
-        "schema": {
-          "type": "integer",
-          "example": 0
-        }
-      },
-      {
-        "name": "Authorization-Token-Idletime",
-        "in": "header",
-        "required": false,
-        "description": "Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
-        "schema": {
-          "type": "integer",
-          "example": 0
-        }
-      }
-    ],
-    "response": {
-      "type": "object",
-      "properties": {
-        "authorizationToken": {
-          "type": "string",
-          "example": "YWRtaW46NGQ1NGU5ZTEzYjc0NGQzOGM5ODM2NzIyNDU2YTZmNjk="
-        }
-      }
-    }
-  },
-  {
-    "route": "/background",
-    "method": "get",
-    "params": {
-      "controller": "App",
-      "action": "background"
-    },
-    "conditions": {
-      "auth": false
-    },
-    "description": "Get background data.",
-    "response": {
-      "type": "object",
-      "properties": {
-        "till": {
-          "type": "object",
-          "properties": {
-            "date": {
-              "type": "string",
-              "example": "2024-08-29 08:52:29.830592"
-            },
-            "timezone_type": {
-              "type": "integer",
-              "example": 3
-            },
-            "timezone": {
-              "type": "string",
-              "example": "UTC"
-            }
-          }
-        },
-        "imageName": {
-          "type": "string",
-          "example": "pexels-pixabay-260689.jpg"
-        },
-        "imagePath": {
-          "type": "string",
-          "example": "client/img/background/pexels-pixabay-260689.jpg"
-        },
-        "authorName": {
-          "type": "string",
-          "example": "Pixabay"
-        },
-        "authorLink": {
-          "type": "string",
-          "example": "https://www.pexels.com/@pixabay"
-        }
-      }
-    }
-  },
-  {
-    "route": "/App/logNavigation/:id",
-    "method": "post",
-    "params": {
-      "controller": "App",
-      "action": "logNavigation",
-      "id": ":id"
-    }
-  },
-  {
     "route": "/MassActions/action/upsert",
     "method": "post",
     "params": {
@@ -292,7 +176,9 @@
         "application/json": {
           "schema": {
             "type": "object",
-            "required": ["id"],
+            "required": [
+              "id"
+            ],
             "properties": {
               "id": {
                 "type": "string",
@@ -398,13 +284,19 @@
         "name": "locale",
         "in": "query",
         "required": false,
-        "schema": {"type": "string", "example": "de_DE"}
+        "schema": {
+          "type": "string",
+          "example": "de_DE"
+        }
       },
       {
         "name": "default",
         "in": "query",
         "required": false,
-        "schema": {"type": "boolean", "example": false}
+        "schema": {
+          "type": "boolean",
+          "example": false
+        }
       }
     ],
     "response": {
@@ -459,11 +351,23 @@
         "application/json": {
           "schema": {
             "type": "object",
-            "required": ["userName", "emailAddress"],
+            "required": [
+              "userName",
+              "emailAddress"
+            ],
             "properties": {
-              "userName": {"type": "string", "example": "admin"},
-              "emailAddress": {"type": "string", "example": "admin@example.com"},
-              "url": {"type": "string", "example": "https://your-instance.com/reset-password"}
+              "userName": {
+                "type": "string",
+                "example": "admin"
+              },
+              "emailAddress": {
+                "type": "string",
+                "example": "admin@example.com"
+              },
+              "url": {
+                "type": "string",
+                "example": "https://your-instance.com/reset-password"
+              }
             }
           }
         }
@@ -490,10 +394,19 @@
         "application/json": {
           "schema": {
             "type": "object",
-            "required": ["requestId", "password"],
+            "required": [
+              "requestId",
+              "password"
+            ],
             "properties": {
-              "requestId": {"type": "string", "example": "a1b2c3d4e5f6"},
-              "password": {"type": "string", "example": "newSecurePassword123"}
+              "requestId": {
+                "type": "string",
+                "example": "a1b2c3d4e5f6"
+              },
+              "password": {
+                "type": "string",
+                "example": "newSecurePassword123"
+              }
             }
           }
         }
@@ -649,8 +562,13 @@
       "properties": {
         "layout": {
           "anyOf": [
-            {"type": "array", "items": {}},
-            {"type": "object"}
+            {
+              "type": "array",
+              "items": {}
+            },
+            {
+              "type": "object"
+            }
           ]
         },
         "storedProfiles": {
@@ -661,8 +579,13 @@
         },
         "storedProfile": {
           "anyOf": [
-            {"type": "array", "items": {}},
-            {"type": "object"}
+            {
+              "type": "array",
+              "items": {}
+            },
+            {
+              "type": "object"
+            }
           ]
         },
         "selectedProfileId": {
@@ -726,8 +649,7 @@
       "properties": {
         "layout": {
           "type": "array",
-          "items": {
-          }
+          "items": {}
         },
         "storedProfiles": {
           "type": "array",
@@ -737,8 +659,13 @@
         },
         "storedProfile": {
           "anyOf": [
-            {"type": "array", "items": {}},
-            {"type": "object"}
+            {
+              "type": "array",
+              "items": {}
+            },
+            {
+              "type": "object"
+            }
           ]
         },
         "selectedProfileId": {
@@ -762,7 +689,10 @@
         "application/json": {
           "schema": {
             "type": "object",
-            "required": ["scope", "viewType"],
+            "required": [
+              "scope",
+              "viewType"
+            ],
             "properties": {
               "scope": {
                 "type": "string",
@@ -789,8 +719,7 @@
       "properties": {
         "layout": {
           "type": "array",
-          "items": {
-          }
+          "items": {}
         },
         "storedProfiles": {
           "type": "array",
@@ -800,8 +729,13 @@
         },
         "storedProfile": {
           "anyOf": [
-            {"type": "array", "items": {}},
-            {"type": "object"}
+            {
+              "type": "array",
+              "items": {}
+            },
+            {
+              "type": "object"
+            }
           ]
         },
         "selectedProfileId": {
@@ -1017,51 +951,6 @@
     }
   },
   {
-    "route": "/App/action/recalculateScriptField",
-    "method": "post",
-    "params": {
-      "controller": "App",
-      "action": "recalculateScriptField"
-    },
-    "summary": "Recalculate the value of the script fields",
-    "description": "Recalculate the value of the script fields",
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "scope": {
-                "type": "string",
-                "example": "Product"
-              },
-              "id": {
-                "type": "string"
-              },
-              "field": {
-                "type": "string",
-                "example": "myScriptFieldCode"
-              }
-            },
-            "required": [
-              "id",
-              "field",
-              "scope"
-            ]
-          }
-        }
-      }
-    },
-    "response": {
-      "type": "object",
-      "example": {
-        "id": "a01k1g09hhce8m8pkmzt3zzyq5v",
-        "name": "Yellow Bike"
-      }
-    }
-  },
-  {
     "route": "EntityField/action/updateOptionCode",
     "method": "post",
     "params": {
@@ -1241,79 +1130,6 @@
     },
     "response": {
       "$ref": "#/components/schemas/Selection"
-    }
-  },
-  {
-    "route": "/App/action/merge",
-    "method": "post",
-    "params": {
-      "controller": "App",
-      "action": "merge"
-    },
-    "summary": "Merge multiple records into a target entity or a new one",
-    "description": "Merge multiple records into a target entity or a new one",
-    "security": [
-      {
-        "Authorization-Token": []
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "scope": {
-                "type": "string",
-                "example": "Product"
-              },
-              "targetId": {
-                "type": "string",
-                "example": "some-id"
-              },
-              "sourceIds": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "example": "example-id"
-                }
-              },
-              "attributes": {
-                "type": "object",
-                "properties": {
-                  "input": {
-                    "type": "object",
-                    "example": {
-                      "name": "a name",
-                      "description": "a description",
-                      "someOtherField": "value"
-                    }
-                  },
-                  "relationshipData": {
-                    "type": "object",
-                    "example": {
-                      "manyToManyRelationName": {
-                        "scope": "ForeignScope",
-                        "toDelete": [],
-                        "toUpsert": []
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "response": {
-      "type": "object",
-      "example": {
-        "id": "some-id",
-        "name": "a name",
-        "description": "a description"
-      }
     }
   },
   {

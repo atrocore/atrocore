@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\EntityTypeHandlers;
 
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
@@ -42,6 +43,10 @@ class ListLinkedHandler extends AbstractHandler
         $id         = (string) $request->getAttribute('id');
         $link       = (string) $request->getAttribute('link');
         $qp         = $request->getQueryParams();
+
+        if (empty($id) || empty($link)) {
+            throw new NotFound();
+        }
 
         $params = $this->buildListParams($request);
         $params['whereRelation'] = $this->prepareWhereQuery($qp['whereRelation'] ?? null);
