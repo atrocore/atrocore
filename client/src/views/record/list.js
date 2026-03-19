@@ -162,8 +162,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
                 if (typeof this[method] == 'function') {
-                    e.stopPropagation();
                     var data = $el.data();
+
+                    if (data.parentScope && action === 'universalAction') {
+                        // Universal actions should be handled by relationship view
+                        return
+                    }
+
                     this[method](data, e);
                     e.preventDefault();
                 }
