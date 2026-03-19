@@ -17,6 +17,7 @@ use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
+use \Atro\Services\AbstractService;
 use Espo\Core\Acl;
 use Espo\Core\ServiceFactory;
 use Espo\ORM\EntityManager;
@@ -70,7 +71,7 @@ abstract class AbstractHandler implements MiddlewareInterface
         return (string)$request->getAttribute('entityName', '');
     }
 
-    protected function getRecordService(string $entityName)
+    protected function getRecordService(string $entityName): AbstractService
     {
         if ($this->getServiceFactory()->checkExists($entityName)) {
             return $this->getServiceFactory()->create($entityName);
