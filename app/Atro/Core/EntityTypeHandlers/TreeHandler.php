@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\EntityTypeHandlers\AbstractHandler;
+use Atro\Handlers\AbstractHandler;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
@@ -82,7 +82,7 @@ class TreeHandler extends AbstractHandler
                 'offset'       => (int) ($qp['offset'] ?? 0),
                 'maxSize'      => !empty($qp['maxSize'])
                     ? (int) $qp['maxSize']
-                    : $this->config->get('recordsPerPageSmall', 20),
+                    : $this->getConfig()->get('recordsPerPageSmall', 20),
             ];
 
             $result = $service->getChildren((string) ($qp['node'] ?? ''), $params);
@@ -99,7 +99,7 @@ class TreeHandler extends AbstractHandler
             'offset'       => (int) ($qp['offset'] ?? 0),
             'maxSize'      => !empty($qp['maxSize'])
                 ? (int) $qp['maxSize']
-                : $this->config->get('recordsPerPageSmall', 20),
+                : $this->getConfig()->get('recordsPerPageSmall', 20),
         ];
 
         $result = $service->getTreeItems(

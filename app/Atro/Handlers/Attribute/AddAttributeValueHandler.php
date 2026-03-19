@@ -48,13 +48,13 @@ class AddAttributeValueHandler extends AbstractHandler
             throw new BadRequest();
         }
 
-        if (!$this->container->get('acl')->check($data->entityName, 'edit')) {
+        if (!$this->getAcl()->check($data->entityName, 'edit')) {
             throw new Forbidden();
         }
 
         if (
-            $this->container->get('metadata')->get(['scopes', $data->entityName, 'hasAttribute'])
-            && $this->container->get('metadata')->get(['scopes', $data->entityName, 'disableAttributeLinking'])
+            $this->getMetadata()->get(['scopes', $data->entityName, 'hasAttribute'])
+            && $this->getMetadata()->get(['scopes', $data->entityName, 'disableAttributeLinking'])
         ) {
             throw new BadRequest();
         }

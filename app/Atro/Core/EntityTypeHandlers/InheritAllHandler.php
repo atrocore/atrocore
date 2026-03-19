@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\EntityTypeHandlers\AbstractHandler;
+use Atro\Handlers\AbstractHandler;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;

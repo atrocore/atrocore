@@ -22,6 +22,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Atro\Core\Routing\EntityType;
+use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/{id}/attributeValues',

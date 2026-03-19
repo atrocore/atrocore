@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\EntityType;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

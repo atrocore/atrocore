@@ -47,7 +47,7 @@ class MergeHandler extends AbstractHandler
             throw new BadRequest();
         }
 
-        if (!$this->container->get('acl')->check($data->scope, 'create')) {
+        if (!$this->getAcl()->check($data->scope, 'create')) {
             throw new Forbidden();
         }
 
