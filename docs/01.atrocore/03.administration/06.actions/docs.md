@@ -403,6 +403,8 @@ Can be used to notify users about events related to the selected entity in respo
 
 ![Send E-mail Configuration](_assets/demo-send-email-configured.png){.medium}
 
+> The Get MS Emails action works similarly — it retrieves emails from your Microsoft mailbox and saves them to the Emails entity. This action is available through the [Microsoft 365 Connector](https://store.atrocore.com/en/microsoft-365-connector/20205) module.
+
 **Configuration:**
 
 - **Target Entity**: Entity type that contains recipient information
@@ -460,10 +462,6 @@ Here is an example of a script that determines the user ID:
 
 { "notificationSystemTemplateId" : "systemUpdateEntity", "usersIds": {{ids|json_encode|raw}} }
 ```
-
-#### **Get MS E-mails**
-
-This is an action added by **Microsoft 365 Connector** module. It downloads emails from your Microsoft mailbox and saves them in **Emails** entity. For more information please read [Microsoft 365 Connector](../../../03.integration/01.microsoft-connector/docs.md) documentation page.
 
 ### Utility Actions
 

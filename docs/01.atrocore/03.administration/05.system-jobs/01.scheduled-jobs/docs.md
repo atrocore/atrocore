@@ -37,7 +37,7 @@ This job starts system update on the schedule you set. The settings set by updat
 
 ### Scan Storage
 
-Performs synchronization of files and folders between external storage (e.g., [S3 Object Storage](https://store.atrocore.com/en/s3-object-storage/20216)) and PIM storage. It updates PIM with changes from the external source, including newly added, modified, or deleted files. This operation can be triggered manually via the Scan action or automated using scheduled jobs of type Scan Storage.
+Performs synchronization of files and folders between external storage (e.g., [S3 Object Storage](https://store.atrocore.com/en/s3-object-storage/20216) or [Microsoft SharePoint](https://store.atrocore.com/en/microsoft-365-connector/20205)) and PIM storage. It updates PIM with changes from the external source, including newly added, modified, or deleted files. This operation can be triggered manually via the `Scan` action or automated using scheduled jobs of type Scan Storage.
 
 ### Calculate Script Fields
 
