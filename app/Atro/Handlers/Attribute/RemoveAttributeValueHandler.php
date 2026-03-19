@@ -17,11 +17,9 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
-use Espo\Core\ServiceFactory;
-use Psr\Container\ContainerInterface;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -36,14 +34,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => ['description' => 'Forbidden'],
     ],
 )]
-class RemoveAttributeValueHandler implements MiddlewareInterface
+class RemoveAttributeValueHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ServiceFactory   $serviceFactory,
-        private readonly ContainerInterface $container
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = json_decode((string)$request->getBody()) ?? new \stdClass();
@@ -63,7 +55,7 @@ class RemoveAttributeValueHandler implements MiddlewareInterface
             throw new BadRequest();
         }
 
-        $result = $this->serviceFactory->create('Attribute')->removeAttributeValue(
+        $result = $this->getServiceFactory()->create('Attribute')->removeAttributeValue(
             $data->entityName,
             $data->entityId,
             $data->attributeId

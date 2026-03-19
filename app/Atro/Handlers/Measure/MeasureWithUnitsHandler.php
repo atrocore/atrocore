@@ -17,11 +17,9 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Espo\Core\ServiceFactory;
-use Psr\Container\ContainerInterface;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -47,13 +45,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     entities: ['Measure', 'Unit'],
 )]
-class MeasureWithUnitsHandler implements MiddlewareInterface
+class MeasureWithUnitsHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ServiceFactory $serviceFactory
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $id = $request->getQueryParams()['id'] ?? null;
@@ -62,7 +55,7 @@ class MeasureWithUnitsHandler implements MiddlewareInterface
             throw new BadRequest('id is required');
         }
 
-        $service = $this->serviceFactory->create('Measure');
+        $service = $this->getServiceFactory()->create('Measure');
 
         $entity = $service->readEntity($id);
 

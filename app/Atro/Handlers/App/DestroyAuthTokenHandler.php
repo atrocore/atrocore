@@ -13,14 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\App;
 
-use Psr\Container\ContainerInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Espo\Core\Utils\Auth;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -34,13 +33,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         400 => ['description' => 'token is required'],
     ],
 )]
-class DestroyAuthTokenHandler implements MiddlewareInterface
+class DestroyAuthTokenHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ContainerInterface $container
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = json_decode((string)$request->getBody()) ?? new \stdClass();

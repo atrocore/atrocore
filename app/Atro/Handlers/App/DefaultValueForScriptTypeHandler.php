@@ -13,14 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\App;
 
-use Psr\Container\ContainerInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Atro\Core\Utils\Metadata;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -43,14 +41,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         400 => ['description' => 'entityName and field are required'],
     ],
 )]
-class DefaultValueForScriptTypeHandler implements MiddlewareInterface
+class DefaultValueForScriptTypeHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly Metadata  $metadata,
-        private readonly ContainerInterface $container
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $query = $request->getQueryParams();
@@ -63,10 +55,10 @@ class DefaultValueForScriptTypeHandler implements MiddlewareInterface
         $field      = $query['field'];
         $default    = null;
 
-        $defaultValueType = $this->metadata->get("entityDefs.{$entityName}.fields.{$field}.defaultValueType");
+        $defaultValueType = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$field}.defaultValueType");
 
         if ($defaultValueType === 'script') {
-            $script = $this->metadata->get("entityDefs.{$entityName}.fields.{$field}.default");
+            $script = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$field}.default");
             if (!empty($script)) {
                 $default = $this->container->get('twig')->renderTemplate((string)$script, []);
             }

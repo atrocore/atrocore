@@ -16,10 +16,9 @@ namespace Atro\Handlers\App;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Espo\Core\ServiceFactory;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -33,13 +32,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         400 => ['description' => 'entityName and fields are required'],
     ],
 )]
-class PrepareScriptFieldsHandler implements MiddlewareInterface
+class PrepareScriptFieldsHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ServiceFactory $serviceFactory
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = json_decode((string)$request->getBody()) ?? new \stdClass();
@@ -49,7 +43,7 @@ class PrepareScriptFieldsHandler implements MiddlewareInterface
         }
 
         return new JsonResponse(
-            $this->serviceFactory->create('App')->prepareScriptFields($data->entityName, $data->fields)
+            $this->getServiceFactory()->create('App')->prepareScriptFields($data->entityName, $data->fields)
         );
     }
 }

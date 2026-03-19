@@ -15,10 +15,9 @@ namespace Atro\Handlers\App;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Espo\Core\ServiceFactory;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -42,16 +41,11 @@ use Psr\Http\Server\RequestHandlerInterface;
         ]]]],
     ],
 )]
-class UserHandler implements MiddlewareInterface
+class UserHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ServiceFactory $serviceFactory
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->serviceFactory->create('App')->getUserData();
+        $data = $this->getServiceFactory()->create('App')->getUserData();
         $data['authorizationToken'] = base64_encode("{$data['user']->userName}:{$data['user']->token}");
 
         $tokenOnly = $request->getHeaderLine('Authorization-Token-Only');

@@ -15,10 +15,9 @@ namespace Atro\Handlers\LastViewed;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Espo\Core\ServiceFactory;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -43,13 +42,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         ]]]],
     ],
 )]
-class NavigationHistoryHandler implements MiddlewareInterface
+class NavigationHistoryHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ServiceFactory $serviceFactory
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $query = $request->getQueryParams();
@@ -60,7 +54,7 @@ class NavigationHistoryHandler implements MiddlewareInterface
         $maxSize    = (int)($query['maxSize'] ?? 0) ?: 3;
 
         /** @var \Atro\Services\LastViewed $service */
-        $service = $this->serviceFactory->create('LastViewed');
+        $service = $this->getServiceFactory()->create('LastViewed');
 
         return new JsonResponse(
             $service->getLastEntities($maxSize, $entityName, $entityId, $tabId)

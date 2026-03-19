@@ -13,12 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\App;
 
-use Psr\Container\ContainerInterface;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -40,13 +39,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         ]]]],
     ],
 )]
-class BackgroundHandler implements MiddlewareInterface
+class BackgroundHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ContainerInterface $container
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entryPoint = new \Atro\EntryPoints\Background($this->container);

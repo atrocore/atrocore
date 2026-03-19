@@ -17,13 +17,11 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\InternalServerError;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Atro\Core\Utils\Language;
+use Atro\Handlers\AbstractHandler;
 use Atro\Services\DashletInterface;
-use Espo\Core\ServiceFactory;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -57,14 +55,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         400 => ['description' => 'dashletName is required'],
     ],
 )]
-class DashletHandler implements MiddlewareInterface
+class DashletHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ServiceFactory $serviceFactory,
-        private readonly Language $language,
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $routeResult = $request->getAttribute(RouteResult::class);
@@ -75,10 +67,10 @@ class DashletHandler implements MiddlewareInterface
         }
 
         $serviceName = ucfirst($dashletName) . 'Dashlet';
-        $dashletService = $this->serviceFactory->create($serviceName);
+        $dashletService = $this->getServiceFactory()->create($serviceName);
 
         if (!$dashletService instanceof DashletInterface) {
-            throw new InternalServerError(sprintf($this->language->translate('notDashletService'), $dashletService));
+            throw new InternalServerError(sprintf($this->getLanguage()->translate('notDashletService'), $dashletService));
         }
 
         return new JsonResponse($dashletService->getDashlet());

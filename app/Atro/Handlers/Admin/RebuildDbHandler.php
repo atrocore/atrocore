@@ -14,12 +14,11 @@ declare(strict_types=1);
 namespace Atro\Handlers\Admin;
 
 use Atro\Core\Exceptions\Forbidden;
-use Psr\Container\ContainerInterface;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -33,16 +32,11 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => ['description' => 'Forbidden'],
     ],
 )]
-class RebuildDbHandler implements MiddlewareInterface
+class RebuildDbHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ContainerInterface $container
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->container->get('user')->isAdmin()) {
+        if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 

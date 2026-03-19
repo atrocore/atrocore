@@ -16,10 +16,9 @@ namespace Atro\Handlers\Attribute;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Espo\Core\ServiceFactory;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -37,13 +36,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         400 => ['description' => 'entityName and attributesIds are required'],
     ],
 )]
-class AttributesDefsHandler implements MiddlewareInterface
+class AttributesDefsHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ServiceFactory $serviceFactory
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $query = $request->getQueryParams();
@@ -52,7 +46,7 @@ class AttributesDefsHandler implements MiddlewareInterface
             throw new BadRequest();
         }
 
-        $result = $this->serviceFactory->create('Attribute')->getAttributesDefs(
+        $result = $this->getServiceFactory()->create('Attribute')->getAttributesDefs(
             $query['entityName'],
             $query['attributesIds']
         );

@@ -16,9 +16,9 @@ namespace Atro\Handlers\App;
 use Atro\Core\DataManager;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -31,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         200 => ['description' => 'true if updated', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
-class UpdatePublicDataKeyHandler implements MiddlewareInterface
+class UpdatePublicDataKeyHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

@@ -13,15 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\App;
 
-use Psr\Container\ContainerInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Espo\Core\ServiceFactory;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -39,14 +37,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => ['description' => 'Forbidden'],
     ],
 )]
-class MergeHandler implements MiddlewareInterface
+class MergeHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ServiceFactory $serviceFactory,
-        private readonly ContainerInterface      $container
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = json_decode((string)$request->getBody()) ?? new \stdClass();
@@ -59,7 +51,7 @@ class MergeHandler implements MiddlewareInterface
             throw new Forbidden();
         }
 
-        $entity = $this->serviceFactory->create($data->scope)->merge(
+        $entity = $this->getServiceFactory()->create($data->scope)->merge(
             !empty($data->targetId) ? $data->targetId : null,
             $data->sourceIds,
             $data->attributes

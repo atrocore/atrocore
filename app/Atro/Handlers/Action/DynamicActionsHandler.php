@@ -16,10 +16,9 @@ namespace Atro\Handlers\Action;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Espo\Core\ServiceFactory;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -42,13 +41,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         400 => ['description' => 'scope is required'],
     ],
 )]
-class DynamicActionsHandler implements MiddlewareInterface
+class DynamicActionsHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly ServiceFactory $serviceFactory
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $query = $request->getQueryParams();
@@ -59,7 +53,7 @@ class DynamicActionsHandler implements MiddlewareInterface
         }
 
         /** @var \Atro\Services\Action $service */
-        $service = $this->serviceFactory->create('Action');
+        $service = $this->getServiceFactory()->create('Action');
 
         return new JsonResponse(
             $service->getDynamicActions(

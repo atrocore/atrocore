@@ -15,11 +15,10 @@ namespace Atro\Handlers\App;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
-use Atro\Core\RealtimeManager;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -33,13 +32,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         400 => ['description' => 'entityName and entityId are required'],
     ],
 )]
-class StartEntityListeningHandler implements MiddlewareInterface
+class StartEntityListeningHandler extends AbstractHandler
 {
-    public function __construct(
-        private readonly RealtimeManager $realtimeManager
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = json_decode((string)$request->getBody()) ?? new \stdClass();
@@ -49,7 +43,7 @@ class StartEntityListeningHandler implements MiddlewareInterface
         }
 
         return new JsonResponse(
-            $this->realtimeManager->startEntityListening($data->entityName, $data->entityId)
+            $this->container->get('realtimeManager')->startEntityListening($data->entityName, $data->entityId)
         );
     }
 }
