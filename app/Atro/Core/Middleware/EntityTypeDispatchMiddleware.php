@@ -54,7 +54,15 @@ class EntityTypeDispatchMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        // Resolve entity name: legacy routes use "controller" param
+        // If the route has a hardcoded (non-placeholder) controller in its config params,
+        // it is a specific route with dedicated legacy-controller handling — do not intercept.
+        $routeConfigParams    = $routeResult->getMatchedRoute()->getOptions()['params'] ?? [];
+        $configuredController = $routeConfigParams['controller'] ?? null;
+        if (is_string($configuredController) && !str_starts_with($configuredController, ':')) {
+            return $handler->handle($request);
+        }
+
+        // Resolve entity name: legacy routes use "controller" param from URL-matched segments
         $params     = $routeResult->getMatchedParams();
         $entityName = ucfirst((string) ($params['controller'] ?? $params['entityName'] ?? ''));
 
