@@ -40,6 +40,7 @@ AtroPIM is designed for organizations that manage large volumes of product data 
 AtroPIM stands out because it adapts to your business, not the other way around. Its configurable data model allows you to create new entities, add custom fields, and define complex relationships directly from the user interface—no coding required. This flexibility extends to the user experience as well; you can tailor layouts, dashboards, and navigation menus to match the specific workflows of different teams. Under the hood, the system is built on a modular, API-first architecture, meaning every custom field or configuration you create is instantly available via the REST API. whether you need to deploy on-premise for full data sovereignty or in the cloud for scalability, AtroPIM provides the versatile foundation needed to manage even the most non-standard product catalogs.
 
 ### Scalability
+
 AtroPIM is engineered to grow alongside your business, capable of handling everything from small catalogs to enterprise environments with millions of records. The system utilizes a robust Job Manager subsystem to handle resource-intensive tasks—such as bulk data imports, channel feeds, and mass updates—in background queues. This ensures that the user interface remains fast and responsive even during heavy data processing. As your data volume increases, AtroPIM supports both vertical scaling (adding CPU/RAM resources) and efficient load management, allowing you to expand your product range and sales channels without performance bottlenecks.
 
 ### Modularity

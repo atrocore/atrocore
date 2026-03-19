@@ -9,6 +9,7 @@ A **Channel** represents a destination or distribution endpoint for product data
 Channels are commonly used to sort, segment, and prepare product information for online stores, ensuring that only relevant data (such as attributes, descriptions, and languages) is exposed per sales channel.
 
 Channel data can be:
+
 - Synchronized with third-party systems (e.g., e-commerce platforms or marketplaces)
 - Exported in specific formats according to integration or business requirements
 
