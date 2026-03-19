@@ -332,7 +332,10 @@ Reference to another entity record. Creates relationships between different enti
 **Configuration options:**
 
 -   **Dropdown**: Displays the field as a dropdown selection in the UI.
+-   **Records per page (select dialog)**: Sets the number of records shown per page when selecting a value via the dialog.
 -   **Filter Results**: Specifies the [selectable values](../03.fields-and-attributes/docs.md#filter-results) for the field.
+
+!! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
 ### List
 
@@ -371,6 +374,9 @@ Multiple selections from a customizable list. Allows multiple categories or tags
 -   **List**: Specifies the [list](../../08.lists/) of selectable values for the field
 -   **Dropdown**: Displays the field as a dropdown selection in the UI
 -   **Default**: Sets a default value for the field
+-   **Records per page (select dialog)**: Sets the number of records shown per page when selecting a value via the dialog.
+
+!! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
 ### Multiple Link
 
@@ -384,6 +390,9 @@ Multiple references to other entity records. Creates relationships between diffe
 
 -   **Log the change as a record activity**: Records changes in this field as Activity.
 -   **Filter Results**: Specifies the [selectable values](../03.fields-and-attributes/docs.md#filter-results) for the field.
+-   **Records per page (select dialog)**: Sets the number of records shown per page when selecting a value via the dialog.
+
+!! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
 Common configuration options **Create no record activity** and **No recording as modification** on the other hand are not available for Multiple link field.
 

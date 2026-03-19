@@ -66,7 +66,8 @@
     "tooltip": "Hinweis",
     "conditionalVisible": "Sichtbar",
     "conditionalDisableOptions": "Deaktivierte Optionen",
-    "urlLabel": "URL Label"
+    "urlLabel": "URL Label",
+    "selectPageSize": "Datensätze pro Seite (Auswahldialog)"
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
@@ -90,7 +91,8 @@
     "modifiedExtendedEnabled": "Änderungen in dieser Beziehung führen zur Aktualisierung des Datums und der Uhrzeit \"Geändert am\".",
     "inheritanceDisabled": "Die Werte für dieses Feld werden nicht vom übergeordneten Element geerbt.",
     "modifiedExtendedDisabled": "Wenn aktiviert, wird bei Änderungen in diesem Feld der Zeitstempel „Geändert am“ nicht aktualisiert.",
-    "auditableDisabled": "Änderungen in diesem Feld werden nicht als Aktivität angezeigt."
+    "auditableDisabled": "Änderungen in diesem Feld werden nicht als Aktivität angezeigt.",
+    "selectPageSize": "Anzahl der pro Seite im Auswahldialog angezeigten Datensätze. Vermeiden Sie zu hohe Werte, da dies den Browser des Benutzers verlangsamen oder zum Einfrieren bringen kann."
   },
   "options": {
     "outputType": {
