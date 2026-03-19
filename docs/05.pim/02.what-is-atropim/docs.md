@@ -62,7 +62,7 @@ The central entity of the system. A **Product** record contains all the base inf
 
 ### 2. Classifications
 
-Classifications are used to organize products into hierarchies or taxonomies (e.g., categories or industry standards like ETIM or ECLASS).
+Classifications are used to organize products into hierarchies or taxonomies (e.g., categories or industry standards like [ETIM](https://www.atropim.com/en/blog/etim) or ECLASS).
 
 * **Context:** A product can belong to one or more classifications.
 * **Inheritance:** Classifications drive data structure. When you link a product to a specific Classification (e.g., "Smartphones"), the system automatically assigns the relevant technical attributes (e.g., "Screen Size," "Battery Capacity") to that product, ensuring data completeness.

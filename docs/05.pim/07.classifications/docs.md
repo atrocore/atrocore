@@ -18,6 +18,8 @@ The attributes linked to the record via the Classification can be unlinked from 
 
 Classifications can be activated or deactivated.
 
+> If you work in the electrical industry, consider the [ETIM Classification](https://store.atrocore.com/en/etim-classification/20132) module, which provides full support for the international ETIM standard for classifying technical products.
+
 ## Classification Fields
 
 The Classification entity comes with the following preconfigured fields; mandatory are marked with *:
@@ -171,7 +173,7 @@ Click the `Save` button to complete the Classification attribute creation proces
 
 When you are trying to link to the Classification record the attribute, which is already linked to the entity record belonging to the given Classification, entity record attribute becomes Classification attribute. Its value (or values) is preserved in the entity record.
 
->  Attributes, which are added to the Classification record, are of higher priority, whereas custom product attributes adapt to the changes made in the Classification attributes. The interrelations between Classifications and product records can be configured and structured even more with the help of the **Advanced Classification** module. For more details, please, visit our [store](https://store.atrocore.com/advanced-classification/20109).
+> Attributes, which are added to the Classification record, are of higher priority, whereas custom product attributes adapt to the changes made in the Classification attributes. The interrelations between Classifications and product records can be configured and structured even more with the help of the **Advanced Classification** module. For more details, please, visit our [store](https://store.atrocore.com/advanced-classification/20109).
 
 To assign an existing attribute (or several attributes) to the Classification record, use the `Select` option from the actions menu:
 
