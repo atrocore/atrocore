@@ -80,6 +80,7 @@
   "exceptions": {
     "regexNotValid": "Questo modello REGEX non è valido.",
     "someFieldNotUnique": "Alcuni valori dei campi non sono unici.",
-    "someFieldDontMathToPattern": "Alcuni campi non corrispondono al modello."
+    "someFieldDontMathToPattern": "Alcuni campi non corrispondono al modello.",
+    "regexSyntaxError": "Errore di sintassi regex nel campo '%s'."
   }
 }

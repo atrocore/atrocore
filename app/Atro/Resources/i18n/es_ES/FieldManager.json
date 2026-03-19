@@ -80,6 +80,7 @@
   "exceptions": {
     "regexNotValid": "This REGEX Pattern is not valid.",
     "someFieldNotUnique": "Some field values are not unique.",
-    "someFieldDontMathToPattern": "Some field don't match the pattern."
+    "someFieldDontMathToPattern": "Some field don't match the pattern.",
+    "regexSyntaxError": "Error de sintaxis de expresión regular en el campo '%s'."
   }
 }

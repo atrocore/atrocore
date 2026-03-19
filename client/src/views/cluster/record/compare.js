@@ -23,7 +23,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         actionRejectItem(e) {
             const id = $(e.currentTarget).data('selection-item-id');
 
-            this.ajaxPostRequest(`ClusterItem/action/reject`, { id: id })
+            this.ajaxPostRequest(`ClusterItem/action/reject`, {id: id})
                 .then(response => {
                     this.notify('Item rejected', 'success');
                     this.notify(this.translate('Loading...'));
@@ -71,6 +71,9 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             html += '<th>' + this.translate('matchedScore', 'fields', 'ClusterItem') + '</th>'
 
             for (let model of this.getModels()) {
+                if (this.merging) {
+                    html += '<th></th>'
+                }
                 html += '<th>' + this.getMatchedScoreHtml(model.item.get('matchedScore'), model.item.get('_meta')?.cluster?.confirmed && model.item.get('confirmedAutomatically')) + '</th>'
             }
 

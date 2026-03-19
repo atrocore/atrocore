@@ -18,6 +18,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Util;
 
 /**
@@ -41,8 +42,10 @@ class FieldManagerController extends AbstractListener
 
         if (property_exists($data, 'pattern') && !empty($data->pattern)) {
             $pattern = $data->pattern;
-            if (!preg_match("/^\/(.*)\/$/", $pattern)) {
-                throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
+            if (!RegexUtil::validate($pattern)) {
+                throw new BadRequest(
+                    sprintf($this->getLanguage()->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'pattern')
+                );
             }
 
             $field = Util::toUnderScore($data->name);
@@ -79,7 +82,7 @@ class FieldManagerController extends AbstractListener
 
             foreach ($records as $valueData) {
                 foreach ($fields as $v) {
-                    if (!empty($valueData[$v]) && !preg_match($pattern, $valueData[$v])) {
+                    if (!empty($valueData[$v]) && !preg_match(RegexUtil::toPhpPattern($pattern), $valueData[$v])) {
                         throw new BadRequest($this->getLanguage()->translate('someFieldDontMathToPattern', 'exceptions', 'FieldManager'));
                     }
                 }

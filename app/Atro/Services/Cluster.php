@@ -184,6 +184,7 @@ class Cluster extends Base
 
         try {
             $attributes->input->_skipCheckForConflicts = true;
+            $goldenRecord->_avoidLocking = true;
             $goldenRecord = $masterService->updateEntity($goldenRecord->get('id'), $attributes->input);
         } catch (NotModified $e) {
 

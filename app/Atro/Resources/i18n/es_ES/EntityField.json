@@ -77,7 +77,7 @@
     "readOnly": "El valor del campo no puede ser especificado por el usuario. Aún así, es posible cambiarlo a través de la API.",
     "protected": "El valor del campo no puede ser especificado por el usuario. Ni a través del front end ni a través de la API.",
     "maxLength": "Longitud máxima aceptable del texto.",
-    "pattern": "Para habilitar sólo letras mayúsculas con longitud de 10 símbolos utilice \"/^[A-Z]{1,10}$/\"",
+    "pattern": "Para habilitar sólo letras mayúsculas con longitud de 10 símbolos utilice \"^[A-Z]{1,10}$\"",
     "default": "El valor se establecerá por defecto al crearlo.",
     "isSorted": "Las opciones se ordenarán después de guardar.",
     "dropdown": "No utilice el desplegable si hay más de 300 opciones en la lista.",

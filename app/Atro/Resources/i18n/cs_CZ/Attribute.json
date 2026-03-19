@@ -83,7 +83,7 @@
     "All": "Všechny"
   },
   "tooltips": {
-    "pattern": "Chcete-li povolit pouze velká písmena s délkou 10 znaků, použijte \"/^[A-Z]{1,10}$/\".",
+    "pattern": "Chcete-li povolit pouze velká písmena s délkou 10 znaků, použijte \"^[A-Z]{1,10}$\".",
     "defaultDate": "Modifikátor hodnoty atributu (např. +5 dní, -3 měsíce)",
     "dropdown": "Pokud je v seznamu více než 300 možností, rozbalovací seznam nepoužívejte."
   },

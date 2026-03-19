@@ -77,7 +77,7 @@
     "readOnly": "La valeur du champ ne peut pas être spécifiée par l'utilisateur. Il est toujours possible de la modifier via l'API.",
     "protected": "La valeur du champ ne peut pas être spécifiée par l'utilisateur. Ni via le front-end, ni via l'API.",
     "maxLength": "Longueur maximale acceptable du texte.",
-    "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
+    "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"^[A-Z]{1,10}$\"",
     "default": "La valeur sera définie par défaut lors de la création.",
     "isSorted": "Les options seront triées après l'enregistrement.",
     "dropdown": "N'utilisez pas la liste déroulante s'il y a plus de 300 options dans la liste.",
