@@ -340,7 +340,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
                 sortBy: this.sortBy,
-                sortAsc: this.sortAsc
+                sortAsc: this.sortAsc,
+                selectPageSize: this.params.selectPageSize
             }, function (view) {
                 view.render();
                 this.notify(false);

@@ -539,6 +539,32 @@
         }
       }
     },
+    "selectPageSize": {
+      "type": "int",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "emHidden": true,
+      "tooltip": true,
+      "layoutRemoveDisabled": true,
+      "min": 1,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "extensibleEnum",
+                "extensibleMultiEnum",
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "notNull": {
       "type": "bool",
       "default": false,
