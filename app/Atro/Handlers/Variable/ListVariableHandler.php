@@ -21,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Variable/action/list',
+    path: '/Variable',
     methods: ['GET'],
     summary: 'List variables',
     description: 'Returns all configured variables.',
