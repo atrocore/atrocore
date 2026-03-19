@@ -2521,6 +2521,7 @@ class Base
             $textFilter = mb_substr($textFilter, strlen('AUTOCOMPLETE:'));
             $autocompletion = true;
         }
+        $type = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']);
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
         $group = [];
@@ -2531,15 +2532,15 @@ class Base
             $textFilter = mb_substr($textFilter, 3);
         }
 
-        $skipWidlcards = false;
+        $skipWildcards = false;
 
         if (mb_strpos($textFilter, '*') !== false) {
-            $skipWidlcards = true;
+            $skipWildcards = true;
             $textFilter = str_replace('*', '%', $textFilter);
         }
 
         $fuzzyTextTypes = ['varchar', 'text', 'wysiwyg'];
-        $useFuzzy = !$skipWidlcards
+        $useFuzzy = $type !== 'ReferenceData' && !$skipWildcards
             && mb_strlen($textFilter) >= 3
             && class_exists('AdvancedDataManagement\Core\FuzzySearch') &&
             \AdvancedDataManagement\Core\FuzzySearch::isAvailable($this->getEntityManager()->getDbal());
@@ -2591,7 +2592,7 @@ class Base
                 $field = "VARCHAR:$field";
             }
 
-            if (!$skipWidlcards) {
+            if (!$skipWildcards) {
                 if (
                     mb_strlen($textFilter) >= $textFilterContainsMinLength
                     && (

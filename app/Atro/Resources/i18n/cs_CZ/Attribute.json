@@ -43,7 +43,8 @@
     "conditionalDisableOptions": "Zakázané možnosti",
     "modifiedExtendedDisabled": "Žádný záznam jako změna",
     "entityType": "Propojený subjekt",
-    "entityField": "Pole entity"
+    "entityField": "Pole entity",
+    "selectPageSize": "Záznamů na stránce (dialog výběru)"
   },
   "labels": {
     "Classification": "Klasifikace",
@@ -85,7 +86,8 @@
   "tooltips": {
     "pattern": "Chcete-li povolit pouze velká písmena s délkou 10 znaků, použijte \"^[A-Z]{1,10}$\".",
     "defaultDate": "Modifikátor hodnoty atributu (např. +5 dní, -3 měsíce)",
-    "dropdown": "Pokud je v seznamu více než 300 možností, rozbalovací seznam nepoužívejte."
+    "dropdown": "Pokud je v seznamu více než 300 možností, rozbalovací seznam nepoužívejte.",
+    "selectPageSize": "Počet záznamů na stránce v dialogu výběru. Vyhněte se příliš vysokým hodnotám, protože by to mohlo zpomalit nebo zmrazit prohlížeč uživatele."
   },
   "exceptions": {
     "wrongAttributeEntity": "Zvolená entita není povolena. Entita musí být stejná jako panel atributů a skupina atributů.",

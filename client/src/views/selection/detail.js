@@ -575,8 +575,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
 
                 if (action === 'compare' && this.getEntityTypes().length) {
-                    let shouldDisabled = this.selectionItemModels?.length <= 1;
-
+                    let shouldDisabled = (this.selectionViewMode === 'standard' ? this.collection?.length : this.selectionItemModels?.length) <= 1;
                     if (shouldDisabled) {
                         return;
                     }
