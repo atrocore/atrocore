@@ -36,8 +36,8 @@ This job checks for available system updates on the schedule you set. It scans f
 This job starts system update on the schedule you set. The settings set by update are taken from the `Modules` menu, so it is essentially pressing the `Update` button on the set time.
 
 ### Scan Storage
-<!-- TODO: it's not actually true, but what is it doing for basic storage? -->
-Available with [S3 Object Storage](../../../../03.integration/02.s3-object-storage/) module.
+
+Performs synchronization of files and folders between external storage (e.g., [S3 Object Storage](https://store.atrocore.com/en/s3-object-storage/20216)) and PIM storage. It updates PIM with changes from the external source, including newly added, modified, or deleted files. This operation can be triggered manually via the Scan action or automated using scheduled jobs of type Scan Storage.
 
 ### Calculate Script Fields
 
