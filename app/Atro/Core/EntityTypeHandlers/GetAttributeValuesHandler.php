@@ -37,14 +37,14 @@ use Atro\Handlers\AbstractHandler;
         200 => ['description' => 'Array result', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object']]]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy'])]
+#[EntityType(types: ['Base', 'Hierarchy'], requires: ['hasAttribute'])]
 class GetAttributeValuesHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
 
-        if (empty($this->metadata->get("scopes.$entityName.hasAttribute"))) {
+        if (empty($this->getMetadata()->get("scopes.$entityName.hasAttribute"))) {
             throw new BadRequest();
         }
 

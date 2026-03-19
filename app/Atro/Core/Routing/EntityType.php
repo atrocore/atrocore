@@ -28,6 +28,8 @@ class EntityType
     public function __construct(
         public readonly array $types,
         public readonly array $excludeEntities = [],
+        public readonly array $requires = [],
+        public readonly array $requiresAbsent = [],
     ) {
     }
 }

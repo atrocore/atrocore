@@ -37,7 +37,7 @@ use Atro\Handlers\AbstractHandler;
         200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy'])]
+#[EntityType(types: ['Base', 'Hierarchy'], requires: ['hasAttribute'])]
 class AddAttributesHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -45,8 +45,8 @@ class AddAttributesHandler extends AbstractHandler
         $entityName = $this->getEntityName($request);
 
         if (
-            empty($this->metadata->get("scopes.$entityName.hasAttribute")) ||
-            !empty($this->metadata->get(['scopes', $entityName, 'disableAttributeLinking']))
+            empty($this->getMetadata()->get("scopes.$entityName.hasAttribute")) ||
+            !empty($this->getMetadata()->get(['scopes', $entityName, 'disableAttributeLinking']))
         ) {
             throw new BadRequest();
         }
@@ -75,7 +75,7 @@ class AddAttributesHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $result = $this->serviceFactory->create('Attribute')
+        $result = $this->getServiceFactory()->create('Attribute')
             ->addAttributeValue($entity->getEntityName(), $entity->get('id'), null, $attributeIds);
 
         return new JsonResponse(['true' => $result]);

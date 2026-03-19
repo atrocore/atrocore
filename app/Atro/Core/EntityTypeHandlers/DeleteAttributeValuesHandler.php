@@ -37,7 +37,7 @@ use Atro\Handlers\AbstractHandler;
         200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy'])]
+#[EntityType(types: ['Base', 'Hierarchy'], requires: ['hasAttribute'])]
 class DeleteAttributeValuesHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -46,8 +46,8 @@ class DeleteAttributeValuesHandler extends AbstractHandler
         $data       = $this->getRequestBody($request);
 
         if (
-            empty($this->metadata->get("scopes.$entityName.hasAttribute")) ||
-            !empty($this->metadata->get(['scopes', $entityName, 'disableAttributeLinking']))
+            empty($this->getMetadata()->get("scopes.$entityName.hasAttribute")) ||
+            !empty($this->getMetadata()->get(['scopes', $entityName, 'disableAttributeLinking']))
         ) {
             throw new BadRequest();
         }
@@ -75,7 +75,7 @@ class DeleteAttributeValuesHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $result = $this->serviceFactory->create('Attribute')
+        $result = $this->getServiceFactory()->create('Attribute')
             ->removeAttributeValues($entity->getEntityName(), $entity->get('id'), $attributeIds);
 
         return new JsonResponse(is_array($result) ? $result : ['true' => $result]);

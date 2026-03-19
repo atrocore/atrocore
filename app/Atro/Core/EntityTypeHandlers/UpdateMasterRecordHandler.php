@@ -44,7 +44,7 @@ class UpdateMasterRecordHandler extends AbstractHandler
     {
         $entityName = $this->getEntityName($request);
 
-        if (empty($this->metadata->get("scopes.$entityName.primaryEntityId"))) {
+        if (empty($this->getMetadata()->get("scopes.$entityName.primaryEntityId"))) {
             throw new NotFound();
         }
 
@@ -63,7 +63,7 @@ class UpdateMasterRecordHandler extends AbstractHandler
             throw new NotFound();
         }
 
-        $this->serviceFactory->create('MasterDataEntity')->updateMasterRecord($staging);
+        $this->getServiceFactory()->create('MasterDataEntity')->updateMasterRecord($staging);
 
         return new JsonResponse(['true' => true]);
     }

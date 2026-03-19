@@ -15,13 +15,11 @@ namespace Atro\Core\Factories;
 
 use Atro\Core\Middleware\ApiValidationMiddleware;
 use Atro\Core\Middleware\AuthMiddleware;
-use Atro\Core\Middleware\EntityTypeDispatchMiddleware;
 use Atro\Core\Middleware\ErrorHandlerMiddleware;
 use Atro\Core\Middleware\LegacyControllerHandler;
 use Atro\Core\Middleware\NotFoundMiddleware;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Atro\Core\Routing\HandlerRegistry;
-use Atro\Core\Routing\Route as RouteAttribute;
+use Atro\Core\Routing\RouteCompiler;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Stratigility\MiddlewarePipe;
 use Mezzio\Router\FastRouteRouter;
@@ -37,18 +35,7 @@ class HttpPipeline implements FactoryInterface
         $router        = new FastRouteRouter();
         $legacyHandler = new LegacyControllerHandler($container);
 
-        $this->registerHandlerRoutes($router, $container);
-
-        foreach ($this->sortRoutes($container->get('route')->getAll()) as $routeConfig) {
-            $pattern = $this->convertPattern(
-                '/api/v1' . $routeConfig['route'],
-                $routeConfig['conditions'] ?? []
-            );
-
-            $route = new Route($pattern, $legacyHandler, [strtoupper($routeConfig['method'])]);
-            $route->setOptions($routeConfig);
-            $router->addRoute($route);
-        }
+        $this->registerAllRoutes($router, $container, $legacyHandler);
 
         $pipe = new MiddlewarePipe();
         $pipe->pipe(new ErrorHandlerMiddleware());
@@ -61,7 +48,6 @@ class HttpPipeline implements FactoryInterface
             $pipe->pipe($middleware);
         }
 
-        $pipe->pipe($container->get(EntityTypeDispatchMiddleware::class));
         $pipe->pipe(new DispatchMiddleware());
         $pipe->pipe(new NotFoundMiddleware());
 
@@ -84,65 +70,110 @@ class HttpPipeline implements FactoryInterface
         return $middlewares;
     }
 
-    private function registerHandlerRoutes(FastRouteRouter $router, ContainerInterface $container): void
+    /**
+     * Collects compiled handler routes and legacy routes into a single list,
+     * sorts them globally by specificity (more static segments first), then registers.
+     *
+     * A global sort is required because FastRoute throws BadRouteException when a static
+     * route is registered after a variable route that would match the same path, even if
+     * the routes come from different sources (compiled vs legacy).
+     */
+    private function registerAllRoutes(FastRouteRouter $router, ContainerInterface $container, LegacyControllerHandler $legacyHandler): void
     {
-        foreach ($container->get(HandlerRegistry::class)->getHandlerClasses() as $className) {
-            if (!class_exists($className)) {
-                continue;
-            }
+        $all = [];
 
-            $ref        = new \ReflectionClass($className);
-            $attributes = $ref->getAttributes(RouteAttribute::class);
+        foreach ($container->get(RouteCompiler::class)->getCompiledRoutes() as $entry) {
+            $path = substr($entry['path'], strlen('/api/v1'));
+            $all[] = [
+                'specificity' => $this->segmentSpecificity($path),
+                'type'        => 'handler',
+                'entry'       => $entry,
+            ];
+        }
 
-            if (empty($attributes)) {
-                continue;
-            }
+        foreach ($container->get('route')->getAll() as $routeConfig) {
+            $all[] = [
+                'specificity' => $this->segmentSpecificity($routeConfig['route']),
+                'type'        => 'legacy',
+                'config'      => $routeConfig,
+            ];
+        }
 
-            $handler = $container->get($className);
+        usort($all, fn($a, $b) => $b['specificity'] <=> $a['specificity']);
 
-            foreach ($attributes as $attr) {
-                /** @var RouteAttribute $routeAttr */
-                $routeAttr = $attr->newInstance();
+        // Track registered pattern+method pairs to prevent duplicates.
+        // Compiled handler routes take priority — if a legacy route resolves to the same
+        // pattern+method as a compiled route, it is skipped.
+        $registered = [];
 
-                if (empty($routeAttr->responses)) {
+        foreach ($all as $item) {
+            if ($item['type'] === 'handler') {
+                $entry   = $item['entry'];
+                $pattern = $entry['path'];
+                $methods = $entry['methods'];
+
+                $skip = false;
+                foreach ($methods as $method) {
+                    if (isset($registered[$pattern . '|' . $method])) {
+                        $skip = true;
+                        break;
+                    }
+                }
+                if ($skip) {
                     continue;
                 }
 
-                $methods = array_map('strtoupper', (array) $routeAttr->methods);
-                $route   = new Route('/api/v1' . $routeAttr->path, $handler, $methods);
-
-                if (!$routeAttr->auth) {
-                    $route->setOptions(['conditions' => ['auth' => false]]);
+                foreach ($methods as $method) {
+                    $registered[$pattern . '|' . $method] = true;
                 }
 
-                $router->addRoute($route);
+                $handler = $container->get($entry['handlerClass']);
+                $route   = new Route($pattern, $handler, $methods);
+
+                $options = [];
+                if (!$entry['auth']) {
+                    $options['conditions'] = ['auth' => false];
+                }
+                if (!empty($entry['openapi'])) {
+                    $options['openapi'] = $entry['openapi'];
+                }
+                if (!empty($options)) {
+                    $route->setOptions($options);
+                }
+            } else {
+                $routeConfig = $item['config'];
+                $pattern     = $this->convertPattern(
+                    '/api/v1' . $routeConfig['route'],
+                    $routeConfig['conditions'] ?? []
+                );
+                $method = strtoupper($routeConfig['method']);
+                $key    = $pattern . '|' . $method;
+
+                if (isset($registered[$key])) {
+                    continue;
+                }
+                $registered[$key] = true;
+
+                $route = new Route($pattern, $legacyHandler, [$method]);
+                $route->setOptions($routeConfig);
             }
+
+            $router->addRoute($route);
         }
     }
 
     /**
-     * Sorts routes so that static (more specific) routes are registered before variable ones.
-     * FastRoute throws BadRouteException if a static route is added after a variable route
-     * that matches the same path.
+     * Returns a specificity score for a path segment string (without /api/v1 prefix).
+     * Handles both Slim-style (:param) and FastRoute-style ({param}) placeholders.
+     * More static segments = higher score = registered first.
      */
-    private function sortRoutes(array $routes): array
+    private function segmentSpecificity(string $path): int
     {
-        usort($routes, function (array $a, array $b): int {
-            return $this->routeSpecificity($b['route']) <=> $this->routeSpecificity($a['route']);
-        });
-
-        return $routes;
-    }
-
-    /**
-     * Returns a specificity score: more static segments = higher score = registered first.
-     */
-    private function routeSpecificity(string $route): int
-    {
-        $segments = explode('/', trim($route, '/'));
-        $score    = 0;
-        foreach ($segments as $segment) {
-            $score += str_starts_with($segment, ':') ? 0 : 1;
+        $score = 0;
+        foreach (explode('/', trim($path, '/')) as $segment) {
+            if ($segment !== '' && !str_starts_with($segment, ':') && !str_starts_with($segment, '{')) {
+                $score++;
+            }
         }
 
         return $score;

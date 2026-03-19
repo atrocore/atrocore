@@ -49,7 +49,7 @@ class SeedHandler extends AbstractHandler
         $seed   = $this->entityManager->getRepository($entityName)->get();
         $result = [];
 
-        foreach ($this->metadata->get(['entityDefs', $seed->getEntityType(), 'fields'], []) as $name => $defs) {
+        foreach ($this->getMetadata()->get(['entityDefs', $seed->getEntityType(), 'fields'], []) as $name => $defs) {
             if (
                 !empty($defs['type']) && $defs['type'] === 'varchar' &&
                 !empty($defs['default']) && $seed->has($name)

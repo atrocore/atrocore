@@ -44,7 +44,7 @@ class CreateHandler extends AbstractHandler
     {
         $entityName = $this->getEntityName($request);
 
-        if ($this->metadata->get("clientDefs.$entityName.createDisabled")) {
+        if ($this->getMetadata()->get("clientDefs.$entityName.createDisabled")) {
             throw new NotFound();
         }
 
