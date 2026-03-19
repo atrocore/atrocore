@@ -69,14 +69,6 @@ This job starts the selected export feed on the schedule you set. The settings s
 <!-- TODO: what 'Maximum hours to look back' param stands for? -->
 ![Export feed Scheduled](_assets/scheduled-jobs-export-feed.png){.medium}
 
-### Recalculate Product Price
-
-Available with [Pricing](../../../../06.erp/01.pricing/) module.
-
-This job is used when you use dynamically calculated prices. This job starts recalculating action for all products.
-
-> This job may take a lot of time and server resources, so please schedule its execution when you do not need to work in the system.
-
 ### Update currency exchange via ECB
 
 This job inserts current exchange rates taken from ECB to AtroCore currencies. Only currencies and rates supported by ECB are affected by this job.
