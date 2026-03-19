@@ -407,7 +407,7 @@ class ReferenceData extends Repository implements Injectable
                 $filtered = [];
 
                 foreach ($params['whereClause'][$key]['OR'] as $k => $v) {
-                    $field = str_replace('*', '', $k);
+                    $field = str_replace('*', '', (string) $k);
                     $search = str_replace('%', '', $v);
                     foreach ($items as $item) {
                         if (!isset($item[$field])) {
