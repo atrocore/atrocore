@@ -42,7 +42,7 @@ class JobManagerUpdateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data = json_decode((string)$request->getBody()) ?? new \stdClass();
+        $data = $this->getRequestBody($request);
 
         if (!property_exists($data, 'pause')) {
             return new BoolResponse(false);

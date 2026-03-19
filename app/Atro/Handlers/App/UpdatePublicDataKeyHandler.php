@@ -35,7 +35,7 @@ class UpdatePublicDataKeyHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = json_decode((string)$request->getBody()) ?? new \stdClass();
+        $data = $this->getRequestBody($request);
 
         if (!property_exists($data, 'key') || !property_exists($data, 'value') || in_array($data->key, ['dataTimestamp', 'notReadCount'])) {
             return new BoolResponse(false);

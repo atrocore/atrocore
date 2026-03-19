@@ -42,7 +42,7 @@ class CreateVariableHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data = json_decode((string)$request->getBody()) ?? new \stdClass();
+        $data = $this->getRequestBody($request);
 
         /** @var \Atro\Services\Variable $service */
         $service = $this->getServiceFactory()->create('Variable');

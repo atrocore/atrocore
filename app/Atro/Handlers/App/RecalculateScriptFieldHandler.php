@@ -37,7 +37,7 @@ class RecalculateScriptFieldHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = json_decode((string)$request->getBody()) ?? new \stdClass();
+        $data = $this->getRequestBody($request);
 
         return new JsonResponse(
             (array)$this->getServiceFactory()->create('App')->recalculateScriptField($data)->getValueMap()

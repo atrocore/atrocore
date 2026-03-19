@@ -41,7 +41,7 @@ class MergeHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = json_decode((string)$request->getBody()) ?? new \stdClass();
+        $data = $this->getRequestBody($request);
 
         if (empty($data->scope) || empty($data->sourceIds) || !is_array($data->sourceIds) || !($data->attributes instanceof \stdClass)) {
             throw new BadRequest();

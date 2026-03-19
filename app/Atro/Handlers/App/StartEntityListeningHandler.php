@@ -36,7 +36,7 @@ class StartEntityListeningHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = json_decode((string)$request->getBody()) ?? new \stdClass();
+        $data = $this->getRequestBody($request);
 
         if (empty($data->entityName) || empty($data->entityId)) {
             throw new BadRequest();

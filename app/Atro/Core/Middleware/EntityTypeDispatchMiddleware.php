@@ -79,7 +79,7 @@ class EntityTypeDispatchMiddleware implements MiddlewareInterface
         $entityType = (string) $this->metadata->get(['scopes', $entityName, 'type'], 'Base');
 
         // Try to find a matching EntityTypeHandler
-        $handlerClass = $this->registry->findHandlerClass($request, $entityType);
+        $handlerClass = $this->registry->findHandlerClass($request, $entityType, $entityName);
 
         if ($handlerClass === null) {
             return $handler->handle($request);

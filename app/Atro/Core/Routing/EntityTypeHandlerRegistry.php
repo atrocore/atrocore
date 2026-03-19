@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class EntityTypeHandlerRegistry
 {
-    /** @var array<string, list<array{class: string, types: string[]}>> routeKey → candidates */
+    /** @var array<string, list<array{class: string, types: string[], excludeEntities: string[]}>> routeKey → candidates */
     private array $handlerList = [];
 
     private ?FastRouteRouter $router = null;
@@ -35,7 +35,7 @@ class EntityTypeHandlerRegistry
      * Returns FQCN of the first EntityTypeHandler that matches the request path/method
      * AND accepts the given entity type. Returns null if no match.
      */
-    public function findHandlerClass(ServerRequestInterface $request, string $entityType): ?string
+    public function findHandlerClass(ServerRequestInterface $request, string $entityType, string $entityName = ''): ?string
     {
         $result = $this->getRouter()->match($request);
 
@@ -47,9 +47,13 @@ class EntityTypeHandlerRegistry
         $candidates = $this->handlerList[$routeKey] ?? [];
 
         foreach ($candidates as $entry) {
-            if (in_array($entityType, $entry['types'], true)) {
-                return $entry['class'];
+            if (!in_array($entityType, $entry['types'], true)) {
+                continue;
             }
+            if ($entityName !== '' && in_array($entityName, $entry['excludeEntities'], true)) {
+                continue;
+            }
+            return $entry['class'];
         }
 
         return null;
@@ -86,7 +90,7 @@ class EntityTypeHandlerRegistry
                 $this->router->addRoute(new MezzioRoute($entry['path'], $stub, $entry['methods'], $routeKey));
                 $registered[$routeKey] = true;
             }
-            $this->handlerList[$routeKey][] = ['class' => $entry['class'], 'types' => $entry['types']];
+            $this->handlerList[$routeKey][] = ['class' => $entry['class'], 'types' => $entry['types'], 'excludeEntities' => $entry['excludeEntities']];
         }
 
         return $this->router;
@@ -111,7 +115,9 @@ class EntityTypeHandlerRegistry
             }
 
             /** @var EntityType $entityTypeAttr */
-            $types = $entityTypeAttrs[0]->newInstance()->types;
+            $entityTypeAttr  = $entityTypeAttrs[0]->newInstance();
+            $types           = $entityTypeAttr->types;
+            $excludeEntities = $entityTypeAttr->excludeEntities;
 
             foreach ($routeAttrs as $attrObj) {
                 /** @var Route $routeAttr */
@@ -120,7 +126,7 @@ class EntityTypeHandlerRegistry
                 $fullPath  = '/api/v1' . $routeAttr->path;
                 $routeKey  = implode(',', $methods) . ':' . $fullPath;
 
-                $entries[] = ['class' => $className, 'methods' => $methods, 'path' => $fullPath, 'key' => $routeKey, 'types' => $types];
+                $entries[] = ['class' => $className, 'methods' => $methods, 'path' => $fullPath, 'key' => $routeKey, 'types' => $types, 'excludeEntities' => $excludeEntities];
             }
         }
 

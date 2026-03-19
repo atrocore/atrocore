@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\Routing\EntityType as EntityTypeAttribute;
 use Atro\Core\Routing\HandlerRegistry;
 use Atro\Core\Routing\Route as RouteAttribute;
 use Atro\Core\Utils\Config;
@@ -1318,16 +1319,18 @@ class OpenApiGenerator
         // ActionLog: create is not exposed via API
         unset($result['paths']["/ActionLog"]['post']);
 
-        // UserProfile: only GET /{id} and PUT /{id} are exposed
-        unset($result['paths']["/UserProfile"]['get']);
-        unset($result['paths']["/UserProfile"]['post']);
-        unset($result['paths']["/UserProfile/{id}"]['delete']);
-        unset($result['paths']["/UserProfile/action/massUpdate"]['put']);
-        unset($result['paths']["/UserProfile/action/massDelete"]['post']);
+        // UserProfile: legacy relation paths not covered by handler attributes
         unset($result['paths']["/UserProfile/{link}/relation"]['post']);
         unset($result['paths']["/UserProfile/{link}/relation"]['delete']);
-        unset($result['paths']["/UserProfile/{id}/subscription"]['put']);
-        unset($result['paths']["/UserProfile/{id}/subscription"]['delete']);
+
+        // Dynamic: remove paths for entities excluded in EntityTypeHandler attributes
+        foreach ($this->collectEntityTypeHandlerExclusions() as $entityName => $paths) {
+            foreach ($paths as $path => $methods) {
+                foreach ($methods as $method) {
+                    unset($result['paths'][$path][$method]);
+                }
+            }
+        }
 
         // Remove paths that ended up with no operations after cleanup
         foreach ($result['paths'] as $path => $methods) {
@@ -1335,6 +1338,62 @@ class OpenApiGenerator
                 unset($result['paths'][$path]);
             }
         }
+    }
+
+    /** @return array<string, array<string, string[]>> entityName → path → methods[] */
+    private function collectEntityTypeHandlerExclusions(): array
+    {
+        $exclusions = [];
+        $dir        = CORE_PATH . '/Atro/Core/EntityTypeHandlers/';
+
+        if (!is_dir($dir)) {
+            return $exclusions;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->getExtension() !== 'php') {
+                continue;
+            }
+
+            $relative  = substr($file->getPathname(), strlen(CORE_PATH) + 1, -4);
+            $className = str_replace('/', '\\', $relative);
+
+            if (!class_exists($className)) {
+                continue;
+            }
+
+            $ref             = new \ReflectionClass($className);
+            $entityTypeAttrs = $ref->getAttributes(EntityTypeAttribute::class);
+            $routeAttrs      = $ref->getAttributes(RouteAttribute::class);
+
+            if (empty($entityTypeAttrs) || empty($routeAttrs)) {
+                continue;
+            }
+
+            $excludeEntities = $entityTypeAttrs[0]->newInstance()->excludeEntities;
+
+            if (empty($excludeEntities)) {
+                continue;
+            }
+
+            foreach ($routeAttrs as $routeAttrObj) {
+                $routeAttr = $routeAttrObj->newInstance();
+                $methods   = array_map('strtolower', (array) $routeAttr->methods);
+
+                foreach ($excludeEntities as $entityName) {
+                    $path = str_replace('{entityName}', $entityName, $routeAttr->path);
+                    foreach ($methods as $method) {
+                        $exclusions[$entityName][$path][] = $method;
+                    }
+                }
+            }
+        }
+
+        return $exclusions;
     }
 
     protected function pushSettingsActions(array &$result, array $schemas): void
