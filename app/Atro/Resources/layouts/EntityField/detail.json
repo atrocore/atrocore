@@ -303,6 +303,12 @@
           "name": "urlLabel"
         },
         false
+      ],
+      [
+        {
+          "name": "selectPageSize"
+        },
+        false
       ]
     ]
   },

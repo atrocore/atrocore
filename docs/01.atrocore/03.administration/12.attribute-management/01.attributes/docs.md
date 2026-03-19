@@ -260,6 +260,9 @@ Link and Multiple Link attributes support the same configuration options as thei
 - **Linked Entity**: Select the entity to be linked
 - **Entity Field**: Select a field to represent the entity
 - **Filter Results**: Specifies the [selectable values](../../11.entity-management/03.fields-and-attributes/docs.md#filter-results) for the attribute.
+- **Records per page (select dialog)**: Sets the number of records shown per page when selecting a value via the dialog.
+
+!! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
 Link attributes create optional relationships between different entities, allowing you to establish connections through attribute values rather than dedicated field relationships that exist for all records.
 

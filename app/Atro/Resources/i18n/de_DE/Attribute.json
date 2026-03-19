@@ -43,7 +43,8 @@
     "conditionalProtected": "Geschützt",
     "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung",
     "entityType": "Verknüpfte Entität",
-    "entityField": "Entitätsfeld"
+    "entityField": "Entitätsfeld",
+    "selectPageSize": "Datensätze pro Seite (Auswahldialog)"
   },
   "labels": {
     "addNewValue": "Neuen Wert hinzufügen",
@@ -89,7 +90,8 @@
   "tooltips": {
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"^[A-Z]{1,10}$\"",
     "defaultDate": "Attributwertmodifikator (z. B. +5 Tage, -3 Monate)",
-    "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind."
+    "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind.",
+    "selectPageSize": "Anzahl der pro Seite im Auswahldialog angezeigten Datensätze. Vermeiden Sie zu hohe Werte, da dies den Browser des Benutzers verlangsamen oder einfrieren kann."
   },
   "exceptions": {
     "fileTypeCannotBeDeleted": "Der Datensatz kann nicht gelöscht werden, da er in dem Attribut \"%s\" verwendet wird.",

@@ -93,6 +93,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'dropdown'                  => !empty($attributeData['dropdown']),
             'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
             'allowedOptions'            => $attributeData['allowedOptions'] ?? null,
+            'selectPageSize'            => $attributeData['selectPageSize'] ?? null,
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'notSortable'               => true,

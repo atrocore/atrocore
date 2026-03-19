@@ -42,6 +42,10 @@
       "tooltip": true
     },
     {
+      "name": "selectPageSize",
+      "type": "int"
+    },
+    {
       "name": "extensibleEnum",
       "required": true,
       "entity": "ExtensibleEnum",
