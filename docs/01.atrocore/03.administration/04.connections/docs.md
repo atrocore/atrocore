@@ -167,7 +167,8 @@ Session-based authentication using cookies for maintaining user state and authen
 ### Communication Services
 
 #### SMTP
-Simple Mail Transfer Protocol connections for sending emails through mail servers. SMTP connections support various authentication methods and can be configured for different mail delivery requirements.
+
+Simple Mail Transfer Protocol connections for sending emails through mail servers. SMTP connections support various authentication methods and can be configured for different mail delivery requirements. 
 
 ![smtp-basic](./_assets/smtp-basic.png)
 
@@ -179,6 +180,7 @@ Simple Mail Transfer Protocol connections for sending emails through mail server
 Authentication Fields (depends on Auth Type):
 
 **Basic Authentication:**
+
 - **Auth Type**: Set to "Basic"
 - **Security**: The security protocol to use (SSL, TLS, or None)
 - **Username**: The username for SMTP authentication
@@ -187,6 +189,7 @@ Authentication Fields (depends on Auth Type):
 ![smtp-oauth](./_assets/smtp-oauth.png)
 
 **OAuth Authentication:**
+
 - **Auth Type**: Set to "Oauth"
 - **Username**: The username for SMTP authentication
 - **Client ID** (required): The OAuth client identifier
@@ -198,6 +201,7 @@ Authentication Fields (depends on Auth Type):
 ### Business Intelligence & Analytics
 
 #### Scope Visio
+
 Integration with Scope Visio business intelligence and analytics platform for data visualization, reporting, and business analytics capabilities.
 
 ![scope-visio](./_assets/scope-visio.png)
@@ -213,6 +217,7 @@ Integration with Scope Visio business intelligence and analytics platform for da
 Following connection types are available only with [AI Integration](../../../05.pim/11.ai-integration/) module.
 
 #### ChatGPT
+
 Connection to OpenAI's ChatGPT API for natural language processing, text generation, and conversational AI capabilities within the AtroCore platform.
 
 ![chatgpt](./_assets/chatgpt.png)
