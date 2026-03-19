@@ -37,16 +37,12 @@ use Atro\Handlers\AbstractHandler;
         200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy'])]
+#[EntityType(types: ['Base', 'Hierarchy'], requires: ['primaryEntityId'])]
 class UpdateMasterRecordHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
-
-        if (empty($this->getMetadata()->get("scopes.$entityName.primaryEntityId"))) {
-            throw new NotFound();
-        }
 
         $data = $this->getRequestBody($request);
 
