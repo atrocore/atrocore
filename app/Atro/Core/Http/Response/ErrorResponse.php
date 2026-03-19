@@ -21,8 +21,8 @@ class ErrorResponse extends Response
     {
         parent::__construct(
             $status,
-            array_merge(['Content-Type' => 'application/json; charset=utf-8'], $extraHeaders),
-            json_encode(['message' => $message])
+            array_merge(['Content-Type' => 'text/html; charset=utf-8', 'X-Status-Reason' => $message], $extraHeaders),
+            $message
         );
     }
 }

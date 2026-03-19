@@ -16,7 +16,6 @@ namespace Atro\Core\Middleware;
 use Atro\Core\Exceptions\Unauthorized;
 use Psr\Container\ContainerInterface;
 use Atro\Core\Http\Response\ErrorResponse;
-use Atro\Core\Http\Response\ErrorResponse;
 use Espo\Core\Utils\Auth;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
