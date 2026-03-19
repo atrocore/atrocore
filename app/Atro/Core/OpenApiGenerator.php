@@ -99,6 +99,10 @@ class OpenApiGenerator
                 continue 1;
             }
 
+            if (empty($scopeData['entity'])) {
+                continue 1;
+            }
+
             if (empty(ControllerManager::getControllerClassName($scopeName, $this->getMetadata()))) {
                 continue 1;
             }
@@ -1422,8 +1426,8 @@ class OpenApiGenerator
         $result['components']['schemas'][$entityName] = [
             'type'       => 'object',
             'properties' => [
-                'id'    => ['type' => 'string'],
-                '_meta' => ['type' => 'object'],
+                'id'    => ['type' => 'string', 'readOnly' => true],
+                '_meta' => ['type' => 'object', 'readOnly' => true],
             ],
         ];
 
@@ -1437,10 +1441,16 @@ class OpenApiGenerator
 
         // Mark all non-required typed properties as nullable so the response validator
         // accepts null values for optional fields (which the API commonly returns).
+        // Also mark protected and forRead fields as readOnly.
         $required = $result['components']['schemas'][$entityName]['required'] ?? [];
         foreach ($result['components']['schemas'][$entityName]['properties'] as $prop => &$propSchema) {
             if (!in_array($prop, $required, true) && isset($propSchema['type'])) {
                 $propSchema['nullable'] = true;
+            }
+
+            $fieldData = $data['fields'][$prop] ?? [];
+            if (!empty($fieldData['protected']) || !empty($fieldData['forRead'])) {
+                $propSchema['readOnly'] = true;
             }
         }
         unset($propSchema);
@@ -1713,6 +1723,10 @@ class OpenApiGenerator
             return;
         }
 
+        foreach ($routeAttr->entities as $entityName) {
+            $this->buildEntitySchema($result, $entityName);
+        }
+
         $tag = $routeAttr->tag;
 
         if (!in_array($tag, array_column($result['tags'], 'name'), true)) {
@@ -1736,6 +1750,10 @@ class OpenApiGenerator
 
             if (!empty($routeAttr->parameters)) {
                 $row['parameters'] = $routeAttr->parameters;
+            }
+
+            if (!empty($routeAttr->requestBody)) {
+                $row['requestBody'] = $routeAttr->requestBody;
             }
 
             $result['paths'][$routeAttr->path][$method] = $row;

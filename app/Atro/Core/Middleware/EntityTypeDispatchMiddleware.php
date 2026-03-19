@@ -70,6 +70,11 @@ class EntityTypeDispatchMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
+        // Skip non-entity scopes (e.g. Variable — handled by dedicated handlers)
+        if (!$this->metadata->get(['scopes', $entityName, 'entity'])) {
+            return $handler->handle($request);
+        }
+
         // Determine the entity's template type from metadata (defaults to 'Base')
         $entityType = (string) $this->metadata->get(['scopes', $entityName, 'type'], 'Base');
 

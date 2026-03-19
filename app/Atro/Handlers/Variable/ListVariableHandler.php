@@ -31,10 +31,11 @@ use Psr\Http\Server\RequestHandlerInterface;
             'type'       => 'object',
             'properties' => [
                 'total' => ['type' => 'integer'],
-                'list'  => ['type' => 'array', 'items' => ['type' => 'object']],
+                'list'  => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/Variable']],
             ],
         ]]]],
     ],
+    entities: ['Variable'],
 )]
 class ListVariableHandler extends AbstractHandler
 {

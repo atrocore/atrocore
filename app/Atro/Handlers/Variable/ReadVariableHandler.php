@@ -32,10 +32,11 @@ use Psr\Http\Server\RequestHandlerInterface;
         ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],
     responses: [
-        200 => ['description' => 'Variable record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Variable record', 'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/Variable']]]],
         403 => ['description' => 'Forbidden'],
         404 => ['description' => 'Not found'],
     ],
+    entities: ['Variable'],
 )]
 class ReadVariableHandler extends AbstractHandler
 {

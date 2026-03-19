@@ -27,10 +27,12 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Create variable',
     description: 'Creates a new configuration variable. Admin only.',
     tag: 'Variable',
+    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/Variable']]]],
     responses: [
-        200 => ['description' => 'Created variable', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Created variable', 'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/Variable']]]],
         403 => ['description' => 'Forbidden'],
     ],
+    entities: ['Variable'],
 )]
 class CreateVariableHandler extends AbstractHandler
 {

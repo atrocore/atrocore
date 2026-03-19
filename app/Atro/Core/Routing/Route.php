@@ -24,6 +24,7 @@ class Route
         public readonly string       $tag,
         public readonly bool         $auth        = true,
         public readonly array        $parameters  = [],
+        public readonly array        $requestBody = [],
         public readonly array        $responses   = [],
         public readonly array        $entities    = [],
     ) {
