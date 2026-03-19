@@ -90,7 +90,7 @@ SQL;
                 ['ids' => Mapper::getParameterType($idsToLoad), 'false' => ParameterType::BOOLEAN]
             )->fetchAllAssociative();
         } else {
-            if (!empty($this->loadedHierarchyIds)){
+            if (!empty($this->loadedHierarchyIds)) {
                 return;
             }
 
@@ -250,6 +250,9 @@ SQL;
                 break;
             }
             foreach ($files as $file) {
+                if (property_exists($folder, '_scan')) {
+                    $file->_scan = $folder->_scan;
+                }
                 $this->getEntityManager()->removeEntity($file);
             }
         }
@@ -260,6 +263,9 @@ SQL;
         $children = $folder->get('children');
         if (!empty($children[0])) {
             foreach ($children as $child) {
+                if (property_exists($folder, '_scan')) {
+                    $child->_scan = $folder->_scan;
+                }
                 $this->getEntityManager()->removeEntity($child);
             }
         }
