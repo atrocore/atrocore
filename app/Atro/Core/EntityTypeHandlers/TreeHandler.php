@@ -39,11 +39,11 @@ use Atro\Core\Routing\EntityType;
         ['name' => 'sortBy',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'string',  'example' => 'name']],
         ['name' => 'asc',        'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean', 'example' => true]],
         ['name' => 'isTreePanel','in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean']],
-        ['name' => 'where',      'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'foreignWhere','in' => 'query','required' => false, 'schema' => ['type' => 'string']],
+        ['name' => 'where',      'in' => 'query', 'required' => false, 'schema' => ['anyOf' => [['type' => 'array'], ['type' => 'object'], ['type' => 'string']]]],
+        ['name' => 'foreignWhere','in' => 'query','required' => false, 'schema' => ['anyOf' => [['type' => 'array'], ['type' => 'object'], ['type' => 'string']]]],
     ],
     responses: [
-        200 => ['description' => 'Array of tree nodes', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object']]]]],
+        200 => ['description' => 'Tree nodes collection', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['total' => ['type' => 'integer'], 'list' => ['type' => 'array', 'items' => ['type' => 'object']]]]]]],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile'])]

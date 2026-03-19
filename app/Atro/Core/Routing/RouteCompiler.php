@@ -114,6 +114,7 @@ class RouteCompiler
                     'auth'           => $routeAttr->auth,
                     'openapi'        => $this->buildOpenApiEntry($routeAttr, $entityName),
                     'schemaEntities' => [],
+                    'entityName'     => $entityName,
                 ];
             }
         }

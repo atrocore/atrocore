@@ -21,6 +21,7 @@ use \Atro\Services\AbstractService;
 use Espo\Core\Acl;
 use Espo\Core\ServiceFactory;
 use Espo\ORM\EntityManager;
+use Mezzio\Router\RouteResult;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -68,7 +69,20 @@ abstract class AbstractHandler implements MiddlewareInterface
 
     protected function getEntityName(ServerRequestInterface $request): string
     {
-        return (string)$request->getAttribute('entityName', '');
+        // For legacy variable routes, FastRoute sets entityName as a path parameter.
+        $entityName = (string)$request->getAttribute('entityName', '');
+        if ($entityName !== '') {
+            return $entityName;
+        }
+
+        // For compiled static routes (EntityTypeHandler expanded paths), entityName
+        // is stored in the route options instead of as a path parameter.
+        $routeResult = $request->getAttribute(RouteResult::class);
+        if ($routeResult instanceof RouteResult && !$routeResult->isFailure()) {
+            $entityName = (string)($routeResult->getMatchedRoute()->getOptions()['entityName'] ?? '');
+        }
+
+        return $entityName;
     }
 
     protected function getRecordService(string $entityName): AbstractService

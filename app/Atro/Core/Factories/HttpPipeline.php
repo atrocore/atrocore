@@ -99,7 +99,18 @@ class HttpPipeline implements FactoryInterface
             ];
         }
 
-        usort($all, fn($a, $b) => $b['specificity'] <=> $a['specificity']);
+        // Primary sort: more static segments first (prevents FastRoute BadRouteException).
+        // Tiebreaker: legacy routes before compiled routes at equal specificity, because
+        // legacy routes often have structural keywords (e.g. "layout" in /:scope/layout/:viewType)
+        // that make them more constraining than variable compiled routes (e.g. /Foo/{id}/{link})
+        // even though the static segment count happens to be the same.
+        usort($all, function (array $a, array $b): int {
+            $cmp = $b['specificity'] <=> $a['specificity'];
+            if ($cmp !== 0) {
+                return $cmp;
+            }
+            return ($a['type'] === 'legacy' ? 0 : 1) <=> ($b['type'] === 'legacy' ? 0 : 1);
+        });
 
         // Track registered pattern+method pairs to prevent duplicates.
         // Compiled handler routes take priority — if a legacy route resolves to the same
@@ -136,6 +147,9 @@ class HttpPipeline implements FactoryInterface
                 }
                 if (!empty($entry['openapi'])) {
                     $options['openapi'] = $entry['openapi'];
+                }
+                if (!empty($entry['entityName'])) {
+                    $options['entityName'] = $entry['entityName'];
                 }
                 if (!empty($options)) {
                     $route->setOptions($options);

@@ -384,7 +384,7 @@ class OpenApiGenerator
             ];
 
             if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
-                $row['security'] = [['Authorization-Token' => []]];
+                $row['security'] = [['Authorization-Token' => []], ['basicAuth' => []], ['cookieAuth' => []]];
             } else {
                 $row['security'] = [];
             }
