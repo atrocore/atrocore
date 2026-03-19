@@ -77,7 +77,7 @@
     "required": "Il campo sarà obbligatorio. Non può essere lasciato vuoto.",
     "readOnly": "Il valore del campo non può essere specificato dall'utente. È comunque possibile modificarlo tramite l'API.",
     "protected": "Il valore del campo non può essere specificato dall'utente. Né tramite il front-end né tramite l'API.",
-    "pattern": "Per abilitare solo le lettere maiuscole con lunghezza di 10 simboli, usi \"/^[A-Z]{1,10}$/\".",
+    "pattern": "Per abilitare solo le lettere maiuscole con lunghezza di 10 simboli, usi \"^[A-Z]{1,10}$\".",
     "default": "Il valore sarà impostato in modo predefinito al momento della creazione.",
     "isSorted": "Le opzioni saranno ordinate dopo il salvataggio.",
     "dropdown": "Non utilizzi il menu a tendina se l'elenco contiene più di 300 opzioni.",

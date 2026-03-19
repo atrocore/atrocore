@@ -29,49 +29,6 @@ Espo.define('views/settings/fields/password-regex-pattern', ['views/fields/varch
             }
         },
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            this.$el.on('keyup', e => {
-                let value = e.target.value ?? '';
-                if (value.startsWith('/')) {
-                    value = value.slice(1);
-                }
-
-                if (value.endsWith('/')) {
-                    value = value.slice(0, -1);
-                }
-
-                if (value) {
-                    this.model.set(this.name, `/${value}/`, { silent: true });
-                    e.target.value = `/${value}/`;
-                } else {
-                    this.model.set(this.name, '', { silent: true });
-                    e.target.value = '';
-                    return;
-                }
-
-                this.handleTextCursor(e.target);
-            }).on('mouseup', e => {
-                this.handleTextCursor(e.target);
-            });
-        },
-
-        handleTextCursor(target) {
-            if (target.selectionStart === target.value.length) {
-                target.selectionStart -= 1;
-                target.selectionEnd = target.selectionStart;
-            }
-
-            if (target.selectionStart === 0) {
-                target.selectionStart = 1;
-            }
-
-            if (target.selectionEnd === target.value.length) {
-                target.selectionEnd -= 1;
-            }
-        },
-
         getTooltipText: function () {
             let link = '#Translation/edit/' + MD5('User.messages.newPasswordInvalid');
 
@@ -82,18 +39,10 @@ Espo.define('views/settings/fields/password-regex-pattern', ['views/fields/varch
             let value = this.model.get(this.name);
             if (!value) return false;
 
-            if (value.startsWith('/')) {
-                value = value.slice(1);
-            }
-
-            if (value.endsWith('/')) {
-                value = value.slice(0, -1);
-            }
-
             try {
-                const regex = new RegExp(value);
+                new RegExp(value);
             } catch (e) {
-                this.showValidationMessage(this.translate('regexNotValid', 'exceptions', 'FieldManager'));
+                this.showValidationMessage(this.translate('regexSyntaxError', 'exceptions', 'FieldManager').replace('%s', this.name));
                 return true;
             }
 

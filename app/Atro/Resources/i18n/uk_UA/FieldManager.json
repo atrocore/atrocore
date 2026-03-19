@@ -80,6 +80,7 @@
   "exceptions": {
     "regexNotValid": "Цей REGEX паттерн не валідний.",
     "someFieldNotUnique": "Деякі поля не мають унікального значення.",
-    "someFieldDontMathToPattern": "Деякі поля не відповідають шаблону."
+    "someFieldDontMathToPattern": "Деякі поля не відповідають шаблону.",
+    "regexSyntaxError": "Помилка синтаксису регулярного виразу у полі '%s'."
   }
 }

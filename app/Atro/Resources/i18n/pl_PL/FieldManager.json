@@ -80,6 +80,7 @@
   "exceptions": {
     "regexNotValid": "Ten wzorzec REGEX nie jest prawidłowy.",
     "someFieldNotUnique": "Niektóre wartości pola nie są unikalne.",
-    "someFieldDontMathToPattern": "Niektóre pola nie pasują do wzorca."
+    "someFieldDontMathToPattern": "Niektóre pola nie pasują do wzorca.",
+    "regexSyntaxError": "Błąd składni wyrażenia regularnego w polu '%s'."
   }
 }

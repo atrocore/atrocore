@@ -101,7 +101,7 @@
     "All": "Tutti"
   },
   "tooltips": {
-    "pattern": "Per abilitare solo le lettere maiuscole con lunghezza di 10 simboli, usi \"/^[A-Z]{1,10}$/\".",
+    "pattern": "Per abilitare solo le lettere maiuscole con lunghezza di 10 simboli, usi \"^[A-Z]{1,10}$\".",
     "defaultDate": "Modificatore del valore dell'attributo (ad esempio +5 giorni, -3 mesi)",
     "dropdown": "Non utilizzi il menu a tendina se l'elenco contiene più di 300 opzioni."
   }

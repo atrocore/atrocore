@@ -77,7 +77,7 @@
     "readOnly": "Hodnotu pole nemůže zadat uživatel. Přesto je možné ji změnit prostřednictvím rozhraní API.",
     "protected": "Hodnotu pole nemůže zadat uživatel. Ani prostřednictvím rozhraní front end, ani prostřednictvím rozhraní API.",
     "maxLength": "Maximální přijatelná délka textu.",
-    "pattern": "Chcete-li povolit pouze velká písmena s délkou 10 znaků, použijte \"/^[A-Z]{1,10}$/\".",
+    "pattern": "Chcete-li povolit pouze velká písmena s délkou 10 znaků, použijte \"^[A-Z]{1,10}$\".",
     "default": "Hodnota bude nastavena jako výchozí při vytvoření.",
     "isSorted": "Po uložení budou možnosti seřazeny.",
     "dropdown": "Pokud je v seznamu více než 300 možností, rozbalovací seznam nepoužívejte.",

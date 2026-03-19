@@ -80,6 +80,7 @@
   "exceptions": {
     "regexNotValid": "Dieses REGEX-Muster ist nicht gültig.",
     "someFieldNotUnique": "Einige Feldwerte sind nicht eindeutig.",
-    "someFieldDontMathToPattern": "Einige Felder stimmen nicht mit dem Muster überein."
+    "someFieldDontMathToPattern": "Einige Felder stimmen nicht mit dem Muster überein.",
+    "regexSyntaxError": "Regex-Syntaxfehler im Feld '%s'."
   }
 }

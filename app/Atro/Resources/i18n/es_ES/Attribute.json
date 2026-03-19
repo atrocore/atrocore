@@ -83,7 +83,7 @@
     "All": "Todos"
   },
   "tooltips": {
-    "pattern": "Para habilitar sólo letras mayúsculas con longitud de 10 símbolos utilice \"/^[A-Z]{1,10}$/\"",
+    "pattern": "Para habilitar sólo letras mayúsculas con longitud de 10 símbolos utilice \"^[A-Z]{1,10}$\"",
     "defaultDate": "Modificador del valor del atributo (por ejemplo, +5 días, -3 meses)",
     "dropdown": "No utilice el desplegable si hay más de 300 opciones en la lista."
   },

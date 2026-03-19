@@ -87,7 +87,7 @@
     "notLinkedWithAnyRecord": "Not linked with any record"
   },
   "tooltips": {
-    "pattern": "To enable only capital letters with 10-symbol length use \"/^[A-Z]{1,10}$/\"",
+    "pattern": "To enable only capital letters with 10-symbol length use \"^[A-Z]{1,10}$\"",
     "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)",
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
   },

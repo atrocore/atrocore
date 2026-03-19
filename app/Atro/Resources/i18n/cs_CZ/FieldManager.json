@@ -80,6 +80,7 @@
   "exceptions": {
     "regexNotValid": "Tento vzor REGEX není platný.",
     "someFieldNotUnique": "Některé hodnoty polí nejsou jedinečné.",
-    "someFieldDontMathToPattern": "Některá pole neodpovídají vzoru."
+    "someFieldDontMathToPattern": "Některá pole neodpovídají vzoru.",
+    "regexSyntaxError": "Chyba syntaxe regulárního výrazu v poli '%s'."
   }
 }

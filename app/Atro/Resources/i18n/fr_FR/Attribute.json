@@ -83,7 +83,7 @@
     "All": "Tous"
   },
   "tooltips": {
-    "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
+    "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"^[A-Z]{1,10}$\"",
     "defaultDate": "Modificateur de la valeur de l'attribut (par exemple +5 jours, -3 mois)",
     "dropdown": "N'utilisez pas la liste déroulante s'il y a plus de 300 options dans la liste."
   },
