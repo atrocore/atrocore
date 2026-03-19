@@ -36,15 +36,19 @@ class OpenApiGenerator
         return $result;
     }
 
-    public function getSchemaForHandler(RouteAttribute $routeAttr): array
+    public function getSchemaForHandler(RouteAttribute $routeAttr, string $entityName = ''): array
     {
         $result = $this->getBase();
 
-        foreach ($routeAttr->entities as $entityName) {
+        foreach ($routeAttr->entities as $ent) {
+            $this->buildEntitySchema($result, $ent);
+        }
+
+        if ($entityName !== '') {
             $this->buildEntitySchema($result, $entityName);
         }
 
-        $this->pushHandlerRoute($result, $routeAttr);
+        $this->pushHandlerRoute($result, $routeAttr, $entityName);
 
         return $result;
     }
@@ -142,19 +146,55 @@ class OpenApiGenerator
 
         // Mark all non-required typed properties as nullable so the response validator
         // accepts null values for optional fields (which the API commonly returns).
-        // Also mark protected and forRead fields as readOnly.
+        // Also mark protected and forRead fields as readOnly, then remove the internal
+        // forRead marker so it doesn't leak into the OpenAPI output.
         $required = $result['components']['schemas'][$entityName]['required'] ?? [];
         foreach ($result['components']['schemas'][$entityName]['properties'] as $prop => &$propSchema) {
             if (!in_array($prop, $required, true) && isset($propSchema['type'])) {
                 $propSchema['nullable'] = true;
             }
 
+            // forRead can be set either on the metadata field itself or on the property
+            // by getFieldSchema (e.g. {field}Name, {field}Names derived properties).
             $fieldData = $data['fields'][$prop] ?? [];
-            if (!empty($fieldData['protected']) || !empty($fieldData['forRead'])) {
+            if (!empty($fieldData['protected']) || !empty($fieldData['forRead']) || !empty($propSchema['forRead'])) {
                 $propSchema['readOnly'] = true;
             }
+
+            unset($propSchema['forRead']);
         }
         unset($propSchema);
+
+        $this->buildEntityWriteSchema($result, $entityName);
+    }
+
+    private function buildEntityWriteSchema(array &$result, string $entityName): void
+    {
+        $readProps    = $result['components']['schemas'][$entityName]['properties'];
+        $readRequired = $result['components']['schemas'][$entityName]['required'] ?? [];
+
+        $excluded = ['id', '_meta', 'deleted', 'createdAt', 'modifiedAt', 'createdById'];
+
+        $writeProps = [];
+        foreach ($readProps as $prop => $propSchema) {
+            if (in_array($prop, $excluded, true) || str_starts_with($prop, '_')) {
+                continue;
+            }
+            if (!empty($propSchema['readOnly'])) {
+                continue;
+            }
+            unset($propSchema['readOnly']);
+            $writeProps[$prop] = $propSchema;
+        }
+
+        $writeRequired = array_values(array_filter($readRequired, fn($k) => isset($writeProps[$k])));
+
+        $schema = ['type' => 'object', 'properties' => $writeProps];
+        if (!empty($writeRequired)) {
+            $schema['required'] = $writeRequired;
+        }
+
+        $result['components']['schemas']["{$entityName}Write"] = $schema;
     }
 
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
@@ -402,14 +442,14 @@ class OpenApiGenerator
         }
     }
 
-    private function pushHandlerRoute(array &$result, RouteAttribute $routeAttr): void
+    private function pushHandlerRoute(array &$result, RouteAttribute $routeAttr, string $entityName = ''): void
     {
         if (empty($routeAttr->responses)) {
             return;
         }
 
-        foreach ($routeAttr->entities as $entityName) {
-            $this->buildEntitySchema($result, $entityName);
+        foreach ($routeAttr->entities as $ent) {
+            $this->buildEntitySchema($result, $ent);
         }
 
         $tag = $routeAttr->tag;
@@ -438,11 +478,27 @@ class OpenApiGenerator
             }
 
             if (!empty($routeAttr->requestBody)) {
-                $row['requestBody'] = $routeAttr->requestBody;
+                $requestBody = $routeAttr->requestBody;
+                if ($entityName !== '') {
+                    $requestBody = $this->substituteWriteSchemaRef($requestBody, $entityName);
+                }
+                $row['requestBody'] = $requestBody;
             }
 
             $result['paths'][$routeAttr->path][$method] = $row;
         }
+    }
+
+    private function substituteWriteSchemaRef(array $data, string $entityName): array
+    {
+        foreach ($data as $key => $value) {
+            if ($key === 'schema' && $value === ['x-entity-write' => true]) {
+                $data[$key] = ['$ref' => "#/components/schemas/{$entityName}Write"];
+            } elseif (is_array($value)) {
+                $data[$key] = $this->substituteWriteSchemaRef($value, $entityName);
+            }
+        }
+        return $data;
     }
 
     private function pushCompiledRoutes(array &$result): void

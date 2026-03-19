@@ -18,6 +18,7 @@ use Atro\Core\OpenApiGenerator;
 use Atro\Core\Routing\Route as RouteAttribute;
 use League\OpenAPIValidation\PSR7\OperationAddress;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
+use Mezzio\Router\RouteResult;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,7 +54,7 @@ class Validator
 
     public function validateHandlerRequest(RouteAttribute $routeAttr, ServerRequestInterface $request): void
     {
-        $builder = $this->getValidatorBuilderForHandler($routeAttr);
+        $builder = $this->getValidatorBuilderForHandler($routeAttr, $this->extractEntityName($request));
 
         try {
             $builder->getRequestValidator()->validate($request);
@@ -62,9 +63,9 @@ class Validator
         }
     }
 
-    public function validateHandlerResponse(RouteAttribute $routeAttr, string $method, ResponseInterface $response): void
+    public function validateHandlerResponse(RouteAttribute $routeAttr, string $method, ResponseInterface $response, string $entityName = ''): void
     {
-        $builder   = $this->getValidatorBuilderForHandler($routeAttr);
+        $builder   = $this->getValidatorBuilderForHandler($routeAttr, $entityName);
         $operation = new OperationAddress($routeAttr->path, strtolower($method));
 
         try {
@@ -85,10 +86,19 @@ class Validator
         return (new ValidatorBuilder())->fromJson(json_encode($schema));
     }
 
-    private function getValidatorBuilderForHandler(RouteAttribute $routeAttr): ValidatorBuilder
+    private function getValidatorBuilderForHandler(RouteAttribute $routeAttr, string $entityName = ''): ValidatorBuilder
     {
-        $schema = $this->container->get(OpenApiGenerator::class)->getSchemaForHandler($routeAttr);
+        $schema = $this->container->get(OpenApiGenerator::class)->getSchemaForHandler($routeAttr, $entityName);
 
         return (new ValidatorBuilder())->fromJson(json_encode($schema));
+    }
+
+    private function extractEntityName(ServerRequestInterface $request): string
+    {
+        $routeResult = $request->getAttribute(RouteResult::class);
+        if (!$routeResult instanceof RouteResult || $routeResult->isFailure()) {
+            return '';
+        }
+        return (string) ($routeResult->getMatchedRoute()->getOptions()['entityName'] ?? '');
     }
 }

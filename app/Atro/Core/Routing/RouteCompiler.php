@@ -209,9 +209,15 @@ class RouteCompiler
      */
     private function substituteEntitySchemaRef(array $data, string $entityName): array
     {
-        if (isset($data['schema']) && $data['schema'] === ['type' => 'object']) {
-            $data['schema'] = ['$ref' => "#/components/schemas/$entityName"];
-            return $data;
+        if (isset($data['schema'])) {
+            if ($data['schema'] === ['type' => 'object']) {
+                $data['schema'] = ['$ref' => "#/components/schemas/$entityName"];
+                return $data;
+            }
+            if ($data['schema'] === ['x-entity-write' => true]) {
+                $data['schema'] = ['$ref' => "#/components/schemas/{$entityName}Write"];
+                return $data;
+            }
         }
 
         foreach ($data as $key => $value) {

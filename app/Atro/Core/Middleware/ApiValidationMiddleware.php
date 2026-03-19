@@ -35,13 +35,24 @@ class ApiValidationMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
+        $entityName = $this->resolveEntityName($request);
+
         $this->validator->validateHandlerRequest($routeAttr, $request);
 
         $response = $handler->handle($request);
 
-        $this->validator->validateHandlerResponse($routeAttr, $request->getMethod(), $response);
+        $this->validator->validateHandlerResponse($routeAttr, $request->getMethod(), $response, $entityName);
 
         return $response;
+    }
+
+    private function resolveEntityName(ServerRequestInterface $request): string
+    {
+        $routeResult = $request->getAttribute(RouteResult::class);
+        if (!$routeResult instanceof RouteResult || $routeResult->isFailure()) {
+            return '';
+        }
+        return (string) ($routeResult->getMatchedRoute()->getOptions()['entityName'] ?? '');
     }
 
     private function resolveRouteAttribute(ServerRequestInterface $request): ?RouteAttribute

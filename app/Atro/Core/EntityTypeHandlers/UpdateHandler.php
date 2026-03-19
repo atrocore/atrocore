@@ -32,6 +32,10 @@ use Atro\Handlers\AbstractHandler;
     parameters: [
         ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'id',         'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],
+    requestBody: [
+        'required' => true,
+        'content'  => ['application/json' => ['schema' => ['x-entity-write' => true]]],
+    ],
     responses: [
         200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
     ],
