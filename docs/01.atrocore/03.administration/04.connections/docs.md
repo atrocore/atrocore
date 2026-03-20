@@ -221,10 +221,6 @@ Integration with Scope Visio business intelligence and analytics platform for da
 - **Customer** (required): The customer identifier for Scope Visio
 - **Organisation** (required): The organization identifier for Scope Visio
 
-### AI Services
-
-Following connection types are available only with [AI Integration](../../../05.pim/11.ai-integration/) module.
-
 ### AtroCore Integration
 
 #### AtroCore
