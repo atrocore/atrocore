@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "confirmedAutomatically": "Confirmé automatiquement"
+  },
   "fields": {
     "entityName": "Nom de l'entité",
     "entityId": "ID de l'entité",

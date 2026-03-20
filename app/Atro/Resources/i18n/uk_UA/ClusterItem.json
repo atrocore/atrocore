@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "confirmedAutomatically": "Підтверджено автоматично"
+  },
   "fields": {
     "entityName": "Назва суб'єкта Назва суб'єкта",
     "entityId": "Ідентифікатор сутності",
