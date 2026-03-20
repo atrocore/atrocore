@@ -146,10 +146,11 @@ In order to relate more entities to classifications, you will first need to sele
 ### Attributes
 
 Attributes that are linked to the Classification record are shown on the `Classification Attributes` panel within the Classification detail view page and include the following table columns:
- - Attribute
- - Required
- - Audit Completeness (available only with [data quality](../../01.atrocore/15.data-quality) module)
- - Default Value
+
+- Attribute
+- Required
+- Audit Completeness (available only with [Data Quality](https://store.atrocore.com/en/data-quality/20219) module)
+- Default Value
 
 ![PF attributes panel](./_assets/pf-attributes-panel.png){.large}
 

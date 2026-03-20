@@ -6,7 +6,7 @@ taxonomy:
 
 Scheduled Jobs are configurations that automatically create [Jobs](../) at specified intervals. They allow you to orchestrate multiple actions, such as import and export feeds, job retrials, system updates, etc. to be executed automatically by the Job Manager subsystem.
 
-> Some job types are available only with additional modules purchase. To execute custom [Actions](../../06.actions/) on a schedule, use the **Action** job type, available with the [Workflows](https://store.atrocore.com/en/workflows/20194) module.
+> Some job types are available only with additional modules purchase. To execute custom [Actions](../../06.actions/) on a schedule, use the **Action** job type, available with the ["Workflows"](https://store.atrocore.com/en/workflows/20194) module.To calculate data quality metrics, the  ["Data Quality"](https://store.atrocore.com/en/data-quality/20218) module is required.
 
 ## Main functions
 
@@ -55,12 +55,6 @@ This job starts the selected import feed on the schedule you set. The settings s
 Available with [Advanced Data Management](../../11.entity-management/06.advanced-data-management/) module.
 
 This job is used when you use dynamic relations, such as dynamic categories. Refreshing cache is needed for relations to show up-to-date data.
-
-### Calculate Data Quality
-
-Available with [Data Quality](../../../15.data-quality/) module.
-
-This job analyzes data quality metrics across the system and generates reports on data completeness, accuracy, and consistency.
 
 ### Export Feed
 

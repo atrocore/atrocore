@@ -87,7 +87,7 @@ To set or change the **Filter Results**, press the filter button in the header. 
 Fields can be configured with various behavior controls and validation rules to ensure data quality and user experience:
 
 - **Type-specific options**: Each data type includes built-in configuration options (e.g., validation rules, display formats, behavior settings). See [Data Types](../02.data-types/) for advanced configuration details.
-- **Data quality rules**: Apply comprehensive data quality validation through the [Data Quality](../../../15.data-quality/) module, which provides advanced validation, cleansing, and monitoring capabilities.
+- **Data quality rules**: Apply comprehensive data quality validation through the ["Data Quality"](https://store.atrocore.com/en/data-quality/20219) module, which provides advanced validation, cleansing, and monitoring capabilities.
 
 ## Conditional Properties
 

@@ -247,14 +247,6 @@ The Activities tab is enabled or disabled by the administrator for each entity. 
 
 Some functions, such as **Discussions** are added by modules. In this case by [Discussions](https://store.atrocore.com/en/discussions/20128) module.
 
-#### Quality Check tab
-
-> The Quality Check tab is added by the [Data Quality](../15.data-quality/docs.md) module.
-
-This tab displays all active Quality Checks for the given entity record. If you need to enable or configure Quality Checks, ask your administrator to adjust it.
-
-![Quality Check](./_assets/quality-check.png) {.medium}
-
 ### List View tabs
 
 #### Filter tab
