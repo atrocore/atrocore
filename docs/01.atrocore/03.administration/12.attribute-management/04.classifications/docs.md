@@ -43,7 +43,7 @@ If you name Classifications with the same or similar names, you can describe in 
 
 When creating a new classification, an existing classification can be duplicated, copying all of its attributes.
 
-![](./_assets/image24.png){.medium}
+![Duplicating Attributes](./_assets/image24.png){.medium}
 
 Unnecessary attributes can be removed from the Classification after they have been created, the new ones are added. Using this option allows you to save a lot of time in system configuration.
 
@@ -176,7 +176,7 @@ Click the `Save` button to complete the Classification attribute creation proces
 
 When you are trying to link to the Classification record the attribute, which is already linked to the entity record belonging to the given Classification, entity record attribute becomes Classification attribute. Its value (or values) is preserved in the entity record.
 
->  Attributes, which are added to the Classification record, are of higher priority, whereas custom product attributes adapt to the changes made in the Classification attributes. The interrelations between Classifications and product records can be configured and structured even more with the help of the **Advanced Classification** module. For more details, please, visit our [store](https://store.atrocore.com/advanced-classification/20109).
+> Attributes, which are added to the Classification record, are of higher priority, whereas custom product attributes adapt to the changes made in the Classification attributes. The interrelations between Classifications and product records can be configured and structured even more with the help of the ["Advanced Classification"]((https://store.atrocore.com/advanced-classification/20109)) module.
 
 To assign an existing attribute (or several attributes) to the Classification record, use the `Select` option from the actions menu:
 
@@ -229,4 +229,3 @@ The entities linked to the given classification record can be viewed, edited, un
 ![Products actions](./_assets/products-actions-menu.png){.large}
 
 To view the related entity record from the entity panel, click on its name in the records list. The [detail view](../../../04.understanding-ui/docs.md#detail-view) page of the given record will open, where you can perform further actions according to your access rights.
-
