@@ -6,7 +6,7 @@ taxonomy:
 
 Scheduled Jobs are configurations that automatically create [Jobs](../) at specified intervals. They allow you to orchestrate multiple actions, such as import and export feeds, job retrials, system updates, etc. to be executed automatically by the Job Manager subsystem.
 
-> Some job types are available only with additional modules purchase. To execute custom [Actions](../../06.actions/) on a schedule, use the **Action** job type, available with the ["Workflows"](https://store.atrocore.com/en/workflows/20194) module.To calculate data quality metrics, the  ["Data Quality"](https://store.atrocore.com/en/data-quality/20218) module is required.
+> Some job types are available only with additional modules. To execute custom [Actions](../../06.actions/) on a schedule, use the **Action** job type, available with the [Workflows](https://store.atrocore.com/en/workflows/20194) module. To calculate data quality metrics, the [Data Quality](https://store.atrocore.com/en/data-quality/20218) module is required. The **Refresh Cache for Dynamic Relations** and **Calculate Script Fields** job types are available with the [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module.
 
 ## Main functions
 
@@ -39,22 +39,12 @@ This job starts system update on the schedule you set. The settings set by updat
 
 Performs synchronization of files and folders between external storage (e.g., [S3 Object Storage](https://store.atrocore.com/en/s3-object-storage/20216) or [Microsoft SharePoint](https://store.atrocore.com/en/microsoft-365-connector/20205)) and PIM storage. It updates PIM with changes from the external source, including newly added, modified, or deleted files. This operation can be triggered manually via the `Scan` action or automated using scheduled jobs of type Scan Storage.
 
-### Calculate Script Fields
-
-Available with [Advanced Data Management](../../../../01.atrocore/03.administration/11.entity-management/06.advanced-data-management/) module.
-
 ### Import Feed
 
 This job starts the selected import feed on the schedule you set. The settings set by the feed are taken from the feed menu, so it is essentially pressing the `Import` button on the set time.
 
 <!-- TODO: what 'Maximum hours to look back' param stands for? -->
 ![Import feed Scheduled](_assets/scheduled-jobs-import-feed.png){.medium}
-
-### Refresh Cache for Dynamic Relations
-
-Available with [Advanced Data Management](../../11.entity-management/06.advanced-data-management/) module.
-
-This job is used when you use dynamic relations, such as dynamic categories. Refreshing cache is needed for relations to show up-to-date data.
 
 ### Export Feed
 

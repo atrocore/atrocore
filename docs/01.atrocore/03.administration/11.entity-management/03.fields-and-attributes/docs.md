@@ -51,14 +51,14 @@ The following options are available for all or most field types:
 
 > A field cannot be marked as required if there is at least one empty record for that field in the entity. To work around this restriction, set a Default value when creating the field (it will be populated to all existing records), or manually fill all empty records if the field already exists.
 
--   **Read-only**: Field is not editable in the UI.
--   **Non Comparable**: Field is excluded from [comparison](../../../09.comparison-and-merge/) operation.
--   **Uninherited**: Field value is not inherited in entity [hierarchies](../04.hierarchies-and-inheritance/).
--   **Tooltip**: Enables contextual help for the field, supporting text and links. Can be localized — see [Labels](../../13.user-interface/03.labels/docs.md#alternative-editing-methods).
--   **Create no record activity**: Changes in this field are not displayed as [Activity](../../../06.activities/).
--   **No recording as modification**: Changes to this field will not update the `Modified at` timestamp.
--   **Protected**: Field value is read-only from UI and from API.
--   **Disable Value Lock**: Prevents the field from being locked during modification via the UI when [Enable Value Lock](../06.advanced-data-management/docs.md#field-value-lock) is activated for the entity (available only if the Advanced Data Management module is installed)
+- **Read-only**: Field is not editable in the UI.
+- **Non Comparable**: Field is excluded from [comparison](../../../09.comparison-and-merge/) operation.
+- **Uninherited**: Field value is not inherited in entity [hierarchies](../04.hierarchies-and-inheritance/).
+- **Tooltip**: Enables contextual help for the field, supporting text and links. Can be localized — see [Labels](../../13.user-interface/03.labels/docs.md#alternative-editing-methods).
+- **Create no record activity**: Changes in this field are not displayed as [Activity](../../../06.activities/).
+- **No recording as modification**: Changes to this field will not update the `Modified at` timestamp.
+- **Protected**: Field value is read-only from UI and from API.
+- **Disable Value Lock**: Prevents the field from being locked during modification via the UI when `Enable Value Lock` is activated for the entity (available only if the ["Advanced Data Management"](https://store.atrocore.com/en/advanced-data-management/20113) module is installed)
 
 For detailed information about configuration options specific to each data type, see [Data Types](../02.data-types/docs.md).
 
