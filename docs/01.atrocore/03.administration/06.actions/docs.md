@@ -255,6 +255,8 @@ Modifies existing records based on specified criteria and field values.
 
 ![Update Configuration](_assets/action-type-update.png){.medium}
 
+> The ["AI Integration"](https://store.atrocore.com/en/ai-integration/20202) module also provides **Set value by AI**, which works the same way but uses AI to determine the values instead of manually defined ones.
+
 **Configuration:**
 
 - **Target Entity**: Entity type for records to update
@@ -294,6 +296,8 @@ Suggests modifications for existing records based on defined templates. The user
 
 ![Suggest value Configuration](_assets/action-type-value.png){.medium}
 
+> The ["AI Integration"](https://store.atrocore.com/en/ai-integration/20202) module adds **Suggest value by AI**, which works the same way but lets AI determine the suggested values rather than manually configured templates.
+
 **Configuration:**
 
 - **Source Entity**: Entity type for records
@@ -308,18 +312,6 @@ When using [Script Mode](#script) for Suggest value action additional Twig funct
 - "uiRecord": Record data array. Variable contains data that you have on frontend side,
 - "uiRecordFromName": The name of the entity from which you open current entity,
 - "uiRecordFrom": Record data array of the entity from which you open current entity.
-
-#### **Suggest value by AI**
-
-> Available with [AI Integration](../../../05.pim/11.ai-integration/docs.md) module.
-
-It uses the same method as **Suggest value** action type but uses AI for the suggested data. For implementation details and usage, refer to the [AI Integration documentation](../../../05.pim/11.ai-integration/docs.md#updating-values-in-frontend).
-
-#### **Set value by AI**
-
-> Available with [AI Integration](../../../05.pim/11.ai-integration/docs.md) module.
-
-It uses the same method as **Update** action type but uses AI for the suggested data.For related behavior and configuration, see the [AI Integration documentation](../../../05.pim/11.ai-integration/docs.md#updating-values-in-backend).
 
 #### **Copy**
 <!-- TODO: investigate further -->
