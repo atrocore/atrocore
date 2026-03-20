@@ -46,7 +46,7 @@ Cannot be referenced by [Multiple-link](../02.data-types/docs.md#multiple-link) 
 
 > Relation entities are also automatically created for [hierarchical](#hierarchy) entities to manage parent-child relationships (e.g., ProductHierarchy for Product entity).
 
-With the [Advanced Data Management](../06.advanced-data-management/) module, you can customize these Relation entities and make them accessible through the main menu.
+With the [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module, you can customize these Relation entities and make them accessible through the main menu.
 
 An entity of type relation inherits the permissions from the two entities it consists of. That is, if the user has permission to create, read and edit the ProductChannel entity, but editing is prohibited for one or both entities (Channel and Product), then the user will not be able to edit the ProductChannel entity either. Thus, in order to have permission to perform some action with an entity of the Relation type, the user must be allowed this action for both the entities that form it, as well as for the Relation entity itself.
 

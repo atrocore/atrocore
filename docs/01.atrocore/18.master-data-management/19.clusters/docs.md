@@ -24,11 +24,11 @@ A cluster can only be deleted if it has no cluster items (i.e., its state is Emp
 
 | Field | Description |
 |---|---|
-| **Number**             |	A unique auto-incremented identifier, assigned automatically by the system. Read-only.|
-| **Master Entity**       |   	The master entity this cluster belongs to. A cluster is always scoped to a single entity and may only contain records from that master entity and its corresponding staging entity.|
-| **Golden Record**	      |The primary master record to which staging records will be linked upon confirmation. Only one Golden Record can be set per cluster. If the Golden Record is deleted, all staging items are unlinked from it. |
-| **State**	              |  A read-only, dynamically calculated field reflecting the current state of the cluster. Updated automatically on any change to cluster items.|
-| **Staging Item Count**  |  The number of staging records currently linked to the cluster. Read-only.| 
+| **Number**             | A unique auto-incremented identifier, assigned automatically by the system. Read-only.|
+| **Master Entity**       |  The master entity this cluster belongs to. A cluster is always scoped to a single entity and may only contain records from that master entity and its corresponding staging entity.|
+| **Golden Record**      |The primary master record to which staging records will be linked upon confirmation. Only one Golden Record can be set per cluster. If the Golden Record is deleted, all staging items are unlinked from it. |
+| **State**              |  A read-only, dynamically calculated field reflecting the current state of the cluster. Updated automatically on any change to cluster items.|
+| **Staging Item Count**  |  The number of staging records currently linked to the cluster. Read-only.|
 | **Master Item Count**   |  The number of master records currently linked to the cluster. Read-only.|
 
 The State field of the Cluster can have the following values:
@@ -42,7 +42,7 @@ The State field of the Cluster can have the following values:
 
 Cluster Items panel lists all master and staging records that the system has linked to the current cluster based on the entity's Matching Rules. Each item displays the Entity Name, the linked Record, and its Matched Score.
 
-Cluster items cannot be added or removed manually. If a Matched Record is deleted, the corresponding Cluster Item is not removed – instead, it is reassigned to another cluster (existing or newly created). 
+Cluster items cannot be added or removed manually. If a Matched Record is deleted, the corresponding Cluster Item is not removed – instead, it is reassigned to another cluster (existing or newly created).
 
 Every staging record must belong to a cluster. If the system detects no duplicates for a given record, a cluster with a single item is created and that item is confirmed automatically.
 
@@ -54,7 +54,7 @@ The Cluster entity supports two view modes:
 
 - **Standard View** – displays all cluster fields along with two relation panels: Cluster Items and Rejected Cluster Items.
 
-- **Comparison View** – displays a comparison table with the fields and attributes defined in the [Selection Layout](../../09.comparison-and-merge/docs.md#configuring-the-comparison-table-layout) of the corresponding entity. 
+- **Comparison View** – displays a comparison table with the fields and attributes defined in the [Selection Layout](../../09.comparison-and-merge/docs.md#configuring-the-comparison-table-layout) of the corresponding entity.
 
 ![Comparison mode](./_assets/compare-mode.png){.large}
 
@@ -67,12 +67,13 @@ The Golden Record is indicated by a horizontal gold line in the comparison table
 To control which items are shown in the comparison table, open the `Item` tab in the left sidebar. It lists all items belonging to the cluster, grouped by entity. Use the eye icon next to each item to show or hide it in the table.
 
 ## Cluster Item Actions
+
 The following actions are available for cluster items in both Standard and Comparison views:
 
 - **Confirm** – creates a link between the staging and master records. Two scenarios apply:
 
-    - If a master record already exists in the cluster, the staging record is linked to it.
-    - If no master record exists yet, a new master record is created based on the selected staging record and linked to it.
+  - If a master record already exists in the cluster, the staging record is linked to it.
+  - If no master record exists yet, a new master record is created based on the selected staging record and linked to it.
 
     An already confirmed item cannot be confirmed again.
 
@@ -88,7 +89,7 @@ When a cluster item (master or staging record) is confirmed, the system creates 
 
 ### Merging Script
 
-During confirmation, all cluster items are processed through the Merging Script defined in the Master Data Entities configuration for the corresponding staging entity. 
+During confirmation, all cluster items are processed through the Merging Script defined in the Master Data Entities configuration for the corresponding staging entity.
 
 ![Master data entities](./_assets/master-data.png){.large}
 
@@ -111,7 +112,7 @@ Note: The Matched Score is copied from the corresponding Matched Record to the c
 
 When Update Master Automatically is enabled in the Master Data Entities configuration, any update to a staging record will automatically trigger an update of the corresponding master record according to the Merging Script – without requiring a manual re-confirmation.
 
-If automatic [field locking](../../../01.atrocore/03.administration/11.entity-management/06.advanced-data-management/docs.md#field-value-lock) on manual modification is enabled, updates from staging records will not overwrite fields in the master record that have been modified manually.
+If automatic [field locking](https://store.atrocore.com/en/advanced-data-management/20113) on manual modification is enabled, updates from staging records will not overwrite fields in the master record that have been modified manually.
 
 ## Activity Stream
 

@@ -33,11 +33,10 @@ The Attribute entity comes with the following preconfigured fields; mandatory ar
 | Multilingual               | If the checkbox is selected, when adding an attribute to a record, a separate field will be added for each of the languages |
 | Protected               | If the checkbox is selected, the field value becomes read-only in both the UI and the API. 'Protected' property on the [Classifications](../04.classifications/docs.md) attribute, has a higher priority than on the 'Attribute'.  |
 | No recording as modification               | Selecting the checkbox means that changes to the attribute value on the record page will not affect the modification date of the record.  |
-| Disable Value Lock     |   Prevents the attribute from being locked during modification via the UI when [Enable Value Lock](../../11.entity-management/06.advanced-data-management/docs.md#field-value-lock) is activated for the entity (available only if the Advanced Data Management module is installed and value locking is enabled for the linked entity)  |
 
 The above fields are common to all attributes. There are also some specific fields that are typical only for certain types.
 
-An attribute is a standard entity in AtroCore, for which the same functionality is available as for other entities: creation, editing in in-line or global mode, mass actions, deletion, and restoring. You can read more about record management [here](../../../08.record-management/docs.md). 
+An attribute is a standard entity in AtroCore, for which the same functionality is available as for other entities: creation, editing in in-line or global mode, mass actions, deletion, and restoring. You can read more about record management [here](../../../08.record-management/docs.md).
 
 Attribute records can be searched and filtered according to your needs. For details refer to the [Search and Filtering](../../../11.search-and-filtering/docs.md) article in this user guide.
 
@@ -49,16 +48,15 @@ It happens that you have to use attributes with the same name for different prod
 
 The attribute code is also used to reference attribute values in [script-type](../../../../10.developer-guide/80.twig-tutorial/) fields and serves as the key name for attributes in [API](../../../../10.developer-guide/10.rest-api/) responses. If code is not specified, the attribute's unique ID is used as a fallback.
 
-
 ## Available Attribute Types
 
 Attributes are automatically validated according to their type. For a complete list of available data types, see the [Data Types](../../11.entity-management/02.data-types/) documentation.
 
 ![Attribute types](./_assets/attribute-types-list.png){.small}
 
-> Some data types available for entity fields are not supported for attributes (e.g., Email, Language Code, Color, etc). 
+> Some data types available for entity fields are not supported for attributes (e.g., Email, Language Code, Color, etc).
 
-> Attribute type Script is provided by an additional module [Advanced Data Management](../../11.entity-management/06.advanced-data-management/).
+> Attribute type Script is provided by an additional module [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113).
 
 Once an attribute has been created, its type cannot be changed to another type available in the system, with the following exceptions:
 
@@ -98,7 +96,7 @@ If you have a list of the records attributes with predefined values, it is conve
 
 You can also disable the ability to add attributes directly to records for the particular entity. In this case, users will only be able to add attributes via the Classification. To do this, select option [`Disable direct attribute linking`](../../11.entity-management/docs.md#configuration-fields) in Entity Manager.
 
-![Disable direct attribute linking](./_assets/disable-direct-attribute-linking.png){.medium} 
+![Disable direct attribute linking](./_assets/disable-direct-attribute-linking.png){.medium}
 
 You can then add attributes to layouts. To learn how to do this, go to the [Attributes](../../12.attribute-management/01.attributes/docs.md) page.
 
@@ -120,7 +118,6 @@ When an attribute is linked to a channel, the name of that channel will be displ
 
 ![Channel-specific attributes](./_assets/channel-attributes.png){.large}
 
-
 ## Variant-specific attributes
 
 Variant-specific attributes are used to represent the characteristics that differentiate child product records.
@@ -132,7 +129,6 @@ To ensure the system understands which attributes distinguish one variant from a
 If you do not need this panel, you can simply hide it from the [layout](../../../03.administration/13.user-interface/02.layouts/docs.md).
 
 ![Variant-specific attributes](./_assets/variant-specific-attributes.png){.large}
-
 
 ## Multilingual Attributes
 
@@ -160,7 +156,6 @@ For float or float range attributes, you can also specify the number of decimal 
 Numeric data types (as well as the String type) can have units of measurement. In order to be able to add units to an attribute value, you need to link a [Measure](../../../03.administration/09.measure-units/docs.md) to that attribute. If your attribute does not have units of measurement, leave this field empty.
 
 ![Measure unit](./_assets/measure-unit.png){.medium}
-
 
 ## Attribute of Text, String, HTML and Markdown type
 
@@ -224,6 +219,7 @@ For both attribute types, the List field is mandatory and must be specified when
 A single List can be reused across multiple attributes or fields of type List or Multi-value List. However, in some cases, not all list options are relevant for every attribute.
 
 For example, an attribute like Material might use the same list, but require different options depending on context:
+
 - For clothing: Linen, Cotton, Wool
 - For jewelry: Gold, Silver, brass.
 
@@ -246,7 +242,6 @@ In both cases, set the **Linked Entity** field to `List Options`. Once selected,
 To apply the new attribute to records, follow the steps described in [Add attributes to a record](#add-attributes-to-a-record).
 
 > For bulk replacement, [export](../../../../02.data-exchange/02.export-feeds/docs.md) the records, update the attribute type and name to match the newly created attribute, then reimport them via [import](../../../../02.data-exchange/01.import-feeds/docs.md).
-
 
 ## Attributes of Link and Multiple Link type
 
