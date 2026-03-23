@@ -100,21 +100,24 @@ class HttpPipeline implements FactoryInterface
         }
 
         // Primary sort: more static segments first (prevents FastRoute BadRouteException).
-        // Tiebreaker: legacy routes before compiled routes at equal specificity, because
-        // legacy routes often have structural keywords (e.g. "layout" in /:scope/layout/:viewType)
-        // that make them more constraining than variable compiled routes (e.g. /Foo/{id}/{link})
-        // even though the static segment count happens to be the same.
+        // Tiebreaker order at equal specificity:
+        //   0 = legacy routes (e.g. /:scope/layout/:viewType — have structural keywords)
+        //   1 = direct PSR-15 handler routes (e.g. /Layout/{scope}/{viewType})
+        //   2 = EntityTypeHandler-expanded routes (e.g. /Layout/{id}/{link} for entity "Layout")
+        // This ensures direct handlers are registered before EntityType expansions, so that
+        // when both compile to the same FastRoute regex, the EntityType route is silently skipped.
         usort($all, function (array $a, array $b): int {
             $cmp = $b['specificity'] <=> $a['specificity'];
             if ($cmp !== 0) {
                 return $cmp;
             }
-            return ($a['type'] === 'legacy' ? 0 : 1) <=> ($b['type'] === 'legacy' ? 0 : 1);
+            return $this->routePriority($a) <=> $this->routePriority($b);
         });
 
         // Track registered pattern+method pairs to prevent duplicates.
-        // Compiled handler routes take priority — if a legacy route resolves to the same
-        // pattern+method as a compiled route, it is skipped.
+        // Deduplication uses a normalised path key (all {param} → {*}) so that two routes
+        // that differ only in placeholder names but compile to the same FastRoute regex are
+        // treated as duplicates. The first registered route (higher priority) wins.
         $registered = [];
 
         foreach ($all as $item) {
@@ -122,10 +125,11 @@ class HttpPipeline implements FactoryInterface
                 $entry   = $item['entry'];
                 $pattern = $entry['path'];
                 $methods = $entry['methods'];
+                $normKey = $this->normalizePathForDedup($pattern);
 
                 $skip = false;
                 foreach ($methods as $method) {
-                    if (isset($registered[$pattern . '|' . $method])) {
+                    if (isset($registered[$normKey . '|' . $method])) {
                         $skip = true;
                         break;
                     }
@@ -135,7 +139,7 @@ class HttpPipeline implements FactoryInterface
                 }
 
                 foreach ($methods as $method) {
-                    $registered[$pattern . '|' . $method] = true;
+                    $registered[$normKey . '|' . $method] = true;
                 }
 
                 $handler = $container->get($entry['handlerClass']);
@@ -160,8 +164,9 @@ class HttpPipeline implements FactoryInterface
                     '/api/v1' . $routeConfig['route'],
                     $routeConfig['conditions'] ?? []
                 );
-                $method = strtoupper($routeConfig['method']);
-                $key    = $pattern . '|' . $method;
+                $method  = strtoupper($routeConfig['method']);
+                $normKey = $this->normalizePathForDedup($pattern);
+                $key     = $normKey . '|' . $method;
 
                 if (isset($registered[$key])) {
                     continue;
@@ -191,6 +196,32 @@ class HttpPipeline implements FactoryInterface
         }
 
         return $score;
+    }
+
+    /**
+     * Sort priority for a route item at equal specificity:
+     *   0 = legacy (most constrained by structural keywords)
+     *   1 = direct PSR-15 handler (e.g. /Layout/{scope}/{viewType})
+     *   2 = EntityTypeHandler-expanded (e.g. /Layout/{id}/{link} for entity "Layout")
+     */
+    private function routePriority(array $item): int
+    {
+        if ($item['type'] === 'legacy') {
+            return 0;
+        }
+        // EntityType-expanded routes carry an 'entityName' key in their entry.
+        return empty($item['entry']['entityName']) ? 1 : 2;
+    }
+
+    /**
+     * Normalises a FastRoute path for deduplication by replacing every placeholder
+     * (with or without a regex constraint) with the canonical token {*}.
+     * This ensures that /Layout/{scope}/{viewType} and /Layout/{id}/{link}
+     * are treated as the same pattern and only the first registered wins.
+     */
+    private function normalizePathForDedup(string $path): string
+    {
+        return preg_replace('/\{[^}]+\}/', '{*}', $path);
     }
 
     /**

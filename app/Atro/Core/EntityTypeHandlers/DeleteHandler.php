@@ -35,7 +35,7 @@ use Atro\Handlers\AbstractHandler;
         200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Matching', 'MasterDataEntity', 'AuthToken', 'Store'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Matching', 'MasterDataEntity', 'AuthToken', 'Store', 'ClassificationAttribute', 'Connection'])]
 class DeleteHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
