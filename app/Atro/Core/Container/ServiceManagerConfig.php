@@ -67,7 +67,6 @@ class ServiceManagerConfig
         'injectableFactory'        => \Espo\Core\InjectableFactory::class,
         'number'                   => \Espo\Core\Factories\Number::class,
         'ormMetadata'              => \Espo\Core\Utils\Metadata\OrmMetadata::class,
-        'output'                   => \Espo\Core\Utils\Api\Output::class,
         'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
         'serviceFactory'           => \Espo\Core\ServiceFactory::class,
         'templateFileManager'      => \Espo\Core\Utils\TemplateFileManager::class,

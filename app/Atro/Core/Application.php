@@ -205,10 +205,6 @@ final class Application
      */
     protected function runApi(string $url): void
     {
-        if (!$this->isInstalled()) {
-            $this->runInstallerApi();
-        }
-
         if (self::isSystemUpdating()) {
             $this->logoutAll();
         }
@@ -306,28 +302,13 @@ final class Application
 
             $entryPointManager->run($entryPoint, $data);
         } catch (\Exception $e) {
-            $container->get('output')->processError($e->getMessage(), $e->getCode(), true, $e);
-        }
-    }
-
-    /**
-     * Run API for installer
-     */
-    protected function runInstallerApi(): void
-    {
-        $request = ServerRequest::fromGlobals();
-        $action  = str_replace('/api/v1/Installer/', '', $request->getUri()->getPath());
-
-        try {
-            $result = $this->getContainer()->get('controllerManager')->process('Installer', $action, [], $request);
-        } catch (\Throwable $e) {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+            $code = $e->getCode() ?: 500;
+            header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code . ' Error', true, $code);
+            if ($GLOBALS['log'] ?? null) {
+                $GLOBALS['log']->error('EntryPoint error: ' . $e->getMessage());
+            }
             exit;
         }
-
-        header('Content-Type: application/json');
-        echo $result;
-        exit;
     }
 
     /**
