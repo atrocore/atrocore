@@ -15,11 +15,12 @@ Views can be shown in the main or pop-up window. They consist of the panels, whi
 The list view is a default view page that appears when any entity is selected in the navigation menu, where the records belonging to this entity are displayed. It has its own layout, which can be configured by the administrator.
 
 The list view page shows a table of records with main fields configured for each entity and includes:
-  - *[left sidebar](#left-sidebar) (1);*
-  - *[taskbar](../05.toolbar/docs.md) (2);*
-  - *[breadcrumb navigation](#breadcrumb-navigation) including the page name (3);*
-  - *[search and filtering panel](../11.search-and-filtering/docs.md) (4);*
-  - *records list (5).*
+
+- *[left sidebar](#left-sidebar) (1);*
+- *[taskbar](../05.toolbar/docs.md) (2);*
+- *[breadcrumb navigation](#breadcrumb-navigation) including the page name (3);*
+- *[search and filtering panel](../11.search-and-filtering/docs.md) (4);*
+- *records list (5).*
 
 ![Default List View](./_assets/default-list-view-core.png){.large}
 
@@ -56,7 +57,8 @@ You can configure the plate view layout by selecting the desired item number to 
 Within the AtroPIM system the plate view is available only for [products](../../05.pim/03.products/).
 
 ## Kanban View
-> Available with [Projects](../../04.collaboration/08.projects/docs.md) module. 
+
+> Available with [Projects](https://store.atrocore.com/en/projects/20225) module.
 
 The Kanban view is a variant of the [list view](#list-view) that displays records as cards organized by their current status.
 
@@ -89,6 +91,7 @@ Small list views are panels and pop-up windows with data on the entities related
 ![Single Record Actions](./_assets/small-list.png){.medium}
 
 The following actions are available for the small list view panels:
+
 - **General actions** – applicable to all records on the related entities panel:
 
   ![Related entity global actions](./_assets/related-entity-actions-global.png){.small}
@@ -96,7 +99,6 @@ The following actions are available for the small list view panels:
   - *Refresh* – to refresh the related entities list on the panel;
   - *Create* – to create a new record for the related entity;
   - *Select* – to create a relation between the entity record, which is opened in the main window and the entity record, which was chosen in the pop-up window.
-
 
 *Please, keep in mind that choosing some record in the pop-up window will reassign it to the entity record, which is opened in the main window. The previous relation will be dropped, if the relation is one-to-many.*
 
@@ -110,20 +112,23 @@ Users can edit records and add or delete attributes via small list view using [i
 ![add or delete attributes via small list view](_assets/add-or-delete-attributes-small.png){.medium}
 
 ## Detail View
+
 > [Deleted](../08.record-management/docs.md#deleting-records) records are not accessible through the standard record view and their detailed information remains unavailable until the record is [restored](../08.record-management/docs.md#restoring-records).
 
 The detail view page appears when the  entity record name is clicked in the corresponding list of records or from the `Full Form` button in [Small List View](#small-list-view). It has its own layout, which can be configured by the administrator.
 
 The detail view page shows detailed information about the selected entity record and all its relations and includes:
-  - *[Left sidebar](#left-sidebar) (1);*
-  - *[taskbar](../05.toolbar/) (2);*
-  - *[breadcrumb navigation](#breadcrumb-navigation) including the page name (3);*
-  - *actions and tabs panel (4);*
-  - *record details, where detailed information about the currently open entity record is displayed (5).*
+
+- *[Left sidebar](#left-sidebar) (1);*
+- *[taskbar](../05.toolbar/) (2);*
+- *[breadcrumb navigation](#breadcrumb-navigation) including the page name (3);*
+- *actions and tabs panel (4);*
+- *record details, where detailed information about the currently open entity record is displayed (5).*
 
 ![Detail View](./_assets/detail-view-core.png){.large}
 
 The detail view page may also include:
+
 - the `OVERVIEW` panel and some other panels that are either default for a certain entity or configured by the administrator:
 
   ![Overview panel](./_assets/overview-panel.png){.medium}
@@ -152,7 +157,7 @@ The following actions are available for all entity records by default on the det
 - **Delete** – select the `Delete` option from the actions menu to remove the given record.
 - **Duplicate** – select the `Duplicate` option from the actions menu to go to the record creation page and enter the unique values for the record fields to be used for duplication.
 
-Some actions, such as **Translate** and  **Compare** are added by modules. In this case by [Translations](../../04.collaboration/04.translations) and [Synchronization](../../02.data-exchange/03.synchronization) modules.
+Some actions, such as **Translate** and  **Compare** are added by modules. In this case by [Translations](https://store.atrocore.com/en/translations/20191) module.
 
 ### Create View
 
@@ -215,16 +220,18 @@ The Insights tab contains panels with information about the record. By default, 
 ![Side view panel](./_assets/side-view.png){.medium}
 
 The **Summary** panel typically shows basic record information, such as:
- - **Created** – when (and by whom) the record was created.
- - **Modified** – when the record was last updated.
- - **Followers** – users who follow changes to the record.
+
+- **Created** – when (and by whom) the record was created.
+- **Modified** – when the record was last updated.
+- **Followers** – users who follow changes to the record.
 
 > If a record is created or modified by an [action](../03.administration/06.actions/docs.md) or [import](../../02.data-exchange/01.import-feeds/docs.md), the **Created** or **Modified** field displays System < User, indicating that the operation was executed by the system on behalf of the specified user. When changes are made manually in the UI, the field displays only the user link without the System mention.
 
 The **Access Management** panel (if available) typically shows who is responsible for the record and who can access it, such as:
- - **Owner** – the person responsible for the record.
- - **Assigned User** – the user expected to work on the record.
- - **Teams** – teams that can access the record.
+
+- **Owner** – the person responsible for the record.
+- **Assigned User** – the user expected to work on the record.
+- **Teams** – teams that can access the record.
 
 The exact set of panels and fields depends on the entity and enabled features. An administrator can configure both the Insights layout (which panels are shown and in which order) and the Summary panel contents (which fields are displayed).
 
@@ -238,15 +245,7 @@ The Activities tab is enabled or disabled by the administrator for each entity. 
 
  ![Activities](./_assets/activities.png){.medium}
 
-Some functions, such as **Discussions** are added by modules. In this case by [Discussions](../../04.collaboration/02.discussions) module.
-
-#### Quality Check tab
-
-> The Quality Check tab is added by the [Data Quality](../15.data-quality/docs.md) module.
-
-This tab displays all active Quality Checks for the given entity record. If you need to enable or configure Quality Checks, ask your administrator to adjust it.
-
-![Quality Check](./_assets/quality-check.png) {.medium}
+Some functions, such as **Discussions** are added by modules. In this case by [Discussions](https://store.atrocore.com/en/discussions/20128) module.
 
 ### List View tabs
 
@@ -261,8 +260,6 @@ The Filter tab is used to filter the records. For more information, please refer
 The Activities tab allows you to track changes to the entity and leave and read comments.
 
  ![Activities tab](./_assets/activities2.png){.medium}
-
-Some functions, such as **Discussions** are added by modules. In this case by [Discussions](../../04.collaboration/02.discussions) module.
 
 Other modules can add more panels to the side view panel. Please, visit our [store](https://store.atrocore.com/en/) to learn more about modules available for you.
 
@@ -286,16 +283,3 @@ The list is automatically updated by the system and reflects the most recent vie
 
 AtroCore comes with breadcrumb navigation on each page in the system. Breadcrumb navigation is a form of a path-style clickable navigation, which links the user back to the prior website page in the overall online route. It reveals the path the user took to arrive to the given page. The `>` symbol separates out the hierarchical search order from beginning to end and may look something like:
 `Home Page > Section Page > Subsection Page`.
-
-
-
-
-
-
-
-
-
-
-
-
-

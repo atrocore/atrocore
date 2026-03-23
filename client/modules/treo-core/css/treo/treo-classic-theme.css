@@ -18377,6 +18377,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     justify-content: space-between;
     align-items: baseline;
     flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 
 .panel-stream .header .filter {
@@ -19156,6 +19157,23 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     height: 3px;
 }
 
+.compare-panel table .matched-score-row th i {
+    font-size: 14px;
+    color: var(--label-color);
+}
+
+.compare-panel table .matched-score-row th i.autoconfirmed {
+    position: absolute;
+    top: 0.25em;
+    right: 0.5em;
+}
+
+.compare-panel table .matched-score-row th i.entity-role-icon {
+    position: absolute;
+    top: 0.25em;
+    left: 0.5em;
+}
+
 .compare-records table tr th.confirmed:before {
     background-color: #06c;
 }
@@ -19657,4 +19675,8 @@ body > .error-container .error-links a {
     position: sticky;
     left: 0;
     right: 0;
+}
+
+i.autoconfirmed {
+
 }

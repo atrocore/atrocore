@@ -1,7 +1,6 @@
 {
     "fields":{
-       "extensibleEnumOptions":"Opcje listy",
-       "multilingual":"Wielojęzyczny"
+       "extensibleEnumOptions":"Opcje listy"
     },
     "exceptions":{
        "extensibleEnumIsUsed":"Lista '%s' jest używana przez pole '%s' w jednostce '%s'."

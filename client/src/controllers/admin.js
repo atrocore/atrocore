@@ -70,7 +70,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
         apiRequest: function (options) {
             var scope = options.scope || null;
 
-            this.main('views/admin/api-request/index', {scope: scope});
+            this.main('views/admin/api-request/index', {scope: scope, page: 'apiRequest'});
         },
 
         getSettingsModel: function () {
@@ -100,7 +100,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             let model = this.getSettingsModel();
             model.once('sync', function () {
                 model.id = id;
-                this.main(view, {model: model});
+                this.main(view, Object.assign({}, options, {model: model}));
             }, this);
             model.fetch();
         },

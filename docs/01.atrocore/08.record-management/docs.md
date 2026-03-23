@@ -237,7 +237,7 @@ Records can be managed through various actions available across different views.
 
 -   **Bookmark/Unbookmark** - Adds or removes the record from your [bookmarks](../05.toolbar/01.bookmarks/) for quick access. Bookmarked records appear in your bookmarks panel for easy navigation. Available from [list view](../04.understanding-ui/docs.md#list-view) and from [detail view](../04.understanding-ui/docs.md#detail-view) as a separate button.
 
--   **Additional Actions** - Some other actions are added by modules and may be available depending on your system configuration and user permissions (e.g., [Generate PDF](../../07.publishing/01.pdf-generator/)). Options available from [list view](../04.understanding-ui/docs.md#list-view) and [detail view](../04.understanding-ui/docs.md#detail-view) may vary.
+-   **Additional Actions** - Some other actions are added by modules and may be available depending on your system configuration and user permissions (e.g., [Generate PDF](https://store.atrocore.com/en/pdf-generator/20167)). Options available from [list view](../04.understanding-ui/docs.md#list-view) and [detail view](../04.understanding-ui/docs.md#detail-view) may vary.
 
 For information about how to access these actions in the interface, see the [Single Record Actions](../04.understanding-ui/docs.md#single-record-actions) section.
 

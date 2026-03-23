@@ -66,7 +66,8 @@
     "tooltip": "Hinweis",
     "conditionalVisible": "Sichtbar",
     "conditionalDisableOptions": "Deaktivierte Optionen",
-    "urlLabel": "URL Label"
+    "urlLabel": "URL Label",
+    "selectPageSize": "Datensätze pro Seite (Auswahldialog)"
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
@@ -77,7 +78,7 @@
     "readOnly": "Der Feldwert kann nicht vom Benutzer festgelegt werden. Es ist jedoch möglich, ihn über die API zu ändern.",
     "protected": "Der Feldwert kann nicht vom Benutzer angegeben werden. Weder über das Frontend noch über die API.",
     "maxLength": "Maximal zulässige Länge des Textes.",
-    "pattern": "Um nur Großbuchstaben mit einer maximalen Länge von 10 Zeichen zu aktivieren, verwenden Sie \"/^[A-Z]{1,10}$/\"",
+    "pattern": "Um nur Großbuchstaben mit einer maximalen Länge von 10 Zeichen zu aktivieren, verwenden Sie \"^[A-Z]{1,10}$\"",
     "default": "Der Wert wird bei der Erstellung standardmäßig festgelegt.",
     "isSorted": "Die Optionen werden nach dem Speichern sortiert.",
     "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind.",
@@ -90,7 +91,8 @@
     "modifiedExtendedEnabled": "Änderungen in dieser Beziehung führen zur Aktualisierung des Datums und der Uhrzeit \"Geändert am\".",
     "inheritanceDisabled": "Die Werte für dieses Feld werden nicht vom übergeordneten Element geerbt.",
     "modifiedExtendedDisabled": "Wenn aktiviert, wird bei Änderungen in diesem Feld der Zeitstempel „Geändert am“ nicht aktualisiert.",
-    "auditableDisabled": "Änderungen in diesem Feld werden nicht als Aktivität angezeigt."
+    "auditableDisabled": "Änderungen in diesem Feld werden nicht als Aktivität angezeigt.",
+    "selectPageSize": "Anzahl der pro Seite im Auswahldialog angezeigten Datensätze. Vermeiden Sie zu hohe Werte, da dies den Browser des Benutzers verlangsamen oder zum Einfrieren bringen kann."
   },
   "options": {
     "outputType": {

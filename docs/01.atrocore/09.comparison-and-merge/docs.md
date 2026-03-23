@@ -16,6 +16,7 @@ Selections are standard entities that can be added to the Navigation menu or Fav
 ![Selection](_assets/selection-example.png){.medium}
 
 ### Basic Configuration
+
 All Selections share these common configuration fields:
 
 - **Number**: A unique read-only auto-incremented identifier, assigned automatically.
@@ -60,7 +61,7 @@ When the Select action is triggered from any record list page, the Current Selec
 
 ## Compare Records
 
-The functionality of comparing entity records allows you to see the difference between the values of the same fields, relation panels and attributes. 
+The functionality of comparing entity records allows you to see the difference between the values of the same fields, relation panels and attributes.
 
 Records within the same entity can be compared in two ways:
 
@@ -71,7 +72,6 @@ To compare records without creating a selection, select two or more records (up 
 ![Comparison table](_assets/comparison-modal-window.png){.large}
 
 A window will open displaying a comparison table for the selected records. Field and attribute values that differ between records are highlighted with a vertical red line.
-
 
 2. Using a Predefined Selection
 
@@ -103,7 +103,6 @@ Unlike comparisons within a single entity, the multi-entity comparison table has
 
 ![Multiple entities](_assets/multiple-entity-selection.png){.large}
 
-
 The comparison table for records from different entities does not highlight differences between field or attribute values.
 
 ### Configuring the Comparison Table Layout
@@ -125,8 +124,8 @@ Navigate to `Administration / Layouts` and select one of the following View Type
 - For Multiple Entities selections, select the needed gear icon at the bottom of each entity column.
 
 ![Layout configuration](_assets/layout-configuration.png){.medium}
-![Layout configuration](_assets/multiple-layout\.png){.medium}
 
+![Layout configuration](_assets/multiple-layout.png){.medium}
 
 Layout changes apply per entity and determine how records are displayed in the comparison table.
 
@@ -171,16 +170,17 @@ Each record in the popup has an item menu from which you can remove that record 
 From the popup or the header indicator, users can:
 
 - Change the Current Selection – switch to a different existing Selection, making it the active one.
-- Unset the Current Selection – deactivate the current one without deleting it. 
+- Unset the Current Selection – deactivate the current one without deleting it.
 - Open current selection in the Standard or Comparison view.
 
 ### Adding records to Current Selection
 
-To add a record to the Current Selection, click the `Select` button available in the action menu of any record in a List or Detail View. 
+To add a record to the Current Selection, click the `Select` button available in the action menu of any record in a List or Detail View.
 
 ![Current Selection](_assets/select.png){.small}
 
 The following rules apply:
+
 - If no Current Selection is set – a new Selection is created automatically and set as the current one.
 - If a Current Selection already exists and the record belongs to the same entity – the record is added to it.
 - If the record belongs to a different entity – the type of the Current Selection is updated automatically to "Mixed" and the record is added.

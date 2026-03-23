@@ -13,11 +13,10 @@ Data import can be performed:
 
 The free module supports file-based imports (CSV, Excel, JSON, XML). Additional modules extend import feed capabilities:
 
-- [Import: Database](../04.import-feeds-database/) – MSSQL, MySQL, PostgreSQL, Oracle, HANA database imports
+- [Import: Database](https://store.atrocore.com/en/import-database/20148) – MSSQL, MySQL, PostgreSQL, Oracle, HANA database imports
 - [Import: HTTP Request](../08.import-feeds-http-request/) – REST API and HTTP request imports
-- [Import: Remote File](../06.import-feeds-remote-file/) – automated imports from FTP, sFTP, or URL sources
-- [Synchronization](../03.synchronization/) – orchestrates multiple import and export feeds for complex data exchange
-
+- [Import: Remote File](https://store.atrocore.com/en/import-remote-file/20154) – automated imports from FTP, sFTP, or URL sources
+- [Synchronization](https://store.atrocore.com/en/synchronization/20124) – orchestrates multiple import and export feeds for complex data exchange
 
 ## Administrator Functions
 
@@ -60,19 +59,18 @@ Define main feed parameters:
 - **Execute As** – user context for import execution:
     - *System* – runs with system-level permissions
     - *Same user* – runs with current user permissions.  When selected, the corresponding user appears as a link following System in the **Created** and **Modified** fields in the [Summary](../../01.atrocore/04.understanding-ui/docs.md#insights-tab) panel of the Side View for changed records.
-      
-      ![Executed by User](../../01.atrocore/03.administration/06.actions/_assets/executed-as-user.png){.medium}
+
+    ![Executed by User](../../01.atrocore/03.administration/06.actions/_assets/executed-as-user.png){.medium}
 
 - **Maximum Number of Records per Job** – limits records per job for performance optimization
-
 
 ### Data Sourcing
 
 The `Data Sourcing` section is type-dependent—each import feed type has its own specific settings. This article describes settings for the **File** type (the default). For other types, see the respective module documentation:
 
-- [Import: Database](../04.import-feeds-database/) – database connection and SQL query settings
+- [Import: Database](https://store.atrocore.com/en/import-database/20148) – database connection and SQL query settings
 - [Import: HTTP Request](../08.import-feeds-http-request/) – REST API and HTTP request settings
-- [Import: Remote File](../06.import-feeds-remote-file/) – FTP, sFTP, and URL source settings
+- [Import: Remote File](https://store.atrocore.com/en/import-remote-file/20154) – FTP, sFTP, and URL source settings
 
 **File type settings:**
 
@@ -82,23 +80,25 @@ The `Data Sourcing` section is type-dependent—each import feed type has its ow
 - **File** – upload import file or sample for configuration (UTF-8 encoded)
 
 **CSV specific:**
+
 - **Header row** – activate the checkbox if column names are included in the import file, or leave it empty if the file has no header row with column names
 - **Field Delimiter** – field delimiter used to separate fields. Options: `,`, `;`, `/t`. Default value is `;`
 - **Text Qualifier** – options: `Double Quote`, `Single Quote`
 
 **Excel specific:**
+
 - **Sheet** – select worksheet for import
 - **Header row** – activate the checkbox if column names are included in the import file, or leave it empty if the file has no header row with column names
 
 ! If the XLS file is too large to import, you can convert it to CSV.
 
 **JSON/XML specific:**
+
 - **Root Node** – element containing all records
 - **Excluded Nodes** – elements to exclude from source fields
 - **Array Nodes** – nodes treated as leaf elements
 
 ### Data Processing
-
 
 ![Import feed data processing](_assets/import-feeds-create-data-processing.png){.medium}
 
@@ -139,7 +139,7 @@ Use [single record actions](../../01.atrocore/04.understanding-ui/docs.md#single
 
 ### Identifier
 
-Define which fields serve as identifiers for record matching. Multiple identifiers can be selected and are used together for database searches. If no identifier is selected, only new records can be created (updates require identifiers). 
+Define which fields serve as identifiers for record matching. Multiple identifiers can be selected and are used together for database searches. If no identifier is selected, only new records can be created (updates require identifiers).
 
 ### Default Value
 
@@ -155,7 +155,7 @@ Configure attributes like regular fields.
 
 ### Marking Attributes as Not Linked
 
-When importing entity fields and attributes simultaneously, use `Marker for Unlinked Attribute` to explicitly mark attributes that should not be linked to records. Default: `N/A`. 
+When importing entity fields and attributes simultaneously, use `Marker for Unlinked Attribute` to explicitly mark attributes that should not be linked to records. Default: `N/A`.
 
 Example using `---` as marker:
 
@@ -166,6 +166,7 @@ Record "all attributes 4" will not have attributes "_asset", "_varchar", and "_v
 ### Boolean Fields and Attributes
 
 For [Boolean](../../01.atrocore/03.administration/11.entity-management/02.data-types/docs.md#boolean) fields/attributes:
+
 - `0` and `False` (case-insensitive) → FALSE
 - `1` and `True` (case-insensitive) → TRUE  
 - Empty values → FALSE (when NULL not allowed for a field/attribute)
@@ -173,6 +174,7 @@ For [Boolean](../../01.atrocore/03.administration/11.entity-management/02.data-t
 ### Range Fields and Attributes
 
 For [Integer Range](../../01.atrocore/03.administration/11.entity-management/02.data-types/docs.md#integer-range) and [Float Range](../../01.atrocore/03.administration/11.entity-management/02.data-types/docs.md#float-range) fields and attributes, values must be imported from two separate columns in your source file:
+
 - One column for the `From` value (minimum value)
 - One column for the `To` value (maximum value)
 
@@ -195,6 +197,7 @@ Configure two mapping rules: one for the numeric/string part and one for the uni
 ![Numeric with unit field](./_assets/num-unit-field.png)
 
 You can also define a `Value Extractor` for each part using regular expressions to extract numeric values and units from complex input strings. Enter the pattern without delimiters:
+
 - `[\d\.,-]+` → extracts float part (e.g., 45.5 from "45.5 EUR")
 - `[^\d,.\s]+$` → extracts unit (e.g., EUR from "45.5 EUR")
 
@@ -277,6 +280,7 @@ Import execution results are displayed in two locations:
 ![import-results-list](_assets/import-feeds-import-results-list.png){.large}
 
 Execution details include:
+
 - **Name** – auto-generated execution name (click to open [detail view](../../01.atrocore/04.understanding-ui/docs.md#detail-view))
 - **Import feed** – source import feed name
 - **Imported file** – data file name (click to open/download)
@@ -290,6 +294,7 @@ Execution details include:
 ![refresh-counters](_assets/refresh-counters.png){.large}
 
 **Execution States:**
+
 - **Running** – currently executing
 - **Pending** – queued for execution
 - **Success** – completed (may contain errors)
@@ -331,6 +336,7 @@ Files generated during import are linked to both their Import Feed and Import Ex
 ### Error File
 
 Import data is validated using the same rules as manual record creation. Errors occur for:
+
 - Missing required field values
 - Wrong data types (e.g., string in Boolean field)
 - Invalid field values

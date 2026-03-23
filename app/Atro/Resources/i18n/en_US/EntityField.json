@@ -66,7 +66,8 @@
     "conditionalReadOnly": "Read-only",
     "conditionalProtected": "Protected",
     "conditionalDisableOptions": "Disabled Options",
-    "urlLabel": "URL Label"
+    "urlLabel": "URL Label",
+    "selectPageSize": "Records per page (select dialog)"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
@@ -77,7 +78,7 @@
     "readOnly": "The field value cannot be specified by the user. It is still possible to change it via the API.",
     "protected": "The field value cannot be specified by the user. Neither via the front end nor via the API.",
     "maxLength": "Max acceptable length of text.",
-    "pattern": "To enable only capital letters with 10-symbol length use \"/^[A-Z]{1,10}$/\"",
+    "pattern": "To enable only capital letters with 10-symbol length use \"^[A-Z]{1,10}$\"",
     "default": "Value will be set by default upon creating.",
     "isSorted": "Options will be sorted after saving.",
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list.",
@@ -90,7 +91,8 @@
     "modifiedExtendedEnabled": "Changes in this relation will cause the update of \"Modified At\" date and time.",
     "inheritanceDisabled": "Values for this field will not be inherited from the parent item.",
     "modifiedExtendedDisabled": "If set the changes in this field will not update the \"Modified At\" timestamp.",
-    "auditableDisabled": "Changes in this field are not displayed as Activity."
+    "auditableDisabled": "Changes in this field are not displayed as Activity.",
+    "selectPageSize": "Number of records shown per page in the selection dialog. Avoid setting this value too high, as it may slow down or freeze the user's browser."
   },
   "options": {
     "outputType": {

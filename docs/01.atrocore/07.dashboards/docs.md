@@ -61,6 +61,7 @@ The added dashlets can be resized using the double-headed arrow in the bottom ri
 ### Available Dashlets
 
 The following dashlets are available in AtroCore:
+
 - Activities
 - Channels
 - Data sync errors for export/import
@@ -179,11 +180,3 @@ This dashlet displays a list of entities. The user can choose which entities to 
 You can customize only Entity List Type you choose to display.
 
 ![Entities dashlet Options](././_assets/Entities-dashlet-options.png){.medium}
-
-#### Records by translation status
-
-This type of dashlet displays the distribution of [translation statuses](../../04.collaboration/04.translations/docs.md#translation-status-field) among the entity’s records as a percentage.
-
-![Translation status](././_assets/translation-status-dashlet.png){.medium}
-
-Customization includes selecting the entity and setting the auto-refresh interval. The dashlet is added by [Translation](../../04.collaboration/04.translations/docs.md) module.

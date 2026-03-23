@@ -24,4 +24,5 @@ In the body of the request we have 2 parameters.
 ![Import Rest Api Example](_assets/import-api-example.png){.large}
 
 ## Usage in EasyCatalog
-If you have a [EasyCatalog Adapter](../../07.publishing/02.easycatalog-adapter) you can use the Import and Export Feeds to enable seemless data integration with InDesign.  These REST API endpoints are to be used for data sources configured in EasyCatalog for Adobe InDesign.
+
+If you have a [EasyCatalog Adapter](https://store.atrocore.com/en/indesign-pim-adapter-for-easycatalog/20157) you can use the Import and Export Feeds to enable seemless data integration with InDesign.  These REST API endpoints are to be used for data sources configured in EasyCatalog for Adobe InDesign.

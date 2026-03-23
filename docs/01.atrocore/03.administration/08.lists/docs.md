@@ -30,7 +30,7 @@ Each list has the following properties:
 - **Code**: An optional unique identifier for the list
 - **Description**: Optional description of the list's purpose
 - **Multilingual**: Whether the list supports multiple languages. To use multilingual feature, you need to enable multilingual functionality (see [Languages](../03.languages/docs.md))
-- **Unique List Options**: Ensures that each option within a list is distinct; duplicate option values are not allowed within the same list. Available in [Advanced Data Management](../11.entity-management/06.advanced-data-management/) module.
+- **Unique List Options**: Ensures that each option within a list is distinct; duplicate option values are not allowed within the same list. Available in [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module.
 
 ![List Detail View](_assets/list-record-view.png){.medium}
 

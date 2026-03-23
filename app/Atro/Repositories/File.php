@@ -170,6 +170,10 @@ class File extends Base
                 throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
             }
         } else {
+            if (property_exists($entity, '_scan')) {
+                $this->isScanning = true;
+            }
+
             $this->deleteFromDb($entity->get('id'));
         }
     }
@@ -226,6 +230,10 @@ class File extends Base
         /** @var \Atro\Entities\File $file */
         $file = $this->getMapper()->selectById($this->entityFactory->create($this->entityType), $id, ['withDeleted' => true]);
         if (!empty($file)) {
+            if (!empty($this->isScanning)) {
+                $file->_scan = true;
+                unset($this->isScanning);
+            }
             $this->getStorage($file)->deleteFilePermanently($file);
         }
 
@@ -264,7 +272,7 @@ class File extends Base
             $nameWithoutExt = explode('.', (string)$file->get('name'));
             array_pop($nameWithoutExt);
             $nameWithoutExt = implode('.', $nameWithoutExt);
-            return (bool) preg_match(RegexUtil::toPhpPattern($fileNameRegexPattern), $nameWithoutExt);
+            return (bool)preg_match(RegexUtil::toPhpPattern($fileNameRegexPattern), $nameWithoutExt);
         }
 
         return true;
@@ -316,8 +324,8 @@ class File extends Base
                     $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
                 }
             }
-        }catch (\Throwable $e) {
-            $GLOBALS['log']->error('Enable to load path for file: '.$file->get('id'). ' Error: '.$e->getMessage());
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('Enable to load path for file: ' . $file->get('id') . ' Error: ' . $e->getMessage());
         }
 
         return $res;

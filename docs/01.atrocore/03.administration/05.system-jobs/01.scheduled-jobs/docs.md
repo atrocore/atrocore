@@ -6,7 +6,7 @@ taxonomy:
 
 Scheduled Jobs are configurations that automatically create [Jobs](../) at specified intervals. They allow you to orchestrate multiple actions, such as import and export feeds, job retrials, system updates, etc. to be executed automatically by the Job Manager subsystem.
 
-> Some job types are available only with additional modules purchase.
+> Some job types are available only with additional modules. To execute custom [Actions](../../06.actions/) on a schedule, use the **Action** job type, available with the [Workflows](https://store.atrocore.com/en/workflows/20194) module. To calculate data quality metrics, the [Data Quality](https://store.atrocore.com/en/data-quality/20218) module is required. The **Refresh Cache for Dynamic Relations** and **Calculate Script Fields** job types are available with the [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module.
 
 ## Main functions
 
@@ -36,12 +36,8 @@ This job checks for available system updates on the schedule you set. It scans f
 This job starts system update on the schedule you set. The settings set by update are taken from the `Modules` menu, so it is essentially pressing the `Update` button on the set time.
 
 ### Scan Storage
-<!-- TODO: it's not actually true, but what is it doing for basic storage? -->
-Available with [S3 Object Storage](../../../../03.integration/02.s3-object-storage/) module.
 
-### Calculate Script Fields
-
-Available with [Advanced Data Management](../../../../01.atrocore/03.administration/11.entity-management/06.advanced-data-management/) module.
+Performs synchronization of files and folders between external storage (e.g., [S3 Object Storage](https://store.atrocore.com/en/s3-object-storage/20216) or [Microsoft SharePoint](https://store.atrocore.com/en/microsoft-365-connector/20205)) and PIM storage. It updates PIM with changes from the external source, including newly added, modified, or deleted files. This operation can be triggered manually via the `Scan` action or automated using scheduled jobs of type Scan Storage.
 
 ### Import Feed
 
@@ -50,28 +46,6 @@ This job starts the selected import feed on the schedule you set. The settings s
 <!-- TODO: what 'Maximum hours to look back' param stands for? -->
 ![Import feed Scheduled](_assets/scheduled-jobs-import-feed.png){.medium}
 
-### Automatic PDF generation
-
-Available with [PDF Generation](../../../../07.publishing/01.pdf-generator/) module.
-
-This job starts generating PDFs as assets that are appropriate for selected PDF Feed.
-
-> Note that this job may take a lot of time and server resources, so please schedule its execution when you do not need to work in the system.
-
-![Connector PDF](_assets/scheduled-jobs-PDF.png){.medium}
-
-### Refresh Cache for Dynamic Relations
-
-Available with [Advanced Data Management](../../11.entity-management/06.advanced-data-management/) module.
-
-This job is used when you use dynamic relations, such as dynamic categories. Refreshing cache is needed for relations to show up-to-date data.
-
-### Calculate Data Quality
-
-Available with [Data Quality](../../../15.data-quality/) module.
-
-This job analyzes data quality metrics across the system and generates reports on data completeness, accuracy, and consistency.
-
 ### Export Feed
 
 This job starts the selected export feed on the schedule you set. The settings set by the feed are taken from the feed menu, so it is essentially pressing the `Export` button on the set time.
@@ -79,25 +53,9 @@ This job starts the selected export feed on the schedule you set. The settings s
 <!-- TODO: what 'Maximum hours to look back' param stands for? -->
 ![Export feed Scheduled](_assets/scheduled-jobs-export-feed.png){.medium}
 
-### Recalculate Product Price
-
-Available with [Pricing](../../../../06.erp/01.pricing/) module.
-
-This job is used when you use dynamically calculated prices. This job starts recalculating action for all products.
-
-> Note that this job may take a lot of time and server resources, so please schedule its execution when you do not need to work in the system.
-
 ### Update currency exchange via ECB
 
 This job inserts current exchange rates taken from ECB to AtroCore currencies. Only currencies and rates supported by ECB are affected by this job.
-
-### Synchronization
-
-Available with [Synchronization](../../../../02.data-exchange/03.synchronization/docs.md) module.
-
-This job starts the selected synchronization on the schedule you set. The settings set by the feed are taken from the synchronization menu, so it is essentially pressing the `Execute` button on the set time.
-
-![Synchronization Scheduled](_assets/scheduled-jobs-synchronization.png){.large}
 
 ### Failed jobs retrial
 
@@ -107,15 +65,9 @@ They will be shown in additional panel Retrials.
 
 ![Retrial Scheduled](_assets/scheduled-jobs-retrials.png){.medium}
 
-### Action
-
-Available in [Workflows](../../../../04.collaboration/01.workflows/) module.
-
-This job type allows for custom actions to be executed on a schedule. It provides flexibility for executing specific business logic or custom operations.
-
 ### Clear deleted data
 
-Add this job to regularly clean the database of deleted records, relations with deleted records or records that have not been modified for a long time. It will remove garbage from all entities that have required parameters set. 
+Add this job to regularly clean the database of deleted records, relations with deleted records or records that have not been modified for a long time. It will remove garbage from all entities that have required parameters set.
 
 ![Clear deleted data](./_assets/clear-data.png){.large}
 

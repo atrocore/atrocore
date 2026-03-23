@@ -10,7 +10,7 @@ Administrators have comprehensive control over the file management system, inclu
 
 You can manage storages in the `Administration > Storages` menu.
 
-This is the location where the file is stored. Each file can have only one Storage, while many files and folders can be stored in the same Storage. By default, only Local (Linux) Storage is available to the user. Other types are available after installing paid modules. For example, MS SharePoint Storage is provided with the Microsoft 365 Connection module. The Base Storage exists in the system by default. All newly created folders and files are placed in it if no other Storage is specified. Files and folders cannot be moved from one Storage to another after creation.
+This is the location where the file is stored. Each file can have only one Storage, while many files and folders can be stored in the same Storage. By default, only Local (Linux) Storage is available to the user. Other types are available after installing paid modules. For example, MS SharePoint Storage is provided with the Microsoft 365 Connection module, and S3 storage is available via the [S3 Object Storage](https://store.atrocore.com/en/s3-object-storage/20216) module. The Base Storage exists in the system by default. All newly created folders and files are placed in it if no other Storage is specified. Files and folders cannot be moved from one Storage to another after creation.
 
 The Storage contains the following fields:
 

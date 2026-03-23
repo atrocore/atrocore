@@ -8,15 +8,15 @@ All the capabilities for efficiently storing, organizing, managing, retrieving a
 
 The AtroCore file system includes the following entities:
 
--   **Storage** - a place where a file is physically stored.
--   **Folder** - the folder to which the file belongs. One file can exist in only one folder
--   **File** - a document that can be used as an attachment to products and other entities.
+- **Storage** - a place where a file is physically stored.
+- **Folder** - the folder to which the file belongs. One file can exist in only one folder
+- **File** - a document that can be used as an attachment to products and other entities.
 
 ## Storages
 
 Storages are locations where your files are physically stored. Each file can be stored in only one Storage, while many files and folders can be stored in the same Storage.
 
-By default, you have access to the Local (Linux) Storage. Additional storage types become available when you install paid modules (for example, MS SharePoint Storage is provided with the Microsoft 365 Connection module).
+By default, you have access to the Local (Linux) Storage. Additional storage types become available when you install paid modules (for example, MS SharePoint Storage is provided with the [Microsoft 365 Connection](https://store.atrocore.com/en/microsoft-365-connector/20205) module).
 
 The Base Storage exists in the system by default and serves as the primary storage location. When you upload files without specifying a particular folder, they are automatically placed in the Base Storage. Once files and folders are created in a Storage, they cannot be moved to another Storage.
 
@@ -32,9 +32,9 @@ Folders help you organize your files by creating a hierarchical structure within
 
 ![files-folder-tree](./_assets/files-folder-tree.png)
 
--   You can see the folder hierarchy in the left menu when viewing Folder or File entities
--   To filter files by folder, go to the File entity and select the desired folder in the tree
--   To upload files to a specific Storage other than the Base Storage, you need to select a folder that belongs to that Storage
+- You can see the folder hierarchy in the left menu when viewing Folder or File entities
+- To filter files by folder, go to the File entity and select the desired folder in the tree
+- To upload files to a specific Storage other than the Base Storage, you need to select a folder that belongs to that Storage
 
 **Note:** The File entity contains a Folder field but not a Storage field, so you control which Storage your files go to by selecting the appropriate folder.
 
@@ -46,9 +46,9 @@ File types help categorize and organize your files. Each file can have only one 
 
 **How File Types Work:**
 
--   File types can be assigned automatically based on validation rules (if configured by administrators)
--   You can set the file type when uploading a file
--   You can change the file type after uploading by editing the file
+- File types can be assigned automatically based on validation rules (if configured by administrators)
+- You can set the file type when uploading a file
+- You can change the file type after uploading by editing the file
 
 File types help the system understand how to handle different files and may affect how they are displayed or processed within the system.
 
@@ -58,9 +58,9 @@ File types help the system understand how to handle different files and may affe
 
 There are several ways to upload a file to the system in AtroCore:
 
--   via the Upload button in the File entity, or any other linked entity
--   via URL
--   through an import feed
+- via the Upload button in the File entity, or any other linked entity
+- via URL
+- through an import feed
 
 ### Create a File using the Upload button
 
@@ -75,6 +75,7 @@ The window for uploading a File opens. You can upload one or more Files with the
 If a File with identical content already exists in the system, uploading the same File again — even under a different name — will be recognized as a duplicate and a warning message will be shown. Duplicate detection is performed by comparing the file content using a secure hash (MD5). If a File with identical content was previously deleted, uploading it again will not trigger a duplicate warning.
 
 You can immediately delete the uploaded File by clicking on the trash icon. The same Folder cannot contain Files and Folders with the same name.
+
 ### Upload a file via the link
 
 To upload a file from the user interface using a URL, click the `Upload` button in the File entity, paste the link into the appropriate field, and click `Upload`.
@@ -109,10 +110,9 @@ The File entity comes with the following preconfigured fields:
 | ImportJob              | Link to the import job that created this file                                                                      |
 | PDF feed               | Link to the PDF feed that created this file                                                                        |
 
-The [ExportFeed](../../02.data-exchange/02.export-feeds/docs.md), [ExportJob](../../02.data-exchange/02.export-feeds/docs.md#export-executions), [ImportFeed](../../02.data-exchange/01.import-feeds/docs.md), [ImportJob](../../02.data-exchange/01.import-feeds/docs.md#import-executions), and [PDFFeed](../../07.publishing/01.pdf-generator/docs.md#pdf-feeds) fields establish bidirectional relationships between files and export/import operations. These fields are read-only and are not shown on layouts by default. When viewing a file record, you can see which export or import feed and execution created it. For export-generated files, this corresponds to the `Exported File` field on the related [Export Execution](../../02.data-exchange/02.export-feeds/docs.md#export-executions) record; for import-generated files, it corresponds to the `Imported File` field on the related [Import Execution](../../02.data-exchange/01.import-feeds/docs.md#import-executions) record. Conversely, you can filter files in the File entity by these fields to find all files created by a specific export or import operation.
+The [ExportFeed](../../02.data-exchange/02.export-feeds/docs.md), [ExportJob](../../02.data-exchange/02.export-feeds/docs.md#export-executions), [ImportFeed](../../02.data-exchange/01.import-feeds/docs.md), [ImportJob](../../02.data-exchange/01.import-feeds/docs.md#import-executions), and [PDFFeed](https://store.atrocore.com/en/pdf-generator/20167) fields establish bidirectional relationships between files and export/import operations. These fields are read-only and are not shown on layouts by default. When viewing a file record, you can see which export or import feed and execution created it. For export-generated files, this corresponds to the `Exported File` field on the related [Export Execution](../../02.data-exchange/02.export-feeds/docs.md#export-executions) record; for import-generated files, it corresponds to the `Imported File` field on the related [Import Execution](../../02.data-exchange/01.import-feeds/docs.md#import-executions) record. Conversely, you can filter files in the File entity by these fields to find all files created by a specific export or import operation.
 
 ! You can add and configure [custom fields](../03.administration/11.entity-management/03.fields-and-attributes) for Files just like for any other entity in the system. This allows you to tailor the File entity to your specific business needs by adding additional information or attributes as required.
-
 
 ## Downloading Files to an archive
 
@@ -140,7 +140,7 @@ For information about configuring deletion settings for the File entity, see [En
 
 ## File Transformations
 
-File Transformations allow you to automatically generate derivative files (renditions) from originals using server-side CLI tools. This feature is available with the [Renditions](https://store.atrocore.com/) premium module.
+File Transformations allow you to automatically generate derivative files (renditions) from originals using server-side CLI tools. This feature is available with the [Renditions](https://store.atrocore.com/en/) premium module.
 
 ## File sharing
 

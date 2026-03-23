@@ -137,7 +137,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         refresh() {
             this.notify(this.translate('Loading...'));
             if (['compare', 'merge'].includes(this.selectionViewMode)) {
-                this.reloadModels(() => this.refreshContent());
+                this.reloadModels(() => {
+                    if (this.selectionItemModels.length < 2) {
+                        this.selectionViewMode = 'standard'
+                    }
+                    this.refreshContent();
+                });
                 this.notify(this.notify(this.translate('Done'), 'success'));
             } else {
                 this.refreshContent();
@@ -155,7 +160,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             if (this.availableModes.includes('merge')) {
-                this.addMenuItem('buttons', {name: 'merge', style: 'hidden'}, true, false, true);
+                this.addMenuItem('buttons', { name: 'merge', style: 'hidden' }, true, false, true);
             }
 
             if (this.isActiveMerge()) {
@@ -198,7 +203,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         updateUrl(mode = null) {
             mode = mode ?? this.selectionViewMode;
             const link = '#' + this.scope + '/view/' + this.model.id + '/selectionViewMode=' + mode;
-            this.getRouter().navigate(link, {trigger: false});
+            this.getRouter().navigate(link, { trigger: false });
         },
 
         actionShowSelectionView: function (data) {
@@ -450,7 +455,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         this.standardPanelList = data.list;
                     }
                     this.panelsList = data.list;
-                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                 });
 
                 if (this.selectionViewMode === 'standard') {
@@ -458,15 +463,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.panelsList = this.standardPanelList;
 
                     if (view.isRendered()) {
-                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                     }
 
                     this.listenTo(view.model, 'change', () => {
-                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                     });
 
                     this.listenTo(view, 'after:render', view => {
-                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                        window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                     });
                 }
 
@@ -570,7 +575,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
 
                 if (action === 'compare' && this.getEntityTypes().length) {
-                    let shouldDisabled = false;
+                    let shouldDisabled = (this.selectionViewMode === 'standard' ? this.collection?.length : this.selectionItemModels?.length) <= 1;
+                    if (shouldDisabled) {
+                        return;
+                    }
+
                     for (const entityType of this.getEntityTypes()) {
                         if (!this.getAcl().check(entityType, 'read')) {
                             shouldDisabled = true;
@@ -628,7 +637,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 let scope = this.itemScope;
                 let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
-                let attributes = {_entityFrom: _.extend(this.model.attributes, {_entityName: this.model.name})};
+                let attributes = { _entityFrom: _.extend(this.model.attributes, { _entityName: this.model.name }) };
 
                 if (this.getMetadata().get(['scopes', scope, 'hasOwner'])) {
                     attributes.ownerUserId = this.getUser().id;
@@ -953,7 +962,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.getMainRecord()?.applyMerge((result) => {
-                this.getRouter().navigate(`#${this.getEntityTypes()[0]}/view/${result.id}`, {trigger: true});
+                this.getRouter().navigate(`#${this.getEntityTypes()[0]}/view/${result.id}`, { trigger: true });
             });
         },
 
@@ -995,7 +1004,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         }
                     }
 
-                    this.layoutData[entityType] = {detailLayout: layout, layoutData: data.layout};
+                    this.layoutData[entityType] = { detailLayout: layout, layoutData: data.layout };
 
                     count++;
                     if (count === this.getEntityTypes().length) {

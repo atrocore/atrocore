@@ -10,5 +10,7 @@
   "notifications": true,
   "hideFieldTypeFilters": true,
   "selectionDisabled": true,
+  "actionDisabled": true,
+  "bookmarkDisabled": true,
   "nameField": "number"
 }

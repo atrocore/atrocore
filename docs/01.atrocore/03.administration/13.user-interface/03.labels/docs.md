@@ -31,6 +31,21 @@ For field labels and tooltips, you can also edit labels directly from the field 
 
 This method opens the label editing interface directly for the specific field, making it easier to edit field-specific translations without searching through the main Labels list.
 
+### Display of labels in content languages
+
+The system supports displaying field and attribute labels in content languages, allowing users to view labels in the same language as the content values.
+
+To enable this functionality:
+
+1. Navigate to `Administration → Locales`.
+2. Activate the Display `Labels in Content Language` option.
+
+![Administration > Locales](./_assets/Administration_Locales.png){.small}
+
+Labels are displayed in the corresponding content language, improving readability and usability for localized data management. This feature is particularly useful in multilingual environments, where product data, attributes, or descriptions are maintained in multiple languages.
+
+![Display Labels in Content Language](./_assets/Display_Labels_in_Content_Language.png){.medium}
+
 ## Label Fields
 
 - **Code**: Unique identifier for the label (e.g., `Action.fields.actions`, `Action.messages.executeNow`). Do not change it, as this field must match internal system keys for the label to be used by the application.

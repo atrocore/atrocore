@@ -11,14 +11,14 @@ With the help of the **Export Feeds** module, data export from the AtroCore syst
 Data export can be performed:
 
 - **Manually** – by running configured export feeds directly
-- **Automatically** – via [Scheduled Jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md#export-feed) or [Workflows](../../04.collaboration/01.workflows/docs.md)
+- **Automatically** – via [Scheduled Jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md#export-feed) or [Workflows](https://store.atrocore.com/en/workflows/20194)
 
 The base module supports file-based exports (CSV, Excel, JSON, XML, SQL). Additional modules extend export feed capabilities:
 
 - [Export: HTTP Request](../09.export-feeds-http-request/docs.md) – exports data via HTTP request.
-- [Export: Remote File](../07.export-feeds-remote-file/docs.md) – exports files to FTP, sFTP, or SSH servers.
-- [Export: Database](../05.export-feeds-database/docs.md) – exports data to MSSQL, MySQL, PostgreSQL, Oracle, or HANA databases.
-- [Synchronization](../03.synchronization/docs.md) – orchestrates multiple import and export feeds for complex data exchange.
+- [Export: Remote File](https://store.atrocore.com/en/export-remote-file/20144) – exports files to FTP, sFTP, or SSH servers.
+- [Export: Database](https://store.atrocore.com/en/export-database/20138) – exports data to MSSQL, MySQL, PostgreSQL, Oracle, or HANA databases.
+- [Synchronization](https://store.atrocore.com/en/synchronization/20124) – orchestrates multiple import and export feeds for complex data exchange.
 
 ## Administrator Functions
 
@@ -48,8 +48,9 @@ Navigate to **Export Feeds** and click `Create`. Enter a name, select a type, an
 - **Maximum Number of Workers** – number of workers that can execute this feed in parallel; if not set, all available workers are used.
 - **Replace Existing File** – when enabled, the previously exported file is replaced on each run.
 
-Module-specific fields:
-- **Priority** – execution priority: `Low`, `Normal`, or `High`. Available with the [Synchronization](../03.synchronization/docs.md) module.
+Available with the [Synchronization](https://store.atrocore.com/en/synchronization/20124) module fields:
+
+- **Priority** – execution priority: `Low`, `Normal`, or `High`.
 - **Scheduled Job** – links the feed to a [Scheduled Job](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md) for automated execution.
 
 ### Export Data Settings
@@ -59,15 +60,16 @@ Module-specific fields:
 > The fields in this panel vary depending on the selected `Type`.
 
 For type-specific configuration, see:
-- [Export: Database](../05.export-feeds-database/docs.md)
+
+- [Export: Database](https://store.atrocore.com/en/export-database/20138)
 - [Export: HTTP Request](../09.export-feeds-http-request/docs.md)
-- [Export: Remote File](../07.export-feeds-remote-file/docs.md)
+- [Export: Remote File](https://store.atrocore.com/en/export-remote-file/20144)
 
 ! It is recommended to create a dedicated folder for each export feed to keep files organized.
 
 **General fields:**
 
-- **Format** – output file format: **CSV**, **Excel**, **JSON** or **XML**. The **SQL** format is intended for use with the [Export Database](../05.export-feeds-database/docs.md) module.
+- **Format** – output file format: **CSV**, **Excel**, **JSON** or **XML**. The **SQL** format is intended for use with the [Export Database](https://store.atrocore.com/en/export-database/20138) module.
 - **Folder** – [folder](../../01.atrocore/03.administration/15.file-management/docs.md#folder-management) where exported files will be stored. Required.
 - **File Name Mask** – filename template using [Twig syntax](../../10.developer-guide/80.twig-tutorial/docs.md)
 
@@ -76,9 +78,10 @@ For type-specific configuration, see:
 **CSV and Excel:**
 
 - **Header Row** – when enabled, column names are included in the first row. Enabled by default for Excel.
-- **Has Multiple Sheets** – enables multi-sheet Excel export. Requires the [Synchronization](../03.synchronization/docs.md) module. See [Multi-Sheet Excel Export](../03.synchronization/docs.md#multi-sheet-excel-export).
+- **Has Multiple Sheets** – enables multi-sheet Excel export. Requires the [Synchronization](https://store.atrocore.com/en/synchronization/20124) module.
 
 CSV-specific:
+
 - **Field Delimiter** – field separator: `;`, `,`, or `\t`.
 - **Text Qualifier** – value enclosure: single or double quotes.
 - **Use Quotes for All Values** – when enabled, all values are quoted; otherwise only multi-word text values are quoted.
@@ -146,6 +149,7 @@ Attributes can be added to the export in two ways:
 - **Add All Attributes** – adds all attributes linked to the entity at once, which can then be filtered by [channel](../../05.pim/06.channels/docs.md).
 
 **Channel** – filters which attribute values are included based on channel assignment:
+
   - *No channel selected* – exports only attribute values not assigned to any channel; channel-specific values are excluded.
   - *Single channel selected* – exports values without a channel and values assigned to the selected channel.
   - *Multiple channels selected* – exports values without a channel and values assigned to any of the selected channels.
@@ -159,6 +163,7 @@ Attributes can be added to the export in two ways:
 The Script type allows exporting computed values using [Twig syntax](../../10.developer-guide/80.twig-tutorial/docs.md). The script has access to the current record via the `record` variable.
 
 Example — exporting the `From` value for Range attributes and the option code for List attributes:
+
 ```twig
 {% if record.attributeType == 'rangeInt' or record.attributeType == 'rangeFloat' %}
   {{ record.valueFrom }}
@@ -170,6 +175,7 @@ Example — exporting the `From` value for Range attributes and the option code 
 ### Units in Configurator
 
 For fields or attributes that contain unit values, the following export options are available:
+
 - **Script** – exports the full value (numeric + unit name).
 - **Value (Numerical)** – exports only the numeric part.
 - **Value Unit** – exports only the unit (name, code, or other unit identifier).
@@ -250,7 +256,7 @@ The `Last Run` value can be adjusted manually to re-export a specific time range
 
 ## Running an Export Feed
 
-Click the `Export` button on the export feed detail view to start the export immediately. 
+Click the `Export` button on the export feed detail view to start the export immediately.
 
 ![Run Export Option](_assets/export-button.png){.large}
 
@@ -266,11 +272,11 @@ After a successful export, a notification appears in the `Notifications` panel, 
 
 Files generated by an export are linked to the corresponding `Export Execution` record via the `Exported File` field, which provides access to the stored file and enables tracing its origin in the [File](../../01.atrocore/13.file-operations/docs.md) entity.
 
-> You can create an export feed [Action](../../01.atrocore/03.administration/06.actions/docs.md#export-feed) to operate in [Scheduled jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md#export-feed) or [Workflows](../../04.collaboration/01.workflows/docs.md).
+> You can create an export feed [Action](../../01.atrocore/03.administration/06.actions/docs.md#export-feed) to operate in [Scheduled jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/docs.md#export-feed) or [Workflows](https://store.atrocore.com/en/workflows/20194).
 
 ### Exporting from Entity
 
-You can export selected data directly from different entities. 
+You can export selected data directly from different entities.
 
 To do so, navigate to the target entity [list view](../../01.atrocore/04.understanding-ui/docs.md#list-view) or [plate view](../../01.atrocore/04.understanding-ui/docs.md#plate-view) records. Select which ones you want to export.
 
@@ -297,14 +303,14 @@ Export execution results are displayed in two locations:
 ![Export Executions Panel](_assets/export-executions-panel.png){.medium}
 
 **Export Executions list view** displays all Export executions across the system.
-To access it, select Export Executions from the main navigation. 
+To access it, select Export Executions from the main navigation.
 
 ![Export Executions List](_assets/export-executions-list.png){.medium}
-
 
 > You can use [single record actions](../../01.atrocore/04.understanding-ui/docs.md#single-record-actions) to remove executions.
 
 Execution details include:
+
 - **Name** – auto-generated execution name (click to open [detail view](../../01.atrocore/04.understanding-ui/docs.md#detail-view)).
 - **Export Feed** – source export feed name.
 - **Exported File** – output file name (click to download).
@@ -313,6 +319,7 @@ Execution details include:
 - **Started At / Finished At** – execution timestamps.
 
 Execution States:
+
 - **Running** – currently executing. Available actions: **Delete**.
 - **Pending** – queued for execution. Available actions: **Delete**.
 - **Success** – completed (may contain errors). Only **Delete** is available action.

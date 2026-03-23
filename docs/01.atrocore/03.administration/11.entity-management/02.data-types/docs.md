@@ -36,13 +36,13 @@ Used for decimal numbers with fractional parts.
 
 **Configuration options:**
 
--   **Disable null value**: Prevents the field from being set to null
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Unique**: Field value must be unique within the entity
--   **Measure**: Unit of measurement for the field value
--   **Min, Max**: Minimum and maximum allowed values
--   **Amount of digits after comma**: Number of decimal places to display
--   **Default**: Sets a default value for the field
+- **Disable null value**: Prevents the field from being set to null
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Unique**: Field value must be unique within the entity
+- **Measure**: Unit of measurement for the field value
+- **Min, Max**: Minimum and maximum allowed values
+- **Amount of digits after comma**: Number of decimal places to display
+- **Default**: Sets a default value for the field
 
 ### Float Range
 
@@ -50,10 +50,10 @@ Defines a range of decimal values with minimum and maximum bounds. Useful for se
 
 **Configuration options:**
 
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Measure**: Unit of measurement for the field value
--   **Amount of digits after comma**: Number of decimal places to display
--   **Default From, Default To**: Sets default range values
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Measure**: Unit of measurement for the field value
+- **Amount of digits after comma**: Number of decimal places to display
+- **Default From, Default To**: Sets default range values
 
 ### Integer
 
@@ -61,13 +61,13 @@ Whole numbers without decimal places.
 
 **Configuration options:**
 
--   **Disable null value**: Prevents the field from being set to null
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Unique**: Field value must be unique within the entity
--   **Measure**: Unit of measurement for the field value
--   **Min, Max**: Minimum and maximum allowed values
--   **Disable formatting**: Disables number formatting (e.g., thousand separators)
--   **Default**: Sets a default value for the field
+- **Disable null value**: Prevents the field from being set to null
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Unique**: Field value must be unique within the entity
+- **Measure**: Unit of measurement for the field value
+- **Min, Max**: Minimum and maximum allowed values
+- **Disable formatting**: Disables number formatting (e.g., thousand separators)
+- **Default**: Sets a default value for the field
 
 > If your data is not truly an integer but a numeric string with a specific format, consider using the **String** type with a Regex pattern instead of **Disable formatting** option.
 
@@ -77,9 +77,9 @@ Defines a range of whole numbers with minimum and maximum bounds. Useful for age
 
 **Configuration options:**
 
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Measure**: Unit of measurement for the field value
--   **Default From, Default To**: Sets default range values
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Measure**: Unit of measurement for the field value
+- **Default From, Default To**: Sets default range values
 
 ## Character Data Types
 
@@ -91,13 +91,13 @@ Specifically designed for email addresses with built-in validation.
 
 **Configuration options:**
 
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Unique**: Field value must be unique within the entity
--   **Remove leading and trailing whitespaces**: Trims whitespace from the beginning and end of the value
--   **Max length**: Maximum number of characters allowed
--   **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
--   **Regex pattern**: Regular expression for input validation
--   **Default**: Sets a default value for the field
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Unique**: Field value must be unique within the entity
+- **Remove leading and trailing whitespaces**: Trims whitespace from the beginning and end of the value
+- **Max length**: Maximum number of characters allowed
+- **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
+- **Regex pattern**: Regular expression for input validation
+- **Default**: Sets a default value for the field
 
 ### HTML
 
@@ -105,18 +105,18 @@ Rich text content with HTML markup support. Allows formatting, links, and embedd
 
 **Configuration options:**
 
--   **Multilingual**: Allows field values to be set per language
--   **Disable null value**: Prevents the field from being set to null
--   **Max length**: Maximum number of characters allowed
--   **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
--   **Disable Displayed Text Shortening**: Prevents automatic shortening of displayed text
--   **Min height (px)**: Sets the minimum height of the input field in pixels
--   **Symbol amount to be displayed**: Limits the number of symbols shown in the UI
--   **Height (px)**: Sets the height of the input field in pixels
--   **Use iframe in view mode**: Displays the field content in an iframe in view mode
--   **HTML Sanitizer**: Enables HTML sanitization for input
--   **Default Value Type**: Options: Basic, Script. Determines how the default value is set
--   **Default**: Sets a default value for the field
+- **Multilingual**: Allows field values to be set per language
+- **Disable null value**: Prevents the field from being set to null
+- **Max length**: Maximum number of characters allowed
+- **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
+- **Disable Displayed Text Shortening**: Prevents automatic shortening of displayed text
+- **Min height (px)**: Sets the minimum height of the input field in pixels
+- **Symbol amount to be displayed**: Limits the number of symbols shown in the UI
+- **Height (px)**: Sets the height of the input field in pixels
+- **Use iframe in view mode**: Displays the field content in an iframe in view mode
+- **HTML Sanitizer**: Enables HTML sanitization for input
+- **Default Value Type**: Options: Basic, Script. Determines how the default value is set
+- **Default**: Sets a default value for the field
 
 **HTML Toolbar**
 
@@ -158,13 +158,13 @@ Tables are a powerful way to display structured data, comparisons, or legends di
 
 Once inserted, click on any cell to reveal the context menu with the following options:
 
--   **Add Row Above** — inserts a new row above the selected cell's row.
--   **Add Row Below** — inserts a new row below the selected cell's row.
--   **Add Column Left** — inserts a new column to the left of the selected cell's column.
--   **Add Column Right** — inserts a new column to the right of the selected cell's column.
--   **Delete Row** — removes the entire row of the selected cell.
--   **Delete Column** — removes the entire column of the selected cell.
--   **Delete Table** — removes the entire table.
+- **Add Row Above** — inserts a new row above the selected cell's row.
+- **Add Row Below** — inserts a new row below the selected cell's row.
+- **Add Column Left** — inserts a new column to the left of the selected cell's column.
+- **Add Column Right** — inserts a new column to the right of the selected cell's column.
+- **Delete Row** — removes the entire row of the selected cell.
+- **Delete Column** — removes the entire column of the selected cell.
+- **Delete Table** — removes the entire table.
 
 ### Markdown
 
@@ -172,15 +172,15 @@ Text content with Markdown syntax support. Provides lightweight formatting optio
 
 **Configuration options:**
 
--   **Multilingual**: Allows field values to be set per language
--   **Disable null value**: Prevents the field from being set to null
--   **Count bytes instead of characters**: Counts bytes instead of characters for length validation
--   **Disable Displayed Text Shortening**: Prevents automatic shortening of displayed text
--   **Min height (px)**: Sets the minimum height of the input field in pixels
--   **Max height (px)**: Sets the maximum height of the input field in pixels
--   **Symbol amount to be displayed**: Limits the number of symbols shown in the UI
--   **Default Value Type**: Options: Basic, Script. Determines how the default value is set
--   **Default**: Sets a default value for the field
+- **Multilingual**: Allows field values to be set per language
+- **Disable null value**: Prevents the field from being set to null
+- **Count bytes instead of characters**: Counts bytes instead of characters for length validation
+- **Disable Displayed Text Shortening**: Prevents automatic shortening of displayed text
+- **Min height (px)**: Sets the minimum height of the input field in pixels
+- **Max height (px)**: Sets the maximum height of the input field in pixels
+- **Symbol amount to be displayed**: Limits the number of symbols shown in the UI
+- **Default Value Type**: Options: Basic, Script. Determines how the default value is set
+- **Default**: Sets a default value for the field
 
 **Markdown Toolbar**
 
@@ -214,17 +214,17 @@ Short text fields for names, titles, and brief descriptions. Limited character c
 
 **Configuration options:**
 
--   **Multilingual**: Allows field values to be set per language
--   **Disable null value**: Prevents the field from being set to null
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Unique**: Field value must be unique within the entity
--   **Measure**: Unit of measurement for the field value
--   **Remove leading and trailing whitespaces**: Trims whitespace from the beginning and end of the value
--   **Max length**: Maximum number of characters allowed
--   **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
--   **Regex pattern**: Regular expression for input validation
--   **Default Value Type**: Options: Basic, Script. Determines how the default value is set
--   **Default**: Sets a default value for the field
+- **Multilingual**: Allows field values to be set per language
+- **Disable null value**: Prevents the field from being set to null
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Unique**: Field value must be unique within the entity
+- **Measure**: Unit of measurement for the field value
+- **Remove leading and trailing whitespaces**: Trims whitespace from the beginning and end of the value
+- **Max length**: Maximum number of characters allowed
+- **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
+- **Regex pattern**: Regular expression for input validation
+- **Default Value Type**: Options: Basic, Script. Determines how the default value is set
+- **Default**: Sets a default value for the field
 
 ### Text
 
@@ -232,17 +232,17 @@ Long-form text content for descriptions, notes, and detailed information. Suppor
 
 **Configuration options:**
 
--   **Multilingual**: Allows field values to be set per language
--   **Disable null value**: Prevents the field from being set to null
--   **Max length**: Maximum number of characters allowed
--   **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
--   **Disable Displayed Text Shortening**: Prevents automatic shortening of displayed text
--   **Symbol amount to be displayed**: Limits the number of symbols shown in the UI
--   **Minimum number of rows of textarea**: Sets the minimum number of rows for textarea input
--   **Maximum number of rows of textarea**: Sets the maximum number of rows for textarea input
--   **Use disabled textarea in view mode**: Displays the field as a disabled textarea in view mode
--   **Default Value Type**: Options: Basic, Script. Determines how the default value is set
--   **Default**: Sets a default value for the field
+- **Multilingual**: Allows field values to be set per language
+- **Disable null value**: Prevents the field from being set to null
+- **Max length**: Maximum number of characters allowed
+- **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
+- **Disable Displayed Text Shortening**: Prevents automatic shortening of displayed text
+- **Symbol amount to be displayed**: Limits the number of symbols shown in the UI
+- **Minimum number of rows of textarea**: Sets the minimum number of rows for textarea input
+- **Maximum number of rows of textarea**: Sets the maximum number of rows for textarea input
+- **Use disabled textarea in view mode**: Displays the field as a disabled textarea in view mode
+- **Default Value Type**: Options: Basic, Script. Determines how the default value is set
+- **Default**: Sets a default value for the field
 
 ### URL
 
@@ -250,15 +250,15 @@ Web addresses with validation.
 
 **Configuration options:**
 
--   **Multilingual**: Allows field values to be set per language
--   **Disable null value**: Prevents the field from being set to null
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Unique**: Field value must be unique within the entity
--   **Max length**: Maximum number of characters allowed
--   **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
--   **Strip**: Removes protocol and domain from the URL
--   **Default**: Sets a default value for the field
--   **URL Label**: Sets a label for the URL. The "Open link" and "View" labels are available. If nothing is selected, the URL is shown without a label
+- **Multilingual**: Allows field values to be set per language
+- **Disable null value**: Prevents the field from being set to null
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Unique**: Field value must be unique within the entity
+- **Max length**: Maximum number of characters allowed
+- **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
+- **Strip**: Removes protocol and domain from the URL
+- **Default**: Sets a default value for the field
+- **URL Label**: Sets a label for the URL. The "Open link" and "View" labels are available. If nothing is selected, the URL is shown without a label
 
 ## Date / Time Data Types
 
@@ -268,9 +268,9 @@ Calendar dates without time information. Date values are selected via a picker i
 
 **Configuration options:**
 
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Unique**: Field value must be unique within the entity
--   **Use numeric format**: Displays the value using the format defined in your `Locale` settings. The default Locale uses `MM/DD/YYYY` format (e.g., `11/13/2025`).
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Unique**: Field value must be unique within the entity
+- **Use numeric format**: Displays the value using the format defined in your `Locale` settings. The default Locale uses `MM/DD/YYYY` format (e.g., `11/13/2025`).
 
 ### Date-time
 
@@ -278,9 +278,9 @@ Combined date and time information. The date-time picker allows precise time sel
 
 **Configuration options:**
 
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Unique**: Field value must be unique within the entity
--   **Use numeric format**: Displays the value using the format defined in your `Locale` settings. The default Locale uses `MM/DD/YYYY HH:mm` format (e.g., `11/13/2025 14:30`).
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Unique**: Field value must be unique within the entity
+- **Use numeric format**: Displays the value using the format defined in your `Locale` settings. The default Locale uses `MM/DD/YYYY HH:mm` format (e.g., `11/13/2025 14:30`).
 
 > For dates close to the current date, a relative format is used:
 - `Today` / `Today HH:mm` - for the current date
@@ -298,9 +298,9 @@ References to uploaded files (images, documents, etc).
 
 **Configuration options:**
 
--   **File Type**: Restricts allowed file types for upload - see [File Management](../../15.file-management/docs.md#file-types) for details
--   **Preview size**: Options: Small, Medium, Large. Sets the preview size for files
--   **Default**: Sets a default value for the field
+- **File Type**: Restricts allowed file types for upload - see [File Management](../../15.file-management/docs.md#file-types) for details
+- **Preview size**: Options: Small, Medium, Large. Sets the preview size for files
+- **Default**: Sets a default value for the field
 
 ### Language Code
 
@@ -310,8 +310,8 @@ Single language selection from predefined options.
 
 **Configuration options:**
 
--   **Disable Empty Value**: Prevents the field from being set to an empty value
--   **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
+- **Disable Empty Value**: Prevents the field from being set to an empty value
+- **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
 
 ### Language Codes
 
@@ -321,7 +321,7 @@ Multiple language selection.
 
 **Configuration options:**
 
--   **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
+- **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
 
 ### Link
 
@@ -331,8 +331,11 @@ Reference to another entity record. Creates relationships between different enti
 
 **Configuration options:**
 
--   **Dropdown**: Displays the field as a dropdown selection in the UI.
--   **Filter Results**: Specifies the [selectable values](../03.fields-and-attributes/docs.md#filter-results) for the field.
+- **Dropdown**: Displays the field as a dropdown selection in the UI.
+- **Records per page (select dialog)**: Sets the number of records shown per page when selecting a value via the dialog.
+- **Filter Results**: Specifies the [selectable values](../03.fields-and-attributes/docs.md#filter-results) for the field.
+
+!! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
 ### List
 
@@ -342,10 +345,10 @@ Single selection from a customizable list of options. Used for categories, statu
 
 **Configuration options:**
 
--   **List**: Specifies the [list](../../08.lists/) of selectable values for the field
--   **Dropdown**: Displays the field as a dropdown selection in the UI
--   **Disable Empty Value**: Prevents the field from being set to an empty value
--   **Default**: Sets a default value for the field
+- **List**: Specifies the [list](../../08.lists/) of selectable values for the field
+- **Dropdown**: Displays the field as a dropdown selection in the UI
+- **Disable Empty Value**: Prevents the field from being set to an empty value
+- **Default**: Sets a default value for the field
 
 ### Measure
 
@@ -355,10 +358,10 @@ Single selection from a customizable list of measure units.
 
 **Configuration options:**
 
--   **Measure**: Specifies the [list](../../09.measure-units/) of selectable values for the field
--   **Dropdown**: Displays the field as a dropdown selection in the UI
--   **Disable Empty Value**: Prevents the field from being set to an empty value
--   **Default**: Sets a default value for the field
+- **Measure**: Specifies the [list](../../09.measure-units/) of selectable values for the field
+- **Dropdown**: Displays the field as a dropdown selection in the UI
+- **Disable Empty Value**: Prevents the field from being set to an empty value
+- **Default**: Sets a default value for the field
 
 ### Multi-value List
 
@@ -368,13 +371,16 @@ Multiple selections from a customizable list. Allows multiple categories or tags
 
 **Configuration options:**
 
--   **List**: Specifies the [list](../../08.lists/) of selectable values for the field
--   **Dropdown**: Displays the field as a dropdown selection in the UI
--   **Default**: Sets a default value for the field
+- **List**: Specifies the [list](../../08.lists/) of selectable values for the field
+- **Dropdown**: Displays the field as a dropdown selection in the UI
+- **Default**: Sets a default value for the field
+- **Records per page (select dialog)**: Sets the number of records shown per page when selecting a value via the dialog.
+
+!! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
 ### Multiple Link
 
-Multiple references to other entity records. Creates relationships between different entities. See [Fields and Relations](../07.fields-and-relations/) for more details. 
+Multiple references to other entity records. Creates relationships between different entities. See [Fields and Relations](../07.fields-and-relations/) for more details.
 
 !! **Reference Entity Restriction:** Multiple-link fields do not support entities of type [Reference](../01.entity-types/docs.md#reference). If you attempt to create a Multiple-link field pointing to a Reference entity, the system will display a validation message and prevent field creation.
 
@@ -382,12 +388,17 @@ Multiple references to other entity records. Creates relationships between diffe
 
 **Configuration options:**
 
--   **Log the change as a record activity**: Records changes in this field as Activity.
--   **Filter Results**: Specifies the [selectable values](../03.fields-and-attributes/docs.md#filter-results) for the field.
+- **Log the change as a record activity**: Records changes in this field as Activity.
+- **Filter Results**: Specifies the [selectable values](../03.fields-and-attributes/docs.md#filter-results) for the field.
+- **Records per page (select dialog)**: Sets the number of records shown per page when selecting a value via the dialog.
+
+!! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
 Common configuration options **Create no record activity** and **No recording as modification** on the other hand are not available for Multiple link field.
 
 ## Other Data Types
+
+> The **Script** data type, which allows calculating field and attribute values dynamically via scripts, is available with the ["Advanced Data Management"](https://store.atrocore.com/en/advanced-data-management/20113) module.
 
 ### Array
 
@@ -395,8 +406,8 @@ Array of strings.
 
 **Configuration options:**
 
--   **Multilingual**: Allows field values to be set per language
--   **Empty string value is not allowed**: Prevents saving an empty string as a value
+- **Multilingual**: Allows field values to be set per language
+- **Empty string value is not allowed**: Prevents saving an empty string as a value
 
 ### Boolean
 
@@ -404,9 +415,9 @@ True/false values. Used for flags, toggles, and simple yes/no decisions.
 
 **Configuration options:**
 
--   **Multilingual**: Allows field values to be set per language
--   **Disable null value**: Prevents the field from being set to null
--   **Default**: Sets a default value for the field
+- **Multilingual**: Allows field values to be set per language
+- **Disable null value**: Prevents the field from being set to null
+- **Default**: Sets a default value for the field
 
 > Enabling **Disable null value** displays the boolean field or attribute as a checkbox; if not enabled, it appears as a dropdown with options: Null, Yes, No.
 
@@ -418,10 +429,10 @@ Color values with picker interface.
 
 **Configuration options:**
 
--   **Database Index**: Adds a database index for faster searching/filtering
--   **Unique**: Field value must be unique within the entity
--   **Disable Empty Value**: Prevents the field from being set to an empty value
--   **Default**: Sets a default value for the field
+- **Database Index**: Adds a database index for faster searching/filtering
+- **Unique**: Field value must be unique within the entity
+- **Disable Empty Value**: Prevents the field from being set to an empty value
+- **Default**: Sets a default value for the field
 
 ### Currency List
 
@@ -433,23 +444,7 @@ Single currency selection from predefined options.
 
 **Configuration options:**
 
--   **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
-
-### Script
-
-> **Available for both fields and attributes** with [Advanced Data Management](../06.advanced-data-management/docs.md) module
-
-Custom script-based data type for advanced functionality and calculations.
-
-**Configuration options:**
-
--   **Multilingual**: Allows field values to be set per language
--   **Script**: Script code to calculate or validate the field value
--   **Output Type**: Options: Text, Integer, Float, Boolean, Date, Date-time. Specifies the output data type
-
-Common configuration options **Required** and **Read-only** are not available for Script field.
-
-> For common configuration options available across all or most data types, see [Fields and Attributes](../03.fields-and-attributes/).
+- **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
 
 ### Static List
 
@@ -459,8 +454,8 @@ A Static List is a single-select field type that allows users to choose exactly 
 
 **Configuration options:**
 
--   **Options**: A list of predefined values available for selection
--   **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
+- **Options**: A list of predefined values available for selection
+- **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
 
 Static List options can have color as well as [List](#list) options.
 
@@ -472,7 +467,7 @@ A Static Multi-value List is a multi-select field type that allows users to sele
 
 **Configuration options:**
 
--   **Options**: The predefined set of selectable values
--   **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
+- **Options**: The predefined set of selectable values
+- **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
 
 Static Multi-value List options can have color as well as [Multi-value List](#multi-value-list) options.

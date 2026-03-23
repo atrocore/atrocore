@@ -221,7 +221,7 @@ The same principle applies to currency values. When filtering monetary values, t
 
 ![currency values](./_assets/currency_values.png){.medium}
 
-Currency exchange rates can be configured in the [Currency](../../07.erp/01.pricing/docs.md#currency-configuration) settings section. Once defined, these rates are automatically applied during filtering and comparison operations.
+Currency exchange rates can be configured in the [Currency](https://store.atrocore.com/en/pricing/20171) settings section. Once defined, these rates are automatically applied during filtering and comparison operations.
 
 ### Subfilters
 

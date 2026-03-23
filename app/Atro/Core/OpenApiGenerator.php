@@ -359,9 +359,6 @@ class OpenApiGenerator
             'description'  => [
                 'type' => 'string'
             ],
-            'multilingual' => [
-                'type' => 'boolean'
-            ],
             'preparedName' => [
                 'type' => 'string'
             ]

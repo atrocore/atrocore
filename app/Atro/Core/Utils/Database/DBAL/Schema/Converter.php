@@ -110,7 +110,7 @@ class Converter
             }
 
             $tableName = Util::toUnderScore($entityName);
-            if(empty($tableName)) {
+            if (empty($tableName)) {
                 continue;
             }
             if ($schema->hasTable($tableName)) {
@@ -224,6 +224,7 @@ class Converter
 
         return $schema;
     }
+
 
     public function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): void
     {

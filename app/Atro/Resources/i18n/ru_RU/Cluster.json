@@ -27,6 +27,10 @@
   "messages": {
     "cannotMergeUnconfirmedItems": "Неподтверждённые элементы не могут быть добавлены к объединению"
   },
+  "labels": {
+    "stagingRecord": "промежуточная запись",
+    "masterRecord": "мастер-запись"
+  },
   "streamMessages": {
     "clusterLinked": "{user} связал {relatedEntity} с этим кластером",
     "clusterLinkedThis": "{user} связал {relatedEntity} с этим кластером",

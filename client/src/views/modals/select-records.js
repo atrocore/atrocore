@@ -190,7 +190,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.waitForView('list');
 
             this.getCollectionFactory().create(this.scope, function (collection) {
-                collection.maxSize = this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
+                collection.maxSize = this.options.selectPageSize || this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
                 this.collection = collection;
 
                 if (this.options.sortBy) {

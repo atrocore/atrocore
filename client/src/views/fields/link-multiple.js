@@ -315,7 +315,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     selectAllByDefault: this.getSelectAllByDefault(),
                     allowSelectAllResult: this.allowSelectAllResult,
                     sortBy: this.sortBy,
-                    sortAsc: this.sortAsc
+                    sortAsc: this.sortAsc,
+                    selectPageSize: this.params.selectPageSize
                 }, function (dialog) {
                     dialog.render();
                     self.notify(false);

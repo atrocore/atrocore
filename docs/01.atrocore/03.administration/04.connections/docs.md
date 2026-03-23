@@ -10,7 +10,7 @@ Connections can be accessed through the administration panel at `Administration 
 
 > Many connection types are available only with purchased additional modules. The availability of specific connection types depends on your AtroCore license and the modules you have installed.
 
-The system provides a "Test Connection" feature to verify that your connection configuration is working correctly. This feature is available for most connection types to ensure proper connectivity before using the connection in your workflows. 
+The system provides a "Test Connection" feature to verify that your connection configuration is working correctly. This feature is available for most connection types to ensure proper connectivity before using the connection in your workflows.
 
 When creating a connection, you need to configure the following required fields:
 
@@ -24,6 +24,7 @@ Other fields depends on the connection type.
 ### Database Connections
 
 #### PDO SQL
+
 PDO (PHP Data Objects) SQL connections provide a database abstraction layer that offers a consistent API for accessing different database systems. This connection type supports multiple database drivers and provides prepared statements for secure database operations.
 
 ![pdo-sql](./_assets/pdo-sql.png)
@@ -34,6 +35,7 @@ PDO (PHP Data Objects) SQL connections provide a database abstraction layer that
 - **Password**: The database password for authentication
 
 #### MySQL Server
+
 Direct connection to MySQL database servers for data storage and retrieval operations. This connection type enables full CRUD operations, complex queries, and transaction management within the MySQL environment.
 
 ![mysql](./_assets/mysql.png)
@@ -45,6 +47,7 @@ Direct connection to MySQL database servers for data storage and retrieval opera
 - **Password**: The MySQL password for authentication
 
 #### PostgreSQL Server
+
 Connection to PostgreSQL database servers, offering advanced features such as complex data types, full-text search capabilities, and robust transaction support. PostgreSQL connections support both basic and advanced database operations.
 
 ![postgresql](./_assets/postgresql.png)
@@ -56,6 +59,7 @@ Connection to PostgreSQL database servers, offering advanced features such as co
 - **Password**: The PostgreSQL password for authentication
 
 #### Microsoft SQL Server
+
 Integration with Microsoft SQL Server databases, providing access to enterprise-level database features including advanced analytics, reporting services, and comprehensive data management capabilities.
 
 ![mssql](./_assets/mssql.png)
@@ -74,9 +78,10 @@ Integration with Microsoft SQL Server databases, providing access to enterprise-
   - **ApplicationIntent**: Set to "ReadOnly" or "ReadWrite"
   - **MultiSubnetFailover**: Enable/disable multi-subnet failover (true/false)
 
-  For a complete list of supported connection options, refer to the [Microsoft SQL Server PHP Driver documentation](https://learn.microsoft.com/en-us/sql/connect/php/connection-options).
+  For a complete list of supported connection options, refer to the [Microsoft SQL Server PHP Driver](https://learn.microsoft.com/en-us/sql/connect/php/connection-options) documentation.
 
 #### Vertica DB
+
 Connection to Vertica analytics database, optimized for large-scale data warehousing and analytical processing. This connection type supports high-performance queries and real-time analytics operations.
 
 ![vertica-db](./_assets/vertica-db.png)
@@ -89,10 +94,11 @@ Connection to Vertica analytics database, optimized for large-scale data warehou
 
 ### File Transfer Connections
 
-#### FTP
-File Transfer Protocol connections for uploading and downloading files to/from remote servers. This connection type supports both active and passive modes for file transfer operations.
+These connection types (FTP and SFTP) are used by the [Import: Remote File](https://store.atrocore.com/en/import-remote-file/20154) and [Export: Remote File](https://store.atrocore.com/en/export-remote-file/20144) modules to [exchange data](https://help.atrocore.com/latest/data-exchange) with remote files.
 
-This connection type is used by the [Import: Remote File](../../../02.data-exchange/06.import-feeds-remote-file/) module to allow importing data from remote files.
+#### FTP
+
+File Transfer Protocol connections for uploading and downloading files to/from remote servers. This connection type supports both active and passive modes for file transfer operations.
 
 ![ftp](./_assets/ftp.png)
 
@@ -103,9 +109,8 @@ This connection type is used by the [Import: Remote File](../../../02.data-excha
 - **TLS/SSL**: A checkbox to enable TLS/SSL encryption for secure file transfer
 
 #### SFTP
-Secure File Transfer Protocol connections that provide encrypted file transfer capabilities. SFTP connections ensure secure data transmission over SSH protocol with authentication and encryption.
 
-This connection type is used by the [Import: Remote File](../../../02.data-exchange/06.import-feeds-remote-file/) module to allow importing data from remote files.
+Secure File Transfer Protocol connections that provide encrypted file transfer capabilities. SFTP connections ensure secure data transmission over SSH protocol with authentication and encryption.
 
 ![sftp](./_assets/sftp.png)
 
@@ -117,6 +122,7 @@ This connection type is used by the [Import: Remote File](../../../02.data-excha
 ### Authentication & Authorization
 
 #### OAuth 2.0
+
 Modern OAuth 2.0 authentication protocol for secure API access and user authorization. This connection type supports various OAuth flows including authorization code, client credentials, and implicit grant types.
 
 ![oauth-2-0](./_assets/oauth-2-0.png)
@@ -127,6 +133,7 @@ Modern OAuth 2.0 authentication protocol for secure API access and user authoriz
 - **OAuth Client Secret** (required): The OAuth client secret provided by the service
 
 #### OAuth 1.0
+
 Legacy OAuth 1.0 authentication protocol for backward compatibility with older systems and APIs that still require this authentication method.
 
 ![oauth-1-0](./_assets/oauth-1-0.png)
@@ -142,6 +149,7 @@ Legacy OAuth 1.0 authentication protocol for backward compatibility with older s
 - **Test api url** (required): The API URL to test the OAuth 1.0 connection
 
 #### Otto OAuth
+
 Specialized OAuth implementation for Otto platform integration, providing custom authentication flows and token management specific to Otto services.
 
 ![otto-oauth](./_assets/otto-oauth.png)
@@ -155,6 +163,7 @@ Specialized OAuth implementation for Otto platform integration, providing custom
 - **Vendor Oauth Scopes** (required): Multi-select field for Otto vendor scopes (orders, shipments, quantities, returns, products, receipts, price-reduction)
 
 #### Cookie Session
+
 Session-based authentication using cookies for maintaining user state and authentication across web requests. This connection type manages user sessions and provides persistent authentication.
 
 ![cookie-session](./_assets/cookie-session.png)
@@ -167,6 +176,7 @@ Session-based authentication using cookies for maintaining user state and authen
 ### Communication Services
 
 #### SMTP
+
 Simple Mail Transfer Protocol connections for sending emails through mail servers. SMTP connections support various authentication methods and can be configured for different mail delivery requirements.
 
 ![smtp-basic](./_assets/smtp-basic.png)
@@ -179,6 +189,7 @@ Simple Mail Transfer Protocol connections for sending emails through mail server
 Authentication Fields (depends on Auth Type):
 
 **Basic Authentication:**
+
 - **Auth Type**: Set to "Basic"
 - **Security**: The security protocol to use (SSL, TLS, or None)
 - **Username**: The username for SMTP authentication
@@ -187,6 +198,7 @@ Authentication Fields (depends on Auth Type):
 ![smtp-oauth](./_assets/smtp-oauth.png)
 
 **OAuth Authentication:**
+
 - **Auth Type**: Set to "Oauth"
 - **Username**: The username for SMTP authentication
 - **Client ID** (required): The OAuth client identifier
@@ -198,6 +210,7 @@ Authentication Fields (depends on Auth Type):
 ### Business Intelligence & Analytics
 
 #### Scope Visio
+
 Integration with Scope Visio business intelligence and analytics platform for data visualization, reporting, and business analytics capabilities.
 
 ![scope-visio](./_assets/scope-visio.png)
@@ -208,38 +221,10 @@ Integration with Scope Visio business intelligence and analytics platform for da
 - **Customer** (required): The customer identifier for Scope Visio
 - **Organisation** (required): The organization identifier for Scope Visio
 
-### AI Services
-
-Following connection types are available only with [AI Integration](../../../05.pim/11.ai-integration/) module.
-
-#### ChatGPT
-Connection to OpenAI's ChatGPT API for natural language processing, text generation, and conversational AI capabilities within the AtroCore platform.
-
-![chatgpt](./_assets/chatgpt.png)
-
-- **Organization ID** (required): The ID of the organization associated with your OpenAI account
-- **Api Key** (required): Your OpenAI API key used for authenticating requests to the ChatGPT API
-- **Model** (required): The specific ChatGPT model to be used for interactions (e.g., gpt-3.5-turbo, gpt-4)
-- **Temperature** (required): A numerical value that controls the randomness of the model's output. Higher values (closer to 1.0) produce more random and creative responses, while lower values (closer to 0.0) produce more focused and deterministic responses
-
-#### Gemini AI
-Integration with Google's Gemini AI services for advanced machine learning, natural language understanding, and AI-powered features.
-
-![gemini](./_assets/gemini.png)
-
-- **Api Key** (required): Your Google AI API key used for authenticating requests to the Gemini AI API
-- **Model** (required): The specific Gemini AI model to be used for interactions (e.g., gemini-1.5-flash, gemini-1.5-pro)
-
-#### Jasper AI
-Connection to Jasper AI platform for content generation, copywriting assistance, and AI-powered content creation tools.
-
-![jasper](./_assets/jasper.png)
-
-- **Api Key** (required): Your Jasper AI API key used for authenticating requests to the Jasper AI platform
-
 ### AtroCore Integration
 
 #### AtroCore
+
 Native AtroCore connection type for internal system integration, data synchronization, etc. between different AtroCore instances.
 
 ![AtroCore](./_assets/atrocore.png){.large}

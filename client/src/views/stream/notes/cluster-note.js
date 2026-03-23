@@ -36,11 +36,17 @@ Espo.define('views/stream/notes/cluster-note', 'views/stream/note', function (De
 
             if (relatedType && relatedId) {
                 var label = Handlebars.Utils.escapeExpression(relatedName || relatedId);
+                var entityStr;
                 if (data.action && data.action.toLowerCase().indexOf('deleted') !== -1) {
-                    this.messageData['relatedEntity'] = label;
+                    entityStr = label;
                 } else {
-                    this.messageData['relatedEntity'] = '<a href="#' + relatedType + '/view/' + relatedId + '">' + label + '</a>';
+                    entityStr = '<a href="#' + relatedType + '/view/' + relatedId + '">' + label + '</a>';
                 }
+                if (data.entityRole) {
+                    var roleLabel = this.translate(data.entityRole + 'Record', 'labels', 'Cluster');
+                    entityStr = roleLabel + ' ' + entityStr;
+                }
+                this.messageData['relatedEntity'] = entityStr;
             }
 
             this.createMessage();
