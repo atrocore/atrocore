@@ -24,7 +24,7 @@ use Atro\Core\Routing\EntityType;
 
 #[Route(
     path: '/{entityName}/action/inheritRelation',
-    methods: ['PUT'],
+    methods: ['PATCH'],
     summary: 'Inherit a relation record',
     description: 'Creates an inherited copy of a relation record from a parent entity.',
     tag: '{entityName}',

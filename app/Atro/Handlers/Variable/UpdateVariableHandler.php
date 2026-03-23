@@ -24,7 +24,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Variable/{id}',
-    methods: ['PATCH', 'PUT'],
+    methods: ['PATCH'],
     summary: 'Update variable',
     description: 'Updates a configuration variable by ID. Admin only.',
     tag: 'Variable',

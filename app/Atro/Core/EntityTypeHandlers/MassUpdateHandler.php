@@ -25,7 +25,7 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/action/massUpdate',
-    methods: ['PUT'],
+    methods: ['PATCH'],
     summary: 'Mass update',
     description: 'Updates multiple records of the specified entity.',
     tag: '{entityName}',

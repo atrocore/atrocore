@@ -24,7 +24,7 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/{id}/subscription',
-    methods: ['PUT'],
+    methods: ['PATCH'],
     summary: 'Follow stream',
     description: 'Subscribes the current user to the stream of the specified entity record.',
     tag: '{entityName}',

@@ -24,7 +24,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/AuthToken/{id}',
-    methods: ['PUT', 'PATCH'],
+    methods: ['PATCH'],
     summary: 'Updates an auth token record',
     description: 'Updates an authentication token record by ID. Accessible by administrators only.',
     tag: 'AuthToken',

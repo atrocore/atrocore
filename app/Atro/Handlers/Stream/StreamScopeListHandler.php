@@ -32,7 +32,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ['name' => 'offset',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],
         ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 20]],
         ['name' => 'after',   'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'filter',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
+        ['name' => 'filter',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'array', 'items' => ['type' => 'string']]],
         ['name' => 'sortBy',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string', 'example' => 'number']],
     ],
     responses: [
