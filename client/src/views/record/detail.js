@@ -2999,8 +2999,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (data.scope === this.scope) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
             } else {
-                this.getStorage().set('selectedNodeId', this.scope, data.id);
-                this.getStorage().set('selectedNodeRoute', this.scope, data.route);
                 window.location.href = `/#${this.scope}`;
             }
         },

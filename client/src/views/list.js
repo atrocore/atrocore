@@ -314,8 +314,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
             this.collection.asc = this.defaultAsc;
             this.getStorage().clear('listSorting', this.collection.name);
 
-            this.getStorage().clear('selectedNodeId', this.scope);
-            this.getStorage().clear('selectedNodeRoute', this.scope);
         },
 
         getSearchDefaultData: function () {
@@ -624,56 +622,14 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
             });
         },
 
-        modifyCollectionForSelectedNode() {
-            const id = this.getStorage().get('selectedNodeId', this.scope);
-            if (!id || ['_self', '_bookmark', '_admin'].includes(this.getStorage().get('treeItem', this.scope))) {
-                this.collection.whereAdditional = []
-                return
-            }
-
-            this.collection.whereAdditional = [
-                {
-                    "type": "linkedWith",
-                    "attribute": this.getStorage().get('treeItem', this.scope),
-                    "value": [id]
-                }
-            ]
-
-            this.collection.where = this.collection.where.filter(item => item['value']?.[0] !== "linkedWith" && item['attribute'] !== this.getStorage().get('treeItem', this.scope))
-        },
-
-        selectTreeNode() {
-            const id = this.getStorage().get('selectedNodeId', this.scope);
-            const route = this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope));
-
-            if (window.treePanelComponent) {
-                window.treePanelComponent.selectTreeNode(id, route);
-            }
-
-            this.notify('Please wait...');
-            this.modifyCollectionForSelectedNode()
-
-            this.collection.reset();
-            this.collection.fetch().then(() => this.notify(false));
-        },
-
         unSelectTreeNode(id) {
             if (window.treePanelComponent) {
                 window.treePanelComponent.unSelectTreeNode(id);
             }
-
-            this.notify('Please wait...');
-
-            this.modifyCollectionForSelectedNode()
-
-            this.collection.reset();
-            this.collection.fetch().then(() => this.notify(false));
         },
 
         treeReset(treeScope) {
             this.notify('Please wait...');
-            this.modifyCollectionForSelectedNode()
-
             if (![this.scope, 'Bookmark'].includes(treeScope)) {
                 this.notify('Please wait...');
                 this.collection.reset();
@@ -681,36 +637,13 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
             }
         },
 
-        selectNode(data, force = false) {
-            if (data.scope === this.scope) {
-                if (data.click) {
-                    window.location.href = `/#${data.scope}/view/${data.id}`;
-                }
-                return;
+        selectNode(data) {
+            if (data.scope === this.scope && data.click) {
+                window.location.href = `/#${data.scope}/view/${data.id}`;
             }
-
-            if (!force && data.id === this.getStorage().get('selectedNodeId', this.scope)) {
-                this.getStorage().clear('selectedNodeId', this.scope);
-                this.getStorage().clear('selectedNodeRoute', this.scope);
-                this.unSelectTreeNode(data.id);
-
-                return;
-            }
-
-            this.getStorage().set('selectedNodeId', this.scope, data.id);
-            if (data.route) {
-                this.getStorage().set('selectedNodeRoute', this.scope, data.route);
-            } else {
-                this.getStorage().clear('selectedNodeRoute', this.scope);
-            }
-
-            this.selectTreeNode();
         },
 
         addNodeToFilter(data) {
-            this.collection.whereAdditional = []
-            this.getStorage().clear('selectedNodeId', this.scope);
-            this.getStorage().clear('selectedNodeRoute', this.scope);
             window.dispatchEvent(new CustomEvent('add-item-to-query-builder', { detail: data }));
         },
 
