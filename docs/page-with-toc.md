@@ -22,7 +22,8 @@ Welcome to our Help Center for our software products AtroCore and AtroPIM. Here 
 - [Release Notes](https://help.atrocore.com/release-notes)
 
 ### Getting Started with AtroPIM
-- [Getting Started with AtroPIM](../01.atrocore/02.getting-started)
+
+- [Getting Started with AtroPIM](01.atrocore/02.getting-started/docs.md)
 
 ### Our websites
 
@@ -33,7 +34,7 @@ Welcome to our Help Center for our software products AtroCore and AtroPIM. Here 
 ## AtroCore Extensions
 <!-- тут потрібно перерахувати всі модулі, які у нас є і дати посилання на документації по кожному  -->
 
-AtroCore can be extended with numerous modules. Please, see the details on the modules available for you in our [store](https://store.atrocore.com/).
+AtroCore can be extended with numerous modules. Please, see the details on the modules available for you in our [store](https://store.atrocore.com/en/).
 
 ## License
 

@@ -8,7 +8,7 @@ taxonomy:
 
 In Atro system Classifications are used in order to define a set of [attributes](../../01.atrocore/03.administration/12.attribute-management/01.attributes/) that are shared by entity records belonging to a certain family, and to describe the characteristics of these records. For each Classification you can define, which attributes are mandatory and which are optional, so the system can calculate the completeness of your content.
 
-*Please, note that completeness calculation is possible only when a separate **"Data Quality"** module is installed in your system. Please, visit our [store](https://store.atrocore.com/data-quality/10095.1) to learn more about the module and its features.*
+*Please, note that completeness calculation is possible only when a separate **"Data Quality"** module is installed in your system. Please, visit our [store](https://store.atrocore.com/en/data-quality/20218) to learn more about the module and its features.*
 
 One attribute can be used in several Classifications and Classification can have many attributes assigned. Each record can be assigned to only one Classification.
 
@@ -174,7 +174,7 @@ Click the `Save` button to complete the Classification attribute creation proces
 
 When you are trying to link to the Classification record the attribute, which is already linked to the entity record belonging to the given Classification, entity record attribute becomes Classification attribute. Its value (or values) is preserved in the entity record.
 
-> Attributes, which are added to the Classification record, are of higher priority, whereas custom product attributes adapt to the changes made in the Classification attributes. The interrelations between Classifications and product records can be configured and structured even more with the help of the **Advanced Classification** module. For more details, please, visit our [store](https://store.atrocore.com/advanced-classification/20109).
+> Attributes, which are added to the Classification record, are of higher priority, whereas custom product attributes adapt to the changes made in the Classification attributes. The interrelations between Classifications and product records can be configured and structured even more with the help of the **Advanced Classification** module. For more details, please, visit our [store](https://store.atrocore.com/en/advanced-classification/20109).
 
 To assign an existing attribute (or several attributes) to the Classification record, use the `Select` option from the actions menu:
 
