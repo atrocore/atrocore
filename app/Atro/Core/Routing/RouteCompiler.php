@@ -104,6 +104,15 @@ class RouteCompiler
                     }
                 }
 
+                // TODO: Backward compatibility only. createDisabled lives in clientDefs, not scopes,
+                // so it cannot be expressed via requiresAbsent on #[EntityType]. Ideally, this flag
+                // should be moved to scopes metadata and handled declaratively.
+                if ($entry['class'] === \Atro\Core\EntityTypeHandlers\CreateHandler::class
+                    && $this->metadata->get("clientDefs.$entityName.createDisabled")
+                ) {
+                    continue;
+                }
+
                 /** @var Route $routeAttr */
                 $routeAttr = $entry['route'];
 
