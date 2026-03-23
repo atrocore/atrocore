@@ -76,4 +76,4 @@ Only administrators can remove change history records from the Activities panel 
 
 !! Beware that this action is irreversible.
 
-! The Activities functionality can be further extended with the help of the [Revisions](https://store.atrocore.com/revisions/20179) module, which allows you to view the field changes history in the pop-up and restore previous values from the change history.
+! The Activities functionality can be further extended with the help of the [Revisions](https://store.atrocore.com/en/versioning/20179) module, which allows you to view the field changes history in the pop-up and restore previous values from the change history.
