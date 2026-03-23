@@ -462,8 +462,8 @@ class ClusterItem extends Base
 
     private function createClusterNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = ''): void
     {
-        $this->getEntityManager()->getRepository('Selection')->createActivityNote(
-            $clusterId, 'Cluster', 'ClusterActivity', $action, $relatedType, $relatedId
+        $this->getEntityManager()->getRepository('ClusterItem')->createClusterActivityNote(
+            $clusterId, $action, $relatedType, $relatedId
         );
     }
 }

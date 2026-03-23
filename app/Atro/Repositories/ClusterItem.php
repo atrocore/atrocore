@@ -251,9 +251,7 @@ class ClusterItem extends Base
         parent::afterSave($entity, $options);
 
         if ($entity->isNew()) {
-            $this->createClusterActivityNote($entity->get('clusterId'), 'linked', $entity->get('entityName'), $entity->get('entityId'), [
-                'entityRole' => $this->getEntityRole($entity->get('clusterId'), $entity->get('entityName')),
-            ]);
+            $this->createClusterActivityNote($entity->get('clusterId'), 'linked', $entity->get('entityName'), $entity->get('entityId'));
         }
     }
 
@@ -265,9 +263,7 @@ class ClusterItem extends Base
             $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('matchedRecordId'));
         }
 
-        $this->createClusterActivityNote($entity->get('clusterId'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'), [
-            'entityRole' => $this->getEntityRole($entity->get('clusterId'), $entity->get('entityName')),
-        ]);
+        $this->createClusterActivityNote($entity->get('clusterId'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -316,14 +312,11 @@ class ClusterItem extends Base
         }
     }
 
-    private function getEntityRole(string $clusterId, string $entityName): string
+    public function createClusterActivityNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = ''): void
     {
-        $cluster = $this->getEntityManager()->getEntity('Cluster', $clusterId);
-        return ($cluster && $cluster->get('masterEntity') === $entityName) ? 'master' : 'staging';
-    }
 
-    private function createClusterActivityNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = '', array $extraData = []): void
-    {
+        $extraData['entityRole'] = $this->getMetadata()->get(['scopes', $relatedType, 'primaryEntityId']) ? 'staging' : 'master' ;
+
         $this->getEntityManager()->getRepository('Selection')->createActivityNote(
             $clusterId, 'Cluster', 'ClusterActivity', $action, $relatedType, $relatedId, $extraData
         );
