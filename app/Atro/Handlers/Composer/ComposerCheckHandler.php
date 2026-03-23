@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Composer/check',
+    path: '/Composer/action/check',
     methods: ['POST'],
     summary: 'Check for module updates',
     description: 'Checks for available module updates. Accessible by administrators only.',
