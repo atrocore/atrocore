@@ -62,6 +62,18 @@ class ClusterItem extends Base
             return;
         }
 
+        // Query items BEFORE the UPDATE so we know what is being moved
+        $items = $this->getDbal()->createQueryBuilder()
+            ->select('ci.entity_name', 'ci.entity_id')
+            ->from('cluster_item', 'ci')
+            ->where('ci.cluster_id = :clusterIdFrom')
+            ->andWhere('ci.deleted = :false')
+            ->andWhere('ci.id NOT IN (SELECT rci2.cluster_item_id FROM rejected_cluster_item rci2 WHERE rci2.cluster_id = :clusterIdTo AND rci2.deleted = :false)')
+            ->setParameter('clusterIdFrom', $clusterIdFrom)
+            ->setParameter('clusterIdTo', $clusterIdTo)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
         $this->getDbal()->createQueryBuilder()
             ->update('cluster_item')
             ->set('cluster_id', ':clusterIdTo')
@@ -70,6 +82,10 @@ class ClusterItem extends Base
             ->setParameter('clusterIdTo', $clusterIdTo)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
+
+        if (!empty($items)) {
+            $this->createMoveNotes($clusterIdFrom, $clusterIdTo, $items);
+        }
 
         $this->updateMatchedScoresInClusters([$clusterIdFrom, $clusterIdTo]);
     }
@@ -312,10 +328,84 @@ class ClusterItem extends Base
         }
     }
 
-    public function createClusterActivityNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = ''): void
+    private function createMoveNotes(string $clusterIdFrom, string $clusterIdTo, array $items): void
     {
+        // Group by entity type for batched name lookups
+        $byEntityName = [];
+        foreach ($items as $item) {
+            $byEntityName[$item['entity_name']][] = $item['entity_id'];
+        }
 
-        $extraData['entityRole'] = $this->getMetadata()->get(['scopes', $relatedType, 'primaryEntityId']) ? 'staging' : 'master' ;
+        // Fetch names in one query per entity type
+        $namesByTypeAndId = [];
+        foreach ($byEntityName as $entityName => $entityIds) {
+            $nameField = $this->getMetadata()->get(['scopes', $entityName, 'nameField']) ?? 'name';
+            $tableName = $this->getDbal()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName)));
+            $quotedNameField = $this->getDbal()->quoteIdentifier($nameField);
+
+            $rows = $this->getDbal()->createQueryBuilder()
+                ->select('id', $quotedNameField . ' AS display_name')
+                ->from($tableName)
+                ->where('id IN (:ids) AND deleted = :false')
+                ->setParameter('ids', $entityIds, Mapper::getParameterType($entityIds))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            foreach ($rows as $row) {
+                $namesByTypeAndId[$entityName][$row['id']] = $row['display_name'];
+            }
+        }
+
+        $stagingRecords = [];
+        $masterRecords  = [];
+
+        foreach ($items as $item) {
+            $entityName = $item['entity_name'];
+            $entityId   = $item['entity_id'];
+
+            $name = (!empty($namesByTypeAndId[$entityName][$entityId])) ? $namesByTypeAndId[$entityName][$entityId] : $entityId;
+
+            $record = ['id' => $entityId, 'name' => $name, 'entityName' => $entityName];
+
+            if (!empty($this->getMetadata()->get(['scopes', $entityName, 'primaryEntityId']))) {
+                $stagingRecords[] = $record;
+            } else {
+                $masterRecords[] = $record;
+            }
+        }
+
+        $clusterRows = $this->getDbal()->createQueryBuilder()
+            ->select('id', 'number')
+            ->from('cluster')
+            ->where('id IN (:ids) AND deleted = :false')
+            ->setParameter('ids', [$clusterIdFrom, $clusterIdTo], Mapper::getParameterType([$clusterIdFrom, $clusterIdTo]))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        $numberById = array_column($clusterRows, 'number', 'id');
+        $fromNumber = $numberById[$clusterIdFrom] ?? null;
+        $toNumber   = $numberById[$clusterIdTo]   ?? null;
+
+        $this->createClusterActivityNote($clusterIdTo, 'movedToCluster', '', '', [
+            'stagingRecords' => $stagingRecords,
+            'masterRecords'  => $masterRecords,
+            'clusterNumber'  => $fromNumber,
+            'clusterId'      => $clusterIdFrom,
+        ]);
+
+        $this->createClusterActivityNote($clusterIdFrom, 'movedFromCluster', '', '', [
+            'stagingRecords' => $stagingRecords,
+            'masterRecords'  => $masterRecords,
+            'clusterNumber'  => $toNumber,
+            'clusterId'      => $clusterIdTo,
+        ]);
+    }
+
+    public function createClusterActivityNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = '', array $extraData = []): void
+    {
+        if ($relatedType !== '') {
+            $extraData['entityRole'] = $this->getMetadata()->get(['scopes', $relatedType, 'primaryEntityId']) ? 'staging' : 'master';
+        }
 
         $this->getEntityManager()->getRepository('Selection')->createActivityNote(
             $clusterId, 'Cluster', 'ClusterActivity', $action, $relatedType, $relatedId, $extraData
