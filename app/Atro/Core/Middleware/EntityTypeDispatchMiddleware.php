@@ -23,13 +23,12 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Intercepts requests matched to the LegacyControllerHandler and, when an EntityTypeHandler
- * is registered for the request path AND the entity's template type, dispatches to it instead.
+ * When an EntityTypeHandler is registered for the request path AND the entity's template type,
+ * dispatches to it — injecting the resolved entityName into request attributes.
  *
  * Dispatch priority:
  *   1. Direct handlers (registered in FastRoute via Handlers/) — already handled before this middleware.
  *   2. EntityTypeHandlers (this middleware) — matched by path pattern + entity template type.
- *   3. LegacyControllerHandler — reached via $handler->handle() if nothing above matched.
  */
 class EntityTypeDispatchMiddleware implements MiddlewareInterface
 {
@@ -49,20 +48,7 @@ class EntityTypeDispatchMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        // Only intercept routes dispatched to the legacy handler
-        if (!$routeResult->getMatchedRoute()->getMiddleware() instanceof LegacyControllerHandler) {
-            return $handler->handle($request);
-        }
-
-        // If the route has a hardcoded (non-placeholder) controller in its config params,
-        // it is a specific route with dedicated legacy-controller handling — do not intercept.
-        $routeConfigParams    = $routeResult->getMatchedRoute()->getOptions()['params'] ?? [];
-        $configuredController = $routeConfigParams['controller'] ?? null;
-        if (is_string($configuredController) && !str_starts_with($configuredController, ':')) {
-            return $handler->handle($request);
-        }
-
-        // Resolve entity name: legacy routes use "controller" param from URL-matched segments
+        // Resolve entity name from URL-matched segments
         $params     = $routeResult->getMatchedParams();
         $entityName = ucfirst((string) ($params['controller'] ?? $params['entityName'] ?? ''));
 
