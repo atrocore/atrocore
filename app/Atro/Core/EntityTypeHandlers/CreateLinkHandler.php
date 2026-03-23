@@ -36,7 +36,7 @@ use Atro\Handlers\AbstractHandler;
         200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['MatchedRecord'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['MatchedRecord', 'Notification'])]
 class CreateLinkHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

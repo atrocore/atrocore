@@ -259,17 +259,6 @@
     }
   },
   {
-    "route": "/Metadata",
-    "method": "get",
-    "params": {
-      "controller": "Metadata"
-    },
-    "description": "Returns all metadata for the current user",
-    "response": {
-      "type": "object"
-    }
-  },
-  {
     "route": "I18n",
     "method": "get",
     "params": {
@@ -414,24 +403,6 @@
     },
     "response": {
       "type": "boolean"
-    }
-  },
-  {
-    "route": "/Stream",
-    "method": "get",
-    "params": {
-      "controller": "Stream",
-      "action": "list",
-      "scope": "User"
-    }
-  },
-  {
-    "route": "/Stream/:scope",
-    "method": "get",
-    "params": {
-      "controller": "Stream",
-      "action": "list",
-      "scope": ":scope"
     }
   },
   {
@@ -817,16 +788,6 @@
       "controller": ":controller",
       "action": "delete",
       "id": ":id"
-    }
-  },
-  {
-    "route": "/:controller/:id/stream",
-    "method": "get",
-    "params": {
-      "controller": "Stream",
-      "action": "list",
-      "id": ":id",
-      "scope": ":controller"
     }
   },
   {

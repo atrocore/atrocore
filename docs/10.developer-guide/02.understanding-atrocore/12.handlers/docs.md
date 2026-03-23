@@ -8,6 +8,49 @@ taxonomy:
 
 AtroCore's HTTP layer is built on open standards: **PSR-7** (HTTP messages), **PSR-15** (middleware pipeline), and **FastRoute** (routing). Every HTTP request passes through a chain of middleware:
 
+---
+
+## PSR-15 Compliance
+
+AtroCore's HTTP layer is built on **PSR-7** (HTTP messages) and **PSR-15** (middleware/request handlers). **Strict compliance with both standards is mandatory.** Every handler and middleware in the system — core or module — must follow the rules below without exception.
+
+### The Two Interfaces
+
+**`MiddlewareInterface`** — processes a request and may delegate to the next handler in the pipeline:
+```php
+interface MiddlewareInterface {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface;
+}
+```
+
+**`RequestHandlerInterface`** — produces a response unconditionally (no delegation):
+```php
+interface RequestHandlerInterface {
+    public function handle(ServerRequestInterface $request): ResponseInterface;
+}
+```
+
+All AtroCore handlers implement `MiddlewareInterface` (method `process`).
+
+### Rules
+
+1. **Always return `ResponseInterface`.** The `process()` method must always return a response. Throwing an exception is allowed (caught by `ErrorHandlerMiddleware`). Returning `null` or omitting `return` is a violation.
+
+2. **Short-circuiting is allowed and expected.** A handler may return a response directly without calling `$handler->handle($request)`. All AtroCore endpoint handlers do this — they produce the response themselves and never delegate further.
+
+3. **Do not mutate `$request` after delegation.** If `$handler->handle($request)` is called, the `$request` object must not be modified afterwards. Modify it (via `withAttribute()` etc.) only before the call.
+
+4. **Do not store per-request state in class properties.** The handler object may be reused across requests by the DI container. Writing request data into `$this->someValue` during `process()` is a violation.
+
+5. **One handler class = one route.** PSR-15 middleware has a single responsibility. Placing multiple `#[Route]` attributes on one class splits responsibility and is **not permitted**. Create a separate class for each route.
+
+6. **No side-effectful logic in constructors.** Constructors are for dependency injection only. All processing must happen in `process()`.
+
+> These rules apply equally to custom module handlers and core handlers. A handler that violates PSR-15 is considered a defect, not a style issue.
+
 ```
 ErrorHandlerMiddleware          ← catches all unexpected exceptions
 RouteMiddleware                 ← matches the request path via FastRoute
@@ -118,6 +161,7 @@ The most common response is `application/json`. Always define the `schema` insid
 |---|---|---|---|
 | `auth` | `bool` | `true` | Whether the endpoint requires authentication. Set to `false` only for explicitly public endpoints. |
 | `parameters` | `array` | `[]` | OpenAPI-format query/path/header parameters. |
+| `requestBody` | `array` | `[]` | OpenAPI-format request body definition. Use `['schema' => ['x-entity-write' => true]]` as the schema sentinel to automatically substitute the entity's write schema (see [Read and Write Schemas](#read-and-write-schemas)). |
 
 > **Important:** A handler without all required fields **will not be registered as a route**. The endpoint simply will not exist. This is by design — it enforces that every API endpoint is fully documented before it can be used.
 
@@ -323,7 +367,7 @@ AtroCore provides a ready-made set of PSR-15 handlers that cover all standard CR
 
 ### The `#[EntityType]` Attribute
 
-Each built-in handler declares which entity template types it applies to:
+Each built-in handler declares which entity template types it applies to, and optionally restricts or requires certain scope metadata flags.
 
 ```php
 use Atro\Core\Routing\EntityType;
@@ -338,6 +382,33 @@ class InheritFieldHandler extends AbstractHandler { ... }
 ```
 
 Always list types **explicitly** — there is no wildcard shorthand.
+
+#### `#[EntityType]` Parameters
+
+| Parameter | Type | Description |
+|---|---|---|
+| `types` | `string[]` | **Required.** Entity template types this handler applies to (e.g. `Base`, `Hierarchy`, `Relation`, `Archive`, `ReferenceData`). |
+| `excludeEntities` | `string[]` | Entity names to **always skip**, regardless of type. Use this when a specific entity has custom logic or the operation is explicitly disabled for it. |
+| `requires` | `string[]` | Keys that must be **truthy** in `scopes.{entityName}` metadata for the route to be registered. The route is skipped for any entity where any of these keys is absent or falsy. |
+| `requiresAbsent` | `string[]` | Keys that must be **absent or falsy** in `scopes.{entityName}` metadata. The route is skipped for any entity where any of these keys is truthy. |
+
+**Examples:**
+
+```php
+// Only for entities that have attributes (hasAttribute flag in scopes)
+#[EntityType(types: ['Base', 'Hierarchy'], requires: ['hasAttribute'])]
+
+// Only for entities where stream is enabled (streamDisabled must not be set)
+#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], requiresAbsent: ['streamDisabled'])]
+
+// Skip specific entities that have custom handlers or disabled operations
+#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Notification'])]
+
+// Only for entities that are master-data primaries
+#[EntityType(types: ['Base'], requires: ['primaryEntityId'])]
+```
+
+> **Note:** `requires` and `requiresAbsent` read from `scopes` metadata only. Flags stored in `clientDefs` (e.g. `createDisabled`) cannot be expressed this way — they require a dedicated check in `RouteCompiler::compileEntityTypeHandlerRoutes()`.
 
 ### Available Types and Their Handler Sets
 
@@ -391,6 +462,38 @@ EntityType handlers extend `Atro\Core\EntityTypeHandlers\AbstractHandler`, which
 | `buildListParams(request)` | Parses common list query parameters (`where`, `offset`, `maxSize`, `sortBy`, etc.). |
 | `buildListResult(result, params)` | Formats a list service result into the standard `{total, list}` response shape. |
 | `buildMassParams(data)` | Parses mass-action parameters (`ids` or `where`+`byWhere`). |
+
+---
+
+## Read and Write Schemas
+
+For every entity AtroCore automatically generates **two OpenAPI component schemas**:
+
+| Schema | Name | Contents |
+|---|---|---|
+| Read schema | `{entityName}` | All fields returned by the API (including computed/derived fields like `categoryName`, `createdAt`, etc.) |
+| Write schema | `{entityName}Write` | Only fields that can be sent in create/update requests — excludes `id`, `_meta`, `deleted`, `createdAt`, `modifiedAt`, `createdById`, all `_`-prefixed fields, and all `readOnly` fields |
+
+These schemas are built automatically by `OpenApiGenerator` based on the entity's field definitions.
+
+### Using the Write Schema in a Handler
+
+In a `requestBody` definition, use the sentinel value `['x-entity-write' => true]` as the schema. `RouteCompiler` replaces it at compile time with a `$ref` to the entity's write schema:
+
+```php
+#[Route(
+    path: '/{entityName}',
+    methods: ['POST'],
+    ...
+    requestBody: [
+        'required' => true,
+        'content'  => ['application/json' => ['schema' => ['x-entity-write' => true]]],
+    ],
+    responses: [...],
+)]
+```
+
+This is how `CreateHandler` and `UpdateHandler` work. The substitution is done by `RouteCompiler::substituteEntitySchemaRef()` when compiling EntityType handler routes.
 
 ---
 
