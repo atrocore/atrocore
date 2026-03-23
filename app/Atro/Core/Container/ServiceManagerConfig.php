@@ -27,7 +27,6 @@ class ServiceManagerConfig
 {
     private array $classAliases = [
         'userContext'              => \Atro\Core\UserContext::class,
-        'route'                    => \Espo\Core\Utils\Route::class,
         'fileManager'              => \Atro\Core\Utils\FileManager::class,
         'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
         'consoleManager'           => \Atro\Core\ConsoleManager::class,

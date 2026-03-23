@@ -16,7 +16,6 @@ namespace Atro\Core\ModuleManager;
 use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Route;
 use Atro\Core\Container;
 use Atro\Core\Utils\Util;
 use Laminas\ServiceManager\ServiceManager;
@@ -50,11 +49,6 @@ abstract class AbstractModule
      * @var Unifier
      */
     protected $objUnifier;
-
-    /**
-     * @var null
-     */
-    private $routeUtil = null;
 
     /**
      * Get module load order
@@ -233,16 +227,6 @@ abstract class AbstractModule
     }
 
     /**
-     * Load module routes
-     *
-     * @param array $data
-     */
-    public function loadRoutes(array &$data)
-    {
-        $data = $this->getRouteUtil()->getAddData($data, $this->getAppPath() . 'Resources/routes.json');
-    }
-
-    /**
      * Load module listeners
      *
      * @param array $listeners
@@ -382,18 +366,6 @@ abstract class AbstractModule
         }
 
         return $this->objUnifier;
-    }
-
-    /**
-     * @return Route
-     */
-    protected function getRouteUtil(): Route
-    {
-        if (is_null($this->routeUtil)) {
-            $this->routeUtil = new Route($this->getContainer()->get('fileManager'), $this->getContainer()->get('moduleManager'), $this->getContainer()->get('dataManager'));
-        }
-
-        return $this->routeUtil;
     }
 
     /**
