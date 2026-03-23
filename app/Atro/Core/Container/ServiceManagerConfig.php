@@ -42,7 +42,6 @@ class ServiceManagerConfig
         'log'                      => \Atro\Core\Factories\Log::class,
         'mailSender'               => \Atro\Core\Mail\Sender::class,
         'pdo'                      => \Atro\Core\Factories\Pdo::class,
-        'controllerManager'        => \Atro\Core\ControllerManager::class,
         'language'                 => \Atro\Core\Utils\Language::class,
         'baseLanguage'             => \Atro\Core\Utils\Language::class,
         'defaultLanguage'          => \Atro\Core\Factories\DefaultLanguage::class,
