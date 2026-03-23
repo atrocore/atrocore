@@ -49,6 +49,18 @@
     "clusterDeleted": "{user} smazal tento cluster",
     "clusterDeletedThis": "{user} smazal tento cluster",
     "clusterRecordDeleted": "{user} smazal {relatedEntity} z tohoto clusteru",
-    "clusterRecordDeletedThis": "{user} smazal {relatedEntity} z tohoto clusteru"
+    "clusterRecordDeletedThis": "{user} smazal {relatedEntity} z tohoto clusteru",
+    "clusterMovedToCluster":              "Systém přesunul záznamy etapizace {stagingRecords} a hlavní záznamy {masterRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterThis":          "Systém přesunul záznamy etapizace {stagingRecords} a hlavní záznamy {masterRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterStaging":       "Systém přesunul záznamy etapizace {stagingRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterStagingThis":   "Systém přesunul záznamy etapizace {stagingRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterMaster":        "Systém přesunul hlavní záznamy {masterRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterMasterThis":    "Systém přesunul hlavní záznamy {masterRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedFromCluster":            "Systém přesunul záznamy etapizace {stagingRecords} a hlavní záznamy {masterRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterThis":        "Systém přesunul záznamy etapizace {stagingRecords} a hlavní záznamy {masterRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterStaging":     "Systém přesunul záznamy etapizace {stagingRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterStagingThis": "Systém přesunul záznamy etapizace {stagingRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterMaster":      "Systém přesunul hlavní záznamy {masterRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterMasterThis":  "Systém přesunul hlavní záznamy {masterRecords} z tohoto clusteru do clusteru {clusterLink}"
   }
 }

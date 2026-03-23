@@ -49,6 +49,18 @@
     "clusterDeleted": "{user} ha eliminato questo cluster",
     "clusterDeletedThis": "{user} ha eliminato questo cluster",
     "clusterRecordDeleted": "{user} ha eliminato {relatedEntity} da questo cluster",
-    "clusterRecordDeletedThis": "{user} ha eliminato {relatedEntity} da questo cluster"
+    "clusterRecordDeletedThis": "{user} ha eliminato {relatedEntity} da questo cluster",
+    "clusterMovedToCluster":              "Il sistema ha spostato i record di allestimento {stagingRecords} e i record master {masterRecords} dal cluster {clusterLink} a questo cluster",
+    "clusterMovedToClusterThis":          "Il sistema ha spostato i record di allestimento {stagingRecords} e i record master {masterRecords} dal cluster {clusterLink} a questo cluster",
+    "clusterMovedToClusterStaging":       "Il sistema ha spostato i record di allestimento {stagingRecords} dal cluster {clusterLink} a questo cluster",
+    "clusterMovedToClusterStagingThis":   "Il sistema ha spostato i record di allestimento {stagingRecords} dal cluster {clusterLink} a questo cluster",
+    "clusterMovedToClusterMaster":        "Il sistema ha spostato i record master {masterRecords} dal cluster {clusterLink} a questo cluster",
+    "clusterMovedToClusterMasterThis":    "Il sistema ha spostato i record master {masterRecords} dal cluster {clusterLink} a questo cluster",
+    "clusterMovedFromCluster":            "Il sistema ha spostato i record di allestimento {stagingRecords} e i record master {masterRecords} da questo cluster al cluster {clusterLink}",
+    "clusterMovedFromClusterThis":        "Il sistema ha spostato i record di allestimento {stagingRecords} e i record master {masterRecords} da questo cluster al cluster {clusterLink}",
+    "clusterMovedFromClusterStaging":     "Il sistema ha spostato i record di allestimento {stagingRecords} da questo cluster al cluster {clusterLink}",
+    "clusterMovedFromClusterStagingThis": "Il sistema ha spostato i record di allestimento {stagingRecords} da questo cluster al cluster {clusterLink}",
+    "clusterMovedFromClusterMaster":      "Il sistema ha spostato i record master {masterRecords} da questo cluster al cluster {clusterLink}",
+    "clusterMovedFromClusterMasterThis":  "Il sistema ha spostato i record master {masterRecords} da questo cluster al cluster {clusterLink}"
   }
 }
