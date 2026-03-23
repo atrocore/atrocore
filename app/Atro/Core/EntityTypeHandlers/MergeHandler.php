@@ -36,7 +36,7 @@ use Atro\Handlers\AbstractHandler;
         200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['Notification'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['Notification', 'AuthToken'])]
 class MergeHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

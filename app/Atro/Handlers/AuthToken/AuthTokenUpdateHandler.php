@@ -11,49 +11,45 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\AuthToken;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Atro\Core\Routing\EntityType;
-use Atro\Handlers\AbstractHandler;
 
 #[Route(
-    path: '/{entityName}/{id}',
+    path: '/AuthToken/{id}',
     methods: ['PUT', 'PATCH'],
-    summary: 'Updates a record',
-    description: 'Updates an existing record by ID.',
-    tag: '{entityName}',
+    summary: 'Updates an auth token record',
+    description: 'Updates an authentication token record by ID. Accessible by administrators only.',
+    tag: 'AuthToken',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'id',         'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-write' => true]]],
+        'content'  => ['application/json' => ['schema' => ['type' => 'object']]],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Updated auth token record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['MatchedRecord', 'AuthToken'])]
-class UpdateHandler extends AbstractHandler
+class AuthTokenUpdateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
-        $id         = (string) $request->getAttribute('id');
-
-        if (!$this->getAcl()->check($entityName, 'edit')) {
+        if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
+        $id     = (string) $request->getAttribute('id');
         $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService($entityName)->updateEntity($id, $data);
+        $entity = $this->getRecordService('AuthToken')->updateEntity($id, $data);
 
         if (empty($entity)) {
             throw new Error();

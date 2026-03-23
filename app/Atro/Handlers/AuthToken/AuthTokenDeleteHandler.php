@@ -11,46 +11,45 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\AuthToken;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Atro\Core\Routing\EntityType;
-use Atro\Handlers\AbstractHandler;
 
 #[Route(
-    path: '/{entityName}/action/massRestore',
-    methods: ['POST'],
-    summary: 'Mass restore',
-    description: 'Restores multiple soft-deleted records from the recycle bin.',
-    tag: '{entityName}',
+    path: '/AuthToken/{id}',
+    methods: ['DELETE'],
+    summary: 'Deletes an auth token record',
+    description: 'Deletes an authentication token by ID. Accessible by administrators only.',
+    tag: 'AuthToken',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],
     responses: [
         200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['UserProfile', 'AuthToken'])]
-class MassRestoreHandler extends AbstractHandler
+class AuthTokenDeleteHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
-
-        if (!$this->getAcl()->check($entityName, 'edit')) {
+        if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
-        $data   = $this->getRequestBody($request);
-        $params = $this->buildMassParams($data);
+        $id      = (string) $request->getAttribute('id');
+        $service = $this->getRecordService('AuthToken');
 
-        $result = $this->getRecordService($entityName)->massRestore($params);
+        if (!$service->deleteEntity($id)) {
+            throw new Error();
+        }
 
-        return new JsonResponse(is_array($result) ? $result : ['true' => $result]);
+        return new JsonResponse(['true' => true]);
     }
 }

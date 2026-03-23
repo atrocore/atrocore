@@ -15,11 +15,10 @@ namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Controllers\Base;
-use Slim\Http\Request;
 
 class ExtensibleEnum extends Base
 {
-    public function actionGetExtensibleEnumOptions($params, $data, Request $request)
+    public function actionGetExtensibleEnumOptions($params, $data, $request)
     {
         if (!$request->isGet() || empty($request->get('extensibleEnumId'))) {
             throw new BadRequest();
@@ -28,7 +27,7 @@ class ExtensibleEnum extends Base
         return $this->getRecordService()->getExtensibleEnumOptions((string)$request->get('extensibleEnumId'));
     }
 
-    public function actionGetExtensibleEnumsOptions($params, $data, Request $request)
+    public function actionGetExtensibleEnumsOptions($params, $data, $request)
     {
         $ids = $request->get('extensibleEnumIds');
         if (is_string($ids)) {

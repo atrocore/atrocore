@@ -11,39 +11,40 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\AuthToken;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Atro\Core\Routing\EntityType;
-use Atro\Handlers\AbstractHandler;
 
 #[Route(
-    path: '/{entityName}/{id}',
+    path: '/AuthToken/{id}',
     methods: ['GET'],
-    summary: 'Returns a record',
-    description: 'Returns a single record by ID.',
-    tag: '{entityName}',
+    summary: 'Returns an auth token record',
+    description: 'Returns a single authentication token by ID. Accessible by administrators only.',
+    tag: 'AuthToken',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'id',         'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Auth token record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation', 'ReferenceData'], excludeEntities: ['MatchedRecord', 'AuthToken'])]
-class ReadHandler extends AbstractHandler
+class AuthTokenReadHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
-        $id = (string) $request->getAttribute('id');
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
-        $entity = $this->getRecordService($entityName)->readEntity($id);
+        $id     = (string) $request->getAttribute('id');
+        $entity = $this->getRecordService('AuthToken')->readEntity($id);
 
         if (empty($entity)) {
             throw new NotFound();

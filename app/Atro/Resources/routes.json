@@ -259,40 +259,6 @@
     }
   },
   {
-    "route": "I18n",
-    "method": "get",
-    "params": {
-      "controller": "I18n"
-    },
-    "conditions": {
-      "auth": false
-    },
-    "description": "Returns all translation labels for the UI",
-    "requestParameters": [
-      {
-        "name": "locale",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "example": "de_DE"
-        }
-      },
-      {
-        "name": "default",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "boolean",
-          "example": false
-        }
-      }
-    ],
-    "response": {
-      "type": "object"
-    }
-  },
-  {
     "route": "/Settings",
     "method": "get",
     "params": {
@@ -403,14 +369,6 @@
     },
     "response": {
       "type": "boolean"
-    }
-  },
-  {
-    "route": "/GlobalSearch",
-    "method": "get",
-    "params": {
-      "controller": "GlobalSearch",
-      "action": "search"
     }
   },
   {

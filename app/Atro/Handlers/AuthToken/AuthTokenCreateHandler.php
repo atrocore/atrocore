@@ -11,53 +11,41 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\AuthToken;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Atro\Core\Routing\EntityType;
-use Atro\Handlers\AbstractHandler;
 
 #[Route(
-    path: '/{entityName}',
+    path: '/AuthToken',
     methods: ['POST'],
-    summary: 'Creates a record',
-    description: 'Creates a new record for the specified entity.',
-    tag: '{entityName}',
-    parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-    ],
+    summary: 'Creates an auth token record',
+    description: 'Creates a new authentication token record. Accessible by administrators only.',
+    tag: 'AuthToken',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-write' => true]]],
+        'content'  => ['application/json' => ['schema' => ['type' => 'object']]],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Created auth token record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['UserProfile', 'MatchedRecord', 'AuthToken'])]
-class CreateHandler extends AbstractHandler
+class AuthTokenCreateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
-
-        if ($this->getMetadata()->get("clientDefs.$entityName.createDisabled")) {
-            throw new NotFound();
-        }
-
-        if (!$this->getAcl()->check($entityName, 'create')) {
+        if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
         $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService($entityName)->createEntity($data);
+        $entity = $this->getRecordService('AuthToken')->createEntity($data);
 
         if (empty($entity)) {
             throw new Error();

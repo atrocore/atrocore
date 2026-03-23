@@ -55,10 +55,6 @@ class ControllerManager
         }
 
         if (!class_exists($controllerClassName)) {
-            $controllerClassName = "\\Espo\\Controllers\\$className";
-        }
-
-        if (!class_exists($controllerClassName)) {
             $type = $metadata->get("scopes.$controllerName.type");
             $controllerClassName = "\\Atro\\Core\\Templates\\Controllers\\$type";
         }
