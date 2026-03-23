@@ -28,8 +28,8 @@
     "cannotMergeUnconfirmedItems": "Непідтверджені елементи не можуть бути додані до об'єднання"
   },
   "labels": {
-    "stagingRecord": "проміжний запис",
-    "masterRecord": "майстер-запис"
+    "stagingRecord": "Проміжний запис",
+    "masterRecord": "Майстер-запис"
   },
   "streamMessages": {
     "clusterLinked": "{user} пов'язав {relatedEntity} з цим кластером",

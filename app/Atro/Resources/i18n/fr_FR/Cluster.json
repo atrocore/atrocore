@@ -28,8 +28,8 @@
     "cannotMergeUnconfirmedItems": "Les éléments non confirmés ne peuvent pas être ajoutés à la fusion"
   },
   "labels": {
-    "stagingRecord": "enregistrement de mise à disposition",
-    "masterRecord": "enregistrement de référence"
+    "stagingRecord": "Enregistrement de mise à disposition",
+    "masterRecord": "Enregistrement de référence"
   },
   "streamMessages": {
     "clusterLinked": "{user} a lié {relatedEntity} à ce cluster",
