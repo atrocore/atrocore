@@ -299,6 +299,21 @@ abstract class AbstractModule
     }
 
     /**
+     * Returns additional entity exclusions for core EntityType handlers.
+     * Maps handler FQCN to entity names that should be excluded from route registration.
+     *
+     * Use this when a specific entity must not have a particular EntityType route registered
+     * (e.g. an operation is disabled for that entity), rather than creating a blocking handler
+     * that throws Forbidden.
+     *
+     * @return array<class-string, string[]>  e.g. [\Atro\Core\EntityTypeHandlers\MergeHandler::class => ['ImportConfiguratorItem']]
+     */
+    public function getEntityTypeHandlerExcludes(): array
+    {
+        return [];
+    }
+
+    /**
      * Registers this module's PSR-15 handler classes into the accumulated $classes list.
      *
      * The list already contains handlers from core and all previously loaded modules.

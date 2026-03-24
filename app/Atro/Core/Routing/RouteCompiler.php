@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Routing;
 
 use Atro\Core\DataManager;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Utils\Metadata;
 
 /**
@@ -35,9 +36,10 @@ class RouteCompiler
     private const CACHE_KEY = 'routes';
 
     public function __construct(
-        private readonly DataManager    $dataManager,
-        private readonly Metadata       $metadata,
+        private readonly DataManager     $dataManager,
+        private readonly Metadata        $metadata,
         private readonly HandlerRegistry $handlerRegistry,
+        private readonly ModuleManager   $moduleManager,
     ) {
     }
 
@@ -71,8 +73,9 @@ class RouteCompiler
 
     private function compileEntityTypeHandlerRoutes(): array
     {
-        $handlerEntries = $this->collectEntityTypeHandlerEntries();
-        $routes         = [];
+        $handlerEntries  = $this->collectEntityTypeHandlerEntries();
+        $moduleExcludes  = $this->collectModuleEntityTypeExcludes();
+        $routes          = [];
 
         foreach ($this->metadata->get(['entityDefs'], []) as $entityName => $data) {
             $scopeData = $this->metadata->get(['scopes', $entityName], []);
@@ -88,7 +91,12 @@ class RouteCompiler
                     continue;
                 }
 
-                if (in_array($entityName, $entry['excludeEntities'], true)) {
+                $excludeEntities = array_merge(
+                    $entry['excludeEntities'],
+                    $moduleExcludes[$entry['class']] ?? []
+                );
+
+                if (in_array($entityName, $excludeEntities, true)) {
                     continue;
                 }
 
@@ -295,6 +303,27 @@ class RouteCompiler
         }
 
         return $entries;
+    }
+
+    /**
+     * Collects entity exclusions declared by all modules via getEntityTypeHandlerExcludes().
+     * Returns a merged map of handler FQCN → entity names to exclude.
+     *
+     * @return array<class-string, string[]>
+     */
+    private function collectModuleEntityTypeExcludes(): array
+    {
+        $result = [];
+
+        foreach ($this->moduleManager->getModules() as $module) {
+            foreach ($module->getEntityTypeHandlerExcludes() as $handlerClass => $entities) {
+                foreach ($entities as $entity) {
+                    $result[$handlerClass][] = $entity;
+                }
+            }
+        }
+
+        return $result;
     }
 
     private function pathSpecificity(string $path): int

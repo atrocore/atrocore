@@ -424,6 +424,33 @@ All built-in entity type handlers live in `Atro\Core\EntityTypeHandlers\`.
 | `Relation` | Full CRUD + `InheritRelationHandler`, `RemoveAssociatesHandler` |
 | `ReferenceData` | Reduced CRUD (no mass mutations, no follow/link); admin-only |
 
+### Disabling an EntityType Route for a Specific Entity
+
+Sometimes a module must **prevent** a standard EntityType route from being registered for a particular entity — because the operation is not applicable or is explicitly forbidden for that entity type.
+
+The correct approach is to declare an exclusion in the module's `Module.php` via `getEntityTypeHandlerExcludes()`. `RouteCompiler` will then skip route registration for that entity/handler combination entirely — no route is registered, and no blocking handler is needed.
+
+```php
+// src/mymodule/app/MyModule/Module.php
+
+use Atro\Core\EntityTypeHandlers\MassDeleteHandler;
+use Atro\Core\EntityTypeHandlers\MergeHandler;
+
+public function getEntityTypeHandlerExcludes(): array
+{
+    return [
+        MassDeleteHandler::class => ['MyLockedEntity'],
+        MergeHandler::class      => ['MyLockedEntity', 'AnotherEntity'],
+    ];
+}
+```
+
+This method returns a map of **handler FQCN → list of entity names** to exclude. Multiple modules can declare their own exclusions — `RouteCompiler` merges them all.
+
+> **Do not create blocking handlers** (handlers that just `throw new Forbidden()`) to suppress EntityType routes. This approach pollutes the handler registry, registers a route that returns 403, and makes the intent less clear. Use `getEntityTypeHandlerExcludes()` instead.
+
+---
+
 ### Overriding an EntityType Handler from a Module
 
 To replace a core EntityType handler for a **specific entity** (e.g. only for `Product`), create a direct handler in your module's `Handlers/` directory with a concrete path. Direct handlers have higher priority than EntityType handlers and always win:
