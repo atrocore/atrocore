@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\DataManager;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
@@ -72,6 +73,8 @@ class Settings extends AbstractService
                 sprintf($this->getLanguage()->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'passwordRegexPattern')
             );
         }
+
+        $this->getInjection('eventManager')->dispatch('SettingsService', 'beforeUpdate', new Event(['data' => $data]));
 
         if (property_exists($data, 'onlyStableReleases')) {
             if ($data->onlyStableReleases !== $this->getConfig()->get('onlyStableReleases')) {
