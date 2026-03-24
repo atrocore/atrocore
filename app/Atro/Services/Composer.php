@@ -18,7 +18,6 @@ use Atro\Core\Templates\Services\HasContainer;
 use Atro\Core\Exceptions;
 use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
-use Slim\Http\Request;
 use Atro\Core\Application;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 
@@ -468,28 +467,6 @@ class Composer extends HasContainer
         }
 
         return $package->get('code');
-    }
-
-    public function getLogs(Request $request): array
-    {
-        /** @var \Espo\Repositories\Note $repo */
-        $repo = $this->getEntityManager()->getRepository('Note');
-
-        $result = [
-            'list'  => [],
-            'total' => $repo->where(['parentType' => 'ModuleManager'])->count()
-        ];
-
-        if ($result['total'] > 0) {
-            $result['list'] = $repo
-                ->where(['parentType' => 'ModuleManager'])
-                ->order('createdAt', 'DESC')
-                ->limit((int)$request->get('offset'), (int)$request->get('maxSize'))
-                ->find()
-                ->toArray();
-        }
-
-        return $result;
     }
 
     protected function getModuleStatus(array $diff, string $id): ?string

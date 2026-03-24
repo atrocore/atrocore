@@ -10,30 +10,14 @@ The DI system in AtroCore is powered by **[Laminas ServiceManager](https://docs.
 
 ---
 
-## A note on naming
+## Using the container
 
-Use `$container` — this is the standard name across the PHP ecosystem (PSR-11, Laminas, Symfony, Laravel). The variable name should reflect the *abstraction* (a container), not the *implementation* (ServiceManager). Type-hint against `Psr\Container\ContainerInterface`, not the concrete class.
+Use `$container` — this is the standard name across the PHP ecosystem. Type-hint against `Psr\Container\ContainerInterface`. The system provides `Atro\Core\Container` which implements this interface and adds IDE-friendly generics on `get()`, so PhpStorm infers the return type automatically when a class-string is passed.
 
 ```php
 // ✅ Correct — follows PSR-11 convention
 public function __construct(private readonly \Psr\Container\ContainerInterface $container) {}
-
-// ⚠️ Legacy — still works, but ties you to the concrete class
-public function __construct(private readonly \Atro\Core\Container $container) {}
 ```
-
----
-
-## Why Laminas ServiceManager
-
-Switching to Laminas ServiceManager brings several concrete advantages over maintaining a custom container:
-
-- **Industry standard** — well-documented, widely adopted, no surprises for new developers
-- **PSR-11 compliant** — any library expecting `Psr\Container\ContainerInterface` works out of the box
-- **Zero boilerplate for simple services** — typed constructors are resolved automatically via reflection, no registration needed
-- **Native factory contracts** — `FactoryInterface` and `AbstractFactoryInterface` are standard interfaces with clear semantics
-- **Shared / non-shared lifecycle** — built-in support, no custom caching code
-- **Maintained externally** — PHP version compatibility, security, performance — not our problem
 
 ---
 
@@ -241,14 +225,11 @@ class Module extends AbstractModule
 
 ## Legacy support (to be removed)
 
-The old `\Atro\Core\Container` class and `\Atro\Core\Factories\FactoryInterface` are still supported for backwards compatibility. Existing modules using them will continue to work.
+The old `\Atro\Core\Factories\FactoryInterface` is still supported for backwards compatibility. Existing modules using it will continue to work.
 
-**Writing new code using the legacy approach is strongly discouraged.** We will be removing legacy support in a future release. Always use the native Laminas ServiceManager patterns described above.
+**Writing new code using the legacy factory approach is strongly discouraged.** Always use the native Laminas ServiceManager patterns described above.
 
 ```php
-// ❌ Legacy — do not use in new code
-$this->container->setClassAlias('myService', MyService::class);
-
 // ❌ Legacy factory — do not use in new code
 class MyFactory implements \Atro\Core\Factories\FactoryInterface
 {

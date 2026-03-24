@@ -1,0 +1,64 @@
+<?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+declare(strict_types=1);
+
+namespace Atro\Core\EntityTypeHandlers;
+
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Routing\Route;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Atro\Core\Routing\EntityType;
+use Atro\Handlers\AbstractHandler;
+
+#[Route(
+    path: '/{entityName}/{id}/attributeValues',
+    methods: ['GET'],
+    summary: 'Get attribute values',
+    description: 'Returns all attribute values assigned to the specified entity record.',
+    tag: '{entityName}',
+    parameters: [
+        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'id',         'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+    ],
+    responses: [
+        200 => ['description' => 'Array result', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object']]]]],
+    ],
+)]
+#[EntityType(types: ['Base', 'Hierarchy'], requires: ['hasAttribute'])]
+class GetAttributeValuesHandler extends AbstractHandler
+{
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $entityName = $this->getEntityName($request);
+
+        if (empty($this->getMetadata()->get("scopes.$entityName.hasAttribute"))) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($entityName, 'read')) {
+            throw new Forbidden();
+        }
+
+        $id     = (string) $request->getAttribute('id');
+        $entity = $this->getRecordService($entityName)->getEntity($id);
+
+        if (!empty($entity)) {
+            return new JsonResponse($entity->getAttributeValuesArray());
+        }
+
+        throw new Error();
+    }
+}

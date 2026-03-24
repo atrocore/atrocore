@@ -27,7 +27,6 @@ class ServiceManagerConfig
 {
     private array $classAliases = [
         'userContext'              => \Atro\Core\UserContext::class,
-        'route'                    => \Espo\Core\Utils\Route::class,
         'fileManager'              => \Atro\Core\Utils\FileManager::class,
         'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
         'consoleManager'           => \Atro\Core\ConsoleManager::class,
@@ -42,8 +41,6 @@ class ServiceManagerConfig
         'log'                      => \Atro\Core\Factories\Log::class,
         'mailSender'               => \Atro\Core\Mail\Sender::class,
         'pdo'                      => \Atro\Core\Factories\Pdo::class,
-        'controllerManager'        => \Atro\Core\ControllerManager::class,
-        'slim'                     => \Atro\Core\Slim\Slim::class,
         'language'                 => \Atro\Core\Utils\Language::class,
         'baseLanguage'             => \Atro\Core\Utils\Language::class,
         'defaultLanguage'          => \Atro\Core\Factories\DefaultLanguage::class,
@@ -70,7 +67,6 @@ class ServiceManagerConfig
         'injectableFactory'        => \Espo\Core\InjectableFactory::class,
         'number'                   => \Espo\Core\Factories\Number::class,
         'ormMetadata'              => \Espo\Core\Utils\Metadata\OrmMetadata::class,
-        'output'                   => \Espo\Core\Utils\Api\Output::class,
         'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
         'serviceFactory'           => \Espo\Core\ServiceFactory::class,
         'templateFileManager'      => \Espo\Core\Utils\TemplateFileManager::class,
@@ -78,6 +74,7 @@ class ServiceManagerConfig
     ];
 
     private array $aliases = [
+        \Psr\Container\ContainerInterface::class        => 'container',
         'connection'                                    => 'dbal',
         Connection::class                               => 'dbal',
         EventManager::class                             => 'eventManager',
@@ -91,7 +88,6 @@ class ServiceManagerConfig
         \Espo\Core\Utils\File\Manager::class            => 'fileManager',
         \Atro\Core\DataManager::class                   => 'dataManager',
         \Atro\Core\ModuleManager\Manager::class         => 'moduleManager',
-        \Atro\Core\Slim\Slim::class                     => 'slim',
         \Atro\Core\Utils\ThemeManager::class            => 'themeManager',
         \Atro\Entities\User::class                      => 'user',
     ];

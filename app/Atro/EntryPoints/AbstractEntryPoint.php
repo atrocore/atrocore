@@ -11,7 +11,6 @@
 
 namespace Atro\EntryPoints;
 
-use Atro\Core\Container;
 use Espo\Core\Acl;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\ClientManager;
@@ -21,15 +20,16 @@ use Espo\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
 use Espo\ORM\EntityManager;
+use Psr\Container\ContainerInterface;
 
 abstract class AbstractEntryPoint
 {
-    protected Container $container;
+    protected ContainerInterface $container;
 
     public static bool $authRequired = true;
     public static bool $notStrictAuth = false;
 
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }

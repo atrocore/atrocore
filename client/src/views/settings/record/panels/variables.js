@@ -36,7 +36,7 @@ Espo.define('views/settings/record/panels/variables', 'views/record/panels/relat
 
         setup() {
             this.defs.create = false;
-            this.url = 'Variable/action/list';
+            this.url = 'Variable';
 
             Dep.prototype.setup.call(this);
 
