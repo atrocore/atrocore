@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Bookmark/action/treeData',
+    path: '/Bookmark/action/TreeData',
     methods: ['GET'],
     summary: 'Returns bookmark tree data',
     description: 'Returns the bookmark tree data (total + tree) for the specified scope.',

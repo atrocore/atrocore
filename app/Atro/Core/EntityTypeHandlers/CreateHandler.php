@@ -48,10 +48,6 @@ class CreateHandler extends AbstractHandler
     {
         $entityName = $this->getEntityName($request);
 
-        if ($this->getMetadata()->get("clientDefs.$entityName.createDisabled")) {
-            throw new NotFound();
-        }
-
         if (!$this->getAcl()->check($entityName, 'create')) {
             throw new Forbidden();
         }
