@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "language": "Language",
+    "role": "Role",
+    "readAction": "Read",
+    "editAction": "Edit"
+  },
+  "labels": {
+    "yes": "Yes",
+    "no": "No"
+  }
+}

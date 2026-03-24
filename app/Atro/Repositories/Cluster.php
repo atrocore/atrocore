@@ -27,9 +27,5 @@ class Cluster extends Base
         if (!empty($item)) {
             throw new BadRequest($this->getLanguage()->translate('cannotDelete', 'exceptions', 'Cluster'));
         }
-
-        $this->getEntityManager()->getRepository('Selection')->createActivityNote(
-            $entity->get('id'), 'Cluster', 'ClusterActivity', 'deleted'
-        );
     }
 }
