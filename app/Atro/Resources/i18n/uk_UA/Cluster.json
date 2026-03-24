@@ -49,6 +49,18 @@
     "clusterDeleted": "{user} видалив цей кластер",
     "clusterDeletedThis": "{user} видалив цей кластер",
     "clusterRecordDeleted": "{user} видалив {relatedEntity} з цього кластера",
-    "clusterRecordDeletedThis": "{user} видалив {relatedEntity} з цього кластера"
+    "clusterRecordDeletedThis": "{user} видалив {relatedEntity} з цього кластера",
+    "clusterMovedToCluster":              "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
+    "clusterMovedToClusterThis":          "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
+    "clusterMovedToClusterStaging":       "Система перемістила проміжні записи {stagingRecords} з кластера {clusterLink} до цього кластера",
+    "clusterMovedToClusterStagingThis":   "Система перемістила проміжні записи {stagingRecords} з кластера {clusterLink} до цього кластера",
+    "clusterMovedToClusterMaster":        "Система перемістила майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
+    "clusterMovedToClusterMasterThis":    "Система перемістила майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
+    "clusterMovedFromCluster":            "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}",
+    "clusterMovedFromClusterThis":        "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}",
+    "clusterMovedFromClusterStaging":     "Система перемістила проміжні записи {stagingRecords} з цього кластера до кластера {clusterLink}",
+    "clusterMovedFromClusterStagingThis": "Система перемістила проміжні записи {stagingRecords} з цього кластера до кластера {clusterLink}",
+    "clusterMovedFromClusterMaster":      "Система перемістила майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}",
+    "clusterMovedFromClusterMasterThis":  "Система перемістила майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}"
   }
 }

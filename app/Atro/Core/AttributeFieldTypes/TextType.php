@@ -13,6 +13,7 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -40,11 +41,11 @@ class TextType extends AbstractFieldType
         $attributeData = !empty($row['data']) ? @json_decode($row['data'], true)['field'] ?? null : null;
 
         $entity->fields[$name] = [
-            'type'        => $this->type,
-            'name'        => $name,
-            'attributeId' => $id,
-            'column'      => $this->column,
-            'required'    => !empty($row['is_required']),
+            'type'                     => $this->type,
+            'name'                     => $name,
+            'attributeId'              => $id,
+            'column'                   => $this->column,
+            'required'                 => !empty($row['is_required']),
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
@@ -69,13 +70,13 @@ class TextType extends AbstractFieldType
             'type'                      => $this->type,
             'required'                  => !empty($row['is_required']),
             'readOnly'                  => !empty($row['is_read_only']),
-            'protected'                  => !empty($row['is_protected']),
+            'protected'                 => !empty($row['is_protected']),
             'notNull'                   => !empty($row['not_null']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'conditionalProperties'     => $this->prepareConditionalProperties($row),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
         ];
 
         if (!empty($row['disable_field_value_lock'])) {
@@ -214,16 +215,22 @@ class TextType extends AbstractFieldType
 
     public function getAttributeLabel(array $row, string $languageCode, array $languages): string
     {
-        if (!empty($localeId = $this->user->get('localeId'))) {
+        if (!empty($localeId = Language::detectLocale($this->config, $this->user))) {
             $currentLocale = $this->em->getEntity('Locale', $localeId);
-            if (!empty($currentLocale) && array_key_exists($currentLocale->get('languageCode'), $languages)) {
-                if ($languageCode === $currentLocale->get('languageCode')) {
-                    return $row[$this->prepareKey('name', $row)];
+            if (!empty($currentLocale)) {
+                if (!empty($currentLocale->get('displayLabelsInContentLanguage'))) {
+                    return $row['name_' . strtolower($languageCode)] ?? $row['name'];
                 }
-                if (empty($languageCode)) {
-                    foreach ($this->config->get('referenceData.Language', []) as $v) {
-                        if ($v['role'] === 'main') {
-                            return $row[$this->prepareKey('name', $row)] . ' / ' . $v['name'];
+
+                if (array_key_exists($currentLocale->get('languageCode'), $languages)){
+                    if ($languageCode === $currentLocale->get('languageCode')) {
+                        return $row[$this->prepareKey('name', $row)];
+                    }
+                    if (empty($languageCode)) {
+                        foreach ($this->config->get('referenceData.Language', []) as $v) {
+                            if ($v['role'] === 'main') {
+                                return $row[$this->prepareKey('name', $row)] . ' / ' . $v['name'];
+                            }
                         }
                     }
                 }

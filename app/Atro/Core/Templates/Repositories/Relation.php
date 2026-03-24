@@ -150,6 +150,11 @@ class Relation extends Base
             foreach ($this->getRelationFields() as $relField) {
                 $input->{"{$relField}Id"} = $relField === $link ? $child['id'] : $entity->get("{$relField}Id");
             }
+
+            if (!empty($this->where((array)$input)->findOne())) {
+                continue;
+            }
+
             foreach ($additionalFields as $additionalField) {
                 $input->{$additionalField} = $entity->get($additionalField);
             }
@@ -159,7 +164,7 @@ class Relation extends Base
             } catch (Forbidden $e) {
             } catch (BadRequest $e) {
             } catch (\Throwable $e) {
-                $GLOBALS['log']->error('updateHierarchical failed: ' . $e->getMessage());
+                $GLOBALS['log']->error('createHierarchical failed: ' . $e->getMessage());
             }
         }
     }

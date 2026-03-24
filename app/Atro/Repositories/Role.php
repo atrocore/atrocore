@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\DataManager;
 use Atro\Entities\Role as RoleEntity;
 use Espo\Core\AclManager;
@@ -47,8 +48,10 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
         $res = $this->getDataManager()->getCacheData($key);
         if ($res === null) {
             $res = [
-                'scopes' => [],
-                'fields' => []
+                'scopes'               => [],
+                'fields'               => [],
+                'languages'            => [],
+                'multilangAttrFields'  => [],
             ];
 
             foreach ($role->get('scopes') ?? [] as $roleScope) {
@@ -108,6 +111,31 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
                         $res['scopes'][$scopeName][$action] = 'no';
                     }
                 }
+            }
+
+            foreach ($role->get('languages') ?? [] as $roleLanguage) {
+                $language = $this->getEntityManager()->getEntity('Language', $roleLanguage->get('languageId'));
+                if (empty($language)) {
+                    continue;
+                }
+                $code = $language->get('code');
+                $res['languages'][$code] = [
+                    'read' => !empty($roleLanguage->get('readAction')) ? 'yes' : 'no',
+                    'edit' => !empty($roleLanguage->get('editAction')) ? 'yes' : 'no',
+                ];
+            }
+
+            $multilangAttrs = $this->getEntityManager()->getRepository('Attribute')
+                ->select(['id', 'code', 'entityId'])
+                ->where(['isMultilang' => true])
+                ->find();
+            foreach ($multilangAttrs as $attr) {
+                $entityType = $attr->get('entityId');
+                if (empty($entityType)) {
+                    continue;
+                }
+                $fieldName = AttributeFieldConverter::prepareFieldName(['id' => $attr->get('id'), 'code' => $attr->get('code')]);
+                $res['multilangAttrFields'][$entityType][] = $fieldName;
             }
 
             $this->getDataManager()->setCacheData($key, $res);

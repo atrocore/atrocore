@@ -27,7 +27,8 @@
       },
       "Role": false,
       "RoleScope": false,
-      "RoleScopeField": false
+      "RoleScopeField": false,
+      "RoleLanguage": false
     },
     "fieldLevel": {
     },

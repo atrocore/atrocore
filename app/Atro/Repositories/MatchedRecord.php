@@ -179,12 +179,16 @@ class MatchedRecord extends Base
 
     public function removeOldMatches(MatchingEntity $matching, string $matchedAt, string $sourceEntityName, string $sourceEntityId): void
     {
-        $this->getConnection()->createQueryBuilder()
+        $entityCondition = 'source_entity=:sourceEntity AND source_entity_id=:sourceEntityId';
+        if ($matching->get('type') === 'duplicate') {
+            $entityCondition = '(' . $entityCondition . ') OR (master_entity=:sourceEntity AND master_entity_id=:sourceEntityId)';
+        }
+
+        $this->getDbal()->createQueryBuilder()
             ->delete('matched_record')
             ->where('matching_id=:matchingId')
             ->andWhere('modified_at<:matchedAt')
-            ->andWhere('source_entity=:sourceEntity')
-            ->andWhere('source_entity_id=:sourceEntityId')
+            ->andWhere($entityCondition)
             ->setParameter('matchingId', $matching->id)
             ->setParameter('matchedAt', $matchedAt)
             ->setParameter('sourceEntity', $sourceEntityName)

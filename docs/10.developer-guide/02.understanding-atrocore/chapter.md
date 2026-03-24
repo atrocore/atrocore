@@ -12,7 +12,7 @@ This guide is primarily for developers looking to build new features and solutio
 
 ## Core Concepts
 
-**AtroCore** is an **API-first** framework built on the principle of **Convention over Configuration (CoC)**. This approach speeds up development by using sensible defaults for entities, providers, services, and controllers, instead of requiring extensive configuration. The framework's modular architecture simplifies adding or modifying features. It supports both **event-driven architecture** and **dependency injection** for extending and customizing behavior.
+**AtroCore** is an **API-first** framework built on the principle of **Convention over Configuration (CoC)**. This approach speeds up development by using sensible defaults for entities, services, and handlers, instead of requiring extensive configuration. The framework's modular architecture simplifies adding or modifying features. It supports both **event-driven architecture** and **dependency injection** for extending and customizing behavior.
 
 The core of the framework is the `\Atro\Core\Application` class, which loads and runs the application. When a request is received, AtroCore automatically detects its type and either serves the client-side view of a single-page application (SPA) or processes it as an API request.
 
@@ -54,12 +54,11 @@ This repository-style approach simplifies data manipulation and promotes cleaner
 
 For a deeper dive, refer to the [Repository documentation](06.repositories/docs.md).
 
-#### Controllers
+#### Handlers
 
-**Controllers** are the entry point for API requests. Their primary responsibility is to handle the request-response cycle. In AtroCore, controllers are designed to be lean; they parse incoming requests, call the appropriate service methods to perform the required actions, and then format and return the response. This keeps the controller focused on its core responsibility.
-For maximum convenience, AtroCore automatically resolve a default controller when you create a new entity, providing you with a set of ready-to-use API endpoints.
+**Handlers** are the entry point for API requests. Each handler is a PSR-15 middleware class responsible for a single endpoint. It receives the HTTP request, delegates business logic to a service, and returns a PSR-7 response. Routing, authentication, and request/response validation are handled automatically by the pipeline — the handler focuses solely on its own logic.
 
-For more information on how services and controllers work together, see the [Controllers documentation](12.controllers/docs.md).
+For more information, see the [Handlers documentation](12.handlers/docs.md).
 
 
 #### Entity Services

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "language",
+    "link": true
+  },
+  {
+    "name": "role"
+  },
+  {
+    "name": "readAction"
+  },
+  {
+    "name": "editAction"
+  }
+]

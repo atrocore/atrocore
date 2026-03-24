@@ -88,6 +88,7 @@ Espo.define('acl-manager', ['acl', 'metadata'], function (Acl, Metadata) {
             this.data.table = this.data.table || {};
             this.data.fieldTable = this.data.fieldTable || {};
             this.data.attributeTable = this.data.attributeTable || {};
+            this.data.languageTable = this.data.languageTable || {};
         },
 
         get: function (name) {
@@ -279,6 +280,18 @@ Espo.define('acl-manager', ['acl', 'metadata'], function (Acl, Metadata) {
             this.forbiddenAttributesCache[key] = attributeList;
 
             return attributeList;
+        },
+
+        getForbiddenLanguageList: function (action) {
+            action = action || 'read';
+            var languageTable = this.data.languageTable || {};
+            var list = [];
+            Object.entries(languageTable).forEach(function ([code, access]) {
+                if ((access[action] || 'yes') === 'no') {
+                    list.push(code);
+                }
+            });
+            return list;
         },
 
         checkTeamAssignmentPermission: function (teamId) {

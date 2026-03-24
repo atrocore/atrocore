@@ -140,7 +140,7 @@ For information about configuring deletion settings for the File entity, see [En
 
 ## File Transformations
 
-File Transformations allow you to automatically generate derivative files (renditions) from originals using server-side CLI tools. This feature is available with the [Renditions](https://store.atrocore.com/) premium module.
+File Transformations allow you to automatically generate derivative files (renditions) from originals using server-side CLI tools. This feature is available with the [Renditions](https://store.atrocore.com/en/) premium module.
 
 ## File sharing
 

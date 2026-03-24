@@ -176,17 +176,23 @@ class Matching extends Base
         }
     }
 
-    public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId, string $matchedAt): void
+    public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId, string $matchedAt, bool $onlyIfAlreadySearched = false): void
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $conn = $this->getDbal();
+        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
 
-        $conn->createQueryBuilder()
+        $qb = $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))))
-            ->set(Util::toUnderScore(self::prepareFieldName($matching->id)), ':matchedAt')
+            ->set($column, ':matchedAt')
             ->where('id = :id')
             ->setParameter('id', $entityId)
-            ->setParameter('matchedAt', $matchedAt)
-            ->executeQuery();
+            ->setParameter('matchedAt', $matchedAt);
+
+        if ($onlyIfAlreadySearched) {
+            $qb->andWhere("$column IS NOT NULL");
+        }
+
+        $qb->executeQuery();
     }
 
     public function isMatchingSearchedForStaging(MatchingEntity $matching, Entity $entity): bool
