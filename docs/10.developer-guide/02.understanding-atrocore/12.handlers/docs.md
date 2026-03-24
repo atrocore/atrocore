@@ -55,6 +55,7 @@ All AtroCore handlers implement `MiddlewareInterface` (method `process`).
 ErrorHandlerMiddleware          ← catches all unexpected exceptions
 RouteMiddleware                 ← matches the request path via FastRoute
 AuthMiddleware                  ← validates the Authorization-Token
+ActionHistoryMiddleware         ← logs the action to ActionHistoryRecord
 ApiValidationMiddleware         ← validates request input and response output
 [module middlewares]            ← optional, registered via Module.php
 EntityTypeDispatchMiddleware    ← dispatches to an EntityTypeHandler when applicable
@@ -83,9 +84,9 @@ When no direct handler matched, `EntityTypeDispatchMiddleware` checks whether an
 
 This is how AtroCore provides generic CRUD endpoints for all standard entity types without any per-entity code.
 
-### 3. Legacy controller handler
+### 3. Not found
 
-If neither tier matched, the request falls through to `LegacyControllerHandler`, which delegates to the old `Controllers/` system. This is technical debt and will be removed in a future release.
+If neither tier matched, `NotFoundMiddleware` returns a `404 Not Found` response.
 
 ---
 
@@ -246,12 +247,13 @@ class ProductStatsHandler implements MiddlewareInterface
 
 ## Route Discovery and Caching
 
-`HandlerRegistry` discovers handler classes by scanning the `Handlers/` directory of each module. This scan happens **once per request** and the result is cached via `DataManager` (key: `handler_routes`).
+At startup, `RouteCompiler` scans all `Handlers/` directories, reads every `#[Route]` attribute, resolves EntityType expansions, and builds the full route table. The result is stored in `data/cache/routes.json` **always — regardless of the `useCache` setting** — because reflection-based compilation is too expensive to repeat on every request.
 
-- **Cache enabled** (`useCache = true` in config) — the class list is stored in `data/cache/handler_routes.json` and reused on subsequent requests. Run `php console.php clear-cache` to invalidate it after adding or renaming handlers.
-- **Cache disabled** (`useCache = false`) — the filesystem is scanned on every request. Use this setting only in development.
+> **This means:** whenever you add a handler, remove one, or change a `#[Route]` attribute — even in development — you must run `php console.php clear cache` for the change to take effect.
 
-> After adding a new handler in production, always run `php console.php clear-cache` to ensure it is picked up.
+The cache is invalidated automatically by `clear cache`. There is no other mechanism that refreshes it.
+
+---
 
 ### Controlling Handler Registration from a Module
 
@@ -357,13 +359,13 @@ AtroCore provides a ready-made set of PSR-15 handlers that cover all standard CR
 
 ### How Dispatch Works
 
-`EntityTypeDispatchMiddleware` runs after module middlewares. When a request was matched by FastRoute to the legacy handler (meaning no direct handler claimed the route), the middleware:
+`EntityTypeDispatchMiddleware` runs after module middlewares. It intercepts requests where the matched route carries an `entityName` parameter and checks whether an EntityType handler applies:
 
-1. Reads the `entityName` from the route parameters.
+1. Reads the `entityName` from the matched route parameters.
 2. Looks up the entity's template type from metadata (`scopes.{entityName}.type`).
 3. Queries `EntityTypeHandlerRegistry` — which holds a secondary FastRoute router built from all `EntityTypeHandler` classes — for a handler whose `#[Route]` pattern matches the request **and** whose `#[EntityType]` types list includes the entity's type.
 4. If found, forwards the request to that handler (with `entityName` set as a request attribute).
-5. If not found, passes the request to `DispatchMiddleware` → `LegacyControllerHandler`.
+5. If not found, passes the request on to `DispatchMiddleware`.
 
 ### The `#[EntityType]` Attribute
 
@@ -495,10 +497,3 @@ In a `requestBody` definition, use the sentinel value `['x-entity-write' => true
 
 This is how `CreateHandler` and `UpdateHandler` work. The substitution is done by `RouteCompiler::substituteEntitySchemaRef()` when compiling EntityType handler routes.
 
----
-
-## Legacy Controllers
-
-Some modules still contain a `Controllers/` directory with classes extending `Atro\Core\Templates\Controllers\Base` (and similar). These are supported via `LegacyControllerHandler`, which bridges the old system into the PSR-15 pipeline.
-
-**This is technical debt scheduled for removal.** Do not create new controllers. All new endpoints must be implemented as PSR-15 handlers as described in this document. Existing controllers will be migrated to handlers in an upcoming release.

@@ -126,6 +126,10 @@ class DataManager
             return true;
         }
 
+        if ($name === 'routes') {
+            return true;
+        }
+
         // for translations
         if (str_starts_with($name, 'locale_')) {
             return true;
