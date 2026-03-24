@@ -21,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Settings',
+    path: '/Settings/1',
     methods: ['PATCH'],
     summary: 'Updates system settings',
     description: 'Updates one or more system configuration fields.',

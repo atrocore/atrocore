@@ -93,7 +93,11 @@ class ActionHistoryMiddleware implements MiddlewareInterface
             return false;
         }
 
-        $user = $this->getUser();
+        $user = $this->container->get('user');
+
+        if (!$user instanceof User) {
+            return false;
+        }
 
         if ($user->get('disableActionHistory') || $user->isSystemUser()) {
             return false;
