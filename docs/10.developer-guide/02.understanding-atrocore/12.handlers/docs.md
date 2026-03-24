@@ -193,7 +193,6 @@ namespace MyModule\Handlers\Product;
 use Atro\Core\Http\Response\Errors\BadRequestResponse;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Mezzio\Router\RouteResult;
 use MyModule\Services\ProductService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -224,8 +223,7 @@ class ProductStatsHandler implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $routeResult = $request->getAttribute(RouteResult::class);
-        $id = $routeResult?->getMatchedParams()['id'] ?? null;
+        $id = (string) $request->getAttribute('id');
 
         if (empty($id)) {
             return new BadRequestResponse('id is required');
