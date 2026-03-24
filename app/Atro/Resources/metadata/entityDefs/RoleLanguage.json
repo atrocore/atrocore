@@ -1,0 +1,84 @@
+{
+  "fields": {
+    "role": {
+      "type": "link",
+      "required": true
+    },
+    "language": {
+      "type": "link",
+      "required": true,
+      "entity": "Language",
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "readAction": {
+      "type": "bool",
+      "default": false,
+      "notNull": true
+    },
+    "editAction": {
+      "type": "bool",
+      "default": false,
+      "notNull": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "readAction"
+            }
+          ]
+        }
+      }
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "role": {
+      "type": "belongsTo",
+      "foreign": "languages",
+      "entity": "Role"
+    },
+    "language": {
+      "type": "belongsTo",
+      "entity": "Language",
+      "skipOrmDefs": true
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": true
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "deleted",
+      "language_id",
+      "role_id"
+    ]
+  }
+}
