@@ -29,6 +29,23 @@ class V2Dot2Dot30 extends Base
         } else {
             $this->exec("CREATE TABLE role_language (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', read_action TINYINT(1) DEFAULT '0' NOT NULL, edit_action TINYINT(1) DEFAULT '0' NOT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, role_id VARCHAR(36) DEFAULT NULL, language_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_ROLE_LANGUAGE_UNIQUE (deleted, language_id, role_id), INDEX IDX_ROLE_LANGUAGE_ROLE_ID (role_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
         }
+
+        // extesnbileEnumOption
+        if($this->isPgSQL()) {
+            $this->exec("ALTER TABLE extensible_enum_option ALTER name TYPE VARCHAR(255)");
+            $this->exec("ALTER TABLE extensible_enum_option ALTER name DROP DEFAULT");
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                $suffix = strtolower($code);
+                $this->exec("ALTER TABLE extensible_enum_option ALTER name_$suffix TYPE VARCHAR(255)");
+                $this->exec("ALTER TABLE extensible_enum_option ALTER name_$suffix DROP DEFAULT");
+            }
+        }else{
+            $this->exec("ALTER TABLE extensible_enum_option CHANGE name name VARCHAR(255) DEFAULT NULL");
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                $suffix = strtolower($code);
+                $this->exec("ALTER TABLE extensible_enum_option CHANGE name_$suffix name_$suffix VARCHAR(255) DEFAULT NULL");
+            }
+        }
     }
 
     public function down(): void
