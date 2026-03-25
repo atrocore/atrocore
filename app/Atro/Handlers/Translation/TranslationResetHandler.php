@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\Translation;
 
 use Atro\Console\AbstractConsole;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -37,6 +37,6 @@ class TranslationResetHandler extends AbstractHandler
     {
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . ' console.php refresh translations >/dev/null');
 
-        return new JsonResponse(['true' => true]);
+        return new BoolResponse(true);
     }
 }

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\ClassificationAttribute;
 
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -47,6 +47,6 @@ class ClassificationAttributeDeleteHandler extends AbstractHandler
             $service->deleteEntity($id);
         }
 
-        return new JsonResponse(['true' => true]);
+        return new BoolResponse(true);
     }
 }

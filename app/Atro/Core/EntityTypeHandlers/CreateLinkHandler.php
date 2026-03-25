@@ -15,7 +15,7 @@ namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -69,7 +69,7 @@ class CreateLinkHandler extends AbstractHandler
 
             $service->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
 
-            return new JsonResponse(['true' => $result]);
+            return new BoolResponse($result);
         }
 
         $foreignIdList = [];
@@ -91,7 +91,7 @@ class CreateLinkHandler extends AbstractHandler
 
         if ($result) {
             $service->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
-            return new JsonResponse(['true' => true]);
+            return new BoolResponse(true);
         }
 
         throw new Error();

@@ -15,7 +15,7 @@ namespace Atro\Handlers\AttributePanel;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -66,7 +66,7 @@ class AttributePanelCreateLinkHandler extends AbstractHandler
 
             $service->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
 
-            return new JsonResponse(['true' => $result]);
+            return new BoolResponse($result);
         }
 
         $foreignIdList = [];
@@ -88,7 +88,7 @@ class AttributePanelCreateLinkHandler extends AbstractHandler
 
         if ($result) {
             $service->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
-            return new JsonResponse(['true' => true]);
+            return new BoolResponse(true);
         }
 
         throw new Error();

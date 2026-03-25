@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
@@ -54,6 +55,6 @@ class DeleteHandler extends AbstractHandler
             throw new Error();
         }
 
-        return new JsonResponse(['true' => true]);
+        return new BoolResponse(true);
     }
 }

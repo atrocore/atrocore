@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\Classification;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Atro\Services\Record;
@@ -76,6 +76,6 @@ class ClassificationRelateRecordsHandler extends AbstractHandler
             }
         }
 
-        return new JsonResponse(['true' => true]);
+        return new BoolResponse(true);
     }
 }

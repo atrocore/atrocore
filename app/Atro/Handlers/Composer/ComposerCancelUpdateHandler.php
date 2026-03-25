@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\Composer;
 
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -41,6 +41,6 @@ class ComposerCancelUpdateHandler extends AbstractHandler
 
         $this->getServiceFactory()->create('Composer')->cancelChanges();
 
-        return new JsonResponse(['true' => true]);
+        return new BoolResponse(true);
     }
 }

@@ -15,7 +15,7 @@ namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -63,6 +63,6 @@ class UpsertAttributeValuesHandler extends AbstractHandler
 
         $this->getRecordService($entityName)->updateEntity($id, $input);
 
-        return new JsonResponse(['true' => true]);
+        return new BoolResponse(true);
     }
 }

@@ -15,7 +15,7 @@ namespace Atro\Handlers\Connection;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -50,6 +50,6 @@ class ConnectionDeleteHandler extends AbstractHandler
             throw new Error();
         }
 
-        return new JsonResponse(['true' => true]);
+        return new BoolResponse(true);
     }
 }

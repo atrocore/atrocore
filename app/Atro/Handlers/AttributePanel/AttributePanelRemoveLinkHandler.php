@@ -15,7 +15,7 @@ namespace Atro\Handlers\AttributePanel;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -75,7 +75,7 @@ class AttributePanelRemoveLinkHandler extends AbstractHandler
         }
 
         if ($result) {
-            return new JsonResponse(['true' => true]);
+            return new BoolResponse(true);
         }
 
         throw new Error();

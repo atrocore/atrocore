@@ -16,7 +16,7 @@ namespace Atro\Handlers\Unit;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -58,6 +58,6 @@ class UnitSetDefaultHandler extends AbstractHandler
 
         $this->getRecordService('Unit')->setUnitAsDefault($unit);
 
-        return new JsonResponse(['true' => true]);
+        return new BoolResponse(true);
     }
 }
