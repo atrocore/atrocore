@@ -244,11 +244,32 @@ The entity can be viewed by its [hierarchy](../03.administration/11.entity-manag
 
 ![Hierarchy panel](./_assets/hierarchy-panel.png){.large}
 
-If the same entity is selected in the left panel as the page being viewed, the "Apply main search and filter" toggle appears below the search. It is enabled by default. Disabling the toggle prevents the main filter and search from applying to the record list in the left sidebar. If the toggle is enabled, the text search in the left sidebar will be applied in addition to the main filter.
+### Multi-Selection in Left Sidebar
 
-![Search in the tree panel](./_assets/hierarchy-panel-search.png){.large}
+For relationship fields displayed in the left sidebar, multiple items can be selected simultaneously to filter the main list. Selected items appear as badges at the bottom of the left sidebar, each showing an icon, name, and a remove button.
 
-In addition to relative fields, there is a [Bookmarks](../05.toolbar/01.bookmarks/docs.md) link at the top of the left sidebar.
+![Multiple selected nodes with badges](./_assets/tree-multi-selection-badges.png){.large}
+
+**Key features:**
+
+- **Select multiple items** – click any item in the left sidebar to add it to the active selection
+- **Visual feedback** – selected items are highlighted in the tree and displayed as badges at the bottom
+- **Remove individual selections** – click the × button on any badge to remove that item from the filter
+- **Clear all selections** – use the **Unset All** button to remove all selected items at once
+
+**Interaction with Advanced Filter:**
+
+When items are selected in the left sidebar, they automatically create filter rules in the right sidebar. These automatic filters:
+
+- Cannot be edited directly in the right sidebar
+- Can only be removed by clearing the selections in the left sidebar badges
+- Disable the **Advanced Filter** toggle and **Reset Filter** button until all selections are cleared
+
+To modify or reset all filters when items are selected in the left sidebar, first clear the selections using the badges or the **Unset All** button.
+
+![Advanced Filter disabled when tree selections are active](./_assets/tree-filter-locked.png){.medium}
+
+In addition to relationship fields, there is a [Bookmarks](../05.toolbar/01.bookmarks/docs.md) link at the top of the left sidebar.
 
 Bookmarked records can be filtered by any filter and searched both in the left sidebar and on the main page.
 

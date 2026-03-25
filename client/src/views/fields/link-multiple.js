@@ -1005,8 +1005,15 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.getModelFactory().create(null, model => {
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
+                        if (rule.$el && !rule.$el.closest('body').length) {
+                            return;
+                        }
                         let nameHash = { '_localeId': this.getUser().get('localeId') }
-                        if ((rule.value || []).length > 0) {
+                        if (rule.data && rule.data['nameHash']) {
+                            Object.assign(nameHash, rule.data['nameHash']);
+                        }
+                        const missingIds = (rule.value || []).filter(id => !nameHash[id]);
+                        if (missingIds.length > 0) {
                             try {
                                 const resp = this.ajaxGetRequest(this.foreignScope, {
                                     select: this.getForeignName(),
@@ -1015,7 +1022,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                         {
                                             type: 'in',
                                             attribute: 'id',
-                                            value: rule.value
+                                            value: missingIds
                                         }
                                     ]
                                 }, { async: false })

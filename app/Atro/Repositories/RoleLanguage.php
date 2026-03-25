@@ -23,17 +23,20 @@ class RoleLanguage extends Base
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew()) {
-            $exists = $this->where([
-                'roleId'     => $entity->get('roleId'),
-                'languageId' => $entity->get('languageId'),
-            ])->findOne();
+        $exists = $this->where([
+            'roleId'     => $entity->get('roleId'),
+            'languageId' => $entity->get('languageId'),
+        ])->findOne();
 
-            if (!empty($exists)) {
-                $fieldName = $this->getLanguage()->translate('language', 'fields', 'RoleLanguage');
-                $message = $this->getLanguage()->translate('notUniqueRecordField', 'exceptions');
-                throw new NotUnique(sprintf($message, $fieldName));
-            }
+        if (!empty($exists) && $exists->get('id') !== $entity->get('id')) {
+            $fieldName = $this->getLanguage()->translate('language', 'fields', 'RoleLanguage');
+            $message = $this->getLanguage()->translate('notUniqueRecordField', 'exceptions');
+            throw new NotUnique(sprintf($message, $fieldName));
+        }
+
+        $language = $this->getEntityManager()->getEntity('Language', $entity->get('languageId'));
+        if (!empty($language) && $language->get('role') === 'main' && empty($entity->get('readAction'))) {
+            throw new BadRequest($this->getLanguage()->translate('mainLanguageMustBeReadable', 'exceptions', 'RoleLanguage'));
         }
 
         if (empty($entity->get('readAction'))) {

@@ -184,6 +184,7 @@ class OpenApiGenerator
                 continue;
             }
             unset($propSchema['readOnly']);
+            $propSchema['nullable'] = true;
             $writeProps[$prop] = $propSchema;
         }
 

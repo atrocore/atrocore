@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": {
-      "type": "text",
+      "type": "varchar",
       "isMultilang": true
     },
     "code": {

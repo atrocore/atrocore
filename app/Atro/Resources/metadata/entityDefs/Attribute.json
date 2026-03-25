@@ -157,8 +157,7 @@
     "isMultilang": {
       "type": "bool",
       "hideMultilang": true,
-      "layoutDetailDisabled": true,
-      "layoutRemoveDisabled": true
+      "layoutDetailDisabled": true
     },
     "classificationAttributes": {
       "type": "linkMultiple",
