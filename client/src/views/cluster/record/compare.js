@@ -124,7 +124,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 statusIconsHtml += `<i class="ph ph-sparkle autoconfirmed" title="${this.translate('confirmedAutomatically', 'labels', 'ClusterItem')}"></i>`;
             }
 
-            if (model.item.get('_meta')?.cluster?.confirmed && entityName) {
+            if (entityName) {
                 const primaryEntityId = this.getMetadata().get(['scopes', entityName, 'primaryEntityId']);
                 if (primaryEntityId && this.getMetadata().get(['scopes', entityName, 'role']) === 'staging') {
                     statusIconsHtml += `<i class="ph ph-signpost entity-role-icon" title="${this.translate('stagingRecord', 'labels', 'Cluster')}"></i>`;
