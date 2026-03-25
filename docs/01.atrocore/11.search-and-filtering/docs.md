@@ -167,10 +167,7 @@ Depending on the [field/attribute type](../03.administration/11.entity-managemen
 | | Less / Less or Equal | Input field |
 | | Greater / Greater or Equal | Input field |
 | | Between | 2 input fields |
-| **String, Text, HTML, URL, Email, Identifier, Script, Color** | Contains / Not Contains | Input field |
-| | Equals / Not Equals | Input field |
-| | Is Null / Is Not Null | – |
-| **Markdown** | Contains / Not Contains | Input field |
+| **String, Text, HTML, Markdown, URL, Email, Identifier, Script, Color** | Contains / Not Contains | Input field |
 | | Equals / Not Equals | Input field |
 | | Is Null / Is Not Null | – |
 | **Boolean** | Equals / Not Equals | Checkbox |
