@@ -1468,6 +1468,9 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$scope]['fields'] = $newFields;
         }
 
+        // Disable removal of isMultilang in Attribute entity
+        $data['entityDefs']['Attribute']['fields']['isMultilang']['layoutRemoveDisabled'] = true;
+
         return $data;
     }
 
