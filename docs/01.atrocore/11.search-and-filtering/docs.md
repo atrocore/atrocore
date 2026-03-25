@@ -191,7 +191,7 @@ Depending on the [field/attribute type](../03.administration/11.entity-managemen
 | | Last Month / Next Month / Current Month | – |
 | | Last Year / Current Year | – |
 | | Past / Today / Future | – |
-| **File, Multiple Link** | In / Not In | Selection dialog |
+| **File, Multiple Link** | In / Not In | Value list, Multiselect |
 | | Is Empty / Is Not Empty | – |
 | **List, Link, Multi-value List, Measure, Array, Static List, Static Multi-value List, Currency List, Language Code, Language Codes, Route(s)** | In / Not In | Value list / multiselect |
 | | Is Null / Is Not Null | – |
