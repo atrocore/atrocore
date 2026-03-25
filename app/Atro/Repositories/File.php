@@ -410,13 +410,15 @@ class File extends Base
     public function validateItemName(FileEntity $file): void
     {
         if ($file->isNew() || $file->isAttributeChanged('name') || $file->isAttributeChanged('folderId')) {
-            $qb = $this->getConnection()->createQueryBuilder()
+            $qb = $this->getDbal()->createQueryBuilder()
                 ->select('*')
                 ->from('file_folder_linker')
                 ->where('name=:name')
                 ->andWhere('parent_id=:parentId')
+                ->andWhere('deleted = :false')
                 ->setParameter('name', $file->get('name'))
-                ->setParameter('parentId', $file->get('folderId') ?? '');
+                ->setParameter('parentId', $file->get('folderId') ?? '')
+                ->setParameter('false', 'false', ParameterType::BOOLEAN);
 
             if (!$file->isNew()) {
                 $qb->andWhere('id!=:id')->setParameter('id', $file->get('id'));
