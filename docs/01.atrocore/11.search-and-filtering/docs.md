@@ -79,9 +79,7 @@ However, Reference-type fields can be used in Advanced Filters, where filtering 
 The following filters appear only when the entity supports the corresponding feature:
 
 - **Active** – active records only (entities with an `isActive` field, configured via [Entity Management](../03.administration/11.entity-management/docs.md#configuration-fields)).
-- **My** – records associated with the current user (entities with [Owner or Assigned User](../03.administration/11.entity-management/docs.md#access-management-panel) enabled).
-- **Owned by me** – records owned by the current user (entities with [Owner](../03.administration/11.entity-management/docs.md#access-management-panel) enabled).
-- **Assigned to me** – records assigned to the current user (entities with [Assigned User](../03.administration/11.entity-management/docs.md#access-management-panel) enabled).
+- **My / Owned by me / Assigned to me** – records associated with, owned by, or assigned to the current user (entities with [Owner or Assigned User](../03.administration/11.entity-management/docs.md#access-management-panel) enabled).
 - **Multiple Classifications** – records with more than one [classification](../03.administration/12.attribute-management/04.classifications/docs.md) assigned.
 - **Without main image** – records with no main image set ([Products](../../05.pim/03.products/docs.md) only).
 
