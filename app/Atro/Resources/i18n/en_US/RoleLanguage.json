@@ -8,5 +8,8 @@
   "labels": {
     "yes": "Yes",
     "no": "No"
+  },
+  "exceptions": {
+    "mainLanguageMustBeReadable": "The main language must be readable by all users."
   }
 }
