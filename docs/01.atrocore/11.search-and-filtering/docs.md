@@ -71,22 +71,19 @@ However, Reference-type fields can be used in Advanced Filters, where filtering 
 
 ## General and Saved filters
 
-**General filters** are predefined on/off filters available for every entity by default:
+**General filters** are predefined on/off filters. The following are available for all entities:
 
-- **My** – records associated with the current user
-- **Owned by me** – records owned by the current user
-- **Assigned to me** – records assigned to the current user
-- **Without main image** – records with no main image set
-- **Active** – active records only
 - **Deleted** – soft-deleted records
 - **Bookmarked** – records bookmarked by the current user
-- **Multiple Classifications** – records with more than one classification assigned
 
-Additional general filters available when specific modules are installed:
+The following filters appear only when the entity supports the corresponding feature:
 
-- **Followed** – records the current user is following
-- **With archived** – includes archived records in results
-- **Without non-archived** – archived records only
+- **Active** – active records only (entities with an `isActive` field, configured via [Entity Management](../03.administration/11.entity-management/docs.md#configuration-fields)).
+- **My** – records associated with the current user (entities with [Owner or Assigned User](../03.administration/11.entity-management/docs.md#access-management-panel) enabled).
+- **Owned by me** – records owned by the current user (entities with [Owner](../03.administration/11.entity-management/docs.md#access-management-panel) enabled).
+- **Assigned to me** – records assigned to the current user (entities with [Assigned User](../03.administration/11.entity-management/docs.md#access-management-panel) enabled).
+- **Multiple Classifications** – records with more than one [classification](../03.administration/12.attribute-management/04.classifications/docs.md) assigned.
+- **Without main image** – records with no main image set ([Products](../../05.pim/03.products/docs.md) only).
 
 **Saved filters** are advanced filter configurations that have been saved for reuse. They can be marked as Public or Private and function as prebuilt on/off filters.
 
@@ -175,7 +172,6 @@ Depending on the [field/attribute type](../03.administration/11.entity-managemen
 | **String, Text, HTML, URL, Email, Identifier, Script, Color** | Contains / Not Contains | Input field |
 | | Equals / Not Equals | Input field |
 | | Is Null / Is Not Null | – |
-| | Similar To / Word Similar To | Input field |
 | **Markdown** | Contains / Not Contains | Input field |
 | | Equals / Not Equals | Input field |
 | | Is Null / Is Not Null | – |
