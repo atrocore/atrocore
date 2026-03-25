@@ -184,14 +184,19 @@ class ClusterItem extends Base
 
     public function getSingleClusterItemsToConfirmAutomatically($stagingEntityName, $offset = 0, $limit = 2000): EntityCollection
     {
+        $masterEntityName = $this->getMetadata()->get("scopes.$stagingEntityName.primaryEntityId");
+        $masterTableName = Util::toUnderScore(lcfirst((string)$masterEntityName));
+
         return $this->limit($offset, $limit)->find([
-            'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($stagingEntityName) {
+            'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($stagingEntityName, $masterTableName) {
                 $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
                 $stagingTableName = $mapper->toDb($stagingEntityName);
 
-                $qb->andWhere("$tableAlias.entity_name = :stagingEntityName and $tableAlias.matched_score is null")
+                $qb->innerJoin($tableAlias, $stagingTableName, 'se_chk', "se_chk.id=$tableAlias.entity_id and se_chk.deleted=:false")
+                    ->leftJoin('se_chk', $masterTableName, 'me_chk', 'me_chk.id=se_chk.master_record_id and me_chk.deleted=:false')
+                    ->andWhere("$tableAlias.entity_name = :stagingEntityName and $tableAlias.matched_score is null")
                     ->andWhere("(select count(id) from cluster_item ci where ci.cluster_id=$tableAlias.cluster_id and deleted=:false) = 1")
-                    ->andWhere("(select count(id) from $stagingTableName st where st.id=$tableAlias.entity_id and st.master_record_id is null and st.deleted=:false) = 1")
+                    ->andWhere('me_chk.id is null')
                     ->setParameter('stagingEntityName', $stagingEntityName);
             }]
         ]);
@@ -207,6 +212,8 @@ class ClusterItem extends Base
 
         $minimumScore = $masterDataEntity->get('minimumMatchingScore');
         $stagingTableName = Util::toUnderScore(lcfirst($stagingEntityName));
+        $masterEntityName = $this->getMetadata()->get("scopes.$stagingEntityName.primaryEntityId");
+        $masterTableName = Util::toUnderScore(lcfirst((string)$masterEntityName));
 
         $qb = $this->getDbal()->createQueryBuilder()
             ->select('ci.cluster_id');
@@ -220,7 +227,9 @@ class ClusterItem extends Base
         $qb->from('cluster_item', 'ci')
             ->innerJoin('ci', 'cluster', 'c', 'c.id=ci.cluster_id and c.deleted=:false')
             ->innerJoin('ci', $stagingTableName, 'se', 'se.id=ci.entity_id and se.deleted=:false')
-            ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and se.master_record_id is null and ci.deleted=:false')
+            ->leftJoin('se', $masterTableName, 'me', 'me.id=se.master_record_id and me.deleted=:false')
+            ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and ci.deleted=:false')
+            ->andWhere('me.id is null')
             ->setParameter('stagingEntityName', $stagingEntityName)
             ->setParameter('minimumScore', $minimumScore)
             ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -229,7 +238,6 @@ class ClusterItem extends Base
             ->orderBy('ci.cluster_id', 'DESC')
             ->groupBy('ci.cluster_id');
 
-
         return $qb->fetchAllAssociative();
     }
 
@@ -237,7 +245,7 @@ class ClusterItem extends Base
     {
         return $this->limit($offset, $limit)->find([
             'skipBelongsToJoins' => true,
-            'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) {
+            'callbacks'          => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) {
                 $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
                 // Search for cluster items with deleted matched record ids and check if it has another matched record in the cluster
@@ -275,9 +283,7 @@ class ClusterItem extends Base
     {
         parent::afterRemove($entity, $options);
 
-        if (!empty($entity->get('matchedRecordId'))) {
-            $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('matchedRecordId'));
-        }
+        $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('entityName'), $entity->get('entityId'));
 
         $this->createClusterActivityNote($entity->get('clusterId'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
     }
@@ -357,11 +363,11 @@ class ClusterItem extends Base
         }
 
         $stagingRecords = [];
-        $masterRecords  = [];
+        $masterRecords = [];
 
         foreach ($items as $item) {
             $entityName = $item['entity_name'];
-            $entityId   = $item['entity_id'];
+            $entityId = $item['entity_id'];
 
             $name = (!empty($namesByTypeAndId[$entityName][$entityId])) ? $namesByTypeAndId[$entityName][$entityId] : $entityId;
 
@@ -384,7 +390,7 @@ class ClusterItem extends Base
 
         $numberById = array_column($clusterRows, 'number', 'id');
         $fromNumber = $numberById[$clusterIdFrom] ?? null;
-        $toNumber   = $numberById[$clusterIdTo]   ?? null;
+        $toNumber = $numberById[$clusterIdTo] ?? null;
 
         $this->createClusterActivityNote($clusterIdTo, 'movedToCluster', '', '', [
             'stagingRecords' => $stagingRecords,

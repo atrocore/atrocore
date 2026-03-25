@@ -44,14 +44,15 @@ class MatchedRecord extends Base
             ->executeQuery();
     }
 
-    public function markHasNoCluster(string $id): void
+    public function markHasNoCluster(string $entityName, string $entityId): void
     {
-        $this->getConnection()->createQueryBuilder()
+        $this->getDbal()->createQueryBuilder()
             ->update('matched_record')
             ->set('has_cluster', ':false')
-            ->where('id=:id')
+            ->where('(source_entity=:entityName AND source_entity_id=:entityId) OR (master_entity=:entityName AND master_entity_id=:entityId)')
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('id', $id)
+            ->setParameter('entityName', $entityName)
+            ->setParameter('entityId', $entityId)
             ->executeQuery();
     }
 
