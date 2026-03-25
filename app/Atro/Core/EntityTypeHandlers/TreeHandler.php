@@ -37,7 +37,7 @@ use Atro\Core\Routing\EntityType;
         ['name' => 'offset',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],
         ['name' => 'maxSize',    'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 20]],
         ['name' => 'sortBy',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'string',  'example' => 'name']],
-        ['name' => 'asc',        'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean', 'example' => true]],
+        ['name' => 'asc',        'in' => 'query', 'required' => false, 'schema' => ['anyOf' => [['type' => 'boolean'], ['type' => 'string']], 'example' => true]],
         ['name' => 'isTreePanel','in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean']],
         ['name' => 'where',      'in' => 'query', 'required' => false, 'schema' => ['anyOf' => [['type' => 'array'], ['type' => 'object'], ['type' => 'string']]]],
         ['name' => 'foreignWhere','in' => 'query','required' => false, 'schema' => ['anyOf' => [['type' => 'array'], ['type' => 'object'], ['type' => 'string']]]],
