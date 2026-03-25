@@ -192,9 +192,11 @@ class ClusterItem extends Base
                 $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
                 $stagingTableName = $mapper->toDb($stagingEntityName);
 
-                $qb->andWhere("$tableAlias.entity_name = :stagingEntityName and $tableAlias.matched_score is null")
+                $qb->innerJoin($tableAlias, $stagingTableName, 'se_chk', "se_chk.id=$tableAlias.entity_id and se_chk.deleted=:false")
+                    ->leftJoin('se_chk', $masterTableName, 'me_chk', 'me_chk.id=se_chk.master_record_id and me_chk.deleted=:false')
+                    ->andWhere("$tableAlias.entity_name = :stagingEntityName and $tableAlias.matched_score is null")
                     ->andWhere("(select count(id) from cluster_item ci where ci.cluster_id=$tableAlias.cluster_id and deleted=:false) = 1")
-                    ->andWhere("(select count(id) from $stagingTableName st where st.id=$tableAlias.entity_id and (st.master_record_id is null or (st.master_record_id is not null and not exists (select 1 from $masterTableName me where me.id = st.master_record_id and me.deleted=:false))) and st.deleted=:false) = 1")
+                    ->andWhere('se_chk.master_record_id is null or me_chk.id is null')
                     ->setParameter('stagingEntityName', $stagingEntityName);
             }]
         ]);
@@ -225,8 +227,9 @@ class ClusterItem extends Base
         $qb->from('cluster_item', 'ci')
             ->innerJoin('ci', 'cluster', 'c', 'c.id=ci.cluster_id and c.deleted=:false')
             ->innerJoin('ci', $stagingTableName, 'se', 'se.id=ci.entity_id and se.deleted=:false')
+            ->leftJoin('se', $masterTableName, 'me', 'me.id=se.master_record_id and me.deleted=:false')
             ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and ci.deleted=:false')
-            ->andWhere('se.master_record_id is null or (se.master_record_id is not null and not exists (select 1 from ' . $masterTableName . ' me where me.id = se.master_record_id and me.deleted=:false))')
+            ->andWhere('se.master_record_id is null or me.id is null')
             ->setParameter('stagingEntityName', $stagingEntityName)
             ->setParameter('minimumScore', $minimumScore)
             ->setParameter('false', false, ParameterType::BOOLEAN)
