@@ -237,7 +237,7 @@ class ClusterItem extends Base
     {
         return $this->limit($offset, $limit)->find([
             'skipBelongsToJoins' => true,
-            'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) {
+            'callbacks'          => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) {
                 $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
                 // Search for cluster items with deleted matched record ids and check if it has another matched record in the cluster
@@ -275,9 +275,7 @@ class ClusterItem extends Base
     {
         parent::afterRemove($entity, $options);
 
-        if (!empty($entity->get('matchedRecordId'))) {
-            $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('matchedRecordId'));
-        }
+        $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('entityName'), $entity->get('entityId'));
 
         $this->createClusterActivityNote($entity->get('clusterId'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
     }
@@ -357,11 +355,11 @@ class ClusterItem extends Base
         }
 
         $stagingRecords = [];
-        $masterRecords  = [];
+        $masterRecords = [];
 
         foreach ($items as $item) {
             $entityName = $item['entity_name'];
-            $entityId   = $item['entity_id'];
+            $entityId = $item['entity_id'];
 
             $name = (!empty($namesByTypeAndId[$entityName][$entityId])) ? $namesByTypeAndId[$entityName][$entityId] : $entityId;
 
@@ -384,7 +382,7 @@ class ClusterItem extends Base
 
         $numberById = array_column($clusterRows, 'number', 'id');
         $fromNumber = $numberById[$clusterIdFrom] ?? null;
-        $toNumber   = $numberById[$clusterIdTo]   ?? null;
+        $toNumber = $numberById[$clusterIdTo] ?? null;
 
         $this->createClusterActivityNote($clusterIdTo, 'movedToCluster', '', '', [
             'stagingRecords' => $stagingRecords,
