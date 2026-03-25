@@ -273,7 +273,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getItemsUrl(selectionId) {
-            return `selection/${selectionId}/selectionItems?select=name,entityName,entityId,entity&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`;
+            return `Selection/${selectionId}/selectionItems?select=name,entityName,entityId,entity&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`;
         },
 
         loadSelectionItemModels(selectionId) {
