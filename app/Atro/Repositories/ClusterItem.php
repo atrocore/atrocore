@@ -196,7 +196,7 @@ class ClusterItem extends Base
                     ->leftJoin('se_chk', $masterTableName, 'me_chk', 'me_chk.id=se_chk.master_record_id and me_chk.deleted=:false')
                     ->andWhere("$tableAlias.entity_name = :stagingEntityName and $tableAlias.matched_score is null")
                     ->andWhere("(select count(id) from cluster_item ci where ci.cluster_id=$tableAlias.cluster_id and deleted=:false) = 1")
-                    ->andWhere('se_chk.master_record_id is null or me_chk.id is null')
+                    ->andWhere('me_chk.id is null')
                     ->setParameter('stagingEntityName', $stagingEntityName);
             }]
         ]);
@@ -229,7 +229,7 @@ class ClusterItem extends Base
             ->innerJoin('ci', $stagingTableName, 'se', 'se.id=ci.entity_id and se.deleted=:false')
             ->leftJoin('se', $masterTableName, 'me', 'me.id=se.master_record_id and me.deleted=:false')
             ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and ci.deleted=:false')
-            ->andWhere('se.master_record_id is null or me.id is null')
+            ->andWhere('me.id is null')
             ->setParameter('stagingEntityName', $stagingEntityName)
             ->setParameter('minimumScore', $minimumScore)
             ->setParameter('false', false, ParameterType::BOOLEAN)
