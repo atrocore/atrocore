@@ -184,14 +184,17 @@ class ClusterItem extends Base
 
     public function getSingleClusterItemsToConfirmAutomatically($stagingEntityName, $offset = 0, $limit = 2000): EntityCollection
     {
+        $masterEntityName = $this->getMetadata()->get("scopes.$stagingEntityName.primaryEntityId");
+        $masterTableName = Util::toUnderScore(lcfirst((string)$masterEntityName));
+
         return $this->limit($offset, $limit)->find([
-            'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($stagingEntityName) {
+            'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($stagingEntityName, $masterTableName) {
                 $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
                 $stagingTableName = $mapper->toDb($stagingEntityName);
 
                 $qb->andWhere("$tableAlias.entity_name = :stagingEntityName and $tableAlias.matched_score is null")
                     ->andWhere("(select count(id) from cluster_item ci where ci.cluster_id=$tableAlias.cluster_id and deleted=:false) = 1")
-                    ->andWhere("(select count(id) from $stagingTableName st where st.id=$tableAlias.entity_id and st.master_record_id is null and st.deleted=:false) = 1")
+                    ->andWhere("(select count(id) from $stagingTableName st where st.id=$tableAlias.entity_id and (st.master_record_id is null or (st.master_record_id is not null and not exists (select 1 from $masterTableName me where me.id = st.master_record_id and me.deleted=:false))) and st.deleted=:false) = 1")
                     ->setParameter('stagingEntityName', $stagingEntityName);
             }]
         ]);
@@ -207,6 +210,8 @@ class ClusterItem extends Base
 
         $minimumScore = $masterDataEntity->get('minimumMatchingScore');
         $stagingTableName = Util::toUnderScore(lcfirst($stagingEntityName));
+        $masterEntityName = $this->getMetadata()->get("scopes.$stagingEntityName.primaryEntityId");
+        $masterTableName = Util::toUnderScore(lcfirst((string)$masterEntityName));
 
         $qb = $this->getDbal()->createQueryBuilder()
             ->select('ci.cluster_id');
@@ -220,7 +225,8 @@ class ClusterItem extends Base
         $qb->from('cluster_item', 'ci')
             ->innerJoin('ci', 'cluster', 'c', 'c.id=ci.cluster_id and c.deleted=:false')
             ->innerJoin('ci', $stagingTableName, 'se', 'se.id=ci.entity_id and se.deleted=:false')
-            ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and se.master_record_id is null and ci.deleted=:false')
+            ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and ci.deleted=:false')
+            ->andWhere('se.master_record_id is null or (se.master_record_id is not null and not exists (select 1 from ' . $masterTableName . ' me where me.id = se.master_record_id and me.deleted=:false))')
             ->setParameter('stagingEntityName', $stagingEntityName)
             ->setParameter('minimumScore', $minimumScore)
             ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -228,7 +234,6 @@ class ClusterItem extends Base
             ->setMaxResults($limit)
             ->orderBy('ci.cluster_id', 'DESC')
             ->groupBy('ci.cluster_id');
-
 
         return $qb->fetchAllAssociative();
     }
