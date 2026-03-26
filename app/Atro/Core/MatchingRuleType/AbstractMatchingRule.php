@@ -33,16 +33,16 @@ abstract class AbstractMatchingRule
 
     abstract public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string;
 
-    abstract public function match(Entity $stageEntity, array $masterEntityData): int;
+    abstract public function match(Entity $stageEntity, array $masterEntityData): float;
 
     public function setRule(MatchingRuleEntity $rule): void
     {
         $this->rule = $rule;
     }
 
-    public function getWeight(): int
+    public function getWeight(): float
     {
-        return $this->rule->get('weight') ?? 0;
+        return (float)($this->rule->get('weight') ?? 0);
     }
 
     protected function getConnection(): Connection
