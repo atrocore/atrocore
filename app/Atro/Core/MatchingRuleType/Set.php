@@ -26,7 +26,7 @@ class Set extends AbstractMatchingRule
         return [];
     }
 
-    public function getWeight(): int
+    public function getWeight(): float
     {
         $weight = 0;
 
@@ -43,7 +43,7 @@ class Set extends AbstractMatchingRule
             }
         }
 
-        return $weight;
+        return (float)$weight;
     }
 
     public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
@@ -79,9 +79,9 @@ class Set extends AbstractMatchingRule
         return "{$alias}.id IN ({$subQb->getSQL()})";
     }
 
-    public function match(Entity $stageEntity, array $masterEntityData): int
+    public function match(Entity $stageEntity, array $masterEntityData): float
     {
-        $weight = 0;
+        $weight = 0.0;
         if ($this->rule->get('operator') === 'or') {
             // convert EntityCollection to array
             $rules = [];

@@ -31,7 +31,7 @@ class MatchingRule extends Base
             ->prepareMatchingSqlPart($qb, $stageEntity);
     }
 
-    public function match(Entity $stageEntity, array $masterEntityData): int
+    public function match(Entity $stageEntity, array $masterEntityData): float
     {
         return $this->getRepository()
             ->createMatchingType($this)
@@ -45,7 +45,7 @@ class MatchingRule extends Base
 
     public function getWeight(): int
     {
-        return $this->getRepository()
+        return (int)$this->getRepository()
             ->createMatchingType($this)
             ->getWeight();
     }

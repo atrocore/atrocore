@@ -56,7 +56,7 @@ class Contains extends AbstractMatchingRule
         return $sqlPart;
     }
 
-    public function match(Entity $stageEntity, array $masterEntityData): int
+    public function match(Entity $stageEntity, array $masterEntityData): float
     {
         $field = $this->rule->get('field');
 
@@ -66,7 +66,7 @@ class Contains extends AbstractMatchingRule
         $masterValue = $masterEntityData[$field];
 
         if (empty($stageValue) && empty($masterValue)) {
-            return 0;
+            return 0.0;
         }
 
         if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
@@ -75,18 +75,18 @@ class Contains extends AbstractMatchingRule
             }
 
             if (!is_array($stageValue) || !is_array($masterValue)) {
-                return 0;
+                return 0.0;
             }
 
             if (empty(array_diff($stageValue, $masterValue))) {
-                return $this->rule->get('weight') ?? 0;
+                return $this->getWeight();
             }
         } else {
             if (str_contains($masterValue, $stageValue)) {
-                return $this->rule->get('weight') ?? 0;
+                return $this->getWeight();
             }
         }
 
-        return 0;
+        return 0.0;
     }
 }

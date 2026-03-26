@@ -76,7 +76,7 @@ class Equal extends AbstractMatchingRule
         return $sqlPart;
     }
 
-    public function match(Entity $stageEntity, array $masterEntityData): int
+    public function match(Entity $stageEntity, array $masterEntityData): float
     {
         $fieldName = $this->rule->get('field');
 
@@ -94,9 +94,9 @@ class Equal extends AbstractMatchingRule
         }
 
         if ($value === $masterEntityData[$fieldName]) {
-            return $this->rule->get('weight') ?? 0;
+            return $this->getWeight();
         }
 
-        return 0;
+        return 0.0;
     }
 }
