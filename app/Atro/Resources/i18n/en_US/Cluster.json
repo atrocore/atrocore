@@ -31,8 +31,8 @@
     "cannotMergeUnconfirmedItems": "Unconfirmed items cannot be added to the merging"
   },
   "labels": {
-    "stagingRecord": "Staging record",
-    "masterRecord": "Master record"
+    "stagingRecord": "staging record",
+    "masterRecord": "master record"
   },
   "streamMessages": {
     "clusterLinked": "{user} linked {relatedEntity} to this cluster",
