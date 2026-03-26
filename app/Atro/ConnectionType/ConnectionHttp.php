@@ -49,7 +49,7 @@ class ConnectionHttp extends AbstractConnection implements HttpConnectionInterfa
 
     public function generateUrlForEntity(string $entityName): string
     {
-        return "https://unknown.domain/api/v1/$entityName?limit={{ limit }}&offset={{ offset }}{% if payload.entityId is not empty %}&entityId={{ payload.entityId }}{% endif %}";
+        return "https://unknown.domain/api/$entityName?limit={{ limit }}&offset={{ offset }}{% if payload.entityId is not empty %}&entityId={{ payload.entityId }}{% endif %}";
     }
 
     protected function getHeaders(): array

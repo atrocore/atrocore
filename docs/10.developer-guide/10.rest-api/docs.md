@@ -8,7 +8,7 @@ AtroCore is an **API-centric** application where the frontend communicates with 
 
 Every action you perform in the UI can be replicated through an API request. A good way to learn how the API works is to monitor the **network tab** in your browser's developer console (`F12`).
 
-All API requests must include the header `Content-Type: application/json`. The base path for all API requests is `/api/v1/`.
+All API requests must include the header `Content-Type: application/json`. The base path for all API requests is `/api/`.
 
 !!! **Best Practice**: We recommend creating a separate API user with a specific role and limited permissions for all API calls.
 
@@ -27,7 +27,7 @@ For example, the documentation for our public demo instance is available at: [De
 
 ## Authentication
 
-To use the AtroCore API, you must first obtain an access token. Use the `/api/v1/App/user` endpoint with **Basic Authentication** to get your token.
+To use the AtroCore API, you must first obtain an access token. Use the `/api/App/user` endpoint with **Basic Authentication** to get your token.
 
 **Step 1: Encode Basic Token**
 
@@ -45,7 +45,7 @@ let basicToken = btoa('admin:admin');
 Use the encoded token to make a GET request to the `/App/user` endpoint with the `Authorization-Token-Only` header set to `true`.
 
 ```http request
-GET /api/v1/App/user HTTP/1.1
+GET /api/App/user HTTP/1.1
 Host: demo.atropim.com
 Authorization: Basic YWRtaW46YWRtaW4=
 Accept: application/json
@@ -65,7 +65,7 @@ Now, include the header `Authorization-Token: *******************` in all subseq
 For example, to get the instance [generated metadata](../02.understanding-atrocore/02.metadata/docs.md):
 
 ```http request
-GET /api/v1/Metadata HTTP/1.1
+GET /api/Metadata HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: *******************
 Accept: application/json
@@ -80,7 +80,7 @@ When retrieving a list of records from the API, you can control the data returne
 To retrieve only the fields you need, use the `select` parameter with a comma-separated list of field names. This helps reduce the payload size and improves performance.
 
 ```http request
-GET /api/v1/Product?select=id,name,isActive HTTP/1.1
+GET /api/Product?select=id,name,isActive HTTP/1.1
 Host: demo.atropim.com
 Accept: application/json
 Authorization-Token: ***************
@@ -100,7 +100,7 @@ You can paginate through large record sets using the `offset` and `maxSize` para
 <!-- end list -->
 
 ```http request
-GET /api/v1/Product?select=id,name,isActive&offset=0&maxSize=2 HTTP/1.1
+GET /api/Product?select=id,name,isActive&offset=0&maxSize=2 HTTP/1.1
 Host: demo.atropim.com
 Accept: application/json
 Authorization-Token: ***************
@@ -118,7 +118,7 @@ To sort the records, use the `sortBy` and `asc` parameters.
 <!-- end list -->
 
 ```http
-GET /api/v1/Product?select=id,name,isActive&offset=0&maxSize=2&sortBy=name&asc=false HTTP/1.1
+GET /api/Product?select=id,name,isActive&offset=0&maxSize=2&sortBy=name&asc=false HTTP/1.1
 Host: demo.atropim.com
 Accept: application/json
 Authorization-Token: ***************
@@ -138,7 +138,7 @@ To filter records, use the **`where`** query parameter. This parameter uses an *
 **Example Request:**
 
 ```http
-GET /api/v1/Product?where[0][attribute]=name&where[0][type]=like&where[0][value]=%test%&where[0][isAttribute]=false HTTP/1.1
+GET /api/Product?where[0][attribute]=name&where[0][type]=like&where[0][value]=%test%&where[0][isAttribute]=false HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ****************
 ```
@@ -176,7 +176,7 @@ To perform bulk create and bulk update operations, use the `upsert` action on th
 **Endpoint:**
 
 ```
-POST https://ATROCORE_INSTANCE_URL/api/v1/MassActions/action/upsert
+POST https://ATROCORE_INSTANCE_URL/api/MassActions/action/upsert
 ```
 
 **Payload Example:**
@@ -227,7 +227,7 @@ The system will:
 #### Standard Behavior (Using ID)
 
 ``` http
-POST /api/v1/Product
+POST /api/Product
 ```
 
 ``` json
@@ -247,7 +247,7 @@ POST /api/v1/Product
 ##### Single Link Example
 
 ``` http
-POST /api/v1/Product
+POST /api/Product
 ```
 
 ``` json
@@ -280,7 +280,7 @@ The feature supports:
 ##### Example
 
 ``` http
-POST /api/v1/Product
+POST /api/Product
 ```
 
 ``` json
@@ -408,7 +408,7 @@ You can upload files to AtroCore through the `File` entity using one of three me
 
 This method is suitable for smaller files. The file's content is encoded in Base64 and sent directly in the request body.
 
-**Endpoint:** `POST /api/v1/File`
+**Endpoint:** `POST /api/File`
 
 **Payload:**
 
@@ -418,7 +418,7 @@ This method is suitable for smaller files. The file's content is encoded in Base
 
 **Example:**
 ```http request
-POST /api/v1/File HTTP/1.1
+POST /api/File HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ****************************
 Content-Type: application/json
@@ -434,7 +434,7 @@ Content-Type: application/json
 
 This method is useful for uploading files that are already hosted elsewhere. The system will download the file from the provided URL.
 
-**Endpoint:** `POST /api/v1/File`
+**Endpoint:** `POST /api/File`
 
 **Payload:**
 
@@ -444,7 +444,7 @@ This method is useful for uploading files that are already hosted elsewhere. The
 
 **Example:**
 ```http request
-POST /api/v1/File HTTP/1.1
+POST /api/File HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ****************************
 Content-Type: application/json
@@ -460,7 +460,7 @@ Content-Type: application/json
 
 For very large files, you must split the file into smaller pieces (chunks) and upload them individually. This process can be done asynchronously.
 
-**Endpoint:** `POST /api/v1/File`
+**Endpoint:** `POST /api/File`
 
 **Payload:**
 
@@ -473,7 +473,7 @@ For very large files, you must split the file into smaller pieces (chunks) and u
 
 **Example:**
 ```http request
-POST /api/v1/File HTTP/1.1
+POST /api/File HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: *******************
 Content-Type: application/json
@@ -571,7 +571,7 @@ function upload() {
             };
 
             // Use fetch to send the payload to the API
-            fetch('https://demo.atropim.com/api/v1/File', {
+            fetch('https://demo.atropim.com/api/File', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -600,12 +600,12 @@ To create a publicly accessible URL for a file, you must create a **Sharing** en
 
 1.  **Identify the file**: You need the unique identifier (`fileId`) of the file you wish to share.
 
-2.  **Create a Sharing entity**: Make a `POST` request to the `/api/v1/Sharing` endpoint. The request body must be in JSON format and contain at least the `fileId` of the file. You can also provide a `name` to help identify the sharing record.
+2.  **Create a Sharing entity**: Make a `POST` request to the `/api/Sharing` endpoint. The request body must be in JSON format and contain at least the `fileId` of the file. You can also provide a `name` to help identify the sharing record.
 
     **Example Request:**
 
     ```http
-    POST /api/v1/Sharing HTTP/1.1
+    POST /api/Sharing HTTP/1.1
     Host: your-instance.com
     Authorization-Token: ***************
     Content-Type: application/json
@@ -674,7 +674,7 @@ The recommended way to work with attributes is via dedicated endpoints. These ar
 Returns all attribute values assigned to a record.
 
 ```http
-GET /api/v1/Product/{id}/attributeValues HTTP/1.1
+GET /api/Product/{id}/attributeValues HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 ```
@@ -710,7 +710,7 @@ Response:
 Assigns one or more attributes to a record without setting values.
 
 ```http
-POST /api/v1/Product/{id}/addAttributes HTTP/1.1
+POST /api/Product/{id}/addAttributes HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 Content-Type: application/json
@@ -730,7 +730,7 @@ true
 Creates or updates attribute values for a record. Only the attributes specified are affected; all others remain unchanged.
 
 ```http
-POST /api/v1/Product/{id}/upsertAttributeValues HTTP/1.1
+POST /api/Product/{id}/upsertAttributeValues HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 Content-Type: application/json
@@ -758,7 +758,7 @@ true
 Removes one or more attribute assignments from a record.
 
 ```http
-DELETE /api/v1/Product/{id}/attributeValues HTTP/1.1
+DELETE /api/Product/{id}/attributeValues HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 Content-Type: application/json
@@ -797,7 +797,7 @@ An attribute may generate **multiple virtual fields** depending on its type. For
 Use the `Flatten-Attributes: true` header to flatten all attribute values directly into the entity object as virtual fields.
 
 ```http
-GET /api/v1/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
+GET /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 Flatten-Attributes: true
@@ -836,7 +836,7 @@ When using the flattened format, the response includes an `attributesDefs` objec
 Use `allAttributes=true` to include all attributes for each item:
 
 ```http
-GET /api/v1/Product?select=name&maxSize=1&allAttributes=true HTTP/1.1
+GET /api/Product?select=name&maxSize=1&allAttributes=true HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 Flatten-Attributes: true
@@ -845,7 +845,7 @@ Flatten-Attributes: true
 Use the `attributes` parameter to load only specific attributes by ID:
 
 ```http
-GET /api/v1/Product?select=name&attributes=a01jzmpz4cze5da1gs5gq2shr4j,a01jz83qe81ebwsq2rfhpfvc2sp HTTP/1.1
+GET /api/Product?select=name&attributes=a01jzmpz4cze5da1gs5gq2shr4j,a01jz83qe81ebwsq2rfhpfvc2sp HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 Flatten-Attributes: true
@@ -856,7 +856,7 @@ Flatten-Attributes: true
 Update attributes like regular fields in a PATCH request:
 
 ```http
-PATCH /api/v1/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
+PATCH /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 Flatten-Attributes: true
@@ -872,7 +872,7 @@ Flatten-Attributes: true
 Use `__attributes` with an array of attribute IDs to assign attributes to a record:
 
 ```http
-PATCH /api/v1/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
+PATCH /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 Flatten-Attributes: true
@@ -887,7 +887,7 @@ Flatten-Attributes: true
 Use `__attributesToRemove` with an array of attribute IDs:
 
 ```http
-PATCH /api/v1/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
+PATCH /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 Flatten-Attributes: true
@@ -939,7 +939,7 @@ The header is accepted on the following endpoints:
 **Accepted values:** `true` or `1`.
 
 ```http
-GET /api/v1/Product HTTP/1.1
+GET /api/Product HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 With-Meta: true
@@ -991,7 +991,7 @@ Contains ACL flags for the **current authenticated user** on this specific recor
 **Example — list response with permissions:**
 
 ```http
-GET /api/v1/Product?select=id,name&maxSize=2 HTTP/1.1
+GET /api/Product?select=id,name&maxSize=2 HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 With-Meta: true
@@ -1133,7 +1133,7 @@ This simplifies client-side handling — instead of selecting a specific languag
 **Example — request data in German:**
 
 ```http
-GET /api/v1/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
+GET /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
 language: de_DE
@@ -1184,7 +1184,7 @@ Because of this ongoing activity, the Network tab may include many unrelated req
 
 Use the filtering tools in Developer Tools to narrow your focus:
 - Filter by HTTP method (e.g., only POST requests)
-- **Specifically, we recommend filtering by `/api/v1/` to isolate requests that interact with the REST API**—this helps exclude internal or non-REST traffic like configuration files and realtime listeners.
+- **Specifically, we recommend filtering by `/api/` to isolate requests that interact with the REST API**—this helps exclude internal or non-REST traffic like configuration files and realtime listeners.
 - Sort by timestamp or response status to locate requests triggered by direct UI actions
 
 This technique enables developers to reverse-engineer undocumented API interactions and gain a deeper understanding of system behavior. If you discover helpful endpoints through this process, we encourage you to share them—your feedback helps improve our documentation and benefits the entire developer community.

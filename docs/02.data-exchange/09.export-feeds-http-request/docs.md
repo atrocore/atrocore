@@ -40,7 +40,7 @@ The following fields are specific to the HTTP Request export type and appear in 
 
   Example URL with Twig template:
   ```twig
-  https://api.example.com/v1/products/import?token={{ connection.apiKey }}
+  https://api.example.com/products/import?token={{ connection.apiKey }}
   ```
 
 - **Import Feed for response processing** – optionally select an Import Feed that will be used to process the HTTP response returned by the server. This is useful when the target API returns data (for example, created record IDs or validation results) that should be written back into AtroCore. Once this field is filled, an `Import Feed attachment formatter` field appears. It supports [Twig syntax](../../10.developer-guide/80.twig-tutorial/docs.md) and allows you to shape the response before it is handed off to the Import Feed.

@@ -130,7 +130,7 @@ class ActionHistoryMiddleware implements MiddlewareInterface
 
     /**
      * Resolves the entity/scope name from the matched route options (EntityType-expanded routes)
-     * or falls back to the first URL segment after /api/v1/.
+     * or falls back to the first URL segment after /api/.
      */
     private function resolveEntityName(ServerRequestInterface $request): string
     {
@@ -144,7 +144,7 @@ class ActionHistoryMiddleware implements MiddlewareInterface
             }
         }
 
-        // Fallback: extract first path segment after /api/v1/
+        // Fallback: extract first path segment after /api/
         $path     = $request->getUri()->getPath();
         $stripped = preg_replace('#^/api/v\d+/#', '', $path);
         $parts    = explode('/', $stripped);

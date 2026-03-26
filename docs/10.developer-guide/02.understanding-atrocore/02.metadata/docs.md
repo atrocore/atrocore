@@ -194,7 +194,7 @@ For performance reasons, AtroCore compiles all metadata into a single cached fil
 
 You can retrieve the complete metadata through the API using:
 ```
-GET /api/v1/Metadata
+GET /api/Metadata
 ```
 
 For more information about the AtroCore API, see the [REST API documentation](../../10.rest-api/docs.md).

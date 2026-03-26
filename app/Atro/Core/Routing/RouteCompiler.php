@@ -22,7 +22,7 @@ use Atro\Core\Utils\Metadata;
  * EntityTypeHandler-expanded routes (one concrete route per entity × handler combination).
  *
  * Each compiled entry contains:
- *   - path          full route path including /api/v1 prefix
+ *   - path          full route path including /api prefix
  *   - methods       HTTP methods (uppercase)
  *   - handlerClass  FQCN of the PSR-15 handler
  *   - auth          whether the route requires authentication
@@ -125,7 +125,7 @@ class RouteCompiler
                 $routeAttr = $entry['route'];
 
                 $routes[] = [
-                    'path'           => '/api/v1' . str_replace('{entityName}', $entityName, $routeAttr->path),
+                    'path'           => '/api' . str_replace('{entityName}', $entityName, $routeAttr->path),
                     'methods'        => array_map('strtoupper', (array) $routeAttr->methods),
                     'handlerClass'   => $entry['class'],
                     'auth'           => $routeAttr->auth,
@@ -159,7 +159,7 @@ class RouteCompiler
                 }
 
                 $routes[] = [
-                    'path'           => '/api/v1' . $routeAttr->path,
+                    'path'           => '/api' . $routeAttr->path,
                     'methods'        => array_map('strtoupper', (array) $routeAttr->methods),
                     'handlerClass'   => $className,
                     'auth'           => $routeAttr->auth,

@@ -157,11 +157,11 @@ Clearing the cache forces the system to rebuild runtime data, configurations, an
 
 ---
 
-### Issue: Installation Failure (500 Error on ```/api/v1/Installer/getTranslations```)
+### Issue: Installation Failure (500 Error on ```/api/Installer/getTranslations```)
 
 During the installation process, some users may encounter a 500 Internal Server Error when accessing:
 ```
-/api/v1/Installer/getTranslations
+/api/Installer/getTranslations
 ```
 
 This issue is not caused by the application itself but is a result of an incorrect web server configuration.

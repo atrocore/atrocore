@@ -8,14 +8,14 @@ Import and Export Feeds can also be used as REST API endpoints with a flat data 
 
 ## REST API in `Export Feeds` Module
 
-To use this api, you need an active exportFeed with a valid code. Then you can do a `GET` request to `/api/v1/ExportFeed/action/EasyCatalog?code=ExportFeedCode&offset=0`.
+To use this api, you need an active exportFeed with a valid code. Then you can do a `GET` request to `/api/ExportFeed/action/EasyCatalog?code=ExportFeedCode&offset=0`.
 This will return data configured in the ExportFeed.
 
 ![Export Rest Api Example](_assets/export-api-example.png){.large}
 
 ## REST API in `Import Feeds` Module
 
-To use this api, you need an active importFeed with a valid code. Then you can do a `POST` request to `/api/v1/ImportFeed/action/EasyCatalog`.
+To use this api, you need an active importFeed with a valid code. Then you can do a `POST` request to `/api/ImportFeed/action/EasyCatalog`.
 In the body of the request we have 2 parameters.
 
 - `code` – the importFeed code
