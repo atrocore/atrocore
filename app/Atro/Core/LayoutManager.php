@@ -142,7 +142,7 @@ class LayoutManager
         // remove fields from layout if this fields not exist in metadata
         $layout = $this->disableNotExistingFields($scope, $relatedEntity, $relatedLink, $viewType, $layout);
 
-        if (empty($isAdminPage) && in_array($viewType, ['list', 'detail'])) {
+        if (empty($isAdminPage) && in_array($viewType, ['list', 'selection', 'detail'])) {
             $layout = $this->injectMultiLanguageFields($layout, $viewType, $scope, $relatedEntity, $relatedLink);
         }
 
@@ -699,7 +699,7 @@ class LayoutManager
             }
         }
 
-        if ($viewType === 'list') {
+        if (in_array($viewType, ['list', 'selection'])) {
             foreach ($data as $field) {
                 if (is_array($field) && in_array($field['name'], $multiLangFields)) {
                     foreach ($this->getMultiLangLocalesFields($field['name']) as $localeField) {
