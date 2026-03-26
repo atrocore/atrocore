@@ -165,19 +165,21 @@ class OpenApiGenerator
         }
         unset($propSchema);
 
-        $this->buildEntityWriteSchema($result, $entityName);
+        $this->buildEntityPostSchema($result, $entityName);
     }
 
-    private function buildEntityWriteSchema(array &$result, string $entityName): void
+    private function buildEntityPostSchema(array &$result, string $entityName): void
     {
         $readProps    = $result['components']['schemas'][$entityName]['properties'];
         $readRequired = $result['components']['schemas'][$entityName]['required'] ?? [];
 
-        $excluded = ['id', '_meta', 'deleted', 'createdAt', 'modifiedAt', 'createdById'];
+        $excluded = ['_meta', 'deleted', 'createdAt', 'modifiedAt', 'createdById'];
 
-        $writeProps = [];
+        $writeProps = [
+            'id' => ['type' => 'string', 'nullable' => true],
+        ];
         foreach ($readProps as $prop => $propSchema) {
-            if (in_array($prop, $excluded, true) || str_starts_with($prop, '_')) {
+            if (in_array($prop, $excluded, true) || str_starts_with($prop, '_') || $prop === 'id') {
                 continue;
             }
             if (!empty($propSchema['readOnly'])) {
@@ -195,7 +197,12 @@ class OpenApiGenerator
             $schema['required'] = $writeRequired;
         }
 
-        $result['components']['schemas']["{$entityName}Write"] = $schema;
+        $result['components']['schemas']["{$entityName}Post"] = $schema;
+
+        $patchSchema = $schema;
+        unset($patchSchema['required']);
+        unset($patchSchema['properties']['id']);
+        $result['components']['schemas']["{$entityName}Patch"] = $patchSchema;
     }
 
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
@@ -490,8 +497,10 @@ class OpenApiGenerator
     private function substituteWriteSchemaRef(array $data, string $entityName): array
     {
         foreach ($data as $key => $value) {
-            if ($key === 'schema' && $value === ['x-entity-write' => true]) {
-                $data[$key] = ['$ref' => "#/components/schemas/{$entityName}Write"];
+            if ($key === 'schema' && $value === ['x-entity-post' => true]) {
+                $data[$key] = ['$ref' => "#/components/schemas/{$entityName}Post"];
+            } elseif ($key === 'schema' && $value === ['x-entity-patch' => true]) {
+                $data[$key] = ['$ref' => "#/components/schemas/{$entityName}Patch"];
             } elseif (is_array($value)) {
                 $data[$key] = $this->substituteWriteSchemaRef($value, $entityName);
             }

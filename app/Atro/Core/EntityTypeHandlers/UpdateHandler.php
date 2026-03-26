@@ -34,7 +34,7 @@ use Atro\Handlers\AbstractHandler;
     ],
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-write' => true]]],
+        'content'  => ['application/json' => ['schema' => ['x-entity-patch' => true]]],
     ],
     responses: [
         200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],

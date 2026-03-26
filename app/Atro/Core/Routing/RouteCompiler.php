@@ -231,8 +231,12 @@ class RouteCompiler
                 $data['schema'] = ['$ref' => "#/components/schemas/$entityName"];
                 return $data;
             }
-            if ($data['schema'] === ['x-entity-write' => true]) {
-                $data['schema'] = ['$ref' => "#/components/schemas/{$entityName}Write"];
+            if ($data['schema'] === ['x-entity-post' => true]) {
+                $data['schema'] = ['$ref' => "#/components/schemas/{$entityName}Post"];
+                return $data;
+            }
+            if ($data['schema'] === ['x-entity-patch' => true]) {
+                $data['schema'] = ['$ref' => "#/components/schemas/{$entityName}Patch"];
                 return $data;
             }
         }
