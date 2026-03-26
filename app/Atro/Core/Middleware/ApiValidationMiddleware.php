@@ -37,7 +37,11 @@ class ApiValidationMiddleware implements MiddlewareInterface
 
         $entityName = $this->resolveEntityName($request);
 
-        $this->validator->validateHandlerRequest($routeAttr, $request);
+        // Strip empty-string query params before validation: maxSize= is equivalent to "not provided"
+        $filteredRequest = $request->withQueryParams(
+            array_filter($request->getQueryParams(), fn($v) => $v !== '')
+        );
+        $this->validator->validateHandlerRequest($routeAttr, $filteredRequest);
 
         $response = $handler->handle($request);
 
