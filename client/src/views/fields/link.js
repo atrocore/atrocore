@@ -967,11 +967,18 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 }
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
+                        if (rule.$el && !rule.$el.closest('body').length) {
+                            return;
+                        }
                         let nameHash = { '_localeId': this.getUser().get('localeId') }
+                        if (rule.data && rule.data['nameHash']) {
+                            Object.assign(nameHash, rule.data['nameHash']);
+                        }
                         try {
                             const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName']) ?? 'name';
 
-                            if ((rule.value || []).length > 0 && foreignName) {
+                            const missingIds = (rule.value || []).filter(id => !nameHash[id]);
+                            if (missingIds.length > 0 && foreignName) {
                                 const resp = this.ajaxGetRequest(this.foreignScope, {
                                     select: foreignName,
                                     collectionOnly: true,
@@ -979,7 +986,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                                         {
                                             type: 'in',
                                             attribute: 'id',
-                                            value: rule.value
+                                            value: missingIds
                                         }
                                     ]
                                 }, { async: false })
