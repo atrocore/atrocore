@@ -572,12 +572,18 @@ For every entity AtroCore automatically generates **three OpenAPI component sche
 
 These schemas are built automatically by `OpenApiGenerator` based on the entity's field definitions.
 
-### Using the Post/Patch Schema in a Handler
+### Using Entity Schema Sentinels in a Handler
 
-In a `requestBody` definition, use the sentinel value `['x-entity-post' => true]` (for POST) or `['x-entity-patch' => true]` (for PATCH) as the schema. `RouteCompiler` replaces it at compile time with a `$ref` to the appropriate entity schema:
+`RouteCompiler` replaces schema sentinels at compile time with concrete `$ref` values. Three sentinels are available:
+
+| Sentinel | Resolves to | Use for |
+|---|---|---|
+| `['x-entity-read' => true]` | `$ref: #/components/schemas/{Entity}` | Response body — full read schema |
+| `['x-entity-post' => true]` | `$ref: #/components/schemas/{Entity}Post` | POST request body — includes `id`, preserves `required` |
+| `['x-entity-patch' => true]` | `$ref: #/components/schemas/{Entity}Patch` | PATCH request body — no `id`, no `required` |
 
 ```php
-// POST — використовує схему з required і дозволяє id
+// POST
 #[Route(
     path: '/{entityName}',
     methods: ['POST'],
@@ -586,10 +592,12 @@ In a `requestBody` definition, use the sentinel value `['x-entity-post' => true]
         'required' => true,
         'content'  => ['application/json' => ['schema' => ['x-entity-post' => true]]],
     ],
-    responses: [...],
+    responses: [
+        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+    ],
 )]
 
-// PATCH — використовує схему без required (часткове оновлення)
+// PATCH
 #[Route(
     path: '/{entityName}/{id}',
     methods: ['PATCH'],
@@ -598,7 +606,9 @@ In a `requestBody` definition, use the sentinel value `['x-entity-post' => true]
         'required' => true,
         'content'  => ['application/json' => ['schema' => ['x-entity-patch' => true]]],
     ],
-    responses: [...],
+    responses: [
+        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+    ],
 )]
 ```
 

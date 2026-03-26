@@ -32,7 +32,7 @@ use Atro\Core\Routing\EntityType;
         ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],
     responses: [
-        200 => ['description' => 'Inherited relation record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Inherited relation record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
     ],
 )]
 #[EntityType(types: ['Relation'])]

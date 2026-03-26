@@ -31,8 +31,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         ['name' => 'extensibleEnumIds', 'in' => 'query', 'required' => true, 'schema' => ['anyOf' => [['type' => 'array', 'items' => ['type' => 'string']], ['type' => 'string']]]],
     ],
     responses: [
-        200 => ['description' => 'Options mapped by enum ID', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Options mapped by enum ID', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'additionalProperties' => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/ExtensibleEnumOption']]]]]],
     ],
+    entities: ['ExtensibleEnumOption'],
 )]
 class ExtensibleEnumGetOptionsMultipleHandler extends AbstractHandler
 {
