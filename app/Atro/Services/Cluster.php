@@ -94,10 +94,14 @@ class Cluster extends Base
             throw new Forbidden();
         }
 
+        $user = $this->getUser();
+        $this->getEntityManager()->setUser($user->getSystemUser());
+        $this->getContainer()->get(\Atro\Core\UserContext::class)->set($user->getSystemUser());
+
         /** @var RDB $masterRepository */
         $masterRepository = $this->getEntityManager()->getRepository($cluster->get('masterEntity'));
         /** @var Record $masterService */
-        $masterService = $this->getRecordService($cluster->get('masterEntity'));
+        $masterService = $this->getContainer()->get('serviceFactory')->create($cluster->get('masterEntity'));
 
         $sourceList = [];
 
@@ -122,10 +126,12 @@ class Cluster extends Base
 
             if(empty($goldenRecord)) {
                 $goldenRecord = $masterService->createEntity($attributes->input);
-                $cluster->set('goldenRecordId', $goldenRecord->get('id'));
-                $this->getRepository()->save($cluster);
+
             }
         }
+
+        $cluster->set('goldenRecordId', $goldenRecord->get('id'));
+        $this->getRepository()->save($cluster);
 
         $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
 
@@ -197,6 +203,26 @@ class Cluster extends Base
             }
         }
 
+        try {
+            $clusterItem = $this->getEntityManager()->getEntity('ClusterItem');
+            $clusterItem->set('clusterId', $clusterId);
+            $clusterItem->set('entityId', $goldenRecord->get('id'));
+            $clusterItem->set('entityName', $goldenRecord->getEntityName());
+            $this->getEntityManager()->saveEntity($clusterItem);
+        }catch (NotUnique $e) {}
+
         return $goldenRecord;
+    }
+
+    protected function getContainer(): \Atro\Core\Container
+    {
+        return $this->getInjection('container');
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('container');
     }
 }
