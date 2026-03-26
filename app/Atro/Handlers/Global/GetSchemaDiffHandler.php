@@ -11,28 +11,29 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Admin;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\TextResponse;
 use Atro\Core\Routing\Route;
+use Atro\Core\Utils\Database\Schema\Schema;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Admin/clearCache',
-    methods: ['POST'],
-    summary: 'Clear application cache',
-    description: 'Clears the application cache. Admin only.',
-    tag: 'Admin',
+    path: '/Admin/getSchemaDiff',
+    methods: ['GET'],
+    summary: 'Get database schema diff',
+    description: 'Returns SQL queries needed to synchronize the database schema with the current metadata. Admin only.',
+    tag: 'Global',
     responses: [
-        200 => ['description' => 'true on success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => ['description' => 'SQL diff queries as plain text', 'content' => ['text/plain' => ['schema' => ['type' => 'string', 'example' => 'ALTER TABLE product ADD COLUMN sku VARCHAR(255);']]]],
         403 => ['description' => 'Forbidden'],
     ],
 )]
-class ClearCacheHandler extends AbstractHandler
+class GetSchemaDiffHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -40,6 +41,14 @@ class ClearCacheHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new BoolResponse($this->container->get('dataManager')->clearCache());
+        /** @var Schema $schema */
+        $schema = $this->container->get('schema');
+
+        $result = '';
+        foreach ($schema->getDiffQueries() as $query) {
+            $result .= $query . PHP_EOL;
+        }
+
+        return new TextResponse($result);
     }
 }

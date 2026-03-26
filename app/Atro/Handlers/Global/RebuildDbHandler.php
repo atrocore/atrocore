@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Admin;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['POST'],
     summary: 'Rebuild database schema',
     description: 'Rebuilds the database schema to match the current metadata. Admin only.',
-    tag: 'Admin',
+    tag: 'Global',
     responses: [
         200 => ['description' => 'true on success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
         403 => ['description' => 'Forbidden'],

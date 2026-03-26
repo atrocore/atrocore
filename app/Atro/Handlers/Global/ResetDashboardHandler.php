@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\UserProfile;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
@@ -28,7 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['POST'],
     summary: 'Reset dashboard layout',
     description: 'Resets the dashboard layout and dashlet options for a user to the default. Admins can reset any user; regular users can only reset their own.',
-    tag: 'UserProfile',
+    tag: 'Global',
     responses: [
         200 => ['description' => 'Reset dashboard data', 'content' => ['application/json' => ['schema' => [
             'type'       => 'object',
