@@ -402,6 +402,7 @@ class ClusterItem extends Base
             $entity->setMetaPermission('confirm', !$isConfirmed);
             $entity->setMetaPermission('reject', true);
             $entity->setMetaPermission('unmerge', $isStaging);
+            $entity->setMetaPermission('move', true);
             $entity->setMetaPermission('delete', true);
             return;
         }
@@ -410,6 +411,7 @@ class ClusterItem extends Base
         $entity->setMetaPermission('confirm', false);
         $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('unmerge', $isStaging && $this->getAcl()->check($entity, 'edit'));
+        $entity->setMetaPermission('move', $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('delete', false);
 
         if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
@@ -458,6 +460,61 @@ class ClusterItem extends Base
         parent::prepareCollectionForOutput($collection, $selectParams);
 
         $this->getRecordService('SelectionItem')->prepareCollectionRecords($collection, $selectParams);
+    }
+
+    public function move(array $params): array
+    {
+        $targetClusterId = $params['targetClusterId'] ?? null;
+        if (empty($targetClusterId)) {
+            throw new BadRequest("targetClusterId is required.");
+        }
+
+        $targetCluster = $this->getEntityManager()->getEntity('Cluster', $targetClusterId);
+        if (empty($targetCluster)) {
+            throw new NotFound("Target cluster not found.");
+        }
+
+        if (!empty($params['where'])) {
+            $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
+            $collection = $this->getRepository()->find($selectParams);
+        } else {
+            if (empty($ids = $params['ids'])) {
+                throw new BadRequest("No ids provided.");
+            }
+            $collection = $this->getRepository()->findByIds($ids);
+        }
+
+        $moved   = 0;
+        $skipped = 0;
+
+        foreach ($collection as $entity) {
+            if ($entity->get('clusterId') === $targetClusterId) {
+                $skipped++;
+                continue;
+            }
+
+            // Skip if item is rejected in the target cluster
+            if ($this->getRepository()->isRejectedInCluster($entity->get('id'), $targetClusterId)) {
+                $skipped++;
+                continue;
+            }
+
+            $sourceClusterId = $entity->get('clusterId');
+
+            if ($this->isClusterItemConfirmed($entity)) {
+                $this->unConfirmClusterItem($entity);
+            }
+
+            $this->createClusterNote($sourceClusterId, 'moved', $entity->get('entityName'), $entity->get('entityId'));
+            $this->getRepository()->moveToCluster($entity->get('id'), $targetClusterId);
+            $this->createClusterNote($targetClusterId, 'linked', $entity->get('entityName'), $entity->get('entityId'));
+
+            $this->getRepository()->updateMatchedScoresInClusters([$sourceClusterId, $targetClusterId]);
+
+            $moved++;
+        }
+
+        return ['count' => $moved, 'skipped' => $skipped, 'sync' => true, 'errors' => []];
     }
 
     private function createClusterNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = ''): void

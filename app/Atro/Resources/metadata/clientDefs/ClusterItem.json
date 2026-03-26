@@ -1,6 +1,7 @@
 {
   "controller": "controllers/record",
   "createDisabled": true,
+  "listView": "views/cluster-item/list",
   "listActions": {
     "quickEdit": {
       "disabled": true
@@ -27,6 +28,13 @@
       "refresh": true,
       "iconClass": "ph ph-arrows-split",
       "sortOrder": 30
+    },
+    "move": {
+      "action": "move",
+      "massAction": true,
+      "refresh": true,
+      "iconClass": "ph ph-arrow-right",
+      "sortOrder": 40
     }
   }
 }
