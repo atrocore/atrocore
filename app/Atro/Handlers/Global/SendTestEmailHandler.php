@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['POST'],
     summary: 'Send a test email',
     description: 'Sends a test email using the current outbound email settings. Admin only.',
-    tag: 'App',
+    tag: 'Global',
     responses: [
         200 => ['description' => 'true if sent successfully', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
         403 => ['description' => 'Forbidden'],

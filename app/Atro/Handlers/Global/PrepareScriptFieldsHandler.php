@@ -11,38 +11,39 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Espo\Core\Utils\Auth;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/destroyAuthToken',
+    path: '/App/action/prepareScriptFields',
     methods: ['POST'],
-    summary: 'Destroy an authorization token',
-    description: 'Invalidates the specified authorization token.',
-    tag: 'App',
+    summary: 'Prepare script fields',
+    description: 'Evaluates script fields for the specified entity.',
+    tag: 'Global',
     responses: [
-        200 => ['description' => 'true if the token was destroyed', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        400 => ['description' => 'token is required'],
+        200 => ['description' => 'Prepared field values', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        400 => ['description' => 'entityName and fields are required'],
     ],
 )]
-class DestroyAuthTokenHandler extends AbstractHandler
+class PrepareScriptFieldsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'token')) {
+        if (empty($data->entityName) && (empty($data->fields) || !is_array($data->fields))) {
             throw new BadRequest();
         }
 
-        return new BoolResponse((new Auth($this->container))->destroyAuthToken($data->token));
+        return new JsonResponse(
+            $this->getServiceFactory()->create('App')->prepareScriptFields($data->entityName, $data->fields)
+        );
     }
 }

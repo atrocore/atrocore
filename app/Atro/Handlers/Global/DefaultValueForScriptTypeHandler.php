@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['GET'],
     summary: 'Get default value for a script-type field',
     description: 'Returns the evaluated default value for a field with defaultValueType=script.',
-    tag: 'App',
+    tag: 'Global',
     parameters: [
         ['name' => 'entityName', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
         ['name' => 'field', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],

@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\DataManager;
 use Atro\Core\Http\Response\BoolResponse;
@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['POST'],
     summary: 'Update a public data key',
     description: 'Updates a key in the public data store.',
-    tag: 'App',
+    tag: 'Global',
     responses: [
         200 => ['description' => 'true if updated', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],

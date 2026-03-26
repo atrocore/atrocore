@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -25,7 +25,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['GET'],
     summary: 'Get background data',
     description: 'Get background data.',
-    tag: 'App',
+    tag: 'Global',
     auth: false,
     responses: [
         200 => ['description' => 'Background data', 'content' => ['application/json' => ['schema' => [

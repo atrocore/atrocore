@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\GlobalSearch;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -25,7 +25,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['GET'],
     summary: 'Global search',
     description: 'Searches across all enabled entity types and returns matching records.',
-    tag: 'App',
+    tag: 'Global',
     parameters: [
         ['name' => 'q',       'in' => 'query', 'required' => false, 'schema' => ['type' => 'string',  'example' => 'product name']],
         ['name' => 'offset',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],

@@ -11,39 +11,38 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
+use Espo\Core\Utils\Auth;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/startEntityListening',
+    path: '/App/action/destroyAuthToken',
     methods: ['POST'],
-    summary: 'Start listening to entity changes',
-    description: 'Subscribes the current user to real-time updates for the specified entity record.',
-    tag: 'App',
+    summary: 'Destroy an authorization token',
+    description: 'Invalidates the specified authorization token.',
+    tag: 'Global',
     responses: [
-        200 => ['description' => 'Listening token data', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
-        400 => ['description' => 'entityName and entityId are required'],
+        200 => ['description' => 'true if the token was destroyed', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        400 => ['description' => 'token is required'],
     ],
 )]
-class StartEntityListeningHandler extends AbstractHandler
+class DestroyAuthTokenHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getRequestBody($request);
 
-        if (empty($data->entityName) || empty($data->entityId)) {
+        if (!property_exists($data, 'token')) {
             throw new BadRequest();
         }
 
-        return new JsonResponse(
-            $this->container->get('realtimeManager')->startEntityListening($data->entityName, $data->entityId)
-        );
+        return new BoolResponse((new Auth($this->container))->destroyAuthToken($data->token));
     }
 }

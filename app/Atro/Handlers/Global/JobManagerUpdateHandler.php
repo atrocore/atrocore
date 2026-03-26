@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\DataManager;
 use Atro\Core\Exceptions\Forbidden;
@@ -28,7 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['POST'],
     summary: 'Pause or resume the job manager',
     description: 'Pauses or resumes background job processing. Admin only.',
-    tag: 'App',
+    tag: 'Global',
     responses: [
         200 => ['description' => 'true if updated', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
         403 => ['description' => 'Forbidden'],

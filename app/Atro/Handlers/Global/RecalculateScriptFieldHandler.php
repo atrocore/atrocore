@@ -11,30 +11,36 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Metadata;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Atro\Core\Utils\DataUtil;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Metadata',
-    methods: ['GET'],
-    summary: 'Returns all metadata for the current user',
-    description: 'Returns all metadata for the current user.',
-    tag: 'App',
+    path: '/App/action/recalculateScriptField',
+    methods: ['POST'],
+    summary: 'Recalculate the value of the script fields',
+    description: 'Recalculate the value of the script fields',
+    tag: 'Global',
     responses: [
-        200 => ['description' => 'Metadata object', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Updated entity data', 'content' => ['application/json' => ['schema' => [
+            'type'    => 'object',
+            'example' => ['id' => 'a01k1g09hhce8m8pkmzt3zzyq5v', 'name' => 'Yellow Bike'],
+        ]]]],
     ],
 )]
-class MetadataHandler extends AbstractHandler
+class RecalculateScriptFieldHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new JsonResponse(DataUtil::toArray($this->getMetadata()->getAllForFrontend()));
+        $data = $this->getRequestBody($request);
+
+        return new JsonResponse(
+            (array)$this->getServiceFactory()->create('App')->recalculateScriptField($data)->getValueMap()
+        );
     }
 }

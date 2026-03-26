@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -25,7 +25,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['GET'],
     summary: 'Get authorized user data',
     description: 'Generate authorization token and return authorized user data.',
-    tag: 'App',
+    tag: 'Global',
     auth: true,
     parameters: [
         ['name' => 'Authorization-Token-Only', 'in' => 'header', 'required' => false, 'schema' => ['type' => 'boolean', 'example' => true]],

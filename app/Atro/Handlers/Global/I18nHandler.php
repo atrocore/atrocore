@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\I18n;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['GET'],
     summary: 'Returns all translation labels for the UI',
     description: 'Returns all translation labels for the UI. Does not require authentication.',
-    tag: 'App',
+    tag: 'Global',
     auth: false,
     parameters: [
         ['name' => 'locale',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string',  'example' => 'de_DE']],

@@ -385,7 +385,7 @@ class OpenApiGenerator
                 ]
             ],
             'tags'       => [
-                ['name' => 'App', 'description' => 'Application and authentication endpoints.']
+                ['name' => 'Global', 'description' => 'System-wide actions and universal operations not bound to any specific entity.']
             ],
             'paths'      => [],
             'components' => [

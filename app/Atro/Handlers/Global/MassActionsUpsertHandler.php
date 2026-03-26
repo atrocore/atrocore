@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\MassActions;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -25,7 +25,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['POST'],
     summary: 'Bulk Create and Bulk Update',
     description: 'The system will try to find existing entities based on the identifier or unique fields. If an entity is found, it will be updated, otherwise it will be created.',
-    tag: 'MassActions',
+    tag: 'Global',
     parameters: [
         ['name' => 'Use-Queue', 'in' => 'header', 'required' => false, 'schema' => ['type' => 'boolean', 'example' => false]],
     ],

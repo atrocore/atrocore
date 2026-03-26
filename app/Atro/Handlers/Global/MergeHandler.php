@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
@@ -27,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['POST'],
     summary: 'Merge multiple records into a target entity or a new one',
     description: 'Merge multiple records into a target entity or a new one',
-    tag: 'App',
+    tag: 'Global',
     responses: [
         200 => ['description' => 'Merged entity data', 'content' => ['application/json' => ['schema' => [
             'type'    => 'object',

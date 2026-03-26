@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
@@ -22,28 +22,28 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/prepareScriptFields',
+    path: '/App/action/startEntityListening',
     methods: ['POST'],
-    summary: 'Prepare script fields',
-    description: 'Evaluates script fields for the specified entity.',
-    tag: 'App',
+    summary: 'Start listening to entity changes',
+    description: 'Subscribes the current user to real-time updates for the specified entity record.',
+    tag: 'Global',
     responses: [
-        200 => ['description' => 'Prepared field values', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
-        400 => ['description' => 'entityName and fields are required'],
+        200 => ['description' => 'Listening token data', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        400 => ['description' => 'entityName and entityId are required'],
     ],
 )]
-class PrepareScriptFieldsHandler extends AbstractHandler
+class StartEntityListeningHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getRequestBody($request);
 
-        if (empty($data->entityName) && (empty($data->fields) || !is_array($data->fields))) {
+        if (empty($data->entityName) || empty($data->entityId)) {
             throw new BadRequest();
         }
 
         return new JsonResponse(
-            $this->getServiceFactory()->create('App')->prepareScriptFields($data->entityName, $data->fields)
+            $this->container->get('realtimeManager')->startEntityListening($data->entityName, $data->entityId)
         );
     }
 }

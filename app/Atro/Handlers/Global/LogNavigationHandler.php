@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
@@ -27,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['POST'],
     summary: 'Log navigation event',
     description: 'Records a navigation event for the specified record ID.',
-    tag: 'App',
+    tag: 'Global',
     parameters: [
         ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
     ],

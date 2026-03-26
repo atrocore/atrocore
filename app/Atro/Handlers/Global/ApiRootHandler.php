@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
@@ -25,7 +25,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: ['GET'],
     summary: 'API root',
     description: 'Health-check endpoint used by the frontend after login to confirm the API is reachable.',
-    tag: 'App',
+    tag: 'Global',
     responses: [
         200 => ['description' => 'API is reachable', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],

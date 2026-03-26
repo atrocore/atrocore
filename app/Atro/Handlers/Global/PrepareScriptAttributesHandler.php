@@ -11,8 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\App;
+namespace Atro\Handlers\Global;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -21,26 +22,28 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/recalculateScriptField',
+    path: '/App/action/prepareScriptAttributes',
     methods: ['POST'],
-    summary: 'Recalculate the value of the script fields',
-    description: 'Recalculate the value of the script fields',
-    tag: 'App',
+    summary: 'Prepare script attributes',
+    description: 'Evaluates script attributes for the specified entity.',
+    tag: 'Global',
     responses: [
-        200 => ['description' => 'Updated entity data', 'content' => ['application/json' => ['schema' => [
-            'type'    => 'object',
-            'example' => ['id' => 'a01k1g09hhce8m8pkmzt3zzyq5v', 'name' => 'Yellow Bike'],
-        ]]]],
+        200 => ['description' => 'Prepared attribute values', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        400 => ['description' => 'entityName and attributesIds are required'],
     ],
 )]
-class RecalculateScriptFieldHandler extends AbstractHandler
+class PrepareScriptAttributesHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getRequestBody($request);
 
+        if (empty($data->entityName) && (empty($data->attributesIds) || !is_array($data->attributesIds))) {
+            throw new BadRequest();
+        }
+
         return new JsonResponse(
-            (array)$this->getServiceFactory()->create('App')->recalculateScriptField($data)->getValueMap()
+            $this->getServiceFactory()->create('App')->prepareScriptAttributes($data->entityName, $data->attributesIds)
         );
     }
 }
