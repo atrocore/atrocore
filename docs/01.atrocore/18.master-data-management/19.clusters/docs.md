@@ -62,11 +62,13 @@ Field values that differ between records are highlighted with a vertical red lin
 
 Each column in the comparison table includes a Matched Score row for the corresponding item. Field values in the table can be edited directly.
 
-Once a cluster item is confirmed, the Matched Score row also shows icons indicating its role and confirmation method:
+The Matched Score row in each column shows icons indicating the entity role and confirmation method:
 
-- Crown icon – the record is a master entity record.
-- Signpost icon – the record is a staging entity record.
-- Sparkle icon – the item was confirmed automatically.
+![Cluster icons](./_assets/cluster-icons.png){.large}
+
+- **1** – the record is a master entity record.
+- **2** – the record is a staging entity record.
+- **3** – the item was confirmed automatically.
 
 The Golden Record is indicated by a horizontal gold line in the comparison table. A confirmed staging record is indicated by a horizontal blue line.
 
