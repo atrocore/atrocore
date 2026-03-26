@@ -42,7 +42,7 @@ In the `Data Sourcing` section:
 
 Example URL with Twig template:
 ```
-https://api.example.com/v1/products?limit={{ limit }}&offset={{ offset }}&sort=createdAt{% if payload.entityId is not empty %}&id={{ payload.entityId }}{% endif %}
+https://api.example.com/products?limit={{ limit }}&offset={{ offset }}&sort=createdAt{% if payload.entityId is not empty %}&id={{ payload.entityId }}{% endif %}
 ```
 
 Available Twig variables:

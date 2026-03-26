@@ -110,7 +110,7 @@ final class Application
             $show404 = true;
 
             // for api
-            if (preg_match('/^api\/v1\/(.*)$/', $query)) {
+            if (preg_match('/^api\/(.*)$/', $query)) {
                 $show404 = false;
                 $this->runApi($query);
             }

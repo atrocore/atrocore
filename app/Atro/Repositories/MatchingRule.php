@@ -135,7 +135,7 @@ class MatchingRule extends Base
     {
         foreach ($this->find() as $rule) {
             if ($rule->get('type') === 'set') {
-                $ruleWeight = $this->createMatchingType($rule)->getWeight();
+                $ruleWeight = (int)$this->createMatchingType($rule)->getWeight();
                 if ($rule->get('weight') !== $ruleWeight) {
                     $rule->set('weight', $ruleWeight);
                     $this->getEntityManager()->saveEntity($rule);

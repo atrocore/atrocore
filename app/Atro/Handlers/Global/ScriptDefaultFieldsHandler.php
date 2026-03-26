@@ -11,11 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\Global;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
-use Atro\Core\Routing\EntityType;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,36 +23,45 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/{entityName}/action/seed',
+    path: '/scriptDefaultFields',
     methods: ['GET'],
-    summary: 'Get seed data',
-    description: 'Returns default field values rendered via Twig for a new entity record.',
-    tag: '{entityName}',
+    summary: 'Get script default fields',
+    description: 'Returns computed Twig default values for all fields of the specified entity that have a script-type default.',
+    tag: 'Global',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        ['name' => 'entityName', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => ['description' => 'Map of field names to their computed default values', 'content' => ['application/json' => ['schema' => [
+            'type'                 => 'object',
+            'additionalProperties' => ['type' => 'string'],
+        ]]]],
+        400 => ['description' => 'entityName is required'],
+        403 => ['description' => 'Access denied'],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'AuthToken', 'Connection'])]
-class SeedHandler extends AbstractHandler
+class ScriptDefaultFieldsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
+        $entityName = (string)($request->getQueryParams()['entityName'] ?? '');
+        if (empty($entityName)) {
+            throw new BadRequest('entityName is required');
+        }
 
         if (!$this->getAcl()->check($entityName, 'read')) {
             throw new Forbidden();
         }
 
-        $seed   = $this->entityManager->getRepository($entityName)->get();
+        $seed = $this->getEntityManager()->getRepository($entityName)->get();
         $result = [];
 
         foreach ($this->getMetadata()->get(['entityDefs', $seed->getEntityType(), 'fields'], []) as $name => $defs) {
             if (
-                !empty($defs['type']) && $defs['type'] === 'varchar' &&
-                !empty($defs['default']) && $seed->has($name)
+                !empty($defs['type'])
+                && $defs['type'] === 'varchar'
+                && !empty($defs['default'])
+                && $seed->has($name)
             ) {
                 $default = $defs['default'];
                 if (strpos($default, '{{') !== false && strpos($default, '}}') !== false) {

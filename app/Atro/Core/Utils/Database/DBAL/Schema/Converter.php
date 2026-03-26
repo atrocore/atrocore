@@ -180,7 +180,7 @@ class Converter
 
                     foreach ($indexParams['columns'] as $column) {
                         $type = $this->metadata->get(['entityDefs', $entityName, 'fields', Util::toCamelCase($column), 'type'], 'varchar');
-                        if (in_array($type, ['text', 'wysiwyg'])) {
+                        if (in_array($type, ['text', 'wysiwyg']) && !in_array('gin', $indexFlagList)) {
                             if (!self::isPgSQL($this->connection)) {
                                 $options['lengths'] = [200];
                             } else {

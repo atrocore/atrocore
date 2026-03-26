@@ -388,7 +388,7 @@ class OpenApiGenerator
             ],
             'servers'    => [
                 [
-                    'url' => '/api/v1'
+                    'url' => '/api'
                 ]
             ],
             'tags'       => [
@@ -519,7 +519,7 @@ class OpenApiGenerator
                 $this->buildEntitySchema($result, $entityName);
             }
 
-            $path = substr($entry['path'], strlen('/api/v1'));
+            $path = substr($entry['path'], strlen('/api'));
             $tag  = $entry['openapi']['tags'][0] ?? null;
 
             if ($tag && !in_array($tag, array_column($result['tags'], 'name'), true)) {

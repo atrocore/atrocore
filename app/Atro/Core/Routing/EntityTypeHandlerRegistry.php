@@ -123,7 +123,7 @@ class EntityTypeHandlerRegistry
                 /** @var Route $routeAttr */
                 $routeAttr = $attrObj->newInstance();
                 $methods   = array_map('strtoupper', (array) $routeAttr->methods);
-                $fullPath  = '/api/v1' . $routeAttr->path;
+                $fullPath  = '/api' . $routeAttr->path;
                 $routeKey  = implode(',', $methods) . ':' . $fullPath;
 
                 $entries[] = ['class' => $className, 'methods' => $methods, 'path' => $fullPath, 'key' => $routeKey, 'types' => $types, 'excludeEntities' => $excludeEntities];

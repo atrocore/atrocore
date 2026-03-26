@@ -26,9 +26,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 class AuthMiddleware implements MiddlewareInterface
 {
     private const ALLOWED_URI_WITH_EXPIRED_PASSWORD = [
-        '/api/v1/',
-        '/api/v1/User/action/changeExpiredPassword',
-        '/api/v1/App/user',
+        '/api/',
+        '/api/User/action/changeExpiredPassword',
+        '/api/App/user',
     ];
 
     public function __construct(private readonly ContainerInterface $container)

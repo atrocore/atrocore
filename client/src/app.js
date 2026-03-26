@@ -179,7 +179,7 @@ Espo.define(
 
             loader: null,
 
-            url: 'api/v1',
+            url: 'api',
 
             auth: null,
 

@@ -541,7 +541,7 @@ class ProductListHandler implements MiddlewareInterface
 }
 ```
 
-This handler will be matched **before** `ListHandler` for `GET /api/v1/Product`, while all other entities continue to use the core `ListHandler`.
+This handler will be matched **before** `ListHandler` for `GET /api/Product`, while all other entities continue to use the core `ListHandler`.
 
 ### `AbstractHandler` Base Class
 

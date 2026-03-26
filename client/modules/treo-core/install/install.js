@@ -43,7 +43,7 @@ $(function () {
 
         getTranslations() {
             return $.ajax({
-                url: 'api/v1/Installer/getTranslations',
+                url: 'api/Installer/getTranslations',
                 type: 'GET'
             });
         },
@@ -146,7 +146,7 @@ $(function () {
 
         getLicenseAndLanguages() {
             return $.ajax({
-                url: 'api/v1/Installer/getLicenseAndLanguages',
+                url: 'api/Installer/getLicenseAndLanguages',
                 type: 'GET'
             });
         },
@@ -168,7 +168,7 @@ $(function () {
                 language: this.model.get('licenseAndLanguages').language
             };
             $.ajax({
-                url: 'api/v1/Installer/setLanguage',
+                url: 'api/Installer/setLanguage',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(dataToSave)
@@ -217,7 +217,7 @@ $(function () {
 
         getDefaultDbSettings() {
             return $.ajax({
-                url: 'api/v1/Installer/getDefaultDbSettings',
+                url: 'api/Installer/getDefaultDbSettings',
                 type: 'GET'
             });
         },
@@ -256,7 +256,7 @@ $(function () {
                 port: this.model.get('dbSettings').port
             };
             return $.ajax({
-                url: 'api/v1/Installer/checkDbConnect',
+                url: 'api/Installer/checkDbConnect',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data)
@@ -292,7 +292,7 @@ $(function () {
                 port: this.model.get('dbSettings').port
             };
             return $.ajax({
-                url: 'api/v1/Installer/setDbSettings',
+                url: 'api/Installer/setDbSettings',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data)
@@ -352,7 +352,7 @@ $(function () {
 
         getRequiredsList() {
             return $.ajax({
-                url: 'api/v1/Installer/getRequiredsList',
+                url: 'api/Installer/getRequiredsList',
                 type: 'GET'
             });
         }
@@ -429,7 +429,7 @@ $(function () {
                 reportingEnabled: this.$el.find('#reporting-enabled').is(':checked')
             };
             return $.ajax({
-                url: 'api/v1/Installer/createAdmin',
+                url: 'api/Installer/createAdmin',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data)

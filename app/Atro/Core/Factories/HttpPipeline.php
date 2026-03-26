@@ -128,7 +128,7 @@ class HttpPipeline implements FactoryInterface
     }
 
     /**
-     * Number of static (non-placeholder) segments in a full path including /api/v1 prefix.
+     * Number of static (non-placeholder) segments in a full path including /api prefix.
      * Higher score = register first.
      */
     private function pathSpecificity(string $path): int
