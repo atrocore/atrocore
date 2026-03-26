@@ -76,7 +76,7 @@ class Similar extends AbstractMatchingRule
         return $sqlPart;
     }
 
-    public function match(Entity $stageEntity, array $masterEntityData): int
+    public function match(Entity $stageEntity, array $masterEntityData): float
     {
         $field = $this->rule->get('field');
 
@@ -91,17 +91,17 @@ class Similar extends AbstractMatchingRule
             }
 
             if (!is_array($stageValue) || !is_array($masterValue)) {
-                return 0;
+                return 0.0;
             }
 
             sort($stageValue);
             sort($masterValue);
 
             if ($stageValue === $masterValue) {
-                return $this->rule->get('weight') ?? 0;
+                return $this->getWeight();
             }
 
-            return 0;
+            return 0.0;
         }
 
         if ($this->isFuzzySearchAvailable()) {
@@ -111,7 +111,7 @@ class Similar extends AbstractMatchingRule
 
             if ($score !== null) {
                 // return part of the weight proportionally to the similarity score
-                return (int)round((float)$score * ($this->rule->get('weight') ?? 0));
+                return (float)$score * $this->getWeight();
             }
         }
 
@@ -119,9 +119,9 @@ class Similar extends AbstractMatchingRule
         $masterValue = str_replace(' ', '', strtolower(trim((string)$masterEntityData[$field])));
 
         if ($stageValue === $masterValue) {
-            return $this->rule->get('weight') ?? 0;
+            return $this->getWeight();
         }
 
-        return 0;
+        return 0.0;
     }
 }
