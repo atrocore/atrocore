@@ -8,7 +8,6 @@
     "notifications": true,
     "object": true,
     "type": "Base",
-    "hasPersonalData": true,
     "hasAssignedUser": true,
     "hasActive": true,
     "hideFieldTypeFilters": true

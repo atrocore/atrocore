@@ -290,6 +290,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
 
             let processFields = (fields) => {
+                let forbiddenLangCode = this.getAcl().getForbiddenLanguageList('read') || [];
+
                 for (const field of fields) {
                     if (forbiddenList.includes(field)) {
                         continue;
@@ -302,6 +304,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     let fieldDef = this.model.defs.fields[field];
 
                     if (!fieldDef) {
+                        continue;
+                    }
+
+                    if(fieldDef?.multilangLocale && forbiddenLangCode.includes(fieldDef?.multilangLocale)) {
                         continue;
                     }
 
@@ -357,6 +363,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         inlineEditDisabled: this.inlineEditDisabled
                     });
                 }
+
 
                 this.fieldPanels = this.originalFieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0);
             }

@@ -8,9 +8,10 @@ AtroCore provides Search and Filtering to locate and limit records displayed in 
 Use the [global search](../05.toolbar/docs.md#global-search) if you wish to search globally across all the entities in the system.
 
 The filters in AtroCore let you control which records are displayed. There are three types:
+
 - **General filters** – prebuilt on/off filters available for every entity by default, such as Active or Deleted
 - **Saved filters** – advanced filters that were saved and can be reused, with visibility set to private or public
-- **Advanced filter** – a flexible tool for creating complex filters for entities by combining multiple rules and conditions, allowing precise control over which records are included 
+- **Advanced filter** – a flexible tool for creating complex filters for entities by combining multiple rules and conditions, allowing precise control over which records are included.
 
 ## Search
 
@@ -18,7 +19,7 @@ Search allows quick access to records by entering text that matches field values
 
 ![Search panel](./_assets/search-panel.png){.large}
 
-To perform a search operation, enter the search query into the search field and press `Enter` or click the `Search` button (magnifying glass). To reset search, click the `Search reset` button. 
+To perform a search operation, enter the search query into the search field and press `Enter` or click the `Search` button (magnifying glass). To reset search, click the `Search reset` button.
 
 The search function looks through the record [identifiers](../03.administration/11.entity-management/02.data-types/docs.md#identifiers), text fields ([string](../03.administration/11.entity-management/02.data-types/docs.md#string), [text](../03.administration/11.entity-management/02.data-types/docs.md#text), [email](../03.administration/11.entity-management/02.data-types/docs.md#email), [URL](../03.administration/11.entity-management/02.data-types/docs.md#url), [HTML](../03.administration/11.entity-management/02.data-types/docs.md#html)), and numeric fields ([integer](../03.administration/11.entity-management/02.data-types/docs.md#integer), [float](../03.administration/11.entity-management/02.data-types/docs.md#float)). Search is case-insensitive.
 
@@ -57,6 +58,7 @@ Wildcards can be used at any place in the search string, separately or in combin
 > The search is performed strictly according to the specified pattern, rather than using the default behavior. The entered value is interpreted as a search pattern, not as a literal string.
 
 Examples:
+
 - "*smith" finds values ending with "smith"
 - "test*" finds values starting with "test"
 - "*test*" finds values containing "test"
@@ -69,7 +71,17 @@ However, Reference-type fields can be used in Advanced Filters, where filtering 
 
 ## General and Saved filters
 
-**General filters** are default boolean filters available for each entity (e.g., Active, Deleted, Bookmarked).
+**General filters** are predefined on/off filters. The following are available for all entities:
+
+- **Deleted** – soft-deleted records
+- **Bookmarked** – records bookmarked by the current user
+
+The following filters appear only when the entity supports the corresponding feature:
+
+- **Active** – active records only (entities with an `isActive` field, configured via [Entity Management](../03.administration/11.entity-management/docs.md#configuration-fields)).
+- **My / Owned by me / Assigned to me** – records associated with, owned by, or assigned to the current user (entities with [Owner or Assigned User](../03.administration/11.entity-management/docs.md#access-management-panel) enabled).
+- **Multiple Classifications** – records with more than one [classification](../03.administration/12.attribute-management/04.classifications/docs.md) assigned.
+- **Without main image** – records with no main image set ([Products](../../05.pim/03.products/docs.md) only).
 
 **Saved filters** are advanced filter configurations that have been saved for reuse. They can be marked as Public or Private and function as prebuilt on/off filters.
 
@@ -116,6 +128,7 @@ Once configured, click `Apply`. The toggle next to "Advanced Filter" indicates i
 Configured rules within a filter can be temporarily disabled without being removed. To deactivate a rule, click the slider control located next to the corresponding rule.
 
 When a rule is deactivated:
+
 - The rule is excluded from filter evaluation.
 - All rule configuration and parameter settings are preserved.
 - The rule can be re-enabled at any time by toggling the slider back to the active position.
@@ -141,68 +154,42 @@ Saved filters appear in the Filters panel for the entity. Available actions incl
 - **Rename** – Change the name or visibility of the filter
 - **Delete** – Remove the filter
 
-![Save Filter options](./_assets/saved-filter-options.png){.small} 
-
+![Save Filter options](./_assets/saved-filter-options.png){.small}
 
 ### Available Filtering Criteria
 
 Depending on the [field/attribute type](../03.administration/11.entity-management/02.data-types/docs.md), the following filtering criteria can be applied:
 
-| **Field Type**                              | **Filtering Criteria** | **Input Value**                                            |
-| :------------------------------------------ | :--------------------- | :--------------------------------------------------------- |
-| Array, List, Multi-value list, Static List, Static Multi-value List, Link, Link Multiple                        | In/Not In                      | Value list, multiselect                                    |
-|                        | Is Empty/Is Not Empty                      | –                                    |
-| Boolean                                   | –                      | Checkbox                                                   |
-| Integer, Float | Is Not Empty           | –                                                          |
-|                                             | Is Null/Is Not Null               | –                                                          |
-|                                             | Equals                 | Input field                                                |
-|                                             | Not Equals             | Input field                                                |
-|                                             | Greater           | Input field                                                |
-|                                             | Less             | Input field                                                |
-|                                             | Greater or Equals | Input field                                                |
-|                                             | Less or Equals    | Input field                                                |
-|                                             | Between                | 2 Input fields                                             |
-|          Date, DateTime                                    | Is Null/Is Not Null               | – |
-|                                             | Current Month          | –                                                          |
-|                                             | Last Month             | –|
-|                                             | Next Month             | –                                                          |
-|                                             | Current Year           | –                                                          |
-|                                             | Last Year              | –|
-|                                             | Past                   | –                                                          |
-|                                             | Today                  | –                                                          |
-|                                             | Future                 | –                                                          |
-|                                             | Last X Days            | Input field                                                |
-|                                             | Next X Days            | Input field                                                |
-|                                             | Less      | Date picker                                                |
-|                                             | Less or equal      | Date picker                                                |
-|        | Greater                                   |Date picker             
-|                                             | Greater or equal      | Date picker                                                |
-|                                             | After X Days           | Input field                                                |
- |                                            |  Older than x days    | Input field                                                |
-|                                             | Equal                     | Date picker                                                |
-|                                             | Not Equal                 | Date picker                                                |
-|                                             | Between                | 2 Input fields                                             ||
-| String, Text,  URL, HTML      | Contains            | Input field                                                |
-|                                             | Equals                 | Input field                                                |
-|                                             | Not Contains           | Input field                                                |
-|                                             | Not Equals             | Input field                                                |
-|                                             | Is Empty               | –                                                          |
-|                                             | Is Not Empty           | –                                                          |
-| User-type fields (Assigned user)      | In            | User picker                                              |
-|                                             | not in                 |User picker                                                  |
-|                                             | is me           | -                                                |
-|                                             | is not me              | -                                               |
-|                                             | is member of my teams               | –                                                          |
-|                                             | Is Empty               | –                                                          |
-|                                             | Is Not Empty           | –                                                          |
-|                                             | include me           | –                                                          |
-|                                             | exclude me           | –                                                          |
-|                                             | is my team           | –                                                          |
-|                                             | is not my team           | – 
-| Route(s)                                    | in                   | User picker 
-|                                             | not in               | User picker 
-|                                             | Is Null/Is Not Null  | –                    |
-
+| **Field / Attribute Type** | **Filtering Criteria** | **Input** |
+| :--- | :--- | :--- |
+| **Integer, Integer Range, Float, Float Range, Auto-increment** | Is Null / Is Not Null | – |
+| | Equals / Not Equals | Input field |
+| | Less / Less or Equal | Input field |
+| | Greater / Greater or Equal | Input field |
+| | Between | 2 input fields |
+| **String, Text, HTML, Markdown, URL, Email, Identifier, Script, Color** | Contains / Not Contains | Input field |
+| | Equals / Not Equals | Input field |
+| | Is Null / Is Not Null | – |
+| **Boolean** | Equals / Not Equals | Checkbox |
+| | Is Null / Is Not Null | – |
+| **Date, DateTime** | Equals / Not Equals | Date picker |
+| | Is Null / Is Not Null | – |
+| | Less / Less or Equal | Date picker |
+| | Greater / Greater or Equal | Date picker |
+| | Between | 2 date pickers |
+| | Last X Days / Next X Days | Input field |
+| | Older Than X Days / After X Days | Input field |
+| | Last Month / Next Month / Current Month | – |
+| | Last Year / Current Year | – |
+| | Past / Today / Future | – |
+| **File, Multiple Link** | In / Not In | Value list, Multiselect |
+| | Is Empty / Is Not Empty | – |
+| **List, Link, Multi-value List, Measure, Array, Static List, Static Multi-value List, Currency List, Language Code, Language Codes, Route(s)** | In / Not In | Value list / multiselect |
+| | Is Null / Is Not Null | – |
+| **User-type fields** *(e.g., Assigned User)* | In / Not In | User picker |
+| | Is Me / Is Not Me | – |
+| | Is Member of My Team | – |
+| | Is Null / Is Not Null | – |
 
 ### Filtering Values with Measures
 
@@ -228,6 +215,7 @@ Currency exchange rates can be configured in the [Currency](https://store.atroco
 Additional sub-filters can be added when creating filters. For example, to filter products by specific Files (main filter) and limit those files to a certain type—such as only Image Files—a sub-filter within the main filter is needed. This sub-filter refines the main filter criteria to include only the desired file types.
 
 To create such a filter:
+
 - Add a rule for Files with the criteria set to "In", then click `Select` to open a modal window for selecting files
 - Filter data in the popup window according to the needed criteria and apply the filter inside the modal window
 - Check all filtered records using the `Select All` checkbox and click `Select`
@@ -236,12 +224,11 @@ To create such a filter:
 
 The modal window will close and the main filter will be shown as below:
 
-![Subfilters](./_assets/subqerry.png){.small} 
+![Subfilters](./_assets/subqerry.png){.small}
 
 This approach is more accurate than manually selecting individual results because it is faster, especially with large result sets, and automatically updates when the database changes—no manual filter updates are needed.
 
 > When using `select all results` option, all additional data that fit the filters will be automatically added if the filtering is reused.
-
 
 ## Left Sidebar Search
 
@@ -297,7 +284,7 @@ If nothing is chosen from the auto-suggesting pop-up, clicking the magnifier ico
 After clicking on the search results, the appropriate filter will be set automatically and the search field will be left empty.
 
 |   **Search Mask Type**  |        **Field Types to Be Searched**        | **Applied Filter Criteria** |
-|:-----------------------|:--------------------------------------------|:---------------------------|
+| :---------------------- | :------------------------------------------- | :-------------------------- |
 | Text, e.g. "atro 123"   | Address, Number, Varchar, Text, URL, Wysiwyg | Starts with                 |
 | %Text, e.g. "%atro 123" | Address, Number, Varchar, Text, URL, Wysiwyg | Consists                    |
 | Numbers, e.g. "123"     | Address, Number, Varchar, Text, URL, Wysiwyg | Starts with                 |

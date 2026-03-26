@@ -715,16 +715,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.type === 'detail' && this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])) {
-                if (this.getAcl().get('dataPrivacyPermission') !== 'no') {
-                    this.dropdownItemList.push({
-                        'label': 'View Personal Data',
-                        'name': 'viewPersonalData',
-                        sortOrder: 190
-                    });
-                }
-            }
-
             const dropDownItems = this.getMetadata().get(['clientDefs', this.scope, 'additionalDropdownItems']) || {};
             Object.keys(dropDownItems).forEach(item => {
                 const check = (dropDownItems[item].conditions || []).every(condition => {

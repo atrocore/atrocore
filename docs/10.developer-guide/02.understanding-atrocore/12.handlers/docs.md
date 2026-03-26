@@ -162,9 +162,77 @@ The most common response is `application/json`. Always define the `schema` insid
 |---|---|---|---|
 | `auth` | `bool` | `true` | Whether the endpoint requires authentication. Set to `false` only for explicitly public endpoints. |
 | `parameters` | `array` | `[]` | OpenAPI-format query/path/header parameters. |
-| `requestBody` | `array` | `[]` | OpenAPI-format request body definition. Use `['schema' => ['x-entity-write' => true]]` as the schema sentinel to automatically substitute the entity's write schema (see [Read and Write Schemas](#read-and-write-schemas)). |
+| `requestBody` | `array` | `[]` | OpenAPI-format request body definition. Use `['schema' => ['x-entity-post' => true]]` or `['schema' => ['x-entity-patch' => true]]` as the schema sentinel to automatically substitute the entity's Post/Patch schema (see [Read, Post and Patch Schemas](#read-post-and-patch-schemas)). |
 
 > **Important:** A handler without all required fields **will not be registered as a route**. The endpoint simply will not exist. This is by design — it enforces that every API endpoint is fully documented before it can be used.
+
+---
+
+## Route Design Rules
+
+### Grouping (tag)
+
+Every route must have a `tag` that matches the entity name it operates on. If a route is not bound to any specific entity, use `tag: 'Global'`.
+
+The `tag` maps to OpenAPI tags and groups endpoints in `/apidocs/`.
+
+### Path Structure
+
+Path segments encode **ownership and nesting**. Every segment must represent a resource or an action on that resource. The scope of an action is expressed through the path itself:
+
+| Scope | Path pattern | tag |
+|---|---|---|
+| Action on a specific record | `/{Entity}/{id}/action` | `Entity` |
+| Action on all records of an entity | `/{Entity}/action` | `Entity` |
+| Action with no entity binding | `/action` | `Global` |
+
+**Examples:**
+
+```
+# Export of a specific feed
+POST /ExportFeed/{id}/export         tag: ExportFeed
+
+# Export of multiple feeds (no specific ID)
+POST /ExportFeed/export              tag: ExportFeed
+
+# Export with no feed binding at all
+POST /export                         tag: Global
+```
+
+### Universal Actions (identical across all entities)
+
+When an action has **exactly the same inputs and outputs for every entity** — same request shape, same response shape — creating per-entity routes (`/Product/massDelete`, `/Category/massDelete`, …) is redundant. Use a single global route with `entityName` as an explicit parameter instead:
+
+```
+# Instead of:
+POST /Product/massDelete
+POST /Category/massDelete
+POST /Brand/massDelete
+...
+
+# Use one route:
+POST /massDelete                     tag: Global
+  body: { entityName: string, ids: string[] }
+  response: boolean
+```
+
+The `entityName` parameter carries the same information that the path segment would — but without spawning a separate route for each entity.
+
+This pattern applies when all three conditions hold:
+1. The action is applicable to **any** entity without special logic per entity.
+2. The **request signature** is identical regardless of entity.
+3. The **response signature** is identical regardless of entity.
+
+If any of these conditions breaks — the action has entity-specific logic, parameters, or response shape — use per-entity routes instead.
+
+### HTTP Method Semantics
+
+| Method | Use |
+|---|---|
+| `GET` | Read, no side effects |
+| `POST` | Create or trigger an action |
+| `PATCH` | Partial update |
+| `DELETE` | Remove |
 
 ---
 
@@ -492,33 +560,57 @@ EntityType handlers extend `Atro\Core\EntityTypeHandlers\AbstractHandler`, which
 
 ---
 
-## Read and Write Schemas
+## Read, Post and Patch Schemas
 
-For every entity AtroCore automatically generates **two OpenAPI component schemas**:
+For every entity AtroCore automatically generates **three OpenAPI component schemas**:
 
 | Schema | Name | Contents |
 |---|---|---|
 | Read schema | `{entityName}` | All fields returned by the API (including computed/derived fields like `categoryName`, `createdAt`, etc.) |
-| Write schema | `{entityName}Write` | Only fields that can be sent in create/update requests — excludes `id`, `_meta`, `deleted`, `createdAt`, `modifiedAt`, `createdById`, all `_`-prefixed fields, and all `readOnly` fields |
+| Post schema | `{entityName}Post` | Fields that can be sent in create (POST) requests — includes optional `id` (for custom IDs), excludes `_meta`, `deleted`, `createdAt`, `modifiedAt`, `createdById`, all `_`-prefixed fields, and all `readOnly` fields. Preserves `required` constraints. |
+| Patch schema | `{entityName}Patch` | Fields that can be sent in partial update (PATCH) requests — same as Post schema but without `id` and without any `required` constraints (since PATCH is a partial update). |
 
 These schemas are built automatically by `OpenApiGenerator` based on the entity's field definitions.
 
-### Using the Write Schema in a Handler
+### Using Entity Schema Sentinels in a Handler
 
-In a `requestBody` definition, use the sentinel value `['x-entity-write' => true]` as the schema. `RouteCompiler` replaces it at compile time with a `$ref` to the entity's write schema:
+`RouteCompiler` replaces schema sentinels at compile time with concrete `$ref` values. Three sentinels are available:
+
+| Sentinel | Resolves to | Use for |
+|---|---|---|
+| `['x-entity-read' => true]` | `$ref: #/components/schemas/{Entity}` | Response body — full read schema |
+| `['x-entity-post' => true]` | `$ref: #/components/schemas/{Entity}Post` | POST request body — includes `id`, preserves `required` |
+| `['x-entity-patch' => true]` | `$ref: #/components/schemas/{Entity}Patch` | PATCH request body — no `id`, no `required` |
 
 ```php
+// POST
 #[Route(
     path: '/{entityName}',
     methods: ['POST'],
     ...
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-write' => true]]],
+        'content'  => ['application/json' => ['schema' => ['x-entity-post' => true]]],
     ],
-    responses: [...],
+    responses: [
+        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+    ],
+)]
+
+// PATCH
+#[Route(
+    path: '/{entityName}/{id}',
+    methods: ['PATCH'],
+    ...
+    requestBody: [
+        'required' => true,
+        'content'  => ['application/json' => ['schema' => ['x-entity-patch' => true]]],
+    ],
+    responses: [
+        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+    ],
 )]
 ```
 
-This is how `CreateHandler` and `UpdateHandler` work. The substitution is done by `RouteCompiler::substituteEntitySchemaRef()` when compiling EntityType handler routes.
+This is how `CreateHandler` (Post) and `UpdateHandler` (Patch) work. The substitution is done by `RouteCompiler::substituteEntitySchemaRef()` when compiling EntityType handler routes.
 

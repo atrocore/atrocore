@@ -35,10 +35,10 @@ use Atro\Handlers\AbstractHandler;
     ],
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-write' => true]]],
+        'content'  => ['application/json' => ['schema' => ['x-entity-post' => true]]],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'MatchedRecord', 'AuthToken', 'Store', 'Matching', 'ActionExecution', 'Job', 'ClassificationAttribute', 'Bookmark', 'File', 'MasterDataEntity', 'Connection'])]

@@ -221,18 +221,24 @@ class RouteCompiler
     }
 
     /**
-     * Recursively replaces `'schema' => ['type' => 'object']` (and only that exact pattern)
-     * with `'schema' => ['$ref' => '#/components/schemas/{entityName}']`.
+     * Recursively substitutes entity schema sentinels with concrete `$ref` values:
+     * - `['x-entity-read' => true]`  → `$ref: #/components/schemas/{entityName}`
+     * - `['x-entity-post' => true]`  → `$ref: #/components/schemas/{entityName}Post`
+     * - `['x-entity-patch' => true]` → `$ref: #/components/schemas/{entityName}Patch`
      */
     private function substituteEntitySchemaRef(array $data, string $entityName): array
     {
         if (isset($data['schema'])) {
-            if ($data['schema'] === ['type' => 'object']) {
+            if ($data['schema'] === ['x-entity-read' => true]) {
                 $data['schema'] = ['$ref' => "#/components/schemas/$entityName"];
                 return $data;
             }
-            if ($data['schema'] === ['x-entity-write' => true]) {
-                $data['schema'] = ['$ref' => "#/components/schemas/{$entityName}Write"];
+            if ($data['schema'] === ['x-entity-post' => true]) {
+                $data['schema'] = ['$ref' => "#/components/schemas/{$entityName}Post"];
+                return $data;
+            }
+            if ($data['schema'] === ['x-entity-patch' => true]) {
+                $data['schema'] = ['$ref' => "#/components/schemas/{$entityName}Patch"];
                 return $data;
             }
         }
