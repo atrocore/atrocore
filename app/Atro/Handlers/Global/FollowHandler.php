@@ -15,7 +15,7 @@ namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -28,7 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'POST',
     ],
     summary: 'Follow stream',
-    description: 'Subscribes the current user to the stream of the specified entity record.',
+    description: 'Subscribes the current user to the stream of the specified entity records.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -38,14 +38,25 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'type'       => 'object',
                     'required'   => [
                         'entityName',
-                        'id',
                     ],
                     'properties' => [
                         'entityName' => [
                             'type' => 'string',
                         ],
-                        'id'         => [
-                            'type' => 'string',
+                        'ids'        => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'where'      => [
+                            'type' => 'array',
+                        ],
+                        'selectData' => [
+                            'type' => 'object',
+                        ],
+                        'byWhere'    => [
+                            'type' => 'boolean',
                         ],
                     ],
                 ],
@@ -54,11 +65,22 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Follow result',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        'type'       => 'object',
+                        'properties' => [
+                            'count' => [
+                                'type' => 'integer',
+                            ],
+                            'ids'   => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -71,16 +93,11 @@ class FollowHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'entityName') || !property_exists($data, 'id')) {
+        if (!property_exists($data, 'entityName') || empty($data->entityName)) {
             throw new BadRequest();
         }
 
-        $entityName = (string)$data->entityName;
-        $id = (string)$data->id;
-
-        if (empty($entityName) || empty($id)) {
-            throw new BadRequest();
-        }
+        $entityName = (string) $data->entityName;
 
         if ($this->getMetadata()->get(['scopes', $entityName, 'streamDisabled'])) {
             throw new Forbidden();
@@ -90,8 +107,8 @@ class FollowHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $this->getRecordService($entityName)->follow($id);
+        $result = $this->getRecordService($entityName)->massFollow($this->buildMassParams($data));
 
-        return new BoolResponse(true);
+        return new JsonResponse($result);
     }
 }

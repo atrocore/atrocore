@@ -15,7 +15,7 @@ namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -28,7 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'DELETE',
     ],
     summary: 'Unfollow stream',
-    description: 'Unsubscribes the current user from the stream of the specified entity record.',
+    description: 'Unsubscribes the current user from the stream of the specified entity records.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -38,14 +38,25 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'type'       => 'object',
                     'required'   => [
                         'entityName',
-                        'id',
                     ],
                     'properties' => [
                         'entityName' => [
                             'type' => 'string',
                         ],
-                        'id'         => [
-                            'type' => 'string',
+                        'ids'        => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'where'      => [
+                            'type' => 'array',
+                        ],
+                        'selectData' => [
+                            'type' => 'object',
+                        ],
+                        'byWhere'    => [
+                            'type' => 'boolean',
                         ],
                     ],
                 ],
@@ -54,11 +65,22 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Unfollow result',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        'type'       => 'object',
+                        'properties' => [
+                            'count' => [
+                                'type' => 'integer',
+                            ],
+                            'ids'   => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -71,23 +93,18 @@ class UnfollowHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'entityName') || !property_exists($data, 'id')) {
+        if (!property_exists($data, 'entityName') || empty($data->entityName)) {
             throw new BadRequest();
         }
 
         $entityName = (string) $data->entityName;
-        $id         = (string) $data->id;
 
-        if (empty($entityName) || empty($id)) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($entityName, 'read')) {
+        if (!$this->getAcl()->check($entityName, 'stream')) {
             throw new Forbidden();
         }
 
-        $this->getRecordService($entityName)->unfollow($id);
+        $result = $this->getRecordService($entityName)->massUnfollow($this->buildMassParams($data));
 
-        return new BoolResponse(true);
+        return new JsonResponse($result);
     }
 }
