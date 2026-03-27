@@ -510,24 +510,35 @@ class OpenApiGenerator
 
     private function pushCompiledRoutes(array &$result): void
     {
+        $grouped = [];
+
         foreach ($this->container->get(RouteCompiler::class)->getCompiledRoutes() as $entry) {
             if (empty($entry['openapi'])) {
                 continue;
             }
+            $tag = $entry['openapi']['tags'][0] ?? 'Global';
+            $grouped[$tag][] = $entry;
+        }
 
-            foreach ($entry['schemaEntities'] as $entityName) {
-                $this->buildEntitySchema($result, $entityName);
-            }
+        uksort($grouped, fn($a, $b) => $a === 'Global' ? -1 : ($b === 'Global' ? 1 : strcmp($a, $b)));
 
-            $path = substr($entry['path'], strlen('/api'));
-            $tag  = $entry['openapi']['tags'][0] ?? null;
+        foreach ($grouped as $tag => $entries) {
+            usort($entries, fn($a, $b) => strcmp($a['path'], $b['path']));
 
-            if ($tag && !in_array($tag, array_column($result['tags'], 'name'), true)) {
+            if (!in_array($tag, array_column($result['tags'], 'name'), true)) {
                 $result['tags'][] = ['name' => $tag, 'description' => "$tag endpoints."];
             }
 
-            foreach ($entry['methods'] as $method) {
-                $result['paths'][$path][strtolower($method)] = $entry['openapi'];
+            foreach ($entries as $entry) {
+                foreach ($entry['schemaEntities'] as $entityName) {
+                    $this->buildEntitySchema($result, $entityName);
+                }
+
+                $path = substr($entry['path'], strlen('/api'));
+
+                foreach ($entry['methods'] as $method) {
+                    $result['paths'][$path][strtolower($method)] = $entry['openapi'];
+                }
             }
         }
     }
