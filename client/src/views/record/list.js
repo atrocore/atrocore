@@ -725,13 +725,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 for (var i in this.checkedList) {
-                    ids.push(this.checkedList[i]);
+                    ids.push(String(this.checkedList[i]));
                 }
 
                 $.ajax({
-                    url: this.entityType + '/action/massDelete',
+                    url: 'entityMassDelete',
                     type: 'POST',
-                    data: JSON.stringify(data)
+                    data: JSON.stringify(Object.assign({entityName: this.entityType}, data))
                 }).done(function (result) {
                     this.notify(false)
                     this.processMassActionResult(result)
