@@ -11,37 +11,44 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Atro\Core\Routing\EntityType;
-use Atro\Handlers\AbstractHandler;
 
 #[Route(
-    path: '/{entityName}/{id}/{link}',
+    path: '/entityRelation',
     methods: [
         'GET',
     ],
-    summary: 'Returns linked records',
-    description: 'Returns a collection of records linked to the specified entity record.',
-    tag: '{entityName}',
+    summary: 'List linked records',
+    description: 'Returns a paginated list of records linked to the specified entity record via the given relation.
+
+**How to use:**
+- `entityName` — the entity type (e.g. `Product`, `Category`). Must match the scope name in metadata.
+- `id` — the ID of the parent record.
+- `link` — the relation name as defined in `entityDefs.{entityName}.links` (e.g. `channels`, `assets`, `categories`). Valid link names can be discovered from the entity metadata.
+
+**Note:** The structure of items in the `list` array depends on the linked entity type resolved from the relation definition. There is no single fixed response schema — it varies per `entityName` + `link` combination.',
+    tag: 'Global',
     parameters: [
         [
             'name'     => 'entityName',
-            'in'       => 'path',
+            'in'       => 'query',
             'required' => true,
             'schema'   => [
-                'type' => 'string',
+                'type'    => 'string',
+                'example' => 'Product',
             ],
         ],
         [
             'name'     => 'id',
-            'in'       => 'path',
+            'in'       => 'query',
             'required' => true,
             'schema'   => [
                 'type' => 'string',
@@ -49,28 +56,11 @@ use Atro\Handlers\AbstractHandler;
         ],
         [
             'name'     => 'link',
-            'in'       => 'path',
+            'in'       => 'query',
             'required' => true,
             'schema'   => [
-                'type' => 'string',
-            ],
-        ],
-        [
-            'name'     => 'where',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
-                'anyOf' => [
-                    [
-                        'type' => 'array',
-                    ],
-                    [
-                        'type' => 'object',
-                    ],
-                    [
-                        'type' => 'string',
-                    ],
-                ],
+                'type'    => 'string',
+                'example' => 'channels',
             ],
         ],
         [
@@ -116,10 +106,28 @@ use Atro\Handlers\AbstractHandler;
                 'example' => true,
             ],
         ],
+        [
+            'name'     => 'where',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'anyOf' => [
+                    [
+                        'type' => 'array',
+                    ],
+                    [
+                        'type' => 'object',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
         200 => [
-            'description' => 'Collection of records',
+            'description' => 'Paginated list of linked records. Item schema varies depending on the linked entity type resolved from the relation definition.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -141,21 +149,20 @@ use Atro\Handlers\AbstractHandler;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['MatchedRecord', 'AuthToken', 'Connection'])]
-class ListLinkedHandler extends AbstractHandler
+class EntityRelationListHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
-        $id         = (string) $request->getAttribute('id');
-        $link       = (string) $request->getAttribute('link');
         $qp         = $request->getQueryParams();
+        $entityName = (string) ($qp['entityName'] ?? '');
+        $id         = (string) ($qp['id'] ?? '');
+        $link       = (string) ($qp['link'] ?? '');
 
-        if (empty($id) || empty($link)) {
+        if ($entityName === '' || $id === '' || $link === '') {
             throw new NotFound();
         }
 
-        $params = $this->buildListParams($request);
+        $params                  = $this->buildListParams($request);
         $params['whereRelation'] = $this->prepareWhereQuery($qp['whereRelation'] ?? null);
 
         $result = $this->getRecordService($entityName)->findLinkedEntities($id, $link, $params);

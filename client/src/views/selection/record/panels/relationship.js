@@ -23,7 +23,7 @@ Espo.define('views/selection/record/panels/relationship', ['view', 'views/record
             let relationName = this.getMetadata().get(['entityDefs', this.model.name, 'links', this.link, 'relationName']);
             this.relationScope = relationName.charAt(0).toUpperCase() + relationName.slice(1);
 
-            var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
+            var url = this.url || 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + this.link;
 
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {

@@ -640,10 +640,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                                 value: selectObj.map(item => item.id)
                             }]
                         } else {
-                            data = selectObj;
+                            data.ids = [selectObj.id];
                         }
 
-                        this.ajaxPostRequest(`${this.scope}/${this.model.id}/${link}`, data)
+                        this.ajaxPostRequest('entityRelation', Object.assign({ entityName: this.scope, id: this.model.id, link: link }, data))
                             .then((resp) => {
                                 if (resp) {
                                     this.notify(this.translate(data.shouldDuplicateForeign ? 'duplicatedAndLinked' : 'linked', 'messages'), 'success');
@@ -955,7 +955,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             data.massRelate = true;
                             data.where = selectObj.where;
                         } else {
-                            data.id = selectObj.id;
+                            data.ids = [selectObj.id];
                         }
                     }
 
@@ -982,9 +982,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         createLink: function (scope, id, link, data) {
             $.ajax({
-                url: scope + '/' + id + '/' + link,
+                url: 'entityRelation',
                 type: 'POST',
-                data: JSON.stringify(data),
+                data: JSON.stringify(Object.assign({ entityName: scope, id: id, link: link }, data)),
                 success: function () {
                     this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                     this.updateRelationshipPanel(link);

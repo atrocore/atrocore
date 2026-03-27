@@ -11,38 +11,45 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Atro\Core\Routing\EntityType;
-use Atro\Handlers\AbstractHandler;
 
 #[Route(
-    path: '/{entityName}/{id}/{link}',
+    path: '/entityRelation',
     methods: [
         'DELETE',
     ],
-    summary: 'Unlinks entities',
-    description: 'Removes a relation between the entity record and one or more foreign records.',
-    tag: '{entityName}',
+    summary: 'Remove relation between records',
+    description: 'Unlinks one or more foreign records from the specified entity record.
+
+**How to use:**
+- `entityName` — the entity type (e.g. `Product`).
+- `id` — the ID of the parent record to unlink from.
+- `link` — the relation name as defined in `entityDefs.{entityName}.links` (e.g. `channels`).
+- Pass `id` or `ids` (comma-separated) in query to unlink specific records. Alternatively, pass `id` or `ids` array in the request body.
+- Pass `all=true` in query to unlink all related records at once.',
+    tag: 'Global',
     parameters: [
         [
             'name'     => 'entityName',
-            'in'       => 'path',
+            'in'       => 'query',
             'required' => true,
             'schema'   => [
-                'type' => 'string',
+                'type'    => 'string',
+                'example' => 'Product',
             ],
         ],
         [
             'name'     => 'id',
-            'in'       => 'path',
+            'in'       => 'query',
             'required' => true,
             'schema'   => [
                 'type' => 'string',
@@ -50,10 +57,11 @@ use Atro\Handlers\AbstractHandler;
         ],
         [
             'name'     => 'link',
-            'in'       => 'path',
+            'in'       => 'query',
             'required' => true,
             'schema'   => [
-                'type' => 'string',
+                'type'    => 'string',
+                'example' => 'channels',
             ],
         ],
         [
@@ -63,6 +71,7 @@ use Atro\Handlers\AbstractHandler;
             'schema'   => [
                 'type' => 'string',
             ],
+            'description' => 'Comma-separated list of foreign record IDs to unlink',
         ],
         [
             'name'     => 'all',
@@ -86,20 +95,19 @@ use Atro\Handlers\AbstractHandler;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Notification', 'AuthToken', 'User', 'Connection'])]
-class RemoveLinkHandler extends AbstractHandler
+class EntityRelationDeleteHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
-        $id         = (string) $request->getAttribute('id');
-        $link       = (string) $request->getAttribute('link');
+        $qp         = $request->getQueryParams();
+        $entityName = (string) ($qp['entityName'] ?? '');
+        $id         = (string) ($qp['id'] ?? '');
+        $link       = (string) ($qp['link'] ?? '');
 
-        if (empty($id) || empty($link)) {
+        if ($entityName === '' || $id === '' || $link === '') {
             throw new BadRequest();
         }
 
-        $qp      = $request->getQueryParams();
         $service = $this->getRecordService($entityName);
 
         if (!empty($qp['all'])) {
@@ -124,7 +132,6 @@ class RemoveLinkHandler extends AbstractHandler
         }
 
         $result = false;
-
         foreach ($foreignIdList as $foreignId) {
             if ($service->unlinkEntity($id, $link, $foreignId)) {
                 $result = true;
