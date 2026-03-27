@@ -785,9 +785,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 $.ajax({
-                    url: this.entityType + '/action/massRestore',
+                    url: 'entityRestore',
                     type: 'POST',
-                    data: JSON.stringify(data)
+                    data: JSON.stringify(Object.assign({entityName: this.entityType}, data))
                 }).done(function (result) {
                     this.collection.fetch().then(() => this.notify(this.translate('Restored'), 'success'));
                 }.bind(this));
@@ -3241,9 +3241,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.collection.remove(model);
                 this.notify('restoring');
                 $.ajax({
-                    url: this.entityType + '/action/restore',
+                    url: 'entityRestore',
                     type: 'POST',
-                    data: JSON.stringify({ id: id })
+                    data: JSON.stringify({ entityName: this.entityType, ids: [id] })
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);
