@@ -15,7 +15,7 @@ namespace Atro\Handlers\Composer;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -47,7 +47,9 @@ class ComposerCancelHandler extends AbstractHandler
         $data = json_decode(json_encode($this->getRequestBody($request)), true);
 
         if (!empty($id = $data['id'])) {
-            return new JsonResponse(['true' => $this->getServiceFactory()->create('Composer')->cancel($id)]);
+            $this->getServiceFactory()->create('Composer')->cancel($id);
+
+            return new BoolResponse(true);
         }
 
         throw new NotFound();

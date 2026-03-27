@@ -15,7 +15,7 @@ namespace Atro\Handlers\Connection;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -54,6 +54,8 @@ class ConnectionSendTestEmailHandler extends AbstractHandler
             throw new BadRequest('Email is required.');
         }
 
-        return new JsonResponse(['true' => $this->getRecordService('Connection')->sendTestEMail((string) $data->id, (string) $data->email)]);
+        $this->getRecordService('Connection')->sendTestEMail((string) $data->id, (string) $data->email);
+
+        return new BoolResponse(true);
     }
 }

@@ -15,7 +15,7 @@ namespace Atro\Handlers\Composer;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -56,7 +56,9 @@ class ComposerDeleteModuleHandler extends AbstractHandler
         }
 
         if (!empty($id)) {
-            return new JsonResponse(['true' => $this->getServiceFactory()->create('Composer')->deleteModule($id)]);
+            $this->getServiceFactory()->create('Composer')->deleteModule($id);
+
+            return new BoolResponse(true);
         }
 
         throw new NotFound();

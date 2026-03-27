@@ -15,7 +15,7 @@ namespace Atro\Handlers\EntityField;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -55,6 +55,8 @@ class EntityFieldUpdateOptionCodeHandler extends AbstractHandler
             throw new BadRequest();
         }
 
-        return new JsonResponse(['true' => $this->getRecordService('EntityField')->updateOptionCode($data->scope, $data->field, $data->oldValue, $data->newValue)]);
+        $this->getRecordService('EntityField')->updateOptionCode($data->scope, $data->field, $data->oldValue, $data->newValue);
+
+        return new BoolResponse(true);
     }
 }

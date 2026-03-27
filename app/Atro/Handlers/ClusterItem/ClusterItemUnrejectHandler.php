@@ -15,7 +15,7 @@ namespace Atro\Handlers\ClusterItem;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -54,6 +54,8 @@ class ClusterItemUnrejectHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new JsonResponse(['true' => $this->getRecordService('ClusterItem')->unreject((string) $data->id, (string) $data->relationId)]);
+        $this->getRecordService('ClusterItem')->unreject((string) $data->id, (string) $data->relationId);
+
+        return new BoolResponse(true);
     }
 }

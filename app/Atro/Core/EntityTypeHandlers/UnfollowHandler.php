@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,6 +49,6 @@ class UnfollowHandler extends AbstractHandler
 
         $result = $this->getRecordService($entityName)->unfollow($id);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

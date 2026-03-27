@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\User;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -57,6 +57,6 @@ class UserChangeOwnPasswordHandler extends AbstractHandler
             $data->sendAccessInfo ?? false
         );
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

@@ -1073,12 +1073,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.confirm(this.translate('unlinkAllConfirmation', 'messages'), function () {
                 this.notify('Please wait...');
                 $.ajax({
-                    url: this.model.name + '/action/unlinkAll',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        link: data.link,
-                        id: this.model.id
-                    }),
+                    url: this.model.name + '/' + this.model.id + '/' + data.link + '?all=true',
+                    type: 'DELETE',
                 }).done(function () {
                     this.notify(false);
                     this.notify('Unlinked', 'success');

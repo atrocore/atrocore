@@ -15,7 +15,7 @@ namespace Atro\Handlers\EntityField;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -50,6 +50,8 @@ class EntityFieldResetToDefaultHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new JsonResponse(['true' => $this->getRecordService('EntityField')->resetToDefault($data->scope, $data->field)]);
+        $this->getRecordService('EntityField')->resetToDefault($data->scope, $data->field);
+
+        return new BoolResponse(true);
     }
 }

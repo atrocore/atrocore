@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\Layout;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\LayoutManager;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -60,13 +60,15 @@ class LayoutSavePreferenceHandler extends AbstractHandler
             $layoutProfileId = (string) $data->layoutProfileId;
         }
 
-        return new JsonResponse(['true' => $this->getLayoutManager()->saveUserPreference(
+        $this->getLayoutManager()->saveUserPreference(
             (string) $data->scope,
             (string) $data->viewType,
             $relatedEntity,
             $relatedLink,
             $layoutProfileId
-        )]);
+        );
+
+        return new BoolResponse(true);
     }
 
     private function getLayoutManager(): LayoutManager

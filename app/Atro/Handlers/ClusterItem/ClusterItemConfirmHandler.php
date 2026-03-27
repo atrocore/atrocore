@@ -16,7 +16,7 @@ namespace Atro\Handlers\ClusterItem;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -58,6 +58,8 @@ class ClusterItemConfirmHandler extends AbstractHandler
             throw new NotFound();
         }
 
-        return new JsonResponse(['true' => $recordService->confirm($entity)]);
+        $recordService->confirm($entity);
+
+        return new BoolResponse(true);
     }
 }

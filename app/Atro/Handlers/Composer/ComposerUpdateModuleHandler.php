@@ -15,7 +15,7 @@ namespace Atro\Handlers\Composer;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -48,7 +48,9 @@ class ComposerUpdateModuleHandler extends AbstractHandler
 
         if (!empty($data['id'])) {
             $version = (!empty($data['version'])) ? $data['version'] : null;
-            return new JsonResponse(['true' => $this->getServiceFactory()->create('Composer')->updateModule($data['id'], $version)]);
+            $this->getServiceFactory()->create('Composer')->updateModule($data['id'], $version);
+
+            return new BoolResponse(true);
         }
 
         throw new NotFound();

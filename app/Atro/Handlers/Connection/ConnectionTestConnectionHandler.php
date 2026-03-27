@@ -15,7 +15,7 @@ namespace Atro\Handlers\Connection;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -50,6 +50,8 @@ class ConnectionTestConnectionHandler extends AbstractHandler
             throw new BadRequest('ID is required.');
         }
 
-        return new JsonResponse(['true' => $this->getRecordService('Connection')->testConnection((string) $data->id)]);
+        $this->getRecordService('Connection')->testConnection((string) $data->id);
+
+        return new BoolResponse(true);
     }
 }

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\SelectionItem;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -47,6 +47,6 @@ class SelectionItemReplaceItemHandler extends AbstractHandler
 
         $result = $this->getRecordService('SelectionItem')->replaceItem($data->id, $data->selectedRecords[0]);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

@@ -16,7 +16,7 @@ namespace Atro\Core\EntityTypeHandlers;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -78,6 +78,6 @@ class AddAttributesHandler extends AbstractHandler
         $result = $this->getServiceFactory()->create('Attribute')
             ->addAttributeValue($entity->getEntityName(), $entity->get('id'), null, $attributeIds);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

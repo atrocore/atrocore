@@ -15,7 +15,7 @@ namespace Atro\Handlers\Entity;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -50,6 +50,8 @@ class EntityResetToDefaultHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new JsonResponse(['true' => $this->getRecordService('Entity')->resetToDefault($data->scope)]);
+        $this->getRecordService('Entity')->resetToDefault($data->scope);
+
+        return new BoolResponse(true);
     }
 }

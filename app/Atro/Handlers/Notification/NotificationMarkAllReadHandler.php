@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Notification;
 
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -36,6 +36,6 @@ class NotificationMarkAllReadHandler extends AbstractHandler
     {
         $result = $this->getServiceFactory()->create('Notification')->markAllRead($this->getUser()->id);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }
