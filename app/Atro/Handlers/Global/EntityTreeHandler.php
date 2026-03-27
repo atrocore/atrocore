@@ -11,8 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\Global;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Handlers\AbstractHandler;
 use Atro\Core\Http\Response\JsonResponse;
@@ -20,22 +21,21 @@ use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Atro\Core\Routing\EntityType;
 
 #[Route(
-    path: '/{entityName}/action/Tree',
+    path: '/entityTree',
     methods: [
         'GET',
     ],
     summary: 'Get hierarchy tree',
     description: 'Returns tree-structured data for a hierarchy entity. Supports node-based navigation and selected node expansion.',
-    tag: '{entityName}',
+    tag: 'Global',
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'entityName',
+            'in'          => 'query',
+            'required'    => true,
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
@@ -185,13 +185,29 @@ use Atro\Core\Routing\EntityType;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'Connection'])]
-class TreeHandler extends AbstractHandler
+class EntityTreeHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
         $qp         = $request->getQueryParams();
+        $entityName = (string) ($qp['entityName'] ?? '');
+
+        if ($entityName === '') {
+            throw new BadRequest('entityName is required');
+        }
+
+        $method = 'process' . $entityName;
+        if (method_exists($this, $method)) {
+            return $this->$method($qp);
+        }
+
+        $excludedEntities = ['UserProfile', 'Connection'];
+        $supportedTypes   = ['Base', 'Hierarchy', 'Relation', 'ReferenceData'];
+        $scopeType        = (string) ($this->getMetadata()->get(['scopes', $entityName, 'type']) ?? 'Base');
+
+        if (in_array($entityName, $excludedEntities, true) || !in_array($scopeType, $supportedTypes, true)) {
+            throw new Forbidden();
+        }
 
         if (!$this->getAcl()->check($entityName, 'read')) {
             throw new Forbidden();
@@ -199,15 +215,13 @@ class TreeHandler extends AbstractHandler
 
         $service = $this->getRecordService($entityName);
 
-        // If entity supports hierarchy tree navigation
         if (method_exists($service, 'isHierarchy') && $service->isHierarchy()) {
             if (empty($qp['node']) && !empty($qp['selectedId'])) {
                 $sortParams = [
                     'asc'    => ($qp['asc'] ?? 'true') === 'true',
                     'sortBy' => $qp['sortBy'] ?? null,
                 ];
-                $result = $service->getTreeDataForSelectedNode((string) $qp['selectedId'], $sortParams);
-                return new JsonResponse($result);
+                return new JsonResponse($service->getTreeDataForSelectedNode((string) $qp['selectedId'], $sortParams));
             }
 
             $params = [
@@ -224,11 +238,9 @@ class TreeHandler extends AbstractHandler
                     : $this->getConfig()->get('recordsPerPageSmall', 20),
             ];
 
-            $result = $service->getChildren((string) ($qp['node'] ?? ''), $params);
-            return new JsonResponse($result);
+            return new JsonResponse($service->getChildren((string) ($qp['node'] ?? ''), $params));
         }
 
-        // Fallback to generic tree (non-hierarchy entity)
         $params = [
             'where'        => $this->prepareWhereQuery($qp['where'] ?? null),
             'foreignWhere' => $this->prepareWhereQuery($qp['foreignWhere'] ?? null),
@@ -241,12 +253,43 @@ class TreeHandler extends AbstractHandler
                 : $this->getConfig()->get('recordsPerPageSmall', 20),
         ];
 
-        $result = $service->getTreeItems(
+        return new JsonResponse($service->getTreeItems(
             (string) ($qp['link'] ?? ''),
             (string) ($qp['scope'] ?? ''),
             $params
-        );
+        ));
+    }
 
-        return new JsonResponse($result);
+    private function processBookmark(array $qp): ResponseInterface
+    {
+        $scope = (string) ($qp['scope'] ?? '');
+        if ($scope === '') {
+            throw new BadRequest('scope is required');
+        }
+
+        $params = [
+            'where'   => $this->prepareWhereQuery($qp['where'] ?? null),
+            'asc'     => ($qp['asc'] ?? 'true') === 'true',
+            'sortBy'  => $qp['sortBy'] ?? 'name',
+            'offset'  => (int) ($qp['offset'] ?? 0),
+            'maxSize' => empty($qp['maxSize'])
+                ? $this->getConfig()->get('recordsPerPageSmall', 20)
+                : (int) $qp['maxSize'],
+        ];
+
+        return new JsonResponse($this->getRecordService('Bookmark')->getBookmarkTree($scope, $params));
+    }
+
+    private function processLastViewed(array $qp): ResponseInterface
+    {
+        $scope = (string) ($qp['scope'] ?? '');
+        if ($scope === '') {
+            throw new BadRequest('scope is required');
+        }
+
+        /** @var \Atro\Services\LastViewed $service */
+        $service = $this->getServiceFactory()->create('LastViewed');
+
+        return new JsonResponse($service->getLastVisitItemsTreeData($scope, (int) ($qp['offset'] ?? 0)));
     }
 }
