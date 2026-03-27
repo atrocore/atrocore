@@ -126,17 +126,31 @@ Every handler **must** declare a `#[Route]` attribute. This attribute serves as 
     description: 'Returns statistics for the specified MyEntity record.',
     tag: 'MyEntity',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true,
-         'description' => 'Record ID', 'schema' => ['type' => 'string']],
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Record ID',
+            'schema'      => [
+                'type' => 'string'
+            ]
+        ],
     ],
     responses: [
-        200 => ['description' => 'Statistics data', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'total'  => ['type' => 'integer'],
-                'active' => ['type' => 'integer'],
-            ],
-        ]]]],
+        200 => [
+            'description' => 'Statistics data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total'  => ['type' => 'integer'],
+                            'active' => ['type' => 'integer'],
+                        ],
+                    ]
+                ]
+            ]
+        ],
         400 => ['description' => 'id is required'],
         404 => ['description' => 'Record not found'],
     ],
@@ -144,6 +158,33 @@ Every handler **must** declare a `#[Route]` attribute. This attribute serves as 
 ```
 
 The most common response is `application/json`. Always define the `schema` inside the `200` response — this is what `ApiValidationMiddleware` uses to validate the actual response body.
+
+### Array Formatting in `#[Route]`
+
+**Always expand nested arrays vertically — one key per line, with indentation.** Never write nested structures inline on a single line.
+
+```php
+// ✗ Wrong — hard to read
+responses: [
+    200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+],
+
+// ✓ Correct — each level on its own line
+responses: [
+    200 => [
+        'description' => 'Success',
+        'content'     => [
+            'application/json' => [
+                'schema' => [
+                    'type' => 'boolean'
+                ]
+            ]
+        ]
+    ],
+],
+```
+
+This rule applies to all nested arrays inside `#[Route]`: `parameters`, `requestBody`, `responses`. Simple scalar values (`400 => ['description' => '...']`) may stay on one line.
 
 ### Required Fields
 
@@ -224,6 +265,35 @@ This pattern applies when all three conditions hold:
 3. The **response signature** is identical regardless of entity.
 
 If any of these conditions breaks — the action has entity-specific logic, parameters, or response shape — use per-entity routes instead.
+
+### Naming Global Routes
+
+Global routes share a single flat namespace. A vague name like `/subscription` or `/follow` will conflict with other operations or become ambiguous as the API grows. **Every Global route name must be specific enough to be unambiguous on its own.**
+
+Rules for naming Global routes:
+
+1. **Prefix with the domain noun** — name the route after the resource it operates on, not the HTTP method or the action verb. The HTTP method already expresses create/delete/update.
+
+   ```
+   ✓  POST   /entitySubscription     (resource: subscription on an entity record)
+   ✓  DELETE /entitySubscription
+   ✗  POST   /follow                 (verb — conflicts with future /follow on other resources)
+   ✗  POST   /subscription           (too vague — subscription to what?)
+   ```
+
+2. **Avoid generic words** — words like `record`, `data`, `item`, `action`, `info` carry no meaning in a flat namespace. Qualify them: `entitySubscription`, not `subscription`; `entityMassDelete`, not `massDelete` (if scoped to entity records).
+
+3. **Use camelCase** — consistent with existing Global routes (`/massDelete`, `/globalSearch`, `/entitySubscription`).
+
+4. **One resource, multiple methods** — prefer a single path with different HTTP methods over separate paths per action:
+
+   ```
+   ✓  POST   /entitySubscription   ← follow
+   ✓  DELETE /entitySubscription   ← unfollow
+
+   ✗  POST   /followEntity
+   ✗  POST   /unfollowEntity
+   ```
 
 ### HTTP Method Semantics
 
