@@ -24,18 +24,57 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/AttributePanel/{id}/{link}',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Unlinks entities for AttributePanel',
     description: 'Removes a relation between the AttributePanel record and one or more foreign records.',
     tag: 'AttributePanel',
     parameters: [
-        ['name' => 'id',   'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'link', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'ids',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'all',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'link',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'ids',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'all',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'boolean',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class AttributePanelRemoveLinkHandler extends AbstractHandler

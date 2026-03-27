@@ -24,7 +24,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/entitySubscription',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Follow stream',
     description: 'Subscribes the current user to the stream of the specified entity record.',
     tag: 'Global',
@@ -36,29 +38,30 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'type'       => 'object',
                     'required'   => [
                         'entityName',
-                        'id'
+                        'id',
                     ],
                     'properties' => [
                         'entityName' => [
-                            'type' => 'string'
+                            'type' => 'string',
                         ],
                         'id'         => [
-                            'type' => 'string'
-                        ]
-                    ]
-                ]
-            ]
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success', 'content' => [
+            'description' => 'Success',
+            'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean'
-                    ]
-                ]
-            ]
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
         ],
     ],
 )]

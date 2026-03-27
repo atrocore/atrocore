@@ -23,16 +23,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/action/resetPassword',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Resets a user password',
     description: 'Admin action: generates a new random password and sends it to the user.',
     tag: 'User',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['userId'], 'properties' => ['userId' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'userId',
+                    ],
+                    'properties' => [
+                        'userId' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserResetPasswordHandler extends AbstractHandler

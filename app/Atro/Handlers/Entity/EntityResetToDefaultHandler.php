@@ -24,16 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Entity/action/resetToDefault',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Reset entity to default',
     description: 'Resets an entity configuration to its default values. Accessible by administrators only.',
     tag: 'Entity',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['scope'], 'properties' => ['scope' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'scope',
+                    ],
+                    'properties' => [
+                        'scope' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class EntityResetToDefaultHandler extends AbstractHandler

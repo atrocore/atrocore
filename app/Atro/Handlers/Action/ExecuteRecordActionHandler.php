@@ -23,14 +23,27 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Action/action/executeRecordAction',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Execute a record-level action',
     description: 'Executes a named action on a specific entity record.',
     tag: 'Action',
     parameters: [],
     responses: [
-        200 => ['description' => 'Execution result', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
-        400 => ['description' => 'actionId and actionType are required'],
+        200 => [
+            'description' => 'Execution result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'actionId and actionType are required',
+        ],
     ],
 )]
 class ExecuteRecordActionHandler extends AbstractHandler

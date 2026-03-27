@@ -22,17 +22,52 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/GlobalSearch',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Global search',
     description: 'Searches across all enabled entity types and returns matching records.',
     tag: 'Global',
     parameters: [
-        ['name' => 'q',       'in' => 'query', 'required' => false, 'schema' => ['type' => 'string',  'example' => 'product name']],
-        ['name' => 'offset',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],
-        ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 10]],
+        [
+            'name'     => 'q',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'product name',
+            ],
+        ],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 10,
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Search results', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Search results',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class GlobalSearchHandler extends AbstractHandler

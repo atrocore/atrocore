@@ -24,15 +24,33 @@ use Atro\Core\Routing\EntityType;
 
 #[Route(
     path: '/{entityName}/action/inheritRelation',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Inherit a relation record',
     description: 'Creates an inherited copy of a relation record from a parent entity.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Inherited relation record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Inherited relation record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Relation'])]

@@ -24,16 +24,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/AuthToken',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates an auth token record',
     description: 'Creates a new authentication token record. Accessible by administrators only.',
     tag: 'AuthToken',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object']]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type' => 'object',
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Created auth token record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Created auth token record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class AuthTokenCreateHandler extends AbstractHandler

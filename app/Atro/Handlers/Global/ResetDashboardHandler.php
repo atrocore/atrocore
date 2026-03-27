@@ -25,21 +25,40 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/UserProfile/action/resetDashboard',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Reset dashboard layout',
     description: 'Resets the dashboard layout and dashlet options for a user to the default. Admins can reset any user; regular users can only reset their own.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'Reset dashboard data', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'dashboardLayout' => ['nullable' => true],
-                'dashletsOptions' => ['nullable' => true],
+        200 => [
+            'description' => 'Reset dashboard data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'dashboardLayout' => [
+                                'nullable' => true,
+                            ],
+                            'dashletsOptions' => [
+                                'nullable' => true,
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
-        400 => ['description' => 'id is required'],
-        403 => ['description' => 'Forbidden'],
-        404 => ['description' => 'User not found'],
+        ],
+        400 => [
+            'description' => 'id is required',
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
+        404 => [
+            'description' => 'User not found',
+        ],
     ],
 )]
 class ResetDashboardHandler extends AbstractHandler

@@ -26,15 +26,44 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/{id}/attributeValues',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get attribute values',
     description: 'Returns all attribute values assigned to the specified entity record.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'id',         'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Array result', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object']]]]],
+        200 => [
+            'description' => 'Array result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type' => 'object',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy'], requires: ['hasAttribute'])]

@@ -24,19 +24,43 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Variable/{id}',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Read variable',
     description: 'Returns a single variable by ID. Admin only.',
     tag: 'Variable',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Variable record', 'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/Variable']]]],
-        403 => ['description' => 'Forbidden'],
-        404 => ['description' => 'Not found'],
+        200 => [
+            'description' => 'Variable record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        '$ref' => '#/components/schemas/Variable',
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
+        404 => [
+            'description' => 'Not found',
+        ],
     ],
-    entities: ['Variable'],
+    entities: [
+        'Variable',
+    ],
 )]
 class ReadVariableHandler extends AbstractHandler
 {

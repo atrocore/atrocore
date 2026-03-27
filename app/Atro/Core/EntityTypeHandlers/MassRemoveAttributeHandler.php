@@ -24,15 +24,33 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/action/massRemoveAttribute',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Mass remove attribute',
     description: 'Removes an attribute from multiple records of the specified entity.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation'], requires: ['hasAttribute'])]

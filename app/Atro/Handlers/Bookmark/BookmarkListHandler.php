@@ -22,12 +22,34 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Bookmark',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns a list of bookmarks',
     description: 'Returns all bookmarks for the current user.',
     tag: 'Bookmark',
     responses: [
-        200 => ['description' => 'Collection of bookmarks', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['total' => ['type' => 'integer'], 'list' => ['type' => 'array', 'items' => ['type' => 'object']]]]]]],
+        200 => [
+            'description' => 'Collection of bookmarks',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class BookmarkListHandler extends AbstractHandler

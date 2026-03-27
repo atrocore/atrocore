@@ -24,19 +24,69 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/{scope}/layout/{viewType}',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get layout content',
     description: 'Returns the layout configuration for an entity and view type.',
     tag: 'Layout',
     parameters: [
-        ['name' => 'scope',           'in' => 'path',  'required' => true,  'schema' => ['type' => 'string', 'example' => 'Product']],
-        ['name' => 'viewType',        'in' => 'path',  'required' => true,  'schema' => ['type' => 'string', 'example' => 'list']],
-        ['name' => 'relatedScope',    'in' => 'query', 'required' => false, 'schema' => ['type' => 'string', 'example' => 'Category']],
-        ['name' => 'layoutProfileId', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'isAdminPage',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'string', 'example' => 'true']],
+        [
+            'name'     => 'scope',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'Product',
+            ],
+        ],
+        [
+            'name'     => 'viewType',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'list',
+            ],
+        ],
+        [
+            'name'     => 'relatedScope',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'Category',
+            ],
+        ],
+        [
+            'name'     => 'layoutProfileId',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'isAdminPage',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'true',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Layout content', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Layout content',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class LayoutGetContentHandler extends AbstractHandler

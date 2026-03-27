@@ -24,16 +24,52 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Layout/action/savePreference',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Save layout preference',
     description: 'Saves the user\'s preferred layout profile for a specific layout.',
     tag: 'Layout',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['scope', 'viewType'], 'properties' => ['scope' => ['type' => 'string'], 'viewType' => ['type' => 'string'], 'relatedScope' => ['type' => 'string'], 'layoutProfileId' => ['type' => 'string', 'nullable' => true]]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'scope',
+                        'viewType',
+                    ],
+                    'properties' => [
+                        'scope'           => [
+                            'type' => 'string',
+                        ],
+                        'viewType'        => [
+                            'type' => 'string',
+                        ],
+                        'relatedScope'    => [
+                            'type' => 'string',
+                        ],
+                        'layoutProfileId' => [
+                            'type'     => 'string',
+                            'nullable' => true,
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class LayoutSavePreferenceHandler extends AbstractHandler

@@ -23,16 +23,53 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/File/action/massDownload',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Mass download files',
     description: 'Initiates a mass download for multiple files, returning a download link.',
     tag: 'File',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['idList' => ['type' => 'array', 'items' => ['type' => 'string']], 'where' => ['type' => 'array', 'items' => ['type' => 'object']], 'byWhere' => ['type' => 'boolean'], 'selectData' => ['type' => 'object']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'properties' => [
+                        'idList'     => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'where'      => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'object',
+                            ],
+                        ],
+                        'byWhere'    => [
+                            'type' => 'boolean',
+                        ],
+                        'selectData' => [
+                            'type' => 'object',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Download result', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Download result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class FileMassDownloadHandler extends AbstractHandler

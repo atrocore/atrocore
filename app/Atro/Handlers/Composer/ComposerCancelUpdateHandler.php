@@ -23,12 +23,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/cancelUpdate',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Cancel composer update',
     description: 'Cancels all queued composer changes. Accessible by administrators only.',
     tag: 'Composer',
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerCancelUpdateHandler extends AbstractHandler

@@ -23,22 +23,64 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Action/action/dynamicActions',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get dynamic actions for a scope',
     description: 'Returns the list of available dynamic actions for the specified entity scope.',
     tag: 'Action',
     parameters: [
-        ['name' => 'scope', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string', 'example' => 'Product']],
-        ['name' => 'id', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'type', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'display', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'scope',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'Product',
+            ],
+        ],
+        [
+            'name'     => 'id',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'type',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'display',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'List of dynamic actions', 'content' => ['application/json' => ['schema' => [
-            'type'  => 'array',
-            'items' => ['type' => 'object'],
-        ]]]],
-        400 => ['description' => 'scope is required'],
+        200 => [
+            'description' => 'List of dynamic actions',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type' => 'object',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'scope is required',
+        ],
     ],
 )]
 class DynamicActionsHandler extends AbstractHandler

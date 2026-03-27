@@ -26,15 +26,41 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/{id}/addAttributes',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Add attributes',
     description: 'Assigns one or more attributes to the specified entity record without setting values.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'id',         'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy'], requires: ['hasAttribute'])]

@@ -24,15 +24,33 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/action/massUnfollow',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Mass unfollow stream',
     description: 'Unsubscribes the current user from the stream of multiple entity records.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['UserProfile'], requiresAbsent: ['streamDisabled'])]

@@ -23,33 +23,78 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/LastViewed/action/Tree',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get last viewed data for a scope for tree panels',
     description: 'Get last viewed data for a scope for tree panels',
     tag: 'LastViewed',
     parameters: [
-        ['name' => 'scope', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string', 'example' => 'Product']],
-        ['name' => 'offset', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer']],
+        [
+            'name'     => 'scope',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'Product',
+            ],
+        ],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'integer',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Last viewed tree data', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'total' => ['type' => 'integer'],
-                'list'  => ['type' => 'array', 'items' => [
-                    'type'       => 'object',
-                    'properties' => [
-                        'id'             => ['type' => 'string'],
-                        'name'           => ['type' => 'string'],
-                        'offset'         => ['type' => 'integer'],
-                        'disabled'       => ['type' => 'boolean', 'example' => false],
-                        'load_on_demand' => ['type' => 'boolean', 'example' => false],
-                        'total'          => ['type' => 'integer'],
+        200 => [
+            'description' => 'Last viewed tree data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type'       => 'object',
+                                    'properties' => [
+                                        'id'             => [
+                                            'type' => 'string',
+                                        ],
+                                        'name'           => [
+                                            'type' => 'string',
+                                        ],
+                                        'offset'         => [
+                                            'type' => 'integer',
+                                        ],
+                                        'disabled'       => [
+                                            'type'    => 'boolean',
+                                            'example' => false,
+                                        ],
+                                        'load_on_demand' => [
+                                            'type'    => 'boolean',
+                                            'example' => false,
+                                        ],
+                                        'total'          => [
+                                            'type' => 'integer',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
-                ]],
+                ],
             ],
-        ]]]],
-        400 => ['description' => 'scope is required'],
+        ],
+        400 => [
+            'description' => 'scope is required',
+        ],
     ],
 )]
 class TreeHandler extends AbstractHandler

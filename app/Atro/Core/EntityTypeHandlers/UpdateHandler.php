@@ -25,20 +25,51 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/{id}',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Updates a record',
     description: 'Updates an existing record by ID.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-patch' => true]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'x-entity-patch' => true,
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['MatchedRecord', 'AuthToken', 'Bookmark', 'Connection'])]

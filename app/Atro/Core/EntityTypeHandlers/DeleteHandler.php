@@ -25,15 +25,50 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/{id}',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Deletes a record',
     description: 'Deletes a record by ID. Pass the permanently header to skip the recycle bin.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'id',         'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'permanently', 'in' => 'header', 'required' => false, 'schema' => ['type' => 'boolean', 'example' => false]],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'permanently',
+            'in'       => 'header',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'boolean',
+                'example' => false,
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Matching', 'MasterDataEntity', 'AuthToken', 'Store', 'ClassificationAttribute', 'Connection'])]

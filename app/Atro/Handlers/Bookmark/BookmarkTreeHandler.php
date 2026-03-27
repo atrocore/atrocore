@@ -23,20 +23,83 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Bookmark/action/Tree',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns bookmark tree',
     description: 'Returns the bookmark tree for the specified scope.',
     tag: 'Bookmark',
     parameters: [
-        ['name' => 'scope',   'in' => 'query', 'required' => true,  'schema' => ['type' => 'string']],
-        ['name' => 'where',   'in' => 'query', 'required' => false, 'schema' => ['anyOf' => [['type' => 'array'], ['type' => 'object'], ['type' => 'string']]]],
-        ['name' => 'asc',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean']],
-        ['name' => 'sortBy',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'offset',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer']],
-        ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer']],
+        [
+            'name'     => 'scope',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'where',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'anyOf' => [
+                    [
+                        'type' => 'array',
+                    ],
+                    [
+                        'type' => 'object',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
+                ],
+            ],
+        ],
+        [
+            'name'     => 'asc',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'boolean',
+            ],
+        ],
+        [
+            'name'     => 'sortBy',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'integer',
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'integer',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Bookmark tree', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Bookmark tree',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class BookmarkTreeHandler extends AbstractHandler

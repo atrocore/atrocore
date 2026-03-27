@@ -23,17 +23,52 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/passwordChangeRequest',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     auth: false,
     summary: 'Requests a password reset link',
     description: 'Sends a password reset link to the user\'s email address.',
     tag: 'User',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['userName', 'emailAddress'], 'properties' => ['userName' => ['type' => 'string', 'example' => 'admin'], 'emailAddress' => ['type' => 'string', 'example' => 'admin@example.com'], 'url' => ['type' => 'string', 'example' => 'https://your-instance.com/reset-password']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'userName',
+                        'emailAddress',
+                    ],
+                    'properties' => [
+                        'userName'     => [
+                            'type'    => 'string',
+                            'example' => 'admin',
+                        ],
+                        'emailAddress' => [
+                            'type'    => 'string',
+                            'example' => 'admin@example.com',
+                        ],
+                        'url'          => [
+                            'type'    => 'string',
+                            'example' => 'https://your-instance.com/reset-password',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserPasswordChangeRequestHandler extends AbstractHandler

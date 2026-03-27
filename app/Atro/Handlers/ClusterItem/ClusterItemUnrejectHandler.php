@@ -24,16 +24,45 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ClusterItem/action/unreject',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Unreject a cluster item',
     description: 'Unrejects a previously rejected cluster item.',
     tag: 'ClusterItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id', 'relationId'], 'properties' => ['id' => ['type' => 'string'], 'relationId' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                        'relationId',
+                    ],
+                    'properties' => [
+                        'id'         => [
+                            'type' => 'string',
+                        ],
+                        'relationId' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ClusterItemUnrejectHandler extends AbstractHandler

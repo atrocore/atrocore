@@ -23,13 +23,24 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Installer/action/getDefaultDbSettings',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get default database settings',
     description: 'Returns the default database connection settings. Only accessible before installation.',
     tag: 'Installer',
     auth: false,
     responses: [
-        200 => ['description' => 'Default DB settings', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Default DB settings',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class InstallerGetDefaultDbSettingsHandler extends AbstractHandler

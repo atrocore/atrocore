@@ -24,14 +24,29 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Attribute/action/addAttributeValue',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Add attribute value to entities',
     description: 'Adds an attribute value to one or more entity records.',
     tag: 'Attribute',
     responses: [
-        200 => ['description' => 'true on success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        400 => ['description' => 'Invalid input'],
-        403 => ['description' => 'Forbidden'],
+        200 => [
+            'description' => 'true on success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'Invalid input',
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
     ],
 )]
 class AddAttributeValueHandler extends AbstractHandler

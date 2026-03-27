@@ -22,22 +22,52 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/LastViewed',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get list of last viewed items',
     description: 'Returns a paginated list of last viewed records.',
     tag: 'LastViewed',
     parameters: [
-        ['name' => 'offset', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer']],
-        ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer']],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'integer',
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'integer',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'List of last viewed items', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'total' => ['type' => 'integer'],
-                'list'  => ['type' => 'array', 'items' => ['type' => 'object']],
+        200 => [
+            'description' => 'List of last viewed items',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
+        ],
     ],
 )]
 class IndexHandler extends AbstractHandler

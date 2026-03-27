@@ -24,15 +24,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Layout/action/resetAllToDefault',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Reset all layouts to default',
     description: 'Removes all custom layout configurations for a layout profile.',
     tag: 'Layout',
     parameters: [
-        ['name' => 'layoutProfileId', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'layoutProfileId',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class LayoutResetAllToDefaultHandler extends AbstractHandler

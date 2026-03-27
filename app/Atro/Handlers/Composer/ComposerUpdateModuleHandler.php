@@ -24,16 +24,46 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/updateModule',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Update module settings',
     description: 'Update module settings (e.g. set a specific version). Changes are queued until runUpdate is called. Accessible by administrators only.',
     tag: 'Composer',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string', 'example' => 'atrocore/pim'], 'version' => ['type' => 'string', 'example' => '1.2.3']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id'      => [
+                            'type'    => 'string',
+                            'example' => 'atrocore/pim',
+                        ],
+                        'version' => [
+                            'type'    => 'string',
+                            'example' => '1.2.3',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerUpdateModuleHandler extends AbstractHandler

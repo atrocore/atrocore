@@ -23,15 +23,47 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Job/action/massActionStatus',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get status of mass action job',
     description: 'Returns the current status of a mass action job.',
     tag: 'Job',
     parameters: [
-        ['name' => 'id', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string', 'example' => '613219736ca7a1c68']],
+        [
+            'name'     => 'id',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => '613219736ca7a1c68',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Job status', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['done' => ['type' => 'boolean'], 'errors' => ['type' => 'string', 'nullable' => true], 'message' => ['type' => 'string', 'nullable' => true]]]]]],
+        200 => [
+            'description' => 'Job status',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'done'    => [
+                                'type' => 'boolean',
+                            ],
+                            'errors'  => [
+                                'type'     => 'string',
+                                'nullable' => true,
+                            ],
+                            'message' => [
+                                'type'     => 'string',
+                                'nullable' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class JobMassActionStatusHandler extends AbstractHandler

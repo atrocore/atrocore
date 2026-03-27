@@ -24,17 +24,53 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Installer/action/checkDbConnect',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Check database connection',
     description: 'Checks whether the provided database connection settings are valid. Only accessible before installation.',
     tag: 'Installer',
     auth: false,
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['host', 'dbname', 'user'], 'properties' => ['host' => ['type' => 'string'], 'dbname' => ['type' => 'string'], 'user' => ['type' => 'string'], 'password' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'host',
+                        'dbname',
+                        'user',
+                    ],
+                    'properties' => [
+                        'host'     => [
+                            'type' => 'string',
+                        ],
+                        'dbname'   => [
+                            'type' => 'string',
+                        ],
+                        'user'     => [
+                            'type' => 'string',
+                        ],
+                        'password' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Connection check result', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Connection check result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class InstallerCheckDbConnectHandler extends AbstractHandler

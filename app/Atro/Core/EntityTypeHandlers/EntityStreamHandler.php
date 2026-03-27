@@ -24,21 +24,98 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/{entityName}/{id}/stream',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns the stream for a record',
     description: 'Returns stream entries for the specified entity record.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path',  'required' => true,  'schema' => ['type' => 'string']],
-        ['name' => 'id',         'in' => 'path',  'required' => true,  'schema' => ['type' => 'string']],
-        ['name' => 'offset',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],
-        ['name' => 'maxSize',    'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 20]],
-        ['name' => 'after',      'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'filter',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'array', 'items' => ['type' => 'string']]],
-        ['name' => 'sortBy',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'string', 'example' => 'number']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 20,
+            ],
+        ],
+        [
+            'name'     => 'after',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'filter',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'  => 'array',
+                'items' => [
+                    'type' => 'string',
+                ],
+            ],
+        ],
+        [
+            'name'     => 'sortBy',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'number',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Collection of stream entries', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['total' => ['type' => 'integer'], 'list' => ['type' => 'array', 'items' => ['type' => 'object']]]]]]],
+        200 => [
+            'description' => 'Collection of stream entries',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation'], requiresAbsent: ['streamDisabled'])]

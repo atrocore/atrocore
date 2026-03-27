@@ -24,15 +24,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/deleteModule',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Delete a module',
     description: 'Queues a module for deletion. Accessible by administrators only.',
     tag: 'Composer',
     parameters: [
-        ['name' => 'id', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerDeleteModuleHandler extends AbstractHandler

@@ -23,17 +23,44 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/I18n',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns all translation labels for the UI',
     description: 'Returns all translation labels for the UI. Does not require authentication.',
     tag: 'Global',
     auth: false,
     parameters: [
-        ['name' => 'locale',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string',  'example' => 'de_DE']],
-        ['name' => 'default', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean', 'example' => false]],
+        [
+            'name'     => 'locale',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'de_DE',
+            ],
+        ],
+        [
+            'name'     => 'default',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'boolean',
+                'example' => false,
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Translation labels', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Translation labels',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class I18nHandler extends AbstractHandler

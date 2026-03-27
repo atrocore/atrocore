@@ -27,15 +27,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/action/acl',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns ACL map for a user',
     description: 'Returns the ACL permission map for the delegator of the specified user.',
     tag: 'User',
     parameters: [
-        ['name' => 'id', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'ACL map', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'ACL map',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserAclHandler extends AbstractHandler

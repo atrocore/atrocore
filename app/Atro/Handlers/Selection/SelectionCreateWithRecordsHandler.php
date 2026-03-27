@@ -24,16 +24,46 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Selection/action/createSelectionWithRecords',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates a selection with multiple records',
     description: 'Creates a new selection and adds the specified entity records to it at once.',
     tag: 'Selection',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['scope' => ['type' => 'string', 'example' => 'Product'], 'entityIds' => ['type' => 'array', 'items' => ['type' => 'string', 'example' => 'example-id']]]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'properties' => [
+                        'scope'     => [
+                            'type'    => 'string',
+                            'example' => 'Product',
+                        ],
+                        'entityIds' => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type'    => 'string',
+                                'example' => 'example-id',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Created Selection record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Created Selection record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class SelectionCreateWithRecordsHandler extends AbstractHandler

@@ -25,17 +25,53 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/changePasswordByRequest',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     auth: false,
     summary: 'Changes password using a reset token',
     description: 'Sets a new password using a password reset token that was previously sent to the user\'s email.',
     tag: 'User',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['requestId', 'password'], 'properties' => ['requestId' => ['type' => 'string', 'example' => 'a1b2c3d4e5f6'], 'password' => ['type' => 'string', 'example' => 'newSecurePassword123']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'requestId',
+                        'password',
+                    ],
+                    'properties' => [
+                        'requestId' => [
+                            'type'    => 'string',
+                            'example' => 'a1b2c3d4e5f6',
+                        ],
+                        'password'  => [
+                            'type'    => 'string',
+                            'example' => 'newSecurePassword123',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Result with redirect URL', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['url' => ['type' => 'string']]]]]],
+        200 => [
+            'description' => 'Result with redirect URL',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'url' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserChangePasswordByRequestHandler extends AbstractHandler

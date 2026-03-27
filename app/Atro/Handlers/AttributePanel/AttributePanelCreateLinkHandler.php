@@ -24,16 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/AttributePanel/{id}/{link}',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Links entities for AttributePanel',
     description: 'Creates a relation between the AttributePanel record and one or more foreign records.',
     tag: 'AttributePanel',
     parameters: [
-        ['name' => 'id',   'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'link', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'link',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class AttributePanelCreateLinkHandler extends AbstractHandler

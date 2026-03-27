@@ -24,22 +24,109 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Entity/{id}/fields',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns fields linked to an Entity',
     description: 'Returns a collection of field records linked to the specified Entity record.',
     tag: 'Entity',
     parameters: [
-        ['name' => 'id',      'in' => 'path',  'required' => true,  'schema' => ['type' => 'string']],
-        ['name' => 'where',   'in' => 'query', 'required' => false, 'schema' => ['anyOf' => [['type' => 'array'], ['type' => 'object'], ['type' => 'string']]]],
-        ['name' => 'offset',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],
-        ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 50]],
-        ['name' => 'sortBy',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string',  'example' => 'name']],
-        ['name' => 'asc',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean', 'example' => true]],
-        ['name' => 'select',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'where',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'anyOf' => [
+                    [
+                        'type' => 'array',
+                    ],
+                    [
+                        'type' => 'object',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
+                ],
+            ],
+        ],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 50,
+            ],
+        ],
+        [
+            'name'     => 'sortBy',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'name',
+            ],
+        ],
+        [
+            'name'     => 'asc',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'boolean',
+                'example' => true,
+            ],
+        ],
+        [
+            'name'     => 'select',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Collection of field records', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['total' => ['type' => 'integer'], 'list' => ['type' => 'array', 'items' => ['type' => 'object']]]]]]],
-        404 => ['description' => 'Entity not found'],
+        200 => [
+            'description' => 'Collection of field records',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        404 => [
+            'description' => 'Entity not found',
+        ],
     ],
 )]
 class EntityListFieldsHandler extends AbstractHandler

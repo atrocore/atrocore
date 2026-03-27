@@ -24,26 +24,165 @@ use Atro\Core\Routing\EntityType;
 
 #[Route(
     path: '/{entityName}/action/Tree',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get hierarchy tree',
     description: 'Returns tree-structured data for a hierarchy entity. Supports node-based navigation and selected node expansion.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path',  'required' => true,  'schema' => ['type' => 'string']],
-        ['name' => 'node',       'in' => 'query', 'required' => false, 'schema' => ['type' => 'string'], 'description' => 'Parent node ID for lazy loading'],
-        ['name' => 'selectedId', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string'], 'description' => 'Expand tree to reveal this record'],
-        ['name' => 'link',       'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'scope',      'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'offset',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],
-        ['name' => 'maxSize',    'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 20]],
-        ['name' => 'sortBy',     'in' => 'query', 'required' => false, 'schema' => ['type' => 'string',  'example' => 'name']],
-        ['name' => 'asc',        'in' => 'query', 'required' => false, 'schema' => ['anyOf' => [['type' => 'boolean'], ['type' => 'string']], 'example' => true]],
-        ['name' => 'isTreePanel','in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean']],
-        ['name' => 'where',      'in' => 'query', 'required' => false, 'schema' => ['anyOf' => [['type' => 'array'], ['type' => 'object'], ['type' => 'string']]]],
-        ['name' => 'foreignWhere','in' => 'query','required' => false, 'schema' => ['anyOf' => [['type' => 'array'], ['type' => 'object'], ['type' => 'string']]]],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'        => 'node',
+            'in'          => 'query',
+            'required'    => false,
+            'schema'      => [
+                'type' => 'string',
+            ],
+            'description' => 'Parent node ID for lazy loading',
+        ],
+        [
+            'name'        => 'selectedId',
+            'in'          => 'query',
+            'required'    => false,
+            'schema'      => [
+                'type' => 'string',
+            ],
+            'description' => 'Expand tree to reveal this record',
+        ],
+        [
+            'name'     => 'link',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'scope',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 20,
+            ],
+        ],
+        [
+            'name'     => 'sortBy',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'name',
+            ],
+        ],
+        [
+            'name'     => 'asc',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'anyOf'   => [
+                    [
+                        'type' => 'boolean',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
+                ],
+                'example' => true,
+            ],
+        ],
+        [
+            'name'     => 'isTreePanel',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'boolean',
+            ],
+        ],
+        [
+            'name'     => 'where',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'anyOf' => [
+                    [
+                        'type' => 'array',
+                    ],
+                    [
+                        'type' => 'object',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
+                ],
+            ],
+        ],
+        [
+            'name'     => 'foreignWhere',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'anyOf' => [
+                    [
+                        'type' => 'array',
+                    ],
+                    [
+                        'type' => 'object',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Tree nodes collection', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['total' => ['type' => 'integer'], 'list' => ['type' => 'array', 'items' => ['type' => 'object']]]]]]],
+        200 => [
+            'description' => 'Tree nodes collection',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'Connection'])]

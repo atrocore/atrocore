@@ -24,13 +24,27 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Admin/getSchemaDiff',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get database schema diff',
     description: 'Returns SQL queries needed to synchronize the database schema with the current metadata. Admin only.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'SQL diff queries as plain text', 'content' => ['text/plain' => ['schema' => ['type' => 'string', 'example' => 'ALTER TABLE product ADD COLUMN sku VARCHAR(255);']]]],
-        403 => ['description' => 'Forbidden'],
+        200 => [
+            'description' => 'SQL diff queries as plain text',
+            'content'     => [
+                'text/plain' => [
+                    'schema' => [
+                        'type'    => 'string',
+                        'example' => 'ALTER TABLE product ADD COLUMN sku VARCHAR(255);',
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
     ],
 )]
 class GetSchemaDiffHandler extends AbstractHandler

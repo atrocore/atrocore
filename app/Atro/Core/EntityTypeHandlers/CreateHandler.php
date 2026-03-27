@@ -26,19 +26,43 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates a record',
     description: 'Creates a new record for the specified entity.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-post' => true]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'x-entity-post' => true,
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'MatchedRecord', 'AuthToken', 'Store', 'Matching', 'ActionExecution', 'Job', 'ClassificationAttribute', 'Bookmark', 'File', 'MasterDataEntity', 'Connection'])]

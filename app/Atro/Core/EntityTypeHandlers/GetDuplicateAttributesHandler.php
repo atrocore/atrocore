@@ -25,15 +25,33 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/action/getDuplicateAttributes',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Get duplicate attributes',
     description: 'Returns attribute values suitable for pre-filling a duplicate of the given record.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation'], requires: ['hasAttribute'])]

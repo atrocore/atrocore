@@ -24,16 +24,45 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/entitySubscription',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Unfollow stream',
     description: 'Unsubscribes the current user from the stream of the specified entity record.',
     tag: 'Global',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['entityName', 'id'], 'properties' => ['entityName' => ['type' => 'string'], 'id' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'entityName',
+                        'id',
+                    ],
+                    'properties' => [
+                        'entityName' => [
+                            'type' => 'string',
+                        ],
+                        'id'         => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UnfollowHandler extends AbstractHandler

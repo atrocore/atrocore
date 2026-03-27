@@ -23,13 +23,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Admin/rebuildDb',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Rebuild database schema',
     description: 'Rebuilds the database schema to match the current metadata. Admin only.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'true on success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        403 => ['description' => 'Forbidden'],
+        200 => [
+            'description' => 'true on success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
     ],
 )]
 class RebuildDbHandler extends AbstractHandler

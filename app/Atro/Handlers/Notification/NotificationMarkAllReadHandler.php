@@ -22,12 +22,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Notification/action/markAllRead',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Mark all notifications as read',
     description: 'Marks all notifications as read for the currently authenticated user.',
     tag: 'Notification',
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class NotificationMarkAllReadHandler extends AbstractHandler

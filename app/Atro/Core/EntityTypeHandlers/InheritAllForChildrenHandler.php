@@ -25,15 +25,33 @@ use Atro\Core\Routing\EntityType;
 
 #[Route(
     path: '/{entityName}/action/inheritAllForChildren',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Inherit all fields for children',
     description: 'Pushes all inheritable field values from a parent record down to all its children.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Hierarchy'])]

@@ -22,15 +22,27 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/action/recalculateScriptField',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Recalculate the value of the script fields',
     description: 'Recalculate the value of the script fields',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'Updated entity data', 'content' => ['application/json' => ['schema' => [
-            'type'    => 'object',
-            'example' => ['id' => 'a01k1g09hhce8m8pkmzt3zzyq5v', 'name' => 'Yellow Bike'],
-        ]]]],
+        200 => [
+            'description' => 'Updated entity data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'    => 'object',
+                        'example' => [
+                            'id'   => 'a01k1g09hhce8m8pkmzt3zzyq5v',
+                            'name' => 'Yellow Bike',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class RecalculateScriptFieldHandler extends AbstractHandler

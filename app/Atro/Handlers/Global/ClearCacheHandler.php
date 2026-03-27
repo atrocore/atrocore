@@ -23,13 +23,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Admin/clearCache',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Clear application cache',
     description: 'Clears the application cache. Admin only.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'true on success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        403 => ['description' => 'Forbidden'],
+        200 => [
+            'description' => 'true on success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
     ],
 )]
 class ClearCacheHandler extends AbstractHandler

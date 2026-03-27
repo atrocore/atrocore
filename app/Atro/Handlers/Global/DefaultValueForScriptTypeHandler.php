@@ -23,22 +23,49 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/action/defaultValueForScriptType',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get default value for a script-type field',
     description: 'Returns the evaluated default value for a field with defaultValueType=script.',
     tag: 'Global',
     parameters: [
-        ['name' => 'entityName', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'field', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'field',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Default value', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'default' => ['nullable' => true],
+        200 => [
+            'description' => 'Default value',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'default' => [
+                                'nullable' => true,
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
-        400 => ['description' => 'entityName and field are required'],
+        ],
+        400 => [
+            'description' => 'entityName and field are required',
+        ],
     ],
 )]
 class DefaultValueForScriptTypeHandler extends AbstractHandler

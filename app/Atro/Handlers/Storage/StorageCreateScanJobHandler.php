@@ -23,16 +23,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Storage/action/createScanJob',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates a storage scan job',
     description: 'Triggers a background scan job for the specified storage.',
     tag: 'Storage',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class StorageCreateScanJobHandler extends AbstractHandler

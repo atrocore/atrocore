@@ -24,16 +24,45 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/EntityField/action/resetToDefault',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Reset entity field to default',
     description: 'Resets an entity field configuration to its default values. Accessible by administrators only.',
     tag: 'EntityField',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['scope', 'field'], 'properties' => ['scope' => ['type' => 'string'], 'field' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'scope',
+                        'field',
+                    ],
+                    'properties' => [
+                        'scope' => [
+                            'type' => 'string',
+                        ],
+                        'field' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class EntityFieldResetToDefaultHandler extends AbstractHandler

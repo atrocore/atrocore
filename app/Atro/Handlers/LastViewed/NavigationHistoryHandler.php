@@ -22,24 +22,68 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/LastViewed/action/getNavigationHistory',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get navigation history for an entity',
     description: 'Returns recently viewed records for the specified entity context.',
     tag: 'LastViewed',
     parameters: [
-        ['name' => 'entity', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'id', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'tabId', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer']],
+        [
+            'name'     => 'entity',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'id',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'tabId',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'integer',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Navigation history', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'total'      => ['type' => 'integer'],
-                'collection' => ['type' => 'array', 'items' => ['type' => 'object']],
+        200 => [
+            'description' => 'Navigation history',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total'      => [
+                                'type' => 'integer',
+                            ],
+                            'collection' => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
+        ],
     ],
 )]
 class NavigationHistoryHandler extends AbstractHandler

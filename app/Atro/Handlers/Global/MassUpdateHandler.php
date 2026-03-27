@@ -24,36 +24,83 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/massUpdate',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Mass update',
     description: 'Updates multiple records of the specified entity.',
     tag: 'Global',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'required'   => ['entityName', 'attributes'],
-            'properties' => [
-                'entityName' => ['type' => 'string'],
-                'attributes' => ['type' => 'object'],
-                'ids'        => ['type' => 'array', 'items' => ['type' => 'string'], 'nullable' => true],
-                'where'      => ['type' => 'array', 'nullable' => true],
-                'selectData' => ['type' => 'object', 'nullable' => true],
-                'byWhere'    => ['type' => 'boolean'],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'entityName',
+                        'attributes',
+                    ],
+                    'properties' => [
+                        'entityName' => [
+                            'type' => 'string',
+                        ],
+                        'attributes' => [
+                            'type' => 'object',
+                        ],
+                        'ids'        => [
+                            'type'     => 'array',
+                            'items'    => [
+                                'type' => 'string',
+                            ],
+                            'nullable' => true,
+                        ],
+                        'where'      => [
+                            'type'     => 'array',
+                            'nullable' => true,
+                        ],
+                        'selectData' => [
+                            'type'     => 'object',
+                            'nullable' => true,
+                        ],
+                        'byWhere'    => [
+                            'type' => 'boolean',
+                        ],
+                    ],
+                ],
             ],
-        ]]],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'count'  => ['type' => 'integer'],
-                'sync'   => ['type' => 'boolean'],
-                'errors' => ['type' => 'array', 'items' => ['type' => 'object']],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'count'  => [
+                                'type' => 'integer',
+                            ],
+                            'sync'   => [
+                                'type' => 'boolean',
+                            ],
+                            'errors' => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
-        400 => ['description' => 'entityName or attributes are missing'],
-        403 => ['description' => 'Access denied'],
+        ],
+        400 => [
+            'description' => 'entityName or attributes are missing',
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class MassUpdateHandler extends AbstractHandler

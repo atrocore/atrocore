@@ -24,15 +24,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/AuthToken/{id}',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns an auth token record',
     description: 'Returns a single authentication token by ID. Accessible by administrators only.',
     tag: 'AuthToken',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Auth token record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Auth token record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class AuthTokenReadHandler extends AbstractHandler

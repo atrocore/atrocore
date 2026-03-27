@@ -22,20 +22,38 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Variable',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'List variables',
     description: 'Returns all configured variables.',
     tag: 'Variable',
     responses: [
-        200 => ['description' => 'List of variables', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'total' => ['type' => 'integer'],
-                'list'  => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/Variable']],
+        200 => [
+            'description' => 'List of variables',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    '$ref' => '#/components/schemas/Variable',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
+        ],
     ],
-    entities: ['Variable'],
+    entities: [
+        'Variable',
+    ],
 )]
 class ListVariableHandler extends AbstractHandler
 {

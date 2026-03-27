@@ -23,16 +23,47 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/SelectionItem/action/createOnCurrentSelection',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates a selection item on current selection',
     description: 'Creates a selection item for the current active selection of the user.',
     tag: 'SelectionItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['entityName', 'entityId'], 'properties' => ['entityName' => ['type' => 'string', 'example' => 'Product'], 'entityId' => ['type' => 'string', 'example' => 'example-id']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'entityName',
+                        'entityId',
+                    ],
+                    'properties' => [
+                        'entityName' => [
+                            'type'    => 'string',
+                            'example' => 'Product',
+                        ],
+                        'entityId'   => [
+                            'type'    => 'string',
+                            'example' => 'example-id',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class SelectionItemCreateOnCurrentSelectionHandler extends AbstractHandler

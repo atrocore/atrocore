@@ -23,20 +23,91 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Stream/{scope}',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns a stream for a given entity type',
     description: 'Returns stream entries for the given entity type across all records.',
     tag: 'Stream',
     parameters: [
-        ['name' => 'scope',   'in' => 'path',  'required' => true,  'schema' => ['type' => 'string', 'example' => 'Product']],
-        ['name' => 'offset',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],
-        ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 20]],
-        ['name' => 'after',   'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'filter',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'array', 'items' => ['type' => 'string']]],
-        ['name' => 'sortBy',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string', 'example' => 'number']],
+        [
+            'name'     => 'scope',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'Product',
+            ],
+        ],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 20,
+            ],
+        ],
+        [
+            'name'     => 'after',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'filter',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'  => 'array',
+                'items' => [
+                    'type' => 'string',
+                ],
+            ],
+        ],
+        [
+            'name'     => 'sortBy',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'number',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Collection of stream entries', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['total' => ['type' => 'integer'], 'list' => ['type' => 'array', 'items' => ['type' => 'object']]]]]]],
+        200 => [
+            'description' => 'Collection of stream entries',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class StreamScopeListHandler extends AbstractHandler

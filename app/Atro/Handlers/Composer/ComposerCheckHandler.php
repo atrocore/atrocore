@@ -23,12 +23,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/action/check',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Check for module updates',
     description: 'Checks for available module updates. Accessible by administrators only.',
     tag: 'Composer',
     responses: [
-        200 => ['description' => 'Update check result', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Update check result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerCheckHandler extends AbstractHandler

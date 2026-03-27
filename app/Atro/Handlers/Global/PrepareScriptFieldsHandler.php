@@ -23,13 +23,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/action/prepareScriptFields',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Prepare script fields',
     description: 'Evaluates script fields for the specified entity.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'Prepared field values', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
-        400 => ['description' => 'entityName and fields are required'],
+        200 => [
+            'description' => 'Prepared field values',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'entityName and fields are required',
+        ],
     ],
 )]
 class PrepareScriptFieldsHandler extends AbstractHandler

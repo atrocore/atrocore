@@ -25,15 +25,33 @@ use Atro\Core\Routing\EntityType;
 
 #[Route(
     path: '/{entityName}/action/inheritField',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Inherit a single field from parent',
     description: 'Pulls the value of a specific field from the parent record into the current record.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Hierarchy'])]

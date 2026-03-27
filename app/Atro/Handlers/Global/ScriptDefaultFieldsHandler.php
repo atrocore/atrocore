@@ -24,20 +24,42 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/scriptDefaultFields',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get script default fields',
     description: 'Returns computed Twig default values for all fields of the specified entity that have a script-type default.',
     tag: 'Global',
     parameters: [
-        ['name' => 'entityName', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Map of field names to their computed default values', 'content' => ['application/json' => ['schema' => [
-            'type'                 => 'object',
-            'additionalProperties' => ['type' => 'string'],
-        ]]]],
-        400 => ['description' => 'entityName is required'],
-        403 => ['description' => 'Access denied'],
+        200 => [
+            'description' => 'Map of field names to their computed default values',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'                 => 'object',
+                        'additionalProperties' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'entityName is required',
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class ScriptDefaultFieldsHandler extends AbstractHandler

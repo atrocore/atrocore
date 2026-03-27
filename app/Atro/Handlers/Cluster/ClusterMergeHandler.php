@@ -23,16 +23,52 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Cluster/action/merge',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Merge multiple records into the golden record',
     description: 'Merge multiple records into the golden record.',
     tag: 'Cluster',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['clusterId', 'sourceIds', 'attributes'], 'properties' => ['clusterId' => ['type' => 'string'], 'sourceIds' => ['type' => 'array', 'items' => ['type' => 'string']], 'attributes' => ['type' => 'object']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'clusterId',
+                        'sourceIds',
+                        'attributes',
+                    ],
+                    'properties' => [
+                        'clusterId'  => [
+                            'type' => 'string',
+                        ],
+                        'sourceIds'  => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'attributes' => [
+                            'type' => 'object',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Merged entity record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Merged entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ClusterMergeHandler extends AbstractHandler

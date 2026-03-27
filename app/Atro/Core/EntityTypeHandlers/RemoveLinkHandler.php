@@ -25,15 +25,65 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/{id}/{link}',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Unlinks entities',
     description: 'Removes a relation between the entity record and one or more foreign records.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'id',         'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'link',       'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']], ['name' => 'ids', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']], ['name' => 'all', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'link',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'ids',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'all',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'boolean',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Notification', 'AuthToken', 'User', 'Connection'])]

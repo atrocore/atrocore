@@ -24,16 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/cancel',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Cancel a queued module change',
     description: 'Cancels a queued installation, update, or deletion for a module. Accessible by administrators only.',
     tag: 'Composer',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerCancelHandler extends AbstractHandler

@@ -25,16 +25,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ClassificationAttribute',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates a ClassificationAttribute record',
     description: 'Creates one or more ClassificationAttribute records. If attributesIds is provided, creates one record per attribute.',
     tag: 'ClassificationAttribute',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object']]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type' => 'object',
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Created ClassificationAttribute record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Created ClassificationAttribute record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ClassificationAttributeCreateHandler extends AbstractHandler

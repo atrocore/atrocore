@@ -23,16 +23,49 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/PreviewTemplate/action/getHtmlPreview',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns HTML preview of a template',
     description: 'Renders and returns the HTML preview of a preview template applied to the specified entity.',
     tag: 'PreviewTemplate',
     parameters: [
-        ['name' => 'previewTemplateId', 'in' => 'query', 'required' => true,  'schema' => ['type' => 'string']],
-        ['name' => 'entityId',          'in' => 'query', 'required' => true,  'schema' => ['type' => 'string']],
+        [
+            'name'     => 'previewTemplateId',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'entityId',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'HTML preview', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['htmlPreview' => ['type' => 'string'], 'hasMultipleLanguages' => ['type' => 'boolean']]]]]],
+        200 => [
+            'description' => 'HTML preview',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'htmlPreview'          => [
+                                'type' => 'string',
+                            ],
+                            'hasMultipleLanguages' => [
+                                'type' => 'boolean',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class PreviewTemplateGetHtmlPreviewHandler extends AbstractHandler

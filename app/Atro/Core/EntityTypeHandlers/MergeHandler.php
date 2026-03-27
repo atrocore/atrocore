@@ -25,15 +25,33 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/action/merge',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Merge records',
     description: 'Merges one or more source records into a target record.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['Notification', 'AuthToken', 'Connection'])]

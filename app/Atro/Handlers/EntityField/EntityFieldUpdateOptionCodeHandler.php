@@ -24,16 +24,57 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/EntityField/action/updateOptionCode',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Update the code of an option from static list',
     description: 'Update the code of an option from static list and static multi list, replacing the value in the database. Accessible by administrators only.',
     tag: 'EntityField',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['scope', 'field', 'oldValue', 'newValue'], 'properties' => ['scope' => ['type' => 'string', 'example' => 'Product'], 'field' => ['type' => 'string', 'example' => 'productStatus'], 'oldValue' => ['type' => 'string', 'example' => 'draft'], 'newValue' => ['type' => 'string', 'example' => 'new']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'scope',
+                        'field',
+                        'oldValue',
+                        'newValue',
+                    ],
+                    'properties' => [
+                        'scope'    => [
+                            'type'    => 'string',
+                            'example' => 'Product',
+                        ],
+                        'field'    => [
+                            'type'    => 'string',
+                            'example' => 'productStatus',
+                        ],
+                        'oldValue' => [
+                            'type'    => 'string',
+                            'example' => 'draft',
+                        ],
+                        'newValue' => [
+                            'type'    => 'string',
+                            'example' => 'new',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class EntityFieldUpdateOptionCodeHandler extends AbstractHandler

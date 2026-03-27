@@ -24,15 +24,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/AuthToken/{id}',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Deletes an auth token record',
     description: 'Deletes an authentication token by ID. Accessible by administrators only.',
     tag: 'AuthToken',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class AuthTokenDeleteHandler extends AbstractHandler

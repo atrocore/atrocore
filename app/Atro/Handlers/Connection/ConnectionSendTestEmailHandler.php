@@ -24,16 +24,46 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Connection/action/sendTestEmail',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Send a test email',
     description: 'Sends a test email via the specified connection. Accessible by administrators only.',
     tag: 'Connection',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id', 'email'], 'properties' => ['id' => ['type' => 'string'], 'email' => ['type' => 'string', 'format' => 'email']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                        'email',
+                    ],
+                    'properties' => [
+                        'id'    => [
+                            'type' => 'string',
+                        ],
+                        'email' => [
+                            'type'   => 'string',
+                            'format' => 'email',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ConnectionSendTestEmailHandler extends AbstractHandler

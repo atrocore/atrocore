@@ -26,22 +26,77 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/{scope}/layout/{viewType}',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Update layout content',
     description: 'Saves the layout configuration for an entity and view type.',
     tag: 'Layout',
     parameters: [
-        ['name' => 'scope',           'in' => 'path',  'required' => true,  'schema' => ['type' => 'string', 'example' => 'Product']],
-        ['name' => 'viewType',        'in' => 'path',  'required' => true,  'schema' => ['type' => 'string', 'example' => 'list']],
-        ['name' => 'relatedScope',    'in' => 'query', 'required' => false, 'schema' => ['type' => 'string', 'example' => 'Category']],
-        ['name' => 'layoutProfileId', 'in' => 'query', 'required' => true,  'schema' => ['type' => 'string']],
+        [
+            'name'     => 'scope',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'Product',
+            ],
+        ],
+        [
+            'name'     => 'viewType',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'list',
+            ],
+        ],
+        [
+            'name'     => 'relatedScope',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'Category',
+            ],
+        ],
+        [
+            'name'     => 'layoutProfileId',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['anyOf' => [['type' => 'array'], ['type' => 'object']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'anyOf' => [
+                        [
+                            'type' => 'array',
+                        ],
+                        [
+                            'type' => 'object',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Updated layout content', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Updated layout content',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class LayoutUpdateContentHandler extends AbstractHandler

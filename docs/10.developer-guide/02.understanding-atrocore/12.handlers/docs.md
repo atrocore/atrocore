@@ -121,7 +121,9 @@ Every handler **must** declare a `#[Route]` attribute. This attribute serves as 
 ```php
 #[Route(
     path: '/MyEntity/{id}/stats',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get MyEntity statistics',
     description: 'Returns statistics for the specified MyEntity record.',
     tag: 'MyEntity',
@@ -132,8 +134,8 @@ Every handler **must** declare a `#[Route]` attribute. This attribute serves as 
             'required'    => true,
             'description' => 'Record ID',
             'schema'      => [
-                'type' => 'string'
-            ]
+                'type' => 'string',
+            ],
         ],
     ],
     responses: [
@@ -144,15 +146,23 @@ Every handler **must** declare a `#[Route]` attribute. This attribute serves as 
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'total'  => ['type' => 'integer'],
-                            'active' => ['type' => 'integer'],
+                            'total'  => [
+                                'type' => 'integer',
+                            ],
+                            'active' => [
+                                'type' => 'integer',
+                            ],
                         ],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ],
-        400 => ['description' => 'id is required'],
-        404 => ['description' => 'Record not found'],
+        400 => [
+            'description' => 'id is required',
+        ],
+        404 => [
+            'description' => 'Record not found',
+        ],
     ],
 )]
 ```
@@ -176,15 +186,15 @@ responses: [
         'content'     => [
             'application/json' => [
                 'schema' => [
-                    'type' => 'boolean'
-                ]
-            ]
-        ]
+                    'type' => 'boolean',
+                ],
+            ],
+        ],
     ],
 ],
 ```
 
-This rule applies to all nested arrays inside `#[Route]`: `parameters`, `requestBody`, `responses`. Simple scalar values (`400 => ['description' => '...']`) may stay on one line.
+This rule applies to **all** arrays inside `#[Route]` without exception: `methods`, `parameters`, `requestBody`, `responses`, and every nested array within them.
 
 ### Required Fields
 
@@ -339,18 +349,40 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Product/{id}/stats',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get product statistics',
     description: 'Returns sales and inventory statistics for the specified product.',
     tag: 'Product',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true,
-         'description' => 'Product record ID', 'schema' => ['type' => 'string']],
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Product record ID',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Product statistics', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
-        400 => ['description' => 'id is required'],
-        404 => ['description' => 'Product not found'],
+        200 => [
+            'description' => 'Product statistics',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'id is required',
+        ],
+        404 => [
+            'description' => 'Product not found',
+        ],
     ],
 )]
 class ProductStatsHandler implements MiddlewareInterface
@@ -596,11 +628,15 @@ To replace a core EntityType handler for a **specific entity** (e.g. only for `P
 
 #[Route(
     path: '/Product',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'List products',
     description: 'Returns a customised product collection.',
     tag: 'Product',
-    responses: [200 => [...]],
+    responses: [
+        200 => [...],
+    ],
 )]
 class ProductListHandler implements MiddlewareInterface
 {
@@ -656,28 +692,62 @@ These schemas are built automatically by `OpenApiGenerator` based on the entity'
 // POST
 #[Route(
     path: '/{entityName}',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     ...
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-post' => true]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'x-entity-post' => true,
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 
 // PATCH
 #[Route(
     path: '/{entityName}/{id}',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     ...
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-patch' => true]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'x-entity-patch' => true,
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 ```

@@ -24,23 +24,100 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Selection/action/tree',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns selection tree items',
     description: 'Returns a paginated list of tree items for the selection panel.',
     tag: 'Selection',
     parameters: [
-        ['name' => 'link',          'in' => 'query', 'required' => true,  'schema' => ['type' => 'string']],
-        ['name' => 'scope',         'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'selectedScope', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'where',         'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'asc',           'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean']],
-        ['name' => 'sortBy',        'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'isTreePanel',   'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean']],
-        ['name' => 'offset',        'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer']],
-        ['name' => 'maxSize',       'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer']],
+        [
+            'name'     => 'link',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'scope',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'selectedScope',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'where',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'asc',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'boolean',
+            ],
+        ],
+        [
+            'name'     => 'sortBy',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'isTreePanel',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'boolean',
+            ],
+        ],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'integer',
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'integer',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Tree items', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object']]]]],
+        200 => [
+            'description' => 'Tree items',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type' => 'object',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class SelectionTreeHandler extends AbstractHandler

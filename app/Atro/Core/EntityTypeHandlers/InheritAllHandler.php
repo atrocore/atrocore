@@ -24,15 +24,40 @@ use Atro\Core\Routing\EntityType;
 
 #[Route(
     path: '/{entityName}/action/inheritAll',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Inherit all linked records for a relation',
     description: 'Copies all linked records for a specific relation from the parent record to the current record.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['anyOf' => [['type' => 'boolean'], ['type' => 'integer']]]]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'anyOf' => [
+                            [
+                                'type' => 'boolean',
+                            ],
+                            [
+                                'type' => 'integer',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Hierarchy'])]

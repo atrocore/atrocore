@@ -24,13 +24,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/action/destroyAuthToken',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Destroy an authorization token',
     description: 'Invalidates the specified authorization token.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'true if the token was destroyed', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        400 => ['description' => 'token is required'],
+        200 => [
+            'description' => 'true if the token was destroyed',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'token is required',
+        ],
     ],
 )]
 class DestroyAuthTokenHandler extends AbstractHandler

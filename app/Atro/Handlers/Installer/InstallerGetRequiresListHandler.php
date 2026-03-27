@@ -23,13 +23,24 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Installer/action/getRequiredsList',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get requirements list',
     description: 'Returns the list of system requirements and their status. Only accessible before installation.',
     tag: 'Installer',
     auth: false,
     responses: [
-        200 => ['description' => 'Requirements list', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Requirements list',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class InstallerGetRequiresListHandler extends AbstractHandler

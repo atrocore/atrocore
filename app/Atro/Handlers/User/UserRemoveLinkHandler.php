@@ -25,18 +25,57 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/{id}/{link}',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Unlinks User entities (admin only)',
     description: 'Removes a relation between a User record and one or more foreign records. Accessible by administrators only.',
     tag: 'User',
     parameters: [
-        ['name' => 'id',   'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'link', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'ids',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'all',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'boolean']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'link',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'ids',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'all',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'boolean',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserRemoveLinkHandler extends AbstractHandler

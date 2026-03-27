@@ -24,17 +24,42 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Installer/action/setLanguage',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Set installer language',
     description: 'Sets the installation language. Only accessible before installation.',
     tag: 'Installer',
     auth: false,
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['language'], 'properties' => ['language' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'language',
+                    ],
+                    'properties' => [
+                        'language' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Result', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class InstallerSetLanguageHandler extends AbstractHandler

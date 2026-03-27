@@ -22,23 +22,61 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/user',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get authorized user data',
     description: 'Generate authorization token and return authorized user data.',
     tag: 'Global',
     auth: true,
     parameters: [
-        ['name' => 'Authorization-Token-Only', 'in' => 'header', 'required' => false, 'schema' => ['type' => 'boolean', 'example' => true]],
-        ['name' => 'Authorization-Token-Lifetime', 'in' => 'header', 'required' => false, 'description' => 'Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.', 'schema' => ['type' => 'integer', 'example' => 0]],
-        ['name' => 'Authorization-Token-Idletime', 'in' => 'header', 'required' => false, 'description' => 'Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.', 'schema' => ['type' => 'integer', 'example' => 0]],
+        [
+            'name'     => 'Authorization-Token-Only',
+            'in'       => 'header',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'boolean',
+                'example' => true,
+            ],
+        ],
+        [
+            'name'        => 'Authorization-Token-Lifetime',
+            'in'          => 'header',
+            'required'    => false,
+            'description' => 'Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.',
+            'schema'      => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
+        [
+            'name'        => 'Authorization-Token-Idletime',
+            'in'          => 'header',
+            'required'    => false,
+            'description' => 'Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.',
+            'schema'      => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Authorized user data', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'authorizationToken' => ['type' => 'string', 'example' => 'YWRtaW46NGQ1NGU5ZTEzYjc0NGQzOGM5ODM2NzIyNDU2YTZmNjk='],
+        200 => [
+            'description' => 'Authorized user data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'authorizationToken' => [
+                                'type'    => 'string',
+                                'example' => 'YWRtaW46NGQ1NGU5ZTEzYjc0NGQzOGM5ODM2NzIyNDU2YTZmNjk=',
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
+        ],
     ],
 )]
 class UserHandler extends AbstractHandler

@@ -23,17 +23,53 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ExtensibleEnum/action/getExtensibleEnumsOptions',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get extensible enums options for multiple lists',
     description: 'Returns the options for multiple extensible enums.',
     tag: 'ExtensibleEnum',
     parameters: [
-        ['name' => 'extensibleEnumIds', 'in' => 'query', 'required' => true, 'schema' => ['anyOf' => [['type' => 'array', 'items' => ['type' => 'string']], ['type' => 'string']]]],
+        [
+            'name'     => 'extensibleEnumIds',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'anyOf' => [
+                    [
+                        'type'  => 'array',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Options mapped by enum ID', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'additionalProperties' => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/ExtensibleEnumOption']]]]]],
+        200 => [
+            'description' => 'Options mapped by enum ID',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'                 => 'object',
+                        'additionalProperties' => [
+                            'type'  => 'array',
+                            'items' => [
+                                '$ref' => '#/components/schemas/ExtensibleEnumOption',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
-    entities: ['ExtensibleEnumOption'],
+    entities: [
+        'ExtensibleEnumOption',
+    ],
 )]
 class ExtensibleEnumGetOptionsMultipleHandler extends AbstractHandler
 {

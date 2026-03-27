@@ -24,17 +24,39 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Variable/{id}',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Delete variable',
     description: 'Deletes a configuration variable by ID. Admin only.',
     tag: 'Variable',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'true on success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        403 => ['description' => 'Forbidden'],
-        404 => ['description' => 'Not found'],
+        200 => [
+            'description' => 'true on success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
+        404 => [
+            'description' => 'Not found',
+        ],
     ],
 )]
 class DeleteVariableHandler extends AbstractHandler

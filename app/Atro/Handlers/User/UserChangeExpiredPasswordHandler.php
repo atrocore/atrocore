@@ -24,16 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/action/changeExpiredPassword',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Changes an expired password',
     description: 'Allows the current user to set a new password when their existing password has expired.',
     tag: 'User',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['password'], 'properties' => ['password' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'password',
+                    ],
+                    'properties' => [
+                        'password' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserChangeExpiredPasswordHandler extends AbstractHandler

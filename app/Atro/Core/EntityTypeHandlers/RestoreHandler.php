@@ -25,15 +25,33 @@ use Atro\Handlers\AbstractHandler;
 
 #[Route(
     path: '/{entityName}/action/restore',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Restore a record',
     description: 'Restores a soft-deleted record from the recycle bin.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Base', 'Hierarchy', 'Relation'], excludeEntities: ['UserProfile', 'AuthToken', 'Connection'])]

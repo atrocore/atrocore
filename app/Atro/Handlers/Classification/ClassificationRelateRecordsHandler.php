@@ -24,16 +24,52 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Classification/action/relateRecords',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Relate records to classifications',
     description: 'Sets classification relations for a given entity record. Replaces existing classifications with the provided list.',
     tag: 'Classification',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['entityName', 'entityId', 'classificationsIds'], 'properties' => ['entityName' => ['type' => 'string'], 'entityId' => ['type' => 'string'], 'classificationsIds' => ['type' => 'array', 'items' => ['type' => 'string']]]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'entityName',
+                        'entityId',
+                        'classificationsIds',
+                    ],
+                    'properties' => [
+                        'entityName'         => [
+                            'type' => 'string',
+                        ],
+                        'entityId'           => [
+                            'type' => 'string',
+                        ],
+                        'classificationsIds' => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ClassificationRelateRecordsHandler extends AbstractHandler

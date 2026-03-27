@@ -23,12 +23,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/list',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns list of modules',
     description: 'Returns a list of all available and installed modules. Accessible by administrators only.',
     tag: 'Composer',
     responses: [
-        200 => ['description' => 'List of modules', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'List of modules',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerListHandler extends AbstractHandler

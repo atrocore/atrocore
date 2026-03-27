@@ -23,12 +23,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/action/UpdatePublicDataKey',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Update a public data key',
     description: 'Updates a key in the public data store.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'true if updated', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'true if updated',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UpdatePublicDataKeyHandler extends AbstractHandler

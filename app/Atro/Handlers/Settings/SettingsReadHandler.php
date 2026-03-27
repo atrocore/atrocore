@@ -22,13 +22,24 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Settings',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     auth: false,
     summary: 'Returns system settings',
     description: 'Returns system configuration data available to the current user.',
     tag: 'Settings',
     responses: [
-        200 => ['description' => 'Settings data', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Settings data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class SettingsReadHandler extends AbstractHandler

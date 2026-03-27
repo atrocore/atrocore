@@ -22,21 +22,42 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/background',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get background data',
     description: 'Get background data.',
     tag: 'Global',
     auth: false,
     responses: [
-        200 => ['description' => 'Background data', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'imageName' => ['type' => 'string', 'example' => 'pexels-pixabay-260689.jpg'],
-                'imagePath' => ['type' => 'string', 'example' => 'client/img/background/pexels-pixabay-260689.jpg'],
-                'authorName' => ['type' => 'string', 'example' => 'Pixabay'],
-                'authorLink' => ['type' => 'string', 'example' => 'https://www.pexels.com/@pixabay'],
+        200 => [
+            'description' => 'Background data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'imageName'  => [
+                                'type'    => 'string',
+                                'example' => 'pexels-pixabay-260689.jpg',
+                            ],
+                            'imagePath'  => [
+                                'type'    => 'string',
+                                'example' => 'client/img/background/pexels-pixabay-260689.jpg',
+                            ],
+                            'authorName' => [
+                                'type'    => 'string',
+                                'example' => 'Pixabay',
+                            ],
+                            'authorLink' => [
+                                'type'    => 'string',
+                                'example' => 'https://www.pexels.com/@pixabay',
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
+        ],
     ],
 )]
 class BackgroundHandler extends AbstractHandler

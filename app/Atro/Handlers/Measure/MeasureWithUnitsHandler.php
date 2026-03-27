@@ -24,26 +24,60 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Measure/action/measureWithUnits',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get measure with its active units',
     description: 'Returns a Measure record together with the list of its active Unit records.',
     tag: 'Measure',
     parameters: [
-        ['name' => 'id', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string'], 'description' => 'Measure record ID'],
+        [
+            'name'        => 'id',
+            'in'          => 'query',
+            'required'    => true,
+            'schema'      => [
+                'type' => 'string',
+            ],
+            'description' => 'Measure record ID',
+        ],
     ],
     responses: [
-        200 => ['description' => 'Measure record with active units', 'content' => ['application/json' => ['schema' => [
-            'allOf' => [
-                ['$ref' => '#/components/schemas/Measure'],
-                ['type' => 'object', 'properties' => [
-                    'units' => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/Unit']],
-                ]],
+        200 => [
+            'description' => 'Measure record with active units',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'allOf' => [
+                            [
+                                '$ref' => '#/components/schemas/Measure',
+                            ],
+                            [
+                                'type'       => 'object',
+                                'properties' => [
+                                    'units' => [
+                                        'type'  => 'array',
+                                        'items' => [
+                                            '$ref' => '#/components/schemas/Unit',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
-        400 => ['description' => 'id is required'],
-        404 => ['description' => 'Measure record not found'],
+        ],
+        400 => [
+            'description' => 'id is required',
+        ],
+        404 => [
+            'description' => 'Measure record not found',
+        ],
     ],
-    entities: ['Measure', 'Unit'],
+    entities: [
+        'Measure',
+        'Unit',
+    ],
 )]
 class MeasureWithUnitsHandler extends AbstractHandler
 {

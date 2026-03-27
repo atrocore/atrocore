@@ -25,16 +25,44 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/installModule',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Install a module',
     description: 'Queues a module for installation. Accessible by administrators only.',
     tag: 'Composer',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string'], 'version' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id'      => [
+                            'type' => 'string',
+                        ],
+                        'version' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerInstallModuleHandler extends AbstractHandler

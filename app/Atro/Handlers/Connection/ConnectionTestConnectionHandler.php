@@ -24,16 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Connection/action/testConnection',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Test a connection',
     description: 'Tests connectivity for a connection record. Accessible by administrators only.',
     tag: 'Connection',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Test result', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Test result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ConnectionTestConnectionHandler extends AbstractHandler

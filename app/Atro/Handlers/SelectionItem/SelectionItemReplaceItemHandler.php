@@ -23,16 +23,48 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/SelectionItem/action/replaceItem',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Replaces a selection item entity',
     description: 'Replaces the entity of an existing selection item with another entity of the same scope.',
     tag: 'SelectionItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id', 'selectedRecords'], 'properties' => ['id' => ['type' => 'string'], 'selectedRecords' => ['type' => 'array', 'items' => ['type' => 'string']]]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                        'selectedRecords',
+                    ],
+                    'properties' => [
+                        'id'              => [
+                            'type' => 'string',
+                        ],
+                        'selectedRecords' => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class SelectionItemReplaceItemHandler extends AbstractHandler
