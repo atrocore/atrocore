@@ -163,7 +163,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
                 if (this.mode === 'detail') {
-                    collection.url = this.model.name + '/' + this.model.id + '/stream';
+                    collection.url = 'entityStream?entityName=' + this.model.name + '&id=' + this.model.id;
                 } else {
                     collection.url = 'Stream' + '/' + this.scope
                 }

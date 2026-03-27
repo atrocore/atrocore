@@ -11,29 +11,29 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\Global;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Atro\Core\Routing\EntityType;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/{entityName}/{id}/stream',
+    path: '/entityStream',
     methods: [
         'GET',
     ],
     summary: 'Returns the stream for a record',
     description: 'Returns stream entries for the specified entity record.',
-    tag: '{entityName}',
+    tag: 'Global',
     parameters: [
         [
             'name'     => 'entityName',
-            'in'       => 'path',
+            'in'       => 'query',
             'required' => true,
             'schema'   => [
                 'type' => 'string',
@@ -41,7 +41,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
         [
             'name'     => 'id',
-            'in'       => 'path',
+            'in'       => 'query',
             'required' => true,
             'schema'   => [
                 'type' => 'string',
@@ -118,18 +118,25 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], requiresAbsent: ['streamDisabled'])]
 class EntityStreamHandler extends AbstractHandler
 {
     private const MAX_SIZE_LIMIT = 200;
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
-        $id         = (string) $request->getAttribute('id');
         $qp         = $request->getQueryParams();
-        $maxSize    = (int) ($qp['maxSize'] ?? 0);
+        $entityName = (string) ($qp['entityName'] ?? '');
+        $id         = (string) ($qp['id'] ?? '');
 
+        if ($entityName === '' || $id === '') {
+            throw new BadRequest('entityName and id are required');
+        }
+
+        if ($this->getMetadata()->get(['scopes', $entityName, 'streamDisabled'])) {
+            throw new Forbidden();
+        }
+
+        $maxSize = (int) ($qp['maxSize'] ?? 0);
         if (empty($maxSize)) {
             $maxSize = self::MAX_SIZE_LIMIT;
         }
