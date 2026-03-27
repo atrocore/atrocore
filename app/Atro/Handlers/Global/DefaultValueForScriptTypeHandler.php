@@ -22,12 +22,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/defaultValueForScriptType',
+    path: '/evaluateScriptFieldDefault',
     methods: [
         'GET',
     ],
-    summary: 'Get default value for a script-type field',
-    description: 'Returns the evaluated default value for a field with defaultValueType=script.',
+    summary: 'Evaluate script default value for a field',
+    description: 'Renders the Twig script defined in `entityDefs.{entityName}.fields.{field}.default` and returns the result as the computed default value. Only applies to fields where `defaultValueType` is `script`.',
     tag: 'Global',
     parameters: [
         [
