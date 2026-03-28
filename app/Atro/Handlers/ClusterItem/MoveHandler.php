@@ -36,7 +36,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
     ],
 )]
-class ClusterItemMoveHandler extends AbstractHandler
+class MoveHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
