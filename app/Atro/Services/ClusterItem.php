@@ -493,6 +493,11 @@ class ClusterItem extends Base
                 continue;
             }
 
+            if ($entity->get('cluster')->get('masterEntity') !== $targetCluster->get('masterEntity')) {
+                $skipped++;
+                continue;
+            }
+
             // Skip if item is rejected in the target cluster
             if ($this->getRepository()->isRejectedInCluster($entity->get('id'), $targetClusterId)) {
                 $skipped++;
