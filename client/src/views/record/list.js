@@ -552,7 +552,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.getMetadata().get(['clientDefs', this.scope, 'listActions', name, 'massAction'])) {
-                var proceed = function () {
+                var actionDefs = this.getMetadata().get(['clientDefs', this.scope, 'listActions', name]) || {};
+
+                var buildData = function () {
                     var idList = [];
                     var data = {};
 
@@ -569,10 +571,14 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
 
                     data.entityType = this.entityType;
+                    return data;
+                }.bind(this);
 
+                var runMassAction = function (extraData) {
                     Espo.Ui.notify(this.translate('pleaseWait', 'messages', this.scope));
 
-                    var url = this.getMetadata().get(['clientDefs', this.scope, 'listActions', name, 'url']);
+                    var url = actionDefs.url;
+                    var data = Object.assign(buildData(), extraData || {});
 
                     this.ajaxPostRequest(url, data).then(function (result) {
                         this.collection.fetch().then(function () {
@@ -583,9 +589,36 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                             Espo.Ui.success(message);
                         }.bind(this));
                     }.bind(this));
-                }
+                }.bind(this);
 
-                this.confirm(this.translate(name, 'massActionConfirmMessages', this.scope), proceed, this);
+                var proceed = function () {
+                    if (actionDefs.modalSelectEntity) {
+                        let entityType = actionDefs.modalSelectEntity;
+                        const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+                        this.notify('Loading...');
+                        this.createView('select', viewName, {
+                            scope: entityType,
+                            createButton: false,
+                            multiple: !!actionDefs.modalSelectMultiple,
+                        }, (dialog) => {
+                            dialog.render(() => this.notify(false));
+                            dialog.once('select', selected => {
+                                let selectedRecords = (Array.isArray(selected) ? selected : [selected])
+                                    .map(m => ({ entityName: m.name, entityId: m.id }));
+                                runMassAction({ selectedRecords });
+                            });
+                        });
+                    } else {
+                        runMassAction();
+                    }
+                }.bind(this);
+
+                var confirmMessage = this.translate(name, 'massActionConfirmMessages', this.scope);
+                if (confirmMessage && confirmMessage !== name) {
+                    this.confirm(confirmMessage, proceed, this);
+                } else {
+                    proceed();
+                }
             }
         },
         massActionUsingDefs: function (name) {
@@ -3190,9 +3223,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
-            let runAction = () => {
+            let runAction = (extraData) => {
                 this.notify(this.translate('Loading...'));
-                this.ajaxPostRequest(actionDefs.url, { action: name, scope: scope, id: id })
+                this.ajaxPostRequest(actionDefs.url, Object.assign({ action: name, scope: scope, id: id }, extraData || {}))
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
                         if (actionDefs.refresh) {
@@ -3201,15 +3234,37 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     });
             }
 
+            let proceed = (extraData) => {
+                if (actionDefs.modalSelectEntity) {
+                    let entityType = actionDefs.modalSelectEntity;
+                    const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+                    this.notify('Loading...');
+                    this.createView('select', viewName, {
+                        scope: entityType,
+                        createButton: false,
+                        multiple: !!actionDefs.modalSelectMultiple,
+                    }, (dialog) => {
+                        dialog.render(() => this.notify(false));
+                        dialog.once('select', selected => {
+                            let selectedRecords = (Array.isArray(selected) ? selected : [selected])
+                                .map(m => ({ entityName: m.name, entityId: m.id }));
+                            runAction(Object.assign({ selectedRecords }, extraData || {}));
+                        });
+                    });
+                } else {
+                    runAction(extraData);
+                }
+            }
+
             if (actionDefs.confirm) {
                 this.confirm({
                     message: this.translate(actionDefs.name, 'actionConfirms', scope),
                     confirmText: this.translate('Apply')
                 }, function () {
-                    runAction();
+                    proceed();
                 }, this);
             } else {
-                runAction();
+                proceed();
             }
         },
 

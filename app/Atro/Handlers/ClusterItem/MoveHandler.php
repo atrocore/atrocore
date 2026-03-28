@@ -48,11 +48,18 @@ class MoveHandler extends AbstractHandler
         $recordService = $this->getRecordService('ClusterItem');
         $params        = [];
 
-        if (!property_exists($data, 'targetClusterId') || empty($data->targetClusterId)) {
+        $targetClusterId = null;
+        if (property_exists($data, 'targetClusterId') && !empty($data->targetClusterId)) {
+            $targetClusterId = (string)$data->targetClusterId;
+        } elseif (property_exists($data, 'selectedRecords') && !empty($data->selectedRecords[0]->entityId)) {
+            $targetClusterId = (string)$data->selectedRecords[0]->entityId;
+        }
+
+        if (empty($targetClusterId)) {
             throw new BadRequest($this->getLanguage()->translate('targetClusterIdRequired', 'exceptions', 'ClusterItem'));
         }
 
-        $params['targetClusterId'] = (string)$data->targetClusterId;
+        $params['targetClusterId'] = $targetClusterId;
 
         if (property_exists($data, 'where')) {
             $params['where'] = json_decode(json_encode($data->where), true);

@@ -1,7 +1,6 @@
 {
   "controller": "controllers/record",
   "createDisabled": true,
-  "listView": "views/cluster-item/list",
   "listActions": {
     "quickEdit": {
       "disabled": true
@@ -30,11 +29,12 @@
       "sortOrder": 30
     },
     "move": {
-      "action": "move",
+      "url": "ClusterItem/action/move",
       "massAction": true,
       "refresh": true,
       "iconClass": "ph ph-arrow-right",
-      "sortOrder": 40
+      "sortOrder": 40,
+      "modalSelectEntity": "Cluster"
     }
   }
 }
