@@ -24,31 +24,61 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ClusterItem/action/move',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Move cluster item(s) to another cluster',
-    description: 'Move one or multiple cluster items to a target cluster. Accepts a single id, a list of ids, or a query where clause. Items rejected in the target cluster will be skipped.',
+    description: 'Move one or multiple cluster items to a target cluster. Items rejected or from a different masterEntity in the target cluster will be skipped.',
     tag: 'ClusterItem',
     requestBody: [
         'required' => true,
         'content'  => [
-            'application/json' =>
-                [
-                    'schema' => [
-                        'type'       => 'object',
-                        'required'   => ['targetClusterId'],
-                        'properties' =>
-                            [
-                                'id'              => ['type' => 'string'],
-                                'idList'          => ['type' => 'array', 'items' => ['type' => 'string']],
-                                'where'           => ['type' => 'array', 'items' => ['type' => 'object']],
-                                'targetClusterId' => ['type' => 'string']
-                            ]
-                    ]
-                ]
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => ['selectedRecords'],
+                    'properties' => [
+                        'id'              => [
+                            'type' => 'string',
+                        ],
+                        'idList'          => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'where'           => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'object',
+                            ],
+                        ],
+                        'selectedRecords' => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type'       => 'object',
+                                'properties' => [
+                                    'entityName' => ['type' => 'string'],
+                                    'entityId'   => ['type' => 'string'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class MoveHandler extends AbstractHandler
