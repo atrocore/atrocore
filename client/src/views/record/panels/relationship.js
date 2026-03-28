@@ -992,12 +992,22 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         entityType = entityType.replace(`{{${key}}}`, value);
                     });
 
+                    let whereAdditional = [];
+                    if (actionDefs.modalSelectWhere) {
+                        let whereStr = JSON.stringify(actionDefs.modalSelectWhere);
+                        $.each(this.model?.attributes || {}, (key, value) => {
+                            whereStr = whereStr.replaceAll(`{{${key}}}`, value);
+                        });
+                        whereAdditional = JSON.parse(whereStr);
+                    }
+
                     const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
                     this.notify('Loading...');
                     this.createView('select', viewName, {
                         scope: entityType,
                         createButton: false,
                         multiple: !!actionDefs.modalSelectMultiple,
+                        whereAdditional: whereAdditional,
                     }, (dialog) => {
                         dialog.render(() => {
                             this.notify(false);

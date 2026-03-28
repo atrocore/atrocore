@@ -594,12 +594,14 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 var proceed = function () {
                     if (actionDefs.modalSelectEntity) {
                         let entityType = actionDefs.modalSelectEntity;
+                        let whereAdditional = actionDefs.modalSelectWhere || [];
                         const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
                         this.notify('Loading...');
                         this.createView('select', viewName, {
                             scope: entityType,
                             createButton: false,
                             multiple: !!actionDefs.modalSelectMultiple,
+                            whereAdditional: whereAdditional,
                         }, (dialog) => {
                             dialog.render(() => this.notify(false));
                             dialog.once('select', selected => {
@@ -3237,12 +3239,21 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let proceed = (extraData) => {
                 if (actionDefs.modalSelectEntity) {
                     let entityType = actionDefs.modalSelectEntity;
+                    let whereAdditional = [];
+                    if (actionDefs.modalSelectWhere) {
+                        let whereStr = JSON.stringify(actionDefs.modalSelectWhere);
+                        $.each(this.model?.attributes || {}, (key, value) => {
+                            whereStr = whereStr.replaceAll(`{{${key}}}`, value);
+                        });
+                        whereAdditional = JSON.parse(whereStr);
+                    }
                     const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
                     this.notify('Loading...');
                     this.createView('select', viewName, {
                         scope: entityType,
                         createButton: false,
                         multiple: !!actionDefs.modalSelectMultiple,
+                        whereAdditional: whereAdditional,
                     }, (dialog) => {
                         dialog.render(() => this.notify(false));
                         dialog.once('select', selected => {

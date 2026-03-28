@@ -43,7 +43,10 @@
           "refresh": true,
           "iconClass": "ph ph-arrow-right",
           "sortOrder": 40,
-          "modalSelectEntity": "Cluster"
+          "modalSelectEntity": "Cluster",
+          "modalSelectWhere": [
+            {"type": "equals", "attribute": "masterEntity", "value": "{{masterEntity}}"}
+          ]
         },
         "removeRelated": {
           "url": "{{entityName}}/{{entityId}}",
