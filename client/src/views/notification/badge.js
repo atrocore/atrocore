@@ -111,7 +111,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
             let expectedHash = "#" + refreshScope;
             if (refreshScope && expectedHash === window.location.hash) {
-                this.ajaxPostRequest('App/action/UpdatePublicDataKey', {
+                this.ajaxPostRequest('publicData', {
                     key: key,
                     value: null
                 }).then(() => {

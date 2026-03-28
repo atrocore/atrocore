@@ -23,19 +23,82 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Stream',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns the current user\'s stream',
     description: 'Returns stream entries for the currently authenticated user.',
     tag: 'Stream',
     parameters: [
-        ['name' => 'offset',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],
-        ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 20]],
-        ['name' => 'after',   'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
-        ['name' => 'filter',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'array', 'items' => ['type' => 'string']]],
-        ['name' => 'sortBy',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string', 'example' => 'number']],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 20,
+            ],
+        ],
+        [
+            'name'     => 'after',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'filter',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'  => 'array',
+                'items' => [
+                    'type' => 'string',
+                ],
+            ],
+        ],
+        [
+            'name'     => 'sortBy',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'string',
+                'example' => 'number',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Collection of stream entries', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['total' => ['type' => 'integer'], 'list' => ['type' => 'array', 'items' => ['type' => 'object']]]]]]],
+        200 => [
+            'description' => 'Collection of stream entries',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class StreamListHandler extends AbstractHandler

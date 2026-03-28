@@ -15,7 +15,7 @@ namespace Atro\Handlers\EntityField;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -24,16 +24,45 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/EntityField/action/resetToDefault',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Reset entity field to default',
     description: 'Resets an entity field configuration to its default values. Accessible by administrators only.',
     tag: 'EntityField',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['scope', 'field'], 'properties' => ['scope' => ['type' => 'string'], 'field' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'scope',
+                        'field',
+                    ],
+                    'properties' => [
+                        'scope' => [
+                            'type' => 'string',
+                        ],
+                        'field' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class EntityFieldResetToDefaultHandler extends AbstractHandler
@@ -50,6 +79,8 @@ class EntityFieldResetToDefaultHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new JsonResponse(['true' => $this->getRecordService('EntityField')->resetToDefault($data->scope, $data->field)]);
+        $this->getRecordService('EntityField')->resetToDefault($data->scope, $data->field);
+
+        return new BoolResponse(true);
     }
 }

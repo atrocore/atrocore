@@ -22,19 +22,59 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/MassActions/action/upsert',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Bulk Create and Bulk Update',
     description: 'The system will try to find existing entities based on the identifier or unique fields. If an entity is found, it will be updated, otherwise it will be created.',
     tag: 'Global',
     parameters: [
-        ['name' => 'Use-Queue', 'in' => 'header', 'required' => false, 'schema' => ['type' => 'boolean', 'example' => false]],
+        [
+            'name'     => 'Use-Queue',
+            'in'       => 'header',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'boolean',
+                'example' => false,
+            ],
+        ],
     ],
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['entity' => ['type' => 'string', 'example' => 'Product'], 'payload' => ['type' => 'object']]]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'  => 'array',
+                    'items' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'entity'  => [
+                                'type'    => 'string',
+                                'example' => 'Product',
+                            ],
+                            'payload' => [
+                                'type' => 'object',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Upsert results', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object']]]]],
+        200 => [
+            'description' => 'Upsert results',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type' => 'object',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class MassActionsUpsertHandler extends AbstractHandler

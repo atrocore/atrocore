@@ -24,16 +24,55 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Layout/action/resetToDefault',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Reset layout to default',
     description: 'Removes the custom configuration for a layout, reverting it to the default.',
     tag: 'Layout',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['scope', 'viewType', 'layoutProfileId'], 'properties' => ['scope' => ['type' => 'string', 'example' => 'Product'], 'viewType' => ['type' => 'string', 'example' => 'list'], 'relatedScope' => ['type' => 'string', 'example' => 'Category'], 'layoutProfileId' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'scope',
+                        'viewType',
+                        'layoutProfileId',
+                    ],
+                    'properties' => [
+                        'scope'           => [
+                            'type'    => 'string',
+                            'example' => 'Product',
+                        ],
+                        'viewType'        => [
+                            'type'    => 'string',
+                            'example' => 'list',
+                        ],
+                        'relatedScope'    => [
+                            'type'    => 'string',
+                            'example' => 'Category',
+                        ],
+                        'layoutProfileId' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Reset layout content', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Reset layout content',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class LayoutResetToDefaultHandler extends AbstractHandler

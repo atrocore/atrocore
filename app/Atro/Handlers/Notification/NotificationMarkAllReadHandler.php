@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Notification;
 
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -22,12 +22,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Notification/action/markAllRead',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Mark all notifications as read',
     description: 'Marks all notifications as read for the currently authenticated user.',
     tag: 'Notification',
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class NotificationMarkAllReadHandler extends AbstractHandler
@@ -36,6 +47,6 @@ class NotificationMarkAllReadHandler extends AbstractHandler
     {
         $result = $this->getServiceFactory()->create('Notification')->markAllRead($this->getUser()->id);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

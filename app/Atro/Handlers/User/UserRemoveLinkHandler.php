@@ -25,17 +25,57 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/{id}/{link}',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Unlinks User entities (admin only)',
     description: 'Removes a relation between a User record and one or more foreign records. Accessible by administrators only.',
     tag: 'User',
     parameters: [
-        ['name' => 'id',   'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'link', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'ids',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'link',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'ids',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'all',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'boolean',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserRemoveLinkHandler extends AbstractHandler
@@ -53,6 +93,14 @@ class UserRemoveLinkHandler extends AbstractHandler
             throw new BadRequest();
         }
 
+        $qp      = $request->getQueryParams();
+        $service = $this->getRecordService('User');
+
+        if (!empty($qp['all'])) {
+            $service->unlinkAll($id, $link);
+            return new BoolResponse(true);
+        }
+
         $data          = $this->getRequestBody($request);
         $foreignIdList = [];
 
@@ -65,13 +113,11 @@ class UserRemoveLinkHandler extends AbstractHandler
             }
         }
 
-        $qp = $request->getQueryParams();
         if (!empty($qp['ids'])) {
             $foreignIdList = explode(',', $qp['ids']);
         }
 
-        $service = $this->getRecordService('User');
-        $result  = false;
+        $result = false;
 
         foreach ($foreignIdList as $foreignId) {
             if ($service->unlinkEntity($id, $link, $foreignId)) {

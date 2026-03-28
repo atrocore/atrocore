@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\User;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,16 +23,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/action/resetPassword',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Resets a user password',
     description: 'Admin action: generates a new random password and sends it to the user.',
     tag: 'User',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['userId'], 'properties' => ['userId' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'userId',
+                    ],
+                    'properties' => [
+                        'userId' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserResetPasswordHandler extends AbstractHandler
@@ -47,6 +72,6 @@ class UserResetPasswordHandler extends AbstractHandler
 
         $result = $this->getRecordService('User')->resetPassword($data->userId);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

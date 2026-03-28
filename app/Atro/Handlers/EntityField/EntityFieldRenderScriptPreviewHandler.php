@@ -23,16 +23,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/EntityField/action/renderScriptPreview',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Render script field preview',
     description: 'Renders a preview of a script field value. Accessible by administrators only.',
     tag: 'EntityField',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object']]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type' => 'object',
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Rendered preview', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Rendered preview',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class EntityFieldRenderScriptPreviewHandler extends AbstractHandler

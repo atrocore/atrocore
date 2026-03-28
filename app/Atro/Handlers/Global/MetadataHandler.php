@@ -23,12 +23,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Metadata',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns all metadata for the current user',
     description: 'Returns all metadata for the current user.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'Metadata object', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Metadata object',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class MetadataHandler extends AbstractHandler

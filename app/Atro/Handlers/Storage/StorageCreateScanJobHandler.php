@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\Storage;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,16 +23,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Storage/action/createScanJob',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates a storage scan job',
     description: 'Triggers a background scan job for the specified storage.',
     tag: 'Storage',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class StorageCreateScanJobHandler extends AbstractHandler
@@ -47,6 +72,6 @@ class StorageCreateScanJobHandler extends AbstractHandler
 
         $result = $this->getRecordService('Storage')->createScanJob((string) $data->id, true);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

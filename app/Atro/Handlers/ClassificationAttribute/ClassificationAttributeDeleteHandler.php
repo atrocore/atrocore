@@ -22,15 +22,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ClassificationAttribute/{id}',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Deletes a ClassificationAttribute record',
     description: 'Deletes a ClassificationAttribute record by ID. Pass withAttributeValues=true in the request body to also delete related attribute values.',
     tag: 'ClassificationAttribute',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ClassificationAttributeDeleteHandler extends AbstractHandler

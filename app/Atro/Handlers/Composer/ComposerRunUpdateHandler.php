@@ -15,7 +15,7 @@ namespace Atro\Handlers\Composer;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Atro\Services\Composer as ComposerService;
@@ -25,12 +25,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/runUpdate',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Run composer update',
     description: 'Executes the queued composer changes. Accessible by administrators only.',
     tag: 'Composer',
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerRunUpdateHandler extends AbstractHandler
@@ -45,6 +56,8 @@ class ComposerRunUpdateHandler extends AbstractHandler
             throw new BadRequest('Composer daemon is not running');
         }
 
-        return new JsonResponse(['true' => $this->getServiceFactory()->create('Composer')->runUpdate()]);
+        $this->getServiceFactory()->create('Composer')->runUpdate();
+
+        return new BoolResponse(true);
     }
 }

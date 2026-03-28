@@ -15,7 +15,7 @@ namespace Atro\Handlers\ClusterItem;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -24,16 +24,45 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ClusterItem/action/unreject',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Unreject a cluster item',
     description: 'Unrejects a previously rejected cluster item.',
     tag: 'ClusterItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id', 'relationId'], 'properties' => ['id' => ['type' => 'string'], 'relationId' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                        'relationId',
+                    ],
+                    'properties' => [
+                        'id'         => [
+                            'type' => 'string',
+                        ],
+                        'relationId' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ClusterItemUnrejectHandler extends AbstractHandler
@@ -54,6 +83,8 @@ class ClusterItemUnrejectHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new JsonResponse(['true' => $this->getRecordService('ClusterItem')->unreject((string) $data->id, (string) $data->relationId)]);
+        $this->getRecordService('ClusterItem')->unreject((string) $data->id, (string) $data->relationId);
+
+        return new BoolResponse(true);
     }
 }

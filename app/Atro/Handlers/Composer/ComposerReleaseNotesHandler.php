@@ -24,16 +24,46 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/releaseNotes',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Get release notes for a module',
     description: 'Returns release notes HTML for the specified module. Accessible by administrators only.',
     tag: 'Composer',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Release notes HTML', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['html' => ['type' => 'string']]]]]],
+        200 => [
+            'description' => 'Release notes HTML',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'html' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerReleaseNotesHandler extends AbstractHandler

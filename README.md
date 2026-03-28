@@ -17,7 +17,7 @@ AtroCore is a powerful open-source data platform designed for [Master Data Manag
 | Mirror (GitHub) | https://github.com/atrocore/atrocore            | 
 -->
 
-AtroCore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Symfony, it’s built with native PHP and enhanced by carefully selected components to solve specific tasks – for example, we use Doctrine DBAL for database interaction. The system primarily works with PostgreSQL, MySQL, or MariaDB as its main database engine. 
+AtroCore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Laminas / Mezzio, Symfony, it’s built on open PHP standards (PSR-7, PSR-11, PSR-15) and enhanced by carefully selected best-of-breed components to solve specific tasks – for example, we use Doctrine DBAL for database interaction and FastRoute for HTTP routing. The system primarily works with PostgreSQL, MySQL, or MariaDB as its main database engine.
 
 To tackle complex and long-running tasks, AtroCore includes a robust Job Manager. This allows you to control the number of workers based on your server’s capacity, ensuring efficient processing without overload. Complementing this, the Scheduled Jobs feature provides a convenient way to configure recurring tasks. AtroCore offers dynamic actions, flexible workflows, and real-time UI customization.
 
@@ -81,6 +81,16 @@ The following full-fledged software products are already available on the AtroCo
 ## Technologies
 
 ![Architecture and Technologies](_assets/architecture-and-technologies.png)
+
+### Standards & Components
+
+AtroCore is built around **open standards**, not framework lock-in. We adopt components from the PHP ecosystem where they are the best fit for the task — and replace them when better options exist.
+
+**HTTP layer** follows [PSR-7](https://www.php-fig.org/psr/psr-7/) (HTTP messages) and [PSR-15](https://www.php-fig.org/psr/psr-15/) (middleware and request handlers) strictly. Every request passes through a typed middleware pipeline dispatched via [FastRoute](https://github.com/nikic/FastRoute). Handlers are registered via PHP attributes and documented automatically as OpenAPI 3.0. A route that is not fully documented is simply not registered — incomplete API definitions cannot exist at runtime. Every request and response is automatically validated against the OpenAPI schema, so the API documentation is always a truthful contract, not a wishful description.
+
+**Dependency injection** is powered by [Laminas ServiceManager](https://github.com/laminas/laminas-servicemanager) — a [PSR-11](https://www.php-fig.org/psr/psr-11/) compliant container. We are part of the Laminas ecosystem where it makes sense, but we are not tied to it. We take the best from it.
+
+**Database** access goes through [Doctrine DBAL](https://www.doctrine-project.org/projects/dbal.html), supporting PostgreSQL (recommended), MySQL, and MariaDB.
 
 
 ## Integrations

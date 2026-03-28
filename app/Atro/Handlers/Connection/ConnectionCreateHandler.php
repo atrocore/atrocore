@@ -24,16 +24,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Connection',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates a connection record',
     description: 'Creates a new connection record. Accessible by administrators only.',
     tag: 'Connection',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object']]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type' => 'object',
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Created connection record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Created connection record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ConnectionCreateHandler extends AbstractHandler

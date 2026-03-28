@@ -25,16 +25,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Unit/action/setDefault',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Sets a unit as default',
     description: 'Marks the specified unit as the default unit for its measure. Accessible by administrators only.',
     tag: 'Unit',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UnitSetDefaultHandler extends AbstractHandler

@@ -24,16 +24,50 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ClusterItem/action/unmerge',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Unmerge cluster item(s)',
     description: 'Unmerge one or multiple cluster items into a new cluster. Accepts a single id, a list of ids, or a query where clause.',
     tag: 'ClusterItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['id' => ['type' => 'string'], 'idList' => ['type' => 'array', 'items' => ['type' => 'string']], 'where' => ['type' => 'array', 'items' => ['type' => 'object']]]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'properties' => [
+                        'id'     => [
+                            'type' => 'string',
+                        ],
+                        'idList' => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'where'  => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'object',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ClusterItemUnmergeHandler extends AbstractHandler

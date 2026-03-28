@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\SelectionItem;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,16 +23,48 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/SelectionItem/action/replaceItem',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Replaces a selection item entity',
     description: 'Replaces the entity of an existing selection item with another entity of the same scope.',
     tag: 'SelectionItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id', 'selectedRecords'], 'properties' => ['id' => ['type' => 'string'], 'selectedRecords' => ['type' => 'array', 'items' => ['type' => 'string']]]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                        'selectedRecords',
+                    ],
+                    'properties' => [
+                        'id'              => [
+                            'type' => 'string',
+                        ],
+                        'selectedRecords' => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class SelectionItemReplaceItemHandler extends AbstractHandler
@@ -47,6 +79,6 @@ class SelectionItemReplaceItemHandler extends AbstractHandler
 
         $result = $this->getRecordService('SelectionItem')->replaceItem($data->id, $data->selectedRecords[0]);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

@@ -24,17 +24,36 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/File/action/upload-proxy',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Proxy file upload from URL',
     description: 'Streams a remote file through the server to the client.',
     tag: 'File',
     auth: false,
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['url'], 'properties' => ['url' => ['type' => 'string', 'format' => 'uri']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'url',
+                    ],
+                    'properties' => [
+                        'url' => [
+                            'type'   => 'string',
+                            'format' => 'uri',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'File content stream'],
+        200 => [
+            'description' => 'File content stream',
+        ],
     ],
 )]
 class FileUploadProxyHandler extends AbstractHandler

@@ -725,13 +725,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 for (var i in this.checkedList) {
-                    ids.push(this.checkedList[i]);
+                    ids.push(String(this.checkedList[i]));
                 }
 
                 $.ajax({
-                    url: this.entityType + '/action/massDelete',
+                    url: 'entityMassDelete',
                     type: 'POST',
-                    data: JSON.stringify(data)
+                    data: JSON.stringify(Object.assign({entityName: this.entityType}, data))
                 }).done(function (result) {
                     this.notify(false)
                     this.processMassActionResult(result)
@@ -785,9 +785,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 $.ajax({
-                    url: this.entityType + '/action/massRestore',
+                    url: 'entityRestore',
                     type: 'POST',
-                    data: JSON.stringify(data)
+                    data: JSON.stringify(Object.assign({entityName: this.entityType}, data))
                 }).done(function (result) {
                     this.collection.fetch().then(() => this.notify(this.translate('Restored'), 'success'));
                 }.bind(this));
@@ -858,7 +858,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 confirmText: this.translate('Follow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massFollow', data).then(function (result) {
+                this.ajaxPostRequest('entitySubscription', Object.assign({entityName: this.entityType}, data)).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massFollowResult';
                     if (resultCount) {
@@ -896,7 +896,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 confirmText: this.translate('Unfollow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massUnfollow', data).then(function (result) {
+                this.ajaxDeleteRequest('entitySubscription', Object.assign({entityName: this.entityType}, data)).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massUnfollowResult';
                     if (resultCount) {
@@ -3241,9 +3241,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.collection.remove(model);
                 this.notify('restoring');
                 $.ajax({
-                    url: this.entityType + '/action/restore',
+                    url: 'entityRestore',
                     type: 'POST',
-                    data: JSON.stringify({ id: id })
+                    data: JSON.stringify({ entityName: this.entityType, ids: [id] })
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);

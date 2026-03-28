@@ -24,16 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/File/action/prepareForRichEditor',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Prepare file for rich editor',
     description: 'Creates a public sharing link for a file to be used in a rich text editor.',
     tag: 'File',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['fileId'], 'properties' => ['fileId' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'fileId',
+                    ],
+                    'properties' => [
+                        'fileId' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'File info with shared URL', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'File info with shared URL',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class FilePrepareForRichEditorHandler extends AbstractHandler

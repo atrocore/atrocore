@@ -298,7 +298,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.disableButton('update');
             let self = this;
             $.ajax({
-                url: 'massUpdate',
+                url: 'entityMassUpdate',
                 type: 'PATCH',
                 data: JSON.stringify({
                     entityName: this.scope,

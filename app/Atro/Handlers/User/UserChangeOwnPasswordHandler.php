@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\User;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,16 +23,51 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/action/changeOwnPassword',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Changes own password',
     description: 'Allows the current user to change their own password by providing the current password.',
     tag: 'User',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['password', 'currentPassword'], 'properties' => ['password' => ['type' => 'string'], 'currentPassword' => ['type' => 'string'], 'userId' => ['type' => 'string'], 'sendAccessInfo' => ['type' => 'boolean']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'password',
+                        'currentPassword',
+                    ],
+                    'properties' => [
+                        'password'        => [
+                            'type' => 'string',
+                        ],
+                        'currentPassword' => [
+                            'type' => 'string',
+                        ],
+                        'userId'          => [
+                            'type' => 'string',
+                        ],
+                        'sendAccessInfo'  => [
+                            'type' => 'boolean',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserChangeOwnPasswordHandler extends AbstractHandler
@@ -57,6 +92,6 @@ class UserChangeOwnPasswordHandler extends AbstractHandler
             $data->sendAccessInfo ?? false
         );
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

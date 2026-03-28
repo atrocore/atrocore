@@ -16,7 +16,7 @@ namespace Atro\Handlers\ClusterItem;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -25,16 +25,50 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ClusterItem/action/reject',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Reject cluster item(s)',
     description: 'Reject a cluster item or a list of cluster items using idList or using a query where clause.',
     tag: 'ClusterItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['id' => ['type' => 'string'], 'idList' => ['type' => 'array', 'items' => ['type' => 'string']], 'where' => ['type' => 'array', 'items' => ['type' => 'object']]]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'properties' => [
+                        'id'     => [
+                            'type' => 'string',
+                        ],
+                        'idList' => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'where'  => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'object',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ClusterItemRejectHandler extends AbstractHandler
@@ -69,6 +103,8 @@ class ClusterItemRejectHandler extends AbstractHandler
             $params['ids'][] = $data->id;
         }
 
-        return new JsonResponse(['true' => $recordService->reject($params)]);
+        $recordService->reject($params);
+
+        return new BoolResponse(true);
     }
 }

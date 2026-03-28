@@ -25,16 +25,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/{id}/{link}',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Links User entities (admin only)',
     description: 'Creates a relation between a User record and one or more foreign records. Accessible by administrators only.',
     tag: 'User',
     parameters: [
-        ['name' => 'id',   'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'link', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'link',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserCreateLinkHandler extends AbstractHandler

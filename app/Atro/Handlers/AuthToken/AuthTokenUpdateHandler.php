@@ -24,19 +24,43 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/AuthToken/{id}',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Updates an auth token record',
     description: 'Updates an authentication token record by ID. Accessible by administrators only.',
     tag: 'AuthToken',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object']]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type' => 'object',
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Updated auth token record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Updated auth token record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class AuthTokenUpdateHandler extends AbstractHandler

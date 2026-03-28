@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\SelectionItem;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,16 +23,47 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/SelectionItem/action/createOnCurrentSelection',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates a selection item on current selection',
     description: 'Creates a selection item for the current active selection of the user.',
     tag: 'SelectionItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['entityName', 'entityId'], 'properties' => ['entityName' => ['type' => 'string', 'example' => 'Product'], 'entityId' => ['type' => 'string', 'example' => 'example-id']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'entityName',
+                        'entityId',
+                    ],
+                    'properties' => [
+                        'entityName' => [
+                            'type'    => 'string',
+                            'example' => 'Product',
+                        ],
+                        'entityId'   => [
+                            'type'    => 'string',
+                            'example' => 'example-id',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class SelectionItemCreateOnCurrentSelectionHandler extends AbstractHandler
@@ -47,6 +78,6 @@ class SelectionItemCreateOnCurrentSelectionHandler extends AbstractHandler
 
         $result = $this->getRecordService('SelectionItem')->createOnCurrentItem($data->entityName, $data->entityId);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

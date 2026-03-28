@@ -589,11 +589,12 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
         generateUrl(node) {
             let queryParameters = {
+                entityName: this.scope,
                 sortBy: this.collection.sortBy,
                 asc: this.collection.asc,
                 where: this.collection.getWhere(),
             };
-            let url = this.scope + '/action/Tree?' + $.param(queryParameters);
+            let url = 'entityTree?' + $.param(queryParameters);
             let id = 'root';
 
             if (node && node.id) {

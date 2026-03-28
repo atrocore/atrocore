@@ -96,7 +96,7 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
         initGroupCollection(group, groupCollection, callback) {
             groupCollection.on('update-total sync', () => this.updateCollectionTotal())
             this.getHelper().layoutManager.get(this.scope, this.layoutName, this.getLayoutLink(), null, data => {
-                groupCollection.url = this.model.name + '/' + this.model.id + '/' + this.link;
+                groupCollection.url = 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + this.link;
                 groupCollection.maxSize = 20
                 groupCollection.data.whereRelation = [
                     {

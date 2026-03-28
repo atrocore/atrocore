@@ -24,16 +24,36 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/logNavigation/{id}',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Log navigation event',
     description: 'Records a navigation event for the specified record ID.',
     tag: 'Global',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'true if logged', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        400 => ['description' => 'id is required'],
+        200 => [
+            'description' => 'true if logged',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'id is required',
+        ],
     ],
 )]
 class LogNavigationHandler extends AbstractHandler

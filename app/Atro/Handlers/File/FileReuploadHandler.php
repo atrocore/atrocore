@@ -25,16 +25,53 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/File/action/reupload',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Reupload file content',
     description: 'Reuploads the content for an existing File entity.',
     tag: 'File',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['reupload'], 'properties' => ['reupload' => ['type' => 'string'], 'fileContents' => ['type' => 'string'], 'piece' => ['type' => 'string', 'description' => 'Chunk data'], 'piecesCount' => ['type' => 'integer', 'minimum' => 1, 'description' => 'Total number of chunks']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'reupload',
+                    ],
+                    'properties' => [
+                        'reupload'     => [
+                            'type' => 'string',
+                        ],
+                        'fileContents' => [
+                            'type' => 'string',
+                        ],
+                        'piece'        => [
+                            'type'        => 'string',
+                            'description' => 'Chunk data',
+                        ],
+                        'piecesCount'  => [
+                            'type'        => 'integer',
+                            'minimum'     => 1,
+                            'description' => 'Total number of chunks',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Updated file record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Updated file record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class FileReuploadHandler extends AbstractHandler

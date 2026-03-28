@@ -22,17 +22,63 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Notification',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns notifications for the current user',
     description: 'Returns a list of notifications for the currently authenticated user.',
     tag: 'Notification',
     parameters: [
-        ['name' => 'offset',  'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 0]],
-        ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer', 'example' => 20]],
-        ['name' => 'after',   'in' => 'query', 'required' => false, 'description' => 'Return only notifications created after this datetime (ISO 8601)', 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 20,
+            ],
+        ],
+        [
+            'name'        => 'after',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Return only notifications created after this datetime (ISO 8601)',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Collection of notifications', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['total' => ['type' => 'integer'], 'list' => ['type' => 'array', 'items' => ['type' => 'object']]]]]]],
+        200 => [
+            'description' => 'Collection of notifications',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class NotificationListHandler extends AbstractHandler

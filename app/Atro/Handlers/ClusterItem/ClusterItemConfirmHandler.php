@@ -16,7 +16,7 @@ namespace Atro\Handlers\ClusterItem;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -25,16 +25,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ClusterItem/action/confirm',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Confirm a cluster item',
     description: 'Confirms a cluster item by ID.',
     tag: 'ClusterItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ClusterItemConfirmHandler extends AbstractHandler
@@ -58,6 +83,8 @@ class ClusterItemConfirmHandler extends AbstractHandler
             throw new NotFound();
         }
 
-        return new JsonResponse(['true' => $recordService->confirm($entity)]);
+        $recordService->confirm($entity);
+
+        return new BoolResponse(true);
     }
 }

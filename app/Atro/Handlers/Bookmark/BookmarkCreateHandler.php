@@ -24,16 +24,45 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Bookmark',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Creates a bookmark',
     description: 'Creates a new bookmark record.',
     tag: 'Bookmark',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['entityId', 'entityType'], 'properties' => ['entityId' => ['type' => 'string'], 'entityType' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'entityId',
+                        'entityType',
+                    ],
+                    'properties' => [
+                        'entityId'   => [
+                            'type' => 'string',
+                        ],
+                        'entityType' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Created bookmark record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Created bookmark record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class BookmarkCreateHandler extends AbstractHandler

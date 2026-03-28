@@ -103,7 +103,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
-            var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
+            var url = this.url || 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + this.link;
 
             if (!this.readOnly && !this.defs.readOnly) {
                 if (!('create' in this.defs)) {
@@ -760,7 +760,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (this.getMetadata().get(['scopes', scope, 'type']) === 'Hierarchy') {
                 if (foreignLink === 'parents' && !this.getMetadata().get(['scopes', scope, 'multiParents'])) {
                     if (this.model.get('id')) {
-                        attributes.parentId = this.model.get('id');
+                        attributes.id = this.model.get('id');
                     }
                     if (this.getModelTitle(this.model)) {
                         attributes.parentName = this.getModelTitle(this.model);
@@ -842,8 +842,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         actionUnlinkRelated: function (data, evt) {
             const model = this.getModel(data, evt)
             let id = model.id;
-            let scope = this.collection.url.split('/').shift();
-            let link = this.collection.url.split('/').pop();
+            let scope = this.model.name;
+            let link = this.link;
             let message = this.translate('unlinkRecordConfirmation', 'messages');
 
             const unlinkConfirm = this.getMetadata().get(`clientDefs.${scope}.relationshipPanels.${link}.unlinkConfirm`) || false;
@@ -1073,12 +1073,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.confirm(this.translate('unlinkAllConfirmation', 'messages'), function () {
                 this.notify('Please wait...');
                 $.ajax({
-                    url: this.model.name + '/action/unlinkAll',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        link: data.link,
-                        id: this.model.id
-                    }),
+                    url: 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + data.link + '&all=true',
+                    type: 'DELETE',
                 }).done(function () {
                     this.notify(false);
                     this.notify('Unlinked', 'success');
@@ -1140,7 +1136,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 view.render();
 
                 view.listenTo(view.model, 'after:file-upload', entity => {
-                    this.ajaxPostRequest(`${this.model.name}/${this.model.get('id')}/${link}`, { ids: [entity.id] }).success(() => {
+                    this.ajaxPostRequest('entityRelation', { entityName: this.model.name, id: this.model.get('id'), link: link, ids: [entity.id] }).success(() => {
                         this.model.trigger('after:relate', link);
                         this.actionRefresh();
                     });

@@ -121,29 +121,80 @@ Every handler **must** declare a `#[Route]` attribute. This attribute serves as 
 ```php
 #[Route(
     path: '/MyEntity/{id}/stats',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get MyEntity statistics',
     description: 'Returns statistics for the specified MyEntity record.',
     tag: 'MyEntity',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true,
-         'description' => 'Record ID', 'schema' => ['type' => 'string']],
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Record ID',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Statistics data', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'total'  => ['type' => 'integer'],
-                'active' => ['type' => 'integer'],
+        200 => [
+            'description' => 'Statistics data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total'  => [
+                                'type' => 'integer',
+                            ],
+                            'active' => [
+                                'type' => 'integer',
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
-        400 => ['description' => 'id is required'],
-        404 => ['description' => 'Record not found'],
+        ],
+        400 => [
+            'description' => 'id is required',
+        ],
+        404 => [
+            'description' => 'Record not found',
+        ],
     ],
 )]
 ```
 
 The most common response is `application/json`. Always define the `schema` inside the `200` response — this is what `ApiValidationMiddleware` uses to validate the actual response body.
+
+### Array Formatting in `#[Route]`
+
+**Always expand nested arrays vertically — one key per line, with indentation.** Never write nested structures inline on a single line.
+
+```php
+// ✗ Wrong — hard to read
+responses: [
+    200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+],
+
+// ✓ Correct — each level on its own line
+responses: [
+    200 => [
+        'description' => 'Success',
+        'content'     => [
+            'application/json' => [
+                'schema' => [
+                    'type' => 'boolean',
+                ],
+            ],
+        ],
+    ],
+],
+```
+
+This rule applies to **all** arrays inside `#[Route]` without exception: `methods`, `parameters`, `requestBody`, `responses`, and every nested array within them.
 
 ### Required Fields
 
@@ -225,6 +276,35 @@ This pattern applies when all three conditions hold:
 
 If any of these conditions breaks — the action has entity-specific logic, parameters, or response shape — use per-entity routes instead.
 
+### Naming Global Routes
+
+Global routes share a single flat namespace. A vague name like `/subscription` or `/follow` will conflict with other operations or become ambiguous as the API grows. **Every Global route name must be specific enough to be unambiguous on its own.**
+
+Rules for naming Global routes:
+
+1. **Prefix with the domain noun** — name the route after the resource it operates on, not the HTTP method or the action verb. The HTTP method already expresses create/delete/update.
+
+   ```
+   ✓  POST   /entitySubscription     (resource: subscription on an entity record)
+   ✓  DELETE /entitySubscription
+   ✗  POST   /follow                 (verb — conflicts with future /follow on other resources)
+   ✗  POST   /subscription           (too vague — subscription to what?)
+   ```
+
+2. **Avoid generic words** — words like `record`, `data`, `item`, `action`, `info` carry no meaning in a flat namespace. Qualify them: `entitySubscription`, not `subscription`; `entityMassDelete`, not `massDelete` (if scoped to entity records).
+
+3. **Use camelCase** — consistent with existing Global routes (`/massDelete`, `/globalSearch`, `/entitySubscription`).
+
+4. **One resource, multiple methods** — prefer a single path with different HTTP methods over separate paths per action:
+
+   ```
+   ✓  POST   /entitySubscription   ← follow
+   ✓  DELETE /entitySubscription   ← unfollow
+
+   ✗  POST   /followEntity
+   ✗  POST   /unfollowEntity
+   ```
+
 ### HTTP Method Semantics
 
 | Method | Use |
@@ -269,18 +349,40 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Product/{id}/stats',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get product statistics',
     description: 'Returns sales and inventory statistics for the specified product.',
     tag: 'Product',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true,
-         'description' => 'Product record ID', 'schema' => ['type' => 'string']],
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Product record ID',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Product statistics', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
-        400 => ['description' => 'id is required'],
-        404 => ['description' => 'Product not found'],
+        200 => [
+            'description' => 'Product statistics',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'id is required',
+        ],
+        404 => [
+            'description' => 'Product not found',
+        ],
     ],
 )]
 class ProductStatsHandler implements MiddlewareInterface
@@ -526,11 +628,15 @@ To replace a core EntityType handler for a **specific entity** (e.g. only for `P
 
 #[Route(
     path: '/Product',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'List products',
     description: 'Returns a customised product collection.',
     tag: 'Product',
-    responses: [200 => [...]],
+    responses: [
+        200 => [...],
+    ],
 )]
 class ProductListHandler implements MiddlewareInterface
 {
@@ -586,28 +692,62 @@ These schemas are built automatically by `OpenApiGenerator` based on the entity'
 // POST
 #[Route(
     path: '/{entityName}',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     ...
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-post' => true]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'x-entity-post' => true,
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 
 // PATCH
 #[Route(
     path: '/{entityName}/{id}',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     ...
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['x-entity-patch' => true]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'x-entity-patch' => true,
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Entity record', 'content' => ['application/json' => ['schema' => ['x-entity-read' => true]]]],
+        200 => [
+            'description' => 'Entity record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'x-entity-read' => true,
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 ```

@@ -25,13 +25,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/action/jobManagerUpdate',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Pause or resume the job manager',
     description: 'Pauses or resumes background job processing. Admin only.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'true if updated', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        403 => ['description' => 'Forbidden'],
+        200 => [
+            'description' => 'true if updated',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
     ],
 )]
 class JobManagerUpdateHandler extends AbstractHandler

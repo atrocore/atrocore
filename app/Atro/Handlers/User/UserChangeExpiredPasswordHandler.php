@@ -15,7 +15,7 @@ namespace Atro\Handlers\User;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -24,16 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/User/action/changeExpiredPassword',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Changes an expired password',
     description: 'Allows the current user to set a new password when their existing password has expired.',
     tag: 'User',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['password'], 'properties' => ['password' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'password',
+                    ],
+                    'properties' => [
+                        'password' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UserChangeExpiredPasswordHandler extends AbstractHandler
@@ -55,6 +80,6 @@ class UserChangeExpiredPasswordHandler extends AbstractHandler
 
         $result = $this->getRecordService('User')->changePassword($user->id, $data->password);
 
-        return new JsonResponse(['true' => $result]);
+        return new BoolResponse(true);
     }
 }

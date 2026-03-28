@@ -15,7 +15,7 @@ namespace Atro\Handlers\Composer;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -24,16 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/cancel',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Cancel a queued module change',
     description: 'Cancels a queued installation, update, or deletion for a module. Accessible by administrators only.',
     tag: 'Composer',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerCancelHandler extends AbstractHandler
@@ -47,7 +72,9 @@ class ComposerCancelHandler extends AbstractHandler
         $data = json_decode(json_encode($this->getRequestBody($request)), true);
 
         if (!empty($id = $data['id'])) {
-            return new JsonResponse(['true' => $this->getServiceFactory()->create('Composer')->cancel($id)]);
+            $this->getServiceFactory()->create('Composer')->cancel($id);
+
+            return new BoolResponse(true);
         }
 
         throw new NotFound();

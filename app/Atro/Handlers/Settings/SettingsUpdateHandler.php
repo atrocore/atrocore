@@ -22,16 +22,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Settings/1',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Updates system settings',
     description: 'Updates one or more system configuration fields.',
     tag: 'Settings',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object']]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type' => 'object',
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Updated settings data', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Updated settings data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class SettingsUpdateHandler extends AbstractHandler

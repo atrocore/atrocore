@@ -23,17 +23,49 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Attribute/action/attributesDefs',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get attributes definitions for an entity',
     description: 'Returns field definitions for the specified attributes of an entity.',
     tag: 'Attribute',
     parameters: [
-        ['name' => 'entityName', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string'], 'description' => 'Entity type name'],
-        ['name' => 'attributesIds', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'array', 'items' => ['type' => 'string']], 'description' => 'List of attribute IDs'],
+        [
+            'name'        => 'entityName',
+            'in'          => 'query',
+            'required'    => true,
+            'schema'      => [
+                'type' => 'string',
+            ],
+            'description' => 'Entity type name',
+        ],
+        [
+            'name'        => 'attributesIds',
+            'in'          => 'query',
+            'required'    => true,
+            'schema'      => [
+                'type'  => 'array',
+                'items' => [
+                    'type' => 'string',
+                ],
+            ],
+            'description' => 'List of attribute IDs',
+        ],
     ],
     responses: [
-        200 => ['description' => 'Attributes definitions', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
-        400 => ['description' => 'entityName and attributesIds are required'],
+        200 => [
+            'description' => 'Attributes definitions',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'entityName and attributesIds are required',
+        ],
     ],
 )]
 class AttributesDefsHandler extends AbstractHandler

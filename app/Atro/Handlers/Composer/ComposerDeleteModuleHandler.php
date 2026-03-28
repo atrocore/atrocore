@@ -15,7 +15,7 @@ namespace Atro\Handlers\Composer;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -24,15 +24,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/deleteModule',
-    methods: ['DELETE'],
+    methods: [
+        'DELETE',
+    ],
     summary: 'Delete a module',
     description: 'Queues a module for deletion. Accessible by administrators only.',
     tag: 'Composer',
     parameters: [
-        ['name' => 'id', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerDeleteModuleHandler extends AbstractHandler
@@ -56,7 +74,9 @@ class ComposerDeleteModuleHandler extends AbstractHandler
         }
 
         if (!empty($id)) {
-            return new JsonResponse(['true' => $this->getServiceFactory()->create('Composer')->deleteModule($id)]);
+            $this->getServiceFactory()->create('Composer')->deleteModule($id);
+
+            return new BoolResponse(true);
         }
 
         throw new NotFound();

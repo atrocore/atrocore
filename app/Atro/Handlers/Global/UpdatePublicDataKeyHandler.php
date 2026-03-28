@@ -22,13 +22,48 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/UpdatePublicDataKey',
-    methods: ['POST'],
-    summary: 'Update a public data key',
-    description: 'Updates a key in the public data store.',
+    path: '/publicData',
+    methods: [
+        'POST',
+    ],
+    summary: 'Write to public data store',
+    description: 'Used internally by the AtroCore UI. External integrations should ignore this endpoint.',
     tag: 'Global',
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'key',
+                        'value',
+                    ],
+                    'properties' => [
+                        'key'   => [
+                            'type'    => 'string',
+                            'example' => 'myUserId123RefreshListScope',
+                        ],
+                        'value' => [
+                            'nullable' => true,
+                            'example'  => null,
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
-        200 => ['description' => 'true if updated', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'true if written, false if key is missing or reserved',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class UpdatePublicDataKeyHandler extends AbstractHandler

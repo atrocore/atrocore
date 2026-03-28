@@ -26,7 +26,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Dashlet/{dashletName}',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get dashlet data',
     description: 'Returns rendered data for the specified dashlet widget.',
     tag: 'Dashlet',
@@ -37,8 +39,8 @@ use Psr\Http\Server\RequestHandlerInterface;
             'required'    => true,
             'description' => 'Dashlet service name (e.g. Activities)',
             'schema'      => [
-                'type' => 'string'
-            ]
+                'type' => 'string',
+            ],
         ],
     ],
     responses: [
@@ -47,12 +49,14 @@ use Psr\Http\Server\RequestHandlerInterface;
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object'
-                    ]
-                ]
-            ]
+                        'type' => 'object',
+                    ],
+                ],
+            ],
         ],
-        400 => ['description' => 'dashletName is required'],
+        400 => [
+            'description' => 'dashletName is required',
+        ],
     ],
 )]
 class DashletHandler extends AbstractHandler

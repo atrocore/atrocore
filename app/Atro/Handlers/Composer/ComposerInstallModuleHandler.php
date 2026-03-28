@@ -16,7 +16,7 @@ namespace Atro\Handlers\Composer;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -25,16 +25,44 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Composer/installModule',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Install a module',
     description: 'Queues a module for installation. Accessible by administrators only.',
     tag: 'Composer',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string'], 'version' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id'      => [
+                            'type' => 'string',
+                        ],
+                        'version' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ComposerInstallModuleHandler extends AbstractHandler
@@ -49,7 +77,9 @@ class ComposerInstallModuleHandler extends AbstractHandler
 
         if (!empty($data['id'])) {
             $version = (!empty($data['version'])) ? $data['version'] : null;
-            return new JsonResponse(['true' => $this->getServiceFactory()->create('Composer')->installModule($data['id'], $version)]);
+            $this->getServiceFactory()->create('Composer')->installModule($data['id'], $version);
+
+            return new BoolResponse(true);
         }
 
         throw new NotFound();

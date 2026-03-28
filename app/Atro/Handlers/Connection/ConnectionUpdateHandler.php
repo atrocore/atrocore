@@ -24,19 +24,43 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Connection/{id}',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Updates a connection record',
     description: 'Updates an existing connection record by ID. Accessible by administrators only.',
     tag: 'Connection',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object']]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type' => 'object',
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Updated connection record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Updated connection record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ConnectionUpdateHandler extends AbstractHandler

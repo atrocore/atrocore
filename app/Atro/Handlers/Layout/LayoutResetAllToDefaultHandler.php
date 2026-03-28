@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\Layout;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\LayoutManager;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -24,15 +24,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Layout/action/resetAllToDefault',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Reset all layouts to default',
     description: 'Removes all custom layout configurations for a layout profile.',
     tag: 'Layout',
     parameters: [
-        ['name' => 'layoutProfileId', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'layoutProfileId',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class LayoutResetAllToDefaultHandler extends AbstractHandler
@@ -49,7 +67,9 @@ class LayoutResetAllToDefaultHandler extends AbstractHandler
         $layoutManager = $this->getLayoutManager();
         $layoutManager->checkLayoutProfile($layoutProfileId);
 
-        return new JsonResponse(['true' => $layoutManager->resetAllToDefault($layoutProfileId)]);
+        $layoutManager->resetAllToDefault($layoutProfileId);
+
+        return new BoolResponse(true);
     }
 
     private function getLayoutManager(): LayoutManager

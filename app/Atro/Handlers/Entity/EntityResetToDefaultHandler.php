@@ -15,7 +15,7 @@ namespace Atro\Handlers\Entity;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -24,16 +24,41 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Entity/action/resetToDefault',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Reset entity to default',
     description: 'Resets an entity configuration to its default values. Accessible by administrators only.',
     tag: 'Entity',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['scope'], 'properties' => ['scope' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'scope',
+                    ],
+                    'properties' => [
+                        'scope' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class EntityResetToDefaultHandler extends AbstractHandler
@@ -50,6 +75,8 @@ class EntityResetToDefaultHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new JsonResponse(['true' => $this->getRecordService('Entity')->resetToDefault($data->scope)]);
+        $this->getRecordService('Entity')->resetToDefault($data->scope);
+
+        return new BoolResponse(true);
     }
 }

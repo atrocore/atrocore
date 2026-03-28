@@ -23,12 +23,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Translation/action/reset',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Resets translations',
     description: 'Triggers an asynchronous re-indexing of all translation labels.',
     tag: 'Translation',
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class TranslationResetHandler extends AbstractHandler

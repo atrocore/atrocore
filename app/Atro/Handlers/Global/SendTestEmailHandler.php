@@ -23,13 +23,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/action/sendTestEmail',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Send a test email',
     description: 'Sends a test email using the current outbound email settings. Admin only.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'true if sent successfully', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        403 => ['description' => 'Forbidden'],
+        200 => [
+            'description' => 'true if sent successfully',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
     ],
 )]
 class SendTestEmailHandler extends AbstractHandler

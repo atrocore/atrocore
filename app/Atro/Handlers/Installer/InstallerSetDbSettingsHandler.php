@@ -24,17 +24,53 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Installer/action/setDbSettings',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Set database settings',
     description: 'Saves database connection settings for installation. Only accessible before installation.',
     tag: 'Installer',
     auth: false,
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['host', 'dbname', 'user'], 'properties' => ['host' => ['type' => 'string'], 'dbname' => ['type' => 'string'], 'user' => ['type' => 'string'], 'password' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'host',
+                        'dbname',
+                        'user',
+                    ],
+                    'properties' => [
+                        'host'     => [
+                            'type' => 'string',
+                        ],
+                        'dbname'   => [
+                            'type' => 'string',
+                        ],
+                        'user'     => [
+                            'type' => 'string',
+                        ],
+                        'password' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Result', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class InstallerSetDbSettingsHandler extends AbstractHandler

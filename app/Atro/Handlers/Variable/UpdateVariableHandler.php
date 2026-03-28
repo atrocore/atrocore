@@ -24,20 +24,53 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Variable/{id}',
-    methods: ['PATCH'],
+    methods: [
+        'PATCH',
+    ],
     summary: 'Update variable',
     description: 'Updates a configuration variable by ID. Admin only.',
     tag: 'Variable',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/Variable']]]],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    '$ref' => '#/components/schemas/Variable',
+                ],
+            ],
+        ],
+    ],
     responses: [
-        200 => ['description' => 'Updated variable', 'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/Variable']]]],
-        403 => ['description' => 'Forbidden'],
-        404 => ['description' => 'Not found'],
+        200 => [
+            'description' => 'Updated variable',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        '$ref' => '#/components/schemas/Variable',
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
+        404 => [
+            'description' => 'Not found',
+        ],
     ],
-    entities: ['Variable'],
+    entities: [
+        'Variable',
+    ],
 )]
 class UpdateVariableHandler extends AbstractHandler
 {

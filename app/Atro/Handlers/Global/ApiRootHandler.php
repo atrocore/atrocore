@@ -22,12 +22,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'API root',
     description: 'Health-check endpoint used by the frontend after login to confirm the API is reachable.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'API is reachable', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'API is reachable',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ApiRootHandler extends AbstractHandler

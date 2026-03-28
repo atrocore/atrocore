@@ -23,13 +23,24 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Installer/action/getTranslations',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get installer translations',
     description: 'Returns translations for the installer UI. Only accessible before installation.',
     tag: 'Installer',
     auth: false,
     responses: [
-        200 => ['description' => 'Translations', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Translations',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class InstallerGetTranslationsHandler extends AbstractHandler

@@ -23,15 +23,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/MatchedRecord/{id}',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Returns a matched record',
     description: 'Returns a single matched record by ID.',
     tag: 'MatchedRecord',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Matched record', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Matched record',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class MatchedRecordReadHandler extends AbstractHandler

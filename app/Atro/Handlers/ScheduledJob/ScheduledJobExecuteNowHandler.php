@@ -23,15 +23,33 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ScheduledJob/{id}/executeNow',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Executes a scheduled job immediately',
     description: 'Triggers the immediate execution of a scheduled job. Requires read access and admin privileges.',
     tag: 'ScheduledJob',
     parameters: [
-       ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']]
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class ScheduledJobExecuteNowHandler extends AbstractHandler

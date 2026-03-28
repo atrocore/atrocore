@@ -23,17 +23,40 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ExtensibleEnum/action/getExtensibleEnumOptions',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get extensible enum options',
     description: 'Returns the options for a single extensible enum.',
     tag: 'ExtensibleEnum',
     parameters: [
-        ['name' => 'extensibleEnumId', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'extensibleEnumId',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'List of options', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/ExtensibleEnumOption']]]]],
+        200 => [
+            'description' => 'List of options',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'  => 'array',
+                        'items' => [
+                            '$ref' => '#/components/schemas/ExtensibleEnumOption',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
-    entities: ['ExtensibleEnumOption'],
+    entities: [
+        'ExtensibleEnumOption',
+    ],
 )]
 class ExtensibleEnumGetOptionsHandler extends AbstractHandler
 {

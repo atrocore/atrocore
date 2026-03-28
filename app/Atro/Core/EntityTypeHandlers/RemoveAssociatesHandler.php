@@ -25,15 +25,33 @@ use Atro\Core\Routing\EntityType;
 
 #[Route(
     path: '/{entityName}/action/removeAssociates',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Remove associated records',
     description: 'Removes associations between main and related records, optionally filtered by association ID.',
     tag: '{entityName}',
     parameters: [
-        ['name' => 'entityName', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        [
+            'name'     => 'entityName',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => [
+            'description' => 'Success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 #[EntityType(types: ['Relation'])]

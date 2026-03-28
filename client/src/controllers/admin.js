@@ -196,7 +196,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             Espo.Ui.notify(master.translate('Please wait...'));
             this.getRouter().navigate('#Admin');
             $.ajax({
-                url: 'Admin/clearCache',
+                url: 'clearCache',
                 type: 'POST',
                 success: function () {
                     var msg = master.translate('Cache has been cleared', 'labels', 'Admin');

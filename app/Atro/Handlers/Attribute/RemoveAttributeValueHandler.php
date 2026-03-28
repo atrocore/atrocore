@@ -24,14 +24,29 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Attribute/action/removeAttributeValue',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Remove attribute value from an entity',
     description: 'Removes an attribute value from an entity record.',
     tag: 'Attribute',
     responses: [
-        200 => ['description' => 'true on success', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        400 => ['description' => 'Invalid input'],
-        403 => ['description' => 'Forbidden'],
+        200 => [
+            'description' => 'true on success',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'Invalid input',
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
     ],
 )]
 class RemoveAttributeValueHandler extends AbstractHandler

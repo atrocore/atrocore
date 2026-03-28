@@ -24,17 +24,50 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Installer/action/createAdmin',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Create admin user',
     description: 'Creates the initial administrator account during installation. Only accessible before installation.',
     tag: 'Installer',
     auth: false,
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['username', 'password', 'confirmPassword'], 'properties' => ['username' => ['type' => 'string'], 'password' => ['type' => 'string'], 'confirmPassword' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'username',
+                        'password',
+                        'confirmPassword',
+                    ],
+                    'properties' => [
+                        'username'        => [
+                            'type' => 'string',
+                        ],
+                        'password'        => [
+                            'type' => 'string',
+                        ],
+                        'confirmPassword' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Result', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
+        200 => [
+            'description' => 'Result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
     ],
 )]
 class InstallerCreateAdminHandler extends AbstractHandler

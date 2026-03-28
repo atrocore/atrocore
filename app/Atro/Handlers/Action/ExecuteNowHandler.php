@@ -23,21 +23,39 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/Action/action/executeNow',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Execute an action immediately',
     description: 'Executes the specified action record immediately.',
     tag: 'Action',
     parameters: [],
     responses: [
-        200 => ['description' => 'Execution result', 'content' => ['application/json' => ['schema' => [
-            'type'       => 'object',
-            'properties' => [
-                'inBackground' => ['type' => 'boolean'],
-                'success'      => ['type' => 'boolean'],
-                'message'      => ['type' => 'string', 'nullable' => true],
+        200 => [
+            'description' => 'Execution result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'inBackground' => [
+                                'type' => 'boolean',
+                            ],
+                            'success'      => [
+                                'type' => 'boolean',
+                            ],
+                            'message'      => [
+                                'type'     => 'string',
+                                'nullable' => true,
+                            ],
+                        ],
+                    ],
+                ],
             ],
-        ]]]],
-        400 => ['description' => 'actionId is required'],
+        ],
+        400 => [
+            'description' => 'actionId is required',
+        ],
     ],
 )]
 class ExecuteNowHandler extends AbstractHandler

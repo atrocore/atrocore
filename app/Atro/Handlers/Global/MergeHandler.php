@@ -24,17 +24,34 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/action/merge',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Merge multiple records into a target entity or a new one',
     description: 'Merge multiple records into a target entity or a new one',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'Merged entity data', 'content' => ['application/json' => ['schema' => [
-            'type'    => 'object',
-            'example' => ['id' => 'some-id', 'name' => 'a name', 'description' => 'a description'],
-        ]]]],
-        400 => ['description' => 'Invalid input'],
-        403 => ['description' => 'Forbidden'],
+        200 => [
+            'description' => 'Merged entity data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'    => 'object',
+                        'example' => [
+                            'id'          => 'some-id',
+                            'name'        => 'a name',
+                            'description' => 'a description',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'Invalid input',
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
     ],
 )]
 class MergeHandler extends AbstractHandler

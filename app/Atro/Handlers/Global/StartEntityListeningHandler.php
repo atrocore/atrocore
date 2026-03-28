@@ -23,13 +23,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/App/action/startEntityListening',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Start listening to entity changes',
     description: 'Subscribes the current user to real-time updates for the specified entity record.',
     tag: 'Global',
     responses: [
-        200 => ['description' => 'Listening token data', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
-        400 => ['description' => 'entityName and entityId are required'],
+        200 => [
+            'description' => 'Listening token data',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'entityName and entityId are required',
+        ],
     ],
 )]
 class StartEntityListeningHandler extends AbstractHandler
