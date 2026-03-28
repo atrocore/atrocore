@@ -30,7 +30,22 @@ use Psr\Http\Server\RequestHandlerInterface;
     tag: 'ClusterItem',
     requestBody: [
         'required' => true,
-        'content'  => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['targetClusterId'], 'properties' => ['id' => ['type' => 'string'], 'idList' => ['type' => 'array', 'items' => ['type' => 'string']], 'where' => ['type' => 'array', 'items' => ['type' => 'object']], 'targetClusterId' => ['type' => 'string']]]]],
+        'content'  => [
+            'application/json' =>
+                [
+                    'schema' => [
+                        'type'       => 'object',
+                        'required'   => ['targetClusterId'],
+                        'properties' =>
+                            [
+                                'id'              => ['type' => 'string'],
+                                'idList'          => ['type' => 'array', 'items' => ['type' => 'string']],
+                                'where'           => ['type' => 'array', 'items' => ['type' => 'object']],
+                                'targetClusterId' => ['type' => 'string']
+                            ]
+                    ]
+                ]
+        ],
     ],
     responses: [
         200 => ['description' => 'Success', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
@@ -44,9 +59,9 @@ class MoveHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data          = $this->getRequestBody($request);
+        $data = $this->getRequestBody($request);
         $recordService = $this->getRecordService('ClusterItem');
-        $params        = [];
+        $params = [];
 
         $targetClusterId = null;
         if (property_exists($data, 'targetClusterId') && !empty($data->targetClusterId)) {

@@ -38,6 +38,13 @@
           "iconClass": "ph ph-arrows-split",
           "sortOrder": 30
         },
+        "move": {
+          "url": "ClusterItem/action/move",
+          "refresh": true,
+          "iconClass": "ph ph-arrow-right",
+          "sortOrder": 40,
+          "modalSelectEntity": "Cluster"
+        },
         "removeRelated": {
           "url": "{{entityName}}/{{entityId}}",
           "refresh": true

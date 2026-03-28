@@ -484,7 +484,7 @@ class ClusterItem extends Base
             $collection = $this->getRepository()->findByIds($ids);
         }
 
-        $moved   = 0;
+        $moved = 0;
         $skipped = 0;
 
         foreach ($collection as $entity) {
@@ -493,8 +493,7 @@ class ClusterItem extends Base
                 continue;
             }
 
-            $sourceCluster = $entity->get('cluster');
-            if (empty($sourceCluster) || $sourceCluster->get('masterEntity') !== $targetCluster->get('masterEntity')) {
+            if ($entity->get('entityName') !== $targetCluster->get('masterEntity') && $this->getMetadata()->get(['scopes', $entity->get('entityName'), 'primaryEntityId']) !== $targetCluster->get('masterEntity')) {
                 $skipped++;
                 continue;
             }
@@ -505,7 +504,7 @@ class ClusterItem extends Base
                 continue;
             }
 
-            $sourceClusterId = $sourceCluster->get('id');
+            $sourceClusterId = $entity->get('clusterId');
 
             if ($this->isClusterItemConfirmed($entity)) {
                 $this->unConfirmClusterItem($entity);
