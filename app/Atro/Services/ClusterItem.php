@@ -493,7 +493,8 @@ class ClusterItem extends Base
                 continue;
             }
 
-            if ($entity->get('cluster')->get('masterEntity') !== $targetCluster->get('masterEntity')) {
+            $sourceCluster = $entity->get('cluster');
+            if (empty($sourceCluster) || $sourceCluster->get('masterEntity') !== $targetCluster->get('masterEntity')) {
                 $skipped++;
                 continue;
             }
@@ -504,7 +505,7 @@ class ClusterItem extends Base
                 continue;
             }
 
-            $sourceClusterId = $entity->get('clusterId');
+            $sourceClusterId = $sourceCluster->get('id');
 
             if ($this->isClusterItemConfirmed($entity)) {
                 $this->unConfirmClusterItem($entity);
