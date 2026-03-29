@@ -73,6 +73,11 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
                 }
             }
 
+            const auditMeta = this.model.getMeta('audit', 'createdBy');
+            if (auditMeta) {
+                this.messageData['user'] = this.buildUserHtml(auditMeta);
+            }
+
             this.createMessage();
         }
 
