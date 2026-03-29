@@ -148,18 +148,109 @@ class Note
                                 }
                             }
                         }
+                    } else {
+                        $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $field, 'entity']);
+                        if (!empty($foreignEntity)) {
+                            foreach (['was', 'became'] as $k) {
+                                $id = ${$k}[$field . 'Id'] ?? null;
+                                if ($id) {
+                                    ${$k}[$field . 'Name'] = $this->getEntityDisplayName($foreignEntity, $id);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($item['fieldType'] === 'linkMultiple') {
+                    $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $field, 'entity']);
+                    if (!empty($foreignEntity)) {
+                        foreach (['was', 'became'] as $k) {
+                            $ids = ${$k}[$field . 'Ids'] ?? null;
+                            if (!empty($ids) && is_array($ids)) {
+                                $names = [];
+                                foreach ($ids as $id) {
+                                    $name = $this->getEntityDisplayName($foreignEntity, $id);
+                                    if ($name !== null) {
+                                        $names[$id] = $name;
+                                    }
+                                }
+                                if (!empty($names)) {
+                                    ${$k}[$field . 'Names'] = $names;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($item['fieldType'] === 'extensibleEnum') {
+                    $fieldDef = $entity->entityDefs['fields'][$field]
+                        ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityType()}.fields.$field", []);
+                    $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
+                    if ($extensibleEnumId) {
+                        $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
+                        foreach (['was', 'became'] as $k) {
+                            $val = ${$k}[$field] ?? null;
+                            if ($val) {
+                                $option = $repo->getPreparedOption($extensibleEnumId, $val);
+                                if (!empty($option['name'])) {
+                                    ${$k}[$field . 'Name'] = $option['name'];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($item['fieldType'] === 'extensibleMultiEnum') {
+                    $fieldDef = $entity->entityDefs['fields'][$field]
+                        ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityType()}.fields.$field", []);
+                    $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
+                    if ($extensibleEnumId) {
+                        $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
+                        foreach (['was', 'became'] as $k) {
+                            $val = ${$k}[$field] ?? null;
+                            if (!empty($val)) {
+                                $ids = is_string($val) ? @json_decode($val, true) : $val;
+                                if (!empty($ids) && is_array($ids)) {
+                                    $options = $repo->getPreparedOptions($extensibleEnumId, $ids);
+                                    if (!empty($options)) {
+                                        ${$k}[$field . 'Names'] = array_column($options, 'name', 'id');
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
 
-        return [
+        $entityType = $entity->getEntityName();
+        $fields = $entity->entityDefs['fields'] ?? $this->getMetadata()->get("entityDefs.{$entityType}.fields", []);
+
+        $attributeData = [];
+        foreach ($updatedFieldList as $field) {
+            $fieldDef = $fields[$field] ?? [];
+            if (!empty($fieldDef['attributeId'])) {
+                $attributeData[$field] = [
+                    'attributeId'   => $fieldDef['attributeId'],
+                    'attributeName' => $fieldDef['label'] ?? $field,
+                    'fieldType'     => $fieldDef['type'] ?? 'varchar',
+                ];
+            }
+        }
+
+        $result = [
             'fields'     => $updatedFieldList,
             'attributes' => [
                 'was'    => $was,
                 'became' => $became
             ]
         ];
+
+        if (!empty($attributeData)) {
+            $result['attributeData'] = $attributeData;
+        }
+
+        return $result;
     }
 
     protected function followEntity(OrmEntity $entity): void
@@ -232,6 +323,7 @@ class Note
 
             $this->setRelationEntityData($entity);
             if (!empty($this->relationEntityData[$entity->getEntityType() . '_LinksToRecord'])) {
+                $nameField = $this->getNameField($entity->getEntityType());
                 foreach ($this->relationEntityData[$entity->getEntityType() . '_LinksToRecord'] as $link => $entityType) {
                     if (!empty($entity->get($link . 'Id'))) {
                         $this->createNote('Update', $entityType,
@@ -240,6 +332,7 @@ class Note
                                     'entityType'  => $entity->getEntityType(),
                                     'relatedId'   => $entity->id,
                                     'relatedType' => $entity->getEntityType(),
+                                    'relatedName' => $nameField !== null ? $entity->get($nameField) : null,
                                 ]
                             ));
                     }
@@ -254,21 +347,29 @@ class Note
                 return;
             }
 
+            $relatedId1 = $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']);
+            $relatedType1 = $this->relationEntityData[$entity->getEntityType()]['entity2'];
+            $relatedName1 = $this->getEntityDisplayName($relatedType1, $relatedId1);
             $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity1'],
                 $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), array_merge($data, [
                         'entityId'    => $entity->id,
                         'entityType'  => $entity->getEntityType(),
-                        'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
-                        'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2']
+                        'relatedId'   => $relatedId1,
+                        'relatedType' => $relatedType1,
+                        'relatedName' => $relatedName1,
                     ]
                 ));
 
+            $relatedId2 = $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']);
+            $relatedType2 = $this->relationEntityData[$entity->getEntityType()]['entity1'];
+            $relatedName2 = $this->getEntityDisplayName($relatedType2, $relatedId2);
             $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity2'],
                 $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), array_merge($data, [
                         'entityId'    => $entity->id,
                         'entityType'  => $entity->getEntityType(),
-                        'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
-                        'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1']
+                        'relatedId'   => $relatedId2,
+                        'relatedType' => $relatedType2,
+                        'relatedName' => $relatedName2,
                     ]
                 ));
         }
@@ -313,16 +414,20 @@ class Note
             if ($entity->isAttributeChanged($field)) {
                 $wasValue = $entity->getFetched($field);
                 $value = $entity->get($field);
+                $nameField = $this->getNameField($entity->getEntityType());
+                $entityDisplayName = $nameField !== null ? $entity->get($nameField) : null;
                 if (!empty($value)) {
                     $this->createNote('Relate', $scope, $value, [
                         'relatedType' => $entity->getEntityType(),
                         'relatedId'   => $entity->id,
+                        'relatedName' => $entityDisplayName,
                         'link'        => $foreignLink
                     ]);
                     if (!empty($wasValue)) {
                         $this->createNote('Unrelate', $scope, $wasValue, [
                             'relatedType' => $entity->getEntityType(),
                             'relatedId'   => $entity->id,
+                            'relatedName' => $entityDisplayName,
                             'link'        => $foreignLink
                         ]);
                     }
@@ -330,6 +435,7 @@ class Note
                     $this->createNote('Unrelate', $scope, $wasValue, [
                         'relatedType' => $entity->getEntityType(),
                         'relatedId'   => $entity->id,
+                        'relatedName' => $entityDisplayName,
                         'link'        => $foreignLink
                     ]);
                 }
@@ -339,6 +445,10 @@ class Note
 
     protected function createNote(string $type, string $parentType, string $parentId, array $data): void
     {
+        if (!isset($data['parentName'])) {
+            $data['parentName'] = $this->getEntityDisplayName($parentType, $parentId);
+        }
+
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
             'type'       => $type,
@@ -425,11 +535,15 @@ class Note
             && (!empty($fieldDefs['auditableEnabled'])
                 || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity2'], $defaultRelationScopeAudited)))
         ) {
+            $relatedId = $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']);
+            $relatedType = $this->relationEntityData[$entity->getEntityType()]['entity2'];
+            $relatedName = $this->getEntityDisplayName($relatedType, $relatedId);
             $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), [
                 'entityId'    => $entity->id,
                 'entityType'  => $entity->getEntityType(),
-                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
-                'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2'],
+                'relatedId'   => $relatedId,
+                'relatedType' => $relatedType,
+                'relatedName' => $relatedName,
                 'link'        => $this->relationEntityData[$entity->getEntityType()]['link1']
             ]);
         }
@@ -446,11 +560,15 @@ class Note
             && (!empty($fieldDefs['auditableEnabled'])
                 || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity1'], $defaultRelationScopeAudited)))
         ) {
+            $relatedId = $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']);
+            $relatedType = $this->relationEntityData[$entity->getEntityType()]['entity1'];
+            $relatedName = $this->getEntityDisplayName($relatedType, $relatedId);
             $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), [
                 'entityId'    => $entity->id,
                 'entityType'  => $entity->getEntityType(),
-                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
-                'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1'],
+                'relatedId'   => $relatedId,
+                'relatedType' => $relatedType,
+                'relatedName' => $relatedName,
                 'link'        => $this->relationEntityData[$entity->getEntityType()]['link2']
             ]);
         }
@@ -482,6 +600,39 @@ class Note
     protected function getFieldManager(): FieldManager
     {
         return $this->getContainer()->get('fieldManager');
+    }
+
+    private function getNameField(string $entityType): ?string
+    {
+        $nameField = $this->getMetadata()->get(['scopes', $entityType, 'nameField']) ?? 'name';
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $nameField]);
+        if (empty($fieldDefs)) {
+            return null;
+        }
+        return $nameField;
+    }
+
+    private function getEntityDisplayName(string $entityType, ?string $entityId): ?string
+    {
+        if ($entityId === null || $entityId === '') {
+            return null;
+        }
+        try {
+            $nameField = $this->getNameField($entityType);
+            if ($nameField === null) {
+                return null;
+            }
+            $entity = $this->getEntityManager()->getRepository($entityType)
+                ->select(['id', $nameField])
+                ->where(['id' => $entityId])
+                ->findOne();
+            if ($entity) {
+                return $entity->get($nameField);
+            }
+        } catch (\Throwable $e) {
+            // silently ignore - entity type may not exist
+        }
+        return null;
     }
 
     private function getContainer(): Container
