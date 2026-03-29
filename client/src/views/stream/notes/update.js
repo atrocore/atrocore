@@ -205,7 +205,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                        }
                     }
                     this.createView(field + 'Was', viewName, {
-                        el: this.options.el + ' .was',
+                        el: this.options.el + ` [data-name="${field}"] .was`,
                         model: modelWas,
                         readOnly: true,
                         defs: {
@@ -225,7 +225,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                     });
 
                     this.createView(field + 'Became', viewName, {
-                        el: this.options.el + ' .became',
+                        el: this.options.el + ` [data-name="${field}"] .became`,
                         model: modelBecame,
                         readOnly: true,
                         defs: {
