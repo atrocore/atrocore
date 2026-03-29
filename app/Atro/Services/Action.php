@@ -13,18 +13,17 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\ActionTypes\TypeInterface;
 use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\ActionManager;
-use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Utils\Language;
-use Atro\Repositories\SavedSearch as SavedSearchRepo;
-use Doctrine\DBAL\ParameterType;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
-use Atro\ActionTypes\TypeInterface;
+use Atro\Core\Utils\Language;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Action extends Base
@@ -187,7 +186,9 @@ class Action extends Base
             throw new Error("Action for '$scope' disabled");
         }
 
-        $entity = $id !== null ? $this->getServiceFactory()->create($scope)->getEntity($id) : null;
+        if (!$this->getAcl()->check($scope, 'read')) {
+            throw new Forbidden();
+        }
 
         $res = [];
 
@@ -211,7 +212,7 @@ class Action extends Base
                 'label'   => $action['name'],
                 'display' => $action['display'] ?? null,
                 'type'    => $action['type'] ?? null,
-                'html' => $action['html'] ?? null,
+                'html'    => $action['html'] ?? null,
                 'tooltip' => $action['tooltip'] ?? null,
                 'data'    => [
                     'action_id' => $action['id'],
@@ -241,7 +242,7 @@ class Action extends Base
 
         if (!empty($actionIds)) {
             $actions = $this->getEntityManager()->getRepository('Action')->findByIds($actionIds);
-
+            $entity = $id !== null ? $this->getServiceFactory()->create($scope)->getEntity($id) : null;
             foreach ($actions as $action) {
                 foreach ($dynamicActions as $dynamicAction) {
                     if ($action->get('id') === $dynamicAction['data']['action_id']) {
