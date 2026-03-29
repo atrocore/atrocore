@@ -157,7 +157,28 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
         },
 
         actionShowFullList(data) {
-            this.getStorage().set('listQueryBuilder', this.scope, this.model.get('data').whereData || {});
+            let whereData = this.model.get('data').whereData || {}
+            if (['Attribute', 'EntityField'].includes(this.model.name) && ['link', 'linkMultiple'].includes(this.model.get('type')) &&
+                this.model.get('extensibleEnumId')) {
+                whereData = _.extend(whereData, {
+                    queryBuilder: {
+                        condition: 'AND',
+                        rules: [
+                            ...(whereData?.queryBuilder?.rules || []),
+                            {
+                                id: 'extensibleEnums',
+                                field: 'extensibleEnums',
+                                value: [this.model.get('extensibleEnumId')],
+                                type: 'string',
+                                operator: 'linked_with'
+                            }
+                        ],
+                        valid: true
+                    },
+                    queryBuilderApplied: true
+                });
+            }
+            this.getStorage().set('listQueryBuilder', this.scope, whereData);
             window.open(`#${this.scope}`, '_blank');
         },
 
