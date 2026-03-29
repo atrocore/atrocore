@@ -57,7 +57,7 @@ Espo.define('views/stream/notes/create-related', 'views/stream/note', function (
 
             this.entityType = this.model.get('relatedType') || data.entityType || null;
             this.entityId = this.model.get('relatedId') || data.entityId || null;
-            this.entityName = this.model.get('relatedName') ||  data.entityName || null;
+            this.entityName = this.model.get('relatedName') || data.relatedName || data.entityName || null;
 
             this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
             this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + Handlebars.Utils.escapeExpression(this.entityName) +'</a>';
