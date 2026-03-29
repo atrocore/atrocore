@@ -47,10 +47,23 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                             }, this);
                         },
                         openEditDialog: (attributes, scope, dataAttributeList, dataAttributesDefs, callback) => {
+                            const filteredAttributeList = dataAttributeList.filter(column => {
+                                if(column === 'id') {
+                                    return false;
+                                }
+
+                                if(column === 'link') {
+                                    let type = attributes?.attributeDefs?.type || this.getMetadata().get(['entityDefs', scope, 'fields', attributes.name, 'type']);
+                                    if(['bool', 'link', 'linkMultiple', 'script', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
+                                        return false;
+                                    }
+                                }
+                                return true;
+                            })
                             this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', {
                                 name: attributes.name,
                                 scope: scope,
-                                attributeList: dataAttributeList.slice(1),
+                                attributeList: filteredAttributeList,
                                 attributeDefs: dataAttributesDefs,
                                 attributes: attributes,
                                 languageCategory: this.languageCategory
