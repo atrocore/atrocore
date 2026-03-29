@@ -169,6 +169,7 @@
     "updateMasterRecord": "Update Master Record"
   },
   "labels": {
+    "purgeAll": "Purge all clusters",
     "entityFilterResult": "Filter Result",
     "System": "System",
     "matchings": "Matchings",

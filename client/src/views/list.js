@@ -119,26 +119,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 this.setupCreateButton();
             }
 
-            this.setupListActionButtons();
-
             this.getStorage().set('list-view', this.scope, this.viewMode);
 
-        },
-
-        setupListActionButtons: function () {
-            const listActions = this.getMetadata().get(['clientDefs', this.scope, 'listActions']) || {};
-            Object.entries(listActions).forEach(([name, defs]) => {
-                if (!defs.massAction) return;
-                if (defs.acl && !this.getAcl().check(this.scope, defs.acl)) return;
-                this.menu.buttons = this.menu.buttons || [];
-                this.menu.buttons.push({
-                    action: 'universalAction',
-                    name: name,
-                    label: this.translate(name, 'massActions', this.scope),
-                    iconClass: defs.iconClass || null,
-                    style: defs.style || 'default',
-                });
-            });
         },
 
         actionUniversalAction(data, e) {
@@ -148,7 +130,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
             if (!name) return;
 
             const scope = this.scope;
-            const actionDefs = this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
+
+            const actionDefs = this.getMenu().buttons.find(item => item.name === name) || this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
             if (!actionDefs.url) return;
 
             const runAction = () => {
@@ -539,7 +522,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
         },
 
         actionQuickCreate: function () {
-            debugger
             var attributes = this.getCreateAttributes() || {};
 
             this.notify('Loading...');
@@ -575,7 +557,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
         },
 
         actionCreate: function () {
-            debugger
             var router = this.getRouter();
 
             var url = '#' + this.scope + '/create';

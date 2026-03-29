@@ -42,7 +42,7 @@ class HttpPipeline implements FactoryInterface
         $pipe->pipe(new AuthMiddleware($container));
         $pipe->pipe($container->get(ActionHistoryMiddleware::class));
 
-//        $pipe->pipe($container->get(ApiValidationMiddleware::class));
+        $pipe->pipe($container->get(ApiValidationMiddleware::class));
 
         foreach ($this->collectModuleMiddlewares($container) as $middleware) {
             $pipe->pipe($middleware);

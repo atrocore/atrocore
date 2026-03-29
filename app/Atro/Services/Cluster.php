@@ -20,7 +20,6 @@ use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Doctrine\DBAL\ParameterType;
 
 class Cluster extends Base
 {
@@ -105,22 +104,14 @@ class Cluster extends Base
             return;
         }
 
-        $clusterItems = $this->getEntityManager()->getRepository('ClusterItem')
+        $this->getEntityManager()->getRepository('ClusterItem')
             ->where(['clusterId' => $id])
-            ->find();
-
-        foreach ($clusterItems as $clusterItem) {
-            $this->getEntityManager()->removeEntity($clusterItem);
-        }
+            ->removeCollection();
 
         // Remove rejected cluster item records for this cluster
-        $this->getContainer()->get('dbal')->createQueryBuilder()
-            ->update('rejected_cluster_item')
-            ->set('deleted', ':true')
-            ->where('cluster_id = :clusterId')
-            ->setParameter('clusterId', $id)
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->executeQuery();
+        $this->getEntityManager()->getRepository('RejectedClusterItem')
+            ->where(['clusterId' => $id])
+            ->removeCollection();
 
         $this->getEntityManager()->removeEntity($cluster);
     }
@@ -129,7 +120,7 @@ class Cluster extends Base
     {
         $cluster = $this->getEntity($clusterId);
 
-        if(empty($cluster)) {
+        if (empty($cluster)) {
             throw new BadRequest("Cluster $clusterId not found");
         }
 
@@ -162,12 +153,12 @@ class Cluster extends Base
 
         if (empty($goldenRecord)) {
             foreach ($sourceList as $source) {
-                if($source->getEntityName() === $cluster->get('masterEntity')) {
+                if ($source->getEntityName() === $cluster->get('masterEntity')) {
                     $goldenRecord = $source;
                 }
             }
 
-            if(empty($goldenRecord)) {
+            if (empty($goldenRecord)) {
                 $goldenRecord = $masterService->createEntity($attributes->input);
 
             }
@@ -240,7 +231,7 @@ class Cluster extends Base
         }
 
         foreach ($sourceList as $source) {
-            if($source->getEntityName() !== $cluster->get('masterEntity')) {
+            if ($source->getEntityName() !== $cluster->get('masterEntity')) {
                 $source->set('masterRecordId', $goldenRecord->get('id'));
                 $this->getEntityManager()->saveEntity($source);
             }
@@ -252,7 +243,8 @@ class Cluster extends Base
             $clusterItem->set('entityId', $goldenRecord->get('id'));
             $clusterItem->set('entityName', $goldenRecord->getEntityName());
             $this->getEntityManager()->saveEntity($clusterItem);
-        }catch (NotUnique $e) {}
+        } catch (NotUnique $e) {
+        }
 
         return $goldenRecord;
     }

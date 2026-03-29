@@ -2,6 +2,22 @@
   "iconClass": "copy",
   "controller": "controllers/record",
   "createDisabled": true,
+  "menu": {
+    "list": {
+      "buttons": [
+        {
+          "name": "purge",
+          "label": "purgeAll",
+          "action": "universalAction",
+          "style": "btn-danger",
+          "acl": "delete",
+          "url": "Cluster/action/purge",
+          "confirm": true,
+          "refresh": true
+        }
+      ]
+    }
+  },
   "listActions": {
     "purge": {
       "url": "Cluster/action/purge",
