@@ -2327,7 +2327,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         _convertLayout: function (listLayout, model) {
             model = model || this.collection.model.prototype;
-
             var layout = [];
 
             if (this.checkboxes) {
@@ -2393,6 +2392,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
                 if (col.widthPx) {
                     item.options.defs.widthPx = col.widthPx;
+                }
+
+                const type = col.type || model.getFieldType(col.name)
+
+                if(['bool', 'link', 'linkMultiple', 'script', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
+                    delete  col.link;
                 }
 
                 if (col.link) {
