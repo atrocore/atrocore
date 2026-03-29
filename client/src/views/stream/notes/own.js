@@ -80,6 +80,11 @@ Espo.define('views/stream/notes/own', 'views/stream/note', function (Dep) {
                 }
             }
 
+            const auditMeta = this.model.getMeta('audit', 'createdBy');
+            if (auditMeta) {
+                this.messageData['user'] = this.buildUserHtml(auditMeta);
+            }
+
             this.createMessage();
         },
 
