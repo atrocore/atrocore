@@ -119,8 +119,58 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 this.setupCreateButton();
             }
 
+            this.setupListActionButtons();
+
             this.getStorage().set('list-view', this.scope, this.viewMode);
 
+        },
+
+        setupListActionButtons: function () {
+            const listActions = this.getMetadata().get(['clientDefs', this.scope, 'listActions']) || {};
+            Object.entries(listActions).forEach(([name, defs]) => {
+                if (!defs.massAction) return;
+                if (defs.acl && !this.getAcl().check(this.scope, defs.acl)) return;
+                this.menu.buttons = this.menu.buttons || [];
+                this.menu.buttons.push({
+                    action: 'universalAction',
+                    name: name,
+                    label: this.translate(name, 'massActions', this.scope),
+                    iconClass: defs.iconClass || null,
+                    style: defs.style || 'default',
+                });
+            });
+        },
+
+        actionUniversalAction(data, e) {
+            if (!e || !$(e.target).closest('.page-header').length) return;
+
+            const name = data.name;
+            if (!name) return;
+
+            const scope = this.scope;
+            const actionDefs = this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
+            if (!actionDefs.url) return;
+
+            const runAction = () => {
+                this.notify(this.translate('Loading...'));
+                this.ajaxPostRequest(actionDefs.url, { action: name, scope: scope })
+                    .then(() => {
+                        this.notify(this.translate('Done'), 'success');
+                        if (actionDefs.refresh) {
+                            this.collection.fetch();
+                        }
+                    });
+            };
+
+            if (actionDefs.confirm) {
+                const confirmMessage = this.translate(name, 'massActionConfirmMessages', scope);
+                this.confirm({
+                    message: (confirmMessage && confirmMessage !== name) ? confirmMessage : this.translate('Are you sure?'),
+                    confirmText: this.translate('Apply')
+                }, () => runAction());
+            } else {
+                runAction();
+            }
         },
 
         actionDynamicEntityAction(data) {
@@ -489,6 +539,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
         },
 
         actionQuickCreate: function () {
+            debugger
             var attributes = this.getCreateAttributes() || {};
 
             this.notify('Loading...');
@@ -524,6 +575,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
         },
 
         actionCreate: function () {
+            debugger
             var router = this.getRouter();
 
             var url = '#' + this.scope + '/create';
