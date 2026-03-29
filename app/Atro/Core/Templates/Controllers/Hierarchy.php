@@ -104,8 +104,8 @@ class Hierarchy extends Base
                 'scope'        => (string)$request->get('scope'),
                 'offset'       => 0,
                 'maxSize'      => 5000,
-                'asc'          => true,
-                'sortBy'       => 'id'
+                'asc'          =>  $request->get('asc', 'true') === 'true',
+                'sortBy'       => $request->get('sortBy') ?? 'id'
             ];
         }
 
