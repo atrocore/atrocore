@@ -21,7 +21,9 @@
     "reject": "Reject",
     "confirm": "Confirm",
     "unreject": "Unreject",
-    "unmerge": "Unmerge"
+    "unmerge": "Unmerge",
+    "move": "Move",
+    "purge": "Purge"
   },
   "exceptions": {
     "cannotDelete": "Only empty clusters can be deleted",

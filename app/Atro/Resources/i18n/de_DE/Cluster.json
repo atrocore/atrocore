@@ -11,7 +11,8 @@
   "actions": {
     "reject": "Ablehnen",
     "confirm": "Bestätigen Sie",
-    "unreject": "Ablehnen"
+    "unreject": "Ablehnen",
+    "purge": "Bereinigen"
   },
   "options": {
     "state": {

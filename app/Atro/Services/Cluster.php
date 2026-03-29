@@ -20,6 +20,7 @@ use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Doctrine\DBAL\ParameterType;
 
 class Cluster extends Base
 {
@@ -80,6 +81,48 @@ class Cluster extends Base
                 }
             }
         }
+    }
+
+    public function purge(array $params): array
+    {
+        $params['action'] = 'purge';
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['singleActionMethod'] = 'purgeCluster';
+
+        list($count, $errors, $sync) = $this->executeMassAction($params, function ($id) {
+            $this->purgeCluster($id);
+        });
+
+        return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
+    }
+
+    public function purgeCluster(string $id): void
+    {
+        $cluster = $this->getEntity($id);
+        if (empty($cluster)) {
+            return;
+        }
+
+        $clusterItems = $this->getEntityManager()->getRepository('ClusterItem')
+            ->where(['clusterId' => $id])
+            ->find();
+
+        foreach ($clusterItems as $clusterItem) {
+            $this->getEntityManager()->removeEntity($clusterItem);
+        }
+
+        // Remove rejected cluster item records for this cluster
+        $this->getContainer()->get('dbal')->createQueryBuilder()
+            ->update('rejected_cluster_item')
+            ->set('deleted', ':true')
+            ->where('cluster_id = :clusterId')
+            ->setParameter('clusterId', $id)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        $this->getEntityManager()->removeEntity($cluster);
     }
 
     public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes): Entity

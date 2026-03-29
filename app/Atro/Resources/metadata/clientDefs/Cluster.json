@@ -2,6 +2,17 @@
   "iconClass": "copy",
   "controller": "controllers/record",
   "createDisabled": true,
+  "listActions": {
+    "purge": {
+      "url": "Cluster/action/purge",
+      "massAction": true,
+      "confirm": true,
+      "refresh": true,
+      "iconClass": "ph ph-trash",
+      "sortOrder": 10,
+      "acl": "delete"
+    }
+  },
   "views": {
     "detail": "views/cluster/detail"
   },
