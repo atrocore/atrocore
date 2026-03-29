@@ -87,7 +87,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         }, Dep.prototype.events),
 
         getForeignName() {
-            return this.model.defs.fields[this.name]?.foreignName ?? this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName'])
+            return this.model.defs.fields[this.name]?.foreignName
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName'])
                 ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'foreignName']) ?? 'name'
         },
 
@@ -898,9 +899,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         model: model,
                         mode: 'search',
                         foreignScope: foreignScope,
+                        foreignName: attribute?.entityField,
                         hideSearchType: true,
-                        whereAdditional: this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
-                        allowSelectAllResult: !this.defs.params?.attribute?.id
+                        whereAdditional: attribute?.data?.where || this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
+                        allowSelectAllResult: !this.defs.params?.attribute?.id,
+
                     }, view => {
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
@@ -1012,10 +1015,18 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         if (rule.data && rule.data['nameHash']) {
                             Object.assign(nameHash, rule.data['nameHash']);
                         }
+
+                        let attribute = this.defs.params?.attribute;
+
                         const missingIds = (rule.value || []).filter(id => !nameHash[id]);
                         if (missingIds.length > 0) {
+                            const foreignScope = attribute?.entityType || this.getForeignScope();
+                            const foreignName = attribute?.entityField
+                                ?? this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName'])
+                                ?? 'name';
+
                             try {
-                                const resp = this.ajaxGetRequest(this.foreignScope, {
+                                const resp = this.ajaxGetRequest(foreignScope, {
                                     select: this.getForeignName(),
                                     collectionOnly: true,
                                     where: [
@@ -1027,8 +1038,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                     ]
                                 }, { async: false })
 
-                                const foreignName = this.getForeignName();
-                                const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                                const localizedForeignName = this.getLocalizedFieldData(foreignScope, foreignName)[0]
                                 resp.responseJSON.list.forEach(record => {
                                     nameHash[record.id] = record[localizedForeignName] || record[foreignName]
                                 })
@@ -1090,7 +1100,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     'is_not_null'
                 ];
             } else {
-                if (this.getForeignScope() === 'User') {
+                let foreignScope = this.defs.params?.attribute?.entityType || this.getForeignScope();
+                if (foreignScope === 'User') {
                     operators = operators.concat(['is_team_member', 'include_me', 'exclude_me'])
                 }
                 operators = operators.concat(['is_not_linked', 'is_linked']);
@@ -1167,11 +1178,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         getForeignScope: function () {
             const scope = this.model.urlRoot;
-            return this.defs.params.foreignScope
+            return this.options.foreignScope
+            ?? this.defs.params.foreignScope
                 ?? this.foreignScope
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
-                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
-                ?? this.defs.params?.attribute?.entityType;
+                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);
         }
     });
 });
