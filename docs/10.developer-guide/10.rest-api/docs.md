@@ -869,7 +869,7 @@ Flatten-Attributes: true
 
 ##### Adding Attributes with Flattened Format
 
-Use `__attributes` with an array of attribute IDs to assign attributes to a record:
+Use `__attributes` with an array of attribute IDs or codes to assign attributes to a record:
 
 ```http
 PATCH /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
@@ -884,7 +884,7 @@ Flatten-Attributes: true
 
 ##### Removing Attributes with Flattened Format
 
-Use `__attributesToRemove` with an array of attribute IDs:
+Use `__attributesToRemove` with an array of attribute codes:
 
 ```http
 PATCH /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
@@ -898,19 +898,24 @@ Flatten-Attributes: true
 }
 ```
 
----
+`__attributes` accepts both attribute IDs and codes, and they may be mixed in the same array. `__attributesToRemove` accepts codes only.
+
+With `Flatten-Attributes: true`, you can pass an object instead of a raw ID. The system will find an existing record matching the given fields and link it, or create and link a new one if no match is found.
+
+For [List Option](../../01.atrocore/03.administration/08.lists/docs.md#list-options) attributes, the correct option list is resolved automatically from the attribute configuration — `listId` is not required. Option lookup is always restricted to the list configured for the attribute.
+
+> **Restrictions:** Only single-link attributes are supported. Matching and creation use simple field types only (`string`, `integer`, `boolean`, etc.). Nested objects within the linked record are not processed.
 
 #### Approach Comparison
 
 | Action | Simple Endpoints | Flattened Format |
 |---|---|---|
 | Read attributes | `GET /{id}/attributeValues` | `Flatten-Attributes: true` on GET |
-| Add attributes | `POST /{id}/addAttributes` | Add IDs to `__attributes` in PATCH |
+| Add attributes | `POST /{id}/addAttributes` | Add IDs or codes to `__attributes` in PATCH |
 | Update attribute | `POST /{id}/upsertAttributeValues` | Include field with new value in PATCH |
-| Remove attribute | `DELETE /{id}/attributeValues` | Add code/ID to `__attributesToRemove` in PATCH |
+| Remove attribute | `DELETE /{id}/attributeValues` | Add code to `__attributesToRemove` in PATCH |
 | Visible in OpenAPI | ✅ Yes | ❌ No |
 
----
 
 #### Summary
 
@@ -921,8 +926,8 @@ Flatten-Attributes: true
 - One attribute may produce multiple virtual fields (value, unit, etc.).
 - Use attribute codes for clean, readable keys in your payloads.
 - Attributes not mentioned in an update request remain unchanged.
-- To add attributes in flattened format, use `__attributes` with an array of attribute IDs.
-- To remove attributes in flattened format, use `__attributesToRemove` with an array of attribute IDs.
+- To add attributes in flattened format, use `__attributes` with an array of attribute IDs or codes.
+- To remove attributes in flattened format, use `__attributesToRemove` with an array of attribute codes.
 
 
 ## The `With-Meta` Header
