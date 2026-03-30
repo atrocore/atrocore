@@ -503,7 +503,7 @@ Espo.define(
                     var arr = Base64.decode(this.auth).split(':');
                     if (arr.length > 1) {
                         $.ajax({
-                            url: 'App/action/destroyAuthToken',
+                            url: 'destroyAuthToken',
                             type: 'POST',
                             data: JSON.stringify({
                                 token: arr[1]
