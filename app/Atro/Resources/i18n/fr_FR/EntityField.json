@@ -127,6 +127,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Certains enregistrements ont des valeurs nulles",
-    "cannotAddRequiredFieldWithExistingRecords": "Vous ne pouvez pas ajouter un champ obligatoire avec des enregistrements existants sans valeur par défaut"
+    "cannotAddRequiredFieldWithExistingRecords": "Vous ne pouvez pas ajouter un champ obligatoire avec des enregistrements existants sans valeur par défaut",
+    "relationAlreadyUsed": "Le Middle Table Name %s est déjà utilisé, veuillez en choisir un autre."
   }
 }

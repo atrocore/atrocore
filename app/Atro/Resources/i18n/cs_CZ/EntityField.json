@@ -127,6 +127,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Některé záznamy mají nulové hodnoty",
-    "cannotAddRequiredFieldWithExistingRecords": "Nelze přidat povinné pole s existujícími záznamy bez výchozí hodnoty"
+    "cannotAddRequiredFieldWithExistingRecords": "Nelze přidat povinné pole s existujícími záznamy bez výchozí hodnoty",
+    "relationAlreadyUsed": "Middle Table Name %s je již používán, zvolte jiný."
   }
 }
