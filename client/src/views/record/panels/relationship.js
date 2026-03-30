@@ -984,6 +984,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     data.relationId = model.relationModel.get('id');
                 }
 
+                let url = actionDefs.url;
+                if (url) {
+                    $.each(model.attributes || {}, (key, value) => {
+                        url = url.replaceAll(`{{${key}}}`, value);
+                    });
+                }
+
                 if (actionDefs.modalSelectEntity) {
                     let entityType = actionDefs.modalSelectEntity;
                     let selectedRecords = [];
@@ -992,12 +999,22 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         entityType = entityType.replace(`{{${key}}}`, value);
                     });
 
+                    let whereAdditional = [];
+                    if (actionDefs.modalSelectWhere) {
+                        let whereStr = JSON.stringify(actionDefs.modalSelectWhere);
+                        $.each(this.model?.attributes || {}, (key, value) => {
+                            whereStr = whereStr.replaceAll(`{{${key}}}`, value);
+                        });
+                        whereAdditional = JSON.parse(whereStr);
+                    }
+
                     const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
                     this.notify('Loading...');
                     this.createView('select', viewName, {
                         scope: entityType,
                         createButton: false,
                         multiple: !!actionDefs.modalSelectMultiple,
+                        whereAdditional: whereAdditional,
                     }, (dialog) => {
                         dialog.render(() => {
                             this.notify(false);
@@ -1016,8 +1033,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
                             this.notify(this.translate('Loading...'));
 
-                            data.selectedRecords = selectedRecords;
-                            this.ajaxPostRequest(actionDefs.url, data)
+                            if (actionDefs.modalSelectResultParam) {
+                                data[actionDefs.modalSelectResultParam] = actionDefs.modalSelectMultiple
+                                    ? selectedRecords.map(r => r.entityId)
+                                    : selectedRecords[0]?.entityId;
+                            } else {
+                                data.selectedRecords = selectedRecords;
+                            }
+                            this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data))
                                 .then(response => {
                                     this.notify(this.translate('Done'), 'success');
                                     if (actionDefs.refresh) {
@@ -1028,7 +1051,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     });
                 } else {
                     this.notify(this.translate('Loading...'));
-                    this.ajaxPostRequest(actionDefs.url, data)
+                    this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data))
                         .then(response => {
                             this.notify(this.translate('Done'), 'success');
                             if (actionDefs.refresh) {

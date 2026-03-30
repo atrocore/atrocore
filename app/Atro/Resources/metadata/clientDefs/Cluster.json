@@ -18,25 +18,37 @@
           "disabled": true
         },
         "confirm": {
-          "url": "ClusterItem/action/confirm",
+          "url": "ClusterItem/{{id}}/confirm",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-check",
           "sortOrder": 10
         },
         "reject": {
-          "url": "ClusterItem/action/reject",
+          "url": "ClusterItem/{{id}}/reject",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-x",
           "sortOrder": 20
         },
         "unmerge": {
-          "url": "ClusterItem/action/unmerge",
+          "url": "ClusterItem/{{id}}/unmerge",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-arrows-split",
           "sortOrder": 30
+        },
+        "move": {
+          "url": "ClusterItem/{{id}}/move",
+          "method": "PATCH",
+          "refresh": true,
+          "iconClass": "ph ph-arrow-right",
+          "sortOrder": 40,
+          "modalSelectEntity": "Cluster",
+          "modalSelectResultParam": "targetClusterId",
+          "modalSelectWhere": [
+            {"type": "equals", "attribute": "masterEntity", "value": "{{masterEntity}}"}
+          ]
         },
         "removeRelated": {
           "url": "{{entityName}}/{{entityId}}",
@@ -63,7 +75,7 @@
           "disabled": true
         },
         "unreject": {
-          "url": "ClusterItem/action/unreject",
+          "url": "ClusterItem/{{id}}/unreject",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-arrow-u-up-left",

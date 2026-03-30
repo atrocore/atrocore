@@ -15,6 +15,7 @@ namespace Atro\Handlers\ClusterItem;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,19 +24,19 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/{id}/unreject',
+    path: '/ClusterItem/{id}/move',
     methods: [
-        'POST',
+        'PATCH',
     ],
-    summary: 'Unreject a cluster item',
-    description: 'Moves a previously rejected cluster item back into the active cluster. Requires the ID of the RejectedClusterItem relation record in the request body.',
+    summary: 'Move a single cluster item to another cluster',
+    description: 'Move the specified cluster item to a target cluster identified by targetClusterId. Returns false if the item is already in the target cluster, its entity type is incompatible with the target cluster masterEntity, or it is rejected in the target cluster.',
     tag: 'ClusterItem',
     parameters: [
         [
             'name'        => 'id',
             'in'          => 'path',
             'required'    => true,
-            'description' => 'ID of the active ClusterItem that the rejected item will be restored under.',
+            'description' => 'ID of the ClusterItem to move.',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -48,12 +49,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                 'schema' => [
                     'type'       => 'object',
                     'required'   => [
-                        'relationId',
+                        'targetClusterId',
                     ],
                     'properties' => [
-                        'relationId' => [
+                        'targetClusterId' => [
                             'type'        => 'string',
-                            'description' => 'ID of the RejectedClusterItem record to unreject.',
+                            'description' => 'ID of the target Cluster to move the item into.',
                         ],
                     ],
                 ],
@@ -62,7 +63,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'ClusterItem successfully unrejected.',
+            'description' => 'true if the item was moved, false if it was skipped.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -72,17 +73,17 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'relationId is missing.',
+            'description' => 'targetClusterId is missing.',
         ],
         403 => [
             'description' => 'Current user does not have edit access on ClusterItem.',
         ],
         404 => [
-            'description' => 'ClusterItem, RejectedClusterItem, or associated Cluster not found.',
+            'description' => 'ClusterItem or target cluster not found.',
         ],
     ],
 )]
-class ClusterItemUnrejectHandler extends AbstractHandler
+class ClusterItemMoveHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -93,12 +94,22 @@ class ClusterItemUnrejectHandler extends AbstractHandler
         $id   = (string)$request->getAttribute('id');
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'relationId')) {
-            throw new BadRequest('Rejected cluster item id is required.');
+        $targetClusterId = null;
+        if (property_exists($data, 'targetClusterId') && !empty($data->targetClusterId)) {
+            $targetClusterId = (string)$data->targetClusterId;
         }
 
-        $this->getRecordService('ClusterItem')->unreject($id, (string) $data->relationId);
+        if (empty($targetClusterId)) {
+            throw new BadRequest($this->getLanguage()->translate('targetClusterIdRequired', 'exceptions', 'ClusterItem'));
+        }
 
-        return new BoolResponse(true);
+        $recordService = $this->getRecordService('ClusterItem');
+
+        $entity = $recordService->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        return new BoolResponse($recordService->moveItem($entity, $targetClusterId));
     }
 }
