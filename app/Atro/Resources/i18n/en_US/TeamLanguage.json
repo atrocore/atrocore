@@ -1,8 +1,7 @@
 {
   "fields": {
     "language": "Language",
-    "role": "Role",
-    "readAction": "Read",
+    "team": "Team",
     "editAction": "Edit"
   },
   "labels": {
@@ -10,6 +9,6 @@
     "no": "No"
   },
   "exceptions": {
-    "mainLanguageMustBeReadable": "The main language must be readable by all users."
+    "cannotRemoveLanguageWhenRestricted": "Cannot remove the main language when the team has language restriction enabled."
   }
 }
