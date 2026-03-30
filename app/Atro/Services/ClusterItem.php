@@ -397,12 +397,20 @@ class ClusterItem extends Base
 
         $isConfirmed = $this->isClusterItemConfirmed($entity);
         $isStaging = !empty($this->getMetadata()->get(['scopes', $entity->get('entityName'), 'primaryEntityId']));
+        $record = $this->getEntityManager()->hasRepository($entity->get('entityName')) ?
+            $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId')) :
+            null;
+
 
         if ($this->getUser()->isAdmin()) {
             $entity->setMetaPermission('confirm', !$isConfirmed);
             $entity->setMetaPermission('reject', true);
             $entity->setMetaPermission('unmerge', $isStaging);
             $entity->setMetaPermission('delete', true);
+            if (empty($record)) {
+                $entity->setMetaPermission('unlink', true);
+                $entity->setMetaPermission('delete', false);
+            }
             return;
         }
 
@@ -412,9 +420,11 @@ class ClusterItem extends Base
         $entity->setMetaPermission('unmerge', $isStaging && $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('delete', false);
 
-        if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
+        if (!empty($record)) {
             $entity->setMetaPermission('confirm', !$isConfirmed && $this->getAcl()->check($record, 'edit'));
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
+        } else {
+            $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));
         }
     }
 

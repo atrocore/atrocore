@@ -334,6 +334,16 @@ class ClusterItem extends Base
         }
     }
 
+    public function afterDeleteEntity($entityName): void
+    {
+        // delete all cluster items for the deleted entity
+        $this->getEntityManager()->getDbal()->createQueryBuilder()
+            ->delete('cluster_item')
+            ->where('entity_name = :entityName')
+            ->setParameter('entityName', $entityName)
+            ->executeStatement();
+    }
+
     private function createMoveNotes(string $clusterIdFrom, string $clusterIdTo, array $items): void
     {
         // Group by entity type for batched name lookups
