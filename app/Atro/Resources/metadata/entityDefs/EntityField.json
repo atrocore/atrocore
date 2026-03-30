@@ -260,6 +260,10 @@
     "notNull": {
       "type": "bool"
     },
+    "allowNullForBool": {
+      "type": "bool",
+      "notStorable": true
+    },
     "readOnly": {
       "type": "bool",
       "tooltip": true,
