@@ -21,9 +21,7 @@
         {
           "name": "editAction"
         },
-        {
-          "name": "false"
-        }
+        false
       ]
     ]
   }

@@ -24,13 +24,7 @@
         "unlinkRelated": {
           "disabled": true
         }
-      },
-      "conditionGroup": [
-        {
-          "type": "isTrue",
-          "attribute": "languageRestricted"
-        }
-      ]
+      }
     }
   },
   "recordViews": {

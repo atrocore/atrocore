@@ -1,56 +1,66 @@
 {
-    "fields": {
-        "name": {
-            "type": "varchar",
-            "maxLength": 100,
-            "trim": true
-        },
-        "roles": {
-            "type": "linkMultiple",
-            "tooltip": true
-        },
-        "languageRestricted": {
-            "type": "bool",
-            "default": false,
-            "notNull": true
-        },
-        "languages": {
-            "type": "linkMultiple",
-            "layoutDetailDisabled": true,
-            "massUpdateDisabled": true,
-            "noLoad": true
-        },
-        "createdAt": {
-            "type": "datetime",
-            "readOnly": true
-        }
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "maxLength": 100,
+      "trim": true
     },
-    "links": {
-        "users": {
-            "type": "hasMany",
-            "entity": "User",
-            "relationName": "TeamUser",
-            "foreign": "teams"
-        },
-        "roles": {
-            "type": "hasMany",
-            "entity": "Role",
-            "foreign": "teams",
-            "relationName": "RoleTeam"
-        },
-        "notes": {
-            "type": "hasMany",
-            "entity": "Note",
-            "foreign": "teams"
-        },
-        "languages": {
-            "type": "hasMany",
-            "foreign": "team",
-            "entity": "TeamLanguage"
-        }
+    "roles": {
+      "type": "linkMultiple",
+      "tooltip": true
     },
-    "collection": {
-        "sortBy": "name",
-        "asc": true
+    "languageRestricted": {
+      "type": "bool",
+      "default": false,
+      "notNull": true
+    },
+    "languages": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "languageRestricted"
+            }
+          ]
+        }
+      }
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
     }
+  },
+  "links": {
+    "users": {
+      "type": "hasMany",
+      "entity": "User",
+      "relationName": "TeamUser",
+      "foreign": "teams"
+    },
+    "roles": {
+      "type": "hasMany",
+      "entity": "Role",
+      "foreign": "teams",
+      "relationName": "RoleTeam"
+    },
+    "notes": {
+      "type": "hasMany",
+      "entity": "Note",
+      "foreign": "teams"
+    },
+    "languages": {
+      "type": "hasMany",
+      "foreign": "team",
+      "entity": "TeamLanguage"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  }
 }

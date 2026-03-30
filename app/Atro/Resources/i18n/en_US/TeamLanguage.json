@@ -7,5 +7,8 @@
   "labels": {
     "yes": "Yes",
     "no": "No"
+  },
+  "exceptions": {
+    "cannotRemoveLanguageWhenRestricted": "Cannot remove the main language when the team has language restriction enabled."
   }
 }

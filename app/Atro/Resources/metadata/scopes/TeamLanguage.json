@@ -1,6 +1,7 @@
 {
   "type": "Base",
-  "module": "Atro",
+  "entity": true,
+  "object": true,
   "disabled": false,
   "customizable": false,
   "importable": false,

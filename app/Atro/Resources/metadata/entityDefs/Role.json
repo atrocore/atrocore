@@ -81,7 +81,7 @@
       "type": "hasMany",
       "foreign": "role",
       "entity": "RoleScope"
-    },
+    }
   },
   "collection": {
     "sortBy": "name",

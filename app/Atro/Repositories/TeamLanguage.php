@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\AclManager;
@@ -41,6 +42,19 @@ class TeamLanguage extends Base
         parent::afterSave($entity, $options);
 
         $this->getAclManager()->clearAclCache();
+    }
+
+    public function beforeRemove(Entity $entity, array $options = [])
+    {
+        $team = $this->getEntityManager()->getEntity('Team', $entity->get('teamId'));
+        if (!empty($team) && $team->get('languageRestricted')) {
+            $language = $this->getEntityManager()->getEntity('Language', $entity->get('languageId'));
+            if (!empty($language) && $language->get('role') === 'main') {
+                throw new BadRequest($this->getLanguage()->translate('cannotRemoveLanguageWhenRestricted', 'exceptions', 'TeamLanguage'));
+            }
+        }
+
+        parent::beforeRemove($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

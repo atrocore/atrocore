@@ -23,8 +23,36 @@ class Team extends \Espo\Core\ORM\Repositories\RDB
         parent::afterSave($entity, $options);
 
         if ($entity->isAttributeChanged('languageRestricted')) {
+            if ($entity->get('languageRestricted')) {
+                $this->createMainLanguageEntry($entity->get('id'));
+            }
             $this->getAclManager()->clearAclCache();
         }
+    }
+
+    protected function createMainLanguageEntry(string $teamId): void
+    {
+        $mainLanguage = $this->getEntityManager()->getRepository('Language')
+            ->where(['role' => 'main'])
+            ->findOne();
+
+        if (empty($mainLanguage)) {
+            return;
+        }
+
+        $exists = $this->getEntityManager()->getRepository('TeamLanguage')
+            ->where(['teamId' => $teamId, 'languageId' => $mainLanguage->get('id')])
+            ->findOne();
+
+        if (!empty($exists)) {
+            return;
+        }
+
+        $entry = $this->getEntityManager()->getEntity('TeamLanguage');
+        $entry->set('teamId', $teamId);
+        $entry->set('languageId', $mainLanguage->get('id'));
+        $entry->set('editAction', false);
+        $this->getEntityManager()->saveEntity($entry);
     }
 
     protected function init()
