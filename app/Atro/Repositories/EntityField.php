@@ -581,6 +581,10 @@ class EntityField extends ReferenceData
                 ) {
                     throw new BadRequest("Middle Table Name is invalid.");
                 }
+
+                if($this->getMetadata()->get(['scopes', $entity->get('relationName')])) {
+                    throw new BadRequest(sprintf($this->getLanguage()->translate('relationAlreadyUsed', 'exceptions', 'EntityField'), $entity->get('relationName')));
+                }
             }
         }
 
