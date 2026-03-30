@@ -5,6 +5,7 @@
     "isMultilang": "Vícejazyčný",
     "required": "Požadované",
     "notNull": "Zakázat nulovou hodnotu",
+    "allowNullForBool": "Povolit nulovou hodnotu",
     "readOnly": "Pouze pro čtení",
     "protected": "Chráněné",
     "unique": "Unikátní",
