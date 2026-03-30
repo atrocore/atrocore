@@ -111,21 +111,6 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
         },
 
-        buildUserHtml: function (auditMeta) {
-            const escape = Handlebars.Utils.escapeExpression;
-            const {actor, delegator} = auditMeta;
-
-            const actorHtml = actor.isSystem
-                ? escape(actor.name || '')
-                : `<a href="#User/view/${actor.id}">${escape(actor.name || '')}</a>`;
-
-            const delegatorHtml = delegator.isSystem
-                ? escape(delegator.name || '')
-                : `<a href="#User/view/${delegator.id}">${escape(delegator.name || '')}</a>`;
-
-            return `${actorHtml} <span class="text-muted">‹</span> ${delegatorHtml}`;
-        },
-
         setup: function () {
             var data = this.model.get('data');
             let parentType = data.entityType ?? this.model.get('parentType')
