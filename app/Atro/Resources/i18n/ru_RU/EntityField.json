@@ -127,6 +127,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Некоторые записи имеют нулевые значения",
-    "cannotAddRequiredFieldWithExistingRecords": "Вы не можете добавить обязательное поле к существующим записям без значения по умолчанию"
+    "cannotAddRequiredFieldWithExistingRecords": "Вы не можете добавить обязательное поле к существующим записям без значения по умолчанию",
+    "relationAlreadyUsed": "Middle Table Name %s уже используется, выберите другое."
   }
 }

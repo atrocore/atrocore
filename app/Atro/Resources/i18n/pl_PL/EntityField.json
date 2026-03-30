@@ -127,6 +127,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Niektóre rekordy mają wartości null",
-    "cannotAddRequiredFieldWithExistingRecords": "Nie można dodać pola wymaganego z istniejącymi rekordami bez wartości domyślnej"
+    "cannotAddRequiredFieldWithExistingRecords": "Nie można dodać pola wymaganego z istniejącymi rekordami bez wartości domyślnej",
+    "relationAlreadyUsed": "Middle Table Name %s jest już używana, wybierz inną."
   }
 }
