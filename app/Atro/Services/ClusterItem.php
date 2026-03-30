@@ -469,11 +469,6 @@ class ClusterItem extends Base
             throw new BadRequest("targetClusterId is required.");
         }
 
-        $targetCluster = $this->getEntityManager()->getEntity('Cluster', $targetClusterId);
-        if (empty($targetCluster)) {
-            throw new NotFound("Target cluster not found.");
-        }
-
         if (!empty($params['where'])) {
             $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
             $collection = $this->getRepository()->find($selectParams);
@@ -488,38 +483,45 @@ class ClusterItem extends Base
         $skipped = 0;
 
         foreach ($collection as $entity) {
-            if ($entity->get('clusterId') === $targetClusterId) {
-                $skipped++;
-                continue;
-            }
-
-            if ($entity->get('entityName') !== $targetCluster->get('masterEntity') && $this->getMetadata()->get(['scopes', $entity->get('entityName'), 'primaryEntityId']) !== $targetCluster->get('masterEntity')) {
-                $skipped++;
-                continue;
-            }
-
-            // Skip if item is rejected in the target cluster
-            if ($this->getRepository()->isRejectedInCluster($entity->get('id'), $targetClusterId)) {
-                $skipped++;
-                continue;
-            }
-
-            $sourceClusterId = $entity->get('clusterId');
-
-            if ($this->isClusterItemConfirmed($entity)) {
-                $this->unConfirmClusterItem($entity);
-            }
-
-            $this->createClusterNote($sourceClusterId, 'moved', $entity->get('entityName'), $entity->get('entityId'));
-            $this->getRepository()->moveToCluster($entity->get('id'), $targetClusterId);
-            $this->createClusterNote($targetClusterId, 'linked', $entity->get('entityName'), $entity->get('entityId'));
-
-            $this->getRepository()->updateMatchedScoresInClusters([$sourceClusterId, $targetClusterId]);
-
-            $moved++;
+            $this->moveItem($entity, $targetClusterId) ? $moved++ : $skipped++;
         }
 
-        return ['count' => $moved, 'skipped' => $skipped, 'sync' => true, 'errors' => []];
+        return ['count' => $moved, 'skipped' => $skipped];
+    }
+
+    public function moveItem(\Atro\Entities\ClusterItem $clusterItem, string $targetClusterId): bool
+    {
+        $targetCluster = $this->getEntityManager()->getEntity('Cluster', $targetClusterId);
+        if (empty($targetCluster)) {
+            throw new NotFound("Target cluster not found.");
+        }
+
+        if ($clusterItem->get('clusterId') === $targetClusterId) {
+            return false;
+        }
+
+        if ($clusterItem->get('entityName') !== $targetCluster->get('masterEntity')
+            && $this->getMetadata()->get(['scopes', $clusterItem->get('entityName'), 'primaryEntityId']) !== $targetCluster->get('masterEntity')) {
+            return false;
+        }
+
+        if ($this->getRepository()->isRejectedInCluster($clusterItem->get('id'), $targetClusterId)) {
+            return false;
+        }
+
+        $sourceClusterId = $clusterItem->get('clusterId');
+
+        if ($this->isClusterItemConfirmed($clusterItem)) {
+            $this->unConfirmClusterItem($clusterItem);
+        }
+
+        $this->createClusterNote($sourceClusterId, 'moved', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
+        $this->getRepository()->moveToCluster($clusterItem->get('id'), $targetClusterId);
+        $this->createClusterNote($targetClusterId, 'linked', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
+
+        $this->getRepository()->updateMatchedScoresInClusters([$sourceClusterId, $targetClusterId]);
+
+        return true;
     }
 
     private function createClusterNote(string $clusterId, string $action, string $relatedType = '', string $relatedId = ''): void

@@ -6,14 +6,39 @@
       "disabled": true
     },
     "confirm": {
-      "url": "ClusterItem/confirm",
+      "url": "ClusterItem/{{id}}/confirm",
       "confirm": false,
       "refresh": true,
       "iconClass": "ph ph-check",
       "sortOrder": 10
     },
     "reject": {
-      "url": "ClusterItem/reject",
+      "url": "ClusterItem/{{id}}/reject",
+      "confirm": false,
+      "refresh": true,
+      "iconClass": "ph ph-x",
+      "sortOrder": 20
+    },
+    "unmerge": {
+      "url": "ClusterItem/{{id}}/unmerge",
+      "confirm": false,
+      "refresh": true,
+      "iconClass": "ph ph-arrows-split",
+      "sortOrder": 30
+    },
+    "move": {
+      "url": "ClusterItem/{{id}}/move",
+      "method": "PATCH",
+      "refresh": true,
+      "iconClass": "ph ph-arrow-right",
+      "sortOrder": 40,
+      "modalSelectEntity": "Cluster",
+      "modalSelectResultParam": "targetClusterId"
+    }
+  },
+  "massActions": {
+    "reject": {
+      "url": "ClusterItem/massReject",
       "confirm": false,
       "massAction": true,
       "refresh": true,
@@ -21,7 +46,7 @@
       "sortOrder": 20
     },
     "unmerge": {
-      "url": "ClusterItem/unmerge",
+      "url": "ClusterItem/massUnmerge",
       "confirm": false,
       "massAction": true,
       "refresh": true,
@@ -29,7 +54,7 @@
       "sortOrder": 30
     },
     "move": {
-      "url": "ClusterItem/move",
+      "url": "ClusterItem/massMove",
       "massAction": true,
       "refresh": true,
       "iconClass": "ph ph-arrow-right",

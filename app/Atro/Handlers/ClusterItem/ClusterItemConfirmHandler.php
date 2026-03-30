@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\ClusterItem;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\BoolResponse;
@@ -24,34 +23,27 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/confirm',
+    path: '/ClusterItem/{id}/confirm',
     methods: [
         'POST',
     ],
     summary: 'Confirm a cluster item',
-    description: 'Confirms a cluster item by ID.',
+    description: 'Confirms the specified cluster item. If the item is the master entity type, it is set as the cluster\'s golden record. Otherwise the item\'s staging record is linked to the existing golden record; if no golden record exists yet, one is created automatically (or a new master entity record is created if needed). Returns false if automatic master record creation failed.',
     tag: 'ClusterItem',
-    requestBody: [
-        'required' => true,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'id',
-                    ],
-                    'properties' => [
-                        'id' => [
-                            'type' => 'string',
-                        ],
-                    ],
-                ],
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the ClusterItem to confirm.',
+            'schema'      => [
+                'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'true if confirmed successfully, false if automatic master record creation failed.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -60,31 +52,30 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        403 => [
+            'description' => 'Current user does not have edit access on ClusterItem.',
+        ],
+        404 => [
+            'description' => 'ClusterItem not found.',
+        ],
     ],
 )]
 class ClusterItemConfirmHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
-
-        if (!property_exists($data, 'id') || empty($data->id)) {
-            throw new BadRequest('ID is required.');
-        }
-
         if (!$this->getAcl()->check('ClusterItem', 'edit')) {
             throw new Forbidden();
         }
 
+        $id            = (string)$request->getAttribute('id');
         $recordService = $this->getRecordService('ClusterItem');
-        $entity        = $recordService->getEntity((string) $data->id);
 
+        $entity = $recordService->getEntity($id);
         if (empty($entity)) {
             throw new NotFound();
         }
 
-        $recordService->confirm($entity);
-
-        return new BoolResponse(true);
+        return new BoolResponse($recordService->confirm($entity));
     }
 }

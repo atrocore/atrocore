@@ -15,7 +15,8 @@ namespace Atro\Handlers\ClusterItem;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,13 +24,24 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/move',
+    path: '/ClusterItem/{id}/move',
     methods: [
-        'POST',
+        'PATCH',
     ],
-    summary: 'Move cluster items to another cluster',
-    description: 'Move one or more cluster items (by idList or where) to a target cluster. The target cluster is identified by the first entry in selectedRecords or by targetClusterId. Items are skipped if they already belong to the target cluster, if their entity type is incompatible with the target cluster masterEntity, or if they are rejected in the target cluster. At least one of idList or where is required.',
+    summary: 'Move a single cluster item to another cluster',
+    description: 'Move the specified cluster item to a target cluster identified by targetClusterId. Returns false if the item is already in the target cluster, its entity type is incompatible with the target cluster masterEntity, or it is rejected in the target cluster.',
     tag: 'ClusterItem',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the ClusterItem to move.',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
         'required' => true,
         'content'  => [
@@ -37,43 +49,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                 'schema' => [
                     'type'       => 'object',
                     'required'   => [
-                        'selectedRecords',
+                        'targetClusterId',
                     ],
                     'properties' => [
-                        'idList'          => [
-                            'type'        => 'array',
-                            'description' => 'List of ClusterItem IDs to move. Required if where is not provided.',
-                            'items'       => [
-                                'type' => 'string',
-                            ],
-                        ],
-                        'where'           => [
-                            'type'        => 'array',
-                            'description' => 'Filter criteria selecting ClusterItems to move. Required if idList is not provided.',
-                            'items'       => [
-                                'type' => 'object',
-                            ],
-                        ],
                         'targetClusterId' => [
                             'type'        => 'string',
-                            'description' => 'ID of the target cluster. Alternative to passing the target via selectedRecords.',
-                        ],
-                        'selectedRecords' => [
-                            'type'        => 'array',
-                            'description' => 'Array of selected records from the modal. The first entry\'s entityId is used as the target cluster ID when targetClusterId is absent.',
-                            'items'       => [
-                                'type'       => 'object',
-                                'properties' => [
-                                    'entityName' => [
-                                        'type'        => 'string',
-                                        'description' => 'Entity name of the selected record (always "Cluster").',
-                                    ],
-                                    'entityId'   => [
-                                        'type'        => 'string',
-                                        'description' => 'ID of the selected Cluster record used as the move target.',
-                                    ],
-                                ],
-                            ],
+                            'description' => 'ID of the target Cluster to move the item into.',
                         ],
                     ],
                 ],
@@ -82,44 +63,23 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Move result',
+            'description' => 'true if the item was moved, false if it was skipped.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'count'   => [
-                                'type'        => 'integer',
-                                'description' => 'Number of cluster items successfully moved.',
-                            ],
-                            'skipped' => [
-                                'type'        => 'integer',
-                                'description' => 'Number of cluster items skipped (incompatible entity type, already in target, or rejected in target).',
-                            ],
-                            'sync'   => [
-                                'type'        => 'boolean',
-                                'description' => 'Always true — move is executed synchronously.',
-                            ],
-                            'errors' => [
-                                'type'  => 'array',
-                                'items' => [
-                                    'type' => 'string',
-                                ],
-                                'description' => 'List of error messages, if any.',
-                            ],
-                        ],
+                        'type' => 'boolean',
                     ],
                 ],
             ],
         ],
         400 => [
-            'description' => 'targetClusterId is missing, or neither idList nor where was provided.',
+            'description' => 'targetClusterId is missing.',
         ],
         403 => [
             'description' => 'Current user does not have edit access on ClusterItem.',
         ],
         404 => [
-            'description' => 'Target cluster not found.',
+            'description' => 'ClusterItem or target cluster not found.',
         ],
     ],
 )]
@@ -131,35 +91,25 @@ class ClusterItemMoveHandler extends AbstractHandler
             throw new Forbidden();
         }
 
+        $id   = (string)$request->getAttribute('id');
         $data = $this->getRequestBody($request);
-        $recordService = $this->getRecordService('ClusterItem');
-        $params = [];
 
         $targetClusterId = null;
         if (property_exists($data, 'targetClusterId') && !empty($data->targetClusterId)) {
             $targetClusterId = (string)$data->targetClusterId;
-        } elseif (property_exists($data, 'selectedRecords') && !empty($data->selectedRecords[0]->entityId)) {
-            $targetClusterId = (string)$data->selectedRecords[0]->entityId;
         }
 
         if (empty($targetClusterId)) {
             throw new BadRequest($this->getLanguage()->translate('targetClusterIdRequired', 'exceptions', 'ClusterItem'));
         }
 
-        $params['targetClusterId'] = $targetClusterId;
+        $recordService = $this->getRecordService('ClusterItem');
 
-        if (property_exists($data, 'idList')) {
-            $params['ids'] = $data->idList;
+        $entity = $recordService->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound();
         }
 
-        if (property_exists($data, 'where')) {
-            $params['where'] = json_decode(json_encode($data->where), true);
-        }
-
-        if (empty($params['ids']) && empty($params['where'])) {
-            throw new BadRequest($this->getLanguage()->translate('idOrIdListOrWhereRequired', 'exceptions', 'ClusterItem'));
-        }
-
-        return new JsonResponse($recordService->move($params));
+        return new BoolResponse($recordService->moveItem($entity, $targetClusterId));
     }
 }

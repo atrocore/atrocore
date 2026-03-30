@@ -550,10 +550,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.massActionUsingDefs(name);
                 return;
             }
+            var actionDefs = this.getMetadata().get(['clientDefs', this.scope, 'massActions', name]);
 
-            if (this.getMetadata().get(['clientDefs', this.scope, 'listActions', name, 'massAction'])) {
-                var actionDefs = this.getMetadata().get(['clientDefs', this.scope, 'listActions', name]) || {};
-
+            if (actionDefs) {
                 var buildData = function () {
                     var idList = [];
                     var data = {};
@@ -580,7 +579,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     var url = actionDefs.url;
                     var data = Object.assign(buildData(), extraData || {});
 
-                    this.ajaxPostRequest(url, data).then(function (result) {
+                    this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data)).then(function (result) {
                         this.collection.fetch().then(function () {
                             var message = this.translate(name, 'massActionSuccessMessages', this.scope);
                             if (typeof result === 'object' && 'count' in result) {
@@ -605,10 +604,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         }, (dialog) => {
                             dialog.render(() => this.notify(false));
                             dialog.once('select', selected => {
-                                const first = Array.isArray(selected) ? selected[0] : selected;
+                                const list = Array.isArray(selected) ? selected : [selected];
                                 const payload = actionDefs.modalSelectResultParam
-                                    ? { [actionDefs.modalSelectResultParam]: first.id }
-                                    : { selectedRecords: (Array.isArray(selected) ? selected : [selected]).map(m => ({ entityName: m.name, entityId: m.id })) };
+                                    ? { [actionDefs.modalSelectResultParam]: actionDefs.modalSelectMultiple ? list.map(m => m.id) : list[0].id }
+                                    : { selectedRecords: list.map(m => ({ entityName: m.name, entityId: m.id })) };
                                 runMassAction(payload);
                             });
                         });
@@ -768,7 +767,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 $.ajax({
                     url: 'entityMassDelete',
                     type: 'POST',
-                    data: JSON.stringify(Object.assign({entityName: this.entityType}, data))
+                    data: JSON.stringify(Object.assign({ entityName: this.entityType }, data))
                 }).done(function (result) {
                     this.notify(false)
                     this.processMassActionResult(result)
@@ -824,7 +823,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 $.ajax({
                     url: 'entityRestore',
                     type: 'POST',
-                    data: JSON.stringify(Object.assign({entityName: this.entityType}, data))
+                    data: JSON.stringify(Object.assign({ entityName: this.entityType }, data))
                 }).done(function (result) {
                     this.collection.fetch().then(() => this.notify(this.translate('Restored'), 'success'));
                 }.bind(this));
@@ -895,7 +894,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 confirmText: this.translate('Follow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest('entitySubscription', Object.assign({entityName: this.entityType}, data)).then(function (result) {
+                this.ajaxPostRequest('entitySubscription', Object.assign({ entityName: this.entityType }, data)).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massFollowResult';
                     if (resultCount) {
@@ -933,7 +932,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 confirmText: this.translate('Unfollow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxDeleteRequest('entitySubscription', Object.assign({entityName: this.entityType}, data)).then(function (result) {
+                this.ajaxDeleteRequest('entitySubscription', Object.assign({ entityName: this.entityType }, data)).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massUnfollowResult';
                     if (resultCount) {
@@ -1231,11 +1230,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
             }, this);
 
-            $.each(this.getMetadata().get(['clientDefs', this.scope, 'listActions']) || {}, (actionName, actionData) => {
-                if (actionData.massAction) {
-                    this.massActionList.push(actionName);
-                    this.checkAllResultMassActionList.push(actionName);
-                }
+            $.each(this.getMetadata().get(['clientDefs', this.scope, 'massActions']) || {}, (actionName, actionData) => {
+                this.massActionList.push(actionName);
+                this.checkAllResultMassActionList.push(actionName);
             });
 
             if (
@@ -3227,9 +3224,17 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
+            let url = actionDefs.url;
+            if (url && model) {
+                $.each(model.attributes || {}, (key, value) => {
+                    url = url.replaceAll(`{{${key}}}`, value);
+                });
+            }
+
             let runAction = (extraData) => {
                 this.notify(this.translate('Loading...'));
-                this.ajaxPostRequest(actionDefs.url, Object.assign({ action: name, scope: scope, id: id }, extraData || {}))
+                const data = Object.assign({ action: name, scope: scope, id: id }, extraData || {});
+                this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data))
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
                         if (actionDefs.refresh) {
@@ -3259,10 +3264,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, (dialog) => {
                         dialog.render(() => this.notify(false));
                         dialog.once('select', selected => {
-                            const first = Array.isArray(selected) ? selected[0] : selected;
+                            const list = Array.isArray(selected) ? selected : [selected];
                             const payload = actionDefs.modalSelectResultParam
-                                ? { [actionDefs.modalSelectResultParam]: first.id }
-                                : { selectedRecords: (Array.isArray(selected) ? selected : [selected]).map(m => ({ entityName: m.name, entityId: m.id })) };
+                                ? { [actionDefs.modalSelectResultParam]: actionDefs.modalSelectMultiple ? list.map(m => m.id) : list[0].id }
+                                : { selectedRecords: list.map(m => ({ entityName: m.name, entityId: m.id })) };
                             runAction(Object.assign(payload, extraData || {}));
                         });
                     });

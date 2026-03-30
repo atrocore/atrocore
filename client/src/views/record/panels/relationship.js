@@ -984,6 +984,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     data.relationId = model.relationModel.get('id');
                 }
 
+                let url = actionDefs.url;
+                if (url) {
+                    $.each(model.attributes || {}, (key, value) => {
+                        url = url.replaceAll(`{{${key}}}`, value);
+                    });
+                }
+
                 if (actionDefs.modalSelectEntity) {
                     let entityType = actionDefs.modalSelectEntity;
                     let selectedRecords = [];
@@ -1027,11 +1034,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                             this.notify(this.translate('Loading...'));
 
                             if (actionDefs.modalSelectResultParam) {
-                                data[actionDefs.modalSelectResultParam] = selectedRecords[0]?.entityId;
+                                data[actionDefs.modalSelectResultParam] = actionDefs.modalSelectMultiple
+                                    ? selectedRecords.map(r => r.entityId)
+                                    : selectedRecords[0]?.entityId;
                             } else {
                                 data.selectedRecords = selectedRecords;
                             }
-                            this.ajaxPostRequest(actionDefs.url, data)
+                            this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data))
                                 .then(response => {
                                     this.notify(this.translate('Done'), 'success');
                                     if (actionDefs.refresh) {
@@ -1042,7 +1051,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     });
                 } else {
                     this.notify(this.translate('Loading...'));
-                    this.ajaxPostRequest(actionDefs.url, data)
+                    this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data))
                         .then(response => {
                             this.notify(this.translate('Done'), 'success');
                             if (actionDefs.refresh) {

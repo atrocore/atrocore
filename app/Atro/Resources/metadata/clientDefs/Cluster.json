@@ -18,28 +18,29 @@
           "disabled": true
         },
         "confirm": {
-          "url": "ClusterItem/confirm",
+          "url": "ClusterItem/{{id}}/confirm",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-check",
           "sortOrder": 10
         },
         "reject": {
-          "url": "ClusterItem/reject",
+          "url": "ClusterItem/{{id}}/reject",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-x",
           "sortOrder": 20
         },
         "unmerge": {
-          "url": "ClusterItem/unmerge",
+          "url": "ClusterItem/{{id}}/unmerge",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-arrows-split",
           "sortOrder": 30
         },
         "move": {
-          "url": "ClusterItem/move",
+          "url": "ClusterItem/{{id}}/move",
+          "method": "PATCH",
           "refresh": true,
           "iconClass": "ph ph-arrow-right",
           "sortOrder": 40,
@@ -74,7 +75,7 @@
           "disabled": true
         },
         "unreject": {
-          "url": "ClusterItem/unreject",
+          "url": "ClusterItem/{{id}}/unreject",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-arrow-u-up-left",

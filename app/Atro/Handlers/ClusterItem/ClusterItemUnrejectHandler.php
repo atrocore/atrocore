@@ -23,13 +23,24 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/unreject',
+    path: '/ClusterItem/{id}/unreject',
     methods: [
         'POST',
     ],
     summary: 'Unreject a cluster item',
-    description: 'Unrejects a previously rejected cluster item.',
+    description: 'Moves a previously rejected cluster item back into the active cluster. Requires the ID of the RejectedClusterItem relation record in the request body.',
     tag: 'ClusterItem',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the active ClusterItem that the rejected item will be restored under.',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
         'required' => true,
         'content'  => [
@@ -37,15 +48,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                 'schema' => [
                     'type'       => 'object',
                     'required'   => [
-                        'id',
                         'relationId',
                     ],
                     'properties' => [
-                        'id'         => [
-                            'type' => 'string',
-                        ],
                         'relationId' => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'ID of the RejectedClusterItem record to unreject.',
                         ],
                     ],
                 ],
@@ -54,7 +62,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'ClusterItem successfully unrejected.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -63,27 +71,33 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'relationId is missing.',
+        ],
+        403 => [
+            'description' => 'Current user does not have edit access on ClusterItem.',
+        ],
+        404 => [
+            'description' => 'ClusterItem, RejectedClusterItem, or associated Cluster not found.',
+        ],
     ],
 )]
 class ClusterItemUnrejectHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
-
-        if (!property_exists($data, 'id')) {
-            throw new BadRequest('ID is required.');
+        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
+            throw new Forbidden();
         }
+
+        $id   = (string)$request->getAttribute('id');
+        $data = $this->getRequestBody($request);
 
         if (!property_exists($data, 'relationId')) {
             throw new BadRequest('Rejected cluster item id is required.');
         }
 
-        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
-            throw new Forbidden();
-        }
-
-        $this->getRecordService('ClusterItem')->unreject((string) $data->id, (string) $data->relationId);
+        $this->getRecordService('ClusterItem')->unreject($id, (string) $data->relationId);
 
         return new BoolResponse(true);
     }
