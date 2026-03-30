@@ -1,0 +1,18 @@
+{
+  "type": "Base",
+  "module": "Atro",
+  "disabled": false,
+  "customizable": false,
+  "importable": false,
+  "layouts": false,
+  "tab": false,
+  "acl": false,
+  "aclPortal": false,
+  "hasActions": false,
+  "stream": false,
+  "fieldFilter": false,
+  "hasBookmarks": false,
+  "hasMatching": false,
+  "canMerge": false,
+  "canSelect": false
+}

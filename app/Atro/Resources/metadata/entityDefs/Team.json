@@ -9,6 +9,17 @@
             "type": "linkMultiple",
             "tooltip": true
         },
+        "languageRestricted": {
+            "type": "bool",
+            "default": false,
+            "notNull": true
+        },
+        "languages": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "massUpdateDisabled": true,
+            "noLoad": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -31,6 +42,11 @@
             "type": "hasMany",
             "entity": "Note",
             "foreign": "teams"
+        },
+        "languages": {
+            "type": "hasMany",
+            "foreign": "team",
+            "entity": "TeamLanguage"
         }
     },
     "collection": {

@@ -3,9 +3,12 @@
     "name": "Name",
     "roles": "Roles",
     "users": "Users",
-    "notes": "Notes"
+    "notes": "Notes",
+    "languageRestricted": "Language Restricted",
+    "languages": "Languages"
   },
   "tooltips": {
-    "roles": "Access Roles. Users of this team obtain access control level from selected roles."
+    "roles": "Access Roles. Users of this team obtain access control level from selected roles.",
+    "languageRestricted": "When enabled, only explicitly listed languages are accessible for users of this team. When disabled, no language filtering is applied."
   }
 }

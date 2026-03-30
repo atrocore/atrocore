@@ -17,6 +17,20 @@
           "disabled": true
         }
       }
+    },
+    "languages": {
+      "select": false,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      },
+      "conditionGroup": [
+        {
+          "type": "isTrue",
+          "attribute": "languageRestricted"
+        }
+      ]
     }
   },
   "recordViews": {

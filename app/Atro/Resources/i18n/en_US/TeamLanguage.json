@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "language": "Language",
+    "team": "Team",
+    "editAction": "Edit"
+  },
+  "labels": {
+    "yes": "Yes",
+    "no": "No"
+  }
+}

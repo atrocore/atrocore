@@ -48,10 +48,9 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
         $res = $this->getDataManager()->getCacheData($key);
         if ($res === null) {
             $res = [
-                'scopes'               => [],
-                'fields'               => [],
-                'languages'            => [],
-                'multilangAttrFields'  => [],
+                'scopes'              => [],
+                'fields'              => [],
+                'multilangAttrFields' => [],
             ];
 
             foreach ($role->get('scopes') ?? [] as $roleScope) {
@@ -111,18 +110,6 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
                         $res['scopes'][$scopeName][$action] = 'no';
                     }
                 }
-            }
-
-            foreach ($role->get('languages') ?? [] as $roleLanguage) {
-                $language = $this->getEntityManager()->getEntity('Language', $roleLanguage->get('languageId'));
-                if (empty($language)) {
-                    continue;
-                }
-                $code = $language->get('code');
-                $res['languages'][$code] = [
-                    'read' => !empty($roleLanguage->get('readAction')) ? 'yes' : 'no',
-                    'edit' => !empty($roleLanguage->get('editAction')) ? 'yes' : 'no',
-                ];
             }
 
             $multilangAttrs = $this->getEntityManager()->getRepository('Attribute')

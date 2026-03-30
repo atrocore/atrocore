@@ -8,14 +8,6 @@
         }
       }
     },
-    "languages": {
-      "select": false,
-      "actions": {
-        "unlinkRelated": {
-          "disabled": true
-        }
-      }
-    },
     "users": {
       "create": false,
       "rowActionsView": "views/record/row-actions/relationship-unlink-only"
