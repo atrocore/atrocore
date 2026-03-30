@@ -24,16 +24,35 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/jobManagerUpdate',
+    path: '/jobManagerPause',
     methods: [
         'POST',
     ],
     summary: 'Pause or resume the job manager',
-    description: 'Pauses or resumes background job processing. Admin only.',
+    description: 'Pauses or resumes background job processing by creating or removing a pause flag file. When paused, no new jobs will be picked up by the daemon. Admin only.',
     tag: 'Global',
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'pause',
+                    ],
+                    'properties' => [
+                        'pause' => [
+                            'type'        => 'boolean',
+                            'description' => 'true to pause the job manager, false to resume.',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
         200 => [
-            'description' => 'true if updated',
+            'description' => 'true if the state was updated, false if the pause field is missing',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -43,11 +62,11 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         403 => [
-            'description' => 'Forbidden',
+            'description' => 'Forbidden — admin only',
         ],
     ],
 )]
-class JobManagerUpdateHandler extends AbstractHandler
+class JobManagerPauseHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
