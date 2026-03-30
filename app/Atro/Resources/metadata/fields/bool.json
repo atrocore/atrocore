@@ -1,7 +1,7 @@
 {
   "params": [
     {
-      "name": "notNull",
+      "name": "allowNullForBool",
       "type": "bool"
     },
     {

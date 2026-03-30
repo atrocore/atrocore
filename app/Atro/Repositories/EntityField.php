@@ -150,6 +150,10 @@ class EntityField extends ReferenceData
             $result['data']['where'] = $where;
         }
 
+        if($fieldDefs['type'] === 'bool') {
+            $result['allowNullForBool'] = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.notNull") === false;
+        }
+
         return $result;
     }
 
@@ -280,7 +284,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        if (!$entity->isNew() && $entity->get('type') === 'bool' && !empty($entity->get('notNull')) && $entity->isAttributeChanged('notNull')) {
+        if (!$entity->isNew() && $entity->get('type') === 'bool' && empty($entity->get('allowNullForBool')) && $entity->isAttributeChanged('allowNullForBool')) {
             $connection = $this->getEntityManager()->getConnection();
             $entityName = $entity->get('entityId');
             $type = $this->getMetadata()->get("scopes.{$entityName}.type");
@@ -773,7 +777,12 @@ class EntityField extends ReferenceData
         }
 
         foreach (array_merge($commonFields, $typeFields) as $field) {
+            if($this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.notStorable")) {
+                continue;
+            }
+
             $fieldType = $this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.type");
+
             if ($fieldType === 'link') {
                 $field .= 'Id';
             }
@@ -943,6 +952,37 @@ class EntityField extends ReferenceData
                 $this->getLanguage()
                     ->setOption($entity->get('entityId'), $entity->get('code'), $option, $newTranslationOptions->{$option});
                 $saveLanguage = true;
+            }
+        }
+
+        if($entity->get('type') === 'bool') {
+            $notNull = null;
+            if($entity->isNew() && !empty($entity->get('allowNullForBool'))) {
+                $notNull = false;
+            }
+
+            if(!$entity->isNew() && $entity->isAttributeChanged('allowNullForBool') && !empty($entity->get('allowNullForBool'))) {
+                $notNull = false;
+            }
+
+            if(!$entity->isNew() && $entity->isAttributeChanged('allowNullForBool') && empty($entity->get('allowNullForBool'))) {
+                $notNull = true;
+            }
+
+            if($notNull === false) {
+                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                    'fields' => [
+                        $entity->get('code') => [
+                            'notNull' => false
+                        ],
+                    ],
+                ]);
+                $saveMetadata = true;
+            }else if($notNull === true) {
+                $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
+                    "fields.{$entity->get('code')}.notNull"
+                ]);
+                $saveMetadata = true;
             }
         }
 

@@ -5,6 +5,7 @@
     "isMultilang": "Multilingue",
     "required": "Requis",
     "notNull": "Désactiver la valeur nulle",
+    "allowNullForBool": "Autoriser la valeur nulle",
     "readOnly": "Lecture seule",
     "protected": "Protegé",
     "unique": "Unique",

@@ -38,7 +38,7 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
 
         _template: '',
 
-        notNull: false,
+        notNull: true,
 
         defaultFilterValue: false,
 
@@ -50,6 +50,10 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
             this.notNull = this.model.getFieldParam(this.name, 'notNull')
                 ?? this.params?.notNull
                 ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']);
+
+            if(this.notNull !== false) {
+                this.notNull = true;
+            }
         },
 
         setupSearch() {
