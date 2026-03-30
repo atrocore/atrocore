@@ -76,7 +76,7 @@ class SelectionItem extends Base
 
     public function prepareEntityRecord($entity): void
     {
-        if (empty($entity->_fromCollection)) {
+        if (empty($entity->_fromCollection) && $this->getEntityManager()->hasRepository($entity->get('entityName'))) {
             $entity->set('recordId', $entity->get('entityId'));
             $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId'));
             if (!empty($record)) {

@@ -285,6 +285,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             let entityByScope = {};
                             let order = 0;
                             for (const entityData of result.list) {
+                                if (!entityData.entity){
+                                    continue
+                                }
                                 let scope = entityData.entityName;
                                 if (!entityByScope[scope]) {
                                     entityByScope[scope] = [];
