@@ -148,7 +148,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             this.wait(true);
             this.getCollectionFactory().create(this.scope, collection => {
                 this.collection = collection;
-                this.collection.url = 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + this.link;
+                this.collection.url = this.getCollectionUrl();
 
                 this.setFilter(this.filter);
 
@@ -156,7 +156,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                     if (!link || this.getLinksForRefresh().includes(link)) {
                         this.getCollectionFactory().create(this.scope, collection => {
                             this.collection = collection;
-                            this.collection.url = 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + this.link;
+                            this.collection.url = this.getCollectionUrl();
                             this.actionRefresh();
                         });
                     }
@@ -197,6 +197,10 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
 
         getLinksForRefresh() {
             return [this.link, this.getCreateLink()]
+        },
+
+        getCollectionUrl() {
+            return 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + this.link;
         },
 
         fetchCollectionGroups(callback) {
@@ -293,7 +297,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
         applyOverviewFilters() {
             this.getCollectionFactory().create(this.scope, collection => {
                 this.collection = collection;
-                this.collection.url = 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + this.link;
+                this.collection.url = this.getCollectionUrl();
                 this.actionRefresh();
             });
         },
