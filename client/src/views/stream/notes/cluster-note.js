@@ -43,6 +43,11 @@ Espo.define('views/stream/notes/cluster-note', 'views/stream/note', function (De
             var relatedId   = data.relatedId   || this.model.get('relatedId');
             var relatedName = this.model.get('relatedName') || data.relatedName || null;
 
+            const auditMeta = this.model.getMeta('audit', 'createdBy');
+            if (auditMeta) {
+                this.messageData['user'] = this.buildUserHtml(auditMeta);
+            }
+
             // Bulk-move note (movedToCluster / movedFromCluster)
             if (data.stagingRecords !== undefined || data.masterRecords !== undefined) {
                 var hasSt = data.stagingRecords && data.stagingRecords.length > 0;
