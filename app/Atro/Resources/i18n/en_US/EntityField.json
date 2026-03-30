@@ -127,6 +127,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Some records have null values",
-    "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value"
+    "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value",
+    "relationAlreadyUsed": "The Middle Table Name %s is already used, choose another."
   }
 }

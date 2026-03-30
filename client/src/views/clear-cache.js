@@ -55,6 +55,7 @@ Espo.define('views/clear-cache', 'view', function (Dep) {
 
         clearLocalCache: function () {
             this.options.cache.clear();
+            this.options.storage.clear('listQueryBuilder-')
             this.$el.find('.action[data-action="clearLocalCache"]').remove();
             this.$el.find('.message-container').removeClass('hidden');
             this.$el.find('.message-container span').html(this.translate('Cache has been cleared'));

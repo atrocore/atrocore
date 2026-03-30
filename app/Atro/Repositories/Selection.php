@@ -15,7 +15,6 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 
@@ -52,8 +51,9 @@ class Selection extends Base
         string $action,
         string $relatedType = '',
         string $relatedId = '',
-        array $extraData = []
-    ): void {
+        array  $extraData = []
+    ): void
+    {
         try {
             $data = new \stdClass();
             $data->action = $action;
@@ -61,12 +61,18 @@ class Selection extends Base
                 $data->$key = $value;
             }
 
+            // Save parentName at creation time
+            $data->parentName = $this->getEntityDisplayName($parentType, $parentId);
+
             $note = $this->getEntityManager()->getEntity('Note');
             $note->set('type', $noteType);
             $note->set('parentId', $parentId);
             $note->set('parentType', $parentType);
             $note->set('data', $data);
             if ($relatedType !== '' && $relatedId !== '') {
+                // Save relatedName at creation time
+                $data->relatedName = $this->getEntityDisplayName($relatedType, $relatedId);
+                $note->set('data', $data);
                 $note->set('relatedType', $relatedType);
                 $note->set('relatedId', $relatedId);
             }
@@ -74,6 +80,25 @@ class Selection extends Base
         } catch (\Throwable $e) {
             $GLOBALS['log']->error("Failed to create $noteType note '$action': " . $e->getMessage());
         }
+    }
+
+    private function getEntityDisplayName(string $entityType, string $entityId): ?string
+    {
+        $nameField = $this->getMetadata()->get(['scopes', $entityType, 'nameField']) ?? 'name';
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $nameField]);
+        if (empty($fieldDefs)) {
+            return null;
+        }
+        $entity = $this->getEntityManager()->getRepository($entityType)
+            ->select(['id', $nameField])
+            ->where(['id' => $entityId])
+            ->findOne();
+
+        if (!empty($entity)) {
+            return $entity->get($nameField);
+        }
+
+        return null;
     }
 
 }

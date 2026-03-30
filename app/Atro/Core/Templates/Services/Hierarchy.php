@@ -15,18 +15,17 @@ namespace Atro\Core\Templates\Services;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
-use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\Templates\Entities\Hierarchy as HierarchyEntity;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Atro\Services\Record;
-use Atro\Core\Exceptions\NotModified;
-use Atro\Core\Templates\Entities\Hierarchy as HierarchyEntity;
 
 class Hierarchy extends Base
 {
@@ -170,8 +169,12 @@ class Hierarchy extends Base
 
     public function getTreeData(array $params): array
     {
+        $sortBy = $params['sortBy'] ?? 'id';
+        $order = $params['asc'] ? 'ASC' : 'DESC';
+
         if (!isset($params['ids'])) {
             $params = $this->getParamsForTree($params['link'], $params['scope'], $params);
+            $params['sortBy'] = 'id';
             $repository = $this->getRepository();
             $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
             $selectParams['distinct'] = true;
@@ -186,7 +189,8 @@ class Hierarchy extends Base
         $tree = [];
         $treeBranches = [];
 
-        foreach ($this->getRepository()->where(['id' => $ids])->select($this->getSelectForTree())->find() as $entity) {
+        foreach ($this->getRepository()->where(['id' => $ids])->order($sortBy, $order)
+                     ->select($this->getSelectForTree())->find() as $entity) {
             $this->createTreeBranches($entity, $treeBranches);
         }
 

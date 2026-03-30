@@ -30,16 +30,16 @@
             {{#if detailFieldsArr}}
             <div class="panel">
                 {{#each detailFieldsArr}}
-                    <div class="row">
-            <div class="cell col-md-12 col-lg-6 form-group">
-                <label class="control-label"><code>{{label}}</code> {{translate 'was' category='streamMessages' scope='Global'}}</label>
-                <div class="field">{{{var was ../this}}}</div>
-            </div>
-            <div class="cell col-md-12 col-lg-6 form-group">
-                <label class="control-label"><code>{{label}}</code> {{translate 'become' category='streamMessages' scope='Global'}}</label>
-                <div class="field">{{{var became ../this}}}</div>
-            </div>
-            </div>
+                    <div class="row" data-name="{{field}}">
+                        <div class="cell col-md-12 col-lg-6 form-group">
+                            <label class="control-label"><code>{{label}}</code> {{translate 'was' category='streamMessages' scope='Global'}}</label>
+                            <div class="field was">{{{var was ../this}}}</div>
+                        </div>
+                        <div class="cell col-md-12 col-lg-6 form-group">
+                            <label class="control-label"><code>{{label}}</code> {{translate 'become' category='streamMessages' scope='Global'}}</label>
+                            <div class="field became">{{{var became ../this}}}</div>
+                        </div>
+                    </div>
                 {{/each}}
                 </div>
             {{/if}}

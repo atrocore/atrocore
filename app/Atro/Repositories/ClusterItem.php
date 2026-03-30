@@ -101,6 +101,20 @@ class ClusterItem extends Base
             ->executeQuery();
     }
 
+    public function isRejectedInCluster(string $clusterItemId, string $clusterId): bool
+    {
+        $res = $this->getDbal()->createQueryBuilder()
+            ->select('rci.id')
+            ->from('rejected_cluster_item', 'rci')
+            ->where('rci.cluster_item_id = :clusterItemId AND rci.cluster_id = :clusterId AND rci.deleted = :false')
+            ->setParameter('clusterItemId', $clusterItemId)
+            ->setParameter('clusterId', $clusterId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchOne();
+
+        return !empty($res);
+    }
+
     public function updateMatchedScore(string $entityName, string $entityId, int $score): void
     {
         $this->getDbal()->createQueryBuilder()

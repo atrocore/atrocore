@@ -127,6 +127,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Einige Datensätze haben Nullwerte",
-    "cannotAddRequiredFieldWithExistingRecords": "Sie können kein erforderliches Feld mit vorhandenen Datensätzen ohne Standardwert hinzufügen"
+    "cannotAddRequiredFieldWithExistingRecords": "Sie können kein erforderliches Feld mit vorhandenen Datensätzen ohne Standardwert hinzufügen",
+    "relationAlreadyUsed": "Der Middle Table Name %s wird bereits verwendet, wählen Sie einen anderen."
   }
 }

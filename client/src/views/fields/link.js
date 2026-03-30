@@ -910,9 +910,9 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                         model: model,
                         mode: 'search',
                         foreignScope: foreignScope,
+                        foreignName: attribute?.entityField,
                         hideSearchType: true,
-                        params: this.defs.params,
-                        whereAdditional: this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
+                        whereAdditional: attribute?.data?.where || this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
                     }, view => {
                         this.addCustomDataToView(view, rule);
 
@@ -974,12 +974,16 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                         if (rule.data && rule.data['nameHash']) {
                             Object.assign(nameHash, rule.data['nameHash']);
                         }
+                        let attribute = this.defs.params?.attribute;
                         try {
-                            const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName']) ?? 'name';
+                            const foreignScope = attribute?.entityType || this.getForeignScope();
+                            const foreignName = attribute?.entityField
+                                ?? this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName'])
+                                ?? 'name';
 
                             const missingIds = (rule.value || []).filter(id => !nameHash[id]);
                             if (missingIds.length > 0 && foreignName) {
-                                const resp = this.ajaxGetRequest(this.foreignScope, {
+                                const resp = this.ajaxGetRequest(foreignScope, {
                                     select: foreignName,
                                     collectionOnly: true,
                                     where: [
@@ -991,7 +995,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                                     ]
                                 }, { async: false })
 
-                                const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                                const localizedForeignName = this.getLocalizedFieldData(foreignScope, foreignName)[0]
                                 resp.responseJSON.list.forEach(record => {
                                     nameHash[record.id] = record[localizedForeignName] || record[foreignName]
                                 })
@@ -1045,11 +1049,13 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
 
         getQueryBuilderOperators() {
             let operators = ['in', 'not_in'];
-            if (this.getForeignScope() === 'User') {
+            let foreignScope = this.defs.params?.attribute?.entityType || this.getForeignScope();
+
+            if (foreignScope === 'User') {
                 operators = operators.concat(['is_me', 'is_not_me', 'is_team_member'])
             }
 
-            if (this.getForeignScope() === 'Team') {
+            if (foreignScope === 'Team') {
                 operators = operators.concat(['is_my_team', 'is_not_my_team'])
             }
 
@@ -1222,7 +1228,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
 
         getForeignScope: function () {
             const scope = this.model.urlRoot;
-            return this.defs.params.foreignScope
+            return this.options.foreignScope
+                ?? this.defs.params.foreignScope
                 ?? this.foreignScope
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                 ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);

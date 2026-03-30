@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\ClusterItem;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,50 +23,43 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/action/unmerge',
+    path: '/ClusterItem/{id}/unmerge',
     methods: [
         'POST',
     ],
-    summary: 'Unmerge cluster item(s)',
-    description: 'Unmerge one or multiple cluster items into a new cluster. Accepts a single id, a list of ids, or a query where clause.',
+    summary: 'Unmerge a single cluster item',
+    description: 'Moves the specified cluster item out of its current cluster into a newly created cluster with the same masterEntity. The item may not be the master entity item of its cluster.',
     tag: 'ClusterItem',
-    requestBody: [
-        'required' => true,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'properties' => [
-                        'id'     => [
-                            'type' => 'string',
-                        ],
-                        'idList' => [
-                            'type'  => 'array',
-                            'items' => [
-                                'type' => 'string',
-                            ],
-                        ],
-                        'where'  => [
-                            'type'  => 'array',
-                            'items' => [
-                                'type' => 'object',
-                            ],
-                        ],
-                    ],
-                ],
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the ClusterItem to unmerge.',
+            'schema'      => [
+                'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'true if the item was unmerged.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object',
+                        'type' => 'boolean',
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'The item is the master entity item and cannot be unmerged.',
+        ],
+        403 => [
+            'description' => 'Current user does not have edit access on ClusterItem.',
+        ],
+        404 => [
+            'description' => 'ClusterItem not found.',
         ],
     ],
 )]
@@ -78,26 +71,16 @@ class ClusterItemUnmergeHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data          = $this->getRequestBody($request);
+        $id            = (string)$request->getAttribute('id');
         $recordService = $this->getRecordService('ClusterItem');
-        $params        = [];
 
-        if (property_exists($data, 'where')) {
-            $params['where'] = json_decode(json_encode($data->where), true);
+        $entity = $recordService->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound();
         }
 
-        if (property_exists($data, 'idList')) {
-            $params['ids'] = $data->idList;
-        }
+        $result = $recordService->unmerge(['ids' => [$id]]);
 
-        if (property_exists($data, 'id')) {
-            $params['ids'] = [$data->id];
-        }
-
-        if (empty($params)) {
-            throw new BadRequest($this->getLanguage()->translate('idOrIdListOrWhereRequired', 'exceptions', 'ClusterItem'));
-        }
-
-        return new JsonResponse($recordService->unmerge($params));
+        return new BoolResponse($result['count'] > 0);
     }
 }

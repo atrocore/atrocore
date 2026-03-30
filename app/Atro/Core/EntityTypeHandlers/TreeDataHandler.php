@@ -149,8 +149,8 @@ class TreeDataHandler extends AbstractHandler
                 'scope'        => (string) ($qp['scope'] ?? ''),
                 'offset'       => 0,
                 'maxSize'      => 5000,
-                'asc'          => true,
-                'sortBy'       => 'id',
+                'asc'          =>  ($qp['asc'] ?? 'true') === 'true',
+                'sortBy'       => $qp['sortBy'] ?? 'id'
             ];
         }
 

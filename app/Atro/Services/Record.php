@@ -189,7 +189,7 @@ class Record extends RecordService
 
         if (
             !in_array($action, $allowMassActions)
-            && !$this->getMetadata()->get(['clientDefs', $this->getEntityType(), 'listActions', $action, 'massAction'], [])
+            && empty($this->getMetadata()->get(['clientDefs', $this->getEntityType(), 'massActions', $action]))
         ) {
             return [];
         }

@@ -23,16 +23,35 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/destroyAuthToken',
+    path: '/destroyAuthToken',
     methods: [
         'POST',
     ],
-    summary: 'Destroy an authorization token',
-    description: 'Invalidates the specified authorization token.',
+    summary: 'Invalidate an auth token',
+    description: 'Invalidates the specified auth token, effectively logging out the session associated with it. Called by the UI on logout.',
     tag: 'Global',
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'token',
+                    ],
+                    'properties' => [
+                        'token' => [
+                            'type'        => 'string',
+                            'description' => 'The auth token to invalidate.',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
         200 => [
-            'description' => 'true if the token was destroyed',
+            'description' => 'true if the token was invalidated',
             'content'     => [
                 'application/json' => [
                     'schema' => [
