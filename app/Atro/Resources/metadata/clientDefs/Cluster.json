@@ -2,6 +2,35 @@
   "iconClass": "copy",
   "controller": "controllers/record",
   "createDisabled": true,
+  "menu": {
+    "list": {
+      "buttons": [
+        {
+          "name": "purge",
+          "label": "purgeAll",
+          "action": "universalAction",
+          "style": "btn-danger",
+          "acl": "delete",
+          "url": "Cluster/purge?all=true",
+          "method": "DELETE",
+          "confirm": true,
+          "refresh": true
+        }
+      ]
+    }
+  },
+  "massActions": {
+    "purge": {
+      "url": "Cluster/purge",
+      "massAction": true,
+      "method": "DELETE",
+      "confirm": true,
+      "refresh": true,
+      "iconClass": "ph ph-trash",
+      "sortOrder": 10,
+      "acl": "delete"
+    }
+  },
   "views": {
     "detail": "views/cluster/detail"
   },

@@ -82,11 +82,45 @@ class Cluster extends Base
         }
     }
 
+    public function purge(array $params): array
+    {
+        $params['action'] = 'purge';
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['singleActionMethod'] = 'purgeCluster';
+
+        list($count, $errors, $sync) = $this->executeMassAction($params, function ($id) {
+            $this->purgeCluster($id);
+        });
+
+        return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
+    }
+
+    public function purgeCluster(string $id): void
+    {
+        $cluster = $this->getEntity($id);
+        if (empty($cluster)) {
+            return;
+        }
+
+        $this->getEntityManager()->getRepository('ClusterItem')
+            ->where(['clusterId' => $id])
+            ->removeCollection();
+
+        // Remove rejected cluster item records for this cluster
+        $this->getEntityManager()->getRepository('RejectedClusterItem')
+            ->where(['clusterId' => $id])
+            ->removeCollection();
+
+        $this->getEntityManager()->removeEntity($cluster);
+    }
+
     public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes): Entity
     {
         $cluster = $this->getEntity($clusterId);
 
-        if(empty($cluster)) {
+        if (empty($cluster)) {
             throw new BadRequest("Cluster $clusterId not found");
         }
 
@@ -119,12 +153,12 @@ class Cluster extends Base
 
         if (empty($goldenRecord)) {
             foreach ($sourceList as $source) {
-                if($source->getEntityName() === $cluster->get('masterEntity')) {
+                if ($source->getEntityName() === $cluster->get('masterEntity')) {
                     $goldenRecord = $source;
                 }
             }
 
-            if(empty($goldenRecord)) {
+            if (empty($goldenRecord)) {
                 $goldenRecord = $masterService->createEntity($attributes->input);
 
             }
@@ -197,7 +231,7 @@ class Cluster extends Base
         }
 
         foreach ($sourceList as $source) {
-            if($source->getEntityName() !== $cluster->get('masterEntity')) {
+            if ($source->getEntityName() !== $cluster->get('masterEntity')) {
                 $source->set('masterRecordId', $goldenRecord->get('id'));
                 $this->getEntityManager()->saveEntity($source);
             }
@@ -209,7 +243,8 @@ class Cluster extends Base
             $clusterItem->set('entityId', $goldenRecord->get('id'));
             $clusterItem->set('entityName', $goldenRecord->getEntityName());
             $this->getEntityManager()->saveEntity($clusterItem);
-        }catch (NotUnique $e) {}
+        } catch (NotUnique $e) {
+        }
 
         return $goldenRecord;
     }

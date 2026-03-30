@@ -123,6 +123,39 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
         },
 
+        actionUniversalAction(data, e) {
+            if (!e || !$(e.target).closest('.page-header').length) return;
+
+            const name = data.name;
+            if (!name) return;
+
+            const scope = this.scope;
+
+            const actionDefs = this.getMenu().buttons.find(item => item.name === name) || this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
+            if (!actionDefs.url) return;
+
+            const runAction = () => {
+                this.notify(this.translate('Loading...'));
+                this.ajaxRequest(actionDefs.url, actionDefs.method || 'POST', JSON.stringify({ action: name, scope: scope }))
+                    .then(() => {
+                        this.notify(this.translate('Done'), 'success');
+                        if (actionDefs.refresh) {
+                            this.collection.fetch();
+                        }
+                    });
+            };
+
+            if (actionDefs.confirm) {
+                const confirmMessage = this.translate(name, 'massActionConfirmMessages', scope);
+                this.confirm({
+                    message: (confirmMessage && confirmMessage !== name) ? confirmMessage : this.translate('Are you sure?'),
+                    confirmText: this.translate('Apply')
+                }, () => runAction());
+            } else {
+                runAction();
+            }
+        },
+
         actionDynamicEntityAction(data) {
             let listView = this.getView('list')
 
