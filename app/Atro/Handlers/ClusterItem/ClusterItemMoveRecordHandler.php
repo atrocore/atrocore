@@ -23,13 +23,24 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/move',
+    path: '/ClusterItem/{id}/move',
     methods: [
         'POST',
     ],
-    summary: 'Move cluster items to another cluster',
-    description: 'Move one or more cluster items (by idList or where) to a target cluster. The target cluster is identified by the first entry in selectedRecords or by targetClusterId. Items are skipped if they already belong to the target cluster, if their entity type is incompatible with the target cluster masterEntity, or if they are rejected in the target cluster. At least one of idList or where is required.',
+    summary: 'Move a single cluster item to another cluster',
+    description: 'Move the specified cluster item to a target cluster. The target cluster is identified by selectedRecords[0].entityId or by targetClusterId. The item is skipped if its entity type is incompatible with the target cluster masterEntity or if it is rejected in the target cluster.',
     tag: 'ClusterItem',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the ClusterItem to move.',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
         'required' => true,
         'content'  => [
@@ -40,20 +51,6 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'selectedRecords',
                     ],
                     'properties' => [
-                        'idList'          => [
-                            'type'        => 'array',
-                            'description' => 'List of ClusterItem IDs to move. Required if where is not provided.',
-                            'items'       => [
-                                'type' => 'string',
-                            ],
-                        ],
-                        'where'           => [
-                            'type'        => 'array',
-                            'description' => 'Filter criteria selecting ClusterItems to move. Required if idList is not provided.',
-                            'items'       => [
-                                'type' => 'object',
-                            ],
-                        ],
                         'targetClusterId' => [
                             'type'        => 'string',
                             'description' => 'ID of the target cluster. Alternative to passing the target via selectedRecords.',
@@ -90,7 +87,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'properties' => [
                             'count'   => [
                                 'type'        => 'integer',
-                                'description' => 'Number of cluster items successfully moved.',
+                                'description' => 'Number of cluster items successfully moved (0 or 1).',
                             ],
                             'skipped' => [
                                 'type'        => 'integer',
@@ -113,7 +110,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'targetClusterId is missing, or neither idList nor where was provided.',
+            'description' => 'targetClusterId is missing.',
         ],
         403 => [
             'description' => 'Current user does not have edit access on ClusterItem.',
@@ -123,7 +120,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ClusterItemMoveHandler extends AbstractHandler
+class ClusterItemMoveRecordHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -131,9 +128,8 @@ class ClusterItemMoveHandler extends AbstractHandler
             throw new Forbidden();
         }
 
+        $id   = (string)$request->getAttribute('id');
         $data = $this->getRequestBody($request);
-        $recordService = $this->getRecordService('ClusterItem');
-        $params = [];
 
         $targetClusterId = null;
         if (property_exists($data, 'targetClusterId') && !empty($data->targetClusterId)) {
@@ -146,20 +142,9 @@ class ClusterItemMoveHandler extends AbstractHandler
             throw new BadRequest($this->getLanguage()->translate('targetClusterIdRequired', 'exceptions', 'ClusterItem'));
         }
 
-        $params['targetClusterId'] = $targetClusterId;
-
-        if (property_exists($data, 'idList')) {
-            $params['ids'] = $data->idList;
-        }
-
-        if (property_exists($data, 'where')) {
-            $params['where'] = json_decode(json_encode($data->where), true);
-        }
-
-        if (empty($params['ids']) && empty($params['where'])) {
-            throw new BadRequest($this->getLanguage()->translate('idOrIdListOrWhereRequired', 'exceptions', 'ClusterItem'));
-        }
-
-        return new JsonResponse($recordService->move($params));
+        return new JsonResponse($this->getRecordService('ClusterItem')->move([
+            'ids'             => [$id],
+            'targetClusterId' => $targetClusterId,
+        ]));
     }
 }
