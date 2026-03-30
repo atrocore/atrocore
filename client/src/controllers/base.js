@@ -53,7 +53,8 @@ Espo.define('controllers/base', 'controller', function (Dep) {
 
         clearCache: function (options) {
             this.entire('views/clear-cache', {
-                cache: this.getCache()
+                cache: this.getCache(),
+                storage: this.getStorage()
             }, function (view) {
                 view.render();
             });
