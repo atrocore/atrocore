@@ -36,6 +36,12 @@
       ],
       [
         {
+          "name": "allowNullForBool"
+        },
+        false
+      ],
+      [
+        {
           "name": "readOnly"
         },
         false
