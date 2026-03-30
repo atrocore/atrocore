@@ -170,8 +170,12 @@ class Hierarchy extends Base
 
     public function getTreeData(array $params): array
     {
+        $sortBy = $params['sortBy'] ?? 'id';
+        $order = $params['asc'] ?  'ASC' : 'DESC';
+
         if (!isset($params['ids'])) {
             $params = $this->getParamsForTree($params['link'], $params['scope'], $params);
+            $params['sortBy'] = 'id';
             $repository = $this->getRepository();
             $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
             $selectParams['distinct'] = true;
@@ -186,7 +190,9 @@ class Hierarchy extends Base
         $tree = [];
         $treeBranches = [];
 
-        foreach ($this->getRepository()->where(['id' => $ids])->select($this->getSelectForTree())->find() as $entity) {
+        foreach ($this->getRepository()->where(['id' => $ids])
+                    ->order($sortBy, $order)
+                     ->select($this->getSelectForTree())->find() as $entity) {
             $this->createTreeBranches($entity, $treeBranches);
         }
 

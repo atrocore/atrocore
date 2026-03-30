@@ -119,7 +119,7 @@ class Record extends RecordService
         $params['maxCountWithoutJob'] = $this->getConfig()->get('massDeleteMaxCountWithoutJob', 200);
         $params['maxChunkSize'] = $this->getConfig()->get('massDeleteMaxChunkSize', 3000);
         $params['minChunkSize'] = $this->getConfig()->get('massDeleteMinChunkSize', 400);
-        $params['singleActionMethod'] = !empty($params['permanently']) ?  'deleteEntityPermanently' : 'deleteEntity';
+        $params['singleActionMethod'] = !empty($params['permanently']) ? 'deleteEntityPermanently' : 'deleteEntity';
 
         if (!empty($params['permanently'])) {
             $callback = function ($id) {
@@ -180,7 +180,7 @@ class Record extends RecordService
         $minChunkSize = $params['minChunkSize'];
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
 
-        $allowMassActions =  ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
+        $allowMassActions = ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
 
         $allowMassActions = array_merge(
             $allowMassActions,
@@ -422,7 +422,6 @@ class Record extends RecordService
             $fields[] = $localizedNameField;
         }
 
-
         if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
             $fields[] = $selectParams['orderBy'];
         }
@@ -658,7 +657,7 @@ class Record extends RecordService
         }
 
         $this->getEntityManager()->getAttributeFieldConverter()->putAttributesToEntity($primaryEntity);
-        if ($primaryEntity->hasField('attributesDefs')){
+        if ($primaryEntity->hasField('attributesDefs')) {
             $input->attributesDefs = json_decode(json_encode($primaryEntity->get('attributesDefs') ?? []));
         }
 
