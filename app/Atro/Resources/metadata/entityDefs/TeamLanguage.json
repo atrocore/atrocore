@@ -1,6 +1,6 @@
 {
   "fields": {
-    "role": {
+    "team": {
       "type": "link",
       "required": true
     },
@@ -19,25 +19,10 @@
         }
       }
     },
-    "readAction": {
-      "type": "bool",
-      "default": false,
-      "notNull": true
-    },
     "editAction": {
       "type": "bool",
       "default": false,
-      "notNull": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "readAction"
-            }
-          ]
-        }
-      }
+      "notNull": true
     },
     "createdAt": {
       "type": "datetime",
@@ -59,10 +44,10 @@
     }
   },
   "links": {
-    "role": {
+    "team": {
       "type": "belongsTo",
       "foreign": "languages",
-      "entity": "Role"
+      "entity": "Team"
     },
     "language": {
       "type": "belongsTo",
@@ -78,7 +63,7 @@
     "unique": [
       "deleted",
       "language_id",
-      "role_id"
+      "team_id"
     ]
   }
 }

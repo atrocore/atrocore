@@ -4,10 +4,7 @@
     "link": true
   },
   {
-    "name": "role"
-  },
-  {
-    "name": "readAction"
+    "name": "team"
   },
   {
     "name": "editAction"
