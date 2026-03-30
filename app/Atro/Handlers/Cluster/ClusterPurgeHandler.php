@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Cluster;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -27,37 +28,48 @@ use Psr\Http\Server\RequestHandlerInterface;
         'DELETE',
     ],
     summary: 'Purge cluster(s)',
-    description: 'Deletes all ClusterItems and RejectedClusterItems belonging to the selected clusters, then deletes the clusters themselves. Pass idList or where as query parameters to target specific clusters, or all=true to purge every cluster.',
+    description: 'Deletes all ClusterItems and RejectedClusterItems belonging to the selected clusters, then deletes the clusters themselves. Exactly one of all=true (query), idList, or where (request body) must be provided.',
     tag: 'Cluster',
     parameters: [
         [
             'name'        => 'all',
             'in'          => 'query',
             'required'    => false,
-            'description' => 'Set to true to purge all clusters, ignoring idList and where.',
+            'description' => 'Set to true to purge all clusters, ignoring body parameters.',
             'schema'      => [
                 'type' => 'boolean',
             ],
         ],
-        [
-            'name'        => 'idList[]',
-            'in'          => 'query',
-            'required'    => false,
-            'description' => 'List of Cluster IDs to purge.',
-            'schema'      => [
-                'type'  => 'array',
-                'items' => [
-                    'type' => 'string',
+    ],
+    requestBody: [
+        'required' => false,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'        => 'object',
+                    'description' => 'Required unless all=true is set in the query. Provide either idList or where.',
+                    'oneOf'       => [
+                        [
+                            'required'   => ['idList'],
+                            'properties' => [
+                                'idList' => [
+                                    'type'        => 'array',
+                                    'items'       => ['type' => 'string'],
+                                    'description' => 'List of Cluster IDs to purge.',
+                                ],
+                            ],
+                        ],
+                        [
+                            'required'   => ['where'],
+                            'properties' => [
+                                'where' => [
+                                    'type'        => 'array',
+                                    'description' => 'Filter criteria selecting Clusters to purge.',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
-            ],
-        ],
-        [
-            'name'        => 'where',
-            'in'          => 'query',
-            'required'    => false,
-            'description' => 'Filter criteria selecting Clusters to purge (JSON-encoded array).',
-            'schema'      => [
-                'type' => 'string',
             ],
         ],
     ],
@@ -89,6 +101,9 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'None of all, idList, or where was provided.',
+        ],
         403 => [
             'description' => 'Current user does not have delete access on Cluster.',
         ],
@@ -102,17 +117,18 @@ class ClusterPurgeHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $query  = $request->getQueryParams();
+        $query = $request->getQueryParams();
+        $data = $this->getRequestBody($request);
         $params = [];
 
         if (!empty($query['all']) && $query['all'] !== 'false') {
             $params['where'] = [];
-        } elseif (!empty($query['idList']) && is_array($query['idList'])) {
-            $params['ids'] = $query['idList'];
-        } elseif (!empty($query['where'])) {
-            $params['where'] = json_decode($query['where'], true);
+        } elseif (!empty($data->idList) && is_array($data->idList)) {
+            $params['ids'] = $data->idList;
+        } elseif (isset($data->where) && is_array($data->where)) {
+            $params['where'] = $data->where;
         } else {
-            $params['where'] = [];
+            throw new BadRequest('One of all, idList, or where is required.');
         }
 
         return new JsonResponse($this->getRecordService('Cluster')->purge($params));
