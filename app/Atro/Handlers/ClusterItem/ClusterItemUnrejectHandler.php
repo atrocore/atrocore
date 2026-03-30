@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/action/unreject',
+    path: '/ClusterItem/unreject',
     methods: [
         'POST',
     ],

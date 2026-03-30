@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/action/unmerge',
+    path: '/ClusterItem/unmerge',
     methods: [
         'POST',
     ],

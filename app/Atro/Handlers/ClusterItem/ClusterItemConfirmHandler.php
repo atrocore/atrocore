@@ -24,7 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/action/confirm',
+    path: '/ClusterItem/confirm',
     methods: [
         'POST',
     ],

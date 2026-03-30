@@ -6,14 +6,14 @@
       "disabled": true
     },
     "confirm": {
-      "url": "ClusterItem/action/confirm",
+      "url": "ClusterItem/confirm",
       "confirm": false,
       "refresh": true,
       "iconClass": "ph ph-check",
       "sortOrder": 10
     },
     "reject": {
-      "url": "ClusterItem/action/reject",
+      "url": "ClusterItem/reject",
       "confirm": false,
       "massAction": true,
       "refresh": true,
@@ -21,7 +21,7 @@
       "sortOrder": 20
     },
     "unmerge": {
-      "url": "ClusterItem/action/unmerge",
+      "url": "ClusterItem/unmerge",
       "confirm": false,
       "massAction": true,
       "refresh": true,
@@ -29,7 +29,7 @@
       "sortOrder": 30
     },
     "move": {
-      "url": "ClusterItem/action/move",
+      "url": "ClusterItem/move",
       "massAction": true,
       "refresh": true,
       "iconClass": "ph ph-arrow-right",
