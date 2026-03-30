@@ -137,7 +137,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         },
 
         getMergeUrl() {
-            return 'Cluster/action/merge'
+            return 'Cluster/merge'
         },
 
         getMergeData(targetId, attributes, relationshipData) {

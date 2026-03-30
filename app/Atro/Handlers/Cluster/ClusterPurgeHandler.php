@@ -48,26 +48,20 @@ use Psr\Http\Server\RequestHandlerInterface;
                 'schema' => [
                     'type'        => 'object',
                     'description' => 'Required unless all=true is set in the query. Provide either idList or where.',
+                    'properties'  => [
+                        'idList' => [
+                            'type'        => 'array',
+                            'items'       => ['type' => 'string'],
+                            'description' => 'List of Cluster IDs to purge.',
+                        ],
+                        'where'  => [
+                            'type'        => 'array',
+                            'description' => 'Filter criteria selecting Clusters to purge.',
+                        ],
+                    ],
                     'oneOf'       => [
-                        [
-                            'required'   => ['idList'],
-                            'properties' => [
-                                'idList' => [
-                                    'type'        => 'array',
-                                    'items'       => ['type' => 'string'],
-                                    'description' => 'List of Cluster IDs to purge.',
-                                ],
-                            ],
-                        ],
-                        [
-                            'required'   => ['where'],
-                            'properties' => [
-                                'where' => [
-                                    'type'        => 'array',
-                                    'description' => 'Filter criteria selecting Clusters to purge.',
-                                ],
-                            ],
-                        ],
+                        ['required' => ['idList']],
+                        ['required' => ['where']],
                     ],
                 ],
             ],

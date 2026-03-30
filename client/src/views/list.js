@@ -136,7 +136,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
             const runAction = () => {
                 this.notify(this.translate('Loading...'));
-                this.ajaxRequest(actionDefs.url, actionDefs.method || 'POST', { action: name, scope: scope })
+                this.ajaxRequest(actionDefs.url, actionDefs.method || 'POST', JSON.stringify({ action: name, scope: scope }))
                     .then(() => {
                         this.notify(this.translate('Done'), 'success');
                         if (actionDefs.refresh) {
