@@ -11,17 +11,19 @@
           "action": "universalAction",
           "style": "btn-danger",
           "acl": "delete",
-          "url": "Cluster/purge",
+          "url": "Cluster/purge?all=true",
+          "method": "DELETE",
           "confirm": true,
           "refresh": true
         }
       ]
     }
   },
-  "listActions": {
+  "massActions": {
     "purge": {
       "url": "Cluster/purge",
       "massAction": true,
+      "method": "DELETE",
       "confirm": true,
       "refresh": true,
       "iconClass": "ph ph-trash",
