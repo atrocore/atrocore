@@ -1026,7 +1026,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
                             this.notify(this.translate('Loading...'));
 
-                            data.selectedRecords = selectedRecords;
+                            if (actionDefs.modalSelectParam) {
+                                data[actionDefs.modalSelectParam] = selectedRecords[0]?.entityId;
+                            } else {
+                                data.selectedRecords = selectedRecords;
+                            }
                             this.ajaxPostRequest(actionDefs.url, data)
                                 .then(response => {
                                     this.notify(this.translate('Done'), 'success');

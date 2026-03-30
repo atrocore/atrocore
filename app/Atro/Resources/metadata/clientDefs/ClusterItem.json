@@ -34,7 +34,8 @@
       "refresh": true,
       "iconClass": "ph ph-arrow-right",
       "sortOrder": 40,
-      "modalSelectEntity": "Cluster"
+      "modalSelectEntity": "Cluster",
+      "modalSelectParam": "targetClusterId"
     }
   }
 }

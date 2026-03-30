@@ -605,9 +605,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         }, (dialog) => {
                             dialog.render(() => this.notify(false));
                             dialog.once('select', selected => {
-                                let selectedRecords = (Array.isArray(selected) ? selected : [selected])
-                                    .map(m => ({ entityName: m.name, entityId: m.id }));
-                                runMassAction({ selectedRecords });
+                                const first = Array.isArray(selected) ? selected[0] : selected;
+                                const payload = actionDefs.modalSelectParam
+                                    ? { [actionDefs.modalSelectParam]: first.id }
+                                    : { selectedRecords: (Array.isArray(selected) ? selected : [selected]).map(m => ({ entityName: m.name, entityId: m.id })) };
+                                runMassAction(payload);
                             });
                         });
                     } else {
@@ -3257,9 +3259,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, (dialog) => {
                         dialog.render(() => this.notify(false));
                         dialog.once('select', selected => {
-                            let selectedRecords = (Array.isArray(selected) ? selected : [selected])
-                                .map(m => ({ entityName: m.name, entityId: m.id }));
-                            runAction(Object.assign({ selectedRecords }, extraData || {}));
+                            const first = Array.isArray(selected) ? selected[0] : selected;
+                            const payload = actionDefs.modalSelectParam
+                                ? { [actionDefs.modalSelectParam]: first.id }
+                                : { selectedRecords: (Array.isArray(selected) ? selected : [selected]).map(m => ({ entityName: m.name, entityId: m.id })) };
+                            runAction(Object.assign(payload, extraData || {}));
                         });
                     });
                 } else {

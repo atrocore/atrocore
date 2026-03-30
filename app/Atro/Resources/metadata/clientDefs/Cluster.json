@@ -44,6 +44,7 @@
           "iconClass": "ph ph-arrow-right",
           "sortOrder": 40,
           "modalSelectEntity": "Cluster",
+          "modalSelectParam": "targetClusterId",
           "modalSelectWhere": [
             {"type": "equals", "attribute": "masterEntity", "value": "{{masterEntity}}"}
           ]
