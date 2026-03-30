@@ -606,8 +606,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                             dialog.render(() => this.notify(false));
                             dialog.once('select', selected => {
                                 const first = Array.isArray(selected) ? selected[0] : selected;
-                                const payload = actionDefs.modalSelectParam
-                                    ? { [actionDefs.modalSelectParam]: first.id }
+                                const payload = actionDefs.modalSelectResultParam
+                                    ? { [actionDefs.modalSelectResultParam]: first.id }
                                     : { selectedRecords: (Array.isArray(selected) ? selected : [selected]).map(m => ({ entityName: m.name, entityId: m.id })) };
                                 runMassAction(payload);
                             });
@@ -3260,8 +3260,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         dialog.render(() => this.notify(false));
                         dialog.once('select', selected => {
                             const first = Array.isArray(selected) ? selected[0] : selected;
-                            const payload = actionDefs.modalSelectParam
-                                ? { [actionDefs.modalSelectParam]: first.id }
+                            const payload = actionDefs.modalSelectResultParam
+                                ? { [actionDefs.modalSelectResultParam]: first.id }
                                 : { selectedRecords: (Array.isArray(selected) ? selected : [selected]).map(m => ({ entityName: m.name, entityId: m.id })) };
                             runAction(Object.assign(payload, extraData || {}));
                         });

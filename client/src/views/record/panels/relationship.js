@@ -1026,8 +1026,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
                             this.notify(this.translate('Loading...'));
 
-                            if (actionDefs.modalSelectParam) {
-                                data[actionDefs.modalSelectParam] = selectedRecords[0]?.entityId;
+                            if (actionDefs.modalSelectResultParam) {
+                                data[actionDefs.modalSelectResultParam] = selectedRecords[0]?.entityId;
                             } else {
                                 data.selectedRecords = selectedRecords;
                             }
