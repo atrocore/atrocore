@@ -87,7 +87,7 @@ Espo.define('views/admin/api-request/index', ['views/admin/page'], function (Dep
                             return;
                         }
                         this.notify(this.translate('Please Wait...'));
-                        this.ajaxPostRequest('MassActions/action/upsert', JSON.parse(model.get('request')))
+                        this.ajaxPostRequest('upsert', JSON.parse(model.get('request')))
                             .success(res => {
                                 this.notify(false);
                                 if (res) {
