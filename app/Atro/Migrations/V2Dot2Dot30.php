@@ -22,16 +22,18 @@ class V2Dot2Dot30 extends Base
 
     public function up(): void
     {
-        if ($this->isPgSQL()) {
-            $this->exec("CREATE TABLE role_language (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', read_action BOOLEAN DEFAULT 'false' NOT NULL, edit_action BOOLEAN DEFAULT 'false' NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, role_id VARCHAR(36) DEFAULT NULL, language_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id));");
-            $this->exec("CREATE UNIQUE INDEX IDX_ROLE_LANGUAGE_UNIQUE ON role_language (deleted, language_id, role_id);");
-            $this->exec("CREATE INDEX IDX_ROLE_LANGUAGE_ROLE_ID ON role_language (role_id, deleted);");
+        if ($this->isPgsql()) {
+            $this->exec("CREATE TABLE team_language (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', edit_action BOOLEAN DEFAULT 'false' NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, team_id VARCHAR(36) DEFAULT NULL, language_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id));");
+            $this->exec("CREATE UNIQUE INDEX IDX_TEAM_LANGUAGE_UNIQUE ON team_language (deleted, language_id, team_id);");
+            $this->exec("CREATE INDEX IDX_TEAM_LANGUAGE_TEAM_ID ON team_language (team_id, deleted);");
+            $this->exec("ALTER TABLE team ADD language_restricted BOOLEAN DEFAULT 'false' NOT NULL");
         } else {
-            $this->exec("CREATE TABLE role_language (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', read_action TINYINT(1) DEFAULT '0' NOT NULL, edit_action TINYINT(1) DEFAULT '0' NOT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, role_id VARCHAR(36) DEFAULT NULL, language_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_ROLE_LANGUAGE_UNIQUE (deleted, language_id, role_id), INDEX IDX_ROLE_LANGUAGE_ROLE_ID (role_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
+            $this->exec("CREATE TABLE team_language (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', edit_action TINYINT(1) DEFAULT '0' NOT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, team_id VARCHAR(36) DEFAULT NULL, language_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_TEAM_LANGUAGE_UNIQUE (deleted, language_id, team_id), INDEX IDX_TEAM_LANGUAGE_TEAM_ID (team_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
+            $this->exec("ALTER TABLE team ADD language_restricted TINYINT(1) DEFAULT '0' NOT NULL;");
         }
 
-        // extesnbileEnumOption
-        if($this->isPgSQL()) {
+        // extensibleEnumOption
+        if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE extensible_enum_option ALTER name TYPE VARCHAR(255)");
             $this->exec("ALTER TABLE extensible_enum_option ALTER name DROP DEFAULT");
             foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
@@ -39,7 +41,7 @@ class V2Dot2Dot30 extends Base
                 $this->exec("ALTER TABLE extensible_enum_option ALTER name_$suffix TYPE VARCHAR(255)");
                 $this->exec("ALTER TABLE extensible_enum_option ALTER name_$suffix DROP DEFAULT");
             }
-        }else{
+        } else {
             $this->exec("ALTER TABLE extensible_enum_option CHANGE name name VARCHAR(255) DEFAULT NULL");
             foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
                 $suffix = strtolower($code);
