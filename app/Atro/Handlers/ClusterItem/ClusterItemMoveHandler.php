@@ -36,7 +36,9 @@ use Psr\Http\Server\RequestHandlerInterface;
             'application/json' => [
                 'schema' => [
                     'type'       => 'object',
-                    'required'   => ['selectedRecords'],
+                    'required'   => [
+                        'selectedRecords'
+                    ],
                     'properties' => [
                         'id'              => [
                             'type' => 'string',
@@ -58,8 +60,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'items' => [
                                 'type'       => 'object',
                                 'properties' => [
-                                    'entityName' => ['type' => 'string'],
-                                    'entityId'   => ['type' => 'string'],
+                                    'entityName' => [
+                                        'type' => 'string'
+                                    ],
+                                    'entityId'   => [
+                                        'type' => 'string'
+                                    ],
                                 ],
                             ],
                         ],
@@ -81,7 +87,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class MoveHandler extends AbstractHandler
+class ClusterItemMoveHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
