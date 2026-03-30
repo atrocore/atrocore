@@ -605,6 +605,8 @@ class Entity extends ReferenceData
             }
         }
 
+        $this->getEntityManager()->getRepository('ClusterItem')->afterDeleteEntity($entity->get('code'));
+
         $this->getDataManager()->clearCache();
 
         return true;

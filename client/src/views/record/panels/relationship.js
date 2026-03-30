@@ -901,7 +901,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         actionRemoveRelated: function (data, evt) {
             const model = this.getModel(data, evt);
 
-            let link = this.collection.url.split('/').pop();
+            let link = this.link;
 
             let message = 'Global.messages.removeRecordConfirmation';
             if (this.isHierarchical()) {
