@@ -11,7 +11,7 @@
           "action": "universalAction",
           "style": "btn-danger",
           "acl": "delete",
-          "url": "Cluster/action/purge",
+          "url": "Cluster/purge",
           "confirm": true,
           "refresh": true
         }
@@ -20,7 +20,7 @@
   },
   "listActions": {
     "purge": {
-      "url": "Cluster/action/purge",
+      "url": "Cluster/purge",
       "massAction": true,
       "confirm": true,
       "refresh": true,

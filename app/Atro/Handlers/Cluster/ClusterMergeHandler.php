@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Cluster/action/merge',
+    path: '/Cluster/merge',
     methods: [
         'POST',
     ],
