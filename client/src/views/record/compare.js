@@ -239,12 +239,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         getMergeUrl() {
-            return 'App/action/merge'
+            return 'entityMerge'
         },
 
         getMergeData(targetId, attributes, relationshipData) {
             return {
-                scope: this.scope,
+                entityName: this.scope,
                 attributes: {
                     input: attributes,
                     relationshipData: relationshipData
