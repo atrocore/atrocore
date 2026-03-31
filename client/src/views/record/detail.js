@@ -1577,7 +1577,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.realtimeId = this.model.get('id');
             }
 
-            this.ajaxPostRequest('App/action/startEntityListening', {
+            this.ajaxPostRequest('startEntityListening', {
                 entityName: this.model.name,
                 entityId: this.model.get('id')
             }).success(res => {
