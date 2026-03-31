@@ -53,3 +53,5 @@ To manage an individual attribute, click the three-dot menu on its row:
 An Attribute Panel appears on a record's detail view only when at least one attribute assigned to that panel has been added to the record. Panels with no attributes on the record are not shown.
 
 The order in which panels appear is determined solely by the Sort Order field on each panel.
+
+The order of attributes within the Classification Attributes panel on a Classification record can be adjusted by drag-and-drop. This order takes priority over the sort order defined on the attribute itself.
