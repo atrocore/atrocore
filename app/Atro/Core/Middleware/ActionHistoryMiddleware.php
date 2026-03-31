@@ -107,7 +107,7 @@ class ActionHistoryMiddleware implements MiddlewareInterface
         $method     = $request->getMethod();
 
         // Always skip these scopes (except App is handled by its own dedicated handlers)
-        if (in_array($entityName, ['ActionHistoryRecord', 'App', 'LogNavigation', 'Metadata'])) {
+        if (in_array($entityName, ['ActionHistoryRecord', 'App', 'LogNavigation', 'Metadata', 'UserSession'])) {
             return false;
         }
 
