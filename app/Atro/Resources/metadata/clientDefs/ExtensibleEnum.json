@@ -5,7 +5,7 @@
     "extensibleEnumOptions": {
       "dragDrop": {
         "isActive": true,
-        "sortField": "extensible_enum_extensible_enum_option_mm.sorting"
+        "sortField": "sortOrder"
       },
       "sortBy": "sorting",
       "asc": true
