@@ -116,6 +116,13 @@ class User extends RDB
             if ($user) {
                 throw new BadRequest($this->getLanguage()->translate('userNameExists', 'messages', 'User'));
             }
+
+            $id = self::generateId();
+
+            $entity->set('id', $id);
+            $entity->set('delegatorId', $id);
+            $entity->set('actorId',$id);
+
         } else {
             if ($entity->isAttributeChanged('userName')) {
                 $userName = $entity->get('userName');
