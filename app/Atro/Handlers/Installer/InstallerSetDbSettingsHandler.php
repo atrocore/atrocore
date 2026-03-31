@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Set database settings',
     description: 'Saves database connection settings for installation. Only accessible before installation.',
     tag: 'Installer',
+    installerOnly: true,
     auth: false,
     requestBody: [
         'required' => true,

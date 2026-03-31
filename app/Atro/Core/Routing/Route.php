@@ -22,11 +22,12 @@ class Route
         public readonly string       $summary,
         public readonly string       $description,
         public readonly string       $tag,
-        public readonly bool         $auth        = true,
-        public readonly array        $parameters  = [],
-        public readonly array        $requestBody = [],
-        public readonly array        $responses   = [],
-        public readonly array        $entities    = [],
+        public readonly bool         $auth          = true,
+        public readonly array        $parameters    = [],
+        public readonly array        $requestBody   = [],
+        public readonly array        $responses     = [],
+        public readonly array        $entities      = [],
+        public readonly bool         $installerOnly = false,
     ) {
     }
 }
