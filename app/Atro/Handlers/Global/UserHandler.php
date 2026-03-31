@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get authorized user data',
     description: 'Generate authorization token and return authorized user data.',
     tag: 'Global',
+    skipActionHistory: true,
     auth: true,
     parameters: [
         [

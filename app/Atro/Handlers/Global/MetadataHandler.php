@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Returns all metadata for the current user',
     description: 'Returns all metadata for the current user.',
     tag: 'Global',
+    skipActionHistory: true,
     responses: [
         200 => [
             'description' => 'Metadata object',
