@@ -10,11 +10,7 @@ taxonomy:
 
 > An Attribute Panel is required for every attribute. [Attribute Groups](../02.attribute-groups/) are optional and can also be assigned at the individual attribute level.
 
-You can use:
-
-- the built-in **Attributes** panel — displays attribute values for all attributes not assigned to any custom panel
-- custom Attribute Panels — display only the attributes explicitly assigned to them
-- or both in combination
+When attributes are enabled for an entity, a default Attributes panel is created automatically. This panel can be selected when creating an attribute. Additional custom panels can be created as needed to organise attributes into separate sections.
 
 **Attribute Panels** are accessible from the [Navigation Menu](https://help.atrocore.com/latest/atrocore/administration/user-interface/navigation).
 
@@ -54,8 +50,6 @@ To manage an individual attribute, click the three-dot menu on its row:
 
 ## Displaying Attribute Panels on a Record Detail View
 
-Attribute Panels appear automatically on an entity's record detail view as soon as an attribute is assigned to them.
+An Attribute Panel appears on a record's detail view only when at least one attribute assigned to that panel has been added to the record. Panels with no attributes on the record are not shown.
 
-For example, on the [Product](../../../../05.pim/03.products/docs.md) detail page, panels are shown when configured via `Administration > Layouts > Products > Relation panels`. Each panel displays values only for the attributes assigned to it, so use the correct panel when adding attributes to records.
-
-> To adjust panel visibility or order, see [Layouts](https://help.atrocore.com/latest/atrocore/administration/user-interface/layouts).
+The order in which panels appear is determined solely by the Sort Order field on each panel.
