@@ -100,14 +100,6 @@ To see all linked records in a full list view pre-filtered by this Classificatio
 
 ![Show full list option](./_assets/show-full-option.png){.medium}
 
-### Mass Actions
-
-Available mass actions for Classification records: Remove, Compare, Merge, Mass Update, Export, Translate, Add relation, Remove relation.
-
-![Classifications mass actions](./_assets/pf-mass-actions.png){.medium}
-
-For details, see [Mass Actions](../../../04.understanding-ui/docs.md#mass-actions).
-
 ## Enabling Classifications for an Entity
 
 By default, Classifications are available for Products. To enable them for another entity, go to `Administration > Entities`, (see [Entity Management](../../11.entity-management/docs.md)) open the entity in edit mode, check **Has Attributes**, then check **Has Classifications**:
