@@ -165,12 +165,13 @@ class RouteCompiler
                 }
 
                 $routes[] = [
-                    'path'           => '/api' . $routeAttr->path,
-                    'methods'        => array_map('strtoupper', (array) $routeAttr->methods),
-                    'handlerClass'   => $className,
-                    'auth'           => $routeAttr->auth,
-                    'openapi'        => $routeAttr->hidden ? [] : $this->buildOpenApiEntry($routeAttr),
-                    'schemaEntities' => $routeAttr->entities,
+                    'path'               => '/api' . $routeAttr->path,
+                    'methods'            => array_map('strtoupper', (array) $routeAttr->methods),
+                    'handlerClass'       => $className,
+                    'auth'               => $routeAttr->auth,
+                    'openapi'            => $routeAttr->hidden ? [] : $this->buildOpenApiEntry($routeAttr),
+                    'schemaEntities'     => $routeAttr->entities,
+                    'skipActionHistory'  => $routeAttr->skipActionHistory,
                 ];
             }
         }

@@ -119,6 +119,9 @@ class HttpPipeline implements FactoryInterface
             if (!empty($entry['entityName'])) {
                 $options['entityName'] = $entry['entityName'];
             }
+            if (!empty($entry['skipActionHistory'])) {
+                $options['skipActionHistory'] = true;
+            }
             if (!empty($options)) {
                 $route->setOptions($options);
             }

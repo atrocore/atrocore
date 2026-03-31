@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Global;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
@@ -24,40 +23,61 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/UserProfile/action/resetDashboard',
+    path: '/resetDashboard',
     methods: [
         'POST',
     ],
     summary: 'Reset dashboard layout',
-    description: 'Resets the dashboard layout and dashlet options for a user to the default. Admins can reset any user; regular users can only reset their own.',
+    description: 'Resets the dashboard layout and dashlet options for the specified user to the system default. '
+        . 'Admins can reset any user; regular users can only reset themselves.',
     tag: 'Global',
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => ['id'],
+                    'properties' => [
+                        'id' => [
+                            'type'        => 'string',
+                            'description' => 'ID of the user whose dashboard should be reset.',
+                            'example'     => 'a01k1g09hhce8m8pkmzt3zzyq5v',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
         200 => [
-            'description' => 'Reset dashboard data',
+            'description' => 'Default dashboard layout applied to the user.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
                             'dashboardLayout' => [
-                                'nullable' => true,
+                                'type'        => 'array',
+                                'nullable'    => true,
+                                'description' => 'Default dashboard tab layout, or null if no default is configured.',
+                                'items'       => ['type' => 'object'],
                             ],
                             'dashletsOptions' => [
-                                'nullable' => true,
+                                'type'        => 'object',
+                                'nullable'    => true,
+                                'description' => 'Default dashlet options, or null if no default is configured.',
                             ],
                         ],
                     ],
                 ],
             ],
         ],
-        400 => [
-            'description' => 'id is required',
-        ],
         403 => [
-            'description' => 'Forbidden',
+            'description' => 'The authenticated user is not allowed to reset another user\'s dashboard.',
         ],
         404 => [
-            'description' => 'User not found',
+            'description' => 'User with the given id not found.',
         ],
     ],
 )]
@@ -66,10 +86,6 @@ class ResetDashboardHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getRequestBody($request);
-
-        if (empty($data->id)) {
-            throw new BadRequest();
-        }
 
         if (!$this->getUser()->isAdmin()) {
             if ($this->getUser()->id != $data->id) {

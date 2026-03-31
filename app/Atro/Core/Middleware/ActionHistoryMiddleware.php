@@ -103,13 +103,16 @@ class ActionHistoryMiddleware implements MiddlewareInterface
             return false;
         }
 
+        /** @var RouteResult|null $routeResult */
+        $routeResult = $request->getAttribute(RouteResult::class);
+        if ($routeResult && !$routeResult->isFailure()) {
+            if ($routeResult->getMatchedRoute()->getOptions()['skipActionHistory'] ?? false) {
+                return false;
+            }
+        }
+
         $entityName = $this->resolveEntityName($request);
         $method     = $request->getMethod();
-
-        // Always skip these scopes (except App is handled by its own dedicated handlers)
-        if (in_array($entityName, ['ActionHistoryRecord', 'App', 'LogNavigation', 'Metadata'])) {
-            return false;
-        }
 
         // Skip GET requests for layout/i18n/settings endpoints
         if ($method === 'GET') {

@@ -61,7 +61,8 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'true if the navigation event was logged successfully.',
         ],
     ],
-    hidden: true
+    hidden: true,
+    skipActionHistory: true,
 )]
 class LogNavigationHandler extends AbstractHandler
 {
