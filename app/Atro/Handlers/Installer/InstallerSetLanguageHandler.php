@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Set installer language',
     description: 'Sets the installation language. Only accessible before installation.',
     tag: 'Installer',
+    installerOnly: true,
     auth: false,
     requestBody: [
         'required' => true,

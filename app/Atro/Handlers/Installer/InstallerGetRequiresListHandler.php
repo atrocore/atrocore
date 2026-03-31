@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get requirements list',
     description: 'Returns the list of system requirements and their status. Only accessible before installation.',
     tag: 'Installer',
+    installerOnly: true,
     auth: false,
     responses: [
         200 => [

@@ -45,12 +45,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "languages": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "noLoad": true
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -87,11 +81,6 @@
       "type": "hasMany",
       "foreign": "role",
       "entity": "RoleScope"
-    },
-    "languages": {
-      "type": "hasMany",
-      "foreign": "role",
-      "entity": "RoleLanguage"
     }
   },
   "collection": {

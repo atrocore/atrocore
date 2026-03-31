@@ -411,7 +411,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
         resetDashboard: function () {
             this.confirm(this.translate('confirmation', 'messages'), function () {
                 this.notify('Loading...');
-                this.ajaxPostRequest('UserProfile/action/resetDashboard', {
+                this.ajaxPostRequest('resetDashboard', {
                     id: this.getUser().id
                 }).done(function (data) {
                     Espo.Ui.success(this.translate('Done'));

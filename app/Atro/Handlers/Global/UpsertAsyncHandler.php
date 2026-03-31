@@ -21,24 +21,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/MassActions/action/upsert',
+    path: '/upsertAsync',
     methods: [
         'POST',
     ],
-    summary: 'Bulk Create and Bulk Update',
-    description: 'The system will try to find existing entities based on the identifier or unique fields. If an entity is found, it will be updated, otherwise it will be created.',
+    summary: 'Bulk upsert entities as a background job',
+    description: 'Schedules a bulk upsert as a background job and returns immediately with the job ID. The actual create/update logic is identical to `POST /upsert` but runs asynchronously via the job queue.',
     tag: 'Global',
-    parameters: [
-        [
-            'name'     => 'Use-Queue',
-            'in'       => 'header',
-            'required' => false,
-            'schema'   => [
-                'type'    => 'boolean',
-                'example' => false,
-            ],
-        ],
-    ],
     requestBody: [
         'required' => true,
         'content'  => [
@@ -47,13 +36,19 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'type'  => 'array',
                     'items' => [
                         'type'       => 'object',
+                        'required'   => [
+                            'entity',
+                            'payload',
+                        ],
                         'properties' => [
                             'entity'  => [
-                                'type'    => 'string',
-                                'example' => 'Product',
+                                'type'        => 'string',
+                                'description' => 'Entity name (e.g. "Product")',
+                                'example'     => 'Product',
                             ],
                             'payload' => [
-                                'type' => 'object',
+                                'type'        => 'object',
+                                'description' => 'Field values to create or update. Provide `id` to target a specific record, or include unique field values for automatic lookup.',
                             ],
                         ],
                     ],
@@ -63,13 +58,19 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Upsert results',
+            'description' => 'Reference to the created background job.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'  => 'array',
-                        'items' => [
-                            'type' => 'object',
+                        'type'       => 'object',
+                        'required'   => [
+                            'jobId',
+                        ],
+                        'properties' => [
+                            'jobId' => [
+                                'type'        => 'string',
+                                'description' => 'ID of the created background job.',
+                            ],
                         ],
                     ],
                 ],
@@ -77,25 +78,16 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class MassActionsUpsertHandler extends AbstractHandler
+class UpsertAsyncHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $useQueue = $request->getHeaderLine('Use-Queue');
-        $viaJob   = $useQueue === '1' || strtolower($useQueue) === 'true';
-
         $body = (string) $request->getBody();
         $data = $body !== '' ? json_decode($body, true) : [];
         if (!is_array($data)) {
             $data = [];
         }
 
-        $service = $this->getServiceFactory()->create('MassActions');
-
-        if ($viaJob) {
-            return new JsonResponse($service->upsertViaJob($data));
-        }
-
-        return new JsonResponse($service->upsert($data));
+        return new JsonResponse($this->getServiceFactory()->create('MassActions')->upsertViaJob($data));
     }
 }

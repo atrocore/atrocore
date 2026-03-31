@@ -8,7 +8,7 @@
           "name": "language"
         },
         {
-          "name": "role"
+          "name": "team"
         }
       ]
     ]
@@ -19,11 +19,9 @@
     "rows": [
       [
         {
-          "name": "readAction"
-        },
-        {
           "name": "editAction"
-        }
+        },
+        false
       ]
     ]
   }

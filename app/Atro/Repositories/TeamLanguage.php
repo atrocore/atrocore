@@ -19,28 +19,19 @@ use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
 
-class RoleLanguage extends Base
+class TeamLanguage extends Base
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
         $exists = $this->where([
-            'roleId'     => $entity->get('roleId'),
+            'teamId'     => $entity->get('teamId'),
             'languageId' => $entity->get('languageId'),
         ])->findOne();
 
         if (!empty($exists) && $exists->get('id') !== $entity->get('id')) {
-            $fieldName = $this->getLanguage()->translate('language', 'fields', 'RoleLanguage');
+            $fieldName = $this->getLanguage()->translate('language', 'fields', 'TeamLanguage');
             $message = $this->getLanguage()->translate('notUniqueRecordField', 'exceptions');
             throw new NotUnique(sprintf($message, $fieldName));
-        }
-
-        $language = $this->getEntityManager()->getEntity('Language', $entity->get('languageId'));
-        if (!empty($language) && $language->get('role') === 'main' && empty($entity->get('readAction'))) {
-            throw new BadRequest($this->getLanguage()->translate('mainLanguageMustBeReadable', 'exceptions', 'RoleLanguage'));
-        }
-
-        if (empty($entity->get('readAction'))) {
-            $entity->set('editAction', false);
         }
 
         parent::beforeSave($entity, $options);
@@ -51,6 +42,19 @@ class RoleLanguage extends Base
         parent::afterSave($entity, $options);
 
         $this->getAclManager()->clearAclCache();
+    }
+
+    public function beforeRemove(Entity $entity, array $options = [])
+    {
+        $team = $this->getEntityManager()->getEntity('Team', $entity->get('teamId'));
+        if (!empty($team) && $team->get('languageRestricted')) {
+            $language = $this->getEntityManager()->getEntity('Language', $entity->get('languageId'));
+            if (!empty($language) && $language->get('role') === 'main') {
+                throw new BadRequest($this->getLanguage()->translate('cannotRemoveLanguageWhenRestricted', 'exceptions', 'TeamLanguage'));
+            }
+        }
+
+        parent::beforeRemove($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

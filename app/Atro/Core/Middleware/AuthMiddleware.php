@@ -28,7 +28,7 @@ class AuthMiddleware implements MiddlewareInterface
     private const ALLOWED_URI_WITH_EXPIRED_PASSWORD = [
         '/api/',
         '/api/User/action/changeExpiredPassword',
-        '/api/App/user',
+        '/api/userSession',
     ];
 
     public function __construct(private readonly ContainerInterface $container)
@@ -91,13 +91,13 @@ class AuthMiddleware implements MiddlewareInterface
 
     private function extractCredentials(ServerRequestInterface $request): array
     {
-        if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-            return explode(':', base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)), 2);
-        }
-
         $token = $request->getHeaderLine('Authorization-Token');
         if ($token !== '') {
             return explode(':', base64_decode($token), 2);
+        }
+
+        if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+            return explode(':', base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)), 2);
         }
 
         $params = $request->getServerParams();

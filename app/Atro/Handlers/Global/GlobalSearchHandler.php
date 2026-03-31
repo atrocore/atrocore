@@ -21,49 +21,63 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/GlobalSearch',
+    path: '/globalSearch',
     methods: [
         'GET',
     ],
     summary: 'Global search',
-    description: 'Searches across all enabled entity types and returns matching records.',
+    description: 'Searches for records matching the query string across all entity types that have global search enabled. '
+        . 'Results are limited to 20 records in total, ordered by entity type as configured. '
+        . 'Only entity types accessible to the current user are included.',
     tag: 'Global',
     parameters: [
         [
-            'name'     => 'q',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
+            'name'        => 'q',
+            'in'          => 'query',
+            'required'    => true,
+            'description' => 'Search query string (minimum 2 characters).',
+            'schema'      => [
                 'type'    => 'string',
-                'example' => 'product name',
-            ],
-        ],
-        [
-            'name'     => 'offset',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
-                'type'    => 'integer',
-                'example' => 0,
-            ],
-        ],
-        [
-            'name'     => 'maxSize',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
-                'type'    => 'integer',
-                'example' => 10,
+                'example' => 'laptop',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Search results',
+            'description' => 'Matching records found across entity types.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object',
+                        'type'       => 'object',
+                        'properties' => [
+                            'count' => [
+                                'type'        => 'integer',
+                                'description' => 'Total number of records returned (maximum 20).',
+                                'example'     => 3,
+                            ],
+                            'list'  => [
+                                'type'        => 'array',
+                                'description' => 'Matched records. Each item includes at minimum `id`, `name`, and `_scope` (entity type name).',
+                                'items'       => [
+                                    'type'       => 'object',
+                                    'properties' => [
+                                        'id'     => [
+                                            'type'        => 'string',
+                                            'description' => 'Record ID.',
+                                        ],
+                                        'name'   => [
+                                            'type'        => 'string',
+                                            'description' => 'Record name.',
+                                        ],
+                                        '_scope' => [
+                                            'type'        => 'string',
+                                            'description' => 'Entity type name the record belongs to (e.g. "Product", "Category").',
+                                            'example'     => 'Product',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],

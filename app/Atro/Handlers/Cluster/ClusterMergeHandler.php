@@ -22,12 +22,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Cluster/action/merge',
+    path: '/Cluster/merge',
     methods: [
         'POST',
     ],
-    summary: 'Merge multiple records into the golden record',
-    description: 'Merge multiple records into the golden record.',
+    summary: 'Merge cluster items into a golden record',
+    description: 'Merges the specified source entity records (identified by their entity IDs within the cluster) into the cluster\'s golden record. If no golden record exists yet, one is resolved from the sources or created from the provided attributes. Relationship data from all source records is merged into the golden record. Returns the resulting golden record\'s field values.',
     tag: 'Cluster',
     requestBody: [
         'required' => true,
@@ -42,16 +42,19 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                     'properties' => [
                         'clusterId'  => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'ID of the Cluster whose items are being merged.',
                         ],
                         'sourceIds'  => [
-                            'type'  => 'array',
-                            'items' => [
+                            'type'        => 'array',
+                            'description' => 'Entity IDs of the ClusterItems to merge into the golden record.',
+                            'items'       => [
                                 'type' => 'string',
                             ],
                         ],
                         'attributes' => [
-                            'type' => 'object',
+                            'type'        => 'object',
+                            'description' => 'Field values and relationship data to apply to the golden record. Must contain an `input` object with field values and a `relationshipData` array for has-many link mutations.',
                         ],
                     ],
                 ],
@@ -60,7 +63,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Merged entity record',
+            'description' => 'Field values of the resulting golden record.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -68,6 +71,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'clusterId, sourceIds, or attributes is missing or invalid; or the cluster was not found.',
+        ],
+        403 => [
+            'description' => 'Current user does not have create access on the cluster\'s masterEntity.',
         ],
     ],
 )]
