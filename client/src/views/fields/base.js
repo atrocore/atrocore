@@ -1907,7 +1907,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 && !(this.options.el || '').includes("stream")
             ) {
                 this.model.set(this.name, null);
-                this.ajaxGetRequest('evaluateScriptFieldDefault', {
+                this.ajaxPostRequest('evaluateScriptFieldDefault', {
                     entityName: this.model.name,
                     field: this.name
                 }).success(res => {

@@ -25,18 +25,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 #[Route(
     path: '/entityScriptDefaultFields',
     methods: [
-        'GET',
+        'POST',
     ],
     summary: 'Get script default fields',
     description: 'Returns computed Twig default values for all fields of the specified entity that have a script-type default.',
     tag: 'Global',
-    parameters: [
-        [
-            'name'     => 'entityName',
-            'in'       => 'query',
-            'required' => true,
-            'schema'   => [
-                'type' => 'string',
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => ['entityName'],
+                    'properties' => [
+                        'entityName' => [
+                            'type'        => 'string',
+                            'description' => 'Entity name (e.g. "Product").',
+                            'example'     => 'Product',
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
@@ -66,7 +74,8 @@ class ScriptDefaultFieldsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = (string)($request->getQueryParams()['entityName'] ?? '');
+        $data = $this->getRequestBody($request);
+        $entityName = (string)($data->entityName ?? '');
         if (empty($entityName)) {
             throw new BadRequest('entityName is required');
         }
