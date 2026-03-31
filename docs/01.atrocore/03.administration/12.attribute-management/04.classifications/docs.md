@@ -21,6 +21,8 @@ Classifications can be activated or deactivated.
 
 ## Creating a Classification
 
+![Classifications list view](./_assets/pf-list-view.png){.large}
+
 [Navigate](../../13.user-interface/01.navigation/docs.md) to **Classifications** in the navigation menu and click `Create`:
 
 ![Create Classification](./_assets/create-classification.png){.medium}
@@ -64,7 +66,6 @@ The panel displays the following columns:
 - **Attribute**
 - **Required**
 - **Default Value**
-- **Audit Completeness** (available with the [Data Quality](https://store.atrocore.com/en/data-quality/20218) module)
 
 ### Attribute Actions
 
@@ -99,28 +100,26 @@ To see all linked records in a full list view pre-filtered by this Classificatio
 
 ![Show full list option](./_assets/show-full-option.png){.medium}
 
-## List View and Navigation
-
-![Classifications list view](./_assets/pf-list-view.png){.large}
-
-Click any sortable column header to sort ascending or descending. For search and filtering options, see [Search and Filtering](../../../11.search-and-filtering/).
-
-Classifications also support [Tree Navigation](../../../11.search-and-filtering/docs.md#tree-navigation-and-display) in the left sidebar — similar to [Categories](../../../../05.pim/05.categories/docs.md). Each Classification is shown with a `+` icon; clicking it displays all records assigned to that Classification.
-
 ### Mass Actions
 
 Available mass actions for Classification records: Remove, Compare, Merge, Mass Update, Export, Translate, Add relation, Remove relation.
 
 ![Classifications mass actions](./_assets/pf-mass-actions.png){.medium}
 
-Some actions require additional modules. For details, see [Mass Actions](../../../04.understanding-ui/docs.md#mass-actions).
+For details, see [Mass Actions](../../../04.understanding-ui/docs.md#mass-actions).
 
 ## Enabling Classifications for an Entity
 
-By default, Classifications are available for Products. To enable them for another entity, go to `Administration > Entities`, open the entity in edit mode, check **Has Attributes**, then check **Has Classifications**:
+By default, Classifications are available for Products. To enable them for another entity, go to `Administration > Entities`, (see [Entity Management](../../11.entity-management/docs.md)) open the entity in edit mode, check **Has Attributes**, then check **Has Classifications**:
 
 ![Has Classifications checkbox](./_assets/Has-Classificationst.png){.medium}
 
-Once enabled, you can also activate **Delete attribute values after unlinking classifications** — this removes all Classification attribute values from a record when the Classification is unlinked from it:
+Once **Has Classifications** is enabled, the following additional options become available for that entity:
+
+- **Delete attribute values after unlinking classifications**. When enabled, all Classification attribute values are removed from a record when that Classification is unlinked from it. When disabled, the attribute values are kept on the record even after the Classification is removed.
 
 ![Delete attribute values option](./_assets/Delete-attribute-values.png){.medium}
+
+- **Disable direct attribute linking**. When enabled, attributes can only be added to records via a Classification — users cannot link attributes to records manually. This enforces that all attributes on a record come from an assigned Classification, which is useful when strict data governance is required.
+- **Single Classification only**. When enabled, a record can be assigned to only one Classification at a time. Attempting to add a second Classification will replace the existing one. Use this when your data model requires exactly one classification template per record.
+- **Link Attributes with the Classification automatically**. When enabled, if a user directly links an attribute to a record, and that record is already assigned to a Classification, the attribute will also be automatically added to that Classification. This keeps Classifications in sync with attributes that editors add on individual records. This option is only available when **Has Attributes** is enabled and **Disable direct attribute linking** is disabled.
