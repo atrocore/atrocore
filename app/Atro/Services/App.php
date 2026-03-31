@@ -20,10 +20,8 @@ use Atro\Core\DataManager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Mail\Sender;
 use Atro\Core\Utils\Metadata;
 use Espo\Core\Acl;
-use Espo\ORM\Entity;
 
 class App extends AbstractService
 {
@@ -147,22 +145,6 @@ class App extends AbstractService
                 'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
             ],
         ];
-    }
-
-    public function sendTestEmail(array $data): bool
-    {
-        $this
-            ->getMailSender()
-            ->send(
-                [
-                    'subject' => 'Test Email',
-                    'body'    => 'Test Email',
-                    'isHtml'  => false,
-                    'to'      => $data['emailAddress'],
-                ]
-            );
-
-        return true;
     }
 
     public function getPreferencesData(): \stdClass
@@ -321,11 +303,6 @@ class App extends AbstractService
     protected function getDataManager(): DataManager
     {
         return $this->getInjection('container')->get('dataManager');
-    }
-
-    protected function getMailSender(): Sender
-    {
-        return $this->getInjection('container')->get('mailSender');
     }
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter
