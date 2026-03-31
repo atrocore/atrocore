@@ -65,9 +65,7 @@ class ExtensibleEnumOption extends Base
     private function applyOnlyForExtensibleEnum(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper, string $enumId): void
     {
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-        if (empty($params['aggregation'])) {
-            $qb->addSelect("ee_eeo.sorting");
-        }
+
         $qb->innerJoin($tableAlias, 'extensible_enum_extensible_enum_option', "ee_eeo", "$tableAlias.id = ee_eeo.extensible_enum_option_id")
             ->innerJoin('ee_eeo', 'extensible_enum', "ee", "ee.id = ee_eeo.extensible_enum_id")
             ->andWhere("ee_eeo.deleted = :false and ee.deleted = :false and ee.id = :enumId")

@@ -22,7 +22,7 @@ class ExtensibleEnumOption extends Base
     public function updateEntity($id, $data)
     {
         if (property_exists($data, '_id') && property_exists($data, '_sortedIds') && property_exists($data, '_scope') && !empty($data->_sortedIds)) {
-            $this->getEntityManager()->getRepository('ExtensibleEnumExtensibleEnumOption')->updateSortOrder($data->_id, $data->_sortedIds);
+            $this->getRepository()->updateSortOrder($data->_sortedIds);
             return $this->getEntity($id);
         }
 
