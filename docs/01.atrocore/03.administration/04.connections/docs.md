@@ -121,6 +121,29 @@ Secure File Transfer Protocol connections that provide encrypted file transfer c
 
 ### Authentication & Authorization
 
+#### Token Auth API
+
+Token-based API authentication that obtains a session token by POSTing credentials to a login endpoint, then uses the token in subsequent request headers. The payload and headers are defined as [Twig](../../../10.developer-guide/80.twig-tutorial/docs.md) templates.
+
+![Token Auth API](./_assets/token-auth-api.png){medium}
+
+- **Login URL** (required): The API endpoint URL where credentials are posted to obtain the token
+- **Password**: The password used in the payload template (stored encrypted)
+- **Payload** (required): A Twig template rendered as a JSON body for the login request. The `{{ password }}` variable is replaced with the decrypted password. Example:
+
+```json
+{
+    "username": "api_user",
+    "password": "{{ password }}"
+}
+```
+
+- **Headers** (required): A Twig template rendered as a JSON array of HTTP headers for subsequent requests. The full login response is available as `{{ response }}`. Example:
+
+```json
+["Authorization: Bearer {{ response['token'] }}"]
+```
+
 #### OAuth 2.0
 
 Modern OAuth 2.0 authentication protocol for secure API access and user authorization. This connection type supports various OAuth flows including authorization code, client credentials, and implicit grant types.
