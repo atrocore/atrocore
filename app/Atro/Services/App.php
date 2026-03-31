@@ -215,21 +215,13 @@ class App extends AbstractService
         return $preferencesData;
     }
 
-    public function recalculateScriptField(\stdClass $data): Entity
+    public function computeEntityScriptField(string $entityName, string $id, string $field): void
     {
-        if (!property_exists($data, 'field') || !property_exists($data, 'id') || !property_exists($data, 'scope')) {
-            throw new BadRequest();
-        }
-
-        $id = $data->id;
-        $field = $data->field;
-        $scope = $data->scope;
-
-        if (in_array($field, $this->getAcl()->getScopeForbiddenAttributeList($scope, 'edit'))) {
+        if (in_array($field, $this->getAcl()->getScopeForbiddenAttributeList($entityName, 'edit'))) {
             throw new Forbidden();
         }
 
-        $repository = $this->getEntityManager()->getRepository($scope);
+        $repository = $this->getEntityManager()->getRepository($entityName);
         $entity = $repository->get($id);
 
         if (empty($entity)) {
@@ -251,8 +243,6 @@ class App extends AbstractService
         if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
             $repository->calculateScriptFields($entity, $field);
         }
-
-        return $entity;
     }
 
     protected function getMaxUploadSize(): int

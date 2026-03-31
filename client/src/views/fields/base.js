@@ -651,12 +651,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             $recalculateLink.on('click', () => {
                 const data = {
-                    scope: this.model.name,
+                    entityName: this.model.name,
                     id: this.model.id,
                     field: this.name
                 }
                 $.ajax({
-                    url: `App/action/recalculateScriptField`,
+                    url: `computeEntityScriptField`,
                     type: 'POST',
                     data: JSON.stringify(data),
                     contentType: 'application/json',
