@@ -48,6 +48,19 @@ class V2Dot2Dot30 extends Base
                 $this->exec("ALTER TABLE extensible_enum_option CHANGE name_$suffix name_$suffix VARCHAR(255) DEFAULT NULL");
             }
         }
+
+        //delegatorId and actorId
+        $this->getDbal()->createQueryBuilder()
+            ->update($this->getDbal()->quoteIdentifier('user'))
+            ->set('actor_id', 'id')
+            ->where('actor_id is null')
+            ->executeQuery();
+
+        $this->getDbal()->createQueryBuilder()
+            ->update($this->getDbal()->quoteIdentifier('user'))
+            ->set('delegator_id', 'id')
+            ->where('delegator_id is null')
+            ->executeQuery();
     }
 
     public function down(): void
