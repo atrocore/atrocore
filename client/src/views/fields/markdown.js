@@ -49,7 +49,7 @@ Espo.define('views/fields/markdown', ['views/fields/base', 'lib!EasyMDE'], funct
                 target,
                 props: {
                     name: this.name,
-                    value: this.getValueForDisplay() ?? null,
+                    value: this.model.get(this.name) ?? null,
                     mode: this.mode,
                     params: this.params || {},
                     searchType,

@@ -62,7 +62,7 @@ Espo.define('views/stream/notes/email-received', 'views/stream/note', function (
                 (this.model.get('parentType') == this.parentModel.name && this.model.get('parentId') == this.parentModel.id)
             ) {
                 if (this.model.get('post')) {
-                    this.createField('post', null, null, 'views/stream/fields/post');
+                    this.createField('post', null, null, 'views/fields/markdown');
                     this.hasPost = true;
                 }
                 if ((this.model.get('attachmentsIds') || []).length) {
