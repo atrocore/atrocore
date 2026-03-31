@@ -15,6 +15,7 @@ namespace Atro\Core\Routing;
 
 use Atro\Core\DataManager;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 
 /**
@@ -40,6 +41,7 @@ class RouteCompiler
         private readonly Metadata        $metadata,
         private readonly HandlerRegistry $handlerRegistry,
         private readonly ModuleManager   $moduleManager,
+        private readonly Config          $config,
     ) {
     }
 
@@ -158,13 +160,18 @@ class RouteCompiler
                     continue;
                 }
 
+                if ($routeAttr->installerOnly && $this->config->get('isInstalled', false)) {
+                    continue;
+                }
+
                 $routes[] = [
-                    'path'           => '/api' . $routeAttr->path,
-                    'methods'        => array_map('strtoupper', (array) $routeAttr->methods),
-                    'handlerClass'   => $className,
-                    'auth'           => $routeAttr->auth,
-                    'openapi'        => $this->buildOpenApiEntry($routeAttr),
-                    'schemaEntities' => $routeAttr->entities,
+                    'path'               => '/api' . $routeAttr->path,
+                    'methods'            => array_map('strtoupper', (array) $routeAttr->methods),
+                    'handlerClass'       => $className,
+                    'auth'               => $routeAttr->auth,
+                    'openapi'            => $routeAttr->hidden ? [] : $this->buildOpenApiEntry($routeAttr),
+                    'schemaEntities'     => $routeAttr->entities,
+                    'skipActionHistory'  => $routeAttr->skipActionHistory,
                 ];
             }
         }

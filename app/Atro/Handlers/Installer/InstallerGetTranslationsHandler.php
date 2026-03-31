@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get installer translations',
     description: 'Returns translations for the installer UI. Only accessible before installation.',
     tag: 'Installer',
+    installerOnly: true,
     auth: false,
     responses: [
         200 => [

@@ -46,7 +46,7 @@ Espo.define('metadata', [], function () {
 
         data: null,
 
-        url: 'Metadata',
+        url: 'metadata',
 
         load: function (callback, disableCache, sync) {
             var sync = (typeof sync == 'undefined') ? false: sync;

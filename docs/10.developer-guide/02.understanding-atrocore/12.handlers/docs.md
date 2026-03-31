@@ -214,6 +214,9 @@ This rule applies to **all** arrays inside `#[Route]` without exception: `method
 | `auth` | `bool` | `true` | Whether the endpoint requires authentication. Set to `false` only for explicitly public endpoints. |
 | `parameters` | `array` | `[]` | OpenAPI-format query/path/header parameters. |
 | `requestBody` | `array` | `[]` | OpenAPI-format request body definition. Use `['schema' => ['x-entity-post' => true]]` or `['schema' => ['x-entity-patch' => true]]` as the schema sentinel to automatically substitute the entity's Post/Patch schema (see [Read, Post and Patch Schemas](#read-post-and-patch-schemas)). |
+| `hidden` | `bool` | `false` | Excludes the endpoint from the generated OpenAPI documentation (`/apidocs/`). The route is still registered and fully functional — it just does not appear in Swagger UI. Use this for internal endpoints that are only called by the AtroCore UI and are not part of the public API contract. |
+| `installerOnly` | `bool` | `false` | Registers the route **only when the application is not yet installed** (`isInstalled = false`). Once installation is complete, the route is not registered and returns 404. Use this for installer wizard endpoints that must not be accessible in a running production instance. |
+| `skipActionHistory` | `bool` | `false` | Prevents `ActionHistoryMiddleware` from logging requests to this endpoint. Use this for endpoints that are called silently and frequently by the UI (e.g. polling, metadata loading, session refresh) where logging would produce noise with no analytical value. |
 
 > **Important:** A handler without all required fields **will not be registered as a route**. The endpoint simply will not exist. This is by design — it enforces that every API endpoint is fully documented before it can be used.
 

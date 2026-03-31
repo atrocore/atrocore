@@ -27,7 +27,7 @@ For example, the documentation for our public demo instance is available at: [De
 
 ## Authentication
 
-To use the AtroCore API, you must first obtain an access token. Use the `/api/App/user` endpoint with **Basic Authentication** to get your token.
+To use the AtroCore API, you must first obtain an access token. Use the `/api/userSession` endpoint with **Basic Authentication** to get your token.
 
 **Step 1: Encode Basic Token**
 
@@ -42,10 +42,10 @@ let basicToken = btoa('admin:admin');
 
 **Step 2: Get the Authorization Token**
 
-Use the encoded token to make a GET request to the `/App/user` endpoint with the `Authorization-Token-Only` header set to `true`.
+Use the encoded token to make a GET request to the `/userSession` endpoint with the `Authorization-Token-Only` header set to `true`.
 
 ```http request
-GET /api/App/user HTTP/1.1
+GET /api/userSession HTTP/1.1
 Host: demo.atropim.com
 Authorization: Basic YWRtaW46YWRtaW4=
 Accept: application/json

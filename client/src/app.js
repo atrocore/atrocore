@@ -623,7 +623,7 @@ Espo.define(
 
             requestUserData: function (callback) {
                 $.ajax({
-                    url: 'App/user',
+                    url: 'userSession',
                 }).done(function (data) {
                     window.SvelteUserData.set(data);
                     window.SvelteNotifier.setNotifier(Espo.Ui);
