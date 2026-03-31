@@ -521,7 +521,7 @@ abstract class AbstractRecordController extends AbstractController
 
     public function actionFollow($params, $data, $request)
     {
-        if (!$request->isPut()) {
+        if (!$request->isPatch()) {
             throw new BadRequest();
         }
         if (!$this->getAcl()->check($this->name, 'stream')) {
