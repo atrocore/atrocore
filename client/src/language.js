@@ -45,7 +45,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
 
         cache: null,
 
-        url: 'I18n',
+        url: 'i18n',
 
         has: function (name, category, scope) {
             if (scope in this.data) {

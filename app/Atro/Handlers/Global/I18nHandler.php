@@ -22,46 +22,71 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/I18n',
+    path: '/i18n',
     methods: [
         'GET',
     ],
-    summary: 'Returns all translation labels for the UI',
-    description: 'Returns all translation labels for the UI. Does not require authentication.',
+    summary: 'Get UI translation labels',
+    description: 'Returns the full translation tree for the requested locale. '
+        . 'The response is a nested object keyed first by scope (entity name or `Global`), '
+        . 'then by category (`fields`, `labels`, `messages`, `options`, etc.), '
+        . 'then by translation key. '
+        . 'Does not require authentication — it is loaded before login to render the login page. '
+        . 'The client caches the result and re-fetches only when the data timestamp changes. '
+        . 'If neither `locale` nor `default` is provided, the locale configured for the current user (or the system default) is used.',
     tag: 'Global',
     auth: false,
     parameters: [
         [
-            'name'     => 'locale',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
+            'name'        => 'locale',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Locale ID to return translations for (e.g. `de_DE`, `fr_FR`). '
+                . 'Overrides the user\'s configured locale for this request.',
+            'schema'      => [
                 'type'    => 'string',
                 'example' => 'de_DE',
             ],
         ],
         [
-            'name'     => 'default',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
+            'name'        => 'default',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'When `true`, returns translations for the system default language, '
+                . 'ignoring the user\'s locale. Used by the admin UI to display default-language labels.',
+            'schema'      => [
                 'type'    => 'boolean',
-                'example' => false,
+                'example' => true,
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Translation labels',
+            'description' => 'Translation tree for the requested locale.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object',
+                        'type'        => 'object',
+                        'description' => 'Keys are scope names (`Global`, entity names). '
+                            . 'Each scope contains category keys (`fields`, `labels`, `messages`, `options`, etc.) '
+                            . 'with string translation values.',
+                        'example'     => [
+                            'Global'  => [
+                                'labels'   => ['Save' => 'Save', 'Cancel' => 'Cancel'],
+                                'messages' => ['confirmRemove' => 'Are you sure?'],
+                            ],
+                            'Product' => [
+                                'fields'  => ['name' => 'Name', 'isActive' => 'Active'],
+                                'options' => ['status' => ['Draft' => 'Draft', 'Published' => 'Published']],
+                            ],
+                        ],
                     ],
                 ],
             ],
         ],
     ],
+    hidden: false,
+    skipActionHistory: true,
 )]
 class I18nHandler extends AbstractHandler
 {
