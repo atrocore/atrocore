@@ -1024,7 +1024,7 @@
   },
   {
     "route": "/:controller/:id/subscription",
-    "method": "put",
+    "method": "patch",
     "params": {
       "controller": ":controller",
       "id": ":id",
