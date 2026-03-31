@@ -1533,6 +1533,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         showValidationMessage: function (message, target) {
             var $el;
 
+            if(this.$el.find('.selectize-control').size()) {
+                target = target || '.selectize-control .main-element'
+            }
+
             target = target || '.main-element';
 
             if (typeof target === 'string' || target instanceof String) {
