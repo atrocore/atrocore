@@ -22,26 +22,49 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Metadata',
+    path: '/metadata',
     methods: [
         'GET',
     ],
-    summary: 'Returns all metadata for the current user',
-    description: 'Returns all metadata for the current user.',
+    summary: 'Get application metadata',
+    description: 'Returns the full metadata tree: `entityDefs` (field definitions per entity), '
+        . '`clientDefs` (UI configuration per entity), `scopes` (entity-level flags and settings), '
+        . '`app` (global application config, authentication types, system icons, etc.). '
+        . 'Paths listed in `app.frontendHiddenPathList` are stripped before the response is sent. '
+        . 'The result is heavily cached by the client — it is only re-fetched when the data timestamp changes.',
     tag: 'Global',
-    skipActionHistory: true,
     responses: [
         200 => [
-            'description' => 'Metadata object',
+            'description' => 'Full metadata tree. Top-level keys include `entityDefs`, `clientDefs`, `scopes`, and `app`.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object',
+                        'type'       => 'object',
+                        'properties' => [
+                            'entityDefs' => [
+                                'type'        => 'object',
+                                'description' => 'Field and relationship definitions keyed by entity name.',
+                            ],
+                            'clientDefs' => [
+                                'type'        => 'object',
+                                'description' => 'Frontend UI configuration keyed by entity name (views, panels, actions, icons, etc.).',
+                            ],
+                            'scopes'     => [
+                                'type'        => 'object',
+                                'description' => 'Entity-level flags keyed by entity name (type, acl, stream, tab visibility, etc.).',
+                            ],
+                            'app'        => [
+                                'type'        => 'object',
+                                'description' => 'Global application metadata (authentication types, system icons, reference data, etc.).',
+                            ],
+                        ],
                     ],
                 ],
             ],
         ],
     ],
+    hidden: false,
+    skipActionHistory: true,
 )]
 class MetadataHandler extends AbstractHandler
 {
