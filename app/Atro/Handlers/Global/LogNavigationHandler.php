@@ -13,59 +13,78 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Global;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/logNavigation/{id}',
+    path: '/logNavigation',
     methods: [
         'POST',
     ],
-    summary: 'Log navigation event',
-    description: 'Records a navigation event for the specified record ID.',
+    summary: 'Log navigation to a non-entity page',
+    description: 'Records a navigation event for pages that have no corresponding entity record '
+    . '(e.g. Dashboard, Administration, Composer). '
+    . 'Writes an ActionHistoryRecord with controllerName="App" so that the LastViewed service '
+    . 'can include these pages in the navigation history alongside entity records. '
+    . 'The Entity-History request header (tab ID) is stored in the record data and used '
+    . 'to isolate history per browser tab. ',
     tag: 'Global',
-    parameters: [
-        [
-            'name'     => 'id',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
-                'type' => 'string',
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => ['name', 'url'],
+                    'properties' => [
+                        'name' => [
+                            'type'        => 'string',
+                            'description' => 'Page identifier used as targetId in the history record (e.g. "Dashboard", "Administration").',
+                            'example'     => 'Dashboard',
+                        ],
+                        'url'  => [
+                            'type'        => 'string',
+                            'description' => 'Full browser URL at the time of navigation (pathname + hash).',
+                            'example'     => '/#dashboard',
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'true if logged',
-            'content'     => [
-                'application/json' => [
-                    'schema' => [
-                        'type' => 'boolean',
-                    ],
-                ],
-            ],
-        ],
-        400 => [
-            'description' => 'id is required',
+            'description' => 'true if the navigation event was logged successfully.',
         ],
     ],
+    hidden: true
 )]
 class LogNavigationHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $routeResult = $request->getAttribute(RouteResult::class);
-        $id = $routeResult ? ($routeResult->getMatchedParams()['id'] ?? null) : null;
+        $data = $this->getRequestBody($request);
 
-        if (empty($id)) {
-            throw new BadRequest();
-        }
+        $record = $this->getEntityManager()->getEntity('ActionHistoryRecord');
+        $record->set('controllerName', 'App');
+        $record->set('action', 'GET');
+        $record->set('targetId', $data->name);
+        $record->set('userId', $this->getUser()->id);
+        $record->set('authTokenId', $this->getUser()->get('authTokenId'));
+        $record->set('ipAddress', $this->getUser()->get('ipAddress'));
+        $record->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
+        $record->set('data', [
+            'request' => [
+                'headers' => ['Entity-History' => [$request->getHeaderLine('Entity-History')]],
+                'params'  => [],
+                'body'    => ['url' => $data->url],
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($record);
 
         return new BoolResponse(true);
     }

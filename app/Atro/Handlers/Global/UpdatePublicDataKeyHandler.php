@@ -65,6 +65,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
+    hidden: true,
 )]
 class UpdatePublicDataKeyHandler extends AbstractHandler
 {

@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get license and languages',
     description: 'Returns the license agreement and available languages for installation. Only accessible before installation.',
     tag: 'Installer',
+    installerOnly: true,
     auth: false,
     responses: [
         200 => [

@@ -15,6 +15,7 @@ namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Mail\Sender;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -22,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/App/action/sendTestEmail',
+    path: '/sendTestEmail',
     methods: [
         'POST',
     ],
@@ -53,10 +54,18 @@ class SendTestEmailHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data = json_decode((string)$request->getBody(), true) ?? [];
+        $data = $this->getRequestBody($request);
 
-        return new BoolResponse(
-            $this->getServiceFactory()->create('App')->sendTestEmail($data)
-        );
+        $this->container->get(Sender::class)
+            ->send(
+                [
+                    'subject' => 'Test Email',
+                    'body'    => 'Test Email',
+                    'isHtml'  => false,
+                    'to'      => $data->emailAddress,
+                ]
+            );
+
+        return new BoolResponse(true);
     }
 }

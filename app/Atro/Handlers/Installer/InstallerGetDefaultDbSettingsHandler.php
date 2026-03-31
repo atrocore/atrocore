@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get default database settings',
     description: 'Returns the default database connection settings. Only accessible before installation.',
     tag: 'Installer',
+    installerOnly: true,
     auth: false,
     responses: [
         200 => [

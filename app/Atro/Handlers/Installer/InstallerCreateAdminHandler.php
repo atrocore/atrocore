@@ -30,6 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Create admin user',
     description: 'Creates the initial administrator account during installation. Only accessible before installation.',
     tag: 'Installer',
+    installerOnly: true,
     auth: false,
     requestBody: [
         'required' => true,
