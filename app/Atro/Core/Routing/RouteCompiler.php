@@ -169,7 +169,7 @@ class RouteCompiler
                     'methods'        => array_map('strtoupper', (array) $routeAttr->methods),
                     'handlerClass'   => $className,
                     'auth'           => $routeAttr->auth,
-                    'openapi'        => $this->buildOpenApiEntry($routeAttr),
+                    'openapi'        => $routeAttr->hidden ? [] : $this->buildOpenApiEntry($routeAttr),
                     'schemaEntities' => $routeAttr->entities,
                 ];
             }

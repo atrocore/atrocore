@@ -28,8 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Start listening to entity record changes',
     description: 'Registers a real-time listening session for the specified entity record. '
         . 'Creates a public JSON file that gets updated whenever the record changes. '
-        . 'Returns a timestamp and the path to that file so the client can poll it to detect changes. '
-        . 'This endpoint is intended for internal use by the AtroCore UI only — external API consumers should not call it.',
+        . 'Returns a timestamp and the path to that file so the client can poll it to detect changes.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -81,6 +80,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'entityName or entityId is missing.',
         ],
     ],
+    hidden: true,
 )]
 class StartEntityListeningHandler extends AbstractHandler
 {
