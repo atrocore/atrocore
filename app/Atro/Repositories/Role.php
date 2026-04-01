@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\AttributeFieldConverter;
 use Atro\Core\DataManager;
 use Atro\Entities\Role as RoleEntity;
 use Espo\Core\AclManager;
@@ -48,9 +47,8 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
         $res = $this->getDataManager()->getCacheData($key);
         if ($res === null) {
             $res = [
-                'scopes'               => [],
-                'fields'               => [],
-                'multilangAttrFields'  => [],
+                'scopes' => [],
+                'fields' => [],
             ];
 
             foreach ($role->get('scopes') ?? [] as $roleScope) {
@@ -110,19 +108,6 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
                         $res['scopes'][$scopeName][$action] = 'no';
                     }
                 }
-            }
-
-            $multilangAttrs = $this->getEntityManager()->getRepository('Attribute')
-                ->select(['id', 'code', 'entityId'])
-                ->where(['isMultilang' => true])
-                ->find();
-            foreach ($multilangAttrs as $attr) {
-                $entityType = $attr->get('entityId');
-                if (empty($entityType)) {
-                    continue;
-                }
-                $fieldName = AttributeFieldConverter::prepareFieldName(['id' => $attr->get('id'), 'code' => $attr->get('code')]);
-                $res['multilangAttrFields'][$entityType][] = $fieldName;
             }
 
             $this->getDataManager()->setCacheData($key, $res);
