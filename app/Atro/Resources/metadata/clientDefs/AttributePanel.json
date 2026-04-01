@@ -10,6 +10,7 @@
   "relationshipPanels": {
     "attributes": {
       "create": false,
+      "unlinkAll": false,
       "disabledSelectAllResult": true,
       "view": "views/attribute-panel/record/panels/attributes",
       "selectBoolFilterList": [
@@ -20,7 +21,12 @@
         "sortField": "sortOrder"
       },
       "sortBy": "sortOrder",
-      "asc": true
+      "asc": true,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
     }
   }
 }
