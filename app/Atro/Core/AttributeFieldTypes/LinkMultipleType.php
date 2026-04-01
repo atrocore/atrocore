@@ -67,20 +67,7 @@ class LinkMultipleType extends AbstractFieldType
             }
 
             if (!empty($value) && !empty($entityName)) {
-                $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $entityName, $foreignName);
-                $columns = array_unique(['id', $foreignName, $localizedNameColumn]);
-
-                $collection = $this->em->getRepository($entityName)
-                    ->select($columns)
-                    ->where(['id' => $value])
-                    ->find();
-
-                $names = [];
-                foreach ($collection as $foreign) {
-                    $names[$foreign->get('id')] = empty($foreign->get($localizedNameColumn)) ? $foreign->get($foreignName) : $foreign->get($localizedNameColumn);
-                }
-
-                $entity->set($name . 'Names', $names);
+                $this->loadNames($entity, $value, $name, ['entity' => $entityName, 'foreignName' => $foreignName]);
             }
         }
 
@@ -177,6 +164,28 @@ class LinkMultipleType extends AbstractFieldType
         if (!empty($names)) {
             $entity->set($name . 'Names', $names);
         }
+    }
+
+    public function loadNames(IEntity $entity, array $ids, string $field, array $defs): void
+    {
+        $scope = $defs['entity'] ?? null;
+        if (empty($scope) || empty($ids)) return;
+
+        $foreignName = $defs['foreignName'] ?? 'name';
+        $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $scope, $foreignName);
+        $columns = array_unique(['id', $foreignName, $localizedNameColumn]);
+
+        $collection = $this->em->getRepository($scope)
+            ->select($columns)
+            ->where(['id' => $ids])
+            ->find();
+
+        $names = [];
+        foreach ($collection as $foreign) {
+            $names[$foreign->get('id')] = empty($foreign->get($localizedNameColumn)) ? $foreign->get($foreignName) : $foreign->get($localizedNameColumn);
+        }
+
+        $entity->set("{$field}Names", $names);
     }
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
