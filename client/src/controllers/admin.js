@@ -84,7 +84,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     recordView: 'views/admin/settings'
@@ -109,7 +108,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     headerTitle: 'Notifications',
@@ -123,7 +121,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     headerTitle: 'Outbound Emails',
@@ -167,7 +164,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     recordView: 'views/admin/user-interface',
@@ -181,7 +177,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     headerTitle: 'Authentication',

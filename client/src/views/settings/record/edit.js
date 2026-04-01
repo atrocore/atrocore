@@ -58,6 +58,61 @@ Espo.define('views/settings/record/edit', 'views/record/edit', function (Dep) {
             }.bind(this));
         },
 
+        saveModel(model, callback, skipExit, attrs) {
+            this.notify('Saving...');
+            let self = this;
+
+            this.ajaxPatchRequest('settings', attrs).success(function (res) {
+                model.set(res);
+
+                this.attributes = model.getClonedAttributes();
+                model._updatedById = self.getUser().id;
+                self.afterSave();
+
+                if (this.mode === 'edit') {
+                    model.trigger('after:save');
+                    self.trigger('after:save');
+                }
+
+                if (!callback) {
+                    if (!skipExit) {
+                        self.exit('save');
+                    }
+                } else {
+                    callback(self);
+                }
+            }.bind(this)).error(function (xhr) {
+                let statusReason = xhr.responseText || '';
+                if (xhr.responseJSON && xhr.responseJSON.reason) {
+                    statusReason = xhr.responseJSON.reason;
+                }
+
+                xhr.errorIsHandled = true;
+                if (xhr.status === 409) {
+                    self.notify(false);
+                    self.enableButtons();
+                    self.trigger('cancel:save');
+                    Espo.Ui.confirm(statusReason || this.translate('unableToDuplicateRecord', 'messages'), {
+                        confirmText: self.translate('Apply'),
+                        cancelText: self.translate('Cancel')
+                    }, function () {
+                        attrs['_prev'] = null;
+                        attrs['_ignoreConflict'] = true;
+                        attrs['_silentMode'] = false;
+                        self.saveModel(model, callback, skipExit, attrs);
+                    });
+                } else {
+                    self.enableButtons();
+                    self.trigger('cancel:save');
+                    if (xhr.status === 304) {
+                        Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
+                    } else {
+                        Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                    }
+                }
+            }.bind(this));
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
         },

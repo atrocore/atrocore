@@ -37,6 +37,11 @@ Espo.define('models/settings', 'model-offline', function (Dep) {
 
         name: 'Settings',
 
+        initialize: function (attributes, options) {
+            Dep.prototype.initialize.apply(this, arguments);
+            this.url = 'settings';
+        },
+
         getByPath: function (arr) {
             if (!arr.length) return null;
 

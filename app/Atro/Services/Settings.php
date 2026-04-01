@@ -124,5 +124,6 @@ class Settings extends AbstractService
 
         $this->addDependency('metadata');
         $this->addDependency('dataManager');
+        $this->addDependency('eventManager');
     }
 }
