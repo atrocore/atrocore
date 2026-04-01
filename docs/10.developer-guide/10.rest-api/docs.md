@@ -237,6 +237,32 @@ Possible `status` values: `Created`, `Updated`, `NotModified`, `Failed`. On `Fai
 2. By unique fields — fields marked as `unique: true` in the entity definition.
 3. By unique indexes — if all fields of a unique index are present in the payload.
 
+### Performance: Bulk vs. Single-Record Operations
+
+Bulk endpoints (`POST /api/upsert`, mass update via `POST /api/entityMassUpdate`) are significantly faster per record than calling the standard single-record endpoints (`POST /{Entity}`, `PATCH /{Entity}/{id}`) in a loop.
+
+**Why bulk operations are faster:**
+
+Single-record endpoints perform full entity preparation after every save:
+- Loading EAV attribute values
+- Loading link/relation fields
+- Loading follower data and file previews
+- Applying ACL metadata headers
+- Running `prepareEntityForOutput` transformations
+
+This preparation is necessary because the endpoint returns a fully hydrated entity in the response.
+
+Bulk endpoints skip all of this. They do not return full entity data — only a lightweight result per record (`status` + `id`). The saved preparation work accumulates quickly at scale.
+
+**Guidance:**
+
+| Use case | Recommended endpoint |
+|---|---|
+| Data integration, imports, batch updates | `POST /api/upsert`, `POST /api/upsertAsync`, or `POST /api/entityMassUpdate` |
+| Single record create/update where full response is needed | `POST /{Entity}` / `PATCH /{Entity}/{id}` |
+
+For large datasets (hundreds to thousands of records), always prefer the bulk endpoints to avoid per-record overhead.
+
 ### Creating Linked Entity Records During Create/Update
 
 The system supports simplified creation and linking of related entities during `create` and `update` operations of a main entity.

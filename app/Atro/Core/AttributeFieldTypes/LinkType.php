@@ -111,8 +111,27 @@ class LinkType extends AbstractFieldType
             }
 
             if (empty($skipValueProcessing)) {
+                $referenceTable = Util::toUnderScore(lcfirst($entityName));
+
                 if (!empty($row['reference_value'])) {
-                    $this->loadName($entity, $row['reference_value'], $name, ['entity' => $entityName, 'foreignName' => $foreignName]);
+                    $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $entityName, $foreignName);
+                    $columns = array_map(fn($column) => $this->conn->quoteIdentifier(Util::toUnderScore($column)), array_unique(['id', $foreignName, $localizedNameColumn]));
+
+                    try {
+                        $referenceItem = $this->conn->createQueryBuilder()
+                            ->select(join(', ', $columns))
+                            ->from($referenceTable)
+                            ->where('id=:id')
+                            ->andWhere('deleted=:false')
+                            ->setParameter('id', $row['reference_value'])
+                            ->setParameter('false', false, ParameterType::BOOLEAN)
+                            ->fetchAssociative();
+
+
+                        $entity->set($name . 'Name', $referenceItem[$localizedNameColumn] ?? $referenceItem[$foreignName] ?? null);
+                    } catch (\Throwable $e) {
+                        // ignore all
+                    }
                 }
             }
 
@@ -147,32 +166,6 @@ class LinkType extends AbstractFieldType
             if ($name === $params['orderBy']) {
                 $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name . 'Name') . ' ' . $params['order']);
             }
-        }
-    }
-
-    public function loadName(IEntity $entity, string $idValue, string $field, array $defs): void
-    {
-        $scope = $defs['entity'] ?? null;
-        if (empty($scope) || empty($idValue)) return;
-
-        $foreignName = $defs['foreignName'] ?? 'name';
-        $referenceTable = Util::toUnderScore(lcfirst($scope));
-        $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $scope, $foreignName);
-        $columns = array_map(fn($column) => $this->conn->quoteIdentifier(Util::toUnderScore($column)), array_unique(['id', $foreignName, $localizedNameColumn]));
-
-        try {
-            $referenceItem = $this->conn->createQueryBuilder()
-                ->select(join(', ', $columns))
-                ->from($referenceTable)
-                ->where('id=:id')
-                ->andWhere('deleted=:false')
-                ->setParameter('id', $idValue)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAssociative();
-
-            $entity->set("{$field}Name", $referenceItem[$localizedNameColumn] ?? $referenceItem[$foreignName] ?? null);
-        } catch (\Throwable $e) {
-            // ignore all
         }
     }
 
