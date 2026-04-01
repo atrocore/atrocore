@@ -12,13 +12,6 @@ All API requests must include the header `Content-Type: application/json`. The b
 
 !!! **Best Practice**: We recommend creating a separate API user with a specific role and limited permissions for all API calls.
 
-## Video Tutorials
-For those who prefer video content, these tutorials provide a quick overview of key API concepts:
-
-* **How to Authorize:** [https://youtu.be/GWfNRvCswXg](https://youtu.be/GWfNRvCswXg)
-* **How to Select Specific Fields:** [https://youtu.be/i7o0aENuyuY](https://youtu.be/i7o0aENuyuY)
-* **How to Filter Data Records:** [https://youtu.be/irgWkN4wlkM](https://youtu.be/irgWkN4wlkM)
-
 ## API Documentation
 
 The REST API documentation is automatically generated for each AtroCore project based on its configurations and installed modules. You can access it at `https://ATROCORE_INSTANCE_URL/apidocs/`.
@@ -65,7 +58,7 @@ Now, include the header `Authorization-Token: *******************` in all subseq
 For example, to get the instance [generated metadata](../02.understanding-atrocore/02.metadata/docs.md):
 
 ```http request
-GET /api/Metadata HTTP/1.1
+GET /api/metadata HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: *******************
 Accept: application/json
@@ -171,17 +164,24 @@ This section provides details on non-standard API requests for common tasks like
 
 ### Bulk Create and Update
 
-To perform bulk create and bulk update operations, use the `upsert` action on the `MassActions` endpoint. This action is **idempotent**: it attempts to find existing entities by their ID or unique fields. If an entity is found, it's updated; otherwise, a new one is created.
+To perform bulk create and bulk update operations, use the `upsert` endpoint. This action is **idempotent**: it attempts to find existing entities by their ID or unique fields. If an entity is found, it's updated; otherwise, a new one is created.
+
+There are two variants:
+
+| Endpoint | Behaviour |
+|---|---|
+| `POST /api/upsert` | Processes synchronously and returns results immediately. |
+| `POST /api/upsertAsync` | Schedules a background job and returns the job ID immediately. |
 
 **Endpoint:**
 
 ```
-POST https://ATROCORE_INSTANCE_URL/api/MassActions/action/upsert
+POST https://ATROCORE_INSTANCE_URL/api/upsert
 ```
 
-**Payload Example:**
+**Request Body:**
 
-The request body should be a JSON array of objects. Each object must specify the `entity` type and the `payload` containing the data to be processed.
+A JSON array of objects. Each object must specify the `entity` type and the `payload` containing the data to be processed.
 
 ```json
 [
@@ -201,7 +201,41 @@ The request body should be a JSON array of objects. Each object must specify the
   }
 ]
 ```
-You can make some tests in demo API [here](https://demo.atropim.com/apidocs/?atroq=apidocs#/MassActions/3a8459ebdfb2cf077b11238793b42151)
+
+**Response (`POST /api/upsert`):**
+
+Returns a JSON array with one result object per input item:
+
+```json
+[
+  {
+    "status": "Created",
+    "stored": true,
+    "entity": { "id": "...", "name": "Apple iPhone 15", "sku": "iphone15" }
+  },
+  {
+    "status": "Updated",
+    "stored": true,
+    "entity": { "id": "2348924928743", "name": "Apple iPhone 15 Pro Max" }
+  }
+]
+```
+
+Possible `status` values: `Created`, `Updated`, `NotModified`, `Failed`. On `Failed`, a `message` field is included instead of `entity`.
+
+**Response (`POST /api/upsertAsync`):**
+
+```json
+{
+  "jobId": "a1b2c3d4e5f6"
+}
+```
+
+**Entity lookup priority:**
+
+1. By `id` — if provided in the payload.
+2. By unique fields — fields marked as `unique: true` in the entity definition.
+3. By unique indexes — if all fields of a unique index are present in the payload.
 
 ### Creating Linked Entity Records During Create/Update
 
@@ -938,8 +972,8 @@ The header is accepted on the following endpoints:
 
 - `GET /{Entity}` — list of records
 - `GET /{Entity}/{id}` — single record
-- `PUT /{Entity}/{id}` — update (in the response)
-- `GET /{Entity}/{id}/{link}` — linked records
+- `PATCH /{Entity}/{id}` — update (in the response)
+- `GET /entityRelation?entityName={Entity}&id={id}&link={link}` — linked records
 
 **Accepted values:** `true` or `1`.
 
@@ -1119,7 +1153,7 @@ When multilingual support is enabled on an AtroCore instance, the API can return
 
 - `GET /{Entity}` — list of records
 - `GET /{Entity}/{id}` — single record
-- `GET /{Entity}/{id}/{link}` — linked records
+- `GET /entityRelation?entityName={Entity}&id={id}&link={link}` — linked records
 - `GET /{Entity}/{id}/attributeValues` — attribute values
 
 **Accepted values:** Any language code configured in the instance (e.g., `de_DE`, `fr_FR`, `es_ES`). The available values are listed in the OpenAPI schema as an enum for this parameter.
