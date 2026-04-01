@@ -580,7 +580,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 ids.push(model.get('id'));
             });
 
-            this.ajaxGetRequest(`${this.scope}/action/TreeData`, { ids: ids }).then(response => {
+            this.ajaxGetRequest(`${this.scope}/treeData`, { ids: ids }).then(response => {
                 $shown.html(response.total);
                 $total.html(response.total);
                 this.setupTree(response.tree);
