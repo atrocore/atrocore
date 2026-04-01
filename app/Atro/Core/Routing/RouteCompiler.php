@@ -235,6 +235,17 @@ class RouteCompiler
      */
     private function substituteEntitySchemaRef(array $data, string $entityName): array
     {
+        // Handle case where the entire array IS the sentinel (e.g. used inside `items`)
+        if ($data === ['x-entity-read' => true]) {
+            return ['$ref' => "#/components/schemas/$entityName"];
+        }
+        if ($data === ['x-entity-post' => true]) {
+            return ['$ref' => "#/components/schemas/{$entityName}Post"];
+        }
+        if ($data === ['x-entity-patch' => true]) {
+            return ['$ref' => "#/components/schemas/{$entityName}Patch"];
+        }
+
         if (isset($data['schema'])) {
             if ($data['schema'] === ['x-entity-read' => true]) {
                 $data['schema'] = ['$ref' => "#/components/schemas/$entityName"];

@@ -125,7 +125,7 @@ use Atro\Handlers\AbstractHandler;
                             'list'  => [
                                 'type'  => 'array',
                                 'items' => [
-                                    'type' => 'object',
+                                    'x-entity-read' => true,
                                 ],
                             ],
                         ],
