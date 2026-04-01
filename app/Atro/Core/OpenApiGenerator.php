@@ -380,7 +380,7 @@ class OpenApiGenerator
             'info'       => [
                 'version'     => Composer::getCoreVersion(),
                 'title'       => 'AtroCore REST API documentation',
-                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>",
+                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).\n\nFor detailed information about authentication, request/response formats, pagination, filtering, and other important concepts, please refer to our [REST API Developer Guide](https://help.atrocore.com/latest/developer-guide/rest-api).",
                 'license'     => [
                     'name' => 'GPLv3',
                     'url'  => 'https://www.gnu.org/licenses/gpl-3.0.html',
