@@ -1,12 +1,22 @@
 {
   "fields": {
-    "masterEntity": "Мастер",
+    "masterEntity": "Майстер-сутність",
     "mergingScript": "Скрипт трансформації",
-    "sourceEntity": "Джерело",
-    "updateMasterAutomatically": "Автоматично оновлювати майстер"
+    "sourceEntity": "Вихідна сутність",
+    "updateMasterAutomatically": "Автоматично оновлювати майстер-запис",
+    "minimumMatchingScore": "Мінімальна оцінка збігу",
+    "confirmAutomatically": "Підтверджувати автоматично",
+    "executeMergeAs": "Виконувати об'єднання від імені"
   },
   "tooltips": {
-    "mergingScript": "Налаштуйте спосіб перетворення, уніфікації та зіставлення вихідних даних з мастер-записом."
+    "mergingScript": "Налаштуйте спосіб перетворення, уніфікації та зіставлення вихідних даних із майстер-записом.",
+    "executeMergeAs": "Обліковий запис користувача, який буде використано для виконання скрипта об'єднання."
+  },
+  "options": {
+    "executeMergeAs": {
+      "system": "Система",
+      "sameUser": "Той самий користувач"
+    }
   },
   "exceptions": {
     "mergingScriptIsMissing": "Відсутній сценарій злиття для головної сутності",

@@ -1,6 +1,7 @@
 {
   "fields": {
-    "extensibleEnumOptions": "Опції списку"
+    "extensibleEnumOptions": "Опції списку",
+    "multilingual": "Багатомовний"
   },
   "exceptions": {
     "extensibleEnumIsUsed": "Список '%s' використовується полем '%s' в сутності '%s'."

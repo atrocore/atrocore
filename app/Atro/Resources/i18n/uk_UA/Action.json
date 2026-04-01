@@ -13,9 +13,9 @@
     "emailScript": "Скрипт",
     "showEmailPreview": "Попередній перегляд перед надсиланням",
     "emailTemplate": "Шаблон електронного листа",
-    "emailTo": "Email To",
-    "emailCc": "Email CC",
-    "emailBcc": "Електронна пошта BCC",
+    "emailTo": "Кому",
+    "emailCc": "Копія",
+    "emailBcc": "Прихована копія",
     "executeAs": "Виконати як",
     "displayField": "Поле відображення",
     "focusField": "Поле",
@@ -27,8 +27,8 @@
     "updateType": "Тип оновлення",
     "updateScript": "Скрипт",
     "updateFields": "Оновити поля",
-    "searchEntity": "Об'єкт пошуку",
-    "executions": "Страти"
+    "searchEntity": "Сутність пошуку",
+    "executions": "Виконання"
   },
   "labels": {
     "execute": "Виконати",
@@ -51,7 +51,7 @@
     },
     "type": {
       "create": "Створити",
-      "update": "Оновлення",
+      "update": "Оновити",
       "delete": "Видалити",
       "set": "Набір дій",
       "email": "Відправити лист",
@@ -72,7 +72,7 @@
       "system": "Система"
     },
     "mode": {
-      "basic": "Basic",
+      "basic": "Базовий",
       "script": "Скрипт"
     }
   },

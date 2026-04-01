@@ -1,9 +1,9 @@
 {
   "fields": {
-    "matching": "Відповідність",
+    "matching": "Зіставлення",
     "weight": "Вага",
     "matchingRuleSet": "Набір",
-    "matchingRules": "Правила збігу",
+    "matchingRules": "Правила зіставлення",
     "operator": "Оператор"
   },
   "options": {
@@ -20,8 +20,8 @@
   },
   "exceptions": {
     "notValidCode": "Код повинен містити лише літери, цифри, підкреслення та тире.",
-    "notValidMatchingActivation": "Правило збігу може бути змінено лише в не активної відповідності.",
-    "notValidMatching": "Збіг недійсний",
-    "notValidMatchingRuleSet": "Відповідний набір правил недійсний"
+    "notValidMatchingActivation": "Правило зіставлення можна змінювати лише для неактивного зіставлення.",
+    "notValidMatching": "Зіставлення недійсне",
+    "notValidMatchingRuleSet": "Набір правил зіставлення недійсний"
   }
 }

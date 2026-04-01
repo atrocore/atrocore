@@ -1,13 +1,13 @@
 {
   "labels": {
-    "Dynamic Logic": "Логічність динаміки",
+    "Dynamic Logic": "Динамічна логіка",
     "Name": "Назва",
     "Label": "Мітка",
     "Type": "Тип"
   },
   "options": {
     "dateTimeDefault": {
-      "": "Ні",
+      "": "Немає",
       "javascript: return this.dateTime.getNow(1);": "Зараз",
       "javascript: return this.dateTime.getNow(5);": "Тепер (5 хв)",
       "javascript: return this.dateTime.getNow(15);": "Зараз (15 хв)",
@@ -33,7 +33,7 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 тиждень"
     },
     "dateDefault": {
-      "": "Ні",
+      "": "Немає",
       "javascript: return this.dateTime.getToday();": "Сьогодні",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 день",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 дні",
@@ -68,7 +68,7 @@
   },
   "fieldParts": {
     "unit": {
-      "unit": "(Unit)"
+      "unit": "(Одиниця)"
     },
     "datetimeOptional": {
       "date": "Дата"
@@ -78,9 +78,8 @@
     "defaultValidationFailed": "Стандартне значення не може містити спеціальні знаки"
   },
   "exceptions": {
-    "regexNotValid": "Цей REGEX паттерн не валідний.",
+    "regexNotValid": "Цей шаблон REGEX недійсний.",
     "someFieldNotUnique": "Деякі поля не мають унікального значення.",
-    "someFieldDontMathToPattern": "Деякі поля не відповідають шаблону.",
-    "regexSyntaxError": "Помилка синтаксису регулярного виразу у полі '%s'."
+    "someFieldDontMathToPattern": "Деякі поля не відповідають шаблону."
   }
 }

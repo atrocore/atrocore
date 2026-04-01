@@ -31,12 +31,12 @@
     "notes": "Нотатки",
     "tasks": "Завдання",
     "followCreatedEntities": "Автоматичне відстеження самостійно створених записів",
-    "followEntityOnStreamPost": "Автоматичне відстеження записів після публікації в Заходах",
+    "followEntityOnStreamPost": "Автоматичне відстеження записів після публікації в Активностях",
     "receiveNotifications": "Отримувати сповіщення",
     "followEntityOnAssignment": "Автоматичне відстеження за призначенням",
     "style": "Стиль інтерфейсу користувача",
     "notificationProfile": "Профіль сповіщень",
-    "layoutProfile": "Лейаут профіль",
+    "layoutProfile": "Профіль макета",
     "locale": "Локаль"
   },
   "labels": {
@@ -51,7 +51,7 @@
     "External Accounts": "Зовнішні облікові записи",
     "Email Accounts": "Облікові записи ел. пошти",
     "Preferences": "Уподобання",
-    "Notifications": "Повідомлення"
+    "Notifications": "Сповіщення"
   },
   "tooltips": {
     "defaultTeam": "Усі записи, створені цим користувачем, за промовчанням будуть відноситися до цієї групи.",
@@ -65,7 +65,7 @@
     "passwordWillBeSent": "Пароль буде надіслано на адресу електронної пошти користувача.",
     "passwordResetEmailSubject": "Ваш пароль було скинуто",
     "passwordResetEmailBody": "Ви можете відновити свій пароль за посиланням {link}. Строк дії цього посилання скоро завершиться.",
-    "passwordExpiredForm": "Строк дії Вашого пароля завершився. Будь ласка, оновіть його у формі нижчу",
+    "passwordExpiredForm": "Строк дії вашого пароля завершився. Будь ласка, оновіть його у формі нижче.",
     "passwordChanged": "Пароль був змінений",
     "userCantBeEmpty": "Ім'я користувача не може бути порожнім.",
     "wrongUsernamePasword": "Неправильне ім'я користувача/пароль",
@@ -75,11 +75,11 @@
     "uniqueLinkHasBeenSent": "Унікальне посилання було надіслано на вказану адресу електронної пошти.",
     "passwordChangedByRequest": "Пароль було змінено.",
     "userNameExists": "Ім'я користувача вже існує",
-    "accountInfoEmailSubject": "AtroCore Інформація про доступ користувача",
-    "accountInfoEmailBody": "Ваші дані доступу n:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-    "passwordChangeLinkEmailSubject": "Надіслати запит на зміну пароля",
-    "passwordChangeLinkEmailBody": "Ви можете змінити Ваш пароль за {link}. Термін дії цього унікального URL незабаром закінчиться.",
-    "setupSmtpBefore": "Вам необхідно встановити <a href=\"{url}\">SMTP settings</a> щоб дозволити системі надсилати пароль у емейлі.",
+    "accountInfoEmailSubject": "Інформація про доступ користувача AtroCore",
+    "accountInfoEmailBody": "Ваші дані доступу:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Запит на зміну пароля",
+    "passwordChangeLinkEmailBody": "Ви можете змінити ваш пароль, перейшовши за посиланням {link}. Термін дії цього унікального URL скоро завершиться.",
+    "setupSmtpBefore": "Вам потрібно налаштувати <a href=\"{url}\">параметри SMTP</a>, щоб система могла надсилати пароль електронною поштою.",
     "newPasswordInvalid": "Пароль має містити принаймні один символ, велику літеру та цифру, а його довжина має перевищувати 8 символів.",
     "changePasswordOnResetViaEmailOnly": "Встановлювати пароль вручну заборонено. Будь ласка, скористайтеся функцією \"Скинути пароль\"."
   },
@@ -92,7 +92,7 @@
     }
   },
   "boolFilters": {
-    "onlyMyTeam": "Тільки мій гурт"
+    "onlyMyTeam": "Моя команда"
   },
   "presetFilters": {
     "active": "Активні"

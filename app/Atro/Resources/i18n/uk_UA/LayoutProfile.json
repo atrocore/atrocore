@@ -5,7 +5,7 @@
     "description": "Опис",
     "hideShowFullList": "Приховати опцію \"Показати повний список\" на панелях зв'язків",
     "layouts": "Макети",
-    "parent": "Батьківський лейаут профіль",
+    "parent": "Батьківський профіль макета",
     "navigation": "Меню навігації",
     "dashboardLayout": "Макет дашборда",
     "favoritesList": "Обрані елементи"
@@ -17,13 +17,13 @@
     "Favorites": "Обрані елементи"
   },
   "exceptions": {
-    "defaultIsRequired": "В системі має існувати лейаут профіль за замовчуванням."
+    "defaultIsRequired": "У системі має існувати профіль макета за замовчуванням."
   },
   "messages": {
     "profileWillBeNewDefault": "Поточний профіль стане новим профілем за замовчуванням, дійсно хочете продовжити?",
     "navigationUpdate": "Навігаційне меню було доналаштоване"
   },
   "boolFilters": {
-    "withLayouts": "With Stored Layout"
+    "withLayouts": "Із збереженим макетом"
   }
 }
