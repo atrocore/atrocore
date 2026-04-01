@@ -14,7 +14,7 @@ Espo.define('views/admin/field-manager/fields/extensible-multi-enum-default', 'v
 
         selectBoolFilterList: ['defaultOption', 'onlyAllowedOptions'],
 
-        sortBy: 'ee_eeo.sorting',
+        sortBy: 'sortOrder',
 
         sortAsc: true,
 

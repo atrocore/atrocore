@@ -47,30 +47,6 @@ class ExtensibleEnumExtensibleEnumOption extends Relation
         parent::beforeSave($entity, $options);
     }
 
-    public function updateSortOrder(string $extensibleEnumId, array $extensibleEnumOptionIds): void
-    {
-        $collection = $this
-            ->where([
-                'extensibleEnumId'       => $extensibleEnumId,
-                'extensibleEnumOptionId' => $extensibleEnumOptionIds
-            ])
-            ->find();
-        if (empty($collection[0])) {
-            return;
-        }
-
-        foreach ($extensibleEnumOptionIds as $k => $id) {
-            $sortOrder = (int)$k * 10;
-            foreach ($collection as $entity) {
-                if ($entity->get('extensibleEnumOptionId') !== (string)$id) {
-                    continue;
-                }
-                $entity->set('sorting', $sortOrder);
-                $this->save($entity);
-            }
-        }
-    }
-
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         $this->validateSystemOptions($entity);

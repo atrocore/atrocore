@@ -55,6 +55,7 @@ Espo.define('views/fields/markdown', ['views/fields/base', 'lib!EasyMDE'], funct
                     searchType,
                     searchValue,
                     markdownView: this,
+                    mentions: (this.model.get('data') || {}).mentions || {}
                 },
             });
         },
