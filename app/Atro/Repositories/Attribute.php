@@ -289,6 +289,8 @@ class Attribute extends Base
             'data'       => [
                 'relatedType' => 'Attribute',
                 'relatedId'   => $attributeId,
+                'relatedName' => $this->getEntityDisplayName('Attribute', $attributeId),
+                'parentName'  => $this->getEntityDisplayName($entityName, $entityId),
                 'link'        => lcfirst($entityName) . "AttributeValues"
             ],
         ]);
@@ -473,6 +475,8 @@ class Attribute extends Base
                 'data'       => [
                     'relatedType' => 'Attribute',
                     'relatedId'   => $attributeId,
+                    'relatedName' => $this->getEntityDisplayName('Attribute', $attributeId),
+                    'parentName'  => $this->getEntityDisplayName($entityName, $entityId),
                     'link'        => lcfirst($entityName) . "AttributeValues"
                 ],
             ]);
@@ -733,5 +737,20 @@ class Attribute extends Base
     protected function getAclManager(): AclManager
     {
         return $this->getInjection('container')->get('aclManager');
+    }
+
+    private function getEntityDisplayName(string $entityType, string $entityId): ?string
+    {
+        $nameField = $this->getMetadata()->get(['scopes', $entityType, 'nameField']) ?? 'name';
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $nameField]);
+        if (empty($fieldDefs)) {
+            return null;
+        }
+        $entity = $this->getEntityManager()->getRepository($entityType)
+            ->select(['id', $nameField])
+            ->where(['id' => $entityId])
+            ->findOne();
+
+        return !empty($entity) ? $entity->get($nameField) : null;
     }
 }
