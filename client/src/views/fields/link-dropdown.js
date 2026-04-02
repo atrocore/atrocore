@@ -114,7 +114,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
                 }
             }
 
-            this.params.linkOptions = this.model.get('_meta')?.options?.[this.originalName] ?? this.getLinkOptions(this.foreignScope, params, clearCache);
+            this.params.linkOptions = this.getLinkOptions(this.foreignScope, params, clearCache);
             this.params.linkOptions.forEach(option => {
                 if (option.id) {
                     this.params.options.push(option.id);
