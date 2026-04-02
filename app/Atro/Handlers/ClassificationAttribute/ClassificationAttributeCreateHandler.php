@@ -16,6 +16,7 @@ namespace Atro\Handlers\ClassificationAttribute;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -74,19 +75,21 @@ class ClassificationAttributeCreateHandler extends AbstractHandler
                 $input->attributeId = $attributeId;
                 unset($input->attributesIds);
                 try {
-                    $service->createEntity($input);
-                    $lastId = $input->id;
+                    $lastId = $service->createEntity($input);
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error($e->getMessage());
                 }
             }
         } else {
-            $service->createEntity($data);
-            $lastId = $data->id;
+            $lastId = $service->createEntity($data);
         }
 
         if (!empty($lastId)) {
-            return new JsonResponse((array) $service->readEntity($lastId)->getValueMap());
+            $entity = $service->prepareEntityById($lastId);
+            if (empty($entity)) {
+                throw new NotFound();
+            }
+            return new JsonResponse((array) $entity->getValueMap());
         }
 
         throw new Error();

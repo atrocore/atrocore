@@ -81,6 +81,11 @@ class CreateHandler extends AbstractHandler
 
         $id = $service->createEntity($data);
 
-        return new JsonResponse((array) $service->readEntity($id)->getValueMap());
+        $entity = $service->prepareEntityById($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        return new JsonResponse((array) $entity->getValueMap());
     }
 }
