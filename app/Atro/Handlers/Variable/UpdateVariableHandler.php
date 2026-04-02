@@ -86,6 +86,8 @@ class UpdateVariableHandler extends AbstractHandler
         /** @var \Atro\Services\Variable $service */
         $service = $this->getServiceFactory()->create('Variable');
 
-        return new JsonResponse($service->updateEntity($id, $data));
+        $service->updateEntity($id, $data);
+
+        return new JsonResponse($service->readEntity($id));
     }
 }

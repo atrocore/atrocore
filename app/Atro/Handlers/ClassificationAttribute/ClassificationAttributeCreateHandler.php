@@ -66,23 +66,27 @@ class ClassificationAttributeCreateHandler extends AbstractHandler
         $service = $this->getRecordService('ClassificationAttribute');
         $entity  = null;
 
+        $lastId = null;
+
         if (property_exists($data, 'attributesIds')) {
             foreach ($data->attributesIds as $attributeId) {
                 $input              = clone $data;
                 $input->attributeId = $attributeId;
                 unset($input->attributesIds);
                 try {
-                    $entity = $service->createEntity($input);
+                    $service->createEntity($input);
+                    $lastId = $input->id;
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error($e->getMessage());
                 }
             }
         } else {
-            $entity = $service->createEntity($data);
+            $service->createEntity($data);
+            $lastId = $data->id;
         }
 
-        if (!empty($entity)) {
-            return new JsonResponse((array) $entity->getValueMap());
+        if (!empty($lastId)) {
+            return new JsonResponse((array) $service->readEntity($lastId)->getValueMap());
         }
 
         throw new Error();

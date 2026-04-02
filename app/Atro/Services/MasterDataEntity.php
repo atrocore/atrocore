@@ -63,7 +63,7 @@ class MasterDataEntity extends Base
 
         return $this->executeAsMergeUser($masterDataEntity, function () use ($input, $master) {
             try {
-                $master = $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($input['masterRecordData'])));
+                $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($input['masterRecordData'])));
             } catch (NotModified) {
                 // ignore
             }

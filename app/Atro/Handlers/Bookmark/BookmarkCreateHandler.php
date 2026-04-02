@@ -77,10 +77,8 @@ class BookmarkCreateHandler extends AbstractHandler
 
         $service = $this->getRecordService('Bookmark');
 
-        if ($entity = $service->createEntity($data)) {
-            return new JsonResponse((array) $entity->getValueMap());
-        }
+        $id = $service->createEntity($data);
 
-        throw new Error();
+        return new JsonResponse((array) $service->readEntity($id)->getValueMap());
     }
 }

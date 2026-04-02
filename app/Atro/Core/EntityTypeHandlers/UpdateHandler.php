@@ -84,13 +84,11 @@ class UpdateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService($entityName)->updateEntity($id, $data);
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService($entityName);
 
-        if (empty($entity)) {
-            throw new Error();
-        }
+        $service->updateEntity($id, $data);
 
-        return new JsonResponse((array) $entity->getValueMap());
+        return new JsonResponse((array) $service->readEntity($id)->getValueMap());
     }
 }

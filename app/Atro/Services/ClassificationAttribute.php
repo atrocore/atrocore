@@ -137,7 +137,7 @@ class ClassificationAttribute extends Base
 
         try {
             $this->prepareDefaultValues($attachment);
-            $result = parent::createEntity($attachment);
+            parent::createEntity($attachment);
             $this->createPseudoTransactionCreateJobs($attachment);
 
             if ($inTransaction) {
@@ -150,7 +150,7 @@ class ClassificationAttribute extends Base
             throw $e;
         }
 
-        return $result;
+        return true;
     }
 
     public function putAclMetaForLink(OrmEntity $entityFrom, string $link, OrmEntity $entity): void

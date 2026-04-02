@@ -531,7 +531,8 @@ class Hierarchy extends Base
             unset($attachment->routesNames);
         }
 
-        $entity = parent::createEntity($attachment);
+        parent::createEntity($attachment);
+        $entity = $this->getRepository()->get($attachment->id);
 
         // run inherit all for child relations
         if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance']))) {
@@ -614,13 +615,13 @@ class Hierarchy extends Base
             $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
         }
 
-        $result = parent::updateEntity($id, $data);
+        parent::updateEntity($id, $data);
 
         $this->getRepository()->pushLinkMultipleFields($entityData);
 
         $this->createPseudoTransactionJobs($entityData, clone $data);
 
-        return $result;
+        return $this->getEntity($id);
     }
 
     public function linkEntity($id, $link, $foreignId)

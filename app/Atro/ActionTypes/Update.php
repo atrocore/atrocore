@@ -207,7 +207,7 @@ class Update extends AbstractAction
         $this->getMemoryStorage()->delete($cacheKey);
 
         try {
-            $service->setIsBulkOperation(true)->updateEntity($entity->get('id'), $inputData);
+            $service->updateEntity($entity->get('id'), $inputData);
             $log->set('type', 'update');
             $this->getEntityManager()->saveEntity($log);
         } catch (Forbidden|NotModified|NotFound $e) {

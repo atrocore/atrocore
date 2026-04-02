@@ -140,12 +140,12 @@ class MassActions extends HasContainer
 
             if (!empty($existed)) {
                 try {
-                    $updated = $service->setIsBulkOperation(true)->updateEntity($existed->get('id'), $node->payload);
+                    $service->updateEntity($existed->get('id'), $node->payload);
                     $result[$k] = [
                         'status' => 'Updated',
                         'stored' => true,
                         'entity' => $node->entity,
-                        'id'     => $updated->id
+                        'id'     => $existed->get('id')
                     ];
                 } catch (NotModified $e) {
                     $result[$k] = [
@@ -163,12 +163,12 @@ class MassActions extends HasContainer
             }
 
             try {
-                $created = $service->setIsBulkOperation(true)->createEntity($node->payload);
+                $service->createEntity($node->payload);
                 $result[$k] = [
                     'status' => 'Created',
                     'stored' => true,
                     'entity' => $node->entity,
-                    'id'     => $created->id
+                    'id'     => $node->payload->id
                 ];
             } catch (\Throwable $e) {
                 $result[$k] = [

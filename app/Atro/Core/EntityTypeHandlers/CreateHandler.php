@@ -76,13 +76,11 @@ class CreateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService($entityName)->createEntity($data);
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService($entityName);
 
-        if (empty($entity)) {
-            throw new Error();
-        }
+        $id = $service->createEntity($data);
 
-        return new JsonResponse((array) $entity->getValueMap());
+        return new JsonResponse((array) $service->readEntity($id)->getValueMap());
     }
 }

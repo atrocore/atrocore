@@ -61,13 +61,11 @@ class ConnectionCreateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService('Connection')->createEntity($data);
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService('Connection');
 
-        if (empty($entity)) {
-            throw new Error();
-        }
+        $id = $service->createEntity($data);
 
-        return new JsonResponse((array) $entity->getValueMap());
+        return new JsonResponse((array) $service->readEntity($id)->getValueMap());
     }
 }

@@ -42,7 +42,7 @@ class MassUpdate extends AbstractJob implements JobInterface
             $input = json_decode(json_encode($data['input']));
 
             try {
-                $service->setIsBulkOperation(true)->updateEntity($id, $input);
+                $service->updateEntity($id, $input);
             } catch (NotModified $e) {
             } catch (\Throwable $e) {
                 $message = "Update {$data['entityType']} '$id' failed: {$e->getMessage()}";

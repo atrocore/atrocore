@@ -213,10 +213,11 @@ class File extends Base
         if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
             $attachment->id = $attachment->reupload;
             $attachment->_skipIsEntityUpdated = true;
-            $entity = parent::updateEntity($attachment->id, $attachment);
+            parent::updateEntity($attachment->id, $attachment);
         } else {
-            $entity = parent::createEntity($attachment);
+            parent::createEntity($attachment);
         }
+        $entity = $this->getRepository()->get($attachment->id);
 
         if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return $entity;

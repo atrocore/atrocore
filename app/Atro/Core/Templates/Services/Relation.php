@@ -124,7 +124,8 @@ class Relation extends Record
 
             try {
                 foreach ($attachments as $attachment) {
-                    $entity = parent::createEntity($attachment);
+                    parent::createEntity($attachment);
+                    $entity = $this->getRepository()->get($attachment->id);
                     if (property_exists($attachment, 'reverseAssociationId') && !empty($attachment->reverseAssociationId)) {
                         try {
                             $reverseAttachment = new \stdClass();
@@ -132,8 +133,8 @@ class Relation extends Record
                             $reverseAttachment->associatedItemId = $attachment->associatingItemId;
                             $reverseAttachment->associationId = $attachment->reverseAssociationId;
                             $reverseAttachment->{"reverseAssociated{$scope}Id"} = $entity->get('id');
-                            $reverseEntity = parent::createEntity($reverseAttachment);
-                            $entity->set("reverseAssociated{$scope}Id", $reverseEntity->get('id'));
+                            parent::createEntity($reverseAttachment);
+                            $entity->set("reverseAssociated{$scope}Id", $reverseAttachment->id);
                             $this->getRepository()->save($entity, ['skipAll' => true]);
                         } catch (\Throwable $e) {
                             $classname = get_class($e);
@@ -174,7 +175,8 @@ class Relation extends Record
             }
 
             try {
-                $entity = parent::updateEntity($id, $data);
+                parent::updateEntity($id, $data);
+                $entity = $this->getRepository()->get($id);
 
                 if (!property_exists($data, '__skipUpdateReverse')) {
                     try {
@@ -243,8 +245,8 @@ class Relation extends Record
             $reverseAttachment->associatedItemId = $entity->get("associatingItemId");
             $reverseAttachment->associationId = $data->reverseAssociationId;
             $reverseAttachment->{$reverseIdField} = $entity->get('id');
-            $reverseEntity = parent::createEntity($reverseAttachment);
-            $entity->set($reverseIdField, $reverseEntity->get('id'));
+            parent::createEntity($reverseAttachment);
+            $entity->set($reverseIdField, $reverseAttachment->id);
             $this->getRepository()->save($entity, ['skipAll' => true]);
             return;
         }

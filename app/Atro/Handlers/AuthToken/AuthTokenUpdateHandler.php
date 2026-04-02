@@ -71,14 +71,12 @@ class AuthTokenUpdateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $id     = (string) $request->getAttribute('id');
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService('AuthToken')->updateEntity($id, $data);
+        $id      = (string) $request->getAttribute('id');
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService('AuthToken');
 
-        if (empty($entity)) {
-            throw new Error();
-        }
+        $service->updateEntity($id, $data);
 
-        return new JsonResponse((array) $entity->getValueMap());
+        return new JsonResponse((array) $service->readEntity($id)->getValueMap());
     }
 }

@@ -64,12 +64,10 @@ class FileCreateHandler extends AbstractHandler
         $data          = $this->getRequestBody($request);
         $data->fromApi = true;
 
-        $entity = $this->getRecordService('File')->createEntity($data);
+        $service = $this->getRecordService('File');
 
-        if (empty($entity)) {
-            throw new Error();
-        }
+        $id = $service->createEntity($data);
 
-        return new JsonResponse((array) $entity->getValueMap());
+        return new JsonResponse((array) $service->readEntity($id)->getValueMap());
     }
 }
