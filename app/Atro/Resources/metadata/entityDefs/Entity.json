@@ -761,6 +761,10 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }
@@ -841,6 +845,10 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }
@@ -893,6 +901,10 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }
