@@ -91,7 +91,7 @@ class UpdateHandler extends AbstractHandler
 
         $entity = $service->prepareEntityById($id);
         if (empty($entity)) {
-            throw new NotFound();
+            throw new Error();
         }
 
         return new JsonResponse((array) $entity->getValueMap());

@@ -15,7 +15,6 @@ namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
@@ -83,7 +82,7 @@ class CreateHandler extends AbstractHandler
 
         $entity = $service->prepareEntityById($id);
         if (empty($entity)) {
-            throw new NotFound();
+            throw new Error();
         }
 
         return new JsonResponse((array) $entity->getValueMap());

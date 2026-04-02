@@ -16,7 +16,6 @@ namespace Atro\Handlers\File;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -95,7 +94,7 @@ class FileReuploadHandler extends AbstractHandler
 
         $entity = $service->prepareEntityById($id);
         if (empty($entity)) {
-            throw new NotFound();
+            throw new Error();
         }
 
         return new JsonResponse((array) $entity->getValueMap());
