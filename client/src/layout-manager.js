@@ -119,7 +119,7 @@ Espo.define('layout-manager', [], function () {
 
             this.ajax({
                 url: this.getUrl(scope, type, relatedScope, layoutProfileId),
-                type: 'PUT',
+                type: 'PATCH',
                 data: JSON.stringify(layout),
                 success: function () {
                     this.clearCache(scope, type, relatedScope)
