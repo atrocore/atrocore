@@ -159,8 +159,8 @@ class Cluster extends Base
             }
 
             if (empty($goldenRecord)) {
-                $masterService->createEntity($attributes->input);
-                $goldenRecord = $this->getEntityManager()->getEntity($cluster->get('masterEntity'), $attributes->input->id);
+                $id = $masterService->createEntity($attributes->input);
+                $goldenRecord = $this->getEntityManager()->getEntity($cluster->get('masterEntity'), $id);
             }
         }
 

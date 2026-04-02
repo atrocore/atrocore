@@ -460,8 +460,8 @@ class Record extends RecordService
         } else {
             $input = $attributes->input;
             unset($input->id);
-            $this->createEntity($input);
-            $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $input->id);
+            $id = $this->createEntity($input);
+            $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
         }
 
         if (!$entity) {
@@ -681,8 +681,8 @@ class Record extends RecordService
             $input->$field = $value;
         }
 
-        $this->createEntity($input);
-        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $input->id);
+        $id = $this->createEntity($input);
+        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
 
 
         // create many-to-many relations

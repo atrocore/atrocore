@@ -217,8 +217,8 @@ class User extends Record
             $attachment->password = $this->hashPassword($attachment->password);
         }
 
-        parent::createEntity($attachment);
-        $user = $this->getRepository()->get($attachment->id);
+        $id = parent::createEntity($attachment);
+        $user = $this->getRepository()->get($id);
 
         if (!is_null($newPassword) && !empty($attachment->sendAccessInfo) && $user && $user->isActive()) {
             try {

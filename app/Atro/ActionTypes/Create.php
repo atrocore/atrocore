@@ -187,10 +187,10 @@ class Create extends AbstractAction
         }
 
         try {
-            $this->getService($targetEntityName)->createEntity($inputData);
+            $id = $this->getService($targetEntityName)->createEntity($inputData);
 
             $log->set('type', 'create');
-            $log->set('entityId', $inputData->id);
+            $log->set('entityId', $id);
             $this->getEntityManager()->saveEntity($log);
         } catch (Forbidden|NotUnique $e) {
         } catch (\Throwable $e) {

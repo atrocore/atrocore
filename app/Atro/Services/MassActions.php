@@ -163,12 +163,12 @@ class MassActions extends HasContainer
             }
 
             try {
-                $service->createEntity($node->payload);
+                $id = $service->createEntity($node->payload);
                 $result[$k] = [
                     'status' => 'Created',
                     'stored' => true,
                     'entity' => $node->entity,
-                    'id'     => $node->payload->id
+                    'id'     => $id
                 ];
             } catch (\Throwable $e) {
                 $result[$k] = [

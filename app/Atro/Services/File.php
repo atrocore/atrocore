@@ -215,7 +215,7 @@ class File extends Base
             $attachment->_skipIsEntityUpdated = true;
             parent::updateEntity($attachment->id, $attachment);
         } else {
-            parent::createEntity($attachment);
+            $attachment->id = parent::createEntity($attachment);
         }
         $entity = $this->getRepository()->get($attachment->id);
 

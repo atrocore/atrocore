@@ -531,8 +531,8 @@ class Hierarchy extends Base
             unset($attachment->routesNames);
         }
 
-        parent::createEntity($attachment);
-        $entity = $this->getRepository()->get($attachment->id);
+        $id = parent::createEntity($attachment);
+        $entity = $this->getRepository()->get($id);
 
         // run inherit all for child relations
         if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance']))) {
@@ -983,11 +983,6 @@ class Hierarchy extends Base
     protected function duplicateChildren($entity, $duplicatingEntity): void
     {
         // ignore duplicating for link 'children'
-    }
-
-    protected function afterUpdateEntity(Entity $entity, $data)
-    {
-        $entity->set('inheritedFields', $this->getInheritedFields($entity));
     }
 
     public function createPseudoTransactionJobs(array $parent, \stdClass $data, string $parentTransactionId = null): void
