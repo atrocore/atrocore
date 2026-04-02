@@ -133,6 +133,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
             this.wait(true);
             this.getModelFactory().create(parentType, function (model) {
+                model.set('_meta', this.model.get('_meta'));
                 var modelWas = model;
                 var modelBecame = model.clone();
 
@@ -189,6 +190,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                            modelBecame.defs.fields[key] = fieldDefs[key];
                        }
                     }
+
                     this.createView(field + 'Was', viewName, {
                         el: this.options.el + ` [data-name="${field}"] .was`,
                         model: modelWas,

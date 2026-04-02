@@ -14,12 +14,11 @@ declare(strict_types=1);
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
+use Atro\Entities\User;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\EntityManager;
-use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\Services\Stream as StreamService;
-use Atro\Entities\User;
 
 class Note
 {
@@ -129,7 +128,7 @@ class Note
                 }
 
                 if ($item['fieldType'] === 'link') {
-                    $fieldDef = $this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.fields.$field", []);
+                    $fieldDef = $entity->entityDefs['fields'][$field] ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.fields.$field", []);
                     if (!empty($fieldDef['entityNameField'])) {
                         $entityType = $entity->get($fieldDef['entityNameField']);
                         if ($entityType && $this->getEntityManager()->hasRepository($entityType)) {
@@ -149,7 +148,7 @@ class Note
                             }
                         }
                     } else {
-                        $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', $field, 'entity']);
+                        $foreignEntity = $entity->entityDefs['fields'][$field]['entity'] ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', $field, 'entity']);
                         if (!empty($foreignEntity)) {
                             foreach (['was', 'became'] as $k) {
                                 $id = ${$k}[$field . 'Id'] ?? null;
@@ -161,8 +160,13 @@ class Note
                     }
                 }
 
-                if ($item['fieldType'] === 'linkMultiple') {
-                    $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', $field, 'entity']);
+                $fieldDef = $entity->entityDefs['fields'][$field]
+                    ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.fields.$field", []);
+
+                $foreignEntity = $fieldDef['entity'] ?? null;
+
+                if ($item['fieldType'] === 'linkMultiple' && $foreignEntity !== 'ExtensibleEnumOption') {
+                    $foreignEntity = $foreignEntity ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', $field, 'entity']);
                     if (!empty($foreignEntity)) {
                         foreach (['was', 'became'] as $k) {
                             $ids = ${$k}[$field . 'Ids'] ?? null;
@@ -182,38 +186,36 @@ class Note
                     }
                 }
 
-                if ($item['fieldType'] === 'extensibleEnum') {
-                    $fieldDef = $entity->entityDefs['fields'][$field]
-                        ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.fields.$field", []);
+                if ($item['fieldType'] === 'extensibleEnum' || ($item['fieldType'] === 'link' && $foreignEntity === 'ExtensibleEnumOption')) {
                     $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
                     if ($extensibleEnumId) {
                         $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
                         foreach (['was', 'became'] as $k) {
-                            $val = ${$k}[$field] ?? null;
+                            $val = ${$k}[$item['fieldType'] === 'link' ? $field . 'Id' : $field] ?? null;
                             if ($val) {
                                 $option = $repo->getPreparedOption($extensibleEnumId, $val);
                                 if (!empty($option['name'])) {
                                     ${$k}[$field . 'Name'] = $option['name'];
+                                    ${$k}[$field . 'OptionData'] = $option;
                                 }
                             }
                         }
                     }
                 }
 
-                if ($item['fieldType'] === 'extensibleMultiEnum') {
-                    $fieldDef = $entity->entityDefs['fields'][$field]
-                        ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.fields.$field", []);
+                if ($item['fieldType'] === 'extensibleMultiEnum' || ($item['fieldType'] === 'linkMultiple' && $foreignEntity === 'ExtensibleEnumOption')) {
                     $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
                     if ($extensibleEnumId) {
                         $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
                         foreach (['was', 'became'] as $k) {
-                            $val = ${$k}[$field] ?? null;
+                            $val = ${$k}[$item['fieldType'] === 'linkMultiple' ? $field . 'Ids' : $field] ?? null;
                             if (!empty($val)) {
                                 $ids = is_string($val) ? @json_decode($val, true) : $val;
                                 if (!empty($ids) && is_array($ids)) {
                                     $options = $repo->getPreparedOptions($extensibleEnumId, $ids);
                                     if (!empty($options)) {
                                         ${$k}[$field . 'Names'] = array_column($options, 'name', 'id');
+                                        ${$k}[$field . 'OptionsData'] = $options;
                                     }
                                 }
                             }
