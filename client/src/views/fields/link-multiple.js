@@ -154,8 +154,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 && res.foreignScope === 'ExtensibleEnumOption'
                 && this.idsName !== this.name
             ) {
-                const options = this.getOptionsData();
-
+                const options = this.model.get('_meta')?.options?.[this.name] || this.getOptionsData();
                 if (options && options.length > 0) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
 
