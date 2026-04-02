@@ -519,7 +519,7 @@ class Hierarchy extends Base
         return $entity;
     }
 
-    public function createEntity($attachment)
+    public function createEntity($attachment): string
     {
         if (!$this->isHierarchy()) {
             return parent::createEntity($attachment);
@@ -555,7 +555,7 @@ class Hierarchy extends Base
             $attributeRepo->inheritAllAttributeValuesFromParents($entity);
         }
 
-        return $entity;
+        return $id;
     }
 
     public function prepareChildInputData(\stdClass $attachment): void
@@ -573,7 +573,7 @@ class Hierarchy extends Base
         }
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity($id, $data): bool
     {
         if (!$this->isHierarchy()) {
             return parent::updateEntity($id, $data);
@@ -581,7 +581,7 @@ class Hierarchy extends Base
 
         if (property_exists($data, '_sortedIds') && property_exists($data, '_id') && property_exists($data, '_link') && $data->_link === 'children') {
             $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
-            return $this->getEntity($id);
+            return true;
         }
 
         if (property_exists($data, '_position') && property_exists($data, '_target') && property_exists($data, 'parentId')) {
@@ -597,7 +597,7 @@ class Hierarchy extends Base
                 $sortAsc = $data->_sortAsc === true;
             }
             $this->getRepository()->updatePositionInTree((string)$id, (string)$data->_position, (string)$data->_target, (string)$data->parentId, $sortAsc);
-            return $this->getEntity($id);
+            return true;
         }
 
         if (property_exists($data, '_fieldValueInheritance') && $data->_fieldValueInheritance) {

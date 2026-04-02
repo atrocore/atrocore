@@ -21,12 +21,12 @@ use Espo\ORM\EntityCollection;
 
 class Archive extends Record
 {
-    public function createEntity($attachment)
+    public function createEntity($attachment): string
     {
         throw new Forbidden();
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity($id, $data): bool
     {
         throw new Forbidden();
     }

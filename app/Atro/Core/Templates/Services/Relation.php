@@ -85,7 +85,7 @@ class Relation extends Record
         return $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
     }
 
-    public function createEntity($attachment)
+    public function createEntity($attachment): string
     {
         if ($this->isAssociatesRelation()) {
             $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
@@ -153,18 +153,18 @@ class Relation extends Record
                 throw $e;
             }
 
-            return $entity;
+            return $entity->get('id');
         }
 
         return Parent::createEntity($attachment);
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity($id, $data): bool
     {
         if ($this->isAssociatesRelation()) {
             if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {
                 $this->getRepository()->updateAssociatesSortOrder($data->_sortedIds);
-                return $this->getEntity($id);
+                return true;
             }
 
             $pdo = $this->getEntityManager()->getPDO();
@@ -197,7 +197,7 @@ class Relation extends Record
                 throw $e;
             }
 
-            return $entity;
+            return true;
         }
 
         return Parent::updateEntity($id, $data);

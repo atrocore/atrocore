@@ -90,9 +90,13 @@ class FileReuploadHandler extends AbstractHandler
 
         $service = $this->getRecordService('File');
 
-        $id = $service->createEntity($data);
+        $result = $service->createEntity($data);
 
-        $entity = $service->prepareEntityById($id);
+        if (!is_string($result)) {
+            return new JsonResponse($result);
+        }
+
+        $entity = $service->prepareEntityById($result);
         if (empty($entity)) {
             throw new Error();
         }

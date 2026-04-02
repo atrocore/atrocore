@@ -21,7 +21,7 @@ class Style extends Base
 {
     protected ?bool $isCollectionRequest;
 
-    public function updateEntity($id, $data)
+    public function updateEntity($id, $data): bool
     {
         $data->_skipCheckForConflicts = true;
         $data->_skipIsEntityUpdated = true;

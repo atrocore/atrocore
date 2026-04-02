@@ -123,7 +123,7 @@ class ClassificationAttribute extends Base
         }
     }
 
-    public function createEntity($attachment)
+    public function createEntity($attachment): string
     {
         if (!property_exists($attachment, 'attributeId')) {
             throw new BadRequest("'attributeId' is required.");
@@ -137,7 +137,7 @@ class ClassificationAttribute extends Base
 
         try {
             $this->prepareDefaultValues($attachment);
-            parent::createEntity($attachment);
+            $id = parent::createEntity($attachment);
             $this->createPseudoTransactionCreateJobs($attachment);
 
             if ($inTransaction) {
@@ -150,7 +150,7 @@ class ClassificationAttribute extends Base
             throw $e;
         }
 
-        return true;
+        return $id;
     }
 
     public function putAclMetaForLink(OrmEntity $entityFrom, string $link, OrmEntity $entity): void
