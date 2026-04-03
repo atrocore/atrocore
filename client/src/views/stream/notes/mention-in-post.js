@@ -47,7 +47,7 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
 
         setup: function () {
             if (this.model.get('post')) {
-                this.createField('post', null, null, 'views/stream/fields/post');
+                this.createField('post', null, null, 'views/fields/markdown');
             }
             if ((this.model.get('attachmentsIds') || []).length) {
                 this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
