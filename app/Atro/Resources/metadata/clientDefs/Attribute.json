@@ -3,6 +3,7 @@
   "iconClass": "swatches",
   "boolFilterList": [
     "onlyMy",
+    "notLinkedWithAnyRecord",
     "fromAttributesTab",
     "notParentCompositeAttribute",
     "notChildCompositeAttribute",

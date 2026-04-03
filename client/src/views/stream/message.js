@@ -41,7 +41,7 @@ Espo.define('views/stream/message', 'view', function (Dep) {
             for (var key in data) {
                 var value = data[key] || '';
 
-                if (value.indexOf('field:') === 0) {
+                if (value.indexOf('field:') === 0 && !(field === 'createdBy'  && !data?.user)) {
                     var field = value.substr(6);
                     this.createField(key, field);
 

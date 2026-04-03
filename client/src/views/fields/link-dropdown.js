@@ -27,6 +27,8 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
         boolFilterData: {},
 
+        fieldsToPassInParams: [],
+
         setup: function () {
             if (this.nameName == null) {
                 this.nameName = this.name + 'Name';
@@ -37,7 +39,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             }
 
             if (this.options.customBoolFilterData) {
-                this.boolFilterData = { ...this.boolFilterData, ...this.options.customBoolFilterData }
+                this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
             }
 
             if (this.options.customSelectBoolFilters) {
@@ -56,9 +58,29 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             this.originalName = this.name;
             this.name = this.idName;
 
+            this.fieldsToPassInParams = this.model.getFieldParam(this.originalName, 'fieldsToPassInParams') || []
+
             this.prepareOptionsList();
 
             Dep.prototype.setup.call(this);
+
+            this.reloadListener();
+        },
+
+        reloadListener() {
+            this.onModelReady(() => {
+                // we reload the option list everytime any time a field to pass in param change
+                if (this.model.getFieldParam(this.originalName, 'reloadListOnFieldParamChange')) {
+                    this.fieldsToPassInParams.forEach(field => {
+                        this.listenTo(this.model, `change:${field}`, () => {
+                            this.notify('Loading..');
+                            this.prepareOptionsList(true);
+                            this.notify(false);
+                            this.reRender();
+                        });
+                    });
+                }
+            });
         },
 
         prepareDefaultValue: function () {
@@ -72,18 +94,26 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             }
         },
 
-        prepareOptionsList: function () {
+        prepareOptionsList: function (clearCache = false) {
             this.params.options = [];
             this.translatedOptions = {};
             this.params.optionColors = {};
-            const name = this.getNameField(this.foreignScope)
+            let name = this.foreignName
+            if (!name || name === 'name') {
+                name = this.getNameField(this.foreignScope)
+            }
             const [localizedName] = this.getLocalizedFieldData(this.foreignScope, name);
-
-            this.params.linkOptions = this.getLinkOptions(this.foreignScope, {
+            const params = {
                 maxSize: 300,
                 sortBy: localizedName,
                 where: this.getWhereFilter()
-            });
+            };
+            for (const key of this.fieldsToPassInParams) {
+                if (!params[key]) {
+                    params[key] = this.model.get(key);
+                }
+            }
+            this.params.linkOptions = this.params.linkOptions ?? this.getLinkOptions(this.foreignScope, params, clearCache);
             this.params.linkOptions.forEach(option => {
                 if (option.id) {
                     this.params.options.push(option.id);
@@ -102,7 +132,20 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
         },
 
         getWhereFilter() {
-            return this.model.getFieldParam(this.originalName, 'where') || [];
+            let res = this.model.getFieldParam(this.originalName || this.name, 'where')
+
+            if (this.getExtensibleEnumId() && this.foreignScope === 'ExtensibleEnumOption') {
+                res = [
+                    ...(res || []),
+                    {
+                        type: 'linkedWith',
+                        attribute: 'extensibleEnums',
+                        value: [this.getExtensibleEnumId()]
+                    }
+                ]
+            }
+
+            return res
         },
 
         fetch: function () {

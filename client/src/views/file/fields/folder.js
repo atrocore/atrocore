@@ -21,12 +21,11 @@ Espo.define('views/file/fields/folder', 'views/fields/link',
             if (this.mode === 'edit') {
                 if (this.model.isNew()) {
                     if (window.location.hash === '#File') {
-                        const selectedFolderId = this.getStorage().get('selectedNodeId', 'File') || null;
-                        if (selectedFolderId) {
-                            this.ajaxGetRequest(`Folder/${selectedFolderId}?silent=true`).success(folder => {
-                                this.model.set('folderId', folder.id);
-                                this.model.set('folderName', folder.name);
-                            });
+                        const treeNodes = this.getStorage().get('treeSelectedNodes', 'File') || [];
+                        const folderNode = treeNodes.find(n => n.link === 'folder');
+                        if (folderNode) {
+                            this.model.set('folderId', folderNode.id);
+                            this.model.set('folderName', folderNode.name);
                         }
                     }
                 }

@@ -16,9 +16,9 @@ namespace Atro\Core\ModuleManager;
 use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Route;
 use Atro\Core\Container;
 use Atro\Core\Utils\Util;
+use Laminas\ServiceManager\ServiceManager;
 
 abstract class AbstractModule
 {
@@ -37,10 +37,8 @@ abstract class AbstractModule
      */
     protected $package;
 
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected ServiceManager $sm;
+    protected Container $container;
 
     /**
      * @var Unifier
@@ -51,11 +49,6 @@ abstract class AbstractModule
      * @var Unifier
      */
     protected $objUnifier;
-
-    /**
-     * @var null
-     */
-    private $routeUtil = null;
 
     /**
      * Get module load order
@@ -76,12 +69,18 @@ abstract class AbstractModule
         string $id,
         string $path,
         array $package,
-        Container $container
+        ServiceManager $sm
     ) {
         $this->id = $id;
         $this->path = $path;
         $this->package = $package;
-        $this->container = $container;
+        $this->sm = $sm;
+        $this->container = $sm->get('container');
+    }
+
+    protected function getContainer(): Container
+    {
+        return $this->container;
     }
 
     public static function afterUpdate(): void
@@ -212,7 +211,7 @@ abstract class AbstractModule
     public function loadLayouts(string $scope, string $name, array &$data)
     {
         // load layout class
-        $layoutManager = $this->container->get('layoutManager');
+        $layoutManager = $this->getContainer()->get('layoutManager');
 
         // prepare file path
         $filePath = $layoutManager->concatPath($this->getAppPath() . 'Resources/layouts', $scope);
@@ -220,21 +219,11 @@ abstract class AbstractModule
 
         if (file_exists($fileFullPath)) {
             // get file data
-            $fileData = $this->container->get('fileManager')->getContents($fileFullPath);
+            $fileData = $this->getContainer()->get('fileManager')->getContents($fileFullPath);
 
             // prepare data
             $data = array_merge_recursive($data, Json::decode($fileData, true));
         }
-    }
-
-    /**
-     * Load module routes
-     *
-     * @param array $data
-     */
-    public function loadRoutes(array &$data)
-    {
-        $data = $this->getRouteUtil()->getAddData($data, $this->getAppPath() . 'Resources/routes.json');
     }
 
     /**
@@ -299,6 +288,63 @@ abstract class AbstractModule
     }
 
     /**
+     * Returns FQCN list of PSR-15 middleware classes this module wants to add to the HTTP pipeline.
+     * Middlewares are piped after authentication, in the order returned.
+     *
+     * @return string[]
+     */
+    public function getMiddlewares(): array
+    {
+        return [];
+    }
+
+    /**
+     * Returns additional entity exclusions for core EntityType handlers.
+     * Maps handler FQCN to entity names that should be excluded from route registration.
+     *
+     * Use this when a specific entity must not have a particular EntityType route registered
+     * (e.g. an operation is disabled for that entity), rather than creating a blocking handler
+     * that throws Forbidden.
+     *
+     * @return array<class-string, string[]>  e.g. [\Atro\Core\EntityTypeHandlers\MergeHandler::class => ['ImportConfiguratorItem']]
+     */
+    public function getEntityTypeHandlerExcludes(): array
+    {
+        return [];
+    }
+
+    /**
+     * Registers this module's PSR-15 handler classes into the accumulated $classes list.
+     *
+     * The list already contains handlers from core and all previously loaded modules.
+     * Override this method to: add new handlers (append), remove a core handler (unset by value),
+     * or redirect a route to a different handler class (replace the FQCN in the array).
+     *
+     * @param string[] $classes Accumulated handler FQCN list, passed by reference.
+     */
+    public function registerHandlerClasses(array &$classes): void
+    {
+        $dir = $this->getAppPath() . 'Handlers';
+
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->getExtension() !== 'php') {
+                continue;
+            }
+
+            $relative  = substr($file->getPathname(), strlen($dir) + 1, -4);
+            $classes[] = $this->id . '\\Handlers\\' . str_replace('/', '\\', $relative);
+        }
+    }
+
+    /**
      * On module load
      */
     public function onLoad()
@@ -312,8 +358,8 @@ abstract class AbstractModule
     {
         if (!isset($this->unifier)) {
             $this->unifier = new Unifier(
-                $this->container->get('fileManager'),
-                $this->container->get('metadata'),
+                $this->getContainer()->get('fileManager'),
+                $this->getContainer()->get('metadata'),
                 false
             );
         }
@@ -328,25 +374,13 @@ abstract class AbstractModule
     {
         if (!isset($this->objUnifier)) {
             $this->objUnifier = new Unifier(
-                $this->container->get('fileManager'),
-                $this->container->get('metadata'),
+                $this->getContainer()->get('fileManager'),
+                $this->getContainer()->get('metadata'),
                 true
             );
         }
 
         return $this->objUnifier;
-    }
-
-    /**
-     * @return Route
-     */
-    protected function getRouteUtil(): Route
-    {
-        if (is_null($this->routeUtil)) {
-            $this->routeUtil = new Route($this->container->get('fileManager'), $this->container->get('moduleManager'), $this->container->get('dataManager'));
-        }
-
-        return $this->routeUtil;
     }
 
     /**

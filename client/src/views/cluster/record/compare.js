@@ -23,7 +23,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         actionRejectItem(e) {
             const id = $(e.currentTarget).data('selection-item-id');
 
-            this.ajaxPostRequest(`ClusterItem/action/reject`, { id: id })
+            this.ajaxPostRequest(`ClusterItem/action/reject`, {id: id})
                 .then(response => {
                     this.notify('Item rejected', 'success');
                     this.notify(this.translate('Loading...'));
@@ -71,13 +71,20 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             html += '<th>' + this.translate('matchedScore', 'fields', 'ClusterItem') + '</th>'
 
             for (let model of this.getModels()) {
-                html += '<th>' + this.getMatchedScoreHtml(model.item.get('matchedScore'), model.item.get('_meta')?.cluster?.confirmed && model.item.get('confirmedAutomatically')) + '</th>'
+                if (this.merging) {
+                    html += '<th></th>'
+                }
+                html += '<th>' + this.getMatchedScoreHtml(model) + '</th>'
             }
 
             return html + '</tr>'
         },
 
-        getMatchedScoreHtml(value, confirmedAutomatically) {
+        getMatchedScoreHtml(model) {
+            const value = model.item.get('matchedScore');
+            const confirmedAutomatically = model.item.get('_meta')?.cluster?.confirmed && model.item.get('confirmedAutomatically');
+            const entityName = model.item.get('entityName');
+
             let backgroundColor = '#CCCCCC';
             let text = ''
 
@@ -112,7 +119,31 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 .map(([key, value]) => `${key}: ${value}`)
                 .join('; ');
 
-            return `<span class="colored-enum label" style="${styleString}">${text}</span>` + (confirmedAutomatically ? '<i style="font-size: 14px;position: relative;margin-left: 2px;top: -0.5em;color: var(--label-color)" class="ph ph-sparkle"></i>' : '');
-        }
+            let statusIconsHtml = '';
+            if (confirmedAutomatically) {
+                statusIconsHtml += `<i class="ph ph-sparkle autoconfirmed" title="${this.translate('confirmedAutomatically', 'labels', 'ClusterItem')}"></i>`;
+            }
+
+            if (entityName) {
+                const primaryEntityId = this.getMetadata().get(['scopes', entityName, 'primaryEntityId']);
+                if (primaryEntityId && this.getMetadata().get(['scopes', entityName, 'role']) === 'staging') {
+                    statusIconsHtml += `<i class="ph ph-signpost entity-role-icon" title="${this.translate('stagingRecord', 'labels', 'Cluster')}"></i>`;
+                } else {
+                    statusIconsHtml += `<i class="ph ph-crown entity-role-icon" title="${this.translate('masterRecord', 'labels', 'Cluster')}"></i>`;
+                }
+            }
+
+            return `<span class="colored-enum label" style="${styleString}">${text}</span>${statusIconsHtml}`;
+        },
+
+        getMergeUrl() {
+            return 'Cluster/merge'
+        },
+
+        getMergeData(targetId, attributes, relationshipData) {
+            let data = Dep.prototype.getMergeData.call(this, targetId, attributes, relationshipData);
+            data.clusterId = this.selectionId;
+            return data;
+        },
     })
 })

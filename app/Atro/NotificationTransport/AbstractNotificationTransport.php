@@ -20,7 +20,7 @@ use Espo\Core\ORM\EntityManager;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\Entity;
 
 abstract class AbstractNotificationTransport

@@ -142,7 +142,7 @@ class LayoutManager
         // remove fields from layout if this fields not exist in metadata
         $layout = $this->disableNotExistingFields($scope, $relatedEntity, $relatedLink, $viewType, $layout);
 
-        if (empty($isAdminPage) && in_array($viewType, ['list', 'detail'])) {
+        if (empty($isAdminPage) && in_array($viewType, ['list', 'selection', 'detail'])) {
             $layout = $this->injectMultiLanguageFields($layout, $viewType, $scope, $relatedEntity, $relatedLink);
         }
 
@@ -155,19 +155,17 @@ class LayoutManager
         }
 
         if (!empty($derivativeScope)) {
-            $hasSourceRecordField = !empty($this->getMetadata()->get(['entityDefs', $derivativeScope, 'fields', 'sourceRecord']));
             if ($viewType === 'detail') {
-                if ($hasSourceRecordField) {
-                    array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], ['name' => 'sourceRecord']]);
-                } else {
-                    array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], false]);
-                }
+                array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], false]);
                 array_unshift($layout[0]['rows'], [['name' => 'derivativeStatus'], false]);
             } elseif ($viewType === 'list') {
                 $layout[] = ['name' => 'derivativeStatus'];
                 $layout[] = ['name' => 'masterRecord'];
-                if ($hasSourceRecordField) {
-                    $layout[] = ['name' => 'sourceRecord'];
+            } elseif ($viewType === 'relationships') {
+                foreach ($this->getMetadata()->get(['entityDefs', $derivativeScope, 'links']) ?? [] as $link => $linkDefs) {
+                    if (!empty($linkDefs['foreign']) && $linkDefs['foreign'] === 'stagingRecord') {
+                        $layout[] = ['name' => $link];
+                    }
                 }
             }
         }
@@ -701,7 +699,7 @@ class LayoutManager
             }
         }
 
-        if ($viewType === 'list') {
+        if (in_array($viewType, ['list', 'selection'])) {
             foreach ($data as $field) {
                 if (is_array($field) && in_array($field['name'], $multiLangFields)) {
                     foreach ($this->getMultiLangLocalesFields($field['name']) as $localeField) {

@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "confirmedAutomatically": "Automatisch bestätigt"
+  },
   "fields": {
     "entityName": "Entitäts-Name",
     "entityId": "Entitäts-ID",
@@ -10,7 +13,9 @@
   },
   "exceptions": {
     "notFound": "Cluster-Element-Datensatz nicht gefunden",
-    "cannotUnreject": "Dieses Clusterelement kann nicht abgelehnt werden"
+    "cannotReject": "Dieses Clusterelement kann nicht abgelehnt werden",
+    "cannotUnreject": "Dieses Clusterelement kann nicht abgelehnt werden",
+    "idOrIdListOrWhereRequired": "Bitte geben Sie mindestens eines an: eine ID, eine ID-Liste oder einen Suchfilter."
   },
   "massActions": {
     "reject": "Ablehnen"

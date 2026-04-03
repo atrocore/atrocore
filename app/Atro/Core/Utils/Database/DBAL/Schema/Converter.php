@@ -110,7 +110,7 @@ class Converter
             }
 
             $tableName = Util::toUnderScore($entityName);
-            if(empty($tableName)) {
+            if (empty($tableName)) {
                 continue;
             }
             if ($schema->hasTable($tableName)) {
@@ -180,7 +180,7 @@ class Converter
 
                     foreach ($indexParams['columns'] as $column) {
                         $type = $this->metadata->get(['entityDefs', $entityName, 'fields', Util::toCamelCase($column), 'type'], 'varchar');
-                        if (in_array($type, ['text', 'wysiwyg'])) {
+                        if (in_array($type, ['text', 'wysiwyg']) && !in_array('gin', $indexFlagList)) {
                             if (!self::isPgSQL($this->connection)) {
                                 $options['lengths'] = [200];
                             } else {
@@ -224,6 +224,7 @@ class Converter
 
         return $schema;
     }
+
 
     public function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): void
     {

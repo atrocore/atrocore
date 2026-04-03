@@ -83,10 +83,19 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
         $offset = 0;
         $limit = 2000;
 
-        while (count($clusterItems = $clusterItemRepo->getClusterItemsToRemoveFromClusters($offset, $limit)) > 0) {
+        while (count($clusterItems = $clusterItemRepo->getClusterItemsWithInvalidMatchedRecords($offset, $limit)) > 0) {
             $offset += $limit;
 
             foreach ($clusterItems as $clusterItem) {
+                if (!empty($matchedRecordId = $clusterItem->rowData['other_matched_record_id'])) {
+                    $matchedRecordRepo->markHasCluster($matchedRecordId);
+                    $clusterItem->set('matchedRecordId', $matchedRecordId);
+
+                    $clusterItemRepo->save($clusterItem);
+                    $clusterItemRepo->updateMatchedScoresInClusters([$clusterItem->get('clusterId')]);
+                    continue;
+                }
+
                 try {
                     $clusterItemService->rejectItem($clusterItem, false);
                 } catch (\Exception $e) {
@@ -97,7 +106,7 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
 
         $entitiesNames = [];
         foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $masterEntity && !empty($scopeDefs['matchMasterRecords'])) {
+            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $masterEntity && $scopeDefs['role'] !== 'changeRequest') {
                 $entitiesNames[] = $scope;
             }
         }

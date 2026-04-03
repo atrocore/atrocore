@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
+use Atro\Core\Utils\RegexUtil;
 use Espo\ORM\Entity;
 
 class User extends Record
@@ -95,7 +96,7 @@ class User extends Record
             ]);
         }
 
-        if (!empty($passwordRegex) && !preg_match($passwordRegex, $password)) {
+        if (!empty($passwordRegex) && !preg_match(RegexUtil::toPhpPattern($passwordRegex), $password)) {
             return false;
         }
 
@@ -446,7 +447,7 @@ class User extends Record
 
     protected function getUserById(string $userId): \Atro\Entities\User
     {
-        $user = $this->getRepository()->get($userId);
+        $user = $this->getEntityManager()->getRepository('User')->get($userId);
         if (!$user) {
             throw new NotFound();
         }
@@ -456,11 +457,6 @@ class User extends Record
         }
 
         return $user;
-    }
-
-    protected function getRepository()
-    {
-        return $this->getEntityManager()->getRepository('User');
     }
 
     protected function init()

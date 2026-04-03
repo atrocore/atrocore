@@ -556,7 +556,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             const nonInheritedFields = this.getNonInheritedFields();
 
-            return !nonInheritedFields.includes(this.name);
+            return !nonInheritedFields.includes(this.originalName || this.name);
         },
 
         initClassificationFieldMarker: function () {
@@ -651,12 +651,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             $recalculateLink.on('click', () => {
                 const data = {
-                    scope: this.model.name,
+                    entityName: this.model.name,
                     id: this.model.id,
                     field: this.name
                 }
                 $.ajax({
-                    url: `App/action/recalculateScriptField`,
+                    url: `computeEntityScriptField`,
                     type: 'POST',
                     data: JSON.stringify(data),
                     contentType: 'application/json',
@@ -1061,7 +1061,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         this.setMode('edit');
                     }
                 } else if (this.mode === 'edit' && readOnly) {
-                    this.inlineEditClose()
+                    this.readOnly = readOnly;
+                    return;
                 }
 
                 if (readOnly !== this.readOnly) {
@@ -1198,7 +1199,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             }
 
-            if (!this.model.get('attributesDefs')?.[name] && this.model.defs['fields']?.[name]?.attributeId ) {
+            if (!this.model.get('attributesDefs')?.[name] && this.model.defs['fields']?.[name]?.attributeId) {
                 data.__attributes = [this.model.defs['fields'][name].attributeId];
             }
 
@@ -1223,8 +1224,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
-            if (this.getRecordView() && typeof this.getRecordView().save === 'function') {
-                this.getRecordView().save(() => {
+            const recordView = this.getRecordView()
+            if (recordView && !recordView.saveDisabled && typeof recordView.save === 'function') {
+                recordView.save(() => {
                     this.model.trigger('after:inlineEditSave');
                     this.trigger('after:inlineEditSave');
                 });
@@ -1353,14 +1355,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (this.hasLockedControls()) {
                 const metaValue = res['_meta']?.locked?.[this.getLockedFieldName()];
                 if (metaValue !== undefined) {
-                    const meta = model.get('_meta') || {};
-                    if (!meta.locked) {
-                        meta.locked = {};
-                    }
-
-                    meta.locked[this.getLockedFieldName()] = metaValue;
-
-                    this.model.set('_meta', meta);
+                    this.model.setMeta('locked', this.getLockedFieldName(), metaValue);
                 }
 
                 this.setLockedControls();
@@ -1538,6 +1533,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         showValidationMessage: function (message, target) {
             var $el;
 
+            if(this.$el.find('.selectize-control').size()) {
+                target = target || '.selectize-control .main-element'
+            }
+
             target = target || '.main-element';
 
             if (typeof target === 'string' || target instanceof String) {
@@ -1637,7 +1636,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             const inheritedFields = this.model.get('inheritedFields');
 
-            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.name);
+            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.originalName || this.name);
         },
 
         fetchToModel: function () {
@@ -1683,13 +1682,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return Espo[key];
         },
 
-        getLinkOptions(scope, customOptions = {}) {
+        getLinkOptions(scope, customOptions = {}, clearCache = false) {
             if (!scope) {
                 return [];
             }
 
             let hash = this.simpleHash(JSON.stringify(customOptions.where ?? []))
             let key = 'link_' + scope + hash;
+            if(clearCache && Espo[key]) {
+                Espo[key] = null;
+            }
             if (!Espo[key]) {
                 Espo[key] = [];
                 let options = {
@@ -1909,7 +1911,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 && !(this.options.el || '').includes("stream")
             ) {
                 this.model.set(this.name, null);
-                this.ajaxGetRequest('App/action/defaultValueForScriptType', {
+                this.ajaxPostRequest('evaluateScriptFieldDefault', {
                     entityName: this.model.name,
                     field: this.name
                 }).success(res => {
@@ -1996,7 +1998,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         getAttributeFieldName() {
             let originalName = this.name;
             $.each((this.model.defs.fields || {}), (field, fieldDefs) => {
-                if (fieldDefs.attributeId && `attr_${fieldDefs.attributeId}` === this.name) {
+                if (fieldDefs.attributeId && [`attr_${fieldDefs.attributeId}`, `unitattr_${fieldDefs.attributeId}`].includes(this.name)) {
                     originalName = field;
                 }
             });
@@ -2005,7 +2007,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getExtensibleEnumId() {
-            let extensibleEnumId = this.model.getFieldParam(this.name, 'extensibleEnumId') ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            const name = this.originalName || this.name;
+            let extensibleEnumId = this.model.getFieldParam(name, 'extensibleEnumId') ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', name, 'extensibleEnumId']);
             if (this.params.extensibleEnumId) {
                 extensibleEnumId = this.params.extensibleEnumId;
             }

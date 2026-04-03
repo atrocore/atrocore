@@ -121,7 +121,10 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
 
                 let data = this.getDataForUpdateRelation(selected, this.model);
 
-                const url = `${this.model.get('mainEntity')}/${this.model.get('selectedLink')}/relation`;
+                let url;
+                data.entityName = this.model.get('mainEntity');
+                data.link = this.model.get('selectedLink');
+                url = 'entityRelationBulk';
                 this.sendDataForUpdateRelation(url, data);
             });
         },

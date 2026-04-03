@@ -190,7 +190,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.waitForView('list');
 
             this.getCollectionFactory().create(this.scope, function (collection) {
-                collection.maxSize = this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
+                collection.maxSize = this.options.selectPageSize || this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
                 this.collection = collection;
 
                 if (this.options.sortBy) {
@@ -381,7 +381,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             [
                 'SvelteFilterSearchBar' + this.dialog.id,
                 'SvelteFilterSearchBar' + this.dialog.id + 'tree',
-                'SvelteRightSideView' + this.dialog.id
+                'SvelteEntityContextPanel' + this.dialog.id
             ]
                 .forEach(key => {
                     if (window[key]) {
@@ -509,9 +509,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     showFilter: true,
                     uniqueKey: this.dialog.id
                 }
-                if (!window['SvelteRightSideView' + this.dialog.id]) {
+                if (!window['SvelteEntityContextPanel' + this.dialog.id]) {
 
-                    window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
+                    window['SvelteEntityContextPanel' + this.dialog.id] = new Svelte.EntityContextPanel({
                         target: rightContainer,
                         props: rightViewOption
                     });
@@ -521,7 +521,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         $(rightContainer).hide();
                     }
                 } else {
-                    window['SvelteRightSideView' + this.dialog.id].$set(rightViewOption)
+                    window['SvelteEntityContextPanel' + this.dialog.id].$set(rightViewOption)
                 }
             }
         },
@@ -580,7 +580,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 ids.push(model.get('id'));
             });
 
-            this.ajaxGetRequest(`${this.scope}/action/TreeData`, { ids: ids }).then(response => {
+            this.ajaxGetRequest(`${this.scope}/treeData`, { ids: ids }).then(response => {
                 $shown.html(response.total);
                 $total.html(response.total);
                 this.setupTree(response.tree);
@@ -589,11 +589,12 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
         generateUrl(node) {
             let queryParameters = {
+                entityName: this.scope,
                 sortBy: this.collection.sortBy,
                 asc: this.collection.asc,
                 where: this.collection.getWhere(),
             };
-            let url = this.scope + '/action/Tree?' + $.param(queryParameters);
+            let url = 'entityTree?' + $.param(queryParameters);
             let id = 'root';
 
             if (node && node.id) {

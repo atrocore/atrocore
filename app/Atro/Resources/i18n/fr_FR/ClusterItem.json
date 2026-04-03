@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "confirmedAutomatically": "Confirmé automatiquement"
+  },
   "fields": {
     "entityName": "Nom de l'entité",
     "entityId": "ID de l'entité",
@@ -10,7 +13,9 @@
   },
   "exceptions": {
     "notFound": "L'enregistrement de l'élément du cluster n'a pas été trouvé",
-    "cannotUnreject": "Cet élément du cluster ne peut pas être rejeté"
+    "cannotReject": "Ce point de la grappe ne peut être rejeté",
+    "cannotUnreject": "Cet élément du cluster ne peut pas être rejeté",
+    "idOrIdListOrWhereRequired": "Veuillez fournir au moins l'un des éléments suivants : un ID, une liste d'ID ou un filtre de recherche."
   },
   "massActions": {
     "reject": "Rejeter"

@@ -62,6 +62,8 @@ class Base
 
     protected array $actionExecutionFilter = [];
 
+    protected array $cachedData = [];
+
     public function __construct(EntityManager $entityManager, User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory)
     {
         $this->entityManager = $entityManager;
@@ -250,7 +252,7 @@ class Base
                 $attribute = "";
                 if (!empty($item['id'])) {
                     $attribute = $item['id'];
-                    if (strpos($item['id'], 'attr_') !== false) {
+                    if (str_contains($item['id'], 'attr_')) {
                         $parts = explode('_', $item['id']);
                         $additionForAttribute['attribute'] = $result['attributesIds'][] = $parts[1];
                         $additionForAttribute['isAttribute'] = true;
@@ -432,11 +434,23 @@ class Base
                             $item = [];
                         }
                     } else {
+                        $isUnitField = !empty($item['data']['unitField']);
                         $item = [
                             'attribute' => $attribute,
                             'type'      => $type,
                             'value'     => $item['value'],
                         ];
+                        if ($isUnitField) {
+                            if (!empty($additionForAttribute['isAttribute'])) {
+                                $item['unitField'] = true;
+                            } else {
+                                $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute]);
+                                if (!empty($fieldDefs['mainField']) && !empty($fieldDefs['measureId'])) {
+                                    $item['unitField'] = true;
+                                    $item['attribute'] = $fieldDefs['mainField'];
+                                }
+                            }
+                        }
                     }
 
                     $item = array_merge($item, $additionForAttribute);
@@ -548,6 +562,12 @@ class Base
                 break;
             case 'last_year':
                 $operator = 'lastYear';
+                break;
+            case 'similar':
+                $operator = 'similar';
+                break;
+            case 'word_similar':
+                $operator = 'wordSimilar';
                 break;
         }
 
@@ -1358,6 +1378,178 @@ class Base
         return $result;
     }
 
+    protected function convertUnitFieldWhere(array $item): array
+    {
+        $type = $item['type'];
+        $value = $item['value'] ?? null;
+        $mainField = $item['attribute'];
+        $mainFieldColumn = Util::toUnderScore($mainField);
+        $unitColumn = $mainFieldColumn . '_unit_id';
+        $ta = QueryConverter::TABLE_ALIAS;
+        $isInt = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $mainField, 'type']) === 'int';
+
+        if ($type === 'isNull') {
+            return [
+                'AND' => [
+                    [$mainField . '=' => null],
+                    [$mainField . 'UnitId=' => null],
+                ],
+            ];
+        }
+
+        if ($type === 'isNotNull') {
+            return [
+                'AND' => [
+                    [$mainField . '!=' => null],
+                    [$mainField . 'UnitId!=' => null],
+                ],
+            ];
+        }
+
+        // Pre-convert filter value into each unit used in the table for sargable (index-friendly) queries
+        $tableName = Util::toUnderScore($this->entityType);
+        $measureUnits = $this->getMeasureUnitsData($tableName, $unitColumn);
+        if (empty($measureUnits)) {
+            return [];
+        }
+
+        if ($type === 'between') {
+            if (!is_array($value) || count($value) < 2) {
+                return [];
+            }
+
+            $baseFrom = $this->resolveUnitFilterValue($value[0], $measureUnits);
+            $baseTo = $this->resolveUnitFilterValue($value[1], $measureUnits);
+            if ($baseFrom === null || $baseTo === null) {
+                return [];
+            }
+
+            $orParts = [];
+            $parameters = [];
+            foreach ($measureUnits as $uid => $multiplier) {
+                $pUid = 'uf_uid_' . IdGenerator::unsortableId();
+                $pFrom = 'uf_from_' . IdGenerator::unsortableId();
+                $pTo = 'uf_to_' . IdGenerator::unsortableId();
+                $orParts[] = "($ta.$unitColumn = :$pUid AND $ta.$mainFieldColumn >= :$pFrom AND $ta.$mainFieldColumn <= :$pTo)";
+                $parameters[$pUid] = $uid;
+                $parameters[$pFrom] = $isInt ? (int)round($baseFrom / $multiplier) : $baseFrom / $multiplier;
+                $parameters[$pTo] = $isInt ? (int)round($baseTo / $multiplier) : $baseTo / $multiplier;
+            }
+
+            return [
+                'innerSql' => [
+                    'sql'        => '(' . implode(' OR ', $orParts) . ')',
+                    'parameters' => $parameters,
+                ],
+            ];
+        }
+
+        $sqlOperator = $this->getUnitFilterSqlOperator($type);
+        if ($sqlOperator === null) {
+            return [];
+        }
+
+        $baseValue = $this->resolveUnitFilterValue($value, $measureUnits);
+        if ($baseValue === null) {
+            return [];
+        }
+
+        $orParts = [];
+        $parameters = [];
+        foreach ($measureUnits as $uid => $multiplier) {
+            $pUid = 'uf_uid_' . IdGenerator::unsortableId();
+            $pVal = 'uf_val_' . IdGenerator::unsortableId();
+            $orParts[] = "($ta.$unitColumn = :$pUid AND $ta.$mainFieldColumn $sqlOperator :$pVal)";
+            $parameters[$pUid] = $uid;
+            $parameters[$pVal] = $isInt ? (int)round($baseValue / $multiplier) : $baseValue / $multiplier;
+        }
+
+        return [
+            'innerSql' => [
+                'sql'        => '(' . implode(' OR ', $orParts) . ')',
+                'parameters' => $parameters,
+            ],
+        ];
+    }
+
+    protected function getMeasureUnitsData(string $tableName, string $unitColumn): array
+    {
+        $cacheKey = $tableName . '.' . $unitColumn;
+
+        if (!isset($this->cachedData['measureUnits'][$cacheKey])) {
+            $rows = $this->getEntityManager()->getDbal()->createQueryBuilder()
+                ->select('u.id', 'u.multiplier')
+                ->from('unit', 'u')
+                ->innerJoin('u', "(SELECT DISTINCT $unitColumn AS uid FROM $tableName WHERE $unitColumn IS NOT NULL)", 'used', 'u.id = used.uid')
+                ->where('u.deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            $units = [];
+            foreach ($rows as $row) {
+                $multiplier = (float)$row['multiplier'];
+                if ($multiplier != 0) {
+                    $units[$row['id']] = $multiplier;
+                }
+            }
+            $this->cachedData['measureUnits'][$cacheKey] = $units;
+        }
+
+        return $this->cachedData['measureUnits'][$cacheKey];
+    }
+
+    protected function resolveUnitFilterValue($value, array $measureUnits): ?float
+    {
+        if (!is_array($value) || count($value) < 2) {
+            return null;
+        }
+
+        $amount = $value[0];
+        $unitId = $value[1];
+
+        if (!is_numeric($amount) || empty($unitId)) {
+            return null;
+        }
+
+        // The filter unit might not be used in the table — look it up if needed
+        if (!isset($measureUnits[$unitId])) {
+            if (!isset($this->cachedData['unitMultiplier'][$unitId])) {
+                $row = $this->getEntityManager()->getDbal()->createQueryBuilder()
+                    ->select('multiplier')
+                    ->from('unit')
+                    ->where('id = :id AND deleted = :false')
+                    ->setParameter('id', $unitId)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAssociative();
+
+                $this->cachedData['unitMultiplier'][$unitId] = !empty($row) ? (float)$row['multiplier'] : null;
+            }
+            $multiplier = $this->cachedData['unitMultiplier'][$unitId];
+        } else {
+            $multiplier = $measureUnits[$unitId];
+        }
+
+        if (empty($multiplier)) {
+            return null;
+        }
+
+        return (float)$amount * $multiplier;
+    }
+
+    protected function getUnitFilterSqlOperator(string $type): ?string
+    {
+        $map = [
+            'equals'              => '=',
+            'notEquals'           => '<>',
+            'greaterThan'         => '>',
+            'greaterThanOrEquals' => '>=',
+            'lessThan'            => '<',
+            'lessThanOrEquals'    => '<=',
+        ];
+
+        return $map[$type] ?? null;
+    }
+
     protected function modifyPartForHierarchy(array &$item): void
     {
         $this->modifyRoutesField($item);
@@ -1497,6 +1689,10 @@ class Base
             $item['dateTime'] = true;
         }
 
+        if (!empty($item['unitField']) && empty($item['isAttribute']) && !empty($attribute) && !empty($item['type'])) {
+            return $this->convertUnitFieldWhere($item);
+        }
+
         if (!empty($item['isAttribute']) && $this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute'])) {
             unset($item['isAttribute']);
             $this->getEntityManager()->getAttributeFieldConverter()->getWherePart($this->getSeed(), $item, $result);
@@ -1598,6 +1794,32 @@ class Base
 
                 case 'notContains':
                     $part[$attribute . '!*'] = '%' . $value . '%';
+                    break;
+
+                case 'similar':
+                    if (!is_null($value) && $value !== '') {
+                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+                        $colName = Util::toUnderScore($attribute);
+                        $paramVal = 'sim_v_' . IdGenerator::unsortableId();
+                        $paramThr = 'sim_t_' . IdGenerator::unsortableId();
+                        $part['innerSql'] = [
+                            'sql'        => 'similarity(' . QueryConverter::TABLE_ALIAS . '.' . $colName . ', :' . $paramVal . ') >= :' . $paramThr,
+                            'parameters' => [$paramVal => $value, $paramThr => $threshold],
+                        ];
+                    }
+                    break;
+
+                case 'wordSimilar':
+                    if (!is_null($value) && $value !== '') {
+                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+                        $colName = Util::toUnderScore($attribute);
+                        $paramVal = 'wsim_v_' . IdGenerator::unsortableId();
+                        $paramThr = 'wsim_t_' . IdGenerator::unsortableId();
+                        $part['innerSql'] = [
+                            'sql'        => 'word_similarity(:' . $paramVal . ', ' . QueryConverter::TABLE_ALIAS . '.' . $colName . ') >= :' . $paramThr,
+                            'parameters' => [$paramVal => $value, $paramThr => $threshold],
+                        ];
+                    }
                     break;
 
                 case 'notEquals':
@@ -2299,6 +2521,7 @@ class Base
             $textFilter = mb_substr($textFilter, strlen('AUTOCOMPLETE:'));
             $autocompletion = true;
         }
+        $type = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']);
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
         $group = [];
@@ -2309,17 +2532,34 @@ class Base
             $textFilter = mb_substr($textFilter, 3);
         }
 
-        $skipWidlcards = false;
+        $skipWildcards = false;
 
         if (mb_strpos($textFilter, '*') !== false) {
-            $skipWidlcards = true;
+            $skipWildcards = true;
             $textFilter = str_replace('*', '%', $textFilter);
         }
+
+        $fuzzyTextTypes = ['varchar', 'text', 'wysiwyg'];
+        $useFuzzy = $type !== 'ReferenceData' && !$skipWildcards
+            && mb_strlen($textFilter) >= 3
+            && class_exists('AdvancedDataManagement\Core\FuzzySearch') &&
+            \AdvancedDataManagement\Core\FuzzySearch::isAvailable($this->getEntityManager()->getDbal());
+
+        $fuzzyFields = [];
 
         foreach ($fieldList as $field) {
             $attributeType = null;
             if (!empty($fieldDefs[$field]['type'])) {
                 $attributeType = $fieldDefs[$field]['type'];
+            }
+
+            if ($useFuzzy && in_array($attributeType, $fuzzyTextTypes)) {
+                $fuzzyFields[] = $field;
+                continue;
+            }
+
+            if ($useFuzzy && in_array($attributeType, ['int', 'float', 'bool', 'date', 'datetime', 'enum'])) {
+                continue;
             }
 
             if (in_array($attributeType, ['int', 'float'])) {
@@ -2352,7 +2592,7 @@ class Base
                 $field = "VARCHAR:$field";
             }
 
-            if (!$skipWidlcards) {
+            if (!$skipWildcards) {
                 if (
                     mb_strlen($textFilter) >= $textFilterContainsMinLength
                     && (
@@ -2374,12 +2614,55 @@ class Base
             if ($field === 'name' && $autocompletion) {
                 $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($expression) {
                     $ta = $mapper->getQueryConverter()->getMainTableAlias();
-                    $parameter = 'name_' . Util::generateUniqueHash();
-                    $alias = 'match_priority_' . Util::generateUniqueHash();
+                    $parameter = 'name_' . IdGenerator::unsortableId();
+                    $alias = 'match_priority_' . IdGenerator::unsortableId();
                     $qb->addSelect("CASE WHEN LOWER($ta.name) LIKE LOWER(:$parameter) THEN 1 ELSE 2 END AS $alias");
                     $qb->orderBy("$alias");
                     $qb->addOrderBy("$ta.name");
                     $qb->setParameter($parameter, $expression);
+                };
+            }
+        }
+
+        if (!empty($fuzzyFields)) {
+            $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+            $words = array_values(array_filter(array_map('trim', explode(' ', $textFilter))));
+            $ta = QueryConverter::TABLE_ALIAS;
+
+            $groupItem = [
+                'AND' => []
+            ];
+
+            // Each word must match at least one fuzzy field (AND of OR-per-field), added via innerSql
+            foreach ($words as $word) {
+                $paramVal = 'ftrgm_v_' . IdGenerator::unsortableId();
+                $paramThr = 'ftrgm_t_' . IdGenerator::unsortableId();
+                $conditions = [];
+                foreach ($fuzzyFields as $f) {
+                    $colName = Util::toUnderScore($f);
+                    $conditions[] = "word_similarity(:$paramVal, $ta.$colName) >= :$paramThr";
+                }
+                $groupItem['AND'][] = [
+                    'innerSql' => [
+                        'sql'        => '(' . implode(' OR ', $conditions) . ')',
+                        'parameters' => [$paramVal => $word, $paramThr => $threshold],
+                    ],
+                ];
+            }
+
+            $group[] = $groupItem;
+
+            // Autocomplete: order by similarity of full input to name (requires callback for addSelect/orderBy)
+            if ($autocompletion && in_array('name', $fuzzyFields)) {
+                $paramVal = 'ftrgm_ord_' . IdGenerator::unsortableId();
+                $scoreAlias = 'fuzzy_name_score_' . IdGenerator::unsortableId();
+                $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($paramVal, $scoreAlias, $textFilter) {
+                    $ta = $mapper->getQueryConverter()->getMainTableAlias();
+                    $colName = Util::toUnderScore('name');
+                    $qb->addSelect("word_similarity(:$paramVal, $ta.$colName) AS $scoreAlias");
+                    $qb->orderBy($scoreAlias, 'DESC');
+                    $qb->addOrderBy("$ta.$colName");
+                    $qb->setParameter($paramVal, $textFilter);
                 };
             }
         }
@@ -2390,9 +2673,11 @@ class Base
             ];
         }
 
-        $result['whereClause'][] = [
-            'OR' => $group
-        ];
+        if (count($group) > 0) {
+            $result['whereClause'][] = [
+                'OR' => $group
+            ];
+        }
     }
 
     public function applyAccess(&$result)

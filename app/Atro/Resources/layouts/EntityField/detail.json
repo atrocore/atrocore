@@ -36,6 +36,12 @@
       ],
       [
         {
+          "name": "allowNullForBool"
+        },
+        false
+      ],
+      [
+        {
           "name": "readOnly"
         },
         false
@@ -301,6 +307,12 @@
       [
         {
           "name": "urlLabel"
+        },
+        false
+      ],
+      [
+        {
+          "name": "selectPageSize"
         },
         false
       ]

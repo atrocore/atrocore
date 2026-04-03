@@ -320,7 +320,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 items = [];
                 link = `#${tab}`;
 
-                if (!this.getAcl().check(tab, 'create') || this.getMetadata().get(['clientDefs', tab, 'createDisabled'])) {
+                if (!this.getAcl().check(tab, 'create') || (this.getMetadata().get(['clientDefs', tab, 'createDisabled']) && tab !== 'File')) {
                     createDisabled = true;
                 }
             }
@@ -523,7 +523,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
         actionClearSystemCache: function () {
             Espo.Ui.notify(this.getLanguage().translate('Please wait...'));
 
-            this.ajaxPostRequest('Admin/clearCache').success(response => {
+            this.ajaxPostRequest('clearCache').success(response => {
                 Espo.Ui.success(this.getLanguage().translate('Cache has been cleared', 'labels', 'Admin'));
             });
         },

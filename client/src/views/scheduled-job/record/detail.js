@@ -46,10 +46,10 @@ Espo.define('views/scheduled-job/record/detail', 'views/record/detail', Dep => {
         },
 
         actionExecuteNow() {
-            if (!this.hasExecuteNow()) {
+            if (!this.hasExecuteNow() || !this.model.id) {
                 return;
             }
-            this.ajaxPostRequest('ScheduledJob/action/executeNow', {id: this.model.id}).then(response => {
+            this.ajaxPostRequest(`ScheduledJob/${this.model.id}/executeNow`).then(response => {
                 this.notify(this.translate(response ? 'jobLaunched' : 'jobAlreadyExist', 'messages', 'ScheduledJob'), response ? 'success' : 'danger');
                 $('button.action[data-action="refresh"][data-panel="jobs"]').click();
             });

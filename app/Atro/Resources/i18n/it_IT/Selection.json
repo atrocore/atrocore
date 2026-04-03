@@ -20,5 +20,13 @@
   },
   "customActions": {
     "replaceItem": "Sostituire l'articolo"
+  },
+  "streamMessages": {
+    "selectionLinked": "{user} ha collegato {relatedEntity} a questa selezione",
+    "selectionLinkedThis": "{user} ha collegato {relatedEntity} a questa selezione",
+    "selectionUnlinked": "{user} ha scollegato {relatedEntity} da questa selezione",
+    "selectionUnlinkedThis": "{user} ha scollegato {relatedEntity} da questa selezione",
+    "selectionDeleted": "{user} ha eliminato {relatedEntity} da questa selezione",
+    "selectionDeletedThis": "{user} ha eliminato questa selezione"
   }
 }

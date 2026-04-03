@@ -18,9 +18,8 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Atro\Services\Record;
 use Espo\ORM\EntityManager;
 
@@ -31,7 +30,6 @@ class PseudoTransactionManager
     private array $canceledJobs = [];
 
     private Container $container;
-    private Container $systemContainer;
 
     protected Connection $connection;
 
@@ -249,9 +247,17 @@ class PseudoTransactionManager
     {
         $inputIsEmpty = $job['input_data'] === '';
 
+        $userContext = $this->container->get(UserContext::class);
+        $previousUser = $userContext->getUser();
+
         try {
-            $this->setSystemContainerUser($job['created_by_id']);
-            $service = $this->getServiceFactory()->create($job['entity_type']);
+            /** @var EntityManager $em */
+            $em = $this->container->get('entityManager');
+            $user = $em->getRepository('User')->get($job['created_by_id']);
+            $em->setUser($user);
+            $userContext->set($user);
+
+            $service = $this->container->get('serviceFactory')->create($job['entity_type']);
             if ($service instanceof Record) {
                 $service->setPseudoTransactionId($job['id']);
             }
@@ -316,6 +322,11 @@ class PseudoTransactionManager
                 ->where('id IN (:ids)')
                 ->setParameter('ids', $childrenIds, Mapper::getParameterType($childrenIds))
                 ->executeQuery();
+        } finally {
+            if ($previousUser !== null) {
+                $this->container->get('entityManager')->setUser($previousUser);
+                $userContext->set($previousUser);
+            }
         }
 
         $this->connection->createQueryBuilder()
@@ -343,32 +354,6 @@ class PseudoTransactionManager
         foreach ($ids as $id) {
             $this->collectChildren($id, $childrenIds);
         }
-    }
-
-    public function getSystemContainer() : Container
-    {
-        if (empty($this->systemContainer)) {
-            $this->systemContainer = new Container();
-            $auth = new \Espo\Core\Utils\Auth($this->systemContainer);
-            $auth->useNoAuth();
-        }
-
-        return $this->systemContainer;
-    }
-
-    protected function getServiceFactory(): ServiceFactory
-    {
-        return $this->getSystemContainer()->get('serviceFactory');
-    }
-
-    protected function setSystemContainerUser(string $userId): void
-    {
-        /** @var EntityManager $em */
-        $em = $this->getSystemContainer()->get('entityManager');
-
-        $user = $em->getRepository('User')->get($userId);
-        $em->setUser($user);
-        $this->getSystemContainer()->setUser($user);
     }
 
     protected function getUser(): User

@@ -15,18 +15,17 @@ namespace Atro\Core\Templates\Services;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
-use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\Templates\Entities\Hierarchy as HierarchyEntity;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Atro\Services\Record;
-use Atro\Core\Exceptions\NotModified;
-use Atro\Core\Templates\Entities\Hierarchy as HierarchyEntity;
 
 class Hierarchy extends Base
 {
@@ -170,8 +169,12 @@ class Hierarchy extends Base
 
     public function getTreeData(array $params): array
     {
+        $sortBy = $params['sortBy'] ?? 'id';
+        $order = $params['asc'] ? 'ASC' : 'DESC';
+
         if (!isset($params['ids'])) {
             $params = $this->getParamsForTree($params['link'], $params['scope'], $params);
+            $params['sortBy'] = 'id';
             $repository = $this->getRepository();
             $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
             $selectParams['distinct'] = true;
@@ -186,7 +189,8 @@ class Hierarchy extends Base
         $tree = [];
         $treeBranches = [];
 
-        foreach ($this->getRepository()->where(['id' => $ids])->select($this->getSelectForTree())->find() as $entity) {
+        foreach ($this->getRepository()->where(['id' => $ids])->order($sortBy, $order)
+                     ->select($this->getSelectForTree())->find() as $entity) {
             $this->createTreeBranches($entity, $treeBranches);
         }
 
@@ -420,7 +424,11 @@ class Hierarchy extends Base
                     }
                     break;
                 case 'linkMultiple':
-                    $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
+                    if (!empty($fieldDefs['attributeId'])) {
+                        $input->{$field . 'Ids'} = $parent->get($field . 'Ids');
+                    } else {
+                        $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
+                    }
                     break;
                 case 'int':
                 case 'float':
@@ -1049,7 +1057,15 @@ class Hierarchy extends Base
 
     protected function createInputDataForPseudoTransactionJob(Entity $entity, array $parent, array $child, \stdClass $data): \stdClass
     {
-        $unInheritedFields = $this->getRepository()->getUnInheritedFields();
+        $unInheritedFields = [];
+        foreach ($this->getRepository()->getUnInheritedFields() as $field) {
+            $list = $this->getFieldManagerUtil()->getActualAttributeList($this->entityName, $field, $entity);
+
+            $unInheritedFields = array_merge($unInheritedFields, $list);
+            $unInheritedFields[] = $field;
+        }
+
+
         $inputData = new \stdClass();
         foreach ($data as $field => $value) {
             if (in_array($field, $unInheritedFields)) {
@@ -1061,7 +1077,7 @@ class Hierarchy extends Base
             }
 
             $parentValue = $parent[$underScoredField];
-            $childValue = $child[$underScoredField];
+            $childValue = $child[$underScoredField] ?? null;
 
             if ($this->areValuesEqual($entity, $field, $parentValue, $childValue)) {
                 $inputData->$field = $value;
@@ -1088,10 +1104,10 @@ class Hierarchy extends Base
                     break;
                 case 'linkMultiple':
                     if (!in_array($field, $this->getRepository()->getUnInheritedFields())) {
-                        if(!empty($fieldDefs['attributeId'])) {
+                        if (!empty($fieldDefs['attributeId'])) {
                             $parentIds = $parent->get($field . 'Ids') ?? [];
                             $entityIds = $child->get($field . 'Ids') ?? [];
-                        }else{
+                        } else {
                             $parentIds = $parent->getLinkMultipleIdList($field);
                             $entityIds = $child->getLinkMultipleIdList($field);
                         }

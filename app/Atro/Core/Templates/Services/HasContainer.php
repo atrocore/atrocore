@@ -17,7 +17,7 @@ use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Services\Base;
 use Atro\Core\Utils\Config;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 
 /**
@@ -33,17 +33,6 @@ class HasContainer extends Base
     protected function getContainer(): Container
     {
         return $this->getInjection('container');
-    }
-
-    protected function reloadDependency(string $name): void
-    {
-        $this->getContainer()->reload($name);
-    }
-
-    protected function rebuild(): void
-    {
-        $this->reloadDependency('entityManager');
-        $this->getContainer()->get('dataManager')->rebuild();
     }
 
     protected function getEntityManager(): EntityManager

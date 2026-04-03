@@ -220,10 +220,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             buttons.addClass('disabled');
             this.handleRadioButtonsDisableState(true);
             $.ajax({
-                url: this.getCompareUrl(),
+                url: this.getMergeUrl(),
                 type: 'POST',
                 selectionId: this.selectionModel?.id,
-                data: JSON.stringify(this.getCompareData(id, attributes, relationshipData)),
+                data: JSON.stringify(this.getMergeData(id, attributes, relationshipData)),
                 error: (xhr, status, error) => {
                     this.notify(false);
                     buttons.removeClass('disabled');
@@ -238,13 +238,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
         },
 
-        getCompareUrl() {
-            return 'App/action/merge'
+        getMergeUrl() {
+            return 'entityMerge'
         },
 
-        getCompareData(targetId, attributes, relationshipData) {
+        getMergeData(targetId, attributes, relationshipData) {
             return {
-                scope: this.scope,
+                entityName: this.scope,
                 attributes: {
                     input: attributes,
                     relationshipData: relationshipData
@@ -290,6 +290,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
 
             let processFields = (fields) => {
+                let forbiddenLangCode = this.getAcl().getForbiddenLanguageList('read') || [];
+
                 for (const field of fields) {
                     if (forbiddenList.includes(field)) {
                         continue;
@@ -302,6 +304,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     let fieldDef = this.model.defs.fields[field];
 
                     if (!fieldDef) {
+                        continue;
+                    }
+
+                    if(fieldDef?.multilangLocale && forbiddenLangCode.includes(fieldDef?.multilangLocale)) {
                         continue;
                     }
 
@@ -357,6 +363,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         inlineEditDisabled: this.inlineEditDisabled
                     });
                 }
+
 
                 this.fieldPanels = this.originalFieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0);
             }
@@ -726,8 +733,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         buildComparisonTableHeaderColumn() {
             let columns = [];
 
+            const model = this.getModels()[0];
+            const nameField = model.nameField && model.hasField(model.nameField) ? model.nameField : 'id';
             columns.push({
-                name: this.translate('name', 'fields'),
+                name: this.translate(nameField, 'fields'),
                 isFirst: true,
             });
 
@@ -823,6 +832,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.renderedPanels.push(name);
             }
 
+            if (this.renderedPanels.length === this.fieldPanels.length && this.options.hideLoaderOnFieldsLoaded) {
+                this.$el.find('.overlay').addClass('hidden');
+            }
+
             if (this.renderedPanels.length === this.fieldPanels.length + 1) {
                 this.handleRadioButtonsDisableState(false);
                 this.trigger('all-panels-rendered');
@@ -886,7 +899,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 let anchorContainer = this.getParentView().$el.find('.anchor-nav-container');
                 if (!anchorContainer.length) {
                     let id = Math.floor(Math.random() * 10000);
-                    anchorContainer = $(`<div class="anchor-nav-container" style="display: flex;width: 100%;padding-top: 10px;position:sticky;left: 0;z-index: 100;"></div>`)
+                    anchorContainer = $(`<div class="anchor-nav-container" style="width: 100%;padding-top: 10px;position:sticky;left: 0;top: 0;z-index: 100;background: white"></div>`)
                     this.getParentView().$el.find('.modal-body').prepend(anchorContainer)
                 }
 
@@ -946,7 +959,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.getParentView()) {
                 const filterButton = $('<div class="compare-content-filter-container" style="display: inline-block;margin-left: 10px"><div></div></div>');
                 this.getParentView().$el.find('.modal-footer').append(filterButton);
-                new Svelte.ContentFilter({
+                new Svelte.FieldStateFilter({
                     target: filterButton.children().get(0),
                     props: {
                         scope: this.scope,

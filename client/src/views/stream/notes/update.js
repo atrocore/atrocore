@@ -116,6 +116,11 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             let parentType = data.entityType ?? this.model.get('parentType')
             var fields = data.fields || [];
 
+            const auditMeta = this.model.getMeta('audit', 'createdBy');
+            if (auditMeta) {
+                this.messageData['user'] = this.buildUserHtml(auditMeta);
+            }
+
             if (data.entityType) {
                 const entityType = this.model.get('relatedType') || data.relatedType || null;
                 const entityId = this.model.get('relatedId') || data.relatedId || null;
@@ -174,18 +179,34 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         });
                     }
 
-                    let viewName =  fieldDefs[field]['view'] || model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+                    let viewName = fieldDefs[field]['view'] || model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     for (const key in fieldDefs) {
-                       if(!modelWas.defs.fields[key]) {
-                           modelWas.defs.fields[key] = fieldDefs[key];
-                       }
+                        if (!modelWas.defs.fields[key]) {
+                            modelWas.defs.fields[key] = fieldDefs[key];
+                        }
 
-                       if(!modelBecame.defs.fields[key]) {
-                           modelBecame.defs.fields[key] = fieldDefs[key];
-                       }
+                        if (!modelBecame.defs.fields[key]) {
+                            modelBecame.defs.fields[key] = fieldDefs[key];
+                        }
                     }
+
+                     let options = [];
+
+                    if (model.get(field + 'OptionData')) {
+                        options.push(model.get(field + 'OptionData'));
+                    }
+
+
+                    if (model.get(field + 'OptionsData')) {
+                        options.push(...model.get(field + 'OptionsData'));
+                    }
+
+                    if(options.length) {
+                        params.linkOptions = options;
+                    }
+
                     this.createView(field + 'Was', viewName, {
-                        el: this.options.el + ' .was',
+                        el: this.options.el + ` [data-name="${field}"] .was`,
                         model: modelWas,
                         readOnly: true,
                         defs: {
@@ -204,8 +225,23 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         });
                     });
 
+                    options = [];
+
+                    if (modelBecame.get(field + 'OptionData')) {
+                        options.push(modelBecame.get(field + 'OptionData'));
+                    }
+
+
+                    if (modelBecame.get(field + 'OptionsData')) {
+                        options.push(...modelBecame.get(field + 'OptionsData'));
+                    }
+
+                    if(options.length) {
+                        params.linkOptions = options;
+                    }
+
                     this.createView(field + 'Became', viewName, {
-                        el: this.options.el + ' .became',
+                        el: this.options.el + ` [data-name="${field}"] .became`,
                         model: modelBecame,
                         readOnly: true,
                         defs: {

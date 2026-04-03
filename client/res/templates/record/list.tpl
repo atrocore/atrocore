@@ -16,7 +16,7 @@
                     <div>
                         {{#if this.sortable}}
                             <a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{this.label}}{{/if}}</a>
-                            {{#if this.sorted}}{{#if this.asc}}<span>&#8593;</span>{{else}}<span>&#8595;</span>{{/if}}{{/if}}
+                            {{#if this.sorted}}{{#if this.asc}}<span><i class="ph ph-arrow-up"></i></span>{{else}}<span><i class="ph ph-arrow-down"></i></span>{{/if}}{{/if}}
                         {{else}}
                             {{#if this.hasCustomLabel}}
                                 {{this.customLabel}}

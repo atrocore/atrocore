@@ -161,7 +161,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                     let linkedColumnViewKey = null;
                     data.forEach((el, key) => {
                         if (!el.field) {
-                            el.entityValueKeys.push({key: null});
+                            el.entityValueKeys.push({ key: null });
                             return;
                         }
 
@@ -171,7 +171,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                         let viewName = fieldModel.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldModel.getFieldType(field))
                         let viewKey = linkedEntity.id + (el.realField || el.field) + index + 'Current';
                         let mode = 'detail';
-                        el.entityValueKeys.push({key: viewKey});
+                        el.entityValueKeys.push({ key: viewKey });
 
                         if (el.field === this.isLinkedColumns) {
                             linkedColumnViewKey = viewKey;
@@ -421,7 +421,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                 listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({number: k, relEntity: parts[0]});
+                        toRemove.push({ number: k, relEntity: parts[0] });
                     }
                 });
 
@@ -552,6 +552,10 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                 attr[this.getModelRelationColumnId()] = this.getSelectedModelIdForData(selectedModelId);
                 attr[this.getRelationshipRelationColumnId()] = linkedEntity.id;
 
+                if (view.model.get('id')) {
+                    attr['id'] = view.model.get('id');
+                }
+
 
                 let otherRows = this.tableRows.filter(row => {
                     return row.field && row.linkedEntityId === linkedEntity.id && row.field !== this.isLinkedColumns;
@@ -563,9 +567,6 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                         return;
                     }
                     attr = _.extend({}, attr, view.fetch());
-                    if (view.model.get('id')) {
-                        attr['id'] = view.model.get('id');
-                    }
                 });
 
                 toUpsert.push(attr);

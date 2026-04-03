@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\DataManager;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Language;
+use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer as ComposerService;
 
@@ -60,13 +62,19 @@ class Settings extends AbstractService
             throw new Forbidden();
         }
 
-        if (!empty($data->fileNameRegexPattern) && !preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $data->fileNameRegexPattern)) {
-            throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
+        if (!empty($data->fileNameRegexPattern) && !RegexUtil::validate($data->fileNameRegexPattern)) {
+            throw new BadRequest(
+                sprintf($this->getLanguage()->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'fileNameRegexPattern')
+            );
         }
 
-        if (!empty($data->passwordRegexPattern) && preg_match($data->passwordRegexPattern, '') === false) {
-            throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
+        if (!empty($data->passwordRegexPattern) && !RegexUtil::validate($data->passwordRegexPattern)) {
+            throw new BadRequest(
+                sprintf($this->getLanguage()->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'passwordRegexPattern')
+            );
         }
+
+        $this->getInjection('eventManager')->dispatch('SettingsService', 'beforeUpdate', new Event(['data' => $data]));
 
         if (property_exists($data, 'onlyStableReleases')) {
             if ($data->onlyStableReleases !== $this->getConfig()->get('onlyStableReleases')) {
@@ -78,7 +86,7 @@ class Settings extends AbstractService
         // clear cache
         $this->getDataManager()->clearCache();
 
-        if (property_exists($data, 'siteUrl')) {
+        if (!empty($data->siteUrl)) {
             $data->siteUrl = rtrim($data->siteUrl, '/');
         }
 
@@ -116,5 +124,6 @@ class Settings extends AbstractService
 
         $this->addDependency('metadata');
         $this->addDependency('dataManager');
+        $this->addDependency('eventManager');
     }
 }

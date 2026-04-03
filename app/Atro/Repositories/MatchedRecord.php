@@ -44,14 +44,15 @@ class MatchedRecord extends Base
             ->executeQuery();
     }
 
-    public function markHasNoCluster(string $id): void
+    public function markHasNoCluster(string $entityName, string $entityId): void
     {
-        $this->getConnection()->createQueryBuilder()
+        $this->getDbal()->createQueryBuilder()
             ->update('matched_record')
             ->set('has_cluster', ':false')
-            ->where('id=:id')
+            ->where('(source_entity=:entityName AND source_entity_id=:entityId) OR (master_entity=:entityName AND master_entity_id=:entityId)')
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('id', $id)
+            ->setParameter('entityName', $entityName)
+            ->setParameter('entityId', $entityId)
             ->executeQuery();
     }
 
@@ -116,7 +117,7 @@ class MatchedRecord extends Base
         $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates") || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords");
         if (!$toRemove) {
             foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
-                if (!empty($scopeDefs['masterEntity']) && $scopeDefs['masterEntity'] === $entityName) {
+                if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $entityName) {
                     $toRemove = true;
                     break;
                 }
@@ -179,12 +180,16 @@ class MatchedRecord extends Base
 
     public function removeOldMatches(MatchingEntity $matching, string $matchedAt, string $sourceEntityName, string $sourceEntityId): void
     {
-        $this->getConnection()->createQueryBuilder()
+        $entityCondition = 'source_entity=:sourceEntity AND source_entity_id=:sourceEntityId';
+        if ($matching->get('type') === 'duplicate') {
+            $entityCondition = '(' . $entityCondition . ') OR (master_entity=:sourceEntity AND master_entity_id=:sourceEntityId)';
+        }
+
+        $this->getDbal()->createQueryBuilder()
             ->delete('matched_record')
             ->where('matching_id=:matchingId')
             ->andWhere('modified_at<:matchedAt')
-            ->andWhere('source_entity=:sourceEntity')
-            ->andWhere('source_entity_id=:sourceEntityId')
+            ->andWhere($entityCondition)
             ->setParameter('matchingId', $matching->id)
             ->setParameter('matchedAt', $matchedAt)
             ->setParameter('sourceEntity', $sourceEntityName)

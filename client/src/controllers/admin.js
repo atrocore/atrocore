@@ -70,7 +70,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
         apiRequest: function (options) {
             var scope = options.scope || null;
 
-            this.main('views/admin/api-request/index', {scope: scope});
+            this.main('views/admin/api-request/index', {scope: scope, page: 'apiRequest'});
         },
 
         getSettingsModel: function () {
@@ -84,7 +84,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     recordView: 'views/admin/settings'
@@ -100,7 +99,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             let model = this.getSettingsModel();
             model.once('sync', function () {
                 model.id = id;
-                this.main(view, {model: model});
+                this.main(view, Object.assign({}, options, {model: model}));
             }, this);
             model.fetch();
         },
@@ -109,7 +108,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     headerTitle: 'Notifications',
@@ -123,7 +121,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     headerTitle: 'Outbound Emails',
@@ -167,7 +164,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     recordView: 'views/admin/user-interface',
@@ -181,7 +177,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             var model = this.getSettingsModel();
 
             model.once('sync', function () {
-                model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
                     headerTitle: 'Authentication',
@@ -196,7 +191,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             Espo.Ui.notify(master.translate('Please wait...'));
             this.getRouter().navigate('#Admin');
             $.ajax({
-                url: 'Admin/clearCache',
+                url: 'clearCache',
                 type: 'POST',
                 success: function () {
                     var msg = master.translate('Cache has been cleared', 'labels', 'Admin');

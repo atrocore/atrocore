@@ -46,6 +46,10 @@
       "type": "bool",
       "default": false,
       "tooltip": true
+    },
+    {
+      "name": "selectPageSize",
+      "type": "int"
     }
   ],
   "notSortable": true,

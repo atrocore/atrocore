@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotUnique;
@@ -149,6 +150,10 @@ class EntityField extends ReferenceData
             $result['data']['where'] = $where;
         }
 
+        if($fieldDefs['type'] === 'bool') {
+            $result['allowNullForBool'] = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.notNull") === false;
+        }
+
         return $result;
     }
 
@@ -225,6 +230,14 @@ class EntityField extends ReferenceData
     {
         parent::beforeSave($entity, $options);
 
+        if (!empty($entity->get('pattern')) && ($entity->isNew() || $entity->isAttributeChanged('pattern'))) {
+            if (!RegexUtil::validate($entity->get('pattern'))) {
+                throw new BadRequest(
+                    sprintf($this->getLanguage()->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'pattern')
+                );
+            }
+        }
+
         if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.hasAttribute")) {
             $attribute = $this->getEntityManager()->getRepository('Attribute')
                 ->where([
@@ -271,7 +284,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        if (!$entity->isNew() && $entity->get('type') === 'bool' && !empty($entity->get('notNull')) && $entity->isAttributeChanged('notNull')) {
+        if (!$entity->isNew() && $entity->get('type') === 'bool' && empty($entity->get('allowNullForBool')) && $entity->isAttributeChanged('allowNullForBool')) {
             $connection = $this->getEntityManager()->getConnection();
             $entityName = $entity->get('entityId');
             $type = $this->getMetadata()->get("scopes.{$entityName}.type");
@@ -572,6 +585,10 @@ class EntityField extends ReferenceData
                 ) {
                     throw new BadRequest("Middle Table Name is invalid.");
                 }
+
+                if($this->getMetadata()->get(['scopes', $entity->get('relationName')])) {
+                    throw new BadRequest(sprintf($this->getLanguage()->translate('relationAlreadyUsed', 'exceptions', 'EntityField'), $entity->get('relationName')));
+                }
             }
         }
 
@@ -760,7 +777,12 @@ class EntityField extends ReferenceData
         }
 
         foreach (array_merge($commonFields, $typeFields) as $field) {
+            if($this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.notStorable")) {
+                continue;
+            }
+
             $fieldType = $this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.type");
+
             if ($fieldType === 'link') {
                 $field .= 'Id';
             }
@@ -771,22 +793,7 @@ class EntityField extends ReferenceData
                 $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                     'fields' => [
                         $entity->get('code') => [
-                            "extensibleEnumId" => $entity->get($field),
-                            "where"            => [
-                                [
-                                    "condition" => "AND",
-                                    "rules"     => [
-                                        [
-                                            "id"       => "extensibleEnums",
-                                            "field"    => "extensibleEnums",
-                                            "type"     => "string",
-                                            "operator" => "linked_with",
-                                            "value"    => [$entity->get($field)],
-                                        ]
-                                    ],
-                                    "valid"     => true
-                                ]
-                            ]
+                            "extensibleEnumId" => $entity->get($field)
                         ]
                     ]
                 ]);
@@ -945,6 +952,37 @@ class EntityField extends ReferenceData
                 $this->getLanguage()
                     ->setOption($entity->get('entityId'), $entity->get('code'), $option, $newTranslationOptions->{$option});
                 $saveLanguage = true;
+            }
+        }
+
+        if($entity->get('type') === 'bool') {
+            $notNull = null;
+            if($entity->isNew() && !empty($entity->get('allowNullForBool'))) {
+                $notNull = false;
+            }
+
+            if(!$entity->isNew() && $entity->isAttributeChanged('allowNullForBool') && !empty($entity->get('allowNullForBool'))) {
+                $notNull = false;
+            }
+
+            if(!$entity->isNew() && $entity->isAttributeChanged('allowNullForBool') && empty($entity->get('allowNullForBool'))) {
+                $notNull = true;
+            }
+
+            if($notNull === false) {
+                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                    'fields' => [
+                        $entity->get('code') => [
+                            'notNull' => false
+                        ],
+                    ],
+                ]);
+                $saveMetadata = true;
+            }else if($notNull === true) {
+                $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
+                    "fields.{$entity->get('code')}.notNull"
+                ]);
+                $saveMetadata = true;
             }
         }
 

@@ -644,8 +644,8 @@
     "updatedCountFilterActionExecution": "Aktualizováno provedením akce",
     "field": "Pole",
     "derivativeStatus": "Stav derivátu",
-    "sourceRecord": "Zdroj Záznam",
-    "stagingRecords": "Záznamy o etapách",
+    "sourceRecord": "zdroj Záznam",
+    "stagingRecords": "záznamy o etapách",
     "masterRecord": "Hlavní záznam"
   },
   "descriptions": {

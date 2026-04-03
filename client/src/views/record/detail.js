@@ -335,6 +335,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        getDynamicActionDefs(id) {
+            for (let key of ['dynamicRecordActions', 'dynamicFieldActions', 'dynamicOnFieldFocusActions']) {
+                let defs = (this.getMetadata().get(['clientDefs', this.entityType, key]) || []).find(defs => defs.id === id)
+                if (defs) {
+                    return defs
+                }
+            }
+            return null
+        },
+
         actionDynamicAction: function (data) {
             let defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
             if (!defs) {
@@ -466,7 +476,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         executeActionRequest(payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
+            return this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
+                if (response.link) {
+                    window.open(response.link, '_blank');
+                    this.model.fetch();
+                }
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
@@ -484,7 +498,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         window.dispatchEvent(new Event('record:actions-reload'));
 
                         if (callback) {
-                            callback()
+                            callback(response)
                         }
                     } else {
                         Espo.Ui.notify(response.message, 'error', null, true);
@@ -698,16 +712,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             }
                         }, this);
                     }
-                }
-            }
-
-            if (this.type === 'detail' && this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])) {
-                if (this.getAcl().get('dataPrivacyPermission') !== 'no') {
-                    this.dropdownItemList.push({
-                        'label': 'View Personal Data',
-                        'name': 'viewPersonalData',
-                        sortOrder: 190
-                    });
                 }
             }
 
@@ -1573,7 +1577,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.realtimeId = this.model.get('id');
             }
 
-            this.ajaxPostRequest('App/action/startEntityListening', {
+            this.ajaxPostRequest('startEntityListening', {
                 entityName: this.model.name,
                 entityId: this.model.get('id')
             }).success(res => {
@@ -1792,7 +1796,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         view.$el.find('.panel:first').prepend(`<div class="panel-heading">${html}</div>`)
                     }
 
-                    if (!this.layoutConfiguratorCreated){
+                    if (!this.layoutConfiguratorCreated) {
                         this.layoutConfiguratorCreated = true
                         this.createView('layoutConfigurator', "views/record/layout-configurator", {
                             scope: this.model.name,
@@ -2182,15 +2186,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         cleanDuplicatedButtons() {
-            let buttonTypes = ['additionalButtons', 'additionalEditButtons', 'dropdownItemList', 'dropdownEditItemList', 'buttonList',  'buttonEditList'];
+            let buttonTypes = ['additionalButtons', 'additionalEditButtons', 'dropdownItemList', 'dropdownEditItemList', 'buttonList', 'buttonEditList'];
             buttonTypes.forEach((type) => {
-                if(!Array.isArray(this[type])) {
+                if (!Array.isArray(this[type])) {
                     return;
                 }
                 let existing = [];
-                this[type] =  this[type].filter(el => {
-                    if(!existing.includes(el.name)) {
-                        existing.push(el.name);
+                this[type] = this[type].filter(el => {
+                    let code = el.action || el.name;
+                    if (!existing.includes(code)) {
+                        existing.push(code);
                         return true;
                     }
                     return false;
@@ -2984,8 +2989,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (data.scope === this.scope) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
             } else {
-                this.getStorage().set('selectedNodeId', this.scope, data.id);
-                this.getStorage().set('selectedNodeRoute', this.scope, data.route);
                 window.location.href = `/#${this.scope}`;
             }
         },

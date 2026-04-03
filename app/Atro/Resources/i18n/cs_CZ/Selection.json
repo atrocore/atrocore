@@ -20,5 +20,13 @@
   },
   "customActions": {
     "replaceItem": "Nahradit položku"
+  },
+  "streamMessages": {
+    "selectionLinked": "{user} propojil {relatedEntity} s touto výběrem",
+    "selectionLinkedThis": "{user} propojil {relatedEntity} s touto výběrem",
+    "selectionUnlinked": "{user} odpojil {relatedEntity} od tohoto výběru",
+    "selectionUnlinkedThis": "{user} odpojil {relatedEntity} od tohoto výběru",
+    "selectionDeleted": "{user} smazal {relatedEntity} z tohoto výběru",
+    "selectionDeletedThis": "{user} smazal tento výběr"
   }
 }

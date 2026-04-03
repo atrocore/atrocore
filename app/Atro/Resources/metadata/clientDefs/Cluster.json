@@ -2,6 +2,35 @@
   "iconClass": "copy",
   "controller": "controllers/record",
   "createDisabled": true,
+  "menu": {
+    "list": {
+      "buttons": [
+        {
+          "name": "purge",
+          "label": "purgeAll",
+          "action": "universalAction",
+          "style": "btn-danger",
+          "acl": "delete",
+          "url": "Cluster/purge?all=true",
+          "method": "DELETE",
+          "confirm": true,
+          "refresh": true
+        }
+      ]
+    }
+  },
+  "massActions": {
+    "purge": {
+      "url": "Cluster/purge",
+      "massAction": true,
+      "method": "DELETE",
+      "confirm": true,
+      "refresh": true,
+      "iconClass": "ph ph-trash",
+      "sortOrder": 10,
+      "acl": "delete"
+    }
+  },
   "views": {
     "detail": "views/cluster/detail"
   },
@@ -10,7 +39,6 @@
   },
   "relationshipPanels": {
     "clusterItems": {
-      "checkboxes": false,
       "actions": {
         "quickView": {
           "disabled": true
@@ -19,21 +47,44 @@
           "disabled": true
         },
         "confirm": {
-          "url": "ClusterItem/action/confirm",
+          "url": "ClusterItem/{{id}}/confirm",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-check",
           "sortOrder": 10
         },
         "reject": {
-          "url": "ClusterItem/action/reject",
+          "url": "ClusterItem/{{id}}/reject",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-x",
           "sortOrder": 20
         },
+        "unmerge": {
+          "url": "ClusterItem/{{id}}/unmerge",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-arrows-split",
+          "sortOrder": 30
+        },
+        "move": {
+          "url": "ClusterItem/{{id}}/move",
+          "method": "PATCH",
+          "refresh": true,
+          "iconClass": "ph ph-arrow-right",
+          "sortOrder": 40,
+          "modalSelectEntity": "Cluster",
+          "modalSelectResultParam": "targetClusterId",
+          "modalSelectWhere": [
+            {"type": "equals", "attribute": "masterEntity", "value": "{{masterEntity}}"}
+          ]
+        },
         "removeRelated": {
           "url": "{{entityName}}/{{entityId}}",
+          "refresh": true
+        },
+        "unlinkRelated": {
+          "url": "ClusterItem/{{id}}",
           "refresh": true
         }
       },
@@ -57,7 +108,7 @@
           "disabled": true
         },
         "unreject": {
-          "url": "ClusterItem/action/unreject",
+          "url": "ClusterItem/{{id}}/unreject",
           "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-arrow-u-up-left",

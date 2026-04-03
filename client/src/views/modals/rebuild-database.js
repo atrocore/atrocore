@@ -32,7 +32,7 @@ Espo.define('views/modals/rebuild-database', 'views/modal', function (Dep) {
                         onApply: () => {
                             Espo.Ui.notify(this.getLanguage().translate('Please wait...'));
 
-                            this.ajaxPostRequest('Admin/rebuildDb').success(response => {
+                            this.ajaxPostRequest('rebuildDb').success(response => {
                                 Espo.Ui.success(this.getLanguage().translate('Done'));
                                 this.close();
                             });

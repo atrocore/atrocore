@@ -23,6 +23,45 @@
     }
   },
   "exceptions": {
-    "cannotDelete": "Odstranit lze pouze prázdné shluky"
+    "cannotMergeWithoutGoldenRecord": "Sloučení bez zlatého záznamu není možné"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Nepotvrzené položky nelze přidat ke sloučení"
+  },
+  "labels": {
+    "stagingRecord": "záznam etapizace",
+    "masterRecord": "hlavní záznam"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} propojil {relatedEntity} s tímto clusterem",
+    "clusterLinkedThis": "{user} propojil {relatedEntity} s tímto clusterem",
+    "clusterUnlinked": "{user} odpojil {relatedEntity} od tohoto clusteru",
+    "clusterUnlinkedThis": "{user} odpojil {relatedEntity} od tohoto clusteru",
+    "clusterRejected": "{user} zamítl {relatedEntity} v tomto clusteru",
+    "clusterRejectedThis": "{user} zamítl {relatedEntity} v tomto clusteru",
+    "clusterReincluded": "{user} znovu zahrnul {relatedEntity} do tohoto clusteru",
+    "clusterReincludedThis": "{user} znovu zahrnul {relatedEntity} do tohoto clusteru",
+    "clusterMoved": "{user} přesunul {relatedEntity} z tohoto clusteru",
+    "clusterMovedThis": "{user} přesunul {relatedEntity} z tohoto clusteru",
+    "clusterConfirmed": "{user} potvrdil {relatedEntity} v tomto clusteru",
+    "clusterConfirmedThis": "{user} potvrdil {relatedEntity} v tomto clusteru",
+    "clusterGoldenRecord": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
+    "clusterGoldenRecordThis": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
+    "clusterDeleted": "{user} smazal tento cluster",
+    "clusterDeletedThis": "{user} smazal tento cluster",
+    "clusterRecordDeleted": "{user} smazal {relatedEntity} z tohoto clusteru",
+    "clusterRecordDeletedThis": "{user} smazal {relatedEntity} z tohoto clusteru",
+    "clusterMovedToCluster":              "Systém přesunul záznamy etapizace {stagingRecords} a hlavní záznamy {masterRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterThis":          "Systém přesunul záznamy etapizace {stagingRecords} a hlavní záznamy {masterRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterStaging":       "Systém přesunul záznamy etapizace {stagingRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterStagingThis":   "Systém přesunul záznamy etapizace {stagingRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterMaster":        "Systém přesunul hlavní záznamy {masterRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedToClusterMasterThis":    "Systém přesunul hlavní záznamy {masterRecords} z clusteru {clusterLink} do tohoto clusteru",
+    "clusterMovedFromCluster":            "Systém přesunul záznamy etapizace {stagingRecords} a hlavní záznamy {masterRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterThis":        "Systém přesunul záznamy etapizace {stagingRecords} a hlavní záznamy {masterRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterStaging":     "Systém přesunul záznamy etapizace {stagingRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterStagingThis": "Systém přesunul záznamy etapizace {stagingRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterMaster":      "Systém přesunul hlavní záznamy {masterRecords} z tohoto clusteru do clusteru {clusterLink}",
+    "clusterMovedFromClusterMasterThis":  "Systém přesunul hlavní záznamy {masterRecords} z tohoto clusteru do clusteru {clusterLink}"
   }
 }

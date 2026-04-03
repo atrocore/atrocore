@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-varchar'], (Dep, Varchar) => {
+Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-varchar', 'views/fields/unit-float'], (Dep, Varchar, UnitFloat) => {
 
     return Dep.extend({
         listLinkTemplate: 'fields/varchar/list-link',
@@ -94,6 +94,20 @@ Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-var
             Dep.prototype.afterRender.call(this);
 
             Varchar.prototype.initUnitSelector.call(this);
+        },
+
+        getLockedFieldName() {
+            return Varchar.prototype.getLockedFieldName.call(this);
+        },
+
+        filterInput(rule, inputName) {
+            return UnitFloat.prototype.filterInput.call(this, rule, inputName);
+        },
+
+        createQueryBuilderFilter() {
+            let filter = Dep.prototype.createQueryBuilderFilter.call(this);
+            filter.validation = UnitFloat.prototype.queryBuilderValidation.call(this);
+            return filter;
         }
     });
 });

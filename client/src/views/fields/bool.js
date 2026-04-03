@@ -49,8 +49,11 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
 
             this.notNull = this.model.getFieldParam(this.name, 'notNull')
                 ?? this.params?.notNull
-                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull'])
-                ?? true;
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']);
+
+            if(this.notNull !== false) {
+                this.notNull = true;
+            }
         },
 
         setupSearch() {
@@ -107,6 +110,11 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
                     scope: this.model.name,
                     params: this.params || {},
                 },
+            });
+
+            this.svelteComponent.$on('change', (event) => {
+                const { name, value } = event.detail;
+                this.model.set(name, value);
             });
         },
 

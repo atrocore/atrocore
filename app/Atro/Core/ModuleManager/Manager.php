@@ -15,6 +15,7 @@ namespace Atro\Core\ModuleManager;
 
 use Atro\Core\Container;
 use Atro\Services\Composer;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Class Manager
@@ -28,10 +29,7 @@ class Manager
      */
     private $modules = [];
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private ServiceManager $sm;
 
     /**
      * Prepare version
@@ -45,14 +43,14 @@ class Manager
         return str_replace('v', '', $version);
     }
 
-    /**
-     * Manager constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct(ServiceManager $sm)
     {
-        $this->container = $container;
+        $this->sm = $sm;
+    }
+
+    private function getContainer(): Container
+    {
+        return $this->sm->get('container');
     }
 
     /**
@@ -131,7 +129,7 @@ class Manager
             $class = AfterInstallAfterDelete::class;
         }
 
-        return new $class($this->container);
+        return new $class($this->getContainer());
     }
 
     /**
@@ -162,7 +160,7 @@ class Manager
                 }
             }
 
-            $this->modules[$module] = new $className($module, $modulePath, $this->getPackage($module), $this->container);
+            $this->modules[$module] = new $className($module, $modulePath, $this->getPackage($module), $this->sm);
         }
     }
 

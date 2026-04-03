@@ -1,0 +1,28 @@
+[
+  {
+    "style": "default",
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "language"
+        },
+        {
+          "name": "team"
+        }
+      ]
+    ]
+  },
+  {
+    "style": "default",
+    "label": "Actions",
+    "rows": [
+      [
+        {
+          "name": "editAction"
+        },
+        false
+      ]
+    ]
+  }
+]

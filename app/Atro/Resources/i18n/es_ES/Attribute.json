@@ -43,7 +43,8 @@
     "conditionalDisableOptions": "Opciones para discapacitados",
     "modifiedExtendedDisabled": "No se registra como modificación",
     "entityType": "Entidad vinculada",
-    "entityField": "Campo de entidad"
+    "entityField": "Campo de entidad",
+    "selectPageSize": "Registros por página (diálogo de selección)"
   },
   "labels": {
     "Classification": "Clasificación",
@@ -83,9 +84,10 @@
     "All": "Todos"
   },
   "tooltips": {
-    "pattern": "Para habilitar sólo letras mayúsculas con longitud de 10 símbolos utilice \"/^[A-Z]{1,10}$/\"",
+    "pattern": "Para habilitar sólo letras mayúsculas con longitud de 10 símbolos utilice \"^[A-Z]{1,10}$\"",
     "defaultDate": "Modificador del valor del atributo (por ejemplo, +5 días, -3 meses)",
-    "dropdown": "No utilice el desplegable si hay más de 300 opciones en la lista."
+    "dropdown": "No utilice el desplegable si hay más de 300 opciones en la lista.",
+    "selectPageSize": "Número de registros por página en el diálogo de selección. Evite valores demasiado altos, ya que pueden ralentizar o bloquear el navegador del usuario."
   },
   "exceptions": {
     "wrongAttributeEntity": "La entidad seleccionada no está permitida. La entidad debe ser la misma que la del Panel de atributos y el Grupo de atributos.",

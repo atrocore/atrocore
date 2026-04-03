@@ -260,6 +260,10 @@
     "notNull": {
       "type": "bool"
     },
+    "allowNullForBool": {
+      "type": "bool",
+      "notStorable": true
+    },
     "readOnly": {
       "type": "bool",
       "tooltip": true,
@@ -915,6 +919,10 @@
         }
       }
     },
+    "selectPageSize": {
+      "type": "int",
+      "min": 10
+    },
     "conditionalRequired": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
@@ -1061,6 +1069,7 @@
         }
       }
     },
+
     "conditionalProperties": {
       "type": "jsonObject",
       "notStorable": true,

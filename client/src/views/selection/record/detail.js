@@ -1,4 +1,3 @@
-
 /**
  * AtroCore Software
  *
@@ -15,12 +14,10 @@ Espo.define('views/selection/record/detail', 'views/record/detail', function (De
 
         entityTypeField: 'entity',
 
-        setup: function() {
-            Dep.prototype.setup.call(this);
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
 
-           this.onModelReady(() => {
-               this.prepareAdditionalButtons();
-           })
+            this.prepareAdditionalButtons();
         },
 
         prepareAdditionalButtons() {
@@ -51,13 +48,13 @@ Espo.define('views/selection/record/detail', 'views/record/detail', function (De
         },
 
         shouldShowDropdownItem() {
-           return this.model.get('type') === 'single'
+            return this.model.get('type') === 'single'
         },
 
         getStagingEntities(masterEntity) {
             let result = [];
             _.each(this.getMetadata().get(['scopes']), (scopeDefs, scope) => {
-                if(scopeDefs.primaryEntityId === masterEntity) {
+                if (scopeDefs.primaryEntityId === masterEntity) {
                     result.push(scope);
                 }
             })

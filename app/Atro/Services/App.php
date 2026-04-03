@@ -20,10 +20,8 @@ use Atro\Core\DataManager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Mail\Sender;
 use Atro\Core\Utils\Metadata;
 use Espo\Core\Acl;
-use Espo\ORM\Entity;
 
 class App extends AbstractService
 {
@@ -149,22 +147,6 @@ class App extends AbstractService
         ];
     }
 
-    public function sendTestEmail(array $data): bool
-    {
-        $this
-            ->getMailSender()
-            ->send(
-                [
-                    'subject' => 'Test Email',
-                    'body'    => 'Test Email',
-                    'isHtml'  => false,
-                    'to'      => $data['emailAddress'],
-                ]
-            );
-
-        return true;
-    }
-
     public function getPreferencesData(): \stdClass
     {
         $user = $this->getUser();
@@ -215,21 +197,13 @@ class App extends AbstractService
         return $preferencesData;
     }
 
-    public function recalculateScriptField(\stdClass $data): Entity
+    public function computeEntityScriptField(string $entityName, string $id, string $field): void
     {
-        if (!property_exists($data, 'field') || !property_exists($data, 'id') || !property_exists($data, 'scope')) {
-            throw new BadRequest();
-        }
-
-        $id = $data->id;
-        $field = $data->field;
-        $scope = $data->scope;
-
-        if (in_array($field, $this->getAcl()->getScopeForbiddenAttributeList($scope, 'edit'))) {
+        if (in_array($field, $this->getAcl()->getScopeForbiddenAttributeList($entityName, 'edit'))) {
             throw new Forbidden();
         }
 
-        $repository = $this->getEntityManager()->getRepository($scope);
+        $repository = $this->getEntityManager()->getRepository($entityName);
         $entity = $repository->get($id);
 
         if (empty($entity)) {
@@ -251,8 +225,6 @@ class App extends AbstractService
         if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
             $repository->calculateScriptFields($entity, $field);
         }
-
-        return $entity;
     }
 
     protected function getMaxUploadSize(): int
@@ -331,11 +303,6 @@ class App extends AbstractService
     protected function getDataManager(): DataManager
     {
         return $this->getInjection('container')->get('dataManager');
-    }
-
-    protected function getMailSender(): Sender
-    {
-        return $this->getInjection('container')->get('mailSender');
     }
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter

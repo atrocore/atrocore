@@ -12,7 +12,7 @@
 namespace Atro\Acl;
 
 use Espo\Core\Acl\Base;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\Entity;
 
 class SavedSearch extends Base
@@ -22,7 +22,7 @@ class SavedSearch extends Base
         return $user->id === $entity->get('userId');
     }
 
-    public function checkScope(\Espo\Entities\User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
+    public function checkScope(\Atro\Entities\User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
     {
         return true;
     }

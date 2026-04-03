@@ -95,7 +95,6 @@ class ExtensibleEnumOption extends Base
                 if ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields', 'description'])) {
                     $select[] = 'eeo.description';
                 }
-                $select[] = 'ee.multilingual AS multilingual';
 
                 $records = $this
                     ->getConnection()
@@ -117,16 +116,14 @@ class ExtensibleEnumOption extends Base
 
                 foreach ($records as $item) {
                     $row = Util::arrayKeysToCamelCase($item);
-                    if (!empty($row['multilingual'])) {
-                        $localizedName = \Atro\Core\Utils\Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), 'ExtensibleEnumOption', 'name');
-                        if ($localizedName !== 'name' && !empty($row[$localizedName])) {
-                            $row['preparedName'] = $row[$localizedName];
-                        } else {
-                            $row['preparedName'] = $row[$this->getOptionName()];
-                        }
+
+                    $localizedName = \Atro\Core\Utils\Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), 'ExtensibleEnumOption', 'name');
+                    if ($localizedName !== 'name' && !empty($row[$localizedName])) {
+                        $row['preparedName'] = $row[$localizedName];
                     } else {
-                        $row['preparedName'] = $row['name'];
+                        $row['preparedName'] = $row[$this->getOptionName()];
                     }
+
                     $this->cachedOptions[$row['id']] = $row;
 
                     if ($id == $row['id']) {
@@ -374,22 +371,5 @@ class ExtensibleEnumOption extends Base
 
             $this->getEntityManager()->getConnection()->executeStatement($sql, $params);
         }
-    }
-
-    public function isMultilingual(string $optionId): bool
-    {
-        $hasMultilingual = $this->getEntityManager()
-            ->getConnection()
-            ->createQueryBuilder()
-            ->from('extensible_enum', 'ee')
-            ->join('ee', 'extensible_enum_extensible_enum_option', 'eeeeo', 'ee.id=eeeeo.extensible_enum_id')
-            ->select('ee.id')
-            ->where('eeeeo.extensible_enum_option_id=:id and ee.multilingual=:true and ee.deleted=:false and eeeeo.deleted=:false')
-            ->setParameter('id', $optionId)
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchOne();
-
-        return !empty($hasMultilingual);
     }
 }

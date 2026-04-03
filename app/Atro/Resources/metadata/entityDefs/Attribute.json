@@ -157,8 +157,7 @@
     "isMultilang": {
       "type": "bool",
       "hideMultilang": true,
-      "layoutDetailDisabled": true,
-      "layoutRemoveDisabled": true
+      "layoutDetailDisabled": true
     },
     "classificationAttributes": {
       "type": "linkMultiple",
@@ -464,7 +463,6 @@
       "isMultilang": true,
       "trim": true,
       "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true
     },
@@ -539,6 +537,32 @@
         }
       }
     },
+    "selectPageSize": {
+      "type": "int",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "emHidden": true,
+      "tooltip": true,
+      "layoutRemoveDisabled": true,
+      "min": 1,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "extensibleEnum",
+                "extensibleMultiEnum",
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "notNull": {
       "type": "bool",
       "default": false,
@@ -580,17 +604,6 @@
         }
       }
     },
-    "listMultilingual": {
-      "type": "bool",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "htmlSanitizer": {
       "type": "link",
       "entity": "HtmlSanitizer",
@@ -622,7 +635,6 @@
       "default": false,
       "layoutRemoveDisabled": true,
       "emHidden": true,
-      "view": "views/attribute/fields/full-width",
       "conditionalProperties": {
         "readOnly": {
           "conditionGroup": [

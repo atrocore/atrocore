@@ -298,9 +298,10 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.disableButton('update');
             let self = this;
             $.ajax({
-                url: this.scope + '/action/massUpdate',
-                type: 'PUT',
+                url: 'entityMassUpdate',
+                type: 'PATCH',
                 data: JSON.stringify({
+                    entityName: this.scope,
                     attributes: attributes,
                     ids: self.ids || null,
                     where: (!self.ids || self.ids.length == 0) ? self.options.where : null,

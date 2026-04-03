@@ -8,12 +8,52 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+
 Espo.define('views/attribute/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
         sideView: "views/attribute/record/detail-side",
 
         bottomView: 'views/attribute/record/detail-bottom',
+
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
+
+            if (this.model.get('entityId') && this.getAcl().check(this.model.get('entityId'), 'read')) {
+                this.additionalButtons.push({
+                    name: "viewRecordsWithAttribute",
+                    label: this.translate('viewRecordsWithAttribute', 'labels', 'Attribute'),
+                    action: "viewRecordsWithAttribute",
+                })
+            }
+        },
+
+        actionViewRecordsWithAttribute() {
+            const entityType = this.model.get('entityId');
+            if (!entityType) {
+                return;
+            }
+
+            const params = {
+                queryBuilder: {
+                    condition: 'AND',
+                    rules: [
+                        {
+                            id: `attr_${this.model.id}`,
+                            field: `attr_${this.model.id}`,
+                            attribute: this.model.id,
+                            operator: 'is_attribute_linked',
+                            type: 'string'
+                        }
+                    ],
+                    valid: true
+                },
+                queryBuilderApplied: true
+            };
+
+            this.getStorage().set('listQueryBuilder', entityType, params);
+            window.open(`#${entityType}`, '_blank');
+        },
 
         delete: function () {
             Espo.TreoUi.confirmWithBody('', {
@@ -78,7 +118,7 @@ Espo.define('views/attribute/record/detail', 'views/record/detail',
             presetFilters['Product'] = presetFilters['Product'].filter(item => Object.keys(item.data).length > 0);
 
             this.getPreferences().set('presetFilters', presetFilters);
-            this.getPreferences().save({patch: true});
+            this.getPreferences().save({ patch: true });
             this.getPreferences().trigger('update');
             let filters = this.getStorage().get('listSearch', 'Product');
             if (filters && filters.advanced) {

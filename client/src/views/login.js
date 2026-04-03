@@ -169,7 +169,7 @@ Espo.define('views/login', 'view', function (Dep) {
             this.notify('Please wait...');
 
             $.ajax({
-                url: 'App/user',
+                url: 'userSession',
                 headers: {
                     'Authorization': 'Basic ' + Base64.encode(userName + ':' + password)
                 },

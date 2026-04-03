@@ -23,6 +23,45 @@
     }
   },
   "exceptions": {
-    "cannotDelete": "Usunąć można tylko puste klastry"
+    "cannotMergeWithoutGoldenRecord": "Scalanie bez rekordu wzorcowego nie jest możliwe"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Niepotwierdzone elementy nie mogą być dodane do scalania"
+  },
+  "labels": {
+    "stagingRecord": "rekord etapu",
+    "masterRecord": "rekord główny"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} powiązał {relatedEntity} z tym klastrem",
+    "clusterLinkedThis": "{user} powiązał {relatedEntity} z tym klastrem",
+    "clusterUnlinked": "{user} odłączył {relatedEntity} od tego klastra",
+    "clusterUnlinkedThis": "{user} odłączył {relatedEntity} od tego klastra",
+    "clusterRejected": "{user} odrzucił {relatedEntity} w tym klastrze",
+    "clusterRejectedThis": "{user} odrzucił {relatedEntity} w tym klastrze",
+    "clusterReincluded": "{user} ponownie włączył {relatedEntity} do tego klastra",
+    "clusterReincludedThis": "{user} ponownie włączył {relatedEntity} do tego klastra",
+    "clusterMoved": "{user} przeniósł {relatedEntity} z tego klastra",
+    "clusterMovedThis": "{user} przeniósł {relatedEntity} z tego klastra",
+    "clusterConfirmed": "{user} potwierdził {relatedEntity} w tym klastrze",
+    "clusterConfirmedThis": "{user} potwierdził {relatedEntity} w tym klastrze",
+    "clusterGoldenRecord": "{user} ustawił {relatedEntity} jako złoty rekord w tym klastrze",
+    "clusterGoldenRecordThis": "{user} ustawił {relatedEntity} jako złoty rekord w tym klastrze",
+    "clusterDeleted": "{user} usunął ten klaster",
+    "clusterDeletedThis": "{user} usunął ten klaster",
+    "clusterRecordDeleted": "{user} usunął {relatedEntity} z tego klastra",
+    "clusterRecordDeletedThis": "{user} usunął {relatedEntity} z tego klastra",
+    "clusterMovedToCluster":              "System przeniósł rekordy etapu {stagingRecords} i rekordy główne {masterRecords} z klastra {clusterLink} do tego klastra",
+    "clusterMovedToClusterThis":          "System przeniósł rekordy etapu {stagingRecords} i rekordy główne {masterRecords} z klastra {clusterLink} do tego klastra",
+    "clusterMovedToClusterStaging":       "System przeniósł rekordy etapu {stagingRecords} z klastra {clusterLink} do tego klastra",
+    "clusterMovedToClusterStagingThis":   "System przeniósł rekordy etapu {stagingRecords} z klastra {clusterLink} do tego klastra",
+    "clusterMovedToClusterMaster":        "System przeniósł rekordy główne {masterRecords} z klastra {clusterLink} do tego klastra",
+    "clusterMovedToClusterMasterThis":    "System przeniósł rekordy główne {masterRecords} z klastra {clusterLink} do tego klastra",
+    "clusterMovedFromCluster":            "System przeniósł rekordy etapu {stagingRecords} i rekordy główne {masterRecords} z tego klastra do klastra {clusterLink}",
+    "clusterMovedFromClusterThis":        "System przeniósł rekordy etapu {stagingRecords} i rekordy główne {masterRecords} z tego klastra do klastra {clusterLink}",
+    "clusterMovedFromClusterStaging":     "System przeniósł rekordy etapu {stagingRecords} z tego klastra do klastra {clusterLink}",
+    "clusterMovedFromClusterStagingThis": "System przeniósł rekordy etapu {stagingRecords} z tego klastra do klastra {clusterLink}",
+    "clusterMovedFromClusterMaster":      "System przeniósł rekordy główne {masterRecords} z tego klastra do klastra {clusterLink}",
+    "clusterMovedFromClusterMasterThis":  "System przeniósł rekordy główne {masterRecords} z tego klastra do klastra {clusterLink}"
   }
 }

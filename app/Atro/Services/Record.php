@@ -189,7 +189,7 @@ class Record extends RecordService
 
         if (
             !in_array($action, $allowMassActions)
-            && !$this->getMetadata()->get(['clientDefs', $this->getEntityType(), 'listActions', $action, 'massAction'], [])
+            && empty($this->getMetadata()->get(['clientDefs', $this->getEntityType(), 'massActions', $action]))
         ) {
             return [];
         }
@@ -603,7 +603,7 @@ class Record extends RecordService
                 continue;
             }
 
-            if (!empty($d['type']) && in_array($d['type'], ['hasMany', 'hasChildren'])) {
+            if (!empty($d['type']) && in_array($d['type'], ['hasMany'])) {
                 if (empty($d['entity']) || empty($d['foreign'])) {
                     continue;
                 }
@@ -657,10 +657,19 @@ class Record extends RecordService
             throw new NotFound("{$this->getEntityType()} with id $id not found");
         }
 
+        $this->getEntityManager()->getAttributeFieldConverter()->putAttributesToEntity($primaryEntity);
+        if ($primaryEntity->hasField('attributesDefs')){
+            $input->attributesDefs = json_decode(json_encode($primaryEntity->get('attributesDefs') ?? []));
+        }
+
         $input->masterRecordId = $primaryEntity->get('id');
 
         foreach ($primaryEntity->toArray() as $field => $value) {
             if (in_array($field, ['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'])) {
+                continue;
+            }
+
+            if ($this->getMetadata()->get(['scopes', $this->entityName, 'type']) === 'Hierarchy' && in_array($field, ['parentId', 'parentIds', 'childrenIds', 'routes'])) {
                 continue;
             }
 

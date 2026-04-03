@@ -1,0 +1,69 @@
+{
+  "fields": {
+    "team": {
+      "type": "link",
+      "required": true
+    },
+    "language": {
+      "type": "link",
+      "required": true,
+      "entity": "Language",
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "editAction": {
+      "type": "bool",
+      "default": false,
+      "notNull": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "team": {
+      "type": "belongsTo",
+      "foreign": "languages",
+      "entity": "Team"
+    },
+    "language": {
+      "type": "belongsTo",
+      "entity": "Language",
+      "skipOrmDefs": true
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": true
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "deleted",
+      "language_id",
+      "team_id"
+    ]
+  }
+}

@@ -101,7 +101,7 @@ class MassActions extends HasContainer
                 $whereClause = [];
                 if (count($uniqueFields) > 0) {
                     foreach ($uniqueFields as $key => $field) {
-                        $value = $node->payload->{$key};
+                        $value = $node->payload->{$key} ?? null;
                         if ($value === null && $this->getMetadata()->get(['entityDefs', $node->entity, 'fields', $key, 'notNull'])) {
                             $value = '';
                         }
@@ -542,21 +542,6 @@ class MassActions extends HasContainer
         }
 
         return $foreignEntityType;
-    }
-
-    /**
-     * @param string $name
-     * @param string $serviceName
-     * @param array  $data
-     *
-     * @return bool
-     */
-    private function qmPush(string $name, string $serviceName, array $data): bool
-    {
-        return $this
-            ->getContainer()
-            ->get('queueManager')
-            ->push($name, $serviceName, $data);
     }
 
     private function getMetadata(): Metadata

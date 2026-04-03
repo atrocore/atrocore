@@ -48,7 +48,7 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
         if ($res === null) {
             $res = [
                 'scopes' => [],
-                'fields' => []
+                'fields' => [],
             ];
 
             foreach ($role->get('scopes') ?? [] as $roleScope) {

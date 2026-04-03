@@ -66,7 +66,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
                 }
             }
 
-            var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
+            var url = this.url || 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + this.link;
 
             if (!this.readOnly && !this.defs.readOnly) {
                 if (!('create' in this.defs)) {

@@ -24,7 +24,7 @@ use Atro\Core\Exceptions;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
-use Espo\Entities\User;
+use Atro\Entities\User;
 
 class Installer extends HasContainer
 {
@@ -532,7 +532,7 @@ class Installer extends HasContainer
         $systemUser->set('id', $this->getConfig()->get('systemUserId'));
 
         // set system user to container
-        $this->getContainer()->setUser($systemUser);
+        $this->getContainer()->get(\Atro\Core\UserContext::class)->set($systemUser);
     }
 
     /**
@@ -547,7 +547,7 @@ class Installer extends HasContainer
         $tableSchema = $isPgsql ? 'public' : $dbParams['dbname'];
 
         // get existing db tables
-        $tables = $this->getContainer()->getDbal()
+        $tables = $this->getContainer()->get('dbal')
             ->executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='$tableSchema'")
             ->fetchAllAssociative();
 
@@ -567,17 +567,17 @@ class Installer extends HasContainer
                 }
 
                 if ($isPgsql) {
-                    $this->getContainer()->getDbal()
+                    $this->getContainer()->get('dbal')
                         ->executeStatement("DROP TABLE IF EXISTS $tableName CASCADE");
                 } else {
-                    $this->getContainer()->getDbal()
+                    $this->getContainer()->get('dbal')
                         ->executeStatement("SET FOREIGN_KEY_CHECKS = 0;DROP TABLE IF EXISTS $tableName;SET FOREIGN_KEY_CHECKS = 1");
                 }
             }
         }
 
         // rebuild database
-        $this->getContainer()->getDataManager()->rebuild();
+        $this->getContainer()->get('dataManager')->rebuild();
     }
 
     protected function getLanguage(): Language

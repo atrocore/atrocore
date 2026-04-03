@@ -103,6 +103,31 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             }
         },
 
+        buildUserHtml: function (auditMeta) {
+            const escape = Handlebars.Utils.escapeExpression;
+            const {actor, delegator} = auditMeta;
+
+            const actorHtml = actor.isSystem
+                ? escape(actor.name || '')
+                : `<a href="#User/view/${actor.id}">${escape(actor.name || '')}</a>`;
+
+            let delegatorHtml = null;
+
+            if (delegator) {
+                delegatorHtml = delegator.isSystem
+                    ? escape(delegator.name || '')
+                    : `<a href="#User/view/${delegator.id}">${escape(delegator.name || '')}</a>`;
+            }
+
+            let userHtml = actorHtml
+
+            if(delegatorHtml) {
+                userHtml +=  ` <span class="text-muted">‹</span> ${delegatorHtml}`
+            }
+
+            return userHtml
+        },
+
         canShowActionButton: function () {
             return !this.options.noEdit && (this.isEditable || this.isRemovable)
         },

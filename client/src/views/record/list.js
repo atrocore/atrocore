@@ -163,6 +163,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
                 if (typeof this[method] == 'function') {
                     var data = $el.data();
+
+                    if (data.parentScope && action === 'universalAction') {
+                        // Universal actions should be handled by relationship view
+                        return
+                    }
+
                     this[method](data, e);
                     e.preventDefault();
                 }
@@ -227,7 +233,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (selectAttributeList) {
                         this.collection.data.select = selectAttributeList.join(',');
                     }
-                    this.collection.fetch({keepSelected: true})
+                    this.collection.fetch({ keepSelected: true })
                     this.collection.once('sync', () => {
                         this.notify(false);
                     })
@@ -289,7 +295,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.notify('Please wait...');
             this.collection.once('sync', function () {
                 this.notify(false);
-                this.trigger('sort', {sortBy: field, asc: asc});
+                this.trigger('sort', { sortBy: field, asc: asc });
             }, this);
             var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
             while (this.collection.length > maxSizeLimit) {
@@ -539,14 +545,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }, this);
         },
 
-        massAction: function(name) {
-            if(this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name])) {
+        massAction: function (name) {
+            if (this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name])) {
                 this.massActionUsingDefs(name);
                 return;
             }
+            var actionDefs = this.getMetadata().get(['clientDefs', this.scope, 'massActions', name]);
 
-            if(this.getMetadata().get(['clientDefs', this.scope, 'listActions', name, 'massAction'])) {
-                var proceed = function () {
+            if (actionDefs) {
+                var buildData = function () {
                     var idList = [];
                     var data = {};
 
@@ -563,12 +570,16 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
 
                     data.entityType = this.entityType;
+                    return data;
+                }.bind(this);
 
+                var runMassAction = function (extraData) {
                     Espo.Ui.notify(this.translate('pleaseWait', 'messages', this.scope));
 
-                    var url = this.getMetadata().get(['clientDefs', this.scope, 'listActions', name, 'url']);
+                    var url = actionDefs.url;
+                    var data = Object.assign(buildData(), extraData || {});
 
-                    this.ajaxPostRequest(url, data).then(function (result) {
+                    this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data)).then(function (result) {
                         this.collection.fetch().then(function () {
                             var message = this.translate(name, 'massActionSuccessMessages', this.scope);
                             if (typeof result === 'object' && 'count' in result) {
@@ -577,9 +588,40 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                             Espo.Ui.success(message);
                         }.bind(this));
                     }.bind(this));
-                }
+                }.bind(this);
 
-                this.confirm(this.translate(name, 'massActionConfirmMessages', this.scope), proceed, this);
+                var proceed = function () {
+                    if (actionDefs.modalSelectEntity) {
+                        let entityType = actionDefs.modalSelectEntity;
+                        let whereAdditional = actionDefs.modalSelectWhere || [];
+                        const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+                        this.notify('Loading...');
+                        this.createView('select', viewName, {
+                            scope: entityType,
+                            createButton: false,
+                            multiple: !!actionDefs.modalSelectMultiple,
+                            whereAdditional: whereAdditional,
+                        }, (dialog) => {
+                            dialog.render(() => this.notify(false));
+                            dialog.once('select', selected => {
+                                const list = Array.isArray(selected) ? selected : [selected];
+                                const payload = actionDefs.modalSelectResultParam
+                                    ? { [actionDefs.modalSelectResultParam]: actionDefs.modalSelectMultiple ? list.map(m => m.id) : list[0].id }
+                                    : { selectedRecords: list.map(m => ({ entityName: m.name, entityId: m.id })) };
+                                runMassAction(payload);
+                            });
+                        });
+                    } else {
+                        runMassAction();
+                    }
+                }.bind(this);
+
+                var confirmMessage = this.translate(name, 'massActionConfirmMessages', this.scope);
+                if (confirmMessage && confirmMessage !== name) {
+                    this.confirm(confirmMessage, proceed, this);
+                } else {
+                    proceed();
+                }
             }
         },
         massActionUsingDefs: function (name) {
@@ -639,16 +681,18 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        getActionDefs(id) {
-            let defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === id)
-            if (!defs) {
-                defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicEntityActions']) || []).find(defs => defs.id === id)
+        getDynamicActionDefs(id) {
+            for (let key of ['dynamicRecordActions', 'dynamicEntityActions']) {
+                let defs = (this.getMetadata().get(['clientDefs', this.entityType, key]) || []).find(defs => defs.id === id)
+                if (defs) {
+                    return defs
+                }
             }
-            return defs
+            return null
         },
 
         massActionDynamicMassAction: function (data) {
-            const defs = this.getActionDefs(data.id)
+            const defs = this.getDynamicActionDefs(data.id)
 
             if (defs && defs.type) {
                 const method = 'massActionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
@@ -671,12 +715,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 requestData.where = this.collection.getWhereForCheckedRecords();
                 requestData.massAction = true;
             } else if (this.checkedList && this.checkedList.length > 0) {
-                requestData.where = [{type: "in", attribute: "id", value: this.checkedList}];
+                requestData.where = [{ type: "in", attribute: "id", value: this.checkedList }];
                 requestData.massAction = true;
             }
 
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', requestData).success(response => {
+
+            return this.ajaxPostRequest('Action/action/executeNow', requestData).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                     setTimeout(() => {
@@ -706,7 +751,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
-                var data = {permanently: permanently};
+                var data = { permanently: permanently };
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhereForCheckedRecords();
                     data.selectData = this.collection.data || {};
@@ -716,13 +761,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 for (var i in this.checkedList) {
-                    ids.push(this.checkedList[i]);
+                    ids.push(String(this.checkedList[i]));
                 }
 
                 $.ajax({
-                    url: this.entityType + '/action/massDelete',
+                    url: 'entityMassDelete',
                     type: 'POST',
-                    data: JSON.stringify(data)
+                    data: JSON.stringify(Object.assign({ entityName: this.entityType }, data))
                 }).done(function (result) {
                     this.notify(false)
                     this.processMassActionResult(result)
@@ -776,9 +821,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 $.ajax({
-                    url: this.entityType + '/action/massRestore',
+                    url: 'entityRestore',
                     type: 'POST',
-                    data: JSON.stringify(data)
+                    data: JSON.stringify(Object.assign({ entityName: this.entityType }, data))
                 }).done(function (result) {
                     this.collection.fetch().then(() => this.notify(this.translate('Restored'), 'success'));
                 }.bind(this));
@@ -849,7 +894,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 confirmText: this.translate('Follow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massFollow', data).then(function (result) {
+                this.ajaxPostRequest('entitySubscription', Object.assign({ entityName: this.entityType }, data)).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massFollowResult';
                     if (resultCount) {
@@ -887,7 +932,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 confirmText: this.translate('Unfollow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massUnfollow', data).then(function (result) {
+                this.ajaxDeleteRequest('entitySubscription', Object.assign({ entityName: this.entityType }, data)).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massUnfollowResult';
                     if (resultCount) {
@@ -927,8 +972,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }).then(result => {
                 this.getModelFactory().create('Selection', (selectionModel) => {
                     selectionModel.set(result);
-                    this.getRouter().navigate('#Selection/view/' + result.id, {trigger: false});
-                    this.getRouter().dispatch('Selection', 'view', {model: selectionModel})
+                    this.getRouter().navigate('#Selection/view/' + result.id, { trigger: false });
+                    this.getRouter().dispatch('Selection', 'view', { model: selectionModel })
                 });
             });
         },
@@ -1020,21 +1065,27 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 collection.maxSize = 10;
 
                 if (this.getMetadata().get(['scopes', this.entityType, 'hasAttribute'])) {
-                    collection.data.allAttributes = true;
                     collection.data.completeAttrDefs = true;
                 }
 
-                collection.fetch().then(() => {
-                    let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
-                    this.createView('dialog', view, {
-                        models: collection.models,
-                        scope: this.entityType,
-                        merging: merging
-                    }, function (dialog) {
-                        this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
-                        dialog.render();
-                    })
-                })
+                this.getHelper().layoutManager.get(this.scope, 'selection', null, null, data => {
+                    let other = Espo.Utils.clone(this);
+                    other.listLayout = data.layout;
+                    other.collection = collection;
+                    other.putAttributesToSelect();
+                    collection.data.select = other.fetchAttributeListFromLayout().join(',');
+                    collection.fetch().then(() => {
+                        let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+                        this.createView('dialog', view, {
+                            models: collection.models,
+                            scope: this.entityType,
+                            merging: merging
+                        }, function (dialog) {
+                            this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
+                            dialog.render();
+                        })
+                    });
+                });
             });
         },
 
@@ -1127,6 +1178,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.removeMassAction('merge');
             }
 
+            if (this.getMetadata().get(['scopes', this.entityType, 'mergeDisabled'])) {
+                this.removeMassAction('merge');
+            }
+
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
                 var acl = defs.acl;
@@ -1175,11 +1230,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
             }, this);
 
-            $.each(this.getMetadata().get(['clientDefs', this.scope, 'listActions']) || {}, (actionName, actionData) => {
-               if(actionData.massAction) {
-                   this.massActionList.push(actionName);
-                   this.checkAllResultMassActionList.push(actionName);
-               }
+            $.each(this.getMetadata().get(['clientDefs', this.scope, 'massActions']) || {}, (actionName, actionData) => {
+                this.massActionList.push(actionName);
+                this.checkAllResultMassActionList.push(actionName);
             });
 
             if (
@@ -1208,7 +1261,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 dynamicActions = dynamicActions.sort((v1, v2) => {
                     return v1.label.localeCompare(v2.label);
                 })
-                dynamicActions.unshift({divider: true})
+                dynamicActions.unshift({ divider: true })
                 this.massActionList.push(...dynamicActions);
                 this.checkAllResultMassActionList.push(...dynamicActions);
             }
@@ -1405,13 +1458,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 },
                 handleSelectAll: (e) => {
                     this.handleSelectAll(e);
-                    component.$set({selected: this.allResultIsChecked});
+                    component.$set({ selected: this.allResultIsChecked });
                 }
             };
         },
 
         getActionsComponent: function () {
-            return Svelte.ListActionsContainer;
+            return Svelte.ListToolbar;
         },
 
         getCounters: function () {
@@ -1556,70 +1609,86 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.resizable) {
-                this.$el.find('table[data-resizable=true] th:not([data-name="r-checkbox"]):not([data-name="draggableIcon"]):not(.table-spacer):not(:last-child)').each((i, el) => {
-                    const $th = $(el);
-                    const name = $th.data('name');
-                    let widthData = this.getStorage().get('list-column-width', this.getColumnWidthKey());
-                    if (!widthData || typeof widthData !== 'object') {
-                        widthData = {};
-                    }
+                const initResizable = () => {
+                    this.$el.find('table[data-resizable=true] th:not([data-name="r-checkbox"]):not([data-name="draggableIcon"]):not(.table-spacer):not(:last-child)').each((i, el) => {
+                        const $th = $(el);
+                        const name = $th.data('name');
+                        let widthData = this.getStorage().get('list-column-width', this.getColumnWidthKey());
+                        if (!widthData || typeof widthData !== 'object') {
+                            widthData = {};
+                        }
 
-                    if (name && widthData[name]) {
-                        $th.width(widthData[name]);
-                    } else {
-                        $th.width($th.outerWidth() - 40);
-                    }
+                        if (name && widthData[name]) {
+                            $th.width(widthData[name]);
+                        } else {
+                            $th.width($th.outerWidth() - 40);
+                        }
 
-                    $th.attr('width', null);
+                        $th.attr('width', null);
 
-                    if ($th.find('.resizer').length) {
-                        return;
-                    }
-
-                    const $resizer = $('<div class="resizer"></div>');
-                    $th.append($resizer);
-
-                    let startX;
-                    let startWidth;
-
-                    $resizer.on('mousedown', e => {
-                        if (e.which !== 1) {
+                        if ($th.find('.resizer').length) {
                             return;
                         }
 
-                        startX = e.pageX;
-                        startWidth = $th.outerWidth();
+                        const $resizer = $('<div class="resizer"></div>');
+                        $th.append($resizer);
 
-                        $(document).on('mousemove.tableResize', function (e) {
-                            const delta = e.pageX - startX;
-                            const newWidth = Math.min(800, Math.max(50, startWidth + delta));
+                        let startX;
+                        let startWidth;
 
-                            $th.width(newWidth - 40);
-                        });
-
-                        $(document).on('mouseup.tableResize', () => {
-                            $(document).off('.tableResize');
-
-                            const width = $th.width() - 20;
-                            if (!name) {
+                        $resizer.on('mousedown', e => {
+                            if (e.which !== 1) {
                                 return;
                             }
 
-                            const key = this.getColumnWidthKey();
-                            let widthData = this.getStorage().get('list-column-width', key);
-                            if (!widthData || typeof widthData !== 'object') {
-                                widthData = {};
-                            }
+                            startX = e.pageX;
+                            startWidth = $th.outerWidth();
 
-                            widthData[name] = width;
+                            $(document).on('mousemove.tableResize', function (e) {
+                                const delta = e.pageX - startX;
+                                const newWidth = Math.min(800, Math.max(50, startWidth + delta));
 
-                            this.getStorage().set(`list-column-width`, key, widthData);
+                                $th.width(newWidth - 40);
+                            });
+
+                            $(document).on('mouseup.tableResize', () => {
+                                $(document).off('.tableResize');
+
+                                const width = $th.width() - 20;
+                                if (!name) {
+                                    return;
+                                }
+
+                                const key = this.getColumnWidthKey();
+                                let widthData = this.getStorage().get('list-column-width', key);
+                                if (!widthData || typeof widthData !== 'object') {
+                                    widthData = {};
+                                }
+
+                                widthData[name] = width;
+
+                                this.getStorage().set(`list-column-width`, key, widthData);
+                            });
+
+                            e.preventDefault();
+                            e.stopPropagation();
                         });
-
-                        e.preventDefault();
-                        e.stopPropagation();
                     });
-                });
+                };
+
+                const table = this.$el.find('table[data-resizable=true]')[0];
+                if (table && table.offsetParent !== null) {
+                    initResizable();
+                } else if (table) {
+                    const observer = new IntersectionObserver(entries => {
+                        if (entries[0].isIntersecting) {
+                            observer.disconnect();
+                            initResizable();
+                        }
+                    });
+                    observer.observe(table);
+                    this.listenToOnce(this, 'remove', () => observer.disconnect());
+                }
             }
         },
 
@@ -2008,7 +2077,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({number: k, relEntity: parts[0]});
+                        toRemove.push({ number: k, relEntity: parts[0] });
                     }
                 });
 
@@ -2292,7 +2361,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         _convertLayout: function (listLayout, model) {
             model = model || this.collection.model.prototype;
-
             var layout = [];
 
             if (this.checkboxes) {
@@ -2358,6 +2426,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
                 if (col.widthPx) {
                     item.options.defs.widthPx = col.widthPx;
+                }
+
+                const type = col.type || model.getFieldType(col.name)
+
+                if(['bool', 'link', 'linkMultiple', 'script', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
+                    delete  col.link;
                 }
 
                 if (col.link) {
@@ -2828,7 +2902,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, this);
 
                     this.listenToOnce(view, 'after:edit-cancel', function () {
-                        this.actionQuickView({id: view.model.id, scope: view.model.name});
+                        this.actionQuickView({ id: view.model.id, scope: view.model.name });
                     }, this);
 
                     this.listenToOnce(view, 'after:save', function (model) {
@@ -2836,7 +2910,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }, this);
                 }, this);
             } else {
-                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
+                this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: true });
             }
         },
 
@@ -2857,7 +2931,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 fullFormDisabled: true,
                 layoutName: 'upload',
                 multiUpload: false,
-                attributes: _.extend(model.attributes, {reupload: model.id}),
+                attributes: _.extend(model.attributes, { reupload: model.id }),
             }, view => {
                 view.render();
                 this.notify(false);
@@ -2955,7 +3029,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
-                this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
+                this.getRouter().navigate('#' + scope + '/edit/' + id, { trigger: false });
                 this.getRouter().dispatch(scope, 'edit', options);
             }
         },
@@ -2978,7 +3052,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         executeActionRequest: function (payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
+
+            return this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
+                if (response.link) {
+                    window.open(response.link, '_blank');
+                    this.collection.fetch();
+                }
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
 
@@ -2989,7 +3068,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (response.success) {
                         this.notify(response.message, 'success');
                         if (response.redirect) {
-                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, {trigger: false});
+                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, { trigger: false });
                             this.getRouter().dispatch(response.scope, 'view', {
                                 id: response.entityId,
                             })
@@ -3030,6 +3109,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
             model.set('bookmarkId', bookmarkId);
+            const hasOnlyBookmarkedFilter = (this.collection.where ?? []).some(where =>
+                where.type === 'bool' && (where.value ?? []).includes('onlyBookmarked')
+            );
             if (bookmarkId) {
                 this.notify(this.translate('Unbookmarking') + '...');
                 $.ajax({
@@ -3042,8 +3124,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.notify(this.translate('Done'), 'success')
                     this.trigger('unbookmarked-' + model.urlRoot, model.get('bookmarkId'))
                     model.set('bookmarkId', null)
-                    this.reRender()
-                    this.collection.fetch()
+
+                    if (hasOnlyBookmarkedFilter) {
+                        this.collection.fetch()
+                    }
                 }.bind(this));
             } else {
                 this.notify(this.translate('Bookmarking') + '...');
@@ -3059,18 +3143,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     model.set('bookmarkId', result.id)
                     this.notify(this.translate('Done'), 'success')
                     this.trigger('bookmarked-' + model.urlRoot, model.get('bookmarkId'))
-                    let shouldNotReRender = false;
 
-                    for (const where of (this.collection.where ?? [])) {
-                        if (where.type === 'bool' && (where.value ?? []).includes('onlyBookmarked')) {
-                            this.collection.fetch()
-                            shouldNotReRender = true;
-                            break;
-                        }
-                    }
-
-                    if (!shouldNotReRender) {
-                        this.reRender();
+                    if (hasOnlyBookmarkedFilter) {
+                        this.collection.fetch()
                     }
 
                 }.bind(this));
@@ -3154,9 +3229,17 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
-            let runAction = () => {
+            let url = actionDefs.url;
+            if (url && model) {
+                $.each(model.attributes || {}, (key, value) => {
+                    url = url.replaceAll(`{{${key}}}`, value);
+                });
+            }
+
+            let runAction = (extraData) => {
                 this.notify(this.translate('Loading...'));
-                this.ajaxPostRequest(actionDefs.url, {action: name, scope: scope, id: id})
+                const data = Object.assign({ action: name, scope: scope, id: id }, extraData || {});
+                this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data))
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
                         if (actionDefs.refresh) {
@@ -3165,15 +3248,48 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     });
             }
 
+            let proceed = (extraData) => {
+                if (actionDefs.modalSelectEntity) {
+                    let entityType = actionDefs.modalSelectEntity;
+                    let whereAdditional = [];
+                    if (actionDefs.modalSelectWhere) {
+                        let whereStr = JSON.stringify(actionDefs.modalSelectWhere);
+                        $.each(this.model?.attributes || {}, (key, value) => {
+                            whereStr = whereStr.replaceAll(`{{${key}}}`, value);
+                        });
+                        whereAdditional = JSON.parse(whereStr);
+                    }
+                    const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+                    this.notify('Loading...');
+                    this.createView('select', viewName, {
+                        scope: entityType,
+                        createButton: false,
+                        multiple: !!actionDefs.modalSelectMultiple,
+                        whereAdditional: whereAdditional,
+                    }, (dialog) => {
+                        dialog.render(() => this.notify(false));
+                        dialog.once('select', selected => {
+                            const list = Array.isArray(selected) ? selected : [selected];
+                            const payload = actionDefs.modalSelectResultParam
+                                ? { [actionDefs.modalSelectResultParam]: actionDefs.modalSelectMultiple ? list.map(m => m.id) : list[0].id }
+                                : { selectedRecords: list.map(m => ({ entityName: m.name, entityId: m.id })) };
+                            runAction(Object.assign(payload, extraData || {}));
+                        });
+                    });
+                } else {
+                    runAction(extraData);
+                }
+            }
+
             if (actionDefs.confirm) {
                 this.confirm({
                     message: this.translate(actionDefs.name, 'actionConfirms', scope),
                     confirmText: this.translate('Apply')
                 }, function () {
-                    runAction();
+                    proceed();
                 }, this);
             } else {
-                runAction();
+                proceed();
             }
         },
 
@@ -3205,9 +3321,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.collection.remove(model);
                 this.notify('restoring');
                 $.ajax({
-                    url: this.entityType + '/action/restore',
+                    url: 'entityRestore',
                     type: 'POST',
-                    data: JSON.stringify({id: id})
+                    data: JSON.stringify({ entityName: this.entityType, ids: [id] })
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);
@@ -3220,7 +3336,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         actionDeletePermanently(data) {
-            let id = (data || {id: null}).id;
+            let id = (data || { id: null }).id;
             if (!id) {
                 return;
             }
@@ -3310,7 +3426,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         this.notify(false)
                     });
                 }, this);
-                model.fetch({main: true});
+                model.fetch({ main: true });
             }, this);
         },
 

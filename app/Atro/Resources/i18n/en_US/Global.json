@@ -169,6 +169,7 @@
     "updateMasterRecord": "Update Master Record"
   },
   "labels": {
+    "purgeAll": "Purge all clusters",
     "entityFilterResult": "Filter Result",
     "System": "System",
     "matchings": "Matchings",
@@ -694,6 +695,7 @@
   "fields": {
     "__currentUser": "Current User",
     "sourceRecord": "Source Record",
+    "stagingRecord": "Staging Record",
     "number": "Number",
     "createdCountFilterActionExecution": "Created by Action Execution",
     "updatedCountFilterActionExecution": "Updated by Action Execution",
@@ -880,7 +882,7 @@
     "emailReceivedInitialFrom": "Email received from {from}, {entityType} {entity} created",
     "emailSent": "{user} successfully sent e-mail with the subject '{subject}' to '{emailTo}' on '{createdAt}', related to {entityType} {entity}",
     "emailSentThis": "{user} successfully sent e-mail with the subject '{subject}' to '{emailTo}' on '{createdAt}'",
-    "unrelate": "{user} unlinked {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
+    "unrelate": "{user} unlinked {relatedEntityType} {relatedEntity} from {entityType} {entity}",
     "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} from this {entityType}.",
     "updateOneThis": "{user} in this {entityType} updated",
     "updateOneInThis": "{user} updated {relatedEntityType} {relatedEntity} in this {entityType}.",
@@ -1348,7 +1350,9 @@
       "is_not_my_team": "is not my team",
       "future": "future",
       "past": "past",
-      "today": "today"
+      "today": "today",
+      "similar": "similar to",
+      "word_similar": "word similar to"
     },
     "errors": {
       "no_filter": "No filter selected",

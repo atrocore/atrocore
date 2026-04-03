@@ -290,13 +290,25 @@ class AttributeFieldConverter
             }
         }
 
+        $attributesToAdd = [];
+        if (empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
+            $values = $entity->_originalInput->__attributes ?? [];
+            if (!empty($values)) {
+                $attributesToAdd = $this->conn->createQueryBuilder()
+                    ->select('id')
+                    ->from($this->conn->quoteIdentifier("attribute"))
+                    ->where('id in (:values) or code in (:values)')
+                    ->andWhere('entity_id=:entityType and deleted=:false')
+                    ->setParameter('values', $values, Mapper::getParameterType($values))
+                    ->setParameter('entityType', $entity->getEntityName())
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchFirstColumn();
+            }
+        }
+
         // it needs because we should be able to create attribute value on entity update
         if (!empty($entity->_originalInput)) {
-            $attributesIds = [];
-
-            if (empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
-                $attributesIds = $entity->_originalInput->__attributes ?? [];
-            }
+            $attributesIds = $attributesToAdd;
 
             foreach ($entity->_originalInput as $field => $value) {
                 $attributeId = $this->metadata->get("entityDefs.{$entity->getEntityName()}.fields.{$field}.attributeId");
@@ -373,7 +385,7 @@ class AttributeFieldConverter
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAllAttributesAsFetched();
 
-        foreach ($entity->_originalInput->__attributes ?? [] as $attributeId) {
+        foreach ($attributesToAdd as $attributeId) {
             foreach ($entity->fields ?? [] as $name => $defs) {
                 if (!empty($defs['attributeId']) && $defs['attributeId'] === $attributeId) {
                     $entity->unsetFetched($name);

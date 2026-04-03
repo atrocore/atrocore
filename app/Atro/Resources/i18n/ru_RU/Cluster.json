@@ -23,6 +23,45 @@
     }
   },
   "exceptions": {
-    "cannotDelete": "Удалять можно только пустые кластеры"
+    "cannotMergeWithoutGoldenRecord": "Объединение без эталонной записи невозможно"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Неподтверждённые элементы не могут быть добавлены к объединению"
+  },
+  "labels": {
+    "stagingRecord": "промежуточная запись",
+    "masterRecord": "мастер-запись"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} связал {relatedEntity} с этим кластером",
+    "clusterLinkedThis": "{user} связал {relatedEntity} с этим кластером",
+    "clusterUnlinked": "{user} отвязал {relatedEntity} от этого кластера",
+    "clusterUnlinkedThis": "{user} отвязал {relatedEntity} от этого кластера",
+    "clusterRejected": "{user} отклонил {relatedEntity} в этом кластере",
+    "clusterRejectedThis": "{user} отклонил {relatedEntity} в этом кластере",
+    "clusterReincluded": "{user} повторно включил {relatedEntity} в этот кластер",
+    "clusterReincludedThis": "{user} повторно включил {relatedEntity} в этот кластер",
+    "clusterMoved": "{user} переместил {relatedEntity} из этого кластера",
+    "clusterMovedThis": "{user} переместил {relatedEntity} из этого кластера",
+    "clusterConfirmed": "{user} подтвердил {relatedEntity} в этом кластере",
+    "clusterConfirmedThis": "{user} подтвердил {relatedEntity} в этом кластере",
+    "clusterGoldenRecord": "{user} установил {relatedEntity} как золотую запись в этом кластере",
+    "clusterGoldenRecordThis": "{user} установил {relatedEntity} как золотую запись в этом кластере",
+    "clusterDeleted": "{user} удалил этот кластер",
+    "clusterDeletedThis": "{user} удалил этот кластер",
+    "clusterRecordDeleted": "{user} удалил {relatedEntity} из этого кластера",
+    "clusterRecordDeletedThis": "{user} удалил {relatedEntity} из этого кластера",
+    "clusterMovedToCluster":              "Система переместила промежуточные записи {stagingRecords} и мастер-записи {masterRecords} из кластера {clusterLink} в этот кластер",
+    "clusterMovedToClusterThis":          "Система переместила промежуточные записи {stagingRecords} и мастер-записи {masterRecords} из кластера {clusterLink} в этот кластер",
+    "clusterMovedToClusterStaging":       "Система переместила промежуточные записи {stagingRecords} из кластера {clusterLink} в этот кластер",
+    "clusterMovedToClusterStagingThis":   "Система переместила промежуточные записи {stagingRecords} из кластера {clusterLink} в этот кластер",
+    "clusterMovedToClusterMaster":        "Система переместила мастер-записи {masterRecords} из кластера {clusterLink} в этот кластер",
+    "clusterMovedToClusterMasterThis":    "Система переместила мастер-записи {masterRecords} из кластера {clusterLink} в этот кластер",
+    "clusterMovedFromCluster":            "Система переместила промежуточные записи {stagingRecords} и мастер-записи {masterRecords} из этого кластера в кластер {clusterLink}",
+    "clusterMovedFromClusterThis":        "Система переместила промежуточные записи {stagingRecords} и мастер-записи {masterRecords} из этого кластера в кластер {clusterLink}",
+    "clusterMovedFromClusterStaging":     "Система переместила промежуточные записи {stagingRecords} из этого кластера в кластер {clusterLink}",
+    "clusterMovedFromClusterStagingThis": "Система переместила промежуточные записи {stagingRecords} из этого кластера в кластер {clusterLink}",
+    "clusterMovedFromClusterMaster":      "Система переместила мастер-записи {masterRecords} из этого кластера в кластер {clusterLink}",
+    "clusterMovedFromClusterMasterThis":  "Система переместила мастер-записи {masterRecords} из этого кластера в кластер {clusterLink}"
   }
 }

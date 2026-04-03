@@ -125,7 +125,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 && data.foreignScope === 'ExtensibleEnumOption'
                 && this.idName !== this.name
             ) {
-                const optionData = this.model.get('_meta')?.options?.[this.name] || this.getOptionsData();
+                const optionData = this.model.getMeta('options', this.name) || this.getOptionsData();
                 if (optionData.color) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
                     data.description = optionData.description || '';
@@ -340,7 +340,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
                 sortBy: this.sortBy,
-                sortAsc: this.sortAsc
+                sortAsc: this.sortAsc,
+                selectPageSize: this.params.selectPageSize
             }, function (view) {
                 view.render();
                 this.notify(false);
@@ -352,7 +353,24 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         },
 
         getWhereAdditional() {
-            return this?.options?.whereAdditional || this.model.getFieldParam(this.name, 'where') || undefined
+            if (this?.options?.whereAdditional) {
+                return this.options.whereAdditional;
+            }
+
+            let res = this.model.getFieldParam(this.name, 'where')
+
+            if (this.getExtensibleEnumId() && this.foreignScope === 'ExtensibleEnumOption') {
+                res = [
+                    ...(res || []),
+                    {
+                        type: 'linkedWith',
+                        attribute: 'extensibleEnums',
+                        value: [this.getExtensibleEnumId()]
+                    }
+                ]
+            }
+
+            return res || undefined
         },
 
         clearLink: function () {
@@ -892,21 +910,21 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                         model: model,
                         mode: 'search',
                         foreignScope: foreignScope,
+                        foreignName: attribute?.entityField,
                         hideSearchType: true,
-                        params: this.defs.params,
-                        whereAdditional: this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
+                        whereAdditional: attribute?.data?.where || this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
                     }, view => {
                         this.addCustomDataToView(view, rule);
 
                         this.listenTo(view, 'add-subquery', subQuery => {
-                            if(!subQuery || subQuery.length === 0 ) {
+                            if (!subQuery || subQuery.length === 0) {
                                 return;
                             }
                             rule.value = null;
                             this.filterValue = rule.value;
 
                             (view.ids || []).forEach(id => {
-                                if(id === 'subquery') {
+                                if (id === 'subquery') {
                                     return;
                                 }
 
@@ -949,29 +967,40 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 }
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
+                        if (rule.$el && !rule.$el.closest('body').length) {
+                            return;
+                        }
                         let nameHash = { '_localeId': this.getUser().get('localeId') }
-                        try{
-                            const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName']) ?? 'name';
+                        if (rule.data && rule.data['nameHash']) {
+                            Object.assign(nameHash, rule.data['nameHash']);
+                        }
+                        let attribute = this.defs.params?.attribute;
+                        try {
+                            const foreignScope = attribute?.entityType || this.getForeignScope();
+                            const foreignName = attribute?.entityField
+                                ?? this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName'])
+                                ?? 'name';
 
-                            if ((rule.value || []).length > 0 && foreignName) {
-                                const resp = this.ajaxGetRequest(this.foreignScope, {
+                            const missingIds = (rule.value || []).filter(id => !nameHash[id]);
+                            if (missingIds.length > 0 && foreignName) {
+                                const resp = this.ajaxGetRequest(foreignScope, {
                                     select: foreignName,
                                     collectionOnly: true,
                                     where: [
                                         {
                                             type: 'in',
                                             attribute: 'id',
-                                            value: rule.value
+                                            value: missingIds
                                         }
                                     ]
                                 }, { async: false })
 
-                                const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                                const localizedForeignName = this.getLocalizedFieldData(foreignScope, foreignName)[0]
                                 resp.responseJSON.list.forEach(record => {
                                     nameHash[record.id] = record[localizedForeignName] || record[foreignName]
                                 })
                             }
-                        }catch (e) {
+                        } catch (e) {
                             console.error(e)
                         }
 
@@ -990,8 +1019,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                             view.addLinkSubQuery(data, true);
                         }
 
-                        if(rule.data && rule.data['nameHash']) {
-                            delete  rule.data['nameHash'];
+                        if (rule.data && rule.data['nameHash']) {
+                            delete rule.data['nameHash'];
                         }
 
                         if (view) {
@@ -1020,11 +1049,13 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
 
         getQueryBuilderOperators() {
             let operators = ['in', 'not_in'];
-            if (this.getForeignScope() === 'User') {
+            let foreignScope = this.defs.params?.attribute?.entityType || this.getForeignScope();
+
+            if (foreignScope === 'User') {
                 operators = operators.concat(['is_me', 'is_not_me', 'is_team_member'])
             }
 
-            if (this.getForeignScope() === 'Team') {
+            if (foreignScope === 'Team') {
                 operators = operators.concat(['is_my_team', 'is_not_my_team'])
             }
 
@@ -1197,7 +1228,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
 
         getForeignScope: function () {
             const scope = this.model.urlRoot;
-            return this.defs.params.foreignScope
+            return this.options.foreignScope
+                ?? this.defs.params.foreignScope
                 ?? this.foreignScope
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                 ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);

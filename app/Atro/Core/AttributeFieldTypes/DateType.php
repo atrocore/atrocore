@@ -27,16 +27,21 @@ class DateType extends AbstractFieldType
         $name = AttributeFieldConverter::prepareFieldName($row);
 
         $entity->fields[$name] = [
-            'type'        => $this->type,
-            'name'        => $name,
-            'attributeId' => $row['id'],
-            'column'      => $this->column,
-            'required'    => !empty($row['is_required']),
+            'type'                     => $this->type,
+            'name'                     => $name,
+            'attributeId'              => $row['id'],
+            'column'                   => $this->column,
+            'required'                 => !empty($row['is_required']),
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         if (empty($skipValueProcessing)) {
-            $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+            if (empty($row['av_id']) && !empty($row['default_date'])) {
+                // set default value when we add attribute
+                $entity->set($name, $row['default_date']);
+            } else {
+                $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+            }
         }
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
@@ -63,7 +68,7 @@ class DateType extends AbstractFieldType
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
             'conditionalProperties'     => $this->prepareConditionalProperties($row),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
         ];
 
         if (!empty($row['disable_field_value_lock'])) {

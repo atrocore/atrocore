@@ -179,7 +179,7 @@ Espo.define(
 
             loader: null,
 
-            url: 'api/v1',
+            url: 'api',
 
             auth: null,
 
@@ -503,7 +503,7 @@ Espo.define(
                     var arr = Base64.decode(this.auth).split(':');
                     if (arr.length > 1) {
                         $.ajax({
-                            url: 'App/action/destroyAuthToken',
+                            url: 'destroyAuthToken',
                             type: 'POST',
                             data: JSON.stringify({
                                 token: arr[1]
@@ -623,7 +623,7 @@ Espo.define(
 
             requestUserData: function (callback) {
                 $.ajax({
-                    url: 'App/user',
+                    url: 'userSession',
                 }).done(function (data) {
                     window.SvelteUserData.set(data);
                     window.SvelteNotifier.setNotifier(Espo.Ui);

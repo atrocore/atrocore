@@ -20,5 +20,13 @@
   },
   "customActions": {
     "replaceItem": "Замінити елемент"
+  },
+  "streamMessages": {
+    "selectionLinked": "{user} пов'язав {relatedEntity} з цією вибіркою",
+    "selectionLinkedThis": "{user} пов'язав {relatedEntity} з цією вибіркою",
+    "selectionUnlinked": "{user} відв'язав {relatedEntity} від цієї вибірки",
+    "selectionUnlinkedThis": "{user} відв'язав {relatedEntity} від цієї вибірки",
+    "selectionDeleted": "{user} видалив {relatedEntity} з цієї вибірки",
+    "selectionDeletedThis": "{user} видалив цю вибірку"
   }
 }

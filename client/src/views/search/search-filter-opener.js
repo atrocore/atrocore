@@ -19,7 +19,7 @@ Espo.define('views/search/search-filter-opener', ['view', 'search-manager'], fun
             }
         },
 
-        open(foreignScope, initialWhere = [], callback, additionalBoolFilterList = [], boolFilterData = {}) {
+        open(foreignScope, initialWhere = [], callback, additionalBoolFilterList = [], boolFilterData = {}, whereAdditional = null) {
             let filters = {}
 
             if (!Array.isArray(initialWhere) && typeof initialWhere === 'object' && initialWhere !== null) {
@@ -64,6 +64,8 @@ Espo.define('views/search/search-filter-opener', ['view', 'search-manager'], fun
                     arrayNoneOf: 'array_none_of',
                     arrayIsEmpty: 'is_null',
                     arrayIsNotEmpty: 'is_not_null',
+                    similar: 'similar',
+                    wordSimilar: 'word_similar',
                 }
                 return data[type] ?? type;
             }
@@ -147,6 +149,7 @@ Espo.define('views/search/search-filter-opener', ['view', 'search-manager'], fun
                 disabledUnsetSearch: !searchManager.isFilterSet() && !searchManager.isTextFilterSet(),
                 additionalBoolFilterList: additionalBoolFilterList,
                 boolFilterData: boolFilterData,
+                whereAdditional: whereAdditional,
             }, (dialog) => {
                 dialog.render();
                 this.notify(false);

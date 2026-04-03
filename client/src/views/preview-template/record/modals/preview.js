@@ -154,7 +154,9 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             this.getPreviewRequest().success(res => {
                 this.htmlContent = res.htmlPreview ?? '';
 
-                if (typeof res.hasMultipleLanguages === 'boolean') {
+                if (typeof res.showLanguageSelector === 'boolean') {
+                    this.canChangeLanguage = res.showLanguageSelector;
+                } else if (typeof res.hasMultipleLanguages === 'boolean') {
                     this.canChangeLanguage = res.hasMultipleLanguages;
                 }
 
@@ -163,6 +165,10 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 if (this.canChangeLanguage && this.languages.length > 1) {
                     const selector = $('<select class="language-selector"></select>');
                     this.$el.find('.language-container').append(selector);
+
+                    if (res.languageSelectorReadonly) {
+                        selector.prop('disabled', true);
+                    }
 
                     selector.selectize({
                         setFirstOptionActive: true,

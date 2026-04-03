@@ -33,7 +33,7 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             }
         },
 
-        sortBy: 'ee_eeo.sorting',
+        sortBy: 'sortOrder',
 
         sortAsc: true,
 

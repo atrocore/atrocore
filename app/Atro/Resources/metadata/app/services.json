@@ -1,7 +1,6 @@
 {
   "AdminNotifications": "\\Espo\\Services\\AdminNotifications",
   "Installer": "\\Atro\\Services\\Installer",
-  "Person": "\\Espo\\Services\\Person",
   "MassActions": "\\Atro\\Services\\MassActions",
   "Composer": "\\Atro\\Services\\Composer"
 }

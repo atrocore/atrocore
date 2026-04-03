@@ -116,8 +116,10 @@ Espo.define('model', [], function () {
                         const defaultValue = this.getFieldParam(field, 'default')
                         if (defaultValue && typeof defaultValue === 'string' && defaultValue.includes('{{') && defaultValue.includes('}}')) {
                             seed = $.ajax({
-                                url: this.name + '/action/Seed?silent=true',
-                                type: 'GET',
+                                url: 'entityScriptDefaultFields?silent=true',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({entityName: this.name}),
                                 dataType: 'json',
                                 async: false,
                             }).responseJSON
@@ -285,6 +287,26 @@ Espo.define('model', [], function () {
 
         isRemovable: function () {
             return true;
+        },
+
+        setMeta: function (category, key, value) {
+            var meta = this.get('_meta') || {};
+            if (!meta[category]) {
+                meta[category] = {};
+            }
+            meta[category][key] = value;
+            this.set('_meta', meta);
+        },
+
+        getMeta: function (category, key) {
+            var meta = this.get('_meta');
+            if (!meta || !meta[category]) {
+                return null;
+            }
+            if (key === undefined) {
+                return meta[category];
+            }
+            return meta[category][key] ?? null;
         },
 
         getEntityType: function () {

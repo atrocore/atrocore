@@ -23,6 +23,45 @@
     }
   },
   "exceptions": {
-    "cannotDelete": "Seules les grappes vides peuvent être supprimées"
+    "cannotMergeWithoutGoldenRecord": "La fusion est impossible sans un enregistrement de référence"
+  },
+  "messages": {
+    "cannotMergeUnconfirmedItems": "Les éléments non confirmés ne peuvent pas être ajoutés à la fusion"
+  },
+  "labels": {
+    "stagingRecord": "enregistrement intermediaire",
+    "masterRecord": "enregistrement de référence"
+  },
+  "streamMessages": {
+    "clusterLinked": "{user} a lié {relatedEntity} à ce cluster",
+    "clusterLinkedThis": "{user} a lié {relatedEntity} à ce cluster",
+    "clusterUnlinked": "{user} a dissocié {relatedEntity} de ce cluster",
+    "clusterUnlinkedThis": "{user} a dissocié {relatedEntity} de ce cluster",
+    "clusterRejected": "{user} a rejeté {relatedEntity} dans ce cluster",
+    "clusterRejectedThis": "{user} a rejeté {relatedEntity} dans ce cluster",
+    "clusterReincluded": "{user} a réintégré {relatedEntity} dans ce cluster",
+    "clusterReincludedThis": "{user} a réintégré {relatedEntity} dans ce cluster",
+    "clusterMoved": "{user} a déplacé {relatedEntity} hors de ce cluster",
+    "clusterMovedThis": "{user} a déplacé {relatedEntity} hors de ce cluster",
+    "clusterConfirmed": "{user} a confirmé {relatedEntity} dans ce cluster",
+    "clusterConfirmedThis": "{user} a confirmé {relatedEntity} dans ce cluster",
+    "clusterGoldenRecord": "{user} a défini {relatedEntity} comme enregistrement doré dans ce cluster",
+    "clusterGoldenRecordThis": "{user} a défini {relatedEntity} comme enregistrement doré dans ce cluster",
+    "clusterDeleted": "{user} a supprimé ce cluster",
+    "clusterDeletedThis": "{user} a supprimé ce cluster",
+    "clusterRecordDeleted": "{user} a supprimé {relatedEntity} de ce cluster",
+    "clusterRecordDeletedThis": "{user} a supprimé {relatedEntity} de ce cluster",
+    "clusterMovedToCluster":              "Le système a déplacé les enregistrements intermediaire {stagingRecords} et les enregistrements de référence {masterRecords} du cluster {clusterLink} vers ce cluster",
+    "clusterMovedToClusterThis":          "Le système a déplacé les enregistrements intermediaire {stagingRecords} et les enregistrements de référence {masterRecords} du cluster {clusterLink} vers ce cluster",
+    "clusterMovedToClusterStaging":       "Le système a déplacé les enregistrements intermediaire {stagingRecords} du cluster {clusterLink} vers ce cluster",
+    "clusterMovedToClusterStagingThis":   "Le système a déplacé les enregistrements intermediaire {stagingRecords} du cluster {clusterLink} vers ce cluster",
+    "clusterMovedToClusterMaster":        "Le système a déplacé les enregistrements de référence {masterRecords} du cluster {clusterLink} vers ce cluster",
+    "clusterMovedToClusterMasterThis":    "Le système a déplacé les enregistrements de référence {masterRecords} du cluster {clusterLink} vers ce cluster",
+    "clusterMovedFromCluster":            "Le système a déplacé les enregistrements intermediaire {stagingRecords} et les enregistrements de référence {masterRecords} de ce cluster vers le cluster {clusterLink}",
+    "clusterMovedFromClusterThis":        "Le système a déplacé les enregistrements intermediaire {stagingRecords} et les enregistrements de référence {masterRecords} de ce cluster vers le cluster {clusterLink}",
+    "clusterMovedFromClusterStaging":     "Le système a déplacé les enregistrements intermediaire {stagingRecords} de ce cluster vers le cluster {clusterLink}",
+    "clusterMovedFromClusterStagingThis": "Le système a déplacé les enregistrements intermediaire {stagingRecords} de ce cluster vers le cluster {clusterLink}",
+    "clusterMovedFromClusterMaster":      "Le système a déplacé les enregistrements de référence {masterRecords} de ce cluster vers le cluster {clusterLink}",
+    "clusterMovedFromClusterMasterThis":  "Le système a déplacé les enregistrements de référence {masterRecords} de ce cluster vers le cluster {clusterLink}"
   }
 }

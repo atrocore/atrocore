@@ -24,6 +24,7 @@ use Atro\Core\FileValidator;
 use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\FolderPathGenerator;
 use Atro\Core\Utils\PDFLib;
+use Atro\Core\Utils\RegexUtil;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -169,6 +170,10 @@ class File extends Base
                 throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
             }
         } else {
+            if (property_exists($entity, '_scan')) {
+                $this->isScanning = true;
+            }
+
             $this->deleteFromDb($entity->get('id'));
         }
     }
@@ -225,6 +230,10 @@ class File extends Base
         /** @var \Atro\Entities\File $file */
         $file = $this->getMapper()->selectById($this->entityFactory->create($this->entityType), $id, ['withDeleted' => true]);
         if (!empty($file)) {
+            if (!empty($this->isScanning)) {
+                $file->_scan = true;
+                unset($this->isScanning);
+            }
             $this->getStorage($file)->deleteFilePermanently($file);
         }
 
@@ -263,7 +272,7 @@ class File extends Base
             $nameWithoutExt = explode('.', (string)$file->get('name'));
             array_pop($nameWithoutExt);
             $nameWithoutExt = implode('.', $nameWithoutExt);
-            return preg_match($fileNameRegexPattern, $nameWithoutExt);
+            return (bool)preg_match(RegexUtil::toPhpPattern($fileNameRegexPattern), $nameWithoutExt);
         }
 
         return true;
@@ -315,8 +324,8 @@ class File extends Base
                     $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
                 }
             }
-        }catch (\Throwable $e) {
-            $GLOBALS['log']->error('Enable to load path for file: '.$file->get('id'). ' Error: '.$e->getMessage());
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('Enable to load path for file: ' . $file->get('id') . ' Error: ' . $e->getMessage());
         }
 
         return $res;
@@ -401,13 +410,15 @@ class File extends Base
     public function validateItemName(FileEntity $file): void
     {
         if ($file->isNew() || $file->isAttributeChanged('name') || $file->isAttributeChanged('folderId')) {
-            $qb = $this->getConnection()->createQueryBuilder()
+            $qb = $this->getDbal()->createQueryBuilder()
                 ->select('*')
                 ->from('file_folder_linker')
                 ->where('name=:name')
                 ->andWhere('parent_id=:parentId')
+                ->andWhere('deleted = :false')
                 ->setParameter('name', $file->get('name'))
-                ->setParameter('parentId', $file->get('folderId') ?? '');
+                ->setParameter('parentId', $file->get('folderId') ?? '')
+                ->setParameter('false', 'false', ParameterType::BOOLEAN);
 
             if (!$file->isNew()) {
                 $qb->andWhere('id!=:id')->setParameter('id', $file->get('id'));
@@ -647,7 +658,6 @@ class File extends Base
 
         $this->addDependency('container');
         $this->addDependency('language');
-        $this->addDependency('fileValidator');
         $this->addDependency('fileManager');
     }
 }

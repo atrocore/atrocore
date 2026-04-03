@@ -43,6 +43,7 @@ class QueryConverter
             'havingClause',
             'skipTextColumns',
             'maxTextColumnsLength',
+            'skipBelongsToJoins',
         ];
 
     public static array $sqlOperators
@@ -158,7 +159,7 @@ class QueryConverter
         }
 
         if (empty($params['aggregation'])) {
-            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength']);
+            $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength'], $params['skipBelongsToJoins']);
             $orderPart = $this->getOrderPart($entity, $params['orderBy'], $params['order']);
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
@@ -408,7 +409,7 @@ class QueryConverter
         return $part;
     }
 
-    protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null)
+    protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null, $skipBelongsToJoin = false)
     {
         $arr = array();
 
@@ -474,6 +475,9 @@ class QueryConverter
                 $fieldPath = $fieldDefs['select'];
             } else {
                 if (!empty($fieldDefs['notStorable']) || !empty($entity->entityDefs['fields'][$attribute]['attributeId'])) {
+                    continue;
+                }
+                if (!empty($fieldDefs['isLinkEntityName']) && $skipBelongsToJoin) {
                     continue;
                 }
                 if ($attributeType === null) {

@@ -407,7 +407,7 @@ class ReferenceData extends Repository implements Injectable
                 $filtered = [];
 
                 foreach ($params['whereClause'][$key]['OR'] as $k => $v) {
-                    $field = str_replace('*', '', $k);
+                    $field = str_replace('*', '', (string) $k);
                     $search = str_replace('%', '', $v);
                     foreach ($items as $item) {
                         if (!isset($item[$field])) {
@@ -467,9 +467,15 @@ class ReferenceData extends Repository implements Injectable
 
         if ($relationType === IEntity::HAS_MANY) {
             $idsField = $link . 'Ids';
-            if (!empty($entity->get($idsField))) {
-                return $this->getEntityManager()->getrepository($entityType)
+            if ($entity->hasField($idsField) && !empty($entity->get($idsField))) {
+                return $this->getEntityManager()->getRepository($entityType)
                     ->where(['id' => $entity->get($idsField)])->find($selectParams);
+            } else {
+                $foreign = $entity->getRelationParam($link, 'foreign');
+                if (!empty($foreign)) {
+                    return $this->getEntityManager()->getRepository($entityType)
+                        ->where(["{$foreign}Id" => $entity->get('id')])->find($selectParams);
+                }
             }
         }
 

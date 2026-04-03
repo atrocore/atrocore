@@ -5,6 +5,7 @@
     "isMultilang": "Wielojęzyczny",
     "required": "Wymagane",
     "notNull": "Wyłączenie wartości null",
+    "allowNullForBool": "Zezwalaj na wartość null",
     "readOnly": "Tylko do odczytu",
     "protected": "Chroniony",
     "unique": "Wyjątkowy",
@@ -66,7 +67,8 @@
     "conditionalReadOnly": "Tylko do odczytu",
     "conditionalProtected": "Chroniony",
     "conditionalDisableOptions": "Wyłączone opcje",
-    "urlLabel": "Etykieta URL"
+    "urlLabel": "Etykieta URL",
+    "selectPageSize": "Rekordów na stronie (okno dialogowe wyboru)"
   },
   "tooltips": {
     "foreignCode": "Ta nazwa kodowa jest używana dla pola utworzonego w powiązanej jednostce dla relacji wstecznej.",
@@ -77,7 +79,7 @@
     "readOnly": "Wartość pola nie może być określona przez użytkownika. Nadal można ją zmienić za pośrednictwem interfejsu API.",
     "protected": "Użytkownik nie może określić wartości pola. Ani za pośrednictwem interfejsu użytkownika, ani interfejsu API.",
     "maxLength": "Maksymalna dopuszczalna długość tekstu.",
-    "pattern": "Aby włączyć tylko wielkie litery o długości 10 znaków, proszę użyć \"/^[A-Z]{1,10}$/\".",
+    "pattern": "Aby włączyć tylko wielkie litery o długości 10 znaków, proszę użyć \"^[A-Z]{1,10}$\".",
     "default": "Wartość zostanie ustawiona domyślnie podczas tworzenia.",
     "isSorted": "Opcje zostaną posortowane po zapisaniu.",
     "dropdown": "Proszę nie używać listy rozwijanej, jeśli na liście znajduje się więcej niż 300 opcji.",
@@ -90,7 +92,8 @@
     "modifiedExtendedEnabled": "Zmiany w tej relacji spowodują aktualizację daty i godziny \"Modified At\".",
     "inheritanceDisabled": "Wartości dla tego pola nie będą dziedziczone z elementu nadrzędnego.",
     "modifiedExtendedDisabled": "Jeśli ustawione, zmiany w tym polu nie będą aktualizować znacznika czasu \"Modified At\".",
-    "auditableDisabled": "Zmiany w tym polu nie są wyświetlane jako Aktywność."
+    "auditableDisabled": "Zmiany w tym polu nie są wyświetlane jako Aktywność.",
+    "selectPageSize": "Liczba rekordów wyświetlanych na stronie w oknie dialogowym wyboru. Unikaj zbyt wysokich wartości, ponieważ może to spowolnić lub zawiesić przeglądarkę użytkownika."
   },
   "options": {
     "outputType": {
@@ -125,6 +128,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Niektóre rekordy mają wartości null",
-    "cannotAddRequiredFieldWithExistingRecords": "Nie można dodać pola wymaganego z istniejącymi rekordami bez wartości domyślnej"
+    "cannotAddRequiredFieldWithExistingRecords": "Nie można dodać pola wymaganego z istniejącymi rekordami bez wartości domyślnej",
+    "relationAlreadyUsed": "Middle Table Name %s jest już używana, wybierz inną."
   }
 }

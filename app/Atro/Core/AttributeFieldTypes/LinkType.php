@@ -47,13 +47,21 @@ class LinkType extends AbstractFieldType
             'attributeId'              => $id,
             'column'                   => 'reference_value',
             'required'                 => !empty($row['is_required']),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled']),
+            'isLinkEntityId'           => true
         ];
 
         $entity->fields[$name . 'Name'] = [
             'type'        => 'varchar',
             'attributeId' => $id,
             'notStorable' => true
+        ];
+
+        $entity->fields[$name] = [
+            'type'         => 'jsonArray',
+            'attributeId'  => $id,
+            'isLinkEntity' => true,
+            'notStorable'  => true
         ];
 
         if (empty($skipValueProcessing)) {
@@ -90,7 +98,8 @@ class LinkType extends AbstractFieldType
                 'conditionalProperties'     => $this->prepareConditionalProperties($row),
                 'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
                 'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
-                'where'                     => $data['where'] ?? []
+                'where'                     => $data['where'] ?? [],
+                'selectPageSize'            => $attributeData['selectPageSize'] ?? null
             ];
 
             if (!empty($attributeData['dropdown'])) {
@@ -106,7 +115,7 @@ class LinkType extends AbstractFieldType
 
                 if (!empty($row['reference_value'])) {
                     $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $entityName, $foreignName);
-                    $columns = array_unique(['id', $foreignName, $localizedNameColumn]);
+                    $columns = array_map(fn($column) => $this->conn->quoteIdentifier(Util::toUnderScore($column)), array_unique(['id', $foreignName, $localizedNameColumn]));
 
                     try {
                         $referenceItem = $this->conn->createQueryBuilder()

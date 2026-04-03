@@ -5,6 +5,7 @@
     "isMultilang": "Multilingue",
     "required": "Requis",
     "notNull": "Désactiver la valeur nulle",
+    "allowNullForBool": "Autoriser la valeur nulle",
     "readOnly": "Lecture seule",
     "protected": "Protegé",
     "unique": "Unique",
@@ -66,7 +67,8 @@
     "conditionalReadOnly": "Lecture seule",
     "conditionalProtected": "Protegé",
     "conditionalDisableOptions": "Options désactivées",
-    "urlLabel": "Label de l'URL"
+    "urlLabel": "Label de l'URL",
+    "selectPageSize": "Enregistrements par page (dialogue de sélection)"
   },
   "tooltips": {
     "foreignCode": "Ce nom de code est utilisé pour le champ créé dans l’entité étrangère pour la relation inverse.",
@@ -77,7 +79,7 @@
     "readOnly": "La valeur du champ ne peut pas être spécifiée par l'utilisateur. Il est toujours possible de la modifier via l'API.",
     "protected": "La valeur du champ ne peut pas être spécifiée par l'utilisateur. Ni via le front-end, ni via l'API.",
     "maxLength": "Longueur maximale acceptable du texte.",
-    "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
+    "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"^[A-Z]{1,10}$\"",
     "default": "La valeur sera définie par défaut lors de la création.",
     "isSorted": "Les options seront triées après l'enregistrement.",
     "dropdown": "N'utilisez pas la liste déroulante s'il y a plus de 300 options dans la liste.",
@@ -90,7 +92,8 @@
     "modifiedExtendedEnabled": "Tout changement dans cette relation entraînera la mise à jour de la date et de l’heure « Modifié le ».",
     "inheritanceDisabled": "Les valeurs de ce champ ne seront pas héritées de l'élément parent.",
     "modifiedExtendedDisabled": "Lorsque cette option est définie, les changements dans ce champ ne mettront pas à jour la date et l’heure « Modifié le ».",
-    "auditableDisabled": "Les modifications apportées à ce champ ne sont pas affichées dans le panneau Activités."
+    "auditableDisabled": "Les modifications apportées à ce champ ne sont pas affichées dans le panneau Activités.",
+    "selectPageSize": "Nombre d'enregistrements affichés par page dans la boîte de dialogue de sélection. Évitez une valeur trop élevée, car cela peut ralentir ou bloquer le navigateur de l'utilisateur."
   },
   "options": {
     "outputType": {
@@ -125,6 +128,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Certains enregistrements ont des valeurs nulles",
-    "cannotAddRequiredFieldWithExistingRecords": "Vous ne pouvez pas ajouter un champ obligatoire avec des enregistrements existants sans valeur par défaut"
+    "cannotAddRequiredFieldWithExistingRecords": "Vous ne pouvez pas ajouter un champ obligatoire avec des enregistrements existants sans valeur par défaut",
+    "relationAlreadyUsed": "Le Middle Table Name %s est déjà utilisé, veuillez en choisir un autre."
   }
 }

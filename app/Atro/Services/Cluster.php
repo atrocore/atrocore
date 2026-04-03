@@ -12,9 +12,11 @@
 
 namespace Atro\Services;
 
-use Atro\Core\AttributeFieldConverter;
-use Atro\Core\Exceptions\Exception;
-use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -78,5 +80,184 @@ class Cluster extends Base
                 }
             }
         }
+    }
+
+    public function purge(array $params): array
+    {
+        $params['action'] = 'purge';
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['singleActionMethod'] = 'purgeCluster';
+
+        list($count, $errors, $sync) = $this->executeMassAction($params, function ($id) {
+            $this->purgeCluster($id);
+        });
+
+        return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
+    }
+
+    public function purgeCluster(string $id): void
+    {
+        $cluster = $this->getEntity($id);
+        if (empty($cluster)) {
+            return;
+        }
+
+        $this->getEntityManager()->getRepository('ClusterItem')
+            ->where(['clusterId' => $id])
+            ->removeCollection();
+
+        // Remove rejected cluster item records for this cluster
+        $this->getEntityManager()->getRepository('RejectedClusterItem')
+            ->where(['clusterId' => $id])
+            ->removeCollection();
+
+        $this->getEntityManager()->removeEntity($cluster);
+    }
+
+    public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes): Entity
+    {
+        $cluster = $this->getEntity($clusterId);
+
+        if (empty($cluster)) {
+            throw new BadRequest("Cluster $clusterId not found");
+        }
+
+        if (!$this->getAcl()->check($cluster->get('masterEntity'), 'create')) {
+            throw new Forbidden();
+        }
+
+        $user = $this->getUser();
+        $this->getEntityManager()->setUser($user->getSystemUser());
+        $this->getContainer()->get(\Atro\Core\UserContext::class)->set($user->getSystemUser());
+
+        /** @var RDB $masterRepository */
+        $masterRepository = $this->getEntityManager()->getRepository($cluster->get('masterEntity'));
+        /** @var Record $masterService */
+        $masterService = $this->getContainer()->get('serviceFactory')->create($cluster->get('masterEntity'));
+
+        $sourceList = [];
+
+        $clusterItems = $this->getEntityManager()->getRepository('ClusterItem')
+            ->where(['entityId' => $sourceIds, 'clusterId' => $clusterId])
+            ->find();
+
+        foreach ($clusterItems as $clusterItem) {
+            if (in_array($clusterItem->get('entityId'), $sourceIds)) {
+                $sourceList[] = $this->getRecordService($clusterItem->get('entityName'))->getEntity($clusterItem->get('entityId'));
+            }
+        }
+
+        $goldenRecord = $cluster->get('goldenRecord');
+
+        if (empty($goldenRecord)) {
+            foreach ($sourceList as $source) {
+                if ($source->getEntityName() === $cluster->get('masterEntity')) {
+                    $goldenRecord = $source;
+                }
+            }
+
+            if (empty($goldenRecord)) {
+                $goldenRecord = $masterService->createEntity($attributes->input);
+
+            }
+        }
+
+        $cluster->set('goldenRecordId', $goldenRecord->get('id'));
+        $this->getRepository()->save($cluster);
+
+        $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
+
+        $linksDefs = $this->getMetadata()->get(['entityDefs', $goldenRecord->getEntityType(), 'links']);
+        foreach ($linksDefs as $link => $linkDefs) {
+
+            if ($linkDefs['type'] !== 'hasMany' || !empty($linkDefs['relationName'])) {
+                continue;
+            }
+            $method = 'applyMergeFor' . ucfirst($link);
+            if (method_exists($this, $method)) {
+                $masterService->$method($goldenRecord, $sourceList);
+                continue;
+            }
+
+            foreach ($sourceList as $source) {
+
+                if (empty($source->entityDefs['links'][$link])) {
+                    continue;
+                }
+
+                $linkedList = $this->getEntityManager()->getRepository($source->getEntityName())->findRelated($source, $link);
+
+                foreach ($linkedList as $linked) {
+                    try {
+                        $masterRepository->relate($goldenRecord, $link, $linked);
+                    } catch (NotUnique $e) {
+                    }
+                }
+            }
+        }
+
+        $upsertData = [];
+
+        foreach ($relationshipData as $data) {
+            if (empty($data['scope'])) {
+                continue;
+            }
+            if (!empty($data['toUpsert'])) {
+                foreach ($data['toUpsert'] as $payload) {
+                    $input = new \stdClass();
+                    $input->entity = $data['scope'];
+                    $input->payload = (object)$payload;
+                    $upsertData[] = $input;
+                }
+            }
+
+            if (!empty($data['toDelete'])) {
+                $this->getRecordService($data['scope'])->massRemove([
+                    'ids' => $data['toDelete']
+                ]);
+            }
+        }
+
+        $this->getRecordService('MassActions')->upsert($upsertData);
+
+        try {
+            $attributes->input->_skipCheckForConflicts = true;
+            $goldenRecord->_avoidLocking = true;
+            $goldenRecord = $masterService->updateEntity($goldenRecord->get('id'), $attributes->input);
+        } catch (NotModified $e) {
+
+        }
+
+        foreach ($sourceList as $source) {
+            if ($source->getEntityName() !== $cluster->get('masterEntity')) {
+                $source->set('masterRecordId', $goldenRecord->get('id'));
+                $this->getEntityManager()->saveEntity($source);
+            }
+        }
+
+        try {
+            $clusterItem = $this->getEntityManager()->getEntity('ClusterItem');
+            $clusterItem->set('clusterId', $clusterId);
+            $clusterItem->set('entityId', $goldenRecord->get('id'));
+            $clusterItem->set('entityName', $goldenRecord->getEntityName());
+            $this->getEntityManager()->saveEntity($clusterItem);
+        } catch (NotUnique $e) {
+        }
+
+        return $goldenRecord;
+    }
+
+    protected function getContainer(): \Atro\Core\Container
+    {
+        return $this->getInjection('container');
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('container');
     }
 }

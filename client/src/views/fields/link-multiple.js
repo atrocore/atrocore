@@ -87,7 +87,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         }, Dep.prototype.events),
 
         getForeignName() {
-            return this.model.defs.fields[this.name]?.foreignName ?? this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName'])
+            return this.model.defs.fields[this.name]?.foreignName
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName'])
                 ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'foreignName']) ?? 'name'
         },
 
@@ -283,7 +284,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.ids = Espo.Utils.clone(this.searchParams.value) || [];
             }
             this.nameHash._localeId = this.getUser().get('localeId')
-            this.model.set(this.nameHashName, this.nameHash, {silent: true});
+            this.model.set(this.nameHashName, this.nameHash, { silent: true });
 
             this.listenTo(this.model, 'change:' + this.idsName, function () {
                 this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
@@ -315,7 +316,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     selectAllByDefault: this.getSelectAllByDefault(),
                     allowSelectAllResult: this.allowSelectAllResult,
                     sortBy: this.sortBy,
-                    sortAsc: this.sortAsc
+                    sortAsc: this.sortAsc,
+                    selectPageSize: this.params.selectPageSize
                 }, function (dialog) {
                     dialog.render();
                     self.notify(false);
@@ -327,7 +329,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         if (models.massRelate) {
                             if (models.where.length === 0) {
                                 // force subquery if primary filter "all" is used in modal
-                                models.where = [{asc: true}]
+                                models.where = [{ asc: true }]
                             }
                             this.model.set(this.idsName, null);
                             this.model.set(this.nameHashName, null);
@@ -408,7 +410,24 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getWhereAdditional() {
-            return this?.options?.whereAdditional || this.model.getFieldParam(this.name, 'where') || undefined
+            if (this?.options?.whereAdditional) {
+                return this.options.whereAdditional;
+            }
+
+            let res = this.model.getFieldParam(this.name, 'where')
+
+            if (this.getExtensibleEnumId() && this.foreignScope === 'ExtensibleEnumOption') {
+                res = [
+                    ...(res || []),
+                    {
+                        type: 'linkedWith',
+                        attribute: 'extensibleEnums',
+                        value: [this.getExtensibleEnumId()]
+                    }
+                ]
+            }
+
+            return res || undefined
         },
 
         uploadLink: function () {
@@ -476,14 +495,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
 
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
-                url += '&' + $.param({'boolFilterList': boolList});
+                url += '&' + $.param({ 'boolFilterList': boolList });
             }
             var primary = this.getSelectPrimaryFilterName();
             if (primary) {
-                url += '&' + $.param({'primaryFilter': primary});
+                url += '&' + $.param({ 'primaryFilter': primary });
             }
 
-            where.push({'type': 'textFilter', value: 'AUTOCOMPLETE:' + q});
+            where.push({ 'type': 'textFilter', value: 'AUTOCOMPLETE:' + q });
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
             additionalWhere = additionalWhere.concat(this.getWhereAdditional() || []);
@@ -495,7 +514,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             }
 
             if (where.length) {
-                url += '&' + $.param({'where': where});
+                url += '&' + $.param({ 'where': where });
             }
 
             return url;
@@ -880,9 +899,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         model: model,
                         mode: 'search',
                         foreignScope: foreignScope,
+                        foreignName: attribute?.entityField,
                         hideSearchType: true,
-                        whereAdditional: this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
-                        allowSelectAllResult: !this.defs.params?.attribute?.id
+                        whereAdditional: attribute?.data?.where || this.model.getFieldParam(this.getAttributeFieldName(), 'where') || undefined,
+                        allowSelectAllResult: !this.defs.params?.attribute?.id,
+
                     }, view => {
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
@@ -908,7 +929,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                 queryBuilder = queryBuilder.rules[0];
                             }
 
-                            return {bool, queryBuilder, queryBuilderApplied: true}
+                            return { bool, queryBuilder, queryBuilderApplied: true }
                         }
 
                         view.getAutocompleteAdditionalWhereConditions = () => {
@@ -987,23 +1008,37 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.getModelFactory().create(null, model => {
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
-                        let nameHash = {'_localeId': this.getUser().get('localeId')}
-                        if ((rule.value || []).length > 0) {
+                        if (rule.$el && !rule.$el.closest('body').length) {
+                            return;
+                        }
+                        let nameHash = { '_localeId': this.getUser().get('localeId') }
+                        if (rule.data && rule.data['nameHash']) {
+                            Object.assign(nameHash, rule.data['nameHash']);
+                        }
+
+                        let attribute = this.defs.params?.attribute;
+
+                        const missingIds = (rule.value || []).filter(id => !nameHash[id]);
+                        if (missingIds.length > 0) {
+                            const foreignScope = attribute?.entityType || this.getForeignScope();
+                            const foreignName = attribute?.entityField
+                                ?? this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName'])
+                                ?? 'name';
+
                             try {
-                                const resp = this.ajaxGetRequest(this.foreignScope, {
+                                const resp = this.ajaxGetRequest(foreignScope, {
                                     select: this.getForeignName(),
                                     collectionOnly: true,
                                     where: [
                                         {
                                             type: 'in',
                                             attribute: 'id',
-                                            value: rule.value
+                                            value: missingIds
                                         }
                                     ]
-                                }, {async: false})
+                                }, { async: false })
 
-                                const foreignName = this.getForeignName();
-                                const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                                const localizedForeignName = this.getLocalizedFieldData(foreignScope, foreignName)[0]
                                 resp.responseJSON.list.forEach(record => {
                                     nameHash[record.id] = record[localizedForeignName] || record[foreignName]
                                 })
@@ -1021,7 +1056,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         let view = this.getView(inputName);
 
                         if (rule.data && rule.data['subQuery'] && view) {
-                            let data = {where: Espo.utils.clone(rule.data['subQuery'])};
+                            let data = { where: Espo.utils.clone(rule.data['subQuery']) };
                             view.searchData.subQuery = Espo.utils.clone(rule.data['subQuery']);
                             view.addLinkSubQuery(data, true);
                         }
@@ -1065,7 +1100,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     'is_not_null'
                 ];
             } else {
-                if (this.getForeignScope() === 'User') {
+                let foreignScope = this.defs.params?.attribute?.entityType || this.getForeignScope();
+                if (foreignScope === 'User') {
                     operators = operators.concat(['is_team_member', 'include_me', 'exclude_me'])
                 }
                 operators = operators.concat(['is_not_linked', 'is_linked']);
@@ -1142,11 +1178,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         getForeignScope: function () {
             const scope = this.model.urlRoot;
-            return this.defs.params.foreignScope
+            return this.options.foreignScope
+            ?? this.defs.params.foreignScope
                 ?? this.foreignScope
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
-                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
-                ?? this.defs.params?.attribute?.entityType;
+                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);
         }
     });
 });

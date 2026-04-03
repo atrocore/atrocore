@@ -21,8 +21,7 @@
     "gumlet/php-image-resize": "~2.1.2@stable",
     "composer/semver": "~3.3.2@stable",
     "doctrine/dbal": "~3.2.2@stable",
-    "atrocore/slim": "~2.6.2",
-    "atrocore/atrocore-legacy": "~1.2.12",
+    "atrocore/atrocore-legacy": "~1.3.0",
     "dragonmantank/cron-expression": "~1.0.3@stable",
     "monolog/monolog": "~3.8.1@stable",
     "lasserafn/php-initial-avatar-generator": "^4.4@stable",
@@ -35,12 +34,15 @@
     "symfony/mailer": "~6.4.18@stable",
     "erusev/parsedown": "^1.7@stable",
     "league/openapi-psr7-validator": "^0.22.0@stable",
+    "mezzio/mezzio": "^3.27@stable",
+    "mezzio/mezzio-fastroute": "^3.14@stable",
     "nyholm/psr7": "^1.8@stable",
     "ramsey/uuid": "^4.7@stable",
     "tuupola/base32": "^2.0@stable",
     "symfony/yaml": "^6.4.13@stable",
     "symfony/html-sanitizer": "^6.4.13@stable",
-    "twig/twig": "^3.4@stable"
+    "twig/twig": "^3.4@stable",
+    "laminas/laminas-servicemanager": "^4.5@stable"
   },
   "conflict": {
     "atrocore/pim": "<1.15.8",
@@ -62,7 +64,7 @@
   },
   "extra": {
     "atroId": "Atro",
-    "frontend": "0.1.2",
+    "frontend": "0.1.3",
     "name": {
       "default": "Core"
     },

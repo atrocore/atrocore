@@ -20,6 +20,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -527,6 +528,14 @@ class Attribute extends Base
             $this->getInjection('container')->get($converterName)->convert($entity);
         }
 
+        if (!empty($entity->get('pattern')) && ($entity->isNew() || $entity->isAttributeChanged('pattern'))) {
+            if (!RegexUtil::validate($entity->get('pattern'))) {
+                throw new BadRequest(
+                    sprintf($this->getInjection('language')->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'pattern')
+                );
+            }
+        }
+
         if ($entity->get('code') === '') {
             $entity->set('code', null);
         }
@@ -614,36 +623,6 @@ class Attribute extends Base
         parent::beforeSave($entity, $options);
 
         $this->validateMinMax($entity);
-
-        if ($entity->isAttributeChanged('extensibleEnumId') && in_array($entity->get('type'), ['link', 'linkMultiple'])) {
-            if (empty($entity->get('extensibleEnumId'))) {
-                $where = [];
-            } else {
-                $where = [
-                    [
-                        "condition" => "AND",
-                        "rules"     => [
-                            [
-                                "id"       => "extensibleEnums",
-                                "field"    => "extensibleEnums",
-                                "type"     => "string",
-                                "operator" => "linked_with",
-                                "value"    => [$entity->get('extensibleEnumId')],
-                            ]
-                        ],
-                        "valid"     => true
-                    ]
-                ];
-            }
-
-            $data = $entity->get('data') ?? [];
-            if ($data instanceof \stdClass) {
-                $data = json_decode(json_encode($data), true);
-            }
-            $data['where'] = $where;
-
-            $entity->set('data', $data);
-        }
     }
 
     public function validateMinMax(Entity $entity): void

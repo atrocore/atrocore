@@ -13,18 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Atro\Core\Utils\Config;
+use Atro\Core\Routing\Route as RouteAttribute;
+use Atro\Core\Routing\RouteCompiler;
 use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer;
 use Atro\Core\Utils\Util;
-use Espo\ORM\EntityManager;
 
 class OpenApiGenerator
 {
-    private const HEADER_LANGUAGE_DESCRIPTION = "Set this parameter for data to be returned for a specified language";
-
-    private const TIMEZONE_DESCRIPTION = "Specify if you need to get dates in a certain time zone. By default, dates are returned in the UTC time zone.";
-
     private Container $container;
 
     public function __construct(Container $container)
@@ -40,30 +36,28 @@ class OpenApiGenerator
         return $result;
     }
 
+    public function getSchemaForHandler(RouteAttribute $routeAttr, string $entityName = ''): array
+    {
+        $result = $this->getBase();
+
+        foreach ($routeAttr->entities as $ent) {
+            $this->buildEntitySchema($result, $ent);
+        }
+
+        if ($entityName !== '') {
+            $this->buildEntitySchema($result, $entityName);
+        }
+
+        $this->pushHandlerRoute($result, $routeAttr, $entityName);
+
+        return $result;
+    }
+
     public function getFullSchema(): array
     {
         $result = $this->getBase();
 
-        foreach ($this->container->get('route')->getAll() as $route) {
-            $this->pushRoute($result, $route);
-        }
-
-        /** @var Config $config */
-        $config = $this->container->get('config');
-
-        $languageParam = null;
-        if (!empty($config->get('isMultilangActive')) && !empty($languages = $config->get('inputLanguageList', []))) {
-            $languageParam = [
-                "name"        => "language",
-                "in"          => "header",
-                "required"    => false,
-                "description" => self::HEADER_LANGUAGE_DESCRIPTION,
-                "schema"      => [
-                    "type" => "string",
-                    "enum" => $languages,
-                ],
-            ];
-        }
+        $this->pushCompiledRoutes($result);
 
         foreach ($this->getMetadata()->get(['entityDefs'], []) as $entityName => $data) {
             $scopeData = $this->getMetadata()->get(['scopes', $entityName]);
@@ -72,908 +66,10 @@ class OpenApiGenerator
                 continue;
             }
 
-            $result['components']['schemas'][$entityName] = [
-                'type'       => 'object',
-                'properties' => [
-                    'id'    => ['type' => 'string'],
-                    '_meta' => ['type' => 'object'],
-                ],
-            ];
-
-            foreach ($data['fields'] as $fieldName => $fieldData) {
-                if ($fieldName === '_meta') {
-                    continue;
-                }
-
-                $this->getFieldSchema($result, $entityName, $fieldName, $fieldData);
-            }
-
-            $schemas[$entityName] = $result['components']['schemas'][$entityName];
+            $this->buildEntitySchema($result, $entityName);
         }
-
-        foreach ($this->getMetadata()->get(['scopes'], []) as $scopeName => $scopeData) {
-            if (!isset($result['components']['schemas'][$scopeName])) {
-                continue 1;
-            }
-
-            if (empty(ControllerManager::getControllerClassName($scopeName, $this->getMetadata()))) {
-                continue 1;
-            }
-
-            $clientDefs = $this->getMetadata()->get(['clientDefs', $scopeName]);
-            $entityDefs = $this->getMetadata()->get(['entityDefs', $scopeName]);
-
-            $result['tags'][] = ['name' => $scopeName];
-
-            // prepare schema data
-            $schema = null;
-            if (isset($schemas[$scopeName])) {
-                $schema = $schemas[$scopeName];
-                unset($schema['properties']['deleted']);
-
-                foreach ($schema['properties'] as $k => $v) {
-                    if (
-                        substr($k, 0, 1) === '_'
-                        || $k === 'createdAt'
-                        || $k === 'modifiedAt'
-                        || $k === 'createdById'
-                        || !empty($v['forRead'])
-                    ) {
-                        unset($schema['properties'][$k]);
-                    }
-                }
-            }
-
-            $result['paths']["/{$scopeName}"]['get'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Returns a collection of $scopeName records",
-                "description" => "Returns a collection of $scopeName records",
-                "operationId" => "getListOf{$scopeName}Items",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"        => "timezone",
-                        "in"          => "query",
-                        "required"    => false,
-                        "description" => self::TIMEZONE_DESCRIPTION,
-                        "schema"      => [
-                            "type"    => "string",
-                            "example" => "Europe/Berlin"
-                        ]
-                    ],
-                    [
-                        "name"        => "select",
-                        "in"          => "query",
-                        "required"    => false,
-                        "description" => "Fields according to $scopeName metadata. For example: id, name, createdAt, ...",
-                        "schema"      => [
-                            "type"    => "string",
-                            "example" => "name,createdAt"
-                        ]
-                    ],
-                    [
-                        "name"        => "where",
-                        "in"          => "query",
-                        "required"    => false,
-                        "description" => "There are a lot of filter types supported. You can learn all of them if you trace what's requested by Atro UI in the network tab in your browser console (press F12 key to open the console).",
-                        "content"     => [
-                            "application/json" => [
-                                "schema" => [
-                                    "type"    => "array",
-                                    "items"   => [
-                                        "type" => "object",
-                                    ],
-                                    'example' => [
-                                        [
-                                            'type'  => 'or',
-                                            'value' => [
-                                                ['type' => 'like', 'attribute' => 'name', 'value' => '%find-me-1%'],
-                                                ['type' => 'equals', 'attribute' => 'name', 'value' => 'find-me-2']
-                                            ]
-                                        ]
-                                    ]
-                                ],
-                            ],
-                        ],
-                    ],
-                    [
-                        "name"     => "offset",
-                        "in"       => "query",
-                        "required" => false,
-                        "schema"   => [
-                            "type"    => "integer",
-                            "example" => 0
-                        ]
-                    ],
-                    [
-                        "name"     => "maxSize",
-                        "in"       => "query",
-                        "required" => false,
-                        "schema"   => [
-                            "type"    => "integer",
-                            "example" => 50
-                        ]
-                    ],
-                    [
-                        "name"     => "sortBy",
-                        "in"       => "query",
-                        "required" => false,
-                        "schema"   => [
-                            "type"    => "string",
-                            "example" => "name"
-                        ]
-                    ],
-                    [
-                        "name"     => "asc",
-                        "in"       => "query",
-                        "required" => false,
-                        "schema"   => [
-                            "type"    => "boolean",
-                            "example" => "true"
-                        ]
-                    ],
-                ],
-                "responses"   => self::prepareResponses([
-                    "type"       => "object",
-                    "properties" => [
-                        "total" => [
-                            "type" => "integer"
-                        ],
-                        "list"  => [
-                            "type"  => "array",
-                            "items" => [
-                                '$ref' => "#/components/schemas/$scopeName"
-                            ]
-                        ],
-                    ]
-                ]),
-            ];
-
-            if (!empty($languageParam)) {
-                $result['paths']["/{$scopeName}"]['get']['parameters'][] = $languageParam;
-            }
-
-            $result['paths']["/{$scopeName}"]['get']['parameters'][] = [
-                "name"        => "With-Meta",
-                "in"          => "header",
-                "required"    => false,
-                "description" => "When true, _meta will be added to the response.",
-                "schema"      => [
-                    "type"    => "boolean",
-                    "example" => "false"
-                ]
-            ];
-
-            $result['paths']["/{$scopeName}/{id}"]['get'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Returns a record of the $scopeName",
-                "description" => "Returns a record of the $scopeName",
-                "operationId" => "get{$scopeName}Item",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"        => "timezone",
-                        "in"          => "query",
-                        "required"    => false,
-                        "description" => self::TIMEZONE_DESCRIPTION,
-                        "schema"      => [
-                            "type"    => "string",
-                            "example" => "Europe/Berlin"
-                        ]
-                    ],
-                    [
-                        "name"     => "id",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                    [
-                        "name"        => "With-Meta",
-                        "in"          => "header",
-                        "required"    => false,
-                        "description" => "When true, _meta will be added to the response.",
-                        "schema"      => [
-                            "type"    => "boolean",
-                            "example" => "false"
-                        ]
-                    ]
-                ],
-                "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
-            ];
-
-            if (!empty($languageParam)) {
-                $result['paths']["/{$scopeName}/{id}"]['get']['parameters'][] = $languageParam;
-            }
-
-            if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive' && $scopeName !== 'MatchedRecord') {
-                if (empty($clientDefs['createDisabled'])) {
-                    $result['paths']["/{$scopeName}"]['post'] = [
-                        'tags'        => [$scopeName],
-                        "summary"     => "Create a record of the $scopeName",
-                        "description" => "Create a record of the $scopeName",
-                        "operationId" => "create{$scopeName}Item",
-                        'security'    => [['Authorization-Token' => []]],
-                        'requestBody' => [
-                            'required' => true,
-                            'content'  => [
-                                'application/json' => [
-                                    'schema' => $schema,
-                                ],
-                            ],
-                        ],
-                        "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
-                    ];
-                }
-
-                $putSchema = $schema;
-                unset($putSchema['properties']['id']);
-
-                $result['paths']["/{$scopeName}/{id}"]['put'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Update a record of the $scopeName",
-                    "description" => "Update a record of the $scopeName",
-                    "operationId" => "update{$scopeName}Item",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string",
-                            ],
-                        ],
-                    ],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => $putSchema,
-                            ],
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
-                ];
-
-                if (!in_array($scopeName, ['Matching', 'MasterDataEntity'])) {
-                    $result['paths']["/{$scopeName}/{id}"]['delete'] = [
-                        'tags'        => [$scopeName],
-                        "summary"     => "Delete a record of the $scopeName",
-                        "description" => "Delete a record of the $scopeName",
-                        "operationId" => "delete{$scopeName}Item",
-                        'security'    => [['Authorization-Token' => []]],
-                        'parameters'  => [
-                            [
-                                "name"     => "id",
-                                "in"       => "path",
-                                "required" => true,
-                                "schema"   => [
-                                    "type" => "string",
-                                ],
-                            ],
-                            [
-                                "name"        => "permanently",
-                                "in"          => "header",
-                                "required"    => false,
-                                "description" => "Set to TRUE if you want to delete the record permanently",
-                                "schema"      => [
-                                    "type"    => "boolean",
-                                    "example" => false,
-                                ],
-                            ],
-                        ],
-                        "responses"   => self::prepareResponses(['type' => 'boolean']),
-                    ];
-                }
-            }
-
-            if (!empty($scopeData['type']) && !in_array($scopeData['type'], ['ReferenceData', 'Archive']) && $scopeName !== 'MatchedRecord') {
-                $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Returns linked entities for the $scopeName",
-                    "description" => "Returns linked entities for the $scopeName",
-                    "operationId" => "getLinkedItemsFor{$scopeName}Item",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"        => "timezone",
-                            "in"          => "query",
-                            "required"    => false,
-                            "description" => self::TIMEZONE_DESCRIPTION,
-                            "schema"      => [
-                                "type"    => "string",
-                                "example" => "Europe/Berlin"
-                            ]
-                        ],
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ],
-                        [
-                            "name"     => "link",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses([
-                        "type"       => "object",
-                        "properties" => [
-                            "total" => [
-                                "type" => "integer"
-                            ],
-                            "list"  => [
-                                "type"  => "array",
-                                "items" => [
-                                    "type" => "object"
-                                ]
-                            ],
-                        ]
-                    ]),
-                ];
-
-                if (!empty($languageParam)) {
-                    $result['paths']["/{$scopeName}/{id}/{link}"]['get']['parameters'][] = $languageParam;
-                }
-
-                $result['paths']["/{$scopeName}/action/massUpdate"]['put'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Mass update of $scopeName data",
-                    "description" => "Mass update of $scopeName data",
-                    "operationId" => "massUpdate{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => [
-                                    "type"       => "object",
-                                    "properties" => [
-                                        "attributes" => [
-                                            "type"    => "object",
-                                            'example' => ['name' => 'New name', 'description' => 'New description']
-                                        ],
-                                        "ids"        => [
-                                            "type"    => "array",
-                                            "items"   => [
-                                                "type" => "string"
-                                            ],
-                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                        ],
-                                    ],
-                                ]
-                            ]
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean'])
-                ];
-
-                if (!empty($scopeData['hasAttribute'])) {
-                    $result['paths']["/{$scopeName}/{id}/attributeValues"]['get'] = [
-                        'tags'        => [$scopeName],
-                        "summary"     => "Get attribute values for a $scopeName record",
-                        "description" => "Returns all attribute values assigned to a $scopeName record",
-                        "operationId" => "get{$scopeName}AttributeValues",
-                        'security'    => [['Authorization-Token' => []]],
-                        'parameters'  => [
-                            [
-                                'name'     => 'id',
-                                'in'       => 'path',
-                                'required' => true,
-                                'schema'   => ['type' => 'string'],
-                                'example'  => '613219736ca7a1c68'
-                            ]
-                        ],
-                        "responses"   => self::prepareResponses([
-                            'type'  => 'array',
-                            "items" => [
-                                "type"       => "object",
-                                'properties' => [
-                                    'attributeId'      => ['type' => 'string'],
-                                    'type'             => ['type' => 'string'],
-                                    'required'         => ['type' => 'boolean'],
-                                    'visible'          => ['type' => 'boolean'],
-                                    'readOnly'         => ['type' => 'boolean'],
-                                    'protected'        => ['type' => 'boolean'],
-                                    'value'            => ['nullable' => true, 'example' => null],
-                                    'valueName'        => ['type' => 'string', 'nullable' => true],
-                                    'valueUnitId'      => ['type' => 'string', 'nullable' => true],
-                                    'valueUnitName'    => ['type' => 'string', 'nullable' => true],
-                                    'valueId'          => ['type' => 'string', 'nullable' => true],
-                                    'valueIds'         => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
-                                    'valueNames'       => ['type' => 'object', 'nullable' => true],
-                                    'valueOptionsData' => ['type' => 'object', 'nullable' => true],
-                                    'valueOptionData'  => ['type' => 'object', 'nullable' => true],
-                                    'valuePathsData'   => ['type' => 'object', 'nullable' => true],
-                                    'valueUnitData'    => ['type' => 'object', 'nullable' => true],
-                                    'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
-                                    'valueFrom'        => ['nullable' => true, 'example' => 1],
-                                    'valueTo'          => ['nullable' => true, 'example' => 2],
-                                ]
-                            ]
-                        ])
-                    ];
-
-                    $result['paths']["/{$scopeName}/{id}/addAttributes"]['post'] = [
-                        'tags'        => [$scopeName],
-                        "summary"     => "Add attributes to a $scopeName record",
-                        "description" => "Assigns one or more attributes to a $scopeName record without setting values",
-                        "operationId" => "add{$scopeName}Attributes",
-                        'security'    => [['Authorization-Token' => []]],
-                        'parameters'  => [
-                            [
-                                'name'     => 'id',
-                                'in'       => 'path',
-                                'required' => true,
-                                'schema'   => ['type' => 'string'],
-                                'example'  => '613219736ca7a1c68'
-                            ]
-                        ],
-                        'requestBody' => [
-                            'required' => true,
-                            'content'  => [
-                                'application/json' => [
-                                    'schema' => [
-                                        'type'       => 'object',
-                                        'properties' => [
-                                            'attributeIds' => [
-                                                'type'    => 'array',
-                                                'items'   => ['type' => 'string'],
-                                                'example' => ['613219736ca7a1c68', '6132197390d69afa5']
-                                            ]
-                                        ],
-                                        'required'   => ['attributeIds']
-                                    ]
-                                ]
-                            ]
-                        ],
-                        "responses"   => self::prepareResponses(['type' => 'boolean'])
-                    ];
-
-                    $result['paths']["/{$scopeName}/{id}/upsertAttributeValues"]['post'] = [
-                        'tags'        => [$scopeName],
-                        "summary"     => "Upsert attribute values for a $scopeName record",
-                        "description" => "Creates or updates attribute values for a $scopeName record. Only specified attributes are affected.",
-                        "operationId" => "upsert{$scopeName}AttributeValues",
-                        'security'    => [['Authorization-Token' => []]],
-                        'parameters'  => [
-                            [
-                                'name'     => 'id',
-                                'in'       => 'path',
-                                'required' => true,
-                                'schema'   => ['type' => 'string'],
-                                'example'  => '613219736ca7a1c68'
-                            ]
-                        ],
-                        'requestBody' => [
-                            'required' => true,
-                            'content'  => [
-                                'application/json' => [
-                                    'schema' => [
-                                        'type'  => 'array',
-                                        'items' => [
-                                            'type'       => 'object',
-                                            'properties' => [
-                                                'attributeId' => ['type' => 'string', 'example' => '613219736ca7a1c68'],
-                                                'value'       => ['nullable' => true, 'example' => 'Some text'],
-                                                'valueUnitId' => ['type' => 'string', 'nullable' => true, 'example' => 'usd'],
-                                            ],
-                                            'required'   => ['attributeId']
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        "responses"   => self::prepareResponses(['type' => 'boolean'])
-                    ];
-
-                    $result['paths']["/{$scopeName}/{id}/attributeValues"]['delete'] = [
-                        'tags'        => [$scopeName],
-                        "summary"     => "Delete attribute values from a $scopeName record",
-                        "description" => "Removes one or more attribute assignments from a $scopeName record",
-                        "operationId" => "delete{$scopeName}AttributeValues",
-                        'security'    => [['Authorization-Token' => []]],
-                        'parameters'  => [
-                            [
-                                'name'     => 'id',
-                                'in'       => 'path',
-                                'required' => true,
-                                'schema'   => ['type' => 'string'],
-                                'example'  => '613219736ca7a1c68'
-                            ]
-                        ],
-                        'requestBody' => [
-                            'required' => true,
-                            'content'  => [
-                                'application/json' => [
-                                    'schema' => [
-                                        'type'       => 'object',
-                                        'properties' => [
-                                            'attributeIds' => [
-                                                'type'    => 'array',
-                                                'items'   => ['type' => 'string'],
-                                                'example' => ['613219736ca7a1c68', '6132197390d69afa5']
-                                            ]
-                                        ],
-                                        'required'   => ['attributeIds']
-                                    ]
-                                ]
-                            ]
-                        ],
-                        "responses"   => self::prepareResponses([
-                            'type'       => 'object',
-                            'properties' => [
-                                'count'  => ['type' => 'integer'],
-                                'errors' => ['type' => 'array', 'items' => ['type' => 'string']]
-                            ]
-                        ])
-                    ];
-
-                    $result['paths']["/{$scopeName}/action/massRemoveAttribute"]['post'] = [
-                        'tags'        => [$scopeName],
-                        "summary"     => "Mass remove attribute on $scopeName record",
-                        "description" => "Mass remove attribute on $scopeName record",
-                        "operationId" => "massRemove{$scopeName}Attribute",
-                        'security'    => [['Authorization-Token' => []]],
-                        'requestBody' => [
-                            'required' => true,
-                            'content'  => [
-                                'application/json' => [
-                                    'schema' => [
-                                        "type"       => "object",
-                                        "properties" => [
-                                            "attributes" => [
-                                                "type"       => "object",
-                                                "properties" => [
-                                                    "ids" => [
-                                                        "type"    => "array",
-                                                        "items"   => ["type" => "string"],
-                                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                                    ]
-                                                ]
-                                            ],
-                                            "ids"        => [
-                                                "type"    => "array",
-                                                "items"   => ["type" => "string"],
-                                                'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                            ],
-                                        ],
-                                    ]
-                                ]
-                            ],
-                        ],
-                        "responses"   => self::prepareResponses(['type' => 'object'])
-                    ];
-                }
-
-                $result['paths']["/{$scopeName}/action/massDelete"]['post'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Mass delete of $scopeName data",
-                    "description" => "Mass delete of $scopeName data",
-                    "operationId" => "massDelete{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => [
-                                    "type"       => "object",
-                                    "properties" => [
-                                        "ids"         => [
-                                            "type"    => "array",
-                                            "items"   => [
-                                                "type" => "string"
-                                            ],
-                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                        ],
-                                        "permanently" => [
-                                            "type"    => "boolean",
-                                            'example' => false
-                                        ],
-                                    ],
-                                ]
-                            ]
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean'])
-                ];
-
-                $result['paths']["/{$scopeName}/{id}/{link}"]['post'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Link $scopeName to Entities",
-                    "description" => "Link $scopeName to Entities",
-                    "operationId" => "link{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ],
-                        [
-                            "name"     => "link",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ],
-                    ],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => [
-                                    "type"       => "object",
-                                    "properties" => [
-                                        "ids" => [
-                                            "type"    => "array",
-                                            "items"   => [
-                                                "type" => "string"
-                                            ],
-                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                        ],
-                                    ],
-                                ]
-                            ]
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean'])
-                ];
-
-                $result['paths']["/{$scopeName}/{id}/{link}"]['delete'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Unlink $scopeName from Entities",
-                    "description" => "Unlink $scopeName from Entities",
-                    "operationId" => "unlink{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ],
-                        [
-                            "name"     => "link",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ],
-                        [
-                            "name"     => "ids",
-                            "in"       => "query",
-                            "required" => true,
-                            "explode"  => false,
-                            "schema"   => [
-                                "type"  => "array",
-                                "items" => [
-                                    "type" => "string"
-                                ]
-                            ]
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean'])
-                ];
-
-                $result['paths']["/{$scopeName}/{link}/relation"]['post'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Add relation for $scopeName",
-                    "description" => "Add relation for $scopeName",
-                    "operationId" => "addRelationFor{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "link",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ]
-                    ],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => [
-                                    "type"       => "object",
-                                    "properties" => [
-                                        "ids"        => [
-                                            "type"    => "array",
-                                            "items"   => [
-                                                "type" => "string"
-                                            ],
-                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                        ],
-                                        "foreignIds" => [
-                                            "type"    => "array",
-                                            "items"   => [
-                                                "type" => "string"
-                                            ],
-                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                        ],
-                                    ],
-                                ]
-                            ]
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean'])
-                ];
-
-                $result['paths']["/{$scopeName}/{link}/relation"]['delete'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Remove relation for $scopeName",
-                    "description" => "Remove relation for $scopeName",
-                    "operationId" => "removeRelationFor{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "link",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ]
-                    ],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => [
-                                    "type"       => "object",
-                                    "properties" => [
-                                        "ids"        => [
-                                            "type"    => "array",
-                                            "items"   => [
-                                                "type" => "string"
-                                            ],
-                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                        ],
-                                        "foreignIds" => [
-                                            "type"    => "array",
-                                            "items"   => [
-                                                "type" => "string"
-                                            ],
-                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                        ],
-                                    ],
-                                ]
-                            ]
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean'])
-                ];
-
-                if (empty($this->getMetadata()->get("scopes.$scopeName.streamDisabled"))) {
-                    $result['paths']["/{$scopeName}/{id}/subscription"]['put'] = [
-                        'tags'        => [$scopeName],
-                        "summary"     => "Follow the $scopeName stream",
-                        "description" => "Follow the $scopeName stream",
-                        "operationId" => "follow{$scopeName}",
-                        'security'    => [['Authorization-Token' => []]],
-                        'parameters'  => [
-                            [
-                                "name"     => "id",
-                                "in"       => "path",
-                                "required" => true,
-                                "schema"   => [
-                                    "type" => "string",
-                                ],
-                            ],
-                        ],
-                        "responses"   => self::prepareResponses([
-                            "type"       => "object",
-                            "properties" => [
-                                "message" => [
-                                    "type" => "string",
-                                ],
-                            ],
-                        ]),
-                    ];
-
-                    $result['paths']["/{$scopeName}/{id}/subscription"]['delete'] = [
-                        'tags'        => [$scopeName],
-                        "summary"     => "Unfollow the $scopeName stream",
-                        "description" => "Unfollow the $scopeName stream",
-                        "operationId" => "unfollow{$scopeName}",
-                        'security'    => [['Authorization-Token' => []]],
-                        'parameters'  => [
-                            [
-                                "name"     => "id",
-                                "in"       => "path",
-                                "required" => true,
-                                "schema"   => [
-                                    "type" => "string",
-                                ],
-                            ],
-                        ],
-                        "responses"   => self::prepareResponses(['type' => 'boolean']),
-                    ];
-                }
-            }
-        }
-
-        $this->pushComposerActions($result, $schemas);
-        $this->pushDashletActions($result, $schemas);
-
-        $this->prepareUserProfileDocs($result, $schemas);
-
-        unset($result['paths']["/ActionLog"]['post']);
-
-        $this->pushSettingsActions($result, $schemas);
-        $this->pushFileActions($result, $schemas);
-
-        foreach ($this->container->get('moduleManager')->getModules() as $module) {
-            $module->prepareApiDocs($result, $schemas);
-        }
-
-        $this->removeForRead($result);
-
-        $this->pushUpdateMasterRecordAction($result);
 
         return $result;
-    }
-
-    protected function pushUpdateMasterRecordAction(array &$array): void
-    {
-        foreach ($this->getMetadata()->get(['scopes'], []) as $scopeName => $scopeData) {
-            if (!empty($scopeData['primaryEntityId'])) {
-                $array['paths']["/{$scopeName}/action/updateMasterRecord"]['post'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Update Master Record from $scopeName Staging",
-                    "description" => "Update Master Record from $scopeName Staging",
-                    "operationId" => "updateMasterRecordFrom{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => [
-                                    "type"       => "object",
-                                    "properties" => [
-                                        'id' => [
-                                            'type'    => 'string',
-                                            'example' => '019c1da3-1b14-7339-84c1-ca38ae4719d7'
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean'])
-                ];
-            }
-        }
-    }
-
-    protected function removeForRead(array &$array): void
-    {
-        foreach ($array as $key => &$value) {
-            if (is_array($value)) {
-                $this->removeForRead($value);
-            }
-
-            if ($key === 'forRead') {
-                unset($array[$key]);
-            }
-        }
     }
 
     public static function prepareResponses(array $success): array
@@ -1008,361 +104,105 @@ class OpenApiGenerator
         ];
     }
 
-    protected function pushComposerActions(array &$result, array $schemas): void
+    public static function prepareRouteResponses(array $responseSchema): array
     {
-        $result['tags'][] = ['name' => 'Composer'];
-
-        $result['paths']["/Composer/runUpdate"]['post'] = [
-            'tags'        => ['Composer'],
-            "summary"     => "Run update",
-            "description" => "Run update",
-            "operationId" => "runUpdateComposer",
-            'security'    => [['Authorization-Token' => []]],
-            "responses"   => self::prepareResponses(['type' => 'boolean'])
-        ];
-
-        $result['paths']["/Composer/cancelUpdate"]['delete'] = [
-            'tags'        => ['Composer'],
-            "summary"     => "Cancel changes",
-            "description" => "Cancel changes",
-            "operationId" => "cancelUpdateComposer",
-            'security'    => [['Authorization-Token' => []]],
-            "responses"   => self::prepareResponses(['type' => 'boolean'])
-        ];
-
-        $result['paths']["/Composer/list"]['get'] = [
-            'tags'        => ['Composer'],
-            "summary"     => "Get installed modules",
-            "description" => "Get installed modules",
-            "operationId" => "getInstalledModules",
-            'security'    => [['Authorization-Token' => []]],
-            'parameters'  => [
-                [
-                    "name"     => "select",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "string",
-                        "example" => "name,createdAt"
-                    ]
-                ],
-                [
-                    "name"     => "offset",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "integer",
-                        "example" => 0
-                    ]
-                ],
-                [
-                    "name"     => "maxSize",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "integer",
-                        "example" => 50
-                    ]
-                ],
-                [
-                    "name"     => "sortBy",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "string",
-                        "example" => "name"
-                    ]
-                ],
-                [
-                    "name"     => "asc",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "boolean",
-                        "example" => "true"
-                    ]
-                ],
-            ],
-            "responses"   => self::prepareResponses([
-                "type"       => "object",
-                "properties" => [
-                    "total" => [
-                        "type" => "integer"
-                    ],
-                    "list"  => [
-                        "type"  => "array",
-                        "items" => [
-                            "type"       => "object",
-                            "properties" => [
-                                "id"             => ["type" => "string"],
-                                "description"    => ["type" => "string"],
-                                "currentVersion" => ["type" => "string"],
-                                "status"         => ["type" => "string"],
-                                "isSystem"       => ["type" => "boolean"],
-                                "isComposer"     => ["type" => "boolean"],
-                            ]
-                        ]
-                    ],
-                ]
-            ]),
-        ];
-
-        $result['paths']["/Composer/installModule"]['post'] = [
-            'tags'        => ['Composer'],
-            "summary"     => "Install module",
-            "description" => "Install module",
-            "operationId" => "installModule",
-            'security'    => [['Authorization-Token' => []]],
-            'requestBody' => [
-                'required' => true,
-                'content'  => [
-                    'application/json' => [
-                        'schema' => [
-                            "type"       => "object",
-                            "properties" => [
-                                "id" => [
-                                    "type" => "string",
-                                ],
-                            ],
-                        ]
-                    ]
-                ],
-            ],
-            "responses"   => self::prepareResponses(['type' => 'boolean'])
-        ];
-
-        $result['paths']["/Composer/deleteModule"]['delete'] = [
-            'tags'        => ['Composer'],
-            "summary"     => "Delete module",
-            "description" => "Delete module",
-            "operationId" => "deleteModule",
-            'security'    => [['Authorization-Token' => []]],
-            'parameters'  => [
-                [
-                    "name"     => "id",
-                    "in"       => "query",
-                    "required" => true,
-                    "schema"   => [
-                        "type" => "string"
-                    ]
-                ],
-            ],
-            "responses"   => self::prepareResponses(['type' => 'boolean'])
-        ];
-
-        $result['paths']["/Composer/cancel"]['post'] = [
-            'tags'        => ['Composer'],
-            "summary"     => "Cancel module changes",
-            "description" => "Cancel module changes",
-            "operationId" => "cancelModule",
-            'security'    => [['Authorization-Token' => []]],
-            'requestBody' => [
-                'required' => true,
-                'content'  => [
-                    'application/json' => [
-                        'schema' => [
-                            "type"       => "object",
-                            "properties" => [
-                                "id" => [
-                                    "type" => "string",
-                                ],
-                            ],
-                        ]
-                    ]
-                ],
-            ],
-            "responses"   => self::prepareResponses(['type' => 'boolean'])
-        ];
-
-        $result['paths']["/Composer/logs"]['get'] = [
-            'tags'        => ['Composer'],
-            "summary"     => "Get updates logs",
-            "description" => "Get updates logs",
-            "operationId" => "getModulesLogs",
-            'security'    => [['Authorization-Token' => []]],
-            'parameters'  => [
-                [
-                    "name"     => "select",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "string",
-                        "example" => "name,createdAt"
-                    ]
-                ],
-                [
-                    "name"     => "offset",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "integer",
-                        "example" => 0
-                    ]
-                ],
-                [
-                    "name"     => "maxSize",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "integer",
-                        "example" => 50
-                    ]
-                ],
-                [
-                    "name"     => "sortBy",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "string",
-                        "example" => "name"
-                    ]
-                ],
-                [
-                    "name"     => "asc",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "boolean",
-                        "example" => "true"
-                    ]
-                ],
-            ],
-            "responses"   => self::prepareResponses([
-                "type"       => "object",
-                "properties" => [
-                    "total" => [
-                        "type" => "integer"
-                    ],
-                    "list"  => [
-                        "type"  => "array",
-                        "items" => $schemas['Note']
-                    ],
-                ]
-            ]),
-        ];
+        $responses = self::prepareResponses($responseSchema);
+        // Plain-text responses are sent with Content-Type: application/json by the framework,
+        // but the body is not JSON-encoded. Remove the content schema so the validator
+        // does not attempt JSON parsing on the body.
+        if (($responseSchema['type'] ?? '') === 'string') {
+            unset($responses['200']['content']);
+        }
+        return $responses;
     }
 
-    protected function pushDashletActions(array &$result, array $schemas): void
+    protected function buildEntitySchema(array &$result, string $entityName): void
     {
-        $result['tags'][] = ['name' => 'Dashlet'];
-
-        $result['paths']["/Dashlet/{dashletName}"]['get'] = [
-            'tags'        => ['Dashlet'],
-            "summary"     => "Get Dashlet data",
-            "description" => "Get Dashlet data",
-            "operationId" => "getDashletData",
-            'security'    => [['Authorization-Token' => []]],
-            'parameters'  => [
-                [
-                    "name"     => "dashletName",
-                    "in"       => "path",
-                    "required" => true,
-                    "schema"   => [
-                        "type" => "string"
-                    ]
-                ]
-            ],
-            "responses"   => self::prepareResponses([
-                "type"       => "object",
-                "properties" => [
-                    "total" => [
-                        "type" => "integer"
-                    ],
-                    "list"  => [
-                        "type"  => "array",
-                        "items" => [
-                            "type" => "object"
-                        ]
-                    ],
-                ]
-            ]),
-        ];
-    }
-
-    protected function prepareUserProfileDocs(array &$result, array $schemas): void
-    {
-        unset($result['paths']["/UserProfile"]['get']);
-        unset($result['paths']["/UserProfile"]['post']);
-        unset($result['paths']["/UserProfile/{id}"]['delete']);
-        unset($result['paths']["/UserProfile/action/massUpdate"]['put']);
-        unset($result['paths']["/UserProfile/action/massDelete"]['post']);
-        unset($result['paths']["/UserProfile/{link}/relation"]['post']);
-        unset($result['paths']["/UserProfile/{link}/relation"]['delete']);
-        unset($result['paths']["/UserProfile/{id}/subscription"]['put']);
-        unset($result['paths']["/UserProfile/{id}/subscription"]['delete']);
-    }
-
-    protected function pushSettingsActions(array &$result, array $schemas): void
-    {
-        $result['tags'][] = ['name' => 'Settings'];
-
-        foreach ($this->getMetadata()->get(['entityDefs', 'Settings', 'fields']) as $fieldName => $fieldData) {
-            $this->getFieldSchema($result, 'Settings', $fieldName, $fieldData);
+        if (isset($result['components']['schemas'][$entityName])) {
+            return;
         }
 
-        $result['paths']['/Settings']['get'] = [
-            'tags'        => ['Settings'],
-            'in'          => 'body',
-            'required'    => true,
-            'summary'     => 'Returns a record of Settings',
-            'description' => 'Returns a record of Settings',
-            'responses'   => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
+        $data = $this->getMetadata()->get(['entityDefs', $entityName]);
+
+        if (empty($data['fields'])) {
+            return;
+        }
+
+        $result['components']['schemas'][$entityName] = [
+            'type'       => 'object',
+            'properties' => [
+                'id'    => ['type' => 'string', 'readOnly' => true],
+                '_meta' => ['type' => 'object', 'readOnly' => true],
+            ],
         ];
 
-        $result['paths']['/Settings']['patch'] = [
-            'tags'        => ['Settings'],
-            'in'          => 'body',
-            'required'    => true,
-            'summary'     => 'Update a record of Settings',
-            'description' => 'Update a record of Settings',
-            'requestBody' => [
-                'required' => true,
-                'content'  => [
-                    'application/json' => [
-                        'schema' => $result['components']['schemas']['Settings']
-                    ]
-                ],
-            ],
-            'responses'   => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
-        ];
+        foreach ($data['fields'] as $fieldName => $fieldData) {
+            if ($fieldName === '_meta') {
+                continue;
+            }
+
+            $this->getFieldSchema($result, $entityName, $fieldName, $fieldData);
+        }
+
+        // Mark all non-required typed properties as nullable so the response validator
+        // accepts null values for optional fields (which the API commonly returns).
+        // Also mark protected and forRead fields as readOnly, then remove the internal
+        // forRead marker so it doesn't leak into the OpenAPI output.
+        $required = $result['components']['schemas'][$entityName]['required'] ?? [];
+        foreach ($result['components']['schemas'][$entityName]['properties'] as $prop => &$propSchema) {
+            if (!in_array($prop, $required, true) && isset($propSchema['type'])) {
+                $propSchema['nullable'] = true;
+            }
+
+            // forRead can be set either on the metadata field itself or on the property
+            // by getFieldSchema (e.g. {field}Name, {field}Names derived properties).
+            $fieldData = $data['fields'][$prop] ?? [];
+            if (!empty($fieldData['protected']) || !empty($fieldData['forRead']) || !empty($propSchema['forRead'])) {
+                $propSchema['readOnly'] = true;
+            }
+
+            unset($propSchema['forRead']);
+        }
+        unset($propSchema);
+
+        $this->buildEntityPostSchema($result, $entityName);
     }
 
-    protected function pushFileActions(array &$result, array $schemas): void
+    private function buildEntityPostSchema(array &$result, string $entityName): void
     {
-        $response = self::prepareResponses([]);
-        $response['200']['content'] = [
-            "application/octet-stream" => [
-                'schema' => [
-                    'type'   => 'string',
-                    'format' => 'binary'
-                ]
-            ]
-        ];
+        $readProps    = $result['components']['schemas'][$entityName]['properties'];
+        $readRequired = $result['components']['schemas'][$entityName]['required'] ?? [];
 
-        $result['paths']['/File/action/upload-proxy']['post'] = [
-            'tags'        => ['File'],
-            'summary'     => 'Read file from URL',
-            'operationId' => 'uploadProxy',
-            'description' => 'Reading the contents of a file provided via a URL link',
-            'requestBody' => [
-                'required' => true,
-                'content'  => [
-                    'application/json' => [
-                        'schema' => [
-                            'type'       => 'object',
-                            'properties' => [
-                                'url' => [
-                                    'type'    => 'string',
-                                    'example' => 'https://your-website.com/image.png'
-                                ]
-                            ],
-                            'required'   => ['url']
-                        ]
-                    ]
-                ],
-            ],
-            'responses'   => $response
+        $excluded = ['_meta', 'deleted', 'createdAt', 'modifiedAt', 'createdById'];
+
+        $writeProps = [
+            'id' => ['type' => 'string', 'nullable' => true],
         ];
+        foreach ($readProps as $prop => $propSchema) {
+            if (in_array($prop, $excluded, true) || str_starts_with($prop, '_') || $prop === 'id') {
+                continue;
+            }
+            if (!empty($propSchema['readOnly'])) {
+                continue;
+            }
+            unset($propSchema['readOnly']);
+            $propSchema['nullable'] = true;
+            $writeProps[$prop] = $propSchema;
+        }
+
+        $writeRequired = array_values(array_filter($readRequired, fn($k) => isset($writeProps[$k])));
+
+        $schema = ['type' => 'object', 'properties' => $writeProps];
+        if (!empty($writeRequired)) {
+            $schema['required'] = $writeRequired;
+        }
+
+        $result['components']['schemas']["{$entityName}Post"] = $schema;
+
+        $patchSchema = $schema;
+        unset($patchSchema['required']);
+        unset($patchSchema['properties']['id']);
+        $result['components']['schemas']["{$entityName}Patch"] = $patchSchema;
     }
 
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
@@ -1527,9 +367,6 @@ class OpenApiGenerator
             'description'  => [
                 'type' => 'string'
             ],
-            'multilingual' => [
-                'type' => 'boolean'
-            ],
             'preparedName' => [
                 'type' => 'string'
             ]
@@ -1543,15 +380,19 @@ class OpenApiGenerator
             'info'       => [
                 'version'     => Composer::getCoreVersion(),
                 'title'       => 'AtroCore REST API documentation',
-                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>"
+                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).\n\nFor detailed information about authentication, request/response formats, pagination, filtering, and other important concepts, please refer to our [REST API Developer Guide](https://help.atrocore.com/latest/developer-guide/rest-api).",
+                'license'     => [
+                    'name' => 'GPLv3',
+                    'url'  => 'https://www.gnu.org/licenses/gpl-3.0.html',
+                ],
             ],
             'servers'    => [
                 [
-                    'url' => '/api/v1'
+                    'url' => '/api'
                 ]
             ],
             'tags'       => [
-                ['name' => 'App']
+                ['name' => 'Global', 'description' => 'System-wide actions and universal operations not bound to any specific entity.']
             ],
             'paths'      => [],
             'components' => [
@@ -1564,6 +405,11 @@ class OpenApiGenerator
                         'type' => 'apiKey',
                         'name' => 'Authorization-Token',
                         'in'   => 'header'
+                    ],
+                    'cookieAuth'          => [
+                        'type' => 'apiKey',
+                        'name' => 'auth-token',
+                        'in'   => 'cookie'
                     ]
                 ]
             ]
@@ -1579,11 +425,13 @@ class OpenApiGenerator
                 'summary'     => $route['summary'] ?? $route['description'],
                 'description' => $route['description'],
                 'operationId' => md5("{$routePath}_{$route['method']}"),
-                "responses"   => self::prepareResponses($route['response'])
+                "responses"   => self::prepareRouteResponses($route['response'])
             ];
 
             if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
-                $row['security'] = [['Authorization-Token' => []]];
+                $row['security'] = [['Authorization-Token' => []], ['basicAuth' => []], ['cookieAuth' => []]];
+            } else {
+                $row['security'] = [];
             }
             if (!empty($route['security'])) {
                 $row['security'] = $route['security'];
@@ -1599,13 +447,104 @@ class OpenApiGenerator
         }
     }
 
+    private function pushHandlerRoute(array &$result, RouteAttribute $routeAttr, string $entityName = ''): void
+    {
+        if (empty($routeAttr->responses)) {
+            return;
+        }
+
+        foreach ($routeAttr->entities as $ent) {
+            $this->buildEntitySchema($result, $ent);
+        }
+
+        $tag = $routeAttr->tag;
+
+        if (!in_array($tag, array_column($result['tags'], 'name'), true)) {
+            $result['tags'][] = ['name' => $tag, 'description' => "$tag endpoints."];
+        }
+
+        $responses = [];
+        foreach ($routeAttr->responses as $code => $response) {
+            $responses[(string) $code] = $response;
+        }
+
+        foreach (array_map('strtolower', (array) $routeAttr->methods) as $method) {
+            $row = [
+                'tags'        => [$tag],
+                'summary'     => $routeAttr->summary,
+                'description' => $routeAttr->description,
+                'operationId' => md5($routeAttr->path . '_' . $method),
+                'responses'   => $responses,
+                'security'    => $routeAttr->auth ? [['Authorization-Token' => []], ['basicAuth' => []], ['cookieAuth' => []]] : [],
+            ];
+
+            if (!empty($routeAttr->parameters)) {
+                $row['parameters'] = $routeAttr->parameters;
+            }
+
+            if (!empty($routeAttr->requestBody)) {
+                $requestBody = $routeAttr->requestBody;
+                if ($entityName !== '') {
+                    $requestBody = $this->substituteWriteSchemaRef($requestBody, $entityName);
+                }
+                $row['requestBody'] = $requestBody;
+            }
+
+            $result['paths'][$routeAttr->path][$method] = $row;
+        }
+    }
+
+    private function substituteWriteSchemaRef(array $data, string $entityName): array
+    {
+        foreach ($data as $key => $value) {
+            if ($key === 'schema' && $value === ['x-entity-post' => true]) {
+                $data[$key] = ['$ref' => "#/components/schemas/{$entityName}Post"];
+            } elseif ($key === 'schema' && $value === ['x-entity-patch' => true]) {
+                $data[$key] = ['$ref' => "#/components/schemas/{$entityName}Patch"];
+            } elseif (is_array($value)) {
+                $data[$key] = $this->substituteWriteSchemaRef($value, $entityName);
+            }
+        }
+        return $data;
+    }
+
+    private function pushCompiledRoutes(array &$result): void
+    {
+        $grouped = [];
+
+        foreach ($this->container->get(RouteCompiler::class)->getCompiledRoutes() as $entry) {
+            if (empty($entry['openapi'])) {
+                continue;
+            }
+            $tag = $entry['openapi']['tags'][0] ?? 'Global';
+            $grouped[$tag][] = $entry;
+        }
+
+        uksort($grouped, fn($a, $b) => $a === 'Global' ? -1 : ($b === 'Global' ? 1 : strcmp($a, $b)));
+
+        foreach ($grouped as $tag => $entries) {
+            usort($entries, fn($a, $b) => strcmp($a['path'], $b['path']));
+
+            if (!in_array($tag, array_column($result['tags'], 'name'), true)) {
+                $result['tags'][] = ['name' => $tag, 'description' => "$tag endpoints."];
+            }
+
+            foreach ($entries as $entry) {
+                foreach ($entry['schemaEntities'] as $entityName) {
+                    $this->buildEntitySchema($result, $entityName);
+                }
+
+                $path = substr($entry['path'], strlen('/api'));
+
+                foreach ($entry['methods'] as $method) {
+                    $result['paths'][$path][strtolower($method)] = $entry['openapi'];
+                }
+            }
+        }
+    }
+
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
-    }
-
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->container->get('entityManager');
     }
 }

@@ -37,6 +37,7 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
 
         setup() {
             Dep.prototype.setup.call(this);
+
             Varchar.prototype.prepareOriginalName.call(this);
 
             Varchar.prototype.afterSetup.call(this);
@@ -61,7 +62,7 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
         },
 
         data() {
-            return Varchar.prototype.prepareMeasureData.call(this, this.setDataWithOriginalName());
+            return  Varchar.prototype.prepareMeasureData.call(this, this.setDataWithOriginalName());
         },
 
         getAttributeList() {
@@ -103,6 +104,128 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
 
         getLockedFieldName() {
             return Varchar.prototype.getLockedFieldName.call(this);
+        },
+
+        filterInput(rule, inputName) {
+            const viewKey = inputName + this.type;
+            if (!rule || !inputName) {
+                return '';
+            }
+            if (!this.isNotListeningToOperatorChange) {
+                this.isNotListeningToOperatorChange = {};
+            }
+
+            if (!this.isNotListeningToOperatorChange[inputName]) {
+                this.listenTo(this.model, 'afterUpdateRuleOperator', (rule, previous) => {
+                    if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
+                        return;
+                    }
+                    rule.rightValue = null;
+                    rule.leftValue = null;
+
+                    let view = this.getView(viewKey);
+
+                    if (!['is_null', 'is_not_null'].includes(rule.operator.type)) {
+                        if (rule.operator.type !== 'between' && view) {
+                            this.filterValue = [view.model.get('value'), view.model.get('valueUnitId')];
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        }
+                    }
+
+                    this.previousOperatorType = rule.operator.type;
+                    this.isNotListeningToOperatorChange[inputName] = true;
+                })
+            }
+            let createValueField = (type) => this.getModelFactory().create(null, model => {
+                setTimeout(() => {
+                    this.previousOperatorType = type ?? rule.operator.type;
+                    let view = 'views/fields/unit-' + this.type;
+
+                    this.createView(viewKey, view, {
+                        name: 'value',
+                        el: `#${rule.id} .field-container.${inputName}`,
+                        model: model,
+                        mode: 'edit',
+                        params: {
+                            notNull: true,
+                            measureId: this.measureId || this.defs.params?.attribute?.measureId
+                        }
+                    }, view => {
+                        view.render();
+                        this.listenTo(model, 'change', () => {
+                            if(!rule.data) {
+                                rule.data = {}
+                            }
+                            rule.data.unitField = true;
+                            if (rule.operator.type === 'between') {
+                                let unitValue = [model.get('value'), model.get('valueUnitId')];
+                                if (inputName.endsWith('value_1')) {
+                                    rule.rightValue = unitValue;
+                                } else {
+                                    rule.leftValue = unitValue;
+                                }
+
+                                if (rule.rightValue != null && rule.leftValue != null) {
+                                    this.filterValue = [rule.leftValue, rule.rightValue];
+                                }
+                            } else {
+                                this.filterValue = [model.get('value'), model.get('valueUnitId')];
+                            }
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        });
+                        this.renderAfterEl(view, `#${rule.id} .field-container`);
+                    });
+                }, 50);
+                this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                    if (rule.operator.type === 'between' && Array.isArray(rule.value) && rule.value.length === 2) {
+                        let entry = inputName.endsWith('value_1') ? rule.value[1] : rule.value[0];
+                        rule.leftValue = rule.value[0];
+                        rule.rightValue = rule.value[1];
+                        if (Array.isArray(entry) && entry.length === 2) {
+                            model.set('value', entry[0]);
+                            model.set('valueUnitId', entry[1]);
+                        }
+                    } else if (Array.isArray(rule.value) && rule.value.length === 2) {
+                        model.set('value', rule.value[0]);
+                        model.set('valueUnitId', rule.value[1]);
+                    }
+                });
+            });
+
+            createValueField();
+
+            return `<div class="field-container ${inputName}"></div><input type="hidden" real-name="${viewKey}" name="${inputName}" />`;
+        },
+
+        queryBuilderValidation() {
+            return {
+                callback: function (value, rule) {
+                    if (rule.operator.type === 'between') {
+                        if (!Array.isArray(value) || value.length !== 2
+                            || !Array.isArray(value[0]) || value[0].length !== 2
+                            || !Array.isArray(value[1]) || value[1].length !== 2) {
+                            return 'bad between';
+                        }
+                        if (value[0][0] === null || value[0][0] === '' || !value[0][1]) {
+                            return 'bad value';
+                        }
+                        if (value[1][0] === null || value[1][0] === '' || !value[1][1]) {
+                            return 'bad value';
+                        }
+                        return true;
+                    }
+
+                    if (!Array.isArray(value) || value.length !== 2) {
+                        return 'bad value';
+                    }
+
+                    if (value[0] === null || value[0] === '' || !value[1]) {
+                        return 'bad value';
+                    }
+
+                    return true;
+                }.bind(this),
+            }
         }
 
     });

@@ -1,4 +1,9 @@
 {
+  "labels": {
+    "confirmedAutomatically": "Confirmed Automatically",
+    "selectTargetCluster": "Select Target Cluster",
+    "moveToCluster": "Move to Cluster"
+  },
   "fields": {
     "entityName": "Entity Name",
     "entityId": "Entity ID",
@@ -10,19 +15,30 @@
   },
   "actions": {
     "reject": "Reject",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "unmerge": "Unmerge",
+    "move": "Move"
   },
   "exceptions": {
     "notFound": "Cluster item record not found",
-    "cannotUnreject": "This cluster item cannot be unrejected"
+    "cannotUnreject": "This cluster item cannot be unrejected",
+    "itemsMustBelongToTheSameCluster": "All items must belong to the same cluster to unmerge together.",
+    "cannotUnmergeMasterEntityItem": "Cannot unmerge the master entity item.",
+    "idOrIdListOrWhereRequired": "Please provide at least one of: an ID, a list of IDs, or a search filter.",
+    "targetClusterIdRequired": "Target cluster is required."
   },
   "massActions": {
-    "reject": "Reject"
+    "reject": "Reject",
+    "unmerge": "Unmerge",
+    "move": "Move"
   },
   "massActionSuccessMessages": {
-    "reject": "The selected Cluster Items are been deleted in the background"
+    "reject": "The selected Cluster Items are been deleted in the background",
+    "unmerge": "The selected Cluster Items are unmerged",
+    "move": "The selected Cluster Items have been moved"
   },
   "massActionConfirmMessages": {
-    "reject": "Are you sure you want to reject the selected Items?"
+    "reject": "Are you sure you want to reject the selected Items?",
+    "unmerge": "Are you sure you want to unmerge the selected Items?"
   }
 }
