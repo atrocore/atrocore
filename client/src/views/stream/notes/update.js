@@ -190,36 +190,19 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         }
                     }
 
-                    if (modelWas.get(field + 'OptionData')) {
-                        modelWas.set('_meta', {
-                            options: {
-                                [field]: [modelWas.get(field + 'OptionData')]
-                            }
-                        });
+                     let options = [];
+
+                    if (model.get(field + 'OptionData')) {
+                        options.push(model.get(field + 'OptionData'));
                     }
 
-                    if (modelBecame.get(field + 'OptionData')) {
-                        modelBecame.set('_meta', {
-                            options: {
-                                [field]: [modelBecame.get(field + 'OptionData')]
-                            }
-                        });
+
+                    if (model.get(field + 'OptionsData')) {
+                        options.push(...model.get(field + 'OptionsData'));
                     }
 
-                    if (modelWas.get(field + 'OptionsData')) {
-                        modelWas.set('_meta', {
-                            options: {
-                                [field]: modelWas.get(field + 'OptionsData')
-                            }
-                        });
-                    }
-
-                    if (modelBecame.get(field + 'OptionsData')) {
-                        modelBecame.set('_meta', {
-                            options: {
-                                [field]: modelBecame.get(field + 'OptionsData')
-                            }
-                        });
+                    if(options.length) {
+                        params.linkOptions = options;
                     }
 
                     this.createView(field + 'Was', viewName, {
@@ -241,6 +224,21 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                             }
                         });
                     });
+
+                    options = [];
+
+                    if (modelBecame.get(field + 'OptionData')) {
+                        options.push(modelBecame.get(field + 'OptionData'));
+                    }
+
+
+                    if (modelBecame.get(field + 'OptionsData')) {
+                        options.push(...modelBecame.get(field + 'OptionsData'));
+                    }
+
+                    if(options.length) {
+                        params.linkOptions = options;
+                    }
 
                     this.createView(field + 'Became', viewName, {
                         el: this.options.el + ` [data-name="${field}"] .became`,
