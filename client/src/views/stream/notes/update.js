@@ -179,16 +179,49 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         });
                     }
 
-                    let viewName =  fieldDefs[field]['view'] || model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+                    let viewName = fieldDefs[field]['view'] || model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     for (const key in fieldDefs) {
-                       if(!modelWas.defs.fields[key]) {
-                           modelWas.defs.fields[key] = fieldDefs[key];
-                       }
+                        if (!modelWas.defs.fields[key]) {
+                            modelWas.defs.fields[key] = fieldDefs[key];
+                        }
 
-                       if(!modelBecame.defs.fields[key]) {
-                           modelBecame.defs.fields[key] = fieldDefs[key];
-                       }
+                        if (!modelBecame.defs.fields[key]) {
+                            modelBecame.defs.fields[key] = fieldDefs[key];
+                        }
                     }
+
+                    if (modelWas.get(field + 'OptionData')) {
+                        modelWas.set('_meta', {
+                            options: {
+                                [field]: [modelWas.get(field + 'OptionData')]
+                            }
+                        });
+                    }
+
+                    if (modelBecame.get(field + 'OptionData')) {
+                        modelBecame.set('_meta', {
+                            options: {
+                                [field]: [modelBecame.get(field + 'OptionData')]
+                            }
+                        });
+                    }
+
+                    if (modelWas.get(field + 'OptionsData')) {
+                       modelWas.set('_meta', {
+                            options: {
+                                [field]: modelWas.get(field + 'OptionsData')
+                            }
+                        });
+                    }
+
+                    if (modelBecame.get(field + 'OptionsData')) {
+                       modelBecame.set('_meta', {
+                            options: {
+                                [field]: modelBecame.get(field + 'OptionsData')
+                            }
+                        });
+                    }
+
                     this.createView(field + 'Was', viewName, {
                         el: this.options.el + ` [data-name="${field}"] .was`,
                         model: modelWas,

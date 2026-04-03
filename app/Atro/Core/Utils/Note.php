@@ -14,12 +14,11 @@ declare(strict_types=1);
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
+use Atro\Entities\User;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\EntityManager;
-use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\Services\Stream as StreamService;
-use Atro\Entities\User;
 
 class Note
 {
@@ -42,7 +41,7 @@ class Note
             $this->handleRelationEntity($entity, 'Relate');
         }
 
-        if ($this->streamEnabled($entity->getEntityType())) {
+        if ($this->streamEnabled($entity->getEntityName())) {
             $this->followEntity($entity);
 
             if (!$entity->isNew()) {
@@ -57,7 +56,7 @@ class Note
     {
         $this->handleRelationEntity($entity, 'Unrelate');
 
-        if ($this->streamEnabled($entity->getEntityType())) {
+        if ($this->streamEnabled($entity->getEntityName())) {
             $conn = $this->getEntityManager()->getConnection();
             $conn->createQueryBuilder()
                 ->update($conn->quoteIdentifier('note'))
@@ -65,7 +64,7 @@ class Note
                 ->where("parent_type = :entityType")
                 ->andWhere("parent_id = :entityId")
                 ->setParameter('entityId', $entity->id)
-                ->setParameter('entityType', $entity->getEntityType())
+                ->setParameter('entityType', $entity->getEntityName())
                 ->setParameter('deleted', true, ParameterType::BOOLEAN)
                 ->executeQuery();
         }
@@ -129,7 +128,7 @@ class Note
                 }
 
                 if ($item['fieldType'] === 'link') {
-                    $fieldDef = $this->getMetadata()->get("entityDefs.{$entity->getEntityType()}.fields.$field", []);
+                    $fieldDef = $entity->entityDefs['fields'][$field] ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.fields.$field", []);
                     if (!empty($fieldDef['entityNameField'])) {
                         $entityType = $entity->get($fieldDef['entityNameField']);
                         if ($entityType && $this->getEntityManager()->hasRepository($entityType)) {
@@ -149,7 +148,7 @@ class Note
                             }
                         }
                     } else {
-                        $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $field, 'entity']);
+                        $foreignEntity = $entity->entityDefs['fields'][$field]['entity'] ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', $field, 'entity']);
                         if (!empty($foreignEntity)) {
                             foreach (['was', 'became'] as $k) {
                                 $id = ${$k}[$field . 'Id'] ?? null;
@@ -161,8 +160,13 @@ class Note
                     }
                 }
 
-                if ($item['fieldType'] === 'linkMultiple') {
-                    $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $field, 'entity']);
+                $fieldDef = $entity->entityDefs['fields'][$field]
+                    ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.fields.$field", []);
+
+                $foreignEntity = $fieldDef['entity'] ?? null;
+
+                if ($item['fieldType'] === 'linkMultiple' && $foreignEntity !== 'ExtensibleEnumOption') {
+                    $foreignEntity = $foreignEntity ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', $field, 'entity']);
                     if (!empty($foreignEntity)) {
                         foreach (['was', 'became'] as $k) {
                             $ids = ${$k}[$field . 'Ids'] ?? null;
@@ -182,38 +186,36 @@ class Note
                     }
                 }
 
-                if ($item['fieldType'] === 'extensibleEnum') {
-                    $fieldDef = $entity->entityDefs['fields'][$field]
-                        ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityType()}.fields.$field", []);
+                if ($item['fieldType'] === 'extensibleEnum' || ($item['fieldType'] === 'link' && $foreignEntity === 'ExtensibleEnumOption')) {
                     $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
                     if ($extensibleEnumId) {
                         $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
                         foreach (['was', 'became'] as $k) {
-                            $val = ${$k}[$field] ?? null;
+                            $val = ${$k}[$item['fieldType'] === 'link' ? $field . 'Id' : $field] ?? null;
                             if ($val) {
                                 $option = $repo->getPreparedOption($extensibleEnumId, $val);
                                 if (!empty($option['name'])) {
                                     ${$k}[$field . 'Name'] = $option['name'];
+                                    ${$k}[$field . 'OptionData'] = $option;
                                 }
                             }
                         }
                     }
                 }
 
-                if ($item['fieldType'] === 'extensibleMultiEnum') {
-                    $fieldDef = $entity->entityDefs['fields'][$field]
-                        ?? $this->getMetadata()->get("entityDefs.{$entity->getEntityType()}.fields.$field", []);
+                if ($item['fieldType'] === 'extensibleMultiEnum' || ($item['fieldType'] === 'linkMultiple' && $foreignEntity === 'ExtensibleEnumOption')) {
                     $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
                     if ($extensibleEnumId) {
                         $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
                         foreach (['was', 'became'] as $k) {
-                            $val = ${$k}[$field] ?? null;
+                            $val = ${$k}[$item['fieldType'] === 'linkMultiple' ? $field . 'Ids' : $field] ?? null;
                             if (!empty($val)) {
                                 $ids = is_string($val) ? @json_decode($val, true) : $val;
                                 if (!empty($ids) && is_array($ids)) {
                                     $options = $repo->getPreparedOptions($extensibleEnumId, $ids);
                                     if (!empty($options)) {
                                         ${$k}[$field . 'Names'] = array_column($options, 'name', 'id');
+                                        ${$k}[$field . 'OptionsData'] = $options;
                                     }
                                 }
                             }
@@ -319,19 +321,19 @@ class Note
         $data = $this->getChangedFieldsData($entity);
 
         if (!empty($data['fields']) && !empty($data['attributes']['was']) && !empty($data['attributes']['became'])) {
-            $this->createNote('Update', $entity->getEntityType(), $entity->id, $data);
+            $this->createNote('Update', $entity->getEntityName(), $entity->id, $data);
 
             $this->setRelationEntityData($entity);
-            if (!empty($this->relationEntityData[$entity->getEntityType() . '_LinksToRecord'])) {
-                $nameField = $this->getNameField($entity->getEntityType());
-                foreach ($this->relationEntityData[$entity->getEntityType() . '_LinksToRecord'] as $link => $entityType) {
+            if (!empty($this->relationEntityData[$entity->getEntityName() . '_LinksToRecord'])) {
+                $nameField = $this->getNameField($entity->getEntityName());
+                foreach ($this->relationEntityData[$entity->getEntityName() . '_LinksToRecord'] as $link => $entityType) {
                     if (!empty($entity->get($link . 'Id'))) {
                         $this->createNote('Update', $entityType,
                             $entity->get($link . 'Id'), array_merge($data, [
                                     'entityId'    => $entity->id,
-                                    'entityType'  => $entity->getEntityType(),
+                                    'entityType'  => $entity->getEntityName(),
                                     'relatedId'   => $entity->id,
-                                    'relatedType' => $entity->getEntityType(),
+                                    'relatedType' => $entity->getEntityName(),
                                     'relatedName' => $nameField !== null ? $entity->get($nameField) : null,
                                 ]
                             ));
@@ -339,34 +341,34 @@ class Note
                 }
             }
 
-            if (empty($this->relationEntityData[$entity->getEntityType()])) {
+            if (empty($this->relationEntityData[$entity->getEntityName()])) {
                 return;
             }
 
-            if (is_null($entity->get($this->relationEntityData[$entity->getEntityType()]['field1']))) {
+            if (is_null($entity->get($this->relationEntityData[$entity->getEntityName()]['field1']))) {
                 return;
             }
 
-            $relatedId1 = $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']);
-            $relatedType1 = $this->relationEntityData[$entity->getEntityType()]['entity2'];
+            $relatedId1 = $entity->get($this->relationEntityData[$entity->getEntityName()]['field2']);
+            $relatedType1 = $this->relationEntityData[$entity->getEntityName()]['entity2'];
             $relatedName1 = $this->getEntityDisplayName($relatedType1, $relatedId1);
-            $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity1'],
-                $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), array_merge($data, [
+            $this->createNote('Update', $this->relationEntityData[$entity->getEntityName()]['entity1'],
+                $entity->get($this->relationEntityData[$entity->getEntityName()]['field1']), array_merge($data, [
                         'entityId'    => $entity->id,
-                        'entityType'  => $entity->getEntityType(),
+                        'entityType'  => $entity->getEntityName(),
                         'relatedId'   => $relatedId1,
                         'relatedType' => $relatedType1,
                         'relatedName' => $relatedName1,
                     ]
                 ));
 
-            $relatedId2 = $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']);
-            $relatedType2 = $this->relationEntityData[$entity->getEntityType()]['entity1'];
+            $relatedId2 = $entity->get($this->relationEntityData[$entity->getEntityName()]['field1']);
+            $relatedType2 = $this->relationEntityData[$entity->getEntityName()]['entity1'];
             $relatedName2 = $this->getEntityDisplayName($relatedType2, $relatedId2);
-            $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity2'],
-                $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), array_merge($data, [
+            $this->createNote('Update', $this->relationEntityData[$entity->getEntityName()]['entity2'],
+                $entity->get($this->relationEntityData[$entity->getEntityName()]['field2']), array_merge($data, [
                         'entityId'    => $entity->id,
-                        'entityType'  => $entity->getEntityType(),
+                        'entityType'  => $entity->getEntityName(),
                         'relatedId'   => $relatedId2,
                         'relatedType' => $relatedType2,
                         'relatedName' => $relatedName2,
@@ -377,23 +379,23 @@ class Note
 
     protected function handleRelation(OrmEntity $entity): void
     {
-        if (!$this->streamEnabled($entity->getEntityType())) {
+        if (!$this->streamEnabled($entity->getEntityName())) {
             return;
         }
 
-        if (!isset($this->createRelatedData[$entity->getEntityType()])) {
-            $this->createRelatedData[$entity->getEntityType()] = [];
+        if (!isset($this->createRelatedData[$entity->getEntityName()])) {
+            $this->createRelatedData[$entity->getEntityName()] = [];
 
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $defs) {
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'fields'], []) as $field => $defs) {
                 if (!empty($defs['type']) && $defs['type'] === 'file') {
-                    $this->createRelatedData[$entity->getEntityType()][$field . 'Id'] = ['File', null];
+                    $this->createRelatedData[$entity->getEntityName()][$field . 'Id'] = ['File', null];
                 }
             }
 
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $defs) {
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links'], []) as $link => $defs) {
                 if (!empty($defs['type']) && $defs['type'] === 'belongsTo' && !empty($defs['entity']) && $this->streamEnabled($defs['entity'])) {
-                    if ($entity->isNew() && $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation' &&
-                        !empty($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $link, 'relationField']))
+                    if ($entity->isNew() && $this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']) === 'Relation' &&
+                        !empty($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'fields', $link, 'relationField']))
                     ) {
                         continue;
                     }
@@ -402,30 +404,30 @@ class Note
                         continue;
                     }
 
-                    $this->createRelatedData[$entity->getEntityType()][$link . 'Id'] = [$defs['entity'], $defs['foreign'] ?? null];
+                    $this->createRelatedData[$entity->getEntityName()][$link . 'Id'] = [$defs['entity'], $defs['foreign'] ?? null];
                 }
             }
         }
 
-        foreach ($this->createRelatedData[$entity->getEntityType()] as $field => list($scope, $foreignLink)) {
+        foreach ($this->createRelatedData[$entity->getEntityName()] as $field => list($scope, $foreignLink)) {
             if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $foreignLink, 'auditableEnabled'])) {
                 continue;
             }
             if ($entity->isAttributeChanged($field)) {
                 $wasValue = $entity->getFetched($field);
                 $value = $entity->get($field);
-                $nameField = $this->getNameField($entity->getEntityType());
+                $nameField = $this->getNameField($entity->getEntityName());
                 $entityDisplayName = $nameField !== null ? $entity->get($nameField) : null;
                 if (!empty($value)) {
                     $this->createNote('Relate', $scope, $value, [
-                        'relatedType' => $entity->getEntityType(),
+                        'relatedType' => $entity->getEntityName(),
                         'relatedId'   => $entity->id,
                         'relatedName' => $entityDisplayName,
                         'link'        => $foreignLink
                     ]);
                     if (!empty($wasValue)) {
                         $this->createNote('Unrelate', $scope, $wasValue, [
-                            'relatedType' => $entity->getEntityType(),
+                            'relatedType' => $entity->getEntityName(),
                             'relatedId'   => $entity->id,
                             'relatedName' => $entityDisplayName,
                             'link'        => $foreignLink
@@ -433,7 +435,7 @@ class Note
                     }
                 } elseif (!empty($wasValue)) {
                     $this->createNote('Unrelate', $scope, $wasValue, [
-                        'relatedType' => $entity->getEntityType(),
+                        'relatedType' => $entity->getEntityName(),
                         'relatedId'   => $entity->id,
                         'relatedName' => $entityDisplayName,
                         'link'        => $foreignLink
@@ -461,37 +463,37 @@ class Note
 
     protected function setRelationEntityData($entity)
     {
-        if (!isset($this->relationEntityData[$entity->getEntityType()])) {
-            $this->relationEntityData[$entity->getEntityType()] = [];
-            if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation') {
-                $relationFields = $this->getEntityManager()->getRepository($entity->getEntityType())->getRelationFields();
+        if (!isset($this->relationEntityData[$entity->getEntityName()])) {
+            $this->relationEntityData[$entity->getEntityName()] = [];
+            if ($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']) === 'Relation') {
+                $relationFields = $this->getEntityManager()->getRepository($entity->getEntityName())->getRelationFields();
                 if (isset($relationFields[1]) && isset($relationFields[0])) {
-                    $this->relationEntityData[$entity->getEntityType()]['field1'] = $relationFields[0] . 'Id';
-                    $this->relationEntityData[$entity->getEntityType()]['entity1'] = $this->getMetadata()
-                        ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[0], 'entity']);
-                    foreach ($this->getMetadata()->get(['entityDefs', $this->relationEntityData[$entity->getEntityType()]['entity1'], 'links'], []) as $link => $defs) {
-                        if (!empty($defs['relationName']) && ucfirst($defs['relationName']) === $entity->getEntityType()) {
+                    $this->relationEntityData[$entity->getEntityName()]['field1'] = $relationFields[0] . 'Id';
+                    $this->relationEntityData[$entity->getEntityName()]['entity1'] = $this->getMetadata()
+                        ->get(['entityDefs', $entity->getEntityName(), 'links', $relationFields[0], 'entity']);
+                    foreach ($this->getMetadata()->get(['entityDefs', $this->relationEntityData[$entity->getEntityName()]['entity1'], 'links'], []) as $link => $defs) {
+                        if (!empty($defs['relationName']) && ucfirst($defs['relationName']) === $entity->getEntityName()) {
                             if (isset($defs['midKeys'])) {
-                                if ($defs['midKeys'][0] !== $this->relationEntityData[$entity->getEntityType()]['field1']) {
+                                if ($defs['midKeys'][0] !== $this->relationEntityData[$entity->getEntityName()]['field1']) {
                                     continue;
                                 }
                             }
-                            $this->relationEntityData[$entity->getEntityType()]['link1'] = $link;
+                            $this->relationEntityData[$entity->getEntityName()]['link1'] = $link;
                             break;
                         }
                     }
 
-                    $this->relationEntityData[$entity->getEntityType()]['field2'] = $relationFields[1] . 'Id';
-                    $this->relationEntityData[$entity->getEntityType()]['entity2'] = $this->getMetadata()
-                        ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[1], 'entity']);
-                    foreach ($this->getMetadata()->get(['entityDefs', $this->relationEntityData[$entity->getEntityType()]['entity2'], 'links'], []) as $link => $defs) {
-                        if (!empty($defs['relationName']) && ucfirst($defs['relationName']) === $entity->getEntityType()) {
+                    $this->relationEntityData[$entity->getEntityName()]['field2'] = $relationFields[1] . 'Id';
+                    $this->relationEntityData[$entity->getEntityName()]['entity2'] = $this->getMetadata()
+                        ->get(['entityDefs', $entity->getEntityName(), 'links', $relationFields[1], 'entity']);
+                    foreach ($this->getMetadata()->get(['entityDefs', $this->relationEntityData[$entity->getEntityName()]['entity2'], 'links'], []) as $link => $defs) {
+                        if (!empty($defs['relationName']) && ucfirst($defs['relationName']) === $entity->getEntityName()) {
                             if (isset($defs['midKeys'])) {
-                                if ($defs['midKeys'][0] !== $this->relationEntityData[$entity->getEntityType()]['field2']) {
+                                if ($defs['midKeys'][0] !== $this->relationEntityData[$entity->getEntityName()]['field2']) {
                                     continue;
                                 }
                             }
-                            $this->relationEntityData[$entity->getEntityType()]['link2'] = $link;
+                            $this->relationEntityData[$entity->getEntityName()]['link2'] = $link;
                             break;
                         }
                     }
@@ -499,10 +501,10 @@ class Note
             }
         }
 
-        $key = $entity->getEntityType() . '_LinksToRecord';
+        $key = $entity->getEntityName() . '_LinksToRecord';
         if (!isset($this->relationEntityData[$key])) {
             $this->relationEntityData[$key] = [];
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $defs) {
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links'], []) as $link => $defs) {
                 if (!empty($defs['type']) && $defs['type'] === 'belongsTo' && !empty($defs['foreign']) && !empty($this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'recordRelatedChangesInStream']))) {
                     $this->relationEntityData[$key][$link] = $defs['entity'];
                 }
@@ -513,7 +515,7 @@ class Note
     protected function handleRelationEntity(OrmEntity $entity, string $type): void
     {
         $this->setRelationEntityData($entity);
-        if (empty($this->relationEntityData[$entity->getEntityType()])) {
+        if (empty($this->relationEntityData[$entity->getEntityName()])) {
             return;
         }
 
@@ -526,50 +528,50 @@ class Note
 
         $fieldDefs = $this->getMetadata()->get([
             'entityDefs',
-            $this->relationEntityData[$entity->getEntityType()]['entity1'],
+            $this->relationEntityData[$entity->getEntityName()]['entity1'],
             'fields',
-            $this->relationEntityData[$entity->getEntityType()]['link1'],
+            $this->relationEntityData[$entity->getEntityName()]['link1'],
         ]);
         if (
-            $this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity1'])
+            $this->streamEnabled($this->relationEntityData[$entity->getEntityName()]['entity1'])
             && (!empty($fieldDefs['auditableEnabled'])
-                || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity2'], $defaultRelationScopeAudited)))
+                || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityName()]['entity2'], $defaultRelationScopeAudited)))
         ) {
-            $relatedId = $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']);
-            $relatedType = $this->relationEntityData[$entity->getEntityType()]['entity2'];
+            $relatedId = $entity->get($this->relationEntityData[$entity->getEntityName()]['field2']);
+            $relatedType = $this->relationEntityData[$entity->getEntityName()]['entity2'];
             $relatedName = $this->getEntityDisplayName($relatedType, $relatedId);
-            $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), [
+            $this->createNote($type, $this->relationEntityData[$entity->getEntityName()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityName()]['field1']), [
                 'entityId'    => $entity->id,
-                'entityType'  => $entity->getEntityType(),
+                'entityType'  => $entity->getEntityName(),
                 'relatedId'   => $relatedId,
                 'relatedType' => $relatedType,
                 'relatedName' => $relatedName,
-                'link'        => $this->relationEntityData[$entity->getEntityType()]['link1']
+                'link'        => $this->relationEntityData[$entity->getEntityName()]['link1']
             ]);
         }
 
         $fieldDefs = $this->getMetadata()->get([
             'entityDefs',
-            $this->relationEntityData[$entity->getEntityType()]['entity2'],
+            $this->relationEntityData[$entity->getEntityName()]['entity2'],
             'fields',
-            $this->relationEntityData[$entity->getEntityType()]['link2'],
+            $this->relationEntityData[$entity->getEntityName()]['link2'],
         ]);
 
         if (
-            $this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity2'])
+            $this->streamEnabled($this->relationEntityData[$entity->getEntityName()]['entity2'])
             && (!empty($fieldDefs['auditableEnabled'])
-                || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity1'], $defaultRelationScopeAudited)))
+                || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityName()]['entity1'], $defaultRelationScopeAudited)))
         ) {
-            $relatedId = $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']);
-            $relatedType = $this->relationEntityData[$entity->getEntityType()]['entity1'];
+            $relatedId = $entity->get($this->relationEntityData[$entity->getEntityName()]['field1']);
+            $relatedType = $this->relationEntityData[$entity->getEntityName()]['entity1'];
             $relatedName = $this->getEntityDisplayName($relatedType, $relatedId);
-            $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), [
+            $this->createNote($type, $this->relationEntityData[$entity->getEntityName()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityName()]['field2']), [
                 'entityId'    => $entity->id,
-                'entityType'  => $entity->getEntityType(),
+                'entityType'  => $entity->getEntityName(),
                 'relatedId'   => $relatedId,
                 'relatedType' => $relatedType,
                 'relatedName' => $relatedName,
-                'link'        => $this->relationEntityData[$entity->getEntityType()]['link2']
+                'link'        => $this->relationEntityData[$entity->getEntityName()]['link2']
             ]);
         }
 
