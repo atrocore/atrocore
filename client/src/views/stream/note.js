@@ -111,11 +111,21 @@ Espo.define('views/stream/note', 'view', function (Dep) {
                 ? escape(actor.name || '')
                 : `<a href="#User/view/${actor.id}">${escape(actor.name || '')}</a>`;
 
-            const delegatorHtml = delegator.isSystem
-                ? escape(delegator.name || '')
-                : `<a href="#User/view/${delegator.id}">${escape(delegator.name || '')}</a>`;
+            let delegatorHtml = null;
 
-            return `${actorHtml} <span class="text-muted">‹</span> ${delegatorHtml}`;
+            if (delegator) {
+                delegatorHtml = delegator.isSystem
+                    ? escape(delegator.name || '')
+                    : `<a href="#User/view/${delegator.id}">${escape(delegator.name || '')}</a>`;
+            }
+
+            let userHtml = actorHtml
+
+            if(delegatorHtml) {
+                userHtml +=  ` <span class="text-muted">‹</span> ${delegatorHtml}`
+            }
+
+            return userHtml
         },
 
         canShowActionButton: function () {
