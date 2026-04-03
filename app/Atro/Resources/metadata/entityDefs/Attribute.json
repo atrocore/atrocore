@@ -463,7 +463,6 @@
       "isMultilang": true,
       "trim": true,
       "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true
     },
