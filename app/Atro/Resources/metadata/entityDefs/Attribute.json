@@ -636,7 +636,6 @@
       "default": false,
       "layoutRemoveDisabled": true,
       "emHidden": true,
-      "view": "views/attribute/fields/full-width",
       "conditionalProperties": {
         "readOnly": {
           "conditionGroup": [
