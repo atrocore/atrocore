@@ -4,12 +4,12 @@
     "path": "Шлях",
     "files": "Файли",
     "folders": "Папки",
-    "syncFolders": "Підтримуйте структуру файлів і папок",
+    "syncFolders": "Підтримувати структуру файлів і папок",
     "folder": "Змонтована папка"
   },
   "options": {
     "type": {
-      "local": "Local (Linux)"
+      "local": "Локальне (Linux)"
     }
   },
   "labels": {
@@ -25,7 +25,7 @@
     "storageHasItems": "Змонтовану папку не можна змінити на не порожнє сховище.",
     "storagePathNotUnique": "Шлях до сховища має бути унікальним.",
     "storagePathContainFilesFromAnotherStorage": "Дерево папок, що починається з вибраного шляху до сховища, не може містити папки/файли, пов'язані з іншим сховищем.",
-    "storageTypeCannotBeChanged": "Type сховища не можна змінити.",
+    "storageTypeCannotBeChanged": "Тип сховища не можна змінити.",
     "storagePathCannotBeChanged": "Шлях до сховища не можна змінити."
   }
 }

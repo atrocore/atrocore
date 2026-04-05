@@ -1,20 +1,20 @@
 {
   "fields": {
     "source": "Джерело",
-    "sourceEntity": "Джерело",
-    "sourceEntityId": "Ідентифікатор джерела",
-    "master": "Мастер",
-    "masterEntity": "Мастер",
-    "masterEntityId": "Ідентифікатор мастер сутності",
+    "sourceEntity": "Вихідна сутність",
+    "sourceEntityId": "Ідентифікатор вихідної сутності",
+    "master": "Майстер",
+    "masterEntity": "Основна сутність",
+    "masterEntityId": "Ідентифікатор основної сутності",
     "score": "Оцінка",
     "hash": "Унікальний хеш",
-    "hasCluster": "Чи має Кластер",
+    "hasCluster": "Має кластер",
     "clusterItems": "Кластерні елементи"
   },
   "options": {
     "type": {
       "duplicate": "Дублікат",
-      "masterRecord": "Мастер запис"
+      "masterRecord": "Майстер-запис"
     }
   }
 }

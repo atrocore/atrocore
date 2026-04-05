@@ -4,12 +4,12 @@
     "widthPx": "Ширина (px)",
     "link": "Посилання",
     "notSortable": "Не сортується",
-    "align": "Вирівняти",
+    "align": "Вирівнювання",
     "panelName": "Назва панелі",
     "style": "Стиль",
     "sticked": "Закріплений",
     "isLarge": "Великий розмір шрифту",
-    "cssStyle": "CSS Styles",
+    "cssStyle": "Стилі CSS",
     "hiddenPerDefault": "Приховано за замовчуванням"
   },
   "options": {
@@ -29,13 +29,13 @@
   },
   "labels": {
     "New panel": "Нова панель",
-    "Layout": "Лейаут",
-    "reset": "Скинути лейаут",
+    "Layout": "Макет",
+    "reset": "Скинути макет",
     "fullEdit": "Повне редагування",
-    "resetToSystem": "Скинути до системного лейаута",
-    "layoutManagement": "Керування лейаутом",
-    "layoutSelection": "Вибір лейаута",
-    "layoutCustomization": "Налаштування лейаута",
+    "resetToSystem": "Скинути до системного макета",
+    "layoutManagement": "Керування макетом",
+    "layoutSelection": "Вибір макета",
+    "layoutCustomization": "Налаштування макета",
     "configure": "Налаштувати",
     "Current Layout": "Поточний макет"
   }

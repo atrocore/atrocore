@@ -2,65 +2,26 @@
   "fields": {
     "clusterItems": "Кластерні елементи",
     "number": "Номер",
-    "masterEntity": "Мастер",
+    "masterEntity": "Майстер-сутність",
     "rejectedClusterItems": "Відхилені елементи кластера",
-    "stagingItemCount": "Підрахунок елементів постановки",
-    "masterItemCount": "Основний підрахунок елементів",
-    "state": "Регіон"
+    "stagingItemCount": "Кількість staging-елементів",
+    "masterItemCount": "Кількість основних елементів",
+    "state": "Стан"
   },
   "actions": {
     "reject": "Відхилити",
     "confirm": "Підтвердити",
-    "unreject": "Відхилити"
+    "unreject": "Скасувати відхилення"
   },
   "options": {
     "state": {
-      "empty": "Порожні значення",
-      "review": "Перевірка",
+      "empty": "Порожній",
+      "review": "На перевірці",
       "merged": "Об'єднано",
       "invalid": "Недійсний"
     }
   },
   "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "Об'єднання без еталонного запису неможливе"
-  },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Непідтверджені елементи не можуть бути додані до об'єднання"
-  },
-  "labels": {
-    "stagingRecord": "Проміжний запис",
-    "masterRecord": "Майстер-запис"
-  },
-  "streamMessages": {
-    "clusterLinked": "{user} пов'язав {relatedEntity} з цим кластером",
-    "clusterLinkedThis": "{user} пов'язав {relatedEntity} з цим кластером",
-    "clusterUnlinked": "{user} відв'язав {relatedEntity} від цього кластера",
-    "clusterUnlinkedThis": "{user} відв'язав {relatedEntity} від цього кластера",
-    "clusterRejected": "{user} відхилив {relatedEntity} у цьому кластері",
-    "clusterRejectedThis": "{user} відхилив {relatedEntity} у цьому кластері",
-    "clusterReincluded": "{user} повторно включив {relatedEntity} у цей кластер",
-    "clusterReincludedThis": "{user} повторно включив {relatedEntity} у цей кластер",
-    "clusterMoved": "{user} перемістив {relatedEntity} з цього кластера",
-    "clusterMovedThis": "{user} перемістив {relatedEntity} з цього кластера",
-    "clusterConfirmed": "{user} підтвердив {relatedEntity} у цьому кластері",
-    "clusterConfirmedThis": "{user} підтвердив {relatedEntity} у цьому кластері",
-    "clusterGoldenRecord": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
-    "clusterGoldenRecordThis": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
-    "clusterDeleted": "{user} видалив цей кластер",
-    "clusterDeletedThis": "{user} видалив цей кластер",
-    "clusterRecordDeleted": "{user} видалив {relatedEntity} з цього кластера",
-    "clusterRecordDeletedThis": "{user} видалив {relatedEntity} з цього кластера",
-    "clusterMovedToCluster":              "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterThis":          "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterStaging":       "Система перемістила проміжні записи {stagingRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterStagingThis":   "Система перемістила проміжні записи {stagingRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterMaster":        "Система перемістила майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterMasterThis":    "Система перемістила майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedFromCluster":            "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterThis":        "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterStaging":     "Система перемістила проміжні записи {stagingRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterStagingThis": "Система перемістила проміжні записи {stagingRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterMaster":      "Система перемістила майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterMasterThis":  "Система перемістила майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}"
+    "cannotDelete": "Можна видаляти лише порожні кластери"
   }
 }

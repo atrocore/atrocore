@@ -2,14 +2,14 @@
   "fields": {
     "title": "Назва",
     "dateFrom": "Дата від",
-    "dateTo": "Дата по",
+    "dateTo": "Дата до",
     "autorefreshInterval": "Інтервал автооновлення",
     "displayRecords": "Відображати записи",
     "isDoubleHeight": "Висота 2x",
     "mode": "Режим",
     "enabledScopeList": "Що відображати",
     "users": "Користувачі",
-    "entityType": "Тип сутністі",
+    "entityType": "Тип сутності",
     "primaryFilter": "Первинний фільтр",
     "boolFilterList": "Додаткові фільтри",
     "sortBy": "Сортування (поле)",
@@ -35,6 +35,6 @@
     }
   },
   "messages": {
-    "selectEntityType": "Виберіть тип об'єкта в параметрах панелі."
+    "selectEntityType": "Виберіть тип сутності в параметрах панелі."
   }
 }
