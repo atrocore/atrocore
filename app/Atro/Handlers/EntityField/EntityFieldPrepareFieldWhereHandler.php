@@ -13,12 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\EntityField;
 
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
-use Atro\Core\Twig\Twig;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,17 +47,17 @@ filtering for new records.',
     tag: 'EntityField',
     parameters: [
         [
-            'name'     => 'id',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => ['type' => 'string'],
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'schema'      => ['type' => 'string'],
             'description' => 'EntityField record ID.',
         ],
         [
-            'name'     => 'recordId',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => ['type' => 'string'],
+            'name'        => 'recordId',
+            'in'          => 'query',
+            'required'    => false,
+            'schema'      => ['type' => 'string'],
             'description' => 'ID of the record currently being edited. Used as `entity` in Twig rendering.',
         ],
     ],
@@ -94,7 +91,7 @@ filtering for new records.',
                                         'value'    => ['u65264ae346eef30c'],
                                     ],
                                 ],
-                                'valid' => true,
+                                'valid'     => true,
                             ],
                         ],
                     ],
@@ -114,83 +111,18 @@ filtering for new records.',
 )]
 class EntityFieldPrepareFieldWhereHandler extends AbstractHandler
 {
-    /** Field types that support a `where` filter (link to a foreign entity). */
-    private const FIELD_TYPES_WITH_WHERE = ['link', 'linkMultiple'];
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityFieldId = (string) $request->getAttribute('id');
-        $recordId      = (string) ($request->getQueryParams()['recordId'] ?? '');
+        $entityFieldId = (string)$request->getAttribute('id');
+        $recordId      = (string)($request->getQueryParams()['recordId'] ?? '');
 
-        // 1. Load EntityField record.
         $entityField = $this->getEntityManager()->getRepository('EntityField')->get($entityFieldId);
         if (empty($entityField)) {
             throw new NotFound();
         }
 
-        // 2. Validate that this field type can carry a where-filter.
-        $fieldType = (string) $entityField->get('type');
-        if (!in_array($fieldType, self::FIELD_TYPES_WITH_WHERE, true)) {
-            throw new BadRequest(
-                sprintf(
-                    "Field type '%s' does not support a where-filter. Only %s fields are supported.",
-                    $fieldType,
-                    implode(', ', self::FIELD_TYPES_WITH_WHERE)
-                )
-            );
-        }
-
-        $entityName = (string) $entityField->get('entityId');
-        $fieldCode  = (string) $entityField->get('code');
-
-        // 3. ACL: caller must have read access to the parent entity scope.
-        if (!$this->getAcl()->check($entityName, 'read')) {
-            throw new Forbidden();
-        }
-
-        // 4. ACL: field must not be forbidden at field level.
-        $forbiddenFields = $this->getAcl()->getScopeForbiddenFieldList($entityName, 'read');
-        if (in_array($fieldCode, $forbiddenFields, true)) {
-            throw new Forbidden();
-        }
-
-        // 5. Read the where-filter from compiled entity metadata.
-        $where = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldCode, 'where']) ?? [];
-
-        if (empty($where)) {
-            return new JsonResponse(['where' => []]);
-        }
-
-        // 6. If no recordId is given, return the raw where without Twig rendering.
-        if ($recordId === '') {
-            return new JsonResponse(['where' => $where]);
-        }
-
-        // 7. Load the context record with ACL check.
-        $record = $this->getEntityManager()->getRepository($entityName)->get($recordId);
-        if (empty($record)) {
-            throw new NotFound();
-        }
-
-        if (!$this->getAcl()->checkEntity($record, 'read')) {
-            throw new Forbidden();
-        }
-
-        // 8. Render Twig expressions inside the where-filter JSON.
-        $whereJson     = json_encode($where);
-        $renderedJson  = $this->getTwig()->renderTemplate($whereJson, ['entity' => $record]);
-        $renderedWhere = @json_decode($renderedJson, true);
-
-        if (!is_array($renderedWhere)) {
-            // Rendering produced invalid JSON — return the original unrendered filter.
-            return new JsonResponse(['where' => $where]);
-        }
-
-        return new JsonResponse(['where' => $renderedWhere]);
-    }
-
-    private function getTwig(): Twig
-    {
-        return $this->container->get('twig');
+        return new JsonResponse([
+            'where' => $this->getRecordService('EntityField')->prepareFieldWhere($entityField, $recordId)
+        ]);
     }
 }
