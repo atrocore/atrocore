@@ -97,23 +97,28 @@ class NotificationRule extends Base
 
     public static function getNotificationProfileUsers($notificationProfileId, Config $config, Connection $connection): array
     {
-        $profileParam = $config->get('defaultNotificationProfileId') === $notificationProfileId
-            ? 'default'
-            : $notificationProfileId;
+        $isDefault = $config->get('defaultNotificationProfileId') === $notificationProfileId;
 
-        $users = $connection->createQueryBuilder()
+        $qb = $connection->createQueryBuilder()
             ->select('id, name, user_name, first_name, last_name, email_address, phone_number, is_admin')
             ->from($connection->quoteIdentifier('user'))
             ->where('is_active = :true')
             ->andWhere('deleted = :false')
             ->andWhere('id <> :system')
-            ->andWhere('notification_profile_id = :notificationProfileId')
             ->andWhere('receive_notifications = :true')
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('system', $config->get('systemUserId'))
-            ->setParameter('notificationProfileId', $profileParam)
-            ->fetchAllAssociative();
+            ->setParameter('system', $config->get('systemUserId'));
+
+        if ($isDefault) {
+            $qb->andWhere('notification_profile_id IS NULL OR notification_profile_id = :notificationProfileId')
+                ->setParameter('notificationProfileId', $notificationProfileId);
+        } else {
+            $qb->andWhere('notification_profile_id = :notificationProfileId')
+                ->setParameter('notificationProfileId', $notificationProfileId);
+        }
+
+        $users = $qb->fetchAllAssociative();
 
         $teamUsers = $connection->createQueryBuilder()
             ->select('tu.team_id, tu.user_id')
