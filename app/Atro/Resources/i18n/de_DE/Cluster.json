@@ -18,8 +18,9 @@
     "state": {
       "empty": "Leere Werte",
       "review": "Review",
-      "merged": "Zusammengeführt",
-      "invalid": "Ungültig"
+      "invalid": "Ungültig",
+      "mergedAutomatically": "Automatisch zusammengeführt",
+      "mergedManually": "Manuell zusammengeführt"
     }
   },
   "exceptions": {

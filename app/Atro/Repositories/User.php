@@ -117,11 +117,17 @@ class User extends RDB
                 throw new BadRequest($this->getLanguage()->translate('userNameExists', 'messages', 'User'));
             }
 
-            $id = self::generateId();
+            if (empty($entity->get('id'))) {
+                $entity->set('id', self::generateId());
+            }
 
-            $entity->set('id', $id);
-            $entity->set('delegatorId', $id);
-            $entity->set('actorId',$id);
+            if (empty($entity->get('delegatorId'))) {
+                $entity->set('delegatorId', $entity->get('id'));
+            }
+
+            if (empty($entity->get('actorId'))) {
+                $entity->set('actorId', $entity->get('id'));
+            }
 
         } else {
             if ($entity->isAttributeChanged('userName')) {

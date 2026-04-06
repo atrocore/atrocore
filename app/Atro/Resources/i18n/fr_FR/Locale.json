@@ -7,7 +7,8 @@
     "thousandSeparator": "Séparateur de milliers",
     "decimalMark": "Symbole du décimal",
     "languageCode": "Code langue",
-    "fallbackLanguageCode": "Code de la langue de secours"
+    "fallbackLanguageCode": "Code de la langue de secours",
+    "displayLabelsInContentLanguage": "Afficher les étiquettes dans la langue du contenu"
   },
   "labels": {
     "sunday": "Dimanche",

@@ -7,7 +7,9 @@
     "entityId": "Entitäts-ID",
     "record": "Datensatz",
     "cluster": "Cluster",
-    "matchedRecord": "Übereinstimmender Datensatz"
+    "matchedRecord": "Übereinstimmender Datensatz",
+    "confirmedAutomatically": "Automatisch bestätigt",
+    "matchedScore": "Abgestimmte Punktzahl"
   },
   "exceptions": {
     "notFound": "Cluster-Element-Datensatz nicht gefunden",
@@ -23,5 +25,9 @@
   },
   "massActionConfirmMessages": {
     "reject": "Sind Sie sicher, dass Sie die ausgewählten Elemente ablehnen möchten?"
+  },
+  "actions": {
+    "confirm": "Bestätigen Sie",
+    "reject": "Ablehnen"
   }
 }

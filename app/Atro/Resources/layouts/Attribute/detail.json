@@ -81,6 +81,12 @@
       ],
       [
         {
+          "name": "allowNullForBool"
+        },
+        false
+      ],
+      [
+        {
           "name": "trim"
         },
         false

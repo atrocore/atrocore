@@ -201,6 +201,17 @@ You can set a Default Date for both types of attributes. This is a function that
 
 > For Date attributes the time defaults are not applicable.
 
+## Attribute of Bool type
+
+The Bool attribute type is used for true/false values — flags, toggles, and simple yes/no decisions.
+
+By default, a Bool attribute supports three states: **Yes**, **No**, and **Null** (no value set). In this mode, the attribute is displayed as a dropdown.
+
+The **Allow null value** option controls whether Null is a valid state for the attribute:
+
+- When **Allow null value** is enabled (default), the attribute can hold Null in addition to Yes/No, and is displayed as a dropdown with options: Null, Yes, No.
+- When **Allow null value** is disabled, the attribute can only be Yes or No, and is displayed as a checkbox.
+
 ## Attributes of List and Multi-value List type
 
 !! **List** and **Multi-value List** attribute types remain available but will be deprecated in a future release. For new implementations, it is recommended to use **Link** and **Multiple Link** attribute types instead. See the [migration guidance](#how-to-migrate-to-link-and-multiple-link) below.
@@ -237,7 +248,9 @@ To replace a **List** attribute, create a new attribute with **Attribute Type** 
 
 In both cases, set the **Linked Entity** field to `List Options`. Once selected, a **List** field will appear — select the same list that was used in the original attribute. After saving, the system automatically configures a filter so that only options from the selected list are shown.
 
-> The `Allowed Options` configured on the original List or Multi-value List attribute can be reflected in the `Filter Results` panel on the new Link or Multiple Link attribute. Also, the List field always acts as a filter and is not shown inside the `Filter Result` panel. For further configuration, see [Filter Results](../../11.entity-management/03.fields-and-attributes/docs.md#filter-results).
+The selected list acts as a built-in filter: it is not visible in the UI filter panel, but only options belonging to that list appear when selecting a value. 
+
+> The `Allowed Options` configured on the original List or Multi-value List attribute or other additional filter conditions can be reflected in the `Filter Results` panel on the new Link or Multiple Link attribute. For further configuration, see [Filter Results](../../11.entity-management/03.fields-and-attributes/docs.md#filter-results).
 
 To apply the new attribute to records, follow the steps described in [Add attributes to a record](#add-attributes-to-a-record).
 

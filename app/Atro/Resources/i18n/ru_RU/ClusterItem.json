@@ -4,7 +4,9 @@
     "entityId": "ID субъекта",
     "record": "Запись",
     "cluster": "Кластер",
-    "matchedRecord": "Сопоставленная запись"
+    "matchedRecord": "Сопоставленная запись",
+    "matchedScore": "Соответствующий балл",
+    "confirmedAutomatically": "Подтверждается автоматически"
   },
   "exceptions": {
     "notFound": "Запись об элементе кластера не найдена",
@@ -20,5 +22,9 @@
   },
   "massActionConfirmMessages": {
     "reject": "Вы уверены, что хотите отклонить выбранные элементы?"
+  },
+  "actions": {
+    "confirm": "Подтвердите",
+    "reject": "Отклонить"
   }
 }

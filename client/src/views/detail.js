@@ -614,7 +614,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 boolFilterList: boolFilterList,
                 boolFilterData: boolfilterData,
                 selectDuplicateEnabled: selectDuplicateEnabled,
-                selectPageSize: this.model.getFieldParam(link, 'selectPageSize')
+                selectPageSize: this.model.getFieldParam(link, 'selectPageSize'),
+                whereAdditional: this.getWhereAdditional(link) || undefined
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
@@ -659,6 +660,22 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     }
                 }, this);
             }.bind(this));
+        },
+
+
+        getWhereAdditional(link) {
+            let res = this.model.getFieldParam(link, 'where');
+
+            if (res && JSON.stringify(res).includes('{{')) {
+                const entityFieldId = this.model.name + '_' + link;
+                const recordId = this.model.id || '';
+                const url = 'EntityField/' + entityFieldId + '/prepareFieldWhere' + (recordId ? '?recordId=' + recordId : '');
+                this.ajaxGetRequest(url, null, {async: false}).success(response => {
+                    res = response?.where || res;
+                });
+            }
+
+            return res || undefined
         },
 
         getPanelView(name) {
@@ -938,7 +955,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 boolFilterData: boolFilterData,
                 selectDuplicateEnabled: selectDuplicateEnabled,
                 mandatorySelectAttributeList: mandatorySelectAttributeList,
-                selectPageSize: this.model.getFieldParam(link, 'selectPageSize')
+                selectPageSize: this.model.getFieldParam(link, 'selectPageSize'),
+                whereAdditional: this.getWhereAdditional(link) || undefined
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
