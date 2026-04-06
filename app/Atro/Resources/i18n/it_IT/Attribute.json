@@ -19,6 +19,7 @@
     "isRequired": "Richiesto",
     "isReadOnly": "In sola lettura",
     "isProtected": "Protetto",
+    "allowNullForBool": "Consenti valore nullo",
     "tooltip": "Tooltip",
     "maxLength": "Lunghezza massima",
     "countBytesInsteadOfCharacters": "Conta i byte invece dei caratteri",
