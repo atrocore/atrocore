@@ -108,6 +108,7 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
                     mode: this.mode,
                     notNull: this.notNull,
                     scope: this.model.name,
+                    valueIsSet: this.model.has(this.name),
                     params: this.params || {},
                 },
             });
