@@ -12,6 +12,27 @@ Espo.define('views/user-profile/fields/notification-profile', 'views/fields/link
 
     return Dep.extend({
 
+        data() {
+            let data = Dep.prototype.data.call(this);
+            if (!data.value && this.getConfig().get('defaultNotificationProfileId')) {
+                data.value = 'default';
+                data.translatedOptions = Object.assign({}, data.translatedOptions, {
+                    'default': this.translate('Default')
+                });
+                data.isNotEmpty = true
+            }
+            return data;
+        },
+
+        fetch() {
+            let data = Dep.prototype.fetch.call(this);
+            if (data[this.name] === 'default') {
+                data[this.name] = null;
+                data[this.name + 'Name'] = null;
+            }
+            return data;
+        },
+
         getLinkOptions(foreignScope) {
             let data = Dep.prototype.getLinkOptions.call(this, foreignScope);
 

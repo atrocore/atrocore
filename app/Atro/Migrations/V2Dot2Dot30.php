@@ -61,6 +61,14 @@ class V2Dot2Dot30 extends Base
             ->set('delegator_id', 'id')
             ->where('delegator_id is null')
             ->executeQuery();
+
+        $this->getDbal()->createQueryBuilder()
+            ->update($this->getDbal()->quoteIdentifier('user'))
+            ->set('notification_profile_id', ':null')
+            ->where('notification_profile_id = :default')
+            ->setParameter('null', null)
+            ->setParameter('default', 'default')
+            ->executeStatement();
     }
 
     public function down(): void
