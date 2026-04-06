@@ -614,7 +614,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 boolFilterList: boolFilterList,
                 boolFilterData: boolfilterData,
                 selectDuplicateEnabled: selectDuplicateEnabled,
-                selectPageSize: this.model.getFieldParam(link, 'selectPageSize')
+                selectPageSize: this.model.getFieldParam(link, 'selectPageSize'),
+                whereAdditional: this.model.getFieldParam(link, 'where')
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
@@ -923,7 +924,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             let mandatorySelectAttributeList = Espo.Utils.cloneDeep(this.mandatorySelectAttributeLists[link] || []);
 
-
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'views/modals/select-records';
             this.notify('Loading...');
             this.createView('dialog', viewName, {
@@ -938,7 +938,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 boolFilterData: boolFilterData,
                 selectDuplicateEnabled: selectDuplicateEnabled,
                 mandatorySelectAttributeList: mandatorySelectAttributeList,
-                selectPageSize: this.model.getFieldParam(link, 'selectPageSize')
+                selectPageSize: this.model.getFieldParam(link, 'selectPageSize'),
+                whereAdditional: this.model.getFieldParam(link, 'where')
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
