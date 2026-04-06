@@ -45,10 +45,6 @@ To create multilingual fields, select the `Multilingual` checkbox when creating 
 
 You can not add multilingual fields to [layouts](../13.user-interface/02.layouts/) individually. They are always displayed after the main language, in the order in which the languages are added.
 
-## Multilingual Lists
-
-Lists can be configured to support multiple languages, allowing list option values to be translated. For detailed information about configuring and managing multilingual lists, see [Lists](../08.lists/docs.md).
-
 ## Access Rights
 
 You can set separate read/edit permissions for multilingual fields per role. For detailed information about configuring field-level permissions, see [Roles](../14.access-management/03.roles/).

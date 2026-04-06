@@ -237,7 +237,9 @@ To replace a **List** attribute, create a new attribute with **Attribute Type** 
 
 In both cases, set the **Linked Entity** field to `List Options`. Once selected, a **List** field will appear — select the same list that was used in the original attribute. After saving, the system automatically configures a filter so that only options from the selected list are shown.
 
-> The `Allowed Options` configured on the original List or Multi-value List attribute can be reflected in the `Filter Results` panel on the new Link or Multiple Link attribute. Also, the List field always acts as a filter and is not shown inside the `Filter Result` panel. For further configuration, see [Filter Results](../../11.entity-management/03.fields-and-attributes/docs.md#filter-results).
+The selected list acts as a built-in filter: it is not visible in the UI filter panel, but only options belonging to that list appear when selecting a value. 
+
+> The `Allowed Options` configured on the original List or Multi-value List attribute or other additional filter conditions can be reflected in the `Filter Results` panel on the new Link or Multiple Link attribute. For further configuration, see [Filter Results](../../11.entity-management/03.fields-and-attributes/docs.md#filter-results).
 
 To apply the new attribute to records, follow the steps described in [Add attributes to a record](#add-attributes-to-a-record).
 

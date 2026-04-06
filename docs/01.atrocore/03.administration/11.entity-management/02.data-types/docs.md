@@ -337,6 +337,12 @@ Reference to another entity record. Creates relationships between different enti
 
 !! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
+#### Link to List Options
+
+A Link field can also reference records from the *List Options* entity, allowing the selectable values to be constrained to a specific list. When *List Options* is selected as the **Linked Entity**, an additional **List** field appears in the configuration – use it to select the list whose options should be available for selection.
+
+The selected list acts as a built-in filter: it is not visible in the UI filter panel, but only options belonging to that list appear when selecting a value. Additional filter conditions can be applied via **Filter Results** if needed.
+
 ### List
 
 > The List field can be replaced with a Link field in the entity view, following the same migration approach as for [attribute](../../12.attribute-management/01.attributes/docs.md#how-to-migrate-to-link-and-multiple-link).
