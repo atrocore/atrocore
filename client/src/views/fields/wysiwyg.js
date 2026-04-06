@@ -99,6 +99,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/base', 'lib!Summernote'], fun
                     searchType,
                     searchValue,
                     wysiwygView: this,
+                    entityName: this.model.name,
+                    entityId: this.model.id,
                 },
             });
         },
