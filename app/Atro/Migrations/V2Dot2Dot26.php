@@ -23,6 +23,20 @@ class V2Dot2Dot26 extends Base
 
     public function up(): void
     {
+        $this->getDbal()->createQueryBuilder()
+            ->update('master_data_entity')
+            ->set('source_entity', ':null')
+            ->setParameter('null', null, ParameterType::NULL)
+            ->executeStatement();
+
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE master_data_entity ALTER source_entity TYPE TEXT");
+            $this->exec("ALTER TABLE master_data_entity ALTER source_entity DROP DEFAULT");
+            $this->exec("COMMENT ON COLUMN master_data_entity.source_entity IS '(DC2Type:jsonArray)'");
+        } else {
+            $this->exec("ALTER TABLE master_data_entity CHANGE source_entity source_entity LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
+        }
+
         $rows = $this->getDbal()->createQueryBuilder()
             ->select('id', 'data')
             ->from($this->getDbal()->quoteIdentifier('attribute'))
@@ -51,6 +65,14 @@ class V2Dot2Dot26 extends Base
                 ->setParameter('data', json_encode($data))
                 ->setParameter('id', $row['id'])
                 ->executeStatement();
+        }
+    }
+
+    protected function exec(string $sql): void
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
         }
     }
 }

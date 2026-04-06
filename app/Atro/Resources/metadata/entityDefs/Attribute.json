@@ -463,7 +463,6 @@
       "isMultilang": true,
       "trim": true,
       "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true
     },
@@ -564,6 +563,21 @@
         }
       }
     },
+    "allowNullForBool": {
+      "type": "bool",
+      "notStorable": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "bool"
+            }
+          ]
+        }
+      }
+    },
     "notNull": {
       "type": "bool",
       "default": false,
@@ -576,7 +590,6 @@
               "attribute": "type",
               "value": [
                 "varchar",
-                "bool",
                 "text",
                 "markdown",
                 "wysiwyg",
@@ -636,7 +649,6 @@
       "default": false,
       "layoutRemoveDisabled": true,
       "emHidden": true,
-      "view": "views/attribute/fields/full-width",
       "conditionalProperties": {
         "readOnly": {
           "conditionGroup": [

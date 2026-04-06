@@ -37,7 +37,6 @@ On the Attribute Panel detail view, open the menu icon in the **Attributes** pan
 
 - **Show List** — opens the full attribute list view filtered to this panel
 - **Select** — opens a selection dialog where you can choose one or more existing attributes; use the right sidebar to filter the results
-- **Unlink All** — removes all attributes from this panel without deleting them
 
 ![Select Attributes](_assets/select-attribute.png){.medium}
 
@@ -45,7 +44,6 @@ To manage an individual attribute, click the three-dot menu on its row:
 
 - **View** — opens the attribute's detail view
 - **Edit** — opens the attribute for editing
-- **Unlink** — removes the attribute from this panel without deleting it
 - **Delete** — deletes the attribute
 
 ## Displaying Attribute Panels on a Record Detail View

@@ -148,8 +148,8 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                         whereScope: this.model.get(this.entityField)
                     }));
                     this.notify(this.translate('saving', 'messages'));
-                    this.model.save({ _prev: null }).then(() => {
-                        this.notify(this.translate('Done'), 'success')
+                    this.ajaxPatchRequest(this.model.name + '/' + this.model.id, { data: this.model.get('data'), _prev: null }).then(() => {
+                        this.notify(this.translate('Done'), 'success');
                         this.setFilter(null);
                         this.actionRefresh();
                     });

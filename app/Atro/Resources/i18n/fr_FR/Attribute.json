@@ -14,6 +14,7 @@
     "isRequired": "Requis",
     "isReadOnly": "Lecture seule",
     "isProtected": "Protegé",
+    "allowNullForBool": "Autoriser la valeur nulle",
     "tooltip": "Info-bulle",
     "maxLength": "Longueur maximale",
     "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",

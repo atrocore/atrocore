@@ -31,6 +31,7 @@
     "defaultDate": "Дата по умолчанию",
     "isReadOnly": "Только для чтения",
     "isProtected": "Защищенный",
+    "allowNullForBool": "Разрешить нулевое значение",
     "conditionalVisible": "Видимый",
     "conditionalReadOnly": "Только для чтения",
     "conditionalProtected": "Защищенный",

@@ -530,7 +530,9 @@
     "currentSelection": "Bieżący wybór",
     "rejectItem": "Proszę odrzucić",
     "openStagingEntity": "Open Staging Entity",
-    "openPrimaryEntity": "Otwarty podmiot główny"
+    "openPrimaryEntity": "Otwarty podmiot główny",
+    "entityFilterResult": "Wynik filtra",
+    "System": "System"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
@@ -1305,7 +1307,9 @@
       "is_attribute_not_linked": "nie jest powiązany",
       "future": "przyszłość",
       "past": "przeszłość",
-      "today": "dzisiaj"
+      "today": "dzisiaj",
+      "older_than_x_days": "starszy niż x dni",
+      "after_x_days": "po x dniach"
     },
     "errors": {
       "no_filter": "Nie wybrano filtru",

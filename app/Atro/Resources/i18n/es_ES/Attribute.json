@@ -18,6 +18,7 @@
     "isRequired": "Required",
     "isReadOnly": "Sólo lectura",
     "isProtected": "Protegido",
+    "allowNullForBool": "Permitir valor nulo",
     "tooltip": "Información sobre herramientas",
     "maxLength": "Longitud máxima",
     "countBytesInsteadOfCharacters": "Contar bytes en lugar de caracteres",

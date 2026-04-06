@@ -523,7 +523,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
         actionClearSystemCache: function () {
             Espo.Ui.notify(this.getLanguage().translate('Please wait...'));
 
-            this.ajaxPostRequest('Admin/clearCache').success(response => {
+            this.ajaxPostRequest('clearCache').success(response => {
                 Espo.Ui.success(this.getLanguage().translate('Cache has been cleared', 'labels', 'Admin'));
             });
         },

@@ -22,7 +22,7 @@ class V2Dot2Dot30 extends Base
 
     public function up(): void
     {
-        if ($this->isPgsql()) {
+        if ($this->isPgSQL()) {
             $this->exec("CREATE TABLE team_language (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', edit_action BOOLEAN DEFAULT 'false' NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, team_id VARCHAR(36) DEFAULT NULL, language_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id));");
             $this->exec("CREATE UNIQUE INDEX IDX_TEAM_LANGUAGE_UNIQUE ON team_language (deleted, language_id, team_id);");
             $this->exec("CREATE INDEX IDX_TEAM_LANGUAGE_TEAM_ID ON team_language (team_id, deleted);");
@@ -61,6 +61,14 @@ class V2Dot2Dot30 extends Base
             ->set('delegator_id', 'id')
             ->where('delegator_id is null')
             ->executeQuery();
+
+        $this->getDbal()->createQueryBuilder()
+            ->update($this->getDbal()->quoteIdentifier('user'))
+            ->set('notification_profile_id', ':null')
+            ->where('notification_profile_id = :default')
+            ->setParameter('null', null)
+            ->setParameter('default', 'default')
+            ->executeStatement();
     }
 
     public function down(): void

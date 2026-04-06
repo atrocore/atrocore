@@ -3,13 +3,23 @@
     "masterEntity": "Hlavní subjekt",
     "mergingScript": "Mapovací skript",
     "sourceEntity": "Zdrojová entita",
-    "updateMasterAutomatically": "Automatická aktualizace předlohy"
+    "updateMasterAutomatically": "Automatická aktualizace předlohy",
+    "minimumMatchingScore": "Minimální skóre shody",
+    "executeMergeAs": "Provést sloučení jako",
+    "confirmAutomatically": "Automatické potvrzení"
   },
   "tooltips": {
-    "mergingScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu."
+    "mergingScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu.",
+    "executeMergeAs": "Uživatelský účet, který bude použit ke spuštění skriptu sloučení."
   },
   "exceptions": {
     "mergingScriptIsMissing": "Chybí skript pro sloučení pro hlavní entitu",
     "mergingScriptIsNotValid": "Slučovací skript vrací neplatné užitečné zatížení: %s"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Stejný uživatel",
+      "system": "Systém"
+    }
   }
 }

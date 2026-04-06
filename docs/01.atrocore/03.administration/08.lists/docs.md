@@ -29,7 +29,6 @@ Each list has the following properties:
 - **Name**: The display name of the list (e.g., "Color", "Size", "Gender")
 - **Code**: An optional unique identifier for the list
 - **Description**: Optional description of the list's purpose
-- **Multilingual**: Whether the list supports multiple languages. To use multilingual feature, you need to enable multilingual functionality (see [Languages](../03.languages/docs.md))
 - **Unique List Options**: Ensures that each option within a list is distinct; duplicate option values are not allowed within the same list. Available in [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module.
 
 ![List Detail View](_assets/list-record-view.png){.medium}
@@ -47,7 +46,7 @@ Each list contains multiple options that users can select from. List options are
 
 **Configuration Features**:
 - **Sort Order (relation)**: Use numeric values to arrange options in a meaningful sequence. Lower numbers appear first.
-- **Multilingual Support**: When enabled, each option can have different values for different languages. This is particularly useful for international deployments.
+- **Multilingual Support**: Each option can have different values for different languages. This is particularly useful for international deployments.
 - **Code Usage**: Codes provide a stable identifier for options, useful for API integration and system configuration.
 
 ![List Option Detail](_assets/list-option-record-view.png){.medium}

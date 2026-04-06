@@ -18,6 +18,8 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\ReferenceData;
 use Atro\Core\Twig\Twig;
 use Espo\ORM\Entity;
@@ -26,6 +28,56 @@ use Espo\ORM\EntityCollection;
 
 class EntityField extends ReferenceData
 {
+    /**
+     * Returns the `where` filter for the given EntityField record with Twig expressions
+     * resolved against the specified context record.
+     *
+     * @throws NotFound   When the EntityField or context record does not exist.
+     * @throws BadRequest When the field type does not support a where-filter.
+     * @throws Forbidden  When the caller lacks read access to the entity scope, the field,
+     *                    or the context record.
+     */
+    public function prepareFieldWhere(OrmEntity $entityField, string $recordId): array
+    {
+        $fieldType = (string)$entityField->get('type');
+        if (!in_array($fieldType, ['link', 'linkMultiple'], true)) {
+            throw new BadRequest(sprintf("Field type '%s' does not support a where-filter.", $fieldType));
+        }
+
+        $entityName = (string)$entityField->get('entityId');
+        $fieldCode = (string)$entityField->get('code');
+
+        if (!$this->getAcl()->check($entityName, 'read')) {
+            throw new Forbidden();
+        }
+
+        $forbiddenFields = $this->getAcl()->getScopeForbiddenFieldList($entityName, 'read');
+        if (in_array($fieldCode, $forbiddenFields, true)) {
+            throw new Forbidden();
+        }
+
+        $where = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldCode, 'where']) ?? [];
+
+        if (empty($where) || $recordId === '') {
+            return $where;
+        }
+
+        $record = $this->getEntityManager()->getRepository($entityName)->get($recordId);
+        if (empty($record)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->checkEntity($record, 'read')) {
+            throw new Forbidden();
+        }
+
+        $renderedWhere = @json_decode(
+            $this->twig()->renderTemplate(json_encode($where), ['entity' => $record]),
+            true
+        );
+
+        return is_array($renderedWhere) ? $renderedWhere : $where;
+    }
 
     public function updateOptionCode(string $scope, string $field, string  $oldValue, string $newValue): bool
     {

@@ -17,8 +17,9 @@
     "state": {
       "empty": "Vide",
       "review": "Révision",
-      "merged": "Fusionné",
-      "invalid": "Invalide"
+      "invalid": "Invalide",
+      "mergedAutomatically": "Fusionné automatiquement",
+      "mergedManually": "Fusionné manuellement"
     }
   },
   "exceptions": {

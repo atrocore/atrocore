@@ -15,10 +15,11 @@
   },
   "options": {
     "state": {
-      "merged": "Fusionado",
       "empty": "Vacío",
       "review": "Revise",
-      "invalid": "No válido"
+      "invalid": "No válido",
+      "mergedManually": "Fusionado manualmente",
+      "mergedAutomatically": "Fusionados automáticamente"
     }
   },
   "exceptions": {

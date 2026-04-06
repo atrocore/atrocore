@@ -88,7 +88,7 @@ class ExtensibleEnumOption extends Base
 
             if (!isset($this->cachedOptions[$id])) {
                 // prepare select
-                $select = ['eeo.id', 'eeo.code', 'eeo.color', 'eeo.name', 'eeo.sort_order', 'eeeeo.sorting'];
+                $select = ['eeo.id', 'eeo.code', 'eeo.color', 'eeo.name', 'eeo.sort_order'];
                 foreach ($this->getLingualFields('name') as $lingualField) {
                     $select[] = 'eeo.' . Util::toUnderScore($lingualField);
                 }
@@ -107,7 +107,7 @@ class ExtensibleEnumOption extends Base
                     ->andWhere('ee.id = :id')
                     ->setParameter('false', false, Mapper::getParameterType(false))
                     ->setParameter('id', $extensibleEnumId, Mapper::getParameterType($extensibleEnumId))
-                    ->orderBy('eeeeo.sorting', 'ASC')
+                    ->orderBy('eeo.sort_order', 'ASC')
                     ->fetchAllAssociative();
 
                 if (!isset($this->cachedOptions[$extensibleEnumId . '_sorting'])) {

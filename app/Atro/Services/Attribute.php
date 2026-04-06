@@ -400,6 +400,10 @@ class Attribute extends Base
         if ($entity->get('fullWidth') === null) {
             $entity->set('fullWidth', in_array($entity->get('type'), ['wysiwyg', 'markdown', 'text', 'composite']));
         }
+
+        if($entity->get('type') === 'bool') {
+            $entity->set('allowNullForBool', empty($entity->get('notNull')));
+        }
     }
 
     public function updateEntity($id, $data): bool
