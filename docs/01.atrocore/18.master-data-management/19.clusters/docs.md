@@ -35,7 +35,8 @@ The State field of the Cluster can have the following values:
 
 - **Empty** – the cluster has no cluster items.
 - **Review** – the cluster has items, but is not yet fully merged.
-- **Merged** – all cluster items have been confirmed.
+- **Merged Manually** – all cluster items have been confirmed, and at least one was confirmed manually.
+- **Merged Automatically** – all cluster items have been confirmed automatically.
 - **Invalid** – the cluster contains more than one master record, or contains no staging records.
 
 ## Cluster Items
@@ -50,11 +51,13 @@ Cluster items are created, populated, and automatically confirmed by the Create 
 
 ## Cluster View Modes
 
-The Cluster entity supports two view modes:
+The Cluster entity supports three view modes, switchable via the buttons in the cluster detail view:
 
 - **Standard View** – displays all cluster fields along with two relation panels: Cluster Items and Rejected Cluster Items.
 
 - **Comparison View** – displays a comparison table with the fields and attributes defined in the [Selection Layout](../../09.comparison-and-merge/docs.md#configuring-the-comparison-table-layout) of the corresponding entity.
+
+- **Merge View** – displays all cluster items side by side with radio buttons for selecting field values from each record. Used to manually build or update the Golden Record by choosing specific values from staging records. See [Merge Cluster Items](#merge-cluster-items) for details.
 
 ![Comparison mode](./_assets/compare-mode.png){.large}
 
@@ -74,6 +77,25 @@ The Golden Record is indicated by a horizontal gold line in the comparison table
 
 To control which items are shown in the comparison table, open the `Item` tab in the left sidebar. It lists all items belonging to the cluster, grouped by entity. Use the eye icon next to each item to show or hide it in the table.
 
+## Merge Cluster Items
+
+The Merge View allows you to manually create or update the Golden Record within a cluster by selecting individual field values from staging records via radio buttons.
+
+![Merge cluster items](./_assets/merge-cluster-items.png){.large}
+
+The merge action is available only for clusters in the "Review" or "Merged" state.
+
+All cluster items are shown in the merge view by default. To exclude an item from the merge, use the unset icon in the left sidebar. Only items that were removed from the merge interface are considered non-participating – all others are treated as participating in the merge.
+
+**Behavior on execution:**
+
+- If no Golden Record exists, it is created; if one already exists, it is updated.
+- Field values are taken from the staging records based on the radio button selection in the merge view.
+- Participating staging records are **not** processed through the [Merging Script](#merging-script) – selected values are applied directly.
+- Participating cluster items have their state changed to Confirmed after the merge is executed.
+- Staging records that did not participate in the merge (i.e., removed from the merge interface) remain unchanged.
+- If a field in the Golden Record is locked via a value lock, the lock is ignored – the selected value is applied regardless.
+
 ## Cluster Item Actions
 
 The following actions are available for cluster items in both Standard and Comparison views:
@@ -85,9 +107,11 @@ The following actions are available for cluster items in both Standard and Compa
 
     An already confirmed item cannot be confirmed again.
 
-- **Reject** – removes the cluster item from the current cluster and reassigns it to another cluster (existing or newly created). The rejected item remains visible in the `Rejected Cluster Items` panel. Confirmed items can be rejected as well – in this case, the link between the master and staging records is removed.
+- **Reject** – removes the cluster item from the current cluster and reassigns it to another cluster (existing or newly created). The rejected item remains visible in the `Rejected Cluster Items` panel. If a confirmed master record is rejected, all already confirmed staging records in the cluster are automatically unconfirmed and the link between the master and staging records is removed. If a confirmed staging record is rejected, that record is unconfirmed. Available as a mass action – can be executed for multiple cluster items at once.
 
 - **Unreject** – Available for items in the `Rejected Cluster Items` panel. Returns the item to the cluster. If the item was previously confirmed, then rejected, and then returned to the cluster, it will have an unconfirmed status and must be confirmed again.
+
+- **Unmerge** – detaches the cluster item from the current cluster and moves it into a new separate cluster. If the item was previously confirmed, its confirmation is automatically reset after the unmerge. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
 
 - **Delete** Deletes the corresponding record and its cluster item.
 
@@ -114,7 +138,7 @@ Items confirmed automatically are marked with a dedicated icon in the cluster.
 
 ![Confirm automatically](./_assets/confirm-automatically.png){.medium}
 
-Note: The Matched Score is copied from the corresponding Matched Record to the cluster item. If the matching chain is A → B with a score of 80 and B → C with a score of 60, the scores assigned to the cluster items will be: A – 80, B – 80, C – 60.
+> The Matched Score is copied from the corresponding Matched Record to the cluster item. If the matching chain is A → B with a score of 80 and B → C with a score of 60, the scores assigned to the cluster items will be: A – 80, B – 80, C – 60.
 
 ### Automatic Master Update
 
