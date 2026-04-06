@@ -3,13 +3,23 @@
     "masterEntity": "Podmiot główny",
     "mergingScript": "Skrypt mapowania",
     "sourceEntity": "Źródłowa Jednostka",
-    "updateMasterAutomatically": "Automatyczna aktualizacja mastera"
+    "updateMasterAutomatically": "Automatyczna aktualizacja mastera",
+    "minimumMatchingScore": "Minimalny wynik dopasowania",
+    "confirmAutomatically": "Potwierdź automatycznie",
+    "executeMergeAs": "Wykonać scalanie jako"
   },
   "tooltips": {
-    "mergingScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego."
+    "mergingScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego.",
+    "executeMergeAs": "Konto użytkownika, które zostanie użyte do wykonania skryptu scalającego."
   },
   "exceptions": {
     "mergingScriptIsMissing": "Brakuje skryptu scalającego dla jednostki master",
     "mergingScriptIsNotValid": "Skrypt scalania zwraca nieprawidłowy ładunek: %s"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Ten sam użytkownik",
+      "system": "System"
+    }
   }
 }

@@ -17,8 +17,9 @@
     "state": {
       "empty": "Vuoto",
       "review": "Recensione",
-      "merged": "Fusione",
-      "invalid": "Non valido"
+      "invalid": "Non valido",
+      "mergedAutomatically": "Fusione automatica",
+      "mergedManually": "Unita manualmente"
     }
   },
   "exceptions": {

@@ -7,7 +7,9 @@
     "entityId": "Ідентифікатор сутності",
     "record": "Запис",
     "cluster": "Кластер",
-    "matchedRecord": "Співставлений запис"
+    "matchedRecord": "Співставлений запис",
+    "confirmedAutomatically": "Підтверджено автоматично",
+    "matchedScore": "Відповідний рахунок"
   },
   "exceptions": {
     "notFound": "Запис елемента кластера не знайдено",
@@ -23,5 +25,9 @@
   },
   "massActionConfirmMessages": {
     "reject": "Ви впевнені, що хочете відхилити вибрані елементи?"
+  },
+  "actions": {
+    "confirm": "Підтвердити",
+    "reject": "Відхилити"
   }
 }

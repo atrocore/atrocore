@@ -16,9 +16,10 @@
   "options": {
     "state": {
       "empty": "Puste",
-      "merged": "Scalony",
       "review": "Recenzja",
-      "invalid": "Nieprawidłowy"
+      "invalid": "Nieprawidłowy",
+      "mergedAutomatically": "Połączone automatycznie",
+      "mergedManually": "Połączone ręcznie"
     }
   },
   "exceptions": {

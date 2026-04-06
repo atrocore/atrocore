@@ -7,7 +7,8 @@
     "thousandSeparator": "Separator tysięcy",
     "decimalMark": "Znak dziesiętny",
     "languageCode": "Kod języka",
-    "fallbackLanguageCode": "Kod języka rezerwowego"
+    "fallbackLanguageCode": "Kod języka rezerwowego",
+    "displayLabelsInContentLanguage": "Wyświetlanie etykiet w języku treści"
   },
   "labels": {
     "sunday": "Niedziela",

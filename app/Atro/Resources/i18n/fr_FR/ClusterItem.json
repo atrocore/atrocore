@@ -7,7 +7,9 @@
     "entityId": "ID de l'entité",
     "record": "Enregistrement",
     "cluster": "Groupement d'entreprises",
-    "matchedRecord": "Enregistrement apparié"
+    "matchedRecord": "Enregistrement apparié",
+    "confirmedAutomatically": "Confirmé automatiquement",
+    "matchedScore": "Score apparié"
   },
   "exceptions": {
     "notFound": "L'enregistrement de l'élément du cluster n'a pas été trouvé",
@@ -23,5 +25,9 @@
   },
   "massActionConfirmMessages": {
     "reject": "Êtes-vous sûr de vouloir rejeter les éléments sélectionnés ?"
+  },
+  "actions": {
+    "reject": "Rejeter",
+    "confirm": "Confirmer"
   }
 }

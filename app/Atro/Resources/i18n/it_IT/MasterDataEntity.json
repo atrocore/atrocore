@@ -3,13 +3,23 @@
     "masterEntity": "Entità master",
     "mergingScript": "Script di mappatura",
     "sourceEntity": "Entità sorgente",
-    "updateMasterAutomatically": "Aggiorna automaticamente il Master"
+    "updateMasterAutomatically": "Aggiorna automaticamente il Master",
+    "minimumMatchingScore": "Punteggio minimo di corrispondenza",
+    "confirmAutomatically": "Conferma automatica",
+    "executeMergeAs": "Eseguire l'unione come"
   },
   "tooltips": {
-    "mergingScript": "Configura il modo in cui i dati di origine vengono trasformati, unificati e mappati nel record master."
+    "mergingScript": "Configura il modo in cui i dati di origine vengono trasformati, unificati e mappati nel record master.",
+    "executeMergeAs": "L'account utente che verrà utilizzato per eseguire lo script di unione."
   },
   "exceptions": {
     "mergingScriptIsMissing": "Manca lo script di fusione per l'entità master",
     "mergingScriptIsNotValid": "Lo script di fusione restituisce un carico utile non valido: %s"
+  },
+  "options": {
+    "executeMergeAs": {
+      "system": "Sistema",
+      "sameUser": "Stesso utente"
+    }
   }
 }

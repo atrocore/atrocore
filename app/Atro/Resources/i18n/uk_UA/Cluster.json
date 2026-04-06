@@ -17,8 +17,9 @@
     "state": {
       "empty": "Порожні значення",
       "review": "Перевірка",
-      "merged": "Об'єднано",
-      "invalid": "Недійсний"
+      "invalid": "Недійсний",
+      "mergedAutomatically": "Об'єднано автоматично",
+      "mergedManually": "Об'єднано вручну"
     }
   },
   "exceptions": {

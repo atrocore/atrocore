@@ -17,8 +17,9 @@
     "state": {
       "empty": "Пустые значения",
       "review": "Проверка",
-      "merged": "Объединено",
-      "invalid": "Неверный"
+      "invalid": "Неверный",
+      "mergedManually": "Объединение вручную",
+      "mergedAutomatically": "Автоматическое объединение"
     }
   },
   "exceptions": {

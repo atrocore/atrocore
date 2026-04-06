@@ -7,7 +7,8 @@
     "thousandSeparator": "Тисячний роздільник",
     "decimalMark": "Десятковий роздільник",
     "languageCode": "Код мови",
-    "fallbackLanguageCode": "Код резервної мови"
+    "fallbackLanguageCode": "Код резервної мови",
+    "displayLabelsInContentLanguage": "Відображати етикетки мовою вмісту"
   },
   "labels": {
     "sunday": "Неділя",

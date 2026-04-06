@@ -4,7 +4,9 @@
     "entityId": "ID entity",
     "record": "Záznam",
     "cluster": "Cluster",
-    "matchedRecord": "Shodný záznam"
+    "matchedRecord": "Shodný záznam",
+    "confirmedAutomatically": "Potvrzeno automaticky",
+    "matchedScore": "Shodný počet bodů"
   },
   "exceptions": {
     "notFound": "Záznam o položce clusteru nebyl nalezen",
@@ -20,5 +22,9 @@
   },
   "massActionConfirmMessages": {
     "reject": "Jste si jisti, že chcete odmítnout vybrané položky?"
+  },
+  "actions": {
+    "confirm": "Potvrďte",
+    "reject": "Odmítnout"
   }
 }

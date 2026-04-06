@@ -7,7 +7,8 @@
     "weekStart": "První den týdne",
     "timeFormat": "Časový formát",
     "thousandSeparator": "Tisíc oddělovačů",
-    "decimalMark": "Desetinná značka"
+    "decimalMark": "Desetinná značka",
+    "displayLabelsInContentLanguage": "Zobrazení štítků v jazyce obsahu"
   },
   "labels": {
     "sunday": "Neděle",

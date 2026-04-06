@@ -16,9 +16,10 @@
   "options": {
     "state": {
       "empty": "Prázdný",
-      "merged": "Sloučené",
       "review": "Recenze",
-      "invalid": "Neplatný"
+      "invalid": "Neplatný",
+      "mergedAutomatically": "Automatické sloučení",
+      "mergedManually": "Ruční sloučení"
     }
   },
   "exceptions": {
