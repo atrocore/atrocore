@@ -18,6 +18,7 @@
     "isRequired": "Požadované",
     "isReadOnly": "Pouze pro čtení",
     "isProtected": "Chráněno",
+    "allowNullForBool": "Povolit nulovou hodnotu",
     "tooltip": "Popis",
     "maxLength": "Maximální délka",
     "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",

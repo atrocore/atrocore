@@ -16,6 +16,7 @@ namespace Atro\Repositories;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
@@ -25,7 +26,6 @@ use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
@@ -620,6 +620,12 @@ class Attribute extends Base
             $entity->set('fullWidth', true);
         }
 
+        if ($entity->get('type') === 'bool') {
+            if ($entity->isNew() || $entity->isAttributeChanged('allowNullForBool')) {
+                $entity->set('notNull', empty($entity->get('allowNullForBool')));
+            }
+        }
+
         parent::beforeSave($entity, $options);
 
         $this->validateMinMax($entity);
@@ -686,6 +692,20 @@ class Attribute extends Base
             $this
                 ->getAclManager()
                 ->clearAclCache();
+        }
+
+        if ($entity->get('type') === 'bool') {
+            if (!$entity->isNew() && $entity->isAttributeChanged('notNull') && $entity->get('notNull')) {
+                $table = Util::toUnderScore(lcfirst($entity->get('entityId')) . '_attribute_value');
+                $this->getDbal()->createQueryBuilder()
+                    ->update($table)
+                    ->set('bool_value', ':false')
+                    ->where('attribute_id = :attributeId')
+                    ->andWhere("bool_value is NULL AND deleted=:false")
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('attributeId', $entity->get('id'))
+                    ->executeStatement();
+            }
         }
     }
 

@@ -13,6 +13,7 @@
     "defaultUnit": "Одиниця виміру за замовченням",
     "defaultDate": "Дата за замовченням",
     "isRequired": "Обов'язково",
+    "allowNullForBool": "Дозволити нульове значення",
     "tooltip": "Текст підказки",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
