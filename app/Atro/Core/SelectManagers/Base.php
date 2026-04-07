@@ -22,8 +22,10 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Utils\Language;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Entity;
 use Espo\Core\SelectManagerFactory;
@@ -52,6 +54,8 @@ class Base
 
     protected Config $config;
 
+    protected Language $language;
+
     protected ?SelectManagerFactory $selectManagerFactory;
 
     protected ?IEntity $seed = null;
@@ -64,7 +68,7 @@ class Base
 
     protected array $cachedData = [];
 
-    public function __construct(EntityManager $entityManager, User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory)
+    public function __construct(EntityManager $entityManager, User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory, Language $language)
     {
         $this->entityManager = $entityManager;
         $this->user = $user;
@@ -73,6 +77,7 @@ class Base
         $this->metadata = $metadata;
         $this->config = $config;
         $this->injectableFactory = $injectableFactory;
+        $this->language = $language;
     }
 
     protected function limit($offset = null, $maxSize = null, &$result = [])
@@ -269,6 +274,8 @@ class Base
                                 }
                             }
                         }
+                    } else if (!$this->isKnownField($attribute)) {
+                        throw new BadRequest(sprintf($this->language->translate('filterContainsUnknownField', 'exceptions', 'Global'), $attribute));
                     }
                 }
 
@@ -470,6 +477,23 @@ class Base
                 }
             }
         }
+    }
+
+    protected function isKnownField(string $attribute): bool
+    {
+        if ($attribute === 'id') {
+            return true;
+        }
+        if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute])) {
+            return true;
+        }
+        if (str_ends_with($attribute, 'Id')) {
+            $baseField = substr($attribute, 0, -2);
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $baseField])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function qbConditionToType(string $condition): string
