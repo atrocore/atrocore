@@ -85,7 +85,7 @@ class Relation extends Record
         return $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
     }
 
-    public function createEntity($attachment): string
+    public function createEntity(\stdClass $attachment): string
     {
         if ($this->isAssociatesRelation()) {
             $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
@@ -159,7 +159,7 @@ class Relation extends Record
         return Parent::createEntity($attachment);
     }
 
-    public function updateEntity($id, $data): bool
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         if ($this->isAssociatesRelation()) {
             if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {

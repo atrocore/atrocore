@@ -121,7 +121,7 @@ class Action extends Base
             ->getArgument('result');
     }
 
-    public function updateEntity($id, $data): bool
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         if (
             property_exists($data, '_link')

@@ -71,14 +71,14 @@ class Connection extends Base
         return $connection;
     }
 
-    public function createEntity($attachment): string
+    public function createEntity(\stdClass $attachment): string
     {
         $this->encryptPasswordFields($attachment);
 
         return parent::createEntity($attachment);
     }
 
-    public function updateEntity($id, $data): bool
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         $this->encryptPasswordFields($data);
 

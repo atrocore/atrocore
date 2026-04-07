@@ -519,7 +519,7 @@ class Hierarchy extends Base
         return $entity;
     }
 
-    public function createEntity($attachment): string
+    public function createEntity(\stdClass $attachment): string
     {
         if (!$this->isHierarchy()) {
             return parent::createEntity($attachment);
@@ -573,7 +573,7 @@ class Hierarchy extends Base
         }
     }
 
-    public function updateEntity($id, $data): bool
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         if (!$this->isHierarchy()) {
             return parent::updateEntity($id, $data);

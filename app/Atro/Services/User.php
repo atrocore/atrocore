@@ -209,7 +209,7 @@ class User extends Record
         return $passwordHash->hash($password);
     }
 
-    public function createEntity($attachment): string
+    public function createEntity(\stdClass $attachment): string
     {
         $newPassword = null;
         if (property_exists($attachment, 'password')) {
@@ -230,7 +230,7 @@ class User extends Record
         return $id;
     }
 
-    public function updateEntity($id, $data): bool
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         $this->getUserById($id);
 

@@ -123,7 +123,7 @@ class ClassificationAttribute extends Base
         }
     }
 
-    public function createEntity($attachment): string
+    public function createEntity(\stdClass $attachment): string
     {
         if (!property_exists($attachment, 'attributeId')) {
             throw new BadRequest("'attributeId' is required.");

@@ -189,7 +189,7 @@ class Bookmark extends Base
         ];
     }
 
-    public function createEntity($attachment): string
+    public function createEntity(\stdClass $attachment): string
     {
         $data = new \stdClass();
         $data->entityId = $attachment->entityId;
