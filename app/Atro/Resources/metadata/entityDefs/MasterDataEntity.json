@@ -130,7 +130,7 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "isNotEmpty",
+              "type": "isEmpty",
               "attribute": "masterEntity"
             }
           ]

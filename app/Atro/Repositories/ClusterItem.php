@@ -244,7 +244,7 @@ class ClusterItem extends Base
             ->innerJoin('ci', $stagingTableName, 'se', 'se.id=ci.entity_id and se.deleted=:false')
             ->leftJoin('se', $masterTableName, 'me', 'me.id=se.master_record_id and me.deleted=:false')
             ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and ci.deleted=:false')
-            ->andWhere('me.id is null')
+            ->andWhere('me.id is null or me.id <> c.golden_record_id')
             ->setParameter('stagingEntityName', $stagingEntityName)
             ->setParameter('minimumScore', $minimumScore)
             ->setParameter('false', false, ParameterType::BOOLEAN)
