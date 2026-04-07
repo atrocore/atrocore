@@ -44,15 +44,22 @@ use Psr\Http\Server\RequestHandlerInterface;
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    'type'       => 'object',
-                    'properties' => [
-                        'fileContents' => [
-                            'type'        => 'string',
-                            'description' => 'Base64-encoded file content as a data URI (e.g. `data:image/png;base64,...`).',
+                    'allOf' => [
+                        [
+                            '$ref' => '#/components/schemas/File',
                         ],
-                        'url'          => [
-                            'type'        => 'string',
-                            'description' => 'Remote URL to fetch the new content from.',
+                        [
+                            'type'       => 'object',
+                            'properties' => [
+                                'fileContents' => [
+                                    'type'        => 'string',
+                                    'description' => 'Base64-encoded file content as a data URI (e.g. `data:image/png;base64,...`).',
+                                ],
+                                'url'          => [
+                                    'type'        => 'string',
+                                    'description' => 'Remote URL to fetch the new content from.',
+                                ],
+                            ],
                         ],
                     ],
                 ],

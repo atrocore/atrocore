@@ -33,27 +33,26 @@ use Psr\Http\Server\RequestHandlerInterface;
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    'type'       => 'object',
-                    'properties' => [
-                        'name'         => [
-                            'type'        => 'string',
-                            'description' => 'File name including extension.',
+                    'allOf' => [
+                        [
+                            '$ref' => '#/components/schemas/File',
                         ],
-                        'folderId'     => [
-                            'type'        => 'string',
-                            'description' => 'ID of the target Folder. Determines which storage is used.',
-                        ],
-                        'fileContents' => [
-                            'type'        => 'string',
-                            'description' => 'Base64-encoded file content as a data URI (e.g. `data:image/png;base64,...`).',
-                        ],
-                        'url'          => [
-                            'type'        => 'string',
-                            'description' => 'Remote URL to fetch the file from. Mutually exclusive with `fileContents` and `localFileName`.',
-                        ],
-                        'share'        => [
-                            'type'        => 'boolean',
-                            'description' => 'When true, a Sharing record is created and `sharedUrl` is returned in the response.',
+                        [
+                            'type'       => 'object',
+                            'properties' => [
+                                'fileContents' => [
+                                    'type'        => 'string',
+                                    'description' => 'Base64-encoded file content as a data URI (e.g. `data:image/png;base64,...`).',
+                                ],
+                                'url'          => [
+                                    'type'        => 'string',
+                                    'description' => 'Remote URL to fetch the file from. Mutually exclusive with `fileContents` and `localFileName`.',
+                                ],
+                                'share'        => [
+                                    'type'        => 'boolean',
+                                    'description' => 'When true, a Sharing record is created and `sharedUrl` is returned in the response.',
+                                ],
+                            ],
                         ],
                     ],
                 ],
