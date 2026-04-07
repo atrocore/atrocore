@@ -548,6 +548,7 @@
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",
     "queryHasErrors": "They are some errors on your query",
+    "deletedFilterTooltip": "Field \"%s\" no longer exists",
     "actionExecuted": "Action \"%s\" was successfully executed",
     "jobAdded": "The Job was successfully added to Job Manager.",
     "confirmInheritAllForChildren": "Are you sure you want all child items to inherit field (and attribute) values as well as relations from this parent item? Existing values will not be replaced.",
@@ -1239,6 +1240,7 @@
     "fileIsInvalid": "File for the field '%s' is not valid.",
     "dateIsInvalid": "Date for the field '%s' is not valid.",
     "datetimeIsInvalid": "Date-time for the field '%s' is not valid.",
+    "filterContainsUnknownField": "Filter contains a rule that refers to a non-existent field \"%s\".",
     "noSuchUnit": "Unit '%s' for the field '%s' is not valid.",
     "noSuchOptions": "Value '%s' for the field '%s' is not valid.",
     "noOptionsDefined": "Options for the field '%s' are not defined.",

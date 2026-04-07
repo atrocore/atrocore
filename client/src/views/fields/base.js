@@ -941,17 +941,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (['edit', 'detail'].includes(this.mode) && !this.options.disableToggleVisibility) {
                 this.toggleVisibility();
             }
-
-            const name = this.originalName || this.name;
-            if (this.isListView() && ['list', 'listLink'].includes(this.mode) && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
-                if (!this.model.get('attributesDefs')[name]['attributeValueId']) {
-                    let html = `${this.translate('N/A')}`
-                    if (this.mode === 'listLink') {
-                        html = `<a href="#${this.model.name}/view/${this.model.id}" class="link" data-id="${this.model.id}" title="${this.translate('N/A')}">${this.translate('N/A')}</a>`
-                    }
-                    this.$el.html(html);
-                }
-            }
         },
 
         initListViewInlineEdit() {
@@ -1164,6 +1153,17 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (this.isListView()) {
                 this.listenTo(this, 'after:render', () => {
                     this.initListViewInlineEdit();
+
+                    const name = this.originalName || this.name;
+                    if (['list', 'listLink'].includes(this.mode) && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
+                        if (!this.model.get('attributesDefs')[name]['attributeValueId']) {
+                            let html = `${this.translate('N/A')}`
+                            if (this.mode === 'listLink') {
+                                html = `<a href="#${this.model.name}/view/${this.model.id}" class="link" data-id="${this.model.id}" title="${this.translate('N/A')}">${this.translate('N/A')}</a>`
+                            }
+                            this.$el.html(html);
+                        }
+                    }
                 });
             }
         },

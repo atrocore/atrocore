@@ -24,7 +24,7 @@ use Espo\ORM\EntityCollection;
 
 class MasterDataEntity extends Base
 {
-    public function updateMasterRecord(Entity $staging, ?Entity $master = null): Entity
+    public function updateMasterRecord(Entity $staging, ?Entity $master = null): bool
     {
         if ($master === null) {
             $master = $staging->get('masterRecord');
@@ -58,17 +58,18 @@ class MasterDataEntity extends Base
         }
 
         if (!empty($input['skipped'])) {
-            return $master;
+            return false;
         }
 
-        return $this->executeAsMergeUser($masterDataEntity, function () use ($input, $master) {
+        $this->executeAsMergeUser($masterDataEntity, function () use ($input, $master) {
             try {
                 $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($input['masterRecordData'])));
             } catch (NotModified) {
                 // ignore
             }
-            return $master;
         });
+
+        return true;
     }
 
     public function createMasterRecord(Entity $staging): ?Entity
@@ -106,12 +107,20 @@ class MasterDataEntity extends Base
             return null;
         }
 
-        return $this->executeAsMergeUser($masterDataEntity, function () use ($input, $masterEntity) {
-            return $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($input['masterRecordData'])));
+        $id = null;
+
+        $this->executeAsMergeUser($masterDataEntity, function () use ($input, $masterEntity, &$id) {
+            $id = $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($input['masterRecordData'])));
         });
+
+        if (empty($id)) {
+            return null;
+        }
+
+        return $this->getEntityManager()->getEntity($masterEntity, $id);
     }
 
-    private function executeAsMergeUser(Entity $masterDataEntity, $callback): ?Entity
+    private function executeAsMergeUser(Entity $masterDataEntity, $callback): void
     {
         if ($masterDataEntity->get('executeMergeAs') === 'system') {
             $executeAsUser = $this->getEntityManager()->getRepository('User')->getGlobalSystemUser();
@@ -127,14 +136,12 @@ class MasterDataEntity extends Base
             $this->auth($executeAsUser);
         }
 
-        $res = $callback();
+        $callback();
 
         if ($userChanged) {
             // auth as current user again
             $this->auth($currentUser);
         }
-
-        return $res;
     }
 
     protected function auth(User $user): void
