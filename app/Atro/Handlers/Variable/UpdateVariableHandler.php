@@ -94,6 +94,6 @@ class UpdateVariableHandler extends AbstractHandler
             throw new Error();
         }
 
-        return new JsonResponse((array)$entity->toArray());
+        return new JsonResponse($entity->toArray());
     }
 }

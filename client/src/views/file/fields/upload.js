@@ -105,7 +105,7 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                 } else {
                     $el.val('');
                     const decodedUrl = decodeURIComponent(url);
-                    fetch('api/File/upload-proxy', {
+                    fetch('api/File/uploadProxy', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({url: decodedUrl})
