@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Variable;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -80,7 +81,7 @@ class UpdateVariableHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $id   = $request->getAttribute(RouteResult::class)?->getMatchedParams()['id'] ?? '';
+        $id = $request->getAttribute(RouteResult::class)?->getMatchedParams()['id'] ?? '';
         $data = $this->getRequestBody($request);
 
         /** @var \Atro\Services\Variable $service */
@@ -88,6 +89,11 @@ class UpdateVariableHandler extends AbstractHandler
 
         $service->updateEntity($id, $data);
 
-        return new JsonResponse($service->readEntity($id));
+        $entity = $service->prepareEntityById($id);
+        if (empty($entity)) {
+            throw new Error();
+        }
+
+        return new JsonResponse((array)$entity->toArray());
     }
 }

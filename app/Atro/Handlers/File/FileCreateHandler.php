@@ -66,28 +66,22 @@ use Psr\Http\Server\RequestHandlerInterface;
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'       => 'object',
-                        'required'   => [
-                            'id',
-                            'name',
-                        ],
-                        'properties' => [
-                            'id'        => [
-                                'type' => 'string',
+                        'allOf' => [
+                            [
+                                '$ref' => '#/components/schemas/File',
                             ],
-                            'name'      => [
-                                'type' => 'string',
-                            ],
-                            'hash'      => [
-                                'type' => 'string',
-                            ],
-                            'duplicate' => [
-                                'type'        => 'object',
-                                'description' => 'Existing File record with the same content hash, if one was found.',
-                            ],
-                            'sharedUrl' => [
-                                'type'        => 'string',
-                                'description' => 'Public sharing URL. Present only when `share` was set in the request.',
+                            [
+                                'type'       => 'object',
+                                'properties' => [
+                                    'duplicate' => [
+                                        '$ref'        => '#/components/schemas/File',
+                                        'description' => 'Existing File record with the same content hash, if one was found.',
+                                    ],
+                                    'sharedUrl' => [
+                                        'type'        => 'string',
+                                        'description' => 'Public sharing URL. Present only when `share` was set in the request.',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -100,6 +94,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => [
             'description' => 'The current user does not have File create permission.',
         ],
+    ],
+    entities: [
+        'File',
     ],
 )]
 class FileCreateHandler extends AbstractHandler

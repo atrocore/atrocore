@@ -69,41 +69,32 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'While chunks are still pending: only `chunks` is present. On the final chunk: full File record plus `chunks`, and optionally `duplicate` and `sharedUrl`.',
+            'description' => 'While chunks are still pending: only `chunks` is present. On the final chunk: full File record merged with `chunks`, and optionally `duplicate` and `sharedUrl`.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'       => 'object',
-                        'required'   => [
-                            'chunks',
-                        ],
-                        'properties' => [
-                            'chunks'      => [
-                                'type'        => 'array',
-                                'description' => 'List of chunk identifiers received so far. Present in every response.',
-                                'items'       => [
-                                    'type' => 'string',
+                        'allOf' => [
+                            [
+                                '$ref' => '#/components/schemas/File',
+                            ],
+                            [
+                                'type'       => 'object',
+                                'required'   => ['chunks'],
+                                'properties' => [
+                                    'chunks'    => [
+                                        'type'        => 'array',
+                                        'description' => 'List of chunk identifiers received so far. Present in every response.',
+                                        'items'       => ['type' => 'string'],
+                                    ],
+                                    'duplicate' => [
+                                        '$ref'        => '#/components/schemas/File',
+                                        'description' => 'Existing File record with the same content hash, if one was found. Present only on completion.',
+                                    ],
+                                    'sharedUrl' => [
+                                        'type'        => 'string',
+                                        'description' => 'Public sharing URL. Present only on completion when `share` was set in the request.',
+                                    ],
                                 ],
-                            ],
-                            'id'          => [
-                                'type'        => 'string',
-                                'description' => 'File record ID. Present only when all chunks have been received and the file entity was created.',
-                            ],
-                            'name'        => [
-                                'type'        => 'string',
-                                'description' => 'File name. Present only on completion.',
-                            ],
-                            'hash'        => [
-                                'type'        => 'string',
-                                'description' => 'File content hash. Present only on completion.',
-                            ],
-                            'duplicate'   => [
-                                'type'        => 'object',
-                                'description' => 'Existing File record with the same content hash, if one was found. Present only on completion.',
-                            ],
-                            'sharedUrl'   => [
-                                'type'        => 'string',
-                                'description' => 'Public sharing URL. Present only on completion when `share` was set in the request.',
                             ],
                         ],
                     ],
@@ -116,6 +107,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => [
             'description' => 'The current user does not have File create or edit permission.',
         ],
+    ],
+    entities: [
+        'File',
     ],
 )]
 class FileChunkHandler extends AbstractHandler

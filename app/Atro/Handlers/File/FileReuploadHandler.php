@@ -65,22 +65,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'       => 'object',
-                        'required'   => [
-                            'id',
-                            'name',
-                        ],
-                        'properties' => [
-                            'id'   => [
-                                'type' => 'string',
-                            ],
-                            'name' => [
-                                'type' => 'string',
-                            ],
-                            'hash' => [
-                                'type' => 'string',
-                            ],
-                        ],
+                        '$ref' => '#/components/schemas/File',
                     ],
                 ],
             ],
@@ -94,6 +79,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         404 => [
             'description' => 'File record not found.',
         ],
+    ],
+    entities: [
+        'File',
     ],
 )]
 class FileReuploadHandler extends AbstractHandler
