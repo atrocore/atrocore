@@ -37,8 +37,6 @@ The following field types can be made multilingual in the AtroCore system:
 - [Array](../11.entity-management/02.data-types/docs.md#array)
 - [Boolean](../11.entity-management/02.data-types/docs.md#boolean)
 
-Additionally, [List](../11.entity-management/02.data-types/docs.md#list) and [Multi-value List](../11.entity-management/02.data-types/docs.md#multi-value-list) field types can use [multilingual lists](#multilingual-lists) where values are translated.
-
 To create multilingual fields, select the `Multilingual` checkbox when creating or editing fields. For detailed information about field creation and configuration, see [Fields and Attributes](../11.entity-management/03.fields-and-attributes/).
 
 > If your system is already integrated with an external system, and you make a simple field multilingual, you may need to change the mapping to ensure correct work with the external systems.

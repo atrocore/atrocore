@@ -49,6 +49,8 @@ The following parameters are available when defining a Matching Rule:
   
   For array-based fields ([array](../../03.administration/11.entity-management/02.data-types/docs.md#array), [multi-value list](../../03.administration/11.entity-management/02.data-types/docs.md#multi-value-list), [static multi-value list](../../03.administration/11.entity-management/02.data-types/docs.md#static-multi-value-list)), values are considered similar if they contain the same elements regardless of order.
   Example: [1,2,3] and [1,3,2] are considered similar.
+
+  To detect duplicates based on approximate text matches – not just exact values – the [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module provides Fuzzy Search support. When enabled, the Similar rule uses it to group records with exactly or approximately matching field values. The match score is proportional to the similarity percentage – a closer match produces a higher score.
   - Contains – checks if the source value contains the target value.
 
   For array-based fields (array, extensibleMultiEnum, multiEnum), this means that all elements of the source value must be present in the target value.
