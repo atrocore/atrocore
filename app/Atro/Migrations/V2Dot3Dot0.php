@@ -26,6 +26,12 @@ class V2Dot3Dot0 extends Base
         copy('vendor/atrocore/copy/public/apidocs/index.html', 'public/apidocs/index.html');
 
         $this->migrateExtensibleEnumOptionSortOrder();
+
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE master_data_entity ADD delete_invalid_masters_automatically BOOLEAN DEFAULT 'false' NOT NULL");
+        } else {
+            $this->exec("ALTER TABLE master_data_entity ADD delete_invalid_masters_automatically TINYINT(1) DEFAULT '0' NOT NULL");
+        }
     }
 
     public function migrateExtensibleEnumOptionSortOrder(): void
