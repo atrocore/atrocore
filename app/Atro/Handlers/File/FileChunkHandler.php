@@ -35,32 +35,32 @@ use Psr\Http\Server\RequestHandlerInterface;
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'id',
-                        'piecesCount',
-                    ],
-                    'properties' => [
-                        'id'          => [
-                            'type'        => 'string',
-                            'description' => 'Client-generated file ID, consistent across all chunks of the same upload',
+                    'allOf' => [
+                        [
+                            '$ref' => '#/components/schemas/File',
                         ],
-                        'piece'       => [
-                            'type'        => 'string',
-                            'description' => 'Base64-encoded chunk data',
-                        ],
-                        'piecesCount' => [
-                            'type'        => 'integer',
-                            'minimum'     => 1,
-                            'description' => 'Total number of chunks the file is split into',
-                        ],
-                        'name'        => [
-                            'type'        => 'string',
-                            'description' => 'Original file name (required on first chunk)',
-                        ],
-                        'reupload'    => [
-                            'type'        => 'string',
-                            'description' => 'ID of an existing File record to replace. When set, the upload overwrites the existing file content.',
+                        [
+                            'type'     => 'object',
+                            'required' => ['id', 'piecesCount'],
+                            'properties' => [
+                                'id'          => [
+                                    'type'        => 'string',
+                                    'description' => 'Client-generated file ID, consistent across all chunks of the same upload',
+                                ],
+                                'piece'       => [
+                                    'type'        => 'string',
+                                    'description' => 'Base64-encoded chunk data',
+                                ],
+                                'piecesCount' => [
+                                    'type'        => 'integer',
+                                    'minimum'     => 1,
+                                    'description' => 'Total number of chunks the file is split into',
+                                ],
+                                'reupload'    => [
+                                    'type'        => 'string',
+                                    'description' => 'ID of an existing File record to replace. When set, the upload overwrites the existing file content.',
+                                ],
+                            ],
                         ],
                     ],
                 ],

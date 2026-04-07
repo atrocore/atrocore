@@ -21,54 +21,41 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/File/prepareForRichEditor',
+    path: '/File/{id}/createSharedUrl',
     methods: [
         'POST',
     ],
-    summary: 'Prepare file for rich editor',
-    description: 'Creates a public Sharing record for the given File and returns the file data with a `sharedUrl` ready to embed in a rich text editor.',
+    summary: 'Create a shared URL for a file',
+    description: 'Creates a public Sharing record for the given File and returns a `sharedUrl` ready to embed in a rich text editor or share externally.',
     tag: 'File',
-    requestBody: [
-        'required' => true,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'fileId',
-                    ],
-                    'properties' => [
-                        'fileId' => [
-                            'type'        => 'string',
-                            'description' => 'ID of the File record to share.',
-                        ],
-                    ],
-                ],
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the File record to share.',
+            'schema'      => [
+                'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Public sharing URL ready to embed in the rich text editor.',
+            'description' => 'Public sharing URL.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
-                        'required'   => [
-                            'sharedUrl',
-                        ],
+                        'required'   => ['sharedUrl'],
                         'properties' => [
                             'sharedUrl' => [
                                 'type'        => 'string',
-                                'description' => 'Public URL for embedding the file in a rich text editor.',
+                                'description' => 'Public URL for embedding or sharing the file.',
                             ],
                         ],
                     ],
                 ],
             ],
-        ],
-        400 => [
-            'description' => '`fileId` is missing or empty.',
         ],
         403 => [
             'description' => 'The current user does not have File read permission.',
@@ -78,13 +65,11 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class FilePrepareForRichEditorHandler extends AbstractHandler
+class FileCreateSharedUrlHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
-
-        $result = $this->getRecordService('File')->prepareForRichEditor($data->fileId);
+        $result = $this->getRecordService('File')->createSharedUrl($request->getAttribute('id'));
 
         return new JsonResponse($result);
     }

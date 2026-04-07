@@ -281,7 +281,7 @@ class File extends Base
         return $entity->get('id');
     }
 
-    public function prepareForRichEditor(string $fileId): array
+    public function createSharedUrl(string $fileId): array
     {
         if (empty($fileId)) {
             throw new BadRequest();
