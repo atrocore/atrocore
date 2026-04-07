@@ -64,7 +64,51 @@
     },
     "convertTo": {
       "type": "link",
-      "view": "views/unit/fields/convert-to"
+      "createDisabled": true,
+      "where": [
+        {
+          "condition": "AND",
+          "rules": [
+            {
+              "id": "id",
+              "field": "id",
+              "type": "string",
+              "operator": "not_equal",
+              "value": "{{entity.id}}"
+            },
+            {
+              "id": "isActive",
+              "field": "isActive",
+              "type": "boolean",
+              "operator": "equal",
+              "value": true
+            },
+            {
+              "id": "measureId",
+              "field": "measureId",
+              "type": "string",
+              "operator": "in",
+              "value": [],
+              "data": {
+                "subQuery": [
+                  {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "id",
+                        "field": "id",
+                        "type": "string",
+                        "operator": "equal",
+                        "value": "{{entity.measureId}}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
     },
     "createdAt": {
       "type": "datetime",
