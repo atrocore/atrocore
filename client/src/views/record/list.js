@@ -378,7 +378,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 moreCount: this.collection.total - this.collection.length,
                 checkboxes: this.checkboxes,
                 allowSelectAllResult: this.isAllowedSelectAllResult(),
-                disableSelectAllResult: (this.options.disableSelectAllResult ?? true) && this.collection.models.length === 0,
+                disableSelectAllResult: this.isSelectAllResultDisabled(),
                 massActionList: this.massActionList,
                 rowList: this.rowList,
                 bottomBar: paginationBottom,
@@ -390,6 +390,24 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 listInlineEditModeEnabled: this.listInlineEditModeEnabled,
                 resizable: this.resizable,
             };
+        },
+
+        isSelectAllResultDisabled() {
+            if (this.options.disableSelectAllResult ?? true) {
+                if (this.getParentView() && this.getParentView().getParentView()) {
+                    let view = this.getParentView().getParentView();
+
+                    if (view.fieldType && view.fieldType === 'linkMultiple') {
+                        if (view.mode === 'search') {
+                            return false;
+                        }
+                    }
+                }
+
+                return this.collection.models.length === 0
+            }
+
+            return false
         },
 
         isAllowedSelectAllResult() {
@@ -2430,8 +2448,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                 const type = col.type || model.getFieldType(col.name)
 
-                if(['bool', 'link', 'linkMultiple', 'script', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
-                    delete  col.link;
+                if (['bool', 'link', 'linkMultiple', 'script', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
+                    delete col.link;
                 }
 
                 if (col.link) {
