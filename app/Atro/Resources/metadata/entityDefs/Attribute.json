@@ -563,6 +563,21 @@
         }
       }
     },
+    "allowNullForBool": {
+      "type": "bool",
+      "notStorable": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "bool"
+            }
+          ]
+        }
+      }
+    },
     "notNull": {
       "type": "bool",
       "default": false,
@@ -575,7 +590,6 @@
               "attribute": "type",
               "value": [
                 "varchar",
-                "bool",
                 "text",
                 "markdown",
                 "wysiwyg",
