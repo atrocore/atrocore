@@ -69,7 +69,7 @@ Direct text search does not operate on values stored in [Reference-type](../03.a
 
 However, Reference-type fields can be used in Advanced Filters, where filtering is performed based on referenced entities and their attributes.
 
-> Fuzzy search – tolerant matching that handles typos and partial words – is available with the [Advanced Data Management](../../../../advanced-data-management/docs/index.md#fuzzy-search) module.
+> Fuzzy search – tolerant matching that handles typos and partial words – is available with the [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module.
 
 ## General and Saved filters
 
