@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\File;
 
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Error;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -24,37 +21,38 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/File/action/reupload',
+    path: '/File/{id}/reupload',
     methods: [
         'PATCH',
     ],
     summary: 'Reupload file content',
-    description: 'Reuploads the content for an existing File entity.',
+    description: 'Replaces the content of an existing File record. Supply either `fileContents` (base64 data URI) or a remote `url`.',
     tag: 'File',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the File record whose content should be replaced.',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
         'required' => true,
         'content'  => [
             'application/json' => [
                 'schema' => [
                     'type'       => 'object',
-                    'required'   => [
-                        'reupload',
-                    ],
                     'properties' => [
-                        'reupload'     => [
-                            'type' => 'string',
-                        ],
                         'fileContents' => [
-                            'type' => 'string',
-                        ],
-                        'piece'        => [
                             'type'        => 'string',
-                            'description' => 'Chunk data',
+                            'description' => 'Base64-encoded file content as a data URI (e.g. `data:image/png;base64,...`).',
                         ],
-                        'piecesCount'  => [
-                            'type'        => 'integer',
-                            'minimum'     => 1,
-                            'description' => 'Total number of chunks',
+                        'url'          => [
+                            'type'        => 'string',
+                            'description' => 'Remote URL to fetch the new content from.',
                         ],
                     ],
                 ],
@@ -63,14 +61,38 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Updated file record',
+            'description' => 'The updated File record.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object',
+                        'type'       => 'object',
+                        'required'   => [
+                            'id',
+                            'name',
+                        ],
+                        'properties' => [
+                            'id'   => [
+                                'type' => 'string',
+                            ],
+                            'name' => [
+                                'type' => 'string',
+                            ],
+                            'hash' => [
+                                'type' => 'string',
+                            ],
+                        ],
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'Missing or invalid fields.',
+        ],
+        403 => [
+            'description' => 'The current user does not have File edit permission.',
+        ],
+        404 => [
+            'description' => 'File record not found.',
         ],
     ],
 )]
@@ -79,28 +101,13 @@ class FileReuploadHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getRequestBody($request);
-
-        if (!property_exists($data, 'reupload') || empty($data->reupload)) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check('File', 'edit')) {
-            throw new Forbidden();
-        }
+        $data->reupload = $request->getAttribute('id');
 
         $service = $this->getRecordService('File');
 
-        $result = $service->createEntity($data);
+        $id = $service->reuploadEntity($data);
+        $entity = $service->prepareEntityById($id);
 
-        if (!is_string($result)) {
-            return new JsonResponse($result);
-        }
-
-        $entity = $service->prepareEntityById($result);
-        if (empty($entity)) {
-            throw new Error();
-        }
-
-        return new JsonResponse((array) $entity->getValueMap());
+        return new JsonResponse((array)$entity->getValueMap());
     }
 }

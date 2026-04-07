@@ -621,7 +621,7 @@ class Hierarchy extends Base
 
         $this->createPseudoTransactionJobs($entityData, clone $data);
 
-        return $this->getEntity($id);
+        return true;
     }
 
     public function linkEntity($id, $link, $foreignId)

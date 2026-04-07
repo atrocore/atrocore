@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\File;
 
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,12 +21,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/File/action/prepareForRichEditor',
+    path: '/File/prepareForRichEditor',
     methods: [
         'POST',
     ],
     summary: 'Prepare file for rich editor',
-    description: 'Creates a public sharing link for a file to be used in a rich text editor.',
+    description: 'Creates a public Sharing record for the given File and returns the file data with a `sharedUrl` ready to embed in a rich text editor.',
     tag: 'File',
     requestBody: [
         'required' => true,
@@ -41,7 +39,8 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                     'properties' => [
                         'fileId' => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'ID of the File record to share.',
                         ],
                     ],
                 ],
@@ -50,14 +49,32 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'File info with shared URL',
+            'description' => 'Public sharing URL ready to embed in the rich text editor.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object',
+                        'type'       => 'object',
+                        'required'   => [
+                            'sharedUrl',
+                        ],
+                        'properties' => [
+                            'sharedUrl' => [
+                                'type'        => 'string',
+                                'description' => 'Public URL for embedding the file in a rich text editor.',
+                            ],
+                        ],
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => '`fileId` is missing or empty.',
+        ],
+        403 => [
+            'description' => 'The current user does not have File read permission.',
+        ],
+        404 => [
+            'description' => 'File record not found.',
         ],
     ],
 )]
@@ -67,25 +84,8 @@ class FilePrepareForRichEditorHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (empty($data->fileId)) {
-            throw new BadRequest();
-        }
+        $result = $this->getRecordService('File')->prepareForRichEditor($data->fileId);
 
-        if (!$this->getAcl()->check('File', 'read')) {
-            throw new Forbidden();
-        }
-
-        $em     = $this->getEntityManager();
-        $file   = $em->getEntity('File', $data->fileId);
-        $result = $file->getValueMap();
-
-        $sharingRepo = $em->getRepository('Sharing');
-        $sharing     = $sharingRepo->get();
-        $sharing->set('fileId', $file->get('id'));
-        $em->saveEntity($sharing);
-        $this->getRecordService('Sharing')->prepareEntityForOutput($sharing);
-        $result->sharedUrl = $sharing->get('link');
-
-        return new JsonResponse((array) $result);
+        return new JsonResponse($result);
     }
 }

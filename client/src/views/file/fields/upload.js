@@ -105,7 +105,7 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                 } else {
                     $el.val('');
                     const decodedUrl = decodeURIComponent(url);
-                    fetch('api/File/action/upload-proxy', {
+                    fetch('api/File/upload-proxy', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({url: decodedUrl})
@@ -306,8 +306,8 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                     url = 'File?silent=true';
 
                 if (this.model.get('reupload')) {
-                    method = 'PUT';
-                    url = 'File/action/reupload';
+                    method = 'PATCH';
+                    url = `File/${this.model.get('reupload')}/reupload`;
                 }
 
                 fileReader.onload = e => {
@@ -412,17 +412,9 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                     return;
                 }
 
-                let method = 'POST',
-                    url = 'File?silent=true';
-
-                if (this.model.get('reupload')) {
-                    method = 'PUT';
-                    url = 'File/action/reupload';
-                }
-
                 $.ajax({
-                    type: method,
-                    url: url,
+                    type: 'POST',
+                    url: 'File/createChunk',
                     contentType: "application/json",
                     data: JSON.stringify(_.extend(this.model.attributes, {
                         id: id,
