@@ -71,10 +71,10 @@ class MassDownload extends AbstractJob implements JobInterface
         $input->folderId = $this->getZipFolderEntity()->get('id');
 
         $this->getMemoryStorage()->set('disableFileTransactions', true);
-        $fileData = $service->moveLocalFileToFileEntity($input, $fileName);
+        $fileId = $service->moveLocalFileToFileEntity($input, $fileName);
         Util::removeDir($zipDir);
 
-        $message = sprintf($this->translate('zipDownloadNotification', 'labels', 'File'), $fileData['id']);
+        $message = sprintf($this->translate('zipDownloadNotification', 'labels', 'File'), $fileId);
         if ($data['totalChunks'] > 1) {
             $message .= " (" . $data['part'] . "/" . $data['totalChunks'] . ")";
         }

@@ -42,14 +42,21 @@ class Base extends RDB
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
         /** @var EntityCollection $collection */
-        $collection = parent::findRelated($entity, $relationName, $params);
+        $res = parent::findRelated($entity, $relationName, $params);
+
+        if ($res instanceof EntityCollection) {
+            $collection = $res;
+        } else {
+            $collection = new EntityCollection();
+            $collection->append($res);
+        }
 
         $firstEntity = $collection[0] ?? null;
         if (!empty($firstEntity) && $this->getMetadata()->get("scopes.{$firstEntity->getEntityName()}.hasAttribute")) {
             $this->prepareAttributesForOutput($collection, $params);
         }
 
-        return $collection;
+        return $res;
     }
 
     public function prepareAttributesForOutput(EntityCollection $collection, array $params): void
@@ -64,7 +71,7 @@ class Base extends RDB
             }
         }
 
-        if(empty($params['completeAttrDefs'])) {
+        if (empty($params['completeAttrDefs'])) {
             foreach ($collection as $entity) {
                 if (!empty($entity->get('attributesDefs'))) {
                     $attributesDefs = [];

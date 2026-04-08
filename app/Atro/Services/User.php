@@ -209,7 +209,7 @@ class User extends Record
         return $passwordHash->hash($password);
     }
 
-    public function createEntity($attachment)
+    public function createEntity(\stdClass $attachment): string
     {
         $newPassword = null;
         if (property_exists($attachment, 'password')) {
@@ -217,19 +217,20 @@ class User extends Record
             $attachment->password = $this->hashPassword($attachment->password);
         }
 
-        $user = parent::createEntity($attachment);
+        $id = parent::createEntity($attachment);
+        $user = $this->getRepository()->get($id);
 
-        if (!is_null($newPassword) && !empty($attachment->sendAccessInfo) && $user->isActive()) {
+        if (!is_null($newPassword) && !empty($attachment->sendAccessInfo) && $user && $user->isActive()) {
             try {
                 $this->sendPassword($user, $newPassword);
             } catch (\Exception $e) {
             }
         }
 
-        return $user;
+        return $id;
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         $this->getUserById($id);
 

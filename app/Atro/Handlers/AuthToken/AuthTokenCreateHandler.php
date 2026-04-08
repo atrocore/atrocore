@@ -61,9 +61,12 @@ class AuthTokenCreateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService('AuthToken')->createEntity($data);
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService('AuthToken');
 
+        $id = $service->createEntity($data);
+
+        $entity = $service->prepareEntityById($id);
         if (empty($entity)) {
             throw new Error();
         }

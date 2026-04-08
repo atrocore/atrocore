@@ -12,6 +12,8 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\Metadata;
+use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 
 class V2Dot3Dot0 extends Base
@@ -26,6 +28,9 @@ class V2Dot3Dot0 extends Base
         copy('vendor/atrocore/copy/public/apidocs/index.html', 'public/apidocs/index.html');
 
         $this->migrateExtensibleEnumOptionSortOrder();
+
+        // set bool attribute with notNull true to false if they are null
+        $this->setNotNullBoolAttributeToFalse();
 
         if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE master_data_entity ADD delete_invalid_masters_automatically BOOLEAN DEFAULT 'false' NOT NULL");
@@ -73,6 +78,61 @@ class V2Dot3Dot0 extends Base
             }
 
             $offset += $batchSize;
+        }
+    }
+
+
+    public function setNotNullBoolAttributeToFalse(): void
+    {
+        $dir = 'data/metadata/scopes';
+
+        $entities = ['Product'];
+
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (!in_array($item, ['.', '..'])) {
+                    $parts = explode('.', $item);
+                    $scope = $parts[0];
+
+                    $content = @json_decode(file_get_contents($dir . '/' . $item), true);
+                    if (empty($content)) {
+                        continue;
+                    }
+
+                    if (!empty($content['hasAttribute'])) {
+                        $entities[] = $scope;
+                        continue;
+                    }
+
+                    if (!empty($content['primaryEntityId']) && in_array($content['primaryEntityId'], $entities)) {
+                        $entities[] = $scope;
+                    }
+                }
+            }
+        }
+
+        $subQb = $this->getDbal()->createQueryBuilder()->select('a.id')
+            ->from('attribute', 'a')
+            ->where('a.type = :bool')
+            ->andWhere('a.not_null = :true');
+
+        foreach ($entities  as $scope) {
+            $pavTable = Util::toUnderScore(lcfirst($scope)) . "_attribute_value";
+
+            if(!$this->getCurrentSchema()->hasTable($pavTable)) {
+                continue;
+            }
+
+            $qb = $this->getDbal()->createQueryBuilder();
+
+            $qb->update($pavTable, 'pav')
+                ->set('bool_value', ':false')
+                ->where($qb->expr()->in('pav.attribute_id', $subQb->getSQL()))
+                ->andWhere('pav.bool_value is NULL AND pav.deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('bool', 'bool')
+                ->setParameter('true', true, ParameterType::BOOLEAN)
+                ->executeStatement();
         }
     }
 }

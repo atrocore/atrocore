@@ -870,7 +870,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     }
 
                     $.ajax({
-                        url: `Attribute/action/removeAttributeValue`,
+                        url: `Attribute/removeAttributeValue`,
                         type: 'POST',
                         data: JSON.stringify(data),
                         contentType: 'application/json',
@@ -1345,10 +1345,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             model.set(attrs);
             model._previousAttributes = res;
             model._updatedById = this.getUser().id; // block realtime
-            if (res.isBackendModified) {
-                model._fetchAfterInlineEditClose = true;
-            }
-
             // this.trigger('after:save'); // ignored because saving needs to be silent
             // model.trigger('after:save'); // ignored because saving needs to be silent
 
@@ -1424,15 +1420,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.getCellElement().css('min-width', '');
             this.getCellElement().css('max-width', '');
             $(window).off('keydown.escape' + this.cid);
-
             this.inlineEditModeIsOn = false;
             this.setMode(this.initialMode);
             this.once('after:render', function () {
                 this.removeInlineEditLinks();
-                if (this.model._fetchAfterInlineEditClose && $('.inline-cancel-link').length === 0) {
-                    delete this.model._fetchAfterInlineEditClose
-                    this.model.fetch();
-                }
             }, this);
 
             if (!dontReset) {

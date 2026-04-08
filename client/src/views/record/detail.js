@@ -268,7 +268,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         data.where = selectObj.where
                     }
                     $.ajax({
-                        url: `Attribute/action/addAttributeValue`,
+                        url: `Attribute/addAttributeValue`,
                         type: 'POST',
                         data: JSON.stringify(data),
                         contentType: 'application/json',

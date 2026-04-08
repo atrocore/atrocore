@@ -121,7 +121,7 @@ class Action extends Base
             ->getArgument('result');
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         if (
             property_exists($data, '_link')
@@ -152,7 +152,7 @@ class Action extends Base
                 }
             }
 
-            return $this->getEntity($id);
+            return true;
         }
 
         return parent::updateEntity($id, $data);

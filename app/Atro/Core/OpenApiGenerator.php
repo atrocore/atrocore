@@ -255,6 +255,8 @@ class OpenApiGenerator
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'boolean'];
                 break;
             case "jsonArray":
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array'];
+                break;
             case "jsonObject":
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'object'];
                 break;

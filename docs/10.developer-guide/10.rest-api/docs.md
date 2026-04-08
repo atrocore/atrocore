@@ -237,6 +237,32 @@ Possible `status` values: `Created`, `Updated`, `NotModified`, `Failed`. On `Fai
 2. By unique fields — fields marked as `unique: true` in the entity definition.
 3. By unique indexes — if all fields of a unique index are present in the payload.
 
+### Performance: Bulk vs. Single-Record Operations
+
+Bulk endpoints (`POST /api/upsert`, mass update via `POST /api/entityMassUpdate`) are significantly faster per record than calling the standard single-record endpoints (`POST /{Entity}`, `PATCH /{Entity}/{id}`) in a loop.
+
+**Why bulk operations are faster:**
+
+Single-record endpoints perform full entity preparation after every save:
+- Loading EAV attribute values
+- Loading link/relation fields
+- Loading follower data and file previews
+- Applying ACL metadata headers
+- Running `prepareEntityForOutput` transformations
+
+This preparation is necessary because the endpoint returns a fully hydrated entity in the response.
+
+Bulk endpoints skip all of this. They do not return full entity data — only a lightweight result per record (`status` + `id`). The saved preparation work accumulates quickly at scale.
+
+**Guidance:**
+
+| Use case | Recommended endpoint |
+|---|---|
+| Data integration, imports, batch updates | `POST /api/upsert`, `POST /api/upsertAsync`, or `POST /api/entityMassUpdate` |
+| Single record create/update where full response is needed | `POST /{Entity}` / `PATCH /{Entity}/{id}` |
+
+For large datasets (hundreds to thousands of records), always prefer the bulk endpoints to avoid per-record overhead.
+
 ### Creating Linked Entity Records During Create/Update
 
 The system supports simplified creation and linking of related entities during `create` and `update` operations of a main entity.
@@ -916,23 +942,7 @@ Flatten-Attributes: true
 }
 ```
 
-##### Removing Attributes with Flattened Format
-
-Use `__attributesToRemove` with an array of attribute codes:
-
-```http
-PATCH /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
-Host: demo.atropim.com
-Authorization-Token: ***************
-Flatten-Attributes: true
-
-{
-  "headlineText": "Updated text",
-  "__attributesToRemove": ["a02...", "a03..."]
-}
-```
-
-`__attributes` accepts both attribute IDs and codes, and they may be mixed in the same array. `__attributesToRemove` accepts codes only.
+`__attributes` accepts both attribute IDs and codes, and they may be mixed in the same array.
 
 With `Flatten-Attributes: true`, you can pass an object instead of a raw ID. The system will find an existing record matching the given fields and link it, or create and link a new one if no match is found.
 
@@ -947,7 +957,7 @@ For [List Option](../../01.atrocore/03.administration/08.lists/docs.md#list-opti
 | Read attributes | `GET /{id}/attributeValues` | `Flatten-Attributes: true` on GET |
 | Add attributes | `POST /{id}/addAttributes` | Add IDs or codes to `__attributes` in PATCH |
 | Update attribute | `POST /{id}/upsertAttributeValues` | Include field with new value in PATCH |
-| Remove attribute | `DELETE /{id}/attributeValues` | Add code to `__attributesToRemove` in PATCH |
+| Remove attribute | `DELETE /{id}/attributeValues` | — |
 | Visible in OpenAPI | ✅ Yes | ❌ No |
 
 
@@ -961,7 +971,6 @@ For [List Option](../../01.atrocore/03.administration/08.lists/docs.md#list-opti
 - Use attribute codes for clean, readable keys in your payloads.
 - Attributes not mentioned in an update request remain unchanged.
 - To add attributes in flattened format, use `__attributes` with an array of attribute IDs or codes.
-- To remove attributes in flattened format, use `__attributesToRemove` with an array of attribute codes.
 
 
 ## The `With-Meta` Header

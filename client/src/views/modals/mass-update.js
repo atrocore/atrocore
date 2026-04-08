@@ -194,7 +194,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                         attributesIds: attributesIds,
                         entityName: this.model.name
                     };
-                    this.ajaxGetRequest('Attribute/action/attributesDefs', data).success(res => {
+                    this.ajaxGetRequest('Attribute/attributesDefs', data).success(res => {
                         $.each(res, (name, defs) => {
                             if (!defs.layoutDetailDisabled) {
                                 this.model.defs['fields'][name] = defs;
