@@ -67,6 +67,7 @@ Espo.define('views/notification/list', 'view', function (Dep) {
                     el: this.options.el + ' .list-container',
                     collection: this.collection,
                     showCount: false,
+                    disableRefreshOnLanguageChange: true,
                     listLayout: {
                         rows: [
                             [
