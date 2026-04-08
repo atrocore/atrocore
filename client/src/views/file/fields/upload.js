@@ -315,7 +315,8 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                         type: method,
                         url: url,
                         contentType: "application/json",
-                        data: JSON.stringify(_.extend(this.model.attributes, {
+                        headers: this.attributes.headers || {},
+                        data: JSON.stringify(_.extend(this.getModelBodyAttributes(), {
                             id: id,
                             name: file.name,
                             fileSize: file.size,
@@ -337,6 +338,12 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                 };
                 fileReader.readAsDataURL(file);
             }
+        },
+
+        getModelBodyAttributes() {
+            const fields = this.model.defs.fields || {};
+            const definedFields = Object.keys(fields).filter(f => !fields[f].readOnly && !fields[f].protected);
+            return _.pick(this.model.attributes, definedFields);
         },
 
         generateId() {
@@ -416,7 +423,8 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                     type: 'POST',
                     url: 'File/createChunk',
                     contentType: "application/json",
-                    data: JSON.stringify(_.extend(this.model.attributes, {
+                    headers: this.attributes.headers || {},
+                    data: JSON.stringify(_.extend(this.getModelBodyAttributes(), {
                         id: id,
                         fileUniqueHash: file.uniqueId,
                         start: item.start,
