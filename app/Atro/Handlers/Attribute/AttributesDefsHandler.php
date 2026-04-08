@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Attribute/action/attributesDefs',
+    path: '/Attribute/attributesDefs',
     methods: [
         'GET',
     ],

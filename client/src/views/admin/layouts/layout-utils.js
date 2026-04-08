@@ -101,7 +101,7 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
 
                                     this.wait(true);
                                     this.notify('Loading...');
-                                    this.ajaxGetRequest('Attribute/action/attributesDefs', {
+                                    this.ajaxGetRequest('Attribute/attributesDefs', {
                                         entityName: entity,
                                         attributesIds: ids
                                     }, {async: false}).success(res => {

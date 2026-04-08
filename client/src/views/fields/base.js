@@ -870,7 +870,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     }
 
                     $.ajax({
-                        url: `Attribute/action/removeAttributeValue`,
+                        url: `Attribute/removeAttributeValue`,
                         type: 'POST',
                         data: JSON.stringify(data),
                         contentType: 'application/json',

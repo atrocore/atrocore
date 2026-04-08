@@ -916,23 +916,7 @@ Flatten-Attributes: true
 }
 ```
 
-##### Removing Attributes with Flattened Format
-
-Use `__attributesToRemove` with an array of attribute codes:
-
-```http
-PATCH /api/Product/a01jz56xg5xe09abkmfg4dr0kvj HTTP/1.1
-Host: demo.atropim.com
-Authorization-Token: ***************
-Flatten-Attributes: true
-
-{
-  "headlineText": "Updated text",
-  "__attributesToRemove": ["a02...", "a03..."]
-}
-```
-
-`__attributes` accepts both attribute IDs and codes, and they may be mixed in the same array. `__attributesToRemove` accepts codes only.
+`__attributes` accepts both attribute IDs and codes, and they may be mixed in the same array.
 
 With `Flatten-Attributes: true`, you can pass an object instead of a raw ID. The system will find an existing record matching the given fields and link it, or create and link a new one if no match is found.
 
@@ -947,7 +931,7 @@ For [List Option](../../01.atrocore/03.administration/08.lists/docs.md#list-opti
 | Read attributes | `GET /{id}/attributeValues` | `Flatten-Attributes: true` on GET |
 | Add attributes | `POST /{id}/addAttributes` | Add IDs or codes to `__attributes` in PATCH |
 | Update attribute | `POST /{id}/upsertAttributeValues` | Include field with new value in PATCH |
-| Remove attribute | `DELETE /{id}/attributeValues` | Add code to `__attributesToRemove` in PATCH |
+| Remove attribute | `DELETE /{id}/attributeValues` | — |
 | Visible in OpenAPI | ✅ Yes | ❌ No |
 
 
@@ -961,7 +945,6 @@ For [List Option](../../01.atrocore/03.administration/08.lists/docs.md#list-opti
 - Use attribute codes for clean, readable keys in your payloads.
 - Attributes not mentioned in an update request remain unchanged.
 - To add attributes in flattened format, use `__attributes` with an array of attribute IDs or codes.
-- To remove attributes in flattened format, use `__attributesToRemove` with an array of attribute codes.
 
 
 ## The `With-Meta` Header
