@@ -71,10 +71,13 @@ class ConnectionUpdateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $id     = (string) $request->getAttribute('id');
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService('Connection')->updateEntity($id, $data);
+        $id      = (string) $request->getAttribute('id');
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService('Connection');
 
+        $service->updateEntity($id, $data);
+
+        $entity = $service->prepareEntityById($id);
         if (empty($entity)) {
             throw new Error();
         }

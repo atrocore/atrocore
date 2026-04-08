@@ -159,8 +159,8 @@ class Cluster extends Base
             }
 
             if (empty($goldenRecord)) {
-                $goldenRecord = $masterService->createEntity($attributes->input);
-
+                $id = $masterService->createEntity($attributes->input);
+                $goldenRecord = $this->getEntityManager()->getEntity($cluster->get('masterEntity'), $id);
             }
         }
 
@@ -225,7 +225,7 @@ class Cluster extends Base
         try {
             $attributes->input->_skipCheckForConflicts = true;
             $goldenRecord->_avoidLocking = true;
-            $goldenRecord = $masterService->updateEntity($goldenRecord->get('id'), $attributes->input);
+            $masterService->updateEntity($goldenRecord->get('id'), $attributes->input);
         } catch (NotModified $e) {
 
         }

@@ -61,9 +61,12 @@ class ConnectionCreateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService('Connection')->createEntity($data);
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService('Connection');
 
+        $id = $service->createEntity($data);
+
+        $entity = $service->prepareEntityById($id);
         if (empty($entity)) {
             throw new Error();
         }

@@ -84,9 +84,12 @@ class UpdateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService($entityName)->updateEntity($id, $data);
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService($entityName);
 
+        $service->updateEntity($id, $data);
+
+        $entity = $service->prepareEntityById($id);
         if (empty($entity)) {
             throw new Error();
         }

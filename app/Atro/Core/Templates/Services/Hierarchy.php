@@ -519,7 +519,7 @@ class Hierarchy extends Base
         return $entity;
     }
 
-    public function createEntity($attachment)
+    public function createEntity(\stdClass $attachment): string
     {
         if (!$this->isHierarchy()) {
             return parent::createEntity($attachment);
@@ -531,7 +531,8 @@ class Hierarchy extends Base
             unset($attachment->routesNames);
         }
 
-        $entity = parent::createEntity($attachment);
+        $id = parent::createEntity($attachment);
+        $entity = $this->getRepository()->get($id);
 
         // run inherit all for child relations
         if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance']))) {
@@ -554,7 +555,7 @@ class Hierarchy extends Base
             $attributeRepo->inheritAllAttributeValuesFromParents($entity);
         }
 
-        return $entity;
+        return $id;
     }
 
     public function prepareChildInputData(\stdClass $attachment): void
@@ -572,7 +573,7 @@ class Hierarchy extends Base
         }
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         if (!$this->isHierarchy()) {
             return parent::updateEntity($id, $data);
@@ -580,7 +581,7 @@ class Hierarchy extends Base
 
         if (property_exists($data, '_sortedIds') && property_exists($data, '_id') && property_exists($data, '_link') && $data->_link === 'children') {
             $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
-            return $this->getEntity($id);
+            return true;
         }
 
         if (property_exists($data, '_position') && property_exists($data, '_target') && property_exists($data, 'parentId')) {
@@ -596,7 +597,7 @@ class Hierarchy extends Base
                 $sortAsc = $data->_sortAsc === true;
             }
             $this->getRepository()->updatePositionInTree((string)$id, (string)$data->_position, (string)$data->_target, (string)$data->parentId, $sortAsc);
-            return $this->getEntity($id);
+            return true;
         }
 
         if (property_exists($data, '_fieldValueInheritance') && $data->_fieldValueInheritance) {
@@ -614,13 +615,13 @@ class Hierarchy extends Base
             $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
         }
 
-        $result = parent::updateEntity($id, $data);
+        parent::updateEntity($id, $data);
 
         $this->getRepository()->pushLinkMultipleFields($entityData);
 
         $this->createPseudoTransactionJobs($entityData, clone $data);
 
-        return $result;
+        return true;
     }
 
     public function linkEntity($id, $link, $foreignId)
@@ -982,11 +983,6 @@ class Hierarchy extends Base
     protected function duplicateChildren($entity, $duplicatingEntity): void
     {
         // ignore duplicating for link 'children'
-    }
-
-    protected function afterUpdateEntity(Entity $entity, $data)
-    {
-        $entity->set('inheritedFields', $this->getInheritedFields($entity));
     }
 
     public function createPseudoTransactionJobs(array $parent, \stdClass $data, string $parentTransactionId = null): void

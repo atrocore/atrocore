@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/File/action/upload-proxy',
+    path: '/File/uploadProxy',
     methods: [
         'POST',
     ],

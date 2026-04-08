@@ -15,7 +15,6 @@ namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
@@ -76,9 +75,12 @@ class CreateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data   = $this->getRequestBody($request);
-        $entity = $this->getRecordService($entityName)->createEntity($data);
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService($entityName);
 
+        $id = $service->createEntity($data);
+
+        $entity = $service->prepareEntityById($id);
         if (empty($entity)) {
             throw new Error();
         }

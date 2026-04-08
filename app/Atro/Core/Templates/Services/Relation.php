@@ -85,7 +85,7 @@ class Relation extends Record
         return $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
     }
 
-    public function createEntity($attachment)
+    public function createEntity(\stdClass $attachment): string
     {
         if ($this->isAssociatesRelation()) {
             $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
@@ -124,7 +124,8 @@ class Relation extends Record
 
             try {
                 foreach ($attachments as $attachment) {
-                    $entity = parent::createEntity($attachment);
+                    $id = parent::createEntity($attachment);
+                    $entity = $this->getRepository()->get($id);
                     if (property_exists($attachment, 'reverseAssociationId') && !empty($attachment->reverseAssociationId)) {
                         try {
                             $reverseAttachment = new \stdClass();
@@ -132,8 +133,8 @@ class Relation extends Record
                             $reverseAttachment->associatedItemId = $attachment->associatingItemId;
                             $reverseAttachment->associationId = $attachment->reverseAssociationId;
                             $reverseAttachment->{"reverseAssociated{$scope}Id"} = $entity->get('id');
-                            $reverseEntity = parent::createEntity($reverseAttachment);
-                            $entity->set("reverseAssociated{$scope}Id", $reverseEntity->get('id'));
+                            $reverseId = parent::createEntity($reverseAttachment);
+                            $entity->set("reverseAssociated{$scope}Id", $reverseId);
                             $this->getRepository()->save($entity, ['skipAll' => true]);
                         } catch (\Throwable $e) {
                             $classname = get_class($e);
@@ -152,18 +153,18 @@ class Relation extends Record
                 throw $e;
             }
 
-            return $entity;
+            return $entity->get('id');
         }
 
         return Parent::createEntity($attachment);
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         if ($this->isAssociatesRelation()) {
             if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {
                 $this->getRepository()->updateAssociatesSortOrder($data->_sortedIds);
-                return $this->getEntity($id);
+                return true;
             }
 
             $pdo = $this->getEntityManager()->getPDO();
@@ -174,7 +175,8 @@ class Relation extends Record
             }
 
             try {
-                $entity = parent::updateEntity($id, $data);
+                parent::updateEntity($id, $data);
+                $entity = $this->getRepository()->get($id);
 
                 if (!property_exists($data, '__skipUpdateReverse')) {
                     try {
@@ -195,7 +197,7 @@ class Relation extends Record
                 throw $e;
             }
 
-            return $entity;
+            return true;
         }
 
         return Parent::updateEntity($id, $data);
@@ -243,8 +245,8 @@ class Relation extends Record
             $reverseAttachment->associatedItemId = $entity->get("associatingItemId");
             $reverseAttachment->associationId = $data->reverseAssociationId;
             $reverseAttachment->{$reverseIdField} = $entity->get('id');
-            $reverseEntity = parent::createEntity($reverseAttachment);
-            $entity->set($reverseIdField, $reverseEntity->get('id'));
+            $reverseId = parent::createEntity($reverseAttachment);
+            $entity->set($reverseIdField, $reverseId);
             $this->getRepository()->save($entity, ['skipAll' => true]);
             return;
         }

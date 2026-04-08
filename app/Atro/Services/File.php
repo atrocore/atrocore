@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Utils\IdGenerator;
-use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
@@ -109,7 +109,32 @@ class File extends Base
         }
     }
 
-    public function createEntity($attachment)
+    public function createEntityAndBuildResponse(\stdClass $attachment): array
+    {
+        if (!$this->getAcl()->check('File', 'create')) {
+            throw new Forbidden();
+        }
+
+        $id = $this->createEntity($attachment);
+        $entity = $this->prepareEntityById($id);
+
+        return $this->buildFileResponse($entity, $attachment);
+    }
+
+    public function reuploadEntity(\stdClass $attachment): string
+    {
+        if (!property_exists($attachment, 'reupload') || empty($attachment->reupload)) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check('File', 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->createEntity($attachment);
+    }
+
+    public function createEntity(\stdClass $attachment): string
     {
         if (property_exists($attachment, 'url')) {
             $url = (string)$attachment->url;
@@ -119,18 +144,24 @@ class File extends Base
 
         $attachment->storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($attachment->folderId ?? '')->get('id');
 
-        // for single upload
-        if (!property_exists($attachment, 'piecesCount')) {
-            if (empty($attachment->id)) {
-                $attachment->id = IdGenerator::uuid();
-            }
-
-            return $this->createFileEntity($attachment);
+        if (empty($attachment->id)) {
+            $attachment->id = IdGenerator::uuid();
         }
 
+        return $this->createFileEntity($attachment);
+    }
+
+    public function createChunk(\stdClass $attachment): array
+    {
         if (empty($attachment->id)) {
             throw new BadRequest("ID is required if create via chunks.");
         }
+
+        if (!$this->getAcl()->check('File', 'create')) {
+            throw new Forbidden();
+        }
+
+        $attachment->storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($attachment->folderId ?? '')->get('id');
 
         // create entity for validation
         $entity = $this->getRepository()->get();
@@ -160,7 +191,9 @@ class File extends Base
         if (count($chunks) === $attachment->piecesCount) {
             $attachment->allChunks = $chunks;
             try {
-                $result = $this->createFileEntity($attachment);
+                $id = $this->createFileEntity($attachment);
+                $entity = $this->prepareEntityById($id);
+                $result = $this->buildFileResponse($entity, $attachment);
             } catch (NotUnique $e) {
                 $result['created'] = true;
             } catch (\Throwable $e) {
@@ -175,14 +208,14 @@ class File extends Base
         return array_merge($result, ['chunks' => $chunks]);
     }
 
-    public function createFileViaContents(\stdClass $attachment, string $contents)
+    public function createFileViaContents(\stdClass $attachment, string $contents): string
     {
         $attachment->fileContents = "data:application/unknown;base64," . base64_encode($contents);
 
         return $this->createEntity($attachment);
     }
 
-    public function createFileViaUrl(\stdClass $attachment, string $url)
+    public function createFileViaUrl(\stdClass $attachment, string $url): string
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new BadRequest("Invalid URL");
@@ -201,27 +234,15 @@ class File extends Base
         return $this->createEntity($attachment);
     }
 
-    public function moveLocalFileToFileEntity(\stdClass $attachment, string $fileName)
+    public function moveLocalFileToFileEntity(\stdClass $attachment, string $fileName): string
     {
         $attachment->localFileName = $fileName;
 
         return $this->createEntity($attachment);
     }
 
-    protected function createFileEntity(\stdClass $attachment)
+    protected function buildFileResponse(Entity $entity, \stdClass $attachment): array
     {
-        if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
-            $attachment->id = $attachment->reupload;
-            $attachment->_skipIsEntityUpdated = true;
-            $entity = parent::updateEntity($attachment->id, $attachment);
-        } else {
-            $entity = parent::createEntity($attachment);
-        }
-
-        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
-            return $entity;
-        }
-
         $result = $entity->toArray();
 
         if (!empty($entity->get('hash'))) {
@@ -243,8 +264,53 @@ class File extends Base
         return $result;
     }
 
+    protected function createFileEntity(\stdClass $attachment): string
+    {
+        if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
+            $attachment->id = $attachment->reupload;
+            $attachment->_skipIsEntityUpdated = true;
+            parent::updateEntity($attachment->id, $attachment);
+        } else {
+            $attachment->id = parent::createEntity($attachment);
+        }
+        $entity = $this->getRepository()->get($attachment->id);
+
+        // cache entity so callers get it without extra DB hit
+        $this->getRepository()->putToCache($entity->get('id'), $entity);
+
+        return $entity->get('id');
+    }
+
+    public function createSharedUrl(string $fileId): array
+    {
+        if (empty($fileId)) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check('File', 'read')) {
+            throw new Forbidden();
+        }
+
+        $file = $this->getEntityManager()->getEntity('File', $fileId);
+        if (empty($file)) {
+            throw new NotFound();
+        }
+
+        $sharingRepo = $this->getEntityManager()->getRepository('Sharing');
+        $sharing     = $sharingRepo->get();
+        $sharing->set('fileId', $file->get('id'));
+        $this->getEntityManager()->saveEntity($sharing);
+        $this->getRecordService('Sharing')->prepareEntityForOutput($sharing);
+
+        return ['sharedUrl' => $sharing->get('link')];
+    }
+
     public function massDownload(array $params): bool
     {
+        if (!$this->getAcl()->check('File', 'read')) {
+            throw new Forbidden();
+        }
+
         $params['action'] = 'download';
         $params['maxCountWithoutJob'] = 0;
         $params['maxChunkSize'] = $this->getConfig()->get('massDownloadMaxChunkSize', 1000);

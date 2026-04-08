@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Variable;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -71,6 +72,13 @@ class CreateVariableHandler extends AbstractHandler
         /** @var \Atro\Services\Variable $service */
         $service = $this->getServiceFactory()->create('Variable');
 
-        return new JsonResponse($service->createEntity($data));
+        $id = $service->createEntity($data);
+
+        $entity = $service->prepareEntityById($id);
+        if (empty($entity)) {
+            throw new Error();
+        }
+
+        return new JsonResponse($entity->toArray());
     }
 }

@@ -406,12 +406,12 @@ class Attribute extends Base
         }
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         foreach (['attributeGroupSortOrder', 'sortOrder'] as $field) {
             if (property_exists($data, $field) && property_exists($data, '_sortedIds')) {
                 $this->getRepository()->updateSortOrder($data->_sortedIds, $field);
-                return $this->getEntity($id);
+                return true;
             }
         }
 
