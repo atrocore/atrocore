@@ -275,7 +275,12 @@ class Attribute extends Base
 
         if (!empty($attribute->get('defaultUnit'))) {
             $qb->setValue('reference_value', ':unitId')
-                ->setparameter('unitId', $attribute->get('defaultUnit'));
+                ->setParameter('unitId', $attribute->get('defaultUnit'));
+        }
+
+        if($attribute->get('type') === 'bool' && $attribute->get('notNull')) {
+            $qb->setValue('bool_value', ':false')
+                ->setParameter('false', 'false', ParameterType::BOOLEAN);
         }
 
         $qb->executeQuery();
