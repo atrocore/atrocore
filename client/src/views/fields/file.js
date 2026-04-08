@@ -348,8 +348,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         getCreateAttributes: function () {
             let res = {
                 accept: this.accept,
-                shouldAvoidAutomaticalExtensionUpdate : this.shouldAvoidAutomaticalExtensionUpdate 
             };
+
+            if (this.shouldAvoidAutomaticalExtensionUpdate) {
+                res.headers = Object.assign(res.headers || {}, {'Skip-Extension-Update': 'true'});
+            }
 
             if (this.fileTypeId) {
                 this.ajaxGetRequest(`FileType/${this.fileTypeId}`, null, {async: false}).success(entity => {
