@@ -95,7 +95,7 @@ class Selection extends Base
             ->findOne();
 
         if (!empty($entity)) {
-            return $entity->get($nameField);
+            return (string)$entity->get($nameField);
         }
 
         return null;
