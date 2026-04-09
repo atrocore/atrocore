@@ -71,7 +71,7 @@ There are several ways to link attributes to records of an entity. You can:
 
 - Add individual attributes directly from the record page
 - Add attributes to multiple records at once by [mass update](../../../12.mass-actions/docs.md#mass-update-to-attributes)
-- Apply a set of attributes using a [Classification](../04.classifications/docs.md#working-with-entities-related-to-classifications)
+- Apply a set of attributes using a [Classification](../04.classifications/docs.md#enabling-classifications-for-an-entity)
 - Import attributes together with their values
 
 You can add attributes to a record using the `Add Attribute` action. This action is available for all entities that support attributes.
