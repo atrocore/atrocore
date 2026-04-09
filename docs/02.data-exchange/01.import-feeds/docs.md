@@ -380,10 +380,12 @@ The import file should contain:
 - A list of option values
 - A reference to the List each option belongs to (required only when creating new options or updating list assignments)
 
+Target entity should always be List Option. Each row in the file represents a single List Option record.
+
 ![Import List Options](./_assets/Import-List-Options.png){.medium}
 
-Each row represents a single list option. To correctly match existing records during import, it is recommended that system IDs are used as unique identifiers when updating existing options in the list. If all option values are unique within the system, however, the option value (code) can be used as an identifier instead.
+ To correctly match existing records during import, it is recommended that system IDs of list options are used as unique identifiers when updating existing options in the list. If all option values are unique within the system, however, the option value (name) can be used as an identifier instead.
 
 ![field mapping](./_assets/field-mapping.png){.medium}
 
-When creating new list options it is recommended to link options to their corresponding lists within the same import feed. This ensures that all required relationships are established during the import process and prevents orphaned option records.
+When creating new list options it is recommended to link options to their corresponding lists within the same import feed usung [multiple relations](#multiple-relations) method. This ensures that all required relationships are established during the import process and prevents orphaned option records.
