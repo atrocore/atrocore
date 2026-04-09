@@ -205,12 +205,11 @@ You can set a Default Date for both types of attributes. This is a function that
 
 The Bool attribute type is used for true/false values — flags, toggles, and simple yes/no decisions.
 
-By default, a Bool attribute supports three states: **Yes**, **No**, and **Null** (no value set). In this mode, the attribute is displayed as a dropdown.
+The **Allow null value** option determines whether the attribute can hold a Null state in addition to Yes/No.
 
-The **Allow null value** option controls whether Null is a valid state for the attribute:
+If this checkbox is not selected (default), the attribute can only be **Yes** or **No**, and is displayed as a checkbox.
 
-- When **Allow null value** is enabled (default), the attribute can hold Null in addition to Yes/No, and is displayed as a dropdown with options: Null, Yes, No.
-- When **Allow null value** is disabled, the attribute can only be Yes or No, and is displayed as a checkbox.
+If this checkbox is selected, the attribute can also be set to **Null** (no value set), and is displayed as a dropdown with options: Null, Yes, No.
 
 ## Attributes of List and Multi-value List type
 
