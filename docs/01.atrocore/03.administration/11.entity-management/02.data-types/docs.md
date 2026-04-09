@@ -422,7 +422,7 @@ True/false values. Used for flags, toggles, and simple yes/no decisions.
 **Configuration options:**
 
 - **Multilingual**: Allows field values to be set per language
-- **Allow null value**: When enabled, the field or attribute can be set to null in addition to true/false. When disabled, null is not permitted.
+- **Allow null value**: Allows the field or attribute to be set to null in addition to true/false
 - **Default**: Sets a default value for the field
 
 > When **Allow null value** is enabled, the boolean field or attribute appears as a dropdown with options: Null, Yes, No. When disabled, it appears as a checkbox (true/false only).

@@ -71,7 +71,7 @@ There are several ways to link attributes to records of an entity. You can:
 
 - Add individual attributes directly from the record page
 - Add attributes to multiple records at once by [mass update](../../../12.mass-actions/docs.md#mass-update-to-attributes)
-- Apply a set of attributes using a [Classification](../04.classifications/docs.md#working-with-entities-related-to-classifications)
+- Apply a set of attributes using a [Classification](../04.classifications/docs.md#enabling-classifications-for-an-entity)
 - Import attributes together with their values
 
 You can add attributes to a record using the `Add Attribute` action. This action is available for all entities that support attributes.
@@ -205,12 +205,11 @@ You can set a Default Date for both types of attributes. This is a function that
 
 The Bool attribute type is used for true/false values — flags, toggles, and simple yes/no decisions.
 
-By default, a Bool attribute supports three states: **Yes**, **No**, and **Null** (no value set). In this mode, the attribute is displayed as a dropdown.
+The **Allow null value** option determines whether the attribute can hold a Null state in addition to Yes/No.
 
-The **Allow null value** option controls whether Null is a valid state for the attribute:
+If this checkbox is not selected (default), the attribute can only be **Yes** or **No**, and is displayed as a checkbox.
 
-- When **Allow null value** is enabled (default), the attribute can hold Null in addition to Yes/No, and is displayed as a dropdown with options: Null, Yes, No.
-- When **Allow null value** is disabled, the attribute can only be Yes or No, and is displayed as a checkbox.
+If this checkbox is selected, the attribute can also be set to **Null** (no value set), and is displayed as a dropdown with options: Null, Yes, No.
 
 ## Attributes of List and Multi-value List type
 
