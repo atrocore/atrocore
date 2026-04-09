@@ -374,24 +374,16 @@ This creates a new import feed with matching fields, format, entity, and mapping
 
 ### How To Import List Options
 
-List options can be imported into the system using CSV or XLS files. This process allows users to create new options or update existing ones in bulk.
+List options can be imported into the system using files such as CSV or XLS. This process allows users to create new options or update existing ones in bulk.
 
 The import file should contain:
 - A list of option values
 - A reference to the List each option belongs to (required only when creating new options or updating list assignments)
 
-Each row represents a single list option. Required fields depend on the configuration but typically include identifiers, labels, and list references.
-
 ![Import List Options](./_assets/Import-List-Options.png){.medium}
 
-To perform the import:
-- Create a new import feed.
-- Set Target Entity to List Option.
-- Select the required Action (e.g., Create, Update, or Create & Update).
-- Configure field mapping rules according to the file structure.
+Each row represents a single list option. To correctly match existing records during import, it is recommended that system IDs are used as unique identifiers when updating existing options in the list. If all option values are unique within the system, however, the option value (code) can be used as an identifier instead.
 
 ![field mapping](./_assets/field-mapping.png){.medium}
-
-To correctly match existing records during import it is recommended to use system IDs as unique identifiers when updating existing list options. Alternatively, if all option values are unique within the system, the option value (code) can be used as an identifier.
 
 When creating new list options it is recommended to link options to their corresponding lists within the same import feed. This ensures that all required relationships are established during the import process and prevents orphaned option records.
