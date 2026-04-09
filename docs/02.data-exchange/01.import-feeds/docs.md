@@ -22,7 +22,7 @@ The free module supports file-based imports (CSV, Excel, JSON, XML). Additional 
 
 After installation, two entities are created: `Import Feeds` and `Import Executions`. These can be enabled/disabled in [navigation menu](../../01.atrocore/03.administration/13.user-interface/01.navigation/) and [favorites](../../01.atrocore/05.toolbar/02.favorites/), with [access rights](../../01.atrocore/03.administration/14.access-management/) configured as for other entities. Layout configuration is not available for these entities.
 
-!! Users must have the following permissions configured via [Roles](../../01.atrocore/03.administration/14.access-management/03.roles/docs.md) (Scopes panel): `Import Feeds`, `Import Execution` and `Files`. Without these, feed import execution will be denied. In  [Access Control List](../../01.atrocore/03.administration/14.access-management/docs.md#acl-strict-mode) strict mode, these permissions must be granted explicitly — they are not given by default.
+!! Users must have the following permissions configured via [Roles](../../01.atrocore/03.administration/14.access-management/03.roles/docs.md) (Scopes panel): `Import Feeds`, `Import Execution` and `Files`, as well as at least Read permission for `Folder`, and `Storage`. Without these, feed import execution will be denied. In [Access Control List](../../01.atrocore/03.administration/14.access-management/docs.md#acl-strict-mode) strict mode, these permissions must be granted explicitly — they are not given by default.
 
 ## User Functions
 
