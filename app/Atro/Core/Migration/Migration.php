@@ -116,13 +116,13 @@ class Migration
         // prepare version
         $version = str_replace('v', '', $version);
 
-        if (preg_match_all('/^(.*)\.(.*)\.(.*)$/', $version, $matches)) {
-            // prepare data
-            $major = (int)$matches[1][0];
-            $version = (int)$matches[2][0];
-            $patch = (int)$matches[3][0];
+        $parts = explode('.', $version);
+        if (count($parts) >= 3) {
+            $major = (int)$parts[0];
+            $minor = (int)$parts[1];
+            $patch = (int)$parts[2];
 
-            return "V{$major}Dot{$version}Dot{$patch}";
+            return "V{$major}Dot{$minor}Dot{$patch}";
         }
 
         return null;
