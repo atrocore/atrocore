@@ -12,7 +12,6 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 
@@ -133,6 +132,14 @@ class V2Dot3Dot0 extends Base
                 ->setParameter('bool', 'bool')
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->executeStatement();
+        }
+    }
+
+    protected function exec(string $sql): void
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
         }
     }
 }
