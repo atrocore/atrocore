@@ -99,7 +99,7 @@ class User extends \Espo\Core\ORM\Entity
             return Language::DEFAULT_LANGUAGE;
         }
 
-        return $locale->get('languageCode');
+        return $locale->get('languageCode') ?? Language::DEFAULT_LANGUAGE;
     }
 
     public function getTeamsUsersIds(array $teamsIds): array
