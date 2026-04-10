@@ -75,15 +75,18 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'type'       => 'object',
                         'properties' => [
                             'count'  => [
-                                'type' => 'integer',
+                                'type'        => 'integer',
+                                'description' => 'Number of successfully updated records.',
                             ],
                             'sync'   => [
-                                'type' => 'boolean',
+                                'type'        => 'boolean',
+                                'description' => 'Whether the update was performed synchronously (true) or dispatched as a background job (false).',
                             ],
                             'errors' => [
-                                'type'  => 'array',
-                                'items' => [
-                                    'type' => 'object',
+                                'type'        => 'array',
+                                'description' => 'List of error messages for records that could not be updated.',
+                                'items'       => [
+                                    'type' => 'string',
                                 ],
                             ],
                         ],
