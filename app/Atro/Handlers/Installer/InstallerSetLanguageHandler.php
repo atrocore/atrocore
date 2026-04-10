@@ -23,14 +23,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Installer/action/setLanguage',
+    path: '/Installer/setLanguage',
     methods: [
         'POST',
     ],
     summary: 'Set installer language',
     description: 'Sets the installation language. Only accessible before installation.',
     tag: 'Installer',
-    installerOnly: true,
     auth: false,
     requestBody: [
         'required' => true,
@@ -62,6 +61,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
+    installerOnly: true,
 )]
 class InstallerSetLanguageHandler extends AbstractHandler
 {

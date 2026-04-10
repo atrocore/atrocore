@@ -23,14 +23,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Installer/action/checkDbConnect',
+    path: '/Installer/checkDbConnect',
     methods: [
         'POST',
     ],
     summary: 'Check database connection',
     description: 'Checks whether the provided database connection settings are valid. Only accessible before installation.',
     tag: 'Installer',
-    installerOnly: true,
     auth: false,
     requestBody: [
         'required' => true,
@@ -73,6 +72,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
+    installerOnly: true,
 )]
 class InstallerCheckDbConnectHandler extends AbstractHandler
 {

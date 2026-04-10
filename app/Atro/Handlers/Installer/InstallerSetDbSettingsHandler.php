@@ -23,14 +23,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Installer/action/setDbSettings',
+    path: '/Installer/setDbSettings',
     methods: [
         'POST',
     ],
     summary: 'Set database settings',
     description: 'Saves database connection settings for installation. Only accessible before installation.',
     tag: 'Installer',
-    installerOnly: true,
     auth: false,
     requestBody: [
         'required' => true,
@@ -73,6 +72,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
+    installerOnly: true,
 )]
 class InstallerSetDbSettingsHandler extends AbstractHandler
 {
