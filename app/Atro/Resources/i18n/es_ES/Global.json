@@ -660,7 +660,6 @@
   "massActions": {
     "remove": "Eliminar",
     "merge": "Unir",
-    "massUpdate": "Actualización masiva",
     "follow": "Seguir",
     "unfollow": "Dejar de seguir",
     "massUpdatePartial": "Mass Update (Part %s)",
@@ -671,12 +670,11 @@
     "delete": "Eliminar",
     "download": "Descargar",
     "massDelete": "Borrado masivo",
-    "massRemove": "Eliminación en masa",
     "massRestore": "Restauración en masa",
     "deletePermanently": "Borrar permanentemente",
     "compare": "Comparar",
     "removeAttribute": "Borrar atributo",
-    "update": "Actualización masiva",
+    "update": "Guardar",
     "export": "Exportar",
     "select": "Seleccionar",
     "cancel": "Cancelar"

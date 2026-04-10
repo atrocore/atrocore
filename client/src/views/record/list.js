@@ -337,9 +337,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         showMore: true,
 
-        massActionList: ['remove', 'compare', 'merge', 'select', 'massUpdate', 'export'],
+        massActionList: ['remove', 'compare', 'merge', 'select', 'update', 'export'],
 
-        checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
+        checkAllResultMassActionList: ['remove', 'update', 'export'],
 
         quickDetailDisabled: false,
 
@@ -1012,7 +1012,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        massActionMassUpdate: function () {
+        massActionUpdate: function () {
             if (!this.getAcl().check(this.entityType, 'edit')) {
                 this.notify('Access denied', 'error');
                 return false;
@@ -1027,7 +1027,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             let massUpdateView = this.getMetadata().get(['clientDefs', this.scope, 'massUpdateView']) || 'views/modals/mass-update';
 
-            this.createView('massUpdate', massUpdateView, {
+            this.createView('update', massUpdateView, {
                 scope: this.entityType,
                 ids: ids,
                 where: this.collection.getWhereForCheckedRecords(),
@@ -1187,7 +1187,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (!this.getAcl().checkScope(this.entityType, 'edit')) {
-                this.removeMassAction('massUpdate');
+                this.removeMassAction('update');
             }
 
             if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled'])) {

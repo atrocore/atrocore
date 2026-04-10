@@ -34,14 +34,14 @@ Espo.define('views/user/record/list', 'views/record/list', function (Dep) {
 
     return Dep.extend({
 
-        massActionList: ['remove', 'massUpdate'],
+        massActionList: ['remove', 'update'],
 
-        checkAllResultMassActionList: ['massUpdate'],
+        checkAllResultMassActionList: ['update'],
 
         setupMassActionItems: function () {
             Dep.prototype.setupMassActionItems.call(this);
             if (!this.getUser().isAdmin()) {
-                this.removeMassAction('massUpdate');
+                this.removeMassAction('update');
             }
         },
 

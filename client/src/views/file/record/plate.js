@@ -19,9 +19,9 @@ Espo.define('views/file/record/plate', 'views/record/list',
 
         listContainerEl: '.list > div > .plate > .row',
     
-        massActionList              : ['remove', 'massUpdate'],
-    
-        checkAllResultMassActionList: ['remove', 'massUpdate'] ,
+        massActionList              : ['remove', 'update'],
+
+        checkAllResultMassActionList: ['remove', 'update'] ,
 
         itemsInRow: null,
 
