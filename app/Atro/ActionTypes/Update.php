@@ -173,7 +173,7 @@ class Update extends AbstractAction
                     }
                     $outputJson = $this->container->get('twig')->renderTemplate($actionData->field->updateScript, $templateData);
                     $inputData = @json_decode((string)$outputJson);
-                    if (empty($inputData) && !empty(trim($outputJson))) {
+                    if (!is_object($inputData) && !empty(trim($outputJson))) {
                         $log->set('type', 'error');
                         $log->set('message', "Invalid Json for Update: " . $outputJson);
                         $this->getEntityManager()->saveEntity($log);
@@ -190,6 +190,11 @@ class Update extends AbstractAction
             $this->getEntityManager()->saveEntity($log);
 
             return false;
+        }
+
+        if (empty($inputData)) {
+            // Skip for empty payload
+            return true;
         }
 
         $inputData->_workflowAction = !empty($input->triggeredEntityId);
