@@ -53,9 +53,12 @@ class AuthMiddleware implements MiddlewareInterface
         if (!$authRequired) {
             if ($username && $password) {
                 try {
-                    $auth->login($username, $password);
+                    if (!$auth->login($username, $password)) {
+                        $auth->useNoAuth();
+                    }
                 } catch (\Exception $e) {
                     // optional auth — silently ignore failure
+                    $auth->useNoAuth();
                 }
             } else {
                 $auth->useNoAuth();
