@@ -118,7 +118,7 @@ class MassUpdateAsyncHandler extends AbstractHandler
             throw new BadRequest('values is required');
         }
 
-        if (empty($data->where)) {
+        if (!isset($data->where)) {
             throw new BadRequest('where is required');
         }
 
@@ -129,9 +129,10 @@ class MassUpdateAsyncHandler extends AbstractHandler
         }
 
         $params = [
-            'where' => json_decode(json_encode($data->where), true),
+            'where'              => json_decode(json_encode($data->where), true),
+            'maxCountWithoutJob' => -1,
         ];
-        $result = $this->getRecordService($entityName)->massUpdateViaJob($data->values, $params);
+        $result = $this->getRecordService($entityName)->massUpdate($data->values, $params);
 
         return new JsonResponse($result);
     }
