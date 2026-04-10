@@ -247,6 +247,24 @@ For URL-based file imports, configure the URL field rule. The 'Request headers' 
 
 **Exception:** Product Main Image can be imported with product data. Provide image URL in the "Main Image" field, which will both create the file record and set it as the main image.
 
+### How To Import List Options
+
+List options can be imported into the system using import data from any type of [Data Sourcing](#Data-Sourcing). This enables users to create or update multiple options at once.
+
+The import data should contain:
+- A list of option values
+- A reference to the List each option belongs to (required only when creating new options or updating list assignments)
+
+Target entity should always be List Option. Each row represents a single List Option record.
+
+![Import List Options](./_assets/Import-List-Options.png){.medium}
+
+To correctly match existing records during import, it is recommended that system IDs of list options are used as unique identifiers when updating existing options in the list. If all option values are unique within the system, however, the option value (name) can be used as an identifier instead. The example feed configuration is shown in the image below:
+
+![field mapping](./_assets/field-mapping.png){.medium}
+
+When creating new list options it is recommended to link options to their corresponding lists within the same import feed usung [multiple relations](#multiple-relations) method. This ensures that all required relationships are established during the import process and prevents orphaned option records.
+
 ## Running Import Feed
 
 Click `Import` to process the configured sample file:
