@@ -1009,6 +1009,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
             } else {
                 Espo.Ui.success(this.translate('massActionDelegatedToJm'));
+                if (result.jobId) {
+                    this.checkMassActionJob(result.jobId);
+                }
             }
         },
 
