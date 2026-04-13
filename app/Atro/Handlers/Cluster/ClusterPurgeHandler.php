@@ -47,21 +47,17 @@ use Psr\Http\Server\RequestHandlerInterface;
             'application/json' => [
                 'schema' => [
                     'type'        => 'object',
-                    'description' => 'Required unless all=true is set in the query. Provide either idList or where.',
+                    'description' => 'Ignored when all=true is set in the query. Otherwise exactly one of idList or where must be provided.',
                     'properties'  => [
                         'idList' => [
                             'type'        => 'array',
                             'items'       => ['type' => 'string'],
-                            'description' => 'List of Cluster IDs to purge.',
+                            'description' => 'List of Cluster IDs to purge. Required when all=true is not set and where is omitted.',
                         ],
                         'where'  => [
                             'type'        => 'array',
-                            'description' => 'Filter criteria selecting Clusters to purge.',
+                            'description' => 'Filter criteria selecting Clusters to purge. Required when all=true is not set and idList is omitted.',
                         ],
-                    ],
-                    'oneOf'       => [
-                        ['required' => ['idList']],
-                        ['required' => ['where']],
                     ],
                 ],
             ],
