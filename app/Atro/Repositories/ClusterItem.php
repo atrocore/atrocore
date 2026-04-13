@@ -375,7 +375,7 @@ class ClusterItem extends Base
             ->executeStatement();
     }
 
-    private function createMoveNotes(string $clusterIdFrom, string $clusterIdTo, array $items): void
+    public function createMoveNotes(string $clusterIdFrom, string $clusterIdTo, array $items): void
     {
         // Group by entity type for batched name lookups
         $byEntityName = [];

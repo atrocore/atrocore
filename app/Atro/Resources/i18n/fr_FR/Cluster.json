@@ -29,8 +29,10 @@
     "cannotMergeUnconfirmedItems": "Les éléments non confirmés ne peuvent pas être ajoutés à la fusion"
   },
   "labels": {
-    "stagingRecord": "enregistrement intermediaire",
-    "masterRecord": "enregistrement de référence"
+    "stagingRecord": "enregistrement intermédiaire",
+    "stagingRecords": "enregistrements intermédiaires",
+    "masterRecord": "enregistrement de référence",
+    "masterRecords": "enregistrements de référence"
   },
   "streamMessages": {
     "clusterLinked": "{user} a lié {relatedEntity} à ce cluster",
@@ -51,17 +53,9 @@
     "clusterDeletedThis": "{user} a supprimé ce cluster",
     "clusterRecordDeleted": "{user} a supprimé {relatedEntity} de ce cluster",
     "clusterRecordDeletedThis": "{user} a supprimé {relatedEntity} de ce cluster",
-    "clusterMovedToCluster":              "Le système a déplacé les enregistrements intermediaire {stagingRecords} et les enregistrements de référence {masterRecords} du cluster {clusterLink} vers ce cluster",
-    "clusterMovedToClusterThis":          "Le système a déplacé les enregistrements intermediaire {stagingRecords} et les enregistrements de référence {masterRecords} du cluster {clusterLink} vers ce cluster",
-    "clusterMovedToClusterStaging":       "Le système a déplacé les enregistrements intermediaire {stagingRecords} du cluster {clusterLink} vers ce cluster",
-    "clusterMovedToClusterStagingThis":   "Le système a déplacé les enregistrements intermediaire {stagingRecords} du cluster {clusterLink} vers ce cluster",
-    "clusterMovedToClusterMaster":        "Le système a déplacé les enregistrements de référence {masterRecords} du cluster {clusterLink} vers ce cluster",
-    "clusterMovedToClusterMasterThis":    "Le système a déplacé les enregistrements de référence {masterRecords} du cluster {clusterLink} vers ce cluster",
-    "clusterMovedFromCluster":            "Le système a déplacé les enregistrements intermediaire {stagingRecords} et les enregistrements de référence {masterRecords} de ce cluster vers le cluster {clusterLink}",
-    "clusterMovedFromClusterThis":        "Le système a déplacé les enregistrements intermediaire {stagingRecords} et les enregistrements de référence {masterRecords} de ce cluster vers le cluster {clusterLink}",
-    "clusterMovedFromClusterStaging":     "Le système a déplacé les enregistrements intermediaire {stagingRecords} de ce cluster vers le cluster {clusterLink}",
-    "clusterMovedFromClusterStagingThis": "Le système a déplacé les enregistrements intermediaire {stagingRecords} de ce cluster vers le cluster {clusterLink}",
-    "clusterMovedFromClusterMaster":      "Le système a déplacé les enregistrements de référence {masterRecords} de ce cluster vers le cluster {clusterLink}",
-    "clusterMovedFromClusterMasterThis":  "Le système a déplacé les enregistrements de référence {masterRecords} de ce cluster vers le cluster {clusterLink}"
+    "clusterMovedToCluster":     "{user} a déplacé {records} du cluster {clusterLink} vers {entity}",
+    "clusterMovedToClusterThis": "{user} a déplacé {records} du cluster {clusterLink} vers ce cluster",
+    "clusterMovedFromCluster":     "{user} a déplacé {records} de {entity} vers le cluster {clusterLink}",
+    "clusterMovedFromClusterThis": "{user} a déplacé {records} de ce cluster vers le cluster {clusterLink}"
   }
 }
