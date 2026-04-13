@@ -41,11 +41,11 @@ Each list contains multiple options that users can select from. List options are
 - **Option Value**: The display text shown to users
 - **Color**: Input field with a color picker for selecting or entering a HEX color code, providing a visual representation of the option
 - **Code**: Optional unique identifier for the option
-- **Sort Order (relation)**: Determines the display order of an option as shown in the list.
+- **Sort Order**: Determines the display order of an option as shown in the list. Lower numbers appear first.
 - **Lists**: Reference to the parent list(s). One option can belong to several lists, allowing for flexible categorization and reuse across different contexts
 
 **Configuration Features**:
-- **Sort Order (relation)**: Use numeric values to arrange options in a meaningful sequence. Lower numbers appear first.
+- **Sort Order**: Use numeric values to arrange options in a meaningful sequence. Lower numbers appear first.
 - **Multilingual Support**: Each option can have different values for different languages. This is particularly useful for international deployments.
 - **Code Usage**: Codes provide a stable identifier for options, useful for API integration and system configuration.
 
@@ -58,10 +58,8 @@ You may need to change the order in which options appear within a list. This can
 > This ordering directly controls how options are displayed in dropdown lists throughout the system.
 
 **Ordering Methods**:
-- **Drag and Drop**: Options can be reordered by dragging and dropping them into the desired position. This method automatically assigns `Sort Order (relation)` values starting from 0 with an increment of 10 for each subsequent option.
-- **Sort Order (relation) Field**: This integer field determines the position of an option relative to others. In a option's [detail view](../../04.understanding-ui/docs.md#detail-view), set a lower number to position an option before another, or a higher number to position it after. This ordering is respected in dropdown lists.
-
-> The Sort Order (relation) field is distinct from the **Sort Order** field on the option itself. The `Sort Order` field on the option only describes the option's position within the `List Options` entity and does not affect the ordering of options in the list.
+- **Drag and Drop**: Options can be reordered by dragging and dropping them into the desired position. This method automatically assigns *Sort Order* values starting from 0 with an increment of 10 for each subsequent option.
+- **Sort Order Field**: This integer field on the option determines its position relative to others. In an option's [detail view](../../04.understanding-ui/docs.md#detail-view), set a lower number to position an option before another, or a higher number to position it after. This ordering is respected in dropdown lists.
 
 ## Access Control
 
