@@ -52,8 +52,6 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         accept: false,
 
-        shouldAvoidAutomaticalExtensionUpdate : false,
-
         events: {
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
@@ -349,10 +347,6 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             let res = {
                 accept: this.accept,
             };
-
-            if (this.shouldAvoidAutomaticalExtensionUpdate) {
-                res.headers = Object.assign(res.headers || {}, {'Skip-Extension-Update': 'true'});
-            }
 
             if (this.fileTypeId) {
                 this.ajaxGetRequest(`FileType/${this.fileTypeId}`, null, {async: false}).success(entity => {

@@ -28,18 +28,6 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Create a File record',
     description: 'Creates a new File entity from uploaded content (`fileContents`), a remote URL (`url`), or a local file path (`localFileName`). Returns the created File record, and optionally `duplicate` if a file with the same content hash already exists, and `sharedUrl` if `share` was requested.',
     tag: 'File',
-    parameters: [
-        [
-            'name'        => 'Skip-Extension-Update',
-            'in'          => 'header',
-            'required'    => false,
-            'description' => 'Set to "true" to prevent AtroCore from automatically correcting the file extension based on its detected MIME type.',
-            'schema'      => [
-                'type' => 'string',
-                'enum' => ['true'],
-            ],
-        ],
-    ],
     requestBody: [
         'required' => true,
         'content'  => [

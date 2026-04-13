@@ -191,8 +191,7 @@ Content-Type: application/json
 Imports records provided directly in the request body, using the configuration of a named Import Feed.
 
 ```http
-POST /api/ImportFeed/action/importData
-Authorization-Token: <authorizationToken>
+POST /api/ImportFeed/importData
 Content-Type: application/json
 ```
 
@@ -218,8 +217,7 @@ Content-Type: application/json
 Checks that the Import Feed identified by its code is correctly configured and contains a required ID column.
 
 ```http
-GET /api/ImportFeed/action/verifyFeedByCode?code=<ImportFeedCode>
-Authorization-Token: <authorizationToken>
+GET /api/ImportFeed/verifyFeedByCode?code=<ImportFeedCode>
 ```
 
 **Query parameters:**
