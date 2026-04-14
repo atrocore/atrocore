@@ -35,6 +35,7 @@ class Job extends Base
 
         $qb->orderBy("$j.priority", 'DESC');
         $qb->addOrderBy("$j.execute_time", 'ASC');
+        $qb->addOrderBy("CASE WHEN $j.status = 'Running' THEN 0 ELSE 1 END", 'ASC');
 
         $qb->andWhere("$j.status IN (:statuses)");
         $qb->andWhere("$j.type IS NOT NULL");
