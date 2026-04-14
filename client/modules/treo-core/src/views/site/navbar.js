@@ -342,6 +342,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 collection.sortBy = 'priority';
                 collection.asc = false;
                 collection.where = [{type: 'bool', value: ['jobManagerItems']}];
+                collection.data.select = ['name', 'status'].join(',');
                 this.listenToOnce(collection, 'sync', () => {
                     this.createView('list', 'views/record/list', {
                         el: this.options.el + ' .list-container',
