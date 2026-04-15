@@ -140,6 +140,7 @@
     "zuZa": "zu_ZA"
   },
   "labels": {
+    "refresh": "Refresh",
     "reset": "Reset to Default",
     "push": "Send for Review"
   },
