@@ -447,11 +447,12 @@ class Hierarchy extends Base
 
     public function getChildrenRecursivelyArray(string $id): array
     {
-        return $this->getConnection()->createQueryBuilder()
+        return $this->getDbal()->createQueryBuilder()
             ->select('id')
             ->from($this->tableName)
-            ->where('routes LIKE :like')
+            ->where('routes LIKE :like and deleted = :false')
             ->setParameter('like', "%|$id|%")
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchFirstColumn();
     }
 
