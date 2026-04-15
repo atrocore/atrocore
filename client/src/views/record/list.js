@@ -2000,14 +2000,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let iteration = 1
             const handler = () => {
                 $.ajax({
-                    url: 'Job/action/massActionStatus?id=' + jobId,
+                    url: 'Job/' + jobId + '/massActionStatus',
                     type: 'GET',
                     success: (result) => {
                         if (result.done) {
                             if (result.errors) {
                                 this.notify(result.message + '\n' + result.errors, 'error', 6000)
                             } else {
-                                this.notify(result.message, 'success')
+                                this.notify(result.message, 'success');
+                                this.collection.fetch();
                             }
 
                             return

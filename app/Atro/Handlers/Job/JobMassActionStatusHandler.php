@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Job/action/massActionStatus',
+    path: '/Job/{id}/massActionStatus',
     methods: [
         'GET',
     ],
@@ -32,7 +32,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     parameters: [
         [
             'name'     => 'id',
-            'in'       => 'query',
+            'in'       => 'path',
             'required' => true,
             'schema'   => [
                 'type'    => 'string',
@@ -70,8 +70,7 @@ class JobMassActionStatusHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $qp    = $request->getQueryParams();
-        $jobId = $qp['id'] ?? null;
+        $jobId = $request->getAttribute('id');
 
         if (empty($jobId)) {
             throw new BadRequest();

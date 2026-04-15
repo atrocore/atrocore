@@ -52,15 +52,17 @@ class Job extends Base
 
             $done = true;
             foreach ($childJobs as $childJob) {
-                if (!in_array($childJob->status, ['Success', 'Failed'])) {
+                if (!in_array($childJob->get('status'), ['Success', 'Failed'])) {
                     $done = false;
                     break;
                 }
 
-                $jobMessages = explode("\n", $childJob->message);
-                $messages[] = $jobMessages[0];
-                array_splice($jobMessages, 0, 1);
-                $errors = array_merge($errors, $jobMessages);
+                if (!empty($childJob->get('message'))) {
+                    $jobMessages = explode("\n", $childJob->get('message'));
+                    $messages[] = $jobMessages[0];
+                    array_splice($jobMessages, 0, 1);
+                    $errors = array_merge($errors, $jobMessages);
+                }
             }
         }
 
