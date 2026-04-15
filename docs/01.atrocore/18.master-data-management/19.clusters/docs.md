@@ -113,6 +113,8 @@ The following actions are available for cluster items in both Standard and Compa
 
 - **Unmerge** – detaches the cluster item from the current cluster and moves it into a new separate cluster. If the item was previously confirmed, its confirmation is automatically reset after the unmerge. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
 
+- **Move** – transfers the cluster item to an existing cluster selected by the user. A cluster picker dialog opens, filtered to clusters of the same master entity. If the item was confirmed, its confirmation is reset before the move. The item cannot be moved to a cluster where it was previously rejected. Both the source and target clusters record the move in their activity streams.
+
 - **Delete** Deletes the corresponding record and its cluster item.
 
 ## Confirming Cluster Items

@@ -31,7 +31,9 @@
   },
   "labels": {
     "stagingRecord": "staging-Datensatz",
-    "masterRecord": "master-Datensatz"
+    "stagingRecords": "staging-Datensätze",
+    "masterRecord": "master-Datensatz",
+    "masterRecords": "master-Datensätze"
   },
   "streamMessages": {
     "clusterLinked": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",
@@ -52,17 +54,9 @@
     "clusterDeletedThis": "{user} hat diesen Cluster gelöscht",
     "clusterRecordDeleted": "{user} hat {relatedEntity} aus diesem Cluster gelöscht",
     "clusterRecordDeletedThis": "{user} hat {relatedEntity} aus diesem Cluster gelöscht",
-    "clusterMovedToCluster":              "Das System hat die Staging-Datensätze {stagingRecords} und Master-Datensätze {masterRecords} von Cluster {clusterLink} in diesen Cluster verschoben",
-    "clusterMovedToClusterThis":          "Das System hat die Staging-Datensätze {stagingRecords} und Master-Datensätze {masterRecords} von Cluster {clusterLink} in diesen Cluster verschoben",
-    "clusterMovedToClusterStaging":       "Das System hat die Staging-Datensätze {stagingRecords} von Cluster {clusterLink} in diesen Cluster verschoben",
-    "clusterMovedToClusterStagingThis":   "Das System hat die Staging-Datensätze {stagingRecords} von Cluster {clusterLink} in diesen Cluster verschoben",
-    "clusterMovedToClusterMaster":        "Das System hat die Master-Datensätze {masterRecords} von Cluster {clusterLink} in diesen Cluster verschoben",
-    "clusterMovedToClusterMasterThis":    "Das System hat die Master-Datensätze {masterRecords} von Cluster {clusterLink} in diesen Cluster verschoben",
-    "clusterMovedFromCluster":            "Das System hat die Staging-Datensätze {stagingRecords} und Master-Datensätze {masterRecords} von diesem Cluster in Cluster {clusterLink} verschoben",
-    "clusterMovedFromClusterThis":        "Das System hat die Staging-Datensätze {stagingRecords} und Master-Datensätze {masterRecords} von diesem Cluster in Cluster {clusterLink} verschoben",
-    "clusterMovedFromClusterStaging":     "Das System hat die Staging-Datensätze {stagingRecords} von diesem Cluster in Cluster {clusterLink} verschoben",
-    "clusterMovedFromClusterStagingThis": "Das System hat die Staging-Datensätze {stagingRecords} von diesem Cluster in Cluster {clusterLink} verschoben",
-    "clusterMovedFromClusterMaster":      "Das System hat die Master-Datensätze {masterRecords} von diesem Cluster in Cluster {clusterLink} verschoben",
-    "clusterMovedFromClusterMasterThis":  "Das System hat die Master-Datensätze {masterRecords} von diesem Cluster in Cluster {clusterLink} verschoben"
+    "clusterMovedToCluster":     "{user} hat {records} von Cluster {clusterLink} nach {entity} verschoben",
+    "clusterMovedToClusterThis": "{user} hat {records} von Cluster {clusterLink} in diesen Cluster verschoben",
+    "clusterMovedFromCluster":     "{user} hat {records} von {entity} in Cluster {clusterLink} verschoben",
+    "clusterMovedFromClusterThis": "{user} hat {records} von diesem Cluster in Cluster {clusterLink} verschoben"
   }
 }

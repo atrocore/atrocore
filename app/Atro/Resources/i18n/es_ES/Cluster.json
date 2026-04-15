@@ -30,7 +30,9 @@
   },
   "labels": {
     "stagingRecord": "registro de ensayo",
-    "masterRecord": "registro maestro"
+    "stagingRecords": "registros de ensayo",
+    "masterRecord": "registro maestro",
+    "masterRecords": "registros maestros"
   },
   "streamMessages": {
     "clusterLinked": "{user} vinculó {relatedEntity} a este clúster",
@@ -51,17 +53,9 @@
     "clusterDeletedThis": "{user} eliminó este clúster",
     "clusterRecordDeleted": "{user} eliminó {relatedEntity} de este clúster",
     "clusterRecordDeletedThis": "{user} eliminó {relatedEntity} de este clúster",
-    "clusterMovedToCluster":              "El sistema movió los registros de ensayo {stagingRecords} y los registros maestros {masterRecords} del clúster {clusterLink} a este clúster",
-    "clusterMovedToClusterThis":          "El sistema movió los registros de ensayo {stagingRecords} y los registros maestros {masterRecords} del clúster {clusterLink} a este clúster",
-    "clusterMovedToClusterStaging":       "El sistema movió los registros de ensayo {stagingRecords} del clúster {clusterLink} a este clúster",
-    "clusterMovedToClusterStagingThis":   "El sistema movió los registros de ensayo {stagingRecords} del clúster {clusterLink} a este clúster",
-    "clusterMovedToClusterMaster":        "El sistema movió los registros maestros {masterRecords} del clúster {clusterLink} a este clúster",
-    "clusterMovedToClusterMasterThis":    "El sistema movió los registros maestros {masterRecords} del clúster {clusterLink} a este clúster",
-    "clusterMovedFromCluster":            "El sistema movió los registros de ensayo {stagingRecords} y los registros maestros {masterRecords} de este clúster al clúster {clusterLink}",
-    "clusterMovedFromClusterThis":        "El sistema movió los registros de ensayo {stagingRecords} y los registros maestros {masterRecords} de este clúster al clúster {clusterLink}",
-    "clusterMovedFromClusterStaging":     "El sistema movió los registros de ensayo {stagingRecords} de este clúster al clúster {clusterLink}",
-    "clusterMovedFromClusterStagingThis": "El sistema movió los registros de ensayo {stagingRecords} de este clúster al clúster {clusterLink}",
-    "clusterMovedFromClusterMaster":      "El sistema movió los registros maestros {masterRecords} de este clúster al clúster {clusterLink}",
-    "clusterMovedFromClusterMasterThis":  "El sistema movió los registros maestros {masterRecords} de este clúster al clúster {clusterLink}"
+    "clusterMovedToCluster":     "{user} movió {records} del clúster {clusterLink} a {entity}",
+    "clusterMovedToClusterThis": "{user} movió {records} del clúster {clusterLink} a este clúster",
+    "clusterMovedFromCluster":     "{user} movió {records} de {entity} al clúster {clusterLink}",
+    "clusterMovedFromClusterThis": "{user} movió {records} de este clúster al clúster {clusterLink}"
   }
 }

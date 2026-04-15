@@ -87,10 +87,6 @@ class ClusterItemMoveHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
-            throw new Forbidden();
-        }
-
         $id   = (string)$request->getAttribute('id');
         $data = $this->getRequestBody($request);
 
