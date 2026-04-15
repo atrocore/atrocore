@@ -146,6 +146,27 @@ When Update Master Automatically is enabled in the Master Data Entities configur
 
 If automatic [field locking](https://store.atrocore.com/en/advanced-data-management/20113) on manual modification is enabled, updates from staging records will not overwrite fields in the master record that have been modified manually.
 
+## Purging Clusters
+
+Purging permanently deletes one or more clusters along with all their ClusterItems and RejectedClusterItems. Unlike the standard delete action, which requires a cluster to be in the Empty state, purge removes a cluster regardless of its state.
+
+> This is a hard delete. Purged clusters and their items cannot be recovered.
+
+### Purge All
+
+The **Purge All** button is available in the top-right area of the Cluster list view. It purges every cluster in the system regardless of any active filters or selection. A confirmation dialog is shown before execution.
+
+### Purge selected
+
+To purge a specific set of clusters, select them in the list view, open the mass action menu, and choose **Purge**. A confirmation dialog is shown before execution.
+
+### Sync vs. async execution
+
+| Clusters affected | Behaviour |
+|---|---|
+| Up to 200 | Executed immediately; the UI waits for completion |
+| More than 200 | Dispatched as background jobs; progress can be monitored in the Job Manager |
+
 ## Activity Stream
 
 Each Cluster has an activity stream that records all significant events on its items. The following events are tracked:
