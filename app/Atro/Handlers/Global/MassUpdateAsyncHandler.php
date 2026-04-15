@@ -23,12 +23,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/entityMassUpdate',
+    path: '/entityMassUpdateAsync',
     methods: [
         'PATCH',
     ],
-    summary: 'Mass update (synchronous)',
-    description: 'Updates multiple records of the specified entity synchronously and returns the result immediately.',
+    summary: 'Mass update (asynchronous)',
+    description: 'Schedules a mass update as a background job and returns immediately with the job ID. The actual update logic is identical to `PATCH /entityMassUpdate` but runs asynchronously via the job queue.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -38,7 +38,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'type'       => 'object',
                     'required'   => [
                         'entityName',
-                        'ids',
+                        'where',
                         'values',
                     ],
                     'properties' => [
@@ -46,11 +46,24 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'type'    => 'string',
                             'example' => 'Product',
                         ],
-                        'ids'        => [
-                            'type'  => 'array',
-                            'items' => [
-                                'type' => 'string',
-                                'example' => 'some-id',
+                        'where'      => [
+                            'type'        => 'array',
+                            'description' => 'Filter conditions that define which records to update. Uses the same format as the list endpoint `where` parameter.',
+                            'items'       => [
+                                'type'       => 'object',
+                                'properties' => [
+                                    'type'      => [
+                                        'type'    => 'string',
+                                        'example' => 'equals',
+                                    ],
+                                    'attribute' => [
+                                        'type'    => 'string',
+                                        'example' => 'status',
+                                    ],
+                                    'value'     => [
+                                        'example' => 'Draft',
+                                    ],
+                                ],
                             ],
                         ],
                         'values'     => [
@@ -65,21 +78,18 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Reference to the created background job.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
+                        'required'   => [
+                            'jobId',
+                        ],
                         'properties' => [
-                            'updated' => [
-                                'type' => 'integer',
-                            ],
-                            'errors' => [
-                                'type'        => 'array',
-                                'description' => 'List of error messages for records that could not be updated.',
-                                'items'       => [
-                                    'type' => 'string',
-                                ],
+                            'jobId' => [
+                                'type'        => 'string',
+                                'description' => 'ID of the created background job.',
                             ],
                         ],
                     ],
@@ -87,14 +97,14 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'entityName, attributes or ids are missing, or ids count exceeds the configured limit',
+            'description' => 'entityName, values or where are missing',
         ],
         403 => [
             'description' => 'Access denied',
         ],
     ],
 )]
-class MassUpdateHandler extends AbstractHandler
+class MassUpdateAsyncHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -108,21 +118,22 @@ class MassUpdateHandler extends AbstractHandler
             throw new BadRequest('values is required');
         }
 
+        if (!isset($data->where)) {
+            throw new BadRequest('where is required');
+        }
+
         $entityName = (string)$data->entityName;
 
         if (!$this->getAcl()->check($entityName, 'edit')) {
             throw new Forbidden();
         }
 
-        $ids = $data->ids ?? [];
-        $limit = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
-        if (count($ids) > $limit) {
-            throw new BadRequest("Too many ids: maximum allowed is $limit. Use /entityMassUpdateAsync for large batches.");
-        }
-
-        $params = ['ids' => $ids, 'maxCountWithoutJob' => PHP_INT_MAX];
+        $params = [
+            'where'              => json_decode(json_encode($data->where), true),
+            'maxCountWithoutJob' => -1,
+        ];
         $result = $this->getRecordService($entityName)->massUpdate($data->values, $params);
 
-        return new JsonResponse(['updated' => $result['count'], 'errors' => $result['errors']]);
+        return new JsonResponse($result);
     }
 }

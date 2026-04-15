@@ -296,24 +296,27 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
         massUpdate(attributes) {
             this.disableButton('update');
-            let self = this;
+            const threshold = this.getConfig().get('massUpdateMaxCountWithoutJob') || 200;
+            const isAsync = this.byWhere || !this.ids || this.ids.length > threshold;
+            const url = isAsync ? 'entityMassUpdateAsync' : 'entityMassUpdate';
             $.ajax({
-                url: 'entityMassUpdate',
+                url: url,
                 type: 'PATCH',
                 data: JSON.stringify({
                     entityName: this.scope,
-                    attributes: attributes,
-                    ids: self.ids || null,
-                    where: (!self.ids || self.ids.length == 0) ? self.options.where : null,
-                    selectData: (!self.ids || self.ids.length == 0) ? self.options.selectData : null,
+                    values: attributes,
+                    ids: this.ids || null,
+                    where: (!this.ids || this.ids.length == 0) ? this.options.where : null,
+                    selectData: (!this.ids || this.ids.length == 0) ? this.options.selectData : null,
                     byWhere: this.byWhere
                 }),
-                success: function (result) {
-                    self.trigger('after:update', result);
+                success: (result) => {
+                    result.sync = !isAsync;
+                    this.trigger('after:update', result);
                 },
-                error: function () {
-                    self.notify('Error occurred', 'error');
-                    self.enableButton('update');
+                error: () => {
+                    this.notify('Error occurred', 'error');
+                    this.enableButton('update');
                 }
             });
         },

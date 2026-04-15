@@ -769,25 +769,28 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let action = () => {
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
-                var ids = [];
-                var data = { permanently: permanently };
-                if (this.allResultIsChecked) {
-                    data.where = this.collection.getWhereForCheckedRecords();
-                    data.selectData = this.collection.data || {};
-                    data.byWhere = true;
-                } else {
-                    data.ids = ids;
-                }
+                const threshold = this.getConfig().get('massDeleteMaxCountWithoutJob') || 200;
+                const isAsync = this.allResultIsChecked || !this.checkedList || this.checkedList.length > threshold;
+                const url = isAsync ? 'entityMassDeleteAsync' : 'entityMassDelete';
 
+                var ids = [];
                 for (var i in this.checkedList) {
                     ids.push(String(this.checkedList[i]));
                 }
 
+                var requestData = { entityName: this.entityType, permanently: permanently };
+                if (isAsync) {
+                    requestData.where = this.collection.getWhereForCheckedRecords();
+                } else {
+                    requestData.ids = ids;
+                }
+
                 $.ajax({
-                    url: 'entityMassDelete',
+                    url: url,
                     type: 'POST',
-                    data: JSON.stringify(Object.assign({ entityName: this.entityType }, data))
+                    data: JSON.stringify(requestData)
                 }).done(function (result) {
+                    result.sync = !isAsync;
                     this.notify(false)
                     this.processMassActionResult(result)
                     this.collection.fetch();
@@ -1010,6 +1013,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
             } else {
                 Espo.Ui.success(this.translate('massActionDelegatedToJm'));
+                if (result.jobId) {
+                    this.checkMassActionJob(result.jobId);
+                }
             }
         },
 

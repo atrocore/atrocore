@@ -116,10 +116,10 @@ class Record extends RecordService
             ->getArgument('params');
 
         $params['action'] = 'delete';
-        $params['maxCountWithoutJob'] = $this->getConfig()->get('massDeleteMaxCountWithoutJob', 200);
+        $params['maxCountWithoutJob'] = $params['maxCountWithoutJob'] ?? $this->getConfig()->get('massDeleteMaxCountWithoutJob', 200);
         $params['maxChunkSize'] = $this->getConfig()->get('massDeleteMaxChunkSize', 3000);
         $params['minChunkSize'] = $this->getConfig()->get('massDeleteMinChunkSize', 400);
-        $params['singleActionMethod'] = !empty($params['permanently']) ?  'deleteEntityPermanently' : 'deleteEntity';
+        $params['singleActionMethod'] = !empty($params['permanently']) ? 'deleteEntityPermanently' : 'deleteEntity';
 
         if (!empty($params['permanently'])) {
             $callback = function ($id) {
@@ -131,11 +131,17 @@ class Record extends RecordService
             };
         }
 
-        list($count, $errors, $sync) = $this->executeMassAction($params, $callback);
+        [$count, $errors, $sync, $jobEntity] = array_pad(
+            $this->executeMassAction($params, $callback),
+            4, null
+        );
+
+        $result = $sync
+            ? ['count' => $count, 'errors' => $errors]
+            : ['jobId' => $jobEntity->get('id')];
 
         return $this
-            ->dispatchEvent('afterMassDelete',
-                new Event(['service' => $this, 'result' => ['count' => $count, 'sync' => $sync, 'errors' => $errors]]))
+            ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => $result]))
             ->getArgument('result');
     }
 
