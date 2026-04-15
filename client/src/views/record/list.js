@@ -267,10 +267,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         setupDraggableParams() {
             this.dragableListRows = this.dragableListRows || this.options.dragableListRows;
             this.listRowsOrderSaveUrl = this.listRowsOrderSaveUrl || this.options.listRowsOrderSaveUrl;
+            const params = new URLSearchParams((this.collection.url || '').split('?')[1]);
 
-            const urlParts = (this.collection.url || '').split('/');
-            const mainScope = urlParts[0];
-            this.relationName = urlParts[2];
+            const mainScope = params.get('entityName');
+            this.relationName = params.get('link');
+
             if (mainScope && this.relationName) {
                 const dragDropDefs = this.getMetadata().get(['clientDefs', mainScope, 'relationshipPanels', this.relationName, 'dragDrop']);
                 if (dragDropDefs && (this.dragableListRows || typeof this.dragableListRows === 'undefined')) {

@@ -1822,7 +1822,7 @@ class Base
 
                 case 'similar':
                     if (!is_null($value) && $value !== '') {
-                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 1);
                         $colName = Util::toUnderScore($attribute);
                         $paramVal = 'sim_v_' . IdGenerator::unsortableId();
                         $paramThr = 'sim_t_' . IdGenerator::unsortableId();
@@ -1835,7 +1835,7 @@ class Base
 
                 case 'wordSimilar':
                     if (!is_null($value) && $value !== '') {
-                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 1);
                         $colName = Util::toUnderScore($attribute);
                         $paramVal = 'wsim_v_' . IdGenerator::unsortableId();
                         $paramThr = 'wsim_t_' . IdGenerator::unsortableId();
@@ -2649,7 +2649,7 @@ class Base
         }
 
         if (!empty($fuzzyFields)) {
-            $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+            $threshold = (float)$this->getConfig()->get('similarityThreshold', 1);
             $words = array_values(array_filter(array_map('trim', explode(' ', $textFilter))));
             $ta = QueryConverter::TABLE_ALIAS;
 

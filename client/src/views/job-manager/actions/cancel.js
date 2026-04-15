@@ -20,7 +20,7 @@ Espo.define('views/job-manager/actions/cancel', 'views/job-manager/actions/abstr
         },
 
         runAction() {
-            this.ajaxPutRequest(`${this.model.name}/${this.model.id}`, this.getSaveData())
+            this.ajaxPatchRequest(`${this.model.name}/${this.model.id}`, this.getSaveData())
                 .then(() => this.model.trigger('reloadList'));
         },
 

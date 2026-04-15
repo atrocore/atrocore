@@ -103,10 +103,6 @@ class ClusterItemMassMoveHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
-            throw new Forbidden();
-        }
-
         $data = $this->getRequestBody($request);
         $recordService = $this->getRecordService('ClusterItem');
         $params = [];

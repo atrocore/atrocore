@@ -113,6 +113,8 @@ The following actions are available for cluster items in both Standard and Compa
 
 - **Unmerge** – detaches the cluster item from the current cluster and moves it into a new separate cluster. If the item was previously confirmed, its confirmation is automatically reset after the unmerge. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
 
+- **Move** – transfers the cluster item to an existing cluster selected by the user. A cluster picker dialog opens, filtered to clusters of the same master entity. If the item was confirmed, its confirmation is reset before the move. The item cannot be moved to a cluster where it was previously rejected. Both the source and target clusters record the move in their activity streams.
+
 - **Delete** Deletes the corresponding record and its cluster item.
 
 ## Confirming Cluster Items
@@ -145,6 +147,27 @@ Items confirmed automatically are marked with a dedicated icon in the cluster.
 When Update Master Automatically is enabled in the Master Data Entities configuration, any update to a staging record will automatically trigger an update of the corresponding master record according to the Merging Script – without requiring a manual re-confirmation.
 
 If automatic [field locking](https://store.atrocore.com/en/advanced-data-management/20113) on manual modification is enabled, updates from staging records will not overwrite fields in the master record that have been modified manually.
+
+## Purging Clusters
+
+Purging permanently deletes one or more clusters along with all their ClusterItems and RejectedClusterItems. Unlike the standard delete action, which requires a cluster to be in the Empty state, purge removes a cluster regardless of its state.
+
+> This is a hard delete. Purged clusters and their items cannot be recovered.
+
+### Purge All
+
+The **Purge All** button is available in the top-right area of the Cluster list view. It purges every cluster in the system regardless of any active filters or selection. A confirmation dialog is shown before execution.
+
+### Purge selected
+
+To purge a specific set of clusters, select them in the list view, open the mass action menu, and choose **Purge**. A confirmation dialog is shown before execution.
+
+### Sync vs. async execution
+
+| Clusters affected | Behaviour |
+|---|---|
+| Up to 200 | Executed immediately; the UI waits for completion |
+| More than 200 | Dispatched as background jobs; progress can be monitored in the Job Manager |
 
 ## Activity Stream
 

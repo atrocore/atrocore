@@ -60,7 +60,7 @@ Espo.define('model', [], function () {
         },
 
         sync: function (method, model, options) {
-            if (method === 'patch') options.type = 'PUT';
+            if (method === 'update') options.type = 'PATCH';
             return Dep.prototype.sync.call(this, method, model, options);
         },
 

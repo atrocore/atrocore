@@ -24,14 +24,6 @@ Espo.define('views/stream/notes/cluster-note', 'views/stream/note', function (De
 
             if (action) {
                 this.messageName = prefix + action.charAt(0).toUpperCase() + action.slice(1);
-
-                // Apply Staging/Master suffix before parent appends 'This'
-                if (data.stagingRecords !== undefined || data.masterRecords !== undefined) {
-                    var hasSt = data.stagingRecords && data.stagingRecords.length > 0;
-                    var hasMa = data.masterRecords  && data.masterRecords.length  > 0;
-                    if (hasSt && !hasMa) { this.messageName += 'Staging'; }
-                    if (!hasSt && hasMa) { this.messageName += 'Master';  }
-                }
             }
 
             Dep.prototype.init.call(this);
@@ -50,23 +42,34 @@ Espo.define('views/stream/notes/cluster-note', 'views/stream/note', function (De
 
             // Bulk-move note (movedToCluster / movedFromCluster)
             if (data.stagingRecords !== undefined || data.masterRecords !== undefined) {
-                var hasSt = data.stagingRecords && data.stagingRecords.length > 0;
-                var hasMa = data.masterRecords  && data.masterRecords.length  > 0;
-                if (!hasSt && !hasMa) { return; }
+                var allRecords = (data.stagingRecords || []).concat(data.masterRecords || []);
+                if (!allRecords.length) { return; }
 
-                this.messageData['stagingRecords'] = (data.stagingRecords || []).map(function (r) {
-                    var label      = Handlebars.Utils.escapeExpression(r.name || r.id);
-                    var entityName = Handlebars.Utils.escapeExpression(r.entityName || '');
-                    var id         = Handlebars.Utils.escapeExpression(r.id || '');
-                    return '<a href="#' + entityName + '/view/' + id + '">' + label + '</a>';
-                }).join(', ');
+                var buildLinks = function (records) {
+                    return records.map(function (r) {
+                        var label      = Handlebars.Utils.escapeExpression(r.name || r.id);
+                        var entityName = Handlebars.Utils.escapeExpression(r.entityName || '');
+                        var id         = Handlebars.Utils.escapeExpression(r.id || '');
+                        return '<a href="#' + entityName + '/view/' + id + '">' + label + '</a>';
+                    }).join(', ');
+                };
 
-                this.messageData['masterRecords'] = (data.masterRecords || []).map(function (r) {
-                    var label      = Handlebars.Utils.escapeExpression(r.name || r.id);
-                    var entityName = Handlebars.Utils.escapeExpression(r.entityName || '');
-                    var id         = Handlebars.Utils.escapeExpression(r.id || '');
-                    return '<a href="#' + entityName + '/view/' + id + '">' + label + '</a>';
-                }).join(', ');
+                var parts = [];
+                var stagingRecords = data.stagingRecords || [];
+                var masterRecords  = data.masterRecords  || [];
+
+                if (stagingRecords.length) {
+                    var stagingLabel = this.translate(stagingRecords.length === 1 ? 'stagingRecord' : 'stagingRecords', 'labels', 'Cluster');
+                    var sep = stagingRecords.length === 1 ? ' ' : ': ';
+                    parts.push(stagingLabel + sep + buildLinks(stagingRecords));
+                }
+                if (masterRecords.length) {
+                    var masterLabel = this.translate(masterRecords.length === 1 ? 'masterRecord' : 'masterRecords', 'labels', 'Cluster');
+                    var sep = masterRecords.length === 1 ? ' ' : ': ';
+                    parts.push(masterLabel + sep + buildLinks(masterRecords));
+                }
+
+                this.messageData['records'] = parts.join('; ');
 
                 var clusterLabel = Handlebars.Utils.escapeExpression(
                     data.clusterNumber != null ? String(data.clusterNumber) : (data.clusterId || '')

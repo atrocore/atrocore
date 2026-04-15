@@ -83,8 +83,7 @@ Espo.define('views/attribute/record/panels/extensible-enum-options', 'views/reco
 
         getCollectionUrl(){
             let extensibleEnumId = this.model.attributeModel.get('extensibleEnumId') || 'no-such-id';
-            
-            return `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
+            return `entityRelation?entityName=ExtensibleEnum&link=extensibleEnumOptions&id=${extensibleEnumId}`
         },
 
         afterRender() {

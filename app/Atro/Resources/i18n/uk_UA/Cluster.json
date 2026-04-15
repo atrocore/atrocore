@@ -29,8 +29,10 @@
     "cannotMergeUnconfirmedItems": "Непідтверджені елементи не можуть бути додані до об'єднання"
   },
   "labels": {
-    "stagingRecord": "Проміжний запис",
-    "masterRecord": "Майстер-запис"
+    "stagingRecord": "проміжний запис",
+    "stagingRecords": "проміжні записи",
+    "masterRecord": "майстер-запис",
+    "masterRecords": "майстер-записи"
   },
   "streamMessages": {
     "clusterLinked": "{user} пов'язав {relatedEntity} з цим кластером",
@@ -51,17 +53,9 @@
     "clusterDeletedThis": "{user} видалив цей кластер",
     "clusterRecordDeleted": "{user} видалив {relatedEntity} з цього кластера",
     "clusterRecordDeletedThis": "{user} видалив {relatedEntity} з цього кластера",
-    "clusterMovedToCluster":              "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterThis":          "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterStaging":       "Система перемістила проміжні записи {stagingRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterStagingThis":   "Система перемістила проміжні записи {stagingRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterMaster":        "Система перемістила майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedToClusterMasterThis":    "Система перемістила майстер-записи {masterRecords} з кластера {clusterLink} до цього кластера",
-    "clusterMovedFromCluster":            "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterThis":        "Система перемістила проміжні записи {stagingRecords} і майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterStaging":     "Система перемістила проміжні записи {stagingRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterStagingThis": "Система перемістила проміжні записи {stagingRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterMaster":      "Система перемістила майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}",
-    "clusterMovedFromClusterMasterThis":  "Система перемістила майстер-записи {masterRecords} з цього кластера до кластера {clusterLink}"
+    "clusterMovedToCluster":     "{user} перемістив {records} з кластера {clusterLink} до {entity}",
+    "clusterMovedToClusterThis": "{user} перемістив {records} з кластера {clusterLink} до цього кластера",
+    "clusterMovedFromCluster":     "{user} перемістив {records} з {entity} до кластера {clusterLink}",
+    "clusterMovedFromClusterThis": "{user} перемістив {records} з цього кластера до кластера {clusterLink}"
   }
 }
