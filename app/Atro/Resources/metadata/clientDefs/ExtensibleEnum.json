@@ -7,7 +7,7 @@
         "isActive": true,
         "sortField": "sortOrder"
       },
-      "sortBy": "sorting",
+      "sortBy": "sortOrder",
       "asc": true
     }
   }

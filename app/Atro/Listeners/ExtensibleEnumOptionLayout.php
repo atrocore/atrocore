@@ -24,16 +24,6 @@ class ExtensibleEnumOptionLayout extends AbstractLayoutListener
             $result = $event->getArgument('result');
             $jsonString = json_encode($result);
 
-            if (!str_contains($jsonString, '"ExtensibleEnumExtensibleEnumOption__sorting"')) {
-                if (str_contains($jsonString, '"sortOrder"')) {
-                    $result = json_decode(
-                        str_replace('"sortOrder"', '"ExtensibleEnumExtensibleEnumOption__sorting"', $jsonString)
-                        , true);
-                } else {
-                    $result[0]['rows'][] = [['name' => 'ExtensibleEnumExtensibleEnumOption__sorting'], false];
-                }
-            }
-
             if (!$this->isAdminPage($event) && !str_contains($jsonString, ':"name"')) {
                 array_splice($result[0]['rows'][0], 1, 0, [['name' => 'name']]);
             }
