@@ -611,10 +611,6 @@ class File extends Base
             return;
         }
 
-        if (!empty($entity->_input->shouldAvoidAutomaticalExtensionUpdate)) {
-            return;
-        }
-
         $mimes = $this->getMetadata()->get(['app', 'mimeTypeToExtensions'], []);
         if (empty($mimes[$entity->get('mimeType')]) or !is_array($mimes[$entity->get('mimeType')])) {
             return;
