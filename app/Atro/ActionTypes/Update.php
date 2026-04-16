@@ -60,7 +60,12 @@ class Update extends AbstractAction
             if ($count > $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200)) {
                 // build chunks
                 $chunks = [];
-                $chunkSize = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+
+                $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
+                $maxChunkSize = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+                $minChunkSize = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+
+                $chunkSize = Record::getChunkSize($count, $maxChunkSize, $minChunkSize, $maxConcurrentJobs);
 
                 $offset = 0;
 
