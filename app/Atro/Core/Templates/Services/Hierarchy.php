@@ -727,7 +727,7 @@ class Hierarchy extends Base
         return $result;
     }
 
-    public function deleteEntity($id)
+    public function deleteEntity(string $id): bool
     {
         if (!$this->isHierarchy()) {
             return parent::deleteEntity($id);

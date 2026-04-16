@@ -350,7 +350,7 @@ class User extends Record
         ]);
     }
 
-    public function deleteEntity($id)
+    public function deleteEntity(string $id): bool
     {
         $this->getUserById($id);
 

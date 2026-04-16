@@ -31,7 +31,7 @@ class Archive extends Record
         throw new Forbidden();
     }
 
-    public function deleteEntity($id)
+    public function deleteEntity(string $id): bool
     {
         throw new Forbidden();
     }
@@ -59,16 +59,16 @@ class Archive extends Record
             $links = $this->getMetadata()->get("entityDefs.{$collection->getEntityName()}.links") ?? [];
             foreach ($links as $link => $defs) {
                 if (!empty($defs['type']) && !empty($defs['entity']) && $defs['type'] === 'belongsTo') {
-                    $ids = array_values(array_unique(array_column($collection->toArray(), $link.'Id')));
+                    $ids = array_values(array_unique(array_column($collection->toArray(), $link . 'Id')));
                     if (!empty($ids)) {
                         $foreign = $this->getEntityManager()->getRepository($defs['entity'])
                             ->where(['id' => $ids])
                             ->find();
                         foreach ($collection as $entity) {
-                            if (!empty($entity->get($link.'Id'))) {
+                            if (!empty($entity->get($link . 'Id'))) {
                                 foreach ($foreign as $foreignEntity) {
-                                    if ($entity->get($link.'Id') === $foreignEntity->get('id')) {
-                                        $entity->set($link.'Name', $foreignEntity->get('name'));
+                                    if ($entity->get($link . 'Id') === $foreignEntity->get('id')) {
+                                        $entity->set($link . 'Name', $foreignEntity->get('name'));
                                         $entity->_collectionPrepared = true;
                                     }
                                 }
@@ -86,10 +86,10 @@ class Archive extends Record
 
         if ($this->hasClickHouseIntegration() && empty($entity->_collectionPrepared)) {
             foreach ($this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.links") ?? [] as $field => $defs) {
-                if (!empty($defs['type']) && !empty($defs['entity']) && $defs['type'] === 'belongsTo' && !empty($entity->get($field.'Id'))) {
-                    $foreign = $this->getEntityManager()->getRepository($defs['entity'])->get($entity->get($field.'Id'));
+                if (!empty($defs['type']) && !empty($defs['entity']) && $defs['type'] === 'belongsTo' && !empty($entity->get($field . 'Id'))) {
+                    $foreign = $this->getEntityManager()->getRepository($defs['entity'])->get($entity->get($field . 'Id'));
                     if (!empty($foreign)) {
-                        $entity->set($field.'Name', $foreign->get('name'));
+                        $entity->set($field . 'Name', $foreign->get('name'));
                     }
                 }
             }

@@ -209,7 +209,7 @@ class Bookmark extends Base
         return $entity->get('id');
     }
 
-    public function deleteEntity($id)
+    public function deleteEntity(string $id): bool
     {
         $entity = $this->getRepository()->get($id);
 
