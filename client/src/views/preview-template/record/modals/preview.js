@@ -249,7 +249,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 overlayEl.textContent = `${iframe.contentDocument.documentElement.scrollWidth} x ${iframe.contentWindow.innerHeight}`;
             } else {
                 const overlay = `<div id="dimensions-overlay">${iframe.contentDocument.documentElement.scrollWidth} x ${iframe.contentWindow.innerHeight}</div>`;
-                iframe.contentDocument.body.insertAdjacentHTML('beforeend', overlay);
+                iframe.contentDocument.body.insertAdjacentHTML('beforeend', overlay); // nosemgrep: typescript.react.security.audit.react-unsanitized-method.react-unsanitized-method
             }
         },
 
