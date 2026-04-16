@@ -135,7 +135,7 @@ use Atro\Handlers\AbstractHandler;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Notification', 'AuthToken', 'Bookmark', 'Connection'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation', 'ReferenceData'], excludeEntities: ['UserProfile', 'MatchedRecord', 'Notification', 'AuthToken', 'Bookmark'])]
 class ListHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

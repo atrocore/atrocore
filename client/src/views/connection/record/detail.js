@@ -40,7 +40,7 @@ Espo.define('views/connection/record/detail', 'views/record/detail', function (D
 
         actionTestConnection() {
             this.notify('Loading...');
-            this.ajaxPostRequest('Connection/action/testConnection', {id: this.model.get('id')}).then(() => {
+            this.ajaxPostRequest(`Connection/${this.model.get('id')}/test`).then(() => {
                 this.notify(this.translate('connectionSuccess', 'labels', 'Connection'), 'success');
             });
         },
@@ -66,10 +66,9 @@ Espo.define('views/connection/record/detail', 'views/record/detail', function (D
                     view.close();
 
                     $.ajax({
-                        url: 'Connection/action/sendTestEmail',
+                        url: `Connection/${this.model.get('id')}/sendTestEmail`,
                         type: 'POST',
                         data: JSON.stringify({
-                            id: this.model.get('id'),
                             email: emailAddress
                         }),
                         error: function (xhr, status) {

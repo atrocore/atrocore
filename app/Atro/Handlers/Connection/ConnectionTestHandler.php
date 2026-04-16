@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Connection;
 
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
@@ -23,26 +22,27 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Connection/{id}',
+    path: '/Connection/{id}/test',
     methods: [
-        'DELETE',
+        'POST',
     ],
-    summary: 'Deletes a connection record',
-    description: 'Deletes a connection record by ID. Accessible by administrators only.',
+    summary: 'Test a connection',
+    description: 'Verifies connectivity for the specified connection record by running a live connection test. Returns true on success, or throws an error with details on failure. Accessible by administrators only.',
     tag: 'Connection',
     parameters: [
         [
-            'name'     => 'id',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'The ID of the connection record to test.',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'true if the connection test passed',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -51,22 +51,21 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        403 => [
+            'description' => 'Forbidden — admin access required',
+        ],
+        404 => [
+            'description' => 'Connection record not found',
+        ],
     ],
 )]
-class ConnectionDeleteHandler extends AbstractHandler
+class ConnectionTestHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        $id = $request->getAttribute('id');
 
-        $id      = (string) $request->getAttribute('id');
-        $service = $this->getRecordService('Connection');
-
-        if (!$service->deleteEntity($id)) {
-            throw new Error();
-        }
+        $this->getRecordService('Connection')->testConnection($id);
 
         return new BoolResponse(true);
     }
