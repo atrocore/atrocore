@@ -1,6 +1,6 @@
 semgrep:
   image: semgrep/semgrep
   script:
-    - semgrep --config "p/php" --config "p/javascript" --config "p/typescript" .
+    - semgrep --config "p/php" --config "p/javascript" --config "p/typescript" --error .
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
