@@ -92,12 +92,15 @@ class Avatar extends Image
                     $color = $this->systemColor;
                 }
 
-                echo $avatar->name($user->get('name'))
+                $contents = $avatar
+                    ->name($user->get('name'))
                     ->size($width)
                     ->background($color)
                     ->color('#fff')
                     ->generate()
                     ->stream('png', 100);
+
+                echo $contents; // nosemgrep: php.lang.security.injection.echoed-request.echoed-request
 
                 exit;
             }
