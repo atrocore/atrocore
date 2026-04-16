@@ -39,7 +39,11 @@ class Translation extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
-        $this->refreshTimestamp($options);
+        if (!empty($entity->_input) && $entity->isAttributeChanged('isCustomized') && !$entity->get('isCustomized')) {
+            $this->refreshToDefault();
+        } else {
+            $this->refreshTimestamp($options);
+        }
     }
 
     public function getPreparedTranslations(): array

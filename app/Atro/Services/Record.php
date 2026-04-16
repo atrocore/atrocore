@@ -174,6 +174,21 @@ class Record extends RecordService
             ->getArgument('res');
     }
 
+    public static function getChunkSize(int $total, int $maxChunkSize, int $minChunkSize, int $maxConcurrentJobs): int
+    {
+        if ($total <= $minChunkSize * $maxConcurrentJobs) {
+            $chunkSize = $minChunkSize;
+        } else {
+            if ($total >= ($minChunkSize * $maxConcurrentJobs) && $total <= ($maxChunkSize * $maxConcurrentJobs)) {
+                $chunkSize = ceil($total / $maxConcurrentJobs);
+            } else {
+                $chunkSize = $maxChunkSize;
+            }
+        }
+
+        return $chunkSize;
+    }
+
     public function executeMassAction(array $params, ?\Closure $actionOperation = null): array
     {
         if (empty($params['action']) || !is_int($params['maxCountWithoutJob']) || empty($params['maxChunkSize']) || empty($params['minChunkSize'])) {
@@ -186,7 +201,7 @@ class Record extends RecordService
         $minChunkSize = $params['minChunkSize'];
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
 
-        $allowMassActions =  ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
+        $allowMassActions = ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
 
         $allowMassActions = array_merge(
             $allowMassActions,
@@ -253,15 +268,7 @@ class Record extends RecordService
 
             return [$total, $errors, true];
         } else {
-            if ($total <= ($minChunkSize * $maxConcurrentJobs)) {
-                $chunkSize = $minChunkSize;
-            } else {
-                if ($total >= ($minChunkSize * $maxConcurrentJobs) && $total <= ($maxChunkSize * $maxConcurrentJobs)) {
-                    $chunkSize = ceil($total / $maxConcurrentJobs);
-                } else {
-                    $chunkSize = $maxChunkSize;
-                }
-            }
+            $chunkSize = $this->getChunkSize($total, $maxChunkSize, $minChunkSize, $maxConcurrentJobs);
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
@@ -665,7 +672,7 @@ class Record extends RecordService
         }
 
         $this->getEntityManager()->getAttributeFieldConverter()->putAttributesToEntity($primaryEntity);
-        if ($primaryEntity->hasField('attributesDefs')){
+        if ($primaryEntity->hasField('attributesDefs')) {
             $input->attributesDefs = json_decode(json_encode($primaryEntity->get('attributesDefs') ?? []));
         }
 

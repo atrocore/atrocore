@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Translation;
 
-use Atro\Console\AbstractConsole;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,16 +21,16 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Translation/action/reset',
+    path: '/Translation/refresh',
     methods: [
         'POST',
     ],
-    summary: 'Resets translations',
-    description: 'Triggers an asynchronous re-indexing of all translation labels.',
+    summary: 'Refresh translation cache',
+    description: 'Refreshes the translation cache.',
     tag: 'Translation',
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'true on success',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -42,11 +41,11 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class TranslationResetHandler extends AbstractHandler
+class TranslationRefreshHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . ' console.php refresh translations >/dev/null');
+        $this->getRecordService('Translation')->refreshCache();
 
         return new BoolResponse(true);
     }
