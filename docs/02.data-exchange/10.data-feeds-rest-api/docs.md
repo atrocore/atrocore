@@ -133,25 +133,25 @@ Authorization-Token: <authorizationToken>
 
 ### Trigger import using a saved Import Feed and a file
 
-Schedules an asynchronous import job based on an existing Import Feed configuration and a previously uploaded file.
+Schedules an asynchronous import job based on an existing Import Feed configuration and a previously uploaded file attachment.
 
 ```http
-POST /api/ImportFeed/<ImportFeedId>/runImport
+POST /api/ImportFeed/action/runImport
 Authorization-Token: <authorizationToken>
 Content-Type: application/json
 ```
 
-- `ImportFeedId` – ID of the Import Feed record
-
-**Request body** (optional):
+**Request body:**
 
 ```json
 {
-  "fileId": "<FileId>"
+  "importFeedId": "<ImportFeedId>",
+  "attachmentId": "<AttachmentId>"
 }
 ```
 
-- `fileId` – ID of the uploaded file to import (optional; omit to use the file already attached to the feed)
+- `importFeedId` – ID of the Import Feed record
+- `attachmentId` – ID of the uploaded file to import
 
 **Response:** `true` if the import job was created successfully, `false` otherwise.
 
@@ -170,17 +170,15 @@ Content-Type: application/json
 ```json
 {
   "code": "<ImportFeedCode>",
-  "json": {
-    "data": [
-      { "ID": "001", "Name": "Product A", "SKU": "SKU-001", "Amount": 10 },
-      { "ID": "002", "Name": "Product B", "SKU": "SKU-002", "Amount": 5 }
-    ]
-  }
+  "json": [
+    { "ID": "record-id-1", "fieldName": "value" },
+    { "ID": "record-id-2", "fieldName": "value" }
+  ]
 }
 ```
 
-- `code` – unique code of the Import Feed to use
-- `json` – object containing a `data` array of record objects to import
+- `code` – code of the Import Feed to use
+- `json` – array of record objects to import
 
 **Response:** `true` if the import was accepted successfully, `false` otherwise.
 
