@@ -267,10 +267,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         setupDraggableParams() {
             this.dragableListRows = this.dragableListRows || this.options.dragableListRows;
             this.listRowsOrderSaveUrl = this.listRowsOrderSaveUrl || this.options.listRowsOrderSaveUrl;
+            const params = new URLSearchParams((this.collection.url || '').split('?')[1]);
 
-            const urlParts = (this.collection.url || '').split('/');
-            const mainScope = urlParts[0];
-            this.relationName = urlParts[2];
+            const mainScope = params.get('entityName');
+            this.relationName = params.get('link');
+
             if (mainScope && this.relationName) {
                 const dragDropDefs = this.getMetadata().get(['clientDefs', mainScope, 'relationshipPanels', this.relationName, 'dragDrop']);
                 if (dragDropDefs && (this.dragableListRows || typeof this.dragableListRows === 'undefined')) {
@@ -337,9 +338,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         showMore: true,
 
-        massActionList: ['remove', 'compare', 'merge', 'select', 'massUpdate', 'export'],
+        massActionList: ['remove', 'compare', 'merge', 'select', 'update', 'export'],
 
-        checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
+        checkAllResultMassActionList: ['remove', 'update', 'export'],
 
         quickDetailDisabled: false,
 
@@ -768,25 +769,28 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let action = () => {
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
-                var ids = [];
-                var data = { permanently: permanently };
-                if (this.allResultIsChecked) {
-                    data.where = this.collection.getWhereForCheckedRecords();
-                    data.selectData = this.collection.data || {};
-                    data.byWhere = true;
-                } else {
-                    data.ids = ids;
-                }
+                const threshold = this.getConfig().get('massDeleteMaxCountWithoutJob') || 200;
+                const isAsync = this.allResultIsChecked || !this.checkedList || this.checkedList.length > threshold;
+                const url = isAsync ? 'entityMassDeleteAsync' : 'entityMassDelete';
 
+                var ids = [];
                 for (var i in this.checkedList) {
                     ids.push(String(this.checkedList[i]));
                 }
 
+                var requestData = { entityName: this.entityType, permanently: permanently };
+                if (isAsync) {
+                    requestData.where = this.collection.getWhereForCheckedRecords();
+                } else {
+                    requestData.ids = ids;
+                }
+
                 $.ajax({
-                    url: 'entityMassDelete',
+                    url: url,
                     type: 'POST',
-                    data: JSON.stringify(Object.assign({ entityName: this.entityType }, data))
+                    data: JSON.stringify(requestData)
                 }).done(function (result) {
+                    result.sync = !isAsync;
                     this.notify(false)
                     this.processMassActionResult(result)
                     this.collection.fetch();
@@ -1009,10 +1013,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
             } else {
                 Espo.Ui.success(this.translate('massActionDelegatedToJm'));
+                if (result.jobId) {
+                    this.checkMassActionJob(result.jobId);
+                }
             }
         },
 
-        massActionMassUpdate: function () {
+        massActionUpdate: function () {
             if (!this.getAcl().check(this.entityType, 'edit')) {
                 this.notify('Access denied', 'error');
                 return false;
@@ -1027,7 +1034,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             let massUpdateView = this.getMetadata().get(['clientDefs', this.scope, 'massUpdateView']) || 'views/modals/mass-update';
 
-            this.createView('massUpdate', massUpdateView, {
+            this.createView('update', massUpdateView, {
                 scope: this.entityType,
                 ids: ids,
                 where: this.collection.getWhereForCheckedRecords(),
@@ -1187,7 +1194,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (!this.getAcl().checkScope(this.entityType, 'edit')) {
-                this.removeMassAction('massUpdate');
+                this.removeMassAction('update');
             }
 
             if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled'])) {
@@ -1993,14 +2000,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let iteration = 1
             const handler = () => {
                 $.ajax({
-                    url: 'Job/action/massActionStatus?id=' + jobId,
+                    url: 'Job/' + jobId + '/massActionStatus',
                     type: 'GET',
                     success: (result) => {
                         if (result.done) {
                             if (result.errors) {
                                 this.notify(result.message + '\n' + result.errors, 'error', 6000)
                             } else {
-                                this.notify(result.message, 'success')
+                                this.notify(result.message, 'success');
+                                this.collection.fetch();
                             }
 
                             return

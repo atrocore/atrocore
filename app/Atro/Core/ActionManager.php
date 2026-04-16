@@ -100,6 +100,8 @@ class ActionManager
         $execution->set('actionName', $action->get('name'));
         $execution->set('action', $action);
 
+        $input->actionUser = $currentUser;
+
         if (!empty($input->executedViaWorkflow)) {
             $execution->set('type', 'workflow');
             $workflow = $this->getEntityManager()->getRepository('Workflow')->get($input->workflowData['workflow_id']);

@@ -22,14 +22,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Installer/action/getRequiredsList',
+    path: '/Installer/getRequiredsList',
     methods: [
         'GET',
     ],
     summary: 'Get requirements list',
     description: 'Returns the list of system requirements and their status. Only accessible before installation.',
     tag: 'Installer',
-    installerOnly: true,
     auth: false,
     responses: [
         200 => [
@@ -37,12 +36,38 @@ use Psr\Http\Server\RequestHandlerInterface;
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object',
+                        'type'  => 'array',
+                        'items' => [
+                            'type'       => 'object',
+                            'required'   => ['name', 'validValue', 'value', 'isValid'],
+                            'properties' => [
+                                'name'       => [
+                                    'type'        => 'string',
+                                    'description' => 'Requirement name',
+                                ],
+                                'validValue' => [
+                                    'type'        => 'string',
+                                    'description' => 'Expected valid value or range',
+                                ],
+                                'value'      => [
+                                    'type'        => 'string',
+                                    'description' => 'Current system value',
+                                ],
+                                'isValid'    => [
+                                    'type'        => 'boolean',
+                                    'description' => 'Whether the requirement is met',
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
         ],
+        403 => [
+            'description' => 'Forbidden — system is already installed',
+        ],
     ],
+    installerOnly: true,
 )]
 class InstallerGetRequiresListHandler extends AbstractHandler
 {

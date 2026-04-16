@@ -16,7 +16,6 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
-use Atro\Services\AbstractService;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\HasBasketInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;

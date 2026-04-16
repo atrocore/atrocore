@@ -77,6 +77,7 @@ class ClusterItem extends Base
         $this->getDbal()->createQueryBuilder()
             ->update('cluster_item')
             ->set('cluster_id', ':clusterIdTo')
+            ->set('confirmed_automatically', ':false')
             ->where('cluster_id=:clusterIdFrom and id not in (select cluster_item_id from rejected_cluster_item where cluster_id=:clusterIdTo and deleted=:false) and deleted=:false')
             ->setParameter('clusterIdFrom', $clusterIdFrom)
             ->setParameter('clusterIdTo', $clusterIdTo)
@@ -243,7 +244,7 @@ class ClusterItem extends Base
             ->innerJoin('ci', $stagingTableName, 'se', 'se.id=ci.entity_id and se.deleted=:false')
             ->leftJoin('se', $masterTableName, 'me', 'me.id=se.master_record_id and me.deleted=:false')
             ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and ci.deleted=:false')
-            ->andWhere('me.id is null')
+            ->andWhere('me.id is null or me.id <> c.golden_record_id')
             ->setParameter('stagingEntityName', $stagingEntityName)
             ->setParameter('minimumScore', $minimumScore)
             ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -253,6 +254,22 @@ class ClusterItem extends Base
             ->groupBy('ci.cluster_id');
 
         return $qb->fetchAllAssociative();
+    }
+
+    public function getInvalidClusterMasterItemIds(string $masterEntity): array
+    {
+        return $this->getDbal()->createQueryBuilder()
+            ->select('ci.id')
+            ->from('cluster_item', 'ci')
+            ->innerJoin('ci', 'cluster', 'c', 'c.id = ci.cluster_id AND c.deleted = :false')
+            ->where('ci.entity_name = :masterEntity')
+            ->andWhere('ci.deleted = :false')
+            ->andWhere('c.golden_record_id IS NOT NULL')
+            ->andWhere('ci.entity_id != c.golden_record_id')
+            ->andWhere('(SELECT COUNT(ci2.id) FROM cluster_item ci2 WHERE ci2.cluster_id = ci.cluster_id AND ci2.entity_name = :masterEntity AND ci2.deleted = :false) > 1')
+            ->setParameter('masterEntity', $masterEntity)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
     }
 
     public function getClusterItemsWithInvalidMatchedRecords(int $offset = 0, int $limit = PHP_INT_MAX): EntityCollection
@@ -358,7 +375,7 @@ class ClusterItem extends Base
             ->executeStatement();
     }
 
-    private function createMoveNotes(string $clusterIdFrom, string $clusterIdTo, array $items): void
+    public function createMoveNotes(string $clusterIdFrom, string $clusterIdTo, array $items): void
     {
         // Group by entity type for batched name lookups
         $byEntityName = [];

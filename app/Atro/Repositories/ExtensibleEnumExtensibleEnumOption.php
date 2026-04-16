@@ -21,32 +21,6 @@ use Espo\ORM\Entity;
 
 class ExtensibleEnumExtensibleEnumOption extends Relation
 {
-    public function getNextSorting(Entity $entity): int
-    {
-        $max = $this->getConnection()->createQueryBuilder()
-            ->select('t.sorting')
-            ->from('extensible_enum_extensible_enum_option', 't')
-            ->leftJoin('t', 'extensible_enum_option', 'o', 'o.id=t.extensible_enum_option_id')
-            ->where('t.deleted=:false')
-            ->andWhere('o.deleted=:false')
-            ->andWhere('t.extensible_enum_id=:extensibleEnumId')
-            ->orderBy('t.sorting', 'DESC')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('extensibleEnumId', $entity->get('extensibleEnumId'))
-            ->fetchOne();
-
-        return empty($max) ? 0 : $max + 10;
-    }
-
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if ($entity->get('sorting') === null) {
-            $entity->set('sorting', $this->getNextSorting($entity));
-        }
-
-        parent::beforeSave($entity, $options);
-    }
-
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         $this->validateSystemOptions($entity);
@@ -54,7 +28,6 @@ class ExtensibleEnumExtensibleEnumOption extends Relation
 
         parent::beforeRemove($entity, $options);
     }
-
 
     public function validateSystemOptions(Entity $entity): void
     {
@@ -89,11 +62,11 @@ class ExtensibleEnumExtensibleEnumOption extends Relation
                 ) {
                     $column = Util::toUnderScore($field);
 
-                    $qb = $this->getConnection()
+                    $qb = $this->getDbal()
                         ->createQueryBuilder()
                         ->select('t.*')
                         ->from(
-                            $this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))),
+                            $this->getDbal()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))),
                             't'
                         );
                     if ($fieldDef['type'] === 'extensibleEnum') {

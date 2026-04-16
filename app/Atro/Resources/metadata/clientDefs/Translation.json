@@ -1,11 +1,23 @@
 {
   "controller": "controllers/record",
   "iconClass": "translate",
-  "views": {
-    "list": "views/translation/list"
-  },
   "recordViews": {
     "list": "views/translation/record/list",
     "detail": "views/translation/record/detail"
+  },
+  "menu": {
+    "list": {
+      "buttons": [
+        {
+          "acl": "create",
+          "aclScope": "Label",
+          "action": "universalAction",
+          "name": "refreshCache",
+          "label": "refresh",
+          "url": "Translation/refresh",
+          "refresh": true
+        }
+      ]
+    }
   }
 }

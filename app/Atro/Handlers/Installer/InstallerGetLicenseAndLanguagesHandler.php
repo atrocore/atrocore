@@ -22,14 +22,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Installer/action/getLicenseAndLanguages',
+    path: '/Installer/getLicenseAndLanguages',
     methods: [
         'GET',
     ],
     summary: 'Get license and languages',
     description: 'Returns the license agreement and available languages for installation. Only accessible before installation.',
     tag: 'Installer',
-    installerOnly: true,
     auth: false,
     responses: [
         200 => [
@@ -43,6 +42,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
+    installerOnly: true,
 )]
 class InstallerGetLicenseAndLanguagesHandler extends AbstractHandler
 {

@@ -44,6 +44,12 @@
         {
           "name": "minimumMatchingScore"
         }
+      ],
+      [
+        {
+          "name": "deleteInvalidMastersAutomatically"
+        },
+        false
       ]
     ]
   }

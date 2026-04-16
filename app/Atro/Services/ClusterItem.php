@@ -12,9 +12,9 @@
 
 namespace Atro\Services;
 
-use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Exception;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
@@ -474,6 +474,10 @@ class ClusterItem extends Base
 
     public function move(array $params): array
     {
+        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
+            throw new Forbidden();
+        }
+
         $targetClusterId = $params['targetClusterId'] ?? null;
         if (empty($targetClusterId)) {
             throw new BadRequest("targetClusterId is required.");
@@ -501,6 +505,10 @@ class ClusterItem extends Base
 
     public function moveItem(\Atro\Entities\ClusterItem $clusterItem, string $targetClusterId): bool
     {
+        if (!$this->getAcl()->checkEntity($clusterItem, 'edit')) {
+            throw new Forbidden();
+        }
+
         $targetCluster = $this->getEntityManager()->getEntity('Cluster', $targetClusterId);
         if (empty($targetCluster)) {
             throw new NotFound("Target cluster not found.");
@@ -525,9 +533,10 @@ class ClusterItem extends Base
             $this->unConfirmClusterItem($clusterItem);
         }
 
-        $this->createClusterNote($sourceClusterId, 'moved', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
         $this->getRepository()->moveToCluster($clusterItem->get('id'), $targetClusterId);
-        $this->createClusterNote($targetClusterId, 'linked', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
+        $this->getRepository()->createMoveNotes($sourceClusterId, $targetClusterId, [
+            ['entity_name' => $clusterItem->get('entityName'), 'entity_id' => $clusterItem->get('entityId')],
+        ]);
 
         $this->getRepository()->updateMatchedScoresInClusters([$sourceClusterId, $targetClusterId]);
 

@@ -14,7 +14,7 @@
             </div>
                 {{#if showInline}}
                     {{#each fieldsArr}}
-                        <span class="message">{{{../message}}} <code>{{label}}</code> {{translate 'from' category='streamMessages' scope='Global'}}&nbsp;<{{htmlTag}} class="was">{{{var was ../this}}}</{{htmlTag}}>&nbsp;{{translate 'to' category='streamMessages' scope='Global'}} <{{htmlTag}} class="became">{{{var became ../this}}}</{{htmlTag}}></span>
+                        <span class="message" data-name="{{field}}">{{{../message}}} <code>{{label}}</code> {{translate 'from' category='streamMessages' scope='Global'}}&nbsp;<{{htmlTag}} class="was">{{{var was ../this}}}</{{htmlTag}}>&nbsp;{{translate 'to' category='streamMessages' scope='Global'}} <{{htmlTag}} class="became">{{{var became ../this}}}</{{htmlTag}}></span>
                     {{/each}}
                 {{/if}}
                 {{#if showCommon}}

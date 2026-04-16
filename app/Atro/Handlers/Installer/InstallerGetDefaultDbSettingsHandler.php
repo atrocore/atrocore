@@ -22,14 +22,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Installer/action/getDefaultDbSettings',
+    path: '/Installer/getDefaultDbSettings',
     methods: [
         'GET',
     ],
     summary: 'Get default database settings',
     description: 'Returns the default database connection settings. Only accessible before installation.',
     tag: 'Installer',
-    installerOnly: true,
     auth: false,
     responses: [
         200 => [
@@ -43,6 +42,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
+    installerOnly: true,
 )]
 class InstallerGetDefaultDbSettingsHandler extends AbstractHandler
 {

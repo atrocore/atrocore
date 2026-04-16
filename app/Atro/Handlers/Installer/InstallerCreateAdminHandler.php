@@ -23,14 +23,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Installer/action/createAdmin',
+    path: '/Installer/createAdmin',
     methods: [
         'POST',
     ],
     summary: 'Create admin user',
     description: 'Creates the initial administrator account during installation. Only accessible before installation.',
     tag: 'Installer',
-    installerOnly: true,
     auth: false,
     requestBody: [
         'required' => true,
@@ -70,6 +69,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
+    installerOnly: true,
 )]
 class InstallerCreateAdminHandler extends AbstractHandler
 {

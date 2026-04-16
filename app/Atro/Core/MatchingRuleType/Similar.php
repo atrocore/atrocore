@@ -60,7 +60,7 @@ class Similar extends AbstractMatchingRule
             $sqlPart = "{$alias}.{$escapedColumnName} LIKE :$parameter";
             $qb->setParameter($parameter, '%"' . reset($value) . '"%');
         } elseif ($this->isFuzzySearchAvailable()) {
-            $threshold = (float)$this->getConfig()->get('similarityThreshold', 0.3);
+            $threshold = (float)$this->getConfig()->get('similarityThreshold', 1);
             $thresholdParam = 'sim_thr_' . IdGenerator::unsortableId();
             $scoreAlias = $this->getSimilarityScoreAlias();
 

@@ -169,6 +169,21 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
                 }
             }
         }
+
+        // Delete unconfirmed master items in invalid clusters
+        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $masterEntity);
+        if (!empty($masterDataEntity) && !empty($masterDataEntity->get('deleteInvalidMastersAutomatically'))) {
+            foreach ($clusterItemRepo->getInvalidClusterMasterItemIds($masterEntity) as $itemId) {
+                $item = $this->getEntityManager()->getEntity('ClusterItem', $itemId);
+                if (!empty($item)) {
+                    try {
+                        $this->getEntityManager()->removeEntity($item);
+                    } catch (\Exception $e) {
+                        $GLOBALS['log']->error("Failed to delete invalid master cluster item $itemId: " . $e->getMessage());
+                    }
+                }
+            }
+        }
     }
 
     protected function createClusterItem(string $clusterId, string $entityName, string $entityId, ?string $matchedRecordId = null, ?int $score = null): Entity

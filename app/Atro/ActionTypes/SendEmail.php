@@ -34,7 +34,7 @@ class SendEmail extends AbstractAction
     {
         $entity = $this->getSourceEntity($action, $input);
 
-        $emailData = $this->getEmailData($action, $entity);
+        $emailData = $this->getEmailData($action, $entity, ['actionUser' => $input->actionUser]);
         foreach (['subject', 'body', 'emailTo', 'emailCc', 'emailBcc'] as $key) {
             if (property_exists($input, $key)) {
                 $emailData[$key] = $input->$key;
@@ -66,11 +66,12 @@ class SendEmail extends AbstractAction
         return true;
     }
 
-    public function getEmailData(Entity $action, ?Entity $sourceEntity): array
+    public function getEmailData(Entity $action, ?Entity $sourceEntity, array $data = []): array
     {
         $templateData = [
             'entity'     => $sourceEntity,
-            'collection' => null
+            'collection' => null,
+            'actionUser' => $data['actionUser'] ?? $this->container->get('user')
         ];
 
         $targetEntity = $action->get('targetEntity');
@@ -124,7 +125,7 @@ class SendEmail extends AbstractAction
 
         $emailTemplate = $this->getEmailTemplate($emailTemplateId);
 
-        $data = [
+        return [
             'subject'         => $twig->renderTemplate($emailTemplate->get('subject'), $templateData),
             'body'            => $twig->renderTemplate($emailTemplate->get('body'), $templateData),
             'emailTo'         => $emailTo,
@@ -132,8 +133,6 @@ class SendEmail extends AbstractAction
             'emailBcc'        => $emailBcc,
             'emailTemplateId' => $emailTemplateId
         ];
-
-        return $data;
     }
 
     public function createNote(Entity $entity, array $data)

@@ -22,7 +22,7 @@ The free module supports file-based imports (CSV, Excel, JSON, XML). Additional 
 
 After installation, two entities are created: `Import Feeds` and `Import Executions`. These can be enabled/disabled in [navigation menu](../../01.atrocore/03.administration/13.user-interface/01.navigation/) and [favorites](../../01.atrocore/05.toolbar/02.favorites/), with [access rights](../../01.atrocore/03.administration/14.access-management/) configured as for other entities. Layout configuration is not available for these entities.
 
-!! Users must have the following permissions configured via [Roles](../../01.atrocore/03.administration/14.access-management/03.roles/docs.md) (Scopes panel): `Import Feeds`, `Import Execution` and `Files`. Without these, feed import execution will be denied. In  [Access Control List](../../01.atrocore/03.administration/14.access-management/docs.md#acl-strict-mode) strict mode, these permissions must be granted explicitly — they are not given by default.
+!! Users must have the following permissions configured via [Roles](../../01.atrocore/03.administration/14.access-management/03.roles/docs.md) (Scopes panel): `Import Feeds`, `Import Execution` and `Files`, as well as at least Read permission for `Folder`, and `Storage`. Without these, feed import execution will be denied. In [Access Control List](../../01.atrocore/03.administration/14.access-management/docs.md#acl-strict-mode) strict mode, these permissions must be granted explicitly — they are not given by default.
 
 ## User Functions
 
@@ -246,6 +246,24 @@ For URL-based file imports, configure the URL field rule. The 'Request headers' 
 ![Request headers](_assets/request-headers.png){.large}
 
 **Exception:** Product Main Image can be imported with product data. Provide image URL in the "Main Image" field, which will both create the file record and set it as the main image.
+
+### How To Import List Options
+
+List options can be imported into the system using import data from any type of [Data Sourcing](#Data-Sourcing). This enables users to create or update multiple options at once.
+
+The import data should contain:
+- A list of option values
+- A reference to the List each option belongs to (required only when creating new options or updating list assignments)
+
+Target entity should always be List Option. Each row represents a single List Option record.
+
+![Import List Options](./_assets/Import-List-Options.png){.medium}
+
+To correctly match existing records during import, it is recommended that system IDs of list options are used as unique identifiers when updating existing options in the list. If all option values are unique within the system, however, the option value (name) can be used as an identifier instead. The example feed configuration is shown in the image below:
+
+![field mapping](./_assets/field-mapping.png){.medium}
+
+When creating new list options it is recommended to link options to their corresponding lists within the same import feed usung [multiple relations](#multiple-relations) method. This ensures that all required relationships are established during the import process and prevents orphaned option records.
 
 ## Running Import Feed
 

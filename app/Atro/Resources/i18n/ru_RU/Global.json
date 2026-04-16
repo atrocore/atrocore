@@ -660,7 +660,6 @@
   "massActions": {
     "remove": "Удалить",
     "merge": "Объединить",
-    "massUpdate": "Обновить массово",
     "export": "Экспортировать",
     "follow": "Подписаться",
     "unfollow": "Отписаться",
@@ -668,7 +667,6 @@
     "removePartial": "Удалить (Part %s)",
     "addRelation": "Добавить связь",
     "removeRelation": "Удалить связь",
-    "massRemove": "Массовое удаление",
     "restore": "Восстановите",
     "massRestore": "Массовое восстановление",
     "deletePermanently": "Удалить навсегда",
@@ -676,7 +674,7 @@
     "download": "Скачать",
     "compare": "Сравнить",
     "removeAttribute": "Удалить атрибут",
-    "update": "Массовое обновление",
+    "update": "Обновить",
     "delete": "Удалить",
     "select": "Выбрать",
     "cancel": "Отменить"

@@ -6,6 +6,7 @@
     "updateMasterAutomatically": "Update Master Automatically",
     "minimumMatchingScore": "Minimum Matching Score",
     "confirmAutomatically": "Confirm Automatically",
+    "deleteInvalidMastersAutomatically": "Delete Invalid Masters Automatically",
     "executeMergeAs": "Execute Merge As"
   },
   "tooltips": {

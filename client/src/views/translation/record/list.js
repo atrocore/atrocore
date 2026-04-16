@@ -12,9 +12,9 @@ Espo.define('views/translation/record/list', 'views/record/list', function (Dep)
 
     return Dep.extend({
 
-        massActionList: ['massUpdate', 'export'],
+        massActionList: ['update', 'export'],
 
-        checkAllResultMassActionList: ['massUpdate', 'export'],
+        checkAllResultMassActionList: ['update', 'export'],
 
     });
 });

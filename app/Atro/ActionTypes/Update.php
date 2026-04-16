@@ -60,7 +60,12 @@ class Update extends AbstractAction
             if ($count > $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200)) {
                 // build chunks
                 $chunks = [];
-                $chunkSize = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+
+                $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
+                $maxChunkSize = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+                $minChunkSize = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+
+                $chunkSize = Record::getChunkSize($count, $maxChunkSize, $minChunkSize, $maxConcurrentJobs);
 
                 $offset = 0;
 
@@ -173,7 +178,7 @@ class Update extends AbstractAction
                     }
                     $outputJson = $this->container->get('twig')->renderTemplate($actionData->field->updateScript, $templateData);
                     $inputData = @json_decode((string)$outputJson);
-                    if (empty($inputData) && !empty(trim($outputJson))) {
+                    if (!is_object($inputData) && !empty(trim($outputJson))) {
                         $log->set('type', 'error');
                         $log->set('message', "Invalid Json for Update: " . $outputJson);
                         $this->getEntityManager()->saveEntity($log);
@@ -190,6 +195,11 @@ class Update extends AbstractAction
             $this->getEntityManager()->saveEntity($log);
 
             return false;
+        }
+
+        if (empty($inputData)) {
+            // Skip for empty payload
+            return true;
         }
 
         $inputData->_workflowAction = !empty($input->triggeredEntityId);

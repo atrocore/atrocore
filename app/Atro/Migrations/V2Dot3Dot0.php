@@ -12,7 +12,6 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 
@@ -31,6 +30,14 @@ class V2Dot3Dot0 extends Base
 
         // set bool attribute with notNull true to false if they are null
         $this->setNotNullBoolAttributeToFalse();
+
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE master_data_entity ADD delete_invalid_masters_automatically BOOLEAN DEFAULT 'false' NOT NULL");
+        } else {
+            $this->exec("ALTER TABLE master_data_entity ADD delete_invalid_masters_automatically TINYINT(1) DEFAULT '0' NOT NULL");
+        }
+
+        $this->backfillMasterDataEntities();
     }
 
     public function migrateExtensibleEnumOptionSortOrder(): void
@@ -47,15 +54,20 @@ class V2Dot3Dot0 extends Base
         $batchSize = 5000;
 
         while (true) {
-            $rows = $this->getDbal()->createQueryBuilder()
-                ->select('t.extensible_enum_option_id', 't.sorting')
-                ->from('extensible_enum_extensible_enum_option', 't')
-                ->innerJoin('t', '(' . $subQuery . ')', 'first', 't.extensible_enum_option_id = first.extensible_enum_option_id AND t.extensible_enum_id = first.first_enum_id')
-                ->where('t.deleted = :false')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setFirstResult($offset)
-                ->setMaxResults($batchSize)
-                ->fetchAllAssociative();
+            try {
+                $rows = $this->getDbal()->createQueryBuilder()
+                    ->select('t.extensible_enum_option_id', 't.sorting')
+                    ->from('extensible_enum_extensible_enum_option', 't')
+                    ->innerJoin('t', '(' . $subQuery . ')', 'first', 't.extensible_enum_option_id = first.extensible_enum_option_id AND t.extensible_enum_id = first.first_enum_id')
+                    ->where('t.deleted = :false')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setFirstResult($offset)
+                    ->setMaxResults($batchSize)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $rows = [];
+            }
+
 
             if (empty($rows)) {
                 break;
@@ -110,10 +122,10 @@ class V2Dot3Dot0 extends Base
             ->where('a.type = :bool')
             ->andWhere('a.not_null = :true');
 
-        foreach ($entities  as $scope) {
+        foreach ($entities as $scope) {
             $pavTable = Util::toUnderScore(lcfirst($scope)) . "_attribute_value";
 
-            if(!$this->getCurrentSchema()->hasTable($pavTable)) {
+            if (!$this->getCurrentSchema()->hasTable($pavTable)) {
                 continue;
             }
 
@@ -127,6 +139,83 @@ class V2Dot3Dot0 extends Base
                 ->setParameter('bool', 'bool')
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->executeStatement();
+        }
+    }
+
+    public function backfillMasterDataEntities(): void
+    {
+        // collect staging entities (those with primaryEntityId in scopes metadata)
+        // map: stagingEntityName => masterEntityName
+        $stagingEntities = [];
+        $dir = 'data/metadata/scopes';
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (in_array($item, ['.', '..'])) {
+                    continue;
+                }
+                $parts = explode('.', $item);
+                $entityName = $parts[0];
+                $content = @json_decode(file_get_contents($dir . '/' . $item), true);
+                if (!empty($content['primaryEntityId'])) {
+                    $stagingEntities[$entityName] = $content['primaryEntityId'];
+                }
+            }
+        }
+
+        if (empty($stagingEntities)) {
+            return;
+        }
+
+        // find distinct entities from matchings of type duplicate
+        $rows = $this->getDbal()->createQueryBuilder()
+            ->select('DISTINCT m.entity')
+            ->from('matching', 'm')
+            ->where('m.type = :type')
+            ->andWhere('m.deleted = :false')
+            ->setParameter('type', 'duplicate')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        foreach ($rows as $row) {
+            $stagingEntityName = $row['entity'];
+            if (!array_key_exists($stagingEntityName, $stagingEntities)) {
+                continue;
+            }
+
+            $masterEntityName = $stagingEntities[$stagingEntityName];
+
+            foreach ([$stagingEntityName, $masterEntityName] as $entityId) {
+                $exists = $this->getDbal()->createQueryBuilder()
+                    ->select('id')
+                    ->from('master_data_entity')
+                    ->where('id = :id')
+                    ->andWhere('deleted = :false')
+                    ->setParameter('id', $entityId)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchOne();
+
+                if ($exists !== false) {
+                    continue;
+                }
+
+                try {
+                    $this->getDbal()->createQueryBuilder()
+                        ->insert('master_data_entity')
+                        ->values(['id' => ':id', 'deleted' => ':false'])
+                        ->setParameter('id', $entityId)
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->executeStatement();
+                } catch (\Throwable $e) {
+                }
+            }
+        }
+    }
+
+    protected function exec(string $sql): void
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
         }
     }
 }

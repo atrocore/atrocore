@@ -27,8 +27,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'PATCH',
     ],
-    summary: 'Mass update',
-    description: 'Updates multiple records of the specified entity.',
+    summary: 'Mass update (synchronous)',
+    description: 'Updates multiple records of the specified entity synchronously and returns the result immediately.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -38,32 +38,25 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'type'       => 'object',
                     'required'   => [
                         'entityName',
-                        'attributes',
+                        'ids',
+                        'values',
                     ],
                     'properties' => [
                         'entityName' => [
-                            'type' => 'string',
-                        ],
-                        'attributes' => [
-                            'type' => 'object',
+                            'type'    => 'string',
+                            'example' => 'Product',
                         ],
                         'ids'        => [
-                            'type'     => 'array',
-                            'items'    => [
+                            'type'  => 'array',
+                            'items' => [
                                 'type' => 'string',
+                                'example' => 'some-id',
                             ],
-                            'nullable' => true,
                         ],
-                        'where'      => [
-                            'type'     => 'array',
-                            'nullable' => true,
-                        ],
-                        'selectData' => [
-                            'type'     => 'object',
-                            'nullable' => true,
-                        ],
-                        'byWhere'    => [
-                            'type' => 'boolean',
+                        'values'     => [
+                            'type'        => 'object',
+                            'description' => 'Field values to apply to every matched record. The accepted keys depend on the entity specified in `entityName` — use the same field names as in a regular entity update request.',
+                            'example'     => ['status' => 'Active', 'assignedUserId' => 'user-uuid'],
                         ],
                     ],
                 ],
@@ -78,16 +71,14 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'count'  => [
+                            'updated' => [
                                 'type' => 'integer',
                             ],
-                            'sync'   => [
-                                'type' => 'boolean',
-                            ],
                             'errors' => [
-                                'type'  => 'array',
-                                'items' => [
-                                    'type' => 'object',
+                                'type'        => 'array',
+                                'description' => 'List of error messages for records that could not be updated.',
+                                'items'       => [
+                                    'type' => 'string',
                                 ],
                             ],
                         ],
@@ -96,7 +87,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'entityName or attributes are missing',
+            'description' => 'entityName, attributes or ids are missing, or ids count exceeds the configured limit',
         ],
         403 => [
             'description' => 'Access denied',
@@ -113,19 +104,25 @@ class MassUpdateHandler extends AbstractHandler
             throw new BadRequest('entityName is required');
         }
 
-        if (empty($data->attributes)) {
-            throw new BadRequest('attributes is required');
+        if (empty($data->values)) {
+            throw new BadRequest('values is required');
         }
 
-        $entityName = (string) $data->entityName;
+        $entityName = (string)$data->entityName;
 
         if (!$this->getAcl()->check($entityName, 'edit')) {
             throw new Forbidden();
         }
 
-        $params = $this->buildMassParams($data);
-        $result = $this->getRecordService($entityName)->massUpdate($data->attributes, $params);
+        $ids = $data->ids ?? [];
+        $limit = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        if (count($ids) > $limit) {
+            throw new BadRequest("Too many ids: maximum allowed is $limit. Use /entityMassUpdateAsync for large batches.");
+        }
 
-        return new JsonResponse(is_array($result) ? $result : ['true' => $result]);
+        $params = ['ids' => $ids, 'maxCountWithoutJob' => PHP_INT_MAX];
+        $result = $this->getRecordService($entityName)->massUpdate($data->values, $params);
+
+        return new JsonResponse(['updated' => $result['count'], 'errors' => $result['errors']]);
     }
 }

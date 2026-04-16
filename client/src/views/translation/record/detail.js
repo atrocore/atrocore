@@ -15,10 +15,20 @@ Espo.define('views/translation/record/detail', 'views/record/detail', Dep => {
         setupActionItems() {
             Dep.prototype.setupActionItems.call(this);
 
-            this.dropdownItemList.push({
-                label: this.translate('reset', 'labels', 'Translation'),
-                name: 'resetToDefault'
-            });
+            if (this.model.get('isCustomized')) {
+                this.dropdownItemList.push({
+                    label: this.translate('reset', 'labels', 'Translation'),
+                    name: 'resetToDefault'
+                });
+            } else {
+                this.dropdownItemList = this.dropdownItemList.filter(item => item.name !== 'resetToDefault');
+            }
+        },
+
+        afterSave: function () {
+            Dep.prototype.afterSave.call(this);
+
+            this.model.trigger('sync')
         },
 
         actionResetToDefault() {
@@ -28,20 +38,11 @@ Espo.define('views/translation/record/detail', 'views/record/detail', Dep => {
             }, () => {
                 this.notify('Please wait...');
 
-                if (this.model.get('isCustomized')) {
-                    this.model.set('isCustomized', false);
-                    this.model.save().then(() => {
-                        this.ajaxPostRequest(`Translation/action/reset`).then(response => {
-                            this.notify(this.translate('resetSuccessfully', 'messages', 'Translation'), 'success');
-                            this.model.fetch();
-                        });
-                    });
-                } else {
-                    this.ajaxPostRequest(`Translation/action/reset`).then(response => {
-                        this.notify(this.translate('resetSuccessfully', 'messages', 'Translation'), 'success');
-                        this.model.fetch();
-                    });
-                }
+                this.model.set('isCustomized', false);
+                this.model.save().then(() => {
+                    this.notify(this.translate('resetSuccessfully', 'messages', 'Translation'), 'success');
+                    this.model.fetch();
+                });
             });
         },
 

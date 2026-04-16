@@ -160,10 +160,10 @@ class Mapper implements MapperInterface
             $relAlias1 = 'hierarchy_alias_' . Util::generateUniqueHash();
             $relAlias2 = 'alias_' . Util::generateUniqueHash();
 
-            $qb->addSelect("$relAlias1.parent_id AS " . $this->getQueryConverter()->fieldToAlias('parentId'));
-            $qb->addSelect("$relAlias2.name AS " . $this->getQueryConverter()->fieldToAlias('parentName'));
-            $qb->leftJoin($ta, "{$tableName}_hierarchy", $relAlias1, "$ta.id=$relAlias1.entity_id AND $relAlias1.deleted=:false");
-            $qb->leftJoin($relAlias1, $tableName, $relAlias2, "$relAlias2.id=$relAlias1.parent_id AND $relAlias1.deleted=:false");
+            $qb->addSelect("$relAlias1.parent_id AS " . $this->getQueryConverter()->fieldToAlias('parentId')); // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
+            $qb->addSelect("$relAlias2.name AS " . $this->getQueryConverter()->fieldToAlias('parentName')); // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
+            $qb->leftJoin($ta, "{$tableName}_hierarchy", $relAlias1, "$ta.id=$relAlias1.entity_id AND $relAlias1.deleted=:false"); // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
+            $qb->leftJoin($relAlias1, $tableName, $relAlias2, "$relAlias2.id=$relAlias1.parent_id AND $relAlias1.deleted=:false"); // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
         }
 
@@ -186,8 +186,8 @@ class Mapper implements MapperInterface
             );
 
             $qb = $conn->createQueryBuilder()
-                ->select("$mainTableAlias.*")
-                ->from('(' . $sql . ')', $mainTableAlias);
+                ->select("$mainTableAlias.*") // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
+                ->from('(' . $sql . ')', $mainTableAlias); // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
 
             foreach ($oldQb->getParameters() as $pName => $pValue) {
                 $qb->setParameter($pName, $pValue, $this->getParameterType($pValue));

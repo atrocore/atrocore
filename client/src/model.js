@@ -61,7 +61,6 @@ Espo.define('model', [], function () {
 
         sync: function (method, model, options) {
             if (method === 'update') options.type = 'PATCH';
-
             return Dep.prototype.sync.call(this, method, model, options);
         },
 

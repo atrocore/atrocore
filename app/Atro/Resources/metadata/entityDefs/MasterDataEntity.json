@@ -124,6 +124,19 @@
         }
       }
     },
+    "deleteInvalidMastersAutomatically": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
     "minimumMatchingScore": {
       "type": "int",
       "default": 100,

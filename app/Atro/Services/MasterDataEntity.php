@@ -47,7 +47,7 @@ class MasterDataEntity extends Base
         $templateData = [
             'stagingRecord'  => $staging,
             'masterRecord'   => $master,
-            'stagingRecords' => $master->get("derived{$staging->getEntityName()}Records")
+            'stagingRecords' => $master->get("derived{$staging->getEntityName()}Records", ['noCache' => true])
         ];
 
         $res = $this->getTwig()->renderTemplate($mergingScript, $templateData);
