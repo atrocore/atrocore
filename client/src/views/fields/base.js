@@ -1947,9 +1947,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
                     this.notify('Saving...');
 
-                    const url = this.model.urlRoot + '/action/' + (this.isLocked() ? 'unlockField' : 'lockField');
-                    this.ajaxPostRequest(url, {
-                        id: this.model.get('id'),
+                    const actionName = this.isLocked() ? 'unlockEntityField' : 'lockEntityField';
+
+                    this.ajaxPostRequest(actionName, {
+                        entityName: this.model.urlRoot,
+                        entityId: this.model.id,
                         field: this.getLockedFieldName(),
                     }).then(() => {
                         Espo.Ui.success('Success');
