@@ -12,7 +12,7 @@ taxonomy:
 
 ## Authentication
 
-> **Note:** All endpoint paths are case-sensitive. Use entity names exactly as shown (e.g. `ExportFeed`, `ImportFeed`, `exportData`).
+> **Note:** All endpoint paths are case-sensitive. Use entity and action names exactly as shown (e.g. `ExportFeed`, `ImportFeed`, `exportData`, `runImport`).
 
 All requests require an `Authorization-Token` header. To obtain a token, send a `GET` request to `/api/App/user` with HTTP Basic authentication:
 
@@ -35,7 +35,7 @@ Authorization-Token: <authorizationToken>
 Retrieves paginated export data from a configured Export Feed by its code. Use this endpoint to read records programmatically without triggering an asynchronous job.
 
 ```http
-GET /api/ExportFeed/action/exportData?code=<ExportFeedCode>&offset=<offset>
+GET /api/ExportFeed/exportData?code=<ExportFeedCode>&offset=<offset>
 Authorization-Token: <authorizationToken>
 ```
 
@@ -65,42 +65,11 @@ Authorization-Token: <authorizationToken>
 Schedules an asynchronous export job based on an existing Export Feed configuration.
 
 ```http
-POST /api/ExportFeed/action/exportFile
+POST /api/ExportFeed/<ExportFeedId>/exportFile
 Authorization-Token: <authorizationToken>
-Content-Type: application/json
 ```
 
-**Request body:**
-
-```json
-{
-  "id": "<ExportFeedId>"
-}
-```
-
-- `id` – ID of the Export Feed record
-
-**Response:** `true` if the export job was created successfully, `false` otherwise.
-
-### Trigger export for a channel
-
-Schedules an asynchronous export job for a channel linked to a specific Export Feed.
-
-```http
-POST /api/ExportFeed/action/exportChannel
-Authorization-Token: <authorizationToken>
-Content-Type: application/json
-```
-
-**Request body:**
-
-```json
-{
-  "id": "<ExportFeedId>"
-}
-```
-
-- `id` – ID of the Export Feed record
+- `ExportFeedId` – ID of the Export Feed record
 
 **Response:** `true` if the export job was created successfully, `false` otherwise.
 
@@ -109,7 +78,7 @@ Content-Type: application/json
 Generates an export file directly for selected records and fields, without requiring a pre-configured Export Feed. Supports simple field types only — for complex export requirements, configure a dedicated Export Feed and use `exportFile` instead.
 
 ```http
-POST /api/ExportFeed/action/directExportFile
+POST /api/ExportFeed/directExportFile
 Authorization-Token: <authorizationToken>
 Content-Type: application/json
 ```
@@ -148,7 +117,7 @@ Content-Type: application/json
 Checks that the Export Feed identified by its code is correctly configured and contains a required ID column.
 
 ```http
-GET /api/ExportFeed/action/verifyFeedByCode?code=<ExportFeedCode>
+GET /api/ExportFeed/verifyFeedByCode?code=<ExportFeedCode>
 Authorization-Token: <authorizationToken>
 ```
 
@@ -164,25 +133,25 @@ Authorization-Token: <authorizationToken>
 
 ### Trigger import using a saved Import Feed and a file
 
-Schedules an asynchronous import job based on an existing Import Feed configuration and a previously uploaded file attachment.
+Schedules an asynchronous import job based on an existing Import Feed configuration and a previously uploaded file.
 
 ```http
-POST /api/ImportFeed/action/runImport
+POST /api/ImportFeed/<ImportFeedId>/runImport
 Authorization-Token: <authorizationToken>
 Content-Type: application/json
 ```
 
-**Request body:**
+- `ImportFeedId` – ID of the Import Feed record
+
+**Request body** (optional):
 
 ```json
 {
-  "importFeedId": "<ImportFeedId>",
-  "attachmentId": "<AttachmentId>"
+  "fileId": "<FileId>"
 }
 ```
 
-- `importFeedId` – ID of the Import Feed record
-- `attachmentId` – ID of the uploaded file to import
+- `fileId` – ID of the uploaded file to import (optional; omit to use the file already attached to the feed)
 
 **Response:** `true` if the import job was created successfully, `false` otherwise.
 
@@ -201,15 +170,17 @@ Content-Type: application/json
 ```json
 {
   "code": "<ImportFeedCode>",
-  "json": [
-    { "ID": "record-id-1", "fieldName": "value" },
-    { "ID": "record-id-2", "fieldName": "value" }
-  ]
+  "json": {
+    "data": [
+      { "ID": "001", "Name": "Product A", "SKU": "SKU-001", "Amount": 10 },
+      { "ID": "002", "Name": "Product B", "SKU": "SKU-002", "Amount": 5 }
+    ]
+  }
 }
 ```
 
-- `code` – code of the Import Feed to use
-- `json` – array of record objects to import
+- `code` – unique code of the Import Feed to use
+- `json` – object containing a `data` array of record objects to import
 
 **Response:** `true` if the import was accepted successfully, `false` otherwise.
 
