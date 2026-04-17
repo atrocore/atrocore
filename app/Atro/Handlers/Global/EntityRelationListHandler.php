@@ -30,8 +30,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     description: 'Returns a paginated list of records linked to the specified entity record via the given relation.
 
 **How to use:**
-- `entityName` — the entity type (e.g. `Product`, `Category`). Must match the scope name in metadata.
-- `id` — the ID of the parent record.
+- `entityName` — the entity name (e.g. `Product`, `Category`).
+- `id` — the ID of the record.
 - `link` — the relation name as defined in `entityDefs.{entityName}.links` (e.g. `channels`, `assets`, `categories`). Valid link names can be discovered from the entity metadata.
 
 **Note:** The structure of items in the `list` array depends on the linked entity type resolved from the relation definition. There is no single fixed response schema — it varies per `entityName` + `link` combination.',
