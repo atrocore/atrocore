@@ -72,7 +72,7 @@ Espo.define('views/compare-instance', ['views/main'], function (Dep) {
 
         setupRecord(name = 'instanceComparison') {
             this.notify('Loading...');
-            this.ajaxPostRequest(`Synchronization/action/distantInstanceRequest`, {
+            this.ajaxPostRequest(`distantInstanceRequest`, {
                 uri: this.scope + '/' + this.model.id, type: 'one'
             }).success(attr => {
                 this.notify(false);

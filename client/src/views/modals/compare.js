@@ -191,7 +191,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             if (this.instanceComparison) {
                 this.getModelFactory().create(this.scope, scopeModel => {
-                    this.ajaxPostRequest(`Synchronization/action/distantInstanceRequest`, {
+                    this.ajaxPostRequest(`distantInstanceRequest`, {
                         uri: this.scope + '/' + this.model.id
                     }).success(attrs => {
                         options.distantModels = [];

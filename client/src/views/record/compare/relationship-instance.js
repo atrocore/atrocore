@@ -42,12 +42,12 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                         select: this.selectFields.join(','),
                         maxSize: this.maxTobeshown
                     }),
-                    this.ajaxPostRequest('Synchronization/action/distantInstanceRequest', {
+                    this.ajaxPostRequest('distantInstanceRequest', {
                         'uri': this.scope + '/' + this.model.id + '/' + this.getLinkName() + '?select=' + this.selectFields.join(','),
                         'type': 'list'
                     }),
                     this.ajaxGetRequest(this.relationName, relationFilter),
-                    this.ajaxPostRequest('Synchronization/action/distantInstanceRequest', {
+                    this.ajaxPostRequest('distantInstanceRequest', {
                         'uri': this.relationName + '?' + $.param(relationFilter),
                         'type': 'list'
                     }),
