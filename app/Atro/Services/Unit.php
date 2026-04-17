@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Espo\ORM\Entity;
@@ -22,6 +23,10 @@ class Unit extends Base
 {
     public function setUnitAsDefault(Entity $unit): void
     {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
         $needToSave = false;
         $measureId = $unit->get('measureId');
         foreach ($this->getMetadata()->get('entityDefs', []) as $entity => $entityDefs) {
