@@ -234,17 +234,13 @@ Espo.define('views/classification/record/panels/classification-attributes',
                         models = dialog.collection.models;
                     }
 
-                    let attributesIds = [];
-                    models.forEach(model => {
-                        attributesIds.push(model.get('id'))
-                    });
-
-                    this.ajaxPostRequest('ClassificationAttribute/createFromAttributes', {
-                        classificationId: this.model.get('id'),
-                        attributesIds: attributesIds,
-                        assignedUserId: this.getUser().id,
-                        assignedUserName: this.getUser().get('name')
-                    }).then(() => {
+                    const classificationId = this.model.get('id');
+                    const assignedUserId = this.getUser().id;
+                    const assignedUserName = this.getUser().get('name');
+                    this.ajaxPostRequest('upsert', models.map(model => ({
+                        entity: 'ClassificationAttribute',
+                        payload: {classificationId, attributeId: model.get('id'), assignedUserId, assignedUserName}
+                    }))).then(() => {
                         this.notify('Linked', 'success');
                         this.actionRefresh();
                     });
