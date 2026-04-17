@@ -60,7 +60,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'default' => new \stdClass(),
+                            'default' => ['type' => 'string', 'nullable' => true],
                         ],
                     ],
                 ],
