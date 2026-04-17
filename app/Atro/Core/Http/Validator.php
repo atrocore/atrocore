@@ -59,7 +59,7 @@ class Validator
         try {
             $builder->getRequestValidator()->validate($request);
         } catch (\Throwable $e) {
-            throw new BadRequest($e->getMessage());
+            throw new BadRequest($this->buildValidatorErrorMessage($e));
         }
     }
 
@@ -71,8 +71,18 @@ class Validator
         try {
             $builder->getResponseValidator()->validate($operation, $response);
         } catch (\Throwable $e) {
-            throw new BadRequest($e->getMessage());
+            throw new BadRequest($this->buildValidatorErrorMessage($e));
         }
+    }
+
+    public function buildValidatorErrorMessage(\Throwable $e): string
+    {
+        $message = $e->getMessage();
+        if (!empty($previous = $e->getPrevious()) && !empty($previous->getMessage())) {
+            $message .= ", " . $previous->getMessage();
+        }
+
+        return $message;
     }
 
     private function getValidatorBuilderForRoute(array $routeConfig): ?ValidatorBuilder
@@ -99,6 +109,6 @@ class Validator
         if (!$routeResult instanceof RouteResult || $routeResult->isFailure()) {
             return '';
         }
-        return (string) ($routeResult->getMatchedRoute()->getOptions()['entityName'] ?? '');
+        return (string)($routeResult->getMatchedRoute()->getOptions()['entityName'] ?? '');
     }
 }
