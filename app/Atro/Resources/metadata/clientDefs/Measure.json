@@ -19,7 +19,7 @@
       "select": false,
       "actions": {
         "setDefault": {
-          "url": "Unit/action/setDefault",
+          "url": "Unit/{{id}}/setDefault",
           "sortOrder": 10
         },
         "unlinkRelated": {

@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Unit;
 
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
@@ -24,28 +22,21 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Unit/action/setDefault',
+    path: '/Unit/{id}/setDefault',
     methods: [
         'POST',
     ],
     summary: 'Sets a unit as default',
     description: 'Marks the specified unit as the default unit for its measure. Accessible by administrators only.',
     tag: 'Unit',
-    requestBody: [
-        'required' => true,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'id',
-                    ],
-                    'properties' => [
-                        'id' => [
-                            'type' => 'string',
-                        ],
-                    ],
-                ],
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Unit record ID',
+            'schema'      => [
+                'type' => 'string',
             ],
         ],
     ],
@@ -60,24 +51,22 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
+        404 => [
+            'description' => 'Unit not found',
+        ],
     ],
 )]
 class UnitSetDefaultHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
+        $id = (string)$request->getAttribute('id');
 
-        if (!property_exists($data, 'id')) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $unit = $this->getEntityManager()->getEntity('Unit', $data->id);
-        if (!$unit) {
+        $unit = $this->getEntityManager()->getEntity('Unit', $id);
+        if (empty($unit)) {
             throw new NotFound();
         }
 
