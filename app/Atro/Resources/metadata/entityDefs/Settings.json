@@ -225,6 +225,10 @@
     "disableToolbarLogo": {
       "type": "bool",
       "default": false
+    },
+    "disableNavigationPath": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {

@@ -37,7 +37,8 @@
     "style": "Стиль інтерфейсу користувача",
     "notificationProfile": "Профіль сповіщень",
     "layoutProfile": "Лейаут профіль",
-    "locale": "Локаль"
+    "locale": "Локаль",
+    "disableNavigationPath": "Вимкнути навігаційний шлях"
   },
   "labels": {
     "Generate": "Згенерувати",

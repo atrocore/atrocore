@@ -42,7 +42,8 @@
     "favicon": "Favicon",
     "notificationSmtpConnection": "Conexión para notificaciones por correo electrónico",
     "passwordRegexPattern": "Patrón Regex de contraseña",
-    "disableToolbarLogo": "Desactivar logotipo de cabecera"
+    "disableToolbarLogo": "Desactivar logotipo de cabecera",
+    "disableNavigationPath": "Desactivar ruta de navegación"
   },
   "tooltips": {
     "recordsPerPage": "Número de registros a mostrar inicialmente en las vistas.",

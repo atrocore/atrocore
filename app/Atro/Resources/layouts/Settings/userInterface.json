@@ -6,7 +6,8 @@
             [{"name": "applicationName"}, {"name": "disableToolbarLogo"}],
             [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
             [{"name": "recordsPerPageSmall"}, {"name": "avatarsDisabled"}],
-            [{"name": "tabIconsDisabled"}, {"name": "favoritesIconsDisabled"}]
+            [{"name": "tabIconsDisabled"}, {"name": "favoritesIconsDisabled"}],
+            [{"name": "disableNavigationPath"}, false]
         ]
     },
     {

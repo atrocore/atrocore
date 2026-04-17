@@ -37,7 +37,8 @@
     "followCreatedEntities": "Suivi automatique des enregistrements créés par l'utilisateur",
     "notificationProfile": "Profil de notification",
     "layoutProfile": "Profil de disposition",
-    "locale": "Paramètre regional"
+    "locale": "Paramètre regional",
+    "disableNavigationPath": "Désactiver le chemin de navigation"
   },
   "labels": {
     "Generate": "Générer",

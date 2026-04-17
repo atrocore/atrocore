@@ -42,7 +42,8 @@
     "onlyStableReleases": "Використовуйте лише стабільні випуски",
     "favicon": "Іконка",
     "disableEmailDelivery": "Вимкнути доставку електронної пошти",
-    "disableToolbarLogo": "Вимкнути логотип у заголовку"
+    "disableToolbarLogo": "Вимкнути логотип у заголовку",
+    "disableNavigationPath": "Вимкнути навігаційний шлях"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Верхня межа на кількість завдань або процесів, які можуть одночасно виконуватися у фоновому режимі сервера.",

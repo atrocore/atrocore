@@ -37,7 +37,8 @@
     "followCreatedEntities": "Automatické sledování vlastních vytvořených záznamů",
     "followEntityOnStreamPost": "Automatické sledování záznamů po odeslání v Aktivitách",
     "receiveNotifications": "Přijímání oznámení",
-    "notificationProfile": "Profil oznámení"
+    "notificationProfile": "Profil oznámení",
+    "disableNavigationPath": "Zakázat navigační cestu"
   },
   "labels": {
     "Generate": "Generovat",

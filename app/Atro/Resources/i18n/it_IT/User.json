@@ -37,7 +37,8 @@
     "followCreatedEntities": "Seguire automaticamente i record auto-creati",
     "followEntityOnStreamPost": "Seguire automaticamente i record dopo la pubblicazione nelle Attività",
     "receiveNotifications": "Ricevere notifiche",
-    "notificationProfile": "Profilo di notifica"
+    "notificationProfile": "Profilo di notifica",
+    "disableNavigationPath": "Disattiva percorso di navigazione"
   },
   "labels": {
     "Generate": "Generare",

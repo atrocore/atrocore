@@ -72,6 +72,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
                             canReadStream: this.getAcl().check(this.scope, 'stream'),
                         },
                         breadcrumbs: this.getBreadcrumbsItems(),
+                        disableNavigationHistory: this.getConfig().get('disableNavigationPath') || this.getUser().get('disableNavigationPath') || false
                     },
                     recordButtons: {
                         editButtons: record.buttonList,

@@ -42,7 +42,8 @@
     "favoritesIconsDisabled": "Désactiver les icônes pour les favoris",
     "automaticFileExtensionCorrection": "Correction automatique de l'extension des fichiers importés",
     "defaultStyle": "Style par défaut",
-    "disableToolbarLogo": "Désactiver le logo de l'en-tête"
+    "disableToolbarLogo": "Désactiver le logo de l'en-tête",
+    "disableNavigationPath": "Désactiver le chemin de navigation"
   },
   "tooltips": {
     "recordsPerPage": "Nombre d'enregistrements initialement affichés dans les vues liste.",

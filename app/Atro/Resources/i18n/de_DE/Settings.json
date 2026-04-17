@@ -42,7 +42,8 @@
     "customStylesheet": "CSS",
     "currencyRates": "Wechselkurse",
     "disableEmailDelivery": "E-Mail-Zustellung deaktivieren",
-    "disableToolbarLogo": "Header-Logo deaktivieren"
+    "disableToolbarLogo": "Header-Logo deaktivieren",
+    "disableNavigationPath": "Navigationspfad deaktivieren"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Obergrenze für die Anzahl der Aufgaben oder Prozesse, die gleichzeitig im Hintergrund eines Servers laufen können.",

@@ -42,7 +42,8 @@
     "customHeadCode": "Codice della testa",
     "customStylesheetPath": "Percorso del file СSS",
     "customStylesheet": "CSS",
-    "disableToolbarLogo": "Disabilita il logo dell'intestazione"
+    "disableToolbarLogo": "Disabilita il logo dell'intestazione",
+    "disableNavigationPath": "Disattiva percorso di navigazione"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Limite superiore del numero di attività o processi che possono essere eseguiti simultaneamente in background su un server.",

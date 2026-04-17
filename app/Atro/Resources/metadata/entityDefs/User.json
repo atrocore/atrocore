@@ -313,6 +313,10 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true
+    },
+    "disableNavigationPath": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {
