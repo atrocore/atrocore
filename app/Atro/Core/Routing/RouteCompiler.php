@@ -131,7 +131,7 @@ class RouteCompiler
                     'methods'        => array_map('strtoupper', (array) $routeAttr->methods),
                     'handlerClass'   => $entry['class'],
                     'auth'           => $routeAttr->auth,
-                    'openapi'        => $this->buildOpenApiEntry($routeAttr, $entityName),
+                    'openapi'        => !empty($scopeData['openApiHidden']) ? [] : $this->buildOpenApiEntry($routeAttr, $entityName),
                     'schemaEntities' => [],
                     'entityName'     => $entityName,
                 ];

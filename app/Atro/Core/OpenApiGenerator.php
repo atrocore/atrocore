@@ -192,6 +192,10 @@ class OpenApiGenerator
 
         $writeRequired = array_values(array_filter($readRequired, fn($k) => isset($writeProps[$k])));
 
+        if (count($writeProps) <= 1) {
+            return;
+        }
+
         $schema = ['type' => 'object', 'properties' => $writeProps];
         if (!empty($writeRequired)) {
             $schema['required'] = $writeRequired;
