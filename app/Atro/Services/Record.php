@@ -90,11 +90,11 @@ class Record extends RecordService
             ->dispatchEvent('beforeMassRemoveAttribute', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
-        $params['action'] = 'removeAttribute';
+        $params['action']             = 'removeAttribute';
         $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
-        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
-        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
-        $params['additionalJobData'] = ["attributes" => $attributes];
+        $params['maxChunkSize']       = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize']       = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['additionalJobData']  = ["attributes" => $attributes];
 
         list($count, $errors, $sync, $job) = $this->executeMassAction($params);
 
@@ -115,10 +115,10 @@ class Record extends RecordService
             ->dispatchEvent('beforeMassDelete', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
-        $params['action'] = 'delete';
+        $params['action']             = 'delete';
         $params['maxCountWithoutJob'] = $params['maxCountWithoutJob'] ?? $this->getConfig()->get('massDeleteMaxCountWithoutJob', 200);
-        $params['maxChunkSize'] = $this->getConfig()->get('massDeleteMaxChunkSize', 3000);
-        $params['minChunkSize'] = $this->getConfig()->get('massDeleteMinChunkSize', 400);
+        $params['maxChunkSize']       = $this->getConfig()->get('massDeleteMaxChunkSize', 3000);
+        $params['minChunkSize']       = $this->getConfig()->get('massDeleteMinChunkSize', 400);
         $params['singleActionMethod'] = !empty($params['permanently']) ? 'deleteEntityPermanently' : 'deleteEntity';
 
         if (!empty($params['permanently'])) {
@@ -195,11 +195,11 @@ class Record extends RecordService
             return [];
         }
 
-        $action = $params['action'];
+        $action             = $params['action'];
         $maxCountWithoutJob = $params['maxCountWithoutJob'];
-        $maxChunkSize = $params['maxChunkSize'];
-        $minChunkSize = $params['minChunkSize'];
-        $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
+        $maxChunkSize       = $params['maxChunkSize'];
+        $minChunkSize       = $params['minChunkSize'];
+        $maxConcurrentJobs  = $this->getConfig()->get('maxConcurrentJobs', 6);
 
         $allowMassActions = ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
 
@@ -224,11 +224,11 @@ class Record extends RecordService
         }
 
         $repository = $this->getEntityManager()->getRepository($this->entityType);
-        $byWhere = array_key_exists('where', $params);
-        $errors = [];
+        $byWhere    = array_key_exists('where', $params);
+        $errors     = [];
 
         if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
-            $ids = $params['ids'];
+            $ids   = $params['ids'];
             $total = count($ids);
         } elseif ($byWhere) {
             $selectParams = $this->getSelectParams(['where' => $params['where']], true, true);
@@ -239,14 +239,14 @@ class Record extends RecordService
             $repository->handleSelectParams($selectParams);
             $total = $repository->count(array_merge($selectParams, ['select' => ['id']]));
         } else {
-            $ids = [];
+            $ids   = [];
             $total = 0;
         }
 
         if ($total <= $maxCountWithoutJob && !empty($actionOperation)) {
             if ($byWhere) {
                 $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
-                $ids = array_column($collection->toArray(), 'id');
+                $ids        = array_column($collection->toArray(), 'id');
             }
             foreach ($ids as $id) {
                 try {
@@ -254,8 +254,8 @@ class Record extends RecordService
                 } catch (\Throwable $e) {
                     $message = "{$action} {$this->getEntityType()} '$id' failed: {$e->getTraceAsString()}";
                     $GLOBALS['log']->error($message);
-                    $entity = $this->getRepository()->get($id);
-                    $name = !empty($entity) ? $entity->get('name') : $id;
+                    $entity   = $this->getRepository()->get($id);
+                    $name     = !empty($entity) ? $entity->get('name') : $id;
                     $errors[] = "Error for '$name': {$e->getMessage()}";
                 }
             }
@@ -302,7 +302,7 @@ class Record extends RecordService
     public function getLocalizedNameField(string $scope): ?string
     {
         $nameField = $this->getNameField($scope);
-        $name = Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), $scope, $nameField);
+        $name      = Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), $scope, $nameField);
 
         if ($name !== $nameField) {
             return $name;
@@ -313,7 +313,7 @@ class Record extends RecordService
 
     public function getLocalizedNameValue($record, string $scope): ?string
     {
-        $nameField = $this->getNameField($scope);
+        $nameField     = $this->getNameField($scope);
         $localizedName = $this->getLocalizedNameField($scope);
 
         if (!empty($localizedName)) {
@@ -338,7 +338,7 @@ class Record extends RecordService
             }
 
             if ($this->getMetadata()->get(['scopes', $this->entityName, 'type']) === 'ReferenceData') {
-                $field = $link . 'Id';
+                $field             = $link . 'Id';
                 $foreignRepository = $this->getEntityManager()->getRepository($scope);
 
                 $params['foreignWhere'][] = [
@@ -346,9 +346,9 @@ class Record extends RecordService
                     'attribute' => $field,
                 ];
 
-                $sp = $this->getSelectManager($scope)->getSelectParams(['where' => $params['foreignWhere']], true, true);
+                $sp           = $this->getSelectManager($scope)->getSelectParams(['where' => $params['foreignWhere']], true, true);
                 $sp['select'] = [$field];
-                $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp);
+                $qb1          = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp);
 
                 $ids = $qb1->distinct()->fetchFirstColumn();
 
@@ -363,7 +363,7 @@ class Record extends RecordService
                     'attribute' => $foreignLink,
                 ];
                 if (!empty($params['foreignWhere'])) {
-                    $where['type'] = 'linkedWith';
+                    $where['type']     = 'linkedWith';
                     $where['subQuery'] = $params['foreignWhere'];
                 }
                 $params['where'][] = $where;
@@ -383,7 +383,7 @@ class Record extends RecordService
                                 ->setParameter('false', false, ParameterType::BOOLEAN);
                         }
                     ];
-                    $params['distinct'] = true;
+                    $params['distinct']       = true;
                 } else if (!empty($this->getEntityManager()->getOrmMetadata()->get($scope, 'fields')[$field])) {
                     if (!empty($params['foreignWhere'])) {
                         $params['where'][] = [
@@ -396,7 +396,7 @@ class Record extends RecordService
                     } else {
                         $params['queryCallbacks'] = [
                             function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($field, $scope) {
-                                $ta = $mapper->getQueryConverter()->getMainTableAlias();
+                                $ta     = $mapper->getQueryConverter()->getMainTableAlias();
                                 $column = $mapper->toDb($field);
 
                                 $qb->leftJoin($ta, $mapper->toDb($scope), 'et', "$ta.id = et.$column")
@@ -405,7 +405,7 @@ class Record extends RecordService
                                     ->setParameter('false', false, ParameterType::BOOLEAN);
                             }
                         ];
-                        $params['distinct'] = true;
+                        $params['distinct']       = true;
                     }
                 } else {
                     throw new BadRequest("Field $field not found on $scope and Foreign link not found for ($scope: $link) on " . $this->entityName);
@@ -429,7 +429,7 @@ class Record extends RecordService
             $selectParams['distinct'] = true;
         }
 
-        $fields = ['id', $this->getNameField($this->entityName)];
+        $fields             = ['id', $this->getNameField($this->entityName)];
         $localizedNameField = $this->getLocalizedNameField($this->entityName);
         if (!empty($localizedNameField)) {
             $fields[] = $localizedNameField;
@@ -440,13 +440,13 @@ class Record extends RecordService
             $fields[] = $selectParams['orderBy'];
         }
         $selectParams['select'] = $fields;
-        $collection = $repository->find($selectParams);
-        $total = $repository->count($selectParams);
-        $offset = $params['offset'];
-        $result = [];
+        $collection             = $repository->find($selectParams);
+        $total                  = $repository->count($selectParams);
+        $offset                 = $params['offset'];
+        $result                 = [];
 
         foreach ($collection as $key => $item) {
-            $value = $this->getLocalizedNameValue($item, $this->entityName);
+            $value    = $this->getLocalizedNameValue($item, $this->entityName);
             $result[] = [
                 'id'             => $item->get('id'),
                 'name'           => !empty($value) ? $value : $item->get('id'),
@@ -473,7 +473,7 @@ class Record extends RecordService
         } else {
             $input = $attributes->input;
             unset($input->id);
-            $id = $this->createEntity($input);
+            $id     = $this->createEntity($input);
             $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
         }
 
@@ -486,11 +486,11 @@ class Record extends RecordService
         $sourceList = array();
         foreach ($sourceIdList as $sourceId) {
             if (is_object($sourceId)) {
-                $source = $sourceId;
+                $source       = $sourceId;
                 $sourceList[] = $source;
                 continue;
             }
-            $source = $this->getEntity($sourceId);
+            $source       = $this->getEntity($sourceId);
             $sourceList[] = $source;
         }
 
@@ -530,7 +530,7 @@ class Record extends RecordService
             foreach ($sourceList as $source) {
                 $linkedList = [];
                 if (!empty($source->get('__relationships'))) {
-                    $linkedIds = $source->get('__relationships')[$link]['ids'] ?? [];
+                    $linkedIds    = $source->get('__relationships')[$link]['ids'] ?? [];
                     $foreignScope = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', $link, 'entity']);
                     if (!empty($linkedIds) && !empty($foreignScope)) {
                         $linkedList = $this->getEntityManager()->getRepository($foreignScope)->findByIds($linkedIds);
@@ -556,10 +556,10 @@ class Record extends RecordService
             }
             if (!empty($data['toUpsert'])) {
                 foreach ($data['toUpsert'] as $payload) {
-                    $input = new \stdClass();
-                    $input->entity = $data['scope'];
+                    $input          = new \stdClass();
+                    $input->entity  = $data['scope'];
                     $input->payload = (object)$payload;
-                    $upsertData[] = $input;
+                    $upsertData[]   = $input;
                 }
             }
 
@@ -575,6 +575,7 @@ class Record extends RecordService
         if (!empty($id)) {
             try {
                 $attributes->input->_skipCheckForConflicts = true;
+                $attributes->input->_sourceEntities        = $sourceList;
                 $this->updateEntity($id, $attributes->input);
             } catch (NotModified $e) {
 
@@ -595,8 +596,8 @@ class Record extends RecordService
 
     public function getMergeLinkList(array $relationshipData): array
     {
-        $mergeLinkList = [];
-        $linksDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']);
+        $mergeLinkList       = [];
+        $linksDefs           = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']);
         $customMergeLinkList = array_keys($relationshipData);
         $customEntityToMerge = array_column(array_values($relationshipData), 'scope');
         foreach ($linksDefs as $link => $d) {
@@ -640,7 +641,7 @@ class Record extends RecordService
 
     protected function getForbiddenLinksToMerge(): array
     {
-        $links = [];
+        $links     = [];
         $scopeDefs = $this->getMetadata()->get(['scopes', $this->entityName]);
         if (!empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy' && empty($scopeDefs['multiParents'])) {
             $links[] = 'parents';
@@ -677,9 +678,14 @@ class Record extends RecordService
         }
 
         $input->masterRecordId = $primaryEntity->get('id');
+        $skippedFields         = ['id', 'createdAt', 'modifiedAt', 'createdById', 'modifiedById', 'deleted'];
 
         foreach ($primaryEntity->toArray() as $field => $value) {
-            if (in_array($field, ['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'])) {
+            if (in_array($field, $skippedFields)) {
+                continue;
+            }
+
+            if (!empty($primaryEntity->entityDefs[$field]['notStorable']) || !empty($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields', $field, 'notStorable']))) {
                 continue;
             }
 
@@ -694,25 +700,62 @@ class Record extends RecordService
             $input->$field = $value;
         }
 
-        $id = $this->createEntity($input);
-        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
+        // build input for many-to-many relations
+        foreach ($primaryEntity->getRelations() as $link => $defs) {
+            if (!empty($defs['relationName'])) {
+                if ($defs['relationName'] === 'EntityTeam') {
+                    $input->teamsIds = $primaryEntity->getLinkMultipleIdList('teams');
+                    continue;
+                }
+
+                if (in_array($link, ['children', 'parents']) || empty($defs['key']) || empty($defs['midKeys'][0])) {
+                    continue;
+                }
+
+                $ids = $primaryEntity->getLinkMultipleIdList($link);
+                if (empty($ids)) {
+                    continue;
+                }
+
+                $relationEntities = $this->getEntityManager()->getRepository(ucfirst($defs['relationName']))
+                    ->where([
+                        $defs['midKeys'][0] => $primaryEntity->get($defs['key']),
+                        $defs['midKeys'][1] => $ids
+                    ])
+                    ->find();
+
+                $idsField     = $link . 'Ids';
+                $columnsField = $link . 'Columns';
 
 
-        // create many-to-many relations
-        foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']) as $link => $linkDef) {
-            if (!empty($linkDef['relationName']) && !in_array($link, ['children', 'parents'])) {
-                $data = $primaryEntity->get($link) ?? [];
-                foreach ($data as $item) {
-                    try {
-                        $this->getEntityManager()->getRepository($entity->getEntityType())->relate($entity, $link, $item, null);
-                    } catch (\Throwable $e) {
-                        $GLOBALS['log']->error($e->getMessage());
+                foreach ($relationEntities as $item) {
+                    $input->$idsField[] = $item->get($defs['midKeys'][1]);
+
+                    if (!isset($input->$columnsField)) {
+                        $input->$columnsField = new \stdClass();
+                    }
+
+                    foreach ($item->toArray() as $field => $value) {
+                        if (!empty($this->getMetadata()->get(['entityDefs', $item->getEntityName(), 'fields', $field, 'notStorable']))) {
+                            continue;
+                        }
+                        if (in_array($field, array_merge($skippedFields, $defs['midKeys']))) {
+                            continue;
+                        }
+
+
+                        if (!isset($input->$columnsField->{$item->get($defs['midKeys'][1])})) {
+                            $input->$columnsField->{$item->get($defs['midKeys'][1])} = new \stdClass();
+                        }
+
+                        $input->$columnsField->{$item->get($defs['midKeys'][1])}->$field = $value;
                     }
                 }
             }
         }
 
+        $id = $this->createEntity($input);
 
-        return $entity;
+        return $this->getEntityManager()->getEntity($this->getEntityType(), $id);
     }
 }
