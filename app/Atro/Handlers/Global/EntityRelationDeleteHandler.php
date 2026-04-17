@@ -31,8 +31,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     description: 'Unlinks one or more foreign records from the specified entity record.
 
 **How to use:**
-- `entityName` — the entity type (e.g. `Product`).
-- `id` — the ID of the parent record to unlink from.
+- `entityName` — the entity name (e.g. `Product`).
+- `id` — the ID of the record to unlink from.
 - `link` — the relation name as defined in `entityDefs.{entityName}.links` (e.g. `channels`).
 - Pass `id` or `ids` (comma-separated) in query to unlink specific records. Alternatively, pass `id` or `ids` array in the request body.
 - Pass `all=true` in query to unlink all related records at once.',

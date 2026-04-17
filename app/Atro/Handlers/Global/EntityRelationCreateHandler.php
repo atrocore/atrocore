@@ -32,8 +32,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     description: 'Links one or more foreign records to the specified entity record via the given relation.
 
 **How to use:**
-- `entityName` — the entity type (e.g. `Product`).
-- `id` — the ID of the parent record to link from.
+- `entityName` — the entity name (e.g. `Product`).
+- `id` — the ID of the record to link from.
 - `link` — the relation name as defined in `entityDefs.{entityName}.links` (e.g. `channels`).
 - `ids` — array of foreign record IDs to link. Use `id` (singular) to link a single record.
 - `massRelate` — set to `true` together with `where` to link all records matching a filter instead of specific IDs.
