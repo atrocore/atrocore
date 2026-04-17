@@ -104,7 +104,7 @@ class UpsertHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $body = (string) $request->getBody();
-        $data = $body !== '' ? json_decode($body, true) : [];
+        $data = $body !== '' ? json_decode($body) : [];
         if (!is_array($data)) {
             $data = [];
         }
