@@ -53,7 +53,7 @@ Espo.define('views/login', 'view', function (Dep) {
             let localeId = 'default';
             if (localeId && (this.getConfig().get('locales')[localeId] || localeId === 'default')) {
                 this.localeId = localeId;
-                this.ajaxGetRequest('I18n', {locale: localStorage.getItem('localeId') || 'default'}, {async: false}).then(data => {
+                this.ajaxGetRequest('i18n', {locale: localStorage.getItem('localeId') || 'default'}, {async: false}).then(data => {
                     this.getLanguage().data = data;
                 });
             } else {
@@ -106,7 +106,7 @@ Espo.define('views/login', 'view', function (Dep) {
             'change select[name="locale"]': function (event) {
                 this.localeId = $(event.currentTarget).val();
                 if (this.localeId) {
-                    this.ajaxGetRequest('I18n', {locale: this.localeId}).then(data => {
+                    this.ajaxGetRequest('i18n', {locale: this.localeId}).then(data => {
                         this.getLanguage().data = data;
                         this.reRender();
                         localStorage.setItem('localeId', this.localeId);
