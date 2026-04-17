@@ -69,7 +69,50 @@ class OpenApiGenerator
             $this->buildEntitySchema($result, $entityName);
         }
 
+        $this->fillMissing4xxResponses($result);
+        $this->removeUnusedSchemas($result);
+
         return $result;
+    }
+
+    private function fillMissing4xxResponses(array &$result): void
+    {
+        $defaults = [
+            '400' => ['description' => 'Bad Request'],
+//            '401' => ['description' => 'Unauthorized'],
+//            '403' => ['description' => 'Forbidden'],
+//            '404' => ['description' => 'Not Found'],
+        ];
+
+        foreach ($result['paths'] as &$pathItem) {
+            foreach ($pathItem as &$operation) {
+                if (!is_array($operation)) {
+                    continue;
+                }
+                foreach ($defaults as $code => $response) {
+                    if (!isset($operation['responses'][$code])) {
+                        $operation['responses'][$code] = $response;
+                    }
+                }
+            }
+        }
+        unset($pathItem, $operation);
+    }
+
+    private function removeUnusedSchemas(array &$result): void
+    {
+        $used = [];
+        array_walk_recursive($result['paths'], function ($value, $key) use (&$used) {
+            if ($key === '$ref' && str_starts_with($value, '#/components/schemas/')) {
+                $used[substr($value, strlen('#/components/schemas/'))] = true;
+            }
+        });
+
+        foreach (array_keys($result['components']['schemas']) as $name) {
+            if (!isset($used[$name])) {
+                unset($result['components']['schemas'][$name]);
+            }
+        }
     }
 
     public static function prepareResponses(array $success): array
