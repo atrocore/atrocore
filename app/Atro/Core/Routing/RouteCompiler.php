@@ -203,7 +203,7 @@ class RouteCompiler
             'operationId' => md5(($expanded ? $entityName : '') . $routeAttr->path . implode(',', (array) $routeAttr->methods)),
             'responses'   => $responses,
             'security'    => $routeAttr->auth
-                ? [['Authorization-Token' => []], ['basicAuth' => []], ['cookieAuth' => []]]
+                ? [['Authorization-Token' => []], ['basicAuth' => []]]
                 : [],
         ];
 

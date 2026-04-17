@@ -411,11 +411,6 @@ class OpenApiGenerator
                         'type' => 'apiKey',
                         'name' => 'Authorization-Token',
                         'in'   => 'header'
-                    ],
-                    'cookieAuth'          => [
-                        'type' => 'apiKey',
-                        'name' => 'auth-token',
-                        'in'   => 'cookie'
                     ]
                 ]
             ]
@@ -435,7 +430,7 @@ class OpenApiGenerator
             ];
 
             if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
-                $row['security'] = [['Authorization-Token' => []], ['basicAuth' => []], ['cookieAuth' => []]];
+                $row['security'] = [['Authorization-Token' => []], ['basicAuth' => []]];
             } else {
                 $row['security'] = [];
             }
@@ -481,7 +476,7 @@ class OpenApiGenerator
                 'description' => $routeAttr->description,
                 'operationId' => md5($routeAttr->path . '_' . $method),
                 'responses'   => $responses,
-                'security'    => $routeAttr->auth ? [['Authorization-Token' => []], ['basicAuth' => []], ['cookieAuth' => []]] : [],
+                'security'    => $routeAttr->auth ? [['Authorization-Token' => []], ['basicAuth' => []]] : [],
             ];
 
             if (!empty($routeAttr->parameters)) {

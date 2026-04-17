@@ -93,14 +93,33 @@ class Validator
 
         $schema = $this->container->get(OpenApiGenerator::class)->getSchemaForRoute($routeConfig);
 
-        return (new ValidatorBuilder())->fromJson(json_encode($schema));
+        return (new ValidatorBuilder())->fromJson(json_encode($this->injectCookieAuth($schema)));
     }
 
     private function getValidatorBuilderForHandler(RouteAttribute $routeAttr, string $entityName = ''): ValidatorBuilder
     {
         $schema = $this->container->get(OpenApiGenerator::class)->getSchemaForHandler($routeAttr, $entityName);
 
-        return (new ValidatorBuilder())->fromJson(json_encode($schema));
+        return (new ValidatorBuilder())->fromJson(json_encode($this->injectCookieAuth($schema)));
+    }
+
+    private function injectCookieAuth(array $schema): array
+    {
+        $schema['components']['securitySchemes']['cookieAuth'] = [
+            'type' => 'apiKey',
+            'name' => 'auth-token',
+            'in'   => 'cookie',
+        ];
+
+        foreach ($schema['paths'] as &$path) {
+            foreach ($path as &$operation) {
+                if (!empty($operation['security'])) {
+                    $operation['security'][] = ['cookieAuth' => []];
+                }
+            }
+        }
+
+        return $schema;
     }
 
     private function extractEntityName(ServerRequestInterface $request): string
