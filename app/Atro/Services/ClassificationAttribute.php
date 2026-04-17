@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -122,26 +121,6 @@ class ClassificationAttribute extends Base
                 }
             }
         }
-    }
-
-    public function createFromAttributes(string $classificationId, array $attributesIds): bool
-    {
-        if (!$this->getAcl()->check('ClassificationAttribute', 'create')) {
-            throw new Forbidden();
-        }
-
-        foreach ($attributesIds as $attributeId) {
-            $input                   = new \stdClass();
-            $input->classificationId = $classificationId;
-            $input->attributeId      = $attributeId;
-            try {
-                $this->createEntity($input);
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error($e->getMessage());
-            }
-        }
-
-        return true;
     }
 
     public function createEntity(\stdClass $attachment): string
