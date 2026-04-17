@@ -116,7 +116,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $entity->set('modifiedAt', $nowString);
         }
         if ($entity->hasAttribute('modifiedById')) {
-            $user = $this->getEntityManager()->getUser();
+            $user         = $this->getEntityManager()->getUser();
             $modifiedById = empty($user) ? $this->getConfig()->get('systemUserId') : $user->id;
             $entity->set('modifiedById', $modifiedById);
         }
@@ -304,7 +304,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         $fromName = $fieldData['mainField'] . 'From';
-        $toName = $fieldData['mainField'] . 'To';
+        $toName   = $fieldData['mainField'] . 'To';
 
         if (!$entity->isAttributeChanged($fromName) && !$entity->isAttributeChanged($toName)) {
             return;
@@ -312,7 +312,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($entity->get($toName) !== null && $entity->get($fromName) !== null && $entity->get($fromName) > $entity->get($toName)) {
             $fieldLabel = $this->getLanguage()->translate($toName, 'fields', $entity->getEntityType());
-            $message = str_replace(['{field}', '{value}'], [$fieldLabel, $entity->get($fromName)], $this->getLanguage()->translate('fieldShouldBeGreater', 'messages', 'Global'));
+            $message    = str_replace(['{field}', '{value}'], [$fieldLabel, $entity->get($fromName)], $this->getLanguage()->translate('fieldShouldBeGreater', 'messages', 'Global'));
             throw new BadRequest($message);
         }
     }
@@ -441,7 +441,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($entity->isAttributeChanged($fieldName) && !empty($ids = $entity->get($fieldName))) {
             $allowedOptions = $fieldData['allowedOptions'] ?? [];
-            $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($fieldData['extensibleEnumId'], $ids);
+            $options        = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($fieldData['extensibleEnumId'], $ids);
             foreach ($options as $option) {
                 if (!empty($option['notExistingOption'])) {
                     throw new BadRequest(
@@ -594,23 +594,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 switch ($mainFieldDefs['type']) {
                     case 'rangeInt':
                         $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField . 'From'), $unit->get('measureId'), $unit->get('id'));
-                        $val = number_format((float)$allUnits[$convertTo->get('name')], 0);
+                        $val      = number_format((float)$allUnits[$convertTo->get('name')], 0);
                         $entity->set($mainField . 'From', (int)$val);
 
                         $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField . 'To'), $unit->get('measureId'), $unit->get('id'));
-                        $val = number_format((float)$allUnits[$convertTo->get('name')], 0);
+                        $val      = number_format((float)$allUnits[$convertTo->get('name')], 0);
                         $entity->set($mainField . 'To', (int)$val);
                         break;
                     case 'rangeFloat':
                         $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField . 'From'), $unit->get('measureId'), $unit->get('id'));
-                        $val = $allUnits[$convertTo->get('name')];
+                        $val      = $allUnits[$convertTo->get('name')];
                         if (isset($mainFieldDefs['amountOfDigitsAfterComma'])) {
                             $val = number_format((float)$val, $mainFieldDefs['amountOfDigitsAfterComma']);
                         }
                         $entity->set($mainField . 'From', (float)$val);
 
                         $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField . 'To'), $unit->get('measureId'), $unit->get('id'));
-                        $val = $allUnits[$convertTo->get('name')];
+                        $val      = $allUnits[$convertTo->get('name')];
                         if (isset($mainFieldDefs['amountOfDigitsAfterComma'])) {
                             $val = number_format((float)$val, $mainFieldDefs['amountOfDigitsAfterComma']);
                         }
@@ -618,12 +618,12 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         break;
                     case 'int':
                         $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField), $unit->get('measureId'), $unit->get('id'));
-                        $val = number_format((float)$allUnits[$convertTo->get('name')], 0);
+                        $val      = number_format((float)$allUnits[$convertTo->get('name')], 0);
                         $entity->set($mainField, (int)$val);
                         break;
                     case 'float':
                         $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField), $unit->get('measureId'), $unit->get('id'));
-                        $val = $allUnits[$convertTo->get('name')];
+                        $val      = $allUnits[$convertTo->get('name')];
                         if (isset($mainFieldDefs['amountOfDigitsAfterComma'])) {
                             $val = number_format($val, $mainFieldDefs['amountOfDigitsAfterComma']);
                         }
@@ -647,8 +647,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
-        $fieldValue = (string)$entity->get($fieldName);
-        $length = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
+        $fieldValue                    = (string)$entity->get($fieldName);
+        $length                        = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
 
         $maxLength = (int)$fieldData['maxLength'];
 
@@ -732,8 +732,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $defs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relation], []);
 
             if (is_array($defs) && !empty($defs['entity']) && !empty($defs['foreign'])) {
-                $data = new \stdClass();
-                $data->modifiedAt = $entity->get('modifiedAt');
+                $data                       = new \stdClass();
+                $data->modifiedAt           = $entity->get('modifiedAt');
                 $data->_skipIsEntityUpdated = true;
 
                 $params = [
@@ -754,7 +754,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     public function save(Entity $entity, array $options = [])
     {
         $nowString = date('Y-m-d H:i:s');
-        $user = $this->getEntityManager()->getUser();
+        $user      = $this->getEntityManager()->getUser();
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
@@ -873,12 +873,19 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];
         foreach ($entity->getRelations() as $name => $defs) {
             if (in_array($defs['type'], $relationTypeList)) {
-                if (property_exists($entity, '_input') && !empty($entity->_input->_duplicatingEntityId) && in_array($name, $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'duplicatableRelations'], []))) {
-                    continue;
-                }
-
-                $fieldName = $name . 'Ids';
+                $fieldName         = $name . 'Ids';
                 $columnsFieldsName = $name . 'Columns';
+                $columnData        = new \stdClass();
+
+                if (property_exists($entity, '_input')) {
+                    if (!empty($entity->_input->_duplicatingEntityId) && in_array($name, $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'duplicatableRelations'], []))) {
+                        continue;
+                    }
+
+                    if (property_exists($entity->_input, $columnsFieldsName)) {
+                        $columnData = $entity->_input->$columnsFieldsName;
+                    }
+                }
 
 
                 if ($entity->has($fieldName) || $entity->has($columnsFieldsName)) {
@@ -895,15 +902,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         }
                     }
                     if (is_array($specifiedIds)) {
-                        $toRemoveIds = [];
-                        $existingIds = [];
-                        $toUpdateIds = [];
+                        $toRemoveIds         = [];
+                        $existingIds         = [];
+                        $toUpdateIds         = [];
                         $existingColumnsData = new \stdClass();
 
-                        $defs = [];
+                        $defs    = [];
                         $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.columns");
                         if (!empty($columns)) {
-                            $columnData = $entity->get($columnsFieldsName);
+                            $columnData                = $entity->get($columnsFieldsName);
                             $defs['additionalColumns'] = $columns;
                         }
 
@@ -914,7 +921,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                 if (!empty($columns)) {
                                     $data = new \stdClass();
                                     foreach ($columns as $columnName => $columnField) {
-                                        $foreignId = $foreignEntity->id;
+                                        $foreignId         = $foreignEntity->id;
                                         $data->$columnName = $foreignEntity->get($columnField);
                                     }
                                     $existingColumnsData->$foreignId = $data;
@@ -964,11 +971,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         foreach ($specifiedIds as $id) {
                             if (!in_array($id, $existingIds)) {
                                 $data = null;
-                                if (!empty($columns) && isset($columnData->$id)) {
+                                if (isset($columnData->$id)) {
                                     $data = $columnData->$id;
                                 }
                                 if ($name === 'teams') {
-                                    $data = ['entityType' => $entity->getEntityType()];
+                                    $data = ['entityType' => $entity->getEntityName()];
                                 }
                                 try {
                                     $this->relate($entity, $name, $id, $data, array_merge($options, ['ignoreDuplicate' => true]));
@@ -996,16 +1003,16 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     }
 
                     $foreignEntityType = $defs['entity'];
-                    $foreignKey = $defs['foreignKey'];
-                    $idFieldName = $name . 'Id';
-                    $nameFieldName = $name . 'Name';
+                    $foreignKey        = $defs['foreignKey'];
+                    $idFieldName       = $name . 'Id';
+                    $nameFieldName     = $name . 'Name';
 
                     if (!$entity->has($idFieldName)) {
                         continue;
                     }
 
-                    $where = [];
-                    $where[$foreignKey] = $entity->id;
+                    $where                 = [];
+                    $where[$foreignKey]    = $entity->id;
                     $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->where($where)->findOne();
                     if ($previousForeignEntity) {
                         if (!$entity->isNew()) {
@@ -1148,8 +1155,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     public function clearEntityField(string $field): void
     {
-        $table = Util::toUnderScore(lcfirst($this->entityType));
-        $conn = $this->getEntityManager()->getConnection();
+        $table  = Util::toUnderScore(lcfirst($this->entityType));
+        $conn   = $this->getEntityManager()->getConnection();
         $column = $this->getEntityManager()->getMapper()->toDb($field);
 
         $conn->createQueryBuilder()
@@ -1165,7 +1172,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         // we build the query to retrieve record with at least one script field null or one null attribute values;
         $table = Util::toUnderScore($this->entityType);
-        $qb = $this->getConnection()->createQueryBuilder()
+        $qb    = $this->getConnection()->createQueryBuilder()
             ->select('t.id')
             ->from($this->getConnection()->quoteIdentifier($table), 't')
             ->where('t.deleted = :false')
@@ -1184,7 +1191,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute']) && class_exists('\AdvancedDataTypes\Module')) {
-            $atTable = $table . '_attribute_value';
+            $atTable       = $table . '_attribute_value';
             $foreignColumn = Util::toUnderScore(lcfirst($this->entityType)) . "_id";
             $qb->leftJoin('t', $atTable, 'at', "t.id = at.$foreignColumn AND at.deleted = :false")
                 ->leftJoin('at', 'attribute', 'a', 'a.id = at.attribute_id AND a.deleted = :false AND a.type = :script AND a.entity_id = :entityId')
@@ -1200,7 +1207,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 if (in_array($outputType, ['text', 'wysiwyg'])) {
                     if (!empty($this->getConfig()->get('isMultilangActive'))) {
                         foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
-                            $langColumn = $column . '_' . strtolower($code);
+                            $langColumn   = $column . '_' . strtolower($code);
                             $conditions[] = "(a.output_type = :$outputType AND (at.$langColumn IS NULL) AND a.is_multilang = :true)";
                         }
                     }
