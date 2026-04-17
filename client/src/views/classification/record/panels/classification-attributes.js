@@ -195,10 +195,10 @@ Espo.define('views/classification/record/panels/classification-attributes',
                         resolve(list.map(item => item.id))
                     })
                 }
-            }).then(attributeIds => {
-                this.ajaxPostRequest('ClassificationAttribute', {
+            }).then(attributesIds => {
+                this.ajaxPostRequest('ClassificationAttribute/createFromAttributes', {
                     classificationId: this.model.get('id'),
-                    attributesIds: attributeIds,
+                    attributesIds: attributesIds,
                     assignedUserId: this.getUser().id,
                     assignedUserName: this.getUser().get('name')
                 }).then(res => {
@@ -238,7 +238,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
                         attributesIds.push(model.get('id'))
                     });
 
-                    this.ajaxPostRequest('ClassificationAttribute', {
+                    this.ajaxPostRequest('ClassificationAttribute/createFromAttributes', {
                         classificationId: this.model.get('id'),
                         attributesIds: attributesIds,
                         assignedUserId: this.getUser().id,
