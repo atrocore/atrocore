@@ -526,7 +526,167 @@ class OpenApiGenerator
                         'name' => 'Authorization-Token',
                         'in'   => 'header'
                     ]
-                ]
+                ],
+                'schemas'         => [
+                    '_LayoutItems'       => [
+                        'type'        => 'array',
+                        'description' => 'Layout definition. A flat array of field objects for `list`/`selection` views, or an array of panel objects with nested `rows` for `detail`/`edit` views.',
+                        'items'       => [
+                            'oneOf' => [
+                                [
+                                    'type'        => 'object',
+                                    'description' => 'Field item used in list/selection layouts',
+                                    'required'    => [
+                                        'name',
+                                    ],
+                                    'properties'  => [
+                                        'name'          => [
+                                            'type' => 'string',
+                                        ],
+                                        'id'            => [
+                                            'type' => 'string',
+                                        ],
+                                        'width'         => [
+                                            'type' => 'number',
+                                        ],
+                                        'widthPx'       => [
+                                            'type' => 'integer',
+                                        ],
+                                        'link'          => [
+                                            'type' => 'boolean',
+                                        ],
+                                        'notSortable'   => [
+                                            'type' => 'boolean',
+                                        ],
+                                        'align'         => [
+                                            'type' => 'string',
+                                        ],
+                                        'view'          => [
+                                            'type' => 'string',
+                                        ],
+                                        'customLabel'   => [
+                                            'type' => 'string',
+                                        ],
+                                        'editable'      => [
+                                            'type' => 'boolean',
+                                        ],
+                                        'attributeId'   => [
+                                            'type'        => 'string',
+                                            'description' => 'ID of the linked attribute when the field is backed by a dynamic attribute.',
+                                        ],
+                                        'attributeDefs' => [
+                                            'type'        => 'object',
+                                            'description' => 'Definition of the linked attribute (type, options, constraints, etc.). Present when `attributeId` is set.',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'type'        => 'object',
+                                    'description' => 'Panel item used in detail/edit layouts',
+                                    'required'    => [
+                                        'rows',
+                                    ],
+                                    'properties'  => [
+                                        'id'    => [
+                                            'type' => 'string',
+                                        ],
+                                        'label' => [
+                                            'type' => 'string',
+                                        ],
+                                        'style' => [
+                                            'type' => 'string',
+                                        ],
+                                        'rows'  => [
+                                            'type'        => 'array',
+                                            'description' => 'Each row is an array of cell items. A cell is either a field object or `false` (empty cell placeholder).',
+                                            'items'       => [
+                                                'type'  => 'array',
+                                                'items' => [
+                                                    'oneOf' => [
+                                                        [
+                                                            'type'       => 'object',
+                                                            'required'   => [
+                                                                'name',
+                                                            ],
+                                                            'properties' => [
+                                                                'id'        => [
+                                                                    'type' => 'string',
+                                                                ],
+                                                                'name'      => [
+                                                                    'type' => 'string',
+                                                                ],
+                                                                'fullWidth' => [
+                                                                    'type' => 'boolean',
+                                                                ],
+                                                            ],
+                                                        ],
+                                                        [
+                                                            'type' => 'boolean',
+                                                            'enum' => [
+                                                                false,
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    '_LayoutData' => [
+                        'type'       => 'object',
+                        'required'   => [
+                            'layout',
+                            'storedProfile',
+                            'storedProfiles',
+                            'selectedProfileId',
+                            'canEdit',
+                        ],
+                        'properties' => [
+                            'layout'            => [
+                                '$ref' => '#/components/schemas/_LayoutItems',
+                            ],
+                            'storedProfile'     => [
+                                'type'        => 'object',
+                                'description' => 'The layout profile currently applied. Empty object `{}` when no profile is stored.',
+                                'properties'  => [
+                                    'id'   => [
+                                        'type' => 'string',
+                                    ],
+                                    'name' => [
+                                        'type' => 'string',
+                                    ],
+                                ],
+                            ],
+                            'storedProfiles'    => [
+                                'type'        => 'array',
+                                'description' => 'All layout profiles that have a stored layout for this entity and view type.',
+                                'items'       => [
+                                    'type'       => 'object',
+                                    'properties' => [
+                                        'id'   => [
+                                            'type' => 'string',
+                                        ],
+                                        'name' => [
+                                            'type' => 'string',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'selectedProfileId' => [
+                                'type'        => 'string',
+                                'nullable'    => true,
+                                'description' => 'ID of the layout profile selected by the current user for this view. `null` if none selected.',
+                            ],
+                            'canEdit'           => [
+                                'type'        => 'boolean',
+                                'description' => 'Whether the current user has edit access to the active layout profile.',
+                            ],
+                        ],
+                    ],
+                ],
             ]
         ];
     }

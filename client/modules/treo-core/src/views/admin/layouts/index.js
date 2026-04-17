@@ -29,7 +29,7 @@ Espo.define('treo-core:views/admin/layouts/index', 'class-replace!treo-core:view
 
         resetAllToDefault: function () {
             this.notify('Saving...');
-            this.ajaxPostRequest('Layout/action/resetAllToDefault?layoutProfileId=' + this.model.get('layoutProfileId')).then(() => {
+            this.ajaxPostRequest(`LayoutProfile/${this.model.get('layoutProfileId')}/resetAllLayoutToDefault`).then(() => {
                 this.notify('Done', 'success');
                 setTimeout(() => {
                     Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);

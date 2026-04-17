@@ -11,10 +11,12 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Layout;
+namespace Atro\Handlers\LayoutProfile;
 
+use Atro\Core\DataManager;
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\LayoutManager;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,13 +25,24 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Layout/savePreference',
+    path: '/LayoutProfile/{id}/updateLayout',
     methods: [
         'POST',
     ],
-    summary: 'Save layout profile preference',
-    description: 'Saves the current user\'s preferred layout profile for a specific entity and view type.',
-    tag: 'Layout',
+    summary: 'Update entity layout content or a layout profile',
+    description: 'Saves the layout configuration for a given entity name and view type into the specified layout profile.',
+    tag: 'LayoutProfile',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Layout profile record ID',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
         'required' => true,
         'content'  => [
@@ -39,27 +52,26 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'required'   => [
                         'entityName',
                         'viewType',
+                        'layout',
                     ],
                     'properties' => [
-                        'entityName'      => [
+                        'entityName'   => [
                             'type'        => 'string',
                             'description' => 'Entity name (e.g. `Product`, `Category`)',
                             'example'     => 'Product',
                         ],
-                        'viewType'        => [
+                        'viewType'     => [
                             'type'        => 'string',
-                            'description' => 'Layout view type (e.g. `list`, `detail`, `relationships`)',
+                            'description' => 'Layout view type (e.g. `list`, `detail`, `edit`)',
                             'example'     => 'list',
                         ],
-                        'relatedScope'    => [
+                        'relatedScope' => [
                             'type'        => 'string',
                             'description' => 'Related entity scope, optionally dot-separated with the link name (e.g. `Category` or `Category.products`)',
                             'example'     => 'Category',
                         ],
-                        'layoutProfileId' => [
-                            'type'        => 'string',
-                            'nullable'    => true,
-                            'description' => 'ID of the layout profile to set as preferred. Pass `null` to clear the preference.',
+                        'layout'       => [
+                            '$ref' => '#/components/schemas/_LayoutItems',
                         ],
                     ],
                 ],
@@ -68,53 +80,73 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Preference saved successfully',
+            'description' => 'Updated layout content. Same structure as GET /entityLayout.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        '$ref' => '#/components/schemas/_LayoutData',
                     ],
                 ],
             ],
         ],
         400 => [
-            'description' => 'entityName is missing or viewType is missing',
+            'description' => 'entityName or viewType or layout is missing',
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
+        404 => [
+            'description' => 'Layout profile not found',
         ],
     ],
 )]
-class LayoutSavePreferenceHandler extends AbstractHandler
+class LayoutProfileUpdateLayoutHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $layoutProfileId = (string)$request->getAttribute('id');
+
         $data = $this->getRequestBody($request);
 
-        $relatedEntity   = '';
-        $relatedLink     = '';
-        $layoutProfileId = null;
+        $relatedEntity = null;
+        $relatedLink   = null;
 
         if (!empty($data->relatedScope)) {
             $parts         = explode('.', $data->relatedScope);
             $relatedEntity = $parts[0];
-            $relatedLink   = $parts[1] ?? '';
+            $relatedLink   = $parts[1] ?? null;
         }
 
-        if (!empty($data->layoutProfileId)) {
-            $layoutProfileId = $data->layoutProfileId;
-        }
+        $layout = isset($data->layout) && is_array($data->layout) ? json_decode(json_encode($data->layout), true): [];
 
-        $this->getLayoutManager()->saveUserPreference(
+        $layoutManager = $this->getLayoutManager();
+        $layoutManager->checkLayoutProfile($layoutProfileId);
+
+        $result = $layoutManager->save(
             $data->entityName,
             $data->viewType,
-            $relatedEntity,
-            $relatedLink,
-            $layoutProfileId
+            $relatedEntity ?? '',
+            $relatedLink ?? '',
+            $layoutProfileId,
+            $layout
         );
 
-        return new BoolResponse(true);
+        if ($result === false) {
+            throw new Error('Error while saving layout.');
+        }
+
+        $this->getDataManager()->clearCache(true);
+
+        return new JsonResponse($layoutManager->get($data->entityName, $data->viewType, $relatedEntity ?? '', $relatedLink ?? '', $layoutProfileId));
     }
 
     private function getLayoutManager(): LayoutManager
     {
         return $this->container->get('layoutManager');
+    }
+
+    private function getDataManager(): DataManager
+    {
+        return $this->container->get('dataManager');
     }
 }

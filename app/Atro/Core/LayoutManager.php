@@ -286,10 +286,10 @@ class LayoutManager
     {
         $profile = $this->getEntityManager()->getEntity('LayoutProfile', $layoutProfileId);
         if (empty($profile)) {
-            throw new NotFound();
+            throw new NotFound("Layout profile '{$layoutProfileId}' not found.");
         }
         if (!$this->getAcl()->checkEntity($profile, 'edit')) {
-            throw new Forbidden();
+            throw new Forbidden("You do not have edit access to layout profile '{$profile->get('name')}'.");
         }
     }
 

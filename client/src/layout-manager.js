@@ -61,8 +61,9 @@ Espo.define('layout-manager', [], function () {
         },
 
         getUrl: function (scope, type, relatedScope, layoutProfileId, isAdminPage) {
-            return scope + '/layout/' + type + "?isAdminPage="
-                + (isAdminPage ?? window.location.hash.search("#Admin") === 0)
+            return 'entityLayout?entityName=' + scope
+                + '&viewType=' + type
+                + '&isAdminPage=' + (isAdminPage ?? window.location.hash.search("#Admin") === 0)
                 + (relatedScope ? ('&relatedScope=' + relatedScope) : '')
                 + (layoutProfileId ? ('&layoutProfileId=' + layoutProfileId) : '');
         },
@@ -118,9 +119,14 @@ Espo.define('layout-manager', [], function () {
             var key = this.getKey(scope, type, relatedScope, layoutProfileId);
 
             this.ajax({
-                url: this.getUrl(scope, type, relatedScope, layoutProfileId),
-                type: 'PATCH',
-                data: JSON.stringify(layout),
+                url: 'LayoutProfile/' + layoutProfileId + '/updateLayout',
+                type: 'POST',
+                data: JSON.stringify({
+                    entityName: scope,
+                    viewType: type,
+                    relatedScope: relatedScope,
+                    layout: layout
+                }),
                 success: function () {
                     this.clearCache(scope, type, relatedScope)
                     if (this.cache && key) {
@@ -145,13 +151,12 @@ Espo.define('layout-manager', [], function () {
 
             Espo.Ui.notify('Saving...');
             this.ajax({
-                url: 'Layout/action/resetToDefault',
+                url: 'LayoutProfile/' + layoutProfileId + '/resetLayoutToDefault',
                 type: 'POST',
                 data: JSON.stringify({
-                    scope: scope,
+                    entityName: scope,
                     viewType: type,
-                    relatedScope: relatedScope,
-                    layoutProfileId: layoutProfileId
+                    relatedScope: relatedScope
                 }),
                 success: function (layout) {
                     this.clearCache(scope, type, relatedScope)
@@ -167,10 +172,10 @@ Espo.define('layout-manager', [], function () {
 
         savePreference: function (scope, type, relatedScope, layoutProfileId, callback) {
             this.ajax({
-                url: 'Layout/action/savePreference',
+                url: 'Layout/savePreference',
                 type: 'POST',
                 data: JSON.stringify({
-                    scope: scope,
+                    entityName: scope,
                     viewType: type,
                     relatedScope: relatedScope,
                     layoutProfileId: layoutProfileId

@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Layout;
+namespace Atro\Handlers\LayoutProfile;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\LayoutManager;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,13 +23,24 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Layout/savePreference',
+    path: '/LayoutProfile/{id}/resetLayoutToDefault',
     methods: [
         'POST',
     ],
-    summary: 'Save layout profile preference',
-    description: 'Saves the current user\'s preferred layout profile for a specific entity and view type.',
-    tag: 'Layout',
+    summary: 'Reset a single layout to default',
+    description: 'Removes the custom configuration for a specific entity, view type, and layout profile, reverting it to the default layout.',
+    tag: 'LayoutProfile',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Layout profile record ID',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
         'required' => true,
         'content'  => [
@@ -41,25 +52,20 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'viewType',
                     ],
                     'properties' => [
-                        'entityName'      => [
+                        'entityName'   => [
                             'type'        => 'string',
                             'description' => 'Entity name (e.g. `Product`, `Category`)',
                             'example'     => 'Product',
                         ],
-                        'viewType'        => [
+                        'viewType'     => [
                             'type'        => 'string',
-                            'description' => 'Layout view type (e.g. `list`, `detail`, `relationships`)',
+                            'description' => 'Layout view type (e.g. `list`, `detail`, `edit`)',
                             'example'     => 'list',
                         ],
-                        'relatedScope'    => [
+                        'relatedScope' => [
                             'type'        => 'string',
                             'description' => 'Related entity scope, optionally dot-separated with the link name (e.g. `Category` or `Category.products`)',
                             'example'     => 'Category',
-                        ],
-                        'layoutProfileId' => [
-                            'type'        => 'string',
-                            'nullable'    => true,
-                            'description' => 'ID of the layout profile to set as preferred. Pass `null` to clear the preference.',
                         ],
                     ],
                 ],
@@ -68,29 +74,36 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Preference saved successfully',
+            'description' => 'Layout reverted to default. Returns the resulting default layout content.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        '$ref' => '#/components/schemas/_LayoutData',
                     ],
                 ],
             ],
         ],
         400 => [
-            'description' => 'entityName is missing or viewType is missing',
+            'description' => 'entityName or viewType is missing',
+        ],
+        403 => [
+            'description' => 'Forbidden',
+        ],
+        404 => [
+            'description' => 'Layout profile not found',
         ],
     ],
 )]
-class LayoutSavePreferenceHandler extends AbstractHandler
+class LayoutProfileResetLayoutToDefaultHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $layoutProfileId = (string)$request->getAttribute('id');
+
         $data = $this->getRequestBody($request);
 
-        $relatedEntity   = '';
-        $relatedLink     = '';
-        $layoutProfileId = null;
+        $relatedEntity = '';
+        $relatedLink   = '';
 
         if (!empty($data->relatedScope)) {
             $parts         = explode('.', $data->relatedScope);
@@ -98,19 +111,16 @@ class LayoutSavePreferenceHandler extends AbstractHandler
             $relatedLink   = $parts[1] ?? '';
         }
 
-        if (!empty($data->layoutProfileId)) {
-            $layoutProfileId = $data->layoutProfileId;
-        }
+        $layoutManager = $this->getLayoutManager();
+        $layoutManager->checkLayoutProfile($layoutProfileId);
 
-        $this->getLayoutManager()->saveUserPreference(
+        return new JsonResponse($layoutManager->resetToDefault(
             $data->entityName,
             $data->viewType,
             $relatedEntity,
             $relatedLink,
             $layoutProfileId
-        );
-
-        return new BoolResponse(true);
+        ));
     }
 
     private function getLayoutManager(): LayoutManager
