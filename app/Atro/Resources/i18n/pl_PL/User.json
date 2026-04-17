@@ -37,7 +37,8 @@
     "followEntityOnStreamPost": "Automatyczne śledzenie rekordów po opublikowaniu w Aktywnościach",
     "receiveNotifications": "Otrzymywanie powiadomień",
     "notificationProfile": "Profil powiadomienia",
-    "locale": "Lokalizacja"
+    "locale": "Lokalizacja",
+    "disableNavigationPath": "Wyłącz ścieżkę nawigacyjną"
   },
   "labels": {
     "Generate": "Generuj",

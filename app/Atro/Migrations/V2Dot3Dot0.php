@@ -38,6 +38,8 @@ class V2Dot3Dot0 extends Base
         }
 
         $this->backfillMasterDataEntities();
+
+        $this->migrateUser();
     }
 
     public function migrateExtensibleEnumOptionSortOrder(): void
@@ -206,6 +208,24 @@ class V2Dot3Dot0 extends Base
                         ->setParameter('false', false, ParameterType::BOOLEAN)
                         ->executeStatement();
                 } catch (\Throwable $e) {
+                }
+            }
+        }
+    }
+
+    public function migrateUser(): void
+    {
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        if ($toSchema->hasTable('user')) {
+            $table = $toSchema->getTable('user');
+
+            if (!$table->hasColumn('disable_navigation_path')) {
+                $table->addColumn('disable_navigation_path', 'boolean', ['default' => false, 'notnull' => true]);
+
+                foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+                    $this->exec($sql);
                 }
             }
         }

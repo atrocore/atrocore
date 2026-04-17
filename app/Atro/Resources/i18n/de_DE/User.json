@@ -37,7 +37,8 @@
     "layoutProfile": "Layout-Profil",
     "teamRole": "Position",
     "teams": "Teams",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "disableNavigationPath": "Navigationspfad deaktivieren"
   },
   "labels": {
     "Generate": "Erzeugen",

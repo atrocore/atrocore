@@ -42,7 +42,8 @@
     "customHeadCode": "Kód v hlavičce",
     "customStylesheetPath": "Cesta k souboru CSS",
     "customStylesheet": "CSS",
-    "disableToolbarLogo": "Zakázat logo v záhlaví"
+    "disableToolbarLogo": "Zakázat logo v záhlaví",
+    "disableNavigationPath": "Zakázat navigační cestu"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Horní limit počtu úloh nebo procesů, které mohou být spuštěny současně na pozadí serveru.",

@@ -37,7 +37,8 @@
     "followCreatedEntities": "Auto-follow self-created records",
     "followEntityOnStreamPost": "Auto-follow records after posting in Activities",
     "receiveNotifications": "Receive Notifications",
-    "notificationProfile": "Notification Profile"
+    "notificationProfile": "Notification Profile",
+    "disableNavigationPath": "Disable Navigation Path"
   },
   "labels": {
     "Generate": "Generate",

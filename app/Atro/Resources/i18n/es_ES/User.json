@@ -37,7 +37,8 @@
     "followEntityOnStreamPost": "Seguimiento automático de los registros tras su publicación en Actividades",
     "layoutProfile": "Perfil del diseño",
     "locale": "Localización",
-    "type": "Tipo"
+    "type": "Tipo",
+    "disableNavigationPath": "Desactivar ruta de navegación"
   },
   "labels": {
     "Generate": "Generar",
