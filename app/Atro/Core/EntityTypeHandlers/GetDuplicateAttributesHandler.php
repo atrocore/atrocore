@@ -53,7 +53,7 @@ use Atro\Handlers\AbstractHandler;
                     'properties' => [
                         'id' => [
                             'type'        => 'string',
-                            'description' => 'The ID of the source entity record which attributes values are suitable for duplication.',
+                            'description' => 'The ID of the source entity record which attributes are suitable for duplication.',
                             'example'     => '01990e5a-1f55-732b-bccd-8d200b594fc9',
                         ],
                     ],
