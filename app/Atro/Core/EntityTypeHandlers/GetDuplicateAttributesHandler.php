@@ -41,6 +41,26 @@ use Atro\Handlers\AbstractHandler;
             ],
         ],
     ],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type'        => 'string',
+                            'description' => 'The ID of the source entity record which attributes values are suitable for duplication.',
+                            'example'     => '01990e5a-1f55-732b-bccd-8d200b594fc9',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
         200 => [
             'description' => 'Entity record',
@@ -54,7 +74,7 @@ use Atro\Handlers\AbstractHandler;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Relation'], requires: ['hasAttribute'])]
+#[EntityType(types: ['Base', 'Hierarchy', 'Relation'])]
 class GetDuplicateAttributesHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
