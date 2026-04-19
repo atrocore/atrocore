@@ -24,7 +24,7 @@ Espo.define('views/user/password-expired', 'views/user/password-change-request',
         sendRequest(password) {
             $.ajax({
                 type: 'POST',
-                url: 'User/action/changeExpiredPassword',
+                url: 'User/changeExpiredPassword',
                 data: JSON.stringify({
                     password: password
                 }),

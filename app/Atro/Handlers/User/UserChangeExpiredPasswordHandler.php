@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Handlers\User;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,11 +22,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/User/action/changeExpiredPassword',
+    path: '/User/changeExpiredPassword',
     methods: [
         'POST',
     ],
-    summary: 'Changes an expired password',
+    summary: 'Change an expired password',
     description: 'Allows the current user to set a new password when their existing password has expired.',
     tag: 'User',
     requestBody: [
@@ -41,7 +40,8 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                     'properties' => [
                         'password' => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'The new password to set.',
                         ],
                     ],
                 ],
@@ -50,7 +50,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Password changed successfully.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -58,6 +58,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'Password is missing.',
+        ],
+        403 => [
+            'description' => 'Forbidden — user is a system user or password has not expired.',
         ],
     ],
 )]
@@ -67,18 +73,11 @@ class UserChangeExpiredPasswordHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'password')) {
-            throw new BadRequest();
+        if (empty($data->password)) {
+            throw new BadRequest("'password' is required.");
         }
 
-        $user       = $this->getUser();
-        $expireDays = $this->getConfig()->get('passwordExpireDays', 0);
-
-        if ($user->isSystemUser() || !$user->needToUpdatePassword($expireDays)) {
-            throw new Forbidden();
-        }
-
-        $result = $this->getRecordService('User')->changePassword($user->id, $data->password);
+        $this->getRecordService('User')->changeExpiredPassword($data->password);
 
         return new BoolResponse(true);
     }

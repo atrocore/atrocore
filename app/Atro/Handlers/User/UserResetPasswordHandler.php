@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\User;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,34 +21,27 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/User/action/resetPassword',
+    path: '/User/{id}/resetPassword',
     methods: [
         'POST',
     ],
-    summary: 'Resets a user password',
-    description: 'Admin action: generates a new random password and sends it to the user.',
+    summary: 'Reset a user password',
+    description: 'Generates a new random password and sends it to the user\'s email address.',
     tag: 'User',
-    requestBody: [
-        'required' => true,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'userId',
-                    ],
-                    'properties' => [
-                        'userId' => [
-                            'type' => 'string',
-                        ],
-                    ],
-                ],
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'User record ID',
+            'schema'      => [
+                'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Password reset email sent successfully.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -58,19 +50,22 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'User has no email address.',
+        ],
+        403 => [
+            'description' => 'Forbidden.',
+        ],
+        404 => [
+            'description' => 'User not found.',
+        ],
     ],
 )]
 class UserResetPasswordHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
-
-        if (!property_exists($data, 'userId')) {
-            throw new BadRequest();
-        }
-
-        $result = $this->getRecordService('User')->resetPassword($data->userId);
+        $this->getRecordService('User')->resetPassword((string)$request->getAttribute('id'));
 
         return new BoolResponse(true);
     }

@@ -150,6 +150,92 @@ class User extends Record
         return true;
     }
 
+    public function unlinkEntity($id, $link, $foreignId)
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        return parent::unlinkEntity($id, $link, $foreignId);
+    }
+
+    public function unlinkAll(string $id, string $link): bool
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        return parent::unlinkAll($id, $link);
+    }
+
+    public function linkEntity($id, $link, $foreignId)
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        return parent::linkEntity($id, $link, $foreignId);
+    }
+
+    public function duplicateAndLinkEntity($id, $link, $foreignId): bool
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        return parent::duplicateAndLinkEntity($id, $link, $foreignId);
+    }
+
+    public function changePasswordByRequest(string $requestId, string $password): array
+    {
+        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')
+            ->where(['requestId' => $requestId])
+            ->findOne();
+
+        if (!$p) {
+            throw new NotFound();
+        }
+
+        $userId = $p->get('userId');
+        if (!$userId) {
+            throw new Error();
+        }
+
+        try {
+            $this->changePassword($userId, $password);
+        } catch (BadRequest $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->removeEntity($p);
+            throw $e;
+        }
+
+        $this->getEntityManager()->removeEntity($p);
+
+        return ['url' => $p->get('url')];
+    }
+
+    public function changeOwnPassword(string $userId, string $password, string $currentPassword, bool $sendAccessInfo = false): bool
+    {
+        if ($this->getConfig()->get('resetPasswordViaEmailOnly', false)) {
+            throw new BadRequest($this->getLanguage()->translate('changePasswordOnResetViaEmailOnly', 'messages', 'User'));
+        }
+
+        return $this->changePassword($userId, $password, true, $currentPassword, $sendAccessInfo);
+    }
+
+    public function changeExpiredPassword(string $password): bool
+    {
+        $user       = $this->getUser();
+        $expireDays = $this->getConfig()->get('passwordExpireDays', 0);
+
+        if ($user->isSystemUser() || !$user->needToUpdatePassword($expireDays)) {
+            throw new Forbidden();
+        }
+
+        return $this->changePassword($user->id, $password);
+    }
+
     public function passwordChangeRequest($userName, $emailAddress, $url = null, $isResetAction = false)
     {
         $user = $this->getEntityManager()->getRepository('User')

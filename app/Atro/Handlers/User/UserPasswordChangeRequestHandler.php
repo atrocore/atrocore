@@ -26,10 +26,10 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'POST',
     ],
-    auth: false,
     summary: 'Requests a password reset link',
     description: 'Sends a password reset link to the user\'s email address.',
     tag: 'User',
+    auth: false,
     requestBody: [
         'required' => true,
         'content'  => [
@@ -60,7 +60,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Reset link sent successfully.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -68,6 +68,9 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'userName or emailAddress is missing.',
         ],
     ],
 )]
@@ -77,13 +80,17 @@ class UserPasswordChangeRequestHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (empty($data->userName) || empty($data->emailAddress)) {
-            throw new BadRequest();
+        if (empty($data->userName)) {
+            throw new BadRequest("'userName' is required.");
         }
 
-        $url = !empty($data->url) ? $data->url : null;
+        if (empty($data->emailAddress)) {
+            throw new BadRequest("'emailAddress' is required.");
+        }
 
-        $result = $this->getRecordService('User')->passwordChangeRequest($data->userName, $data->emailAddress, $url);
+        $url = property_exists($data, 'url') ? $data->url : null;
+
+        $this->getRecordService('User')->passwordChangeRequest($data->userName, $data->emailAddress, $url);
 
         return new BoolResponse(true);
     }
