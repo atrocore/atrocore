@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\DataManager;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\LayoutManager;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
@@ -52,6 +55,43 @@ class LayoutProfile extends Base
         }
 
         $entity->set('navigation', $preparedNavigation);
+    }
+
+    public function updateLayout(
+        string $layoutProfileId,
+        string $entityName,
+        string $viewType,
+        string $relatedEntity,
+        string $relatedLink,
+        array $layout
+    ): array {
+        $lm = $this->getLayoutManager();
+        $lm->checkLayoutProfile($layoutProfileId);
+
+        if ($lm->save($entityName, $viewType, $relatedEntity, $relatedLink, $layoutProfileId, $layout) === false) {
+            throw new Error('Error while saving layout.');
+        }
+
+        $this->getDataManager()->clearCache(true);
+
+        return $lm->get($entityName, $viewType, $relatedEntity, $relatedLink, $layoutProfileId);
+    }
+
+    protected function getLayoutManager(): LayoutManager
+    {
+        return $this->getInjection('layoutManager');
+    }
+
+    protected function getDataManager(): DataManager
+    {
+        return $this->getInjection('dataManager');
+    }
+
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('layoutManager');
+        $this->addDependency('dataManager');
     }
 
     protected function duplicateLayouts(IEntity $entity, IEntity $duplicatingEntity)

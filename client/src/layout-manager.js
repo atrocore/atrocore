@@ -32,9 +32,20 @@
 
 Espo.define('layout-manager', [], function () {
 
+    var BASE_LAYOUT_TYPES = new Set([
+        'list', 'detail', 'summary', 'selection', 'relationships', 'navigation',
+        'insights', 'selectionRelations', 'sidePanelsDetail', 'kanban'
+    ]);
+
+    var BUILTIN_SUBTYPE_MAP = {
+        'listExpanded': 'list',
+        'listRelationshipCustom': 'list',
+    };
+
     var LayoutManager = function (options, userId) {
         var options = options || {};
         this.cache = options.cache || null;
+        this.metadata = options.metadata || null;
         this.applicationId = options.applicationId || 'default-id';
         this.data = {};
         this.ajax = $.ajax;
@@ -61,11 +72,39 @@ Espo.define('layout-manager', [], function () {
         },
 
         getUrl: function (scope, type, relatedScope, layoutProfileId, isAdminPage) {
-            return 'entityLayout?entityName=' + scope
-                + '&viewType=' + type
-                + '&isAdminPage=' + (isAdminPage ?? window.location.hash.search("#Admin") === 0)
-                + (relatedScope ? ('&relatedScope=' + relatedScope) : '')
-                + (layoutProfileId ? ('&layoutProfileId=' + layoutProfileId) : '');
+            var baseType, layoutName;
+
+            if (BASE_LAYOUT_TYPES.has(type)) {
+                baseType = type;
+                layoutName = null;
+            } else if (type in BUILTIN_SUBTYPE_MAP) {
+                baseType = BUILTIN_SUBTYPE_MAP[type];
+                layoutName = type;
+            } else {
+                var additionalLayouts = this.metadata
+                    ? (this.metadata.get(['clientDefs', scope, 'additionalLayouts']) || {})
+                    : {};
+                baseType = additionalLayouts[type] || 'list';
+                layoutName = type;
+            }
+
+            var url = 'Layout/' + baseType + '?entityName=' + scope;
+
+            if (layoutName) {
+                url += '&layoutName=' + layoutName;
+            }
+
+            url += '&isAdminPage=' + (isAdminPage ?? window.location.hash.search("#Admin") === 0);
+
+            if (relatedScope) {
+                url += '&relatedScope=' + relatedScope;
+            }
+
+            if (layoutProfileId) {
+                url += '&layoutProfileId=' + layoutProfileId;
+            }
+
+            return url;
         },
 
         get: function (scope, type, relatedScope, layoutProfileId, callback, cache, isAdminPage, failedCallback) {
@@ -115,18 +154,51 @@ Espo.define('layout-manager', [], function () {
             });
         },
 
+        getUpdateUrl: function (scope, type) {
+            var BASE_LAYOUT_TYPES = new Set([
+                'list', 'detail', 'summary', 'selection', 'relationships', 'navigation',
+                'insights', 'selectionRelations', 'sidePanelsDetail', 'kanban'
+            ]);
+            var BUILTIN_SUBTYPE_MAP = {
+                'listExpanded': 'list',
+                'listRelationshipCustom': 'list',
+            };
+
+            var baseType, layoutName;
+
+            if (BASE_LAYOUT_TYPES.has(type)) {
+                baseType = type;
+                layoutName = null;
+            } else if (type in BUILTIN_SUBTYPE_MAP) {
+                baseType = BUILTIN_SUBTYPE_MAP[type];
+                layoutName = type;
+            } else {
+                var additionalLayouts = this.metadata
+                    ? (this.metadata.get(['clientDefs', scope, 'additionalLayouts']) || {})
+                    : {};
+                baseType = additionalLayouts[type] || 'list';
+                layoutName = type;
+            }
+
+            return { path: 'update' + baseType.charAt(0).toUpperCase() + baseType.slice(1) + 'Layout', layoutName: layoutName };
+        },
+
         set: function (scope, type, relatedScope, layoutProfileId, layout, callback, errorCallback) {
             var key = this.getKey(scope, type, relatedScope, layoutProfileId);
+            var updateInfo = this.getUpdateUrl(scope, type);
+            var bodyData = {
+                entityName: scope,
+                relatedScope: relatedScope,
+                layout: layout
+            };
+            if (updateInfo.layoutName) {
+                bodyData.layoutName = updateInfo.layoutName;
+            }
 
             this.ajax({
-                url: 'LayoutProfile/' + layoutProfileId + '/updateLayout',
+                url: 'LayoutProfile/' + layoutProfileId + '/' + updateInfo.path,
                 type: 'POST',
-                data: JSON.stringify({
-                    entityName: scope,
-                    viewType: type,
-                    relatedScope: relatedScope,
-                    layout: layout
-                }),
+                data: JSON.stringify(bodyData),
                 success: function () {
                     this.clearCache(scope, type, relatedScope)
                     if (this.cache && key) {
@@ -158,9 +230,8 @@ Espo.define('layout-manager', [], function () {
                     viewType: type,
                     relatedScope: relatedScope
                 }),
-                success: function (layout) {
-                    this.clearCache(scope, type, relatedScope)
-                    this.data[key] = layout;
+                success: function () {
+                    this.clearCache(scope, type, relatedScope);
                     this.trigger('sync');
                     if (typeof callback === 'function') {
                         callback();

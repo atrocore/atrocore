@@ -13,15 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\LayoutProfile;
 
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\LayoutManager;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
 #[Route(
     path: '/LayoutProfile/{id}/resetLayoutToDefault',
     methods: [
@@ -64,6 +62,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                         ],
                         'relatedScope' => [
                             'type'        => 'string',
+                            'nullable'    => true,
                             'description' => 'Related entity scope, optionally dot-separated with the link name (e.g. `Category` or `Category.products`)',
                             'example'     => 'Category',
                         ],
@@ -74,11 +73,11 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Layout reverted to default. Returns the resulting default layout content.',
+            'description' => 'Layout reset successfully.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        '$ref' => '#/components/schemas/_LayoutData',
+                        'type' => 'boolean',
                     ],
                 ],
             ],
@@ -114,13 +113,15 @@ class LayoutProfileResetLayoutToDefaultHandler extends AbstractHandler
         $layoutManager = $this->getLayoutManager();
         $layoutManager->checkLayoutProfile($layoutProfileId);
 
-        return new JsonResponse($layoutManager->resetToDefault(
+        $layoutManager->resetToDefault(
             $data->entityName,
             $data->viewType,
             $relatedEntity,
             $relatedLink,
             $layoutProfileId
-        ));
+        );
+
+        return new BoolResponse(true);
     }
 
     private function getLayoutManager(): LayoutManager

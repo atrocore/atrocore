@@ -189,7 +189,7 @@ class LayoutManager
 
         return [
             'layout'            => $layout,
-            'storedProfile'     => empty($storedProfile) ? [] : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
+            'storedProfile'     => empty($storedProfile) ? null : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
             'storedProfiles'    => $storedProfiles,
             'selectedProfileId' => empty($selectedProfileId) ? null : $selectedProfileId,
             'canEdit'           => empty($layoutProfile) ? false : $this->getAcl()->check($layoutProfile, 'edit')

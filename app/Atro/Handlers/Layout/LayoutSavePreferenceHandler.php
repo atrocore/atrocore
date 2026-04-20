@@ -53,6 +53,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                         ],
                         'relatedScope'    => [
                             'type'        => 'string',
+                            'nullable'    => true,
                             'description' => 'Related entity scope, optionally dot-separated with the link name (e.g. `Category` or `Category.products`)',
                             'example'     => 'Category',
                         ],
