@@ -180,8 +180,10 @@ class AttributeFieldConverter
             }
         }
 
+        $attributeRepository = $this->container->get('entityManager')->getRepository('Attribute');
+
         if (!empty($entity->_originalInput->__attributesToRemove)) {
-            $toRemove = $this->getAttributeIdsByIdOrCode($entity->getEntityName(), $entity->_originalInput->__attributesToRemove);
+            $toRemove = $attributeRepository->getAttributeIdsByIdOrCode($entity->getEntityName(), $entity->_originalInput->__attributesToRemove);
             if (!empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
                 throw new BadRequest('Attribute unlinking is disabled.');
             }
@@ -191,15 +193,7 @@ class AttributeFieldConverter
             }
 
             // Validate composite children: a child may not be removed without its composite parent also being removed.
-            $children = $this->conn->createQueryBuilder()
-                ->select('a.id, a.composite_attribute_id')
-                ->from($this->conn->quoteIdentifier('attribute'), 'a')
-                ->where('a.id IN (:ids)')
-                ->andWhere('a.composite_attribute_id IS NOT NULL')
-                ->andWhere('a.deleted = :false')
-                ->setParameter('ids', $toRemove, $this->conn::PARAM_STR_ARRAY)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
+            $children = $attributeRepository->getCompositeDataForAttributes($toRemove);
 
             foreach ($children as $child) {
                 if (!in_array($child['composite_attribute_id'], $toRemove)) {
@@ -344,7 +338,8 @@ class AttributeFieldConverter
         if (empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
             $values = $entity->_originalInput->__attributes ?? [];
             if (!empty($values)) {
-                $attributesToAdd = $this->getAttributeIdsByIdOrCode($entity->getEntityName(), $values);
+                $attributesToAdd = $this->container->get('entityManager')->getRepository('Attribute')
+                    ->getAttributeIdsByIdOrCode($entity->getEntityName(), $values);
             }
         }
 
@@ -438,18 +433,6 @@ class AttributeFieldConverter
         $entity->hasAllEntityAttributes = true;
     }
 
-    private function getAttributeIdsByIdOrCode(string $entityName, array $values): array
-    {
-        return $this->conn->createQueryBuilder()
-            ->select('id')
-            ->from($this->conn->quoteIdentifier("attribute"))
-            ->where('id in (:values) or code in (:values)')
-            ->andWhere('entity_id=:entityName and deleted=:false')
-            ->setParameter('values', $values, Mapper::getParameterType($values))
-            ->setParameter('entityName', $entityName)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchFirstColumn();
-    }
 
     public function prepareInputForAttributeValuesArray(IEntity $entity, \stdClass $input): void
     {

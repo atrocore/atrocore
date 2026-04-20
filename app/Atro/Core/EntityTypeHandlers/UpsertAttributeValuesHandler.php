@@ -94,8 +94,8 @@ class UpsertAttributeValuesHandler extends AbstractHandler
         $input                  = new \stdClass();
         $input->attributeValues = $data;
 
-        $this->getRecordService($entityName)->updateEntity($id, $input);
+        $res = $this->getRecordService($entityName)->updateEntity($id, $input);
 
-        return new BoolResponse(true);
+        return new BoolResponse($res);
     }
 }

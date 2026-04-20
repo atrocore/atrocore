@@ -101,8 +101,8 @@ class AddAttributesHandler extends AbstractHandler
         $input = new \stdClass();
         $input->__attributes = $attributeIds;
 
-        $this->getRecordService($entityName)->updateEntity($id, $input);
+        $res = $this->getRecordService($entityName)->updateEntity($id, $input);
 
-        return new BoolResponse(true);
+        return new BoolResponse($res);
     }
 }

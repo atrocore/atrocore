@@ -92,7 +92,7 @@ class Attribute extends Base
 
     public function getAttributesByIds(array $attributesIds): array
     {
-        $conn = $this->getConnection();
+        $conn = $this->getDbal();
 
         if (class_exists("\\Pim\\Module")) {
             return $conn->createQueryBuilder()
@@ -112,6 +112,32 @@ class Attribute extends Base
             ->where('id IN (:ids)')
             ->andWhere('deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+    }
+
+    public function getAttributeIdsByIdOrCode(string $entityName, array $values): array
+    {
+        return $this->getDbal()->createQueryBuilder()
+            ->select('id')
+            ->from($this->getDbal()->quoteIdentifier("attribute"))
+            ->where('id in (:values) or code in (:values)')
+            ->andWhere('entity_id=:entityName and deleted=:false')
+            ->setParameter('values', $values, Connection::PARAM_STR_ARRAY)
+            ->setParameter('entityName', $entityName)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+    }
+
+    public function getCompositeDataForAttributes(array $ids): array
+    {
+        return $this->getDbal()->createQueryBuilder()
+            ->select(['id', 'composite_attribute_id'])
+            ->from($this->getDbal()->quoteIdentifier('attribute'))
+            ->where('id IN (:ids)')
+            ->andWhere('composite_attribute_id IS NOT NULL')
+            ->andWhere('deleted = :false')
+            ->setParameter('ids', $ids, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
     }
