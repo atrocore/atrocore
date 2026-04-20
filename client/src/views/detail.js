@@ -1023,8 +1023,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         actionDuplicate: function () {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest(this.scope + '/action/getDuplicateAttributes', {
-                id: this.model.id
+            this.ajaxGetRequest('entityDuplicateValues', {
+                id: this.model.id,
+                entityName: this.scope
             }).then(function (attributes) {
                 Espo.Ui.notify(false);
                 var url = '#' + this.scope + '/create';
