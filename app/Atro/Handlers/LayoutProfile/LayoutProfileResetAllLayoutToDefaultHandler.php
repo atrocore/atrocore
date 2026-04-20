@@ -63,7 +63,7 @@ class LayoutProfileResetAllLayoutToDefaultHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $layoutProfileId = (string)$request->getAttribute('id');
+        $layoutProfileId = $request->getAttribute('id');
 
         $layoutManager = $this->getLayoutManager();
         $layoutManager->checkLayoutProfile($layoutProfileId);

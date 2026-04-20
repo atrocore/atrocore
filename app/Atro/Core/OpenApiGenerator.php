@@ -213,6 +213,10 @@ class OpenApiGenerator
         if (!empty($this->getMetadata()->get(['scopes', $entityName, 'hasAttribute']))) {
             $this->buildAttributeValueSchema($result);
         }
+
+        if (in_array($entityName, ['LayoutSection', 'LayoutListItem', 'LayoutRelationshipItem'])) {
+            $this->buildLayoutEntitiesSchema($result, $entityName);
+        }
     }
 
     private function buildEntityPostSchema(array &$result, string $entityName): void
@@ -526,79 +530,7 @@ class OpenApiGenerator
                         'name' => 'Authorization-Token',
                         'in'   => 'header'
                     ]
-                ],
-                'schemas'         => [
-                    'LayoutRowItem'          => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'name'      => ['type' => 'string'],
-                            'fullWidth' => ['type' => 'boolean'],
-                        ],
-                    ],
-                    'LayoutListItem'         => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'name'        => ['type' => 'string'],
-                            'link'        => ['type' => 'boolean'],
-                            'align'       => ['type' => 'string', 'enum' => ['left', 'right', 'center']],
-                            'width'       => [
-                                'oneOf'       => [['type' => 'number'], ['type' => 'string']],
-                                'description' => 'Column width as a percentage. Accepts a number or its string form.',
-                            ],
-                            'widthPx'     => [
-                                'oneOf'       => [['type' => 'number'], ['type' => 'string']],
-                                'description' => 'Column width in pixels. Accepts a number or its string form.',
-                            ],
-                            'isLarge'     => ['type' => 'boolean'],
-                            'cssStyle'    => ['type' => 'string'],
-                            'notSortable' => ['type' => 'boolean'],
-                            'editable'    => ['type' => 'boolean'],
-                            'attributeId' => ['type' => 'string', 'description' => 'ID of the linked attribute when the field is backed by a dynamic attribute.'],
-                        ],
-                    ],
-                    'LayoutSection'          => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'label' => ['type' => 'string', 'description' => 'Section heading label (stored as `name` in the database).'],
-                            'style' => ['type' => 'string', 'enum' => ['default', 'success', 'danger', 'primary', 'info', 'warning']],
-                            'rows'  => [
-                                'type'        => 'array',
-                                'description' => 'Each row is an array of one or two cells. A cell is either a `LayoutRowItem` field object or `false` (empty placeholder).',
-                                'example'     => [
-                                    [['name' => 'name', 'fullWidth' => true]],
-                                    [['name' => 'brand'], ['name' => 'number']],
-                                    [['name' => 'status'], false],
-                                ],
-                                'items'       => [
-                                    'type'  => 'array',
-                                    'items' => [
-                                        'oneOf' => [
-                                            ['$ref' => '#/components/schemas/LayoutRowItem'],
-                                            ['type' => 'boolean', 'enum' => [false]],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                    'LayoutRelationshipItem' => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'name'             => ['type' => 'string'],
-                            'style'            => ['type' => 'string', 'enum' => ['default', 'success', 'danger', 'primary', 'info', 'warning']],
-                            'hiddenPerDefault' => ['type' => 'boolean'],
-                        ],
-                    ],
-                    'LayoutSidePanelItem'    => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'name'     => ['type' => 'string'],
-                            'style'    => ['type' => 'string', 'enum' => ['default', 'success', 'danger', 'primary', 'info', 'warning']],
-                            'sticked'  => ['type' => 'boolean', 'description' => 'Whether the panel stays visible when scrolling.'],
-                            'disabled' => ['type' => 'boolean', 'description' => 'Whether the panel is hidden by default.'],
-                        ],
-                    ],
-                ],
+                ]
             ]
         ];
     }
@@ -727,6 +659,104 @@ class OpenApiGenerator
                     $result['paths'][$path][strtolower($method)] = $entry['openapi'];
                 }
             }
+        }
+    }
+
+    private function buildLayoutResponse(string $itemRef): array
+    {
+        return [
+            'type'       => 'object',
+            'required'   => ['layout', 'storedProfile', 'storedProfiles', 'selectedProfileId', 'canEdit'],
+            'properties' => [
+                'layout'            => [
+                    'type'  => 'array',
+                    'items' => ['$ref' => $itemRef],
+                ],
+                'storedProfile'     => [
+                    'type'        => 'object',
+                    'nullable'    => true,
+                    'description' => 'Layout profile this layout belongs to, or null for the default.',
+                    'required'    => ['id', 'name'],
+                    'properties'  => [
+                        'id'   => ['type' => 'string'],
+                        'name' => ['type' => 'string'],
+                    ],
+                ],
+                'storedProfiles'    => [
+                    'type'        => 'array',
+                    'description' => 'All profiles that have a stored layout for this entity and view type.',
+                    'items'       => [
+                        'type'       => 'object',
+                        'required'   => ['id', 'name'],
+                        'properties' => [
+                            'id'   => ['type' => 'string'],
+                            'name' => ['type' => 'string'],
+                        ],
+                    ],
+                ],
+                'selectedProfileId' => [
+                    'nullable'    => true,
+                    'type'        => 'string',
+                    'description' => 'Profile ID selected by the current user, or null.',
+                ],
+                'canEdit'           => [
+                    'type'        => 'boolean',
+                    'description' => 'Whether the current user may edit the active layout profile.',
+                ],
+            ],
+        ];
+    }
+
+
+    private function buildLayoutEntitiesSchema(array &$result, string $entityName): void
+    {
+        switch ($entityName) {
+            case 'LayoutListItem':
+                if (empty($result['components']['schemas']['LayoutListItem'])) {
+                    $this->buildEntitySchema($result, 'LayoutListItem');
+                }
+                $result['components']['schemas']['LayoutListItemResponse'] = $this->buildLayoutResponse('#/components/schemas/LayoutListItem');
+                break;
+            case 'LayoutRelationshipItem':
+                if (empty($result['components']['schemas']['LayoutRelationshipItem'])) {
+                    $this->buildEntitySchema($result, 'LayoutRelationshipItem');
+                }
+                $result['components']['schemas']['LayoutRelationshipItemResponse'] = $this->buildLayoutResponse('#/components/schemas/LayoutRelationshipItem');
+                break;
+            case 'LayoutSection':
+                $result['components']['schemas']['LayoutSection'] =  [
+                    'type'       => 'object',
+                    'properties' => [
+                        'label' => ['type' => 'string', 'description' => 'Section heading label (stored as `name` in the database).'],
+                        'style' => ['type' => 'string', 'enum' => ['default', 'success', 'danger', 'primary', 'info', 'warning']],
+                        'rows'  => [
+                            'type'        => 'array',
+                            'description' => 'Each row is an array of one or two cells. A cell is either a field object or `false` (empty placeholder).',
+                            'example'     => [
+                                [['name' => 'name', 'fullWidth' => true]],
+                                [['name' => 'brand'], ['name' => 'number']],
+                                [['name' => 'status'], false],
+                            ],
+                            'items'       => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'oneOf' => [
+                                        [
+                                            'type'       => 'object',
+                                            'properties' => [
+                                                'name'      => ['type' => 'string'],
+                                                'fullWidth' => ['type' => 'boolean'],
+                                            ],
+                                        ],
+                                        ['type' => 'boolean', 'enum' => [false]],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+                $result['components']['schemas']['LayoutSectionResponse'] = $this->buildLayoutResponse('#/components/schemas/LayoutSection');
+
         }
     }
 

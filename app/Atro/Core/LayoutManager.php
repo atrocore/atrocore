@@ -187,6 +187,17 @@ class LayoutManager
         $layout = $this->getEventManager()->dispatch('Layout', 'afterGetLayoutContent', $event)
             ->getArgument('result');
 
+        if (in_array($viewType, ['list', 'selection', 'kanban', 'navigation', 'insights', 'selectionRelations'], true) && is_array($layout)) {
+            foreach ($layout as $k => $item) {
+                if (is_array($item) && isset($item['width'])) {
+                    $layout[$k]['width'] = (float) $item['width'];
+                }
+                if (is_array($item) && isset($item['widthPx'])) {
+                    $layout[$k]['widthPx'] = (float) $item['widthPx'];
+                }
+            }
+        }
+
         return [
             'layout'            => $layout,
             'storedProfile'     => empty($storedProfile) ? null : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],

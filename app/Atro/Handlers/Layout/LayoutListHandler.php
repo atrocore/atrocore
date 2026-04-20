@@ -92,64 +92,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'List layout for the requested entity',
             'content'     => [
                 'application/json' => [
-                    'schema' => [
-                        'type'       => 'object',
-                        'required'   => [
-                            'layout',
-                            'storedProfile',
-                            'storedProfiles',
-                            'selectedProfileId',
-                            'canEdit',
-                        ],
-                        'properties' => [
-                            'layout'            => [
-                                'type'        => 'array',
-                                'description' => 'Ordered list of column definitions.',
-                                'items'       => [
-                                    '$ref' => '#/components/schemas/LayoutListItem',
-                                ],
-                            ],
-                            'storedProfile'     => [
-                                'type'        => 'object',
-                                'nullable'    => true,
-                                'description' => 'Layout profile this layout belongs to, or null for the default.',
-                                'required'    => ['id', 'name'],
-                                'properties'  => [
-                                    'id'   => [
-                                        'type' => 'string',
-                                    ],
-                                    'name' => [
-                                        'type' => 'string',
-                                    ],
-                                ],
-                            ],
-                            'storedProfiles'    => [
-                                'type'        => 'array',
-                                'description' => 'All profiles that have a stored layout for this entity and view type.',
-                                'items'       => [
-                                    'type'       => 'object',
-                                    'required'   => ['id', 'name'],
-                                    'properties' => [
-                                        'id'   => [
-                                            'type' => 'string',
-                                        ],
-                                        'name' => [
-                                            'type' => 'string',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'selectedProfileId' => [
-                                'nullable'    => true,
-                                'type'        => 'string',
-                                'description' => 'Profile ID selected by the current user, or null.',
-                            ],
-                            'canEdit'           => [
-                                'type'        => 'boolean',
-                                'description' => 'Whether the current user may edit the active layout profile.',
-                            ],
-                        ],
-                    ],
+                    'schema' => ['$ref' => '#/components/schemas/LayoutListItemResponse'],
                 ],
             ],
         ],
@@ -157,6 +100,9 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'Layout not found',
         ],
     ],
+    entities: [
+        'LayoutListItem'
+    ]
 )]
 class LayoutListHandler extends AbstractHandler
 {
@@ -185,7 +131,7 @@ class LayoutListHandler extends AbstractHandler
         );
 
         if (empty($data)) {
-            throw new NotFound("List layout for '{$qp['entityName']}' is not found.");
+            throw new NotFound("Layout '{$viewType}' for '{$qp['entityName']}' is not found.");
         }
 
         return new JsonResponse($data);

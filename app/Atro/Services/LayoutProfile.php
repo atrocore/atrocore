@@ -65,16 +65,15 @@ class LayoutProfile extends Base
         string $relatedLink,
         array $layout
     ): array {
-        $lm = $this->getLayoutManager();
-        $lm->checkLayoutProfile($layoutProfileId);
+         $this->getLayoutManager()->checkLayoutProfile($layoutProfileId);
 
-        if ($lm->save($entityName, $viewType, $relatedEntity, $relatedLink, $layoutProfileId, $layout) === false) {
+        if ( $this->getLayoutManager()->save($entityName, $viewType, $relatedEntity, $relatedLink, $layoutProfileId, $layout) === false) {
             throw new Error('Error while saving layout.');
         }
 
         $this->getDataManager()->clearCache(true);
 
-        return $lm->get($entityName, $viewType, $relatedEntity, $relatedLink, $layoutProfileId);
+        return  $this->getLayoutManager()->get($entityName, $viewType, $relatedEntity, $relatedLink, $layoutProfileId);
     }
 
     protected function getLayoutManager(): LayoutManager
