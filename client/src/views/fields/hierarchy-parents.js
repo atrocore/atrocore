@@ -87,7 +87,7 @@ Espo.define('views/fields/hierarchy-parents', 'views/fields/link-multiple',
                     }
                 });
 
-                this.ajaxPostRequest(`${scope}/action/getDuplicateAttributes`, {id: parentsIds.shift()}).then(data => {
+                this.ajaxGetRequest(`entityDuplicateValues`, {id: parentsIds.shift(), entityName: scope}).then(data => {
                     $.each(data, (field, value) => {
                         if (!nonInheritedFields.includes(field) && !this.model.get(field)) {
                             this.model.set(field, value);
