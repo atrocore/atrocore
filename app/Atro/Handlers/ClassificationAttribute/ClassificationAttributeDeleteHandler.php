@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'DELETE',
     ],
     summary: 'Deletes a ClassificationAttribute record',
-    description: 'Deletes a ClassificationAttribute record by ID. Pass withAttributeValues=true in the request body to also delete related attribute values.',
+    description: 'Deletes a ClassificationAttribute record by ID. Optionally also deletes all attribute values linked to this classification attribute.',
     tag: 'ClassificationAttribute',
     parameters: [
         [
@@ -35,6 +35,23 @@ use Psr\Http\Server\RequestHandlerInterface;
             'required' => true,
             'schema'   => [
                 'type' => 'string',
+            ],
+        ],
+    ],
+    requestBody: [
+        'required' => false,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'properties' => [
+                        'withAttributeValues' => [
+                            'type'        => 'boolean',
+                            'default'     => false,
+                            'description' => 'When true, all attribute values linked to this classification attribute are also deleted.',
+                        ],
+                    ],
+                ],
             ],
         ],
     ],

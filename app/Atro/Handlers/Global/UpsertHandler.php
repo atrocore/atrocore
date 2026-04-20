@@ -84,8 +84,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                                     'description' => 'Whether the record was persisted to the database.',
                                 ],
                                 'entity'  => [
-                                    'type'        => 'object',
-                                    'description' => 'Full entity data after create or update. Present on Created and Updated statuses.',
+                                    'type'        => 'string',
+                                    'description' => 'Entity name. Present on Created and Updated statuses.',
+                                ],
+                                'id'      => [
+                                    'type'        => 'string',
+                                    'description' => 'Created or updated record ID. Present on Created and Updated statuses.',
                                 ],
                                 'message' => [
                                     'type'        => 'string',
@@ -104,7 +108,7 @@ class UpsertHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $body = (string) $request->getBody();
-        $data = $body !== '' ? json_decode($body, true) : [];
+        $data = $body !== '' ? json_decode($body) : [];
         if (!is_array($data)) {
             $data = [];
         }
