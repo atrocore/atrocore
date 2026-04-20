@@ -459,6 +459,13 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             });
 
             list.push({
+                link: '/docs/',
+                label: this.getLanguage().translate('Read Docs'),
+                targetBlank: true,
+                icon: '<i class="ph ph-info"></i>'
+            });
+
+            list.push({
                 link: 'https://help.atrocore.com',
                 label: this.getLanguage().translate('Help Center'),
                 targetBlank: true,

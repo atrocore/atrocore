@@ -1,0 +1,263 @@
+@import "vue.css";
+
+:root {
+    --theme-color: #004e8d;
+    --selected-item-background: #f0f6ff;
+    --text-color: #333;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../../modules/treo-core/fonts/Roboto.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+.markdown-section a {
+    color: #1473c2;
+    font-size: inherit;
+    text-decoration: none;
+}
+
+.markdown-section a:hover {
+    color: #004e8d;
+    text-decoration: underline;
+}
+
+.markdown-section :where(b, strong, label, th) {
+    font-weight: 600
+}
+
+.markdown-section :where(h1, h2, h3, h4, h5, h6) {
+    font-family: "Roboto", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+    line-height: 1.5;
+    margin: 1.25em 0 0.75em;
+    color: #333;
+}
+
+.markdown-section h1 { font-size: 30px; }
+.markdown-section h2 { font-size: 26px; }
+.markdown-section h3 { font-size: 22px; }
+.markdown-section h4 { font-size: 20px; }
+.markdown-section h5 { font-size: 18px; }
+.markdown-section h6 { font-size: 16px; }
+
+hr {
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    margin: 10px 0;
+}
+
+.sidebar-nav li {
+    font-size: 14px;
+}
+
+.sidebar-nav .sidebar-label {
+    cursor: pointer;
+}
+
+.sidebar .sidebar-nav {
+    line-height: 1.75;
+}
+
+.sidebar ul li.active>a {
+    border-right: 0;
+}
+
+.content {
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+/* TOC */
+body.has-toc section.content {
+    right: 300px;
+    transition: right .25s ease;
+}
+
+body.has-toc.toc-close section.content {
+    right: 0;
+}
+
+#page-toc {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    overflow-y: auto;
+    padding: 40px 16px 50px;
+    box-sizing: border-box;
+    font-size: 13px;
+    border-left: 1px solid rgba(0, 0, 0, .07);
+    background: #fff;
+    scrollbar-width: thin;
+    transition: transform .25s ease-out;
+    z-index: 20;
+}
+
+body.toc-close #page-toc {
+    transform: translateX(300px);
+}
+
+#page-toc[hidden] {
+    display: none;
+}
+
+#toc-toggle {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 10px 16px;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    display: none;
+    outline: none;
+}
+
+body.has-toc #toc-toggle {
+    display: block;
+}
+
+body.has-toc:not(.toc-close) #toc-toggle {
+    border-top: 1px solid rgba(0, 0, 0, .07);
+    border-left: 1px solid rgba(0, 0, 0, .07);
+    width: 300px;
+}
+
+.toc-toggle-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 16px;
+    margin-left: auto;
+}
+
+.toc-toggle-btn span {
+    display: block;
+    height: 2px;
+    background: var(--theme-color);
+    border-radius: 1px;
+}
+
+/* Sidebar toggle — same style as TOC toggle */
+.sidebar-toggle {
+    background-color: #fff !important;
+    padding: 10px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    align-items: flex-end !important;
+    border-top: none !important;
+}
+
+body:not(.close) .sidebar-toggle {
+    border-top: 1px solid rgba(0, 0, 0, .07) !important;
+    border-right: 1px solid rgba(0, 0, 0, .07) !important;
+    width: 300px !important;
+}
+
+body.close .sidebar-toggle {
+    width: auto !important;
+}
+
+.sidebar-toggle-button {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 16px;
+    margin-right: auto;
+}
+
+.sidebar-toggle:hover .sidebar-toggle-button {
+    opacity: 1;
+}
+
+.sidebar-toggle span {
+    background: var(--theme-color) !important;
+    border-radius: 1px !important;
+    margin-bottom: 0 !important;
+}
+
+#page-toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#page-toc li {
+    margin: 3px 0;
+    line-height: 1.4;
+}
+
+#page-toc li.toc-h3 { padding-left: 12px; }
+#page-toc li.toc-h4 { padding-left: 24px; }
+#page-toc li.toc-h5 { padding-left: 36px; }
+#page-toc li.toc-h6 { padding-left: 48px; }
+
+#page-toc a {
+    display: block;
+    padding: 3px 6px;
+    border-radius: 3px;
+    color: var(--text-color);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s;
+}
+
+#page-toc a:hover {
+    color: var(--theme-color);
+}
+
+#page-toc a.active {
+    color: var(--theme-color);
+    font-weight: 600;
+    background: var(--selected-item-background);
+}
+
+/* Content typography */
+.markdown-section p { margin: 10px 0; }
+.markdown-section ul, .markdown-section ol { margin-top: 15px; margin-bottom: 15px; }
+.markdown-section ul ul, .markdown-section ul ol, .markdown-section ol ul, .markdown-section ol ol { margin-top: 0; margin-bottom: 0; }
+
+.markdown-section table { border-collapse: collapse; table-layout: auto; width: 100%; margin-top: 15px; }
+.markdown-section th { background: #f7f7f7; text-align: left; padding: 10px; }
+.markdown-section td { border: 1px solid #eaeaea; padding: 10px; }
+.markdown-section tr, .markdown-section td, .markdown-section th { vertical-align: middle; }
+
+.markdown-section blockquote {
+    border-left: 5px solid #ccc;
+    margin: 10px 0;
+    padding: 5px 20px;
+    background-color: #f0f0f0;
+    position: relative;
+    color: #333;
+}
+.markdown-section blockquote p { font-size: 16px; color: inherit; }
+.markdown-section blockquote.tip      { background-color: #dafbda !important; border-left-color: #5cb85c; color: #155724 !important; }
+.markdown-section blockquote.warning  { background-color: #ffebce !important; border-left-color: #f0b37e; color: #d77e01 !important; }
+.markdown-section blockquote.caution,
+.markdown-section blockquote.danger   { background-color: #fdd3d3 !important; border-left-color: #d9534f; color: #721c24 !important; }
+.markdown-section blockquote.note,
+.markdown-section blockquote.info     { background-color: #E7F2FA !important; border-left-color: #6AB0DE; color: #0c5460 !important; }
+
+.markdown-section hr { border-bottom: 4px solid #F0F2F4; border-left: none; border-right: none; border-top: none; margin: 10px 0; }
+
+.markdown-section p > img { margin: 48px auto; display: block; max-width: 620px; width: auto; }
+
+.markdown-section mark { background: #FFFF27; color: #333; }
