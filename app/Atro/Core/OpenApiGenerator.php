@@ -541,8 +541,14 @@ class OpenApiGenerator
                             'name'        => ['type' => 'string'],
                             'link'        => ['type' => 'boolean'],
                             'align'       => ['type' => 'string', 'enum' => ['left', 'right', 'center']],
-                            'width'       => ['type' => 'number'],
-                            'widthPx'     => ['type' => 'number'],
+                            'width'       => [
+                                'oneOf'       => [['type' => 'number'], ['type' => 'string']],
+                                'description' => 'Column width as a percentage. Accepts a number or its string form.',
+                            ],
+                            'widthPx'     => [
+                                'oneOf'       => [['type' => 'number'], ['type' => 'string']],
+                                'description' => 'Column width in pixels. Accepts a number or its string form.',
+                            ],
                             'isLarge'     => ['type' => 'boolean'],
                             'cssStyle'    => ['type' => 'string'],
                             'notSortable' => ['type' => 'boolean'],

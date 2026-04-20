@@ -34,7 +34,7 @@ Espo.define('layout-manager', [], function () {
 
     var BASE_LAYOUT_TYPES = new Set([
         'list', 'detail', 'summary', 'selection', 'relationships', 'navigation',
-        'insights', 'selectionRelations', 'sidePanelsDetail', 'kanban'
+        'insights', 'selectionRelations', 'kanban'
     ]);
 
     var BUILTIN_SUBTYPE_MAP = {
@@ -157,7 +157,7 @@ Espo.define('layout-manager', [], function () {
         getUpdateUrl: function (scope, type) {
             var BASE_LAYOUT_TYPES = new Set([
                 'list', 'detail', 'summary', 'selection', 'relationships', 'navigation',
-                'insights', 'selectionRelations', 'sidePanelsDetail', 'kanban'
+                'insights', 'selectionRelations', 'kanban'
             ]);
             var BUILTIN_SUBTYPE_MAP = {
                 'listExpanded': 'list',
