@@ -22,11 +22,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/User/action/changeOwnPassword',
+    path: '/User/changeOwnPassword',
     methods: [
         'POST',
     ],
-    summary: 'Changes own password',
+    summary: 'Change own password',
     description: 'Allows the current user to change their own password by providing the current password.',
     tag: 'User',
     requestBody: [
@@ -41,16 +41,20 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                     'properties' => [
                         'password'        => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'The new password to set.',
                         ],
                         'currentPassword' => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'The current password for verification.',
                         ],
                         'userId'          => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'Target user ID. Defaults to the current user.',
                         ],
                         'sendAccessInfo'  => [
-                            'type' => 'boolean',
+                            'type'        => 'boolean',
+                            'description' => 'Whether to send access info to the user after the password change.',
                         ],
                     ],
                 ],
@@ -59,7 +63,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Password changed successfully.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -68,26 +72,31 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'Password or current password is missing, or password change via email only is enforced.',
+        ],
+        403 => [
+            'description' => 'Current password is incorrect.',
+        ],
     ],
 )]
 class UserChangeOwnPasswordHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if ($this->getConfig()->get('resetPasswordViaEmailOnly', false)) {
-            throw new BadRequest($this->getLanguage()->translate('changePasswordOnResetViaEmailOnly', 'messages', 'User'));
-        }
-
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'password') || !property_exists($data, 'currentPassword')) {
-            throw new BadRequest();
+        if (empty($data->password)) {
+            throw new BadRequest("'password' is required.");
         }
 
-        $result = $this->getRecordService('User')->changePassword(
+        if (empty($data->currentPassword)) {
+            throw new BadRequest("'currentPassword' is required.");
+        }
+
+        $this->getRecordService('User')->changeOwnPassword(
             $data->userId ?? $this->getUser()->id,
             $data->password,
-            true,
             $data->currentPassword,
             $data->sendAccessInfo ?? false
         );

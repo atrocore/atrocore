@@ -154,7 +154,7 @@ Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
             this.$el.find('button[data-name="change"]').addClass('disabled');
 
             $.ajax({
-                url: 'User/action/changeOwnPassword',
+                url: 'User/changeOwnPassword',
                 type: 'POST',
                 data: JSON.stringify({
                     userId: this.options.userId,

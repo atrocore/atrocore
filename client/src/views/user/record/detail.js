@@ -126,11 +126,8 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
         actionResetPassword() {
             $.ajax({
-                url: 'User/action/resetPassword',
-                type: 'POST',
-                data: JSON.stringify({
-                    userId: this.model.id
-                })
+                url: `User/${this.model.id}/resetPassword`,
+                type: 'POST'
             }).done(function () {
                 Espo.Ui.success(this.translate('uniqueLinkHasBeenSent', 'messages', 'User'));
                 setTimeout(() => {

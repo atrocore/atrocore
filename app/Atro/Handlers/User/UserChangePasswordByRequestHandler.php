@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Atro\Handlers\User;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Error;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -28,10 +26,10 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'POST',
     ],
-    auth: false,
     summary: 'Changes password using a reset token',
     description: 'Sets a new password using a password reset token that was previously sent to the user\'s email.',
     tag: 'User',
+    auth: false,
     requestBody: [
         'required' => true,
         'content'  => [
@@ -58,19 +56,26 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Result with redirect URL',
+            'description' => 'Password changed successfully.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
                             'url' => [
-                                'type' => 'string',
+                                'type'        => 'string',
+                                'description' => 'Redirect URL after the password change.',
                             ],
                         ],
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'requestId or password is missing, or the new password is invalid.',
+        ],
+        404 => [
+            'description' => 'Reset token not found.',
         ],
     ],
 )]
@@ -80,38 +85,16 @@ class UserChangePasswordByRequestHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (empty($data->requestId) || empty($data->password)) {
-            throw new BadRequest();
+        if (empty($data->requestId)) {
+            throw new BadRequest("'requestId' is required.");
         }
 
-        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')
-            ->where(['requestId' => $data->requestId])
-            ->findOne();
-
-        if (!$p) {
-            throw new Forbidden();
+        if (empty($data->password)) {
+            throw new BadRequest("'password' is required.");
         }
 
-        $userId = $p->get('userId');
-        if (!$userId) {
-            throw new Error();
-        }
-
-        try {
-            $changed = $this->getRecordService('User')->changePassword($userId, $data->password);
-        } catch (BadRequest $e) {
-            // do not delete request on password validation error
-            throw $e;
-        } catch (\Throwable $e) {
-            $this->getEntityManager()->removeEntity($p);
-            throw $e;
-        }
-
-        if (!empty($changed)) {
-            $this->getEntityManager()->removeEntity($p);
-            return new JsonResponse(['url' => $p->get('url')]);
-        }
-
-        return new JsonResponse([]);
+        return new JsonResponse(
+            $this->getRecordService('User')->changePasswordByRequest($data->requestId, $data->password)
+        );
     }
 }
