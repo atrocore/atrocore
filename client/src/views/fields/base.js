@@ -863,16 +863,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     message: this.translate('confirmRemoveAttributeValue'),
                     confirmText: this.translate('Remove')
                 }, () => {
-                    const data = {
-                        entityName: this.model.name,
-                        entityId: this.model.get('id'),
-                        attributeId: attributeId
-                    }
-
                     $.ajax({
-                        url: `Attribute/removeAttributeValue`,
-                        type: 'POST',
-                        data: JSON.stringify(data),
+                        url: `${this.model.name}/${this.model.get('id')}/attributeValues`,
+                        type: 'DELETE',
+                        data: JSON.stringify({attributeIds: [attributeId]}),
                         contentType: 'application/json',
                         success: () => {
                             if (['list', 'listLink'].includes(this.mode)) {

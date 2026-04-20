@@ -229,7 +229,7 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 this.notify(false);
                 dialog.once('select', model => {
                     this.notify('Loading...');
-                    this.ajaxGetRequest('Attribute/attributesDefs', {
+                    this.ajaxGetRequest('Attribute/getAttributesDefs', {
                         entityName: this.scope,
                         attributesIds: [model.id]
                     }, { async: false }).success(res => {

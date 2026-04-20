@@ -14,9 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -34,29 +32,51 @@ use Atro\Handlers\AbstractHandler;
     tag: '{entityName}',
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'entityName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Entity name (e.g. "Product")',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
         [
-            'name'     => 'id',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Record ID',
+            'schema'      => [
                 'type' => 'string',
+            ],
+        ],
+    ],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => ['attributeIds'],
+                    'properties' => [
+                        'attributeIds' => [
+                            'type'        => 'array',
+                            'description' => 'IDs of the attributes whose values should be removed',
+                            'items'       => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Entity record',
+            'description' => 'Operation result',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'x-entity-read' => true,
+                        'type' => 'boolean',
                     ],
                 ],
             ],
@@ -71,39 +91,18 @@ class DeleteAttributeValuesHandler extends AbstractHandler
         $entityName = $this->getEntityName($request);
         $data       = $this->getRequestBody($request);
 
-        if (
-            empty($this->getMetadata()->get("scopes.$entityName.hasAttribute")) ||
-            !empty($this->getMetadata()->get(['scopes', $entityName, 'disableAttributeLinking']))
-        ) {
+        $id           = $request->getAttribute('id');
+        $attributeIds = $data->attributeIds;
+
+        if (empty($attributeIds)) {
             throw new BadRequest();
         }
 
-        if (
-            !$this->getAcl()->check($entityName, 'edit') ||
-            !$this->getAcl()->check($entityName, 'deleteAttributeValue')
-        ) {
-            throw new Forbidden();
-        }
+        $input                       = new \stdClass();
+        $input->__attributesToRemove = $attributeIds;
 
-        $id           = (string) $request->getAttribute('id');
-        $attributeIds = $data->attributeIds ?? [];
+        $result = $this->getRecordService($entityName)->updateEntity($id, $input);
 
-        if (!is_array($attributeIds) || empty($attributeIds)) {
-            throw new BadRequest();
-        }
-
-        $entity = $this->getRecordService($entityName)->getEntity($id);
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $result = $this->getServiceFactory()->create('Attribute')
-            ->removeAttributeValues($entity->getEntityName(), $entity->get('id'), $attributeIds);
-
-        return new JsonResponse(is_array($result) ? $result : ['true' => $result]);
+        return new BoolResponse($result);
     }
 }

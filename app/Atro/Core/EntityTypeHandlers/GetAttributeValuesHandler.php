@@ -29,7 +29,7 @@ use Atro\Handlers\AbstractHandler;
     methods: [
         'GET',
     ],
-    summary: 'Get attribute values',
+    summary: 'Get attribute values for a record',
     description: 'Returns all attribute values assigned to the specified entity record.',
     tag: '{entityName}',
     parameters: [
@@ -58,7 +58,7 @@ use Atro\Handlers\AbstractHandler;
                     'schema' => [
                         'type'  => 'array',
                         'items' => [
-                            'type' => 'object',
+                            '$ref' => '#/components/schemas/AttributeValue',
                         ],
                     ],
                 ],
@@ -72,14 +72,6 @@ class GetAttributeValuesHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
-
-        if (empty($this->getMetadata()->get("scopes.$entityName.hasAttribute"))) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($entityName, 'read')) {
-            throw new Forbidden();
-        }
 
         $id     = (string) $request->getAttribute('id');
         $entity = $this->getRecordService($entityName)->getEntity($id);

@@ -45,15 +45,15 @@ class Entity extends ReferenceData
         return [];
     }
 
-    protected function filterInput($data, string $id = null)
+    protected function filterInput($data, ?OrmEntity $entity = null)
     {
-        parent::filterInput($data, $id);
+        parent::filterInput($data, $entity);
 
         if (!is_object($data)) {
             return;
         }
 
-        $fields = $this->getMetadata()->get(['scopes', $id, 'onlyEditableEmFields']);
+        $fields = $this->getMetadata()->get(['scopes', $entity->get('id'), 'onlyEditableEmFields']);
         if (!empty($fields)) {
             foreach ($data as $field => $value) {
                 $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);

@@ -258,19 +258,24 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.notify(false);
                 dialog.once('select', selectObj => {
                     this.notify('Loading...');
-                    const data = {
-                        entityName: this.model.name,
-                        entityId: this.model.get('id'),
-                    }
-                    if (Array.isArray(selectObj)) {
-                        data.ids = selectObj.map(o => o.id)
-                    } else {
-                        data.where = selectObj.where
+                    const entityName = this.model.name;
+                    const entityId = this.model.get('id');
+                    let attributeIds = (Array.isArray(selectObj) ? selectObj : (selectObj.list || [])).map(o => (o.id))
+                    if (selectObj.massRelate) {
+                        // fetch all ids
+                        this.ajaxGetRequest('Attribute', {
+                            select: 'id',
+                            collectionOnly: true,
+                            where: selectObj.where,
+                            maxSize: 5000
+                        }, {async: false}).then(response => {
+                            attributeIds = response.list.map(o => o.id)
+                        })
                     }
                     $.ajax({
-                        url: `Attribute/addAttributeValue`,
+                        url: `${entityName}/${entityId}/addAttributes`,
                         type: 'POST',
-                        data: JSON.stringify(data),
+                        data: JSON.stringify({ attributeIds: attributeIds }),
                         contentType: 'application/json',
                         success: () => {
                             this.model.fetch().then(() => {
