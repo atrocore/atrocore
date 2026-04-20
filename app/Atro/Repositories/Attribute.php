@@ -280,7 +280,7 @@ class Attribute extends Base
 
         if($attribute->get('type') === 'bool' && $attribute->get('notNull')) {
             $qb->setValue('bool_value', ':false')
-                ->setParameter('false', 'false', ParameterType::BOOLEAN);
+                ->setParameter('false', false, ParameterType::BOOLEAN);
         }
 
         $qb->executeQuery();
@@ -346,6 +346,10 @@ class Attribute extends Base
 
         if (is_array($value)) {
             $value = json_encode($value);
+        }
+
+        if($value === null && isset($entity->entityDefs['fields'][$fieldName]['default'])) {
+            $value = $entity->entityDefs['fields'][$fieldName]['default'];
         }
 
         if (!$this->getAcl()->check($entity->getEntityName(), 'createAttributeValue')) {

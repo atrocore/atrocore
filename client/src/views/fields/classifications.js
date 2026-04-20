@@ -53,7 +53,7 @@ Espo.define('views/fields/classifications', 'views/fields/link-multiple',
             };
 
             this.notify('Saving...');
-            this.ajaxPostRequest('Classification/action/relateRecords', postData)
+            this.ajaxPostRequest('Classification/relateRecords', postData)
                 .success(() => {
                     this.model.fetch().then(() => {
                         this.trigger('after:save');
