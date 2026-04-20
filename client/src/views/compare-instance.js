@@ -72,19 +72,46 @@ Espo.define('views/compare-instance', ['views/main'], function (Dep) {
 
         setupRecord(name = 'instanceComparison') {
             this.notify('Loading...');
-            this.ajaxPostRequest(`Synchronization/action/distantInstanceRequest`, {
-                uri: this.scope + '/' + this.model.id, type: 'one'
-            }).success(attr => {
+            let instances = this.getMetadata().get(['app', 'comparableInstances']);
+            this.ajaxGetRequest(`${this.scope}/${this.model.id}/fromRemoteAtroCore`).success(attrs => {
                 this.notify(false);
-                var o = {
-                    model: this.model,
-                    distantModelsAttribute: attr,
-                    instanceComparison: true,
-                    el: '#main main > .' + name,
-                    scope: this.scope
-                };
-                this.createView(name, this.recordView, o, view => view.render());
-            })
+                this.getModelFactory().create(this.scope, scopeModel => {
+                    let distantModels = [];
+                    for (const index in attrs) {
+                        let attr = attrs[index];
+                        if (attr.error) {
+                            let message;
+                            if (attr.error.includes('404 Body')) {
+                                message = this.translate('recordDontExistInInstance', 'messages');
+                            } else if (attr.error.includes('401 Body')) {
+                                message = this.translate('badTokenInstance', 'messages');
+                            } else if (attr.error.includes('403 Body')) {
+                                message = this.translate('dontHaveAccessInInstance', 'messages');
+                            } else {
+                                message = this.translate('En error occur with the instance: ') + attr.error;
+                            }
+                            instances[index]._error = message;
+                            let distantModel = scopeModel.clone();
+                            distantModel.set('_instance', instances[index]);
+                            distantModels.push(distantModel);
+                            continue;
+                        }
+                        let distantModel = scopeModel.clone();
+                        distantModel.set(attr.data);
+                        distantModel.set('_instance', instances[index]);
+                        distantModels.push(distantModel);
+                    }
+                    var o = {
+                        model: this.model,
+                        distantModels: distantModels,
+                        instances: instances,
+                        instanceComparison: true,
+                        el: '#main main > .' + name,
+                        scope: this.scope
+                    };
+                    this.createView(name, this.recordView, o, view => view.render());
+                });
+            });
         },
 
         getMenu() {
