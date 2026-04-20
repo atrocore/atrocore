@@ -303,7 +303,7 @@ class OpenApiGenerator
                 break;
             case "jsonArray":
                 if (empty($result['components']['schemas'][$entityName]['properties'][$fieldName])) {
-                    $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => []];
+                    $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => (object)[]];
                 }
                 break;
             case "jsonObject":
