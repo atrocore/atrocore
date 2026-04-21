@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Classification/action/relateRecords',
+    path: '/Classification/relateRecords',
     methods: [
         'POST',
     ],
@@ -43,14 +43,19 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                     'properties' => [
                         'entityName'         => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'Name of the entity whose record is being classified (e.g. `Product`).',
+                            'example'     => 'Product',
                         ],
                         'entityId'           => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'ID of the record on `entityName` whose classifications should be replaced.',
                         ],
                         'classificationsIds' => [
-                            'type'  => 'array',
-                            'items' => [
+                            'type'        => 'array',
+                            'nullable'    => true,
+                            'description' => 'List of classification IDs to relate to the record. The existing set is fully replaced: classifications in the list are linked, ones not in the list are unlinked. Pass `null` or an empty array to unlink all classifications.',
+                            'items'       => [
                                 'type' => 'string',
                             ],
                         ],
