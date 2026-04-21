@@ -20,15 +20,18 @@ class DocsManager
 {
     private ?array $moduleMap = null;
 
+    private string $corePath;
+
     public function __construct(
         private readonly ModuleManager $moduleManager,
         private readonly DataManager   $dataManager,
     ) {
+        $this->corePath = dirname(CORE_PATH);
     }
 
     public function getMarkdown(string $module, string $page, string $assetBaseUrl): ?string
     {
-        if ($module === '_sidebar') {
+        if ($module === 'navigation') {
             return $this->buildSidebar();
         }
 
@@ -43,7 +46,7 @@ class DocsManager
 
         $docsDir = $map[$module];
 
-        if ($page === '_sidebar') {
+        if ($page === 'navigation') {
             return $this->buildSidebar();
         }
 
@@ -70,7 +73,7 @@ class DocsManager
         $asset = ltrim($asset, '/');
 
         if ($module === 'README') {
-            $filePath = 'src/atrocore/' . $asset;
+            $filePath = $this->corePath . '/' . $asset;
         } else {
             $map = $this->getModuleMap();
             if (!isset($map[$module])) {
@@ -100,9 +103,9 @@ class DocsManager
         if ($this->moduleMap === null) {
             $this->moduleMap = [];
 
-            $coreDocs = 'src/atrocore/docs';
+            $coreDocs = $this->corePath . '/docs';
             if (is_dir($coreDocs)) {
-                $this->moduleMap['AtroCore'] = $coreDocs;
+                $this->moduleMap['Atro'] = $coreDocs;
             }
 
             foreach ($this->moduleManager->getModules() as $id => $module) {
@@ -143,10 +146,10 @@ class DocsManager
 
     private function buildReadme(string $assetBaseUrl): string
     {
-        $path = 'src/atrocore/README.md';
+        $path = $this->corePath . '/README.md';
         if (file_exists($path)) {
             $content = file_get_contents($path);
-            return $this->rewriteAssetUrls($content, 'README', 'src/atrocore', 'src/atrocore', $assetBaseUrl);
+            return $this->rewriteAssetUrls($content, 'README', $this->corePath, $this->corePath, $assetBaseUrl);
         }
 
         $lines = ['# Module Documentation', ''];
@@ -161,7 +164,7 @@ class DocsManager
     {
         $items = [];
         foreach ($this->getModuleMap() as $id => $docsDir) {
-            if ($id === 'AtroCore') {
+            if ($id === 'Atro') {
                 $label = 'AtroCore';
             } else {
                 $module = $this->moduleManager->getModule($id);
@@ -173,8 +176,8 @@ class DocsManager
         }
 
         usort($items, function ($a, $b) {
-            if ($a[1] === 'AtroCore') return -1;
-            if ($b[1] === 'AtroCore') return 1;
+            if ($a[1] === 'Atro') return -1;
+            if ($b[1] === 'Atro') return 1;
             return strcmp($a[0], $b[0]);
         });
 

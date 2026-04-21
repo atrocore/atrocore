@@ -35,7 +35,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'name'        => 'module',
             'in'          => 'query',
             'required'    => true,
-            'description' => 'Module ID, "_sidebar", or "README"',
+            'description' => 'Module ID, "navigation", or "README"',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -82,10 +82,6 @@ class DocsHandler implements MiddlewareInterface
         $qp     = $request->getQueryParams();
         $module = preg_replace('/\.md$/i', '', (string)($qp['module'] ?? ''));
         $page   = preg_replace('/\.md$/i', '', (string)($qp['page'] ?? ''));
-
-        if ($module === '') {
-            return new ErrorResponse(400, 'module is required');
-        }
 
         $scheme      = $request->getUri()->getScheme();
         $host        = $request->getUri()->getHost();

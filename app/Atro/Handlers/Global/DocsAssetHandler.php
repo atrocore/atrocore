@@ -84,10 +84,6 @@ class DocsAssetHandler implements MiddlewareInterface
         $module = (string)($qp['module'] ?? '');
         $asset  = (string)($qp['asset'] ?? '');
 
-        if ($module === '' || $asset === '') {
-            return new ErrorResponse(400, 'module and asset are required');
-        }
-
         if (str_contains($asset, '..')) {
             return new ErrorResponse(400, 'Invalid asset path');
         }

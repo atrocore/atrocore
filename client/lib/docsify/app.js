@@ -38,7 +38,7 @@ window.$docsify = {
     homepage: 'README.md',
     loadSidebar: true,
     alias: {
-        '/(.*/)?_sidebar\\.md': window.location.origin + '/api/docs?module=_sidebar'
+        '/(.*/)?_sidebar\\.md': window.location.origin + '/api/docs?module=navigation'
     },
     routes: {
         '/': function(route, matched, next) {
@@ -67,10 +67,7 @@ window.$docsify = {
         }
     },
     sidebarDisplayLevel: 1,
-    search: {
-        placeholder: 'Search...',
-        noData: 'No results.',
-    },
+    search: null,
     plugins: [
         function (hook) {
             var tocEl = null;
