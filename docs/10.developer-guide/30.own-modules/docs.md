@@ -200,6 +200,14 @@ Composer file in the module root directory creates configuration for composer wh
 
 `atroId` contains the unique name of the module for its identification in the system. `name` and `description` are used to show the module in the section `Administration > System > Update & Modules`.
 
+### Module documentation
+
+To make documentation available in the built-in docs portal, place a `docs/` folder in the module root directory. The folder must contain at least an `index.md` file — this is the entry point that the system checks to detect documentation.
+
+When `docs/index.md` exists, a **Docs** action appears in the row menu for that module on the `Administration > Modules` page. Clicking it opens the docs portal in a new tab, navigating directly to the module's documentation.
+
+The docs portal is powered by [Docsify](https://docsify.js.org) and serves all Markdown files from `docs/` via the `/api/docs` endpoint. Subdirectories are rendered as chapters in the sidebar. Numeric prefixes on folder names (e.g. `01.getting-started`) control the sort order and are stripped from the URL.
+
 ## Module Installation
 
 Modules installation is carried out from the Module Manager located at `Administration > System > Update & Modules` page. To mark your module to be installed, you need to perform certain actions, which will be described below.
