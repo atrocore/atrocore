@@ -46,6 +46,24 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                 this.updateFieldState(null, modelId)
             });
 
+            if (this.getMetadata().get(['scopes', this.scope, 'activeLanguages'])) {
+                const activeLanguages = new Set();
+                this.models.forEach(model => {
+                    (model.get('activeLanguages') || []).forEach(lang => activeLanguages.add(lang));
+                });
+
+                if (activeLanguages.size > 0) {
+                    this.fieldList.forEach(group => {
+                        group.fieldListInGroup = group.fieldListInGroup.filter(fieldData => {
+                            const defs = this.model.defs.fields[fieldData.field];
+                            if (!defs || !defs.multilangLocale) return true;
+                            return activeLanguages.has(defs.multilangLocale);
+                        });
+                    });
+                    this.fieldList = this.fieldList.filter(group => group.fieldListInGroup.length > 0);
+                }
+            }
+
             this.buildFieldViews();
         },
 
