@@ -12,8 +12,6 @@
 Espo.define('views/attribute/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
-        sideView: "views/attribute/record/detail-side",
-
         bottomView: 'views/attribute/record/detail-bottom',
 
         setupActionItems() {

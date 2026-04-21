@@ -40,7 +40,6 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
             'list',
             'detail',
             'relationships',
-            'sidePanelsDetail',
             'selection'
         ],
 
