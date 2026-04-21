@@ -43,14 +43,11 @@ The Style Configuration panel allows you to customize the visual appearance of t
 
 ## Backgrounds Configuration Panel
 
-The Backgrounds Configuration panel allows users to define and manage background images used for visual customization within the system.
+The Backgrounds Configuration panel enables users to define and manage the background images that are used to customise the appearance of the system when a page is loaded.
 
 ![Style Configuration Panel](./_assets/Background-Panel-configuration.png){.medium}
 
-Configuration Fields
-
 The panel includes the following fields:
-
 - **Image**: Specifies the background image file. Users can select or upload an image that will be used as a background. This field is mandatory.
 - **Name**: Defines the display name of the background configuration. This name is used to identify the background within the system.
 - **Code**: A unique system identifier for the background configuration. This value is used internally and must be unique across all background records.
