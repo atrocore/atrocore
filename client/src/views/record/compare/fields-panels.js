@@ -46,7 +46,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                 this.updateFieldState(null, modelId)
             });
 
-            if (this.getMetadata().get(['scopes', this.scope, 'activeLanguages'])) {
+            if (this.getMetadata().get(['scopes', this.scope, 'hasActiveLanguages'])) {
                 const activeLanguages = new Set();
                 this.models.forEach(model => {
                     (model.get('activeLanguages') || []).forEach(lang => activeLanguages.add(lang));

@@ -2481,7 +2481,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 result.push('')
             }
 
-            if (this.getMetadata().get(['scopes', this.model.name, 'activeLanguages'])) {
+            if (this.getMetadata().get(['scopes', this.model.name, 'hasActiveLanguages'])) {
                 const activeLanguages = this.model.get('activeLanguages');
                 if (!activeLanguages || activeLanguages.length === 0) {
                     return result.includes('') ? [''] : result.slice(0, 1);
@@ -2705,7 +2705,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 })
             }
 
-            if (this.getMetadata().get(['scopes', this.model.name, 'activeLanguages'])) {
+            if (this.getMetadata().get(['scopes', this.model.name, 'hasActiveLanguages'])) {
                 const activeLanguages = this.model.get('activeLanguages');
                 if (activeLanguages && activeLanguages.length > 0) {
                     const activeSet = new Set(activeLanguages);
