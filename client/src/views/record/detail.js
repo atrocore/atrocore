@@ -2571,6 +2571,26 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         prepareLayoutData(data) {
+            if (this.getMetadata().get(['scopes', this.model.name, 'hasActiveLanguages'])) {
+                const activeLanguages = this.model.get('activeLanguages');
+                if (activeLanguages && activeLanguages.length > 0) {
+                    const activeSet = new Set(activeLanguages);
+                    data.layout.forEach(panel => {
+                        if (!panel || !panel.rows) return;
+                        panel.rows = panel.rows.map(row => {
+                            return row.map(cell => {
+                                if (!cell || !cell.name) return cell;
+                                const multilangLocale = this.getMetadata().get(['entityDefs', this.model.name, 'fields', cell.name, 'multilangLocale']);
+                                if (multilangLocale && !activeSet.has(multilangLocale)) {
+                                    return false;
+                                }
+                                return cell;
+                            });
+                        }).filter(row => row.some(cell => cell !== false));
+                    });
+                }
+            }
+
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
                 let attributePanels = {};
                 $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
@@ -2641,7 +2661,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                             if (defs.isMultilang) {
                                 this.getUserLanguages().forEach(code => {
-                                    console.log('push :' + code)
                                     pushItem(name + code, this.model.get('attributesDefs')[name + code])
                                 })
                                 return;
@@ -2703,26 +2722,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         data.layout.push(panel);
                     }
                 })
-            }
-
-            if (this.getMetadata().get(['scopes', this.model.name, 'hasActiveLanguages'])) {
-                const activeLanguages = this.model.get('activeLanguages');
-                if (activeLanguages && activeLanguages.length > 0) {
-                    const activeSet = new Set(activeLanguages);
-                    data.layout.forEach(panel => {
-                        if (!panel || !panel.rows) return;
-                        panel.rows = panel.rows.map(row => {
-                            return row.map(cell => {
-                                if (!cell || !cell.name) return cell;
-                                const multilangLocale = this.getMetadata().get(['entityDefs', this.model.name, 'fields', cell.name, 'multilangLocale']);
-                                if (multilangLocale && !activeSet.has(multilangLocale)) {
-                                    return false;
-                                }
-                                return cell;
-                            });
-                        }).filter(row => row.some(cell => cell !== false));
-                    });
-                }
             }
         },
 
