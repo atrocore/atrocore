@@ -176,10 +176,22 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
             foreach ($clusterItemRepo->getInvalidClusterMasterItemIds($masterEntity) as $itemId) {
                 $item = $this->getEntityManager()->getEntity('ClusterItem', $itemId);
                 if (!empty($item)) {
+                    /** @var \Espo\ORM\Entity $record */
+                    $record = $this->getEntityManager()->getEntity($item->get('entityName'), $item->get('entityId'));
+
                     try {
                         $this->getEntityManager()->removeEntity($item);
                     } catch (\Exception $e) {
                         $GLOBALS['log']->error("Failed to delete invalid master cluster item $itemId: " . $e->getMessage());
+                        continue;
+                    }
+
+                    if (!empty($record)) {
+                        try {
+                            $this->getEntityManager()->removeEntity($record);
+                        } catch (\Exception $e) {
+                            $GLOBALS['log']->error("Failed to delete invalid master {$record->getEntityName()} record {$record->get('id')}: " . $e->getMessage());
+                        }
                     }
                 }
             }
