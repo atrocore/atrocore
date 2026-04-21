@@ -99,3 +99,4 @@ The menu includes the following options:
 - **Provide Feedback**: Submit feedback about the system
 - **Report a bug**: Report system issues
 - **Visit Community**: Access community resources
+- **Read Docs**: Open the built-in documentation portal in a new tab

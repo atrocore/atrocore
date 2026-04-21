@@ -12,7 +12,7 @@ To do it you need to go to "Administration > Module Manager" page.
 
 As you can see, this page consists of three panels:
 
-* **Installed** – a list of modules installed in the system is displayed here along with the following data given in the corresponding columns: module name and description, setting version (* means the latest version), current version of AtroCore and required dependencies. You can manage versions of modules by selecting a set version (use * and a version of module to select the specified version of a module or ^ and a version of module to select a version of a module not lover than specified).
+* **Installed** – a list of modules installed in the system is displayed here along with the following data given in the corresponding columns: module name and description, setting version (* means the latest version), current version of AtroCore and required dependencies. You can manage versions of modules by selecting a set version (use * and a version of module to select the specified version of a module or ^ and a version of module to select a version of a module not lover than specified). The row action menu for each module may include a **Docs** option – if the module provides built-in documentation, clicking it opens the documentation portal in a new tab.
 
   ![installed_panel](./_assets/module_manager_installed_en.png)
 
