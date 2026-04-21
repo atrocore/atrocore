@@ -49,7 +49,8 @@
     "setModuleForRemoving": "Das Modul wurde zum Entfernen vorbereitet. Klicken Sie auf die Schaltfläche „Update“, um die Modulinstallation oder -entfernung anzuwenden.",
     "daemonDisabled": "<b>Der Composer Daemon läuft nicht!</b><br>Wahrscheinlich wird der Daemon gerade neu geladen und Sie sollten eine Minute warten, oder die crontab ist nicht konfiguriert. Eine Anleitung zur Konfiguration der Crontab finden Sie <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">hier</a>.",
     "jobManagerRunning": "Die Möglichkeit zur Aktualisierung von Modulen ist gesperrt. Bitte versuch es später.",
-    "showReleaseNotes": "Versionshinweise"
+    "showReleaseNotes": "Versionshinweise",
+    "Docs": "Dokumentation"
   },
   "notifications": {
     "Module update": "Das {module} wurde aktualisiert. Von Version {from} zu {to}",

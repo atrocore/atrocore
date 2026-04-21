@@ -6,10 +6,12 @@
       "trim": true
     },
     "layout": {
-      "type": "link"
+      "type": "link",
+      "openApiDisabled": true
     },
     "sortOrder": {
-      "type": "int"
+      "type": "int",
+      "openApiDisabled": true
     },
     "style": {
       "type": "enum",
@@ -27,21 +29,25 @@
     },
     "createdAt": {
       "type": "datetime",
-      "readOnly": true
+      "readOnly": true,
+      "openApiDisabled": true
     },
     "modifiedAt": {
       "type": "datetime",
-      "readOnly": true
+      "readOnly": true,
+      "openApiDisabled": true
     },
     "createdBy": {
       "type": "link",
       "readOnly": true,
-      "view": "views/fields/user"
+      "view": "views/fields/user",
+      "openApiDisabled": true
     },
     "modifiedBy": {
       "type": "link",
       "readOnly": true,
-      "view": "views/fields/user"
+      "view": "views/fields/user",
+      "openApiDisabled": true
     }
   },
   "links": {

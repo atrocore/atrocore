@@ -187,9 +187,20 @@ class LayoutManager
         $layout = $this->getEventManager()->dispatch('Layout', 'afterGetLayoutContent', $event)
             ->getArgument('result');
 
+        if (in_array($viewType, ['list', 'selection', 'kanban', 'navigation', 'insights', 'selectionRelations'], true) && is_array($layout)) {
+            foreach ($layout as $k => $item) {
+                if (is_array($item) && isset($item['width'])) {
+                    $layout[$k]['width'] = (float) $item['width'];
+                }
+                if (is_array($item) && isset($item['widthPx'])) {
+                    $layout[$k]['widthPx'] = (float) $item['widthPx'];
+                }
+            }
+        }
+
         return [
             'layout'            => $layout,
-            'storedProfile'     => empty($storedProfile) ? [] : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
+            'storedProfile'     => empty($storedProfile) ? null : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
             'storedProfiles'    => $storedProfiles,
             'selectedProfileId' => empty($selectedProfileId) ? null : $selectedProfileId,
             'canEdit'           => empty($layoutProfile) ? false : $this->getAcl()->check($layoutProfile, 'edit')
@@ -286,10 +297,10 @@ class LayoutManager
     {
         $profile = $this->getEntityManager()->getEntity('LayoutProfile', $layoutProfileId);
         if (empty($profile)) {
-            throw new NotFound();
+            throw new NotFound("Layout profile '{$layoutProfileId}' not found.");
         }
         if (!$this->getAcl()->checkEntity($profile, 'edit')) {
-            throw new Forbidden();
+            throw new Forbidden("You do not have edit access to layout profile '{$profile->get('name')}'.");
         }
     }
 

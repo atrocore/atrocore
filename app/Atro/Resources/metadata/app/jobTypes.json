@@ -60,6 +60,14 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\Upsert"
   },
+  "EntityRelationBulkAction": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\EntityRelationBulkAction"
+  },
+  "EntityRelationBulkCreator": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\EntityRelationBulkCreator"
+  },
   "ActionHandler": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\ActionHandler"
