@@ -40,6 +40,8 @@ class V2Dot3Dot0 extends Base
         $this->backfillMasterDataEntities();
 
         $this->migrateUser();
+
+        $this->migrateNavigationType();
     }
 
     public function migrateExtensibleEnumOptionSortOrder(): void
@@ -228,6 +230,18 @@ class V2Dot3Dot0 extends Base
                     $this->exec($sql);
                 }
             }
+        }
+    }
+
+    public function migrateNavigationType(): void
+    {
+        if($this->isPgSQL()) {
+            $this->exec("ALTER TABLE layout_profile ALTER navigation TYPE TEXT");
+            $this->exec("ALTER TABLE layout_profile ALTER navigation DROP DEFAULT");
+            $this->exec("COMMENT ON COLUMN layout_profile.navigation IS '(DC2Type:jsonArray)'");
+        }else{
+            $this->exec("ALTER TABLE layout_profile CHANGE navigation navigation LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)");
+            $this->exec("ALTER TABLE user ADD disable_navigation_path TINYINT(1) DEFAULT '0' NOT NULL");
         }
     }
 

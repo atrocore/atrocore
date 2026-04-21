@@ -39,7 +39,7 @@
       "type": "link"
     },
     "navigation": {
-      "type": "jsonObject",
+      "type": "jsonArray",
       "view": "views/layout-profile/fields/navigation",
       "filterDisabled": true,
       "massUpdateDisabled": true
