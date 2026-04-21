@@ -65,7 +65,7 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
                 const key = 'attributesDefs-' + this.scope + '-' + ids.join(',');
                 if (!Espo[key]) {
                     this.wait(true);
-                    this.ajaxGetRequest('Attribute/getAttributesDefs', {
+                    this.ajaxGetRequest('Attribute/attributesDefs', {
                         entityName: this.scope,
                         attributesIds: ids
                     }, { async: false }).success(res => {

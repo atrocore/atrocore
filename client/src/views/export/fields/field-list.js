@@ -93,7 +93,7 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
                 dialog.once('select', model => {
                     this.wait(true);
                     this.notify('Loading...');
-                    this.ajaxGetRequest('Attribute/getAttributesDefs', {
+                    this.ajaxGetRequest('Attribute/attributesDefs', {
                         entityName: entity,
                         attributesIds: [model.id]
                     }, { async: false }).success(res => {

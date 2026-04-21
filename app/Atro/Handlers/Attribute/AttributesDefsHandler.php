@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Attribute;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Attribute/getAttributesDefs',
+    path: '/Attribute/attributesDefs',
     methods: [
         'GET',
     ],
@@ -68,7 +67,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class AttributeGetAttributesDefsHandler extends AbstractHandler
+class AttributesDefsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
