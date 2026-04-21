@@ -164,6 +164,11 @@ abstract class AbstractModule
         return (!empty($this->package['version'])) ? $this->package['version'] : "";
     }
 
+    public function hasDocs(): bool
+    {
+        return file_exists($this->getPath() . 'docs/index.md');
+    }
+
     /**
      * Load module services
      *

@@ -27,8 +27,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'DELETE',
     ],
-    summary: 'Remove relations in bulk',
-    description: 'Removes relations between multiple records. Accepts either explicit IDs (ids + foreignIds) or filter conditions (where + foreignWhere).',
+    summary: 'Remove relations in bulk (synchronous)',
+    description: 'Removes relations between records using explicit IDs. Synchronous — returns immediately with the result. For large batches, prefer DELETE /entityRelationBulkAsync to avoid request timeouts.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -39,45 +39,33 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'required'   => [
                         'entityName',
                         'link',
+                        'ids',
+                        'foreignIds',
                     ],
                     'properties' => [
-                        'entityName'   => [
+                        'entityName' => [
                             'type'        => 'string',
                             'description' => 'Entity name (e.g. "Product")',
                         ],
-                        'link'         => [
+                        'link'       => [
                             'type'        => 'string',
                             'description' => 'Relation link name (e.g. "categories")',
                         ],
-                        'ids'          => [
+                        'ids'        => [
                             'type'        => 'array',
                             'items'       => [
                                 'type' => 'string',
                             ],
-                            'description' => 'IDs of main entity records. Required when where/foreignWhere are not provided.',
+                            'description' => 'IDs of main entity records.',
                         ],
-                        'foreignIds'   => [
+                        'foreignIds' => [
                             'type'        => 'array',
                             'items'       => [
                                 'type' => 'string',
                             ],
-                            'description' => 'IDs of foreign entity records to unlink. Required together with ids.',
+                            'description' => 'IDs of foreign entity records to unlink.',
                         ],
-                        'where'        => [
-                            'type'        => 'array',
-                            'items'       => [
-                                'type' => 'object',
-                            ],
-                            'description' => 'Filter conditions for main entity records. Required when ids/foreignIds are not provided.',
-                        ],
-                        'foreignWhere' => [
-                            'type'        => 'array',
-                            'items'       => [
-                                'type' => 'object',
-                            ],
-                            'description' => 'Filter conditions for foreign entity records. Required together with where.',
-                        ],
-                        'data'         => [
+                        'data'       => [
                             'type'        => 'object',
                             'description' => 'Extra relation attributes used to narrow which relations to remove',
                         ],
@@ -106,6 +94,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'entityName, link, ids or foreignIds are missing',
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class EntityRelationBulkDeleteHandler extends AbstractHandler
@@ -113,35 +107,26 @@ class EntityRelationBulkDeleteHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data       = $this->getRequestBody($request);
-        $entityName = (string) ($data->entityName ?? '');
-        $link       = (string) ($data->link ?? '');
+        $entityName = (string)($data->entityName ?? '');
+        $link       = (string)($data->link ?? '');
 
         if (empty($entityName) || empty($link)) {
-            throw new BadRequest();
+            throw new BadRequest('entityName and link are required');
         }
 
         if (!$this->getAcl()->check($entityName, 'edit')) {
             throw new Forbidden();
         }
 
-        $relationData = json_decode(json_encode($data->data ?? null), true);
-        $service      = $this->getServiceFactory()->create('MassActions');
+        $ids        = $data->ids ?? [];
+        $foreignIds = $data->foreignIds ?? [];
 
-        if (property_exists($data, 'where') && property_exists($data, 'foreignWhere')) {
-            $where        = json_decode(json_encode($data->where), true);
-            $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
-
-            return new JsonResponse($service->removeRelationByWhere($where, $foreignWhere, $entityName, $link, $relationData));
+        if (!is_array($ids) || !is_array($foreignIds)) {
+            throw new BadRequest('ids and foreignIds must be arrays');
         }
 
-        if (property_exists($data, 'ids') && property_exists($data, 'foreignIds')) {
-            if (!is_array($data->ids) || !is_array($data->foreignIds)) {
-                throw new BadRequest();
-            }
+        $relationData = json_decode(json_encode($data->data), true);
 
-            return new JsonResponse($service->removeRelation($data->ids, $data->foreignIds, $entityName, $link, $relationData));
-        }
-
-        throw new BadRequest();
+        return new JsonResponse($this->getServiceFactory()->create('MassActions')->removeRelation($ids, $foreignIds, $entityName, $link, $relationData));
     }
 }

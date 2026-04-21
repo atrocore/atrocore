@@ -28,6 +28,7 @@ class Store extends ReferenceData
             $entity->set('settingVersion', self::getSettingVersion(Composer::getComposerJson(), 'atrocore/core'));
             $entity->set('isSystem', true);
             $entity->set('isComposer', true);
+            $entity->set('hasDocs', true);
         } else {
             $module = $this->getModuleManager()->getModule($entity->get('id'));
             if (!empty($module)) {
@@ -36,6 +37,7 @@ class Store extends ReferenceData
                     self::getSettingVersion(Composer::getComposerJson(), $module->getComposerName()));
                 $entity->set('isSystem', $module->isSystem());
                 $entity->set('isComposer', !empty($module->getVersion()));
+                $entity->set('hasDocs', $module->hasDocs());
             }
         }
 

@@ -90,6 +90,11 @@
     "isComposer": {
       "type": "bool",
       "readOnly": true
+    },
+    "hasDocs": {
+      "type": "bool",
+      "readOnly": true,
+      "notStorable": true
     }
   },
   "collection": {

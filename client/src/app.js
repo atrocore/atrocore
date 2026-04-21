@@ -396,7 +396,7 @@ Espo.define(
             initView: function () {
                 var helper = this.viewHelper = new ViewHelper();
 
-                helper.layoutManager = new LayoutManager({ cache: this.cache, applicationId: this.id });
+                helper.layoutManager = new LayoutManager({ cache: this.cache, applicationId: this.id, metadata: this.metadata });
                 helper.settings = this.settings;
                 helper.config = this.settings;
                 helper.user = this.user;

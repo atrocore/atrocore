@@ -119,12 +119,50 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
                     return;
                 }
 
-                let data = this.getDataForUpdateRelation(selected, this.model);
-
+                const entityName = this.model.get('mainEntity');
+                const link = this.model.get('selectedLink');
+                let data;
                 let url;
-                data.entityName = this.model.get('mainEntity');
-                data.link = this.model.get('selectedLink');
-                url = 'entityRelationBulk';
+
+                if (this.options.type === 'addRelation') {
+                    const threshold = this.getConfig().get('massUpdateMaxCountWithoutJob') || 200;
+                    const isAsync = this.options.allResultIsChecked
+                        || this.options.checkedList.length > threshold
+                        || !Array.isArray(selected);
+
+                    if (isAsync) {
+                        data = this.getDataForUpdateRelation(selected, this.model);
+                        url = 'entityRelationBulkAsync';
+                    } else {
+                        data = {
+                            ids: this.options.checkedList,
+                            foreignIds: selected.map(m => m.id),
+                        };
+                        if (link === this.getAssociationLink()) {
+                            data.data = {associationId: this.model.get('associationId')};
+                        }
+                        url = 'entityRelationBulk';
+                    }
+                } else {
+                    const threshold = this.getConfig().get('massUpdateMaxCountWithoutJob') || 200;
+                    const isAsync = this.options.allResultIsChecked
+                        || this.options.checkedList.length > threshold
+                        || !Array.isArray(selected);
+
+                    if (isAsync) {
+                        data = this.getDataForUpdateRelation(selected, this.model);
+                        url = 'entityRelationBulkAsync';
+                    } else {
+                        data = {
+                            ids: this.options.checkedList,
+                            foreignIds: selected.map(m => m.id),
+                        };
+                        url = 'entityRelationBulk';
+                    }
+                }
+
+                data.entityName = entityName;
+                data.link = link;
                 this.sendDataForUpdateRelation(url, data);
             });
         },
@@ -217,14 +255,21 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
         sendDataForUpdateRelation(url, data) {
             if (this.options.type === 'addRelation') {
                 this.ajaxPostRequest(url, data).then(response => {
-                    Espo.Ui.notify(response.message, 'success', 1000 * 60 * 60);
-                    this.initCloseNotification();
+                    if (response.jobId) {
+                        Espo.Ui.notify(this.translate('massActionDelegatedToJm'), 'success');
+                    } else {
+                        Espo.Ui.notify(response.message, 'success', 1000 * 60 * 60);
+                        this.initCloseNotification();
+                    }
                 });
             } else if (this.options.type === 'removeRelation') {
-                data = JSON.stringify(data);
-                this.ajaxRequest(url, 'DELETE', data).then(response => {
-                    Espo.Ui.notify(response.message, 'success', 1000 * 60 * 60);
-                    this.initCloseNotification();
+                this.ajaxRequest(url, 'DELETE', JSON.stringify(data)).then(response => {
+                    if (response.jobId) {
+                        Espo.Ui.notify(this.translate('massActionDelegatedToJm'), 'success');
+                    } else {
+                        Espo.Ui.notify(response.message, 'success', 1000 * 60 * 60);
+                        this.initCloseNotification();
+                    }
                 });
             }
         },
