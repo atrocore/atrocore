@@ -27,8 +27,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'POST',
     ],
-    summary: 'Add relations in bulk',
-    description: 'Creates relations between multiple records. Accepts either explicit IDs (ids + foreignIds) or filter conditions (where + foreignWhere).',
+    summary: 'Add relations in bulk (synchronous)',
+    description: 'Creates relations between records using explicit IDs. Synchronous — returns immediately with the result. For large batches, prefer POST /entityRelationBulkAsync to avoid request timeouts.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -39,45 +39,33 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'required'   => [
                         'entityName',
                         'link',
+                        'ids',
+                        'foreignIds',
                     ],
                     'properties' => [
-                        'entityName'   => [
+                        'entityName' => [
                             'type'        => 'string',
                             'description' => 'Entity name (e.g. "Product")',
                         ],
-                        'link'         => [
+                        'link'       => [
                             'type'        => 'string',
                             'description' => 'Relation link name (e.g. "categories")',
                         ],
-                        'ids'          => [
+                        'ids'        => [
                             'type'        => 'array',
                             'items'       => [
                                 'type' => 'string',
                             ],
-                            'description' => 'IDs of main entity records. Required when where/foreignWhere are not provided.',
+                            'description' => 'IDs of main entity records.',
                         ],
-                        'foreignIds'   => [
+                        'foreignIds' => [
                             'type'        => 'array',
                             'items'       => [
                                 'type' => 'string',
                             ],
-                            'description' => 'IDs of foreign entity records to link. Required together with ids.',
+                            'description' => 'IDs of foreign entity records to link.',
                         ],
-                        'where'        => [
-                            'type'        => 'array',
-                            'items'       => [
-                                'type' => 'object',
-                            ],
-                            'description' => 'Filter conditions for main entity records. Required when ids/foreignIds are not provided.',
-                        ],
-                        'foreignWhere' => [
-                            'type'        => 'array',
-                            'items'       => [
-                                'type' => 'object',
-                            ],
-                            'description' => 'Filter conditions for foreign entity records. Required together with where.',
-                        ],
-                        'data'         => [
+                        'data'       => [
                             'type'        => 'object',
                             'description' => 'Extra relation attributes (e.g. {"associationId": "..."})',
                         ],
@@ -106,6 +94,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'entityName, link, ids or foreignIds are missing, or ids count exceeds the configured limit',
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class EntityRelationBulkCreateHandler extends AbstractHandler
@@ -113,35 +107,27 @@ class EntityRelationBulkCreateHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data       = $this->getRequestBody($request);
-        $entityName = (string) ($data->entityName ?? '');
-        $link       = (string) ($data->link ?? '');
+        $entityName = (string)($data->entityName ?? '');
+        $link       = (string)($data->link ?? '');
 
         if (empty($entityName) || empty($link)) {
-            throw new BadRequest();
+            throw new BadRequest('entityName and link are required');
         }
 
         if (!$this->getAcl()->check($entityName, 'edit')) {
             throw new Forbidden();
         }
 
-        $relationData = json_decode(json_encode($data->data ?? new \stdClass()), true);
+        $ids        = $data->ids ?? [];
+        $foreignIds = $data->foreignIds ?? [];
+
+        if (!is_array($ids) || !is_array($foreignIds)) {
+            throw new BadRequest('ids and foreignIds must be arrays');
+        }
+
+        $relationData = json_decode(json_encode($data->data), true);
         $service      = $this->getServiceFactory()->create('MassActions');
 
-        if (property_exists($data, 'where') && property_exists($data, 'foreignWhere')) {
-            $where        = json_decode(json_encode($data->where), true);
-            $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
-
-            return new JsonResponse($service->addRelationByWhere($where, $foreignWhere, $entityName, $link, $relationData));
-        }
-
-        if (property_exists($data, 'ids') && property_exists($data, 'foreignIds')) {
-            if (!is_array($data->ids) || !is_array($data->foreignIds)) {
-                throw new BadRequest();
-            }
-
-            return new JsonResponse($service->addRelation($data->ids, $data->foreignIds, $entityName, $link, $relationData));
-        }
-
-        throw new BadRequest();
+        return new JsonResponse($service->addRelation($ids, $foreignIds, $entityName, $link, $relationData));
     }
 }

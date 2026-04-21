@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
@@ -45,6 +46,40 @@ class MassActions extends HasContainer
         return [
             "jobId" => $jobEntity->get('id')
         ];
+    }
+
+    public function addRelationViaJob(string $entityType, string $link, array $payload): array
+    {
+        if (!$this->getContainer()->get('acl')->check($entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'    => 'Add relation: ' . $entityType . '.' . $link,
+            'type'    => 'EntityRelationBulkCreator',
+            'payload' => array_merge($payload, ['action' => 'add', 'entityType' => $entityType, 'link' => $link]),
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
+
+        return ['jobId' => $jobEntity->get('id')];
+    }
+
+    public function removeRelationViaJob(string $entityType, string $link, array $payload): array
+    {
+        if (!$this->getContainer()->get('acl')->check($entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'    => 'Remove relation: ' . $entityType . '.' . $link,
+            'type'    => 'EntityRelationBulkCreator',
+            'payload' => array_merge($payload, ['action' => 'remove', 'entityType' => $entityType, 'link' => $link]),
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
+
+        return ['jobId' => $jobEntity->get('id')];
     }
 
     public function upsert(array $data): array

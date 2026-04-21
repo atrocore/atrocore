@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,12 +22,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/entityRelationBulk',
+    path: '/entityRelationBulkAsync',
     methods: [
         'DELETE',
     ],
-    summary: 'Remove relations in bulk (synchronous)',
-    description: 'Removes relations between records using explicit IDs. Synchronous — returns immediately with the result. For large batches, prefer DELETE /entityRelationBulkAsync to avoid request timeouts.',
+    summary: 'Remove relations in bulk (asynchronous)',
+    description: 'Schedules bulk relation removal as a background job and returns immediately with the job ID. The actual removal logic is identical to `DELETE /entityRelationBulk` but runs asynchronously via the job queue.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -39,33 +38,33 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'required'   => [
                         'entityName',
                         'link',
-                        'ids',
-                        'foreignIds',
+                        'where',
+                        'foreignWhere',
                     ],
                     'properties' => [
-                        'entityName' => [
+                        'entityName'   => [
                             'type'        => 'string',
                             'description' => 'Entity name (e.g. "Product")',
                         ],
-                        'link'       => [
+                        'link'         => [
                             'type'        => 'string',
                             'description' => 'Relation link name (e.g. "categories")',
                         ],
-                        'ids'        => [
+                        'where'        => [
                             'type'        => 'array',
                             'items'       => [
-                                'type' => 'string',
+                                'type' => 'object',
                             ],
-                            'description' => 'IDs of main entity records.',
+                            'description' => 'Filter conditions for main entity records.',
                         ],
-                        'foreignIds' => [
+                        'foreignWhere' => [
                             'type'        => 'array',
                             'items'       => [
-                                'type' => 'string',
+                                'type' => 'object',
                             ],
-                            'description' => 'IDs of foreign entity records to unlink.',
+                            'description' => 'Filter conditions for foreign entity records.',
                         ],
-                        'data'       => [
+                        'data'         => [
                             'type'        => 'object',
                             'description' => 'Extra relation attributes used to narrow which relations to remove',
                         ],
@@ -76,18 +75,18 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Operation result',
+            'description' => 'Reference to the created background job.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'required'   => [
-                            'message',
+                            'jobId',
                         ],
                         'properties' => [
-                            'message' => [
+                            'jobId' => [
                                 'type'        => 'string',
-                                'description' => 'Human-readable result message displayed to the user',
+                                'description' => 'ID of the created background job.',
                             ],
                         ],
                     ],
@@ -95,14 +94,14 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'entityName, link, ids or foreignIds are missing',
+            'description' => 'entityName, link, where or foreignWhere are missing',
         ],
         403 => [
             'description' => 'Access denied',
         ],
     ],
 )]
-class EntityRelationBulkDeleteHandler extends AbstractHandler
+class EntityRelationBulkDeleteAsyncHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -114,19 +113,22 @@ class EntityRelationBulkDeleteHandler extends AbstractHandler
             throw new BadRequest('entityName and link are required');
         }
 
-        if (!$this->getAcl()->check($entityName, 'edit')) {
-            throw new Forbidden();
+        if (!isset($data->where)) {
+            throw new BadRequest('where is required');
         }
 
-        $ids        = $data->ids ?? [];
-        $foreignIds = $data->foreignIds ?? [];
-
-        if (!is_array($ids) || !is_array($foreignIds)) {
-            throw new BadRequest('ids and foreignIds must be arrays');
+        if (!isset($data->foreignWhere)) {
+            throw new BadRequest('foreignWhere is required');
         }
 
-        $relationData = json_decode(json_encode($data->data), true);
+        $result = $this->getServiceFactory()->create('MassActions')->removeRelationViaJob(
+            $entityName,
+            $link,
+            json_decode(json_encode($data->where), true),
+            json_decode(json_encode($data->foreignWhere), true),
+            json_decode(json_encode($data->data), true)
+        );
 
-        return new JsonResponse($this->getServiceFactory()->create('MassActions')->removeRelation($ids, $foreignIds, $entityName, $link, $relationData));
+        return new JsonResponse($result);
     }
 }
