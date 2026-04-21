@@ -209,6 +209,10 @@ class OpenApiGenerator
         unset($propSchema);
 
         $this->buildEntityPostSchema($result, $entityName);
+
+        if (!empty($this->getMetadata()->get(['scopes', $entityName, 'hasAttribute']))) {
+            $this->buildAttributeValueSchema($result);
+        }
     }
 
     private function buildEntityPostSchema(array &$result, string $entityName): void
@@ -230,7 +234,7 @@ class OpenApiGenerator
             }
             unset($propSchema['readOnly']);
             $propSchema['nullable'] = true;
-            $writeProps[$prop] = $propSchema;
+            $writeProps[$prop]      = $propSchema;
         }
 
         $writeRequired = array_values(array_filter($readRequired, fn($k) => isset($writeProps[$k])));
@@ -250,6 +254,69 @@ class OpenApiGenerator
         unset($patchSchema['required']);
         unset($patchSchema['properties']['id']);
         $result['components']['schemas']["{$entityName}Patch"] = $patchSchema;
+    }
+
+    private function buildAttributeValueSchema(array &$result)
+    {
+        if (!empty($result['components']['schemas']['AttributeValue'])) {
+            return;
+        }
+
+        $avSchema = [
+            'type'       => 'object',
+            'required'   => ['attributeId'],
+            'properties' => [
+                'attributeId'      => ['type' => 'string'],
+                'type'             => ['type' => 'string'],
+                'required'         => ['type' => 'boolean'],
+                'visible'          => ['type' => 'boolean'],
+                'readOnly'         => ['type' => 'boolean'],
+                'protected'        => ['type' => 'boolean'],
+                'value'            => ['nullable' => true, 'example' => null],
+                'valueName'        => ['type' => 'string', 'nullable' => true],
+                'valueUnitId'      => ['type' => 'string', 'nullable' => true],
+                'valueUnitName'    => ['type' => 'string', 'nullable' => true],
+                'valueId'          => ['type' => 'string', 'nullable' => true],
+                'valueIds'         => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
+                'valueNames'       => ['type' => 'object', 'nullable' => true],
+                'valueOptionsData' => ['type' => 'object', 'nullable' => true],
+                'valueOptionData'  => ['type' => 'object', 'nullable' => true],
+                'valuePathsData'   => ['type' => 'object', 'nullable' => true],
+                'valueUnitData'    => ['type' => 'object', 'nullable' => true],
+                'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
+                'valueFrom'        => ['nullable' => true, 'example' => 1],
+                'valueTo'          => ['nullable' => true, 'example' => 2],
+            ]
+        ];
+
+        $avPostSchema = [
+            'type'       => 'object',
+            'required'   => ['attributeId'],
+            'properties' => [
+                'attributeId' => ['type' => 'string'],
+                'value'       => ['nullable' => true, 'example' => null],
+                'valueUnitId' => ['type' => 'string', 'nullable' => true],
+                'valueId'     => ['type' => 'string', 'nullable' => true],
+                'valueIds'    => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
+                'valueFrom'   => ['nullable' => true, 'example' => 1],
+                'valueTo'     => ['nullable' => true, 'example' => 2],
+            ]
+        ];
+
+        foreach ($this->container->get('config')->get('inputLanguageList') ?? [] as $language) {
+            $avSchema['properties']['value' . ucfirst(Util::toCamelCase(strtolower($language)))] = [
+                'type'     => 'string',
+                'nullable' => true
+            ];
+
+            $avPostSchema['properties']['value' . ucfirst(Util::toCamelCase(strtolower($language)))] = [
+                'type'     => 'string',
+                'nullable' => true
+            ];
+        }
+
+        $result['components']['schemas']['AttributeValue']     = $avSchema;
+        $result['components']['schemas']['AttributeValuePost'] = $avPostSchema;
     }
 
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
@@ -331,8 +398,8 @@ class OpenApiGenerator
                 ];
                 break;
             case "extensibleEnum":
-                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
-                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
+                $result['components']['schemas'][$entityName]['properties'][$fieldName]               = ['type' => 'string'];
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"]       = [
                     'type'    => 'string',
                     'forRead' => true
                 ];
@@ -343,11 +410,11 @@ class OpenApiGenerator
                 ];
                 break;
             case 'extensibleMultiEnum':
-                $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                $result['components']['schemas'][$entityName]['properties'][$fieldName]                = [
                     'type'  => 'array',
                     'items' => ['type' => 'string']
                 ];
-                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = [
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"]       = [
                     'type'    => 'object',
                     'forRead' => true
                 ];
@@ -468,7 +535,7 @@ class OpenApiGenerator
     {
         if (!empty($route['description'])) {
             $routePath = preg_replace('/:(\w+)/', '{$1}', $route['route']);
-            $row = [
+            $row       = [
                 'tags'        => [$route['params']['controller']],
                 'summary'     => $route['summary'] ?? $route['description'],
                 'description' => $route['description'],
@@ -513,10 +580,10 @@ class OpenApiGenerator
 
         $responses = [];
         foreach ($routeAttr->responses as $code => $response) {
-            $responses[(string) $code] = $response;
+            $responses[(string)$code] = $response;
         }
 
-        foreach (array_map('strtolower', (array) $routeAttr->methods) as $method) {
+        foreach (array_map('strtolower', (array)$routeAttr->methods) as $method) {
             $row = [
                 'tags'        => [$tag],
                 'summary'     => $routeAttr->summary,
@@ -564,7 +631,7 @@ class OpenApiGenerator
             if (empty($entry['openapi'])) {
                 continue;
             }
-            $tag = $entry['openapi']['tags'][0] ?? 'Global';
+            $tag             = $entry['openapi']['tags'][0] ?? 'Global';
             $grouped[$tag][] = $entry;
         }
 

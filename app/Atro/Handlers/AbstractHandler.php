@@ -102,7 +102,13 @@ abstract class AbstractHandler implements MiddlewareInterface
         $body    = (string)$request->getBody();
         $decoded = $body !== '' ? json_decode($body) : null;
 
-        return $decoded instanceof \stdClass ? $decoded : new \stdClass();
+        if (is_array($decoded)) {
+            return (object)$decoded;
+        } else if ($decoded instanceof \stdClass) {
+            return $decoded;
+        } else {
+            return new \stdClass();
+        }
     }
 
     protected function prepareWhereQuery(mixed $where): mixed

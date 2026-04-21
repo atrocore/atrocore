@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Entities\Job;
+use Atro\ORM\DB\RDB\Mapper;
 
 class MassRemoveAttribute extends AbstractJob implements JobInterface
 {
@@ -35,20 +35,38 @@ class MassRemoveAttribute extends AbstractJob implements JobInterface
 
         $attributes = $data['attributes'];
 
-        $service = $this->getServiceFactory()->create('Attribute');
+        $attributeService = $this->getServiceFactory()->create('Attribute');
+        $recordService    = $this->getServiceFactory()->create($data['entityType']);
 
-        $count = 0;
+        $attributeIds = $attributes['ids'] ?? [];
+
+        if (empty($attributeIds) && !empty($attributes['where'])) {
+            $sp           = $attributeService->getSelectParams(['where' => $attributes['where']]);
+            $sp['select'] = ['id'];
+
+            $records      = $this->getEntityManager()->getRepository('Attribute')->find($sp);
+            $attributeIds = array_column($records->toArray(), 'id');
+        }
+
+        $count  = 0;
         $errors = [];
 
         foreach ($data['ids'] as $id) {
-            $res = $service->removeAttributeValues($data['entityType'], $id, $attributes['ids'] ?? null, $attributes['where'] ?? null);
+            $input                       = new \stdClass();
+            $input->__attributesToRemove = $attributeIds;
 
-            $count += $res['count'] ?? 0;
-            $errors = array_merge($errors, $res['errors'] ?? []);
+            try {
+                $recordService->updateEntity($id, $input);
+                $count++;
+            } catch (NotModified $e) {
+
+            } catch (\Throwable $e) {
+                $errors[] = "Error for $id: " . $e->getMessage();
+            }
         }
 
         // update Job message
-        $message = "$count attribute(s) removed";
+        $message = "$count record(s) updated";
         if (!empty($errors)) {
             $message .= "\n" . implode("\n", $errors);
         }

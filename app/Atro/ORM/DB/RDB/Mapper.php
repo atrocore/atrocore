@@ -41,11 +41,11 @@ class Mapper implements MapperInterface
 
     public function __construct(EntityManager $entityManager, EntityFactory $entityFactory, Container $container)
     {
-        $this->em = $entityManager;
+        $this->em            = $entityManager;
         $this->entityFactory = $entityFactory;
-        $this->container = $container;
+        $this->container     = $container;
 
-        $this->connection = $container->get('connection');
+        $this->connection     = $container->get('connection');
         $this->queryConverter = new QueryConverter($this->entityFactory, $container->get('connection'));
     }
 
@@ -156,12 +156,12 @@ class Mapper implements MapperInterface
         // select parent_id if single parent hierarchy
         if ($this->isSingleParentHierarchy($entity) && empty($params['aggregation']) && empty($params['disableParentLoad']) && !$innerSql) {
             $tableName = $this->getQueryConverter()->toDb($entity->getEntityType());
-            $ta = $this->getQueryConverter()::TABLE_ALIAS;
+            $ta        = $this->getQueryConverter()::TABLE_ALIAS;
             $relAlias1 = 'hierarchy_alias_' . Util::generateUniqueHash();
             $relAlias2 = 'alias_' . Util::generateUniqueHash();
 
-            $qb->addSelect("$relAlias1.parent_id AS " . $this->getQueryConverter()->fieldToAlias('parentId')); // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
-            $qb->addSelect("$relAlias2.name AS " . $this->getQueryConverter()->fieldToAlias('parentName')); // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
+            $qb->addSelect("$relAlias1.parent_id AS " . $this->getQueryConverter()->fieldToAlias('parentId'));                     // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
+            $qb->addSelect("$relAlias2.name AS " . $this->getQueryConverter()->fieldToAlias('parentName'));                        // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
             $qb->leftJoin($ta, "{$tableName}_hierarchy", $relAlias1, "$ta.id=$relAlias1.entity_id AND $relAlias1.deleted=:false"); // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
             $qb->leftJoin($relAlias1, $tableName, $relAlias2, "$relAlias2.id=$relAlias1.parent_id AND $relAlias1.deleted=:false"); // nosemgrep: php.doctrine.security.audit.doctrine-orm-dangerous-query.doctrine-orm-dangerous-query
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
@@ -174,7 +174,7 @@ class Mapper implements MapperInterface
         }
 
         if (!empty($params['subQueryCallbacks'])) {
-            $oldQb = $qb;
+            $oldQb          = $qb;
             $mainTableAlias = $this->getQueryConverter()->getMainTableAlias();
             $oldQb->addSelect("$mainTableAlias.id as id");
 
@@ -204,7 +204,7 @@ class Mapper implements MapperInterface
     protected function isSingleParentHierarchy(IEntity $entity): bool
     {
         if (!isset($this->singleParentHierarchy[$entity->getEntityType()])) {
-            $scopeDefs = $this->getMetadata()->get(['scopes', $entity->getEntityType()], []);
+            $scopeDefs                                             = $this->getMetadata()->get(['scopes', $entity->getEntityType()], []);
             $this->singleParentHierarchy[$entity->getEntityType()] = !empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy' && empty($scopeDefs['multiParents']);
         }
 
@@ -213,8 +213,8 @@ class Mapper implements MapperInterface
 
     public function count(IEntity $entity, array $params = []): int
     {
-        $params['aggregation'] = 'COUNT';
-        $params['aggregationBy'] = 'id';
+        $params['aggregation']        = 'COUNT';
+        $params['aggregationBy']      = 'id';
         $params['skipBelongsToJoins'] = true;
 
         $res = $this->select($entity, $params);
@@ -240,7 +240,7 @@ class Mapper implements MapperInterface
             }
 
             $relEntityName = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
-            $relEntity = $this->entityFactory->create($relEntityName);
+            $relEntity     = $this->entityFactory->create($relEntityName);
 
             if (!$relEntity) {
                 return null;
@@ -248,7 +248,7 @@ class Mapper implements MapperInterface
         }
 
         if ($totalCount) {
-            $params['aggregation'] = 'COUNT';
+            $params['aggregation']   = 'COUNT';
             $params['aggregationBy'] = 'id';
         }
 
@@ -260,14 +260,14 @@ class Mapper implements MapperInterface
 
         $keySet = $this->getKeys($entity, $relationName);
 
-        $key = $keySet['key'];
+        $key        = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
 
         switch ($relType) {
             case IEntity::BELONGS_TO:
                 $params['whereClause'][$foreignKey] = $entity->get($key);
-                $params['offset'] = 0;
-                $params['limit'] = 1;
+                $params['offset']                   = 0;
+                $params['limit']                    = 1;
 
                 $rows = $this->select($relEntity, $params);
 
@@ -289,13 +289,13 @@ class Mapper implements MapperInterface
                 $params['whereClause'][$foreignKey] = $entity->get($key);
 
                 if ($relType == IEntity::HAS_CHILDREN) {
-                    $foreignType = $keySet['foreignType'];
+                    $foreignType                         = $keySet['foreignType'];
                     $params['whereClause'][$foreignType] = $entity->getEntityType();
                 }
 
                 if ($relType == IEntity::HAS_ONE) {
                     $params['offset'] = 0;
-                    $params['limit'] = 1;
+                    $params['limit']  = 1;
                 }
 
                 $resultArr = [];
@@ -324,10 +324,10 @@ class Mapper implements MapperInterface
 
             case IEntity::MANY_MANY:
                 $params['relationName'] = $relOpt['relationName'];
-                $params['callbacks'][] = [new JoinManyToMany($entity, $relationName, $keySet), 'run'];
+                $params['callbacks'][]  = [new JoinManyToMany($entity, $relationName, $keySet), 'run'];
 
                 $resultArr = [];
-                $rows = $this->select($relEntity, $params);
+                $rows      = $this->select($relEntity, $params);
                 if ($rows) {
                     if (!$totalCount) {
                         $resultArr = $rows;
@@ -340,13 +340,13 @@ class Mapper implements MapperInterface
                 return $resultArr;
             case IEntity::BELONGS_TO_PARENT:
                 $foreignEntityType = $entity->get($keySet['typeKey']);
-                $foreignEntityId = $entity->get($key);
+                $foreignEntityId   = $entity->get($key);
                 if (!$foreignEntityType || !$foreignEntityId) {
                     return null;
                 }
                 $params['whereClause'][$foreignKey] = $foreignEntityId;
-                $params['offset'] = 0;
-                $params['limit'] = 1;
+                $params['offset']                   = 0;
+                $params['limit']                    = 1;
 
                 $relEntity = $this->entityFactory->create($foreignEntityType);
 
@@ -411,7 +411,7 @@ class Mapper implements MapperInterface
             return false;
         }
 
-        $nearKey = $keySet['nearKey'];
+        $nearKey    = $keySet['nearKey'];
         $distantKey = $keySet['distantKey'];
 
         $relTable = $this->toDb($relOpt['relationName']);
@@ -495,7 +495,7 @@ class Mapper implements MapperInterface
             return false;
         }
 
-        $nearKey = $keySet['nearKey'];
+        $nearKey    = $keySet['nearKey'];
         $distantKey = $keySet['distantKey'];
 
         $relTable = $this->toDb($relOpt['relationName']);
@@ -554,7 +554,7 @@ class Mapper implements MapperInterface
     public function insert(IEntity $entity, bool $ignoreDuplicate = false): bool
     {
         $dataArr = [];
-        $attrs = [];
+        $attrs   = [];
 
         foreach ($this->toValueMap($entity) as $attribute => $value) {
             if (!empty($entity->fields[$attribute]['attributeId'])) {
@@ -601,7 +601,7 @@ class Mapper implements MapperInterface
     public function update(IEntity $entity): bool
     {
         $setArr = [];
-        $attrs = [];
+        $attrs  = [];
 
         foreach ($this->toValueMap($entity) as $attribute => $value) {
             if ($attribute == 'id') {
@@ -683,8 +683,8 @@ class Mapper implements MapperInterface
                 }
 
                 if (empty($entity->fields[$key]['column'])) {
-                    if (!$attributeRepository->hasAttributeValue($entity->getEntityType(), $entity->id, $entity->fields[$key]['attributeId'])) {
-                        $attributeRepository->addAttributeValue($entity->getEntityType(), $entity->id, $entity->fields[$key]['attributeId']);
+                    if (!$attributeRepository->hasAttributeValue($entity->getEntityName(), $entity->id, $entity->fields[$key]['attributeId'])) {
+                        $attributeRepository->addAttributeValue($entity->getEntityName(), $entity->id, $entity->fields[$key]['attributeId']);
                     }
                 } else {
                     $attributeRepository->upsertAttributeValue($entity, $key, $value);
@@ -692,13 +692,8 @@ class Mapper implements MapperInterface
             }
         }
 
-        if (!empty($entity->_originalInput?->__attributesToRemove)) {
-            foreach ($entity->_originalInput->__attributesToRemove as $name) {
-                $attributeId = $entity->entityDefs['fields'][$name]['attributeId'] ?? null;
-                if (!empty($attributeId)) {
-                    $attributeRepository->removeAttributeValue($entity->getEntityType(), $entity->get('id'), $attributeId);
-                }
-            }
+        foreach ($entity->_originalInput->__attributesToRemove ?? [] as $attributeId) {
+            $attributeRepository->removeAttributeValue($entity->getEntityName(), $entity->get('id'), $attributeId);
         }
     }
 

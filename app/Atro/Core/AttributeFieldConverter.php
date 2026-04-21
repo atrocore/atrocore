@@ -16,6 +16,7 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Metadata;
@@ -24,6 +25,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\Acl;
 use Espo\ORM\IEntity;
 
 class AttributeFieldConverter
@@ -37,11 +39,11 @@ class AttributeFieldConverter
 
     public function __construct(Container $container)
     {
-        $this->metadata = $container->get('metadata');
-        $this->config = $container->get('config');
-        $this->conn = $container->get('connection');
+        $this->metadata     = $container->get('metadata');
+        $this->config       = $container->get('config');
+        $this->conn         = $container->get('connection');
         $this->eventManager = $container->get('eventManager');
-        $this->container = $container;
+        $this->container    = $container;
     }
 
     public static function isValidCode(string $code): bool
@@ -83,7 +85,7 @@ class AttributeFieldConverter
 
         if (!isset($this->attributes[$id])) {
             $this->attributes = [];
-            $attributeIds = [];
+            $attributeIds     = [];
             foreach ($result['attributesIds'] as $attributeId) {
                 $attributeIds[] = self::getAttributeIdFromFieldName($attributeId);
             }
@@ -126,7 +128,7 @@ class AttributeFieldConverter
         $attributesDefs = [];
 
         $tableName = Util::toUnderScore(lcfirst($entity->getEntityName()));
-        $alias = $mapper->getQueryConverter()::TABLE_ALIAS;
+        $alias     = $mapper->getQueryConverter()::TABLE_ALIAS;
         foreach ($attributes as $attribute) {
             $attributeAlias = IdGenerator::unsortableId();
             $qb->leftJoin(
@@ -160,6 +162,48 @@ class AttributeFieldConverter
         }
 
         $entity->set('attributesDefs', $attributesDefs);
+    }
+
+    public function validateInput(IEntity $entity): void
+    {
+        if (empty($entity->_originalInput) || !$this->metadata->get("scopes.{$entity->getEntityName()}.hasAttribute")) {
+            return;
+        }
+
+        if (!empty($entity->_originalInput->__attributes)) {
+            if (!$entity->isNew() && !empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
+                throw new BadRequest('Attribute linking is disabled.');
+            }
+
+            if (!$this->container->get('acl')->check($entity, 'createAttributeValue')) {
+                throw new Forbidden();
+            }
+        }
+
+        $attributeRepository = $this->container->get('entityManager')->getRepository('Attribute');
+
+        if (!empty($entity->_originalInput->__attributesToRemove)) {
+            $toRemove = $attributeRepository->getAttributeIdsByIdOrCode($entity->getEntityName(), $entity->_originalInput->__attributesToRemove);
+            if (!empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
+                throw new BadRequest('Attribute unlinking is disabled.');
+            }
+
+            if (!$this->container->get('acl')->check($entity, 'deleteAttributeValue')) {
+                throw new Forbidden();
+            }
+
+            // Validate composite children: a child may not be removed without its composite parent also being removed.
+            $children = $attributeRepository->getCompositeDataForAttributes($toRemove);
+
+            foreach ($children as $child) {
+                if (!in_array($child['composite_attribute_id'], $toRemove)) {
+                    throw new BadRequest('Nested attribute cannot be removed without its composite parent.');
+                }
+            }
+
+            // mutate property
+            $entity->_originalInput->__attributesToRemove = $toRemove;
+        }
     }
 
     public function putAttributesToEntity(IEntity $entity): void
@@ -258,9 +302,9 @@ class AttributeFieldConverter
                 foreach ($classificationAttrs as $classificationAttribute) {
                     if ($attribute['id'] === $classificationAttribute['attribute_id']) {
                         $res[$k]['classification_attribute_id'] = $classificationAttribute['id'];
-                        $res[$k]['is_required'] = $classificationAttribute['is_required'];
-                        $res[$k]['is_read_only'] = $classificationAttribute['is_read_only'];
-                        $res[$k]['is_protected'] = $classificationAttribute['is_protected'];
+                        $res[$k]['is_required']                 = $classificationAttribute['is_required'];
+                        $res[$k]['is_read_only']                = $classificationAttribute['is_read_only'];
+                        $res[$k]['is_protected']                = $classificationAttribute['is_protected'];
 
                         foreach (['conditional_required', 'conditional_visible', 'conditional_protected', 'conditional_read_only', 'conditional_disable_options'] as $key) {
                             if (!empty($classificationAttribute["enable_$key"])) {
@@ -294,15 +338,8 @@ class AttributeFieldConverter
         if (empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
             $values = $entity->_originalInput->__attributes ?? [];
             if (!empty($values)) {
-                $attributesToAdd = $this->conn->createQueryBuilder()
-                    ->select('id')
-                    ->from($this->conn->quoteIdentifier("attribute"))
-                    ->where('id in (:values) or code in (:values)')
-                    ->andWhere('entity_id=:entityType and deleted=:false')
-                    ->setParameter('values', $values, Mapper::getParameterType($values))
-                    ->setParameter('entityType', $entity->getEntityName())
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->fetchFirstColumn();
+                $attributesToAdd = $this->container->get('entityManager')->getRepository('Attribute')
+                    ->getAttributeIdsByIdOrCode($entity->getEntityName(), $values);
             }
         }
 
@@ -325,8 +362,8 @@ class AttributeFieldConverter
                 }
             }
 
-            if (!empty($entity->_originalInput->attributesValues)) {
-                foreach ($entity->_originalInput->attributesValues as $attributeValue) {
+            if (!empty($entity->_originalInput->attributeValues)) {
+                foreach ($entity->_originalInput->attributeValues as $attributeValue) {
                     if (!empty($attributeValue->attributeId) && !in_array($attributeValue->attributeId, $attributesIds)) {
                         $attributesIds[] = $attributeValue->attributeId;
                     }
@@ -385,7 +422,7 @@ class AttributeFieldConverter
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAllAttributesAsFetched();
 
-        foreach ($attributesToAdd as $attributeId) {
+        foreach ($preparedAttributesIds ?? [] as $attributeId) {
             foreach ($entity->fields ?? [] as $name => $defs) {
                 if (!empty($defs['attributeId']) && $defs['attributeId'] === $attributeId) {
                     $entity->unsetFetched($name);
@@ -395,6 +432,7 @@ class AttributeFieldConverter
 
         $entity->hasAllEntityAttributes = true;
     }
+
 
     public function prepareInputForAttributeValuesArray(IEntity $entity, \stdClass $input): void
     {

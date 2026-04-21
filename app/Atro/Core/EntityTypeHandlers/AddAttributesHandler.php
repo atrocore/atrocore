@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
@@ -29,30 +27,52 @@ use Atro\Handlers\AbstractHandler;
     methods: [
         'POST',
     ],
-    summary: 'Add attributes',
-    description: 'Assigns one or more attributes to the specified entity record without setting values.',
+    summary: 'Add attributes to a record',
+    description: 'Assigns one or more attributes to the specified entity record. The attributes are linked without setting values — use `upsertAttributeValues` to set values.',
     tag: '{entityName}',
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'entityName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Entity name (e.g. "Product")',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
         [
-            'name'     => 'id',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Record ID',
+            'schema'      => [
                 'type' => 'string',
+            ],
+        ],
+    ],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => ['attributeIds'],
+                    'properties' => [
+                        'attributeIds' => [
+                            'type'        => 'array',
+                            'description' => 'IDs of the attributes to assign to the record',
+                            'items'       => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Operation result',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -70,40 +90,19 @@ class AddAttributesHandler extends AbstractHandler
     {
         $entityName = $this->getEntityName($request);
 
-        if (
-            empty($this->getMetadata()->get("scopes.$entityName.hasAttribute")) ||
-            !empty($this->getMetadata()->get(['scopes', $entityName, 'disableAttributeLinking']))
-        ) {
-            throw new BadRequest();
-        }
-
-        if (
-            !$this->getAcl()->check($entityName, 'edit') ||
-            !$this->getAcl()->check($entityName, 'createAttributeValue')
-        ) {
-            throw new Forbidden();
-        }
-
-        $id   = (string) $request->getAttribute('id');
+        $id   = $request->getAttribute('id');
         $data = $this->getRequestBody($request);
 
-        $attributeIds = $data->attributeIds ?? [];
-        if (!is_array($attributeIds) || empty($attributeIds)) {
+        $attributeIds = $data->attributeIds;
+        if (empty($attributeIds)) {
             throw new BadRequest();
         }
 
-        $entity = $this->getRecordService($entityName)->getEntity($id);
-        if (empty($entity)) {
-            throw new NotFound();
-        }
+        $input = new \stdClass();
+        $input->__attributes = $attributeIds;
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
+        $res = $this->getRecordService($entityName)->updateEntity($id, $input);
 
-        $result = $this->getServiceFactory()->create('Attribute')
-            ->addAttributeValue($entity->getEntityName(), $entity->get('id'), null, $attributeIds);
-
-        return new BoolResponse(true);
+        return new BoolResponse($res);
     }
 }

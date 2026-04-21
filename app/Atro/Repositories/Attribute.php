@@ -25,6 +25,7 @@ use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
@@ -52,7 +53,7 @@ class Attribute extends Base
         /* @var $repository Base */
         $repository = $this->getEntityManager()->getRepository($entityName);
 
-        $sp = $this->getInjection('container')->get('serviceFactory')->create($entityName)->getSelectParams([
+        $sp           = $this->getInjection('container')->get('serviceFactory')->create($entityName)->getSelectParams([
             'where' => json_decode(json_encode($where), true),
         ]);
         $sp['select'] = ['id'];
@@ -91,7 +92,7 @@ class Attribute extends Base
 
     public function getAttributesByIds(array $attributesIds): array
     {
-        $conn = $this->getConnection();
+        $conn = $this->getDbal();
 
         if (class_exists("\\Pim\\Module")) {
             return $conn->createQueryBuilder()
@@ -111,6 +112,32 @@ class Attribute extends Base
             ->where('id IN (:ids)')
             ->andWhere('deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+    }
+
+    public function getAttributeIdsByIdOrCode(string $entityName, array $values): array
+    {
+        return $this->getDbal()->createQueryBuilder()
+            ->select('id')
+            ->from($this->getDbal()->quoteIdentifier("attribute"))
+            ->where('id in (:values) or code in (:values)')
+            ->andWhere('entity_id=:entityName and deleted=:false')
+            ->setParameter('values', $values, Connection::PARAM_STR_ARRAY)
+            ->setParameter('entityName', $entityName)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+    }
+
+    public function getCompositeDataForAttributes(array $ids): array
+    {
+        return $this->getDbal()->createQueryBuilder()
+            ->select(['id', 'composite_attribute_id'])
+            ->from($this->getDbal()->quoteIdentifier('attribute'))
+            ->where('id IN (:ids)')
+            ->andWhere('composite_attribute_id IS NOT NULL')
+            ->andWhere('deleted = :false')
+            ->setParameter('ids', $ids, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
     }
@@ -208,7 +235,7 @@ class Attribute extends Base
                     ->executeQuery();
 
 
-                $attr['id'] = IdGenerator::uuid();
+                $attr['id']              = IdGenerator::uuid();
                 $attr["{$tableName}_id"] = $entity->get('id');
 
                 $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
@@ -233,7 +260,7 @@ class Attribute extends Base
 
         $name = Util::toUnderScore(lcfirst($entity->get('entityId')));
 
-        $avIds = $this->getConnection()->createQueryBuilder()
+        $avIds = $this->getDbal()->createQueryBuilder()
             ->select("{$name}_id")
             ->distinct()
             ->from("{$name}_attribute_value")
@@ -243,6 +270,7 @@ class Attribute extends Base
 
         foreach ($avIds as $avId) {
             try {
+                // TODO: Use massupdate on mainEntity
                 $this->addAttributeValue($entity->get('entityId'), $avId, $entity->get('id'));
             } catch (\Throwable $e) {
                 // ignore
@@ -264,7 +292,7 @@ class Attribute extends Base
 
         $name = Util::toUnderScore(lcfirst($entityName));
 
-        $qb = $this->getConnection()->createQueryBuilder()
+        $qb = $this->getDbal()->createQueryBuilder()
             ->insert("{$name}_attribute_value")
             ->setValue('id', ':id')
             ->setValue('attribute_id', ':attributeId')
@@ -278,7 +306,7 @@ class Attribute extends Base
                 ->setParameter('unitId', $attribute->get('defaultUnit'));
         }
 
-        if($attribute->get('type') === 'bool' && $attribute->get('notNull')) {
+        if ($attribute->get('type') === 'bool' && $attribute->get('notNull')) {
             $qb->setValue('bool_value', ':false')
                 ->setParameter('false', 'false', ParameterType::BOOLEAN);
         }
@@ -301,6 +329,18 @@ class Attribute extends Base
 
         if ($this->shouldLinkAddedAttributeToClassification($entityName)) {
             $this->addAttributeToClassification($this->getEntityManager()->getEntity($entityName, $entityId), $attributeId);
+        }
+
+        if ($attribute->get('type') === 'composite') {
+            $childrenIds = [];
+            $this->prepareAllChildrenAttributesIdsForComposite($attribute->get('id'), $childrenIds);
+            foreach ($childrenIds as $childId) {
+                try {
+                    $this->addAttributeValue($entityName, $entityId, $childId);
+                } catch (UniqueConstraintViolationException $e) {
+                    // ignore
+                }
+            }
         }
     }
 
@@ -327,9 +367,9 @@ class Attribute extends Base
                 ->fetchOne();
 
             if (empty($exists)) {
-                $input = new \stdClass();
+                $input                   = new \stdClass();
                 $input->classificationId = $classification->get('id');
-                $input->attributeId = $attributeId;
+                $input->attributeId      = $attributeId;
                 $this->getInjection('container')->get('serviceFactory')->create('ClassificationAttribute')->createEntity($input);
             }
         }
@@ -337,7 +377,7 @@ class Attribute extends Base
 
     public function upsertAttributeValue(IEntity $entity, string $fieldName, $value, bool $insertOnly = false): void
     {
-        $name = Util::toUnderScore(lcfirst($entity->getEntityName()));
+        $name      = Util::toUnderScore(lcfirst($entity->getEntityName()));
         $valColumn = $entity->fields[$fieldName]['column'] ?? null;
 
         if (empty($valColumn)) {
@@ -353,7 +393,7 @@ class Attribute extends Base
                 return;
             }
 
-            $this->getConnection()->createQueryBuilder()
+            $this->getDbal()->createQueryBuilder()
                 ->update("{$name}_attribute_value")
                 ->set($valColumn, ":value")
                 ->where("{$name}_id=:entityId")
@@ -367,20 +407,20 @@ class Attribute extends Base
         } else {
             $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value)";
             if (!$insertOnly) {
-                if (Converter::isPgSQL($this->getConnection())) {
+                if (Converter::isPgSQL($this->getDbal())) {
                     $sql .= " ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn RETURNING xmax";
                 } else {
                     $sql .= " ON DUPLICATE KEY UPDATE $valColumn = VALUES($valColumn)";
                 }
             } else {
-                if (Converter::isPgSQL($this->getConnection())) {
+                if (Converter::isPgSQL($this->getDbal())) {
                     $sql .= ' ON CONFLICT DO NOTHING';
                 } else {
                     $sql = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $sql);
                 }
             }
 
-            $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
+            $stmt             = $this->getEntityManager()->getPDO()->prepare($sql);
             $attributeValueId = IdGenerator::uuid();
 
             $stmt->bindValue(':id', $attributeValueId);
@@ -403,25 +443,39 @@ class Attribute extends Base
                 if (empty($attributesDefs[$fieldName]['attributeValueId'])) {
                     foreach ($attributesDefs as $key => $attributeDef) {
                         if ($attributeDef['attributeId'] === $entity->fields[$fieldName]['attributeId']) {
-                            $attributesDefs[$key]['attributeValueId'] = $attributeValueId;
+                            $attributesDefs[$key]['attributeValueId']                     = $attributeValueId;
                             $entity->entityDefs['fields'][$fieldName]['attributeValueId'] = $attributeValueId;
                         }
                     }
                     $entity->set('attributesDefs', $attributesDefs);
                 }
 
-                if ($this->shouldLinkAddedAttributeToClassification($entity->getEntityType())) {
-                    if (Converter::isPgSQL($this->getConnection())) {
-                        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-                        $wasInserted = $result['xmax'] == 0;
-                    } else {
-                        $wasInserted = $stmt->rowCount() === 1;
-                    }
+                if (Converter::isPgSQL($this->getDbal())) {
+                    $result      = $stmt->fetch(\PDO::FETCH_ASSOC);
+                    $wasInserted = $result['xmax'] == 0;
+                } else {
+                    $wasInserted = $stmt->rowCount() === 1;
+                }
 
-                    if ($wasInserted) {
+                if ($wasInserted) {
+                    if ($this->shouldLinkAddedAttributeToClassification($entity->getEntityName())) {
                         $this->addAttributeToClassification($entity, $entity->fields[$fieldName]['attributeId']);
                     }
+
+                    $note = $this->getEntityManager()->getEntity('Note');
+                    $note->set([
+                        'type'       => 'Relate',
+                        'parentType' => $entity->getEntityName(),
+                        'parentId'   => $entity->id,
+                        'data'       => [
+                            'relatedType' => 'Attribute',
+                            'relatedId'   => $entity->fields[$fieldName]['attributeId'],
+                            'link'        => lcfirst($entity->getEntityName()) . "AttributeValues"
+                        ],
+                    ]);
+                    $this->getEntityManager()->saveEntity($note);
                 }
+
             } catch (\PDOException $e) {
                 $GLOBALS['log']->error('Upsert attribute error: ' . $e->getMessage());
             }
@@ -432,7 +486,7 @@ class Attribute extends Base
     {
         $name = Util::toUnderScore(lcfirst($entityName));
 
-        $res = $this->getConnection()->createQueryBuilder()
+        $res = $this->getDbal()->createQueryBuilder()
             ->select('id')
             ->from("{$name}_attribute_value")
             ->where('attribute_id=:attributeId')
@@ -448,9 +502,23 @@ class Attribute extends Base
 
     public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
     {
+        $attribute = $this->get($attributeId);
+        if (empty($attribute)) {
+            return false;
+        }
+
+
+        if ($attribute->get('type') === 'composite') {
+            $childrenIds = [];
+            $this->prepareAllChildrenAttributesIdsForComposite($attributeId, $childrenIds);
+            foreach ($childrenIds as $childId) {
+                $this->removeAttributeValue($entityName, $entityId, $childId);
+            }
+        }
+
         $name = Util::toUnderScore(lcfirst($entityName));
 
-        $res = $this->getConnection()->createQueryBuilder()
+        $res = $this->getDbal()->createQueryBuilder()
             ->select('id')
             ->from("{$name}_attribute_value")
             ->where('attribute_id=:attributeId')
@@ -462,7 +530,7 @@ class Attribute extends Base
             ->fetchAssociative();
 
         if (!empty($res)) {
-            $this->getConnection()->createQueryBuilder()
+            $this->getDbal()->createQueryBuilder()
                 ->delete("{$name}_attribute_value")
                 ->where('attribute_id=:attributeId')
                 ->andWhere("{$name}_id=:entityId")
@@ -653,7 +721,7 @@ class Attribute extends Base
     public function clearAttributeValue(string $scope, string $attributeId, string $column): void
     {
         $table = Util::toUnderScore(lcfirst($scope) . '_attribute_value');
-        $conn = $this->getEntityManager()->getConnection();
+        $conn  = $this->getEntityManager()->getConnection();
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier($table))
             ->set($column, ':null')

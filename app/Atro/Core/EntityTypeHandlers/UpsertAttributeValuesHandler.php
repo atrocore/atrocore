@@ -28,37 +28,49 @@ use Atro\Handlers\AbstractHandler;
     methods: [
         'POST',
     ],
-    summary: 'Upsert attribute values',
-    description: 'Creates or updates attribute values for the specified entity record.',
+    summary: 'Upsert attribute values for a record',
+    description: 'Creates or updates one or more attribute values for the specified entity record. Each item must contain an `attributeId`. Existing attribute values are updated; missing ones are created.',
     tag: '{entityName}',
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'entityName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Entity name (e.g. "Product")',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
         [
-            'name'     => 'id',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Record ID',
+            'schema'      => [
                 'type' => 'string',
+            ],
+        ],
+    ],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'  => 'array',
+                    'items' => [
+                        '$ref' => '#/components/schemas/AttributeValuePost',
+                    ],
+                ],
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Array result',
+            'description' => 'Operation result',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'  => 'array',
-                        'items' => [
-                            'type' => 'object',
-                        ],
+                        'type' => 'boolean',
                     ],
                 ],
             ],
@@ -72,26 +84,18 @@ class UpsertAttributeValuesHandler extends AbstractHandler
     {
         $entityName = $this->getEntityName($request);
 
-        if (empty($this->getMetadata()->get("scopes.$entityName.hasAttribute"))) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($entityName, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $id   = (string) $request->getAttribute('id');
+        $id   = $request->getAttribute('id');
         $data = $this->getRequestBody($request);
 
-        if (empty($data) || !is_array($data)) {
+        if (empty(get_object_vars($data))) {
             throw new BadRequest();
         }
 
-        $input                    = new \stdClass();
-        $input->attributeValues   = $data;
+        $input                  = new \stdClass();
+        $input->attributeValues = $data;
 
-        $this->getRecordService($entityName)->updateEntity($id, $input);
+        $res = $this->getRecordService($entityName)->updateEntity($id, $input);
 
-        return new BoolResponse(true);
+        return new BoolResponse($res);
     }
 }

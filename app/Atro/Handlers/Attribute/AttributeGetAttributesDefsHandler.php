@@ -22,12 +22,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Attribute/attributesDefs',
+    path: '/Attribute/getAttributesDefs',
     methods: [
         'GET',
     ],
-    summary: 'Get attributes definitions for an entity',
-    description: 'Returns field definitions for the specified attributes of an entity.',
+    summary: 'Get attributes definitions for a set of attributes',
+    description: 'Returns field definitions for the specified attributes.',
     tag: 'Attribute',
     parameters: [
         [
@@ -37,7 +37,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'schema'      => [
                 'type' => 'string',
             ],
-            'description' => 'Entity type name',
+            'description' => 'Entity name',
         ],
         [
             'name'        => 'attributesIds',
@@ -68,15 +68,11 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class AttributesDefsHandler extends AbstractHandler
+class AttributeGetAttributesDefsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $query = $request->getQueryParams();
-
-        if (empty($query['entityName']) || empty($query['attributesIds'])) {
-            throw new BadRequest();
-        }
 
         $result = $this->getServiceFactory()->create('Attribute')->getAttributesDefs(
             $query['entityName'],
