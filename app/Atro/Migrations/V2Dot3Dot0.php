@@ -24,7 +24,13 @@ class V2Dot3Dot0 extends Base
 
     public function up(): void
     {
-        copy('vendor/atrocore/copy/public/apidocs/index.html', 'public/apidocs/index.html');
+        copy('vendor/atrocore/core/copy/public/apidocs/index.html', 'public/apidocs/index.html');
+
+        if (!is_dir('public/docs')) {
+            mkdir('public/docs', 0755, true);
+        }
+        copy('vendor/atrocore/core/copy/public/docs/index.html', 'public/docs/index.html');
+        copy('vendor/atrocore/core/copy/public/.htaccess', 'public/.htaccess');
 
         $this->migrateExtensibleEnumOptionSortOrder();
 

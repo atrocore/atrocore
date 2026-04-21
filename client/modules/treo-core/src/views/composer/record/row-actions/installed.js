@@ -35,6 +35,17 @@ Espo.define('treo-core:views/composer/record/row-actions/installed', 'views/reco
                     });
                 }
 
+                if (this.model.get('hasDocs')) {
+                    list.push({
+                        action: 'readDocs',
+                        label: 'Docs',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
+
+
                 list.push({
                     action: 'showReleaseNotes',
                     label: 'showReleaseNotes',

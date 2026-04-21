@@ -339,9 +339,13 @@ Espo.define('treo-core:views/composer/list', 'views/list',
             });
         },
 
+        actionReadDocs(data) {
+            window.open('/docs/#/' + data.id + '/', '_blank');
+        },
+
         actionShowReleaseNotes(data) {
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Composer/action/releaseNotes', {
+            this.ajaxPostRequest('Composer/releaseNotes', {
                 id: data.id
             }).success(response => {
                 this.notify(false)
