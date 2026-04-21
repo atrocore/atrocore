@@ -323,7 +323,7 @@ Then (only when issues found) — a markdown list:
   *Suggestion:* concrete advice, with a code snippet if helpful.
 ```
 
-Categories: `[psr-15]`, `[route-attribute]`, `[route-formatting]`, `[route-design]`, `[response-class]`, `[handler-structure]`, `[entity-type]`, `[metadata]`, `[other]`.
+Categories: `[psr-15]`, `[route-attribute]`, `[route-formatting]`, `[route-design]`, `[response-class]`, `[handler-structure]`, `[entity-type]`, `[dbal-in-handler]`, `[srp]`, `[naming]`, `[params]`, `[metadata]`, `[other]`.
 
 ## Tone rules
 

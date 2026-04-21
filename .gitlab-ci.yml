@@ -21,7 +21,7 @@ ai_review:
 
       # 1. Get the diff between the branch and the target branch
       git fetch --depth=100 origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
-      DIFF=$(git diff "origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}...HEAD")
+      DIFF=$(git diff "origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}...HEAD" -- '*.php')
 
       # Truncate large diffs (API limit ~200k tokens; leaving a margin)
       MAX_CHARS=400000
@@ -90,5 +90,7 @@ ai_review:
         "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - "app/**/*.php"
   allow_failure: true   # AI review never blocks merge — it's advisory
   interruptible: true   # a new MR revision cancels the previous review
