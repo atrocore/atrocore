@@ -92,5 +92,6 @@ ai_review:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - "app/**/*.php"
+      when: manual
   allow_failure: true   # AI review never blocks merge — it's advisory
   interruptible: true   # a new MR revision cancels the previous review
