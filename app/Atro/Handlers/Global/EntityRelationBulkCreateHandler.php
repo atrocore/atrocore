@@ -95,7 +95,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'entityName, link, ids or foreignIds are missing, or ids count exceeds the configured limit',
+            'description' => 'entityName, link, ids or foreignIds are missing',
         ],
         403 => [
             'description' => 'Access denied',
