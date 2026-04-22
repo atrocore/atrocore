@@ -27,11 +27,15 @@ class EntityRelationBulkAction extends AbstractJob implements JobInterface
 
         /** @var \Atro\Services\MassActions $service */
         $service = $this->getServiceFactory()->create('MassActions');
-
         if (($data['action'] ?? 'add') === 'remove') {
-            $service->removeRelation($data['ids'], $data['foreignIds'], $data['entityType'], $data['link'], $data['relationData'] ?? null);
+            $result = $service->removeRelation($data['ids'], $data['foreignIds'], $data['entityType'], $data['link'], $data['relationData'] ?? null);
         } else {
-            $service->addRelation($data['ids'], $data['foreignIds'], $data['entityType'], $data['link'], $data['relationData'] ?? null);
+            $result = $service->addRelation($data['ids'], $data['foreignIds'], $data['entityType'], $data['link'], $data['relationData'] ?? null);
+        }
+
+        if (!empty($result['message'])) {
+            $job->set('message', $result['message']);
+            $this->getEntityManager()->saveEntity($job, ['skipAll' => true]);
         }
     }
 }
