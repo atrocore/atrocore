@@ -56,7 +56,7 @@ class MassActions extends HasContainer
 
         $jobEntity = $this->getEntityManager()->getEntity('Job');
         $jobEntity->set([
-            'name'    => 'Add relation: ' . $entityType . '.' . $link,
+            'name'    => 'Add relation creator: ' . $entityType . '.' . $link,
             'type'    => 'EntityRelationBulkCreator',
             'payload' => array_merge($payload, ['action' => 'add', 'entityType' => $entityType, 'link' => $link]),
         ]);
@@ -73,7 +73,7 @@ class MassActions extends HasContainer
 
         $jobEntity = $this->getEntityManager()->getEntity('Job');
         $jobEntity->set([
-            'name'    => 'Remove relation: ' . $entityType . '.' . $link,
+            'name'    => 'Remove relation creator: ' . $entityType . '.' . $link,
             'type'    => 'EntityRelationBulkCreator',
             'payload' => array_merge($payload, ['action' => 'remove', 'entityType' => $entityType, 'link' => $link]),
         ]);
