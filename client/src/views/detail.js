@@ -640,7 +640,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             }
                         };
 
-                        const threshold = this.getConfig().get('maxMassLinkCount') || 200;
+                        const threshold = this.getConfig().get('maxMassLinkCount') || 20;
                         const isAsync = !duplicate && (!Array.isArray(selectObj)
                             ? (dialog.collection?.total ?? 0) >= threshold
                             : selectObj.length >= threshold);
