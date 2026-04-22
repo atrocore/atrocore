@@ -31,6 +31,15 @@
                 {{/each}}
             </tr>
         </thead>
+        {{else}}
+            <colgroup>
+                {{#if checkboxes}}
+                    <col style="width: 40px">
+                {{/if}}
+                {{#each headerDefs}}
+                    <col {{#if width}} style="width: {{width}}"{{/if}}>
+                {{/each}}
+            </colgroup>
         {{/if}}
         <tbody>
             {{#if collection.models.length}}
