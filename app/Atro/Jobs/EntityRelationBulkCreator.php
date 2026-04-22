@@ -79,8 +79,10 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
         $jobs       = [];
 
         while (true) {
-            $mainCollection = $mainRepository->limit($mainOffset, $mainChunkSize)->order('id')->find($mainSp);
-            $ids            = array_column($mainCollection->toArray(), 'id');
+            $ids = array_column(
+                $mainRepository->find(array_merge($mainSp, ['offset' => $mainOffset, 'limit' => $mainChunkSize, 'orderBy' => 'id', 'order' => 'ASC', 'select' => ['id']]))->toArray(),
+                'id'
+            );
             if (empty($ids)) {
                 break;
             }
@@ -88,8 +90,10 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
 
             $foreignOffset = 0;
             while (true) {
-                $foreignCollection = $foreignRepository->limit($foreignOffset, $foreignChunkSize)->order('id')->find($foreignSp);
-                $foreignIds        = array_column($foreignCollection->toArray(), 'id');
+                $foreignIds = array_column(
+                    $foreignRepository->find(array_merge($foreignSp, ['offset' => $foreignOffset, 'limit' => $foreignChunkSize, 'orderBy' => 'id', 'order' => 'ASC', 'select' => ['id']]))->toArray(),
+                    'id'
+                );
                 if (empty($foreignIds)) {
                     break;
                 }
