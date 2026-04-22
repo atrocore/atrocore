@@ -1,7 +1,5 @@
 ---
 title: PIM
-taxonomy:
-    category: docs
 metadata:
     title: AtroPIM
 ---

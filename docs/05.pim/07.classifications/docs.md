@@ -1,7 +1,5 @@
 ---
 title: Classifications
-taxonomy:
-    category: docs
 ---
 
 **Classification** – a grouping of similar entities, which use similar or same production processes, have similar physical characteristics, and may share customer segments, distribution channels, pricing methods, promotional campaigns, and other elements of the marketing mix.

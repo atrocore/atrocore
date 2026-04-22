@@ -1,7 +1,5 @@
 ---
 title: Notifications
-taxonomy:
-    category: docs
 ---
 
 <!-- TODO: describe following records -->

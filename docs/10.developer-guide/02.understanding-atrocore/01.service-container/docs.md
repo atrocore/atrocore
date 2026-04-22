@@ -1,7 +1,5 @@
 ---
 title: Service Container
-taxonomy:
-    category: docs
 ---
 
 The DI system in AtroCore is powered by **[Laminas ServiceManager](https://docs.laminas.dev/laminas-servicemanager/)** — a battle-tested, PSR-11 compliant container maintained by the Laminas Project.

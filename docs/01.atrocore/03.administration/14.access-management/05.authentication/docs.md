@@ -1,7 +1,5 @@
 ---
 title: Authentication
-taxonomy:
-    category: docs
 --- 
 
 The Authentication page allows you to configure security settings related to user authentication tokens and session management.

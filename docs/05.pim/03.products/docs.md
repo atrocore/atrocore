@@ -1,7 +1,5 @@
 ---
 title: Products
-taxonomy:
-    category: docs
 ---
 
 **Product** – the item in physical, virtual or cyber form as well as a service offered for sale. Every product is made at a cost and sold at a price.

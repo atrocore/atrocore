@@ -1,8 +1,6 @@
 
 ---
 title: Caching
-taxonomy:
-    category: docs
 ---
 
 AtroCore provides a flexible caching layer to store frequently accessed data, which improves performance by reducing the need for expensive database queries.

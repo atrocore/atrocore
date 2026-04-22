@@ -1,7 +1,5 @@
 ---
 title: Understanding UI
-taxonomy:
-    category: docs
 ---
 
 The AtroCore system comes with a user-friendly configurable [interface](../03.administration/13.user-interface/docs.md) that includes a number of views and panels, where **entity records** are displayed and managed.

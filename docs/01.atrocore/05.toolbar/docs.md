@@ -1,7 +1,5 @@
 ---
 title: Toolbar
-taxonomy:
-    category: docs
 ---
 
 The Toolbar is a top panel of the AtroCore user interface that provides quick access to essential navigation and functionality:

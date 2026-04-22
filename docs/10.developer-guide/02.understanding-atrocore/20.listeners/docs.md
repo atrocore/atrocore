@@ -1,7 +1,5 @@
 ---
 title: Listeners
-taxonomy:
-    category: docs
 ---
 
 AtroCore uses an event-driven architecture that allows developers to modify the behavior of core features and modules without directly altering the original codebase. This approach provides a clean, maintainable way to extend functionality through event listeners.

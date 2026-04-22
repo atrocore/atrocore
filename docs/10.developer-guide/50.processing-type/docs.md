@@ -1,7 +1,5 @@
 ---
 title: Processing Type for Import Feeds
-taxonomy:
-    category: docs
 ---
 
 ## Overview

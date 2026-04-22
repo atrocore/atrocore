@@ -1,7 +1,5 @@
 ---
 title: Integrations
-taxonomy:
-    category: docs
 metadata:
     title: Integrations
 ---

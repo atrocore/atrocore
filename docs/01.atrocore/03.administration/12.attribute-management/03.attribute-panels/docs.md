@@ -1,7 +1,5 @@
 ---
 title: Attribute Panels
-taxonomy:
-    category: docs
 ---
 
 **Attribute Panels** provide an additional layer of structure for displaying [attribute](../01.attributes/) values on a record's detail page. Each panel appears as a separate section and groups its attributes by [Attribute Group](../02.attribute-groups/).

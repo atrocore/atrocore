@@ -1,7 +1,5 @@
 ---
 title: Installing PHP with AVIF image format support
-taxonomy:
-    category: docs
 ---
 
 This guide describes how to compile and install PHP with AVIF image format support on Ubuntu/Debian systems.

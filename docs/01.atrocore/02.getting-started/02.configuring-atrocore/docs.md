@@ -1,7 +1,5 @@
 ---
 title:  Configuring AtroCore
-taxonomy:
-    category: docs
 --- 
 
 For high-quality product data, it's essential to properly configure the main entities within the system before beginning its use. The term “entity” is used for modules or tables of structured data that are stored in the system with a specific purpose. So, the categories, channels, associations, catalogs, etc. count as entities. The entities can be linked to one another, for example, a product can belong to several categories at the same time.

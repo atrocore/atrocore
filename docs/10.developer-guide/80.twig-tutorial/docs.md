@@ -1,7 +1,5 @@
 ---
 title: Twig Templating
-taxonomy:
-    category: docs
 ---
 ## Overview
 

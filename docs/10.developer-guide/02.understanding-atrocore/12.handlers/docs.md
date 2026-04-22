@@ -1,7 +1,5 @@
 ---
 title: PSR-15 Handlers
-taxonomy:
-    category: docs
 ---
 
 ## Overview

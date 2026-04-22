@@ -1,7 +1,5 @@
 ---
 title: PIM Administration
-taxonomy:
-    category: docs
 ---
 
 Read [Administration](../../01.atrocore/03.administration/) section for general administration features.

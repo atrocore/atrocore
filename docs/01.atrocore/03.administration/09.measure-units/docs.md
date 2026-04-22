@@ -1,7 +1,5 @@
 ---
 title: Measure Units
-taxonomy:
-    category: docs
 ---
 
 Measure Units system allows you to manage different Measures (e.g., length or weight) and their associated Units (e.g., cm, mm, dm, m) with automatic unit conversion support.

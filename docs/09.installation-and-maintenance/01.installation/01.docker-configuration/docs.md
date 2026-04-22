@@ -1,7 +1,5 @@
 ---
 title: Docker Configuration
-taxonomy:
-    category: docs
 ---
 
 This guide describes how to prepare your server for the installation of AtroCore Application. Please make sure your user

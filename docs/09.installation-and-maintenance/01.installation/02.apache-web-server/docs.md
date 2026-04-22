@@ -1,7 +1,5 @@
 ---
 title: Apache Web Server Preparation
-taxonomy:
-    category: docs
 ---
 
 

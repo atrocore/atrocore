@@ -1,7 +1,5 @@
 ---
 title: Custom Report Types
-taxonomy:
-    category: docs
 ---
 
 ## Overview

@@ -1,7 +1,5 @@
 ---
 title: How to use the workflows?
-taxonomy:
-    category: docs
 ---
 
 The creation of the qualitative and full-fledged product descriptions requires a large amount of time - both internally and externally - from the employees, from the agencies and freelancers involved (copywriters, photographers, SEO specialists). All participants can do their tasks in parallel as well as one after the other, so the correct organization of the work process and the cooperation between the participants is very important so that this work is done quickly, qualitatively and effectively.

@@ -1,7 +1,5 @@
 ---
 title: Channels
-taxonomy:
-    category: docs
 ---
 
 A **Channel** represents a destination or distribution endpoint for product data. Channels are used to control how product information is structured, filtered, and delivered to external or internal systems. Typical channel targets include online stores, marketplaces, mobile applications, print catalogs, or other third-party platforms.

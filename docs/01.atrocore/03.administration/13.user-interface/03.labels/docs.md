@@ -1,7 +1,5 @@
 ---
 title: Labels
-taxonomy:
-    category: docs
 --- 
 
 Labels manage user interface translations and text customization across different languages. This feature allows you to customize system messages, field labels, tooltips, and other interface elements.

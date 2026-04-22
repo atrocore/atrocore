@@ -1,7 +1,5 @@
 ---
 title: User Profile
-taxonomy:
-    category: docs
 ---
 
 Click the user profile icon on the far right of the [toolbar](../05.toolbar/docs.md#user-menu) to open the user menu:

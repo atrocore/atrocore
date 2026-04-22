@@ -1,7 +1,5 @@
 ---
 title: Dashboards and Dashlets
-taxonomy:
-    category: docs
 ---
 
 Dashboards are designed for quick navigation within the AtroCore entities data displayed on separate dashlets. The dashboard is the starting page of AtroCore that can be reached any time via clicking the [Header Logo](../05.toolbar/docs.md#header-logo) located in the upper left corner of the AtroCore pages:

@@ -1,7 +1,5 @@
 ---
 title: Data Exchange
-taxonomy:
-    category: docs
 metadata:
     title: Data Exchange
 ---

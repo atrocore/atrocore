@@ -1,7 +1,5 @@
 ---
 title:  How to categorize the products?
-taxonomy:
-    category: docs
 ---
 
 Customers search for the desired products in the online shops and marketplaces in two ways: via the search function or via the categories and sub-categories. The product attributes are used for an additional filtering of the products that were found in the first or second way. The faster the customer finds the desired product, the more likely he will make a positive purchase decision, that is why a correct categorization is of great importance. For marketing purposes, each product is usually assigned to one or more categories.

@@ -1,7 +1,5 @@
 ---
 title: Record Preview
-taxonomy:
-    category: docs
 ---
 
 The Preview feature enables you to see how different entities appear on third party websites. This feature uses HTML/CSS templates to display records in a preview window, allowing you to review how your data will look when displayed externally.

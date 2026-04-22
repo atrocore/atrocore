@@ -1,7 +1,5 @@
 ---
 title: Favorites
-taxonomy:
-    category: docs
 ---
 
 ![Favorites Navigation Bar](./_assets/favorites-navigation-bar.png){.large}

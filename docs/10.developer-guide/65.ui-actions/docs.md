@@ -1,7 +1,5 @@
 ---
 title: UI Actions
-taxonomy:
-    category: docs
 ---
 
 ## Overview

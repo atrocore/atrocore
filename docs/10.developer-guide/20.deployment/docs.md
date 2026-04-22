@@ -1,7 +1,5 @@
 ---
 title: Deployment
-taxonomy:
-    category: docs
 ---
 
 This page explains how deployments are managed in AtroCore and outlines best practices for module handling and system customization.

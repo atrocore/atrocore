@@ -1,7 +1,5 @@
 ---
 title: API Request
-taxonomy:
-    category: docs
 --- 
 
 API Request is a general-purpose tool for executing Upsert operations with valid JSON payloads that match specific entity schemas. It creates or updates records of the target entity type. It can be found in Administration → Tools.

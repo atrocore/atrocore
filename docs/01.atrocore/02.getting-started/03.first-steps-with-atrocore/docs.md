@@ -1,7 +1,5 @@
 ---
 title: First Steps With AtroCore
-taxonomy:
-    category: docs
 ---
 
 

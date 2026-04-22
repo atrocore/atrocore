@@ -1,7 +1,5 @@
 ---
 title: Entity Types
-taxonomy:
-    category: docs
 --- 
 
 AtroCore provides several entity types, each offering distinct capabilities for data management, including: Base, Hierarchy, Archive and Reference.

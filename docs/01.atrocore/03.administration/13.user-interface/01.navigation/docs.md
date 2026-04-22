@@ -1,7 +1,5 @@
 ---
 title: Navigation
-taxonomy:
-    category: docs
 ---
 
 The **Navigation Menu** in AtroCore provides quick access to all available entities and serves as the primary way to navigate through the system. It can be customized by administrators to organize entities into logical groups and improve user experience.

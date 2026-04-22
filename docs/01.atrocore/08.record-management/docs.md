@@ -1,7 +1,5 @@
 ---
 title: Record Management
-taxonomy:
-    category: docs
 ---
 
 Record management in AtroCore encompasses all operations you can perform on entity records, regardless of the specific entity type. This guide covers the fundamental operations that apply to any record in the system, from basic CRUD operations to advanced relationship management.

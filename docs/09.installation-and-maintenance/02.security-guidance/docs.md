@@ -1,7 +1,5 @@
 ---
 title: Security Guidance
-taxonomy:
-    category: docs
 ---
 
 AtroCore aims to ship with secure defaults that do not need to get modified by administrators. However, in some cases some additional security hardening can be applied in scenarios were the administrator has complete control over the Instance.

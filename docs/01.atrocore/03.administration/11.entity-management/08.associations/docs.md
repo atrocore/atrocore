@@ -1,7 +1,5 @@
 ---
 title: Associations
-taxonomy:
-    category: docs
 ---
 
 **Association** – a type of the relationship between records, where one in some way is dependent on the other one(s), or can influence the other one(s). Associations can be used for various purposes such as marketing strategies (cross-sell, up-sell), product bundles, component relationships (is part of/consists of), complementary products, alternative options, and many other business scenarios. Each record can associate different records and can be associated from different records.

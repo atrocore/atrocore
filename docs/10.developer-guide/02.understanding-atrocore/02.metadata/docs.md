@@ -1,7 +1,5 @@
 ---
 title: Metadata
-taxonomy:
-    category: docs
 ---
 
 This page explains the concept of metadata in **AtroCore** and how developers can work with it to define and extend

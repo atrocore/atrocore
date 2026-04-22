@@ -1,7 +1,5 @@
 ---
 title: Copying feed configurations
-taxonomy:
-    category: docs
 ---
 
 If you want to easily copy configurations for [export](../02.export-feeds/) or [import](../01.import-feeds/) feeds between instances (between test and live for example), you should use the "Copy Configurations" functions. This creates a JSON code that stores the configurations of a feed in the clipboard.

@@ -1,7 +1,5 @@
 ---
 title: Required Skills
-taxonomy:
-    category: docs
 --- 
 
 This chapter addresses the required skills for implementing the AtroCore software independently. If you would like to outsource the software implementation (or its parts) to AtroCore Company or our Implementation Partners, please contact us.

@@ -1,7 +1,5 @@
 ---
 title: Fields and Attributes
-taxonomy:
-    category: docs
 ---
 
 Entities are created with a default set of system fields, which provide the basic structure for data management. You can enhance entities by adding custom fields of various types or modifying existing ones. Field customization is available for both predefined entities (such as Product) and custom entities created by users.

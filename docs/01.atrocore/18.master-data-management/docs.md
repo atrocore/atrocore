@@ -1,7 +1,5 @@
 ---
 title: Master Data Management 
-taxonomy:
-    category: docs
 ---
 
 AtroСore can be used as a Master Data Management (MDM) system. This means that users can import data into the platform in any convenient way. Inside AtroСore, this data can then be improved, structured, and enriched if necessary, and finally exported to external systems such as marketplaces or other platforms.

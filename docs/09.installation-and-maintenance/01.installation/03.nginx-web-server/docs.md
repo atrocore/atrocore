@@ -1,7 +1,5 @@
 ---
 title: Nginx Web Server Preparation
-taxonomy:
-    category: docs
 ---
 
 This guide describes how to prepare the Nginx web server for the installation of AtroCore Applications.

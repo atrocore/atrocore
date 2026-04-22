@@ -1,7 +1,5 @@
 ---
 title: Entity Management
-taxonomy:
-    category: docs
 ---
 
 AtroCore offers highly flexible, scalable and configurable mechanisms that enable customers to manage and use their data efficiently without being tied to rigid structures.

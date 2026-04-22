@@ -1,7 +1,5 @@
 ---
 title: Collaboration
-taxonomy:
-    category: docs
 metadata:
     title: Collaboration
 ---

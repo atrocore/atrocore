@@ -1,7 +1,5 @@
 ---
 title: Languages
-taxonomy:
-    category: docs
 --- 
 
 By default, AtroCore has English as the main language, but you can change this and add additional languages.

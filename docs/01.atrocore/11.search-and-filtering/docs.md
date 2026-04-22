@@ -1,7 +1,5 @@
 ---
 title: Search and Filtering
-taxonomy:
-    category: docs
 ---
 AtroCore provides Search and Filtering to locate and limit records displayed in entity list views. Search is used to find records within the currently opened entity based on matching field values, while filtering works also on the related records, which are configured by the administrator.
 

@@ -1,7 +1,5 @@
 ---
 title: Select Managers
-taxonomy:
-    category: docs
 ---
 
 For complex queries in **AtroCore**, use the **`SelectManager`**. It enables you to build high-level queries and pass them to the entity repository.

@@ -1,7 +1,5 @@
 ---
 title: Export Feeds
-taxonomy:
-    category: docs
 ---
 
 The **Export Feeds** module enables structured, configurable data export from AtroCore. An export feed is a reusable template that defines which entity data to export, in what format, and with what field mapping.

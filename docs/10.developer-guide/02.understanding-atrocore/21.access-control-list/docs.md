@@ -1,8 +1,6 @@
 
 ---
 title: Access Control Lists
-taxonomy:
-    category: docs
 ---
 
 In AtroCore, the **Access Control List (ACL)** is a fundamental system for managing user permissions. It defines **granular permissions** for different user roles, ensuring that users can only access the data and perform the actions they are authorized to.

@@ -1,7 +1,5 @@
 ---
 title: Correcting Errors
-taxonomy:
-    category: docs
 ---
 
 There are certain errors in the system which can be easily corrected by an administrator. Indication of such problems could be "Bad Server Response" errors while you visit the list or detail page for some entity or record.

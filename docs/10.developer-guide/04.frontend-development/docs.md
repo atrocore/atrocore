@@ -1,7 +1,5 @@
 ---
 title: Frontend development
-taxonomy:
-    category: docs
 ---
 
 ## Introduction

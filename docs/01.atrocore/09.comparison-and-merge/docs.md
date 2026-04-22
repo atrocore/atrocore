@@ -1,7 +1,5 @@
 ---
 title:  Merge and comparison
-taxonomy:
-    category: docs
 ---
 
 AtroCore provides the ability to compare or merge two or more records within one or multiple entities. This can be done directly on the selected entity page via a modal window, or through a dedicated entity called Selection. From the Selection entity, you can also choose records for comparison or merging.

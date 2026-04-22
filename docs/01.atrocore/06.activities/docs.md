@@ -1,7 +1,5 @@
 ---
 title: Activities panel
-taxonomy:
-    category: docs
 ---
 
 `Activities` is a separate AtroCore tool, that is used to display changes of the entity records made by [user](#user-activity) and system activity.

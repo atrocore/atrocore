@@ -1,7 +1,5 @@
 ---
 title: Access management
-taxonomy:
-    category: docs
 ---
 
 Our AtroCore software offers excellent opportunities for efficient collaboration, both internally between employees and with external agencies or freelancers. The company can have its own product managers who prepare technical product descriptions. However, external experts can also be used to create good marketing or SEO texts and professional product images.

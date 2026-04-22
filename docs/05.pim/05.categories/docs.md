@@ -1,7 +1,5 @@
 ---
 title: Categories
-taxonomy:
-    category: docs
 ---
 
 **Category** – an efficient way to organize the products by their type, which helps target consumer find the desired products faster.

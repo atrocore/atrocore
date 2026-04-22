@@ -1,7 +1,5 @@
 ---
 title: Backend development
-taxonomy:
-    category: docs
 ---
 
 Welcome to the developer documentation for **AtroCore**, a powerful open-source data platform designed for **Master Data Management (MDM)** and **Data Integration**. Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile application development with minimal coding. It's ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.

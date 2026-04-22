@@ -1,7 +1,5 @@
 ---
 title: Data Types
-taxonomy:
-    category: docs
 ---
 
 AtroCore supports various data types for entity fields and attributes. Each data type has specific characteristics and use cases. Understanding these data types helps you design effective entity structures and ensures data integrity.

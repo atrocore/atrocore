@@ -1,7 +1,5 @@
 ---
 title: Layout management
-taxonomy:
-    category: docs
 ---
 
 AtroCore provides a flexible system for customizing how entity data is displayed in your application through JSON-based layout files. These files control the appearance of both list views (tables) and detail views (record pages) for each entity type in your system.

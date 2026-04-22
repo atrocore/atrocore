@@ -1,7 +1,5 @@
 ---
 title: Outgoing Webhooks
-taxonomy:
-    category: docs
 ---
 
 ## Overview

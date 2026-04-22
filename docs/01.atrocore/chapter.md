@@ -1,7 +1,5 @@
 ---
 title: Core
-taxonomy:
-    category: docs
 metadata:
     title: AtroCore
 ---

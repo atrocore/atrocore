@@ -1,7 +1,5 @@
 ---
 title: Listing
-taxonomy:
-    category: docs
 ---
 
 The Product Listing is designed to help teams manage and adapt product data for multiple online sales channels. It enables the creation of channel-specific product variations without modifying the original product record in the system.

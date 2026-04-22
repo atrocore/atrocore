@@ -1,7 +1,5 @@
 ---
 title: System Jobs
-taxonomy:
-    category: docs
 ---
 
 Modern business applications often need to perform heavy or time-consuming operations that would be impractical to execute during normal user interactions. These background tasks include data import/export, bulk operations, scheduled maintenance, and other resource-intensive processes where execution time can't be predicted.

@@ -1,7 +1,5 @@
 ---
 title: Import: HTTP Request
-taxonomy:
-    category: docs
 ---
 
 Module [Import: HTTP Request](https://store.atrocore.com/en/import-http-request/20151) extends [Import Feeds](../01.import-feeds/) to automate data imports from REST APIs and HTTP endpoints, eliminating the need for manual file downloads and uploads.

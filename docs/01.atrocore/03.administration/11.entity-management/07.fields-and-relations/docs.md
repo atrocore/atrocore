@@ -1,7 +1,5 @@
 ---
 title: Fields and Relations
-taxonomy:
-    category: docs
 --- 
 
 AtroCore supports relationship fields that connect entities together. These relationship fields are separate from the [hierarchy system](../04.hierarchies-and-inheritance/) used for parent-child record structures.

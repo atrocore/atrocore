@@ -1,7 +1,5 @@
 ---
 title: Job Manager
-taxonomy:
-    category: docs
 ---
 
 The Job Manager is AtroCore's subsystem for handling background task execution. Users interact with it through a pop-up interface that provides real-time monitoring and control over currently running operations.

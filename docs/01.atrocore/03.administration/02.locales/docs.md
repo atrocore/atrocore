@@ -1,7 +1,5 @@
 ---
 title: Locales
-taxonomy:
-    category: docs
 --- 
 
 UI multilingualism is managed through the Locales system.

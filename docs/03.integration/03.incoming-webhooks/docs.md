@@ -1,7 +1,5 @@
 ---
 title: Incoming Webhooks
-taxonomy:
-    category: docs
 ---
 
 ## Overview

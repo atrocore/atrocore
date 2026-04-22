@@ -1,7 +1,5 @@
 ---
 title: Bookmarks
-taxonomy:
-    category: docs
 ---
 
 Bookmarks allow you to save favorite records for quick access from the toolbar.

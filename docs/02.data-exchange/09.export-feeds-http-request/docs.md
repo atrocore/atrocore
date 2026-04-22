@@ -1,7 +1,5 @@
 ---
 title: Export: HTTP Request
-taxonomy:
-    category: docs
 ---
 
 Module [Export: HTTP Request](https://store.atrocore.com/en/export-http-request/201400.1) extends [Export Feeds](../02.export-feeds/docs.md) to automate data exports by sending exported data directly to external systems via HTTP endpoints—eliminating the need to manually transfer files after export.

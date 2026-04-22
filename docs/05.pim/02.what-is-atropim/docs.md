@@ -1,7 +1,5 @@
 ---
 title: What is AtroPIM
-taxonomy:
-    category: docs
 ---  
 
 Here is the current draft of the **"What is AtroPIM"** chapter, based on your previous requirements. We can treat this text as our working document.

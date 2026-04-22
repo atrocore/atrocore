@@ -1,7 +1,5 @@
 ---
 title: Lists
-taxonomy:
-    category: docs
 ---
 
 Lists in AtroCore are configurable enumeration values that provide standardized options for various fields throughout the system. They serve as a reference data that can be used across different entities to ensure consistency and data integrity.

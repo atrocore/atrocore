@@ -1,7 +1,5 @@
 ---
 title: Teams
-taxonomy:
-    category: docs
 ---
 
 Teams in AtroCore are organizational units that group users for collaborative work and access control. Teams can be assigned to entities to control data visibility and permissions across the system.

@@ -1,7 +1,5 @@
 ---
 title: Users
-taxonomy:
-    category: docs
 ---
 
 Users in AtroCore are system accounts that provide access to the platform. Each user can be assigned specific roles and teams to control their permissions and access levels throughout the system.

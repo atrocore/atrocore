@@ -1,7 +1,5 @@
 ---
 title: REST API Overview
-taxonomy:
-    category: docs
 ---
 
 AtroCore is an **API-centric** application where the frontend communicates with the backend exclusively via REST API requests. Our REST API is built on **OpenAPI (Swagger)**, allowing you to [automatically generate a client](https://openapi-generator.tech/docs/generators/) in the programming language of your choice.

@@ -1,7 +1,5 @@
 ---
 title: Translations
-taxonomy:
-    category: docs
 ---
 
 **AtroCore** provides a powerful and easy-to-use localization system to support multiple languages. All translation data is stored in **JSON** format within the `Resources/i18n` folder of the core or any custom modules.

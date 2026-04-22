@@ -1,7 +1,5 @@
 ---
 title: Module Installation
-taxonomy:
-    category: docs
 ---
 
 In AtroCore system you can install, update, and remove modules directly from the admin area.

@@ -1,8 +1,6 @@
 
 ---
 title: Job Management
-taxonomy:
-    category: docs
 ---
 
 AtroCore includes a powerful background job system that allows you to execute long-running or resource-intensive tasks

@@ -1,7 +1,5 @@
 ---
 title: Brands
-taxonomy:
-    category: docs
 ---
 
 **Brand** – a name, term, design, symbol, or other feature that distinguishes the product from its rivals in the eyes of the customer. Brands are used in business, marketing and advertising to increase sales.

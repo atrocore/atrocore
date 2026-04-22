@@ -1,7 +1,5 @@
 ---
 title: Config Parameters
-taxonomy:
-    category: docs
 ---
 
 AtroCore configuration parameters are located in the `data/config.php` file. You can access and modify these values in the

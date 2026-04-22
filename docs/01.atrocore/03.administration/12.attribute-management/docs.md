@@ -1,7 +1,5 @@
 ---
 title: Attribute management
-taxonomy:
-    category: docs
 ---
 
 **Attributes** – characteristics of a certain item that distinguish it from others. For products it can be size, color, functionality, components and features that affect the product's attractiveness or acceptance in the market.

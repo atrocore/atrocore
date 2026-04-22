@@ -1,7 +1,5 @@
 ---
 title: Services
-taxonomy:
-    category: docs
 ---
 
 **Entity Services** are where the core business logic of your application resides.

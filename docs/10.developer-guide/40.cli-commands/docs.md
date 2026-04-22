@@ -1,7 +1,5 @@
 ---
 title: CLI commands
-taxonomy:
-    category: docs
 ---
 ## Overview
 Atrocore system provides several CLI commands. Some of them help to execute functions manually, others help with debugging.

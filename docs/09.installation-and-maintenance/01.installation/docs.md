@@ -1,7 +1,5 @@
 ---
 title: Installation
-taxonomy:
-    category: docs
 ---
 
 This Installation Guide is prepared for **Ubuntu** Operating System. Of course, you can use any UNIX-based system, but in this case you need to adopt this manual by yourself.

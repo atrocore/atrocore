@@ -1,7 +1,5 @@
 ---
 title: File Management
-taxonomy:
-    category: docs
 ---
 
 Administrators have comprehensive control over the file management system, including storages, folders, file types, and validation rules.

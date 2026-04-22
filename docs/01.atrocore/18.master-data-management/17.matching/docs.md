@@ -1,7 +1,5 @@
 ---
 title: Matchings
-taxonomy:
-    category: docs
 ---
 
 AtroCore provides an automated mechanism for identifying similar or duplicate entity records. This functionality is configured through the Matchings feature.

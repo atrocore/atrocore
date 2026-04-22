@@ -1,7 +1,5 @@
 ---
 title: Hierarchies and Inheritance
-taxonomy:
-    category: docs
 ---
 
 Hierarchies and inheritance allow you to create parent-child relationships between entities, where child records can inherit field values and relations from their parent records. This is particularly useful for organizing related data, such as product variants that share common characteristics with their parent product.

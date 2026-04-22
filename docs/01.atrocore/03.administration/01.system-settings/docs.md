@@ -1,7 +1,5 @@
 ---
 title: System Settings
-taxonomy:
-    category: docs
 --- 
 
 To visit and edit the system settings, the user must be an administrator and go to the Administration/Settings menu.

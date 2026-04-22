@@ -1,7 +1,5 @@
 ---
 title: Clusters
-taxonomy:
-    category: docs
 ---
 
 A Cluster is a system entity that virtually groups one or more records based on the [Matching Rules](../17.matching/docs.md#matching-rules) defined for a given entity. Unlike standard relationships, the connection between records within a cluster exists on a virtual level – no physical link is created between them at this stage.

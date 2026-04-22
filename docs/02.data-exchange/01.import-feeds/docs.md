@@ -1,7 +1,5 @@
 ---
 title: Import Feeds
-taxonomy:
-    category: docs
 ---
 
 The Import Feeds module enables bulk data import for any entity in AtroCore, including related entities and their creation. Import feeds use the AtroCore REST API, ensuring data validation follows the same rules as manual record creation.

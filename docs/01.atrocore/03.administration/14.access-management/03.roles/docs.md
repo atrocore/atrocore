@@ -1,7 +1,5 @@
 ---
 title: Roles
-taxonomy:
-    category: docs
 ---
 
 A **Role** defines what a user is allowed to do in the system. Each role contains a set of permissions that control which entities a user can see, create, edit, or delete — and at what access level. Every user is assigned one or more roles, and their total access is the combined sum of all permissions from those roles.

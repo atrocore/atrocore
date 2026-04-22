@@ -1,7 +1,5 @@
 ---
 title: Mass Actions
-taxonomy:
-    category: docs
 ---
 Mass actions are applied to one or more selected entity records from [list view](../../01.atrocore/04.understanding-ui/docs.md#list-view), i.e. records with a tick in the checkbox.
 Use [search and filtering](../../01.atrocore/11.search-and-filtering/) to find what you need and check all results you need.

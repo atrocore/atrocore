@@ -1,7 +1,5 @@
 ---
 title: Scheduled Jobs
-taxonomy:
-    category: docs
 ---
 
 Scheduled Jobs are configurations that automatically create [Jobs](../) at specified intervals. They allow you to orchestrate multiple actions, such as import and export feeds, job retrials, system updates, etc. to be executed automatically by the Job Manager subsystem.

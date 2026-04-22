@@ -1,7 +1,5 @@
 ---
 title: Layouts
-taxonomy:
-    category: docs
 --- 
 
 The **Layouts** system in AtroCore allows you to customize the user interface for any entity by configuring how fields, panels, and relationships are displayed across different view types. Access layouts through `Administration > Layouts`.

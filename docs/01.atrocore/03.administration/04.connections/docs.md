@@ -1,7 +1,5 @@
 ---
 title: Connections
-taxonomy:
-    category: docs
 --- 
 
 AtroCore provides a comprehensive connection management system that allows you to integrate with various external services, databases, and APIs. The platform supports multiple connection types to facilitate data exchange, authentication, and communication with external systems.

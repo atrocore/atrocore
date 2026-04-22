@@ -1,7 +1,5 @@
 ---
 title: User Interface (UI)
-taxonomy:
-    category: docs
 ---
 
 The user interface (UI) includes all visible elements users see and interact with while using AtroCore. 

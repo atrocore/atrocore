@@ -1,7 +1,5 @@
 ---
 title: Notifications
-taxonomy:
-    category: docs
 ---
 
 The Notifications feature provides real-time alerts for important system events through the toolbar bell icon.

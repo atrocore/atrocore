@@ -1,7 +1,5 @@
 ---
 title: Classifications
-taxonomy:
-    category: docs
 ---
 
 A **Classification** is a template that defines a set of [attributes](../01.attributes/) shared by a group of entity records. It describes what data should be collected for records of a given type and controls which attributes are mandatory and which are optional.

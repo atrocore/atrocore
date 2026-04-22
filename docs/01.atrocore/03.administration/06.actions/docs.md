@@ -1,7 +1,5 @@
 ---
 title: Actions
-taxonomy:
-    category: docs
 ---
 
 Actions in AtroCore are automated operations that can be executed manually through the user interface or automatically via [scheduled jobs](../05.system-jobs/01.scheduled-jobs/) and [workflows](https://store.atrocore.com/en/workflows/20194). They provide a powerful framework for automating business processes, data transformations, integrations, and AI-powered operations.

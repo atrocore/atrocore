@@ -1,7 +1,5 @@
 ---
 title: Import/Export Feeds REST API
-taxonomy:
-    category: docs
 ---
 
 > The endpoints described on this page are provided by the **Import** and **Export** modules.

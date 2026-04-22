@@ -1,7 +1,5 @@
 ---
 title: Attribute Groups
-taxonomy:
-    category: docs
 ---
 
 **Attribute Group** – a collection of [attributes](../01.attributes/) of a certain kind combined together to make it easier for the customer to understand the product and its features better. As an example, the "screen" attribute group for smartphones may combine such attributes as "screen diagonal", "resolution", "type of matrix", "number of touch points", etc. Each attribute may belong to only one attribute group, which is optional.

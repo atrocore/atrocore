@@ -1,7 +1,5 @@
 ---
 title: Repositories
-taxonomy:
-    category: docs
 ---
 
 AtroCore implements the **Repository design pattern** to provide a centralized, abstracted layer for data access

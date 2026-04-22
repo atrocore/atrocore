@@ -1,7 +1,5 @@
 ---
 title: Custom Condition Types
-taxonomy:
-    category: docs
 ---
 
 ## Overview

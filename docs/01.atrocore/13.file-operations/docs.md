@@ -1,7 +1,5 @@
 ---
 title: File Operations
-taxonomy:
-    category: docs
 ---
 
 All the capabilities for efficiently storing, organizing, managing, retrieving and distributing files are available to the users as soon as they install the system. With the help of AtroCore, you can store files of various types, manage them, link them to products and other entities, import and export them. We have implemented the File first concept, which allows the user to add, delete and modify files and folders both inside the system and externally - directly on the server.

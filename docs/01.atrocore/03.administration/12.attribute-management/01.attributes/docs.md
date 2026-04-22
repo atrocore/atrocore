@@ -1,7 +1,5 @@
 ---
 title: Attributes
-taxonomy:
-    category: docs
 ---
 
 An **Attribute** is a standalone entity in AtroCore. It has its own fields that define its specific characteristics. Therefore, before assigning an Attribute to a Product (or any other entity), you must first create the Attribute, define its type, and configure any additional properties, if needed.

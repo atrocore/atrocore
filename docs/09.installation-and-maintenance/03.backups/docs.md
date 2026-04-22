@@ -1,7 +1,5 @@
 ---
 title: Backups
-taxonomy:
-    category: docs
 ---
 
 To ensure the security and availability of the atrocore, it is crucial to implement a reliable backup strategy. We recomend to use the *3-2-1 Backup Strategy*

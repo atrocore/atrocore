@@ -1,7 +1,5 @@
 ---
 title: Custom Actions
-taxonomy:
-    category: docs
 ---
 
 ## Overview
