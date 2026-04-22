@@ -23,7 +23,7 @@ Welcome to our Help Center for our software products AtroCore and AtroPIM. Here 
 
 ### Getting Started with AtroPIM
 
-- [Getting Started with AtroPIM](01.atrocore/02.getting-started/docs.md)
+- [Getting Started with AtroPIM](01.atrocore/02.getting-started/index.md)
 
 ### Our websites
 
