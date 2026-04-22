@@ -478,6 +478,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 }
             });
 
+            if (this.getParentView() && this.getParentView().getView('rightSideView')) {
+                notValid = notValid || this.getParentView().getView('rightSideView').validate()
+            }
+
             return notValid;
         },
 

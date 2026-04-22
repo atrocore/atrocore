@@ -78,6 +78,18 @@ Espo.define('views/record/right-side-view', 'views/record/detail-bottom', functi
                     panelView.setDetailMode();
                 }
             });
+        },
+
+        validate() {
+            let notValid = false;
+            this.panelList.forEach(p => {
+                const panelView = this.getView(p.name);
+                if (panelView && typeof panelView.validate === 'function') {
+                    notValid = notValid || panelView.validate();
+                }
+            });
+
+            return notValid
         }
 
     });
