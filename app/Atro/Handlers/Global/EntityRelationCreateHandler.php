@@ -37,7 +37,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 - `link` — the relation name as defined in `entityDefs.{entityName}.links` (e.g. `channels`).
 - `ids` — array of foreign record IDs to link. Use `id` (singular) to link a single record.
 - `massRelate` — set to `true` together with `where` to link all records matching a filter instead of specific IDs.
-- `shouldDuplicateForeign` — set to `true` to duplicate the foreign record before linking.',
+- `shouldDuplicateForeign` — set to `true` to duplicate the foreign record before linking.
+
+For linking many records at once, consider using `POST /entityRelationBulkAsync` instead to avoid timeouts.',
     tag: 'Global',
     requestBody: [
         'required' => true,

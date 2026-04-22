@@ -127,7 +127,7 @@ class EntityRelationBulkDeleteAsyncHandler extends AbstractHandler
             [
                 'where'        => json_decode(json_encode($data->where), true),
                 'foreignWhere' => json_decode(json_encode($data->foreignWhere), true),
-                'relationData' => json_decode(json_encode($data->data), true),
+                'relationData' => !empty($data->data) ? json_decode(json_encode($data->data), true) : null,
             ]
         );
 
