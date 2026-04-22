@@ -1731,6 +1731,7 @@ class Base
                 $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
                 $sp['select'] = [$foreignField];
                 $sp['additionalSelectColumns'] = [];
+                $sp['orderBy'] = null;
                 $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp, true);
                 $item['value'] = [
                     "innerSql" => [
