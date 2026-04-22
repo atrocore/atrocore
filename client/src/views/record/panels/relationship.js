@@ -1097,7 +1097,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.notify('Please wait...');
 
                 const total = this.collection.total;
-                const threshold = this.getConfig().get('massDeleteMaxCountWithoutJob') || 200;
+                const threshold = this.getConfig().get('maxMassUnlinkCount') || 200;
                 const onDone = () => {
                     this.collection.fetch();
                     this.model.trigger('after:unrelate', this.link, this.defs);
