@@ -57,7 +57,7 @@ class FolderHierarchy extends Relation
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if (empty($options['ignoreValidation'])) {
-            $parentStorage = $this->getEntityManager()->getRepository('Folder')->getRootStorage();
+            $parentStorage = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('parentId'));
             $entityStorage = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('entityId'));
 
             if ($parentStorage->get('id') !== $entityStorage->get('id')) {
