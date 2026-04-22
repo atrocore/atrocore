@@ -32,7 +32,9 @@
     "stagingRecord": "record di allestimento",
     "stagingRecords": "record di allestimento",
     "masterRecord": "record master",
-    "masterRecords": "record master"
+    "masterRecords": "record master",
+    "confirmed": "Confermato",
+    "rejected": "Rifiutato"
   },
   "streamMessages": {
     "clusterLinked": "{user} ha collegato {relatedEntity} a questo cluster",

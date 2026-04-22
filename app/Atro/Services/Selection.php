@@ -22,19 +22,19 @@ class Selection extends Base
 {
     protected $mandatorySelectAttributeList = ['number', 'entity', 'entityTypes', 'type'];
 
-    public function createSelectionWithRecords(string $scope, array $entityIds): Entity
+    public function createSelectionWithRecords(string $entityName, array $entityIds): Entity
     {
         if (!$this->getAcl()->check('Selection', 'create')) {
             throw new Forbidden();
         }
 
-        $selection = $this->createSelection($scope);
+        $selection = $this->createSelection($entityName);
 
         $items = [];
         foreach ($entityIds as $entityId) {
             $record = $this->getEntityManager()->getEntity('SelectionItem');
             $record->set('entityId', $entityId);
-            $record->set('entityName', $scope);
+            $record->set('entityName', $entityName);
             $record->set('selectionId', $selection->get('id'));
             $this->getEntityManager()->saveEntity($record);
 
@@ -67,12 +67,12 @@ class Selection extends Base
         parent::prepareEntityForOutput($entity);
     }
 
-    protected function createSelection(string $scope): Entity
+    protected function createSelection(string $entityName): Entity
     {
         $selection = $this->getEntityManager()->getEntity('Selection');
         $selection->set('type', 'single');
-        $selection->set('entity', $scope);
-        if (!empty($masterEntity = $this->getMetadata()->get(['scopes', $scope, 'primaryEntityId']))) {
+        $selection->set('entity', $entityName);
+        if (!empty($masterEntity = $this->getMetadata()->get(['scopes', $entityName, 'primaryEntityId']))) {
             $selection->set('entity', $masterEntity);
         }
         $this->getEntityManager()->saveEntity($selection);

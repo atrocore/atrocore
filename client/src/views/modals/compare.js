@@ -110,7 +110,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     onClick: (dialog) => {
                         this.ajaxPostRequest('Selection/createWithItems', {
                             entityName: this.scope,
-                            entityIds: this.getModels().map(m => m.id)
+                            entityIds: this.getModels().map(m => String(m.id))
                         }).then(result => {
                             this.getModelFactory().create('Selection', (selectionModel) => {
                                 selectionModel.set(result);
@@ -304,7 +304,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     if (!this.versionComparison && !this.options.disableSelection) {
                         this.ajaxPostRequest('Selection/createWithItems', {
                             entityName: this.scope,
-                            entityIds: this.getModels().map(m => m.id)
+                            entityIds: this.getModels().map(m => String(m.id))
                         });
                     }
                 });

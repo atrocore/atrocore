@@ -32,7 +32,9 @@
     "stagingRecord": "záznam etapizace",
     "stagingRecords": "záznamy etapizace",
     "masterRecord": "hlavní záznam",
-    "masterRecords": "hlavní záznamy"
+    "masterRecords": "hlavní záznamy",
+    "confirmed": "Potvrzeno",
+    "rejected": "Odmítnuto"
   },
   "streamMessages": {
     "clusterLinked": "{user} propojil {relatedEntity} s tímto clusterem",

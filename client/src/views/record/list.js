@@ -991,7 +991,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.notify(this.translate('Loading'))
             this.ajaxPostRequest('Selection/createWithItems', {
                 entityName: this.entityType,
-                entityIds: this.checkedList
+                entityIds: this.checkedList.map(id => String(id))
             }).then(result => {
                 this.getModelFactory().create('Selection', (selectionModel) => {
                     selectionModel.set(result);
