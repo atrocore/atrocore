@@ -46,14 +46,16 @@ class Base extends RDB
 
         if ($res instanceof EntityCollection) {
             $collection = $res;
-        } else {
+        } else if (!empty($res)) {
             $collection = new EntityCollection();
             $collection->append($res);
         }
 
-        $firstEntity = $collection[0] ?? null;
-        if (!empty($firstEntity) && $this->getMetadata()->get("scopes.{$firstEntity->getEntityName()}.hasAttribute")) {
-            $this->prepareAttributesForOutput($collection, $params);
+        if (isset($collection)) {
+            $firstEntity = $collection[0] ?? null;
+            if (!empty($firstEntity) && $this->getMetadata()->get("scopes.{$firstEntity->getEntityName()}.hasAttribute")) {
+                $this->prepareAttributesForOutput($collection, $params);
+            }
         }
 
         return $res;
@@ -77,7 +79,7 @@ class Base extends RDB
                     $attributesDefs = [];
                     foreach ($entity->get('attributesDefs') as $field => $defs) {
                         $attributesDefs[$field]['attributeId'] = $defs['attributeId'];
-                        $attributesDefs[$field]['type'] = $defs['type'];
+                        $attributesDefs[$field]['type']        = $defs['type'];
                     }
                     $entity->set('attributesDefs', $attributesDefs);
                 }
