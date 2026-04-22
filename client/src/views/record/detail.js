@@ -268,7 +268,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             collectionOnly: true,
                             where: selectObj.where,
                             maxSize: 5000
-                        }, {async: false}).then(response => {
+                        }, { async: false }).then(response => {
                             attributeIds = response.list.map(o => o.id)
                         })
                     }
@@ -2481,6 +2481,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 result.push('')
             }
 
+            if (this.getMetadata().get(['scopes', this.model.name, 'hasActiveLanguages'])) {
+                const activeLanguages = this.model.get('activeLanguages');
+                if (!activeLanguages || activeLanguages.length === 0) {
+                    return result.includes('') ? [''] : result.slice(0, 1);
+                }
+
+                const activeSuffixes = new Set();
+                activeLanguages.forEach(code => {
+                    if (code === mainLocaleCode) {
+                        activeSuffixes.add('');
+                    } else {
+                        activeSuffixes.add(code.split('_').map(part => Espo.utils.upperCaseFirst(part.toLowerCase())).join(''));
+                    }
+                });
+
+                const filtered = result.filter(suffix => activeSuffixes.has(suffix));
+                return filtered.length > 0 ? filtered : [''];
+            }
+
             return result
         },
 
@@ -2552,6 +2571,26 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         prepareLayoutData(data) {
+            if (this.getMetadata().get(['scopes', this.model.name, 'hasActiveLanguages'])) {
+                const activeLanguages = this.model.get('activeLanguages');
+                if (activeLanguages && activeLanguages.length > 0) {
+                    const activeSet = new Set(activeLanguages);
+                    data.layout.forEach(panel => {
+                        if (!panel || !panel.rows) return;
+                        panel.rows = panel.rows.map(row => {
+                            return row.map(cell => {
+                                if (!cell || !cell.name) return cell;
+                                const multilangLocale = this.getMetadata().get(['entityDefs', this.model.name, 'fields', cell.name, 'multilangLocale']);
+                                if (multilangLocale && !activeSet.has(multilangLocale)) {
+                                    return false;
+                                }
+                                return cell;
+                            });
+                        }).filter(row => row.some(cell => cell !== false));
+                    });
+                }
+            }
+
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
                 let attributePanels = {};
                 $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {

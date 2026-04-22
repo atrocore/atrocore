@@ -994,10 +994,10 @@ class Metadata extends AbstractListener
                 // MIDDLE columns
                 if (!empty($relationParams['midKeys'])) {
                     $leftId = $relationParams['midKeys'][0];
-                    $left = substr($leftId, 0, -2);
+                    $left   = substr($leftId, 0, -2);
 
                     $rightId = $relationParams['midKeys'][1];
-                    $right = substr($rightId, 0, -2);
+                    $right   = substr($rightId, 0, -2);
 
                     if ($entityName === 'EntityTeam') {
                         $res[$entityName]['fields'][$leftId] = [
@@ -1011,21 +1011,25 @@ class Metadata extends AbstractListener
                             'required'      => true,
                             'relationField' => true
                         ];
-                        $res[$entityName]['links'][$left] = [
+                        $res[$entityName]['links'][$left]  = [
                             'type'   => 'belongsTo',
                             'entity' => $scope
                         ];
 
+                        if (($data['scopes'][$scope]['type'] ?? null) === 'ReferenceData') {
+                            $res[$entityName]['links'][$left]['skipOrmDefs'] = true;
+                        }
+
                         if (!empty($data['scopes'][$scope]['nameField'])) {
                             $res[$entityName]['fields'][$left]['foreignName'] = $data['scopes'][$scope]['nameField'];
-                            $res[$entityName]['links'][$left]['foreignName'] = $data['scopes'][$scope]['nameField'];
+                            $res[$entityName]['links'][$left]['foreignName']  = $data['scopes'][$scope]['nameField'];
                         }
 
                         if (!empty($additionalFields)) {
                             $relFieldName = $left . ucfirst(Util::pluralize($right));
                             if (empty($data['entityDefs'][$scope]['fields'][$relFieldName])
                                 && empty($data['entityDefs'][$scope]['links'][$relFieldName])) {
-                                $res[$entityName]['links'][$left]['foreign'] = $relFieldName;
+                                $res[$entityName]['links'][$left]['foreign']         = $relFieldName;
                                 $data['entityDefs'][$scope]['fields'][$relFieldName] = [
                                     'type'                     => 'linkMultiple',
                                     'linkToRelationEntity'     => $relationParams['entity'],
@@ -1034,7 +1038,7 @@ class Metadata extends AbstractListener
                                     'massUpdateDisabled'       => true,
                                     'noLoad'                   => true
                                 ];
-                                $data['entityDefs'][$scope]['links'][$relFieldName] = [
+                                $data['entityDefs'][$scope]['links'][$relFieldName]  = [
                                     'type'    => 'hasMany',
                                     'foreign' => $left,
                                     'entity'  => $entityName
@@ -1049,21 +1053,25 @@ class Metadata extends AbstractListener
                         'required'      => true,
                         'relationField' => true
                     ];
-                    $res[$entityName]['links'][$right] = [
+                    $res[$entityName]['links'][$right]  = [
                         'type'   => 'belongsTo',
                         'entity' => $relationParams['entity']
                     ];
 
+                    if (($data['scopes'][$relationParams['entity']]['type'] ?? null) === 'ReferenceData') {
+                        $res[$entityName]['links'][$right]['skipOrmDefs'] = true;
+                    }
+
                     if (!empty($data['scopes'][$relationParams['entity']]['nameField'])) {
                         $res[$entityName]['fields'][$right]['foreignName'] = $data['scopes'][$relationParams['entity']]['nameField'];
-                        $res[$entityName]['links'][$right]['foreignName'] = $data['scopes'][$relationParams['entity']]['nameField'];
+                        $res[$entityName]['links'][$right]['foreignName']  = $data['scopes'][$relationParams['entity']]['nameField'];
                     }
 
                     if (!empty($additionalFields)) {
                         $relFieldName = $right . ucfirst(Util::pluralize($left));
                         if (empty($data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName])
                             && empty($data['entityDefs'][$relationParams['entity']]['links'][$relFieldName])) {
-                            $res[$entityName]['links'][$right]['foreign'] = $relFieldName;
+                            $res[$entityName]['links'][$right]['foreign']                           = $relFieldName;
                             $data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName] = [
                                 'type'                     => 'linkMultiple',
                                 'linkToRelationEntity'     => $scope,
@@ -1072,7 +1080,7 @@ class Metadata extends AbstractListener
                                 'massUpdateDisabled'       => true,
                                 'noLoad'                   => true
                             ];
-                            $data['entityDefs'][$relationParams['entity']]['links'][$relFieldName] = [
+                            $data['entityDefs'][$relationParams['entity']]['links'][$relFieldName]  = [
                                 'type'    => 'hasMany',
                                 'foreign' => $right,
                                 'entity'  => $entityName
@@ -1113,7 +1121,7 @@ class Metadata extends AbstractListener
             file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/entityDefs.json'),
             true
         );
-        $defaultScopes = json_decode(
+        $defaultScopes     = json_decode(
             file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/scopes.json'),
             true
         );
@@ -1147,7 +1155,7 @@ class Metadata extends AbstractListener
         ];
 
         foreach ($res as $entityName => $entityDefs) {
-            $current = $data['clientDefs'][$entityName] ?? [];
+            $current                         = $data['clientDefs'][$entityName] ?? [];
             $data['clientDefs'][$entityName] = empty($current)
                 ? $defaultClientDefs
                 : Util::merge(
@@ -1160,7 +1168,7 @@ class Metadata extends AbstractListener
 
             $data['entityDefs'][$entityName] = Util::merge($defaultEntityDefs, $current);
 
-            $current = $data['scopes'][$entityName] ?? [];
+            $current                     = $data['scopes'][$entityName] ?? [];
             $data['scopes'][$entityName] = empty($current) ? $defaultScopes : Util::merge($defaultScopes, $current);
 
             if (!empty($data['scopes'][$entityName]['isHierarchyEntity'])) {
@@ -1174,7 +1182,7 @@ class Metadata extends AbstractListener
             if (!isset($data['scopes'][$entityName]['layouts'])) {
                 $data['scopes'][$entityName]['layouts'] = true;
             }
-            $data['scopes'][$entityName]['customizable'] = false;
+            $data['scopes'][$entityName]['customizable']  = false;
             $data['scopes'][$entityName]['mergeDisabled'] = true;
         }
     }
