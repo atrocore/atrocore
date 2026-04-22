@@ -124,9 +124,11 @@ class EntityRelationBulkDeleteAsyncHandler extends AbstractHandler
         $result = $this->getServiceFactory()->create('MassActions')->removeRelationViaJob(
             $entityName,
             $link,
-            json_decode(json_encode($data->where), true),
-            json_decode(json_encode($data->foreignWhere), true),
-            json_decode(json_encode($data->data), true)
+            [
+                'where'        => json_decode(json_encode($data->where), true),
+                'foreignWhere' => json_decode(json_encode($data->foreignWhere), true),
+                'relationData' => !empty($data->data) ? json_decode(json_encode($data->data), true) : null,
+            ]
         );
 
         return new JsonResponse($result);

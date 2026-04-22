@@ -1095,15 +1095,43 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         actionUnlinkAllRelated: function (data) {
             this.confirm(this.translate('unlinkAllConfirmation', 'messages'), function () {
                 this.notify('Please wait...');
-                $.ajax({
-                    url: 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + data.link + '&all=true',
-                    type: 'DELETE',
-                }).done(function () {
-                    this.notify(false);
-                    this.notify('Unlinked', 'success');
+
+                const total = this.collection.total;
+                const threshold = this.getConfig().get('massDeleteMaxCountWithoutJob') || 200;
+                const onDone = () => {
                     this.collection.fetch();
                     this.model.trigger('after:unrelate', this.link, this.defs);
-                }.bind(this));
+                };
+
+                if (total !== undefined && total < threshold) {
+                    this.ajaxRequest(
+                        'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=' + data.link + '&all=true',
+                        'DELETE'
+                    ).then(() => {
+                        this.notify(false);
+                        this.notify('Unlinked', 'success');
+                        onDone();
+                    });
+                } else {
+                    const foreignLink = this.model.defs?.links?.[data.link]?.foreign;
+                    const foreignWhere = foreignLink
+                        ? [{type: 'linkedWith', attribute: foreignLink, value: [this.model.id]}]
+                        : [{type: 'isNotNull', attribute: 'id'}];
+                    this.ajaxRequest('entityRelationBulkAsync', 'DELETE', JSON.stringify({
+                        entityName: this.model.name,
+                        link: data.link,
+                        where: [{type: 'equals', attribute: 'id', value: this.model.id}],
+                        foreignWhere: foreignWhere,
+                    })).then(response => {
+                        this.notify(false);
+                        if (response.jobId) {
+                            Espo.Ui.notify(this.translate('massActionDelegatedToJm'), 'success');
+                        } else {
+                            this.notify('Unlinked', 'success');
+                        }
+                        onDone();
+                    });
+                }
             }, this);
         },
 

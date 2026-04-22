@@ -35,7 +35,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 - `id` — the ID of the record to unlink from.
 - `link` — the relation name as defined in `entityDefs.{entityName}.links` (e.g. `channels`).
 - Pass `id` or `ids` (comma-separated) in query to unlink specific records. Alternatively, pass `id` or `ids` array in the request body.
-- Pass `all=true` in query to unlink all related records at once.',
+- Pass `all=true` in query to unlink all related records at once. For a huge amount of data, it is better to use `DELETE /entityRelationBulkAsync` to avoid timeouts.',
     tag: 'Global',
     parameters: [
         [
@@ -74,12 +74,13 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'Comma-separated list of foreign record IDs to unlink',
         ],
         [
-            'name'     => 'all',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
+            'name'        => 'all',
+            'in'          => 'query',
+            'required'    => false,
+            'schema'      => [
                 'type' => 'boolean',
             ],
+            'description' => 'Set to `true` to unlink all related records at once. For large datasets, consider using `DELETE /entityRelationBulkAsync` instead to avoid timeouts.',
         ],
     ],
     responses: [

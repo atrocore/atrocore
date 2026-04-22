@@ -610,7 +610,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 createButton: false,
                 listLayout: data.listLayout,
                 filters: filters,
-                massRelateEnabled: false,
+                massRelateEnabled: !massRelateDisabled,
                 primaryFilterName: primaryFilterName,
                 boolFilterList: boolFilterList,
                 boolFilterData: boolfilterData,
@@ -633,31 +633,59 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     if (afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
                         panelView[afterSelectCallback](selectObj);
                     } else {
-                        let data = {shouldDuplicateForeign: duplicate};
-                        if (Array.isArray(selectObj)) {
-                            data.massRelate = true;
-                            data.where = [{
-                                type: 'in',
-                                field: 'id',
-                                value: selectObj.map(item => item.id)
-                            }]
-                        } else {
-                            data.ids = [selectObj.id];
-                        }
+                        const onSuccess = () => {
+                            this.updateRelationshipPanel(link);
+                            if (this.mode !== 'edit') {
+                                this.model.trigger('after:relate', link);
+                            }
+                        };
 
-                        this.ajaxPostRequest('entityRelation', Object.assign({ entityName: this.scope, id: this.model.id, link: link }, data))
-                            .then((resp) => {
-                                if (resp) {
-                                    this.notify(this.translate(data.shouldDuplicateForeign ? 'duplicatedAndLinked' : 'linked', 'messages'), 'success');
+                        const threshold = this.getConfig().get('massDeleteMaxCountWithoutJob') || 200;
+                        const isAsync = !duplicate && (!Array.isArray(selectObj)
+                            ? (dialog.collection?.total ?? 0) >= threshold
+                            : selectObj.length >= threshold);
+
+                        if (isAsync) {
+                            const foreignWhere = Array.isArray(selectObj)
+                                ? [{type: 'in', attribute: 'id', value: selectObj.map(item => item.id)}]
+                                : selectObj.where;
+
+                            this.ajaxPostRequest('entityRelationBulkAsync', {
+                                entityName: this.scope,
+                                link: link,
+                                where: [{type: 'equals', attribute: 'id', value: this.model.id}],
+                                foreignWhere: foreignWhere,
+                            }).then(response => {
+                                if (response.jobId) {
+                                    Espo.Ui.notify(this.translate('massActionDelegatedToJm'), 'success');
                                 } else {
-                                    this.notify(this.translate('linkJobsCreated', 'messages'), 'success');
+                                    this.notify(this.translate('linked', 'messages'), 'success');
                                 }
-                                this.updateRelationshipPanel(link);
-
-                                if (this.mode !== 'edit') {
-                                    this.model.trigger('after:relate', link);
-                                }
+                                onSuccess();
                             });
+                        } else {
+                            let postData = {shouldDuplicateForeign: duplicate};
+                            if (Array.isArray(selectObj)) {
+                                postData.massRelate = true;
+                                postData.where = [{
+                                    type: 'in',
+                                    field: 'id',
+                                    value: selectObj.map(item => item.id)
+                                }];
+                            } else {
+                                postData.ids = [selectObj.id];
+                            }
+
+                            this.ajaxPostRequest('entityRelation', Object.assign({entityName: this.scope, id: this.model.id, link: link}, postData))
+                                .then((resp) => {
+                                    if (resp) {
+                                        this.notify(this.translate(postData.shouldDuplicateForeign ? 'duplicatedAndLinked' : 'linked', 'messages'), 'success');
+                                    } else {
+                                        this.notify(this.translate('linkJobsCreated', 'messages'), 'success');
+                                    }
+                                    onSuccess();
+                                });
+                        }
                     }
                 }, this);
             }.bind(this));

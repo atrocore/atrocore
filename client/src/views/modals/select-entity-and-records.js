@@ -336,6 +336,9 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
         },
 
         checkScopeForAssociation() {
+            if (!this.getView('association')) {
+                return;
+            }
             if (this.model.get('selectedLink') === this.getAssociationLink()) {
                 this.getView('association').show();
             } else {
