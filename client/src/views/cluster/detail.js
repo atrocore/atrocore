@@ -81,7 +81,12 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
 
         getCompareButtons() {
             return {
-                additionalButtons: [],
+                additionalButtons: [
+                    {
+                        name: 'massAction',
+                        className: 'hidden'
+                    }
+                ],
                 buttons: [],
                 dropdownButtons: [
                     {

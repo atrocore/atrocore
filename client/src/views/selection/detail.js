@@ -513,6 +513,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.setupRecord();
                 })
 
+                this.listenTo(view, 'refresh', () => {
+                    this.refresh();
+                })
+
                 if (this.isRendered()) {
                     view.render();
                 }
@@ -735,40 +739,35 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
         },
 
-        // renderCompareActionsContainer(recordView) {
-        //     if (!recordView || typeof recordView.renderActionsContainer !== 'function') {
-        //         return;
-        //     }
-        //
-        //     const header = document.querySelector('.page-header');
-        //     if (!header) {
-        //         return;
-        //     }
-        //
-        //     let container = header.querySelector('.compare-actions-container');
-        //     if (!container) {
-        //         container = document.createElement('div');
-        //         container.className = 'compare-actions-container hidden';
-        //         header.appendChild(container);
-        //     } else {
-        //         container.innerHTML = '';
-        //         container.classList.add('hidden');
-        //     }
-        //
-        //     if (this.svelteCompareActions) {
-        //         try {
-        //             this.svelteCompareActions.$destroy();
-        //         } catch (e) {
-        //         }
-        //         this.svelteCompareActions = null;
-        //     }
-        //
-        //     this.svelteCompareActions = recordView.renderActionsContainer(container);
-        //
-        //     this.listenTo(recordView, 'compare-check', (ids) => {
-        //         container.classList.toggle('hidden', !ids || ids.length === 0);
-        //     });
-        // },
+        renderCompareActionsContainer(recordView) {
+            if (!recordView || typeof recordView.renderActionsContainer !== 'function') {
+                return;
+            }
+
+            const original = document.querySelector('.page-header [data-name="massAction"]');
+            if (!original) {
+                return;
+            }
+
+            const container = document.createElement('div');
+            container.setAttribute('data-name', 'massAction');
+            container.className = 'compare-mass-action hidden';
+            original.replaceWith(container);
+
+            if (this.svelteCompareActions) {
+                try {
+                    this.svelteCompareActions.$destroy();
+                } catch (e) {
+                }
+                this.svelteCompareActions = null;
+            }
+
+            this.svelteCompareActions = recordView.renderActionsContainer(container);
+
+            this.listenTo(recordView, 'compare-check', (ids) => {
+                container.classList.toggle('hidden', !ids || ids.length === 0);
+            });
+        },
 
         initSelectLeftPanel() {
             if (['compare', 'merge'].includes(this.selectionViewMode) && !this.getStorage().get('treeItem', this.scope)) {

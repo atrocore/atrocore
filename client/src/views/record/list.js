@@ -599,6 +599,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     var data = Object.assign(buildData(), extraData || {});
 
                     this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify(data)).then(function (result) {
+                        this.trigger('refresh');
                         this.collection.fetch().then(function () {
                             var message = this.translate(name, 'massActionSuccessMessages', this.scope);
                             if (typeof result === 'object' && 'count' in result) {

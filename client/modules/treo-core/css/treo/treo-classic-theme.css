@@ -3720,7 +3720,13 @@ a[role=button].primary:hover, a[role=button].primary:focus, a[role=button].prima
 
 button.primary:active, button.primary.active, .show-more > .btn-block:active,
 a[role=button].primary:active, a[role=button].primary.active,
-.btn-primary:active, .btn-primary.active, .show-more > .btn-block:hover {
+.btn-primary:active, .btn-primary.active, .show-more > .btn-block:hover,
+.open > button.primary.dropdown-toggle,
+.open > button.primary.dropdown-toggle:hover,
+.open > button.primary.dropdown-toggle:focus,
+.open > .dropdown-toggle.btn-primary,
+.open > .dropdown-toggle.btn-primary:hover,
+.open > .dropdown-toggle.btn-primary:focus {
     background-color: #004c9e;
     border-color: #004c9e;
     color: #fff;
@@ -19074,14 +19080,6 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     z-index: 1;
 }
 
-.page-header .compare-actions-container {
-    width: 100%;
-    padding: 6px 0;
-}
-
-.page-header .compare-actions-container.hidden {
-    display: none;
-}
 
 .compare-records .compare-panel table td.cell .inline-actions .ph,
 .compare-panel table th div.inline-actions .list-row-buttons .ph {

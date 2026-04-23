@@ -42,7 +42,9 @@
                                     {{/unless}}
                                     <th class="text-center {{#unless isFirst}} inline-actions {{/unless}}" data-id ="{{id}}">
                                         {{#unless isFirst}}
-                                            <input type="checkbox" class="compare-header-checkbox" data-id="{{id}}">
+                                            {{#if ../showCompareHeaderCheckbox}}
+                                                <input type="checkbox" class="compare-header-checkbox" data-id="{{id}}">
+                                            {{/if}}
                                         {{/unless}}
                                         {{{name}}}
                                         {{#if _error}}

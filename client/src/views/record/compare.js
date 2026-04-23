@@ -9,7 +9,7 @@
  */
 
 
-Espo.define('views/record/compare', 'view', function (Dep) {
+Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'], function (Dep, ListView, Collection) {
 
     return Dep.extend({
         template: 'record/compare',
@@ -49,6 +49,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         inlineEditDisabled: false,
 
         recordActionView: false,
+
+        showCompareHeaderCheckbox: false,
 
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
@@ -631,6 +633,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 showOverlay: this.showOverlay,
                 overlayLogo: this.getFavicon(),
                 hasRecordAction: !!this.recordActionView,
+                showCompareHeaderCheckbox: !!this.showCompareHeaderCheckbox,
                 additionalHeaderHtml: this.getAdditionalHeaderHtml()
             };
         },
@@ -653,9 +656,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             const component = new Svelte.ListToolbar({
                 target: container,
                 props: {
-                    scope: this.scope,
+                    scope: this.itemScope || this.scope,
                     selected: this.checkedIds.slice(),
                     massActions: this.getCompareMassActions(),
+                    massActionStyle: 'primary',
                     isRelationship: true,
                     executeMassAction: (action, data) => {
                         this.executeCompareMassAction(action, data);
@@ -678,9 +682,36 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         executeCompareMassAction: function (action, data) {
-            const method = 'actionCompareMass' + Espo.Utils.upperCaseFirst(action);
-            if (typeof this[method] === 'function') {
-                this[method](this.checkedIds.slice(), data);
+            const method = 'massAction' + Espo.Utils.upperCaseFirst(action);
+
+            const scope = this.itemScope || this.scope;
+            const items = this.getModels()
+                .filter(m => this.checkedIds.includes(m.id))
+                .map(m => m.item || m);
+
+            const collection = new Collection();
+            collection.name = scope;
+            collection.url = scope;
+            items.forEach(item => collection.add(item));
+
+            const clone = Espo.Utils.clone(this);
+            Object.setPrototypeOf(clone, ListView.prototype);
+            clone.scope = scope;
+            clone.entityType = scope;
+            clone.collection = collection;
+            clone.checkedList = items.map(m => m.id);
+            clone.allResultIsChecked = false;
+            clone.getModel = function (d) {
+                if (d && d.cid) {
+                    return this.collection.get(d.cid);
+                }
+                return this.collection.get(d && d.id);
+            };
+
+            if (typeof ListView.prototype[method] === 'function') {
+                ListView.prototype[method].call(clone, data);
+            } else {
+                ListView.prototype.massAction.call(clone, action);
             }
         },
 
