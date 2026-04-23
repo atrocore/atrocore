@@ -88,7 +88,20 @@
       }
     },
     "folder": {
-      "type": "link"
+      "type": "link",
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "local"
+              ]
+            }
+          ]
+        }
+      }
     },
     "folders": {
       "type": "linkMultiple",
