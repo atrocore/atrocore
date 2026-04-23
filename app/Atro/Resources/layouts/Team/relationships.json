@@ -1,1 +1,8 @@
-["users", "languages"]
+[
+  {
+    "name": "users"
+  },
+  {
+    "name": "languages"
+  }
+]
