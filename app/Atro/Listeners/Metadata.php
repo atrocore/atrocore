@@ -1048,10 +1048,9 @@ class Metadata extends AbstractListener
                         }
                     }
 
-                    $isAssociatesEntity = !empty($data['scopes'][$entityName]['associatesForEntity']);
                     $res[$entityName]['fields'][$right] = [
                         'type'          => 'link',
-                        'required'      => !$isAssociatesEntity,
+                        'required'      => empty($data['scopes'][$entityName]['associatesForEntity']),
                         'relationField' => true
                     ];
                     $res[$entityName]['links'][$right]  = [
