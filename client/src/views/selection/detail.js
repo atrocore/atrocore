@@ -506,6 +506,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     $('#main > .content-wrapper > main').css('overflow-y', 'auto');
                     this.enableButtons();
                     this.notify(false);
+                    this.renderCompareActionsContainer(view);
                 });
 
                 this.listenTo(view, 'layout-refreshed', () => {
@@ -733,6 +734,41 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.getMainRecord().createLayoutConfigurator();
             }
         },
+
+        // renderCompareActionsContainer(recordView) {
+        //     if (!recordView || typeof recordView.renderActionsContainer !== 'function') {
+        //         return;
+        //     }
+        //
+        //     const header = document.querySelector('.page-header');
+        //     if (!header) {
+        //         return;
+        //     }
+        //
+        //     let container = header.querySelector('.compare-actions-container');
+        //     if (!container) {
+        //         container = document.createElement('div');
+        //         container.className = 'compare-actions-container hidden';
+        //         header.appendChild(container);
+        //     } else {
+        //         container.innerHTML = '';
+        //         container.classList.add('hidden');
+        //     }
+        //
+        //     if (this.svelteCompareActions) {
+        //         try {
+        //             this.svelteCompareActions.$destroy();
+        //         } catch (e) {
+        //         }
+        //         this.svelteCompareActions = null;
+        //     }
+        //
+        //     this.svelteCompareActions = recordView.renderActionsContainer(container);
+        //
+        //     this.listenTo(recordView, 'compare-check', (ids) => {
+        //         container.classList.toggle('hidden', !ids || ids.length === 0);
+        //     });
+        // },
 
         initSelectLeftPanel() {
             if (['compare', 'merge'].includes(this.selectionViewMode) && !this.getStorage().get('treeItem', this.scope)) {

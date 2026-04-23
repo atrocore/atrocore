@@ -19066,6 +19066,23 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
+.compare-panel table th input[type="checkbox"].compare-header-checkbox {
+    position: absolute !important;
+    top: 4px !important;
+    left: 4px;
+    margin: 0;
+    z-index: 1;
+}
+
+.page-header .compare-actions-container {
+    width: 100%;
+    padding: 6px 0;
+}
+
+.page-header .compare-actions-container.hidden {
+    display: none;
+}
+
 .compare-records .compare-panel table td.cell .inline-actions .ph,
 .compare-panel table th div.inline-actions .list-row-buttons .ph {
     font-size: 14px;

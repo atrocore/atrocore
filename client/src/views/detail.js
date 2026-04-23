@@ -443,6 +443,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 },
             });
 
+            debugger
             return {
                 params: {
                     mode: this.mode,

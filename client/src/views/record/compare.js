@@ -58,6 +58,19 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.model.trigger('select-model', id);
             },
 
+            'change input.compare-header-checkbox': function (e) {
+                e.stopPropagation();
+                const id = $(e.currentTarget).data('id');
+                if (e.currentTarget.checked) {
+                    if (!this.checkedIds.includes(id)) {
+                        this.checkedIds.push(id);
+                    }
+                } else {
+                    this.checkedIds = this.checkedIds.filter(x => x !== id);
+                }
+                this.trigger('compare-check', this.checkedIds.slice());
+            },
+
             'click a[data-action="openOverviewFilter"]': function () {
                 this.openOverviewFilter();
             },
@@ -83,6 +96,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.merging = this.options.merging || this.merging;
             this.renderedPanels = [];
+            this.checkedIds = [];
             this.hideButtonPanel = false;
             this.selectionModel = this.options.selectionModel || this.selectionModel;
             this.collection = this.options.collection;
@@ -629,6 +643,45 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.confirm(this.translate('confirmation', 'messages'), function () {
 
             }, this);
+        },
+
+        renderActionsContainer: function (container) {
+            if (!container) {
+                return;
+            }
+
+            const component = new Svelte.ListToolbar({
+                target: container,
+                props: {
+                    scope: this.scope,
+                    selected: this.checkedIds.slice(),
+                    massActions: this.getCompareMassActions(),
+                    isRelationship: true,
+                    executeMassAction: (action, data) => {
+                        this.executeCompareMassAction(action, data);
+                    }
+                }
+            });
+
+            this.listenTo(this, 'compare-check', (ids) => {
+                component.$set({
+                    selected: ids,
+                    massActions: this.getCompareMassActions(),
+                });
+            });
+
+            return component;
+        },
+
+        getCompareMassActions: function () {
+            return [];
+        },
+
+        executeCompareMassAction: function (action, data) {
+            const method = 'actionCompareMass' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] === 'function') {
+                this[method](this.checkedIds.slice(), data);
+            }
         },
 
         areEquals(current, others, field, fieldDef) {
