@@ -2088,7 +2088,7 @@ class Metadata extends AbstractListener
                             "view"          => "views/associated-record/fields/associating-item"
                         ],
                         "associatedItem"          => [
-                            "required"      => true,
+                            "required"      => false,
                             "type"          => "link",
                             "relationField" => true,
                             "view"          => "views/associated-record/fields/associated-item",
