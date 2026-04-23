@@ -26,6 +26,7 @@
     "storagePathNotUnique": "Cesta k úložišti by měla být jedinečná.",
     "storagePathContainFilesFromAnotherStorage": "Strom složek zahájený vybranou cestou k úložišti nemůže obsahovat složky/soubory spojené s jiným úložištěm.",
     "storageTypeCannotBeChanged": "Type úložiště nelze změnit.",
-    "storagePathCannotBeChanged": "Cestu k úložišti nelze změnit."
+    "storagePathCannotBeChanged": "Cestu k úložišti nelze změnit.",
+    "folderUsedByOtherStorage": "Tato složka je již používána jiným úložištěm."
   }
 }

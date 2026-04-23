@@ -23,7 +23,8 @@
     "storagePathNotUnique": "Ścieżka zapisu powinna być unikalna.",
     "storageTypeCannotBeChanged": "Storage Type nie może zostać zmieniony.",
     "storagePathCannotBeChanged": "Ścieżki zapisu nie można zmienić.",
-    "storageHasItems": "Zamontowanego folderu nie można zmienić w przypadku niepustej pamięci masowej."
+    "storageHasItems": "Zamontowanego folderu nie można zmienić w przypadku niepustej pamięci masowej.",
+    "folderUsedByOtherStorage": "Ten folder jest już używany przez inną pamięć masową."
   },
   "tooltips": {
     "syncFolders": "Jeśli to pole jest zaznaczone, fizyczna struktura plików i folderów w pamięci masowej będzie taka sama jak w systemie. Oznacza to, że tylko jeden plik/folder o podobnej nazwie może być przechowywany w tej samej ścieżce."

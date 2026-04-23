@@ -26,6 +26,7 @@
     "storagePathNotUnique": "Шлях до сховища має бути унікальним.",
     "storagePathContainFilesFromAnotherStorage": "Дерево папок, що починається з вибраного шляху до сховища, не може містити папки/файли, пов'язані з іншим сховищем.",
     "storageTypeCannotBeChanged": "Type сховища не можна змінити.",
-    "storagePathCannotBeChanged": "Шлях до сховища не можна змінити."
+    "storagePathCannotBeChanged": "Шлях до сховища не можна змінити.",
+    "folderUsedByOtherStorage": "Ця папка вже використовується іншим сховищем."
   }
 }

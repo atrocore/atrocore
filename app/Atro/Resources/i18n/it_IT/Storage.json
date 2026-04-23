@@ -26,6 +26,7 @@
     "storagePathNotUnique": "Il percorso di archiviazione deve essere unico.",
     "storagePathContainFilesFromAnotherStorage": "L'albero delle cartelle avviato dal percorso di archiviazione selezionato non può contenere cartelle/file associate a un altro archivio.",
     "storageTypeCannotBeChanged": "Il tipo di archiviazione non può essere modificato.",
-    "storagePathCannotBeChanged": "Il percorso di archiviazione non può essere modificato."
+    "storagePathCannotBeChanged": "Il percorso di archiviazione non può essere modificato.",
+    "folderUsedByOtherStorage": "Questa cartella è già utilizzata da un altro archivio."
   }
 }

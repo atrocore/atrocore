@@ -26,6 +26,7 @@
     "storagePathNotUnique": "Storage path should be unique.",
     "storagePathContainFilesFromAnotherStorage": "The folder tree started by the selected storage path cannot contain folders/files associated with another storage.",
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
-    "storagePathCannotBeChanged": "Storage Path cannot be changed."
+    "storagePathCannotBeChanged": "Storage Path cannot be changed.",
+    "folderUsedByOtherStorage": "This folder is already used by another storage."
   }
 }
