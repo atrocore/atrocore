@@ -32,10 +32,6 @@ Espo.define('views/selection/record/detail/compare', [
 
         relationName: 'selectionItems',
 
-        showCompareHeaderCheckbox: true,
-
-        compareMassActionExcluded: ['update', 'compare', 'merge', 'select', 'addRelation', 'removeRelation'],
-
         compareMassActionBase: ['remove', 'export'],
 
         setup() {
@@ -161,9 +157,6 @@ Espo.define('views/selection/record/detail/compare', [
             }
 
             (this.getMetadata().get(['clientDefs', scope, 'massActionList']) || []).forEach(item => {
-                if (this.compareMassActionExcluded.includes(item)) {
-                    return;
-                }
                 const defs = this.getMetadata().get(['clientDefs', scope, 'massActionDefs', item]) || {};
                 if (defs.acl || defs.aclScope) {
                     if (!this.getAcl().check(defs.aclScope || scope, defs.acl)) {
@@ -180,10 +173,12 @@ Espo.define('views/selection/record/detail/compare', [
                 }
             });
 
-            $.each(this.getMetadata().get(['clientDefs', scope, 'massActions']) || {}, (actionName) => {
-                if (this.compareMassActionExcluded.includes(actionName)) {
+            $.each(this.getMetadata().get(['clientDefs', scope, 'massActions']) || {}, (actionName, actionData) => {
+                if (actionData.disabled) {
+                    list = list.filter(name => name !== actionName);
                     return;
                 }
+
                 if (!list.includes(actionName)) {
                     list.push(actionName);
                 }

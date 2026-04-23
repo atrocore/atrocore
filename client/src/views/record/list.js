@@ -1293,6 +1293,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.checkAllResultMassActionList.push(...dynamicActions);
             }
 
+            //remove disabled
+            $.each(this.getMetadata().get(['clientDefs', this.scope, 'massActions']) || {}, (actionName, actionData) => {
+                if (actionData.disabled) {
+                    this.massActionList = this.massActionList.filter(name => name !== actionName)
+                    this.checkAllResultMassActionList = this.checkAllResultMassActionList.filter(name => name !== actionName)
+                }
+            });
 
             if (this.selectable) {
                 this.events['click .list a.link'] = function (e) {

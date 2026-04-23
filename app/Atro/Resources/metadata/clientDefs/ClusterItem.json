@@ -61,6 +61,15 @@
       "sortOrder": 40,
       "modalSelectEntity": "Cluster",
       "modalSelectResultParam": "targetClusterId"
+    },
+    "update": {
+      "disabled": true
+    },
+    "addRelation": {
+      "disabled": true
+    },
+    "removeRelation": {
+      "disabled": true
     }
   }
 }
