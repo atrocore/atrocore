@@ -3398,12 +3398,14 @@ textarea.input-lg, select[multiple].input-lg {
 }
 
 .has-error .form-control,
-.has-error .input-group-btn > button.btn {
+.has-error .input-group-btn > .btn,
+.has-error .input-group-btn > button {
     border-bottom-color: #a94442 !important;
 }
 
 .has-error .form-control:focus,
-.has-error .input-group-btn > button.btn:focus {
+.has-error .input-group-btn > .btn:focus,
+.has-error .input-group-btn > button:focus {
     border-color: #843534;
 }
 
