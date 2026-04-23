@@ -88,7 +88,7 @@ class Relation extends Record
     public function createEntity(\stdClass $attachment): string
     {
         if ($this->isAssociatesRelation()) {
-            if (empty($attachment?->{"associatedItemsIds"}) && empty($attachment?->associatedItemId)) {
+            if (empty($attachment?->associatedItemsIds) && empty($attachment?->associatedItemId)) {
                 throw new BadRequest("Either 'associatedItemId' or 'associatedItemsIds' is required.");
             }
 
