@@ -2,24 +2,20 @@
     {
         "name": "name",
         "notSortable": true,
-        "width": "25"
+        "width": 50
     },
     {
         "name": "loader",
         "view": "views/job-manager/fields/loader",
-        "widthPx": "50"
+        "widthPx": 50
     },
     {
         "name": "status",
-        "widthPx": "90"
-    },
-    {
-        "name": "createdBy",
-        "width": "20"
+        "widthPx": 90
     },
     {
         "name": "actions",
         "view": "views/job-manager/fields/actions",
-        "width": "40"
+        "widthPx": 100
     }
 ]

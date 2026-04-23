@@ -2317,6 +2317,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     width = this.listLayout[i].width + '%';
                 } else if ('widthPx' in this.listLayout[i]) {
                     width = this.listLayout[i].widthPx;
+                    if (!this.header){
+                        // set in pixels for col groups
+                        width = width + 'px';
+                    }
                 }
 
                 var item = {
