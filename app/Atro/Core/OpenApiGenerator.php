@@ -243,14 +243,6 @@ class OpenApiGenerator
 
         $writeRequired = array_values(array_filter($readRequired, fn($k) => isset($writeProps[$k])));
 
-        // Associates relation entities support batch creation via associatedItemsIds (array).
-        // The Relation service expands this into individual records, so associatedItemId must
-        // not be required at the schema level when associatedItemsIds is also accepted.
-        if (!empty($this->getMetadata()->get(['scopes', $entityName, 'associatesForEntity']))) {
-            $writeRequired = array_values(array_diff($writeRequired, ['associatedItemId']));
-            $writeProps['associatedItemsIds'] = ['type' => 'array', 'items' => ['type' => 'string'], 'nullable' => true];
-        }
-
         if (count($writeProps) <= 1) {
             return;
         }
