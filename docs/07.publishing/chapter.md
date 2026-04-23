@@ -1,7 +1,5 @@
 ---
 title: Publishing
-taxonomy:
-    category: docs
 metadata:
     title: Publishing
 ---

@@ -1,7 +1,5 @@
 ---
 title: ERP
-taxonomy:
-    category: docs
 metadata:
     title: ERP
 ---

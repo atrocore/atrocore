@@ -1,7 +1,5 @@
 ---
 title: Developer Guide
-taxonomy:
-    category: docs
 metadata:
     title: Developer Guide
 ---

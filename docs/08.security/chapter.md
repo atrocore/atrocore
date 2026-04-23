@@ -1,7 +1,5 @@
 ---
 title: Security
-taxonomy:
-    category: docs
 metadata:
     title: Security
 ---
