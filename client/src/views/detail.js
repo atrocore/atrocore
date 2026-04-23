@@ -640,7 +640,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             }
                         };
 
-                        const threshold = this.getConfig().get('massDeleteMaxCountWithoutJob') || 200;
+                        const threshold = this.getConfig().get('maxMassLinkCount') || 20;
                         const isAsync = !duplicate && (!Array.isArray(selectObj)
                             ? (dialog.collection?.total ?? 0) >= threshold
                             : selectObj.length >= threshold);
@@ -990,26 +990,54 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 dialog.render();
                 this.notify(false);
                 dialog.once('select', function (selectObj, duplicate = false) {
-                    var data = {shouldDuplicateForeign: duplicate};
-                    if (Object.prototype.toString.call(selectObj) === '[object Array]') {
-                        var ids = [];
-                        selectObj.forEach(function (model) {
-                            ids.push(model.id);
-                        });
-                        data.ids = ids;
-                    } else {
-                        if (selectObj.massRelate) {
-                            data.massRelate = true;
-                            data.where = selectObj.where;
-                        } else {
-                            data.ids = [selectObj.id];
-                        }
-                    }
+                    const threshold = this.getConfig().get('maxMassLinkCount') || 20;
+                    const isMassRelate = !Array.isArray(selectObj) && selectObj.massRelate;
+                    const isAsync = !duplicate && (
+                        isMassRelate
+                            ? (dialog.collection?.total ?? 0) >= threshold
+                            : Array.isArray(selectObj) && selectObj.length >= threshold
+                    );
 
-                    const method = 'selectConfirm' + Espo.utils.upperCaseFirst(link)
-                    let execute = true
+                    const doLink = () => {
+                        if (isAsync) {
+                            const foreignWhere = isMassRelate
+                                ? selectObj.where
+                                : [{type: 'in', attribute: 'id', value: selectObj.map(m => m.id)}];
+
+                            this.ajaxPostRequest('entityRelationBulkAsync', {
+                                entityName: this.scope,
+                                link: link,
+                                where: [{type: 'equals', attribute: 'id', value: this.model.id}],
+                                foreignWhere: foreignWhere,
+                            }).then(response => {
+                                if (response.jobId) {
+                                    Espo.Ui.notify(this.translate('massActionDelegatedToJm'), 'success');
+                                } else {
+                                    this.notify(this.translate('linked', 'messages'), 'success');
+                                }
+                                this.updateRelationshipPanel(link);
+                                if (this.mode !== 'edit') {
+                                    this.model.trigger('after:relate', link);
+                                }
+                            });
+                        } else {
+                            var data = {shouldDuplicateForeign: duplicate};
+                            if (Array.isArray(selectObj)) {
+                                data.ids = selectObj.map(m => m.id);
+                            } else if (isMassRelate) {
+                                data.massRelate = true;
+                                data.where = selectObj.where;
+                            } else {
+                                data.ids = [selectObj.id];
+                            }
+                            this.createLink(this.scope, this.model.id, link, data);
+                        }
+                    };
+
+                    const method = 'selectConfirm' + Espo.utils.upperCaseFirst(link);
+                    let execute = true;
                     if (typeof this[method] === 'function') {
-                        execute = this[method](selectObj, duplicate)
+                        execute = this[method](selectObj, duplicate);
                     }
                     const selectConfirm = this.getMetadata().get(`clientDefs.${self.scope}.relationshipPanels.${link}.selectConfirm`) || false;
                     if (selectConfirm && execute) {
@@ -1017,11 +1045,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         Espo.Ui.confirm(this.translate(parts[2], parts[1], parts[0]), {
                             confirmText: self.translate('Apply'),
                             cancelText: self.translate('Cancel')
-                        }, () => {
-                            this.createLink(this.scope, this.model.id, link, data);
-                        });
+                        }, () => doLink());
                     } else {
-                        this.createLink(this.scope, this.model.id, link, data);
+                        doLink();
                     }
                 }.bind(this));
             }.bind(this));

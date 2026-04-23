@@ -24,12 +24,12 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
 
         $entityType   = $data['entityType'] ?? '';
         $link         = $data['link'] ?? '';
-        $action       = $data['action'] ?? 'add';
+        $action       = $data['action'] ?? null;
         $where        = $data['where'] ?? [];
         $foreignWhere = $data['foreignWhere'] ?? [];
         $relationData = $data['relationData'] ?? null;
 
-        if (empty($entityType) || empty($link)) {
+        if (empty($entityType) || empty($link) || empty($action)) {
             return;
         }
 
@@ -37,11 +37,6 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
             ?? $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'entity']);
 
         if (empty($foreignEntityType)) {
-            return;
-        }
-
-        $foreignIds = $this->resolveIds($foreignEntityType, $foreignWhere);
-        if (empty($foreignIds)) {
             return;
         }
 
@@ -55,54 +50,78 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
             return;
         }
 
+        $foreignSp         = $this->getForeignSelectParams($foreignEntityType, $foreignWhere);
+        $foreignRepository = $this->getEntityManager()->getRepository($foreignEntityType);
+        $foreignTotal      = $foreignRepository->count(array_merge($foreignSp, ['select' => ['id']]));
+        if ($foreignTotal === 0) {
+            return;
+        }
+
         $maxChunkSize      = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
         $minChunkSize      = $this->getConfig()->get('massUpdateMinChunkSize', 400);
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
-        $chunkSize         = Record::getChunkSize($total, $maxChunkSize, $minChunkSize, $maxConcurrentJobs);
-        $totalChunks       = (int)ceil($total / $chunkSize);
 
-        $childJobType = 'EntityRelationBulkAction';
+        $foreignChunkSize = min($foreignTotal, $maxChunkSize);
+        $mainChunkSize    = min(
+            Record::getChunkSize($total, $maxChunkSize, $minChunkSize, $maxConcurrentJobs),
+            max(1, (int)floor($maxChunkSize / $foreignChunkSize))
+        );
+
+        $totalMainChunks    = (int)ceil($total / $mainChunkSize);
+        $totalForeignChunks = (int)ceil($foreignTotal / $foreignChunkSize);
+        $totalChunks        = $totalMainChunks * $totalForeignChunks;
+
+        $childJobType = $action === 'remove' ? 'EntityRelationBulkRemoveAction' : 'EntityRelationBulkAddAction';
         $actionLabel  = $action === 'remove' ? 'Remove relation' : 'Add relation';
 
-        $offset = 0;
-        $part   = 0;
-        $jobs   = [];
+        $mainOffset = 0;
+        $part       = 0;
+        $jobs       = [];
 
         while (true) {
-            $collection = $mainRepository
-                ->limit($offset, $chunkSize)
-                ->order('id')
-                ->find($mainSp);
-
-            $ids = array_column($collection->toArray(), 'id');
+            $ids = array_column(
+                $mainRepository->find(array_merge($mainSp, ['offset' => $mainOffset, 'limit' => $mainChunkSize, 'orderBy' => 'id', 'order' => 'ASC', 'select' => ['id']]))->toArray(),
+                'id'
+            );
             if (empty($ids)) {
                 break;
             }
+            $mainOffset += $mainChunkSize;
 
-            $offset += $chunkSize;
-            $part++;
+            $foreignOffset = 0;
+            while (true) {
+                $foreignIds = array_column(
+                    $foreignRepository->find(array_merge($foreignSp, ['offset' => $foreignOffset, 'limit' => $foreignChunkSize, 'orderBy' => 'id', 'order' => 'ASC', 'select' => ['id']]))->toArray(),
+                    'id'
+                );
+                if (empty($foreignIds)) {
+                    break;
+                }
+                $foreignOffset += $foreignChunkSize;
+                $part++;
 
-            $jobEntity = $this->getEntityManager()->getEntity('Job');
-            $jobEntity->set([
-                'name'        => sprintf('%s: %s.%s (%d/%d)', $actionLabel, $entityType, $link, $part, $totalChunks),
-                'type'        => $childJobType,
-                'priority'    => $job->get('priority'),
-                'ownerUserId' => $job->get('ownerUserId'),
-                'payload'     => [
-                    'creatorId'    => $job->get('id'),
-                    'action'       => $action,
-                    'entityType'   => $entityType,
-                    'link'         => $link,
-                    'ids'          => $ids,
-                    'foreignIds'   => $foreignIds,
-                    'relationData' => $relationData,
-                    'total'        => $total,
-                    'totalChunks'  => $totalChunks,
-                    'part'         => $part,
-                ],
-            ]);
-            $this->getEntityManager()->saveEntity($jobEntity);
-            $jobs[] = $jobEntity;
+                $jobEntity = $this->getEntityManager()->getEntity('Job');
+                $jobEntity->set([
+                    'name'        => sprintf('%s: %s.%s (%d/%d)', $actionLabel, $entityType, $link, $part, $totalChunks),
+                    'type'        => $childJobType,
+                    'priority'    => $job->get('priority'),
+                    'ownerUserId' => $job->get('ownerUserId'),
+                    'payload'     => [
+                        'creatorId'    => $job->get('id'),
+                        'action'       => $action,
+                        'entityType'   => $entityType,
+                        'link'         => $link,
+                        'ids'          => $ids,
+                        'foreignIds'   => $foreignIds,
+                        'relationData' => $relationData,
+                        'total'        => $total,
+                        'totalChunks'  => $totalChunks,
+                        'part'         => $part,
+                    ],
+                ]);
+                $this->getEntityManager()->saveEntity($jobEntity);
+                $jobs[] = $jobEntity;
+            }
         }
 
         foreach ($jobs as $j) {
@@ -110,14 +129,12 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
         }
     }
 
-    private function resolveIds(string $entityType, array $where): array
+    private function getForeignSelectParams(string $entityType, array $where): array
     {
-        $selectManagerFactory = $this->getContainer()->get('selectManagerFactory');
-        $sp                   = $selectManagerFactory->create($entityType)->getSelectParams(['where' => $where]);
-        $repository           = $this->getEntityManager()->getRepository($entityType);
+        $sp         = $this->getContainer()->get('selectManagerFactory')->create($entityType)->getSelectParams(['where' => $where]);
+        $repository = $this->getEntityManager()->getRepository($entityType);
         $repository->handleSelectParams($sp);
-        $collection = $repository->find(array_merge($sp, ['select' => ['id']]));
 
-        return array_column($collection->toArray(), 'id');
+        return $sp;
     }
 }

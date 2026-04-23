@@ -15,7 +15,7 @@ namespace Atro\Jobs;
 
 use Atro\Entities\Job;
 
-class EntityRelationBulkAction extends AbstractJob implements JobInterface
+class EntityRelationBulkRemoveAction extends AbstractJob implements JobInterface
 {
     public function run(Job $job): void
     {
@@ -27,11 +27,11 @@ class EntityRelationBulkAction extends AbstractJob implements JobInterface
 
         /** @var \Atro\Services\MassActions $service */
         $service = $this->getServiceFactory()->create('MassActions');
+        $result  = $service->removeRelation($data['ids'], $data['foreignIds'], $data['entityType'], $data['link'], $data['relationData'] ?? null);
 
-        if (($data['action'] ?? 'add') === 'remove') {
-            $service->removeRelation($data['ids'], $data['foreignIds'], $data['entityType'], $data['link'], $data['relationData'] ?? null);
-        } else {
-            $service->addRelation($data['ids'], $data['foreignIds'], $data['entityType'], $data['link'], $data['relationData'] ?? null);
+        if (!empty($result['message'])) {
+            $job->set('message', $result['message']);
+            $this->getEntityManager()->saveEntity($job);
         }
     }
 }
