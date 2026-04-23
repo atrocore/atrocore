@@ -105,6 +105,7 @@ class SelectionItem extends Base
                             $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
                         }
 
+                        $service->putMeta($entity);
                         $service->loadAdditionalFields($entity);
                         $service->prepareEntityForOutput($entity);
 
