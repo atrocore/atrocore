@@ -56,6 +56,10 @@ class Storage extends Base
             if ($entity->get('type') === 'local' && $entity->isAttributeChanged('path')) {
                 throw new BadRequest($this->translate('storagePathCannotBeChanged', 'exceptions', 'Storage'));
             }
+        } else {
+            if (!empty($this->where(['folderId' => $entity->get('folderId') ?? ''])->findOne())) {
+                throw new BadRequest($this->translate('folderUsedByOtherStorage', 'exceptions', 'Storage'));
+            }
         }
 
         $this->validateLocalPath($entity);

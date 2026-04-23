@@ -26,6 +26,7 @@
     "storagePathNotUnique": "Der Storage-Pfad sollte eindeutig sein.",
     "storagePathContainFilesFromAnotherStorage": "Die Ordnerstruktur, die durch den ausgewählten Speicherpfad gestartet wird, kann keine Ordner/Dateien enthalten, die mit einem anderen Storage verbunden sind.",
     "storageTypeCannotBeChanged": "Der Storage-Typ kann nicht geändert werden.",
-    "storagePathCannotBeChanged": "Der Storage-Pfad kann nicht geändert werden."
+    "storagePathCannotBeChanged": "Der Storage-Pfad kann nicht geändert werden.",
+    "folderUsedByOtherStorage": "Dieser Ordner wird bereits von einem anderen Storage verwendet."
   }
 }

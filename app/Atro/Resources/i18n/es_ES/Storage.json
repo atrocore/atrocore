@@ -26,6 +26,7 @@
     "storagePathNotUnique": "La ruta de almacenamiento debe ser única.",
     "storagePathContainFilesFromAnotherStorage": "El árbol de carpetas iniciado por la ruta de almacenamiento seleccionada no puede contener carpetas/archivos asociados a otro almacenamiento.",
     "storageTypeCannotBeChanged": "El Tipo de almacenamiento no se puede cambiar.",
-    "storagePathCannotBeChanged": "La ruta de almacenamiento no puede modificarse."
+    "storagePathCannotBeChanged": "La ruta de almacenamiento no puede modificarse.",
+    "folderUsedByOtherStorage": "Esta carpeta ya está siendo utilizada por otro almacenamiento."
   }
 }
