@@ -641,14 +641,17 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         };
 
                         const threshold = this.getConfig().get('maxMassLinkCount') || 20;
-                        const isAsync = !duplicate && (!Array.isArray(selectObj)
-                            ? (dialog.collection?.total ?? 0) >= threshold
-                            : selectObj.length >= threshold);
+                        const isMassRelate = !Array.isArray(selectObj) && selectObj.massRelate;
+                        const isAsync = !duplicate && (
+                            isMassRelate
+                                ? (dialog.collection?.total ?? 0) >= threshold
+                                : Array.isArray(selectObj) && selectObj.length >= threshold
+                        );
 
                         if (isAsync) {
-                            const foreignWhere = Array.isArray(selectObj)
-                                ? [{type: 'in', attribute: 'id', value: selectObj.map(item => item.id)}]
-                                : selectObj.where;
+                            const foreignWhere = isMassRelate
+                                ? selectObj.where
+                                : [{type: 'in', attribute: 'id', value: selectObj.map(item => item.id)}];
 
                             this.ajaxPostRequest('entityRelationBulkAsync', {
                                 entityName: this.scope,
