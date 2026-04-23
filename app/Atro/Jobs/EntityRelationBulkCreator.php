@@ -24,12 +24,12 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
 
         $entityType   = $data['entityType'] ?? '';
         $link         = $data['link'] ?? '';
-        $action       = $data['action'] ?? 'add';
+        $action       = $data['action'] ?? null;
         $where        = $data['where'] ?? [];
         $foreignWhere = $data['foreignWhere'] ?? [];
         $relationData = $data['relationData'] ?? null;
 
-        if (empty($entityType) || empty($link)) {
+        if (empty($entityType) || empty($link) || empty($action)) {
             return;
         }
 
@@ -71,7 +71,7 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
         $totalForeignChunks = (int)ceil($foreignTotal / $foreignChunkSize);
         $totalChunks        = $totalMainChunks * $totalForeignChunks;
 
-        $childJobType = 'EntityRelationBulkAction';
+        $childJobType = $action === 'remove' ? 'EntityRelationBulkRemoveAction' : 'EntityRelationBulkAddAction';
         $actionLabel  = $action === 'remove' ? 'Remove relation' : 'Add relation';
 
         $mainOffset = 0;
