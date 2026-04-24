@@ -39,6 +39,17 @@ The Style Configuration panel allows you to customize the visual appearance of t
 
 - **CSS File Path**: The file where your custom CSS styles are stored. Your custom CSS styles will be written to this file automatically, and you can also edit it directly for advanced customization.
 
+## Backgrounds Configuration Panel
+
+The Backgrounds Configuration panel enables users to define and manage the background images that are used to customise the appearance of the system when a page is loaded.
+
+![Style Configuration Panel](./_assets/Background-Panel-configuration.png){.medium}
+
+The panel includes the following fields:
+- **Image**: Specifies the background image file. Users can select or upload an image that will be used as a background. This field is mandatory.
+- **Name**: Defines the display name of the background configuration. This name is used to identify the background within the system.
+- **Code**: A unique system identifier for the background configuration. This value is used internally and must be unique across all background records.
+
 ## What else you can configure
 
 - **Navigation Menu**: Configure which entities appear and in what order. See [Navigation](../13.user-interface/01.navigation/).
