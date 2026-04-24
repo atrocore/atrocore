@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Selection;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Core\Utils\DataUtil;
@@ -23,12 +22,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Selection/action/createSelectionWithRecords',
+    path: '/Selection/createWithItems',
     methods: [
         'POST',
     ],
-    summary: 'Creates a selection with multiple records',
-    description: 'Creates a new selection and adds the specified entity records to it at once.',
+    summary: 'Create a selection with multiple records',
+    description: 'Creates a new Selection and adds the specified entity records to it in one request.',
     tag: 'Selection',
     requestBody: [
         'required' => true,
@@ -36,14 +35,20 @@ use Psr\Http\Server\RequestHandlerInterface;
             'application/json' => [
                 'schema' => [
                     'type'       => 'object',
+                    'required'   => [
+                        'entityName',
+                        'entityIds',
+                    ],
                     'properties' => [
-                        'scope'     => [
-                            'type'    => 'string',
-                            'example' => 'Product',
+                        'entityName' => [
+                            'type'        => 'string',
+                            'description' => 'Entity type the selection is built for (e.g. "Product")',
+                            'example'     => 'Product',
                         ],
-                        'entityIds' => [
-                            'type'  => 'array',
-                            'items' => [
+                        'entityIds'  => [
+                            'type'        => 'array',
+                            'description' => 'IDs of the entity records to include in the selection',
+                            'items'       => [
                                 'type'    => 'string',
                                 'example' => 'example-id',
                             ],
@@ -55,28 +60,28 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Created Selection record',
+            'description' => 'The created Selection record with its items pre-populated',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object',
-                    ],
+                        '$ref' => '#/components/schemas/Selection'
+                    ]
                 ],
             ],
         ],
+        403 => [
+            'description' => 'Forbidden — the current user does not have create access to Selection',
+        ],
     ],
+    entities: ['Selection']
 )]
-class SelectionCreateWithRecordsHandler extends AbstractHandler
+class SelectionCreateWithItemsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getRequestBody($request);
 
-        if (empty($data->scope) || empty($data->entityIds)) {
-            throw new BadRequest();
-        }
-
-        $selection = $this->getRecordService('Selection')->createSelectionWithRecords($data->scope, $data->entityIds);
+        $selection = $this->getRecordService('Selection')->createSelectionWithRecords($data->entityName, $data->entityIds);
 
         return new JsonResponse(DataUtil::toArray($selection->getValueMap()));
     }

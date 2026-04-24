@@ -19,11 +19,13 @@
           "disabled": true
         },
         "replaceItem": {
-          "url": "SelectionItem/action/replaceItem",
+          "url": "SelectionItem/{{id}}/replace",
+          "method": "PATCH",
           "confirm": false,
           "refresh": true,
           "modalSelectEntity": "{{entityName}}",
           "modalSelectMultiple": false,
+          "modalSelectResultParam": "selectedId",
           "iconClass": "ph ph-swap",
           "sortOrder": 10
         },

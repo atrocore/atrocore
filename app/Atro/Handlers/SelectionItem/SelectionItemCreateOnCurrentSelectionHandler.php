@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\SelectionItem;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,12 +21,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SelectionItem/action/createOnCurrentSelection',
+    path: '/SelectionItem/createOnCurrentSelection',
     methods: [
         'POST',
     ],
-    summary: 'Creates a selection item on current selection',
-    description: 'Creates a selection item for the current active selection of the user.',
+    summary: 'Add a record to the current selection',
+    description: 'Creates a SelectionItem that links the given entity record to the current active Selection of the user.',
     tag: 'SelectionItem',
     requestBody: [
         'required' => true,
@@ -41,12 +40,14 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                     'properties' => [
                         'entityName' => [
-                            'type'    => 'string',
-                            'example' => 'Product',
+                            'type'        => 'string',
+                            'description' => 'Entity type of the record to add (e.g. "Product")',
+                            'example'     => 'Product',
                         ],
                         'entityId'   => [
-                            'type'    => 'string',
-                            'example' => 'example-id',
+                            'type'        => 'string',
+                            'description' => 'ID of the record to add to the current selection',
+                            'example'     => 'example-id',
                         ],
                     ],
                 ],
@@ -55,7 +56,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Whether the item was successfully added to the current selection',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -63,6 +64,9 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                 ],
             ],
+        ],
+        403 => [
+            'description' => 'Forbidden — the current user does not have access to the current selection',
         ],
     ],
 )]
@@ -72,12 +76,8 @@ class SelectionItemCreateOnCurrentSelectionHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (empty($data->entityName) || empty($data->entityId)) {
-            throw new BadRequest();
-        }
+        $res = $this->getRecordService('SelectionItem')->createOnCurrentItem($data->entityName, $data->entityId);
 
-        $result = $this->getRecordService('SelectionItem')->createOnCurrentItem($data->entityName, $data->entityId);
-
-        return new BoolResponse(true);
+        return new BoolResponse($res);
     }
 }

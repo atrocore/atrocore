@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\AttributeFieldConverter;
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
@@ -26,13 +25,10 @@ class SelectionItem extends Base
 
     protected array $services = [];
 
-    public function replaceItem(string $id, \stdClass $selectedItem): bool
+    public function replaceItem(string $id, string $selectedId): bool
     {
         $item = $this->getRepository()->get($id);
-        if ($item->get('entityName') !== $selectedItem->entityName) {
-            throw new BadRequest('entityName mismatch');
-        }
-        $item->set('entityId', $selectedItem->entityId);
+        $item->set('entityId', $selectedId);
         $this->getEntityManager()->saveEntity($item);
         return true;
     }

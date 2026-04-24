@@ -22,17 +22,12 @@ class Selection extends Base
 {
     protected $mandatorySelectAttributeList = ['number', 'entity', 'entityTypes', 'type'];
 
-    public function getTreeItems(string $link, string $scope, array $params): array
+    public function createSelectionWithRecords(string $scope, array $entityIds): Entity
     {
-        if (!$this->getAcl()->check('Selection', 'read')) {
+        if (!$this->getAcl()->check('Selection', 'create')) {
             throw new Forbidden();
         }
 
-        return parent::getTreeItems($link, $scope, $params);
-    }
-
-    public function createSelectionWithRecords(string $scope, array $entityIds)
-    {
         $selection = $this->createSelection($scope);
 
         $items = [];
@@ -77,7 +72,7 @@ class Selection extends Base
         $selection = $this->getEntityManager()->getEntity('Selection');
         $selection->set('type', 'single');
         $selection->set('entity', $scope);
-        if(!empty($masterEntity = $this->getMetadata()->get(['scopes', $scope, 'primaryEntityId']))) {
+        if (!empty($masterEntity = $this->getMetadata()->get(['scopes', $scope, 'primaryEntityId']))) {
             $selection->set('entity', $masterEntity);
         }
         $this->getEntityManager()->saveEntity($selection);
