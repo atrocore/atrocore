@@ -22,5 +22,6 @@
   "attributesDisabled": true,
   "matchingDisabled": true,
   "mergeDisabled": true,
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "valueLockDisabled": true
 }

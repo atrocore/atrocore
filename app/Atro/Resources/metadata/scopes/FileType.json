@@ -11,5 +11,6 @@
   "object": true,
   "hideFieldTypeFilters": true,
   "matchingDisabled": true,
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "valueLockDisabled": true
 }
