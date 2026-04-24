@@ -13,16 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\AttributeFieldConverter;
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
-use Atro\Core\Utils\Util;
-use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Espo\ORM\IEntity;
 
 class Selection extends Base
 {

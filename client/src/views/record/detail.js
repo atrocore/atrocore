@@ -166,9 +166,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             'click a[data-action="setAsInherited"]': function (e) {
                 const $el = $(e.currentTarget);
                 const field = $el.parents('.cell').data('name');
-                this.ajaxPostRequest(`${this.scope}/action/inheritField`, {
+                this.ajaxPostRequest(`${this.scope}/${this.model.get('id')}/inheritField`, {
                     field: field,
-                    id: this.model.get('id')
                 }).then(response => {
                     this.model.fetch().then(() => {
                         this.afterSave();
@@ -322,7 +321,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 confirmText: this.translate('Apply')
             }, () => {
                 this.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.scope + '/action/InheritAllForChildren', { id: this.model.id }).then(() => {
+                this.ajaxPostRequest(`${this.scope}/${this.model.id}/inheritAllForChildren`, {}).then(() => {
                     this.notify('Done', 'success');
                 });
             });
@@ -334,7 +333,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 confirmText: this.translate('Apply')
             }, () => {
                 this.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.scope + '/action/InheritAllFromParent', { id: this.model.id }).then(() => {
+                this.ajaxPostRequest(`${this.scope}/${this.model.id}/inheritAllFromParent`, {}).then(() => {
                     this.notify('Done', 'success');
                 });
             });
