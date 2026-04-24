@@ -49,7 +49,7 @@ class Entity extends ReferenceData
     {
         parent::filterInput($data, $entity);
 
-        if (!is_object($data)) {
+        if (!is_object($data) || empty($entity)) {
             return;
         }
 
