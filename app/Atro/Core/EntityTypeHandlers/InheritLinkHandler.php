@@ -23,12 +23,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Atro\Core\Routing\EntityType;
 
 #[Route(
-    path: '/{entityName}/{id}/inheritField',
+    path: '/{entityName}/{id}/inheritLink',
     methods: [
         'POST',
     ],
-    summary: 'Inherit a single field from parent',
-    description: 'Pulls the value of a specific field from the parent record into the specified record.',
+    summary: 'Inherit all linked records from parent for a relation',
+    description: 'Copies all linked records for a specific relation link from the parent record into the specified record.',
     tag: '{entityName}',
     parameters: [
         [
@@ -44,7 +44,7 @@ use Atro\Core\Routing\EntityType;
             'name'        => 'id',
             'in'          => 'path',
             'required'    => true,
-            'description' => 'ID of the child record to inherit the field into',
+            'description' => 'ID of the child record to inherit linked records into',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -56,11 +56,11 @@ use Atro\Core\Routing\EntityType;
             'application/json' => [
                 'schema' => [
                     'type'       => 'object',
-                    'required'   => ['field'],
+                    'required'   => ['link'],
                     'properties' => [
-                        'field' => [
+                        'link' => [
                             'type'        => 'string',
-                            'description' => 'Name of the field to inherit from the parent record',
+                            'description' => 'Name of the relation link to inherit (e.g. "categories")',
                         ],
                     ],
                 ],
@@ -69,11 +69,18 @@ use Atro\Core\Routing\EntityType;
     ],
     responses: [
         200 => [
-            'description' => 'Whether the field was inherited',
+            'description' => 'Whether any linked records were inherited',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        'anyOf' => [
+                            [
+                                'type' => 'boolean',
+                            ],
+                            [
+                                'type' => 'integer',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -87,14 +94,14 @@ use Atro\Core\Routing\EntityType;
     ],
 )]
 #[EntityType(types: ['Hierarchy'])]
-class InheritFieldHandler extends AbstractHandler
+class InheritLinkHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
         $id         = $request->getAttribute('id');
         $data       = $this->getRequestBody($request);
-        $result     = $this->getRecordService($entityName)->inheritField($data->field, $id);
+        $result     = $this->getRecordService($entityName)->inheritAllForLink($id, $data->link);
 
         return new BoolResponse($result);
     }

@@ -28,13 +28,14 @@ use Psr\Http\Server\RequestHandlerInterface;
         'GET',
     ],
     summary: 'Get hierarchy tree',
-    description: 'Returns tree-structured data for a hierarchy entity. Supports node-based navigation and selected node expansion.',
+    description: 'Returns tree-structured data for a hierarchy entity. Supports node-based lazy loading and selected-node expansion.',
     tag: 'Global',
     parameters: [
         [
             'name'        => 'entityName',
             'in'          => 'query',
             'required'    => true,
+            'description' => 'Entity name to load the tree for (e.g. "Category")',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -43,68 +44,92 @@ use Psr\Http\Server\RequestHandlerInterface;
             'name'        => 'node',
             'in'          => 'query',
             'required'    => false,
+            'description' => 'Parent node ID for lazy loading — returns direct children of this node',
             'schema'      => [
                 'type' => 'string',
             ],
-            'description' => 'Parent node ID for lazy loading',
         ],
         [
             'name'        => 'selectedId',
             'in'          => 'query',
             'required'    => false,
+            'description' => 'Expand the tree to reveal and highlight this record ID',
             'schema'      => [
                 'type' => 'string',
             ],
-            'description' => 'Expand tree to reveal this record',
         ],
         [
-            'name'     => 'link',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
+            'name'        => 'link',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Relation link name used to scope the tree to a specific relation context',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
         [
-            'name'     => 'scope',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
+            'name'        => 'scope',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Entity scope for the relation context — usually the entity name of the linking side',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
         [
-            'name'     => 'offset',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
-                'type'    => 'integer',
-                'example' => 0,
+            'name'        => 'where',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Standard AtroCore where-clause to filter tree nodes',
+            'schema'      => [
+                'anyOf' => [
+                    [
+                        'type' => 'array',
+                    ],
+                    [
+                        'type' => 'object',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
+                ],
             ],
         ],
         [
-            'name'     => 'maxSize',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
-                'type'    => 'integer',
-                'example' => 20,
+            'name'        => 'foreignWhere',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Additional where-clause applied in the relation context defined by `link`',
+            'schema'      => [
+                'anyOf' => [
+                    [
+                        'type' => 'array',
+                    ],
+                    [
+                        'type' => 'object',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
+                ],
             ],
         ],
         [
-            'name'     => 'sortBy',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
+            'name'        => 'sortBy',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Field to sort tree nodes by',
+            'schema'      => [
                 'type'    => 'string',
                 'example' => 'name',
             ],
         ],
         [
-            'name'     => 'asc',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
+            'name'        => 'asc',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Sort direction. `true` for ascending (default), `false` for descending.',
+            'schema'      => [
                 'anyOf'   => [
                     [
                         'type' => 'boolean',
@@ -117,71 +142,101 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         [
-            'name'     => 'isTreePanel',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
+            'name'        => 'isTreePanel',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Set to `true` when the request comes from a tree panel — enables tree-panel-specific filtering',
+            'schema'      => [
                 'type' => 'boolean',
             ],
         ],
         [
-            'name'     => 'where',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
-                'anyOf' => [
-                    [
-                        'type' => 'array',
-                    ],
-                    [
-                        'type' => 'object',
-                    ],
-                    [
-                        'type' => 'string',
-                    ],
-                ],
+            'name'        => 'offset',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Number of records to skip for pagination',
+            'schema'      => [
+                'type'    => 'integer',
+                'example' => 0,
             ],
         ],
         [
-            'name'     => 'foreignWhere',
-            'in'       => 'query',
-            'required' => false,
-            'schema'   => [
-                'anyOf' => [
-                    [
-                        'type' => 'array',
-                    ],
-                    [
-                        'type' => 'object',
-                    ],
-                    [
-                        'type' => 'string',
-                    ],
-                ],
+            'name'        => 'maxSize',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Maximum number of records to return per page',
+            'schema'      => [
+                'type'    => 'integer',
+                'example' => 20,
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Tree nodes collection',
+            'description' => 'Tree nodes for the requested level or selected-node expansion',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
                             'total' => [
-                                'type' => 'integer',
+                                'type'        => 'integer',
+                                'description' => 'Total number of matching records or nodes',
                             ],
                             'list'  => [
-                                'type'  => 'array',
-                                'items' => [
-                                    'type' => 'object',
+                                'type'        => 'array',
+                                'description' => 'Tree nodes or flat records depending on entity type and query mode',
+                                'items'       => [
+                                    'type'       => 'object',
+                                    'properties' => [
+                                        'id'             => [
+                                            'type'        => 'string',
+                                            'description' => 'Record ID',
+                                        ],
+                                        'name'           => [
+                                            'type'        => 'string',
+                                            'description' => 'Localized display name of the record',
+                                        ],
+                                        'offset'         => [
+                                            'type'        => 'integer',
+                                            'description' => 'Position of this item within the full result set — useful for virtual scroll and pagination',
+                                        ],
+                                        'total'          => [
+                                            'type'        => 'integer',
+                                            'description' => 'Total number of siblings at this level — repeated on each item so the client does not need a separate count request',
+                                        ],
+                                        'disabled'       => [
+                                            'type'        => 'boolean',
+                                            'description' => '`true` when the current user cannot read this record — the node is shown but not selectable',
+                                        ],
+                                        'load_on_demand' => [
+                                            'type'        => 'boolean',
+                                            'description' => '`true` when the node has children that should be lazy-loaded by requesting this endpoint again with `node` set to this item\'s `id`',
+                                        ],
+                                        'scope'          => [
+                                            'type'        => 'string',
+                                            'description' => 'Entity name of this record (e.g. "Category") — may differ from `entityName` for polymorphic trees',
+                                        ],
+                                        'children'       => [
+                                            'type'        => 'array',
+                                            'description' => 'Nested child nodes of the same shape — only present for Hierarchy entities when `selectedId` is used to pre-expand the tree',
+                                            'items'       => [
+                                                'type' => 'object',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'Bad request — `entityName` query parameter is missing',
+        ],
+        403 => [
+            'description' => 'Forbidden — the entity type is not supported in tree view, or the current user does not have read access',
         ],
     ],
 )]
