@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\SelectionItem;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,13 +21,24 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SelectionItem/action/replaceItem',
+    path: '/SelectionItem/{id}/replace',
     methods: [
-        'POST',
+        'PATCH',
     ],
-    summary: 'Replaces a selection item entity',
-    description: 'Replaces the entity of an existing selection item with another entity of the same scope.',
+    summary: 'Replace the entity of a selection item',
+    description: 'Swaps the entity record of an existing SelectionItem with another record of the same entity type.',
     tag: 'SelectionItem',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the SelectionItem record to update',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
         'required' => true,
         'content'  => [
@@ -36,18 +46,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                 'schema' => [
                     'type'       => 'object',
                     'required'   => [
-                        'id',
-                        'selectedRecords',
+                        'selectedId',
                     ],
                     'properties' => [
-                        'id'              => [
-                            'type' => 'string',
-                        ],
-                        'selectedRecords' => [
-                            'type'  => 'array',
-                            'items' => [
-                                'type' => 'string',
-                            ],
+                        'selectedId' => [
+                            'type'        => 'string',
+                            'description' => 'ID of the replacement entity record — must be the same entity type as the current item',
                         ],
                     ],
                 ],
@@ -56,7 +60,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Whether the SelectionItem was successfully updated',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -65,20 +69,23 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        403 => [
+            'description' => 'Forbidden — the current user does not have edit access to this item',
+        ],
+        404 => [
+            'description' => 'Not found — no SelectionItem exists with the given ID',
+        ],
     ],
 )]
-class SelectionItemReplaceItemHandler extends AbstractHandler
+class SelectionItemReplaceHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $id   = $request->getAttribute('id');
         $data = $this->getRequestBody($request);
 
-        if (empty($data->id) || empty($data->selectedRecords)) {
-            throw new BadRequest();
-        }
+        $res = $this->getRecordService('SelectionItem')->replaceItem($id, $data->selectedId);
 
-        $result = $this->getRecordService('SelectionItem')->replaceItem($data->id, $data->selectedRecords[0]);
-
-        return new BoolResponse(true);
+        return new BoolResponse($res);
     }
 }

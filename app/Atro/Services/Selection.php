@@ -13,23 +13,21 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\AttributeFieldConverter;
-use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Services\Base;
-use Atro\Core\Utils\Util;
-use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Espo\ORM\IEntity;
 
 class Selection extends Base
 {
     protected $mandatorySelectAttributeList = ['number', 'entity', 'entityTypes', 'type'];
 
-    public function createSelectionWithRecords(string $scope, array $entityIds)
+    public function createSelectionWithRecords(string $scope, array $entityIds): Entity
     {
+        if (!$this->getAcl()->check('Selection', 'create')) {
+            throw new Forbidden();
+        }
+
         $selection = $this->createSelection($scope);
 
         $items = [];
@@ -74,7 +72,7 @@ class Selection extends Base
         $selection = $this->getEntityManager()->getEntity('Selection');
         $selection->set('type', 'single');
         $selection->set('entity', $scope);
-        if(!empty($masterEntity = $this->getMetadata()->get(['scopes', $scope, 'primaryEntityId']))) {
+        if (!empty($masterEntity = $this->getMetadata()->get(['scopes', $scope, 'primaryEntityId']))) {
             $selection->set('entity', $masterEntity);
         }
         $this->getEntityManager()->saveEntity($selection);

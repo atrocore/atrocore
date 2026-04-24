@@ -287,7 +287,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionSelect: function (data) {
-            this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
+            this.ajaxPostRequest('SelectionItem/createOnCurrentSelection', {
                 entityName: this.model.name,
                 entityId: this.model.id
             }).then(_ => {

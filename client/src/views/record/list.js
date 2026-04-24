@@ -988,8 +988,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
             this.notify(this.translate('Loading'))
-            this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
-                scope: this.entityType,
+            this.ajaxPostRequest('Selection/createWithItems', {
+                entityName: this.entityType,
                 entityIds: this.checkedList
             }).then(result => {
                 this.getModelFactory().create('Selection', (selectionModel) => {
@@ -2876,7 +2876,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.notify('Wrong input data', 'error');
             }
 
-            this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
+            this.ajaxPostRequest('SelectionItem/createOnCurrentSelection', {
                 entityName: this.collection.name,
                 entityId: data.id
             }).then(_ => {

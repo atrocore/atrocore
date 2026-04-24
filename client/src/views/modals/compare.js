@@ -108,8 +108,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     label: this.translate('createSelection', 'labels', 'Selection'),
                     disabled: true,
                     onClick: (dialog) => {
-                        this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
-                            scope: this.scope,
+                        this.ajaxPostRequest('Selection/createWithItems', {
+                            entityName: this.scope,
                             entityIds: this.getModels().map(m => m.id)
                         }).then(result => {
                             this.getModelFactory().create('Selection', (selectionModel) => {
@@ -302,8 +302,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 this.listenTo(this, 'switchToMerge', (dialog) => {
                     view.trigger('switchToMerge', dialog);
                     if (!this.versionComparison && !this.options.disableSelection) {
-                        this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
-                            scope: this.scope,
+                        this.ajaxPostRequest('Selection/createWithItems', {
+                            entityName: this.scope,
                             entityIds: this.getModels().map(m => m.id)
                         });
                     }
