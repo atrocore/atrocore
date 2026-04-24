@@ -19,9 +19,11 @@ class ErrorResponse extends Response
 {
     public function __construct(int $status, string $message, array $extraHeaders = [])
     {
+        // HTTP header values must not contain control characters (newlines, etc.)
+        $headerMessage = preg_replace('/[\x00-\x08\x0A-\x1F\x7F]/', ' ', $message);
         parent::__construct(
             $status,
-            array_merge(['Content-Type' => 'text/html; charset=utf-8', 'X-Status-Reason' => $message], $extraHeaders),
+            array_merge(['Content-Type' => 'text/html; charset=utf-8', 'X-Status-Reason' => $headerMessage], $extraHeaders),
             $message
         );
     }
