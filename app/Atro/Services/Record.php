@@ -15,6 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Utils\Language;
@@ -420,6 +421,10 @@ class Record extends RecordService
 
     public function getTreeItems(string $link, string $scope, array $params): array
     {
+        if (!$this->getAcl()->check($this->entityName, 'read')) {
+            throw new Forbidden();
+        }
+
         $params = $this->getParamsForTree($link, $scope, $params);
 
         $repository = $this->getRepository();

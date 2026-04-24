@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Core\EntityTypeHandlers;
 
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Handlers\AbstractHandler;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -45,21 +44,24 @@ use Atro\Core\Routing\EntityType;
     skipActionHistory: true,
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => ['type' => 'string'],
-            'example'  => 'Category',
+            'name'        => 'entityName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Entity name of a Hierarchy-type entity (e.g. "Category")',
+            'schema'      => [
+                'type' => 'string',
+            ],
         ],
         [
             'name'        => 'ids',
             'in'          => 'query',
             'required'    => false,
-            'description' => 'IDs mode: list of record IDs to expand in the tree. '
-                . 'When provided, `where`, `foreignWhere`, `link` and `scope` are ignored.',
+            'description' => 'IDs mode: list of record IDs to expand in the tree. When provided, `where`, `foreignWhere`, `link` and `scope` are ignored.',
             'schema'      => [
                 'type'  => 'array',
-                'items' => ['type' => 'string'],
+                'items' => [
+                    'type' => 'string',
+                ],
             ],
         ],
         [
@@ -69,9 +71,15 @@ use Atro\Core\Routing\EntityType;
             'description' => 'Filter mode: standard AtroCore where-clause to select the leaf records. Ignored when `ids` is provided.',
             'schema'      => [
                 'anyOf' => [
-                    ['type' => 'array'],
-                    ['type' => 'object'],
-                    ['type' => 'string'],
+                    [
+                        'type' => 'array',
+                    ],
+                    [
+                        'type' => 'object',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
                 ],
             ],
         ],
@@ -82,9 +90,15 @@ use Atro\Core\Routing\EntityType;
             'description' => 'Additional where-clause applied in the relation context defined by `link`.',
             'schema'      => [
                 'anyOf' => [
-                    ['type' => 'array'],
-                    ['type' => 'object'],
-                    ['type' => 'string'],
+                    [
+                        'type' => 'array',
+                    ],
+                    [
+                        'type' => 'object',
+                    ],
+                    [
+                        'type' => 'string',
+                    ],
                 ],
             ],
         ],
@@ -92,35 +106,47 @@ use Atro\Core\Routing\EntityType;
             'name'        => 'link',
             'in'          => 'query',
             'required'    => false,
-            'description' => 'Relation name used to scope the filter (e.g. `products`). Used together with `scope`.',
-            'schema'      => ['type' => 'string'],
+            'description' => 'Relation name used to scope the filter (e.g. "products"). Used together with `scope`.',
+            'schema'      => [
+                'type' => 'string',
+            ],
         ],
         [
             'name'        => 'scope',
             'in'          => 'query',
             'required'    => false,
-            'description' => 'Entity scope for the relation context. Usually the entity name of the linking side.',
-            'schema'      => ['type' => 'string'],
+            'description' => 'Entity scope for the relation context — usually the entity name of the linking side.',
+            'schema'      => [
+                'type' => 'string',
+            ],
         ],
         [
             'name'        => 'sortBy',
             'in'          => 'query',
             'required'    => false,
             'description' => 'Field to sort tree nodes by. Defaults to `id`.',
-            'schema'      => ['type' => 'string'],
-            'example'     => 'name',
+            'schema'      => [
+                'type'    => 'string',
+                'example' => 'name',
+            ],
         ],
         [
             'name'        => 'asc',
             'in'          => 'query',
             'required'    => false,
             'description' => 'Sort direction. `true` for ascending (default), `false` for descending.',
-            'schema'      => ['type' => 'string', 'enum' => ['true', 'false']],
+            'schema'      => [
+                'type' => 'string',
+                'enum' => [
+                    'true',
+                    'false',
+                ],
+            ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Nested tree structure.',
+            'description' => 'Nested tree structure built from the matched records and their ancestors',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -137,9 +163,18 @@ use Atro\Core\Routing\EntityType;
                                 'items'       => [
                                     'type'       => 'object',
                                     'properties' => [
-                                        'id'       => ['type' => 'string', 'description' => 'Record ID.'],
-                                        'name'     => ['type' => 'string', 'description' => 'Localized display name.'],
-                                        'scope'    => ['type' => 'string', 'description' => 'Entity name (e.g. `Category`).'],
+                                        'id'       => [
+                                            'type'        => 'string',
+                                            'description' => 'Record ID.',
+                                        ],
+                                        'name'     => [
+                                            'type'        => 'string',
+                                            'description' => 'Localized display name.',
+                                        ],
+                                        'scope'    => [
+                                            'type'        => 'string',
+                                            'description' => 'Entity name (e.g. "Category").',
+                                        ],
                                         'disabled' => [
                                             'type'        => 'boolean',
                                             'description' => '`true` for ancestor nodes that are not in the matched set and should be non-selectable.',
@@ -147,7 +182,9 @@ use Atro\Core\Routing\EntityType;
                                         'children' => [
                                             'type'        => 'array',
                                             'description' => 'Child nodes (same structure, recursively).',
-                                            'items'       => ['type' => 'object'],
+                                            'items'       => [
+                                                'type' => 'object',
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -156,6 +193,9 @@ use Atro\Core\Routing\EntityType;
                     ],
                 ],
             ],
+        ],
+        403 => [
+            'description' => 'Forbidden — the current user does not have read access to this entity type',
         ],
     ],
 )]
@@ -167,10 +207,6 @@ class TreeDataHandler extends AbstractHandler
         $entityName = $this->getEntityName($request);
         $qp         = $request->getQueryParams();
 
-        if (!$this->getAcl()->check($entityName, 'read')) {
-            throw new Forbidden();
-        }
-
         if (!empty($qp['ids'])) {
             $params = ['ids' => (array) $qp['ids']];
         } else {
@@ -181,8 +217,8 @@ class TreeDataHandler extends AbstractHandler
                 'scope'        => (string) ($qp['scope'] ?? ''),
                 'offset'       => 0,
                 'maxSize'      => 5000,
-                'asc'          =>  ($qp['asc'] ?? 'true') === 'true',
-                'sortBy'       => $qp['sortBy'] ?? 'id'
+                'asc'          => ($qp['asc'] ?? 'true') === 'true',
+                'sortBy'       => $qp['sortBy'] ?? 'id',
             ];
         }
 

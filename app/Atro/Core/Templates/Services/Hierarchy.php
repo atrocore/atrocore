@@ -47,6 +47,10 @@ class Hierarchy extends Base
 
     public function inheritAllForChildren(string $id): bool
     {
+        if (!$this->getAcl()->check($this->entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
         $parent = parent::getEntity($id);
         if (empty($parent)) {
             throw new NotFound();
@@ -98,6 +102,10 @@ class Hierarchy extends Base
 
     public function inheritAllFromParent(string $id): bool
     {
+        if (!$this->getAcl()->check($this->entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'], false)) {
             throw new BadRequest();
         }
@@ -169,6 +177,10 @@ class Hierarchy extends Base
 
     public function getTreeData(array $params): array
     {
+        if (!$this->getAcl()->check($this->entityType, 'read')) {
+            throw new Forbidden();
+        }
+
         $sortBy = $params['sortBy'] ?? 'id';
         $order = $params['asc'] ? 'ASC' : 'DESC';
 
@@ -299,8 +311,72 @@ class Hierarchy extends Base
         }
     }
 
+    public function inheritRelation(string $id, string $relationName, string $relationId): bool
+    {
+        if (!$this->getAcl()->check($this->entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $entity = $this->getRepository()->get($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        $metaRelationName = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationName, 'relationName']);
+        if (empty($metaRelationName)) {
+            throw new BadRequest("Relation '$relationName' not found on entity '$this->entityType'.");
+        }
+
+        $relationEntityName = ucfirst($metaRelationName);
+        $relationRepository = $this->getEntityManager()->getRepository($relationEntityName);
+        $keySet             = $relationRepository->getMapper()->getKeys($entity, $relationName);
+
+        $relationRecord = $relationRepository
+            ->where([
+                $keySet['nearKey']    => $id,
+                $keySet['distantKey'] => $relationId,
+            ])
+            ->findOne();
+
+        if (empty($relationRecord)) {
+            throw new NotFound();
+        }
+
+        $additionalFields = $relationRepository->getAdditionalFieldsNames();
+        if (empty($additionalFields)) {
+            return true;
+        }
+
+        $parentsIds = $entity->getLinkMultipleIdList('parents');
+        if (empty($parentsIds)) {
+            return true;
+        }
+
+        $parentRelationRecord = $relationRepository
+            ->where([
+                $keySet['nearKey']    => $parentsIds,
+                $keySet['distantKey'] => $relationId,
+            ])
+            ->findOne();
+
+        if (empty($parentRelationRecord)) {
+            return true;
+        }
+
+        $input = new \stdClass();
+        foreach ($additionalFields as $field) {
+            $input->{$field} = $parentRelationRecord->get($field);
+        }
+
+        return $this->getServiceFactory()->create($relationEntityName)->updateEntity($relationRecord->get('id'), $input);
+    }
+
     public function inheritAllForLink(string $id, string $link): bool
     {
+        if (!$this->getAcl()->check($this->entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
         $event = $this->dispatchEvent('beforeInheritAllForLink', new Event(['id' => $id, 'link' => $link]));
 
         $id = $event->getArgument('id');

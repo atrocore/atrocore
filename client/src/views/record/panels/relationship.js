@@ -814,20 +814,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         actionInheritRelated: function (data) {
-            let id = data.id;
-
-            let relationName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.panelName, 'relationName']);
-            let relEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1);
-
             this.notify('Saving...');
-            this.ajaxPutRequest(`${relEntity}/action/inheritRelation`, {
-                entityType: this.model.urlRoot,
-                entityId: this.model.get('id'),
-                relation: this.panelName,
-                relId: id
+            this.ajaxPostRequest(`${this.model.urlRoot}/${this.model.id}/inheritRelation`, {
+                relationName: this.panelName,
+                relationId: data.id,
             }).then(() => {
                 this.notify('Saved', 'success');
-                this.collection.get(id).trigger('after:save');
+                this.collection.get(data.id).trigger('after:save');
                 this.collection.fetch();
             });
         },
@@ -1077,11 +1070,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.confirm(this.translate('inheritAllConfirmation', 'messages'), function () {
                 this.notify('Please wait...');
                 $.ajax({
-                    url: this.model.name + '/action/inheritAll',
+                    url: `${this.model.name}/${this.model.id}/inheritLink`,
                     type: 'POST',
                     data: JSON.stringify({
                         link: data.link,
-                        id: this.model.id
                     }),
                 }).done(function () {
                     this.notify(false);

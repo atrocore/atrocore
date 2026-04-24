@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\EntityTypeHandlers;
 
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Handlers\AbstractHandler;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -24,26 +23,36 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Atro\Core\Routing\EntityType;
 
 #[Route(
-    path: '/{entityName}/action/inheritAllForChildren',
+    path: '/{entityName}/{id}/inheritAllForChildren',
     methods: [
         'POST',
     ],
-    summary: 'Inherit all fields for children',
-    description: 'Pushes all inheritable field values from a parent record down to all its children.',
+    summary: 'Inherit all fields and links for children',
+    description: 'Pushes all inheritable field values and linked records from the specified parent record down to all its child records. Only fields that are currently null on a child are updated — already-set values are not overwritten.',
     tag: '{entityName}',
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'entityName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Entity name (e.g. "Category")',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the parent record whose values will be pushed to children',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Whether any children were updated',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -51,6 +60,12 @@ use Atro\Core\Routing\EntityType;
                     ],
                 ],
             ],
+        ],
+        403 => [
+            'description' => 'Forbidden — the current user does not have edit access to this entity type',
+        ],
+        404 => [
+            'description' => 'Not found — no record exists with the given ID',
         ],
     ],
 )]
@@ -60,18 +75,10 @@ class InheritAllForChildrenHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
-        $data       = $this->getRequestBody($request);
+        $id         = $request->getAttribute('id');
 
-        if (!property_exists($data, 'id')) {
-            throw new BadRequest();
-        }
+        $result = $this->getRecordService($entityName)->inheritAllForChildren($id);
 
-        if (!$this->getAcl()->check($entityName, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $result = $this->getRecordService($entityName)->inheritAllForChildren((string) $data->id);
-
-        return new JsonResponse($result);
+        return new BoolResponse($result);
     }
 }
