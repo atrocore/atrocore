@@ -760,7 +760,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (this.getMetadata().get(['scopes', scope, 'type']) === 'Hierarchy') {
                 if (foreignLink === 'parents' && !this.getMetadata().get(['scopes', scope, 'multiParents'])) {
                     if (this.model.get('id')) {
-                        attributes.id = this.model.get('id');
+                        attributes.parentId = this.model.get('id');
                     }
                     if (this.getModelTitle(this.model)) {
                         attributes.parentName = this.getModelTitle(this.model);
