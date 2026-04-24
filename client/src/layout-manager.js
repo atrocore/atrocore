@@ -40,6 +40,7 @@ Espo.define('layout-manager', [], function () {
     var BUILTIN_SUBTYPE_MAP = {
         'listExpanded': 'list',
         'listRelationshipCustom': 'list',
+        'settings': 'detail',
     };
 
     var LayoutManager = function (options, userId) {
@@ -162,6 +163,7 @@ Espo.define('layout-manager', [], function () {
             var BUILTIN_SUBTYPE_MAP = {
                 'listExpanded': 'list',
                 'listRelationshipCustom': 'list',
+                'settings': 'detail',
             };
 
             var baseType, layoutName;

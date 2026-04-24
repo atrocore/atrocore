@@ -324,6 +324,7 @@ class Metadata extends AbstractListener
             $data['scopes'][$relationshipEntity]['streamDisabled'] = true;
             $data['scopes'][$relationshipEntity]['matchingDisabled'] = true;
             $data['scopes'][$relationshipEntity]['selectionDisabled'] = true;
+            $data['scopes'][$relationshipEntity]['openApiHidden'] = true;
         }
     }
 
@@ -2527,6 +2528,8 @@ class Metadata extends AbstractListener
                                     $linkDefs['foreign'] = $foreign;
                                 }
                             }
+
+                            $data['scopes'][ucfirst($relationName)]['openApiHidden'] = true;
                         }
 
                         $linkDefs['relationName'] = $relationName;

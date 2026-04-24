@@ -642,6 +642,10 @@ class OpenApiGenerator
         uksort($grouped, fn($a, $b) => $a === 'Global' ? -1 : ($b === 'Global' ? 1 : strcmp($a, $b)));
 
         foreach ($grouped as $tag => $entries) {
+            if (!empty($this->getMetadata()->get(['scopes', $tag, 'openApiHidden']))) {
+                continue;
+            }
+
             usort($entries, fn($a, $b) => strcmp($a['path'], $b['path']));
 
             if (!in_array($tag, array_column($result['tags'], 'name'), true)) {
@@ -724,7 +728,7 @@ class OpenApiGenerator
                 $result['components']['schemas']['LayoutRelationshipItemResponse'] = $this->buildLayoutResponse('#/components/schemas/LayoutRelationshipItem');
                 break;
             case 'LayoutSection':
-                $result['components']['schemas']['LayoutSection'] =  [
+                $result['components']['schemas']['LayoutSection']         = [
                     'type'       => 'object',
                     'properties' => [
                         'label' => ['type' => 'string', 'description' => 'Section heading label (stored as `name` in the database).'],
