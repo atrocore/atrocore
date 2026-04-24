@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\EntityField;
 
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -116,13 +115,8 @@ class EntityFieldPrepareFieldWhereHandler extends AbstractHandler
         $entityFieldId = (string)$request->getAttribute('id');
         $recordId      = (string)($request->getQueryParams()['recordId'] ?? '');
 
-        $entityField = $this->getEntityManager()->getRepository('EntityField')->get($entityFieldId);
-        if (empty($entityField)) {
-            throw new NotFound();
-        }
-
         return new JsonResponse([
-            'where' => $this->getRecordService('EntityField')->prepareFieldWhere($entityField, $recordId)
+            'where' => $this->getRecordService('EntityField')->prepareFieldWhere($entityFieldId, $recordId)
         ]);
     }
 }

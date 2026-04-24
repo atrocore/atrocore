@@ -37,16 +37,46 @@ class EntityField extends ReferenceData
      * @throws Forbidden  When the caller lacks read access to the entity scope, the field,
      *                    or the context record.
      */
-    public function prepareFieldWhere(OrmEntity $entityField, string $recordId): array
+    public function prepareFieldWhere(string $entityFieldId, string $recordId): array
     {
-        $fieldType = (string)$entityField->get('type');
+        $entityField = $this->getEntityManager()->getRepository('EntityField')->get($entityFieldId);
+
+        if ($entityField !== null) {
+            $fieldType = (string)$entityField->get('type');
+            if (!in_array($fieldType, ['link', 'linkMultiple'], true)) {
+                throw new BadRequest(sprintf("Field type '%s' does not support a where-filter.", $fieldType));
+            }
+
+            return $this->prepareFieldWhereByEntityAndField(
+                (string)$entityField->get('entityId'),
+                (string)$entityField->get('code'),
+                $recordId
+            );
+        }
+
+        // Built-in fields have no EntityField DB record; derive entity name and field code from the ID.
+        $underscorePos = strpos($entityFieldId, '_');
+        if ($underscorePos === false) {
+            throw new NotFound();
+        }
+        $entityName = substr($entityFieldId, 0, $underscorePos);
+        $fieldCode  = substr($entityFieldId, $underscorePos + 1);
+
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldCode]);
+        if (empty($fieldDefs)) {
+            throw new NotFound();
+        }
+
+        $fieldType = $fieldDefs['type'] ?? '';
         if (!in_array($fieldType, ['link', 'linkMultiple'], true)) {
             throw new BadRequest(sprintf("Field type '%s' does not support a where-filter.", $fieldType));
         }
 
-        $entityName = (string)$entityField->get('entityId');
-        $fieldCode = (string)$entityField->get('code');
+        return $this->prepareFieldWhereByEntityAndField($entityName, $fieldCode, $recordId);
+    }
 
+    public function prepareFieldWhereByEntityAndField(string $entityName, string $fieldCode, string $recordId): array
+    {
         if (!$this->getAcl()->check($entityName, 'read')) {
             throw new Forbidden();
         }
