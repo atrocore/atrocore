@@ -1920,6 +1920,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.getInlineActionsContainer().find('.value-lock').remove();
             this.getCellElement().off('mouseover.value-lock-' + this.name);
             this.getCellElement().off('mouseleave.value-lock-' + this.name);
+            this.$el.removeClass('is-value-locked');
 
             if (!this.hasLockedControls()) {
                 return;
@@ -1927,6 +1928,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.mode === 'detail' && this.isLocked()) {
                 this.getStatusIconsContainer().append(`<i class="ph ph-lock value-locked" title="${this.translate('fieldValueLocked', 'tooltips')}"></i>`);
+                this.$el.addClass('is-value-locked');
+            }
+
+            if (this.isListView() && this.isLocked()) {
+                this.$el.addClass('is-value-locked');
             }
 
             if (this.readOnly) {

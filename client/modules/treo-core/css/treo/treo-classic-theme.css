@@ -19681,6 +19681,6 @@ body > .error-container .error-links a {
     right: 0;
 }
 
-i.autoconfirmed {
-
+.is-value-locked {
+    opacity: 0.7;
 }

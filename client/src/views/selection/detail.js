@@ -273,7 +273,19 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getItemsUrl(selectionId) {
-            return `Selection/${selectionId}/selectionItems?select=name,entityName,entityId,entity&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`;
+            const params = new URLSearchParams({
+                select: 'name,entityName,entityId,entity',
+                collectionOnly: true,
+                sortBy: 'id',
+                asc: false,
+                offset: 0,
+                maxSize: 20,
+                id: selectionId,
+                entityName: 'Selection',
+                link: 'selectionItems',
+            });
+
+            return `entityRelation?${params.toString()}`;
         },
 
         loadSelectionItemModels(selectionId) {
