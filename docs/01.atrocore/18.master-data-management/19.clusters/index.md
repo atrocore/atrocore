@@ -146,6 +146,14 @@ When Update Master Automatically is enabled in the Master Data Entities configur
 
 If automatic [field locking](https://store.atrocore.com/en/advanced-data-management/20113) on manual modification is enabled, updates from staging records will not overwrite fields in the master record that have been modified manually.
 
+### Automatic Removal of Invalid Masters
+
+When **Delete Invalid Masters Automatically** is enabled in the Master Data Entities configuration, the system automatically removes invalid master records from clusters that already have a Golden Record set.
+
+A cluster is considered to have invalid masters when it contains more than one master record — a state reflected by the **Invalid** cluster state. In this situation, all master records in the cluster except the designated Golden Record are considered invalid. With this option enabled, those excess master records are deleted automatically during the `Create Clusters` job run.
+
+This setting is useful to automatically clean up master data in scenarios where duplicate detection identifies master records that should not coexist independently and should instead be consolidated under the cluster's Golden Record.
+
 ## Purging Clusters
 
 Purging permanently deletes one or more clusters along with all their ClusterItems and RejectedClusterItems. Unlike the standard delete action, which requires a cluster to be in the Empty state, purge removes a cluster regardless of its state.
