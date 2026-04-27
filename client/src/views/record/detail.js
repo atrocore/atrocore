@@ -2579,10 +2579,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         panel.rows = panel.rows.map(row => {
                             return row.map(cell => {
                                 if (!cell || !cell.name) return cell;
+
+                                if (this.getMetadata().get(['entityDefs', this.model.name, 'fields', cell.name, 'isMultilang'])) {
+                                    if (!activeSet.has(this.getConfig().get('mainLanguage'))) {
+                                        return false;
+                                    }
+                                }
+
                                 const multilangLocale = this.getMetadata().get(['entityDefs', this.model.name, 'fields', cell.name, 'multilangLocale']);
                                 if (multilangLocale && !activeSet.has(multilangLocale)) {
                                     return false;
                                 }
+
                                 return cell;
                             });
                         }).filter(row => row.some(cell => cell !== false));
