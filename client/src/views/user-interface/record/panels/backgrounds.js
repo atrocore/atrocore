@@ -16,7 +16,7 @@ Espo.define('views/user-interface/record/panels/backgrounds', 'views/record/pane
             this.defs.create = false;
             this.defs.select = false;
 
-            this.url = 'Background/action/list';
+            this.url = 'Background';
 
             Dep.prototype.setup.call(this);
 
