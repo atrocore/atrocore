@@ -36,8 +36,8 @@ class TextType extends AbstractFieldType
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
-        $id = $row['id'];
-        $name = AttributeFieldConverter::prepareFieldName($row);
+        $id            = $row['id'];
+        $name          = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = !empty($row['data']) ? @json_decode($row['data'], true)['field'] ?? null : null;
 
         $entity->fields[$name] = [
@@ -116,7 +116,7 @@ class TextType extends AbstractFieldType
 
         if (!empty($row['is_multilang'])) {
             foreach ($languages as $language => $languageName) {
-                $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
+                $lName                  = $name . ucfirst(Util::toCamelCase(strtolower($language)));
                 $entity->fields[$lName] = array_merge($entity->fields[$name], [
                     'name'   => $lName,
                     'column' => $this->column . "_" . strtolower($language)
@@ -137,18 +137,18 @@ class TextType extends AbstractFieldType
                 $attributesDefs[$lName] = $entity->entityDefs['fields'][$lName];
             }
             $entity->entityDefs['fields'][$name]['isMultilang'] = true;
-            $entity->entityDefs['fields'][$name]['label'] = $this->getAttributeLabel($row, '', $languages);
+            $entity->entityDefs['fields'][$name]['label']       = $this->getAttributeLabel($row, '', $languages);
         }
 
         if ($this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang'])) {
-            $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
-            $entity->entityDefs['fields'][$name]['mainField'] = $name;
-            $entity->entityDefs['fields'][$name]['unitField'] = true;
+            $entity->entityDefs['fields'][$name]['measureId']        = $row['measure_id'];
+            $entity->entityDefs['fields'][$name]['mainField']        = $name;
+            $entity->entityDefs['fields'][$name]['unitField']        = true;
             $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
-            $entity->entityDefs['fields'][$name]['detailViewLabel'] = $entity->entityDefs['fields'][$name]['label'];
-            $entity->entityDefs['fields'][$name]['label'] = "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate("{$this->type}Part");
+            $entity->entityDefs['fields'][$name]['detailViewLabel']  = $entity->entityDefs['fields'][$name]['label'];
+            $entity->entityDefs['fields'][$name]['label']            = "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate("{$this->type}Part");
 
-            $entity->fields[$name . 'UnitId'] = [
+            $entity->fields[$name . 'UnitId']   = [
                 'type'        => 'varchar',
                 'name'        => $name,
                 'attributeId' => $id,
@@ -202,8 +202,8 @@ class TextType extends AbstractFieldType
                 'conditionalProperties'     => $this->prepareConditionalProperties($row),
                 'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
             ];
-            $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
-            $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
+            $attributesDefs[$name]                        = $entity->entityDefs['fields'][$name];
+            $attributesDefs[$name . 'Unit']               = $entity->entityDefs['fields'][$name . 'Unit'];
 
             $entity->entityDefs['fields'][$name . 'UnitId'] = [
                 'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
@@ -219,10 +219,12 @@ class TextType extends AbstractFieldType
             $currentLocale = $this->em->getEntity('Locale', $localeId);
             if (!empty($currentLocale)) {
                 if (!empty($currentLocale->get('displayLabelsInContentLanguage'))) {
-                    return $row['name_' . strtolower($languageCode)] ?? $row['name'];
+                    if (!empty($row['name_' . strtolower($languageCode)])) {
+                        return $row['name_' . strtolower($languageCode)];
+                    }
                 }
 
-                if (array_key_exists($currentLocale->get('languageCode'), $languages)){
+                if (array_key_exists($currentLocale->get('languageCode'), $languages)) {
                     if ($languageCode === $currentLocale->get('languageCode')) {
                         return $row[$this->prepareKey('name', $row)];
                     }

@@ -96,16 +96,16 @@ class Language extends AbstractListener
                         && !empty($entityDefs['links'][$field]['entity'])
                         && $entityDefs['links'][$field]['foreign'] === 'masterRecord'
                     ) {
-                        $fieldLabel = $this->getLabel($data, $locale, 'Global', 'stagingRecords');
+                        $fieldLabel  = $this->getLabel($data, $locale, 'Global', 'stagingRecords');
                         $entityLabel = $this->getLabel($data, $locale, 'Global', $entityDefs['links'][$field]['entity'], 'scopeNames');
 
                         $data[$locale][$entity]['fields'][$field] = "$fieldLabel ($entityLabel)";
                     }
 
                     if (!empty($fieldDefs['linkToRelationEntity']) && empty($data[$locale][$entity]['fields'][$field])) {
-                        $fieldLabel = $this->getLabel($data, $locale, 'Global', $fieldDefs['linkToRelationEntity'], 'scopeNamesPlural');
+                        $fieldLabel     = $this->getLabel($data, $locale, 'Global', $fieldDefs['linkToRelationEntity'], 'scopeNamesPlural');
                         $relationEntity = $this->getMetadata()->get(['entityDefs', $entity, 'links', $field, 'entity']);
-                        $fieldLabel1 = $this->getLabel($data, $locale, 'Global', $relationEntity, 'scopeNames');
+                        $fieldLabel1    = $this->getLabel($data, $locale, 'Global', $relationEntity, 'scopeNames');
 
                         $data[$locale][$entity]['fields'][$field] = "$fieldLabel ($fieldLabel1)";
                     }
@@ -123,28 +123,28 @@ class Language extends AbstractListener
                             break;
                         case 'rangeInt':
                         case 'rangeFloat':
-                            $fieldLabel = !empty($rows[$entity]['fields'][$field]) ? $rows[$entity]['fields'][$field] : $field;
-                            $fromLabel = !empty($rows['Global']['labels']['From']) ? $rows['Global']['labels']['From'] : 'From';
-                            $toLabel = !empty($rows['Global']['labels']['To']) ? $rows['Global']['labels']['To'] : 'To';
+                            $fieldLabel                                        = !empty($rows[$entity]['fields'][$field]) ? $rows[$entity]['fields'][$field] : $field;
+                            $fromLabel                                         = !empty($rows['Global']['labels']['From']) ? $rows['Global']['labels']['From'] : 'From';
+                            $toLabel                                           = !empty($rows['Global']['labels']['To']) ? $rows['Global']['labels']['To'] : 'To';
                             $data[$locale][$entity]['fields'][$field . 'From'] = $fieldLabel . ' ' . $fromLabel;
-                            $data[$locale][$entity]['fields'][$field . 'To'] = $fieldLabel . ' ' . $toLabel;
+                            $data[$locale][$entity]['fields'][$field . 'To']   = $fieldLabel . ' ' . $toLabel;
 
                             if (!empty($fieldDefs['unitField'])) {
-                                $fieldType = $fieldDefs['type'] === 'rangeInt' ? 'int' : 'float';
-                                $typeLabel = !empty($rows['Global']['labels'][$fieldType . 'Part']) ? $rows['Global']['labels'][$fieldType . 'Part'] : "({$fieldType})";
+                                $fieldType                                         = $fieldDefs['type'] === 'rangeInt' ? 'int' : 'float';
+                                $typeLabel                                         = !empty($rows['Global']['labels'][$fieldType . 'Part']) ? $rows['Global']['labels'][$fieldType . 'Part'] : "({$fieldType})";
                                 $data[$locale][$entity]['fields'][$field . 'From'] .= ' ' . $typeLabel;
-                                $data[$locale][$entity]['fields'][$field . 'To'] .= ' ' . $typeLabel;
+                                $data[$locale][$entity]['fields'][$field . 'To']   .= ' ' . $typeLabel;
                             }
                             break;
                     }
 
                     if (!empty($fieldDefs['unitField'])) {
-                        $mainField = $fieldDefs['mainField'] ?? $field;
-                        $fieldLabel = $this->getLabel($data, $locale, $entity, $mainField);
+                        $mainField     = $fieldDefs['mainField'] ?? $field;
+                        $fieldLabel    = $this->getLabel($data, $locale, $entity, $mainField);
                         $mainFieldType = $this->getMetadata()->get(['entityDefs', $entity, 'fields', $mainField, 'type']);
 
                         if (!in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
-                            $data[$locale][$entity]['fields'][$mainField] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, $mainFieldType . 'Part', 'labels');
+                            $data[$locale][$entity]['fields'][$mainField]                   = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, $mainFieldType . 'Part', 'labels');
                             $data[$locale][$entity]['fields']['unit' . ucfirst($mainField)] = $fieldLabel;
                         }
 
@@ -154,7 +154,7 @@ class Language extends AbstractListener
             }
         }
 
-        $languages = [];
+        $languages        = [];
         $mainLanguageCode = $this->getConfig()->get('mainLanguage');
         $mainLanguageName = null;
 
@@ -202,11 +202,14 @@ class Language extends AbstractListener
                                     $mField = $field . ucfirst(Util::toCamelCase(strtolower($code)));
                                     if (!isset($data[$locale][$scope][$type][$mField])) {
                                         if ($type == 'fields' && $code !== ($displayLabelsInContentLanguage ? str_replace($suffixKey, '', $locale) : $locale)) {
-                                            if ($displayLabelsInContentLanguage) {
-                                                $data[$locale][$scope][$type][$mField] = $this->getLabel($originalData ?? [], $code, $scope, $field);
-                                            } else {
-                                                $data[$locale][$scope][$type][$mField] = $value . ' / ' . $name;
+                                            if ($displayLabelsInContentLanguage && !empty($originalData)) {
+                                                $val = $originalData[$code][$scope]['fields'][$field] ?? $originalData[$code]['Global']['fields'][$field] ?? null;
+                                                if (!empty($val)) {
+                                                    $data[$locale][$scope][$type][$mField] = $val;
+                                                    continue;
+                                                }
                                             }
+                                            $data[$locale][$scope][$type][$mField] = $value . ' / ' . $name;
                                             continue;
                                         }
                                         $data[$locale][$scope][$type][$mField] = $value;
