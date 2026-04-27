@@ -91,7 +91,7 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
             $foreignOffset = 0;
             while (true) {
                 $foreignIds = array_column(
-                    $foreignRepository->find(array_merge($foreignSp, ['disableParentLoad' => true, 'offset' => $foreignOffset, 'limit' => $foreignChunkSize, 'orderBy' => 'id', 'order' => 'ASC', 'select' => ['id']]))->toArray(),
+                    $foreignRepository->find(array_merge($foreignSp, ['offset' => $foreignOffset, 'limit' => $foreignChunkSize, 'orderBy' => 'id', 'order' => 'ASC', 'select' => ['id']]))->toArray(),
                     'id'
                 );
                 if (empty($foreignIds)) {
