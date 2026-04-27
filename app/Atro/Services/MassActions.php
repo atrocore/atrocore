@@ -174,25 +174,23 @@ class MassActions extends HasContainer
             }
 
             if (!empty($existed)) {
+                $result[$k] = [
+                    'entity' => $node->entity,
+                    'id'     => $existed->get('id'),
+                    'stored' => true,
+                ];
+
                 try {
                     $service->updateEntity($existed->get('id'), $node->payload);
-                    $result[$k] = [
-                        'status' => 'Updated',
-                        'stored' => true,
-                        'entity' => $node->entity,
-                        'id'     => $existed->get('id')
-                    ];
+
+                    $result[$k]['status'] = 'Updated';
                 } catch (NotModified $e) {
-                    $result[$k] = [
-                        'status' => 'NotModified',
-                        'stored' => true
-                    ];
+                    $result[$k]['status'] = 'NotModified';
                 } catch (\Throwable $e) {
-                    $result[$k] = [
-                        'status'  => 'Failed',
-                        'stored'  => false,
-                        'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
-                    ];
+                    $result[$k]['status'] = 'Failed';
+                    $result[$k]['stored'] = false;
+                    $result[$k]['code'] = $e->getCode();
+                    $result[$k]['message'] = $e->getMessage();
                 }
                 continue;
             }
@@ -209,7 +207,8 @@ class MassActions extends HasContainer
                 $result[$k] = [
                     'status'  => 'Failed',
                     'stored'  => false,
-                    'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
+                    'code'    => $e->getCode(),
+                    'message' => $e->getMessage()
                 ];
             }
         }
@@ -220,8 +219,8 @@ class MassActions extends HasContainer
     /**
      * Add relation to entities
      *
-     * @param array  $ids
-     * @param array  $foreignIds
+     * @param array $ids
+     * @param array $foreignIds
      * @param string $entityType
      * @param string $link
      *
@@ -291,8 +290,8 @@ class MassActions extends HasContainer
     /**
      * Remove relation from entities
      *
-     * @param array  $ids
-     * @param array  $foreignIds
+     * @param array $ids
+     * @param array $foreignIds
      * @param string $entityType
      * @param string $link
      *
@@ -505,11 +504,11 @@ class MassActions extends HasContainer
 
 
     /**
-     * @param int    $success
-     * @param array  $errors
+     * @param int $success
+     * @param array $errors
      * @param string $entityType
      * @param string $foreignEntityType
-     * @param bool   $relate
+     * @param bool $relate
      *
      * @return string
      */

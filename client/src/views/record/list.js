@@ -1408,6 +1408,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.refreshLayout()
                 })
             }
+
+            if (this.listInlineEditModeEnabled) {
+                this._inlineEditRowAttrs = {};
+                this.listenTo(this.collection, 'sync', () => {
+                    this._inlineEditRowAttrs = {};
+                });
+            }
         },
 
         afterSave: function () {
@@ -3497,6 +3504,160 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.setConfirmLeaveOut(false);
         },
 
+        save() {
+            if (!this.listInlineEditModeEnabled) return;
+
+            const rowViews = this._getRowViewsWithEditFields();
+            if (!rowViews.length) return;
+
+            const changedRows = [];
+            const noChangeRows = [];
+
+            rowViews.forEach(rowView => {
+                const model = rowView.model;
+                const initialAttrs = (this._inlineEditRowAttrs || {})[model.id] || {};
+
+                const fetchedData = {};
+                for (const key in rowView.nestedViews) {
+                    const fv = rowView.nestedViews[key];
+                    if (fv.mode === 'edit' && !fv.disabled && !fv.readOnly && fv.isFullyRendered()) {
+                        Object.assign(fetchedData, fv.fetch());
+                    }
+                }
+
+                const changedAttrs = {};
+                let hasChanges = false;
+                Object.keys(fetchedData).forEach(key => {
+                    if (!_.isEqual(initialAttrs[key], fetchedData[key])) {
+                        changedAttrs[key] = fetchedData[key];
+                        hasChanges = true;
+                    }
+                });
+
+                if (hasChanges) {
+                    changedRows.push({rowView, model, initialAttrs, changedAttrs});
+                } else {
+                    noChangeRows.push(rowView);
+                }
+            });
+
+            let notValid = false;
+            changedRows.forEach(({rowView}) => {
+                for (const key in rowView.nestedViews) {
+                    const fv = rowView.nestedViews[key];
+                    if (fv.disabled || fv.readOnly || typeof fv.validate !== 'function') continue;
+                    if (fv.$el && fv.$el.hasClass('hidden')) continue;
+                    const fieldInvalid = fv.validate();
+                    if (fieldInvalid) {
+                        notValid = true;
+                        if (fv.mode !== 'edit' && typeof fv.inlineEdit === 'function') {
+                            fv.inlineEdit();
+                        }
+                    }
+                }
+            });
+
+            if (notValid) return;
+
+            noChangeRows.forEach(rowView => this._closeRowInlineEdit(rowView));
+
+            if (!changedRows.length) return;
+
+            this.notify('Saving...');
+
+            const upsertPayload = changedRows.map(({model, initialAttrs, changedAttrs}) => {
+                const _prev = {};
+                Object.keys(changedAttrs).forEach(field => {
+                    _prev[field] = initialAttrs[field];
+                });
+                return {
+                    entity: model.name,
+                    payload: Object.assign({id: model.id, _prev, _silentMode: true}, changedAttrs),
+                };
+            });
+
+            this.ajaxPostRequest('upsert', upsertPayload)
+                .success(results => {
+                    let anySuccess = false;
+                    (results || []).forEach((result, i) => {
+                        const {rowView, model, changedAttrs} = changedRows[i];
+                        if (result.status === 'Failed') {
+                            this._markRowFieldsInvalid(rowView, result.message);
+                        } else {
+                            model.set(changedAttrs);
+                            if (this._inlineEditRowAttrs) {
+                                delete this._inlineEditRowAttrs[model.id];
+                            }
+                            model.trigger('after:inlineEditSave');
+                            this._closeRowInlineEdit(rowView);
+                            anySuccess = true;
+                        }
+                    });
+
+                    const stillOpenField = this._getFirstOpenEditField();
+                    if (stillOpenField) {
+                        stillOpenField.initSaveAfterOutsideClick();
+                    }
+
+                    this.notify(anySuccess ? 'Saved' : false, anySuccess ? 'success' : undefined);
+                })
+                .error(xhr => {
+                    xhr.errorIsHandled = true;
+                    const statusReason = xhr.responseJSON?.reason || xhr.responseText || '';
+                    Espo.Ui.notify(
+                        `${this.translate('Error')} ${xhr.status}: ${statusReason}`,
+                        'error', 1000 * 60 * 60 * 2, true
+                    );
+                });
+        },
+
+        _getRowViewsWithEditFields() {
+            const result = [];
+            (this.rowList || []).forEach(key => {
+                const rowView = this.getView(key);
+                if (!rowView) return;
+                const hasEdit = Object.values(rowView.nestedViews || {}).some(fv => fv.mode === 'edit');
+                if (hasEdit) result.push(rowView);
+            });
+            return result;
+        },
+
+        _closeRowInlineEdit(rowView) {
+            for (const key in rowView.nestedViews) {
+                const fv = rowView.nestedViews[key];
+                if (fv.mode === 'edit' && typeof fv.inlineEditClose === 'function') {
+                    fv.inlineEditClose(true);
+                }
+            }
+        },
+
+        _markRowFieldsInvalid(rowView, message) {
+            let first = true;
+            for (const key in rowView.nestedViews) {
+                const fv = rowView.nestedViews[key];
+                if (fv.mode !== 'edit') continue;
+                fv.trigger('invalid');
+                if (first && message && typeof fv.showValidationMessage === 'function') {
+                    fv.showValidationMessage(message);
+                    first = false;
+                }
+            }
+        },
+
+        _getFirstOpenEditField() {
+            for (const rowKey of (this.rowList || [])) {
+                const rv = this.getView(rowKey);
+                if (!rv) continue;
+                for (const key in rv.nestedViews) {
+                    const fv = rv.nestedViews[key];
+                    if (fv.mode === 'edit' && typeof fv.initSaveAfterOutsideClick === 'function') {
+                        return fv;
+                    }
+                }
+            }
+            return null;
+        },
+
         initListenToInlineMode(view) {
             let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
 
@@ -3525,10 +3686,20 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                     this.listenTo(fieldView, 'inline-edit-on', function () {
                         this.inlineEditModeIsOn = true;
+                        if (this.listInlineEditModeEnabled && this._inlineEditRowAttrs && !this._inlineEditRowAttrs[view.model.id]) {
+                            this._inlineEditRowAttrs[view.model.id] = view.model.getClonedAttributes();
+                        }
                     }, this);
                     this.listenTo(fieldView, 'inline-edit-off', function () {
-                        this.inlineEditModeIsOn = false;
-                        this.setIsNotChanged();
+                        const stillHasEdit = (this.rowList || []).some(rowKey => {
+                            const rv = this.getView(rowKey);
+                            if (!rv) return false;
+                            return Object.values(rv.nestedViews || {}).some(fv => fv !== fieldView && fv.mode === 'edit');
+                        });
+                        if (!stillHasEdit) {
+                            this.inlineEditModeIsOn = false;
+                            this.setIsNotChanged();
+                        }
                     }, this);
                 }
             })
