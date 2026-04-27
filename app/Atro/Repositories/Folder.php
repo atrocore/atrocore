@@ -228,6 +228,10 @@ SQL;
                 throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
             }
         } else {
+            if (property_exists($entity, '_scan')) {
+                $this->isScanning = true;
+            }
+
             $this->deleteFromDb($entity->get('id'));
         }
     }
@@ -444,6 +448,10 @@ SQL;
             ->getMapper()
             ->selectById($this->entityFactory->create($this->entityType), $folderId, ['withDeleted' => true]);
         if (!empty($folder)) {
+            if (!empty($this->isScanning)) {
+                $folder->_scan = true;
+                unset($this->isScanning);
+            }
             $this->getStorage($folder)->deleteFolderPermanently($folder);
         }
 

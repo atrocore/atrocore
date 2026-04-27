@@ -181,7 +181,7 @@ class Record extends RecordService
             $chunkSize = $minChunkSize;
         } else {
             if ($total >= ($minChunkSize * $maxConcurrentJobs) && $total <= ($maxChunkSize * $maxConcurrentJobs)) {
-                $chunkSize = ceil($total / $maxConcurrentJobs);
+                $chunkSize = (int)ceil($total / $maxConcurrentJobs);
             } else {
                 $chunkSize = $maxChunkSize;
             }
