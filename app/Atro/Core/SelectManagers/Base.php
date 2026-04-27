@@ -2961,7 +2961,7 @@ class Base
 
     protected function getUser(): User
     {
-        return $this->user;
+        return $this->user->get('delegator');
     }
 
     protected function getAcl(): Acl
