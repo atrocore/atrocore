@@ -41,6 +41,8 @@ Espo.define('layout-manager', [], function () {
         'listExpanded': 'list',
         'listRelationshipCustom': 'list',
         'settings': 'detail',
+        'userInterface': 'detail',
+        'authentication': 'detail',
     };
 
     var LayoutManager = function (options, userId) {
@@ -164,6 +166,8 @@ Espo.define('layout-manager', [], function () {
                 'listExpanded': 'list',
                 'listRelationshipCustom': 'list',
                 'settings': 'detail',
+                'userInterface': 'detail',
+                'authentication': 'detail',
             };
 
             var baseType, layoutName;
