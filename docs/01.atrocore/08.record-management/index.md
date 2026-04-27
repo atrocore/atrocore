@@ -127,7 +127,7 @@ For quick field updates without entering full edit mode, you can use in-line edi
 
 When you click on a field, it enters edit mode, the browser focuses on the field, and the cursor is placed at the end.
 
-In-line editing allows you to modify individual fields without putting the entire record in edit mode.
+In-line editing allows you to modify individual fields without putting the entire record in edit mode. In the list view, fields across multiple records can be edited simultaneously — clicking outside the list saves all changed records at once.
 
 Inline editing is also available in the record [comparison functionality](../09.comparison-and-merge/index.md#compare-records). You can edit field and attribute values directly in the comparison table.
 
