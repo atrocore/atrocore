@@ -91,7 +91,7 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
             $foreignOffset = 0;
             while (true) {
                 $foreignIds = array_column(
-                    $foreignRepository->find(array_merge($foreignSp, ['offset' => $foreignOffset, 'limit' => $foreignChunkSize, 'orderBy' => 'id', 'order' => 'ASC', 'select' => ['id']]))->toArray(),
+                    $foreignRepository->find(array_merge($foreignSp, ['disableParentLoad' => true, 'offset' => $foreignOffset, 'limit' => $foreignChunkSize, 'orderBy' => 'id', 'order' => 'ASC', 'select' => ['id']]))->toArray(),
                     'id'
                 );
                 if (empty($foreignIds)) {
@@ -106,6 +106,7 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
                     'type'        => $childJobType,
                     'priority'    => $job->get('priority'),
                     'ownerUserId' => $job->get('ownerUserId'),
+                    'status'      => 'Awaiting',
                     'payload'     => [
                         'creatorId'    => $job->get('id'),
                         'action'       => $action,
@@ -125,6 +126,8 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
         }
 
         foreach ($jobs as $j) {
+            $j->set('status', 'Pending');
+            $j->set('executeTime', (new \DateTime())->format('Y-m-d H:i:s'));
             $this->getEntityManager()->saveEntity($j);
         }
     }
