@@ -65,12 +65,27 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                                 this.$number?.removeClass('hidden').html(count.toString());
                             }
 
-                            if (savedCount && count > savedCount && $('#notification.alert-danger').length === 0) {
-                                if ((count - savedCount) > 1) {
-                                    Espo.Ui.notify(this.translate('youHaveNewNotifications'), 'info', 5000);
-                                } else {
-                                    Espo.Ui.notify(this.translate('youHaveNewNotification'), 'info', 5000);
-                                }
+                            if (savedCount && count > savedCount) {
+                                const newCount = count - savedCount;
+                                this.ajaxGetRequest('Notification', {
+                                    maxSize: newCount,
+                                    offset: 0,
+                                    where: [{type: 'isFalse', attribute: 'read'}]
+                                }).done(response => {
+                                    (response.list || []).forEach(notification => {
+                                        const data = notification.data || {};
+                                        let message = notification.message || data.message || '';
+                                        if (message) {
+                                            message = message
+                                                .replace(/{user}/g, data.userName || '')
+                                                .replace(/{entity}/g, data.entityName || '')
+                                                .replace(/{entityType}/g, data.entityType || '');
+                                        } else {
+                                            message = this.translate('youHaveNewNotification');
+                                        }
+                                        window.Notifier.notify(message, {type: 'info', duration: 5000});
+                                    });
+                                });
                             }
                             savedCount = count;
 
