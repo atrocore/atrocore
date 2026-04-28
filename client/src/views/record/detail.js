@@ -377,15 +377,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return;
             }
             Espo.ui.notify(this.translate('loading', 'messages'))
-            this.ajaxPostRequest('Action/action/ExecuteRecordAction', {
-                actionId: data.id,
+            this.ajaxPostRequest(`Action/${data.id}/suggestValue`, {
                 entityId: this.model.get('id'),
-                actionType: "suggestingValue",
-                payload: {
-                    uiRecord: this.model.attributes,
-                    uiRecordFromName: this.model.attributes?._entityFrom?._entityName || null,
-                    uiRecordFrom: this.model.attributes?._entityFrom || null,
-                }
+                uiRecord: this.model.attributes,
+                uiRecordFromName: this.model.attributes?._entityFrom?._entityName || null,
+                uiRecordFrom: this.model.attributes?._entityFrom || null,
             }).success(res => {
                 Espo.Ui.notify(false);
                 if (res.toUpdate) {
@@ -411,10 +407,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 // show preview modal
                 Espo.ui.notify(this.translate('loading', 'messages'))
 
-                this.ajaxPostRequest('Action/action/ExecuteRecordAction', {
-                    actionId: data.id,
+                this.ajaxPostRequest(`Action/${data.id}/emailPreview`, {
                     entityId: this.model.get('id'),
-                    actionType: "emailPreview"
                 }).success(response => {
                     this.getModelFactory().create('EmailTemplate', model => {
                         model.set(response);
