@@ -23,6 +23,15 @@ class CompositeType extends AbstractFieldType
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 
+        $entity->fields[$name] = [
+            'type'        => 'composite',
+            'attributeId' => $row['id'],
+        ];
+
+        if (empty($skipValueProcessing)) {
+            $entity->set($name, null);
+        }
+
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
             'attributeValueId'          => $row['av_id'] ?? null,
