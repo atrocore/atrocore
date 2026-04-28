@@ -11275,6 +11275,10 @@ table.no-margin {
     overflow: hidden
 }
 
+.list > table td.has-error {
+    overflow: visible;
+}
+
 .list > table thead tr {
     background-color: inherit;
 }
