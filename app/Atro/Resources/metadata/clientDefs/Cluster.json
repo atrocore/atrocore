@@ -6,8 +6,7 @@
     "list": {
       "buttons": [
         {
-          "name": "purge",
-          "label": "purgeAll",
+          "name": "purgeAll",
           "action": "universalAction",
           "style": "btn-danger",
           "acl": "delete",

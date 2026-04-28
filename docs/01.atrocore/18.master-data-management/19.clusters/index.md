@@ -162,7 +162,7 @@ Purging permanently deletes one or more clusters along with all their ClusterIte
 
 ### Purge All
 
-The **Purge All** button is available in the top-right area of the Cluster list view. It purges every cluster in the system regardless of any active filters or selection. A confirmation dialog is shown before execution.
+The **Purge All** button is available in the top-left area of the Cluster list view. It purges every cluster in the system regardless of any active filters or selection. A confirmation dialog is shown before execution.
 
 ### Purge selected
 

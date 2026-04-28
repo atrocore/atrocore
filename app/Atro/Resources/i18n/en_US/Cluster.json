@@ -29,7 +29,8 @@
     "purge": "Purge"
   },
   "massActionConfirmMessages": {
-    "purge": "Are you sure you want to purge all clusters? This action cannot be undone."
+    "purge": "Are you sure you want to purge selected clusters? This action cannot be undone.",
+    "purgeAll": "Are you sure you want to purge all clusters? This action cannot be undone."
   },
   "exceptions": {
     "cannotDelete": "Only empty clusters can be deleted",
