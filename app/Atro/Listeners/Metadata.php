@@ -2583,11 +2583,11 @@ class Metadata extends AbstractListener
 
             // add additional actions
             $data['clientDefs'][$scope]['detailActions']['updateMasterRecord'] = [
-                "url"       => "$scope/action/updateMasterRecord",
+                "url"       => "$scope/{{id}}/updateMasterRecord",
                 "sortOrder" => 250
             ];
             $data['clientDefs'][$scope]['listActions']['updateMasterRecord'] = [
-                "url"       => "$scope/action/updateMasterRecord",
+                "url"       => "$scope/{{id}}/updateMasterRecord",
                 "sortOrder" => 250
             ];
 

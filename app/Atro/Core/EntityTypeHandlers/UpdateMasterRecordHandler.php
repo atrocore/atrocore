@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Core\EntityTypeHandlers;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\BoolResponse;
@@ -25,26 +24,36 @@ use Atro\Core\Routing\EntityType;
 use Atro\Handlers\AbstractHandler;
 
 #[Route(
-    path: '/{entityName}/action/updateMasterRecord',
+    path: '/{entityName}/{id}/updateMasterRecord',
     methods: [
         'POST',
     ],
-    summary: 'Update master record',
-    description: 'Propagates staging record changes back to the master record.',
+    summary: 'Propagate staging record to master',
+    description: 'Applies all changes from the specified staging record back to its master record.',
     tag: '{entityName}',
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'entityName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Entity name that supports master/staging workflow (e.g. "Product")',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the staging record whose changes will be propagated to the master record',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Whether the master record was successfully updated',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -52,6 +61,12 @@ use Atro\Handlers\AbstractHandler;
                     ],
                 ],
             ],
+        ],
+        403 => [
+            'description' => 'Forbidden — the current user does not have edit access to this entity type',
+        ],
+        404 => [
+            'description' => 'Not found — no staging record with the given ID exists',
         ],
     ],
 )]
@@ -61,18 +76,13 @@ class UpdateMasterRecordHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
-
-        $data = $this->getRequestBody($request);
-
-        if (!property_exists($data, 'id')) {
-            throw new BadRequest();
-        }
+        $id         = (string) $request->getAttribute('id');
 
         if (!$this->getAcl()->check($entityName, 'edit')) {
             throw new Forbidden();
         }
 
-        $staging = $this->entityManager->getRepository($entityName)->get((string) $data->id);
+        $staging = $this->getEntityManager()->getRepository($entityName)->get($id);
         if (empty($staging)) {
             throw new NotFound();
         }
