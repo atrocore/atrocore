@@ -457,7 +457,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             let runAction = () => {
                 this.notify(this.translate('Loading...'));
-                this.ajaxPostRequest(actionDefs.url, { action: name, scope: scope, id: id })
+                let url = actionDefs.url;
+                $.each(model.attributes || {}, (key, value) => {
+                    url = url.replaceAll(`{{${key}}}`, value);
+                });
+                this.ajaxPostRequest(url, { action: name, scope: scope, id: id })
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
                         if (actionDefs.refresh) {
