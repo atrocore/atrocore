@@ -191,7 +191,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             if (this.instanceComparison) {
                 this.getModelFactory().create(this.scope, scopeModel => {
-                    this.ajaxGetRequest(`${this.scope}/${this.model.id}/fromRemoteAtroCore`).success(attrs => {
+                    this.ajaxGetRequest('remoteAtroCore', {entityName: this.scope, id: this.model.id}).success(attrs => {
                         options.distantModels = [];
                         for (const index in attrs) {
                             let attr = attrs[index];

@@ -42,14 +42,14 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                         select: this.selectFields.join(','),
                         maxSize: this.maxTobeshown
                     }),
-                    this.ajaxGetRequest('entityRelationFromRemoteAtroCore', {
+                    this.ajaxGetRequest('remoteAtroCore/entityRelation', {
                         entityName: this.scope,
                         id: this.model.id,
                         link: this.getLinkName(),
                         select: this.selectFields.join(',')
                     }),
                     this.ajaxGetRequest(this.relationName, relationFilter),
-                    this.ajaxGetRequest(`${this.relationName}/fromRemoteAtroCore`, relationFilter),
+                    this.ajaxGetRequest('remoteAtroCore/list', {entityName: this.relationName, ...relationFilter}),
                 ]).then(results => {
                     if (results[0].total > this.maxTobeshown) {
                         this.hasToManyRecords = true;
