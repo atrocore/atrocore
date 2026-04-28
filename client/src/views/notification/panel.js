@@ -39,7 +39,7 @@ Espo.define('views/notification/panel', 'view', function (Dep) {
         events: {
             'click [data-action="markAllNotificationsRead"]': function () {
                 $.ajax({
-                    url: 'Notification/action/markAllRead',
+                    url: 'Notification/markAllRead',
                     type: 'POST'
                 }).done(function (count) {
                     this.trigger('all-read');

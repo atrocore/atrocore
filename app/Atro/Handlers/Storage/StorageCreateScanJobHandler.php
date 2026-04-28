@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Storage;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,34 +21,27 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Storage/action/createScanJob',
+    path: '/Storage/{id}/createScanJob',
     methods: [
         'POST',
     ],
-    summary: 'Creates a storage scan job',
-    description: 'Triggers a background scan job for the specified storage.',
+    summary: 'Create a storage scan job',
+    description: 'Triggers a background job that scans the specified storage and rebuilds its file index.',
     tag: 'Storage',
-    requestBody: [
-        'required' => true,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'id',
-                    ],
-                    'properties' => [
-                        'id' => [
-                            'type' => 'string',
-                        ],
-                    ],
-                ],
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the storage record to scan',
+            'schema'      => [
+                'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Whether the scan job was successfully created',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -58,19 +50,18 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        404 => [
+            'description' => 'Not found — no storage with the given ID exists',
+        ],
     ],
 )]
 class StorageCreateScanJobHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
+        $id = (string) $request->getAttribute('id');
 
-        if (!property_exists($data, 'id') || empty($data->id)) {
-            throw new BadRequest();
-        }
-
-        $result = $this->getRecordService('Storage')->createScanJob((string) $data->id, true);
+        $this->getRecordService('Storage')->createScanJob($id, true);
 
         return new BoolResponse(true);
     }

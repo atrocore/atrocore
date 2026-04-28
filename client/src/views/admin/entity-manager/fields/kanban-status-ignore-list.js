@@ -37,7 +37,7 @@ Espo.define('views/admin/entity-manager/fields/kanban-status-ignore-list', 'view
 
                     if (!Espo[key]) {
                         Espo[key] = [];
-                        this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, {extensibleEnumId: extensibleEnumId}, {async: false}).then(res => {
+                        this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/options`, {}, {async: false}).then(res => {
                             Espo[key] = res;
                         });
                     }
