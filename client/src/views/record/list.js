@@ -1957,37 +1957,21 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.notify(false);
                 dialog.once('select', models => {
                     this.notify('Loading...');
-                    let attributes = {
-                        'ids': null,
-                        'where': null
-                    }
+                    let attributeWhere = Array.isArray(models)
+                        ? [{type: 'in', attribute: 'id', value: models.map(m => m.id)}]
+                        : (models.where ?? []);
 
-                    if (Array.isArray(models)) {
-                        attributes.ids = models.map(m => m.id)
-                    } else if (models.massRelate) {
-                        attributes.where = models.where
-                    }
-
-                    let ids = null;
-                    let where = null;
-                    if (!this.allResultIsChecked) {
-                        ids = this.checkedList;
-                    } else {
-                        where = this.collection.getWhere()
-                    }
+                    let recordWhere = this.allResultIsChecked
+                        ? this.collection.getWhere()
+                        : [{type: 'in', attribute: 'id', value: this.checkedList}];
 
                     $.ajax({
-                        url: this.scope + '/action/massRemoveAttribute',
+                        url: this.scope + '/massRemoveAttributeAsync',
                         type: 'POST',
-                        data: JSON.stringify({
-                            attributes,
-                            ids: ids,
-                            where: where,
-                            byWhere: this.allResultIsChecked
-                        }),
-                        success: (result) => {
+                        data: JSON.stringify({attributeWhere, recordWhere}),
+                        success: (jobId) => {
                             this.notify('A job is created to remove attributes', 'success');
-                            this.checkMassActionJob(result.jobId)
+                            this.checkMassActionJob(jobId);
                         },
                         error: () => {
                             this.notify('Error occurred', 'error');
