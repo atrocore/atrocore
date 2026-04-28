@@ -106,6 +106,7 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
                     'type'        => $childJobType,
                     'priority'    => $job->get('priority'),
                     'ownerUserId' => $job->get('ownerUserId'),
+                    'status'      => 'Awaiting',
                     'payload'     => [
                         'creatorId'    => $job->get('id'),
                         'action'       => $action,
@@ -125,6 +126,8 @@ class EntityRelationBulkCreator extends AbstractJob implements JobInterface
         }
 
         foreach ($jobs as $j) {
+            $j->set('status', 'Pending');
+            $j->set('executeTime', (new \DateTime())->format('Y-m-d H:i:s'));
             $this->getEntityManager()->saveEntity($j);
         }
     }
