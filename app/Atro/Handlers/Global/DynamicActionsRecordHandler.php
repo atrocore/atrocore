@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Global;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -163,6 +164,11 @@ class DynamicActionsRecordHandler extends AbstractHandler
     {
         $entityName = (string)$request->getAttribute('entityName');
         $id = (string)$request->getAttribute('id');
+
+        if (!preg_match('/^[a-zA-Z0-9_-]+$/', $id) || strtolower($id) === 'action') {
+            throw new BadRequest("Invalid record ID '$id'.");
+        }
+
         $query = $request->getQueryParams();
 
         /** @var \Atro\Services\Action $service */

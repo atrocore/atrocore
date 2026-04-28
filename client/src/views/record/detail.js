@@ -367,8 +367,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.executeActionRequest({
                 actionId: data.id,
                 entityId: this.model.get('id'),
-                actionType: defs?.type || dynamicActionData?.type,
-                inBackground: dynamicActionData?.inBackground ?? false
+                actionType: defs?.type || data.type || dynamicActionData?.type,
+                inBackground: data.inBackground ?? dynamicActionData?.inBackground ?? false
             })
         },
 
@@ -404,7 +404,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 actionId: data.id,
                 entityId: this.model.get('id'),
                 actionType: 'email',
-                inBackground: dynamicActionData?.inBackground ?? false
+                inBackground: data.inBackground ?? dynamicActionData?.inBackground ?? false
             }
 
             if (defs.showEmailPreview) {
