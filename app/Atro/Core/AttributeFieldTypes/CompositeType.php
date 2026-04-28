@@ -25,7 +25,9 @@ class CompositeType extends AbstractFieldType
 
         $entity->fields[$name] = [
             'type'        => 'composite',
+            'name'        => $name,
             'attributeId' => $row['id'],
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         if (empty($skipValueProcessing)) {
