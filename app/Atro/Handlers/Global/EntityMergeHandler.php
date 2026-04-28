@@ -48,7 +48,7 @@ If `targetId` is provided, the existing record with that ID becomes the merge ta
                     'properties' => [
                         'entityName' => [
                             'type'        => 'string',
-                            'description' => 'Entity type name (e.g. Product, Contact).',
+                            'description' => 'Entity name (e.g. Product, Contact).',
                         ],
                         'sourceIds'  => [
                             'type'        => 'array',

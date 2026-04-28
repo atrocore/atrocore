@@ -60,23 +60,6 @@ class Action extends Base
         }
     }
 
-    public function executeRecordAction(string $id, string $entityId, string $actionName, $payload = null): array
-    {
-        $action = $this->getRepository()->where(['id' => $id])->findOne();
-        if (empty($action)) {
-            throw new NotFound();
-        }
-
-        $actionType = $this->getActionType($action->get('type'));
-
-        $method = "execute" . ucfirst($actionName);
-        if (!method_exists($actionType, $method)) {
-            throw new NotFound();
-        }
-
-        return $actionType->$method($action, $entityId, $payload);
-    }
-
     public function executeNow(string $id, \stdClass $input): array
     {
         $event = $this->dispatchEvent('beforeExecuteNow', new Event(['id' => $id, 'input' => $input]));
@@ -111,9 +94,8 @@ class Action extends Base
         }
 
         $result = [
-            'inBackground' => $action->get('inBackground'),
-            'success'      => $success,
-            'message'      => $message ?? null,
+            'success' => $success,
+            'message' => $message ?? null,
         ];
 
         return $this
@@ -251,6 +233,7 @@ class Action extends Base
 
                         try {
                             if ($this->getActionManager()->canExecute($action, $input)) {
+                                $dynamicAction['inBackground'] = (bool)$action->get('inBackground');
                                 $res[] = $dynamicAction;
                             }
                         } catch (\Throwable $e) {

@@ -71,7 +71,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                                         ],
                                         '_scope' => [
                                             'type'        => 'string',
-                                            'description' => 'Entity type name the record belongs to (e.g. "Product", "Category").',
+                                            'description' => 'Entity name the record belongs to (e.g. "Product", "Category").',
                                             'example'     => 'Product',
                                         ],
                                     ],

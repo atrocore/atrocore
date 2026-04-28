@@ -57,8 +57,7 @@ class Set extends AbstractAction
 
         $res = $this->getActionManager()->executeNow($action, $input);
 
-        if (empty($action->get('inBackground')) &&
-            (!property_exists($input, 'where') || in_array($action->get('type'), ['export', 'import', 'synchronization'])) &&
+        if ((!property_exists($input, 'where') || in_array($action->get('type'), ['export', 'import', 'synchronization'])) &&
             !empty($next = $this->getNextAction($current))) {
             return $this->executeAction($next, $input);
         }

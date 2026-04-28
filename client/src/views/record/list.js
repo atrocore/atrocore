@@ -726,7 +726,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         executeDynamicMassActionRequest(data, callback) {
             let requestData = {
-                actionId: data.id,
                 ...(data.requestData || {})
             };
 
@@ -740,8 +739,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             this.notify(this.translate('pleaseWait', 'messages'));
 
-            return this.ajaxPostRequest('Action/action/executeNow', requestData).success(response => {
-                if (response.inBackground) {
+            const defs = this.getDynamicActionDefs(data.id)
+            const type = defs?.type
+            return this.ajaxPostRequest(`Action/${data.id}/${type}Async`, requestData).success(response => {
+                if (response.jobId) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                     setTimeout(() => {
                         this.collection.fetch();
@@ -3081,21 +3082,26 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
             }
 
+            const rowModel = this.collection.get(data.entity_id)
+            const dynamicActionData = (rowModel?.dynamicActions || []).find(a => a.data?.action_id === data.action_id)
             this.executeActionRequest({
                 actionId: data.action_id,
-                entityId: data.entity_id
+                entityId: data.entity_id,
+                actionType: defs?.type || dynamicActionData?.type,
+                inBackground: dynamicActionData?.inBackground ?? false
             })
         },
 
         executeActionRequest: function (payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
-
-            return this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
+            const { actionId, actionType, inBackground, ...body } = payload;
+            const urlSuffix = inBackground ? `${actionType}Async` : actionType;
+            return this.ajaxPostRequest(`Action/${actionId}/${urlSuffix}?silent=true`, body).success(response => {
                 if (response.link) {
                     window.open(response.link, '_blank');
                     this.collection.fetch();
                 }
-                if (response.inBackground) {
+                if (response.jobId) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
 
                     if (callback) {
