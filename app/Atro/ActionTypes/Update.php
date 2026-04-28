@@ -25,7 +25,7 @@ class Update extends AbstractAction
 {
     public function execute(ActionExecution $execution, \stdClass $input): bool
     {
-        $action = $execution->get('action');
+        $action       = $execution->get('action');
         $sourceEntity = $this->getSourceEntity($action, $input);
 
         if (empty($action->get('applyToPreselectedRecords'))) {
@@ -37,7 +37,7 @@ class Update extends AbstractAction
             ];
 
             $whereJson = $this->getTwig()->renderTemplate($whereJson, $templateData);
-            $where = @json_decode($whereJson, true);
+            $where     = @json_decode($whereJson, true);
 
             $searchEntityType = $action->get('searchEntity') ?? $action->get('targetEntity');
 
@@ -62,17 +62,17 @@ class Update extends AbstractAction
                 $chunks = [];
 
                 $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
-                $maxChunkSize = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
-                $minChunkSize = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+                $maxChunkSize      = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+                $minChunkSize      = $this->getConfig()->get('massUpdateMinChunkSize', 400);
 
                 $chunkSize = Record::getChunkSize($count, $maxChunkSize, $minChunkSize, $maxConcurrentJobs);
 
                 $offset = 0;
 
-                $select = ['id'];
+                $select  = ['id'];
                 $orderBy = 'id';
                 if (!empty($this->getMetadata()->get(['entityDefs', $searchEntityType, 'fields', 'createdAt']))) {
-                    $orderBy = 'createdAt';
+                    $orderBy  = 'createdAt';
                     $select[] = $orderBy;
                 }
 
@@ -84,7 +84,7 @@ class Update extends AbstractAction
                         ->find($selectParams);
 
                     $offset = $offset + $chunkSize;
-                    $ids = array_column($collection->toArray(), 'id');
+                    $ids    = array_column($collection->toArray(), 'id');
                     if (empty($ids)) {
                         break;
                     }
@@ -147,7 +147,7 @@ class Update extends AbstractAction
 
     public function updateEntity(Entity $entity, ?Entity $triggeredEntity, ActionExecution $execution, \stdClass $input): bool
     {
-        $action = $execution->get('action');
+        $action     = $execution->get('action');
         $actionData = $action->get('data');
 
         if (empty($actionData->field) || empty($actionData->field->updateType)) {
@@ -173,12 +173,12 @@ class Update extends AbstractAction
                     ];
                     if (!empty($triggeredEntity)) {
                         $templateData['triggeredEntityType'] = $triggeredEntity->getEntityType();
-                        $templateData['triggeredEntityId'] = $triggeredEntity->get('id');
-                        $templateData['triggeredEntity'] = $triggeredEntity;
+                        $templateData['triggeredEntityId']   = $triggeredEntity->get('id');
+                        $templateData['triggeredEntity']     = $triggeredEntity;
                     }
                     $outputJson = $this->container->get('twig')->renderTemplate($actionData->field->updateScript, $templateData);
-                    $inputData = @json_decode((string)$outputJson);
-                    if (!is_object($inputData) && !empty(trim($outputJson))) {
+                    $inputData  = @json_decode((string)$outputJson);
+                    if (!is_object($inputData) && !is_array($inputData) && !empty(trim($outputJson))) {
                         $log->set('type', 'error');
                         $log->set('message', "Invalid Json for Update: " . $outputJson);
                         $this->getEntityManager()->saveEntity($log);
