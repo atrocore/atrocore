@@ -49,8 +49,11 @@ Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/
 
             this.confirm(this.translate('executeNow', 'messages', 'Action'), () => {
                 this.notify('Please wait...');
-                this.ajaxPostRequest('Action/action/executeNow', {actionId: this.model.get('id')}).success(response => {
-                    if (response.inBackground) {
+                const type = this.model.get('type');
+                const inBackground = this.model.get('inBackground');
+                const urlSuffix = inBackground ? `${type}Async` : type;
+                this.ajaxPostRequest(`Action/${this.model.get('id')}/${urlSuffix}`, {}).success(response => {
+                    if (response.jobId) {
                         this.notify(this.translate('jobAdded', 'messages'), 'success');
                     } else {
                         if (response.success) {

@@ -363,9 +363,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
+            const dynamicActionData = (this.model.dynamicActions || []).find(a => a.data?.action_id === data.id)
             this.executeActionRequest({
                 actionId: data.id,
-                entityId: this.model.get('id')
+                entityId: this.model.get('id'),
+                actionType: defs?.type || data.type || dynamicActionData?.type,
+                inBackground: data.inBackground ?? dynamicActionData?.inBackground ?? false
             })
         },
 
@@ -374,15 +377,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return;
             }
             Espo.ui.notify(this.translate('loading', 'messages'))
-            this.ajaxPostRequest('Action/action/ExecuteRecordAction', {
-                actionId: data.id,
+            this.ajaxPostRequest(`Action/${data.id}/suggestValue`, {
                 entityId: this.model.get('id'),
-                actionType: "suggestingValue",
-                payload: {
-                    uiRecord: this.model.attributes,
-                    uiRecordFromName: this.model.attributes?._entityFrom?._entityName || null,
-                    uiRecordFrom: this.model.attributes?._entityFrom || null,
-                }
+                uiRecord: this.model.attributes,
+                uiRecordFromName: this.model.attributes?._entityFrom?._entityName || null,
+                uiRecordFrom: this.model.attributes?._entityFrom || null,
             }).success(res => {
                 Espo.Ui.notify(false);
                 if (res.toUpdate) {
@@ -396,19 +395,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (!defs) {
                 return
             }
+            const dynamicActionData = (this.model.dynamicActions || []).find(a => a.data?.action_id === data.id)
             const payload = {
                 actionId: data.id,
-                entityId: this.model.get('id')
+                entityId: this.model.get('id'),
+                actionType: 'email',
+                inBackground: data.inBackground ?? dynamicActionData?.inBackground ?? false
             }
 
             if (defs.showEmailPreview) {
                 // show preview modal
                 Espo.ui.notify(this.translate('loading', 'messages'))
 
-                this.ajaxPostRequest('Action/action/ExecuteRecordAction', {
-                    actionId: data.id,
+                this.ajaxPostRequest(`Action/${data.id}/emailPreview`, {
                     entityId: this.model.get('id'),
-                    actionType: "emailPreview"
                 }).success(response => {
                     this.getModelFactory().create('EmailTemplate', model => {
                         model.set(response);
@@ -480,12 +480,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         executeActionRequest(payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
-            return this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
+            const { actionId, actionType, inBackground, ...body } = payload;
+            const urlSuffix = inBackground ? `${actionType}Async` : actionType;
+            return this.ajaxPostRequest(`Action/${actionId}/${urlSuffix}?silent=true`, body).success(response => {
                 if (response.link) {
                     window.open(response.link, '_blank');
                     this.model.fetch();
                 }
-                if (response.inBackground) {
+                if (response.jobId) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
                     if (response.success) {
@@ -1530,7 +1532,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.executeActionRequest({
                 actionId: item.id,
-                entityId: this.model.get('id')
+                entityId: this.model.get('id'),
+                actionType: item.type,
+                inBackground: false
             })
         },
 
