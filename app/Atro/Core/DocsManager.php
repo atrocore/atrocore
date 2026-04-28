@@ -61,6 +61,7 @@ class DocsManager
         $content    = preg_replace('~\{\.[\w-]+\}~', '', $content);
         $content    = $this->convertGravNotices($content);
         $content    = $this->rewriteAssetUrls($content, $module, $pageDir, $docsDir, $assetBaseUrl);
+        $content    = $this->rewriteExternalHelpLinks($content);
         $relPath    = ltrim(substr($pageDir, strlen($docsDir)), '/');
         $urlPath    = preg_replace('~(^|/)(\d+\.)~', '$1', $relPath);
         $currentDir = rtrim($module . '/' . $urlPath, '/') . '/';
@@ -346,6 +347,7 @@ class DocsManager
                     if ($seg === '.') continue;
                     if ($seg === '..') { array_pop($parts); continue; }
                     $seg = preg_replace(['/^\d+\./', '/\.md$/i'], ['', ''], $seg);
+                    if ($seg === 'index') continue;
                     if (isset($lcMap[strtolower($seg)])) {
                         $canonical = $lcMap[strtolower($seg)];
                         if (empty($parts)) {
@@ -363,6 +365,30 @@ class DocsManager
                 if (empty($parts)) return $full;
 
                 return '[' . $text . '](/' . implode('/', $parts) . '/' . $fragment . ')';
+            },
+            $content
+        );
+    }
+
+    private function rewriteExternalHelpLinks(string $content): string
+    {
+        return preg_replace_callback(
+            '~(!?)\[([^\]]*)\]\(https?://help\.atrocore\.com/[^/]+/([^)#\s]+)(?:#([^)\s]*))?\)~',
+            function ($m) {
+                [$full, $imgPrefix, $text, $path, $anchor] = $m;
+
+                if ($imgPrefix === '!') return $full;
+                if (str_starts_with($path, 'release-notes')) return $full;
+
+                $fragment = !empty($anchor) ? '#' . $anchor : '';
+
+                foreach ($this->getModuleMap() as $moduleId => $docsDir) {
+                    if ($this->resolvePage($docsDir, $path) !== null) {
+                        return '[' . $text . '](/' . $moduleId . '/' . $path . '/' . $fragment . ')';
+                    }
+                }
+
+                return $full;
             },
             $content
         );
