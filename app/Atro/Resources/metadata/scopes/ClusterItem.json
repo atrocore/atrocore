@@ -9,5 +9,6 @@
   "hasTeam": false,
   "streamDisabled": true,
   "selectionDisabled": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "valueLockDisabled": true
 }

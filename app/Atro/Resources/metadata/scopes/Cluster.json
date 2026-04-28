@@ -14,5 +14,6 @@
     "clusterItems"
   ],
   "selectionDisabled": true,
-  "nameField": "number"
+  "nameField": "number",
+  "valueLockDisabled": true
 }
