@@ -43,6 +43,7 @@ Espo.define('layout-manager', [], function () {
         'settings': 'detail',
         'userInterface': 'detail',
         'authentication': 'detail',
+        'upload': 'detail',
     };
 
     var LayoutManager = function (options, userId) {
@@ -168,6 +169,7 @@ Espo.define('layout-manager', [], function () {
                 'settings': 'detail',
                 'userInterface': 'detail',
                 'authentication': 'detail',
+                'upload': 'detail',
             };
 
             var baseType, layoutName;
