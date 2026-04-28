@@ -73,7 +73,7 @@ Espo.define('views/compare-instance', ['views/main'], function (Dep) {
         setupRecord(name = 'instanceComparison') {
             this.notify('Loading...');
             let instances = this.getMetadata().get(['app', 'comparableInstances']);
-            this.ajaxGetRequest(`${this.scope}/${this.model.id}/fromRemoteAtroCore`).success(attrs => {
+            this.ajaxGetRequest('remoteAtroCore', {entityName: this.scope, id: this.model.id}).success(attrs => {
                 this.notify(false);
                 this.getModelFactory().create(this.scope, scopeModel => {
                     let distantModels = [];

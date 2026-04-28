@@ -276,7 +276,16 @@ class OpenApiGenerator
                 'visible'          => ['type' => 'boolean'],
                 'readOnly'         => ['type' => 'boolean'],
                 'protected'        => ['type' => 'boolean'],
-                'value'            => ['nullable' => true, 'example' => null],
+                'value'            => [
+                    'example'  => null,
+                    'anyOf'    => [
+                        ['type' => 'string'],
+                        ['type' => 'number'],
+                        ['type' => 'boolean'],
+                        ['type' => 'array', 'items' => []],
+                        ['type' => 'string', 'nullable' => true]
+                    ]
+                ],
                 'valueName'        => ['type' => 'string', 'nullable' => true],
                 'valueUnitId'      => ['type' => 'string', 'nullable' => true],
                 'valueUnitName'    => ['type' => 'string', 'nullable' => true],
@@ -288,8 +297,8 @@ class OpenApiGenerator
                 'valuePathsData'   => ['type' => 'object', 'nullable' => true],
                 'valueUnitData'    => ['type' => 'object', 'nullable' => true],
                 'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
-                'valueFrom'        => ['nullable' => true, 'example' => 1],
-                'valueTo'          => ['nullable' => true, 'example' => 2],
+                'valueFrom'        => ['type' => 'number', 'nullable' => true, 'example' => 1],
+                'valueTo'          => ['type' => 'number', 'nullable' => true, 'example' => 2],
             ]
         ];
 
@@ -298,12 +307,21 @@ class OpenApiGenerator
             'required'   => ['attributeId'],
             'properties' => [
                 'attributeId' => ['type' => 'string'],
-                'value'       => ['nullable' => true, 'example' => null],
+                'value'       => [
+                    'example'  => null,
+                    'anyOf'    => [
+                        ['type' => 'string'],
+                        ['type' => 'number'],
+                        ['type' => 'boolean'],
+                        ['type' => 'array', 'items' => []],
+                        ['type' => 'string', 'nullable' => true]
+                    ]
+                ],
                 'valueUnitId' => ['type' => 'string', 'nullable' => true],
                 'valueId'     => ['type' => 'string', 'nullable' => true],
                 'valueIds'    => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
-                'valueFrom'   => ['nullable' => true, 'example' => 1],
-                'valueTo'     => ['nullable' => true, 'example' => 2],
+                'valueFrom'   => ['type' => 'number', 'nullable' => true, 'example' => 1],
+                'valueTo'     => ['type' => 'number', 'nullable' => true, 'example' => 2],
             ]
         ];
 
