@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\ExtensibleEnum;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,26 +21,27 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ExtensibleEnum/action/getExtensibleEnumOptions',
+    path: '/ExtensibleEnum/{id}/options',
     methods: [
         'GET',
     ],
     summary: 'Get extensible enum options',
-    description: 'Returns the options for a single extensible enum.',
+    description: 'Returns the full list of options for the specified extensible enum.',
     tag: 'ExtensibleEnum',
     parameters: [
         [
-            'name'     => 'extensibleEnumId',
-            'in'       => 'query',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the extensible enum whose options should be returned',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'List of options',
+            'description' => 'List of options belonging to the extensible enum',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -53,6 +53,9 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        404 => [
+            'description' => 'Not found — no extensible enum with the given ID exists',
+        ],
     ],
     entities: [
         'ExtensibleEnumOption',
@@ -62,12 +65,8 @@ class ExtensibleEnumGetOptionsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $qp = $request->getQueryParams();
+        $id = (string) $request->getAttribute('id');
 
-        if (empty($qp['extensibleEnumId'])) {
-            throw new BadRequest();
-        }
-
-        return new JsonResponse($this->getRecordService('ExtensibleEnum')->getExtensibleEnumOptions((string) $qp['extensibleEnumId']));
+        return new JsonResponse($this->getRecordService('ExtensibleEnum')->getExtensibleEnumOptions($id));
     }
 }

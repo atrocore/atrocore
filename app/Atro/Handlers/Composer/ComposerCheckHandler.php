@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Composer/action/check',
+    path: '/Composer/check',
     methods: [
         'POST',
     ],
@@ -31,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     tag: 'Composer',
     responses: [
         200 => [
-            'description' => 'Update check result',
+            'description' => 'Result of the update check',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -39,6 +39,9 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                 ],
             ],
+        ],
+        403 => [
+            'description' => 'Forbidden — only administrators can perform this action',
         ],
     ],
 )]

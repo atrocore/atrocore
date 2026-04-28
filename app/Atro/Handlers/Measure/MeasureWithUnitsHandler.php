@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Measure;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -23,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Measure/action/measureWithUnits',
+    path: '/Measure/{id}/measureWithUnits',
     methods: [
         'GET',
     ],
@@ -33,17 +32,17 @@ use Psr\Http\Server\RequestHandlerInterface;
     parameters: [
         [
             'name'        => 'id',
-            'in'          => 'query',
+            'in'          => 'path',
             'required'    => true,
+            'description' => 'ID of the measure record',
             'schema'      => [
                 'type' => 'string',
             ],
-            'description' => 'Measure record ID',
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Measure record with active units',
+            'description' => 'Measure record with its active units',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -67,11 +66,8 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
-        400 => [
-            'description' => 'id is required',
-        ],
         404 => [
-            'description' => 'Measure record not found',
+            'description' => 'Not found — no measure with the given ID exists',
         ],
     ],
     entities: [
@@ -83,11 +79,7 @@ class MeasureWithUnitsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $id = $request->getQueryParams()['id'] ?? null;
-
-        if (empty($id)) {
-            throw new BadRequest('id is required');
-        }
+        $id = (string) $request->getAttribute('id');
 
         $service = $this->getServiceFactory()->create('Measure');
 

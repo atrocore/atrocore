@@ -23,33 +23,70 @@ use Atro\Core\Routing\EntityType;
 use Atro\Handlers\AbstractHandler;
 
 #[Route(
-    path: '/{entityName}/action/massRemoveAttribute',
+    path: '/{entityName}/massRemoveAttributeAsync',
     methods: [
         'POST',
     ],
-    summary: 'Mass remove attribute',
-    description: 'Removes an attribute from multiple records of the specified entity.',
+    summary: 'Mass-remove attributes from records (async)',
+    description: 'Schedules a background job that removes the specified attributes from multiple records of the given entity. Always returns a job ID — the operation is never executed synchronously.',
     tag: '{entityName}',
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'entityName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Entity name whose records will have attributes removed (e.g. "Product")',
+            'schema'      => [
                 'type' => 'string',
+            ],
+        ],
+    ],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'attributeWhere',
+                        'recordWhere',
+                    ],
+                    'properties' => [
+                        'attributeWhere' => [
+                            'type'        => 'array',
+                            'description' => 'Filter conditions used to select attributes to remove',
+                            'items'       => [
+                                'type' => 'object',
+                            ],
+                        ],
+                        'recordWhere'    => [
+                            'type'        => 'array',
+                            'description' => 'Filter conditions used to select records to process',
+                            'items'       => [
+                                'type' => 'object',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Entity record',
+            'description' => 'ID of the created background job',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'x-entity-read' => true,
+                        'type' => 'string',
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'Bad request — attributeWhere or recordWhere is missing',
+        ],
+        403 => [
+            'description' => 'Forbidden — the current user does not have update access to this entity type',
         ],
     ],
 )]
@@ -65,11 +102,12 @@ class MassRemoveAttributeHandler extends AbstractHandler
         }
 
         $data       = $this->getRequestBody($request);
-        $params     = $this->buildMassParams($data);
-        $attributes = json_decode(json_encode($data->attributes), true);
+        $massData   = (object) ['where' => $data->recordWhere, 'byWhere' => true];
+        $params     = $this->buildMassParams($massData);
+        $attributes = ['where' => json_decode(json_encode($data->attributeWhere), true)];
 
         $result = $this->getRecordService($entityName)->massRemoveAttribute($attributes, $params);
 
-        return new JsonResponse(is_array($result) ? $result : ['true' => $result]);
+        return new JsonResponse($result['jobId']);
     }
 }

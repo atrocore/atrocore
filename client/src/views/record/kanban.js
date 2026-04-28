@@ -199,7 +199,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 if (!Espo[key]) {
                     Espo[key] = [];
-                    this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, {extensibleEnumId: extensibleEnumId}, {async: false}).then(res => {
+                    this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/options`, {}, {async: false}).then(res => {
                         Espo[key] = res;
                     });
                 }

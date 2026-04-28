@@ -61,7 +61,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.ajaxPostRequest('Composer/action/check').then(response => {
+            this.ajaxPostRequest('Composer/check').then(response => {
                 let alertEl = $('.progress-status');
                 alertEl.html('');
                 if (response.status) {

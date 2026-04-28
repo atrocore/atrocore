@@ -21,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Notification/action/markAllRead',
+    path: '/Notification/markAllRead',
     methods: [
         'POST',
     ],
@@ -30,7 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     tag: 'Notification',
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Whether all notifications were successfully marked as read',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -45,7 +45,7 @@ class NotificationMarkAllReadHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $result = $this->getServiceFactory()->create('Notification')->markAllRead($this->getUser()->id);
+        $this->getServiceFactory()->create('Notification')->markAllRead($this->getUser()->id);
 
         return new BoolResponse(true);
     }

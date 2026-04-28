@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Core\EntityTypeHandlers;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Handlers\AbstractHandler;
-use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,26 +23,55 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Atro\Core\Routing\EntityType;
 
 #[Route(
-    path: '/{entityName}/action/removeAssociates',
+    path: '/{entityName}/removeAssociates',
     methods: [
         'POST',
     ],
-    summary: 'Remove associated records',
-    description: 'Removes associations between main and related records, optionally filtered by association ID.',
+    summary: 'Remove associations between records',
+    description: 'Removes all or a specific association between a main record and a related record. If associationId is provided, only that association is removed; otherwise all associations between the two records are removed.',
     tag: '{entityName}',
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'entityName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Relation entity name (e.g. "ProductAssociation")',
+            'schema'      => [
                 'type' => 'string',
+            ],
+        ],
+    ],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'mainRecordId',
+                        'relatedRecordId',
+                    ],
+                    'properties' => [
+                        'mainRecordId'    => [
+                            'type'        => 'string',
+                            'description' => 'ID of the main record from which associations are removed',
+                        ],
+                        'relatedRecordId' => [
+                            'type'        => 'string',
+                            'description' => 'ID of the related record to disassociate from the main record',
+                        ],
+                        'associationId'   => [
+                            'type'        => 'string',
+                            'description' => 'ID of a specific association to remove; if omitted, all associations between the two records are removed',
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Whether the associations were successfully removed',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -51,6 +79,12 @@ use Atro\Core\Routing\EntityType;
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'Bad request — mainRecordId or relatedRecordId is missing',
+        ],
+        403 => [
+            'description' => 'Forbidden — the current user does not have delete access to this entity type',
         ],
     ],
 )]
@@ -61,10 +95,6 @@ class RemoveAssociatesHandler extends AbstractHandler
     {
         $entityName = $this->getEntityName($request);
         $data       = $this->getRequestBody($request);
-
-        if (!property_exists($data, 'mainRecordId') || !property_exists($data, 'relatedRecordId')) {
-            throw new BadRequest();
-        }
 
         if (!$this->getAcl()->check($entityName, 'delete')) {
             throw new Forbidden();
@@ -77,6 +107,6 @@ class RemoveAssociatesHandler extends AbstractHandler
             $associationId
         );
 
-        return new JsonResponse($result);
+        return new BoolResponse($result);
     }
 }

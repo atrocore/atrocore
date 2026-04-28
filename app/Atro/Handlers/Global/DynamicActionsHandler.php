@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Global;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,24 +21,35 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/{entityName}/dynamicActions',
+    path: '/dynamicActions',
     methods: [
         'GET',
     ],
-    summary: 'Get dynamic actions for an entity',
-    description: 'Returns the list of available dynamic actions for the specified entity. '
-        . 'Used in list view and mass-action context where no specific record is selected. '
+    summary: 'Get dynamic actions for an entity or a record',
+    description: 'Returns the list of available dynamic actions. '
+        . 'When id is provided, actions are evaluated against that specific record state and may include the bookmark toggle. '
+        . 'When id is omitted, actions are returned for the entity as a whole (list/mass-action context). '
         . 'Actions are filtered by the current user\'s ACL and the optional display context.',
     tag: 'Global',
     parameters: [
         [
             'name'        => 'entityName',
-            'in'          => 'path',
+            'in'          => 'query',
             'required'    => true,
             'description' => 'Entity name (e.g. "Product", "Category").',
             'schema'      => [
                 'type'    => 'string',
                 'example' => 'Product',
+            ],
+        ],
+        [
+            'name'        => 'id',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Record ID. When provided, actions are evaluated against the record state.',
+            'schema'      => [
+                'type'    => 'string',
+                'example' => 'a01jz56xg5xe09abkmfg4dr0kvj',
             ],
         ],
         [
@@ -68,7 +78,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'List of available dynamic actions for the entity.',
+            'description' => 'List of available dynamic actions.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -78,7 +88,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'properties' => [
                                 'action'       => [
                                     'type'        => 'string',
-                                    'description' => 'Action identifier. Always "dynamicAction" for workflow-based actions.',
+                                    'description' => 'Action identifier. "dynamicAction" for workflow-based actions, "bookmark" for the bookmark toggle.',
                                     'example'     => 'dynamicAction',
                                 ],
                                 'label'        => [
@@ -115,15 +125,20 @@ use Psr\Http\Server\RequestHandlerInterface;
                                     'type'        => 'object',
                                     'description' => 'Action payload consumed by the frontend action handler.',
                                     'properties'  => [
-                                        'action_id' => [
+                                        'action_id'   => [
                                             'type'        => 'string',
                                             'nullable'    => true,
                                             'description' => 'ID of the Action record (workflow action).',
                                         ],
-                                        'entity_id' => [
+                                        'entity_id'   => [
                                             'type'        => 'string',
                                             'nullable'    => true,
-                                            'description' => 'Always null for entity-level actions.',
+                                            'description' => 'ID of the entity record this action targets. Null when id is not provided.',
+                                        ],
+                                        'bookmark_id' => [
+                                            'type'        => 'string',
+                                            'nullable'    => true,
+                                            'description' => 'ID of the existing Bookmark record. Present only for the bookmark action; null when not yet bookmarked.',
                                         ],
                                     ],
                                 ],
@@ -136,6 +151,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => [
             'description' => 'The current user does not have read access to the entity, or actions are disabled for it.',
         ],
+        404 => [
+            'description' => 'Record not found — only possible when id is provided.',
+        ],
     ],
     skipActionHistory: true,
 )]
@@ -143,8 +161,9 @@ class DynamicActionsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = (string)$request->getAttribute('entityName');
-        $query = $request->getQueryParams();
+        $query      = $request->getQueryParams();
+        $entityName = (string) ($query['entityName'] ?? '');
+        $id         = (string) ($query['id'] ?? '');
 
         /** @var \Atro\Services\Action $service */
         $service = $this->getServiceFactory()->create('Action');
@@ -152,7 +171,7 @@ class DynamicActionsHandler extends AbstractHandler
         return new JsonResponse(
             $service->getDynamicActions(
                 $entityName,
-                null,
+                $id !== '' ? $id : null,
                 $query['type'] ?? null,
                 $query['display'] ?? null
             )

@@ -199,8 +199,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 }
             }
 
-            return this.ajaxGetRequest('PreviewTemplate/action/getHtmlPreview', {
-                previewTemplateId: this.options.previewTemplateId,
+            return this.ajaxGetRequest(`PreviewTemplate/${this.options.previewTemplateId}/htmlPreview`, {
                 entityId: this.options.entityId
             }, options);
         },
