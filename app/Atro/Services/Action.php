@@ -111,9 +111,8 @@ class Action extends Base
         }
 
         $result = [
-            'inBackground' => $action->get('inBackground'),
-            'success'      => $success,
-            'message'      => $message ?? null,
+            'success' => $success,
+            'message' => $message ?? null,
         ];
 
         return $this
@@ -251,6 +250,7 @@ class Action extends Base
 
                         try {
                             if ($this->getActionManager()->canExecute($action, $input)) {
+                                $dynamicAction['inBackground'] = (bool)$action->get('inBackground');
                                 $res[] = $dynamicAction;
                             }
                         } catch (\Throwable $e) {

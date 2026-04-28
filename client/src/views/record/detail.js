@@ -363,9 +363,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
+            const dynamicActionData = (this.model.dynamicActions || []).find(a => a.data?.action_id === data.id)
             this.executeActionRequest({
                 actionId: data.id,
-                entityId: this.model.get('id')
+                entityId: this.model.get('id'),
+                actionType: defs?.type || dynamicActionData?.type,
+                inBackground: dynamicActionData?.inBackground ?? false
             })
         },
 
@@ -396,9 +399,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (!defs) {
                 return
             }
+            const dynamicActionData = (this.model.dynamicActions || []).find(a => a.data?.action_id === data.id)
             const payload = {
                 actionId: data.id,
-                entityId: this.model.get('id')
+                entityId: this.model.get('id'),
+                actionType: 'email',
+                inBackground: dynamicActionData?.inBackground ?? false
             }
 
             if (defs.showEmailPreview) {
@@ -480,12 +486,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         executeActionRequest(payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
-            return this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
+            const { actionId, actionType, inBackground, ...body } = payload;
+            const urlSuffix = inBackground ? `${actionType}Async` : actionType;
+            return this.ajaxPostRequest(`Action/${actionId}/${urlSuffix}?silent=true`, body).success(response => {
                 if (response.link) {
                     window.open(response.link, '_blank');
                     this.model.fetch();
                 }
-                if (response.inBackground) {
+                if (response.jobId) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
                     if (response.success) {
@@ -1530,7 +1538,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.executeActionRequest({
                 actionId: item.id,
-                entityId: this.model.get('id')
+                entityId: this.model.get('id'),
+                actionType: item.type,
+                inBackground: false
             })
         },
 

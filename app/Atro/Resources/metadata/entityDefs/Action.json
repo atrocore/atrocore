@@ -228,18 +228,7 @@
     "inBackground": {
       "type": "bool",
       "default": false,
-      "tooltip": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": []
-            }
-          ]
-        }
-      }
+      "tooltip": true
     },
     "massAction": {
       "type": "bool",

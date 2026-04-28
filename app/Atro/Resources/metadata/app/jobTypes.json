@@ -76,6 +76,10 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\ActionHandler"
   },
+  "ExecuteAction": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\ExecuteAction"
+  },
   "FindMatches": {
     "scheduledJob": true,
     "unique": true,
