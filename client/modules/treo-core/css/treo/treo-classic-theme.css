@@ -19679,3 +19679,7 @@ body > .error-container .error-links a {
 .is-value-locked {
     opacity: 0.7;
 }
+
+.toast-text > .stream-head-container {
+    padding: 0;
+}

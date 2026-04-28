@@ -296,7 +296,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         showReloadPageMessage() {
-            Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);
+            Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', -1, true);
         },
 
         actionEdit: function () {
