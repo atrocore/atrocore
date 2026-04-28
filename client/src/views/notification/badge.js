@@ -74,16 +74,28 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                                 }).done(response => {
                                     (response.list || []).forEach(notification => {
                                         const data = notification.data || {};
-                                        let message = notification.message || data.message || '';
-                                        if (message) {
-                                            message = message
-                                                .replace(/{user}/g, data.userName || '')
-                                                .replace(/{entity}/g, data.entityName || '')
-                                                .replace(/{entityType}/g, data.entityType || '');
-                                        } else {
-                                            message = this.translate('youHaveNewNotification');
+                                        const messageTemplate = notification.message || data.message || '';
+
+                                        if (!messageTemplate) {
+                                            window.Notifier.notify(this.translate('youHaveNewNotification'), {type: 'info', duration: 5000});
+                                            return;
                                         }
-                                        window.Notifier.notify(message, {type: 'info', duration: 5000});
+
+                                        const messageData = {
+                                            entityType: Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase()),
+                                            user: '<a href="#User/view/' + data.userId + '">' + data.userName + '</a>',
+                                            entity: '<a href="#' + data.entityType + '/view/' + data.entityId + '">' + data.entityName + '</a>',
+                                        };
+
+                                        const viewKey = 'notifMsg_' + notification.id;
+                                        this.createView(viewKey, 'views/stream/message', {
+                                            messageTemplate,
+                                            messageData,
+                                        }, view => {
+                                            const html = view._template || messageTemplate;
+                                            this.clearView(viewKey);
+                                            window.Notifier.notify(html, {type: 'info', duration: 5000});
+                                        });
                                     });
                                 });
                             }
