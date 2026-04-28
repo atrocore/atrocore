@@ -2397,7 +2397,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return
             }
 
-            this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumsOptions`, { extensibleEnumIds: idsToLoad }, { async: false }).then(res => {
+            this.ajaxGetRequest(`ExtensibleEnum/options`, { extensibleEnumIds: idsToLoad }, { async: false }).then(res => {
                 Object.entries(res).forEach(([extensibleEnumId, value]) => {
                     Espo['extensible_enum_' + extensibleEnumId] = value;
                 })
