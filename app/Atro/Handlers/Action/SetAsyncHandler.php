@@ -41,18 +41,14 @@ use Atro\Core\Routing\Route;
                 'schema' => [
                     'type'       => 'object',
                     'properties' => [
-                        'entityId'   => [
+                        'entityId' => [
                             'type'        => 'string',
-                            'description' => 'ID of the source entity record passed as context to each sub-action in the set.',
+                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
                         ],
-                        'where'      => [
+                        'where'    => [
                             'type'        => 'array',
-                            'description' => 'Filter conditions for mass execution. Provide together with `massAction: true` to run all sub-actions against every matching record.',
+                            'description' => 'Standard AtroCore filter conditions that select the records the action operates on. The action runs once for every matching record.',
                             'items'       => ['type' => 'object'],
-                        ],
-                        'massAction' => [
-                            'type'        => 'boolean',
-                            'description' => 'Set to `true` to apply all sub-actions to every record matching the `where` filter.',
                         ],
                     ],
                 ],

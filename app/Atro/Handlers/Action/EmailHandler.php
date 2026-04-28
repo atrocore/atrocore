@@ -68,7 +68,7 @@ use Atro\Core\Routing\Route;
                         ],
                         'entityId'  => [
                             'type'        => 'string',
-                            'description' => 'ID of the entity record used as context for template rendering.',
+                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
                         ],
                     ],
                 ],

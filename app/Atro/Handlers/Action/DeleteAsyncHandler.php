@@ -43,11 +43,11 @@ use Atro\Core\Routing\Route;
                     'properties' => [
                         'entityId' => [
                             'type'        => 'string',
-                            'description' => 'ID of the entity record to delete. Required when `applyToPreselectedRecords` is enabled on the action.',
+                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
                         ],
                         'where'    => [
                             'type'        => 'array',
-                            'description' => 'Filter conditions for mass delete. All records matching the filter are deleted.',
+                            'description' => 'Standard AtroCore filter conditions that select the records the action operates on. The action runs once for every matching record.',
                             'items'       => ['type' => 'object'],
                         ],
                     ],
