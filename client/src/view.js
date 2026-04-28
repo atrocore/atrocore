@@ -43,7 +43,7 @@ Espo.define('view', [], function () {
 
         notify: function (label, type, timeout, scope) {
             if (label == false) {
-                Espo.Ui.notify(false);
+                window.Notifier.clearAll();
                 return;
             }
             scope = scope || null;
@@ -52,7 +52,7 @@ Espo.define('view', [], function () {
                 timeout = null;
             }
             var text = this.getLanguage().translate(label, 'labels', scope);
-            Espo.Ui.notify(text, type, timeout);
+            window.Notifier.notify(text, {type: type, duration: timeout});
         },
 
         getHelper: function () {

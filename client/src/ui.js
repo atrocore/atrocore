@@ -340,33 +340,11 @@ Espo.define('ui', [], function () {
         },
 
         notify: function (message, type, timeout, closeButton) {
-            $('#notification').remove();
-
-            if (message) {
-                type = type || 'warning';
-                if (typeof closeButton == 'undefined') {
-                    closeButton = false;
-                }
-
-                if (type == 'error') {
-                    type = 'danger';
-                }
-
-                var el = $('<div class="alert alert-' + type + ' fade in" id="notification" />').html(message);
-
-                if (closeButton) {
-                    el.append('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>');
-                }
-
-                if (timeout) {
-                    setTimeout(function () {
-                        el.alert('close');
-                    }, timeout);
-                }
-
-                el.appendTo('body');
-                el.css("top", (($('#header').height() + 10) + "px"))
+            if (!message) {
+                window.Notifier.clearAll();
+                return;
             }
+            window.Notifier.notify(message, {type: type || 'warning', duration: timeout || 2000, closeButton: !!closeButton});
         },
 
         warning: function (message) {
