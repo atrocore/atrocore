@@ -1714,7 +1714,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             let key = 'measure_data_' + measureId;
             if (!Espo[key]) {
                 Espo[key] = {};
-                this.ajaxGetRequest(`Measure/action/measureWithUnits`, { id: measureId }, { async: false }).then(res => {
+                this.ajaxGetRequest(`Measure/${measureId}/measureWithUnits`, {}, { async: false }).then(res => {
                     Espo[key] = res;
                 });
             }
