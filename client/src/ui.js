@@ -341,7 +341,7 @@ Espo.define('ui', [], function () {
 
         notify: function (message, type, timeout, closeButton) {
             if (!message) {
-                window.Notifier.clearAll();
+                window.Notifier.clearRegular();
                 return;
             }
             window.Notifier.notify(message, {type: type || 'warning', duration: timeout || 2000, closeButton: !!closeButton});

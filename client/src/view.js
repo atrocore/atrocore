@@ -43,7 +43,7 @@ Espo.define('view', [], function () {
 
         notify: function (label, type, timeout, scope) {
             if (label == false) {
-                window.Notifier.clearAll();
+                window.Notifier.clearRegular();
                 return;
             }
             scope = scope || null;

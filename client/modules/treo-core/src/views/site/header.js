@@ -47,6 +47,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                         window.Notifier.notify(this.translate('pleaseRebuildDatabase'), {
                             type: 'danger',
                             duration: -1,
+                            closeButton: true,
                             actions: [{
                                 tooltip: this.translate('rebuildDb', 'labels', 'Admin'),
                                 iconClass: 'ph ph-wrench',
@@ -70,6 +71,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                     window.Notifier.notify(this.translate('pleaseReloadPage'), {
                         type: 'info',
                         duration: -1,
+                        closeButton: true,
                         actions: [{
                             tooltip: this.translate('Refresh'),
                             iconClass: 'ph ph-arrows-clockwise',
