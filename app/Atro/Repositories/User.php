@@ -13,6 +13,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Entities\User as UserEntity;
@@ -156,13 +157,19 @@ class User extends RDB
             $currentUser = $this->getEntityManager()->getUser();
             if ($currentUser !== null && !$currentUser->isAdmin()) {
                 if ($entity->isAttributeChanged('isAdmin')) {
-                    throw new \Atro\Core\Exceptions\Forbidden();
+                    throw new Forbidden();
                 }
                 if ($entity->isAttributeChanged('isEntityAdmin')) {
-                    throw new \Atro\Core\Exceptions\Forbidden();
+                    throw new Forbidden();
                 }
                 if ($entity->isAttributeChanged('isRoleAdmin')) {
-                    throw new \Atro\Core\Exceptions\Forbidden();
+                    throw new Forbidden();
+                }
+                if ($entity->isAttributeChanged('isUserAdmin')) {
+                    throw new Forbidden();
+                }
+                if ($entity->getFetched('isAdmin')) {
+                    throw new Forbidden();
                 }
             }
         }
@@ -201,7 +208,8 @@ class User extends RDB
             || $entity->isAttributeChanged('rolesIds')
             || $entity->isAttributeChanged('isAdmin')
             || $entity->isAttributeChanged('isEntityAdmin')
-            || $entity->isAttributeChanged('isRoleAdmin')) {
+            || $entity->isAttributeChanged('isRoleAdmin')
+            || $entity->isAttributeChanged('isUserAdmin')) {
             $this
                 ->getAclManager()
                 ->clearAclCache();

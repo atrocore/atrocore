@@ -7,6 +7,7 @@
     "isAdmin": "Admin",
     "isEntityAdmin": "Amministratore entità",
     "isRoleAdmin": "Amministratore ruoli",
+    "isUserAdmin": "Amministratore utenti",
     "defaultTeam": "Squadra predefinita",
     "emailAddress": "Email",
     "phoneNumber": "Telefono",
@@ -62,6 +63,7 @@
     "isAdmin": "L'utente amministratore può accedere a tutto.",
     "isEntityAdmin": "Se abilitato, l'utente può creare, modificare ed eliminare entità di sistema e i loro campi.",
     "isRoleAdmin": "Se abilitato, l'utente può creare, modificare ed eliminare ruoli di accesso.",
+    "isUserAdmin": "Se abilitato, l'utente può creare, modificare ed eliminare altri utenti. I flag amministrativi (Admin, Amministratore entità, Amministratore ruoli, Amministratore utenti) possono essere modificati solo dall'amministratore globale.",
     "isActive": "Se è deselezionato, l'utente non potrà effettuare il login.",
     "teams": "I team a cui questo utente appartiene. Il livello di controllo dell'accesso è ereditato dai ruoli del team.",
     "roles": "Ruoli di accesso aggiuntivi. Lo utilizzi se l'utente non appartiene ad alcun team o se ha bisogno di estendere il livello di controllo degli accessi esclusivamente per questo utente."

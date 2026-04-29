@@ -75,6 +75,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 'isAdmin',
                 'isEntityAdmin',
                 'isRoleAdmin',
+                'isUserAdmin',
                 'teams',
                 'roles',
                 'password',
@@ -151,6 +152,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     "rows": [
                         [{"name":"isActive"}, {"name":"isAdmin"}],
                         [{"name":"isEntityAdmin"}, {"name":"isRoleAdmin"}],
+                        [{"name":"isUserAdmin"}, false],
                         [{"name":"teams"}, {"name":"disableActionHistory"}],
                         [{"name":"roles"}, {"name":"defaultTeam"}]
                     ]

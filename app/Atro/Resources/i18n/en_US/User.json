@@ -7,6 +7,7 @@
     "isAdmin": "Admin",
     "isEntityAdmin": "Entity Administrator",
     "isRoleAdmin": "Role Administrator",
+    "isUserAdmin": "User Administrator",
     "defaultTeam": "Default Team",
     "emailAddress": "Email",
     "phoneNumber": "Phone",
@@ -62,6 +63,7 @@
     "isAdmin": "Admin user can access everything.",
     "isEntityAdmin": "If enabled, the user can create, modify, and delete system entities and their fields. Configure your data model by managing existing entities and creating new ones.",
     "isRoleAdmin": "If enabled, the user can create, modify, and delete access roles.",
+    "isUserAdmin": "If enabled, the user can create, modify, and delete other users. This user cannot change admin-level flags (Admin, Entity Administrator, Role Administrator, User Administrator) — only a global Admin can do that.",
     "isActive": "If unchecked then user won't be able to login.",
     "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
     "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user."

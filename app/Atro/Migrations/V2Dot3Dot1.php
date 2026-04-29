@@ -36,6 +36,10 @@ class V2Dot3Dot1 extends Base
                 $table->addColumn('is_role_admin', 'boolean', ['default' => false, 'notnull' => true]);
             }
 
+            if (!$table->hasColumn('is_user_admin')) {
+                $table->addColumn('is_user_admin', 'boolean', ['default' => false, 'notnull' => true]);
+            }
+
             foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
                 $this->exec($sql);
             }

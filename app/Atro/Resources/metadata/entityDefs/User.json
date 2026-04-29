@@ -44,6 +44,20 @@
         }
       }
     },
+    "isUserAdmin": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isAdmin"
+            }
+          ]
+        }
+      }
+    },
     "userName": {
       "type": "varchar",
       "maxLength": 50,

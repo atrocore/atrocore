@@ -7,6 +7,7 @@
     "isAdmin": "Administrateur",
     "isEntityAdmin": "Administrateur d'entités",
     "isRoleAdmin": "Administrateur de rôles",
+    "isUserAdmin": "Administrateur des utilisateurs",
     "defaultTeam": "Équipe par défaut",
     "emailAddress": "Mail",
     "phoneNumber": "Téléphone",
@@ -62,6 +63,7 @@
     "isAdmin": "L'utilisateur Admin peut accéder à tout.",
     "isEntityAdmin": "Si activé, l'utilisateur peut créer, modifier et supprimer des entités système et leurs champs.",
     "isRoleAdmin": "Si activé, l'utilisateur peut créer, modifier et supprimer des rôles d'accès.",
+    "isUserAdmin": "Si activé, l'utilisateur peut créer, modifier et supprimer d'autres utilisateurs. Les indicateurs administratifs (Admin, Administrateur d'entités, Administrateur de rôles, Administrateur des utilisateurs) ne peuvent être modifiés que par l'administrateur global.",
     "isActive": "Si cette case n'est pas cochée, l'utilisateur ne pourra pas se connecter.",
     "teams": "Équipes auxquelles cet utilisateur appartient. Le niveau de contrôle d'accès est hérité des rôles de l'équipe.",
     "roles": "Rôles d'accès supplémentaires. Utilisez-le si l'utilisateur n'appartient à aucune équipe ou si vous devez étendre le niveau de contrôle d'accès exclusivement pour cet utilisateur."

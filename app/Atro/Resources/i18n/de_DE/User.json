@@ -8,6 +8,7 @@
     "isAdmin": "Admin",
     "isEntityAdmin": "Entitäts-Administrator",
     "isRoleAdmin": "Rollen-Administrator",
+    "isUserAdmin": "Benutzer-Administrator",
     "defaultTeam": "Standard-Team",
     "emailAddress": "E-Mail",
     "phoneNumber": "Telefon",
@@ -62,6 +63,7 @@
     "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
     "isEntityAdmin": "Wenn aktiviert, kann der Benutzer System-Entitäten und deren Felder erstellen, ändern und löschen.",
     "isRoleAdmin": "Wenn aktiviert, kann der Benutzer Zugriffsrollen erstellen, ändern und löschen.",
+    "isUserAdmin": "Wenn aktiviert, kann der Benutzer andere Benutzer erstellen, ändern und löschen. Admin-Flags (Admin, Entitäts-Administrator, Rollen-Administrator, Benutzer-Administrator) können nur vom globalen Admin geändert werden.",
     "isActive": "Wenn nicht markiert, kann sich der Benutzer nicht einloggen.",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
     "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."

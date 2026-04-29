@@ -7,6 +7,7 @@
     "isAdmin": "Správce",
     "isEntityAdmin": "Správce entit",
     "isRoleAdmin": "Správce rolí",
+    "isUserAdmin": "Správce uživatelů",
     "defaultTeam": "Výchozí tým",
     "emailAddress": "E-mail",
     "phoneNumber": "Telefon",
@@ -62,6 +63,7 @@
     "isAdmin": "Uživatel Admin má přístup ke všemu.",
     "isEntityAdmin": "Pokud je povoleno, uživatel může vytvářet, upravovat a mazat systémové entity a jejich pole.",
     "isRoleAdmin": "Pokud je povoleno, uživatel může vytvářet, upravovat a mazat přístupové role.",
+    "isUserAdmin": "Pokud je povoleno, uživatel může vytvářet, upravovat a mazat ostatní uživatele. Administrativní příznaky (Admin, Správce entit, Správce rolí, Správce uživatelů) může měnit pouze globální administrátor.",
     "isActive": "Pokud není zaškrtnuto, uživatel se nebude moci přihlásit.",
     "teams": "Týmy, do kterých tento uživatel patří. Úroveň řízení přístupu se dědí z rolí týmu.",
     "roles": "Další přístupové role. Použijte ji, pokud uživatel nepatří do žádného týmu nebo pokud potřebujete rozšířit úroveň řízení přístupu výhradně pro tohoto uživatele."

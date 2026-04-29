@@ -7,6 +7,7 @@
     "isAdmin": "Administrator",
     "isEntityAdmin": "Administrator encji",
     "isRoleAdmin": "Administrator ról",
+    "isUserAdmin": "Administrator użytkowników",
     "defaultTeam": "Domyślny Zespół",
     "emailAddress": "Email",
     "phoneNumber": "Telefon",
@@ -62,6 +63,7 @@
     "isAdmin": "Użytkownik admin może mieć dostęp do wszystkiego.",
     "isEntityAdmin": "Jeśli włączone, użytkownik może tworzyć, modyfikować i usuwać encje systemowe oraz ich pola.",
     "isRoleAdmin": "Jeśli włączone, użytkownik może tworzyć, modyfikować i usuwać role dostępu.",
+    "isUserAdmin": "Jeśli włączone, użytkownik może tworzyć, modyfikować i usuwać innych użytkowników. Flagi administracyjne (Admin, Administrator encji, Administrator ról, Administrator użytkowników) może zmieniać tylko administrator globalny.",
     "isActive": "Jeśli niezaznaczone, użytkownik nie będzie mógł się zalogować.",
     "teams": "Zespoły, do których należy ten użytkownik. Poziom kontroli dostępu jest dziedziczony z ról zespołu.",
     "roles": "Dodatkowe role dostępu. Użyj ich, jeśli użytkownik nie należy do żadnego zespołu lub musisz rozszerzyć poziom kontroli dostępu wyłącznie dla tego użytkownika."
