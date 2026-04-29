@@ -94,7 +94,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                                             }, view => {
                                                 view.getHtml(html => {
                                                     this.clearView(viewKey);
-                                                    window.Notifier.notify(html, {type: 'info', duration: -1, closeButton: true});
+                                                    window.Notifier.notify(html, {type: 'info', duration: 2000, closeButton: true});
                                                 });
                                             });
                                         });
