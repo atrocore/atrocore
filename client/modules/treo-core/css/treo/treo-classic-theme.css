@@ -19074,8 +19074,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .compare-panel table th input[type="checkbox"].compare-header-checkbox {
     position: absolute !important;
-    top: 4px !important;
-    left: 4px;
+    top: 1.25rem !important;
+    left: 1rem;
     margin: 0;
     z-index: 1;
 }

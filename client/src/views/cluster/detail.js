@@ -34,6 +34,15 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
             return entities;
         },
 
+        reloadStyle(selected = null) {
+            Dep.prototype.reloadStyle.call(this);
+
+            selected = selected ?? this.selectionViewMode;
+            if (selected === 'standard') {
+                $(`.compare-mass-action[data-name="massAction"]`).addClass('hidden')
+            }
+        },
+
         shouldOpenSelectDialog() {
             return true;
         },

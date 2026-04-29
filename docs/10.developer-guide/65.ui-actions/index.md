@@ -100,7 +100,7 @@ Adds per-record actions inside a relationship panel on the detail page. Also sup
 
 ### `massActions` — toolbar mass actions
 
-Mass actions are declared under their own top-level `massActions` key, independent of `listActions`. Each entry points to its own bulk endpoint. The payload contains either an `idList` array (selected records) or a `where` clause (when "select all across pages" is used).
+Mass actions are declared under their own top-level `massActions` key, independent of `listActions`. Each entry points to its own bulk endpoint. The payload always contains a `where` clause that describes the selection.
 
 ```json
 {
@@ -189,9 +189,8 @@ public function actionApprove($params, $data, $request)
 
 ### Mass action endpoint
 
-Each entry under `massActions` points at its own bulk endpoint — typically named `EntityName/massXxx`. The `$data` object will contain either:
-- `$data->idList` — array of selected record IDs (specific selection)
-- `$data->where` — filter clause ("select all across pages")
+Each entry under `massActions` points at its own bulk endpoint — typically named `EntityName/massXxx`. The `$data` object will contain:
+- `$data->where` — filter clause describing the selection
 
 If the action also needs a target chosen via a modal (`modalSelectEntity` / `modalSelectResultParam`), that value arrives under the key you declared in `modalSelectResultParam`.
 
@@ -208,19 +207,13 @@ public function actionMassReject($params, $data, $request)
         throw new \Atro\Core\Exceptions\Forbidden();
     }
 
-    $actionParams = [];
-
-    if (property_exists($data, 'where')) {
-        $actionParams['where'] = json_decode(json_encode($data->where), true);
+    if (!property_exists($data, 'where')) {
+        throw new \Atro\Core\Exceptions\BadRequest('A where filter is required.');
     }
 
-    if (property_exists($data, 'idList')) {
-        $actionParams['ids'] = $data->idList;
-    }
-
-    if (empty($actionParams)) {
-        throw new \Atro\Core\Exceptions\BadRequest('Provide idList or a where filter.');
-    }
+    $actionParams = [
+        'where' => json_decode(json_encode($data->where), true),
+    ];
 
     return $this->getRecordService()->reject($actionParams);
 }
@@ -272,7 +265,7 @@ There are **two execution paths** — both must be covered:
 
 This is why **both** `$params['singleActionMethod']` and the closure are required — they serve different paths but both call the same per-record method. The closure handles sync; `singleActionMethod` is the string the background job uses to reach back into the service.
 
-`executeMassAction` resolves `$params['ids']` or `$params['where']` automatically — the service does not need to handle that distinction.
+`executeMassAction` resolves `$params['where']` automatically — the service does not need to handle the selection itself.
 
 ---
 
