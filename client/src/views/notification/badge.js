@@ -95,7 +95,16 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                                             }, view => {
                                                 view.getHtml(html => {
                                                     this.clearView(viewKey);
-                                                    window.Notifier.notify(html, {type: 'notification', duration: -1, closeButton: true});
+                                                    window.Notifier.notify(html, {
+                                                        type: 'notification',
+                                                        duration: 5000,
+                                                        closeButton: true,
+                                                        actions: [{
+                                                            tooltip: this.translate('Mark as read', 'labels'),
+                                                            iconClass: 'ph ph-checks',
+                                                            callback: () => this.ajaxPostRequest('Notification/' + model.id + '/markRead'),
+                                                        }],
+                                                    });
                                                 });
                                             });
                                         });
