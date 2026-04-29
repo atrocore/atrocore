@@ -456,6 +456,7 @@ class User extends Record
             || array_key_exists('teamsIds', $data)
             || array_key_exists('isAdmin', $data)
             || array_key_exists('isEntityAdmin', $data)
+            || array_key_exists('isRoleAdmin', $data)
         ) {
             $this->clearRoleCache($entity->id);
         }
