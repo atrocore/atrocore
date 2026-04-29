@@ -84,7 +84,13 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
         rebuildDb() {
             this.rebuilding = true;
 
-            this.createView('rebuild-db', 'views/modals/rebuild-database', {}, view => view.render());
+            this.createView('rebuild-db', 'views/modals/rebuild-database', {}, view => {
+                view.render();
+                this.listenToOnce(view, 'remove', () => {
+                    this.rebuilding = false;
+                    this.rebuildNotifShown = false;
+                });
+            });
         }
 
     });
