@@ -1,4 +1,5 @@
 {
+  "controller": "controllers/record",
   "relationshipPanels": {
     "scopes": {
       "select": false,

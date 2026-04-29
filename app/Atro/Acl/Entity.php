@@ -13,31 +13,31 @@ namespace Atro\Acl;
 
 use Espo\Core\Acl\Base;
 use Atro\Entities\User;
-use Espo\ORM\Entity;
+use Espo\ORM\Entity as OrmEntity;
 
-class EntityField extends Base
+class Entity extends Base
 {
-    public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
+    public function checkScope(User $user, $data, $action = null, OrmEntity $entity = null, $entityAccessData = array())
     {
         return true;
     }
 
-    public function checkEntityRead(User $user, Entity $entity, $data)
+    public function checkEntityRead(User $user, OrmEntity $entity, $data)
     {
         return true;
     }
 
-    public function checkEntityCreate(User $user, Entity $entity, $data)
+    public function checkEntityCreate(User $user, OrmEntity $entity, $data)
     {
         return $user->isAdmin() || $user->isEntityAdmin();
     }
 
-    public function checkEntityEdit(User $user, Entity $entity, $data)
+    public function checkEntityEdit(User $user, OrmEntity $entity, $data)
     {
         return $user->isAdmin() || $user->isEntityAdmin();
     }
 
-    public function checkEntityDelete(User $user, Entity $entity, $data)
+    public function checkEntityDelete(User $user, OrmEntity $entity, $data)
     {
         return $user->isAdmin() || $user->isEntityAdmin();
     }

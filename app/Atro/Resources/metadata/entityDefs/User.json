@@ -16,6 +16,48 @@
       "type": "bool",
       "tooltip": true
     },
+    "isEntityAdmin": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isAdmin"
+            }
+          ]
+        }
+      }
+    },
+    "isRoleAdmin": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isAdmin"
+            }
+          ]
+        }
+      }
+    },
+    "isUserAdmin": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isAdmin"
+            }
+          ]
+        }
+      }
+    },
     "userName": {
       "type": "varchar",
       "maxLength": 50,
