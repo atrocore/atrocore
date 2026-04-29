@@ -59,6 +59,7 @@ body {
     --error: #f2dede;
     --highlighting-color-for-required: #f0f8ff;
     --highlighting-color-for-data-quality: #fff8B8;
+    --highlighting-color-for-qc-failed: #ffe0e0;
     --field-hover-color: #f8f8f8;
     --field-inline-edit-color: #f2f2f2;
     --toolbar-background-color: #f5f5f5;
@@ -18370,6 +18371,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .highlighted-qc {
     background-color: var(--highlighting-color-for-data-quality);
+}
+
+.highlighted-qc.qc-failed {
+    background-color: var(--highlighting-color-for-qc-failed);
 }
 
 .panel-stream .btn.post,
