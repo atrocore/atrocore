@@ -18,10 +18,6 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         rebuilding: false,
 
-        rebuildNotifShown: false,
-
-        reloadNotifShown: false,
-
         setup: function () {
             this.navbarView = this.getMetadata().get('app.clientDefs.navbarView') || this.navbarView;
 
@@ -31,7 +27,10 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
         },
 
         getPublicData() {
-            setInterval(() => {
+            if (window._publicDataInterval) {
+                clearInterval(window._publicDataInterval);
+            }
+            window._publicDataInterval = setInterval(() => {
                 $.ajax('data/publicData.json?silent=true&time=' + $.now(), {local: true}).done(response => {
                     window.dispatchEvent(new CustomEvent('publicDataFetched', { detail: response }));
                     Backbone.Events.trigger('publicData', response);
@@ -42,8 +41,8 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                         this.isNeedToReloadPage();
                     }
 
-                    if (response.isNeedToRebuildDatabase && !this.rebuilding && !this.rebuildNotifShown) {
-                        this.rebuildNotifShown = true;
+                    if (response.isNeedToRebuildDatabase && !this.rebuilding && !window._rebuildNotifShown) {
+                        window._rebuildNotifShown = true;
                         window.Notifier.notify(this.translate('pleaseRebuildDatabase'), {
                             type: 'danger',
                             duration: -1,
@@ -56,7 +55,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                     }
 
                     if (!response.isNeedToRebuildDatabase) {
-                        this.rebuildNotifShown = false;
+                        window._rebuildNotifShown = false;
                     }
                 });
             }, 1000);
@@ -64,8 +63,8 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         isNeedToReloadPage() {
             const key = 'pd_dataTimestamp';
-            if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key) && !this.reloadNotifShown) {
-                this.reloadNotifShown = true;
+            if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key) && !window._reloadNotifShown) {
+                window._reloadNotifShown = true;
                 setTimeout(() => {
                     window.Notifier.notify(this.translate('pleaseReloadPage'), {
                         type: 'info',
@@ -88,7 +87,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                 view.render();
                 this.listenToOnce(view, 'remove', () => {
                     this.rebuilding = false;
-                    this.rebuildNotifShown = false;
+                    window._rebuildNotifShown = false;
                 });
             });
         }
