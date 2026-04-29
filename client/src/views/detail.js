@@ -80,6 +80,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.notify('Loading...');
+            this.model._disableRefreshNotification = true;
             this.onModelReady(() => this.notify(false));
 
             this.recordView = this.options.recordView || this.recordView;
