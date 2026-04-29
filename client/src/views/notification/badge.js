@@ -70,6 +70,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                                 this.getCollectionFactory().create('Notification', collection => {
                                     collection.maxSize = newCount;
                                     collection.where = [{type: 'isFalse', attribute: 'read'}];
+                                    collection.data = {previewOnly: true};
                                     this.listenToOnce(collection, 'sync', () => {
                                         collection.models.forEach(model => {
                                             const data = model.get('data') || {};
@@ -94,7 +95,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                                             }, view => {
                                                 view.getHtml(html => {
                                                     this.clearView(viewKey);
-                                                    window.Notifier.notify(html, {type: 'info', duration: 2000, closeButton: true});
+                                                    window.Notifier.notify(html, {type: 'notification', duration: -1, closeButton: true});
                                                 });
                                             });
                                         });

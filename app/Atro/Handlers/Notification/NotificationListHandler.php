@@ -95,9 +95,10 @@ class NotificationListHandler extends AbstractHandler
         }
 
         $result = $this->getServiceFactory()->create('Notification')->getList($this->getUser()->id, [
-            'offset'  => (int) ($qp['offset'] ?? 0),
-            'maxSize' => $maxSize,
-            'after'   => $qp['after'] ?? null,
+            'offset'      => (int) ($qp['offset'] ?? 0),
+            'maxSize'     => $maxSize,
+            'after'       => $qp['after'] ?? null,
+            'previewOnly' => !empty($qp['previewOnly']),
         ]);
 
         return new JsonResponse([
