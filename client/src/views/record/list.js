@@ -1818,7 +1818,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 };
             }
             if (url) {
-                this.ajaxPutRequest(url, data)
+                this.ajaxPatchRequest(url, data)
                     .then(response => {
                         let statusMsg = 'Error occurred';
                         let type = 'error';
