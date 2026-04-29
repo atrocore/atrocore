@@ -24,10 +24,6 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
             Dep.prototype.setup.call(this);
 
             this.getPublicData();
-
-            $(document).on('click', 'a[data-action="rebuild-notification"]', () => {
-                this.rebuildDb();
-            });
         },
 
         getPublicData() {
@@ -43,7 +39,15 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                     }
 
                     if (response.isNeedToRebuildDatabase && !this.rebuilding) {
-                        Espo.Ui.notify(this.translate('pleaseRebuildDatabase'), 'danger', -1, true);
+                        window.Notifier.notify(this.translate('pleaseRebuildDatabase'), {
+                            type: 'danger',
+                            duration: -1,
+                            actions: [{
+                                tooltip: this.translate('rebuildDb', 'labels', 'Admin'),
+                                iconClass: 'ph ph-wrench',
+                                callback: () => this.rebuildDb(),
+                            }],
+                        });
                     }
                 });
             }, 1000);
@@ -53,7 +57,15 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
             const key = 'pd_dataTimestamp';
             if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key)) {
                 setTimeout(() => {
-                    Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', -1, true);
+                    window.Notifier.notify(this.translate('pleaseReloadPage'), {
+                        type: 'info',
+                        duration: -1,
+                        actions: [{
+                            tooltip: this.translate('Refresh'),
+                            iconClass: 'ph ph-arrows-clockwise',
+                            callback: () => window.location.reload(),
+                        }],
+                    });
                 }, 5000);
             }
             this.dataTimestamp = localStorage.getItem(key);
