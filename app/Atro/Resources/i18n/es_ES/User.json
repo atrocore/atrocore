@@ -4,6 +4,7 @@
     "userName": "Nombre de Usuario",
     "title": "Título",
     "isAdmin": "Es administrador",
+    "isEntityAdmin": "Es administrador de entidades",
     "defaultTeam": "Equipo por defecto",
     "emailAddress": "Correo electrónico",
     "phoneNumber": "Teléfono",
@@ -58,6 +59,7 @@
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
     "userName": "Letras a-z, números 0-9 y guiones bajos están permitidos",
     "isAdmin": "El usuario administrador puede tener acceso a todo.",
+    "isEntityAdmin": "Si está activado, el usuario puede crear, modificar y eliminar entidades del sistema y sus campos.",
     "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",
     "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
     "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso solo para este usuario."

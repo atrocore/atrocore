@@ -21,6 +21,11 @@ class User extends \Espo\Core\ORM\Entity
         return $this->get('delegator')->get('isAdmin');
     }
 
+    public function isEntityAdmin(): bool
+    {
+        return (bool)$this->get('delegator')->get('isEntityAdmin');
+    }
+
     public function isGlobalSystemUser(): bool
     {
         return $this->get('userName') === 'system';

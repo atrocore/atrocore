@@ -5,6 +5,7 @@
     "userName": "Nome utente",
     "title": "Titolo",
     "isAdmin": "È Admin",
+    "isEntityAdmin": "È amministratore entità",
     "defaultTeam": "Squadra predefinita",
     "emailAddress": "Email",
     "phoneNumber": "Telefono",
@@ -58,6 +59,7 @@
     "defaultTeam": "Tutti i record creati da questo utente saranno collegati a questo team per impostazione predefinita.",
     "userName": "Sono consentite le lettere a-z, i numeri 0-9, i punti, i trattini, i segni @ e i trattini bassi.",
     "isAdmin": "L'utente amministratore può accedere a tutto.",
+    "isEntityAdmin": "Se abilitato, l'utente può creare, modificare ed eliminare entità di sistema e i loro campi.",
     "isActive": "Se è deselezionato, l'utente non potrà effettuare il login.",
     "teams": "I team a cui questo utente appartiene. Il livello di controllo dell'accesso è ereditato dai ruoli del team.",
     "roles": "Ruoli di accesso aggiuntivi. Lo utilizzi se l'utente non appartiene ad alcun team o se ha bisogno di estendere il livello di controllo degli accessi esclusivamente per questo utente."

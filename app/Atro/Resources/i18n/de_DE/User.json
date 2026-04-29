@@ -6,6 +6,7 @@
     "userName": "Benutzername",
     "title": "Funktion",
     "isAdmin": "Ist Admin",
+    "isEntityAdmin": "Ist Entitäts-Administrator",
     "defaultTeam": "Standard-Team",
     "emailAddress": "E-Mail",
     "phoneNumber": "Telefon",
@@ -58,6 +59,7 @@
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
     "userName": "Erlaubte Zeichen sind die Buchstaben a-z, Ziffern, Punkt, @-Symbol, Strich und Unterstrich.",
     "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
+    "isEntityAdmin": "Wenn aktiviert, kann der Benutzer System-Entitäten und deren Felder erstellen, ändern und löschen.",
     "isActive": "Wenn nicht markiert, kann sich der Benutzer nicht einloggen.",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
     "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."

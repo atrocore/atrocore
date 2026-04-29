@@ -152,6 +152,16 @@ class User extends RDB
                     throw new BadRequest('Password change in the demo version is not possible.');
                 }
             }
+
+            $currentUser = $this->getEntityManager()->getUser();
+            if ($currentUser !== null && !$currentUser->isAdmin()) {
+                if ($entity->isAttributeChanged('isAdmin')) {
+                    throw new \Atro\Core\Exceptions\Forbidden();
+                }
+                if ($entity->isAttributeChanged('isEntityAdmin')) {
+                    throw new \Atro\Core\Exceptions\Forbidden();
+                }
+            }
         }
     }
 
@@ -186,7 +196,8 @@ class User extends RDB
 
         if ($entity->isAttributeChanged('teamsIds')
             || $entity->isAttributeChanged('rolesIds')
-            || $entity->isAttributeChanged('isAdmin')) {
+            || $entity->isAttributeChanged('isAdmin')
+            || $entity->isAttributeChanged('isEntityAdmin')) {
             $this
                 ->getAclManager()
                 ->clearAclCache();
