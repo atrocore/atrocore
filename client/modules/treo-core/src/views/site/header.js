@@ -18,6 +18,10 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         rebuilding: false,
 
+        rebuildNotifShown: false,
+
+        reloadNotifShown: false,
+
         setup: function () {
             this.navbarView = this.getMetadata().get('app.clientDefs.navbarView') || this.navbarView;
 
@@ -38,7 +42,8 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                         this.isNeedToReloadPage();
                     }
 
-                    if (response.isNeedToRebuildDatabase && !this.rebuilding) {
+                    if (response.isNeedToRebuildDatabase && !this.rebuilding && !this.rebuildNotifShown) {
+                        this.rebuildNotifShown = true;
                         window.Notifier.notify(this.translate('pleaseRebuildDatabase'), {
                             type: 'danger',
                             duration: -1,
@@ -49,13 +54,18 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                             }],
                         });
                     }
+
+                    if (!response.isNeedToRebuildDatabase) {
+                        this.rebuildNotifShown = false;
+                    }
                 });
             }, 1000);
         },
 
         isNeedToReloadPage() {
             const key = 'pd_dataTimestamp';
-            if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key)) {
+            if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key) && !this.reloadNotifShown) {
+                this.reloadNotifShown = true;
                 setTimeout(() => {
                     window.Notifier.notify(this.translate('pleaseReloadPage'), {
                         type: 'info',
