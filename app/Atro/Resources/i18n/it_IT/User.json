@@ -4,7 +4,7 @@
     "name": "Nome visualizzato",
     "userName": "Nome utente",
     "title": "Titolo",
-    "isAdmin": "Admin",
+    "isAdmin": "Amministratore globale",
     "isEntityAdmin": "Amministratore entità",
     "isRoleAdmin": "Amministratore ruoli",
     "isUserAdmin": "Amministratore utenti",

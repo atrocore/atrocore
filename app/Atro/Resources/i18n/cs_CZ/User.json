@@ -4,7 +4,7 @@
     "name": "Zobrazované jméno",
     "userName": "Uživatelské jméno",
     "title": "Název",
-    "isAdmin": "Správce",
+    "isAdmin": "Globální správce",
     "isEntityAdmin": "Správce entit",
     "isRoleAdmin": "Správce rolí",
     "isUserAdmin": "Správce uživatelů",

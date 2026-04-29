@@ -99,11 +99,11 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     "label": "Teams and Access Control",
                     "name": "accessControl",
                     "rows": [
-                        [{"name":"isActive"}, {"name":"isAdmin"}],
-                        [{"name":"isEntityAdmin"}, {"name":"isRoleAdmin"}],
-                        [{"name":"isUserAdmin"}, false],
-                        [{"name":"teams"}, {"name":"disableActionHistory"}],
-                        [{"name":"roles"}, {"name":"defaultTeam"}]
+                        [{"name": "isActive"}, {"name": "roles"}],
+                        [{"name": "isAdmin"}, {"name": "isUserAdmin"}],
+                        [{"name": "isEntityAdmin"}, {"name": "isRoleAdmin"}],
+                        [{"name": "teams"}, {"name": "defaultTeam"}],
+                        [{"name": "disableActionHistory"}, false],
                     ]
                 });
 

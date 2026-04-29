@@ -4,7 +4,7 @@
     "name": "Display Name",
     "userName": "User Name",
     "title": "Title",
-    "isAdmin": "Admin",
+    "isAdmin": "Global Administrator",
     "isEntityAdmin": "Entity Administrator",
     "isRoleAdmin": "Role Administrator",
     "isUserAdmin": "User Administrator",

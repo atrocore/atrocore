@@ -5,7 +5,7 @@
     "isActive": "Aktiv",
     "userName": "Benutzername",
     "title": "Funktion",
-    "isAdmin": "Admin",
+    "isAdmin": "Globaler Administrator",
     "isEntityAdmin": "Entitäts-Administrator",
     "isRoleAdmin": "Rollen-Administrator",
     "isUserAdmin": "Benutzer-Administrator",

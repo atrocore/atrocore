@@ -3,7 +3,7 @@
     "name": "Nombre",
     "userName": "Nombre de Usuario",
     "title": "Título",
-    "isAdmin": "Administrador",
+    "isAdmin": "Administrador global",
     "isEntityAdmin": "Administrador de entidades",
     "isRoleAdmin": "Administrador de roles",
     "isUserAdmin": "Administrador de usuarios",
