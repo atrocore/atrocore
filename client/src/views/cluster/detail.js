@@ -36,6 +36,15 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
             return entities;
         },
 
+        reloadStyle(selected = null) {
+            Dep.prototype.reloadStyle.call(this);
+
+            selected = selected ?? this.selectionViewMode;
+            if (selected === 'standard') {
+                $(`.compare-mass-action[data-name="massAction"]`).addClass('hidden')
+            }
+        },
+
         shouldOpenSelectDialog() {
             return true;
         },
@@ -255,7 +264,12 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
 
         getCompareButtons() {
             return {
-                additionalButtons: [],
+                additionalButtons: [
+                    {
+                        name: 'massAction',
+                        className: 'hidden'
+                    }
+                ],
                 buttons: [],
                 dropdownButtons: [
                     {

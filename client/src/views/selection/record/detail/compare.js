@@ -32,6 +32,8 @@ Espo.define('views/selection/record/detail/compare', [
 
         relationName: 'selectionItems',
 
+        compareMassActionBase: ['remove', 'export'],
+
         setup() {
             this.models = [];
             this.selectionModel = this.options.model;
@@ -40,6 +42,8 @@ Espo.define('views/selection/record/detail/compare', [
             this.selectedFilters = this.getStorage().get('fieldFilter', this.selectionModel.name) || [];
 
             Dep.prototype.setup.call(this);
+
+            this.setupCompareMassActions();
 
             this.listenTo(this, 'selection-item:loaded', models => {
                 this.selectionModel.trigger('selection-item:loaded', models);
@@ -142,6 +146,49 @@ Espo.define('views/selection/record/detail/compare', [
 
         getModels() {
             return this.models;
+        },
+
+        setupCompareMassActions: function () {
+            const scope = this.itemScope;
+            let list = Espo.Utils.clone(this.compareMassActionBase);
+
+            if (!this.getAcl().checkScope(scope, 'delete')) {
+                list = list.filter(a => a !== 'remove');
+            }
+
+            (this.getMetadata().get(['clientDefs', scope, 'massActionList']) || []).forEach(item => {
+                const defs = this.getMetadata().get(['clientDefs', scope, 'massActionDefs', item]) || {};
+                if (defs.acl || defs.aclScope) {
+                    if (!this.getAcl().check(defs.aclScope || scope, defs.acl)) {
+                        return;
+                    }
+                }
+                if (defs.configCheck) {
+                    if (!this.getConfig().getByPath(defs.configCheck.split('.'))) {
+                        return;
+                    }
+                }
+                if (!list.includes(item)) {
+                    list.push(item);
+                }
+            });
+
+            $.each(this.getMetadata().get(['clientDefs', scope, 'massActions']) || {}, (actionName, actionData) => {
+                if (actionData.disabled) {
+                    list = list.filter(name => name !== actionName);
+                    return;
+                }
+
+                if (!list.includes(actionName)) {
+                    list.push(actionName);
+                }
+            });
+
+            this.compareMassActionList = list;
+        },
+
+        getCompareMassActions: function () {
+            return this.compareMassActionList || [];
         },
 
         getRecordButtons() {

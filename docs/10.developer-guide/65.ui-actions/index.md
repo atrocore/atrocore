@@ -98,25 +98,39 @@ Adds per-record actions inside a relationship panel on the detail page. Also sup
 
 ---
 
-### `listActions` as `massActions`
+### `massActions` — toolbar mass actions
 
-Setting `"massAction": true` on a `listAction` automatically makes it available as a mass action in the list view. The same URL is called, but the payload contains either an `idList` array (for selected records) or a `where` clause (when "select all" is used).
+Mass actions are declared under their own top-level `massActions` key, independent of `listActions`. Each entry points to its own bulk endpoint. The payload always contains a `where` clause that describes the selection.
 
 ```json
 {
-  "listActions": {
+  "massActions": {
     "reject": {
-      "url": "MyEntity/action/reject",
-      "massAction": true,
+      "url": "MyEntity/massReject",
       "refresh": true,
       "iconClass": "ph ph-x",
       "sortOrder": 20
-    }
+    },
+    "move": {
+      "url": "MyEntity/massMove",
+      "refresh": true,
+      "iconClass": "ph ph-arrow-right",
+      "sortOrder": 40,
+      "modalSelectEntity": "Folder",
+      "modalSelectResultParam": "targetFolderId"
+    },
+    "update": { "disabled": true },
+    "addRelation": { "disabled": true },
+    "removeRelation": { "disabled": true }
   }
 }
 ```
 
-When used as a mass action, the frontend automatically shows a confirmation before calling the endpoint, and displays a success message afterward. Both messages are sourced from the entity's i18n file (see [Translations](#translations) below).
+Key points:
+
+- Built-in mass actions (`update`, `addRelation`, `removeRelation`, etc.) can be turned off for the entity by declaring them with `"disabled": true`.
+- Actions that need a target picked at execution time can use `modalSelectEntity` (the scope of the selection dialog) together with `modalSelectResultParam` (the key under which the chosen ID is posted).
+- The confirmation message and success message both come from the entity's i18n file (see [Translations](#translations)).
 
 ---
 
@@ -124,13 +138,15 @@ When used as a mass action, the frontend automatically shows a confirmation befo
 
 | Property | Type | Applies to | Description |
 |---|---|---|---|
-| `url` | string | all | Backend endpoint. Called via POST. Format: `EntityName/action/methodName`. |
+| `url` | string | all | Backend endpoint. Called via POST. Format: `EntityName/action/methodName` for single-record, `EntityName/massXxx` for mass actions. |
+| `method` | string | all | HTTP verb for the endpoint. Default: `POST`. |
 | `confirm` | bool | all | Show a confirmation dialog before executing. Default: `false`. |
 | `refresh` | bool | all | Refresh the record/collection after the action completes. Default: `false`. |
-| `disabled` | bool | all | Hide the action from the UI entirely. Useful to suppress built-in actions. |
-| `iconClass` | string | listActions, relationshipPanels | Phosphor icon class shown next to the label. Example: `"ph ph-check"`. |
+| `disabled` | bool | all | Hide the action from the UI entirely. Used to suppress built-in actions — e.g. `"update": { "disabled": true }` under `massActions` removes the built-in Mass Update. |
+| `iconClass` | string | listActions, massActions, relationshipPanels | Phosphor icon class shown next to the label. Example: `"ph ph-check"`. |
 | `sortOrder` | int | all | Controls position in the menu. Lower = higher up. Built-in actions start at 110. |
-| `massAction` | bool | listActions only | Also expose this action as a mass action. |
+| `modalSelectEntity` | string | massActions, listActions | Entity scope for a selection modal opened before the request is sent. Used by actions that need a target chosen at runtime (e.g. "Move to…"). |
+| `modalSelectResultParam` | string | massActions, listActions | Name of the POST field under which the chosen record's ID is sent. Pairs with `modalSelectEntity`. |
 | `singleButton` | bool | detailActions only | Render as a standalone button rather than a dropdown item. |
 | `style` | string | detailActions only | Button style when `singleButton` is true. Values: `"primary"`, `"default"`, `"secondary"`. |
 
@@ -171,17 +187,17 @@ public function actionApprove($params, $data, $request)
 }
 ```
 
-### Action supporting both single record and mass action
+### Mass action endpoint
 
-When `massAction: true` is set on a `listAction`, the same endpoint is called for both single-record and bulk execution. The `$data` object will contain either:
-- `$data->id` — single record (triggered from row action)
-- `$data->idList` — array of selected record IDs (mass action with specific selection)
-- `$data->where` — filter clause (mass action with "select all" across pages)
+Each entry under `massActions` points at its own bulk endpoint — typically named `EntityName/massXxx`. The `$data` object will contain:
+- `$data->where` — filter clause describing the selection
 
-Handle all three cases in one method:
+If the action also needs a target chosen via a modal (`modalSelectEntity` / `modalSelectResultParam`), that value arrives under the key you declared in `modalSelectResultParam`.
+
+A typical mass handler:
 
 ```php
-public function actionReject($params, $data, $request)
+public function actionMassReject($params, $data, $request)
 {
     if (!$request->isPost()) {
         throw new \Atro\Core\Exceptions\BadRequest();
@@ -191,23 +207,13 @@ public function actionReject($params, $data, $request)
         throw new \Atro\Core\Exceptions\Forbidden();
     }
 
-    $actionParams = [];
-
-    if (property_exists($data, 'where')) {
-        $actionParams['where'] = json_decode(json_encode($data->where), true);
+    if (!property_exists($data, 'where')) {
+        throw new \Atro\Core\Exceptions\BadRequest('A where filter is required.');
     }
 
-    if (property_exists($data, 'idList')) {
-        $actionParams['ids'] = $data->idList;
-    }
-
-    if (empty($actionParams) && !empty($data->id)) {
-        $actionParams['ids'] = [$data->id];
-    }
-
-    if (empty($actionParams)) {
-        throw new \Atro\Core\Exceptions\BadRequest('Provide an id, idList, or where filter.');
-    }
+    $actionParams = [
+        'where' => json_decode(json_encode($data->where), true),
+    ];
 
     return $this->getRecordService()->reject($actionParams);
 }
@@ -259,7 +265,7 @@ There are **two execution paths** — both must be covered:
 
 This is why **both** `$params['singleActionMethod']` and the closure are required — they serve different paths but both call the same per-record method. The closure handles sync; `singleActionMethod` is the string the background job uses to reach back into the service.
 
-`executeMassAction` resolves `$params['ids']` or `$params['where']` automatically — the service does not need to handle that distinction.
+`executeMassAction` resolves `$params['where']` automatically — the service does not need to handle the selection itself.
 
 ---
 
@@ -325,7 +331,7 @@ The `actions` key provides the label shown in the UI for both list/detail and ma
 
 ## Real-World Example
 
-The `ClusterItem` entity uses `listActions` with mass action support:
+The `ClusterItem` entity declares its row actions and toolbar mass actions side by side:
 
 ```json
 // app/Atro/Resources/metadata/clientDefs/ClusterItem.json
@@ -333,30 +339,67 @@ The `ClusterItem` entity uses `listActions` with mass action support:
   "listActions": {
     "quickEdit": { "disabled": true },
     "confirm": {
-      "url": "ClusterItem/action/confirm",
+      "url": "ClusterItem/{{id}}/confirm",
+      "confirm": false,
       "refresh": true,
       "iconClass": "ph ph-check",
       "sortOrder": 10
     },
     "reject": {
-      "url": "ClusterItem/action/reject",
-      "massAction": true,
+      "url": "ClusterItem/{{id}}/reject",
       "refresh": true,
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
     "unmerge": {
-      "url": "ClusterItem/action/unmerge",
-      "massAction": true,
+      "url": "ClusterItem/{{id}}/unmerge",
       "refresh": true,
       "iconClass": "ph ph-arrows-split",
       "sortOrder": 30
+    },
+    "move": {
+      "url": "ClusterItem/{{id}}/move",
+      "method": "PATCH",
+      "refresh": true,
+      "iconClass": "ph ph-arrow-right",
+      "sortOrder": 40,
+      "modalSelectEntity": "Cluster",
+      "modalSelectResultParam": "targetClusterId"
     }
+  },
+
+  "massActions": {
+    "reject": {
+      "url": "ClusterItem/massReject",
+      "refresh": true,
+      "iconClass": "ph ph-x",
+      "sortOrder": 20
+    },
+    "unmerge": {
+      "url": "ClusterItem/massUnmerge",
+      "refresh": true,
+      "iconClass": "ph ph-arrows-split",
+      "sortOrder": 30
+    },
+    "move": {
+      "url": "ClusterItem/massMove",
+      "refresh": true,
+      "iconClass": "ph ph-arrow-right",
+      "sortOrder": 40,
+      "modalSelectEntity": "Cluster",
+      "modalSelectResultParam": "targetClusterId"
+    },
+
+    "update":         { "disabled": true },
+    "addRelation":    { "disabled": true },
+    "removeRelation": { "disabled": true }
   }
 }
 ```
 
 This configuration:
-- Disables the built-in `quickEdit` row action
-- Adds three custom actions to each row: **Confirm**, **Reject**, and **Unmerge**
-- Makes **Reject** and **Unmerge** available as mass actions in the list toolbar
+
+- Disables the built-in `quickEdit` row action.
+- Adds four custom row actions — **Confirm**, **Reject**, **Unmerge**, and **Move** — each with its own single-record endpoint. **Move** opens a `Cluster` picker first and posts the chosen ID under `targetClusterId`.
+- Declares three toolbar mass actions (**Reject**, **Unmerge**, **Move**) that point at dedicated bulk endpoints (`massReject`, `massUnmerge`, `massMove`).
+- Suppresses the built-in **Mass Update**, **Add Relation**, and **Remove Relation** entries so they don't clutter the toolbar for this entity.

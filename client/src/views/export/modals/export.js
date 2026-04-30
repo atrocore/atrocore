@@ -115,7 +115,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
 
             let actionName = this.model.get('useExistingExportFeed') ? 'exportFile' : 'directExportFile'
 
-            this.ajaxPostRequest(`ExportFeed/action/${actionName}`, data).then(response => {
+            this.ajaxPostRequest(`ExportFeed/${actionName}`, data).then(response => {
                 if (response) {
                     this.notify(this.translate('jobCreated'), 'success');
                 } else {

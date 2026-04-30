@@ -9,7 +9,7 @@
  */
 
 
-Espo.define('views/record/compare', 'view', function (Dep) {
+Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'], function (Dep, ListView, Collection) {
 
     return Dep.extend({
         template: 'record/compare',
@@ -50,12 +50,27 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         recordActionView: false,
 
+        showCompareHeaderCheckbox: false,
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
                 let id = e.currentTarget.value;
                 $('input[data-id="' + id + '"]').prop('checked', true);
                 this.model.trigger('select-model', id);
+            },
+
+            'change input.compare-header-checkbox': function (e) {
+                e.stopPropagation();
+                const id = $(e.currentTarget).data('id');
+                if (e.currentTarget.checked) {
+                    if (!this.checkedIds.includes(id)) {
+                        this.checkedIds.push(id);
+                    }
+                } else {
+                    this.checkedIds = this.checkedIds.filter(x => x !== id);
+                }
+                this.trigger('compare-check', this.checkedIds.slice());
             },
 
             'click a[data-action="openOverviewFilter"]': function () {
@@ -83,6 +98,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.merging = this.options.merging || this.merging;
             this.renderedPanels = [];
+            this.checkedIds = [];
             this.hideButtonPanel = false;
             this.selectionModel = this.options.selectionModel || this.selectionModel;
             this.collection = this.options.collection;
@@ -617,6 +633,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 showOverlay: this.showOverlay,
                 overlayLogo: this.getFavicon(),
                 hasRecordAction: !!this.recordActionView,
+                showCompareHeaderCheckbox: !!this.showCompareHeaderCheckbox,
                 additionalHeaderHtml: this.getAdditionalHeaderHtml()
             };
         },
@@ -629,6 +646,73 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.confirm(this.translate('confirmation', 'messages'), function () {
 
             }, this);
+        },
+
+        renderActionsContainer: function (container) {
+            if (!container) {
+                return;
+            }
+
+            const component = new Svelte.ListToolbar({
+                target: container,
+                props: {
+                    scope: this.itemScope || this.scope,
+                    selected: this.checkedIds.slice(),
+                    massActions: this.getCompareMassActions(),
+                    massActionStyle: 'primary',
+                    isRelationship: true,
+                    executeMassAction: (action, data) => {
+                        this.executeCompareMassAction(action, data);
+                    }
+                }
+            });
+
+            this.listenTo(this, 'compare-check', (ids) => {
+                component.$set({
+                    selected: ids,
+                    massActions: this.getCompareMassActions(),
+                });
+            });
+
+            return component;
+        },
+
+        getCompareMassActions: function () {
+            return [];
+        },
+
+        executeCompareMassAction: function (action, data) {
+            const method = 'massAction' + Espo.Utils.upperCaseFirst(action);
+
+            const scope = this.itemScope || this.scope;
+            const items = this.getModels()
+                .filter(m => this.checkedIds.includes(m.id))
+                .map(m => m.item || m);
+
+            const collection = new Collection();
+            collection.name = scope;
+            collection.url = scope;
+            items.forEach(item => collection.add(item));
+
+            const clone = Espo.Utils.clone(this);
+            Object.setPrototypeOf(clone, ListView.prototype);
+            clone.scope = scope;
+            clone.entityType = scope;
+            clone.collection = collection;
+            clone.checkedList = items.map(m => m.id);
+            clone.allResultIsChecked = false;
+            clone.getModel = function (d) {
+                if (d && d.cid) {
+                    return this.collection.get(d.cid);
+                }
+                return this.collection.get(d && d.id);
+            };
+
+            if (typeof ListView.prototype[method] === 'function') {
+                ListView.prototype[method].call(clone, data);
+            } else {
+                ListView.prototype.massAction.call(clone, action);
+            }
         },
 
         areEquals(current, others, field, fieldDef) {

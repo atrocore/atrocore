@@ -16,6 +16,8 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
         relationName: 'clusterItems',
 
+        showCompareHeaderCheckbox: true,
+
         isComparisonAcrossScopes() {
             return false;
         },

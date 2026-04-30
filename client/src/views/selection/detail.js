@@ -511,10 +511,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     $('#main > .content-wrapper > main').css('overflow-y', 'auto');
                     this.enableButtons();
                     this.notify(false);
+                    this.renderCompareActionsContainer(view);
                 });
 
                 this.listenTo(view, 'layout-refreshed', () => {
                     this.setupRecord();
+                })
+
+                this.listenTo(view, 'refresh', () => {
+                    this.refresh();
                 })
 
                 if (this.isRendered()) {
@@ -737,6 +742,36 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             if (this.selectionViewMode !== 'standard' && !this.comparisonAcrossEntities() && this.getMainRecord()) {
                 this.getMainRecord().createLayoutConfigurator();
             }
+        },
+
+        renderCompareActionsContainer(recordView) {
+            if (!recordView || typeof recordView.renderActionsContainer !== 'function') {
+                return;
+            }
+
+            const original = document.querySelector('.page-header [data-name="massAction"]');
+            if (!original) {
+                return;
+            }
+
+            const container = document.createElement('div');
+            container.setAttribute('data-name', 'massAction');
+            container.className = 'compare-mass-action hidden';
+            original.replaceWith(container);
+
+            if (this.svelteCompareActions) {
+                try {
+                    this.svelteCompareActions.$destroy();
+                } catch (e) {
+                }
+                this.svelteCompareActions = null;
+            }
+
+            this.svelteCompareActions = recordView.renderActionsContainer(container);
+
+            this.listenTo(recordView, 'compare-check', (ids) => {
+                container.classList.toggle('hidden', !ids || ids.length === 0);
+            });
         },
 
         initSelectLeftPanel() {
