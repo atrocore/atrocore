@@ -17,16 +17,7 @@
     },
     "value": {
       "type": "text",
-      "view": "views/variable/fields/value-container",
-      "openApiSchema": {
-        "anyOf": [
-          {"type": "string"},
-          {"type": "number"},
-          {"type": "boolean"},
-          {"type": "array", "items": {}}
-        ],
-        "nullable": true
-      }
+      "view": "views/variable/fields/value-container"
     }
   }
 }

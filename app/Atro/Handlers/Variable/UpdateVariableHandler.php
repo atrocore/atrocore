@@ -46,7 +46,21 @@ use Psr\Http\Server\RequestHandlerInterface;
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    '$ref' => '#/components/schemas/Variable',
+                    'type'       => 'object',
+                    'properties' => [
+                        'key'   => ['type' => 'string', 'nullable' => true],
+                        'type'  => ['type' => 'string', 'nullable' => true],
+                        'value' => [
+                            'nullable' => true,
+                            'anyOf'    => [
+                                ['type' => 'string'],
+                                ['type' => 'number'],
+                                ['type' => 'boolean'],
+                                ['type' => 'array'],
+                                ['type' => 'object'],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -57,7 +71,22 @@ use Psr\Http\Server\RequestHandlerInterface;
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        '$ref' => '#/components/schemas/Variable',
+                        'type'       => 'object',
+                        'properties' => [
+                            'id'    => ['type' => 'string'],
+                            'key'   => ['type' => 'string', 'nullable' => true],
+                            'type'  => ['type' => 'string', 'nullable' => true],
+                            'value' => [
+                                'nullable' => true,
+                                'anyOf'    => [
+                                    ['type' => 'string'],
+                                    ['type' => 'number'],
+                                    ['type' => 'boolean'],
+                                    ['type' => 'array'],
+                                    ['type' => 'object'],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -68,9 +97,6 @@ use Psr\Http\Server\RequestHandlerInterface;
         404 => [
             'description' => 'Not found',
         ],
-    ],
-    entities: [
-        'Variable',
     ],
 )]
 class UpdateVariableHandler extends AbstractHandler

@@ -351,11 +351,6 @@ class OpenApiGenerator
             return;
         }
 
-        if (!empty($fieldData['openApiSchema'])) {
-            $result['components']['schemas'][$entityName]['properties'][$fieldName] = $fieldData['openApiSchema'];
-            return;
-        }
-
         if ($fieldData['type'] === 'script') {
             $fieldData['type'] = $fieldData['outputType'] ?? 'text';
         }
