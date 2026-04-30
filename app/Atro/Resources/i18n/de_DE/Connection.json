@@ -77,7 +77,8 @@
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",
     "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s",
     "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden.",
-    "notificationConnectionCannotBeDeleted": "Diese Verbindung wird für E-Mail-Benachrichtigungen verwendet und kann nicht gelöscht werden"
+    "notificationConnectionCannotBeDeleted": "Diese Verbindung wird für E-Mail-Benachrichtigungen verwendet und kann nicht gelöscht werden",
+    "onlySmtpConnectionsSupported": "Das Senden von Test-E-Mails wird nur für SMTP-Verbindungen unterstützt."
   },
   "options": {
     "smtpAuthType": {

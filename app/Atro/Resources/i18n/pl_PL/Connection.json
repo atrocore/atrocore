@@ -77,7 +77,8 @@
     "sqlsrvMissing": "Rozszerzenie PHP MSSQL nie jest zainstalowane.",
     "connectionFailed": "Nie można nawiązać połączenia: %s",
     "noSuchType": "Brak takiego typu połączenia.",
-    "notificationConnectionCannotBeDeleted": "To połączenie jest używane do powiadomień e-mail i nie można go usunąć."
+    "notificationConnectionCannotBeDeleted": "To połączenie jest używane do powiadomień e-mail i nie można go usunąć.",
+    "onlySmtpConnectionsSupported": "Wysyłanie wiadomości testowych jest obsługiwane tylko dla połączeń SMTP."
   },
   "options": {
     "smtpAuthType": {

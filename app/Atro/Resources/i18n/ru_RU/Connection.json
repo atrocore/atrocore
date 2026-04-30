@@ -77,7 +77,8 @@
     "sqlsrvMissing": "PHP MSSQL extension не установлен.",
     "connectionFailed": "Соединение не установлено: %s",
     "noSuchType": "Тип соединения не поддерживается.",
-    "notificationConnectionCannotBeDeleted": "Это соединение используется для E-Mail уведомлений и не может быть удалено"
+    "notificationConnectionCannotBeDeleted": "Это соединение используется для E-Mail уведомлений и не может быть удалено",
+    "onlySmtpConnectionsSupported": "Отправка тестовых писем поддерживается только для SMTP-подключений."
   },
   "options": {
     "smtpAuthType": {

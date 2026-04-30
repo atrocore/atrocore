@@ -39,10 +39,11 @@ class Connection extends Base
         }
 
         $connection = $this->createConnection($connectionEntity);
-        if ($connection instanceof ConnectionSmtp) {
-            return $connection->sendTestEmail($connectionEntity, $toEmail);
+        if (!($connection instanceof ConnectionSmtp)) {
+            throw new BadRequest($this->exception('onlySmtpConnectionsSupported'));
         }
-        return false;
+
+        return $connection->sendTestEmail($connectionEntity, $toEmail);
     }
 
     public function testConnection(string $id): bool
