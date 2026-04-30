@@ -83,6 +83,7 @@
     "sqlsrvMissing": "L'estensione PHP MSSQL non è installata.",
     "connectionFailed": "Non è stato possibile stabilire la connessione: %s",
     "noSuchType": "Non esiste un tipo di connessione simile.",
-    "notificationConnectionCannotBeDeleted": "Questo collegamento è utilizzato per le notifiche via e-mail e non può essere eliminato."
+    "notificationConnectionCannotBeDeleted": "Questo collegamento è utilizzato per le notifiche via e-mail e non può essere eliminato.",
+    "onlySmtpConnectionsSupported": "L'invio di e-mail di test è supportato solo per le connessioni SMTP."
   }
 }

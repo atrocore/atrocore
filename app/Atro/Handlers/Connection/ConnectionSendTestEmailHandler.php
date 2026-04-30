@@ -88,7 +88,7 @@ class ConnectionSendTestEmailHandler extends AbstractHandler
             throw new BadRequest('Email address is required.');
         }
 
-        $this->getRecordService('Connection')->sendTestEMail($id, $data->email);
+        $this->getRecordService('Connection')->sendTestEmail($id, $data->email);
 
         return new BoolResponse(true);
     }
