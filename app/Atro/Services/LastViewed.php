@@ -107,7 +107,7 @@ class LastViewed extends AbstractService
                 $qb->setParameter('entityName', $entityName);
             }
 
-            $queryHeader = $tabId ? '%"Entity-History":"' . $tabId . '"%' : '%"Entity-History":%';
+            $queryHeader = $tabId ? '%"Entity-History":["' . $tabId . '"]%' : '%"Entity-History":%';
 
             $qb->join($t, "({$subQb->getSQL()})", 'sub', "sub.id = $t.id AND sub.rn = 1")
                 ->setParameter('userId', $this->getUser()->id)
