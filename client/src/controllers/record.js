@@ -188,10 +188,6 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                 var model = options.model;
                 createView(model);
 
-                this.listenToOnce(model, 'sync', function () {
-                    this.hideLoadingNotification();
-                }, this);
-                this.showLoadingNotification();
                 model.fetch({
                     headers: {
                         'Entity-History': sessionStorage.tabId || 'true'
@@ -205,7 +201,6 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                 this.getModel(function (model) {
                     model.id = id;
 
-                    this.showLoadingNotification();
                     createView(model);
                     model.fetch({
                         main: true,
@@ -295,7 +290,6 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
                 this.prepareModelEdit(model, options);
 
-                this.showLoadingNotification();
                 this.listenToOnce(model, 'sync', function () {
                     var o = {
                         scope: this.name,
@@ -371,10 +365,8 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     model = options.model;
                 }
 
-                this.showLoadingNotification();
                 this.listenToOnce(model, 'sync', function () {
                     createView(model);
-                    this.hideLoadingNotification();
                 }, this);
                 model.fetch({ main: true });
 

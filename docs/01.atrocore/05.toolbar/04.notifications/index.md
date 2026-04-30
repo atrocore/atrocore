@@ -23,6 +23,14 @@ In the notifications list, you can:
 - Use the **Mark all as read** button to clear all unread notifications at once
 - Delete individual notifications using the arrow button menu in each notification record
 
+## Notification Previews
+
+When a new notification arrives, a preview appears at the bottom of the screen. You can mark it as read directly from the preview — no need to open the notifications panel.
+
+![Notification preview](./_assets/notification-preview.png){.small}
+
+The preview disappears automatically after a few seconds.
+
 ## Notification Types
 
 Notifications appear for various events including:

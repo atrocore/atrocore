@@ -273,7 +273,6 @@ Espo.define('controller', [], function () {
             var master = this.master(function (master) {
                 if (isCanceled) return;
 
-                master.showLoadingNotification();
                 options = options || {};
                 options.el = '#main';
 
@@ -285,7 +284,6 @@ Espo.define('controller', [], function () {
                     }
                     main.once('render', function () {
                         main.updatePageTitle();
-                        master.hideLoadingNotification();
                     });
 
                     main.listenToOnce(this.baseController, 'action', function () {

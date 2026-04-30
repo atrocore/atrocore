@@ -18,16 +18,16 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         rebuilding: false,
 
+        rebuildNotifShown: false,
+
+        reloadNotifShown: false,
+
         setup: function () {
             this.navbarView = this.getMetadata().get('app.clientDefs.navbarView') || this.navbarView;
 
             Dep.prototype.setup.call(this);
 
             this.getPublicData();
-
-            $(document).on('click', 'a[data-action="rebuild-notification"]', () => {
-                this.rebuildDb();
-            });
         },
 
         getPublicData() {
@@ -42,8 +42,22 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                         this.isNeedToReloadPage();
                     }
 
-                    if (response.isNeedToRebuildDatabase && !this.rebuilding) {
-                        Espo.Ui.notify(this.translate('pleaseRebuildDatabase'), 'danger', 1000 * 60, true);
+                    if (response.isNeedToRebuildDatabase && !this.rebuilding && !this.rebuildNotifShown) {
+                        this.rebuildNotifShown = true;
+                        window.Notifier.notify(this.translate('pleaseRebuildDatabase'), {
+                            type: 'danger',
+                            duration: -1,
+                            closeButton: true,
+                            actions: [{
+                                tooltip: this.translate('rebuildDb', 'labels', 'Admin'),
+                                iconClass: 'ph ph-wrench',
+                                callback: () => this.rebuildDb(),
+                            }],
+                        });
+                    }
+
+                    if (!response.isNeedToRebuildDatabase) {
+                        this.rebuildNotifShown = false;
                     }
                 });
             }, 1000);
@@ -51,9 +65,19 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         isNeedToReloadPage() {
             const key = 'pd_dataTimestamp';
-            if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key)) {
+            if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key) && !this.reloadNotifShown) {
+                this.reloadNotifShown = true;
                 setTimeout(() => {
-                    Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);
+                    window.Notifier.notify(this.translate('pleaseReloadPage'), {
+                        type: 'info',
+                        duration: -1,
+                        closeButton: true,
+                        actions: [{
+                            tooltip: this.translate('Refresh'),
+                            iconClass: 'ph ph-arrows-clockwise',
+                            callback: () => window.location.reload(),
+                        }],
+                    });
                 }, 5000);
             }
             this.dataTimestamp = localStorage.getItem(key);
@@ -62,7 +86,13 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
         rebuildDb() {
             this.rebuilding = true;
 
-            this.createView('rebuild-db', 'views/modals/rebuild-database', {}, view => view.render());
+            this.createView('rebuild-db', 'views/modals/rebuild-database', {}, view => {
+                view.render();
+                this.listenToOnce(view, 'remove', () => {
+                    this.rebuilding = false;
+                    this.rebuildNotifShown = false;
+                });
+            });
         }
 
     });

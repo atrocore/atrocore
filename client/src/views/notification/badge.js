@@ -51,8 +51,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
         setup: function () {
 
-            let savedCount = null;
-
             const processPublicData = data => {
                 this.$number?.addClass('hidden').html('');
 
@@ -65,14 +63,56 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                                 this.$number?.removeClass('hidden').html(count.toString());
                             }
 
-                            if (savedCount && count > savedCount && $('#notification.alert-danger').length === 0) {
-                                if ((count - savedCount) > 1) {
-                                    Espo.Ui.notify(this.translate('youHaveNewNotifications'), 'info', 5000);
-                                } else {
-                                    Espo.Ui.notify(this.translate('youHaveNewNotification'), 'info', 5000);
-                                }
+                            // FIXME: two badge instances exist in DOM (desktop + mobile hidden-xs), both listen to publicData;
+                            // shared window._notificationSavedCount ensures only the first one to process a count change shows the toast
+                            if (window._notificationSavedCount && count > window._notificationSavedCount) {
+                                const newCount = count - window._notificationSavedCount;
+                                this.getCollectionFactory().create('Notification', collection => {
+                                    collection.maxSize = newCount;
+                                    collection.where = [{type: 'isFalse', attribute: 'read'}];
+                                    collection.data = {previewOnly: true};
+                                    this.listenToOnce(collection, 'sync', () => {
+                                        collection.models.forEach(model => {
+                                            const data = model.get('data') || {};
+                                            const messageTemplate = model.get('message') || data.message || '';
+
+                                            if (!messageTemplate) {
+                                                window.Notifier.notify(this.translate('youHaveNewNotification'), {type: 'info', duration: 5000});
+                                                return;
+                                            }
+
+                                            const messageData = {
+                                                entityType: Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase()),
+                                                user: data.userId ? '<a href="#User/view/' + data.userId + '">' + data.userName + '</a>' : '',
+                                                entity: data.entityId ? '<a href="#' + data.entityType + '/view/' + data.entityId + '">' + data.entityName + '</a>' : '',
+                                            };
+
+                                            const viewKey = 'notifMsg_' + model.id;
+                                            this.createView(viewKey, 'views/stream/message', {
+                                                model,
+                                                messageTemplate,
+                                                messageData,
+                                            }, view => {
+                                                view.getHtml(html => {
+                                                    this.clearView(viewKey);
+                                                    window.Notifier.notify(html, {
+                                                        type: 'notification',
+                                                        duration: 5000,
+                                                        closeButton: true,
+                                                        actions: [{
+                                                            tooltip: this.translate('Mark as read', 'labels'),
+                                                            iconClass: 'ph ph-checks',
+                                                            callback: () => this.ajaxPostRequest('Notification/' + model.id + '/markRead'),
+                                                        }],
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                    collection.fetch();
+                                }, this);
                             }
-                            savedCount = count;
+                            window._notificationSavedCount = count; // FIXME: shared across both badge instances, see comment above
 
                             if (navigator.setAppBadge && this.isPWAMode()) {
                                 navigator.setAppBadge(count);
