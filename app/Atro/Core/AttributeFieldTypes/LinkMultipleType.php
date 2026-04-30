@@ -25,10 +25,10 @@ class LinkMultipleType extends AbstractFieldType
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 
-        $data = @json_decode($row['data'], true);
+        $data          = @json_decode($row['data'], true);
         $attributeData = $data['field'] ?? null;
-        $entityName = $attributeData['entityType'] ?? null;
-        $foreignName = $attributeData['entityField'] ?? 'name';
+        $entityName    = $attributeData['entityType'] ?? null;
+        $foreignName   = $attributeData['entityField'] ?? 'name';
 
         $entity->fields[$name . 'Ids'] = [
             'type'                     => 'jsonArray',
@@ -68,18 +68,43 @@ class LinkMultipleType extends AbstractFieldType
 
             if (!empty($value) && !empty($entityName)) {
                 $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $entityName, $foreignName);
-                $columns = array_unique(['id', $foreignName, $localizedNameColumn]);
+                $columns             = array_unique(['id', $foreignName, $localizedNameColumn]);
+
+                $collectionDefs = $this->em->getContainer()->get('metadata')->get(['entityDefs', $entityName, 'collection']);
+                $defs           = [];
+                if (!empty($collectionDefs['sortBy'])) {
+                    $orderBy = $collectionDefs['sortBy'];
+                    $order   = 'ASC';
+                    if ($collectionDefs['asc'] === false) {
+                        $order = 'DESC';
+                    }
+                    if (!empty($this->em->getContainer()->get('metadata')->get(['entityDefs', $entityName, 'fields', $orderBy]))) {
+                        $defs['orderBy'] = $orderBy;
+                        $defs['order']   = $order;
+                    }
+                }
 
                 $collection = $this->em->getRepository($entityName)
                     ->select($columns)
                     ->where(['id' => $value])
-                    ->find();
+                    ->find($defs);
 
                 $names = [];
                 foreach ($collection as $foreign) {
                     $names[$foreign->get('id')] = empty($foreign->get($localizedNameColumn)) ? $foreign->get($foreignName) : $foreign->get($localizedNameColumn);
                 }
 
+                if (!empty($defs)){
+                    // fix sort order for ids
+                    $ids = array_keys($names);
+                    foreach ($value as $id) {
+                        if (!in_array($id, $ids)) {
+                            $ids[] = $id;
+                        }
+                    }
+
+                    $entity->set($name . 'Ids', $ids);
+                }
                 $entity->set($name . 'Names', $names);
             }
         }
@@ -145,7 +170,7 @@ class LinkMultipleType extends AbstractFieldType
         if (empty($entityName)) {
             return;
         }
-        $foreignName = $entity->entityDefs['fields'][$name]['foreignName'] ?? 'name';
+        $foreignName         = $entity->entityDefs['fields'][$name]['foreignName'] ?? 'name';
         $localizedNameColumn = Language::getLocalizedFieldName($this->em->getContainer(), $entityName, $foreignName);
 
         $names = [];
@@ -170,7 +195,7 @@ class LinkMultipleType extends AbstractFieldType
                 }
             }
 
-            $foreign = $this->cachedCollection[$entityName][$id] ?? null;
+            $foreign    = $this->cachedCollection[$entityName][$id] ?? null;
             $names[$id] = !empty($foreign) ? (empty($foreign->get($localizedNameColumn)) ? $foreign->get($foreignName) : $foreign->get($localizedNameColumn)) : $id;
         }
 
@@ -190,8 +215,8 @@ class LinkMultipleType extends AbstractFieldType
 
         foreach ($values as $value) {
             // escape slashes to search in escaped json
-            $value = str_replace('\\', '\\\\\\\\', $value);
-            $value = str_replace("/", "\\\\/", $value);
+            $value            = str_replace('\\', '\\\\\\\\', $value);
+            $value            = str_replace("/", "\\\\/", $value);
             $where['value'][] = [
                 'type'      => $item['type'] === 'notLinkedWith' ? 'notLike' : 'like',
                 'attribute' => 'jsonValue',
