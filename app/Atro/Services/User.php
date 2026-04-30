@@ -438,9 +438,13 @@ class User extends Record
 
     public function deleteEntity(string $id): bool
     {
-        $this->getUserById($id);
+        $user = $this->getUserById($id);
 
         if ($id === $this->getUser()->id) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin() && $user->get('isAdmin')) {
             throw new Forbidden();
         }
 
@@ -455,6 +459,9 @@ class User extends Record
             array_key_exists('rolesIds', $data)
             || array_key_exists('teamsIds', $data)
             || array_key_exists('isAdmin', $data)
+            || array_key_exists('isEntityAdmin', $data)
+            || array_key_exists('isRoleAdmin', $data)
+            || array_key_exists('isUserAdmin', $data)
         ) {
             $this->clearRoleCache($entity->id);
         }

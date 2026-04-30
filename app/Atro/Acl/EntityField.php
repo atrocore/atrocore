@@ -29,16 +29,16 @@ class EntityField extends Base
 
     public function checkEntityCreate(User $user, Entity $entity, $data)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isEntityAdmin();
     }
 
     public function checkEntityEdit(User $user, Entity $entity, $data)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isEntityAdmin();
     }
 
     public function checkEntityDelete(User $user, Entity $entity, $data)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isEntityAdmin();
     }
 }

@@ -4,7 +4,7 @@
   "notificationDisabled": true,
   "entity": true,
   "layouts": false,
-  "tab": false,
+  "tab": true,
   "acl": false,
   "customizable": false,
   "streamDisabled": true,

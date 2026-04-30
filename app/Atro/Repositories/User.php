@@ -13,6 +13,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Entities\User as UserEntity;
@@ -152,6 +153,25 @@ class User extends RDB
                     throw new BadRequest('Password change in the demo version is not possible.');
                 }
             }
+
+            $currentUser = $this->getEntityManager()->getUser();
+            if ($currentUser !== null && !$currentUser->isAdmin()) {
+                if ($entity->isAttributeChanged('isAdmin')) {
+                    throw new Forbidden();
+                }
+                if ($entity->isAttributeChanged('isEntityAdmin')) {
+                    throw new Forbidden();
+                }
+                if ($entity->isAttributeChanged('isRoleAdmin')) {
+                    throw new Forbidden();
+                }
+                if ($entity->isAttributeChanged('isUserAdmin')) {
+                    throw new Forbidden();
+                }
+                if ($entity->getFetched('isAdmin')) {
+                    throw new Forbidden();
+                }
+            }
         }
     }
 
@@ -186,7 +206,10 @@ class User extends RDB
 
         if ($entity->isAttributeChanged('teamsIds')
             || $entity->isAttributeChanged('rolesIds')
-            || $entity->isAttributeChanged('isAdmin')) {
+            || $entity->isAttributeChanged('isAdmin')
+            || $entity->isAttributeChanged('isEntityAdmin')
+            || $entity->isAttributeChanged('isRoleAdmin')
+            || $entity->isAttributeChanged('isUserAdmin')) {
             $this
                 ->getAclManager()
                 ->clearAclCache();

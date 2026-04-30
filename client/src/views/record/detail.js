@@ -2435,7 +2435,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, this.options.layoutRelatedScope ?? null, function (data) {
-                data = Espo.Utils.clone(data)
+                data = Espo.Utils.cloneDeep(data)
                 this.prepareLayoutData(data);
                 this.layoutData = data
                 this.gridLayout = {

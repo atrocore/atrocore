@@ -32,7 +32,9 @@
     "stagingRecord": "rekord etapu",
     "stagingRecords": "rekordy etapu",
     "masterRecord": "rekord główny",
-    "masterRecords": "rekordy główne"
+    "masterRecords": "rekordy główne",
+    "confirmed": "Potwierdzone",
+    "rejected": "Odrzucone"
   },
   "streamMessages": {
     "clusterLinked": "{user} powiązał {relatedEntity} z tym klastrem",
