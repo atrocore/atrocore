@@ -473,6 +473,13 @@ class Record extends RecordService
     {
         $repository = $this->getRepository();
 
+        if (!isset($attributes->relationshipData) || !($attributes->relationshipData instanceof \stdClass)) {
+            $attributes->relationshipData = new \stdClass();
+        }
+        if (!isset($attributes->input) || !($attributes->input instanceof \stdClass)) {
+            $attributes->input = new \stdClass();
+        }
+
         if (!empty($id)) {
             $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
         } else {
@@ -486,7 +493,7 @@ class Record extends RecordService
             throw new NotFound();
         }
 
-        $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
+        $relationshipData = json_decode(json_encode($attributes->relationshipData), true) ?? [];
 
         $sourceList = array();
         foreach ($sourceIdList as $sourceId) {
@@ -495,7 +502,10 @@ class Record extends RecordService
                 $sourceList[] = $source;
                 continue;
             }
-            $source       = $this->getEntity($sourceId);
+            $source = $this->getEntity($sourceId);
+            if (!$source) {
+                throw new BadRequest("Record with ID '{$sourceId}' not found.");
+            }
             $sourceList[] = $source;
         }
 
