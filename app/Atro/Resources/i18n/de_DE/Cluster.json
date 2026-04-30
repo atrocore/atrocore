@@ -33,7 +33,9 @@
     "stagingRecord": "staging-Datensatz",
     "stagingRecords": "staging-Datensätze",
     "masterRecord": "master-Datensatz",
-    "masterRecords": "master-Datensätze"
+    "masterRecords": "master-Datensätze",
+    "confirmed": "Bestätigt",
+    "rejected": "Abgelehnt"
   },
   "streamMessages": {
     "clusterLinked": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",

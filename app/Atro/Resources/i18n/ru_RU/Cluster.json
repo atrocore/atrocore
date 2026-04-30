@@ -32,7 +32,9 @@
     "stagingRecord": "промежуточная запись",
     "stagingRecords": "промежуточные записи",
     "masterRecord": "мастер-запись",
-    "masterRecords": "мастер-записи"
+    "masterRecords": "мастер-записи",
+    "confirmed": "Подтверждено",
+    "rejected": "Отклонено"
   },
   "streamMessages": {
     "clusterLinked": "{user} связал {relatedEntity} с этим кластером",

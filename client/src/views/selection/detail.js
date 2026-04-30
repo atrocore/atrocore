@@ -236,7 +236,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         reloadModels(callback) {
-            this.loadSelectionItemModels(this.model.id).then(models => {
+            this.loadSelectionItemModels(this.getItemsUrl(this.model.id)).then(models => {
                 if (models.length > 0) {
                     this.selectionItemModels = models;
                     let allIds = models.map(m => m.id);
@@ -255,9 +255,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         this.hiddenIds.push(id);
                     }
 
-                    if (window.leftSidePanel) {
-                        window.leftSidePanel?.setRecords(this.getRecordForPanels());
-                        window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
+                    if (window.itemsListPanel) {
+                        window.itemsListPanel?.setRecords(this.getRecordForPanels());
+                        window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
                     }
                 }
 
@@ -288,11 +288,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             return `entityRelation?${params.toString()}`;
         },
 
-        loadSelectionItemModels(selectionId) {
+        loadSelectionItemModels(url) {
             let models = [];
             return new Promise((initialResolve, reject) => {
                 this.getModelFactory().create(this.itemScope, (itemModel) => {
-                    this.ajaxGetRequest(this.getItemsUrl(selectionId))
+                    this.ajaxGetRequest(url)
                         .then(result => {
                             let entityByScope = {};
                             let order = 0;
@@ -321,6 +321,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                             let currentModel = model.clone();
                                             let item = itemModel.clone();
                                             item.set(data._item);
+                                            if(data._item.__relationEntity) {
+                                                relationModel = new Model();
+                                                relationModel.set(data._item.__relationEntity);
+                                                item.relationModel = relationModel;
+                                            }
                                             delete data._item;
                                             currentModel.set(data);
                                             currentModel.item = item;
@@ -674,7 +679,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             if (this.getSelectedIds().length >= this.maxForComparison) {
                                 this.toggleSelected(model.get('entityId'));
                             }
-                            window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
+                            window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
 
                             if (!this.model.get('entityTypes')) {
                                 this.model.set('entityTypes', []);
@@ -709,7 +714,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         if (this.getSelectedIds().length >= this.maxForComparison) {
                             this.toggleSelected(model.get('entityId'));
                         }
-                        window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
+                        window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
                     })
                 }, this);
             });
@@ -742,6 +747,75 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
         },
 
+        createItemListPanel(element) {
+            if (window.itemsListPanel) {
+                try {
+                    window.itemsListPanel.$destroy();
+                } catch (e) {
+                }
+            }
+
+            window.itemsListPanel = new Svelte.SelectionItemList({
+                target: element,
+                props: {
+                    records: this.getRecordForPanels(),
+                    selectedIds: this.getSelectedIds(),
+                    selectionViewMode: this.selectionViewMode,
+                    onItemClicked: (e, itemId) => {
+                        if (this.selectionViewMode === 'standard') {
+                            return;
+                        }
+
+                        e.preventDefault();
+
+                        if (this.toggleSelected(itemId)) {
+                            window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                            if (this.getView('record')) {
+                                this.getView('record').showLoader();
+                            }
+                            this.trigger('refresh');
+                        }
+                    },
+                    onSelectAll: (entityType) => {
+                        let shouldReload = false;
+                        this.selectionItemModels.forEach(model => {
+                            if (model.name === entityType && this.hiddenIds.includes(model.id)) {
+                                if (this.toggleSelected(model.id)) {
+                                    shouldReload = true;
+                                }
+                            }
+                        });
+
+                        if (shouldReload) {
+                            if (this.getView('record')) {
+                                this.getView('record').showLoader();
+                            }
+                            window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                            this.trigger('refresh');
+                        }
+                    },
+                    onUnSelectAll: (entityType) => {
+                        let shouldReload = false;
+                        this.selectionItemModels.reverse().forEach(model => {
+                            if (model.name === entityType && !this.hiddenIds.includes(model.id)) {
+                                if (this.toggleSelected(model.id)) {
+                                    shouldReload = true;
+                                }
+                            }
+                        });
+
+                        if (shouldReload) {
+                            if (this.getView('record')) {
+                                this.getView('record').showLoader();
+                            }
+                            window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                            this.trigger('refresh');
+                        }
+                    }
+                }
+            })
+        },
+
         renderLeftPanel() {
             this.initSelectLeftPanel();
             if (window.treePanelComponent) {
@@ -769,72 +843,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             }
                         },
                         onActiveItems: (element) => {
-                            if (window.leftSidePanel) {
-                                try {
-                                    window.leftSidePanel.$destroy();
-                                } catch (e) {
-                                }
-                            }
-
-                            window.leftSidePanel = new Svelte.SelectionItemList({
-                                target: element,
-                                props: {
-                                    records: this.getRecordForPanels(),
-                                    selectedIds: this.getSelectedIds(),
-                                    selectionViewMode: this.selectionViewMode,
-                                    onItemClicked: (e, itemId) => {
-                                        if (this.selectionViewMode === 'standard') {
-                                            return;
-                                        }
-
-                                        e.preventDefault();
-
-                                        if (this.toggleSelected(itemId)) {
-                                            window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
-                                            if (this.getView('record')) {
-                                                this.getView('record').showLoader();
-                                            }
-                                            this.trigger('refresh');
-                                        }
-                                    },
-                                    onSelectAll: (entityType) => {
-                                        let shouldReload = false;
-                                        this.selectionItemModels.forEach(model => {
-                                            if (model.name === entityType && this.hiddenIds.includes(model.id)) {
-                                                if (this.toggleSelected(model.id)) {
-                                                    shouldReload = true;
-                                                }
-                                            }
-                                        });
-
-                                        if (shouldReload) {
-                                            if (this.getView('record')) {
-                                                this.getView('record').showLoader();
-                                            }
-                                            window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
-                                            this.trigger('refresh');
-                                        }
-                                    },
-                                    onUnSelectAll: (entityType) => {
-                                        let shouldReload = false;
-                                        this.selectionItemModels.reverse().forEach(model => {
-                                            if (model.name === entityType && !this.hiddenIds.includes(model.id)) {
-                                                if (this.toggleSelected(model.id)) {
-                                                    shouldReload = true;
-                                                }
-                                            }
-                                        });
-
-                                        if (shouldReload) {
-                                            if (this.getView('record')) {
-                                                this.getView('record').showLoader();
-                                            }
-                                            window.leftSidePanel?.setSelectedIds(this.getSelectedIds());
-                                            this.trigger('refresh');
-                                        }
-                                    }
-                                }
-                            })
+                            this.createItemListPanel(element);
                         }
                     }
                 }

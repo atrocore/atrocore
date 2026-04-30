@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Model, List) {
+Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/panels/relationship', 'collection'], function (Dep, Relationship, Collection) {
 
     return Dep.extend({
 
@@ -26,6 +26,8 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
 
         recordView: 'views/cluster/record/detail',
 
+        rejectedItems: [],
+
         getEntityTypes() {
             let entities = [this.model.get('masterEntity')];
             this.getStagingEntities(this.model.get(this.entityTypeField)).forEach(stagingEntity => {
@@ -38,8 +40,180 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
             return true;
         },
 
-        getItemsUrl(clusterId) {
-            return `entityRelation?entityName=Cluster&link=clusterItems&id=${clusterId}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`;
+        reloadModels(callback) {
+            this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`)
+                .then(models => {
+                    if (models.length > 0) {
+                        this.selectionItemModels = models;
+                        let allIds = models.map(m => m.id);
+                        // remove dead Ids
+                        this.hiddenIds = this.hiddenIds.filter(id => allIds.includes(id));
+
+                        for (const id of allIds.reverse()) {
+                            if ((allIds.length - this.hiddenIds.length) <= this.maxForComparison) {
+                                break;
+                            }
+
+                            if (this.hiddenIds.includes(id)) {
+                                continue;
+                            }
+
+                            this.hiddenIds.push(id);
+                        }
+                    }
+
+                    this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=rejectedClusterItems&id=${this.model.id}&select=entityName,entity,entityId&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`)
+                        .then(models => {
+                            this.rejectedItems = models;
+                            if (window.itemsListPanel) {
+                                window.itemsListPanel?.setRecords(this.getRecordForPanels());
+                                window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                            }
+                        });
+
+                    if (callback) {
+                        callback();
+                    }
+                });
+        },
+
+        getRecordForPanels() {
+            if (!this.selectionItemModels) {
+                return [];
+            }
+            let records = this.selectionItemModels.map(model => {
+                return {
+                    id: model.id,
+                    name: this.getModelTitle(model),
+                    entityType: model.name,
+                    confirm: model.item?.get('_meta')?.cluster?.confirmed ?? false,
+                    confirmedAutomatically: model.item?.get('confirmedAutomatically') ?? false,
+                    rejected: false
+                }
+            });
+
+            for (const model of this.rejectedItems || []) {
+                records.push({
+                    id: model.id,
+                    name: this.getModelTitle(model),
+                    entityType: model.name,
+                    confirm: false,
+                    confirmedAutomatically: false,
+                    rejected: true
+                });
+            }
+
+            return records;
+        },
+
+        createItemListPanel(element) {
+            if (window.itemsListPanel) {
+                try {
+                    window.itemsListPanel.$destroy();
+                } catch (e) {
+                }
+            }
+
+            window.itemsListPanel = new Svelte.ClusterItemList({
+                target: element,
+                props: {
+                    records: this.getRecordForPanels(),
+                    selectedIds: this.getSelectedIds(),
+                    selectionViewMode: this.selectionViewMode,
+                    onMountRowActions: (el, itemId, relationName) => {
+                        const model = [...(this.selectionItemModels || []), ...(this.rejectedItems || [])]
+                            .find(m => m.id === itemId);
+                        if (!model) return;
+                        this.createView('rowActions_' + itemId, 'views/record/row-actions/relationship', {
+                            el: el,
+                            model: model.item,
+                            parentModelName: 'Cluster',
+                            relationName: relationName
+                        }, view => {
+                            view.render();
+                        });
+                    },
+                    onItemClicked: (e, itemId) => {
+                        if (this.selectionViewMode === 'standard') {
+                            return;
+                        }
+
+                        e.preventDefault();
+
+                        if (this.toggleSelected(itemId)) {
+                            window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                            if (this.getView('record')) {
+                                this.getView('record').showLoader();
+                            }
+                            this.trigger('refresh');
+                        }
+                    },
+                    onSelectAll: (entityType) => {
+                        let shouldReload = false;
+                        this.selectionItemModels.forEach(model => {
+                            if (model.name === entityType && this.hiddenIds.includes(model.id)) {
+                                if (this.toggleSelected(model.id)) {
+                                    shouldReload = true;
+                                }
+                            }
+                        });
+
+                        if (shouldReload) {
+                            if (this.getView('record')) {
+                                this.getView('record').showLoader();
+                            }
+                            window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                            this.trigger('refresh');
+                        }
+                    },
+                    onUnSelectAll: (entityType) => {
+                        let shouldReload = false;
+                        this.selectionItemModels.reverse().forEach(model => {
+                            if (model.name === entityType && !this.hiddenIds.includes(model.id)) {
+                                if (this.toggleSelected(model.id)) {
+                                    shouldReload = true;
+                                }
+                            }
+                        });
+
+                        if (shouldReload) {
+                            if (this.getView('record')) {
+                                this.getView('record').showLoader();
+                            }
+                            window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                            this.trigger('refresh');
+                        }
+                    }
+                }
+            });
+
+            $(element).on('click', '[data-action]', (e) => {
+                var $el = $(e.currentTarget);
+                var action = $el.data('action');
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+
+                if (typeof   Relationship.prototype[method] == 'function') {
+                    var data = $el.data();
+                    let model = this.selectionItemModels.find(m => m.item.id === data.id);
+                    if(!model) {
+                        model = this.rejectedItems.find(m => m.item.id === data.id);
+                    }
+                    let thisClone = Espo.utils.clone(this);
+                    let collection = new Collection();
+                    collection.add(model.item);
+                    thisClone.collection = collection;
+                    thisClone['getModel'] = (data, evt) => {
+                        if (data.cid) {
+                            return thisClone.collection.get(data.cid)
+                        }
+                        return thisClone.collection.get(data.id)
+                    };
+
+                    Relationship.prototype[method].call(thisClone, data, e);
+
+                    e.preventDefault();
+                }
+            });
         },
 
         selectRecord(foreignScope) {
@@ -60,7 +234,7 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
                     }).then(() => {
                         this.model.trigger('after:relate', this.link);
                         if (this.toggleSelected(model.id)) {
-                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                            window.itemsListPanel?.setSelectedIds(this.selectedIds);
                         }
                     })
                 }, this);

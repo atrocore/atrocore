@@ -43,7 +43,9 @@
     "stagingRecord": "staging record",
     "stagingRecords": "staging records",
     "masterRecord": "master record",
-    "masterRecords": "master records"
+    "masterRecords": "master records",
+    "confirmed": "Confirmed",
+    "rejected": "Rejected"
   },
   "streamMessages": {
     "clusterLinked": "{user} linked {relatedEntity} to this cluster",
