@@ -35,7 +35,23 @@ use Psr\Http\Server\RequestHandlerInterface;
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    '$ref' => '#/components/schemas/Variable',
+                    'type'       => 'object',
+                    'required'   => ['type'],
+                    'properties' => [
+                        'id'    => ['type' => 'string', 'nullable' => true],
+                        'key'   => ['type' => 'string', 'nullable' => true],
+                        'type'  => ['type' => 'string'],
+                        'value' => [
+                            'nullable' => true,
+                            'anyOf'    => [
+                                ['type' => 'string'],
+                                ['type' => 'number'],
+                                ['type' => 'boolean'],
+                                ['type' => 'array'],
+                                ['type' => 'object'],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -46,7 +62,22 @@ use Psr\Http\Server\RequestHandlerInterface;
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        '$ref' => '#/components/schemas/Variable',
+                        'type'       => 'object',
+                        'properties' => [
+                            'id'    => ['type' => 'string'],
+                            'key'   => ['type' => 'string', 'nullable' => true],
+                            'type'  => ['type' => 'string', 'nullable' => true],
+                            'value' => [
+                                'nullable' => true,
+                                'anyOf'    => [
+                                    ['type' => 'string'],
+                                    ['type' => 'number'],
+                                    ['type' => 'boolean'],
+                                    ['type' => 'array'],
+                                    ['type' => 'object'],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -54,9 +85,6 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => [
             'description' => 'Forbidden',
         ],
-    ],
-    entities: [
-        'Variable',
     ],
 )]
 class CreateVariableHandler extends AbstractHandler
