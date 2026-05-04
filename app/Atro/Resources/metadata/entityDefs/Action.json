@@ -228,7 +228,37 @@
     "inBackground": {
       "type": "bool",
       "default": false,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "suggestValue",
+                "updateByAi",
+                "suggestValueByAi",
+                "error"
+              ]
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "suggestValue",
+                "updateByAi",
+                "suggestValueByAi",
+                "error"
+              ]
+            }
+          ]
+        }
+      }
     },
     "massAction": {
       "type": "bool",
