@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\EntityTypeHandlers;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
@@ -101,7 +102,11 @@ class AddAttributesHandler extends AbstractHandler
         $input = new \stdClass();
         $input->__attributes = $attributeIds;
 
-        $res = $this->getRecordService($entityName)->updateEntity($id, $input);
+        try {
+            $res = $this->getRecordService($entityName)->updateEntity($id, $input);
+        } catch (NotModified) {
+            $res = true;
+        }
 
         return new BoolResponse($res);
     }
