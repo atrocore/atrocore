@@ -5,6 +5,7 @@
     "status": "Statut",
     "conditionsType": "Type de conditions",
     "conditions": "Conditions",
+    "conditionsScript": "Script de conditions",
     "followers": "Abonnés",
     "name": "Nom",
     "emailAddress": "Mail",

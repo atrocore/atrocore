@@ -755,6 +755,7 @@
     "classifications": "Классификации",
     "conditionsType": "Тип условий",
     "conditions": "Условия",
+    "conditionsScript": "Скрипт условий",
     "allowedOptions": "Разрешенные варианты",
     "disableActionHistory": "Отключите ведение журнала действий",
     "downloadUrl": "Загрузить URL",

@@ -1013,6 +1013,7 @@
     "status": "Stato",
     "conditionsType": "Condizioni Tipo",
     "conditions": "Condizioni",
+    "conditionsScript": "Script condizioni",
     "entity": "Entità",
     "allowedOptions": "Opzioni consentite",
     "disableActionHistory": "Disabilita la registrazione delle azioni",
