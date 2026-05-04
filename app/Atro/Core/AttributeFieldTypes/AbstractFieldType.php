@@ -30,6 +30,9 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     protected Language $language;
     protected mixed $selectManagerFactory;
 
+    private bool $localeResolved = false;
+    private ?IEntity $cachedCurrentLocale = null;
+
     public function __construct(Container $container)
     {
         $this->config = $container->get('config');
@@ -133,15 +136,26 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     {
     }
 
+    protected function getCachedCurrentLocale(): ?IEntity
+    {
+        if (!$this->localeResolved) {
+            $this->localeResolved = true;
+            $localeId = Language::detectLocale($this->config, $this->user);
+            if ($localeId) {
+                $this->cachedCurrentLocale = $this->em->getEntity('Locale', $localeId);
+            }
+        }
+
+        return $this->cachedCurrentLocale;
+    }
+
     protected function prepareKey(string $nameKey, array $row): string
     {
-        if (!empty($localeId = Language::detectLocale($this->config, $this->user))) {
-            $currentLocale = $this->em->getEntity('Locale', $localeId);
-            if (!empty($currentLocale)) {
-                $languageNameKey = $nameKey . '_' . strtolower($currentLocale->get('languageCode'));
-                if (!empty($row[$languageNameKey])) {
-                    $nameKey = $languageNameKey;
-                }
+        $currentLocale = $this->getCachedCurrentLocale();
+        if (!empty($currentLocale)) {
+            $languageNameKey = $nameKey . '_' . strtolower($currentLocale->get('languageCode'));
+            if (!empty($row[$languageNameKey])) {
+                $nameKey = $languageNameKey;
             }
         }
 

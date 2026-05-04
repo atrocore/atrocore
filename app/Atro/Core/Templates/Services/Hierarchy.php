@@ -685,17 +685,24 @@ class Hierarchy extends Base
         }
 
         $fetchedEntity = $this->getRepository()->get($id);
+
         if (!empty($fetchedEntity)) {
-            $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
-            $fetchedEntity->hasAllEntityAttributes = false;
-            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+            $hasChildren = $this->getRepository()->hasChildren($id);
+            if ($hasChildren){
+                $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
+
+                $fetchedEntity->hasAllEntityAttributes = false;
+                $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+            }
         }
 
         parent::updateEntity($id, $data);
 
         $this->getRepository()->pushLinkMultipleFields($entityData);
 
-        $this->createPseudoTransactionJobs($entityData, clone $data);
+        if (!empty($hasChildren)){
+            $this->createPseudoTransactionJobs($entityData, clone $data);
+        }
 
         return true;
     }

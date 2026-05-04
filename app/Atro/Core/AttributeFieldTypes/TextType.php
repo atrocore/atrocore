@@ -13,7 +13,6 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
-use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -27,6 +26,8 @@ class TextType extends AbstractFieldType
 
     protected Connection $conn;
 
+    private ?array $cachedLanguages = null;
+
     public function __construct(Container $container)
     {
         parent::__construct($container);
@@ -39,6 +40,11 @@ class TextType extends AbstractFieldType
         $id            = $row['id'];
         $name          = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = !empty($row['data']) ? @json_decode($row['data'], true)['field'] ?? null : null;
+
+        // Resolve once per attribute — avoids repeated detectLocale + getEntity calls inside prepareKey
+        $nameKey       = $this->prepareKey('name', $row);
+        $tooltipKey    = $this->prepareKey('tooltip', $row);
+        $conditionals  = $this->prepareConditionalProperties($row);
 
         $entity->fields[$name] = [
             'type'                     => $this->type,
@@ -72,10 +78,10 @@ class TextType extends AbstractFieldType
             'readOnly'                  => !empty($row['is_read_only']),
             'protected'                 => !empty($row['is_protected']),
             'notNull'                   => !empty($row['not_null']),
-            'label'                     => $row[$this->prepareKey('name', $row)],
-            'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
-            'conditionalProperties'     => $this->prepareConditionalProperties($row),
+            'label'                     => $row[$nameKey],
+            'tooltip'                   => !empty($row[$tooltipKey]),
+            'tooltipText'               => $row[$tooltipKey],
+            'conditionalProperties'     => $conditionals,
             'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
         ];
 
@@ -101,18 +107,7 @@ class TextType extends AbstractFieldType
             $entity->entityDefs['fields'][$name]['countBytesInsteadOfCharacters'] = $attributeData['countBytesInsteadOfCharacters'];
         }
 
-        $languages = [];
-        if (!empty($this->config->get('isMultilangActive'))) {
-            foreach ($this->config->get('inputLanguageList', []) as $code) {
-                $languages[$code] = $code;
-                foreach ($this->config->get('referenceData.Language', []) as $v) {
-                    if ($code === $v['code']) {
-                        $languages[$code] = $v['name'];
-                        break;
-                    }
-                }
-            }
-        }
+        $languages = $this->getLanguageMap();
 
         if (!empty($row['is_multilang'])) {
             foreach ($languages as $language => $languageName) {
@@ -128,8 +123,8 @@ class TextType extends AbstractFieldType
                 $entity->entityDefs['fields'][$lName] = array_merge($entity->entityDefs['fields'][$name], [
                     'name'            => $lName,
                     'label'           => $this->getAttributeLabel($row, $language, $languages),
-                    'tooltip'         => !empty($row[$this->prepareKey('tooltip', $row)]),
-                    'tooltipText'     => $row[$this->prepareKey('tooltip', $row)],
+                    'tooltip'         => !empty($row[$tooltipKey]),
+                    'tooltipText'     => $row[$tooltipKey],
                     'multilangField'  => $name,
                     'multilangLocale' => $language,
                 ]);
@@ -146,7 +141,7 @@ class TextType extends AbstractFieldType
             $entity->entityDefs['fields'][$name]['unitField']        = true;
             $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
             $entity->entityDefs['fields'][$name]['detailViewLabel']  = $entity->entityDefs['fields'][$name]['label'];
-            $entity->entityDefs['fields'][$name]['label']            = "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate("{$this->type}Part");
+            $entity->entityDefs['fields'][$name]['label']            = "{$row[$nameKey]} " . $this->language->translate("{$this->type}Part");
 
             $entity->fields[$name . 'UnitId']   = [
                 'type'        => 'varchar',
@@ -176,7 +171,7 @@ class TextType extends AbstractFieldType
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
                 "type"                      => "link",
-                'label'                     => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+                'label'                     => "{$row[$nameKey]} " . $this->language->translate('unitPart'),
                 "view"                      => "views/fields/unit-link",
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
@@ -199,47 +194,68 @@ class TextType extends AbstractFieldType
                 'readOnly'                  => !empty($row['is_read_only']),
                 'protected'                 => !empty($row['is_protected']),
                 'layoutDetailDisabled'      => true,
-                'conditionalProperties'     => $this->prepareConditionalProperties($row),
+                'conditionalProperties'     => $conditionals,
                 'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
             ];
             $attributesDefs[$name]                        = $entity->entityDefs['fields'][$name];
             $attributesDefs[$name . 'Unit']               = $entity->entityDefs['fields'][$name . 'Unit'];
 
             $entity->entityDefs['fields'][$name . 'UnitId'] = [
-                'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+                'label' => "{$row[$nameKey]} " . $this->language->translate('unitPart'),
             ];
         } else {
             $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
         }
     }
 
+    protected function getLanguageMap(): array
+    {
+        if ($this->cachedLanguages !== null) {
+            return $this->cachedLanguages;
+        }
+
+        $this->cachedLanguages = [];
+        if (!empty($this->config->get('isMultilangActive'))) {
+            $referenceLanguages = $this->config->get('referenceData.Language', []);
+            $codeToName = [];
+            foreach ($referenceLanguages as $v) {
+                $codeToName[$v['code']] = $v['name'];
+            }
+            foreach ($this->config->get('inputLanguageList', []) as $code) {
+                $this->cachedLanguages[$code] = $codeToName[$code] ?? $code;
+            }
+        }
+
+        return $this->cachedLanguages;
+    }
+
     public function getAttributeLabel(array $row, string $languageCode, array $languages): string
     {
-        if (!empty($localeId = Language::detectLocale($this->config, $this->user))) {
-            $currentLocale = $this->em->getEntity('Locale', $localeId);
-            if (!empty($currentLocale)) {
-                if (!empty($currentLocale->get('displayLabelsInContentLanguage'))) {
-                    if (!empty($row['name_' . strtolower($languageCode)])) {
-                        return $row['name_' . strtolower($languageCode)];
-                    }
-                }
+        $currentLocale = $this->getCachedCurrentLocale();
+        $nameKey       = $this->prepareKey('name', $row);
 
-                if (array_key_exists($currentLocale->get('languageCode'), $languages)) {
-                    if ($languageCode === $currentLocale->get('languageCode')) {
-                        return $row[$this->prepareKey('name', $row)];
-                    }
-                    if (empty($languageCode)) {
-                        foreach ($this->config->get('referenceData.Language', []) as $v) {
-                            if ($v['role'] === 'main') {
-                                return $row[$this->prepareKey('name', $row)] . ' / ' . $v['name'];
-                            }
+        if (!empty($currentLocale)) {
+            if (!empty($currentLocale->get('displayLabelsInContentLanguage'))) {
+                if (!empty($row['name_' . strtolower($languageCode)])) {
+                    return $row['name_' . strtolower($languageCode)];
+                }
+            }
+
+            if (array_key_exists($currentLocale->get('languageCode'), $languages)) {
+                if ($languageCode === $currentLocale->get('languageCode')) {
+                    return $row[$nameKey];
+                }
+                if (empty($languageCode)) {
+                    foreach ($this->config->get('referenceData.Language', []) as $v) {
+                        if ($v['role'] === 'main') {
+                            return $row[$nameKey] . ' / ' . $v['name'];
                         }
                     }
                 }
             }
         }
 
-        $res = $row[$this->prepareKey('name', $row)];
+        $res = $row[$nameKey];
         if (!empty($languageCode)) {
             $res .= ' / ' . $languages[$languageCode];
         }

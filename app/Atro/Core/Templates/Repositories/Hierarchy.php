@@ -582,12 +582,12 @@ class Hierarchy extends Base
 
     public function hasChildren(string $id): bool
     {
-        $res = $this->getConnection()->createQueryBuilder()
+        $res = $this->getDbal()->createQueryBuilder()
             ->select('id')
             ->from($this->tableName)
             ->where('routes LIKE :like')
             ->setParameter('like', "%|$id|%")
-            ->fetchAssociative();
+            ->fetchOne();
 
         return !empty($res);
     }
