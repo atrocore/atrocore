@@ -745,6 +745,7 @@
     "classifications": "Clasificaciones",
     "conditionsType": "Condiciones Type",
     "conditions": "Condiciones",
+    "conditionsScript": "Script de condiciones",
     "entity": "Entidad",
     "allowedOptions": "Opciones permitidas",
     "fileType": "Tipo de archivo",

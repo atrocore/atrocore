@@ -684,6 +684,7 @@
     "status": "Status",
     "conditionsType": "Typ warunków",
     "conditions": "Warunki",
+    "conditionsScript": "Skrypt warunków",
     "followers": "Obserwujący",
     "connection": "Połączenie",
     "tags": "Tagi",

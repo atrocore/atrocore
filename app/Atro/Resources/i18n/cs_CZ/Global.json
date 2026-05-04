@@ -558,6 +558,7 @@
     "classifications": "Klasifikace",
     "conditionsType": "Typ podmínek",
     "conditions": "Podmínky",
+    "conditionsScript": "Skript podmínek",
     "entity": "Entita",
     "allowedOptions": "Povolené možnosti",
     "disableActionHistory": "Vypnout protokolování akcí",

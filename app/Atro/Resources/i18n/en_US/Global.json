@@ -723,6 +723,7 @@
     "status": "Status",
     "conditionsType": "Conditions Type",
     "conditions": "Conditions",
+    "conditionsScript": "Conditions Script",
     "entity": "Entity",
     "allowedOptions": "Allowed Options",
     "disableActionHistory": "Disable action logging",

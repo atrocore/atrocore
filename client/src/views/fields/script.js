@@ -17,7 +17,19 @@ Espo.define('views/fields/script', 'views/fields/base', Dep => {
         svelteComponent: null,
 
         fetch: function () {
-            return this.svelteComponent.fetch();
+            return this.svelteComponent ? this.svelteComponent.fetch() : {};
+        },
+
+        // Prevent reRender on visibility/required condition changes to avoid destroying Monaco.
+        // toggleReadOnlyViaConditions() handles mode/readOnly changes with reRender when needed.
+        reRenderByConditionalProperties: function () {
+            this.toggleReadOnlyViaConditions();
+            if (this.getConditions('visible')) {
+                this.toggleVisibility();
+            }
+            if (this.getConditions('required')) {
+                this.toggleRequiredMarker();
+            }
         },
 
         afterRender: function () {
