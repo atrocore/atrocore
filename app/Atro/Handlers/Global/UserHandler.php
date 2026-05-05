@@ -28,7 +28,6 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get authorized user data',
     description: 'Generate authorization token and return authorized user data.',
     tag: 'Global',
-    skipActionHistory: true,
     auth: true,
     parameters: [
         [
@@ -63,15 +62,43 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Authorized user data',
+            'description' => 'Authorized user data. When Authorization-Token-Only is true, only authorizationToken is returned.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
+                        'required'   => [
+                            'authorizationToken',
+                        ],
                         'properties' => [
                             'authorizationToken' => [
-                                'type'    => 'string',
-                                'example' => 'YWRtaW46NGQ1NGU5ZTEzYjc0NGQzOGM5ODM2NzIyNDU2YTZmNjk=',
+                                'type'        => 'string',
+                                'description' => 'Base64-encoded "username:token" credential string.',
+                                'example'     => 'YWRtaW46NGQ1NGU5ZTEzYjc0NGQzOGM5ODM2NzIyNDU2YTZmNjk=',
+                            ],
+                            'token'              => [
+                                'type'        => 'string',
+                                'description' => 'Raw authorization token.',
+                            ],
+                            'user'               => [
+                                'type'                 => 'object',
+                                'description'          => 'Authenticated user record.'
+                            ],
+                            'acl'                => [
+                                'type'                 => 'object',
+                                'description'          => 'ACL scope-permission map for the authenticated user.'
+                            ],
+                            'preferences'        => [
+                                'type'        => 'object',
+                                'description' => 'User UI preferences.'
+                            ],
+                            'settings'           => [
+                                'type'                 => 'object',
+                                'description'          => 'Application settings visible to the authenticated user.'
+                            ],
+                            'appParams'          => [
+                                'type'        => 'object',
+                                'description' => 'Runtime application parameters.'
                             ],
                         ],
                     ],
@@ -79,6 +106,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
+    skipActionHistory: true
 )]
 class UserHandler extends AbstractHandler
 {

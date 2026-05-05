@@ -42,9 +42,8 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'key'   => ['type' => 'string', 'nullable' => true],
                         'type'  => ['type' => 'string'],
                         'value' => [
-                            'nullable' => true,
-                            'anyOf'    => [
-                                ['type' => 'string'],
+                            'anyOf' => [
+                                ['type' => 'string', 'nullable' => true],
                                 ['type' => 'number'],
                                 ['type' => 'boolean'],
                                 ['type' => 'array'],
@@ -68,13 +67,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'key'   => ['type' => 'string', 'nullable' => true],
                             'type'  => ['type' => 'string', 'nullable' => true],
                             'value' => [
-                                'nullable' => true,
-                                'anyOf'    => [
-                                    ['type' => 'string'],
-                                    ['type' => 'number'],
-                                    ['type' => 'boolean'],
-                                    ['type' => 'array'],
-                                    ['type' => 'object'],
+                                'anyOf' => [
+                                    ['type' => 'string',  'nullable' => true],
+                                    ['type' => 'number',  'nullable' => true],
+                                    ['type' => 'boolean', 'nullable' => true],
+                                    ['type' => 'array',   'nullable' => true],
+                                    ['type' => 'object',  'nullable' => true],
                                 ],
                             ],
                         ],
