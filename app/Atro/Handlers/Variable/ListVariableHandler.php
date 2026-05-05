@@ -42,7 +42,21 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'list'  => [
                                 'type'  => 'array',
                                 'items' => [
-                                    '$ref' => '#/components/schemas/Variable',
+                                    'type'       => 'object',
+                                    'properties' => [
+                                        'id'    => ['type' => 'string'],
+                                        'key'   => ['type' => 'string', 'nullable' => true],
+                                        'type'  => ['type' => 'string', 'nullable' => true],
+                                        'value' => [
+                                            'anyOf' => [
+                                                ['type' => 'string',  'nullable' => true],
+                                                ['type' => 'number',  'nullable' => true],
+                                                ['type' => 'boolean', 'nullable' => true],
+                                                ['type' => 'array',   'nullable' => true],
+                                                ['type' => 'object',  'nullable' => true],
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -50,9 +64,6 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
-    ],
-    entities: [
-        'Variable',
     ],
 )]
 class ListVariableHandler extends AbstractHandler
