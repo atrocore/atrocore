@@ -16,6 +16,7 @@
     "relatedEntity": "Jedná se o hlavní entitu, z jejíž stránky se zobrazuje rozložení pro výše vybranou entitu."
   },
   "messages": {
-    "cannotRemoveFieldFromLayout": "Pole \"%s\" nelze z rozvržení odstranit."
+    "cannotRemoveFieldFromLayout": "Pole \"%s\" nelze z rozvržení odstranit.",
+    "compositeAttributeNotAllowedInList": "Composite atribut nelze přidat do rozvržení seznamu."
   }
 }

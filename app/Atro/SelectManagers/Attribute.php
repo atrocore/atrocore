@@ -101,6 +101,11 @@ class Attribute extends Base
         ];
     }
 
+    protected function boolFilterNotCompositeType(array &$result): void
+    {
+        $result['whereClause'][] = ['type!=' => 'composite'];
+    }
+
     protected function boolFilterNotParentCompositeAttribute(array &$result): void
     {
         $attributeId = (string)$this->getBoolFilterParameter('notParentCompositeAttribute');

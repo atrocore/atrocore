@@ -16,6 +16,7 @@
     "relatedEntity": "Il s'agit de l'entité principale à partir de laquelle la disposition de l'entité sélectionnée ci-dessus est affichée."
   },
   "messages": {
-    "cannotRemoveFieldFromLayout": "Vous ne pouvez pas supprimer la rubrique \"%s\" de la disposition."
+    "cannotRemoveFieldFromLayout": "Vous ne pouvez pas supprimer la rubrique \"%s\" de la disposition.",
+    "compositeAttributeNotAllowedInList": "L'attribut composite ne peut pas être ajouté à la mise en page liste."
   }
 }
