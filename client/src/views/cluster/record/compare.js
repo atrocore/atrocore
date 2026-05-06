@@ -25,7 +25,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         actionRejectItem(e) {
             const id = $(e.currentTarget).data('selection-item-id');
 
-            this.ajaxPostRequest(`ClusterItem/action/reject`, {id: id})
+            this.ajaxPostRequest(`ClusterItem/${id}/reject`)
                 .then(response => {
                     this.notify('Item rejected', 'success');
                     this.notify(this.translate('Loading...'));
