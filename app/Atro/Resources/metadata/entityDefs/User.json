@@ -414,7 +414,8 @@
     },
     "currentSelection": {
       "type": "belongsTo",
-      "entity": "Selection"
+      "entity": "Selection",
+      "foreignName": "number"
     }
   },
   "collection": {
