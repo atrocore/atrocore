@@ -698,9 +698,8 @@ class Hierarchy extends Base
 
         parent::updateEntity($id, $data);
 
-        $this->getRepository()->pushLinkMultipleFields($entityData);
-
         if (!empty($hasChildren)){
+            $this->getRepository()->pushLinkMultipleFields($entityData);
             $this->createPseudoTransactionJobs($entityData, clone $data);
         }
 
