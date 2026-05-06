@@ -13,10 +13,6 @@
       "type": "varchar",
       "protected": true
     },
-    "controllerAction": {
-      "type": "varchar",
-      "protected": true
-    },
     "target": {
       "type": "varchar",
       "notStorable": true,

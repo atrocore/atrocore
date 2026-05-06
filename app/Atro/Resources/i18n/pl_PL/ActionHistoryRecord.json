@@ -9,7 +9,6 @@
     "authLogRecord": "Rekord Logowania",
     "data": "Dane",
     "controllerName": "Nazwa kontrolera",
-    "controllerAction": "Działanie kontrolera",
     "targetName": "Nazwa celu",
     "targetId": "Identyfikator celu"
   }

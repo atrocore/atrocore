@@ -191,9 +191,10 @@ class LastViewed extends AbstractService
 
 
         $collection = $this->getEntityManager()->getRepository('ActionHistoryRecord')->where(array(
-            'userId'           => $this->getUser()->id,
-            'controllerAction' => 'read',
-            'controllerName'   => $targetTypeList
+            'userId'         => $this->getUser()->id,
+            'action'         => 'GET',
+            'targetId!='     => null,
+            'controllerName' => $targetTypeList
         ))
             ->order(3, true)
             ->limit($offset, $maxSize)
@@ -202,9 +203,10 @@ class LastViewed extends AbstractService
             ->find();
 
         $count = $this->getEntityManager()->getRepository('ActionHistoryRecord')->where(array(
-            'userId'           => $this->getUser()->id,
-            'controllerAction' => 'read',
-            'controllerName'   => $targetTypeList
+            'userId'         => $this->getUser()->id,
+            'action'         => 'GET',
+            'targetId!='     => null,
+            'controllerName' => $targetTypeList
         ))->select([
             'targetId', 'controllerName'
         ])->groupBy([
