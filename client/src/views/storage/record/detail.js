@@ -25,7 +25,7 @@ Espo.define('views/storage/record/detail', 'views/record/detail', Dep => {
 
         actionScan() {
             this.notify('Please wait...');
-            this.ajaxPostRequest('Storage/action/createScanJob', {id: this.model.get('id')}).success(() => {
+            this.ajaxPostRequest(`Storage/${this.model.get('id')}/createScanJob`).success(() => {
                 this.notify(this.translate('jobCreated'), 'success');
             });
         },

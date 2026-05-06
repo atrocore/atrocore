@@ -27,7 +27,7 @@ class AuthMiddleware implements MiddlewareInterface
 {
     private const ALLOWED_URI_WITH_EXPIRED_PASSWORD = [
         '/api/',
-        '/api/User/action/changeExpiredPassword',
+        '/api/User/changeExpiredPassword',
         '/api/userSession',
     ];
 
