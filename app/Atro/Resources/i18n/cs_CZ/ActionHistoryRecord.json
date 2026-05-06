@@ -4,7 +4,6 @@
     "action": "Akce",
     "createdAt": "Datum",
     "controllerName": "Název ovladače",
-    "controllerAction": "Akce kontroleru",
     "authToken": "Auth Token",
     "ipAddress": "IP adresa",
     "authLogRecord": "Záznam protokolu ověření",

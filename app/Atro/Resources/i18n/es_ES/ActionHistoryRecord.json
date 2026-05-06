@@ -8,7 +8,6 @@
     "ipAddress": "Dirección IP",
     "authLogRecord": "Auth Log Record",
     "controllerName": "Nombre del controlador",
-    "controllerAction": "Acción del controlador",
     "targetName": "Nombre del objetivo",
     "targetId": "Identificación del objetivo",
     "data": "Datos"
