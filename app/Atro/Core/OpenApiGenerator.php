@@ -237,8 +237,10 @@ class OpenApiGenerator
                 continue;
             }
             unset($propSchema['readOnly']);
-            $propSchema['nullable'] = true;
-            $writeProps[$prop]      = $propSchema;
+            if (isset($propSchema['type'])) {
+                $propSchema['nullable'] = true;
+            }
+            $writeProps[$prop] = $propSchema;
         }
 
         $writeRequired = array_values(array_filter($readRequired, fn($k) => isset($writeProps[$k])));
@@ -690,7 +692,7 @@ class OpenApiGenerator
                     $this->buildEntitySchema($result, $entityName);
                 }
 
-                $path = substr($entry['path'], strlen('/api'));
+                $path = preg_replace('/\{(\w+):[^}]+\}/', '{$1}', substr($entry['path'], strlen('/api')));
 
                 foreach ($entry['methods'] as $method) {
                     $result['paths'][$path][strtolower($method)] = $entry['openapi'];

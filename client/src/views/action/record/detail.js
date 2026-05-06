@@ -31,7 +31,10 @@ Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/
         },
 
         isButtonsDisabled() {
-            return this.model.get('type') === 'error' || !this.model.get('isActive');
+            return this.model.get('type') === 'suggestValueByAi'
+                || this.model.get('type') === 'suggestValue'
+                || this.model.get('type') === 'error'
+                || !this.model.get('isActive');
         },
 
         handleButtonsDisability() {
