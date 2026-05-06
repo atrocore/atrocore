@@ -44,6 +44,9 @@ Espo.define('layout-manager', [], function () {
         'userInterface': 'detail',
         'authentication': 'detail',
         'upload': 'detail',
+        'pimSettings': 'detail',
+        'salesSettings': 'detail',
+        'etimSettings': 'detail'
     };
 
     var LayoutManager = function (options, userId) {
