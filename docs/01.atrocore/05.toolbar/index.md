@@ -35,11 +35,11 @@ Wildcards can be used for search, at any place in the search string, separately 
 
 The toolbar provides two separate controls for internationalization:
 
-**Language Selection**: The language icon shows your current language settings:
-- **Globe icon**: All languages are enabled
-- **Language indicator**: Only specific languages are active (e.g., English, but not German)
+**Language Selection**: The language icon reflects your current content language settings:
+- **Globe icon**: All additional languages are enabled
+- **Language indicator**: Only the main language is active, or a specific subset of additional languages is selected
 
-Click this icon to change which languages you want to use in the system.
+By default, only the main language is active. Click the icon to open the language panel and enable additional languages as needed. When at least one additional language is selected, an **Unselect All** link appears — clicking it deactivates all additional languages, leaving only the main language active.
 
 ![Filter by language](./_assets/additional-languages-filtering.png){.small}
 
