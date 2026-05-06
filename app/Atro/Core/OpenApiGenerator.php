@@ -355,6 +355,20 @@ class OpenApiGenerator
             $fieldData['type'] = $fieldData['outputType'] ?? 'text';
         }
 
+        // TODO: value-container fields are polymorphic (scalar or array depending on field type being configured).
+        // This anyOf is a temporary workaround until field-level API types are modelled properly.
+        if (!empty($fieldData['view']) && str_contains($fieldData['view'], 'value-container')) {
+            $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                'anyOf'    => [
+                    ['type' => 'string', 'nullable' => true],
+                    ['type' => 'number'],
+                    ['type' => 'array', 'items' => (object)[]],
+                    ['type' => 'object'],
+                ]
+            ];
+            return;
+        }
+
         if (!empty($fieldData['required'])) {
             if (empty($result['components']['schemas'][$entityName]['required'])) {
                 $result['components']['schemas'][$entityName]['required'] = [];
@@ -402,6 +416,7 @@ class OpenApiGenerator
                 break;
             case "array":
             case "multiEnum":
+            case "multiLanguage":
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
                     'type'  => 'array',
                     'items' => ['type' => 'string']
