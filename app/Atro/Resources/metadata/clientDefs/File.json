@@ -32,7 +32,7 @@
   ],
   "massActionDefs": {
     "download": {
-      "url": "File/action/massDownload",
+      "url": "File/massDownload",
       "successMessage": "downloadJobsCreated"
     }
   },
