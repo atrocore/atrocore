@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/{entityName}/action/listKanban',
+    path: '/{entityName}/listKanban',
     methods: [
         'GET',
     ],
