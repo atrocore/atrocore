@@ -335,7 +335,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
         },
 
         setViewModeKanban: function () {
-            this.collection.url = this.scope + '/action/listKanban';
+            this.collection.url = this.scope + '/listKanban';
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall');
 
             this.collection.sortBy = this.collection.defaultSortBy;
