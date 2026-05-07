@@ -321,7 +321,9 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                             name: file.name,
                             fileSize: file.size,
                             piecesCount: undefined,
-                            fileContents: e.target.result
+                            fileContents: e.target.result,
+                            typeId: this.model.get('typeId'),
+                            folderId: this.model.get('folderId')
                         })),
                     }).done(response => {
                         this.pushPieceSize(file, file.size);
@@ -432,7 +434,9 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                         piecesCount: this.pieces.length,
                         name: file.name,
                         fileSize: file.size,
-                        fileContents: undefined
+                        fileContents: undefined,
+                        typeId: this.model.get('typeId'),
+                        folderId: this.model.get('folderId')
                     })),
                 }).done(entity => {
                     this.uploadedChunks = entity.chunks;
