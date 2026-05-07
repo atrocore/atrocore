@@ -94,28 +94,35 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 return
             }
 
-            let fieldDefs = null;
-            if (!this.model.get('exportAllField') && this.model.get('fieldList')) {
-                fieldDefs = {}
-                this.model.get('fieldList').forEach(field => {
-                    fieldDefs[field] = this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}`);
-                })
+            let url, data;
+
+            if (this.model.get('useExistingExportFeed')) {
+                url = `ExportFeed/${this.model.get('exportFeed')}/exportFile`;
+                data = {
+                    ignoreFilter: this.model.get('ignoreFilter'),
+                    entityFilterData: this.options.entityFilterData
+                };
+            } else {
+                let fieldDefs = null;
+                if (!this.model.get('exportAllField') && this.model.get('fieldList')) {
+                    fieldDefs = {};
+                    this.model.get('fieldList').forEach(field => {
+                        fieldDefs[field] = this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}`);
+                    });
+                }
+
+                url = 'ExportFeed/directExportFile';
+                data = {
+                    fileType: this.model.get('fileType'),
+                    scope: this.scope,
+                    exportAllField: this.model.get('exportAllField'),
+                    fieldList: this.model.get('fieldList'),
+                    fieldDefs: fieldDefs,
+                    entityFilterData: this.options.entityFilterData
+                };
             }
 
-            let data = {
-                id: this.model.get('exportFeed'),
-                fileType: this.model.get('fileType'),
-                exportAllField: this.model.get('exportAllField'),
-                fieldList: this.model.get('fieldList'),
-                fieldDefs: fieldDefs,
-                ignoreFilter: this.model.get('ignoreFilter'),
-                scope: this.scope,
-                entityFilterData: this.options.entityFilterData
-            };
-
-            let actionName = this.model.get('useExistingExportFeed') ? 'exportFile' : 'directExportFile'
-
-            this.ajaxPostRequest(`ExportFeed/action/${actionName}`, data).then(response => {
+            this.ajaxPostRequest(url, data).then(response => {
                 if (response) {
                     this.notify(this.translate('jobCreated'), 'success');
                 } else {
