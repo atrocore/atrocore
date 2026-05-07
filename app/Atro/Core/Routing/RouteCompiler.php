@@ -114,11 +114,18 @@ class RouteCompiler
                     }
                 }
 
-                // TODO: Backward compatibility only. createDisabled lives in clientDefs, not scopes,
-                // so it cannot be expressed via requiresAbsent on #[EntityType]. Ideally, this flag
-                // should be moved to scopes metadata and handled declaratively.
+                // createDisabled lives in clientDefs, not scopes, so it cannot be expressed via
+                // requiresAbsent on #[EntityType]. Skip the create route when creation is disabled for the entity.
                 if ($entry['class'] === \Atro\Core\EntityTypeHandlers\CreateHandler::class
                     && $this->metadata->get("clientDefs.$entityName.createDisabled")
+                ) {
+                    continue;
+                }
+
+                // kanbanViewMode lives in clientDefs, not scopes, so it cannot be expressed via
+                // requires on #[EntityType]. Only register the kanban list route for entities that have kanban enabled.
+                if ($entry['class'] === \Atro\Core\EntityTypeHandlers\ListKanbanHandler::class
+                    && !$this->metadata->get("clientDefs.$entityName.kanbanViewMode")
                 ) {
                     continue;
                 }
