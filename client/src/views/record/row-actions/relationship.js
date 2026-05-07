@@ -34,6 +34,15 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
 
     return Dep.extend({
 
+        getLoadActions: function () {
+            const parentModelName = this.options?.parentModelName || null;
+            const relationName = this.options?.relationName || null;
+            if (this.getMetadata().get(['clientDefs', parentModelName, 'relationshipPanels', relationName, 'dynamicActionDisabled'])) {
+                return undefined;
+            }
+            return Dep.prototype.getLoadActions.call(this);
+        },
+
         getActionList: function () {
             const parentModelName = this.options?.parentModelName || null;
             const relationName = this.options?.relationName || null;
@@ -70,19 +79,17 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     list.push({
                         action: 'quickView',
                         label: 'View',
-                        data: {
-                            id: this.model.id
-                        },
+                        iconClass: 'ph ph-eye',
+                        data: { id: this.model.id },
                         link: '#' + this.model.name + '/view/' + this.model.id
-                    })
+                    });
                 } else if (actionName === 'openInTab') {
                     if (this.model.get('hasOpen') && this.model.get('downloadUrl')) {
                         list.push({
                             action: 'openInTab',
                             label: 'Open',
-                            data: {
-                                url: this.model.get('downloadUrl')
-                            },
+                            iconClass: 'ph ph-arrow-square-out',
+                            data: { url: this.model.get('downloadUrl') },
                         });
                     }
                 } else if (actionName === 'reupload') {
@@ -90,9 +97,8 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         list.push({
                             action: 'reupload',
                             label: 'Reupload',
-                            data: {
-                                id: this.model.get('id')
-                            },
+                            iconClass: 'ph ph-upload-simple',
+                            data: { id: this.model.get('id') },
                         });
                     }
                 } else if (actionName === 'quickEdit') {
@@ -100,10 +106,8 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         list.push({
                             action: 'quickEdit',
                             label: 'Edit',
-                            data: {
-                                id: this.model.id,
-                                cid: this.model.cid
-                            },
+                            iconClass: 'ph ph-pencil-simple',
+                            data: { id: this.model.id, cid: this.model.cid },
                             link: '#' + this.model.name + '/edit/' + this.model.id
                         });
                     }
@@ -112,10 +116,8 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         list.push({
                             action: 'inheritRelated',
                             label: 'inherit',
-                            data: {
-                                id: this.model.id,
-                                cid: this.model.cid
-                            }
+                            iconClass: 'ph ph-git-branch',
+                            data: { id: this.model.id, cid: this.model.cid }
                         });
                     }
                 } else if (actionName === 'unlinkRelated') {
@@ -160,17 +162,6 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     }
                 }
             });
-
-            list.push({
-                divider: true
-            });
-
-            if (!this.getMetadata().get(['clientDefs', parentModelName, 'relationshipPanels', relationName, 'dynamicActionDisabled'])) {
-                list.push({
-                    preloader: true
-                });
-            }
-
 
             return list;
         }

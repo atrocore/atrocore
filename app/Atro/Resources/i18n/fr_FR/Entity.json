@@ -14,6 +14,7 @@
     "statusField": "Champ de statut",
     "kanbanViewMode": "Vue Kanban",
     "kanbanStatusIgnoreList": "Listes ignorées dans la vue Kanban",
+    "quickActions": "Actions rapides",
     "deleteWithoutConfirmation": "Suppression sans confirmation",
     "autoDeleteAfterDays": "Période de suppression automatique, en jours",
     "clearDeletedAfterDays": "Période de suppression permanente, en jours",
