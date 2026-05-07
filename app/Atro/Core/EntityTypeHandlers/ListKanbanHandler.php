@@ -115,7 +115,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-#[EntityType(types: ['Base', 'Hierarchy', 'Archive', 'Relation', 'ReferenceData'])]
+#[EntityType(types: ['Base', 'Hierarchy'])]
 class ListKanbanHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
