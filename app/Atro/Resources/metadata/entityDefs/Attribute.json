@@ -398,7 +398,6 @@
       "view": "views/admin/field-manager/fields/default-unit",
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "importDisabled": true,
       "layoutRemoveDisabled": true
     },
     "defaultDate": {
