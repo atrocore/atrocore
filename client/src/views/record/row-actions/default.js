@@ -214,7 +214,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
                         list.push({
                             action: actionData.action || 'universalAction',
-                            iconClass: actionData.iconClass,
+                            iconClass: actionData.iconClass || undefined,
+                            iconUrl: actionData.iconUrl || undefined,
                             label: this.translate(actionName, 'actions', scope),
                             data: {
                                 'name': actionName,
