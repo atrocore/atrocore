@@ -53,7 +53,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             const actions = this.getActionList().map(a => ({
                 name: a.action,
                 label: a.label,
-                icon: a.iconClass || undefined,
+                iconClass: a.iconClass || undefined,
                 link: a.link || undefined,
                 data: a.data || undefined,
                 quick: quickActionNames.includes(a.action),
@@ -96,6 +96,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         label: a.label,
                         link: a.link || undefined,
                         data: a.data || undefined,
+                        iconUrl: a.iconUrl || undefined,
                     }))
             );
         },
