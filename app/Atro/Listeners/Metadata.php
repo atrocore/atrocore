@@ -525,7 +525,9 @@ class Metadata extends AbstractListener
             }
 
             if (!empty($action['icon_class']) && !empty($data['app']['systemIcons'][$action['icon_class']]['path'])) {
-                $html = '<img src="' . $data['app']['systemIcons'][$action['icon_class']]['path'] . '" class="icon-button" >';
+                $iconPath = $data['app']['systemIcons'][$action['icon_class']]['path'];
+                $params['iconUrl'] = $iconPath;
+                $html = '<img src="' . $iconPath . '" class="icon-button" >';
                 if (empty($action['hide_text_label'])) {
                     $html .= ' ' . $action['name'];
                 } else {
