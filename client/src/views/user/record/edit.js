@@ -71,7 +71,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                 }
             }, this);
 
-            if (this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'oidcType', 'type']) && this.getConfig().get('oidcType')) {
+            if (this.getConfig().get('oidcType')) {
                 this.listenTo(this.model, 'change:emailAddress', function (model) {
                     let email = model.get('emailAddress');
                     if (!email) return;
