@@ -37,9 +37,15 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
         adaptQuickAction: function (name) {
             const adapter = {
                 quickRemove: 'removeRelated',
+                notInherit: 'notInheritRelated',
             };
 
             return adapter[name] || name;
+        },
+
+        getQuickActions: function () {
+            const configured = this.getMetadata().get(['clientDefs', this.model.name, 'quickActions']) || [];
+            return configured.map(name => this.adaptQuickAction(name));
         },
 
         getLoadActions: function () {
@@ -129,10 +135,21 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         });
                     }
                 } else if (actionName === 'unlinkRelated') {
-                    if (this.model.get('_meta')?.permissions?.unlink) {
+                    if (!this.model.get('_meta')?.permissions?.unlink) {
+                        return;
+                    }
+
+                    if (this.model.has('isInherited') && this.model.get('isInherited')) {
+                        list.push({
+                            action: 'notInheritRelated',
+                            iconClass: 'ph ph-link-break',
+                            label: 'Not Inherit',
+                            data: { id: this.model.id, cid: this.model.cid }
+                        });
+                    } else {
                         list.push({
                             action: 'unlinkRelated',
-                            iconClass: "ph ph-link-break",
+                            iconClass: 'ph ph-link-break',
                             label: 'Unlink',
                             data: {
                                 id: this.model.id,

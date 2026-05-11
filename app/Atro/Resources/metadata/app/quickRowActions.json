@@ -1,5 +1,6 @@
 {
   "quickView": "View",
   "quickEdit": "Edit",
-  "quickRemove": "Remove"
+  "quickRemove": "Remove",
+  "notInherit": "Not Inherit"
 }

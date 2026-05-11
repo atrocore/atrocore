@@ -1296,6 +1296,10 @@ class Metadata extends AbstractListener
                 }
             }
 
+            if (!isset($data['clientDefs'][$scope]['quickActions'])) {
+                $data['clientDefs'][$scope]['quickActions'] = ['notInherit'];
+            }
+
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'parents');
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'children');
 
