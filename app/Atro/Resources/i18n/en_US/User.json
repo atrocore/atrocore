@@ -41,6 +41,7 @@
     "disableNavigationPath": "Disable Navigation Path"
   },
   "labels": {
+    "OidcLogin": "Login via SSO",
     "Generate": "Generate",
     "Access": "Access",
     "Change Password": "Change Password",

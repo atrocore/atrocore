@@ -59,6 +59,24 @@ Espo.define('views/login', 'view', function (Dep) {
             } else {
                 this.localeId = this.getConfig().get('localeId');
             }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('token') && urlParams.has('username')) {
+                this.getStorage().set('user', 'auth', Base64.encode(urlParams.get('username') + ':' + urlParams.get('token')));
+                this.trigger('login', {
+                    auth: {
+                        userName: urlParams.get('username'),
+                        token: urlParams.get('token')
+                    }
+                });
+                window.location.href = '/';
+            }
+
+            if (this.getConfig().get('oidcType')) {
+                this.ajaxGetRequest('OidcLoginUrl', {}, {async: false}).then(data => {
+                    this.oidcLoginUrl = data.url || '';
+                });
+            }
         },
 
         afterRender: function () {
@@ -120,7 +138,9 @@ Espo.define('views/login', 'view', function (Dep) {
 
         data: function () {
             return {
-                logoSrc: this.getLogoSrc()
+                logoSrc: this.getLogoSrc(),
+                oidcEnabled: !!this.oidcLoginUrl,
+                oidcLoginUrl: this.oidcLoginUrl || ''
             };
         },
 

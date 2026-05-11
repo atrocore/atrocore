@@ -52,7 +52,8 @@
     "Email Accounts": "Comptes de courrier électronique",
     "Reset Password": "Réinitialiser le mot de passe",
     "Preferences": "Préférences",
-    "Notifications": "Notifications"
+    "Notifications": "Notifications",
+    "OidcLogin": "Se connecter via SSO"
   },
   "tooltips": {
     "defaultTeam": "Tous les enregistrements créés par cet utilisateur seront par défaut liés à cette équipe.",

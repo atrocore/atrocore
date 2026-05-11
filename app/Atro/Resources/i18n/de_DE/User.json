@@ -52,7 +52,8 @@
     "External Accounts": "Externe Konten",
     "Email Accounts": "E-Mail Konten",
     "Notifications": "Benachrichtigungen",
-    "Preferences": "Präferenzen"
+    "Preferences": "Präferenzen",
+    "OidcLogin": "Über SSO anmelden"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
