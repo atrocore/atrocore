@@ -26,6 +26,9 @@
                         <div>
                             <a href="javascript:" class="btn btn-link pull-right" data-action="passwordChangeRequest" tabindex="4">{{translate 'Forgot Password?' scope='User'}}</a>
                             <button type="submit" class="btn btn-primary" id="btn-login" tabindex="3">{{translate 'Login' scope='User'}}</button>
+                            {{#if oidcEnabled}}
+                                <a href="{{oidcLoginUrl}}" class="btn btn-default" id="btn-oidc-login" tabindex="4">{{translate 'OidcLogin' scope='User'}}</a>
+                            {{/if}}
                         </div>
                     </form>
                 </div>
