@@ -42,21 +42,30 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             this.options.acl = this.options.acl || {};
         },
 
+        getQuickActions: function () {
+            const configured = (this.getMetadata().get(['clientDefs', this.model.name, 'quickActions']) || []);
+            return configured.map(name => this.adaptQuickAction(name));
+        },
+
+        adaptQuickAction: function (name) {
+            return name;
+        },
+
         afterRender: function () {
             this.svelteComponent?.$destroy();
 
             if (!this.$el[0]) return;
 
-            const scope = this.model.name;
-            const quickActionNames = (this.getMetadata().get(['clientDefs', scope, 'quickActions']) || []).slice(0, 2);
+            const quickActions = this.getQuickActions();
 
             const actions = this.getActionList().map(a => ({
                 name: a.action,
                 label: a.label,
                 iconClass: a.iconClass || undefined,
+                iconUrl: a.iconUrl || undefined,
                 link: a.link || undefined,
                 data: a.data || undefined,
-                quick: quickActionNames.includes(a.action),
+                quick: quickActions.includes(a.action),
             }));
 
             this.svelteComponent = new Svelte.RowActions({

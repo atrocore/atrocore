@@ -17,18 +17,12 @@ Espo.define('views/admin/entity-manager/fields/quick-actions', 'views/fields/mul
             this.setupOptions();
         },
 
-        labelMap: {
-            quickView:   'View',
-            quickEdit:   'Edit',
-            quickRemove: 'Remove',
-            // 'notInherit'
-        },
-
         setupOptions() {
-            this.params.options = Object.keys(this.labelMap);
+            const quickActions = this.getMetadata().get(['app', 'quickRowActions']) || {};
+            this.params.options = Object.keys(quickActions);
             this.translatedOptions = {};
             this.params.options.forEach(action => {
-                this.translatedOptions[action] = this.translate(this.labelMap[action]);
+                this.translatedOptions[action] = this.translate(quickActions[action]);
             });
         },
 

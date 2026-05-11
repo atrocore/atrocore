@@ -34,6 +34,14 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
 
     return Dep.extend({
 
+        adaptQuickAction: function (name) {
+            const adapter = {
+                quickRemove: 'removeRelated',
+            };
+
+            return adapter[name] || name;
+        },
+
         getLoadActions: function () {
             const parentModelName = this.options?.parentModelName || null;
             const relationName = this.options?.relationName || null;
