@@ -55,7 +55,8 @@
     "External Accounts": "Conti esterni",
     "Email Accounts": "Conti e-mail",
     "Preferences": "Preferenze",
-    "Notifications": "Notifiche"
+    "Notifications": "Notifiche",
+    "OidcLogin": "Accedi tramite SSO"
   },
   "tooltips": {
     "defaultTeam": "Tutti i record creati da questo utente saranno collegati a questo team per impostazione predefinita.",

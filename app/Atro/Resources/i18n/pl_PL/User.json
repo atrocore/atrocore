@@ -55,7 +55,8 @@
     "Email Accounts": "Konta Email",
     "Reset Password": "Proszę zresetować hasło",
     "Preferences": "Preferencje",
-    "Notifications": "Powiadomienia"
+    "Notifications": "Powiadomienia",
+    "OidcLogin": "Zaloguj przez SSO"
   },
   "tooltips": {
     "defaultTeam": "Wszystkie rekordy utworzone przez tego użytkownika będą domyślnie powiązane z tym zespołem.",

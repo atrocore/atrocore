@@ -55,7 +55,8 @@
     "Email Accounts": "Cuentas de correo",
     "Reset Password": "Restablecer contraseña",
     "Preferences": "Preferencias",
-    "Notifications": "Notificaciones"
+    "Notifications": "Notificaciones",
+    "OidcLogin": "Iniciar sesión vía SSO"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
