@@ -236,8 +236,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 });
             } else if (this.versionComparison) {
                 this.getModelFactory().create(this.scope, scopeModel => {
-                    this.ajaxGetRequest(`RecordVersion/action/getVersion`, {
-                        scope: this.scope,
+                    this.ajaxGetRequest(`version`, {
+                        entityName: this.scope,
                         entityId: this.model.id,
                         name: this.currentVersion,
                     }).success(res => {
