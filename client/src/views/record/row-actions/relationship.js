@@ -142,8 +142,9 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     if (this.model.has('isInherited') && this.model.get('isInherited')) {
                         list.push({
                             action: 'notInheritRelated',
-                            iconClass: 'ph ph-link-break',
+                            iconClass: 'ph ph-link-simple-horizontal-break',
                             label: 'Not Inherit',
+                            alwaysVisible: true,
                             data: { id: this.model.id, cid: this.model.cid }
                         });
                     } else {

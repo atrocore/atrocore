@@ -66,6 +66,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 link: a.link || undefined,
                 data: a.data || undefined,
                 quick: quickActions.includes(a.action),
+                alwaysVisible: a.alwaysVisible || false,
             }));
 
             this.svelteComponent = new Svelte.RowActions({

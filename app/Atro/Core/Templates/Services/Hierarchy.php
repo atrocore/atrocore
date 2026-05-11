@@ -371,6 +371,19 @@ class Hierarchy extends Base
         return $this->getServiceFactory()->create($relationEntityName)->updateEntity($relationRecord->get('id'), $input);
     }
 
+    public function notInheritRelation(string $id, string $relationName, string $relationId): bool
+    {
+        if (!$this->getAcl()->check($this->entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationName, 'relationName']))) {
+            throw new BadRequest("Relation '$relationName' not found on entity '$this->entityType'.");
+        }
+
+        return $this->unlinkEntity($id, $relationName, $relationId);
+    }
+
     public function inheritAllForLink(string $id, string $link): bool
     {
         if (!$this->getAcl()->check($this->entityType, 'edit')) {

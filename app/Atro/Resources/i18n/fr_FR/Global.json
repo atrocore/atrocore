@@ -624,6 +624,7 @@
     "deleteAllConfirmation": "Êtes-vous sûr de vouloir supprimer tous les enregistrements ?",
     "removeRecordConfirmation": "Êtes-vous sûr de vouloir supprimer l'enregistrement ?",
     "unlinkRecordConfirmation": "Êtes-vous sûr de vouloir dissocier l'enregistrement lié ?",
+    "notInheritRecordConfirmation": "Êtes-vous sûr de vouloir arrêter d'hériter de cet enregistrement du parent ?",
     "removeRecordConfirmationHierarchically": "L'enregistrement sélectionné et ses enregistrements enfants seront définitivement supprimés. Êtes-vous sûr de vouloir les supprimer ?",
     "massUpdateResultSingle": "{count} enregistrement a été mis à jour",
     "noRecordsUpdated": "Aucun enregistrement n'a été mis à jour",
