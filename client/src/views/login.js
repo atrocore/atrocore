@@ -72,7 +72,7 @@ Espo.define('views/login', 'view', function (Dep) {
                 window.location.href = '/';
             }
 
-            if (this.getConfig().get('oidcType')) {
+            if (this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'oidcType', 'type']) && this.getConfig().get('oidcType')) {
                 this.ajaxGetRequest('oidcLoginUrl', {}, {async: false}).then(data => {
                     this.oidcLoginUrl = data.url || '';
                 });
