@@ -78,5 +78,6 @@
       ],
       "view": "views/attribute/record/panels/nested-attributes"
     }
-  }
+  },
+  "deleteConfirmation": "Attribute.messages.removeAttribute(s)"
 }
