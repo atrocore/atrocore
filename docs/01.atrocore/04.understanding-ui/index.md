@@ -80,9 +80,9 @@ Each record has a three-dot button (⋮) that provides access to various operati
 
 #### Quick Actions
 
-For frequently used actions, up to 2 icon shortcuts can be displayed directly in the list row, next to the three-dot button. These quick actions allow you to trigger common operations without opening the dropdown.
+For frequently used actions, icon shortcuts can be displayed directly in the list row on hover, next to the three-dot button. These quick actions allow you to trigger common operations without opening the dropdown.
 
-<!-- TODO: add screenshot of a list row with quick action icons visible next to the three-dot button -->
+![Quick Actions](./_assets/quick-actions.png){.small}
 
 Quick actions are always visible for [Hierarchy](../03.administration/11.entity-management/01.entity-types/index.md#hierarchy) entity records that are inherited from a parent — in that case, the "Not Inherit" icon is shown by default. For other entities, quick actions must be configured by an administrator.
 
