@@ -235,6 +235,10 @@ Records can be managed through various actions available across different views.
 
 -   **Bookmark/Unbookmark** - Adds or removes the record from your [bookmarks](../05.toolbar/01.bookmarks/) for quick access. Bookmarked records appear in your bookmarks panel for easy navigation. Available from [list view](../04.understanding-ui/index.md#list-view) and from [detail view](../04.understanding-ui/index.md#detail-view) as a separate button.
 
+-   **Unlink** - Removes the relationship between the current record and a related record without deleting either record. Available from related entity panels in the [detail view](../04.understanding-ui/index.md#detail-view). See [Removing Relations](#removing-relations) for details.
+
+-   **Not Inherit** - Available in related entity panels of [Hierarchy](../03.administration/11.entity-management/01.entity-types/index.md#hierarchy) entities. Replaces **Unlink** when a related record was inherited from a parent record. Removes the inherited relation from the current record only. See [Not Inherit](#not-inherit-hierarchy-entities) for details.
+
 -   **Additional Actions** - Some other actions are added by modules and may be available depending on your system configuration and user permissions (e.g., [Generate PDF](https://store.atrocore.com/en/pdf-generator/20167)). Options available from [list view](../04.understanding-ui/index.md#list-view) and [detail view](../04.understanding-ui/index.md#detail-view) may vary.
 
 For information about how to access these actions in the interface, see the [Single Record Actions](../04.understanding-ui/index.md#single-record-actions) section.
@@ -296,3 +300,11 @@ To unlink related records:
 4. Confirm the action
 
 > **Warning**: Unlinking records only removes the relationship, not the actual records. The unlinked records remain in the system.
+
+#### Not Inherit (Hierarchy entities)
+
+For [Hierarchy](../03.administration/11.entity-management/01.entity-types/index.md#hierarchy) entities, related records in a panel can be *inherited* from a parent record. An inherited record was not manually linked to the current record — it was propagated automatically from the parent.
+
+When a related record is inherited, the **Unlink** action is replaced by **Not Inherit** in the actions menu. This action removes the inherited relation from the current record without affecting the parent or any sibling records.
+
+For inherited records, the **Not Inherit** icon is also shown directly in the list row as a [quick action](#quick-actions) — visible without opening the dropdown menu — so you can break the inheritance with a single click.

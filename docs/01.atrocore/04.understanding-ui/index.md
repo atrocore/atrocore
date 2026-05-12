@@ -76,11 +76,19 @@ To see the actions available for separate records in the list, click the single 
 
 ![Single Record Actions](./_assets/single-record-actions.png){.small}
 
-Each record has a three-dot menu that provides access to various operations. The available actions depend on the entity type and your user permissions.
+Each record has a three-dot button (⋮) that provides access to various operations via a dropdown menu. The available actions depend on the entity type and your user permissions.
+
+#### Quick Actions
+
+For frequently used actions, up to 2 icon shortcuts can be displayed directly in the list row, next to the three-dot button. These quick actions allow you to trigger common operations without opening the dropdown.
+
+<!-- TODO: add screenshot of a list row with quick action icons visible next to the three-dot button -->
+
+Quick actions are always visible for [Hierarchy](../03.administration/11.entity-management/01.entity-types/index.md#hierarchy) entity records that are inherited from a parent — in that case, the "Not Inherit" icon is shown by default. For other entities, quick actions must be configured by an administrator.
 
 > For detailed information about what each action does and when to use them, see the [Single Record Actions](../08.record-management/index.md#single-record-actions) section in Record Management.
 
-> To modify the single record actions list, please, contact your administrator.
+> To configure which actions appear as quick actions, contact your administrator. See [Entity Configuration](../03.administration/11.entity-management/index.md#configuration-fields) for details.
 
 ## Small List View
 
