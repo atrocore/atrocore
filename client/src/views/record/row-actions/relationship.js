@@ -144,6 +144,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                             action: 'notInheritRelated',
                             iconClass: 'ph ph-link-simple-horizontal-break',
                             label: 'Not Inherit',
+                            quick: true,
                             alwaysVisible: true,
                             data: { id: this.model.id, cid: this.model.cid }
                         });

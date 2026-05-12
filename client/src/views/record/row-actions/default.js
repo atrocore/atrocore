@@ -65,7 +65,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 iconUrl: a.iconUrl || undefined,
                 link: a.link || undefined,
                 data: a.data || undefined,
-                quick: quickActions.includes(a.action),
+                quick: a.quick || quickActions.includes(a.action),
                 alwaysVisible: a.alwaysVisible || false,
             }));
 
@@ -106,6 +106,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         label: a.label,
                         link: a.link || undefined,
                         data: a.data || undefined,
+                        iconClass: a.iconClass || undefined,
                         iconUrl: a.iconUrl || undefined,
                     }))
             );
