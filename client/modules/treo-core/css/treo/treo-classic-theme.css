@@ -11395,6 +11395,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 5px;
     margin-left: 0;
+    border: 1px solid #ddd;
 }
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container,
