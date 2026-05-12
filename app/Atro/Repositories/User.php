@@ -227,6 +227,14 @@ class User extends RDB
         ) {
             $this->getInjection('container')->get('dataManager')->clearCache(true);
         }
+
+        if ($entity->isAttributeChanged('isActive') && empty($entity->get('isActive'))) {
+            $this->getDbal()->createQueryBuilder()
+                ->delete('auth_token')
+                ->where('user_id = :userId')
+                ->setParameter('userId', $entity->get('id'))
+                ->executeQuery();
+        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
