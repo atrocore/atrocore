@@ -256,12 +256,10 @@ class Action extends Base
 
             $isBookmarked = !empty($result['id']);
             $res[] = [
-                'action'   => 'bookmark',
-                'label'    => $isBookmarked ? 'Unbookmark' : 'Bookmark',
-                'iconUrl'  => $isBookmarked
-                    ? $this->getMetadata()->get(['app', 'systemIcons', 'bookmarks-simple-fill', 'path'])
-                    : $this->getMetadata()->get(['app', 'systemIcons', 'bookmarks-simple', 'path']),
-                'data'     => [
+                'action'    => 'bookmark',
+                'label'     => $isBookmarked ? 'Unbookmark' : 'Bookmark',
+                'iconClass' => $isBookmarked ? 'ph-fill ph-bookmarks-simple' : 'ph ph-bookmarks-simple',
+                'data'      => [
                     'entity_id'   => $id,
                     'bookmark_id' => $result['id'] ?? null
                 ]
