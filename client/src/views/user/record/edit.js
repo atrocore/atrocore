@@ -71,24 +71,6 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                 }
             }, this);
 
-            if (this.getConfig().get('oidcType')) {
-                this.listenTo(this.model, 'change:emailAddress', function (model) {
-                    let email = model.get('emailAddress');
-                    if (!email) return;
-                    this.ajaxGetRequest('oidcUserData', {email: email}).then(data => {
-                        if (data.error) {
-                            Espo.Ui.error(data.error);
-                            return;
-                        }
-                        Object.entries(data).forEach(([key, value]) => {
-                            if (value && !this.model.get(key)) {
-                                this.model.set(key, value);
-                            }
-                        });
-                    });
-                }, this);
-            }
-
             Detail.prototype.setupFieldAppearance.call(this);
 
             this.hideField('passwordPreview');
