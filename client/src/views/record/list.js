@@ -2862,13 +2862,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getStatusIcons: function (model) {
-            const htmlIcons = [];
-
-            if (model.get('isInherited')) {
-                htmlIcons.push(`<i class="ph ph-link-simple-horizontal" title="${this.translate('inherited')}"></i>`);
-            }
-
-            return htmlIcons;
         },
 
         actionSelect: function (data) {
