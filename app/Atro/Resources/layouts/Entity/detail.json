@@ -36,7 +36,9 @@
         {
           "name": "iconClass"
         },
-        false
+        {
+          "name": "quickActions"
+        }
       ],
       [
         {

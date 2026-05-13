@@ -573,6 +573,7 @@
     "removeRecordConfirmation": "Ви впевнені, що хочете видалити запис?",
     "restoreRecordConfirmation": "Вибраний запис буде відновлено. Ви впевнені, що бажаєте його відновити?",
     "unlinkRecordConfirmation": "Ви дійсно хочете прибрати пов'язаний запис?",
+    "notInheritRecordConfirmation": "Ви дійсно хочете припинити наслідування цього запису від батьківського?",
     "removeRecordConfirmationHierarchically": "Ви дійсно хочете видалити записи ієрархічно?",
     "removeSelectedRecordsConfirmation": "Ви впевнені, що хочете видалити вибрані записи?",
     "restoreSelectedRecordsConfirmation": "Ви впевнені, що бажаєте остаточно відновити вибрані?",

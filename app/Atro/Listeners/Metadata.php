@@ -525,7 +525,9 @@ class Metadata extends AbstractListener
             }
 
             if (!empty($action['icon_class']) && !empty($data['app']['systemIcons'][$action['icon_class']]['path'])) {
-                $html = '<img src="' . $data['app']['systemIcons'][$action['icon_class']]['path'] . '" class="icon-button" >';
+                $iconPath = $data['app']['systemIcons'][$action['icon_class']]['path'];
+                $params['iconUrl'] = $iconPath;
+                $html = '<img src="' . $iconPath . '" class="icon-button" >';
                 if (empty($action['hide_text_label'])) {
                     $html .= ' ' . $action['name'];
                 } else {
@@ -1292,6 +1294,10 @@ class Metadata extends AbstractListener
                     }
                     $data['scopes'][$scope]['mandatoryUnInheritedFields'][] = $fieldName;
                 }
+            }
+
+            if (!isset($data['clientDefs'][$scope]['quickActions'])) {
+                $data['clientDefs'][$scope]['quickActions'] = ['notInherit'];
             }
 
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'parents');

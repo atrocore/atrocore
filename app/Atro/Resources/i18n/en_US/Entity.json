@@ -14,6 +14,7 @@
     "statusField": "Status field",
     "kanbanViewMode": "Kanban View",
     "kanbanStatusIgnoreList": "Ignored lists in Kanban View",
+    "quickActions": "Quick Actions",
     "deleteWithoutConfirmation": "Delete without confirmation",
     "autoDeleteAfterDays": "Auto-delete period, in days",
     "clearDeletedAfterDays": "Permanent deletion period, days",

@@ -610,6 +610,7 @@
     "deletePermanentlyRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Datensätze permanent löschen wollen?",
     "restoreRecordConfirmation": "Der ausgewählte Datensatz wird wiederhergestellt. Sind Sie sicher, dass Sie es wiederherstellen möchten?",
     "unlinkRecordConfirmation": "Wollen Sie die Verknüpfung mit dem Datensatz wirklich endgültig löschen?",
+    "notInheritRecordConfirmation": "Sind Sie sicher, dass Sie die Vererbung dieses Datensatzes vom übergeordneten Element beenden möchten?",
     "removeRecordConfirmationHierarchically": "Wollen Sie wirklich die Datensätze hierarchisch löschen?",
     "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Datensätze löschen wollen?",
     "restoreSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Datensätze dauerhaft wiederherstellen?",

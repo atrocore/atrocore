@@ -13,6 +13,7 @@
     "statusField": "Statusfeld",
     "kanbanViewMode": "Kanban-Ansicht",
     "kanbanStatusIgnoreList": "Die in der Kanban-Ansicht ignorierten Listen",
+    "quickActions": "Schnellaktionen",
     "deleteWithoutConfirmation": "Löschen ohne Bestätigung",
     "autoDeleteAfterDays": "Zeitraum für automatisches Löschen, in Tagen",
     "clearDeletedAfterDays": "Zeitraum für dauerhaftes Löschen, in Tagen",

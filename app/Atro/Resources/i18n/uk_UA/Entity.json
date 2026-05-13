@@ -15,6 +15,7 @@
     "statusField": "Поле статусу",
     "kanbanViewMode": "Режим перегляду Kanban",
     "kanbanStatusIgnoreList": "Ігноровані списки в Kanban View",
+    "quickActions": "Швидкі дії",
     "deleteWithoutConfirmation": "Видаляти без підтвердження",
     "autoDeleteAfterDays": "Період автоматичного видалення, в днях",
     "clearDeletedAfterDays": "Період остаточного видалення, днів",

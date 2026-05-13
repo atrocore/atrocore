@@ -824,6 +824,25 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             });
         },
 
+        actionNotInheritRelated: function (data) {
+            this.confirm({
+                message: this.translate('notInheritRecordConfirmation', 'messages'),
+                confirmText: this.translate('Not Inherit'),
+            }, () => {
+                this.notify('Saving...');
+                this.ajaxPostRequest(`${this.model.urlRoot}/${this.model.id}/notInheritRelation`, {
+                    relationName: this.panelName,
+                    relationId: data.id,
+                }).then(() => {
+                    this.notify('Done', 'success');
+                    this.collection.fetch();
+                    if (this.mode !== 'edit') {
+                        this.model.trigger('after:unrelate', this.link, this.defs);
+                    }
+                });
+            });
+        },
+
         getModel(data, evt) {
             if (data.cid) {
                 return this.collection.get(data.cid)
