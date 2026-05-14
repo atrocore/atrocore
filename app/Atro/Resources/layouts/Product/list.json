@@ -1,21 +1,19 @@
 [
-  [
-    {
-      "name": "number"
-    },
-    {
-      "name": "image",
-      "notSortable": true
-    },
-    {
-      "name": "name",
-      "link": true
-    },
-    {
-      "name": "isActive"
-    },
-    {
-      "name": "owner"
-    }
-  ]
+  {
+    "name": "number"
+  },
+  {
+    "name": "image",
+    "notSortable": true
+  },
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "isActive"
+  },
+  {
+    "name": "owner"
+  }
 ]
