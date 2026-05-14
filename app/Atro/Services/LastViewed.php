@@ -64,8 +64,10 @@ class LastViewed extends AbstractService
     {
         $scopes = $this->getMetadata()->get('scopes');
 
-        $targetTypeList = array_filter(array_keys($scopes),
-            fn($item) => !empty($scopes[$item]['entity']));
+        $targetTypeList = array_filter(
+            array_keys($scopes),
+            fn($item) => !empty($scopes[$item]['entity'])
+        );
 
         $targetTypeList[] = 'App';
 
@@ -102,9 +104,11 @@ class LastViewed extends AbstractService
                 $subQb->andWhere('(a.controller_name <> :entityName OR a.target_id <> :entityId OR a.target_id IS NULL)');
                 $qb->setParameter('entityId', $entityId);
                 $qb->setParameter('entityName', $entityName);
-            } else if ($entityName) {
-                $subQb->andWhere('(a.controller_name <> :entityName OR a.target_id IS NOT NULL)');
-                $qb->setParameter('entityName', $entityName);
+            } else {
+                if ($entityName) {
+                    $subQb->andWhere('(a.controller_name <> :entityName OR a.target_id IS NOT NULL)');
+                    $qb->setParameter('entityName', $entityName);
+                }
             }
 
             $queryHeader = $tabId ? '%"Entity-History":["' . $tabId . '"]%' : '%"Entity-History":%';
@@ -161,9 +165,19 @@ class LastViewed extends AbstractService
             $entity->clear('data');
         }
 
+        $res = [];
+        foreach ($entities as $entity) {
+            $row = [];
+            foreach (['controllerName', 'targetId', 'targetName', 'targetUrl'] as $field) {
+                $value = $entity->get($field);
+                $row[$field] = empty($value) ? null : (string)$value;
+            }
+            $res[] = $row;
+        }
+
         return [
             'total'      => $entities->count(),
-            'collection' => $entities->toArray(),
+            'collection' => $res,
         ];
     }
 
@@ -236,9 +250,11 @@ class LastViewed extends AbstractService
 
                 if (!empty($foreignEntity)) {
                     $entity->set('targetName', $foreignEntity->get($nameField));
-                } else if (!empty($params['skipDeleted'])) {
-                    $collection->offsetUnset($i);
-                    continue;
+                } else {
+                    if (!empty($params['skipDeleted'])) {
+                        $collection->offsetUnset($i);
+                        continue;
+                    }
                 }
             }
 
