@@ -117,14 +117,14 @@ class Manager
             foreach ($classes as $listener) {
                 // skip wrong metadata listener
                 if ($target === 'Metadata' && !is_a($listener, AbstractMetadataListener::class, true)) {
-                    continue 1;
+                    continue;
                 }
 
                 // skip abstract classes
                 try {
-                    $obj = $this->createListener($listener);
+                    $this->createListener($listener);
                 } catch (\Throwable $e) {
-                    continue 1;
+                    continue;
                 }
                 if (!empty($methods = \get_class_methods($listener))) {
                     foreach ($methods as $method) {
