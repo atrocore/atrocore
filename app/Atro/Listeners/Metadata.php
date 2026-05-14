@@ -18,18 +18,16 @@ use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
-use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Entities\File;
 use Atro\Repositories\MasterDataEntity;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
-use Atro\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Atro\Core\Utils\Util;
 use Atro\Repositories\Matching as MatchingRepository;
 
-class Metadata extends AbstractListener
+class Metadata extends AbstractMetadataListener
 {
     public function loadData(Event $event): void
     {
@@ -447,7 +445,7 @@ class Metadata extends AbstractListener
             return;
         }
 
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->getDataManager();
 
         $actions = $dataManager->getCacheData('dynamic_action');
         if ($actions === null) {
@@ -592,11 +590,6 @@ class Metadata extends AbstractListener
                 $data['clientDefs'][$action['source_entity']]['dynamicOnRecordLoadActions'][] = $params;
             }
         }
-    }
-
-    protected function getMemoryStorage(): StorageInterface
-    {
-        return $this->getContainer()->get('memoryStorage');
     }
 
     public function setTranslationRequiredLanguage(array &$data)
@@ -1834,8 +1827,7 @@ class Metadata extends AbstractListener
             return;
         }
 
-        /** @var DataManager $dataManager */
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->getDataManager();
         $previewTemplates = $dataManager->getCacheData(PreviewTemplate::CACHE_NAME);
         if ($previewTemplates === null) {
             try {
@@ -1876,7 +1868,7 @@ class Metadata extends AbstractListener
 
     protected function prepareNotificationRuleTransportField(array &$data): void
     {
-        foreach (array_keys(($this->getMetadata()->get(['app', 'notificationTransports'], []))) as $transport) {
+        foreach (array_keys($data['app']['notificationTransports'] ?? []) as $transport) {
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'Active'] = [
                 "type"         => "bool",
                 "virtualField" => true,
@@ -1917,8 +1909,7 @@ class Metadata extends AbstractListener
             return;
         }
 
-        /** @var DataManager $dataManager */
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->getDataManager();
         $cachedData = $dataManager->getCacheData(NotificationRule::CACHE_NAME);
         if (!isset($cachedData['notificationRules']) || !isset($cachedData['users']) || !isset($cachedData['notificationProfilesIds'])) {
             $notificationProfilesIds = [];
