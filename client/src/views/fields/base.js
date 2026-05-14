@@ -989,6 +989,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         this.getCellElement().hide();
                     }
                 }
+                this.model.trigger('field:visibility:change');
             }
         },
 
