@@ -26,7 +26,6 @@
     },
     "name": {
       "type": "varchar",
-      "view": "treo-core:views/user/fields/name",
       "trim": true,
       "required": true
     },
