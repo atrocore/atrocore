@@ -718,47 +718,19 @@ class Metadata extends AbstractListener
                     'layoutRelationshipsDisabled' => true,
                 ];
 
-                if ($visibleLogic = $this->getMetadata()->get([
-                    'entityDefs',
-                    $entityType,
-                    'fields',
-                    $field,
-                    'conditionalProperties',
-                    'visible'
-                ])) {
+                if ($visibleLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['visible'] ?? null) {
                     $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['visible'] = $visibleLogic;
                 }
 
-                if (($readOnly = $this->getMetadata()->get([
-                    'entityDefs',
-                    $entityType,
-                    'fields',
-                    $field,
-                    'conditionalProperties',
-                    'readOnly'
-                ]))) {
+                if ($readOnly = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['readOnly'] ?? null) {
                     $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['readOnly'] = $readOnly;
                 }
 
-                if ($requireLogic = $this->getMetadata()->get([
-                    'entityDefs',
-                    $entityType,
-                    'fields',
-                    $field,
-                    'conditionalProperties',
-                    'required'
-                ])) {
+                if ($requireLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['required'] ?? null) {
                     $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['required'] = $requireLogic;
                 }
 
-                if ($protected = $this->getMetadata()->get([
-                    'entityDefs',
-                    $entityType,
-                    'fields',
-                    $field,
-                    'conditionalProperties',
-                    'protected'
-                ])) {
+                if ($protected = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['protected'] ?? null) {
                     $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['protected'] = $protected;
                 }
 
@@ -779,36 +751,15 @@ class Metadata extends AbstractListener
                         "emHidden"           => true
                     ];
 
-                    if ($visibleLogic = $this->getMetadata()->get([
-                        'entityDefs',
-                        $entityType,
-                        'fields',
-                        $field,
-                        'conditionalProperties',
-                        'visible'
-                    ])) {
+                    if ($visibleLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['visible'] ?? null) {
                         $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['visible'] = $visibleLogic;
                     }
 
-                    if (($readOnly = $this->getMetadata()->get([
-                        'entityDefs',
-                        $entityType,
-                        'fields',
-                        $field,
-                        'conditionalProperties',
-                        'readOnly'
-                    ]))) {
+                    if ($readOnly = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['readOnly'] ?? null) {
                         $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['readOnly'] = $readOnly;
                     }
 
-                    if ($requireLogic = $this->getMetadata()->get([
-                        'entityDefs',
-                        $entityType,
-                        'fields',
-                        $field,
-                        'conditionalProperties',
-                        'required'
-                    ])) {
+                    if ($requireLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['required'] ?? null) {
                         $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['required'] = $requireLogic;
                     }
                 } else {
