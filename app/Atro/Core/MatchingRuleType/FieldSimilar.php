@@ -17,13 +17,12 @@ use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
-class Contains extends AbstractMatchingRule
+class FieldSimilar extends AbstractMatchingRule
 {
     public static function getSupportedFieldTypes(): array
     {
         return [
             "markdown",
-            "password",
             "text",
             "url",
             "varchar",
@@ -38,38 +37,34 @@ class Contains extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
         $field = $this->rule->get('field');
-        $columnName = Util::toUnderScore($this->rule->get('field'));
+        $columnName = Util::toUnderScore($field);
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
         $value = $stageEntity->get($field);
         $parameter = IdGenerator::unsortableId();
 
         if (empty($value)) {
-            $sqlPart = "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
-        } elseif (is_array($value)) {
-            $sqlPart = "{$alias}.{$escapedColumnName} LIKE :$parameter";
-            $qb->setParameter($parameter, '%"' . reset($value) . '"%');
-        } else {
-            $sqlPart = "{$alias}.{$escapedColumnName} IS NOT NULL AND {$alias}.{$escapedColumnName} LIKE :$parameter";
-            $qb->setParameter($parameter, "%" . $stageEntity->get($this->rule->get('field')) . "%");
+            return "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
         }
 
-        return $sqlPart;
+        if (is_array($value)) {
+            $qb->setParameter($parameter, '%"' . reset($value) . '"%');
+            return "{$alias}.{$escapedColumnName} LIKE :$parameter";
+        }
+
+        $qb->setParameter($parameter, str_replace(' ', '', strtolower(trim($value))));
+
+        return "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :$parameter";
     }
 
     public function match(Entity $stageEntity, array $masterEntityData): float
     {
         $field = $this->rule->get('field');
-
         $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}.type");
 
-        $stageValue = $stageEntity->get($field);
-        $masterValue = $masterEntityData[$field];
-
-        if (empty($stageValue) && empty($masterValue)) {
-            return 0.0;
-        }
-
         if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
+            $stageValue = $stageEntity->get($field) ?? [];
+            $masterValue = $masterEntityData[$field] ?? [];
+
             if (is_string($masterValue)) {
                 $masterValue = json_decode($masterValue, true) ?? [];
             }
@@ -78,15 +73,15 @@ class Contains extends AbstractMatchingRule
                 return 0.0;
             }
 
-            if (empty(array_diff($stageValue, $masterValue))) {
-                return $this->getWeight();
-            }
-        } else {
-            if (str_contains($masterValue, $stageValue)) {
-                return $this->getWeight();
-            }
+            sort($stageValue);
+            sort($masterValue);
+
+            return $stageValue === $masterValue ? $this->getWeight() : 0.0;
         }
 
-        return 0.0;
+        $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
+        $masterValue = str_replace(' ', '', strtolower(trim((string)$masterEntityData[$field])));
+
+        return $stageValue === $masterValue ? $this->getWeight() : 0.0;
     }
 }

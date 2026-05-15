@@ -1,0 +1,14 @@
+{
+  "fieldEqual": {
+    "className": "\\Atro\\Core\\MatchingRuleType\\FieldEqual"
+  },
+  "fieldSimilar": {
+    "className": "\\Atro\\Core\\MatchingRuleType\\FieldSimilar"
+  },
+  "fieldContains": {
+    "className": "\\Atro\\Core\\MatchingRuleType\\FieldContains"
+  },
+  "set": {
+    "className": "\\Atro\\Core\\MatchingRuleType\\Set"
+  }
+}

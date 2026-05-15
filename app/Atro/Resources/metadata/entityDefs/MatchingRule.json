@@ -64,9 +64,9 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "equal",
-                "similar",
-                "contains"
+                "fieldEqual",
+                "fieldSimilar",
+                "fieldContains"
               ]
             }
           ]
@@ -77,9 +77,9 @@
       "type": "enum",
       "required": true,
       "options": [
-        "equal",
-        "similar",
-        "contains",
+        "fieldEqual",
+        "fieldSimilar",
+        "fieldContains",
         "set"
       ],
       "conditionalProperties": {
@@ -103,9 +103,9 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "equal",
-                "similar",
-                "contains"
+                "fieldEqual",
+                "fieldSimilar",
+                "fieldContains"
               ]
             }
           ]
@@ -116,9 +116,9 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "equal",
-                "similar",
-                "contains"
+                "fieldEqual",
+                "fieldSimilar",
+                "fieldContains"
               ]
             }
           ]

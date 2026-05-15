@@ -8,9 +8,9 @@
   },
   "options": {
     "type": {
-      "equal": "Equal",
-      "similar": "Podobný",
-      "contains": "Obsahuje",
+      "fieldEqual": "Pole se rovná",
+      "fieldSimilar": "Pole je podobné",
+      "fieldContains": "Pole obsahuje",
       "set": "Sada"
     },
     "operator": {
