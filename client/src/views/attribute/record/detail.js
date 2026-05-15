@@ -53,51 +53,6 @@ Espo.define('views/attribute/record/detail', 'views/record/detail',
             window.open(`#${entityType}`, '_blank');
         },
 
-        delete: function () {
-            Espo.TreoUi.confirmWithBody('', {
-                confirmText: this.translate('Remove'),
-                cancelText: this.translate('Cancel'),
-                body: this.getBodyHtml()
-            }, function () {
-                this.trigger('before:delete');
-                this.trigger('delete');
-
-                this.notify('Removing...');
-
-                var collection = this.model.collection;
-
-                var self = this;
-                this.model.destroy({
-                    wait: true,
-                    error: function () {
-                        this.notify('Error occured!', 'error');
-                    }.bind(this),
-                    success: function () {
-                        if (collection) {
-                            if (collection.total > 0) {
-                                collection.total--;
-                            }
-                        }
-
-                        this.clearFilters();
-
-                        this.notify('Removed', 'success');
-                        this.trigger('after:delete');
-                        this.exit('delete');
-                    }.bind(this),
-                });
-            }, this);
-        },
-
-        getBodyHtml() {
-            return '' +
-                '<div class="row">' +
-                '<div class="col-xs-12">' +
-                '<span class="confirm-message">' + this.translate('removeAttribute(s)', 'messages', 'Attribute') + '</span>' +
-                '</div>' +
-                '</div>';
-        },
-
         clearFilters() {
             var presetFilters = this.getPreferences().get('presetFilters') || {};
             if (!('Product' in presetFilters)) {

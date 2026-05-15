@@ -16,6 +16,7 @@
     "relatedEntity": "Questa è l'entità principale dalla cui pagina viene visualizzato il layout dell'entità selezionata in precedenza."
   },
   "messages": {
-    "cannotRemoveFieldFromLayout": "Non è possibile rimuovere il campo '%s' dal layout."
+    "cannotRemoveFieldFromLayout": "Non è possibile rimuovere il campo '%s' dal layout.",
+    "compositeAttributeNotAllowedInList": "L'attributo composite non può essere aggiunto al layout lista."
   }
 }

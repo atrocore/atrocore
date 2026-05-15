@@ -152,6 +152,10 @@
         }
       }
     },
+    "quickActions": {
+      "type": "multiEnum",
+      "view": "views/admin/entity-manager/fields/quick-actions"
+    },
     "deleteWithoutConfirmation": {
       "type": "bool",
       "tooltip": true,

@@ -66,7 +66,8 @@ abstract class AbstractAction implements TypeInterface
             if (empty($sourceEntity)) {
                 return true;
             }
-            $conditions = @json_decode($action->get('conditions'), true);
+            $raw = $action->get('conditions');
+            $conditions = is_string($raw) ? @json_decode($raw, true) : @json_decode(@json_encode($raw), true);
             if (!empty($conditions)) {
                 if ($sourceEntity->getEntityType() !== $action->get('sourceEntity')) {
                     return false;
@@ -75,7 +76,7 @@ abstract class AbstractAction implements TypeInterface
             }
             return true;
         } elseif ($action->get('conditionsType') === 'script') {
-            $template = empty($action->get('conditions')) ? '' : (string)$action->get('conditions');
+            $template = (string)($action->get('conditionsScript') ?? '');
             $templateData = [
                 'entity'          => $this->getSourceEntity($action, $input),
                 'triggeredEntity' => $input->triggeredEntity ?? null,

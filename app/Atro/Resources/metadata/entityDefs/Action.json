@@ -179,8 +179,72 @@
       }
     },
     "conditions": {
-      "type": "wysiwyg",
-      "view": "views/action/fields/conditions-container"
+      "type": "jsonObject",
+      "view": "views/action/fields/conditions-container",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "conditionsType",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "conditionsType",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "conditionsScript": {
+      "type": "text",
+      "view": "views/fields/script",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "twigVariables": [
+        "entity",
+        "uiRecord",
+        "uiRecordFromName",
+        "uiRecordFrom"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "conditionsType",
+              "value": [
+                "script"
+              ]
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "conditionsType",
+              "value": [
+                "script"
+              ]
+            }
+          ]
+        }
+      }
     },
     "data": {
       "type": "jsonObject",
@@ -228,7 +292,37 @@
     "inBackground": {
       "type": "bool",
       "default": false,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "suggestValue",
+                "updateByAi",
+                "suggestValueByAi",
+                "error"
+              ]
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "suggestValue",
+                "updateByAi",
+                "suggestValueByAi",
+                "error"
+              ]
+            }
+          ]
+        }
+      }
     },
     "massAction": {
       "type": "bool",

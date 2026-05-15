@@ -48,6 +48,8 @@ class V2Dot3Dot0 extends Base
         $this->migrateUser();
 
         $this->migrateNavigationType();
+
+        $this->migrateConditionsScript();
     }
 
     public function migrateExtensibleEnumOptionSortOrder(): void
@@ -249,6 +251,12 @@ class V2Dot3Dot0 extends Base
             $this->exec("ALTER TABLE layout_profile CHANGE navigation navigation LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)");
             $this->exec("ALTER TABLE user ADD disable_navigation_path TINYINT(1) DEFAULT '0' NOT NULL");
         }
+    }
+
+    private function migrateConditionsScript(): void
+    {
+        $this->exec("ALTER TABLE action ADD COLUMN conditions_script TEXT DEFAULT NULL");
+        $this->exec("UPDATE action SET conditions_script = conditions WHERE conditions_type = 'script'");
     }
 
     protected function exec(string $sql): void

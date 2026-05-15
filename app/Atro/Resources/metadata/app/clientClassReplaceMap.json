@@ -23,9 +23,6 @@
   "views/list": [
     "treo-core"
   ],
-  "views/record/row-actions/default": [
-    "treo-core"
-  ],
   "views/admin/index": [
     "treo-core"
   ],

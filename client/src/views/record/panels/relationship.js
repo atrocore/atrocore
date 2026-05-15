@@ -177,7 +177,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             if (
                 this.defs.create
-                && canSelect
                 && this.getAcl().check(this.scope, 'create')
                 && !~['User', 'Team'].indexOf()
                 && !(this.scope === 'EntityField' && this.model.name === 'Entity' && this.getMetadata().get(`scopes.${this.model.id}.customizable`) === false)
@@ -822,6 +821,25 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.notify('Saved', 'success');
                 this.collection.get(data.id).trigger('after:save');
                 this.collection.fetch();
+            });
+        },
+
+        actionNotInheritRelated: function (data) {
+            this.confirm({
+                message: this.translate('notInheritRecordConfirmation', 'messages'),
+                confirmText: this.translate('Not Inherit'),
+            }, () => {
+                this.notify('Saving...');
+                this.ajaxPostRequest(`${this.model.urlRoot}/${this.model.id}/notInheritRelation`, {
+                    relationName: this.panelName,
+                    relationId: data.id,
+                }).then(() => {
+                    this.notify('Done', 'success');
+                    this.collection.fetch();
+                    if (this.mode !== 'edit') {
+                        this.model.trigger('after:unrelate', this.link, this.defs);
+                    }
+                });
             });
         },
 

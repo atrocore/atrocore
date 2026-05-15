@@ -176,7 +176,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 boolFilterData: {
                     onlyForEntity: this.scope
                 },
-                boolFilterList: ['onlyForEntity'],
+                boolFilterList: ['onlyForEntity', 'notCompositeType'],
             }, dialog => {
                 dialog.render();
                 this.notify(false);

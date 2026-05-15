@@ -34,7 +34,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record/row-actions/default',
+        _template: '',
 
         hiddenActionTypes: ['previewTemplate'],
 
@@ -42,97 +42,74 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             this.options.acl = this.options.acl || {};
         },
 
+        getQuickActions: function () {
+            const configured = (this.getMetadata().get(['clientDefs', this.model.name, 'quickActions']) || []);
+            return configured.map(name => this.adaptQuickAction(name));
+        },
+
+        adaptQuickAction: function (name) {
+            return name;
+        },
+
         afterRender: function () {
-            this.dropdown?.destroy();
+            this.svelteComponent?.$destroy();
 
-            const button = this.$el.find('.dropdown-toggle')[0];
-            const dropdown = this.$el.find('.dropdown-menu')[0];
+            if (!this.$el[0]) return;
 
-            if (!button || !dropdown) {
-                return;
-            }
+            const quickActions = this.getQuickActions();
 
-            dropdown.style.position = 'fixed';
+            const actions = this.getActionList().map(a => ({
+                name: a.action,
+                label: a.label,
+                iconClass: a.iconClass || undefined,
+                iconUrl: a.iconUrl || undefined,
+                link: a.link || undefined,
+                data: a.data || undefined,
+                quick: a.quick || quickActions.includes(a.action),
+                alwaysVisible: a.alwaysVisible || false,
+            }));
 
-            this.dropdown = window.Dropdown.create(button, dropdown, {
-                placement: 'bottom-end',
-                strategy: 'fixed',
-                onDropdownShow: dropdown => {
-                    this.loadDynamicActions();
+            this.svelteComponent = new Svelte.RowActions({
+                target: this.$el[0],
+                props: { actions, itemId: this.model.id, loadActions: this.getLoadActions() }
+            });
 
-                    dropdown.parentElement?.classList.add('open');
+            this.svelteComponent.$on('dropdownShow', () => {
+                this.$el.closest('.list-row').addClass('active-dropdown');
+            });
 
-                    this.$el.closest('.list-row').addClass('active-dropdown');
-                },
-                onDropdownHide: dropdown => {
-                    dropdown.parentElement?.classList.remove('open');
-
-                    this.$el.closest('.list-row').removeClass('active-dropdown');
-                },
+            this.svelteComponent.$on('dropdownHide', () => {
+                this.$el.closest('.list-row').removeClass('active-dropdown');
             });
         },
 
-        isInheritingRelation: function () {
-            if (
-                this.getParentView()
-                && this.getParentView().getParentView()
-                && this.getParentView().getParentView().getParentView()
-                && typeof this.getParentView().getParentView().getParentView().isInheritingRelation === 'function'
-            ) {
-                return this.getParentView().getParentView().getParentView().isInheritingRelation();
-            }
-
-            return false;
+        onRemove: function () {
+            this.svelteComponent?.$destroy();
         },
 
-        modelHasChildren: function () {
-
-            if (
-                this.getParentView()
-                && this.getParentView().getParentView()
-                && this.getParentView().getParentView().getParentView()
-                && this.getParentView().getParentView().getParentView().getParentView()
-                && this.getParentView().getParentView().getParentView().getParentView().model
-            ) {
-                return this.getParentView().getParentView().getParentView().getParentView().model.get("hasChildren");
+        getLoadActions: function () {
+            const scope = this.model.name;
+            if (this.getMetadata().get(['scopes', scope, 'actionDisabled'])) {
+                return undefined;
             }
 
-            return false;
-        },
-
-        loadDynamicActions: function () {
-            if (!$(this.$el).find('li.divider').get(0)) {
-                return
+            const filters = this.getStorage().get('listQueryBuilder', scope);
+            if (filters?.bool?.onlyDeleted === true) {
+                return undefined;
             }
 
-            if (this.getMetadata().get(['scopes', this.model.name, 'actionDisabled'])) {
-                this.$el.find('.preloader').addClass('hidden');
-                return;
-            }
-
-            if (this.model.dynamicActions == null) {
-                $(this.$el).find('li.preloader,li.divider').show()
-                $(this.$el).find('li.dynamic-action').remove()
-            }
-
-            this.model.fetchDynamicActions('record')
-                .then(dynamicActions => {
-                    $(this.$el).find('li.dynamic-action').remove();
-
-                    dynamicActions = dynamicActions.filter(action => !this.hiddenActionTypes.includes(action.type) && !this.getMetadata().get(['action', 'typesData', action.type, 'forEditModeOnly']));
-
-                    const template = this._templator.compileTemplate(`
-                    {{#each dynamicActions}}
-                        <li class="dynamic-action"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{translate label scope=../scope}}</a></li>
-                    {{/each}}`)
-                    const html = this._renderer.render(template, {dynamicActions})
-
-                    $(this.$el).find('li.preloader').hide()
-                    $(html).insertBefore($(this.$el).find('li.preloader'))
-                    if (dynamicActions.length === 0) {
-                        $(this.$el).find('li.divider').hide()
-                    }
-                })
+            return () => this.model.fetchDynamicActions('record').then(dynamicActions =>
+                dynamicActions
+                    .filter(a => !this.hiddenActionTypes.includes(a.type) && !this.getMetadata().get(['action', 'typesData', a.type, 'forEditModeOnly']))
+                    .map(a => ({
+                        name: a.action,
+                        label: a.label,
+                        link: a.link || undefined,
+                        data: a.data || undefined,
+                        iconClass: a.iconClass || undefined,
+                        iconUrl: a.iconUrl || undefined,
+                    }))
+            );
         },
 
         getActionList: function () {
@@ -178,9 +155,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                             list.push({
                                 action: 'quickRestore',
                                 label: 'Restore',
-                                data: {
-                                    id: this.model.id
-                                }
+                                iconClass: 'ph ph-arrow-counter-clockwise',
+                                data: { id: this.model.id }
                             });
                         }
                     }
@@ -190,9 +166,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                             list.push({
                                 action: 'deletePermanently',
                                 label: 'deletePermanently',
-                                data: {
-                                    id: this.model.id
-                                }
+                                iconClass: 'ph ph-trash',
+                                data: { id: this.model.id }
                             });
                         }
                     }
@@ -200,9 +175,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     list.push({
                         action: 'quickView',
                         label: 'View',
-                        data: {
-                            id: this.model.id
-                        },
+                        iconClass: 'ph ph-eye',
+                        data: { id: this.model.id },
                         link: '#' + this.model.name + '/view/' + this.model.id
                     });
                 } else if (actionName === 'quickEdit') {
@@ -210,9 +184,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         list.push({
                             action: 'quickEdit',
                             label: 'Edit',
-                            data: {
-                                id: this.model.id
-                            },
+                            iconClass: 'ph ph-pencil-simple',
+                            data: { id: this.model.id },
                             link: '#' + this.model.name + '/edit/' + this.model.id
                         });
                     }
@@ -221,10 +194,9 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         list.push({
                             action: 'select',
                             label: 'Select',
-                            data: {
-                                id: this.model.id
-                            }
-                        })
+                            iconClass: 'ph ph-check',
+                            data: { id: this.model.id }
+                        });
                     }
                 } else if (actionName === 'quickCompare') {
                     if (this.getMetadata().get(['clientDefs', this.model.name, 'showCompareAction'])) {
@@ -234,10 +206,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                                 action: 'quickCompare',
                                 label: this.translate('Compare with ' + instances[0].name),
                                 name: 'compare',
-                                data: {
-                                    id: this.model.id,
-                                    scope: this.model.name
-                                },
+                                iconClass: 'ph ph-arrows-left-right',
+                                data: { id: this.model.id, scope: this.model.name },
                             });
                         }
                     }
@@ -246,9 +216,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                         list.push({
                             action: 'quickRemove',
                             label: 'Remove',
-                            data: {
-                                id: this.model.id
-                            }
+                            iconClass: 'ph ph-trash-simple',
+                            data: { id: this.model.id }
                         });
                     }
                 } else {
@@ -256,7 +225,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
                         list.push({
                             action: actionData.action || 'universalAction',
-                            iconClass: actionData.iconClass,
+                            iconClass: actionData.iconClass || undefined,
+                            iconUrl: actionData.iconUrl || undefined,
                             label: this.translate(actionName, 'actions', scope),
                             data: {
                                 'name': actionName,
@@ -267,32 +237,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 }
             });
 
-            // avoid mass action when onlyDeleted
-            if (!filters?.bool?.onlyDeleted) {
-                list.push({
-                    divider: true
-                });
-
-                list.push({
-                    preloader: true
-                });
-            }
-
             return list;
-        },
-        handleDataBeforeRender: function (data) {
-            Dep.prototype.handleDataBeforeRender.call(data)
-            data['actionList'] = this.getActionList();
-        },
-        data: function () {
-            return {
-                acl: this.options.acl,
-                actionList: this.getActionList(),
-                scope: this.model.name,
-                hasInheritedIcon: this.model.has('isInherited'),
-                isInherited: this.model.get('isInherited'),
-                showIcons: !!this.options?.showIcons
-            };
         }
     });
 });

@@ -16,6 +16,7 @@
     "relatedEntity": "Це головна сутність, зі сторінки якої відображається лейаут для вибраної вище сутності."
   },
   "messages": {
-    "cannotRemoveFieldFromLayout": "Ви не можете видалити поле '%s' з макета."
+    "cannotRemoveFieldFromLayout": "Ви не можете видалити поле '%s' з макета.",
+    "compositeAttributeNotAllowedInList": "Атрибут типу composite не може бути доданий до лістингового лейауту."
   }
 }

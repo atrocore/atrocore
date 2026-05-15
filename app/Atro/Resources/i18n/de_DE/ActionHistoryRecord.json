@@ -7,7 +7,6 @@
     "user": "Benutzer",
     "createdAt": "Datum",
     "controllerName": "Controller Name",
-    "controllerAction": "Controller-Aktion",
     "authToken": "Authentifizierungstoken",
     "targetName": "Ziel-Name",
     "targetId": "Ziel-ID",

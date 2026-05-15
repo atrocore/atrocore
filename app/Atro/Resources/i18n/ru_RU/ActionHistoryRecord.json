@@ -8,7 +8,6 @@
     "ipAddress": "IP адрес",
     "authLogRecord": "Запись Лога Аутентификации",
     "controllerName": "Имя контроллера",
-    "controllerAction": "Действие контроллера",
     "targetName": "Название цели",
     "targetId": "ID цели",
     "data": "Данные"

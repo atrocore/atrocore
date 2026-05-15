@@ -11373,7 +11373,8 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     text-decoration: none;
 }
 
-.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle,
+.list > table tr.list-row .list-row-buttons .quick-action,
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .dropdown-toggle,
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > button {
     border: 0;
     line-height: 1;
@@ -11388,11 +11389,13 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: 2px;
 }
 
-.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle,
+.list > table tr.list-row .list-row-buttons .quick-action,
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .dropdown-toggle,
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > button {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 5px;
     margin-left: 0;
+    border: 1px solid #ddd;
 }
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container,
@@ -11413,6 +11416,15 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > button[data-action="loadCounters"] {
     padding: 5px;
+}
+
+.list > table tr.list-row .list-row-buttons .quick-action {
+    visibility: hidden;
+}
+
+.list > table tr.list-row:hover .list-row-buttons .quick-action,
+.list > table tr.list-row.active-dropdown .list-row-buttons .quick-action {
+    visibility: visible;
 }
 
 .panel.dashlet > .panel-heading > .btn-group {
@@ -19404,7 +19416,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover,
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):not(.list-row-buttons):hover,
 .compare-records .compare-panel table tr td.cell:not(:first-child):not([data-mode=edit]):hover,
 .compare-records .compare-panel table tr td.cell:not([data-readonly]):not([data-mode=edit]) > .field:hover,
 .compare-records .compare-panel table tr th:not(:first-child):hover,
@@ -19420,6 +19432,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .list-container > .list[data-editable=true] > table tr th {
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.list-container > .list[data-editable=true] > table tr th .layout-editor-container {
+    padding: 0 5px;
+    text-align: right;
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):first-child {

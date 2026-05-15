@@ -55,7 +55,8 @@
     "External Accounts": "Externí účty",
     "Email Accounts": "E-mailové účty",
     "Preferences": "Předvolby",
-    "Notifications": "Oznámení"
+    "Notifications": "Oznámení",
+    "OidcLogin": "Přihlásit přes SSO"
   },
   "tooltips": {
     "defaultTeam": "Všechny záznamy vytvořené tímto uživatelem se budou ve výchozím nastavení vztahovat k tomuto týmu.",

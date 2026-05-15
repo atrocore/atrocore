@@ -16,6 +16,7 @@
     "relatedEntity": "Jest to główna jednostka, z której strony wyświetlany jest układ dla jednostki wybranej powyżej."
   },
   "messages": {
-    "cannotRemoveFieldFromLayout": "Nie można usunąć pola \"%s\" z układu."
+    "cannotRemoveFieldFromLayout": "Nie można usunąć pola \"%s\" z układu.",
+    "compositeAttributeNotAllowedInList": "Atrybut kompozytowy nie może być dodany do układu listy."
   }
 }

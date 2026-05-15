@@ -83,6 +83,7 @@
     "sqlsrvMissing": "Není nainstalováno rozšíření PHP MSSQL.",
     "connectionFailed": "Spojení se nepodařilo navázat: %s",
     "noSuchType": "Žádný takový typ připojení.",
-    "notificationConnectionCannotBeDeleted": "Toto připojení se používá pro e-mailová oznámení a nelze jej odstranit."
+    "notificationConnectionCannotBeDeleted": "Toto připojení se používá pro e-mailová oznámení a nelze jej odstranit.",
+    "onlySmtpConnectionsSupported": "Odesílání testovacích e-mailů je podporováno pouze pro SMTP připojení."
   }
 }

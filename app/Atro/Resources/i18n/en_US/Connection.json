@@ -83,6 +83,7 @@
     "sqlsrvMissing": "PHP MSSQL extension is not installed.",
     "connectionFailed": "Connection could not be established: %s",
     "noSuchType": "No such connection type.",
-    "notificationConnectionCannotBeDeleted": "This connection is used for E-Mail Notifications and cannot be deleted"
+    "notificationConnectionCannotBeDeleted": "This connection is used for E-Mail Notifications and cannot be deleted",
+    "onlySmtpConnectionsSupported": "Sending test emails is only supported for SMTP connections."
   }
 }

@@ -371,6 +371,19 @@ class Hierarchy extends Base
         return $this->getServiceFactory()->create($relationEntityName)->updateEntity($relationRecord->get('id'), $input);
     }
 
+    public function notInheritRelation(string $id, string $relationName, string $relationId): bool
+    {
+        if (!$this->getAcl()->check($this->entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationName, 'relationName']))) {
+            throw new BadRequest("Relation '$relationName' not found on entity '$this->entityType'.");
+        }
+
+        return $this->unlinkEntity($id, $relationName, $relationId);
+    }
+
     public function inheritAllForLink(string $id, string $link): bool
     {
         if (!$this->getAcl()->check($this->entityType, 'edit')) {
@@ -685,17 +698,23 @@ class Hierarchy extends Base
         }
 
         $fetchedEntity = $this->getRepository()->get($id);
+
         if (!empty($fetchedEntity)) {
-            $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
-            $fetchedEntity->hasAllEntityAttributes = false;
-            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+            $hasChildren = $this->getRepository()->hasChildren($id);
+            if ($hasChildren){
+                $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
+
+                $fetchedEntity->hasAllEntityAttributes = false;
+                $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+            }
         }
 
         parent::updateEntity($id, $data);
 
-        $this->getRepository()->pushLinkMultipleFields($entityData);
-
-        $this->createPseudoTransactionJobs($entityData, clone $data);
+        if (!empty($hasChildren)){
+            $this->getRepository()->pushLinkMultipleFields($entityData);
+            $this->createPseudoTransactionJobs($entityData, clone $data);
+        }
 
         return true;
     }

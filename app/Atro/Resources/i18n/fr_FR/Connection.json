@@ -77,7 +77,8 @@
     "sqlsrvMissing": "L'extension PHP MSSQL n'est pas installée.",
     "connectionFailed": "La connexion n'a pas pu être établie : %s",
     "noSuchType": "Aucun type de connexion de ce type.",
-    "notificationConnectionCannotBeDeleted": "Cette connexion est utilisée pour les notifications par e‑mail et ne peut pas être supprimée."
+    "notificationConnectionCannotBeDeleted": "Cette connexion est utilisée pour les notifications par e‑mail et ne peut pas être supprimée.",
+    "onlySmtpConnectionsSupported": "L'envoi d'e-mails de test n'est pris en charge que pour les connexions SMTP."
   },
   "options": {
     "smtpAuthType": {

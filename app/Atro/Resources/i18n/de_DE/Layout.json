@@ -16,6 +16,7 @@
     "relatedEntity": "Dies ist die Hauptentität, von deren Seite aus das Layout für die oben ausgewählte Entität angezeigt wird."
   },
   "messages": {
-    "cannotRemoveFieldFromLayout": "Das Feld '%s' kann nicht aus dem Layout entfernt werden."
+    "cannotRemoveFieldFromLayout": "Das Feld '%s' kann nicht aus dem Layout entfernt werden.",
+    "compositeAttributeNotAllowedInList": "Composite-Attribut kann nicht zum Listen-Layout hinzugefügt werden."
   }
 }

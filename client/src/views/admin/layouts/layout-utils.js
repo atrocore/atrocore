@@ -79,13 +79,18 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                             const scope = 'Attribute';
                             const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
 
+                            const boolFilterList = ['onlyForEntity'];
+                            if (params.type === 'list') {
+                                boolFilterList.push('notCompositeType');
+                            }
+
                             this.notify('Loading...');
                             this.createView('dialog', viewName, {
                                 scope: scope,
                                 multiple: true,
                                 createButton: false,
                                 massRelateEnabled: false,
-                                boolFilterList: ['onlyForEntity'],
+                                boolFilterList: boolFilterList,
                                 boolFilterData: {
                                     onlyForEntity: entity
                                 },

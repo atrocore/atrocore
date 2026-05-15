@@ -32,18 +32,11 @@ class Action extends Base
 
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
-        if (property_exists($data, 'conditions') && !is_string($data->conditions)) {
-            $data->conditions = @json_encode($data->conditions);
-        }
-
         parent::handleInput($data, $id);
     }
 
     public function prepareEntityForOutput(Entity $entity)
     {
-        if ($entity->get('conditionsType') === 'basic') {
-            $entity->set('conditions', @json_decode($entity->get('conditions')));
-        }
 
         parent::prepareEntityForOutput($entity);
 
@@ -190,13 +183,14 @@ class Action extends Base
             }
 
             $data = [
-                'action'  => 'dynamicAction',
-                'label'   => $action['name'],
-                'display' => $action['display'] ?? null,
-                'type'    => $action['type'] ?? null,
-                'html'    => $action['html'] ?? null,
-                'tooltip' => $action['tooltip'] ?? null,
-                'data'    => [
+                'action'   => 'dynamicAction',
+                'label'    => $action['name'],
+                'display'  => $action['display'] ?? null,
+                'type'     => $action['type'] ?? null,
+                'html'     => $action['html'] ?? null,
+                'iconUrl'  => $action['iconUrl'] ?? null,
+                'tooltip'  => $action['tooltip'] ?? null,
+                'data'     => [
                     'action_id' => $action['id'],
                     'entity_id' => $id
                 ]
@@ -260,10 +254,12 @@ class Action extends Base
                 ->setParameter('userId', $this->getUser()->id)
                 ->fetchAssociative();
 
+            $isBookmarked = !empty($result['id']);
             $res[] = [
-                'action' => 'bookmark',
-                'label'  => empty($result['id']) ? 'Bookmark' : 'Unbookmark',
-                'data'   => [
+                'action'    => 'bookmark',
+                'label'     => $isBookmarked ? 'Unbookmark' : 'Bookmark',
+                'iconClass' => $isBookmarked ? 'ph-fill ph-bookmarks-simple' : 'ph ph-bookmarks-simple',
+                'data'      => [
                     'entity_id'   => $id,
                     'bookmark_id' => $result['id'] ?? null
                 ]

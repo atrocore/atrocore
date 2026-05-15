@@ -81,6 +81,12 @@
           "name": "conditions",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "conditionsScript",
+          "fullWidth": true
+        }
       ]
     ]
   },

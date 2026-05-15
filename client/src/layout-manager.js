@@ -44,6 +44,9 @@ Espo.define('layout-manager', [], function () {
         'userInterface': 'detail',
         'authentication': 'detail',
         'upload': 'detail',
+        'pimSettings': 'detail',
+        'salesSettings': 'detail',
+        'etimSettings': 'detail'
     };
 
     var LayoutManager = function (options, userId) {
@@ -159,19 +162,6 @@ Espo.define('layout-manager', [], function () {
         },
 
         getUpdateUrl: function (scope, type) {
-            var BASE_LAYOUT_TYPES = new Set([
-                'list', 'detail', 'summary', 'selection', 'relationships', 'navigation',
-                'insights', 'selectionRelations', 'kanban'
-            ]);
-            var BUILTIN_SUBTYPE_MAP = {
-                'listExpanded': 'list',
-                'listRelationshipCustom': 'list',
-                'settings': 'detail',
-                'userInterface': 'detail',
-                'authentication': 'detail',
-                'upload': 'detail',
-            };
-
             var baseType, layoutName;
 
             if (BASE_LAYOUT_TYPES.has(type)) {

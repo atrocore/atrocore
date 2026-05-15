@@ -16,6 +16,7 @@
     "relatedEntity": "Se trata de la entidad principal desde cuya página se muestra la maqueta de la entidad seleccionada anteriormente."
   },
   "messages": {
-    "cannotRemoveFieldFromLayout": "No puede eliminar el campo '%s' de la presentación."
+    "cannotRemoveFieldFromLayout": "No puede eliminar el campo '%s' de la presentación.",
+    "compositeAttributeNotAllowedInList": "El atributo compuesto no se puede añadir al diseño de lista."
   }
 }

@@ -325,6 +325,20 @@ class LayoutManager
             $where['relatedLink'] = empty($relatedLink) ? null : $relatedLink;
         }
 
+        if ($layoutName === 'list') {
+            foreach ($layoutData as $item) {
+                if (empty($item['name'])) {
+                    continue;
+                }
+                $fieldDef = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $item['name']], []);
+                if (($fieldDef['type'] ?? '') === 'composite') {
+                    throw new BadRequest(
+                        $this->getLanguage()->translate('compositeAttributeNotAllowedInList', 'messages', 'Layout')
+                    );
+                }
+            }
+        }
+
         $selectedFields = [];
         if ($layoutName === 'detail') {
             foreach ($layoutData as $data) {

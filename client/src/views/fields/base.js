@@ -715,6 +715,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         !$target.is('i')
                         && !$target.is('button')
                         && !$target.is('a')
+                        && !$target.is('[data-action]')
                     ) {
                         setTimeout(() => {
                             const selection = window.getSelection();
@@ -935,6 +936,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (['edit', 'detail'].includes(this.mode) && !this.options.disableToggleVisibility) {
                 this.toggleVisibility();
             }
+
+            this.conditionStates = this.buildConditionStates();
         },
 
         initListViewInlineEdit() {
@@ -987,6 +990,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         this.getCellElement().hide();
                     }
                 }
+                this.model.trigger('field:visibility:change');
             }
         },
 
@@ -1162,12 +1166,26 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
+        buildConditionStates() {
+            const states = {};
+            for (const type of ['visible', 'required']) {
+                const conditions = this.getConditions(type);
+                if (conditions) {
+                    states[type] = this.checkConditionGroup(conditions);
+                }
+            }
+            return states;
+        },
+
         reRenderByConditionalProperties() {
             this.toggleReadOnlyViaConditions();
-            if (
-                this.getConditions('visible')
-                || this.getConditions('required')
-            ) {
+
+            const prev = this.conditionStates ?? {};
+            const next = this.buildConditionStates();
+
+            const changed = Object.keys({ ...prev, ...next }).some(k => prev[k] !== next[k]);
+            if (changed) {
+                this.conditionStates = next;
                 this.reRender();
             }
         },

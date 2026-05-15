@@ -27,7 +27,7 @@ class AuthMiddleware implements MiddlewareInterface
 {
     private const ALLOWED_URI_WITH_EXPIRED_PASSWORD = [
         '/api/',
-        '/api/User/action/changeExpiredPassword',
+        '/api/User/changeExpiredPassword',
         '/api/userSession',
     ];
 
@@ -81,7 +81,11 @@ class AuthMiddleware implements MiddlewareInterface
 
             return $this->unauthorizedResponse(['Password-Expired' => 'true']);
         } catch (\Exception $e) {
-            return new ErrorResponse($e->getCode() ?: 500, $e->getMessage(), ['X-Status-Reason' => $e->getMessage()]);
+            $code = $e->getCode();
+            if (!is_int($code) || $code < 100 || $code >= 600) {
+                $code = 500;
+            }
+            return new ErrorResponse($code, $e->getMessage(), ['X-Status-Reason' => $e->getMessage()]);
         }
 
 

@@ -19,7 +19,7 @@ Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/
                 "label": this.translate('execute', 'labels', 'Action')
             }];
 
-            this.listenTo(this.model, 'after:save', () => {
+            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 this.handleButtonsDisability();
             });
         },
@@ -31,14 +31,14 @@ Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/
         },
 
         isButtonsDisabled() {
-            return !this.model.get('isActive');
+            return this.model.get('type') === 'suggestValueByAi' || this.model.get('type') === 'suggestValue' || this.model.get('type') === 'error' || !this.model.get('isActive');
         },
 
         handleButtonsDisability() {
-            if (this.isButtonsDisabled()) {
-                $('.additional-button').addClass('disabled');
-            } else {
-                $('.additional-button').removeClass('disabled');
+            const disabled = this.isButtonsDisabled();
+            this.additionalButtons = this.additionalButtons.map(b => ({...b, disabled}));
+            if (this.isRendered()) {
+                window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
             }
         },
 

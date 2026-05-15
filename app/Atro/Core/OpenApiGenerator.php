@@ -237,8 +237,10 @@ class OpenApiGenerator
                 continue;
             }
             unset($propSchema['readOnly']);
-            $propSchema['nullable'] = true;
-            $writeProps[$prop]      = $propSchema;
+            if (isset($propSchema['type'])) {
+                $propSchema['nullable'] = true;
+            }
+            $writeProps[$prop] = $propSchema;
         }
 
         $writeRequired = array_values(array_filter($readRequired, fn($k) => isset($writeProps[$k])));
@@ -355,6 +357,20 @@ class OpenApiGenerator
             $fieldData['type'] = $fieldData['outputType'] ?? 'text';
         }
 
+        // TODO: value-container fields are polymorphic (scalar or array depending on field type being configured).
+        // This anyOf is a temporary workaround until field-level API types are modelled properly.
+        if (!empty($fieldData['view']) && str_contains($fieldData['view'], 'value-container')) {
+            $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                'anyOf'    => [
+                    ['type' => 'string', 'nullable' => true],
+                    ['type' => 'number'],
+                    ['type' => 'array', 'items' => (object)[]],
+                    ['type' => 'object'],
+                ]
+            ];
+            return;
+        }
+
         if (!empty($fieldData['required'])) {
             if (empty($result['components']['schemas'][$entityName]['required'])) {
                 $result['components']['schemas'][$entityName]['required'] = [];
@@ -402,6 +418,7 @@ class OpenApiGenerator
                 break;
             case "array":
             case "multiEnum":
+            case "multiLanguage":
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
                     'type'  => 'array',
                     'items' => ['type' => 'string']
@@ -675,7 +692,7 @@ class OpenApiGenerator
                     $this->buildEntitySchema($result, $entityName);
                 }
 
-                $path = substr($entry['path'], strlen('/api'));
+                $path = preg_replace('/\{(\w+):[^}]+\}/', '{$1}', substr($entry['path'], strlen('/api')));
 
                 foreach ($entry['methods'] as $method) {
                     $result['paths'][$path][strtolower($method)] = $entry['openapi'];

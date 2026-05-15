@@ -4,7 +4,6 @@
     "action": "Action",
     "createdAt": "Date",
     "controllerName": "Controller Name",
-    "controllerAction": "Controller Action",
     "authToken": "Auth Token",
     "ipAddress": "IP Address",
     "authLogRecord": "Auth Log Record",

@@ -163,6 +163,7 @@ class Entity extends ReferenceData
             'namePlural'            => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
             'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
             'kanbanViewMode'        => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
+            'quickActions'          => $this->getMetadata()->get(['clientDefs', $code, 'quickActions'], []),
             'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
             'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
             'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
@@ -391,7 +392,7 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if (in_array($field, ['iconClass', 'color', 'kanbanViewMode'])) {
+            if (in_array($field, ['iconClass', 'color', 'kanbanViewMode', 'quickActions'])) {
                 $loadedVal = $loadedData['clientDefs'][$entity->get('code')][$field] ?? null;
                 if ($loadedVal === $entity->get($field)) {
                     $this->getMetadata()->delete('clientDefs', $entity->get('code'), [$field]);

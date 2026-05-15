@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\EventManager;
 
 use Atro\Core\Container;
+use Atro\Listeners\AbstractMetadataListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Manager
@@ -70,7 +71,7 @@ class Manager
         foreach ($this->getClassNames() as $action => $rows) {
             foreach ($rows as $row) {
                 try {
-                    $object = new $row[0]();
+                    $object = $this->createListener($row[0]);
                 } catch (\Throwable $e) {
                     continue 1;
                 }
@@ -114,11 +115,16 @@ class Manager
         $data = [];
         foreach ($listeners as $target => $classes) {
             foreach ($classes as $listener) {
+                // skip wrong metadata listener
+                if ($target === 'Metadata' && !is_a($listener, AbstractMetadataListener::class, true)) {
+                    continue;
+                }
+
                 // skip abstract classes
                 try {
-                    $obj = new $listener;
+                    $this->createListener($listener);
                 } catch (\Throwable $e) {
-                    continue 1;
+                    continue;
                 }
                 if (!empty($methods = \get_class_methods($listener))) {
                     foreach ($methods as $method) {
@@ -154,5 +160,19 @@ class Manager
                 }
             }
         }
+    }
+
+    private function createListener(string $className)
+    {
+        if (is_a($className, AbstractMetadataListener::class, true)) {
+            return new $className(
+                $this->container->get('config'),
+                $this->container->get('dbal'),
+                $this->container->get('dataManager'),
+                $this->container->get('memoryStorage')
+            );
+        }
+
+        return new $className();
     }
 }

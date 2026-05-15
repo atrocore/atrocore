@@ -18,18 +18,16 @@ use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
-use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Entities\File;
 use Atro\Repositories\MasterDataEntity;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
-use Atro\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Atro\Core\Utils\Util;
 use Atro\Repositories\Matching as MatchingRepository;
 
-class Metadata extends AbstractListener
+class Metadata extends AbstractMetadataListener
 {
     public function loadData(Event $event): void
     {
@@ -447,7 +445,7 @@ class Metadata extends AbstractListener
             return;
         }
 
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->getDataManager();
 
         $actions = $dataManager->getCacheData('dynamic_action');
         if ($actions === null) {
@@ -525,7 +523,9 @@ class Metadata extends AbstractListener
             }
 
             if (!empty($action['icon_class']) && !empty($data['app']['systemIcons'][$action['icon_class']]['path'])) {
-                $html = '<img src="' . $data['app']['systemIcons'][$action['icon_class']]['path'] . '" class="icon-button" >';
+                $iconPath = $data['app']['systemIcons'][$action['icon_class']]['path'];
+                $params['iconUrl'] = $iconPath;
+                $html = '<img src="' . $iconPath . '" class="icon-button" >';
                 if (empty($action['hide_text_label'])) {
                     $html .= ' ' . $action['name'];
                 } else {
@@ -590,11 +590,6 @@ class Metadata extends AbstractListener
                 $data['clientDefs'][$action['source_entity']]['dynamicOnRecordLoadActions'][] = $params;
             }
         }
-    }
-
-    protected function getMemoryStorage(): StorageInterface
-    {
-        return $this->getContainer()->get('memoryStorage');
     }
 
     public function setTranslationRequiredLanguage(array &$data)
@@ -716,47 +711,19 @@ class Metadata extends AbstractListener
                     'layoutRelationshipsDisabled' => true,
                 ];
 
-                if ($visibleLogic = $this->getMetadata()->get([
-                    'entityDefs',
-                    $entityType,
-                    'fields',
-                    $field,
-                    'conditionalProperties',
-                    'visible'
-                ])) {
+                if ($visibleLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['visible'] ?? null) {
                     $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['visible'] = $visibleLogic;
                 }
 
-                if (($readOnly = $this->getMetadata()->get([
-                    'entityDefs',
-                    $entityType,
-                    'fields',
-                    $field,
-                    'conditionalProperties',
-                    'readOnly'
-                ]))) {
+                if ($readOnly = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['readOnly'] ?? null) {
                     $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['readOnly'] = $readOnly;
                 }
 
-                if ($requireLogic = $this->getMetadata()->get([
-                    'entityDefs',
-                    $entityType,
-                    'fields',
-                    $field,
-                    'conditionalProperties',
-                    'required'
-                ])) {
+                if ($requireLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['required'] ?? null) {
                     $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['required'] = $requireLogic;
                 }
 
-                if ($protected = $this->getMetadata()->get([
-                    'entityDefs',
-                    $entityType,
-                    'fields',
-                    $field,
-                    'conditionalProperties',
-                    'protected'
-                ])) {
+                if ($protected = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['protected'] ?? null) {
                     $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['protected'] = $protected;
                 }
 
@@ -777,36 +744,15 @@ class Metadata extends AbstractListener
                         "emHidden"           => true
                     ];
 
-                    if ($visibleLogic = $this->getMetadata()->get([
-                        'entityDefs',
-                        $entityType,
-                        'fields',
-                        $field,
-                        'conditionalProperties',
-                        'visible'
-                    ])) {
+                    if ($visibleLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['visible'] ?? null) {
                         $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['visible'] = $visibleLogic;
                     }
 
-                    if (($readOnly = $this->getMetadata()->get([
-                        'entityDefs',
-                        $entityType,
-                        'fields',
-                        $field,
-                        'conditionalProperties',
-                        'readOnly'
-                    ]))) {
+                    if ($readOnly = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['readOnly'] ?? null) {
                         $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['readOnly'] = $readOnly;
                     }
 
-                    if ($requireLogic = $this->getMetadata()->get([
-                        'entityDefs',
-                        $entityType,
-                        'fields',
-                        $field,
-                        'conditionalProperties',
-                        'required'
-                    ])) {
+                    if ($requireLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['required'] ?? null) {
                         $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['required'] = $requireLogic;
                     }
                 } else {
@@ -1292,6 +1238,10 @@ class Metadata extends AbstractListener
                     }
                     $data['scopes'][$scope]['mandatoryUnInheritedFields'][] = $fieldName;
                 }
+            }
+
+            if (!isset($data['clientDefs'][$scope]['quickActions'])) {
+                $data['clientDefs'][$scope]['quickActions'] = ['notInherit'];
             }
 
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'parents');
@@ -1877,8 +1827,7 @@ class Metadata extends AbstractListener
             return;
         }
 
-        /** @var DataManager $dataManager */
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->getDataManager();
         $previewTemplates = $dataManager->getCacheData(PreviewTemplate::CACHE_NAME);
         if ($previewTemplates === null) {
             try {
@@ -1919,7 +1868,7 @@ class Metadata extends AbstractListener
 
     protected function prepareNotificationRuleTransportField(array &$data): void
     {
-        foreach (array_keys(($this->getMetadata()->get(['app', 'notificationTransports'], []))) as $transport) {
+        foreach (array_keys($data['app']['notificationTransports'] ?? []) as $transport) {
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'Active'] = [
                 "type"         => "bool",
                 "virtualField" => true,
@@ -1960,8 +1909,7 @@ class Metadata extends AbstractListener
             return;
         }
 
-        /** @var DataManager $dataManager */
-        $dataManager = $this->getContainer()->get('dataManager');
+        $dataManager = $this->getDataManager();
         $cachedData = $dataManager->getCacheData(NotificationRule::CACHE_NAME);
         if (!isset($cachedData['notificationRules']) || !isset($cachedData['users']) || !isset($cachedData['notificationProfilesIds'])) {
             $notificationProfilesIds = [];
