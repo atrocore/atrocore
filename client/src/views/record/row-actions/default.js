@@ -70,7 +70,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
             this.svelteComponent = new Svelte.RowActions({
                 target: this.$el[0],
-                props: { actions: actions, quickActions, itemId: this.model.id, loadActions: this.getLoadActions() }
+                props: { actions, quickActions, itemId: this.model.id, loadActions: this.getLoadActions() }
             });
 
             this.svelteComponent.$on('dropdownShow', () => {
