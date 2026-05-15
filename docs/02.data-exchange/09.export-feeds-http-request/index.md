@@ -37,6 +37,7 @@ The following fields are specific to the HTTP Request export type and appear in 
 - **URL** – the target API endpoint. Supports [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md) for dynamic values, enabling you to construct URLs that vary depending on the exported record or execution context.
 
   Example URL with Twig template:
+
   ```twig
   https://api.example.com/products/import?token={{ connection.apiKey }}
   ```
@@ -44,6 +45,7 @@ The following fields are specific to the HTTP Request export type and appear in 
 - **Import Feed for response processing** – optionally select an Import Feed that will be used to process the HTTP response returned by the server. This is useful when the target API returns data (for example, created record IDs or validation results) that should be written back into AtroCore. Once this field is filled, an `Import Feed attachment formatter` field appears. It supports [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md) and allows you to shape the response before it is handed off to the Import Feed.
 
   Example `Import Feed attachment formatter`:
+
   ```twig
   {% set payload = responseText | json_decode %}
   {% set payload = payload | merge({id: entities[0].id, 'httpCode': httpCode}) %}
@@ -60,6 +62,12 @@ The following fields are specific to the HTTP Request export type and appear in 
 Configure custom HTTP headers required by the API (authentication tokens, content types, etc.) in the `Headers` panel.
 
 ![Export HTTP Request Headers](_assets/export-http-headers.png) {.medium}
+
+## Retry HTTP Export for Failed Executions
+
+In addition to **Export Again**, `Failed` or `Canceled` HTTP Request export executions have an extra retry option:
+
+**Resend Request** — resends the HTTP request using the already-generated file from the original execution, without re-running the export. Use this when the target endpoint was temporarily unavailable but the exported data is still valid.
 
 ## Further Configuration
 

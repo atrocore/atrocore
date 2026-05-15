@@ -89,6 +89,10 @@ CSV-specific:
 - **Template** – output structure defined using [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md).
 - **Template Name** – select a predefined Twig template.
 
+**XML schema validation:**
+
+When the exported XML, the system automatically extracts the schema URL, downloads the XSD file, and validates the output against it. Errors and fatal errors additionally set the execution state to `Failed`. If no `schemaLocation` is present in the XML, validation is skipped silently.
+
 ### Feed Settings
 
 ![Feed Settings](_assets/export-feed-settings.png){.medium}
@@ -158,9 +162,18 @@ Attributes can be added to the export in two ways:
 
 ![Script in configurator](_assets/export-script-in-configurator.png){.large}
 
-The Script type allows exporting computed values using [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md). The script has access to the current record via the `record` variable.
+The Script type allows exporting computed values using [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md). Two variables are available inside the script:
 
-Example — exporting the `From` value for Range attributes and the option code for List attributes:
+- **`record`** – a flat associative array of the exported entity's field values for the current row. Keys correspond to field names (e.g., `record.name`, `record.sku`, `record.isActive`).
+- **`configuration`** – the configurator item settings array (column name, type, exportBy, channels, etc.).
+
+Example — exporting a computed value from a standard entity:
+
+```twig
+{{ record.name }} ({{ record.sku }})
+```
+
+Example — exporting the `From` value for Range attributes and the option code for List attributes (when the exported entity is `ProductAttributeValue`):
 
 ```twig
 {% if record.attributeType == 'rangeInt' or record.attributeType == 'rangeFloat' %}
@@ -168,6 +181,13 @@ Example — exporting the `From` value for Range attributes and the option code 
 {% elseif record.attributeType == 'extensibleEnum' %}
   {{ record.valueOptionData.code }}
 {% endif %}
+```
+
+If you need to access multiple attribute values and do not require channel- or language-specific filtering, use the `putAttributesToEntity` filter. It loads all attribute values directly onto the record, making them accessible by attribute code:
+
+```twig
+{% set product = record | putAttributesToEntity %}
+{{ product.your_attribute_code }}
 ```
 
 ### Units in Configurator
@@ -198,40 +218,48 @@ To enable this, check **Export Files to a ZIP Archive** on the relevant configur
 
 ![Export to Archive](_assets/export-files-to-archive.png){.medium}
 
-The names of the files in the archive correspond to the names of the assets by default. You can change naming using the "File Name Template" field.
+The names of the files in the archive correspond to the names of the assets by default. You can change naming using the **File Name Template** field.
 
 ![File name template](_assets/file-name-template.png){.large}
 
-To set file names you can use the following variables:
+The **File Name Template** field accepts [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md) and supports the following variables:
 
-- {{currentNumber}} - serial number of the asset in the export entity
-- {{fileName}} - the actual name of the file
-- {{entity}}- entity object that is exported
+- `{{ fileName }}` – original filename of the asset (default)
+- `{{ currentNumber }}` – serial number of the asset within the exported entity
+- `{{ entity }}` – the exported entity object; access its fields with dot notation (e.g., `{{ entity.name }}`, `{{ entity.sku }}`)
+- `{{ entityId }}` – the ID of the exported entity record
 
-By default, the variable {{fileName}} is specified in the "File Name Template" field. This means that if you don't change anything in it, the file will have the original asset name. If you want to add a sequence number to the file name, the template will look like this:
+By default, `{{ fileName }}` is set, preserving the original asset name. To append a sequence number:
 
-{{fileName}}_{{currentNumber}}
+```twig
+{{ fileName }}_{{ currentNumber }}
+```
 
-You can also add to the file name the name of object (Product, Brand, etc.) from which the asset is exported. To do this, use the following template:
+To include the entity's name field in the filename:
 
-{{entity}} {{fileName}} {{currentNumber}}
+```twig
+{{ entity.name }}_{{ fileName }}_{{ currentNumber }}
+```
 
 Then when exporting from two products that have two assets each, the naming will be as follows:
 
 ![File naming](_assets/file-naming.png){.large}
 
-To add the attribute value to the file name, you can use the findRecord function. As parameters, you need to pass the name of the entity (ProductAttributeValue) and the identifiers of the record (f.e. product Id, attribute Id, channel Id, language).
-For example:
+To add an attribute value to the filename, use `findRecord()`:
 
-{% set productId = entity.id %}
+```twig
+{% set pav = findRecord('ProductAttributeValue', {
+    'productId': entity.id,
+    'attributeId': 'h64e5a3eeaf1a728f',
+    'channelId': '',
+    'language': 'main'
+}) %}
+{{ pav.value }}_{{ fileName }}_{{ currentNumber }}
+```
 
-{% set pav = findRecord('ProductAttributeValue', {'productId' : productId, 'attributeId' : 'h64e5a3eeaf1a728f', 'channelId':'','language':'main'})%}
+We have attribute value 67 for Product1 and 4435 for Product2 so the file names will look like this:
 
- {{pav.value}} {{ fileName }} {{currentNumber}}
-
- We have attribute value 67 for Product1 and 4435 for Product2 so the file names will look like this:
-
- ![File naming](_assets/file-naming1.png)
+![File naming](_assets/file-naming1.png)
 
 ## Filter Result
 
@@ -318,11 +346,17 @@ Execution details include:
 
 Execution States:
 
-- **Running** – currently executing. Available actions: **Delete**.
-- **Pending** – queued for execution. Available actions: **Delete**.
+- **Running** – currently executing. Available actions: **Cancel**, **Delete**.
+- **Pending** – queued for execution. Available actions: **Cancel**, **Delete**.
 - **Success** – completed (may contain errors). Only **Delete** is available action.
 - **Failed** – technical failure. Available actions: **Delete** and **Export Again**.
 - **Canceled** – user-stopped. Available actions: **Delete**, **Export Again**.
+
+### Retry Actions for Failed or Canceled Executions
+
+For `Failed` or `Canceled` executions, the **Export Again** action is available from the row actions menu in the `Export Executions` panel. It re-runs the full export — data is re-fetched, re-serialized, and re-sent.
+
+> For [Export: HTTP Request](../09.export-feeds-http-request/index.md) executions, an additional **Resend Request** action is available.
 
 ## Export Feed Actions
 
@@ -333,7 +367,6 @@ Standard [record management actions](../../01.atrocore/08.record-management/inde
 - **Export** – executes the feed immediately.
 - **Duplicate** – opens the creation page pre-filled with all field values and configurator mapping rules from the current feed.
 - **Delete** – removes the feed record.
-- **Export Again** action is available for executions, allowing the same configuration to be re-run without creating a new export feed execution.
 - **Duplicate as Import** – creates a new [import feed](../01.import-feeds/index.md#creating-import-feed-from-export-feed) with matching entity, format, and mapping rules.
 - **Copy Configuration** – copies the feed configuration as JSON for API-based recreation. See [Copying Feed Configurations](../11.copying-feed-configurations/index.md).
 
