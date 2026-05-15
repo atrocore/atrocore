@@ -45,6 +45,8 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
 
         getQuickActions: function () {
             const configured = this.getMetadata().get(['clientDefs', this.model.name, 'quickActions']) || [];
+            configured.push('notInherit');
+
             return configured.map(name => this.adaptQuickAction(name));
         },
 
@@ -144,7 +146,6 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                             action: 'notInheritRelated',
                             iconClass: 'ph ph-link-simple-horizontal-break',
                             label: 'Not Inherit',
-                            quick: true,
                             alwaysVisible: true,
                             data: { id: this.model.id, cid: this.model.cid }
                         });

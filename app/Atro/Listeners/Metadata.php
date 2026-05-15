@@ -1240,10 +1240,6 @@ class Metadata extends AbstractMetadataListener
                 }
             }
 
-            if (!isset($data['clientDefs'][$scope]['quickActions'])) {
-                $data['clientDefs'][$scope]['quickActions'] = ['notInherit'];
-            }
-
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'parents');
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'children');
 
@@ -2607,10 +2603,10 @@ class Metadata extends AbstractMetadataListener
             }
         }
 
-        // set matching rules types
-        foreach ($data['entityDefs']['MatchingRule']['fields']['type']['options'] ?? [] as $type) {
-            $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($type);
-            if (!class_exists($className)) {
+        // set matching rules types from the JSON registry (app.matchingRuleTypes)
+        foreach ($data['app']['matchingRuleTypes'] ?? [] as $type => $typeDefs) {
+            $className = $typeDefs['className'] ?? null;
+            if (!$className || !class_exists($className)) {
                 continue;
             }
 

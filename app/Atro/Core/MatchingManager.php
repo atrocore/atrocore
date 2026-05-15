@@ -35,9 +35,10 @@ class MatchingManager
 
     public function createMatchingType(MatchingRule $rule): AbstractMatchingRule
     {
-        $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($rule->get('type'));
-        if (!class_exists($className)) {
-            throw new \Exception("Class $className not found");
+        $type = $rule->get('type');
+        $className = $this->getMetadata()->get(['app', 'matchingRuleTypes', $type, 'className']);
+        if (!$className || !class_exists($className)) {
+            throw new \Exception("MatchingRule type '$type' is not registered");
         }
 
         $ruleType = $this->container->get($className);

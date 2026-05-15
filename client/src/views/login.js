@@ -72,6 +72,11 @@ Espo.define('views/login', 'view', function (Dep) {
                 window.location.href = '/';
             }
 
+            this.ssoError = urlParams.get('ssoError') || null;
+            if (this.ssoError) {
+                history.replaceState(null, '', '/');
+            }
+
             if (this.getConfig().get('oidcType')) {
                 this.ajaxGetRequest('oidcLoginUrl', {}, {async: false}).then(data => {
                     this.oidcLoginUrl = data.url || '';
@@ -140,7 +145,8 @@ Espo.define('views/login', 'view', function (Dep) {
             return {
                 logoSrc: this.getLogoSrc(),
                 oidcEnabled: !!this.oidcLoginUrl,
-                oidcLoginUrl: this.oidcLoginUrl || ''
+                oidcLoginUrl: this.oidcLoginUrl || '',
+                ssoError: this.ssoError || ''
             };
         },
 
