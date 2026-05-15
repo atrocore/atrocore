@@ -183,16 +183,11 @@ Example — exporting the `From` value for Range attributes and the option code 
 {% endif %}
 ```
 
-To access an attribute value of the exported entity from a Script field, use `findRecord()`:
+If you need to access multiple attribute values and do not require channel- or language-specific filtering, use the `putAttributesToEntity` filter. It loads all attribute values directly onto the record, making them accessible by attribute code:
 
 ```twig
-{% set pav = findRecord('ProductAttributeValue', {
-    'productId': record.id,
-    'attributeId': 'your_attribute_id',
-    'channelId': '',
-    'language': 'main'
-}) %}
-{{ pav.value }}
+{% set product = record | putAttributesToEntity %}
+{{ product.your_attribute_code }}
 ```
 
 ### Units in Configurator
