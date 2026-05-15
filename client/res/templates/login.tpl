@@ -8,6 +8,9 @@
             </div>
             <div class="panel-body">
                 <div>
+                    {{#if ssoError}}
+                        <div class="alert alert-danger">{{ssoError}}</div>
+                    {{/if}}
                     <form id="login-form" onsubmit="return false;">
                         <div class="form-group">
                             <label for="field-username">{{translate 'Username'}}</label>
