@@ -19,17 +19,6 @@ use Espo\ORM\Entity;
 
 class FieldSimilar extends AbstractMatchingRule
 {
-    private function isFuzzySearchAvailable(): bool
-    {
-        return class_exists('AdvancedDataManagement\Core\FuzzySearch')
-            && \AdvancedDataManagement\Core\FuzzySearch::isAvailable($this->getConnection());
-    }
-
-    private function getSimilarityScoreAlias(): string
-    {
-        return 'sim_score_' . Util::toUnderScore($this->rule->get('field'));
-    }
-
     public static function getSupportedFieldTypes(): array
     {
         return [
@@ -49,37 +38,28 @@ class FieldSimilar extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
         $field = $this->rule->get('field');
-        $columnName = Util::toUnderScore($this->rule->get('field'));
+        $columnName = Util::toUnderScore($field);
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
         $value = $stageEntity->get($field);
         $parameter = IdGenerator::unsortableId();
 
         if (empty($value)) {
-            $sqlPart = "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
-        } elseif (is_array($value)) {
-            $sqlPart = "{$alias}.{$escapedColumnName} LIKE :$parameter";
-            $qb->setParameter($parameter, '%"' . reset($value) . '"%');
-        } elseif ($this->isFuzzySearchAvailable()) {
-            $threshold = (float)$this->getConfig()->get('similarityThreshold', 1);
-            $thresholdParam = 'sim_thr_' . IdGenerator::unsortableId();
-            $scoreAlias = $this->getSimilarityScoreAlias();
-
-            $sqlPart = "similarity({$alias}.{$escapedColumnName}, :{$parameter}) >= :{$thresholdParam}";
-            $qb->setParameter($parameter, (string)$value);
-            $qb->setParameter($thresholdParam, $threshold);
-            $qb->addSelect("similarity({$alias}.{$escapedColumnName}, :{$parameter}) AS {$scoreAlias}");
-        } else {
-            $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :$parameter";
-            $qb->setParameter($parameter, str_replace(' ', '', strtolower(trim($value))));
+            return "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
         }
 
-        return $sqlPart;
+        if (is_array($value)) {
+            $qb->setParameter($parameter, '%"' . reset($value) . '"%');
+            return "{$alias}.{$escapedColumnName} LIKE :$parameter";
+        }
+
+        $qb->setParameter($parameter, str_replace(' ', '', strtolower(trim($value))));
+
+        return "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :$parameter";
     }
 
     public function match(Entity $stageEntity, array $masterEntityData): float
     {
         $field = $this->rule->get('field');
-
         $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}.type");
 
         if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
@@ -97,31 +77,12 @@ class FieldSimilar extends AbstractMatchingRule
             sort($stageValue);
             sort($masterValue);
 
-            if ($stageValue === $masterValue) {
-                return $this->getWeight();
-            }
-
-            return 0.0;
-        }
-
-        if ($this->isFuzzySearchAvailable()) {
-            $scoreAlias = $this->getSimilarityScoreAlias();
-            $scoreKey = Util::toCamelCase($scoreAlias);
-            $score = $masterEntityData[$scoreKey] ?? $masterEntityData[$scoreAlias] ?? null;
-
-            if ($score !== null) {
-                // return part of the weight proportionally to the similarity score
-                return (float)$score * $this->getWeight();
-            }
+            return $stageValue === $masterValue ? $this->getWeight() : 0.0;
         }
 
         $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
         $masterValue = str_replace(' ', '', strtolower(trim((string)$masterEntityData[$field])));
 
-        if ($stageValue === $masterValue) {
-            return $this->getWeight();
-        }
-
-        return 0.0;
+        return $stageValue === $masterValue ? $this->getWeight() : 0.0;
     }
 }
