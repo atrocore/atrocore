@@ -18,7 +18,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
-class Equal extends AbstractMatchingRule
+class FieldEqual extends AbstractMatchingRule
 {
     public static function getSupportedFieldTypes(): array
     {

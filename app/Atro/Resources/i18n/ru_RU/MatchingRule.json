@@ -8,9 +8,9 @@
   },
   "options": {
     "type": {
-      "equal": "Равный",
-      "similar": "Похожий",
-      "contains": "Содержит",
+      "fieldEqual": "Поле равно",
+      "fieldSimilar": "Поле похоже",
+      "fieldContains": "Поле содержит",
       "set": "Набор"
     },
     "operator": {

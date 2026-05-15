@@ -17,7 +17,7 @@ use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
-class Similar extends AbstractMatchingRule
+class FieldSimilar extends AbstractMatchingRule
 {
     private function isFuzzySearchAvailable(): bool
     {

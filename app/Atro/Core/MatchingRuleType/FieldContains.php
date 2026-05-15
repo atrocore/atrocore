@@ -17,7 +17,7 @@ use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
-class Contains extends AbstractMatchingRule
+class FieldContains extends AbstractMatchingRule
 {
     public static function getSupportedFieldTypes(): array
     {

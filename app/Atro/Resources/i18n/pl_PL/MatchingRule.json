@@ -8,9 +8,9 @@
   },
   "options": {
     "type": {
-      "equal": "Równość",
-      "similar": "Podobny",
-      "contains": "Zawiera",
+      "fieldEqual": "Pole jest równe",
+      "fieldSimilar": "Pole jest podobne",
+      "fieldContains": "Pole zawiera",
       "set": "Zestaw"
     },
     "operator": {

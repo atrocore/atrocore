@@ -8,9 +8,9 @@
   },
   "options": {
     "type": {
-      "equal": "Equal",
-      "similar": "Similar",
-      "contains": "Contains",
+      "fieldEqual": "Field is Equal",
+      "fieldSimilar": "Field is Similar",
+      "fieldContains": "Field Contains",
       "set": "Set"
     },
     "operator": {
