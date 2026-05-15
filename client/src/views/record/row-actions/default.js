@@ -65,13 +65,12 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 iconUrl: a.iconUrl || undefined,
                 link: a.link || undefined,
                 data: a.data || undefined,
-                quick: a.quick || quickActions.includes(a.action),
                 alwaysVisible: a.alwaysVisible || false,
             }));
 
             this.svelteComponent = new Svelte.RowActions({
                 target: this.$el[0],
-                props: { actions, itemId: this.model.id, loadActions: this.getLoadActions() }
+                props: { actions, quickActions, itemId: this.model.id, loadActions: this.getLoadActions() }
             });
 
             this.svelteComponent.$on('dropdownShow', () => {
