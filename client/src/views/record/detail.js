@@ -1662,7 +1662,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.listenTo(this, 'after:render', () => {
                 this.togglePanelsVisibility();
-            })
+            });
+
+            this.listenTo(this.model, 'field:visibility:change', () => {
+                this.togglePanelsVisibility();
+            });
 
             this.initDynamicHandler();
         },
