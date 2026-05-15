@@ -23,7 +23,6 @@ class FieldSimilar extends AbstractMatchingRule
     {
         return [
             "markdown",
-            "password",
             "text",
             "url",
             "varchar",
