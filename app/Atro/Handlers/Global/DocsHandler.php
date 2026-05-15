@@ -83,9 +83,7 @@ class DocsHandler implements MiddlewareInterface
         $module = preg_replace('/\.md$/i', '', (string)($qp['module'] ?? ''));
         $page   = preg_replace('/\.md$/i', '', (string)($qp['page'] ?? ''));
 
-        $scheme      = $request->getUri()->getScheme();
-        $host        = $request->getUri()->getHost();
-        $assetBaseUrl = $scheme . '://' . $host . '/api/docsAsset?';
+        $assetBaseUrl = '/api/docsAsset?';
 
         $content = $this->docs->getMarkdown($module, $page, $assetBaseUrl);
 
