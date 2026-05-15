@@ -55,6 +55,14 @@ window.$docsify = {
     },
     markdown: {
         renderer: {
+            image: function(src, title, alt) {
+                if (src && /^\/api\//.test(src)) {
+                    src = window.location.origin + src;
+                }
+                var attrs = 'src="' + src + '" alt="' + (alt || '') + '"';
+                if (title) attrs += ' title="' + title + '"';
+                return '<img ' + attrs + '>';
+            },
             blockquote: function(quote) {
                 var m = /^<p>\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*([\s\S]*?)<\/p>/i.exec(quote);
                 if (m) {
@@ -155,6 +163,13 @@ window.$docsify = {
             });
 
             hook.doneEach(function () {
+                document.querySelectorAll('.markdown-section img[src]').forEach(function(img) {
+                    var src = img.getAttribute('src') || '';
+                    if (/^\/api\//.test(src)) {
+                        img.src = window.location.origin + src;
+                    }
+                });
+
                 if (scrollHandler) {
                     window.removeEventListener('scroll', scrollHandler);
                 }
