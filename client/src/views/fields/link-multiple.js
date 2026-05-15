@@ -95,10 +95,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         actionLoadData() {
             this.notify('Please wait...');
 
-            let foreignName = this.getForeignName()
-
-            this.ajaxGetRequest(`${this.model.name}/${this.model.get('id')}/${this.name}`, {
-                select: `id, ${foreignName}`
+            let foreignName = this.getForeignName();
+            this.ajaxGetRequest('entityRelation', {
+                select: `id, ${foreignName}`,
+                entityName: this.model.name,
+                id: this.model.id,
+                link: this.name
             }).success(res => {
                 let ids = [];
                 let names = {};

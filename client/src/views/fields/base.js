@@ -715,6 +715,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         !$target.is('i')
                         && !$target.is('button')
                         && !$target.is('a')
+                        && !$target.is('[data-action]')
                     ) {
                         setTimeout(() => {
                             const selection = window.getSelection();
