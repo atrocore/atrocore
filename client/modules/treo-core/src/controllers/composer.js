@@ -14,6 +14,10 @@ Espo.define('treo-core:controllers/composer', 'controller', function (Dep) {
 
         defaultAction: "list",
 
+        checkAccessGlobal: function () {
+            return !!this.getUser().isAdmin();
+        },
+
         list: function () {
             this.collectionFactory.create('Composer', function (collection) {
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
