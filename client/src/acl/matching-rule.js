@@ -12,6 +12,13 @@ Espo.define('acl/matching-rule', 'acl', function (Dep) {
 
     return Dep.extend({
 
+        checkScope: function (data, action, precise) {
+            if (this.getUser().isAdmin()) {
+                return true;
+            }
+            return this.aclManager.checkScope('Matching', action, precise);
+        },
+
         checkModel: function (model, data, action, precise) {
             return model.get('editable');
         },
