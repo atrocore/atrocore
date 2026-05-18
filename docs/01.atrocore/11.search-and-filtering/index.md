@@ -168,6 +168,8 @@ Depending on the [field/attribute type](../03.administration/11.entity-managemen
 | | Greater / Greater or Equal | Input field |
 | | Between | 2 input fields |
 | **String, Text, HTML, Markdown, URL, Email, Identifier, Script, Color** | Contains / Not Contains | Input field |
+| | Starts With / Not Starts With | Input field |
+| | Ends With / Not Ends With | Input field |
 | | Equals / Not Equals | Input field |
 | | Is Null / Is Not Null | – |
 | **Boolean** | Equals / Not Equals | Checkbox |
