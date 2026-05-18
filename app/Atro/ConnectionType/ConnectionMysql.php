@@ -20,6 +20,10 @@ class ConnectionMysql extends AbstractConnection implements ConnectionInterface
 {
     public function connect(Entity $connection)
     {
+        if (!defined('\PDO::MYSQL_ATTR_INIT_COMMAND') || !defined('\PDO::ATTR_ERRMODE') || !defined('\PDO::ERRMODE_EXCEPTION')) {
+            throw new BadRequest($this->exception('pdoMysqlMissing'));
+        }
+
         try {
             $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
             $dsn = 'mysql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';

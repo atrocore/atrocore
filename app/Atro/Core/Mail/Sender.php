@@ -13,8 +13,10 @@ namespace Atro\Core\Mail;
 
 use Atro\ConnectionType\ConnectionSmtp;
 use Atro\Core\Container;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\IdGenerator;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Atro\Entities\Connection;
 use Atro\Entities\File;
 use Atro\Core\Utils\Config;
@@ -174,6 +176,8 @@ class Sender
 
         try {
             $this->transport->send($email, Envelope::create($email));
+        } catch (TransportException $e) {
+            throw new BadRequest($e->getMessage());
         } catch (\Exception $e) {
             throw new Error($e->getMessage(), 500);
         } finally {
