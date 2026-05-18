@@ -81,6 +81,7 @@
   },
   "exceptions": {
     "sqlsrvMissing": "Není nainstalováno rozšíření PHP MSSQL.",
+    "pdoMysqlMissing": "Není nainstalováno rozšíření PHP PDO MySQL.",
     "connectionFailed": "Spojení se nepodařilo navázat: %s",
     "noSuchType": "Žádný takový typ připojení.",
     "notificationConnectionCannotBeDeleted": "Toto připojení se používá pro e-mailová oznámení a nelze jej odstranit.",
