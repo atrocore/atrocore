@@ -81,6 +81,7 @@
   },
   "exceptions": {
     "sqlsrvMissing": "La extensión PHP MSSQL no está instalada.",
+    "pdoMysqlMissing": "La extensión PHP PDO MySQL no está instalada.",
     "connectionFailed": "No se ha podido establecer la conexión: %s",
     "noSuchType": "No existe tal tipo de conexión.",
     "notificationConnectionCannotBeDeleted": "Esta conexión se utiliza para las notificaciones por correo electrónico y no se puede eliminar",

@@ -75,6 +75,7 @@
   },
   "exceptions": {
     "sqlsrvMissing": "Rozszerzenie PHP MSSQL nie jest zainstalowane.",
+    "pdoMysqlMissing": "Rozszerzenie PHP PDO MySQL nie jest zainstalowane.",
     "connectionFailed": "Nie można nawiązać połączenia: %s",
     "noSuchType": "Brak takiego typu połączenia.",
     "notificationConnectionCannotBeDeleted": "To połączenie jest używane do powiadomień e-mail i nie można go usunąć.",
