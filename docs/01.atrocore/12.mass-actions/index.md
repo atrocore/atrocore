@@ -16,7 +16,7 @@ The following mass actions are available by default in the AtroCore system:
 - **[Compare](#compare)** – to compare the selected entity records.
 - **[Merge](#merge)** – to combine the selected entity records.
 - **[Select](#select)** - to create a new Selection based on the selected records
-- **[Mass update](#mass-update)** – to update several selected entity records at once.
+- **[Update](#update)** – to update several selected entity records at once.
 - **[Export](#export)** – to export the desired data fields of the selected entity records in the XLSX (Excel) or CSV format.
 - **[Add relation](#add-relation)** – to relate the selected entity records with other entities (or entity).
 - **[Remove relation](#remove-relation)** – to remove the relations that have been added to the selected entity records.
@@ -48,23 +48,21 @@ Merge is a tool used to merge multiple different records. For more information v
 
 Select is a tool used to add records to a Selection for further comparison or merging. For more information visit [Merge and comparison](../09.comparison-and-merge/index.md#selection) article.
 
-## Mass Update
+## Update
 
-Mass update is a tool used to quickly modify information that is the same for different records. You can mass update all the fields and/or attributes for records. To do this, first select the records you want to update. Then select Actions/Mass Update to proceed to the mass update pop-up.
+Update is a tool used to quickly modify information that is the same for different records. You can mass update all the fields and/or attributes for records. To perform a mass update, choose the records you want to modify, then click `Actions/Update` to open the Mass Update popup.
 
 ![Mass update select](./_assets/mass-update-options.png){.medium}
 
 You can select any number of fields and/or attributes to update.
 
-To select mass update first select records you want to update. Then select `Actions/Mass Update` to proceed to Mass update popup.
-
-![Selecting mass update](./_assets/mass-update-select.png){.large}
+![Selecting mass update](./_assets/mass-update-selected.png){.large}
 
 When all fields and/or attributes you wanted are selected and their values are set press `Update` to start updating process. If everything is ok you will see `Success` message.
 
-### Mass update to fields
+### Update to fields
 
-To update field select `Select Field` in Mass update popup. Then select a field you need from a new popup menu. Then apply field value as usual. If the field is already selected, it will not be shown in the list. You can select multiple fields at once.
+To update field select `Select Field` in Mass Update popup. Then select a field you need from a new popup menu. Then apply field value as usual. If the field is already selected, it will not be shown in the list. You can select multiple fields at once.
 
 ![Mass update to fields](./_assets/mass-update-field.png){.large}
 
@@ -72,9 +70,9 @@ To update field select `Select Field` in Mass update popup. Then select a field 
 
 ![Mass update to fields view](./_assets/mass-update-fiel-view.png){.medium}
 
-### Mass update to attributes
+### Update to attributes
 
-To update an attribute, select `Select attribute` in the `Mass update` pop-up. Then select the attribute you need from the new pop-up. You can select multiple attributes at once. If an attribute is already selected, selecting it again will have no effect. You can filter attributes in this popup.
+To update an attribute, select `Select attribute` in the Update pop-up. Then select the attribute you need from the new pop-up. You can select multiple attributes at once. If an attribute is already selected, selecting it again will have no effect. You can filter attributes in this popup.
 
 If any/all of your products selected to be mass updated have no attribute the attribute will be linked to the product.
 

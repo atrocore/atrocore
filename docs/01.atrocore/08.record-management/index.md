@@ -247,7 +247,7 @@ For information about how to access these actions in the interface, see the [Sin
 
 AtroCore provides powerful mass actions for managing multiple records simultaneously. These operations allow you to perform actions on multiple selected records at once, significantly improving efficiency when working with large datasets.
 
-Available mass actions include mass update, mass delete, mass export, and mass relationship management. These are particularly useful for bulk data updates, data cleanup, and relationship management. The available actions can be extended through system configuration and additional modules.
+Available mass actions include update, remove, export, and mass relationship management. These are particularly useful for bulk data updates, data cleanup, and relationship management. The available actions can be extended through system configuration and additional modules.
 
 For detailed information about mass actions, step-by-step procedures, and advanced features, see the [Mass Actions](../12.mass-actions/index.md) documentation.
 
