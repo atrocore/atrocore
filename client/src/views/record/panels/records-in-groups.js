@@ -33,6 +33,10 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             return this.link;
         },
 
+        getAclScope() {
+            return this.scope;
+        },
+
         setup() {
             let bottomPanel = new BottomPanel();
             bottomPanel.setup.call(this);
@@ -72,7 +76,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                     action: this.defs.createAction || 'createRelated',
                     link: this.getCreateLink(),
                     acl: 'create',
-                    aclScope: this.scope,
+                    aclScope: this.getAclScope(),
                     html: '<i class="ph ph-plus"></i>',
                     data: {
                         link: this.getCreateLink(),
@@ -118,7 +122,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                         "relationshipScope": this.scope
                     },
                     acl: 'delete',
-                    aclScope: this.scope
+                    aclScope: this.getAclScope()
                 });
             }
 
@@ -400,7 +404,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
         },
 
         checkAclAction(action) {
-            return this.getAcl().check(this.scope, action);
+            return this.getAcl().check(this.getAclScope(), action);
         },
 
 

@@ -45,6 +45,10 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
             });
         },
 
+        getAclScope() {
+            return `Associated${this.scope}`
+        },
+
         data() {
             return {
                 ...Dep.prototype.data.call(this),
