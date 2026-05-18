@@ -247,7 +247,7 @@ For information about how to access these actions in the interface, see the [Sin
 
 AtroCore provides powerful mass actions for managing multiple records simultaneously. These operations allow you to perform actions on multiple selected records at once, significantly improving efficiency when working with large datasets.
 
-Available mass actions include mass update, mass delete, mass export, and mass relationship management. These are particularly useful for bulk data updates, data cleanup, and relationship management. The available actions can be extended through system configuration and additional modules.
+Available mass actions include update, remove, export, and mass relationship management. These are particularly useful for bulk data updates, data cleanup, and relationship management. The available actions can be extended through system configuration and additional modules.
 
 For detailed information about mass actions, step-by-step procedures, and advanced features, see the [Mass Actions](../12.mass-actions/index.md) documentation.
 
@@ -307,4 +307,4 @@ For [Hierarchy](../03.administration/11.entity-management/01.entity-types/index.
 
 When a related record is inherited, the **Unlink** action is replaced by **Not Inherit** in the actions menu. This action removes the inherited relation from the current record without affecting the parent or any sibling records.
 
-For inherited records, the **Not Inherit** icon is also shown directly in the list row as a [quick action](#quick-actions) — visible without opening the dropdown menu — so you can break the inheritance with a single click.
+For inherited records, the **Not Inherit** icon is also shown directly in the list row as a [quick action](#quick-edit-mode) — visible without opening the dropdown menu — so you can break the inheritance with a single click.
