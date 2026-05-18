@@ -3,7 +3,7 @@
   "model": "models/user",
   "recordViews": {
     "detail": "views/user/record/detail",
-    "edit": "treo-core:views/user/record/edit",
+    "edit": "views/user/record/edit",
     "list": "views/user/record/list"
   },
   "modalViews": {
