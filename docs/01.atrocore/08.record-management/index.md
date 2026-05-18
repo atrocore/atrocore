@@ -307,4 +307,4 @@ For [Hierarchy](../03.administration/11.entity-management/01.entity-types/index.
 
 When a related record is inherited, the **Unlink** action is replaced by **Not Inherit** in the actions menu. This action removes the inherited relation from the current record without affecting the parent or any sibling records.
 
-For inherited records, the **Not Inherit** icon is also shown directly in the list row as a [quick action](#quick-actions) — visible without opening the dropdown menu — so you can break the inheritance with a single click.
+For inherited records, the **Not Inherit** icon is also shown directly in the list row as a [quick action](#quick-edit-mode) — visible without opening the dropdown menu — so you can break the inheritance with a single click.

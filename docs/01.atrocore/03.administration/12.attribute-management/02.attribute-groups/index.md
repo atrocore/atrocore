@@ -12,7 +12,7 @@ The attribute group entity comes with the following preconfigured fields; mandat
 |--------------------------|--------------------------------------------|
 | Group name (multi-lang)* | Name of the attribute group (e.g. technical) |
 | Code *                   | Unique value used to identify the attribute group. It can only consist of lowercase letters, digits and underscore symbols                   |
-| Sort order               | Sorting order of the attribute group. With this parameter, attribute groups will be arranged in the appropriate order on the product [detail view](../../../04.understanding-ui#detail-view) page                   |
+| Sort order               | Sorting order of the attribute group. With this parameter, attribute groups will be arranged in the appropriate order on the product [detail view](../../../04.understanding-ui/index.md#detail-view) page                   |
 | Description (multi-lang) | Description of the attribute group purpose   |
 
 If you want to make changes to the attribute group entity (e.g. add new fields, or modify attribute group views), please contact your administrator.
@@ -37,7 +37,7 @@ To open the list of attribute group records available in the system, click the `
 
 ![AP list view page](./_assets/ag-list-view.jpg){.large}
 
-By default, the following fields are displayed on the [list view](../../../04.understanding-ui#list-view) page for attribute group records:
+By default, the following fields are displayed on the [list view](../../../04.understanding-ui/index.md#list-view) page for attribute group records:
 - Group name
 - Code
 - Sort order
@@ -46,20 +46,20 @@ To change the attribute group records order in the list, click any sortable colu
 
 Attribute group records can be searched and filtered according to your needs. For details on the search and filtering options,  refer to the [**Search and Filtering**](../../../11.search-and-filtering/) article in this user guide.
 
-To view some attribute group record details, click the name field value of the corresponding record in the list of attribute groups; the [detail view](../../../04.understanding-ui#detail-view) page will open. Alternatively, use the `View` option from the single record actions menu to open the [quick detail](../../../04.understanding-ui#quick-detail-view-small-detail-view) pop-up.
+To view some attribute group record details, click the name field value of the corresponding record in the list of attribute groups; the [detail view](../../../04.understanding-ui/index.md#detail-view) page will open. Alternatively, use the `View` option from the single record actions menu to open the [quick detail](../../../04.understanding-ui/index.md#quick-detail-view-small-detail-view) pop-up.
 
 ### Mass Actions
 
 The following mass actions are available for attribute group records:
 - Remove
-- Mass update
+- Update
 - Export
 - Add relation
 - Remove relation
 
-![AG mass actions](./_assets/ag-mass-actions.jpg){.large}
+![AG mass actions](./_assets/attr-groups-mass-actions.png){.large}
 
-For details on these actions, please, see the [**Mass Actions**](../../../04.understanding-ui#mass-actions) section of the **Views and Panels** article in this user guide.
+For details on these actions, please, see the [**Mass Actions**](../../../04.understanding-ui/index.md#mass-actions) section of the **Views and Panels** article in this user guide.
 
 ### Single Record Actions
 
@@ -70,19 +70,19 @@ The following single record actions are available for attribute group records:
 
 ![AG single record actions](./_assets/ag-single-actions.jpg){.large}
 
-For details on these actions, please, refer to the [**Single Record Actions**](../../../04.understanding-ui#single-record-actions) section of the **Views and Panels** article in this user guide.
+For details on these actions, please, refer to the [**Single Record Actions**](../../../04.understanding-ui/index.md#single-record-actions) section of the **Views and Panels** article in this user guide.
 
 ## Editing
 
-To edit the attribute group, click the `Edit` button on the [detail view](../../../04.understanding-ui#detail-view) page of the currently open attribute group record; the following editing window will open:
+To edit the attribute group, click the `Edit` button on the [detail view](../../../04.understanding-ui/index.md#detail-view) page of the currently open attribute group record; the following editing window will open:
 
 ![AG editing](./_assets/ag-editing.jpg){.large}
 
 Here edit the desired fields and click the `Save` button to apply your changes.
 
-Besides, you can make changes in the attribute group record via [in-line editing](../../../04.understanding-ui#in-line-editing) on its detail view page.
+Besides, you can make changes in the attribute group record via [in-line editing](../../../08.record-management/index.md#in-line-editing) on its detail view page.
 
-Alternatively, make changes to the desired attribute group record in the [quick edit](../../../04.understanding-ui#quick-edit-view) pop-up that appears when you select the `Edit` option from the single record actions menu on the attribute groups list view page:
+Alternatively, make changes to the desired attribute group record in the [quick edit](../../../04.understanding-ui/index.md#quick-edit-view) pop-up that appears when you select the `Edit` option from the single record actions menu on the attribute groups list view page:
 
 ![Editing pop-up](./_assets/ag-editing-popup.jpg){.large}
 
@@ -104,7 +104,7 @@ Use the `Duplicate` option from the actions menu to go to the attribute group cr
 
 ## Working With Attributes Related to the Attribute Group
 
-Attributes that are linked to the attribute group record are displayed on its [detail view](../../../04.understanding-ui#detail-view) page on the `ATTRIBUTES` panel and include the following table columns:
+Attributes that are linked to the attribute group record are displayed on its [detail view](../../../04.understanding-ui/index.md#detail-view) page on the `ATTRIBUTES` panel and include the following table columns:
 - Attribute name
 - Code
 - Attribute type
@@ -135,4 +135,4 @@ On this panel, you can also define attribute records order within the given attr
 
 The changes are saved on the fly.
 
-To view the attribute record from the `ATTRIBUTES` panel, click its name in the attributes list. The [detail view](../../../04.understanding-ui#detail-view) page of the given attribute will open, where you can perform further actions according to your access rights, configured by the administrator.
+To view the attribute record from the `ATTRIBUTES` panel, click its name in the attributes list. The [detail view](../../../04.understanding-ui/index.md#detail-view) page of the given attribute will open, where you can perform further actions according to your access rights, configured by the administrator.
