@@ -294,7 +294,7 @@ class OpenApiGenerator
                 'valueId'          => ['type' => 'string', 'nullable' => true],
                 'valueIds'         => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
                 'valueNames'       => ['type' => 'object', 'nullable' => true],
-                'valueOptionsData' => ['type' => 'object', 'nullable' => true],
+                'valueOptionsData' => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'object']],
                 'valueOptionData'  => ['type' => 'object', 'nullable' => true],
                 'valuePathsData'   => ['type' => 'object', 'nullable' => true],
                 'valueUnitData'    => ['type' => 'object', 'nullable' => true],
