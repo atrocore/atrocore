@@ -72,7 +72,7 @@ Espo.define('acl-manager', ['acl', 'metadata'], function (Acl, Metadata) {
                 if (scope in this.implementationClassMap) {
                     implementationClass = this.implementationClassMap[scope];
                 }
-                var obj = new implementationClass(this.getUser(), scope);
+                var obj = new implementationClass(this.getUser(), scope, this);
                 this.implementationHash[scope] = obj;
             }
             return this.implementationHash[scope];
