@@ -32,9 +32,10 @@
 
 Espo.define('acl', [], function () {
 
-    var Acl = function (user, scope) {
+    var Acl = function (user, scope, aclManager) {
         this.user = user || null;
         this.scope = scope;
+        this.aclManager = aclManager || null;
     }
 
     _.extend(Acl.prototype, {
