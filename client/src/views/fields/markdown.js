@@ -79,7 +79,7 @@ Espo.define('views/fields/markdown', ['views/fields/base', 'lib!EasyMDE'], funct
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
-                operators: ['contains', 'not_contains', 'equal', 'not_equal', 'is_null', 'is_not_null'],
+                operators: ['contains', 'not_contains', 'begins_with', 'ends_with', 'equal', 'not_equal', 'is_null', 'is_not_null'],
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {

@@ -133,7 +133,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/base', 'lib!Summernote'], fun
         },
 
         createQueryBuilderFilter() {
-            let operators = ['contains', 'not_contains', 'equal', 'not_equal', 'is_null', 'is_not_null'];
+            let operators = ['contains', 'not_contains', 'begins_with', 'ends_with', 'equal', 'not_equal', 'is_null', 'is_not_null'];
             if (this.getConfig().get('fuzzySearchAvailable')) {
                 operators.push('similar', 'word_similar');
             }
