@@ -128,6 +128,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             let operators = [
                 'contains',
                 'not_contains',
+                'begins_with',
+                'ends_with',
                 'equal',
                 'not_equal',
                 'is_null',
