@@ -19,6 +19,12 @@
       ],
       [
         {
+          "name": "attribute"
+        },
+        false
+      ],
+      [
+        {
           "name": "operator"
         },
         false

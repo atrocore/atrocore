@@ -22,4 +22,6 @@ interface AttributeFieldTypeInterface
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void;
 
     public function getWherePart(IEntity $entity, array $attribute, array &$item): void;
+
+    public function getValueColumn(): string;
 }

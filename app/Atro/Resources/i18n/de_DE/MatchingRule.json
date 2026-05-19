@@ -4,7 +4,14 @@
     "weight": "Gewicht",
     "matchingRuleSet": "Satz",
     "matchingRules": "Übereinstimmungs-Regeln",
-    "operator": "Operator"
+    "operator": "Operator",
+    "attribute": "Attribut"
+  },
+  "groupOptions": {
+    "field": {
+      "fields": "Felder",
+      "attributes": "Attribute"
+    }
   },
   "options": {
     "type": {
@@ -22,6 +29,8 @@
     "notValidCode": "Der Code darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten.",
     "notValidMatchingActivation": "Die Übereinstimmungsregel kann nur für eine inaktive Übereinstimmung geändert werden.",
     "notValidMatching": "Die Übereinstimmung ist ungültig",
-    "notValidMatchingRuleSet": "Der übereinstimmende Regelsatz ist ungültig"
+    "notValidMatchingRuleSet": "Der übereinstimmende Regelsatz ist ungültig",
+    "notValidFieldType": "Der Feldtyp wird vom ausgewählten Regeltyp nicht unterstützt.",
+    "notValidAttributeType": "Der Attributtyp wird vom ausgewählten Regeltyp nicht unterstützt."
   }
 }

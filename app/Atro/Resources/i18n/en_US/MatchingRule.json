@@ -4,7 +4,14 @@
     "weight": "Weight",
     "matchingRuleSet": "Set",
     "matchingRules": "Matching Rules",
-    "operator": "Operator"
+    "operator": "Operator",
+    "attribute": "Attribute"
+  },
+  "groupOptions": {
+    "field": {
+      "fields": "Fields",
+      "attributes": "Attributes"
+    }
   },
   "options": {
     "type": {
@@ -22,6 +29,8 @@
     "notValidCode": "Code must contain only letters, numbers, underscores and dashes.",
     "notValidMatchingActivation": "The Matching Rule can only be changed for an inactive Matching.",
     "notValidMatching": "Matching is invalid",
-    "notValidMatchingRuleSet": "Matching Rule Set is invalid"
+    "notValidMatchingRuleSet": "Matching Rule Set is invalid",
+    "notValidFieldType": "Field type is not supported by the selected rule type.",
+    "notValidAttributeType": "Attribute type is not supported by the selected rule type."
   }
 }

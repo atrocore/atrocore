@@ -26,6 +26,11 @@ class IntType extends AbstractFieldType
 
     protected Connection $conn;
 
+    public function getValueColumn(): string
+    {
+        return "{$this->type}_value";
+    }
+
     public function __construct(Container $container)
     {
         parent::__construct($container);

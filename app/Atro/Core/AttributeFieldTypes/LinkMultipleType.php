@@ -19,6 +19,7 @@ use Espo\ORM\IEntity;
 
 class LinkMultipleType extends AbstractFieldType
 {
+    protected string $column = 'json_value';
     private array $cachedCollection = [];
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void

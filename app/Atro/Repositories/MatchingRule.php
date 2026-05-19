@@ -17,6 +17,7 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Metadata;
 use Atro\Entities\Matching as MatchingEntity;
 use Atro\Entities\MatchingRule as MatchingRuleEntity;
 use Espo\ORM\Entity as OrmEntity;
@@ -44,6 +45,7 @@ class MatchingRule extends Base
         }
 
         $this->validateIsMatchingActive($entity);
+        $this->validateFieldType($entity);
 
         parent::beforeSave($entity, $options);
     }
@@ -78,12 +80,57 @@ class MatchingRule extends Base
         return $this->getInjection('matchingManager')->createMatchingType($rule);
     }
 
+    protected function validateFieldType(MatchingRuleEntity $entity): void
+    {
+        $type = $entity->get('type');
+        if (empty($type) || $type === 'set') {
+            return;
+        }
+
+        $className = $this->getInjection('metadata')->get(['app', 'matchingRuleTypes', $type, 'className']);
+        if (!$className || !class_exists($className)) {
+            return;
+        }
+
+        /** @var AbstractMatchingRule $className */
+        $supportedTypes = $className::getSupportedFieldTypes();
+
+        if (!empty($entity->get('attributeId'))) {
+            $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+            if ($attribute && !in_array($attribute->get('type'), $supportedTypes)) {
+                throw new BadRequest($this->getInjection('language')->translate('notValidAttributeType', 'exceptions', 'MatchingRule'));
+            }
+            return;
+        }
+
+        $field = $entity->get('field');
+        if (empty($field)) {
+            return;
+        }
+
+        $matching = $this->getMatching($entity);
+        if (empty($matching)) {
+            return;
+        }
+
+        $entityName = $matching->get('masterEntity');
+        $fieldType  = $this->getInjection('metadata')->get(['entityDefs', $entityName, 'fields', $field, 'type']);
+        if (empty($fieldType)) {
+            return;
+        }
+
+        if (!in_array($fieldType, $supportedTypes)) {
+            throw new BadRequest($this->getInjection('language')->translate('notValidFieldType', 'exceptions', 'MatchingRule'));
+        }
+    }
+
     protected function init()
     {
         parent::init();
 
         $this->addDependency('matchingManager');
         $this->addDependency('language');
+        $this->addDependency('metadata');
     }
 
     /**

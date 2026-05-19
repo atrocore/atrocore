@@ -79,6 +79,17 @@ class Attribute extends Base
         ];
     }
 
+    protected function boolFilterOnlyAttributeTypes(array &$result): void
+    {
+        $types = $this->getBoolFilterParameter('onlyAttributeTypes');
+
+        if (!empty($types)) {
+            $result['whereClause'][] = [
+                'type=' => $types
+            ];
+        }
+    }
+
     protected function boolFilterOnlyCompositeAttributes(array &$result): void
     {
         $attributeId = (string)$this->getBoolFilterParameter('onlyCompositeAttributes');

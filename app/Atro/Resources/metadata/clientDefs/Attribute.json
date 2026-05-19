@@ -10,6 +10,7 @@
     "onlyCompositeAttributes",
     "notLinkedWithCurrent",
     "onlyForEntity",
+    "onlyAttributeTypes",
     "onlyForAttributePanel",
     "notForbiddenForEditFields",
     "onlyEditableAttributes"
@@ -21,6 +22,7 @@
     "onlyCompositeAttributes",
     "notLinkedWithCurrent",
     "onlyForEntity",
+    "onlyAttributeTypes",
     "onlyForAttributePanel",
     "notForbiddenForEditFields",
     "onlyEditableAttributes"

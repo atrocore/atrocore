@@ -24,6 +24,8 @@ use Espo\ORM\IEntity;
 
 abstract class AbstractFieldType implements AttributeFieldTypeInterface
 {
+    protected string $column = 'varchar_value';
+
     protected Config $config;
     protected User $user;
     protected EntityManager $em;
@@ -130,6 +132,11 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
                 ]
             ];
         }
+    }
+
+    public function getValueColumn(): string
+    {
+        return $this->column;
     }
 
     public function afterSelect(IEntity $entity, string $name, array $dataArr): void
