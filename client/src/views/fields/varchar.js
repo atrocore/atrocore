@@ -89,7 +89,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         applyDefaultValue() {
             let defaultValue
             if (this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultValueType']) === 'script') {
-                defaultValue = this.model.defaults[this.name]
+                defaultValue = this.model.defaults != null ? this.model.defaults[this.name] : null
             } else {
                 defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default'])
             }
@@ -217,15 +217,20 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     return
                 }
 
-                if (this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultValueType']) === 'script'
-                    && this.model.defaults[this.name] == null) {
+                if (
+                    this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultValueType']) === 'script'
+                    && (this.model.defaults == null || this.model.defaults[this.name] == null)
+                ) {
                     // fetch default value from server
-                    this.model.defaults = $.ajax({
+                    const seedResult = $.ajax({
                         url: this.model.name + '/action/Seed?silent=true',
                         type: 'GET',
                         dataType: 'json',
                         async: false,
                     }).responseJSON
+                    if (seedResult != null) {
+                        this.model.defaults = seedResult
+                    }
                 }
             }
         },
