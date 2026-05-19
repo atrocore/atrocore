@@ -53,15 +53,6 @@ class ExtensibleEnumOption extends Base
         }
     }
 
-    protected function boolFilterNotDisabledOptions(array &$result): void
-    {
-        $ids = $this->getBoolFilterParameter('notDisabledOptions');
-
-        if (!empty($ids)) {
-            $result['whereClause'][] = ['id!=' => $ids];
-        }
-    }
-
     private function applyOnlyForExtensibleEnum(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper, string $enumId): void
     {
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();

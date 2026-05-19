@@ -70,7 +70,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         selectBoolFilterList: [],
 
-        boolFilterData: {},
+        boolFilterData: {
+            notDisabledOptions() {
+                return this.getDisableOptionsViaConditions();
+            }
+        },
 
         noCreateScopeList: ['User', 'Team', 'Role'],
 
@@ -297,6 +301,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.sortable = this.sortable || this.params.sortable;
 
             this.iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
+
+            if (this.getDisableOptionsRules() && !this.selectBoolFilterList.includes('notDisabledOptions')) {
+                this.selectBoolFilterList.push('notDisabledOptions');
+            }
 
             this.addActionHandler('selectLink', function () {
                 self.notify('Loading...');

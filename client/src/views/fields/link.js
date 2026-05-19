@@ -64,7 +64,11 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
 
         selectBoolFilterList: [],
 
-        boolFilterData: {},
+        boolFilterData: {
+            notDisabledOptions() {
+                return this.getDisableOptionsViaConditions();
+            }
+        },
 
         sortBy: null,
 
@@ -263,6 +267,10 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 ) {
                     this.createDisabled = true;
                 }
+            }
+
+            if (this.getDisableOptionsRules() && !this.selectBoolFilterList.includes('notDisabledOptions')) {
+                this.selectBoolFilterList.push('notDisabledOptions');
             }
 
             this.addActionHandler('selectLink', function () {

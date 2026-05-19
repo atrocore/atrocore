@@ -136,6 +136,35 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                         this.optionsDefsList[num].options = model.get('options') || [];
                     });
                 });
+            } else if (['link', 'linkMultiple'].includes(this.model.get(this.typeField))) {
+                const foreignScope = this.model.get('foreignEntityId');
+                const ids = model.get('options') || [];
+
+                model.set('optionsIds', ids);
+
+                if (ids.length > 0) {
+                    const requestData = { where: [{ type: 'in', attribute: 'id', value: ids }] };
+                    this.ajaxGetRequest(foreignScope, requestData, { async: false }).success(res => {
+                        let optionsNames = {};
+                        (res.list || []).forEach(item => { optionsNames[item.id] = item.name; });
+                        model.set('optionsNames', optionsNames);
+                    });
+                }
+
+                this.createView(key, 'views/fields/link-multiple', {
+                    el: this.getSelector() + ' .options-container[data-key="' + key + '"]',
+                    model: model,
+                    name: 'options',
+                    mode: this.mode,
+                    foreignScope: foreignScope,
+                    whereAdditional: this.model.get('data')?.where || undefined,
+                    inlineEditDisabled: this.options.inlineEditDisabled,
+                }, view => {
+                    if (this.isRendered()) view.render();
+                    this.listenTo(view, 'change', () => {
+                        this.optionsDefsList[num].options = model.get('optionsIds') || [];
+                    });
+                });
             } else {
                 this.createView(key, 'views/fields/multi-enum', {
                     el: this.getSelector() + ' .options-container[data-key="' + key + '"]',

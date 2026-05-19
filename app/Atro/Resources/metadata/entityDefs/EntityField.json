@@ -1062,7 +1062,9 @@
                 "enum",
                 "multiEnum",
                 "extensibleEnum",
-                "extensibleMultiEnum"
+                "extensibleMultiEnum",
+                "link",
+                "linkMultiple"
               ]
             }
           ]
