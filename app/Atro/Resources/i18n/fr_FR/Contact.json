@@ -14,5 +14,12 @@
     "box": "Boîte",
     "city": "Ville",
     "accounts": "Comptes"
+  },
+  "options": {
+    "gender": {
+      "Male": "Homme",
+      "Female": "Femme",
+      "Neutral": "Neutre"
+    }
   }
 }

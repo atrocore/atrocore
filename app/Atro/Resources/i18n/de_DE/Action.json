@@ -74,6 +74,10 @@
     "mode": {
       "basic": "Grundlegend",
       "script": "Skript"
+    },
+    "updateType": {
+      "basic": "Grundlegend",
+      "script": "Skript"
     }
   },
   "tooltips": {

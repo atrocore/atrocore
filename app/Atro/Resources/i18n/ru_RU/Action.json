@@ -74,6 +74,10 @@
     "mode": {
       "basic": "Basic",
       "script": "Скрипт"
+    },
+    "updateType": {
+      "basic": "Basic",
+      "script": "Скрипт"
     }
   },
   "tooltips": {

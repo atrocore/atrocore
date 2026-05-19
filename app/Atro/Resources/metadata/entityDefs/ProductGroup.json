@@ -34,9 +34,8 @@
       "index": true
     },
     "itemType": {
-      "type": "extensibleEnum",
-      "dropdown": true,
-      "extensibleEnumId": "product_group_item_type"
+      "type": "enum",
+      "options": ["physical_goods", "services", "digital_products", "legal_rights"]
     },
     "products": {
       "type": "linkMultiple",

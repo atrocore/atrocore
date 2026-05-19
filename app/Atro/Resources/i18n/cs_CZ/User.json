@@ -93,7 +93,6 @@
   },
   "options": {
     "gender": {
-      "": "Není nastaveno",
       "Male": "Muž",
       "Female": "Žena",
       "Neutral": "Neutrální"

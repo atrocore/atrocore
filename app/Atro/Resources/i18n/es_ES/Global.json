@@ -789,7 +789,6 @@
     "updatedCountFilterActionExecution": "Actualizado por Ejecución de la acción",
     "createdCountFilterActionExecution": "Creado por Ejecución de acciones",
     "field": "Campo",
-    "derivativeStatus": "Estado derivado",
     "sourceRecord": "Fuente Registro",
     "stagingRecords": "Registros de puesta en escena",
     "masterRecord": "Registro maestro"

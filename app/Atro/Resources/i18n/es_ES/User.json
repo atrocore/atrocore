@@ -93,7 +93,6 @@
   },
   "options": {
     "gender": {
-      "": "No definido",
       "Male": "Masculino",
       "Female": "Femenino",
       "Neutral": "Neutral"

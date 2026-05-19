@@ -14,5 +14,12 @@
     "box": "Box",
     "city": "Ciudad",
     "accounts": "Cuentas"
+  },
+  "options": {
+    "gender": {
+      "Male": "Masculino",
+      "Female": "Femenino",
+      "Neutral": "Neutral"
+    }
   }
 }

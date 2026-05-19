@@ -67,6 +67,10 @@
       "customCode": "Custom Code",
       "email": "Send E-mail"
     },
+    "updateType": {
+      "basic": "Basic",
+      "script": "Script"
+    },
     "executeAs": {
       "system": "System",
       "sameUser": "Same User"

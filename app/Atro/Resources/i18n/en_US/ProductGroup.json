@@ -3,5 +3,13 @@
     "code": "Code",
     "itemType": "Item Type",
     "products": "Products"
+  },
+  "options": {
+    "itemType": {
+      "physical_goods": "Physical goods",
+      "services": "Services",
+      "digital_products": "Digital products",
+      "legal_rights": "Legal rights"
+    }
   }
 }

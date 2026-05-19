@@ -14,5 +14,12 @@
     "box": "Box",
     "city": "Město",
     "accounts": "Účty"
+  },
+  "options": {
+    "gender": {
+      "Male": "Muž",
+      "Female": "Žena",
+      "Neutral": "Neutrální"
+    }
   }
 }
