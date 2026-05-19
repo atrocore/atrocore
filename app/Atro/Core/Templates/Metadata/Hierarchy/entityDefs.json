@@ -41,19 +41,7 @@
     },
     "sortOrder": {
       "type": "int",
-      "default": null,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isRoot"
-            }
-          ]
-        }
-      }
+      "default": null
     }
   },
   "links": {

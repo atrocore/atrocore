@@ -512,8 +512,8 @@ class Hierarchy extends Base
             $secondarySortBy = Util::toUnderScore(!empty($secondarySortBy) ? $secondarySortBy : 'name');
             $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
 
-            $sortOrder = $selectParams['order'] ?? (!empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC');
-            $withDeleted = !empty($selectParams['withDeleted']) && $selectParams['withDeleted'] === true;
+            $sortOrder = $sp['order'] ?? (!empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC');
+            $withDeleted = !empty($sp['withDeleted']) && $sp['withDeleted'] === true;
 
             $qb->addSelect('h.hierarchy_sort_order');
             $qb->leftJoin($mtAlias, $quotedHierarchyTableName, 'h', "h.entity_id = $mtAlias.id")
@@ -715,6 +715,26 @@ class Hierarchy extends Base
 
         if ($entity->get('sortOrder') === null) {
             $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
+        }
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        if (
+            !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'multiParents'], false)
+            && $entity->isAttributeChanged('sortOrder')
+            && $entity->get('sortOrder') !== null
+        ) {
+            $this->getDbal()->createQueryBuilder()
+                ->update($this->hierarchyTableName)
+                ->set('hierarchy_sort_order', ':sortOrder')
+                ->where('entity_id = :entityId AND deleted = :false')
+                ->setParameter('sortOrder', $entity->get('sortOrder'))
+                ->setParameter('entityId', $entity->get('id'))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->executeQuery();
         }
     }
 

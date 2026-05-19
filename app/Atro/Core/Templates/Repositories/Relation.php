@@ -294,6 +294,18 @@ class Relation extends Base
                     ->setParameter('entityId', $entity->get('entityId'))
                     ->setParameter('parentId', $entity->get('parentId'))
                     ->executeQuery();
+
+                if ($entity->isAttributeChanged('hierarchySortOrder') && $entity->get('hierarchySortOrder') !== null) {
+                    $hierarchicalEntity = $this->getHierarchicalEntity();
+                    $entityTableName = $this->getEntityManager()->getMapper()->toDb($hierarchicalEntity);
+                    $this->getDbal()->createQueryBuilder()
+                        ->update($entityTableName)
+                        ->set('sort_order', ':sortOrder')
+                        ->where('id = :id')
+                        ->setParameter('sortOrder', $entity->get('hierarchySortOrder'))
+                        ->setParameter('id', $entity->get('entityId'))
+                        ->executeQuery();
+                }
             }
 
             // rebuild routes
