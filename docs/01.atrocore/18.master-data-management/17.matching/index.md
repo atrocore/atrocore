@@ -61,10 +61,11 @@ The following parameters are available when defining a Matching Rule:
 - Weight – numerical value defining the rule’s importance in the overall similarity score.
 - Staging Entity (Unidirectional only) – entity from which external or temporary data originates. Inherited from parent Matching. Immutable.
 - Master Entity (Unidirectional only) – primary entity containing the reference data. Inherited from parent Matching. Immutable.
-- Source Field – field from the selected entity being evaluated.
+- Source Field – field (or attribute) from the selected entity being evaluated.
   - For Bidirectional, this refers to the field used to compare values between two records within the same entity.
   - For Unidirectional, this refers to the field in the Staging Entity.
-- Target Field – field against which the source is compared.
+  - For entities that support [attributes](../../03.administration/12.attribute-management/index.md) (e.g., Product, Listing), an attribute can be selected instead of a regular field by choosing **[Add Attribute]** from the field dropdown. Only attribute types compatible with the selected rule type are shown. If the attribute value is absent in either compared record, the rule contributes a score of `0` for that pair.
+- Target Field – field (or attribute) against which the source is compared.
   - For Bidirectional, this may be the same as Source Field.
   - For Unidirectional, this refers to the field in the Master Entity.
 
