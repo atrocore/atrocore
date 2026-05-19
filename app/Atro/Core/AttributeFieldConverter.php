@@ -334,12 +334,14 @@ class AttributeFieldConverter
             }
         }
 
+        $entityName = $this->metadata->get("scopes.{$entity->getEntityName()}.primaryEntityId") ?? $entity->getEntityName();
+
         $attributesToAdd = [];
         if (empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
             $values = $entity->_originalInput->__attributes ?? [];
             if (!empty($values)) {
                 $attributesToAdd = $this->container->get('entityManager')->getRepository('Attribute')
-                    ->getAttributeIdsByIdOrCode($entity->getEntityName(), $values);
+                    ->getAttributeIdsByIdOrCode($entityName, $values);
             }
         }
 
@@ -348,7 +350,7 @@ class AttributeFieldConverter
             $attributesIds = $attributesToAdd;
 
             foreach ($entity->_originalInput as $field => $value) {
-                $attributeId = $this->metadata->get("entityDefs.{$entity->getEntityName()}.fields.{$field}.attributeId");
+                $attributeId = $this->metadata->get("entityDefs.{$entityName}.fields.{$field}.attributeId");
                 if ($attributeId) {
                     $attributesIds[] = $attributeId;
                 }
@@ -396,8 +398,6 @@ class AttributeFieldConverter
 
         $attributesDefs = [];
 
-        $isDerivative = !empty($this->metadata->get("scopes.{$entity->getEntityName()}.primaryEntityId"));
-
         foreach ($res as $row) {
             // set null if attribute-panel does not exist
             if (!empty($row['attribute_panel_id']) && !in_array($row['attribute_panel_id'], $attributePanelsIds)) {
@@ -405,7 +405,7 @@ class AttributeFieldConverter
             }
 
             // remove required property for derivatives
-            if ($isDerivative) {
+            if ($entityName !== $entity->getEntityName()) {
                 if (!empty($row['is_required'])) {
                     $row['is_required'] = false;
                 }
