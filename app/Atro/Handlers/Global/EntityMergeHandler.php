@@ -28,9 +28,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         'POST',
     ],
     summary: 'Merge multiple entity records',
-    description: 'Merges two or more records of the same entity type into a single target record.
+    description: 'Merges two or more records of the same entity name into a single target record.
 
-The merge logic is entity-specific — each entity type may implement its own `merge()` service method with custom field resolution, relation re-linking, and cleanup. The `attributes` object defines the final field values for the resulting record.
+The merge logic is entity-specific — each entity name may implement its own `merge()` service method with custom field resolution, relation re-linking, and cleanup. The `attributes` object defines the final field values for the resulting record.
 
 If `targetId` is provided, the existing record with that ID becomes the merge target and surviving record. If omitted, a new record is created from the merged data.',
     tag: 'Global',
@@ -83,7 +83,7 @@ If `targetId` is provided, the existing record with that ID becomes the merge ta
             'description' => 'Missing or invalid required fields',
         ],
         403 => [
-            'description' => 'No create access for the given entity type',
+            'description' => 'No create access for the given entity name, or no edit access for the target record, or no delete access for the source records.',
         ],
     ],
 )]
@@ -95,10 +95,6 @@ class EntityMergeHandler extends AbstractHandler
 
         if (empty($data->entityName) || empty($data->sourceIds) || !is_array($data->sourceIds) || !($data->attributes instanceof \stdClass)) {
             throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($data->entityName, 'create')) {
-            throw new Forbidden();
         }
 
         $this->getServiceFactory()->create($data->entityName)->merge(
