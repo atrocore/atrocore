@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -506,6 +507,10 @@ class Record extends RecordService
             if (!$source) {
                 throw new BadRequest("Record with ID '{$sourceId}' not found.");
             }
+            if (empty($keepSources) && !$this->getAcl()->check($source, 'delete')) {
+                throw new Forbidden("You don't have permission to delete source record.");
+            }
+
             $sourceList[] = $source;
         }
 
@@ -558,7 +563,7 @@ class Record extends RecordService
                 foreach ($linkedList as $linked) {
                     try {
                         $repository->relate($entity, $link, $linked);
-                    } catch (UniqueConstraintViolationException $e) {
+                    } catch (UniqueConstraintViolationException|NotUnique $e) {
                     }
                 }
             }

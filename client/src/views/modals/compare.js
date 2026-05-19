@@ -89,7 +89,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             this.buttonList = [];
 
-            if (this.getAcl().check(this.scope, 'create')) {
+            if (this.canMerge()) {
                 this.buttonList.push({
                     name: 'merge',
                     style: 'primary',
@@ -139,7 +139,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 }
             });
 
-            if (this.getAcl().check(this.scope, 'create') && !this.getMetadata().get(`scopes.${this.scope}.mergeDisabled`)) {
+            if (this.canMerge()) {
                 this.buttonList.push({
                     name: 'switchToCompare',
                     style: this.options.merging ? '' : 'primary',
@@ -163,6 +163,36 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 });
             }
 
+        },
+
+        canMerge: function () {
+            if (!!this.getMetadata().get(`scopes.${this.scope}.mergeDisabled`)) {
+                return false
+            }
+
+            if (this.versionComparison || this.derivativeComparison) {
+                if (!this.getAcl().check(this.getModels()[0], 'edit')) {
+                    return false
+                }
+
+                if (this.derivativeComparison) {
+                    return this.getAcl().check(this.getModels()[1], 'delete')
+                }
+
+                return true
+            }
+
+            if (!this.getAcl().check(this.scope, 'create')) {
+                return false
+            }
+
+            for (let model of this.getModels()) {
+                if (!this.getAcl().check(model, 'delete')) {
+                    return false
+                }
+            }
+
+            return true
         },
 
         getComparisonScope: function () {
@@ -191,7 +221,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             if (this.instanceComparison) {
                 this.getModelFactory().create(this.scope, scopeModel => {
-                    this.ajaxGetRequest('remoteAtroCore', {entityName: this.scope, id: this.model.id}).success(attrs => {
+                    this.ajaxGetRequest('remoteAtroCore', {
+                        entityName: this.scope,
+                        id: this.model.id
+                    }).success(attrs => {
                         options.distantModels = [];
                         for (const index in attrs) {
                             let attr = attrs[index];
