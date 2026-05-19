@@ -193,7 +193,7 @@
     "matchingRuleSet": {
       "type": "belongsTo",
       "foreign": "matchingRules",
-      "entity": "Matching"
+      "entity": "MatchingRule"
     },
     "matchingRules": {
       "type": "hasMany",
