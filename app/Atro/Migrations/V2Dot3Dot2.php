@@ -31,5 +31,15 @@ class V2Dot3Dot2 extends Base
                 ->setParameter('old', $old)
                 ->executeQuery();
         }
+
+        $this->exec("ALTER TABLE matching_rule ADD attribute_id VARCHAR(36) DEFAULT NULL");
+    }
+
+    protected function exec(string $sql): void
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+        }
     }
 }

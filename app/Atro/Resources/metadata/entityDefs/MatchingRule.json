@@ -93,6 +93,26 @@
         }
       }
     },
+    "attribute": {
+      "type": "link",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      }
+    },
     "field": {
       "type": "enum",
       "view": "views/matching-rule/fields/entity-field",
@@ -185,6 +205,11 @@
     }
   },
   "links": {
+    "attribute": {
+      "type": "belongsTo",
+      "entity": "Attribute",
+      "layoutRelationshipsDisabled": true
+    },
     "matching": {
       "type": "belongsTo",
       "foreign": "matchingRules",

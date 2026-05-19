@@ -23,6 +23,7 @@ use Espo\ORM\IEntity;
 
 class LinkType extends AbstractFieldType
 {
+    protected string $column = 'reference_value';
     protected Connection $conn;
 
     public function __construct(Container $container)

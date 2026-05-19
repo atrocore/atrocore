@@ -18,6 +18,8 @@ use Espo\ORM\IEntity;
 
 class ExtensibleMultiEnumType extends AbstractFieldType
 {
+    protected string $column = 'json_value';
+
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);

@@ -18,7 +18,7 @@ use Espo\ORM\Entity;
 
 class MatchingRule extends Base
 {
-    protected $mandatorySelectAttributeList = ['matchingId', 'matchingRuleSetId'];
+    protected $mandatorySelectAttributeList = ['matchingId', 'matchingRuleSetId', 'attributeId'];
 
     public function prepareEntityForOutput(Entity $entity)
     {

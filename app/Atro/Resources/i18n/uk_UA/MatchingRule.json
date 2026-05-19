@@ -4,7 +4,14 @@
     "weight": "Вага",
     "matchingRuleSet": "Набір",
     "matchingRules": "Правила збігу",
-    "operator": "Оператор"
+    "operator": "Оператор",
+    "attribute": "Атрибут"
+  },
+  "groupOptions": {
+    "field": {
+      "fields": "Поля",
+      "attributes": "Атрибути"
+    }
   },
   "options": {
     "type": {

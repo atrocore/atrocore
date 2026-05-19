@@ -4,7 +4,14 @@
     "weight": "Gewicht",
     "matchingRuleSet": "Satz",
     "matchingRules": "Übereinstimmungs-Regeln",
-    "operator": "Operator"
+    "operator": "Operator",
+    "attribute": "Attribut"
+  },
+  "groupOptions": {
+    "field": {
+      "fields": "Felder",
+      "attributes": "Attribute"
+    }
   },
   "options": {
     "type": {

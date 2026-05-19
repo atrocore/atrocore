@@ -4,7 +4,14 @@
     "weight": "Вес",
     "matchingRuleSet": "Набор",
     "matchingRules": "Правила подбора",
-    "operator": "Оператор"
+    "operator": "Оператор",
+    "attribute": "Атрибут"
+  },
+  "groupOptions": {
+    "field": {
+      "fields": "Поля",
+      "attributes": "Атрибуты"
+    }
   },
   "options": {
     "type": {

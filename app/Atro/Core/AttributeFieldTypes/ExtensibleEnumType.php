@@ -18,6 +18,8 @@ use Espo\ORM\IEntity;
 
 class ExtensibleEnumType extends AbstractFieldType
 {
+    protected string $column = 'reference_value';
+
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);

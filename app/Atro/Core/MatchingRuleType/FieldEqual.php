@@ -49,6 +49,10 @@ class FieldEqual extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
 
+        if (!empty($this->rule->get('attributeId'))) {
+            return $this->buildAttributeEqualSubquery($qb, $alias, $stageEntity);
+        }
+
         $fieldName = $this->rule->get('field');
 
         $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$fieldName}.type");
@@ -78,6 +82,19 @@ class FieldEqual extends AbstractMatchingRule
 
     public function match(Entity $stageEntity, array $masterEntityData): float
     {
+        if (!empty($this->rule->get('attributeId'))) {
+            $attributeId = $this->rule->get('attributeId');
+            $entityName  = $stageEntity->getEntityName();
+            $stageValue  = $this->loadAttributeRawValue($entityName, $stageEntity->id, $attributeId);
+            $masterValue = $this->loadAttributeRawValue($entityName, $masterEntityData['id'], $attributeId);
+
+            if ($stageValue === false || $masterValue === false) {
+                return 0.0;
+            }
+
+            return $stageValue === $masterValue ? $this->getWeight() : 0.0;
+        }
+
         $fieldName = $this->rule->get('field');
 
         $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$fieldName}.type");
@@ -98,5 +115,46 @@ class FieldEqual extends AbstractMatchingRule
         }
 
         return 0.0;
+    }
+
+    private function buildAttributeEqualSubquery(QueryBuilder $qb, string $alias, Entity $stageEntity): string
+    {
+        $attributeId = $this->rule->get('attributeId');
+        $entityName  = $stageEntity->getEntityName();
+        $tableName   = Util::toUnderScore(lcfirst($entityName));
+
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $attributeId);
+        if (!$attribute) {
+            return '1=0';
+        }
+
+        $col   = $this->getAttributeValueColumn($attribute->get('type'));
+        $value = $this->loadAttributeRawValue($entityName, $stageEntity->id, $attributeId);
+
+        if ($value === false) {
+            return '1=0';
+        }
+
+        $subAlias  = 'av_' . IdGenerator::unsortableId();
+        $attrParam = IdGenerator::unsortableId();
+
+        $qb->setParameter($attrParam, $attributeId);
+
+        $baseCondition = "{$subAlias}.{$tableName}_id = {$alias}.id"
+            . " AND {$subAlias}.attribute_id = :{$attrParam}"
+            . " AND {$subAlias}.deleted = :false";
+
+        if ($value === null) {
+            return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
+                . " WHERE {$baseCondition}"
+                . " AND {$subAlias}.{$col} IS NULL)";
+        }
+
+        $valParam = IdGenerator::unsortableId();
+        $qb->setParameter($valParam, $value, Mapper::getParameterType($value));
+
+        return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
+            . " WHERE {$baseCondition}"
+            . " AND {$subAlias}.{$col} = :{$valParam})";
     }
 }

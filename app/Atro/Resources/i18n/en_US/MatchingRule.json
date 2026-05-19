@@ -4,7 +4,14 @@
     "weight": "Weight",
     "matchingRuleSet": "Set",
     "matchingRules": "Matching Rules",
-    "operator": "Operator"
+    "operator": "Operator",
+    "attribute": "Attribute"
+  },
+  "groupOptions": {
+    "field": {
+      "fields": "Fields",
+      "attributes": "Attributes"
+    }
   },
   "options": {
     "type": {
