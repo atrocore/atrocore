@@ -48,7 +48,7 @@ class V2Dot3Dot2 extends Base
         'team_position'           => [[],                                                                                                                             ['TeamUser' => 'role']],
         'update_type'             => [['basic', 'script'],                                                                                                            ['Action' => 'updateType']],
         'content_items'           => [['highlight', 'top_features_list', 'story'],                                                                                    ['ContentItem' => 'type']],
-        'listing_status'          => [[],                                                                                                                             ['Listing' => 'status']],
+        'listing_status'          => [['listing_draft', 'listing_prepared', 'buyable', 'discoverable', 'listing_error'],                                             ['Listing' => 'status']],
         'pdfTemplateType'         => [['pdfTemplateHtml', 'pdfTemplateODT', 'pdfTemplateCatalog'],                                                                    ['PdfFeed' => 'type']],
         'budget_item_status'      => [[],                                                                                                                             ['BudgetItem' => 'status']],
         // sales
@@ -56,7 +56,7 @@ class V2Dot3Dot2 extends Base
         'billingStatus'           => [['openBillingStatus', 'inProgressBS', 'cancelledBS', 'partlyBilledBS', 'billedBS'],                                             ['Sale' => 'billingStatus']],
         'shippingStatus'          => [['openShippingStatus', 'cancelledShippingStatus', 'returnedShippingStatus', 'shippedShippingStatus'],                           ['Sale' => 'shippingStatus']],
         'shippingMethod'          => [[],                                                                                                                             ['Sale' => 'shippingMethod']],
-        'documentType'            => [['documentTypeSection', 'documentTypeGroup', 'documentTypeItem', 'documentTypeNote', 'documentTypeSubtotal'],                   ['SaleItem' => 'type', 'QuotationItem' => 'type', 'SubscriptionItem' => 'type']],
+        'documentType'            => [['documentTypeSection', 'documentTypeGroup', 'documentTypeItem', 'documentTypeNote', 'documentTypeSubtotal'],                   ['SaleItem' => 'type', 'QuotationItem' => 'type', 'SubscriptionItem' => 'type', 'InvoiceItem' => 'type', 'DebitNoteItem' => 'type', 'CreditNoteItem' => 'type']],
         'saleItemStatus'          => [['newSIS', 'approvedSIS', 'inProgressSIS', 'fulfilledSIS', 'invoicedSIS', 'cancelledSIS'],                                      ['SaleItem' => 'status']],
         'saleReturnStatus'        => [['newSaleReturnStatus', 'dispatchedSRS', 'returnedSRS'],                                                                        ['SaleReturn' => 'status']],
         'quotationStatus'         => [['newQuotationStatus', 'approvedQuotationStatus', 'negotiatingQS', 'acceptedQS', 'rejectedQS', 'cancelledQuotationStatus'],     ['Quotation' => 'status']],
@@ -65,9 +65,21 @@ class V2Dot3Dot2 extends Base
         'recurringPeriod'         => [['days', 'weeks', 'months', 'years'],                                                                                           ['Subscription' => 'recurringPeriod', 'RecurringPrice' => 'recurringPeriod']],
         'paymentSchedule'         => [['advancedPSchedule', 'deferredPSchedule'],                                                                                     ['Subscription' => 'paymentSchedule']],
         'subscriptionStatus'      => [['newSubscriptionStatus', 'activeSS', 'cancelledSS', 'pausedSS'],                                                               ['Subscription' => 'status']],
+        // accounting
+        'invoiceType'             => [['standardInvoiceType', 'correctionInvoiceType', 'proformaInvoiceType'],                                                         ['Invoice' => 'type']],
+        'debitNoteType'           => [['standardDebitNoteType', 'correctionDNT', 'priceIncreaseDNT', 'commissionDNT'],                                                 ['DebitNote' => 'type']],
+        'creditNoteType'          => [['standardCNT', 'priceReductionCNT', 'correctionCNT', 'commissionCNT'],                                                          ['CreditNote' => 'type']],
+        'invoiceStatus'           => [['draftInvoiceStatus', 'readyInvoiceStatus', 'sentInvoiceStatus', 'paidInvoiceStatus', 'canceledInvoiceStatus', 'unpaidInvoiceStatus'], ['Invoice' => 'status', 'DebitNote' => 'status', 'CreditNote' => 'status']],
         // inventory
         'locationType'            => [['warehouseID', 'areaId', 'positionId'],                                                                                        ['Location' => 'type']],
         'deliveryStatus'          => [['newDeliveryStatus', 'dispatchedDeliveryStatus', 'shippedDeliveryStatus'],                                                      ['Delivery' => 'status']],
+        // activities
+        'task_status'             => [['task_status_new', 'task_status_in_progress', 'task_status_done', 'task_status_cancelled'],                                     ['Task' => 'status']],
+        'task_priority'           => [['task_priority_normal', 'task_priority_low', 'task_priority_high'],                                                             ['Task' => 'priority']],
+        // components
+        'componentStatus'         => [['component_draft', 'component_draft_warning', 'component_prepared', 'component_accepted', 'component_rejected', 'component_approved', 'component_error'], ['Component' => 'status']],
+        // amazon-adapter
+        'componentChannelStatus'  => [['component_draft', 'component_accepted', 'component_rejected', 'component_approved'],                                          ['ComponentChannel' => 'status']],
     ];
 
     private function migrateOptionsToMetadata(): void
