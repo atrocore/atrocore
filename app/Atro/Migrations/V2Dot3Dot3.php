@@ -1,0 +1,268 @@
+<?php
+/*
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+namespace Atro\Migrations;
+
+use Atro\Core\Migration\Base;
+use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\Util;
+
+class V2Dot3Dot3 extends Base
+{
+    public function getMigrationDateTime(): ?\DateTime
+    {
+        return new \DateTime('2026-05-15 12:00:00');
+    }
+
+    public function up(): void
+    {
+        $enumOptionFile = 'data/metadata/entityDefs/ExtensibleEnumOption.json';
+        $enumOptionDefs = file_exists($enumOptionFile)
+            ? (json_decode(file_get_contents($enumOptionFile), true) ?? [])
+            : [];
+        $enumOptionChanged = false;
+
+        foreach (glob('data/metadata/entityDefs/*.json') as $file) {
+            $entityName = basename($file, '.json');
+            if ($entityName === 'ExtensibleEnumOption') {
+                continue;
+            }
+
+            $tableName = Util::toUnderScore(lcfirst($entityName));
+            $defs      = json_decode(file_get_contents($file), true) ?? [];
+            $changed   = false;
+
+            foreach ($defs['fields'] ?? [] as $field => $fieldDefs) {
+                $col         = Util::toUnderScore(lcfirst($field));
+                $type        = $fieldDefs['type'] ?? '';
+                $enumId      = $fieldDefs['extensibleEnumId'] ?? null;
+                $foreignName = lcfirst($field) . ucfirst(lcfirst($entityName)) . 's' . substr(md5($entityName . $field), 0, 8);
+
+                if ($type === 'extensibleEnum') {
+                    $this->renameColumn($tableName, $col, $col . '_id');
+
+                    $defs['fields'][$field] = $this->buildLinkDefs($fieldDefs, $enumId);
+                    $defs['links'][$field]  = [
+                        'type'     => 'belongsTo',
+                        'entity'   => 'ExtensibleEnumOption',
+                        'foreign'  => $foreignName,
+                        'isCustom' => true,
+                    ];
+
+                    $enumOptionDefs['fields'][$foreignName] = $this->buildReverseLinkMultipleFieldDefs();
+                    $enumOptionDefs['links'][$foreignName]  = [
+                        'type'    => 'hasMany',
+                        'foreign' => $field,
+                        'entity'  => $entityName,
+                    ];
+
+                    $changed           = true;
+                    $enumOptionChanged = true;
+                }
+
+                if ($type === 'extensibleMultiEnum') {
+                    $relationName = $entityName . ucfirst($field);
+
+                    $this->createRelationTable($relationName, $tableName);
+                    $this->migrateJsonToRelation($tableName, $col, $relationName);
+                    $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " DROP COLUMN " . $this->getDbal()->quoteIdentifier($col));
+
+                    $defs['fields'][$field] = $this->buildLinkMultipleDefs($fieldDefs, $enumId);
+                    $defs['links'][$field]  = [
+                        'type'         => 'hasMany',
+                        'entity'       => 'ExtensibleEnumOption',
+                        'relationName' => $relationName,
+                        'foreign'      => $foreignName,
+                        'isCustom'     => true,
+                    ];
+
+                    $enumOptionDefs['fields'][$foreignName] = $this->buildReverseLinkMultipleFieldDefs();
+                    $enumOptionDefs['links'][$foreignName]  = [
+                        'type'         => 'hasMany',
+                        'foreign'      => $field,
+                        'entity'       => $entityName,
+                        'relationName' => $relationName,
+                    ];
+
+                    $changed           = true;
+                    $enumOptionChanged = true;
+                }
+            }
+
+            if ($changed) {
+                file_put_contents($file, json_encode($defs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            }
+        }
+
+        if ($enumOptionChanged) {
+            file_put_contents($enumOptionFile, json_encode($enumOptionDefs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        }
+    }
+
+    private function renameColumn(string $table, string $from, string $to): void
+    {
+        $t = $this->getDbal()->quoteIdentifier($table);
+        $f = $this->getDbal()->quoteIdentifier($from);
+        $n = $this->getDbal()->quoteIdentifier($to);
+
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE $t RENAME COLUMN $f TO $n");
+        } else {
+            $this->exec("ALTER TABLE $t CHANGE $f $n VARCHAR(36) DEFAULT NULL");
+        }
+    }
+
+    private function createRelationTable(string $relationName, string $entityTable): void
+    {
+        $table = $this->getDbal()->quoteIdentifier(Util::toUnderScore(lcfirst($relationName)));
+
+        if ($this->isPgSQL()) {
+            $this->exec("CREATE TABLE IF NOT EXISTS $table (
+                id VARCHAR(36) NOT NULL,
+                deleted BOOLEAN NOT NULL DEFAULT FALSE,
+                {$entityTable}_id VARCHAR(36),
+                extensible_enum_option_id VARCHAR(36)
+            )");
+        } else {
+            $this->exec("CREATE TABLE IF NOT EXISTS $table (
+                id VARCHAR(36) NOT NULL,
+                deleted TINYINT(1) NOT NULL DEFAULT 0,
+                {$entityTable}_id VARCHAR(36) DEFAULT NULL,
+                extensible_enum_option_id VARCHAR(36) DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        }
+    }
+
+    private function migrateJsonToRelation(string $entityTable, string $col, string $relationName): void
+    {
+        $relTable = Util::toUnderScore(lcfirst($relationName));
+
+        try {
+            $stmt = $this->getPDO()->query(
+                "SELECT id, $col FROM $entityTable WHERE $col IS NOT NULL AND $col != '' AND $col != '[]'"
+            );
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            $ids = json_decode($row[$col], true);
+            if (!is_array($ids)) {
+                continue;
+            }
+            foreach ($ids as $optionId) {
+                if (empty($optionId)) {
+                    continue;
+                }
+                try {
+                    $this->getDbal()->insert($relTable, [
+                        'id'                        => $this->generateId(),
+                        'deleted'                   => false,
+                        $entityTable . '_id'        => $row['id'],
+                        'extensible_enum_option_id' => $optionId,
+                    ]);
+                } catch (\Throwable $e) {
+                }
+            }
+        }
+    }
+
+    private function generateId(): string
+    {
+        return IdGenerator::uuid();
+    }
+
+    private function buildReverseLinkMultipleFieldDefs(): array
+    {
+        return [
+            'type'                  => 'linkMultiple',
+            'noLoad'                => true,
+            'layoutDetailDisabled'  => true,
+            'massUpdateDisabled'    => true,
+            'isCustom'              => true,
+        ];
+    }
+
+    private function buildLinkDefs(array $orig, ?string $enumId): array
+    {
+        $defs = ['type' => 'link'];
+
+        foreach (['required', 'readOnly', 'isCustom', 'audited', 'dropdown', 'inheritanceDisabled',
+                  'duplicateIgnore', 'tooltip', 'default', 'conditionalProperties',
+                  'modifiedExtendedDisabled', 'prohibitedEmptyValue'] as $key) {
+            if (array_key_exists($key, $orig)) {
+                $defs[$key] = $orig[$key];
+            }
+        }
+
+        $defs['foreignName'] = 'name';
+
+        if ($enumId) {
+            $defs['extensibleEnumId'] = $enumId;
+            $defs['where']            = $this->buildEnumWhere($enumId);
+        }
+
+        $defs['isCustom'] = $orig['isCustom'] ?? true;
+
+        return $defs;
+    }
+
+    private function buildLinkMultipleDefs(array $orig, ?string $enumId): array
+    {
+        $defs = ['type' => 'linkMultiple'];
+
+        foreach (['required', 'readOnly', 'isCustom', 'audited', 'dropdown', 'inheritanceDisabled',
+                  'duplicateIgnore', 'tooltip', 'noLoad', 'layoutDetailDisabled', 'massUpdateDisabled',
+                  'conditionalProperties', 'modifiedExtendedDisabled'] as $key) {
+            if (array_key_exists($key, $orig)) {
+                $defs[$key] = $orig[$key];
+            }
+        }
+
+        $defs['foreignName'] = 'name';
+
+        if ($enumId) {
+            $defs['extensibleEnumId'] = $enumId;
+            $defs['where']            = $this->buildEnumWhere($enumId);
+        }
+
+        $defs['isCustom'] = $orig['isCustom'] ?? true;
+
+        return $defs;
+    }
+
+    private function buildEnumWhere(string $enumId): array
+    {
+        return [
+            [
+                'condition' => 'AND',
+                'rules'     => [
+                    [
+                        'id'       => 'extensibleEnums',
+                        'field'    => 'extensibleEnums',
+                        'type'     => 'string',
+                        'operator' => 'linked_with',
+                        'value'    => [$enumId],
+                    ],
+                ],
+                'valid' => true,
+            ],
+        ];
+    }
+
+    protected function exec(string $sql): void
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+        }
+    }
+}
