@@ -421,6 +421,8 @@ Espo.define(
                 window.SvelteStorage.setStorage(helper.storage)
                 window.SvelteModelFactory.setModelFactory(helper.modelFactory)
                 window.SvelteConfig.setConfig(helper.settings)
+                window.SvelteAcl.setAcl(helper.acl)
+                window.SvelteCollectionFactory.setCollectionFactory(helper.collectionFactory)
 
                 this.viewLoader = function (viewName, callback) {
                     Espo.require(Espo.Utils.composeViewClassName(viewName), callback);
