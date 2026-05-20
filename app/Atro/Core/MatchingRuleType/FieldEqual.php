@@ -28,8 +28,6 @@ class FieldEqual extends AbstractMatchingRule
             "date",
             "datetime",
             "enum",
-            "extensibleEnum",
-            "extensibleMultiEnum",
             "file",
             "float",
             "int",
@@ -66,7 +64,7 @@ class FieldEqual extends AbstractMatchingRule
 
         $value = $stageEntity->get($fieldName);
 
-        if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
+        if (in_array($fieldType, ['array', 'multiEnum'])) {
             if ($value !== null) {
                 $value = json_encode($value);
             }
@@ -104,7 +102,7 @@ class FieldEqual extends AbstractMatchingRule
         }
 
         $value = $stageEntity->get($fieldName);
-        if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
+        if (in_array($fieldType, ['array', 'multiEnum'])) {
             if ($value !== null) {
                 $value = json_encode($value);
             }

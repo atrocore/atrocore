@@ -28,7 +28,6 @@ class FieldSimilar extends AbstractMatchingRule
             "varchar",
             "wysiwyg",
             "array",
-            "extensibleMultiEnum",
             "multiEnum"
         ];
     }
@@ -74,7 +73,7 @@ class FieldSimilar extends AbstractMatchingRule
             }
 
             $attribute = $this->getEntityManager()->getEntity('Attribute', $attributeId);
-            if ($attribute && in_array($attribute->get('type'), ['array', 'multiEnum', 'extensibleMultiEnum'])) {
+            if ($attribute && in_array($attribute->get('type'), ['array', 'multiEnum', 'linkMultiple'])) {
                 $stageValue  = is_string($stageValue) ? (json_decode($stageValue, true) ?? []) : ($stageValue ?? []);
                 $masterValue = is_string($masterValue) ? (json_decode($masterValue, true) ?? []) : ($masterValue ?? []);
                 sort($stageValue);
@@ -92,9 +91,11 @@ class FieldSimilar extends AbstractMatchingRule
         $field = $this->rule->get('field');
         $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}.type");
 
-        if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
-            $stageValue = $stageEntity->get($field) ?? [];
-            $masterValue = $masterEntityData[$field] ?? [];
+        if (in_array($fieldType, ['array', 'linkMultiple', 'multiEnum'])) {
+            $stageValue = $fieldType === 'linkMultiple'
+                ? ($stageEntity->get($field . 'Ids') ?? [])
+                : ($stageEntity->get($field) ?? []);
+            $masterValue = $masterEntityData[$field . 'Ids'] ?? $masterEntityData[$field] ?? [];
 
             if (is_string($masterValue)) {
                 $masterValue = json_decode($masterValue, true) ?? [];
