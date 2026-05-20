@@ -21,7 +21,7 @@ Espo.define('views/admin/entity-manager/fields/status-field', 'views/fields/enum
             this.params.options = Object.keys(fieldDefs).filter(function (item) {
                 if (fieldDefs[item].disabled) return;
                 if (fieldDefs[item].notStorable && fieldDefs[item].notStorable === true) return;
-                return ['enum', 'extensibleEnum'].includes(fieldDefs[item].type);
+                return ['enum'].includes(fieldDefs[item].type);
             }, this).sort(function (v1, v2) {
                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
             }.bind(this));
