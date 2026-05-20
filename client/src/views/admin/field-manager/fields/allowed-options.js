@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/allowed-options', 'views/fields/extensible-multi-enum-dropdown',
+Espo.define('views/admin/field-manager/fields/allowed-options', 'views/fields/link-multiple-dropdown',
     Dep => {
 
         return Dep.extend({
@@ -32,7 +32,7 @@ Espo.define('views/admin/field-manager/fields/allowed-options', 'views/fields/ex
 
                 this.$el.parent().hide();
 
-                if (this.getExtensibleEnumId() && !['link', 'linkMultiple'].includes(this.model.get('type'))) {
+                if (this.getExtensibleEnumId()) {
                     this.$el.parent().show();
                 }
             },

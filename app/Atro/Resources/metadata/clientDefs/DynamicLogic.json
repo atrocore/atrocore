@@ -168,10 +168,6 @@
             "view": "views/admin/dynamic-logic/conditions/field-types/enum",
             "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "in", "notIn"]
         },
-        "extensibleEnum": {
-            "view": "views/admin/dynamic-logic/conditions/field-types/extensible-enum",
-            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals","in", "notIn"]
-        },
         "link": {
             "view": "views/admin/dynamic-logic/conditions/field-types/link",
             "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "in", "notIn"]
@@ -195,10 +191,6 @@
         "multiEnum": {
             "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
             "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
-        },
-        "extensibleMultiEnum": {
-            "view": "views/admin/dynamic-logic/conditions/field-types/extensible-multi-enum",
-            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains","in", "notIn"]
         },
         "array": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",

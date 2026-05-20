@@ -525,44 +525,18 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "or",
-              "value": [
-                {
-                  "type": "in",
-                  "attribute": "type",
-                  "value": [
-                    "extensibleEnum",
-                    "extensibleMultiEnum"
-                  ]
-                },
-                {
-                  "type": "equals",
-                  "attribute": "foreignEntityId",
-                  "value": "ExtensibleEnumOption"
-                }
-              ]
+              "type": "equals",
+              "attribute": "foreignEntityId",
+              "value": "ExtensibleEnumOption"
             }
           ]
         },
         "required": {
           "conditionGroup": [
             {
-              "type": "or",
-              "value": [
-                {
-                  "type": "in",
-                  "attribute": "type",
-                  "value": [
-                    "extensibleEnum",
-                    "extensibleMultiEnum"
-                  ]
-                },
-                {
-                  "type": "equals",
-                  "attribute": "foreignEntityId",
-                  "value": "ExtensibleEnumOption"
-                }
-              ]
+              "type": "equals",
+              "attribute": "foreignEntityId",
+              "value": "ExtensibleEnumOption"
             }
           ]
         }
@@ -1061,8 +1035,6 @@
               "value": [
                 "enum",
                 "multiEnum",
-                "extensibleEnum",
-                "extensibleMultiEnum",
                 "link",
                 "linkMultiple"
               ]
