@@ -24,7 +24,7 @@ class ClassificationAttribute extends Base
     {
         if ($attribute === 'textValue' && $this->has('attributeId')) {
             if (!empty($attr = $this->get('attribute'))) {
-                if (in_array($attr->get('type'), ['array', 'extensibleMultiEnum'])) {
+                if (in_array($attr->get('type'), ['array', 'linkMultiple'])) {
                     return IEntity::JSON_ARRAY;
                 }
             }

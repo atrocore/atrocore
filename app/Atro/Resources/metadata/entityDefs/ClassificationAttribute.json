@@ -433,15 +433,6 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "allowedOptions": {
-      "type": "array",
-      "view": "views/admin/field-manager/fields/allowed-options",
-      "notStorable": true,
-      "virtualField": true,
-      "fieldProperty": true,
-      "filterDisabled": true,
-      "emHidden": true
-    },
     "min": {
       "type": "float",
       "notStorable": true,
