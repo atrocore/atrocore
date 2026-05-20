@@ -73,7 +73,7 @@ class Metadata extends AbstractMetadataListener
 
         $this->prepareModifiedIntermediateEntities($data);
 
-        $this->prepareExtensibleEnum($data);
+        $this->prepareDropdownField($data);
 
         $this->prepareAclActionLevelListMap($data);
 
@@ -396,7 +396,7 @@ class Metadata extends AbstractMetadataListener
         }
     }
 
-    protected function prepareExtensibleEnum(array &$data): void
+    protected function prepareDropdownField(array &$data): void
     {
         foreach ($data['entityDefs'] as $entityType => $entityDefs) {
             if (empty($entityDefs['fields'])) {
@@ -404,7 +404,7 @@ class Metadata extends AbstractMetadataListener
             }
 
             foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                $dropdownTypes = ['extensibleEnum', 'extensibleMultiEnum', 'link', 'linkMultiple', 'measure'];
+                $dropdownTypes = ['link', 'linkMultiple', 'measure'];
                 if (!empty($fieldDefs['type'])
                     && in_array(
                         $fieldDefs['type'],
@@ -412,21 +412,7 @@ class Metadata extends AbstractMetadataListener
                     )
                     && empty($fieldDefs['view'])) {
                     if (!empty($fieldDefs['dropdown'])) {
-                        switch ($fieldDefs['type']) {
-                            case 'extensibleEnum':
-                                $viewType = 'extensible-enum';
-                                break;
-                            case 'extensibleMultiEnum':
-                                $viewType = 'extensible-multi-enum';
-                                break;
-                            case 'linkMultiple':
-                                $viewType = 'link-multiple';
-                                break;
-                            default:
-                                $viewType = $fieldDefs['type'];
-                                break;
-                        }
-
+                        $viewType = $fieldDefs['type'] === 'linkMultiple' ? 'link-multiple' : $fieldDefs['type'];
                         $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/$viewType-dropdown";
                         $data['entityDefs'][$entityType]['fields'][$field]['ignoreViewForSearch'] = true;
                     }
