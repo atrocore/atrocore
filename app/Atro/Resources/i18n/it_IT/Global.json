@@ -1100,7 +1100,6 @@
     "createdCountFilterActionExecution": "Creato da Esecuzione azione",
     "updatedCountFilterActionExecution": "Aggiornato dall'esecuzione dell'azione",
     "field": "Campo",
-    "derivativeStatus": "Stato derivato",
     "sourceRecord": "Fonte Record",
     "stagingRecords": "Registri di allestimento",
     "masterRecord": "Record principale"

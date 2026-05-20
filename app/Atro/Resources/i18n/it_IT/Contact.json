@@ -14,5 +14,12 @@
     "box": "Scatola",
     "city": "Città",
     "accounts": "Conti"
+  },
+  "options": {
+    "gender": {
+      "Male": "Uomo",
+      "Female": "Donna",
+      "Neutral": "Neutrale"
+    }
   }
 }

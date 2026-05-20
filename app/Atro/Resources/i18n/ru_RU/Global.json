@@ -789,7 +789,6 @@
     "emailAddress": "Эл. почта",
     "createdCountFilterActionExecution": "Создано с помощью Action Execution",
     "updatedCountFilterActionExecution": "Обновлено выполнением действия",
-    "derivativeStatus": "Статус производного",
     "sourceRecord": "Источник записи",
     "stagingRecords": "Постановочные записи",
     "masterRecord": "Мастер запись"

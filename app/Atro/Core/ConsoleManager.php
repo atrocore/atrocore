@@ -93,7 +93,6 @@ class ConsoleManager
     public function getCommands(): array
     {
         $commands = [
-            "regenerate lists"                          => Console\RegenerateExtensibleEnums::class,
             "list"                                      => Console\ListCommand::class,
             "regenerate measures"                       => Console\RegenerateMeasures::class,
             "refresh translations"                      => Console\RefreshTranslations::class,

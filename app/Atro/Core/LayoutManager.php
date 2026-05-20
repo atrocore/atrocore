@@ -157,9 +157,7 @@ class LayoutManager
         if (!empty($derivativeScope)) {
             if ($viewType === 'detail') {
                 array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], false]);
-                array_unshift($layout[0]['rows'], [['name' => 'derivativeStatus'], false]);
             } elseif ($viewType === 'list') {
-                $layout[] = ['name' => 'derivativeStatus'];
                 $layout[] = ['name' => 'masterRecord'];
             } elseif ($viewType === 'relationships') {
                 foreach ($this->getMetadata()->get(['entityDefs', $derivativeScope, 'links']) ?? [] as $link => $linkDefs) {

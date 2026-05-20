@@ -198,8 +198,8 @@
       "disabled": true
     },
     "gender": {
-      "type": "extensibleEnum",
-      "extensibleEnumId": "gender"
+      "type": "enum",
+      "options": ["Male", "Female", "Neutral"]
     },
     "createdAt": {
       "type": "datetime",
