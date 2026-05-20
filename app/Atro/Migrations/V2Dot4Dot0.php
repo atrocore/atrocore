@@ -15,7 +15,7 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 
-class V2Dot3Dot3 extends Base
+class V2Dot4Dot0 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -104,6 +104,37 @@ class V2Dot3Dot3 extends Base
 
         if ($enumOptionChanged) {
             file_put_contents($enumOptionFile, json_encode($enumOptionDefs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        }
+
+        $this->migrateAttributeTypes();
+    }
+
+    private function migrateAttributeTypes(): void
+    {
+        try {
+            $rows = $this->getPDO()
+                ->query("SELECT id, type, data FROM attribute WHERE type IN ('extensibleEnum','extensibleMultiEnum') AND deleted=false")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        foreach ($rows as $row) {
+            $newType = $row['type'] === 'extensibleEnum' ? 'link' : 'linkMultiple';
+            $data    = !empty($row['data']) ? (@json_decode((string)$row['data'], true) ?? []) : [];
+
+            if (!isset($data['field'])) {
+                $data['field'] = [];
+            }
+
+            $data['field']['entityType']  = 'ExtensibleEnumOption';
+            $data['field']['entityField'] = 'name';
+            unset($data['field']['allowedOptions']);
+
+            $this->getDbal()->update('attribute', [
+                'type' => $newType,
+                'data' => json_encode($data),
+            ], ['id' => $row['id']]);
         }
     }
 
