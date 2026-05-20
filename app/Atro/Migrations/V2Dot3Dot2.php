@@ -40,16 +40,34 @@ class V2Dot3Dot2 extends Base
 
     // extensibleEnumId => [systemOptions, [Entity => fieldName]]
     private array $map = [
-        'gender'                  => [['Male', 'Female', 'Neutral'],                                          ['User' => 'gender', 'Contact' => 'gender']],
-        'role'                    => [['supplier', 'customer'],                                                ['Account' => 'role']],
-        'addressType'             => [['billing', 'delivery'],                                                ['Address' => 'type']],
-        'product_group_item_type' => [['physical_goods', 'services', 'digital_products', 'legal_rights'],     ['ProductGroup' => 'itemType']],
-        'team_position'           => [[],                                                                     ['TeamUser' => 'role']],
-        'update_type'             => [['basic', 'script'],                                                    ['Action' => 'updateType']],
-        'content_items'           => [['highlight', 'top_features_list', 'story'],                            ['ContentItem' => 'type']],
-        'listing_status'          => [[],                                                                     ['Listing' => 'status']],
-        'pdfTemplateType'         => [['pdfTemplateHtml', 'pdfTemplateODT', 'pdfTemplateCatalog'],            ['PdfFeed' => 'type']],
-        'budget_item_status'      => [[],                                                                     ['BudgetItem' => 'status']],
+        // atrocore
+        'gender'                  => [['Male', 'Female', 'Neutral'],                                                                                                  ['User' => 'gender', 'Contact' => 'gender', 'Prospect' => 'gender']],
+        'role'                    => [['supplier', 'customer'],                                                                                                        ['Account' => 'role', 'Prospect' => 'role']],
+        'addressType'             => [['billing', 'delivery'],                                                                                                        ['Address' => 'type']],
+        'product_group_item_type' => [['physical_goods', 'services', 'digital_products', 'legal_rights'],                                                             ['ProductGroup' => 'itemType']],
+        'team_position'           => [[],                                                                                                                             ['TeamUser' => 'role']],
+        'update_type'             => [['basic', 'script'],                                                                                                            ['Action' => 'updateType']],
+        'content_items'           => [['highlight', 'top_features_list', 'story'],                                                                                    ['ContentItem' => 'type']],
+        'listing_status'          => [[],                                                                                                                             ['Listing' => 'status']],
+        'pdfTemplateType'         => [['pdfTemplateHtml', 'pdfTemplateODT', 'pdfTemplateCatalog'],                                                                    ['PdfFeed' => 'type']],
+        'budget_item_status'      => [[],                                                                                                                             ['BudgetItem' => 'status']],
+        // sales
+        'saleStatus'              => [['new', 'approved', 'in_progress', 'fulfilled', 'provided', 'partly_invoiced', 'invoiced', 'cancelled'],                        ['Sale' => 'status', 'Settings' => 'consideredSaleStatuses']],
+        'billingStatus'           => [['openBillingStatus', 'inProgressBS', 'cancelledBS', 'partlyBilledBS', 'billedBS'],                                             ['Sale' => 'billingStatus']],
+        'shippingStatus'          => [['openShippingStatus', 'cancelledShippingStatus', 'returnedShippingStatus', 'shippedShippingStatus'],                           ['Sale' => 'shippingStatus']],
+        'shippingMethod'          => [[],                                                                                                                             ['Sale' => 'shippingMethod']],
+        'documentType'            => [['documentTypeSection', 'documentTypeGroup', 'documentTypeItem', 'documentTypeNote', 'documentTypeSubtotal'],                   ['SaleItem' => 'type', 'QuotationItem' => 'type', 'SubscriptionItem' => 'type']],
+        'saleItemStatus'          => [['newSIS', 'approvedSIS', 'inProgressSIS', 'fulfilledSIS', 'invoicedSIS', 'cancelledSIS'],                                      ['SaleItem' => 'status']],
+        'saleReturnStatus'        => [['newSaleReturnStatus', 'dispatchedSRS', 'returnedSRS'],                                                                        ['SaleReturn' => 'status']],
+        'quotationStatus'         => [['newQuotationStatus', 'approvedQuotationStatus', 'negotiatingQS', 'acceptedQS', 'rejectedQS', 'cancelledQuotationStatus'],     ['Quotation' => 'status']],
+        'prospectStatus'          => [['newPS', 'contactedPS', 'engagedPS', 'qualifiedPS', 'processingPS', 'quotedPS', 'followUpPS', 'wonPS', 'lostPS', 'disqualifiedPS'], ['Prospect' => 'status']],
+        'confirmationStatus'      => [['newCS', 'sentCS'],                                                                                                            ['OrderConfirmation' => 'status']],
+        'recurringPeriod'         => [['days', 'weeks', 'months', 'years'],                                                                                           ['Subscription' => 'recurringPeriod', 'RecurringPrice' => 'recurringPeriod']],
+        'paymentSchedule'         => [['advancedPSchedule', 'deferredPSchedule'],                                                                                     ['Subscription' => 'paymentSchedule']],
+        'subscriptionStatus'      => [['newSubscriptionStatus', 'activeSS', 'cancelledSS', 'pausedSS'],                                                               ['Subscription' => 'status']],
+        // inventory
+        'locationType'            => [['warehouseID', 'areaId', 'positionId'],                                                                                        ['Location' => 'type']],
+        'deliveryStatus'          => [['newDeliveryStatus', 'dispatchedDeliveryStatus', 'shippedDeliveryStatus'],                                                      ['Delivery' => 'status']],
     ];
 
     private function migrateOptionsToMetadata(): void
