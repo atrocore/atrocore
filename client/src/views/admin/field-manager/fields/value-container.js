@@ -61,9 +61,7 @@ Espo.define('views/admin/field-manager/fields/value-container', 'views/fields/ba
                     link: "views/admin/field-manager/fields/link-default",
                     measure: "views/admin/field-manager/fields/measure-default",
                     file: "views/admin/field-manager/fields/file-default",
-                    extensibleEnum: "views/admin/field-manager/fields/extensible-enum-default",
                     linkMultiple: "views/admin/field-manager/fields/link-multiple-default",
-                    extensibleMultiEnum: "views/admin/field-manager/fields/extensible-multi-enum-default",
                     enum: "views/admin/field-manager/fields/enum-default",
                 }
 

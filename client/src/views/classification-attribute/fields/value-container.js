@@ -128,19 +128,6 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
                 }
 
                 let customOptions = {}
-                if (attributeType === 'extensibleEnum' || attributeType === 'extensibleMultiEnum') {
-                    params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
-
-                    customOptions = {
-                        customSelectBoolFilters: ['onlyExtensibleEnumOptionIds'],
-                        customBoolFilterData: {
-                            onlyExtensibleEnumOptionIds() {
-                                return this.model.get('extensibleEnumOptionsIds')
-                            }
-                        }
-                    }
-                }
-
                 if (['link', 'linkMultiple'].includes(attributeType)) {
                     this.model.defs['fields']['value']['where'] = this.model.get('attributeData')?.where;
 
@@ -170,31 +157,7 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
                 }
                 this.createView('valueField', fieldView, options, view => {
                     view.render();
-
-                    this.listenTo(this.model, 'change:extensibleEnumOptionsIds', () => {
-                        if (attributeType === 'extensibleEnum' && !this.model.get('extensibleEnumOptionsIds').includes(this.model.get('value'))) {
-                            try {
-                                view.clearLink()
-                            } catch (e) {
-                            }
-                        }
-
-                        if (attributeType === 'extensibleMultiEnum') {
-                            (this.model.get('value') ?? []).forEach(v => {
-                                if (!this.model.get('extensibleEnumOptionsIds').includes(v)) {
-                                    try {
-                                        view.deleteLink(v)
-                                    } catch (e) {
-                                    }
-                                }
-                            })
-                        }
-                    });
                 });
-
-                if (this.mode === 'edit' && 'extensibleMultiEnum' === attributeType) {
-                    this.$el.addClass('over-visible');
-                }
             }
         },
 
