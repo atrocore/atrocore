@@ -186,12 +186,12 @@ class Note
                     }
                 }
 
-                if ($item['fieldType'] === 'extensibleEnum' || ($item['fieldType'] === 'link' && $foreignEntity === 'ExtensibleEnumOption')) {
+                if ($item['fieldType'] === 'link' && $foreignEntity === 'ExtensibleEnumOption') {
                     $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
                     if ($extensibleEnumId) {
                         $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
                         foreach (['was', 'became'] as $k) {
-                            $val = ${$k}[$item['fieldType'] === 'link' ? $field . 'Id' : $field] ?? null;
+                            $val = ${$k}[$field . 'Id'] ?? null;
                             if ($val) {
                                 $option = $repo->getPreparedOption($extensibleEnumId, $val);
                                 if (!empty($option['name'])) {
@@ -203,12 +203,12 @@ class Note
                     }
                 }
 
-                if ($item['fieldType'] === 'extensibleMultiEnum' || ($item['fieldType'] === 'linkMultiple' && $foreignEntity === 'ExtensibleEnumOption')) {
+                if ($item['fieldType'] === 'linkMultiple' && $foreignEntity === 'ExtensibleEnumOption') {
                     $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
                     if ($extensibleEnumId) {
                         $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
                         foreach (['was', 'became'] as $k) {
-                            $val = ${$k}[$item['fieldType'] === 'linkMultiple' ? $field . 'Ids' : $field] ?? null;
+                            $val = ${$k}[$field . 'Ids'] ?? null;
                             if (!empty($val)) {
                                 $ids = is_string($val) ? @json_decode($val, true) : $val;
                                 if (!empty($ids) && is_array($ids)) {

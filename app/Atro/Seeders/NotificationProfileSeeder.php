@@ -142,7 +142,7 @@ class NotificationProfileSeeder extends AbstractSeeder
     {%  set entityType = context.entityType %}
     {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
 
-    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+    {% if updateData['fieldTypes'][field] in ['link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
         {% set value = updateData['attributes'][type][field] %}
@@ -157,22 +157,7 @@ class NotificationProfileSeeder extends AbstractSeeder
         {% set value = 'Null' %}
     {% endif %}
 
-    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
-        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
-        {% if color %}
-            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
-        {% else %}
-            <code> {{ value }}</code>
-        {% endif %}
-    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
-        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
-            {% if optionData['color'] %}
-                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{  optionData['name'] }}</span>
-            {% else %}
-                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
-            {% endif %}
-        {% endfor %}
-    {% elseif updateData['fieldTypes'][field] == 'color' %}
+    {% if updateData['fieldTypes'][field] == 'color' %}
         <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
     {% elseif updateData['fieldTypes'][field] == 'enum' %}
         {%  set optionColors = {} %}
@@ -297,7 +282,7 @@ class NotificationProfileSeeder extends AbstractSeeder
     {%  set entityType = context.entityType %}
     {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
 
-    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+    {% if updateData['fieldTypes'][field] in ['link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
         {% set value = updateData['attributes'][type][field] %}
@@ -312,22 +297,7 @@ class NotificationProfileSeeder extends AbstractSeeder
         {% set value = 'Null' %}
     {% endif %}
 
-    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
-        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
-        {% if color %}
-            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
-        {% else %}
-            <code> {{ value }}</code>
-        {% endif %}
-    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
-        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
-            {% if optionData['color'] %}
-                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{  optionData['name'] }}</span>
-            {% else %}
-                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
-            {% endif %}
-        {% endfor %}
-    {% elseif updateData['fieldTypes'][field] == 'color' %}
+    {% if updateData['fieldTypes'][field] == 'color' %}
         <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
     {% elseif updateData['fieldTypes'][field] == 'enum' %}
         {%  set optionColors = {} %}
@@ -452,7 +422,7 @@ class NotificationProfileSeeder extends AbstractSeeder
     {%  set entityType = context.entityType %}
     {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
 
-    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+    {% if updateData['fieldTypes'][field] in ['link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
         {% set value = updateData['attributes'][type][field] %}
@@ -466,23 +436,8 @@ class NotificationProfileSeeder extends AbstractSeeder
     {% if value is null %}
         {% set value = 'Null' %}
     {% endif %}
-
-    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
-        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
-        {% if color %}
-            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
-        {% else %}
-            <code> {{ value }}</code>
-        {% endif %}
-    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
-        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
-            {% if optionData['color'] %}
-                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{  optionData['name'] }}</span>
-            {% else %}
-                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
-            {% endif %}
-        {% endfor %}
-    {% elseif updateData['fieldTypes'][field] == 'color' %}
+    
+    {% if updateData['fieldTypes'][field] == 'color' %}
         <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
     {% elseif updateData['fieldTypes'][field] == 'enum' %}
         {%  set optionColors = {} %}
@@ -664,7 +619,7 @@ class NotificationProfileSeeder extends AbstractSeeder
     {%  set entityType = context.entityType %}
     {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
 
-    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+    {% if updateData['fieldTypes'][field] in ['link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
          {% set value = updateData['attributes'][type][field] %}
@@ -675,22 +630,7 @@ class NotificationProfileSeeder extends AbstractSeeder
         {% set value = updateData['attributes'][type][field] %}
     {% endif %}
 
-    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
-        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
-        {% if color %}
-            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
-        {% else %}
-            <code> {{ value }}</code>
-        {% endif %}
-    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
-        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
-            {% if optionData['color'] %}
-                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{ optionData['name'] }}</span>
-            {% else %}
-                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
-            {% endif %}
-        {% endfor %}
-    {% elseif updateData['fieldTypes'][field] == 'color' %}
+    {% if updateData['fieldTypes'][field] == 'color' %}
         <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
     {% elseif updateData['fieldTypes'][field] == 'enum' %}
         {%  set optionColors = {} %}
@@ -786,7 +726,7 @@ class NotificationProfileSeeder extends AbstractSeeder
     {%  set entityType = context.entityType %}
     {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
 
-    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+    {% if updateData['fieldTypes'][field] in ['link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
         {% set value = updateData['attributes'][type][field] %}
@@ -797,22 +737,7 @@ class NotificationProfileSeeder extends AbstractSeeder
         {% set value = updateData['attributes'][type][field] %}
     {% endif %}
 
-    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
-        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
-        {% if color %}
-            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
-        {% else %}
-            <code> {{ value }}</code>
-        {% endif %}
-    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
-        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
-            {% if optionData['color'] %}
-                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{ optionData['name'] }}</span>
-            {% else %}
-                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
-            {% endif %}
-        {% endfor %}
-    {% elseif updateData['fieldTypes'][field] == 'color' %}
+    {% if updateData['fieldTypes'][field] == 'color' %}
         <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
     {% elseif updateData['fieldTypes'][field] == 'enum' %}
         {%  set optionColors = {} %}
@@ -909,7 +834,7 @@ class NotificationProfileSeeder extends AbstractSeeder
     {%  set entityType = context.entityType %}
     {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
 
-    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+    {% if updateData['fieldTypes'][field] in ['link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
          {% set value = updateData['attributes'][type][field] %}
@@ -920,22 +845,7 @@ class NotificationProfileSeeder extends AbstractSeeder
         {% set value = updateData['attributes'][type][field] %}
     {% endif %}
 
-    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
-        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
-        {% if color %}
-            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
-        {% else %}
-            <code> {{ value }}</code>
-        {% endif %}
-    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
-        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
-            {% if optionData['color'] %}
-                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{ optionData['name'] }}</span>
-            {% else %}
-                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
-            {% endif %}
-        {% endfor %}
-    {% elseif updateData['fieldTypes'][field] == 'color' %}
+    {% if updateData['fieldTypes'][field] == 'color' %}
         <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
     {% elseif updateData['fieldTypes'][field] == 'enum' %}
         {%  set optionColors = {} %}
