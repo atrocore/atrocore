@@ -542,10 +542,6 @@
         }
       }
     },
-    "allowedOptions": {
-      "type": "array",
-      "view": "views/admin/field-manager/fields/allowed-options"
-    },
     "translatedOptions": {
       "type": "jsonObject",
       "notStorable": true

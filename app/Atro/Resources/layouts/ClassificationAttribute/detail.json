@@ -41,12 +41,6 @@
       ],
       [
         {
-          "name": "allowedOptions"
-        },
-        false
-      ],
-      [
-        {
           "name": "value"
         },
         false

@@ -90,15 +90,6 @@
         }
       }
     },
-    "allowedOptions": {
-      "type": "array",
-      "view": "views/admin/field-manager/fields/allowed-options",
-      "notStorable": true,
-      "virtualField": true,
-      "filterDisabled": true,
-      "emHidden": true,
-      "layoutRemoveDisabled": true
-    },
     "entity": {
       "type": "link",
       "entity": "Entity",

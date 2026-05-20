@@ -1,4 +1,4 @@
 {
-  "extensibleEnum": "views/fields/extensible-enum-dropdown",
-  "extensibleMultiEnum": "views/fields/extensible-multi-enum-dropdown"
+  "link": "views/fields/link-dropdown",
+  "linkMultiple": "views/fields/link-multiple-dropdown"
 }

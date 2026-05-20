@@ -220,12 +220,6 @@
       ],
       [
         {
-          "name": "allowedOptions"
-        },
-        false
-      ],
-      [
-        {
           "name": "useNumericFormat"
         },
         {

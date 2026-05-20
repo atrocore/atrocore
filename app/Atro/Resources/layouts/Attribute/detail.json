@@ -159,12 +159,6 @@
       ],
       [
         {
-          "name": "allowedOptions"
-        },
-        false
-      ],
-      [
-        {
           "name": "description"
         },
         false
