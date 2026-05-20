@@ -10,7 +10,8 @@
     "sticked": "Закріплений",
     "isLarge": "Великий розмір шрифту",
     "cssStyle": "CSS Styles",
-    "hiddenPerDefault": "Приховано за замовчуванням"
+    "hiddenPerDefault": "Приховано за замовчуванням",
+    "label": "Назва"
   },
   "options": {
     "align": {
