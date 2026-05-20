@@ -10,7 +10,8 @@
     "sticked": "Collé",
     "isLarge": "Grande taille de police",
     "cssStyle": "Styles CSS",
-    "hiddenPerDefault": "Caché par défaut"
+    "hiddenPerDefault": "Caché par défaut",
+    "label": "Libellé"
   },
   "options": {
     "align": {

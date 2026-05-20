@@ -10,7 +10,8 @@
     "sticked": "Sticked",
     "isLarge": "Large font size",
     "cssStyle": "CSS Styles",
-    "hiddenPerDefault": "Hidden per default"
+    "hiddenPerDefault": "Hidden per default",
+    "label": "Label"
   },
   "options": {
     "align": {
