@@ -115,6 +115,8 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
+                this.$element = this.$el.find('.range-container');
+
                 this.$from = this.$el.find('[name="' + this.fromField + '"]');
                 this.$to = this.$el.find('[name="' + this.toField + '"]');
 
