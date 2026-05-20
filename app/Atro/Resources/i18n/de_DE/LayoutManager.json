@@ -10,7 +10,8 @@
     "sticked": "Gepinnt",
     "isLarge": "Große Schriftgröße",
     "cssStyle": "CSS-Stile",
-    "hiddenPerDefault": "Standardmäßig ausgeblendet"
+    "hiddenPerDefault": "Standardmäßig ausgeblendet",
+    "label": "Bezeichnung"
   },
   "options": {
     "align": {
