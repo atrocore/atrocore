@@ -69,7 +69,7 @@
       "default": "Core"
     },
     "description": {
-      "default": "AtroCore is  a powerful, modular, highly configurable, open-source Data Platform and Master Data Management (MDM) system built for medium-sized companies and enterprises seeking complete control over their business-critical data."
+      "default": "AtroCore is a powerful, modular, highly configurable, open-source Data Platform and Master Data Management (MDM) system built for medium-sized companies and enterprises seeking complete control over their business-critical data."
     }
   }
 }
