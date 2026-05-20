@@ -1024,10 +1024,6 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                         model.set('valueNames', nameHash);
                         model.set('valueIds', rule.value);
 
-                        if (type === 'extensibleEnum') {
-                            model.set('value', rule.value);
-                        }
-
                         view = this.getView(inputName);
 
                         if (rule.data && rule.data['subQuery'] && view) {
@@ -1178,7 +1174,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
 
         getFilterName(type = null) {
             let name = this.name;
-            if (!name.includes('attr_') && type !== 'extensibleEnum') {
+            if (!name.includes('attr_')) {
                 name = this.name + 'Id'
             }
             return name;

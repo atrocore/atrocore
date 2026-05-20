@@ -77,7 +77,7 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
             }
 
             this.valueViewDataList = [];
-            if (['extensibleMultiEnum', 'linkMultiple'].includes(fieldType)) {
+            if (['linkMultiple'].includes(fieldType)) {
                 var model = this.model.clone();
                 model.set(attribute, valueList);
                 if (field && this.itemData.data?.values?.[field + 'Names']) {

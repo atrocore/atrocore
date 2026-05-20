@@ -54,7 +54,7 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
 
                                 if(column === 'link') {
                                     let type = attributes?.attributeDefs?.type || this.getMetadata().get(['entityDefs', scope, 'fields', attributes.name, 'type']);
-                                    if(['bool', 'link', 'linkMultiple', 'script', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
+                                    if(['bool', 'link', 'linkMultiple', 'script'].includes(type)) {
                                         return false;
                                     }
                                 }

@@ -907,12 +907,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         foreignScope = attribute.entityType;
                     }
 
-                    let view = 'views/fields/link-multiple';
-                    if (type === 'extensibleMultiEnum') {
-                        view = 'views/fields/extensible-multi-enum'
-                    }
-
-                    this.createView(inputName, view, {
+                    this.createView(inputName, 'views/fields/link-multiple', {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
@@ -1068,10 +1063,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         model.set('valueNames', nameHash);
                         model.set('valueIds', rule.value);
 
-                        if (type === 'extensibleMultiEnum') {
-                            model.set('value', rule.value);
-                        }
-
                         let view = this.getView(inputName);
 
                         if (rule.data && rule.data['subQuery'] && view) {
@@ -1111,14 +1102,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 'not_linked_with',
             ];
 
-            if (type === 'extensibleMultiEnum') {
-                operators = [
-                    'array_any_of',
-                    'array_none_of',
-                    'is_null',
-                    'is_not_null'
-                ];
-            } else {
+            {
                 let foreignScope = this.defs.params?.attribute?.entityType || this.getForeignScope();
                 if (foreignScope === 'User') {
                     operators = operators.concat(['is_team_member', 'include_me', 'exclude_me'])
