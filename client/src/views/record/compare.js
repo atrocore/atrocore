@@ -384,8 +384,39 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                 this.fieldPanels = this.originalFieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0);
             }
 
+            let addAllModelAttributes = (fields) => {
+                let addedFields = new Set(fields);
+                let userLanguages = this.getUserLanguages();
+
+                this.getModels().forEach(model => {
+                    let attributesDefs = model.get('attributesDefs') || {};
+                    $.each(attributesDefs, (name, defs) => {
+                        if (defs.layoutDetailDisabled || defs.compositedField || defs.multilangField) {
+                            return;
+                        }
+                        if (defs.isMultilang) {
+                            userLanguages.forEach(code => {
+                                let fieldName = name + code;
+                                if (!addedFields.has(fieldName) && attributesDefs[fieldName]) {
+                                    fields.push(fieldName);
+                                    addedFields.add(fieldName);
+                                }
+                            });
+                            return;
+                        }
+                        if (!addedFields.has(name)) {
+                            fields.push(name);
+                            addedFields.add(name);
+                        }
+                    });
+                });
+            };
+
             if (this.layoutData) {
                 let fields = this.layoutData.layout.map(row => row.name);
+                if (!this.layoutData.layout.some(row => row.attributeId)) {
+                    addAllModelAttributes(fields);
+                }
                 processFields(fields);
                 if (callback) {
                     callback();
@@ -394,6 +425,8 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                 this.getHelper().layoutManager.get(this.scope, 'selection', null, null, data => {
                     this.layoutData = data;
                     let fields = []
+                    let hasAttributeInLayout = this.layoutData.layout.some(fieldData => fieldData.attributeId);
+
                     for (const fieldData of this.layoutData.layout) {
                         fields.push(fieldData.name);
                         if (fieldData.attributeId) {
@@ -403,6 +436,11 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                             });
                         }
                     }
+
+                    if (!hasAttributeInLayout) {
+                        addAllModelAttributes(fields);
+                    }
+
                     processFields(fields);
 
                     if (callback) {
@@ -1137,6 +1175,74 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                     view.hide();
                 }
             })
+        },
+
+        getUserLanguages() {
+            const user = this.getUser();
+            let disabledLanguages = user.get('disabledLanguages') || [];
+            let userLocale = this.getConfig().get('locales')[user.get('localeId')];
+            if (!userLocale) {
+                userLocale = this.getConfig().get('locales')[this.getConfig().get('locale')];
+            }
+
+            const systemLanguages = this.getConfig().get('inputLanguageList').slice();
+            let mainLocaleCode = '';
+            for (const [code, language] of Object.entries(this.getConfig().get('referenceData').Language ?? {})) {
+                if (language.role === 'main') {
+                    mainLocaleCode = code;
+                }
+            }
+
+            systemLanguages.push(mainLocaleCode);
+            let languages = systemLanguages.filter(item => disabledLanguages.indexOf(item) === -1);
+
+            if (userLocale && systemLanguages.includes(userLocale.language)) {
+                languages.unshift(userLocale.language);
+            } else {
+                languages.unshift(mainLocaleCode);
+            }
+
+            languages = languages.filter((item, index) => languages.indexOf(item) === index);
+            const result = [];
+            languages.forEach(code => {
+                if (systemLanguages.includes(code)) {
+                    if (code === mainLocaleCode) {
+                        result.push('');
+                    } else {
+                        result.push(code.split('_').map(part => Espo.utils.upperCaseFirst(part.toLowerCase())).join(''));
+                    }
+                }
+            });
+
+            if (result.length === 0) {
+                result.push('');
+            }
+
+            const activeSuffixes = new Set();
+
+            for (const model of this.getModels()) {
+                if (!this.getMetadata().get(['scopes', model.name, 'hasActiveLanguages'])) {
+                    return result;
+                }
+                const activeLanguages = model.get('activeLanguages');
+                if (!activeLanguages || activeLanguages.length === 0) {
+                    return result;
+                }
+                activeLanguages.forEach(code => {
+                    if (code === mainLocaleCode) {
+                        activeSuffixes.add('');
+                    } else {
+                        activeSuffixes.add(code.split('_').map(part => Espo.utils.upperCaseFirst(part.toLowerCase())).join(''));
+                    }
+                });
+            }
+
+            if (activeSuffixes.size > 0) {
+                const filtered = result.filter(suffix => activeSuffixes.has(suffix));
+                return filtered.length > 0 ? filtered : [''];
+            }
+
+            return result;
         },
 
         remove(dontEmpty) {

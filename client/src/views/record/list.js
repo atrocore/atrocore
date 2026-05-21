@@ -1101,6 +1101,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     other.collection = collection;
                     other.putAttributesToSelect();
                     collection.data.select = other.fetchAttributeListFromLayout().join(',');
+                    let hasAttributeInLayout =  data.layout.some(fieldData => fieldData.attributeId);
+                    if (!hasAttributeInLayout){
+                        collection.data.allAttributes = true
+                    }
+
                     collection.fetch().then(() => {
                         let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
                         this.createView('dialog', view, {
@@ -1634,19 +1639,22 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
                 }.bind(this), 50)
             }
-            const filters = this.getStorage().get('listQueryBuilder', this.scope);
-            if (filters && filters?.bool?.onlyDeleted === true && !this.massActionList.includes('restore')) {
-                this.massActionListBackup = this.massActionList;
-                this.checkAllResultMassActionListBackup = this.checkAllResultMassActionList;
-                this.massActionList = ['restore', 'deletePermanently'];
-                this.checkAllResultMassActionList = ['restore', 'deletePermanently'];
-                this.reRender();
-            }
 
-            if (filters && filters?.bool?.onlyDeleted !== true && this.massActionList.includes('restore')) {
-                this.massActionList = this.massActionListBackup;
-                this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
-                this.reRender()
+            if (this.showFilter) {
+                const filters = this.getStorage().get('listQueryBuilder', this.scope);
+                if (filters && filters?.bool?.onlyDeleted === true && !this.massActionList.includes('restore')) {
+                    this.massActionListBackup = this.massActionList;
+                    this.checkAllResultMassActionListBackup = this.checkAllResultMassActionList;
+                    this.massActionList = ['restore', 'deletePermanently'];
+                    this.checkAllResultMassActionList = ['restore', 'deletePermanently'];
+                    this.reRender();
+                }
+
+                if (filters && filters?.bool?.onlyDeleted !== true && this.massActionList.includes('restore')) {
+                    this.massActionList = this.massActionListBackup;
+                    this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
+                    this.reRender()
+                }
             }
 
             if (this.resizable) {
@@ -1973,17 +1981,17 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 dialog.once('select', models => {
                     this.notify('Loading...');
                     let attributeWhere = Array.isArray(models)
-                        ? [{type: 'in', attribute: 'id', value: models.map(m => m.id)}]
+                        ? [{ type: 'in', attribute: 'id', value: models.map(m => m.id) }]
                         : (models.where ?? []);
 
                     let recordWhere = this.allResultIsChecked
                         ? this.collection.getWhere()
-                        : [{type: 'in', attribute: 'id', value: this.checkedList}];
+                        : [{ type: 'in', attribute: 'id', value: this.checkedList }];
 
                     $.ajax({
                         url: this.scope + '/massRemoveAttributeAsync',
                         type: 'POST',
-                        data: JSON.stringify({attributeWhere, recordWhere}),
+                        data: JSON.stringify({ attributeWhere, recordWhere }),
                         success: (jobId) => {
                             this.notify('A job is created to remove attributes', 'success');
                             this.checkMassActionJob(jobId);
@@ -2317,7 +2325,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     width = this.listLayout[i].width + '%';
                 } else if ('widthPx' in this.listLayout[i]) {
                     width = this.listLayout[i].widthPx;
-                    if (!this.header){
+                    if (!this.header) {
                         // set in pixels for col groups
                         width = width + 'px';
                     }
@@ -3526,14 +3534,14 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 });
 
                 if (hasChanges) {
-                    changedRows.push({rowView, model, initialAttrs, changedAttrs});
+                    changedRows.push({ rowView, model, initialAttrs, changedAttrs });
                 } else {
                     noChangeRows.push(rowView);
                 }
             });
 
             let notValid = false;
-            changedRows.forEach(({rowView}) => {
+            changedRows.forEach(({ rowView }) => {
                 for (const key in rowView.nestedViews) {
                     const fv = rowView.nestedViews[key];
                     if (fv.disabled || fv.readOnly || typeof fv.validate !== 'function') continue;
@@ -3556,14 +3564,14 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             this.notify('Saving...');
 
-            const upsertPayload = changedRows.map(({model, initialAttrs, changedAttrs}) => {
+            const upsertPayload = changedRows.map(({ model, initialAttrs, changedAttrs }) => {
                 const _prev = {};
                 Object.keys(changedAttrs).forEach(field => {
                     _prev[field] = initialAttrs[field];
                 });
                 return {
                     entity: model.name,
-                    payload: Object.assign({id: model.id, _prev, _silentMode: true}, changedAttrs),
+                    payload: Object.assign({ id: model.id, _prev, _silentMode: true }, changedAttrs),
                 };
             });
 
@@ -3571,7 +3579,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 .success(results => {
                     let anySuccess = false;
                     (results || []).forEach((result, i) => {
-                        const {rowView, model, changedAttrs} = changedRows[i];
+                        const { rowView, model, changedAttrs } = changedRows[i];
                         if (result.status === 'Failed') {
                             this._markRowFieldsInvalid(rowView, result.message);
                         } else {

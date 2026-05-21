@@ -15,11 +15,10 @@
       "type": "email"
     },
     "type": {
-      "type": "extensibleEnum",
-      "extensibleEnumId": "addressType",
+      "type": "enum",
+      "options": ["billing", "delivery"],
       "required": true,
-      "notNull": true,
-      "dropdown": true
+      "notNull": true
     },
     "contactName": {
       "type": "varchar"

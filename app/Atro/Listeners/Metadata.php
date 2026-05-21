@@ -2535,14 +2535,6 @@ class Metadata extends AbstractMetadataListener
                 "sortOrder" => 250
             ];
 
-            // add status field
-            $data['entityDefs'][$scope]['fields']['derivativeStatus'] = [
-                'type'             => 'extensibleEnum',
-                'required'         => false,
-                "dropdown"         => true,
-                "extensibleEnumId" => "derivative_status"
-            ];
-
             $linkName = 'derived' . ucfirst($scope) . 'Records';
 
             // add link to the primary entity

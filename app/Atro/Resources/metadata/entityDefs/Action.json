@@ -913,11 +913,10 @@
       "openApiEnabled": true
     },
     "updateType": {
-      "type": "extensibleEnum",
+      "type": "enum",
+      "options": ["basic", "script"],
       "notStorable": true,
       "virtualField": true,
-      "extensibleEnumId": "update_type",
-      "dropdown": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,

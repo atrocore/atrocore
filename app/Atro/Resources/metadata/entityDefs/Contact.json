@@ -27,9 +27,8 @@
       "type": "email"
     },
     "gender": {
-      "type": "extensibleEnum",
-      "extensibleEnumId": "gender",
-      "dropdown": true
+      "type": "enum",
+      "options": ["Male", "Female", "Neutral"]
     },
     "createdAt": {
       "type": "datetime",

@@ -14,5 +14,12 @@
     "box": "Box",
     "city": "City",
     "accounts": "Accounts"
+  },
+  "options": {
+    "gender": {
+      "Male": "Male",
+      "Female": "Female",
+      "Neutral": "Neutral"
+    }
   }
 }

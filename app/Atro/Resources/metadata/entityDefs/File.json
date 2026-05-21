@@ -21,9 +21,8 @@
       "exportDisabled": true
     },
     "tags": {
-      "type": "extensibleMultiEnum",
-      "extensibleEnumId": "fileTags",
-      "dropdown": false
+      "type": "multiEnum",
+      "options": []
     },
     "url": {
       "type": "varchar",

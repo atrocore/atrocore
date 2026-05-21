@@ -845,7 +845,6 @@
     "end": "Ende",
     "createdCountFilterActionExecution": "Erstellt durch Aktionsausführung",
     "updatedCountFilterActionExecution": "Aktualisiert durch Aktionsausführung",
-    "derivativeStatus": "Derivat-Status",
     "sourceRecord": "Quelle Rekord",
     "masterRecord": "Stammdatensatz"
   },

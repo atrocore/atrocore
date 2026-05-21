@@ -24,9 +24,8 @@
       ]
     },
     "role": {
-      "type": "extensibleEnum",
-      "extensibleEnumId": "role",
-      "dropdown": true
+      "type": "enum",
+      "options": ["supplier", "customer"]
     },
     "emailAddress": {
       "type": "email"

@@ -789,7 +789,6 @@
     "createdCountFilterActionExecution": "Stworzone przez Action Execution",
     "updatedCountFilterActionExecution": "Aktualizacja przez wykonanie akcji",
     "field": "Pole",
-    "derivativeStatus": "Status instrumentu pochodnego",
     "sourceRecord": "Źródło: Record",
     "stagingRecords": "Staging Records",
     "masterRecord": "Główny rekord"

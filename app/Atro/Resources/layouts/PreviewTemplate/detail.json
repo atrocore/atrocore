@@ -20,7 +20,7 @@
       [
         {
           "name": "template",
-          "fullWidth": "true"
+          "fullWidth": true
         },
         false
       ]

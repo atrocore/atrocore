@@ -14,5 +14,12 @@
 		"box": "Skrytka pocztowa",
 		"city": "Miasto",
         "accounts": "Konta"
+	},
+	"options": {
+		"gender": {
+			"Male": "Mężczyzna",
+			"Female": "Kobieta",
+			"Neutral": "Neutralna"
+		}
 	}
 }
