@@ -2575,6 +2575,17 @@ class Metadata extends AbstractMetadataListener
             return;
         }
 
+        // Build the list of entities that should have the cluster link.
+        $clusterScopeSet = [];
+        foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
+            if (!empty($defs['matchDuplicates']) || !empty($defs['matchMasterRecords'])) {
+                $clusterScopeSet[$sourceEntity] = true;
+                if (!empty($defs['primaryEntityId'])) {
+                    $clusterScopeSet[$defs['primaryEntityId']] = true;
+                }
+            }
+        }
+
         foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
             if (!empty($defs['matchDuplicates'])) {
                 $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForDuplicate($sourceEntity))] = [
@@ -2599,6 +2610,23 @@ class Metadata extends AbstractMetadataListener
                     "importDisabled"       => true,
                     "exportDisabled"       => true,
                     "emHidden"             => true
+                ];
+            }
+
+            if (!empty($clusterScopeSet[$sourceEntity])) {
+                $data['entityDefs'][$sourceEntity]['fields']['cluster'] = [
+                    'type'             => 'link',
+                    'notStorable'      => true,
+                    'protected'        => true,
+                    'massUpdateDisabled' => true,
+                    'importDisabled'   => true,
+                    'exportDisabled'   => true,
+                    'emHidden'         => true,
+                ];
+                $data['entityDefs'][$sourceEntity]['links']['cluster'] = [
+                    'type'        => 'belongsTo',
+                    'entity'      => 'Cluster',
+                    'skipOrmDefs' => true,
                 ];
             }
         }
