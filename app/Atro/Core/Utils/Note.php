@@ -185,43 +185,6 @@ class Note
                         }
                     }
                 }
-
-                if ($item['fieldType'] === 'link' && $foreignEntity === 'ExtensibleEnumOption') {
-                    $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
-                    if ($extensibleEnumId) {
-                        $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
-                        foreach (['was', 'became'] as $k) {
-                            $val = ${$k}[$field . 'Id'] ?? null;
-                            if ($val) {
-                                $option = $repo->getPreparedOption($extensibleEnumId, $val);
-                                if (!empty($option['name'])) {
-                                    ${$k}[$field . 'Name'] = $option['name'];
-                                    ${$k}[$field . 'OptionData'] = $option;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if ($item['fieldType'] === 'linkMultiple' && $foreignEntity === 'ExtensibleEnumOption') {
-                    $extensibleEnumId = $fieldDef['extensibleEnumId'] ?? null;
-                    if ($extensibleEnumId) {
-                        $repo = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
-                        foreach (['was', 'became'] as $k) {
-                            $val = ${$k}[$field . 'Ids'] ?? null;
-                            if (!empty($val)) {
-                                $ids = is_string($val) ? @json_decode($val, true) : $val;
-                                if (!empty($ids) && is_array($ids)) {
-                                    $options = $repo->getPreparedOptions($extensibleEnumId, $ids);
-                                    if (!empty($options)) {
-                                        ${$k}[$field . 'Names'] = array_column($options, 'name', 'id');
-                                        ${$k}[$field . 'OptionsData'] = $options;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
 

@@ -764,19 +764,6 @@ class EntityField extends ReferenceData
 
             $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
 
-            if (in_array($entity->get('type'), ['link', 'linkMultiple']) && $field === 'extensibleEnumId' && !empty($entity->get($field))) {
-                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
-                    'fields' => [
-                        $entity->get('code') => [
-                            "extensibleEnumId" => $entity->get($field)
-                        ]
-                    ]
-                ]);
-
-                $saveMetadata = true;
-                continue;
-            }
-
             if ($field === 'where' && isset($entity->_input->data)) {
                 $value = !empty($where = $entity->_input->data?->where) ? json_decode(json_encode($where), true) : [];
                 if ($loadedVal !== $value) {

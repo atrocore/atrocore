@@ -137,7 +137,6 @@ class LinkMultipleType extends AbstractFieldType
             'notSortable'               => true,
             'conditionalProperties'     => $this->prepareConditionalProperties($row),
             'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
-            'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
             'where'                     => $data['where'] ?? [],
             'selectPageSize'            => $attributeData['selectPageSize'] ?? null
         ];
