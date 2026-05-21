@@ -22,8 +22,6 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
 
         typeField: 'type',
 
-        extensibleEnumIdField: 'extensibleEnumId',
-
         events: {
             'click [data-action="editConditions"]': function (e) {
                 var index = parseInt($(e.currentTarget).data('index'));

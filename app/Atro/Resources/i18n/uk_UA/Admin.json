@@ -189,7 +189,6 @@
     "date": "Дата",
     "datetime": "Дата і час",
     "email": "Електронна пошта",
-    "extensibleEnum": "Список",
     "float": "Дійсне число",
     "int": "Ціле число",
     "script": "Скрипт",
@@ -218,7 +217,6 @@
     "colorpicker": "Вибір кольору",
     "jsonArray": "Масив JSON",
     "jsonObject": "Об'єкт JSON",
-    "markdown": "Уцінка",
-    "extensibleMultiEnum": "Багатозначний список"
+    "markdown": "Уцінка"
   }
 }

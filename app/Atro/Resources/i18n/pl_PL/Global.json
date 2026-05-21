@@ -696,7 +696,6 @@
     "isInherited": "Inherited",
     "isArchived": "Archived",
     "code": "Code",
-    "extensibleEnum": "List",
     "hierarchySortOrder": "Hierarchy Sort Order",
     "sortOrder": "Sort Order",
     "parents": "Parent Record(s)",

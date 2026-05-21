@@ -519,38 +519,9 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true
     },
-    "extensibleEnum": {
-      "type": "link",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "foreignEntityId",
-              "value": "ExtensibleEnumOption"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "foreignEntityId",
-              "value": "ExtensibleEnumOption"
-            }
-          ]
-        }
-      }
-    },
     "translatedOptions": {
       "type": "jsonObject",
       "notStorable": true
-    },
-    "extensibleEnumOptions": {
-      "type": "jsonObject",
-      "notStorable": true,
-      "readOnly": true,
-      "view": "views/admin/field-manager/fields/extensible-enum-options"
     },
     "fileType": {
       "type": "link",
@@ -1069,17 +1040,9 @@
       "type": "belongsTo",
       "entity": "Measure"
     },
-    "extensibleEnum": {
-      "type": "belongsTo",
-      "entity": "ExtensibleEnum"
-    },
     "fileType": {
       "type": "belongsTo",
       "entity": "FileType"
-    },
-    "extensibleEnumOptions": {
-      "type": "hasMany",
-      "entity": "ExtensibleEnumOption"
     },
     "htmlSanitizer": {
       "type": "belongsTo",

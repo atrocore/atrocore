@@ -1669,22 +1669,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return false;
         },
 
-        getListOptionsData(extensibleEnumId) {
-            if (!extensibleEnumId) {
-                return []
-            }
-            let key = 'extensible_enum_' + extensibleEnumId;
-
-            if (!Espo[key]) {
-                Espo[key] = [];
-                this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/options`, {}, { async: false }).then(res => {
-                    Espo[key] = res;
-                });
-            }
-
-            return Espo[key];
-        },
-
         getLinkOptions(scope, customOptions = {}, clearCache = false) {
             if (!scope) {
                 return [];

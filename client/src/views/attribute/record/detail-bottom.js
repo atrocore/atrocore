@@ -13,18 +13,7 @@ Espo.define('views/attribute/record/detail-bottom', 'views/record/detail-bottom'
 
         createPanelViews() {
             this.panelList.forEach(p => {
-                if (p.name === 'extensibleEnumOptions') {
-                    this.getModelFactory().create('ExtensibleEnum', model => {
-                        model.set('id', this.model.get('extensibleEnumId') || 'no-such-id');
-                        model.attributeModel = this.model;
-                        p = _.extend(p, this.getMetadata().get(['clientDefs', 'ExtensibleEnum', 'relationshipPanels', 'extensibleEnumOptions']));
-                        p.model = model;
-                        p.label = this.translate('extensibleEnumOptions', 'fields', 'ExtensibleEnum');
-                        this.createPanelView(p);
-                    });
-                } else {
-                    this.createPanelView(p);
-                }
+                this.createPanelView(p);
             });
         },
 

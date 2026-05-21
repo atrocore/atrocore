@@ -1031,7 +1031,6 @@
     "isInherited": "Ereditato",
     "isArchived": "Archiviato",
     "code": "Codice",
-    "extensibleEnum": "Elenco",
     "hierarchySortOrder": "Ordine gerarchico",
     "sortOrder": "Ordinamento",
     "parents": "Record del genitore (o dei genitori)",

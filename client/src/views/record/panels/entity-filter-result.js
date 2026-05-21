@@ -80,12 +80,6 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                     this.trigger('panel:rebuild', this.options.defs)
                 });
 
-                this.listenTo(this.model, 'change:extensibleEnumId', () => {
-                    if (['Attribute', 'EntityField'].includes(this.model.name) && ['link', 'linkMultiple'].includes(this.model.get('type'))) {
-                        this.trigger('panel:rebuild', this.options.defs)
-                    }
-                })
-
                 if (this.isRendered()) {
                     this.trigger('panel:rebuild', this.options.defs);
                 }
@@ -105,16 +99,6 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
         },
 
         getWhereAdditional() {
-            if (['Attribute', 'EntityField'].includes(this.model.name) && ['link', 'linkMultiple'].includes(this.model.get('type')) &&
-                this.model.get('extensibleEnumId')) {
-                return [
-                    {
-                        type: 'linkedWith',
-                        attribute: "extensibleEnums",
-                        value: [this.model.get('extensibleEnumId')],
-                    }
-                ]
-            }
             return null
         },
 
@@ -158,26 +142,6 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
 
         actionShowFullList(data) {
             let whereData = this.model.get('data').whereData || {}
-            if (['Attribute', 'EntityField'].includes(this.model.name) && ['link', 'linkMultiple'].includes(this.model.get('type')) &&
-                this.model.get('extensibleEnumId')) {
-                whereData = _.extend(whereData, {
-                    queryBuilder: {
-                        condition: 'AND',
-                        rules: [
-                            ...(whereData?.queryBuilder?.rules || []),
-                            {
-                                id: 'extensibleEnums',
-                                field: 'extensibleEnums',
-                                value: [this.model.get('extensibleEnumId')],
-                                type: 'string',
-                                operator: 'linked_with'
-                            }
-                        ],
-                        valid: true
-                    },
-                    queryBuilderApplied: true
-                });
-            }
             this.getStorage().set('listQueryBuilder', this.scope, whereData);
             window.open(`#${this.scope}`, '_blank');
         },

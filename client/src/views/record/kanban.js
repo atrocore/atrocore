@@ -190,22 +190,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             if (!this.statusField) {
                 throw new Error("No status field for entity type '" + this.scope + "'.");
             }
-            const type = Espo.Utils.clone(this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'type']))
-            if (type === 'enum') {
-                this.statusList = Espo.Utils.clone(this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'options']));
-            } else {
-                const extensibleEnumId = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'extensibleEnumId'])
-                let key = 'extensible_enum_' + extensibleEnumId;
-
-                if (!Espo[key]) {
-                    Espo[key] = [];
-                    this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/options`, {}, {async: false}).then(res => {
-                        Espo[key] = res;
-                    });
-                }
-
-                this.statusList = Espo[key].map(item => item.id)
-            }
+            this.statusList = Espo.Utils.clone(this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'options']));
 
             var statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
 

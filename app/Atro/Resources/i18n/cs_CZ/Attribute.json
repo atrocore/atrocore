@@ -26,7 +26,6 @@
     "amountOfDigitsAfterComma": "Počet číslic za čárkou",
     "description": "Popis",
     "classifications": "Klasifikace",
-    "extensibleEnum": "Seznam",
     "min": "Min",
     "max": "Max",
     "notNull": "Zakázat nulovou hodnotu",
@@ -50,7 +49,6 @@
   "labels": {
     "Classification": "Klasifikace",
     "addNewValue": "Přidání nové hodnoty",
-    "extensibleEnumOptions": "Možnosti seznamu",
     "conditionalProperties": "Podmíněné vlastnosti"
   },
   "options": {
@@ -60,10 +58,8 @@
       "composite": "Kompozitní",
       "date": "Datum",
       "datetime": "Datum a čas",
-      "extensibleEnum": "Seznam",
       "float": "Float",
       "int": "Celé číslo",
-      "extensibleMultiEnum": "Vícehodnotový seznam",
       "text": "Text",
       "markdown": "Markdown",
       "url": "Url",

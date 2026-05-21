@@ -130,10 +130,6 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
                 let customOptions = {}
                 if (['link', 'linkMultiple'].includes(attributeType)) {
                     this.model.defs['fields']['value']['where'] = this.model.get('attributeData')?.where;
-
-                    if (this.model.get('attributeExtensibleEnumId')) {
-                        params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
-                    }
                 }
 
                 if (this.model.get('attributeType') === 'varchar') {
@@ -220,7 +216,6 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
                 this.model.set('attributeEntityType', attr.entityType);
                 this.model.set('attributeEntityField', attr.entityField);
                 this.model.set('attributeFileTypeId', attr.fileTypeId);
-                this.model.set('attributeExtensibleEnumId', attr.extensibleEnumId);
                 this.model.set('attributeIsDropdown', attr.dropdown);
                 this.model.set('maxLength', attr.maxLength);
                 this.model.set('attributeTrim', !!attr.trim);

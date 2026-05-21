@@ -26,7 +26,6 @@
     "amountOfDigitsAfterComma": "Cantidad de dígitos después de la coma",
     "description": "Descripción",
     "classifications": "Clasificaciones",
-    "extensibleEnum": "List",
     "min": "Min",
     "max": "Max",
     "notNull": "Desactivar valor nulo",
@@ -50,7 +49,6 @@
   "labels": {
     "Classification": "Clasificación",
     "addNewValue": "Añadir nuevo valor",
-    "extensibleEnumOptions": "Opciones de la lista",
     "conditionalProperties": "Propiedades condicionales"
   },
   "options": {
@@ -60,10 +58,8 @@
       "composite": "Compuesto",
       "date": "Fecha",
       "datetime": "Date-Time",
-      "extensibleEnum": "List",
       "float": "Decimal",
       "int": "Entero",
-      "extensibleMultiEnum": "Lista multivalor",
       "text": "Área de texto simple",
       "markdown": "Markdown",
       "url": "Url",

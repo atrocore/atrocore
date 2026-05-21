@@ -132,9 +132,7 @@
     "jsonObject": "Json Object",
     "language": "Código de idioma",
     "script": "Guión",
-    "extensibleMultiEnum": "Lista multivalor",
     "markdown": "Markdown",
-    "extensibleEnum": "Lista",
     "multiLanguage": "Códigos lingüísticos",
     "measure": "Medida"
   },

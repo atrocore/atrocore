@@ -26,7 +26,6 @@
     "amountOfDigitsAfterComma": "Ilość cyfr po przecinku",
     "description": "Description",
     "classifications": "Klasyfikacje",
-    "extensibleEnum": "Lista",
     "min": "Min",
     "max": "Max",
     "notNull": "Wyłącz wartość Null",
@@ -50,7 +49,6 @@
   "labels": {
     "Classification": "Klasyfikacja",
     "addNewValue": "Proszę dodać nową wartość",
-    "extensibleEnumOptions": "Opcje list",
     "conditionalProperties": "Właściwości warunkowe"
   },
   "options": {
@@ -60,10 +58,8 @@
       "composite": "Kompozyt",
       "date": "Data",
       "datetime": "Data-czas",
-      "extensibleEnum": "Lista",
       "float": "Liczba zmiennoprzecinkowa",
       "int": "Liczba całkowita",
-      "extensibleMultiEnum": "Lista wielowartościowa",
       "text": "Tekst",
       "markdown": "Markdown",
       "url": "Adres URL",

@@ -22,7 +22,6 @@
     "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "useDisabledTextareaInViewMode": "Deaktivierte Textarea im Ansichtsmodus verwenden",
     "description": "Beschreibung",
-    "extensibleEnum": "Liste",
     "min": "Minimum",
     "max": "Max",
     "notNull": "Deaktivieren Nullwert",
@@ -49,7 +48,6 @@
   },
   "labels": {
     "addNewValue": "Neuen Wert hinzufügen",
-    "extensibleEnumOptions": "Auswahloptionen",
     "Classification": "Klassifikation",
     "conditionalProperties": "Bedingte Eigenschaften",
     "viewRecordsWithAttribute": "Datensätze mit diesem Attribut"
@@ -60,10 +58,8 @@
       "bool": "Boolesch",
       "date": "Datum",
       "datetime": "Datum-Uhrzeit",
-      "extensibleEnum": "Liste",
       "float": "Kommazahl",
       "int": "Ganzzahl",
-      "extensibleMultiEnum": "Liste mit Mehrfachauswahl",
       "text": "Text",
       "markdown": "Markdown",
       "url": "Url",
