@@ -894,6 +894,14 @@ class Base
         $result['additionalSelectColumns'][QueryConverter::TABLE_ALIAS . ".deleted"] = "deleted";
     }
 
+    protected function boolFilterNotDisabledOptions(array &$result): void
+    {
+        $ids = $this->getBoolFilterParameter('notDisabledOptions');
+        if (!empty($ids)) {
+            $result['whereClause'][] = ['id!=' => $ids];
+        }
+    }
+
     protected function boolFilterNotActive(array &$result): void
     {
         $result['whereClause'][] = [
@@ -2992,5 +3000,62 @@ class Base
     protected function getEntityType(): string
     {
         return $this->entityType;
+    }
+
+    public function getWherePartForClusterId(array $item, array $result): array
+    {
+        $entityName = $this->entityType;
+        $suffix = str_replace('.', '_', uniqid('', true));
+        $alias = 'ci_' . $suffix;
+        $entityNameParam = 'cl_en_' . $suffix;
+        $mainAlias = QueryConverter::TABLE_ALIAS;
+
+        $baseCondition = "$alias.entity_name = :$entityNameParam AND $alias.entity_id = $mainAlias.id AND $alias.deleted = :false";
+        $params = [$entityNameParam => $entityName];
+
+        switch ($item['type']) {
+            case 'isNull':
+                return [
+                    'innerSql' => [
+                        'sql'        => "NOT EXISTS (SELECT 1 FROM cluster_item $alias WHERE $baseCondition)",
+                        'parameters' => $params,
+                    ],
+                ];
+            case 'isNotNull':
+                return [
+                    'innerSql' => [
+                        'sql'        => "EXISTS (SELECT 1 FROM cluster_item $alias WHERE $baseCondition)",
+                        'parameters' => $params,
+                    ],
+                ];
+            case 'in':
+                $value = $item['value'] ?? null;
+                if (empty($value)) {
+                    return [];
+                }
+                $values = is_array($value) ? $value : [$value];
+                $clusterParam = 'cl_ids_' . $suffix;
+                return [
+                    'innerSql' => [
+                        'sql'        => "EXISTS (SELECT 1 FROM cluster_item $alias WHERE $baseCondition AND $alias.cluster_id IN (:$clusterParam))",
+                        'parameters' => array_merge($params, [$clusterParam => $values]),
+                    ],
+                ];
+            case 'notIn':
+                $value = $item['value'] ?? null;
+                if (empty($value)) {
+                    return [];
+                }
+                $values = is_array($value) ? $value : [$value];
+                $clusterParam = 'cl_ids_not_' . $suffix;
+                return [
+                    'innerSql' => [
+                        'sql'        => "NOT EXISTS (SELECT 1 FROM cluster_item $alias WHERE $baseCondition AND $alias.cluster_id IN (:$clusterParam))",
+                        'parameters' => array_merge($params, [$clusterParam => $values]),
+                    ],
+                ];
+            default:
+                return [];
+        }
     }
 }

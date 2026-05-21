@@ -37,13 +37,16 @@
     "cannotMergeWithoutGoldenRecord": "It is not possible to merge without a golden record"
   },
   "messages": {
-    "cannotMergeUnconfirmedItems": "Unconfirmed items cannot be added to the merging"
+    "cannotMergeUnconfirmedItems": "Unconfirmed items cannot be added to the merging",
+    "noClusterFound": "No cluster found for this record"
   },
   "labels": {
     "stagingRecord": "staging record",
     "stagingRecords": "staging records",
+    "stagingRecordsPanel": "Staging Records",
     "masterRecord": "master record",
     "masterRecords": "master records",
+    "masterRecordsPanel": "Master Records",
     "confirmed": "Confirmed",
     "rejected": "Rejected"
   },
