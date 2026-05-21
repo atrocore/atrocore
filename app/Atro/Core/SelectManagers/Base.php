@@ -894,14 +894,6 @@ class Base
         $result['additionalSelectColumns'][QueryConverter::TABLE_ALIAS . ".deleted"] = "deleted";
     }
 
-    protected function boolFilterNotDisabledOptions(array &$result): void
-    {
-        $ids = $this->getBoolFilterParameter('notDisabledOptions');
-        if (!empty($ids)) {
-            $result['whereClause'][] = ['id!=' => $ids];
-        }
-    }
-
     protected function boolFilterNotActive(array &$result): void
     {
         $result['whereClause'][] = [
