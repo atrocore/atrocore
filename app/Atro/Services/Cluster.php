@@ -133,7 +133,7 @@ class Cluster extends Base
             $row = [
                 'id'                     => $itemEntityId,
                 'name'                   => $namesByType[$itemEntityName][$itemEntityId] ?? $itemEntityId,
-                'entityType'             => $itemEntityName,
+                'entityName'             => $itemEntityName,
                 'confirmed'              => $clusterItemService->isClusterItemConfirmed($item),
                 'confirmedAutomatically' => $item->get('confirmedAutomatically'),
                 'isGoldenRecord'         => $itemEntityId === $goldenRecordId,

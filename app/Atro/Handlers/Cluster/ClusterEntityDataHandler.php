@@ -34,7 +34,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'name'        => 'entityName',
             'in'          => 'query',
             'required'    => true,
-            'description' => 'Entity type name (e.g. `Product`).',
+            'description' => 'Entity name (e.g. `Product`).',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -75,13 +75,13 @@ use Psr\Http\Server\RequestHandlerInterface;
                             ],
                             'masterRecords'  => [
                                 'type'        => 'array',
-                                'description' => 'Items whose entity type is the primary (master) entity.',
+                                'description' => 'Items whose entity name is the primary (master) entity.',
                                 'items'       => [
                                     'type'       => 'object',
                                     'properties' => [
                                         'id'                     => ['type' => 'string', 'description' => 'Record ID.'],
                                         'name'                   => ['type' => 'string', 'nullable' => true,'description' => 'Record name.'],
-                                        'entityType'             => ['type' => 'string', 'description' => 'Entity type name.'],
+                                        'entityName'             => ['type' => 'string', 'description' => 'Entity name.'],
                                         'confirmed'              => ['type' => 'boolean', 'description' => 'Whether the item is confirmed (determined via isClusterItemConfirmed logic).'],
                                         'confirmedAutomatically' => ['type' => 'boolean', 'nullable' => true, 'description' => 'Whether the item was confirmed automatically.'],
                                         'isGoldenRecord'         => ['type' => 'boolean', 'description' => 'Whether this record is the cluster golden record.'],
@@ -90,13 +90,13 @@ use Psr\Http\Server\RequestHandlerInterface;
                             ],
                             'stagingRecords' => [
                                 'type'        => 'array',
-                                'description' => 'Items whose entity type is a staging (derived) entity.',
+                                'description' => 'Items whose entity name is a staging (derived) entity.',
                                 'items'       => [
                                     'type'       => 'object',
                                     'properties' => [
                                         'id'                     => ['type' => 'string', 'description' => 'Record ID.'],
                                         'name'                   => ['type' => 'string', 'nullable' => true,'description' => 'Record name.'],
-                                        'entityType'             => ['type' => 'string', 'description' => 'Entity type name.'],
+                                        'entityName'             => ['type' => 'string', 'description' => 'Entity name.'],
                                         'confirmed'              => ['type' => 'boolean', 'description' => 'Whether the item is confirmed (determined via isClusterItemConfirmed logic).'],
                                         'confirmedAutomatically' => ['type' => 'boolean', 'nullable' => true, 'description' => 'Whether the item was confirmed automatically.'],
                                         'isGoldenRecord'         => ['type' => 'boolean', 'description' => 'Whether this record is the cluster golden record.'],
