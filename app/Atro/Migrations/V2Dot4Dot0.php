@@ -27,6 +27,7 @@ class V2Dot4Dot0 extends Base
         $this->migrateExtensibleEnumsToLinks();
         $this->migrateAttributeTypes();
         $this->createCustomExtensibleEnumEntity();
+        $this->seedExtensibleEnumLayouts();
         $this->migrateExtensibleEnumTranslations();
     }
 
@@ -166,6 +167,152 @@ class V2Dot4Dot0 extends Base
                     $filePath,
                     json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
                 );
+            }
+        }
+    }
+
+    private function seedExtensibleEnumLayouts(): void
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $layouts = [
+            ['entity' => 'ExtensibleEnum', 'viewType' => 'list',
+             'items' => [
+                 ['name' => 'name', 'link' => true, 'sortOrder' => 0],
+                 ['name' => 'code', 'sortOrder' => 1],
+             ]],
+            ['entity' => 'ExtensibleEnum', 'viewType' => 'detail',
+             'sections' => [[
+                 'name' => 'Details', 'style' => 'default', 'sortOrder' => 0,
+                 'rowItems' => [
+                     ['name' => 'name', 'rowIndex' => 0, 'columnIndex' => 0],
+                     ['name' => 'code', 'rowIndex' => 0, 'columnIndex' => 1],
+                     ['name' => 'description', 'rowIndex' => 1, 'columnIndex' => 0, 'fullWidth' => true],
+                 ],
+             ]]],
+            ['entity' => 'ExtensibleEnum', 'viewType' => 'relationships',
+             'relations' => [['name' => 'extensibleEnumOptions', 'sortOrder' => 0]]],
+            ['entity' => 'ExtensibleEnumOption', 'viewType' => 'list',
+             'items' => [
+                 ['name' => 'color', 'width' => 8.0, 'sortOrder' => 0],
+                 ['name' => 'name', 'link' => true, 'sortOrder' => 1],
+                 ['name' => 'code', 'sortOrder' => 2],
+                 ['name' => 'extensibleEnums', 'sortOrder' => 3],
+             ]],
+            ['entity' => 'ExtensibleEnumOption', 'viewType' => 'list',
+             'relatedEntity' => 'ExtensibleEnum', 'relatedLink' => 'extensibleEnumOptions',
+             'items' => [
+                 ['name' => 'color', 'width' => 8.0, 'sortOrder' => 0],
+                 ['name' => 'name', 'link' => true, 'sortOrder' => 1],
+                 ['name' => 'code', 'sortOrder' => 2],
+             ]],
+            ['entity' => 'ExtensibleEnumOption', 'viewType' => 'detail',
+             'sections' => [[
+                 'name' => 'Details', 'style' => 'default', 'sortOrder' => 0,
+                 'rowItems' => [
+                     ['name' => 'name', 'rowIndex' => 0, 'columnIndex' => 0],
+                     ['name' => 'color', 'rowIndex' => 0, 'columnIndex' => 1],
+                     ['name' => 'code', 'rowIndex' => 1, 'columnIndex' => 0],
+                     ['name' => 'sortOrder', 'rowIndex' => 2, 'columnIndex' => 0],
+                     ['name' => 'extensibleEnums', 'rowIndex' => 2, 'columnIndex' => 1],
+                 ],
+             ]]],
+        ];
+
+        foreach ($layouts as $def) {
+            $entity        = $def['entity'];
+            $viewType      = $def['viewType'];
+            $relatedEntity = $def['relatedEntity'] ?? '';
+            $relatedLink   = $def['relatedLink'] ?? '';
+
+            $hash = md5('atrocore_salt' . implode("\n", ['', $entity, $relatedEntity, $relatedLink, $viewType]));
+
+            try {
+                $existing = $this->getDbal()->createQueryBuilder()
+                    ->select('id')->from('layout')
+                    ->where('hash = :hash')->andWhere('deleted = :d')
+                    ->setParameter('hash', $hash)
+                    ->setParameter('d', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                    ->fetchOne();
+                if ($existing) {
+                    continue;
+                }
+
+                $layoutId = IdGenerator::uuid();
+                $row = [
+                    'id'         => $layoutId,
+                    'entity'     => $entity,
+                    'view_type'  => $viewType,
+                    'hash'       => $hash,
+                    'deleted'    => false,
+                    'created_at' => $now,
+                ];
+                if ($relatedEntity) {
+                    $row['related_entity'] = $relatedEntity;
+                }
+                if ($relatedLink) {
+                    $row['related_link'] = $relatedLink;
+                }
+                $this->getDbal()->insert('layout', $row);
+
+                if (!empty($def['items'])) {
+                    foreach ($def['items'] as $item) {
+                        $r = [
+                            'id'         => IdGenerator::uuid(),
+                            'layout_id'  => $layoutId,
+                            'name'       => $item['name'],
+                            'sort_order' => $item['sortOrder'],
+                            'link'       => !empty($item['link']),
+                            'deleted'    => false,
+                            'created_at' => $now,
+                        ];
+                        if (isset($item['width'])) {
+                            $r['width'] = $item['width'];
+                        }
+                        $this->getDbal()->insert('layout_list_item', $r);
+                    }
+                }
+
+                if (!empty($def['sections'])) {
+                    foreach ($def['sections'] as $sec) {
+                        $sectionId = IdGenerator::uuid();
+                        $this->getDbal()->insert('layout_section', [
+                            'id'         => $sectionId,
+                            'layout_id'  => $layoutId,
+                            'name'       => $sec['name'],
+                            'style'      => $sec['style'] ?? 'default',
+                            'sort_order' => $sec['sortOrder'],
+                            'deleted'    => false,
+                            'created_at' => $now,
+                        ]);
+                        foreach ($sec['rowItems'] as $ri) {
+                            $this->getDbal()->insert('layout_row_item', [
+                                'id'           => IdGenerator::uuid(),
+                                'section_id'   => $sectionId,
+                                'name'         => $ri['name'],
+                                'row_index'    => $ri['rowIndex'],
+                                'column_index' => $ri['columnIndex'],
+                                'full_width'   => !empty($ri['fullWidth']),
+                                'deleted'      => false,
+                                'created_at'   => $now,
+                            ]);
+                        }
+                    }
+                }
+
+                if (!empty($def['relations'])) {
+                    foreach ($def['relations'] as $rel) {
+                        $this->getDbal()->insert('layout_relationship_item', [
+                            'id'         => IdGenerator::uuid(),
+                            'layout_id'  => $layoutId,
+                            'name'       => $rel['name'],
+                            'sort_order' => $rel['sortOrder'],
+                            'deleted'    => false,
+                            'created_at' => $now,
+                        ]);
+                    }
+                }
+            } catch (\Throwable $e) {
             }
         }
     }
