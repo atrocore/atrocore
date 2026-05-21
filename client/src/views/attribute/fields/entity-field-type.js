@@ -33,7 +33,7 @@ Espo.define('views/attribute/fields/entity-field-type', 'views/fields/enum',
                 if (data.notStorable === true || data.type === 'link') {
                     return
                 }
-                if (data.type === 'varchar' || (entityType === 'ExtensibleEnumOption' && name === 'name')) {
+                if (data.type === 'varchar') {
                     this.params.options.push(name);
                     this.translatedOptions[name] = this.translate(name, 'fields', foreign);
                 } else if (data.type === 'link' && ['ownerUser', 'assignedUser'].includes(name)) {

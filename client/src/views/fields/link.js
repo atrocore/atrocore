@@ -124,11 +124,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 createDisabled: this.createDisabled,
             }, Dep.prototype.data.call(this));
 
-            if (
-                ['list', 'detail'].includes(this.mode)
-                && data.foreignScope === 'ExtensibleEnumOption'
-                && this.idName !== this.name
-            ) {
+            if (['list', 'detail'].includes(this.mode) && this.idName !== this.name) {
                 const optionData = this.model.getMeta('options', this.name) || this.getOptionsData();
                 if (optionData.color) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
