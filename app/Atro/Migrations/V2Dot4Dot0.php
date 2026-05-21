@@ -27,6 +27,7 @@ class V2Dot4Dot0 extends Base
         $this->migrateExtensibleEnumsToLinks();
         $this->migrateAttributeTypes();
         $this->createCustomExtensibleEnumEntity();
+        $this->migrateExtensibleEnumTranslations();
     }
 
     private function createCustomExtensibleEnumEntity(): void
@@ -166,6 +167,59 @@ class V2Dot4Dot0 extends Base
                     json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
                 );
             }
+        }
+    }
+
+    private function migrateExtensibleEnumTranslations(): void
+    {
+        $file = 'data/reference-data/Translation.json';
+        if (!file_exists($file)) {
+            return;
+        }
+
+        $translations = json_decode(file_get_contents($file), true) ?? [];
+
+        $defaults = [
+            'ExtensibleEnum.fields.extensibleEnumOptions'                  => 'List Options',
+            'ExtensibleEnum.exceptions.extensibleEnumIsUsed'               => "The List '%s' is used by the field '%s' in the Entity '%s'.",
+            'ExtensibleEnumOption.fields.name'                             => 'Option Value',
+            'ExtensibleEnumOption.fields.color'                            => 'Color',
+            'ExtensibleEnumOption.fields.sortOrder'                        => 'Sort Order',
+            'ExtensibleEnumOption.fields.extensibleEnums'                  => 'Lists',
+            'ExtensibleEnumOption.exceptions.extensibleEnumOptionIsSystem' => "The List Option '%s' is required by the system.",
+            'ExtensibleEnumOption.exceptions.extensibleEnumOptionIsUsed'   => "The List Option '%s' is used by the field '%s' in the Entity '%s' for the Record '%s'.",
+            'Global.scopeNames.ExtensibleEnum'                             => 'List',
+            'Global.scopeNames.ExtensibleEnumOption'                       => 'List Option',
+            'Global.scopeNames.ExtensibleEnumExtensibleEnumOption'         => 'List (List Option)',
+            'Global.scopeNamesPlural.ExtensibleEnum'                       => 'Lists',
+            'Global.scopeNamesPlural.ExtensibleEnumOption'                 => 'List Options',
+        ];
+
+        $changed = false;
+        foreach ($defaults as $code => $enUs) {
+            if (isset($translations[$code])) {
+                if (empty($translations[$code]['isCustomized'])) {
+                    $translations[$code]['isCustomized'] = true;
+                    $changed = true;
+                }
+            } else {
+                $translations[$code] = [
+                    'id'           => md5($code),
+                    'code'         => $code,
+                    'module'       => 'custom',
+                    'isCustomized' => true,
+                    'createdAt'    => date('Y-m-d H:i:s'),
+                    'enUs'         => $enUs,
+                ];
+                $changed = true;
+            }
+        }
+
+        if ($changed) {
+            file_put_contents(
+                $file,
+                json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+            );
         }
     }
 
