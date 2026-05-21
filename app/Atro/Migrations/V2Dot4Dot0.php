@@ -173,50 +173,56 @@ class V2Dot4Dot0 extends Base
 
     private function seedExtensibleEnumLayouts(): void
     {
+        $profileId = $this->getDbal()->createQueryBuilder()
+            ->select('id')
+            ->from('layout_profile')
+            ->where('is_default = :true')
+            ->andWhere('deleted = :false')
+            ->setParameter('true', true, \Doctrine\DBAL\ParameterType::BOOLEAN)
+            ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+            ->fetchOne();
+
+        if (!$profileId) {
+            return;
+        }
+
         $now = date('Y-m-d H:i:s');
 
         $layouts = [
             ['entity' => 'ExtensibleEnum', 'viewType' => 'list',
-             'items' => [
+             'items'  => [
                  ['name' => 'name', 'link' => true, 'sortOrder' => 0],
-                 ['name' => 'code', 'sortOrder' => 1],
+                 ['name' => 'code', 'link' => false, 'sortOrder' => 1],
              ]],
-            ['entity' => 'ExtensibleEnum', 'viewType' => 'detail',
+            ['entity'   => 'ExtensibleEnum', 'viewType' => 'detail',
              'sections' => [[
-                 'name' => 'Details', 'style' => 'default', 'sortOrder' => 0,
-                 'rowItems' => [
-                     ['name' => 'name', 'rowIndex' => 0, 'columnIndex' => 0],
-                     ['name' => 'code', 'rowIndex' => 0, 'columnIndex' => 1],
-                     ['name' => 'description', 'rowIndex' => 1, 'columnIndex' => 0, 'fullWidth' => true],
-                 ],
-             ]]],
-            ['entity' => 'ExtensibleEnum', 'viewType' => 'relationships',
+                                'name'     => 'Details', 'style' => 'default', 'sortOrder' => 0,
+                                'rowItems' => [
+                                    ['name' => 'name', 'rowIndex' => 0, 'columnIndex' => 0, 'fullWidth' => false],
+                                    ['name' => 'code', 'rowIndex' => 0, 'columnIndex' => 1, 'fullWidth' => false],
+                                    ['name' => 'description', 'rowIndex' => 1, 'columnIndex' => 0, 'fullWidth' => true],
+                                ],
+                            ]]],
+            ['entity'    => 'ExtensibleEnum', 'viewType' => 'relationships',
              'relations' => [['name' => 'extensibleEnumOptions', 'sortOrder' => 0]]],
             ['entity' => 'ExtensibleEnumOption', 'viewType' => 'list',
-             'items' => [
-                 ['name' => 'color', 'width' => 8.0, 'sortOrder' => 0],
+             'items'  => [
+                 ['name' => 'color', 'link' => false, 'width' => 8.0, 'sortOrder' => 0],
                  ['name' => 'name', 'link' => true, 'sortOrder' => 1],
-                 ['name' => 'code', 'sortOrder' => 2],
-                 ['name' => 'extensibleEnums', 'sortOrder' => 3],
+                 ['name' => 'code', 'link' => false, 'sortOrder' => 2],
+                 ['name' => 'extensibleEnums', 'link' => false, 'sortOrder' => 3],
              ]],
-            ['entity' => 'ExtensibleEnumOption', 'viewType' => 'list',
-             'relatedEntity' => 'ExtensibleEnum', 'relatedLink' => 'extensibleEnumOptions',
-             'items' => [
-                 ['name' => 'color', 'width' => 8.0, 'sortOrder' => 0],
-                 ['name' => 'name', 'link' => true, 'sortOrder' => 1],
-                 ['name' => 'code', 'sortOrder' => 2],
-             ]],
-            ['entity' => 'ExtensibleEnumOption', 'viewType' => 'detail',
+            ['entity'   => 'ExtensibleEnumOption', 'viewType' => 'detail',
              'sections' => [[
-                 'name' => 'Details', 'style' => 'default', 'sortOrder' => 0,
-                 'rowItems' => [
-                     ['name' => 'name', 'rowIndex' => 0, 'columnIndex' => 0],
-                     ['name' => 'color', 'rowIndex' => 0, 'columnIndex' => 1],
-                     ['name' => 'code', 'rowIndex' => 1, 'columnIndex' => 0],
-                     ['name' => 'sortOrder', 'rowIndex' => 2, 'columnIndex' => 0],
-                     ['name' => 'extensibleEnums', 'rowIndex' => 2, 'columnIndex' => 1],
-                 ],
-             ]]],
+                                'name'     => 'Details', 'style' => 'default', 'sortOrder' => 0,
+                                'rowItems' => [
+                                    ['name' => 'name', 'rowIndex' => 0, 'columnIndex' => 0, 'fullWidth' => false],
+                                    ['name' => 'color', 'rowIndex' => 0, 'columnIndex' => 1, 'fullWidth' => false],
+                                    ['name' => 'code', 'rowIndex' => 1, 'columnIndex' => 0, 'fullWidth' => false],
+                                    ['name' => 'sortOrder', 'rowIndex' => 2, 'columnIndex' => 0, 'fullWidth' => false],
+                                    ['name' => 'extensibleEnums', 'rowIndex' => 2, 'columnIndex' => 1, 'fullWidth' => false],
+                                ],
+                            ]]],
         ];
 
         foreach ($layouts as $def) {
@@ -225,94 +231,143 @@ class V2Dot4Dot0 extends Base
             $relatedEntity = $def['relatedEntity'] ?? '';
             $relatedLink   = $def['relatedLink'] ?? '';
 
-            $hash = md5('atrocore_salt' . implode("\n", ['', $entity, $relatedEntity, $relatedLink, $viewType]));
+            $hash = md5('atrocore_salt' . implode("\n", [$profileId, $entity, $relatedEntity, $relatedLink, $viewType]));
 
-            try {
-                $existing = $this->getDbal()->createQueryBuilder()
-                    ->select('id')->from('layout')
-                    ->where('hash = :hash')->andWhere('deleted = :d')
-                    ->setParameter('hash', $hash)
-                    ->setParameter('d', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
-                    ->fetchOne();
-                if ($existing) {
-                    continue;
-                }
+            $existing = $this->getDbal()->createQueryBuilder()
+                ->select('id')
+                ->from('layout')
+                ->where('hash = :hash')
+                ->andWhere('deleted = :false')
+                ->setParameter('hash', $hash)
+                ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->fetchOne();
 
-                $layoutId = IdGenerator::uuid();
-                $row = [
-                    'id'         => $layoutId,
-                    'entity'     => $entity,
-                    'view_type'  => $viewType,
-                    'hash'       => $hash,
-                    'deleted'    => false,
-                    'created_at' => $now,
-                ];
-                if ($relatedEntity) {
-                    $row['related_entity'] = $relatedEntity;
-                }
-                if ($relatedLink) {
-                    $row['related_link'] = $relatedLink;
-                }
-                $this->getDbal()->insert('layout', $row);
+            if ($existing) {
+                continue;
+            }
 
-                if (!empty($def['items'])) {
-                    foreach ($def['items'] as $item) {
-                        $r = [
-                            'id'         => IdGenerator::uuid(),
-                            'layout_id'  => $layoutId,
-                            'name'       => $item['name'],
-                            'sort_order' => $item['sortOrder'],
-                            'link'       => !empty($item['link']),
-                            'deleted'    => false,
-                            'created_at' => $now,
-                        ];
-                        if (isset($item['width'])) {
-                            $r['width'] = $item['width'];
-                        }
-                        $this->getDbal()->insert('layout_list_item', $r);
-                    }
-                }
+            $layoutId = IdGenerator::uuid();
 
-                if (!empty($def['sections'])) {
-                    foreach ($def['sections'] as $sec) {
-                        $sectionId = IdGenerator::uuid();
-                        $this->getDbal()->insert('layout_section', [
-                            'id'         => $sectionId,
-                            'layout_id'  => $layoutId,
-                            'name'       => $sec['name'],
-                            'style'      => $sec['style'] ?? 'default',
-                            'sort_order' => $sec['sortOrder'],
-                            'deleted'    => false,
-                            'created_at' => $now,
-                        ]);
-                        foreach ($sec['rowItems'] as $ri) {
-                            $this->getDbal()->insert('layout_row_item', [
-                                'id'           => IdGenerator::uuid(),
-                                'section_id'   => $sectionId,
-                                'name'         => $ri['name'],
-                                'row_index'    => $ri['rowIndex'],
-                                'column_index' => $ri['columnIndex'],
-                                'full_width'   => !empty($ri['fullWidth']),
-                                'deleted'      => false,
-                                'created_at'   => $now,
-                            ]);
-                        }
-                    }
-                }
+            $qb = $this->getDbal()->createQueryBuilder()
+                ->insert('layout')
+                ->values([
+                    'id'                => ':id',
+                    'entity'            => ':entity',
+                    'view_type'         => ':viewType',
+                    'layout_profile_id' => ':profileId',
+                    'hash'              => ':hash',
+                    'deleted'           => ':false',
+                    'created_at'        => ':now',
+                ])
+                ->setParameter('id', $layoutId)
+                ->setParameter('entity', $entity)
+                ->setParameter('viewType', $viewType)
+                ->setParameter('profileId', $profileId)
+                ->setParameter('hash', $hash)
+                ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->setParameter('now', $now);
 
-                if (!empty($def['relations'])) {
-                    foreach ($def['relations'] as $rel) {
-                        $this->getDbal()->insert('layout_relationship_item', [
-                            'id'         => IdGenerator::uuid(),
-                            'layout_id'  => $layoutId,
-                            'name'       => $rel['name'],
-                            'sort_order' => $rel['sortOrder'],
-                            'deleted'    => false,
-                            'created_at' => $now,
-                        ]);
-                    }
+            if ($relatedEntity) {
+                $qb->setValue('related_entity', ':relatedEntity')
+                   ->setParameter('relatedEntity', $relatedEntity);
+            }
+            if ($relatedLink) {
+                $qb->setValue('related_link', ':relatedLink')
+                   ->setParameter('relatedLink', $relatedLink);
+            }
+
+            $qb->executeStatement();
+
+            foreach ($def['items'] ?? [] as $item) {
+                $this->getDbal()->createQueryBuilder()
+                    ->insert('layout_list_item')
+                    ->values([
+                        'id'         => ':id',
+                        'layout_id'  => ':layoutId',
+                        'name'       => ':name',
+                        'sort_order' => ':sortOrder',
+                        'link'       => ':link',
+                        'width'      => ':width',
+                        'deleted'    => ':false',
+                        'created_at' => ':now',
+                    ])
+                    ->setParameter('id', IdGenerator::uuid())
+                    ->setParameter('layoutId', $layoutId)
+                    ->setParameter('name', $item['name'])
+                    ->setParameter('sortOrder', $item['sortOrder'], \Doctrine\DBAL\ParameterType::INTEGER)
+                    ->setParameter('link', !empty($item['link']), \Doctrine\DBAL\ParameterType::BOOLEAN)
+                    ->setParameter('width', $item['width'] ?? null)
+                    ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                    ->setParameter('now', $now)
+                    ->executeStatement();
+            }
+
+            foreach ($def['sections'] ?? [] as $sec) {
+                $sectionId = IdGenerator::uuid();
+
+                $this->getDbal()->createQueryBuilder()
+                    ->insert('layout_section')
+                    ->values([
+                        'id'         => ':id',
+                        'layout_id'  => ':layoutId',
+                        'name'       => ':name',
+                        'style'      => ':style',
+                        'sort_order' => ':sortOrder',
+                        'deleted'    => ':false',
+                        'created_at' => ':now',
+                    ])
+                    ->setParameter('id', $sectionId)
+                    ->setParameter('layoutId', $layoutId)
+                    ->setParameter('name', $sec['name'])
+                    ->setParameter('style', $sec['style'] ?? 'default')
+                    ->setParameter('sortOrder', $sec['sortOrder'], \Doctrine\DBAL\ParameterType::INTEGER)
+                    ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                    ->setParameter('now', $now)
+                    ->executeStatement();
+
+                foreach ($sec['rowItems'] as $ri) {
+                    $this->getDbal()->createQueryBuilder()
+                        ->insert('layout_row_item')
+                        ->values([
+                            'id'           => ':id',
+                            'section_id'   => ':sectionId',
+                            'name'         => ':name',
+                            'row_index'    => ':rowIndex',
+                            'column_index' => ':columnIndex',
+                            'full_width'   => ':fullWidth',
+                            'deleted'      => ':false',
+                            'created_at'   => ':now',
+                        ])
+                        ->setParameter('id', IdGenerator::uuid())
+                        ->setParameter('sectionId', $sectionId)
+                        ->setParameter('name', $ri['name'])
+                        ->setParameter('rowIndex', $ri['rowIndex'], \Doctrine\DBAL\ParameterType::INTEGER)
+                        ->setParameter('columnIndex', $ri['columnIndex'], \Doctrine\DBAL\ParameterType::INTEGER)
+                        ->setParameter('fullWidth', $ri['fullWidth'], \Doctrine\DBAL\ParameterType::BOOLEAN)
+                        ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                        ->setParameter('now', $now)
+                        ->executeStatement();
                 }
-            } catch (\Throwable $e) {
+            }
+
+            foreach ($def['relations'] ?? [] as $rel) {
+                $this->getDbal()->createQueryBuilder()
+                    ->insert('layout_relationship_item')
+                    ->values([
+                        'id'         => ':id',
+                        'layout_id'  => ':layoutId',
+                        'name'       => ':name',
+                        'sort_order' => ':sortOrder',
+                        'deleted'    => ':false',
+                        'created_at' => ':now',
+                    ])
+                    ->setParameter('id', IdGenerator::uuid())
+                    ->setParameter('layoutId', $layoutId)
+                    ->setParameter('name', $rel['name'])
+                    ->setParameter('sortOrder', $rel['sortOrder'], \Doctrine\DBAL\ParameterType::INTEGER)
+                    ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                    ->setParameter('now', $now)
+                    ->executeStatement();
             }
         }
     }
