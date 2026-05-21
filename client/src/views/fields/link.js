@@ -145,17 +145,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         },
 
         getOptionsData() {
-            let res = {};
-            let id = this.model.get(this.idName);
-            if (id) {
-                this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
-                    if (option.id === id) {
-                        res = option;
-                    }
-                });
-            }
-
-            return res;
+            return {};
         },
 
         onInlineEditSave(res, attrs, model) {
@@ -202,15 +192,6 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         },
 
         getCreateAttributes: function () {
-            let extensibleEnumId = this.getExtensibleEnumId();
-            if (extensibleEnumId) {
-                return {
-                    "extensibleEnumsIds": [extensibleEnumId],
-                    "extensibleEnumsNames": {
-                        [extensibleEnumId]: this.getExtensibleEnumName()
-                    }
-                }
-            }
         },
 
         setup: function () {
@@ -374,17 +355,6 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 this.ajaxGetRequest(url, null, {async: false}).success(response => {
                     res = response?.where || res;
                 });
-            }
-
-            if (this.getExtensibleEnumId() && this.foreignScope === 'ExtensibleEnumOption') {
-                res = [
-                    ...(res || []),
-                    {
-                        type: 'linkedWith',
-                        attribute: 'extensibleEnums',
-                        value: [this.getExtensibleEnumId()]
-                    }
-                ]
             }
 
             return res || undefined

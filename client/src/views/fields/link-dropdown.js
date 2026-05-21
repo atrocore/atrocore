@@ -132,20 +132,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
         },
 
         getWhereFilter() {
-            let res = this.model.getFieldParam(this.originalName || this.name, 'where')
-
-            if (this.getExtensibleEnumId() && this.foreignScope === 'ExtensibleEnumOption') {
-                res = [
-                    ...(res || []),
-                    {
-                        type: 'linkedWith',
-                        attribute: 'extensibleEnums',
-                        value: [this.getExtensibleEnumId()]
-                    }
-                ]
-            }
-
-            return res
+            return this.model.getFieldParam(this.originalName || this.name, 'where');
         },
 
         fetch: function () {
