@@ -105,13 +105,6 @@
         "docsUrl": "https://help.atrocore.com/atrocore/administration/languages"
       },
       {
-        "url": "#ExtensibleEnum",
-        "label": "lists",
-        "description": "lists",
-        "icon": "ph ph-list-plus",
-        "docsUrl": "https://help.atrocore.com/atrocore/administration/lists"
-      },
-      {
         "url": "#Cluster",
         "label": "clusters",
         "description": "clusters",

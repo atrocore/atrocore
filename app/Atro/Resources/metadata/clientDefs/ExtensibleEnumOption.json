@@ -1,18 +1,4 @@
 {
   "controller": "controllers/record",
-  "iconClass": "list",
-  "boolFilterList": [
-    "defaultOption",
-    "onlyForExtensibleEnum",
-    "onlyAllowedOptions",
-    "onlyExtensibleEnumOptionIds",
-    "notDisabledOptions"
-  ],
-  "hiddenBoolFilterList": [
-    "defaultOption",
-    "onlyForExtensibleEnum",
-    "onlyAllowedOptions",
-    "onlyExtensibleEnumOptionIds",
-    "notDisabledOptions"
-  ]
+  "iconClass": "list"
 }

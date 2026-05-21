@@ -1,14 +1,4 @@
 {
   "controller": "controllers/record",
-  "iconClass": "list-plus",
-  "relationshipPanels": {
-    "extensibleEnumOptions": {
-      "dragDrop": {
-        "isActive": true,
-        "sortField": "sortOrder"
-      },
-      "sortBy": "sortOrder",
-      "asc": true
-    }
-  }
+  "iconClass": "list-plus"
 }
