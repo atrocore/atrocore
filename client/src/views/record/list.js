@@ -1101,6 +1101,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     other.collection = collection;
                     other.putAttributesToSelect();
                     collection.data.select = other.fetchAttributeListFromLayout().join(',');
+                    let hasAttributeInLayout = data.layout.some(fieldData => fieldData.attributeId);
+                    if (!hasAttributeInLayout) {
+                        collection.data.allAttributes = true;
+                    }
+
                     collection.fetch().then(() => {
                         let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
                         this.createView('dialog', view, {
