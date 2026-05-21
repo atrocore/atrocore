@@ -24,6 +24,153 @@ class V2Dot4Dot0 extends Base
 
     public function up(): void
     {
+        $this->migrateExtensibleEnumsToLinks();
+        $this->migrateAttributeTypes();
+        $this->createCustomExtensibleEnumEntity();
+    }
+
+    private function createCustomExtensibleEnumEntity(): void
+    {
+        $dataPath = 'data/metadata';
+
+        $definitions = [
+            'entityDefs' => [
+                'ExtensibleEnum' => [
+                    'fields' => [
+                        'name'                  => ['type' => 'varchar', 'required' => true, 'trim' => true],
+                        'description'           => ['type' => 'text'],
+                        'code'                  => ['type' => 'varchar', 'unique' => true],
+                        'extensibleEnumOptions' => ['type' => 'linkMultiple', 'layoutDetailDisabled' => true, 'noLoad' => true],
+                        'createdAt'             => ['type' => 'datetime', 'readOnly' => true],
+                        'modifiedAt'            => ['type' => 'datetime', 'readOnly' => true],
+                        'createdBy'             => ['type' => 'link', 'readOnly' => true, 'view' => 'views/fields/user'],
+                        'modifiedBy'            => ['type' => 'link', 'readOnly' => true, 'view' => 'views/fields/user'],
+                    ],
+                    'links' => [
+                        'extensibleEnumOptions' => [
+                            'type'         => 'hasMany',
+                            'foreign'      => 'extensibleEnums',
+                            'entity'       => 'ExtensibleEnumOption',
+                            'relationName' => 'ExtensibleEnumExtensibleEnumOption',
+                        ],
+                        'createdBy'  => ['type' => 'belongsTo', 'entity' => 'User'],
+                        'modifiedBy' => ['type' => 'belongsTo', 'entity' => 'User'],
+                    ],
+                    'collection' => ['sortBy' => 'createdAt', 'asc' => false],
+                    'indexes'    => [
+                        'name'      => ['columns' => ['name', 'deleted']],
+                        'createdAt' => ['columns' => ['createdAt', 'deleted']],
+                    ],
+                ],
+                'ExtensibleEnumOption' => [
+                    'fields' => [
+                        'name'            => ['type' => 'varchar', 'isMultilang' => true],
+                        'code'            => ['type' => 'varchar', 'unique' => true],
+                        'extensibleEnums' => ['type' => 'linkMultiple'],
+                        'color'           => ['type' => 'color'],
+                        'sortOrder'       => ['type' => 'int'],
+                        'createdAt'       => ['type' => 'datetime', 'readOnly' => true],
+                        'modifiedAt'      => ['type' => 'datetime', 'readOnly' => true],
+                        'createdBy'       => ['type' => 'link', 'readOnly' => true, 'view' => 'views/fields/user'],
+                        'modifiedBy'      => ['type' => 'link', 'readOnly' => true, 'view' => 'views/fields/user'],
+                    ],
+                    'links' => [
+                        'extensibleEnums' => [
+                            'type'         => 'hasMany',
+                            'foreign'      => 'extensibleEnumOptions',
+                            'entity'       => 'ExtensibleEnum',
+                            'relationName' => 'ExtensibleEnumExtensibleEnumOption',
+                        ],
+                        'createdBy'  => ['type' => 'belongsTo', 'entity' => 'User'],
+                        'modifiedBy' => ['type' => 'belongsTo', 'entity' => 'User'],
+                    ],
+                    'collection' => ['sortBy' => 'sortOrder', 'asc' => true],
+                    'indexes'    => [
+                        'createdAt' => ['columns' => ['createdAt', 'deleted']],
+                    ],
+                ],
+            ],
+            'scopes' => [
+                'ExtensibleEnum' => [
+                    'entity'             => true,
+                    'layouts'            => true,
+                    'tab'                => true,
+                    'acl'                => true,
+                    'customizable'       => true,
+                    'importable'         => true,
+                    'notifications'      => true,
+                    'streamDisabled'     => true,
+                    'disabled'           => false,
+                    'type'               => 'Base',
+                    'object'             => true,
+                    'hideFieldTypeFilters' => true,
+                    'hasOwner'           => true,
+                    'hasAssignedUser'    => true,
+                    'hasTeam'            => true,
+                    'matchingDisabled'   => true,
+                    'valueLockDisabled'  => true,
+                    'module'             => 'Custom',
+                    'isCustom'           => true,
+                ],
+                'ExtensibleEnumOption' => [
+                    'entity'             => true,
+                    'layouts'            => true,
+                    'tab'                => true,
+                    'acl'                => true,
+                    'customizable'       => true,
+                    'importable'         => true,
+                    'notifications'      => true,
+                    'streamDisabled'     => true,
+                    'disabled'           => false,
+                    'type'               => 'Base',
+                    'object'             => true,
+                    'hideFieldTypeFilters' => true,
+                    'hasOwner'           => true,
+                    'hasAssignedUser'    => true,
+                    'hasTeam'            => true,
+                    'matchingDisabled'   => true,
+                    'valueLockDisabled'  => true,
+                    'module'             => 'Custom',
+                    'isCustom'           => true,
+                ],
+            ],
+            'clientDefs' => [
+                'ExtensibleEnum' => [
+                    'controller' => 'controllers/record',
+                    'iconClass'  => 'list-plus',
+                ],
+                'ExtensibleEnumOption' => [
+                    'controller' => 'controllers/record',
+                    'iconClass'  => 'list',
+                ],
+            ],
+        ];
+
+        foreach ($definitions as $type => $entities) {
+            $dir = "$dataPath/$type";
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            foreach ($entities as $entityName => $canonical) {
+                $filePath = "$dir/$entityName.json";
+
+                $data = $canonical;
+                if (file_exists($filePath)) {
+                    $existing = json_decode(file_get_contents($filePath), true) ?? [];
+                    $data = array_replace_recursive($canonical, $existing);
+                }
+
+                file_put_contents(
+                    $filePath,
+                    json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                );
+            }
+        }
+    }
+
+    private function migrateExtensibleEnumsToLinks(): void
+    {
         $enumOptionFile = 'data/metadata/entityDefs/ExtensibleEnumOption.json';
         $enumOptionDefs = file_exists($enumOptionFile)
             ? (json_decode(file_get_contents($enumOptionFile), true) ?? [])
@@ -37,20 +184,20 @@ class V2Dot4Dot0 extends Base
             }
 
             $tableName = Util::toUnderScore(lcfirst($entityName));
-            $defs      = json_decode(file_get_contents($file), true) ?? [];
-            $changed   = false;
+            $defs = json_decode(file_get_contents($file), true) ?? [];
+            $changed = false;
 
             foreach ($defs['fields'] ?? [] as $field => $fieldDefs) {
-                $col         = Util::toUnderScore(lcfirst($field));
-                $type        = $fieldDefs['type'] ?? '';
-                $enumId      = $fieldDefs['extensibleEnumId'] ?? null;
+                $col = Util::toUnderScore(lcfirst($field));
+                $type = $fieldDefs['type'] ?? '';
+                $enumId = $fieldDefs['extensibleEnumId'] ?? null;
                 $foreignName = lcfirst($field) . ucfirst(lcfirst($entityName)) . 's' . substr(md5($entityName . $field), 0, 8);
 
                 if ($type === 'extensibleEnum') {
                     $this->renameColumn($tableName, $col, $col . '_id');
 
                     $defs['fields'][$field] = $this->buildLinkDefs($fieldDefs, $enumId);
-                    $defs['links'][$field]  = [
+                    $defs['links'][$field] = [
                         'type'     => 'belongsTo',
                         'entity'   => 'ExtensibleEnumOption',
                         'foreign'  => $foreignName,
@@ -58,13 +205,13 @@ class V2Dot4Dot0 extends Base
                     ];
 
                     $enumOptionDefs['fields'][$foreignName] = $this->buildReverseLinkMultipleFieldDefs();
-                    $enumOptionDefs['links'][$foreignName]  = [
+                    $enumOptionDefs['links'][$foreignName] = [
                         'type'    => 'hasMany',
                         'foreign' => $field,
                         'entity'  => $entityName,
                     ];
 
-                    $changed           = true;
+                    $changed = true;
                     $enumOptionChanged = true;
                 }
 
@@ -76,7 +223,7 @@ class V2Dot4Dot0 extends Base
                     $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " DROP COLUMN " . $this->getDbal()->quoteIdentifier($col));
 
                     $defs['fields'][$field] = $this->buildLinkMultipleDefs($fieldDefs, $enumId);
-                    $defs['links'][$field]  = [
+                    $defs['links'][$field] = [
                         'type'         => 'hasMany',
                         'entity'       => 'ExtensibleEnumOption',
                         'relationName' => $relationName,
@@ -85,14 +232,14 @@ class V2Dot4Dot0 extends Base
                     ];
 
                     $enumOptionDefs['fields'][$foreignName] = $this->buildReverseLinkMultipleFieldDefs();
-                    $enumOptionDefs['links'][$foreignName]  = [
+                    $enumOptionDefs['links'][$foreignName] = [
                         'type'         => 'hasMany',
                         'foreign'      => $field,
                         'entity'       => $entityName,
                         'relationName' => $relationName,
                     ];
 
-                    $changed           = true;
+                    $changed = true;
                     $enumOptionChanged = true;
                 }
             }
@@ -105,8 +252,6 @@ class V2Dot4Dot0 extends Base
         if ($enumOptionChanged) {
             file_put_contents($enumOptionFile, json_encode($enumOptionDefs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
-
-        $this->migrateAttributeTypes();
     }
 
     private function migrateAttributeTypes(): void
