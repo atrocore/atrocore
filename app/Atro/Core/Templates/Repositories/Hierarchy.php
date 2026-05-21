@@ -146,6 +146,13 @@ class Hierarchy extends Base
         }
     }
 
+    protected function afterRestore($entity)
+    {
+        parent::afterRestore($entity);
+
+        $this->buildRoutes($entity->id);
+    }
+
     public function getEntityPosition(Entity $entity, string $parentId, array $sortParams): ?int
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
