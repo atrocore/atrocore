@@ -196,6 +196,54 @@ sudo systemctl restart apache2
 
 ---
 
+### Issue: Database Dump Fails During System Update
+
+When updating the system via Composer, a database backup is automatically created before applying any changes. If the backup fails, you may see one of the following messages in the output:
+
+```
+Failed! Please, install pg_dump! System can’t create dump for database!
+```
+```
+Failed! Please, install mysqldump! System can’t create dump for database!
+```
+
+These messages are generic — they appear whenever the dump command exits with a non-zero status code. The actual cause can be anything: a missing utility, wrong credentials, insufficient permissions, or a network/socket issue.
+
+**How to Diagnose:**
+
+To find the real error, run the dump command manually with the values from your `data/config.php` file. The stderr output (suppressed during the update) will reveal the actual problem.
+
+For **PostgreSQL** (`driver: pdo_pgsql`):
+```bash
+PGPASSWORD="<password>" pg_dump -c -h <host> -p <port> -U <user> -d <dbname> > /tmp/test-dump.sql
+```
+
+For **MySQL** (`driver: pdo_mysql`):
+```bash
+mysqldump --add-drop-table -h <host> --no-tablespaces -u <user> --port=<port> -p’<password>’ <dbname> > /tmp/test-dump.sql
+```
+
+Replace each placeholder with the corresponding value from `data/config.php`:
+
+| Placeholder | Config key |
+|---|---|
+| `<host>` | `database.host` |
+| `<port>` | `database.port` (default: `5432` for PG, `3306` for MySQL) |
+| `<user>` | `database.user` |
+| `<password>` | `database.password` |
+| `<dbname>` | `database.dbname` |
+
+**Common causes and fixes:**
+
+- **Utility not installed** — install `postgresql-client` (for `pg_dump`) or `mysql-client` / `mysqldump` package for your OS.
+- **Wrong credentials** — verify the values in `data/config.php` match the actual database user and password.
+- **Access denied** — the database user may lack the `SELECT` privilege on certain tables; grant it or use a more privileged account for dumps.
+- **Permission denied on output path** — the web server user (`www-data` on Ubuntu) must have write access to the `backups/` directory.
+
+Once the command runs successfully on its own, re-run the system update — the backup step will succeed automatically.
+
+---
+
 ## What’s Next
 
 The Typical Issues section will be continuously updated as new cases are identified and verified. Stay tuned — we’ll document more problems and their solutions as they emerge.
