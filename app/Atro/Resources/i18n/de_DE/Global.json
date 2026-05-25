@@ -523,6 +523,7 @@
     "basic": "Grundlegend",
     "script": "Script",
     "unitPart": "(Maßeinheit)",
+    "prefixPart": "(Präfix)",
     "Details": "Details",
     "Filter": "Filter",
     "openLink": "Link öffnen",

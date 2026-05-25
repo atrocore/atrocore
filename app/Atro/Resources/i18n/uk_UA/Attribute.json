@@ -11,6 +11,8 @@
     "pattern": "Regex Pattern",
     "measure": "Міра",
     "defaultUnit": "Одиниця виміру за замовченням",
+    "prefix": "Префікс",
+    "defaultPrefix": "Префікс за замовчуванням",
     "defaultDate": "Дата за замовченням",
     "isRequired": "Обов'язково",
     "allowNullForBool": "Дозволити нульове значення",

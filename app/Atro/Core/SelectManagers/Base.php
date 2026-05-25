@@ -441,7 +441,7 @@ class Base
                             $item = [];
                         }
                     } else {
-                        $isUnitField = !empty($item['data']['unitField']);
+                        $isUnitField = !empty($item['data']['combinedField']);
                         $item = [
                             'attribute' => $attribute,
                             'type'      => $type,
@@ -449,11 +449,11 @@ class Base
                         ];
                         if ($isUnitField) {
                             if (!empty($additionForAttribute['isAttribute'])) {
-                                $item['unitField'] = true;
+                                $item['combinedField'] = true;
                             } else {
                                 $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute]);
                                 if (!empty($fieldDefs['mainField']) && !empty($fieldDefs['measureId'])) {
-                                    $item['unitField'] = true;
+                                    $item['combinedField'] = true;
                                     $item['attribute'] = $fieldDefs['mainField'];
                                 }
                             }
@@ -1721,7 +1721,7 @@ class Base
             $item['dateTime'] = true;
         }
 
-        if (!empty($item['unitField']) && empty($item['isAttribute']) && !empty($attribute) && !empty($item['type'])) {
+        if (!empty($item['combinedField']) && empty($item['isAttribute']) && !empty($attribute) && !empty($item['type'])) {
             return $this->convertUnitFieldWhere($item);
         }
 

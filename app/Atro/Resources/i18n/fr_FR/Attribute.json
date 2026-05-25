@@ -10,6 +10,8 @@
     "pattern": "Modif Regex",
     "measure": "Mesure",
     "defaultUnit": "Unité par défaut",
+    "prefix": "Préfixe",
+    "defaultPrefix": "Préfixe par défaut",
     "defaultDate": "Date par défaut",
     "isRequired": "Requis",
     "isReadOnly": "Lecture seule",

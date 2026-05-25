@@ -64,6 +64,14 @@
       ],
       [
         {
+          "name": "prefix"
+        },
+        {
+          "name": "defaultPrefix"
+        }
+      ],
+      [
+        {
           "name": "trim"
         },
         {

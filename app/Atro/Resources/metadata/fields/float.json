@@ -16,6 +16,11 @@
       "entity": "Measure"
     },
     {
+      "name": "prefix",
+      "type": "link",
+      "entity": "ExtensibleEnum"
+    },
+    {
       "name": "default",
       "type": "float"
     },

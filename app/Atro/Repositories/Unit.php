@@ -100,7 +100,7 @@ class Unit extends Base
                 if (
                     empty($fieldDef['notStorable'])
                     && empty($fieldDef['unitIdField'])
-                    && empty($fieldDef['unitField'])
+                    && empty($fieldDef['combinedField'])
                     && !empty($fieldDef['type'])
                     && !empty($fieldDef['measureId'])
                     && $fieldDef['measureId'] === $entity->get('measureId')

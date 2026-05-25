@@ -15,6 +15,8 @@
     "pattern": "Modello Regex",
     "measure": "Misura",
     "defaultUnit": "Unità predefinita",
+    "prefix": "Prefisso",
+    "defaultPrefix": "Prefisso predefinito",
     "defaultDate": "Data predefinita",
     "isRequired": "Richiesto",
     "isReadOnly": "In sola lettura",

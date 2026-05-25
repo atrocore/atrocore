@@ -40,8 +40,8 @@ class IntType extends AbstractFieldType
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
-        $id = $row['id'];
-        $name = AttributeFieldConverter::prepareFieldName($row);
+        $id            = $row['id'];
+        $name          = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name] = [
@@ -111,15 +111,22 @@ class IntType extends AbstractFieldType
             $entity->entityDefs['fields'][$name]['disableFieldValueLock'] = true;
         }
 
-        if (isset($row['measure_id'])) {
-            $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
-            $entity->entityDefs['fields'][$name]['mainField'] = $name;
-            $entity->entityDefs['fields'][$name]['unitField'] = true;
-            $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
-            $entity->entityDefs['fields'][$name]['detailViewLabel'] = $entity->entityDefs['fields'][$name]['label'];
-            $entity->entityDefs['fields'][$name]['label'] = "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate("{$this->type}Part");
+        $hasMeasure = isset($row['measure_id']);
+        $hasPrefix  = !empty($row['prefix_id']);
+        $nameKey    = $this->prepareKey('name', $row);
 
-            $entity->fields[$name . 'UnitId'] = [
+        if ($hasMeasure || $hasPrefix) {
+            $entity->entityDefs['fields'][$name]['mainField']        = $name;
+            $entity->entityDefs['fields'][$name]['combinedField']    = true;
+            $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/combined-{$this->type}";
+            $entity->entityDefs['fields'][$name]['detailViewLabel']  = $entity->entityDefs['fields'][$name]['label'];
+            $entity->entityDefs['fields'][$name]['label']            = "{$row[$nameKey]} " . $this->language->translate("{$this->type}Part");
+        }
+
+        if ($hasMeasure) {
+            $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
+
+            $entity->fields[$name . 'UnitId']   = [
                 'type'        => 'varchar',
                 'name'        => $name,
                 'attributeId' => $id,
@@ -153,7 +160,7 @@ class IntType extends AbstractFieldType
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
                 "type"                      => "link",
-                'label'                     => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+                'label'                     => "{$row[$nameKey]} " . $this->language->translate('unitPart'),
                 "view"                      => "views/fields/unit-link",
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
@@ -178,40 +185,85 @@ class IntType extends AbstractFieldType
                 'layoutDetailDisabled'      => true,
                 'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
             ];
-            $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
-            $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
+            $attributesDefs[$name . 'Unit']               = $entity->entityDefs['fields'][$name . 'Unit'];
 
             $entity->entityDefs['fields'][$name . 'UnitId'] = [
-                'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+                'label' => "{$row[$nameKey]} " . $this->language->translate('unitPart'),
             ];
-        } else {
-            $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
         }
+
+        if ($hasPrefix) {
+            $entity->entityDefs['fields'][$name]['prefixId'] = $row['prefix_id'];
+
+            $entity->fields[$name . 'PrefixId']   = [
+                'type'        => 'varchar',
+                'name'        => $name,
+                'attributeId' => $id,
+                'column'      => 'prefix_value',
+                'required'    => false,
+            ];
+            $entity->fields[$name . 'PrefixName'] = [
+                'type'        => 'varchar',
+                'attributeId' => $id,
+                'notStorable' => true,
+            ];
+
+            if (empty($skipValueProcessing)) {
+                if (empty($row['av_id']) && !empty($row['default_prefix'])) {
+                    $entity->set($name . 'PrefixId', $row['default_prefix']);
+                } else {
+                    $entity->set($name . 'PrefixId', $row['prefix_value'] ?? null);
+                    $entity->set($name . 'PrefixName', $row['prefix_option_name'] ?? null);
+                }
+            }
+
+            $entity->entityDefs['fields'][$name . 'Prefix'] = [
+                'type'                 => 'link',
+                'label'                => "{$row[$nameKey]} " . $this->language->translate('prefixPart'),
+                'entity'               => 'ExtensibleEnumOption',
+                'extensibleEnumId'     => $row['prefix_id'],
+                'default'              => $row['default_prefix'] ?? null,
+                'prefixIdField'        => true,
+                'mainField'            => $name,
+                'attributeId'          => $id,
+                'layoutDetailDisabled' => true,
+            ];
+            $attributesDefs[$name . 'Prefix']               = $entity->entityDefs['fields'][$name . 'Prefix'];
+        }
+
+        $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 
-        $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
-
         $qb->addSelect("{$alias}.{$this->type}_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
-        $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
-        $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
 
-        switch ($params['orderBy']) {
-            case $name:
-                $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name) . ' ' . $params['order']);
-                break;
-            case "{$name}Unit":
+        if (isset($row['measure_id'])) {
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
+            $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
+            $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
+
+            if ("{$name}Unit" === $params['orderBy']) {
                 $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName") . ' ' . $params['order']);
-                break;
+            }
+        }
+
+        if (!empty($row['prefix_id'])) {
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier('extensible_enum_option'), "{$alias}_peeo", "{$alias}_peeo.id={$alias}.prefix_value AND {$alias}_peeo.deleted=:false");
+            $qb->addSelect("{$alias}.prefix_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixId"));
+            $qb->addSelect("{$alias}_peeo.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixName"));
+        }
+
+        if ($name === $params['orderBy']) {
+            $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name) . ' ' . $params['order']);
         }
     }
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if (!empty($item['unitField'])) {
+        if (!empty($item['combinedField'])) {
             return $this->convertUnitFieldWhere($entity, $attribute, $item);
         }
 
@@ -246,10 +298,10 @@ class IntType extends AbstractFieldType
 
     protected function convertUnitFieldWhere(IEntity $entity, array $attribute, array $item): array
     {
-        $type = $item['type'];
-        $value = $item['value'] ?? null;
+        $type        = $item['type'];
+        $value       = $item['value'] ?? null;
         $valueColumn = $item['valueColumn'] ?? "{$this->type}Value";
-        $isInt = $this->type === 'int';
+        $isInt       = $this->type === 'int';
 
         if ($type === 'isNull') {
             return [
@@ -289,15 +341,15 @@ class IntType extends AbstractFieldType
             }
 
             $baseFrom = $this->resolveUnitFilterValue($value[0], $measureUnits);
-            $baseTo = $this->resolveUnitFilterValue($value[1], $measureUnits);
+            $baseTo   = $this->resolveUnitFilterValue($value[1], $measureUnits);
             if ($baseFrom === null || $baseTo === null) {
                 return [];
             }
 
             $orConditions = [];
             foreach ($measureUnits as $unitId => $multiplier) {
-                $convertedFrom = $baseFrom / $multiplier;
-                $convertedTo = $baseTo / $multiplier;
+                $convertedFrom  = $baseFrom / $multiplier;
+                $convertedTo    = $baseTo / $multiplier;
                 $orConditions[] = [
                     'type'  => 'and',
                     'value' => [

@@ -110,7 +110,7 @@ class EntityField extends ReferenceData
 
         $label = $this->translate($fieldName, 'fields', $entityName);
         if (in_array($fieldDefs['type'], ['int', 'float', 'varchar']) && !empty($fieldDefs['measureId'])) {
-            $label = $this->translate('unit' . ucfirst($fieldName), 'fields', $entityName);
+            $label = $this->translate('combined' . ucfirst($fieldName), 'fields', $entityName);
         }
 
         $translatedOptions = null;

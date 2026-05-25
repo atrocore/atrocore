@@ -393,12 +393,66 @@
         }
       }
     },
+    "prefix": {
+      "type": "link",
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float",
+                "varchar"
+              ]
+            },
+            {
+              "type": "isFalse",
+              "attribute": "isMultilang"
+            }
+          ]
+        }
+      }
+    },
     "defaultUnit": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/default-unit",
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "layoutRemoveDisabled": true
+    },
+    "defaultPrefix": {
+      "type": "varchar",
+      "view": "views/fields/extensible-enum-dropdown",
+      "extensibleEnumIdField": "prefixId",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float",
+                "varchar"
+              ]
+            },
+            {
+              "type": "isFalse",
+              "attribute": "isMultilang"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "prefixId"
+            }
+          ]
+        }
+      }
     },
     "defaultDate": {
       "type": "varchar",
@@ -797,6 +851,11 @@
       "type": "belongsTo",
       "foreign": "attributes",
       "entity": "Measure"
+    },
+    "prefix": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "ExtensibleEnum"
     },
     "classificationAttributes": {
       "type": "hasMany",

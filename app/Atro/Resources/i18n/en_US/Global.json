@@ -208,6 +208,7 @@
     "floatPart": "(Float)",
     "varcharPart": "(String)",
     "unitPart": "(Unit)",
+    "prefixPart": "(Prefix)",
     "inheritAllForChildren": "Inherit all for children items",
     "inheritAllFromParent": "Inherit all from parent",
     "homepage": "Homepage",

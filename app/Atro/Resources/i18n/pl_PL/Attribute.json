@@ -14,6 +14,8 @@
     "pattern": "Wzorzec Regex",
     "measure": "Miara",
     "defaultUnit": "Jednostka domyślna",
+    "prefix": "Prefiks",
+    "defaultPrefix": "Domyślny prefiks",
     "defaultDate": "Data domyślna",
     "isRequired": "Wymagane",
     "isReadOnly": "Tylko do odczytu",

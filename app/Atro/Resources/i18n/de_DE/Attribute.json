@@ -11,6 +11,8 @@
     "pattern": "Regex-Muster",
     "measure": "Maß",
     "defaultUnit": "Standard Maßeinheit",
+    "prefix": "Präfix",
+    "defaultPrefix": "Standard-Präfix",
     "defaultDate": "Standard Datum",
     "isRequired": "Erforderlich",
     "isReadOnly": "Schreibgeschützt",

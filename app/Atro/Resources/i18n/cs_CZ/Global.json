@@ -195,6 +195,7 @@
     "intPart": "(Celé číslo)",
     "floatPart": "(desetinné číslo)",
     "unitPart": "(Jednotka)",
+    "prefixPart": "(Prefix)",
     "inheritAllForChildren": "Dědit vše pro podřízené položky",
     "inheritAllFromParent": "Dědit vše od rodiče",
     "homepage": "Domovská stránka",

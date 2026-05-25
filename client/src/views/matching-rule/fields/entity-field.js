@@ -107,7 +107,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
                     !fieldDefs.disabled
                     && availableTypes.includes(fieldDefs.type)
                     && !fieldDefs.importDisabled
-                    && !fieldDefs.unitField
+                    && !fieldDefs.combinedField
                     && !fieldDefs.notStorable
                 ) {
                     this.params.options.push(field);

@@ -348,6 +348,19 @@
         }
       }
     },
+    "prefix": {
+      "type": "link",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
     "trim": {
       "type": "bool",
       "default": true
@@ -441,6 +454,11 @@
     "defaultUnit": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/default-unit"
+    },
+    "defaultPrefix": {
+      "type": "varchar",
+      "view": "views/fields/extensible-enum-dropdown",
+      "extensibleEnumIdField": "prefixId"
     },
     "tooltip": {
       "type": "bool"
@@ -1100,6 +1118,10 @@
     "measure": {
       "type": "belongsTo",
       "entity": "Measure"
+    },
+    "prefix": {
+      "type": "belongsTo",
+      "entity": "ExtensibleEnum"
     },
     "extensibleEnum": {
       "type": "belongsTo",

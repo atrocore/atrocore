@@ -65,7 +65,7 @@ class Metadata extends AbstractMetadataListener
 
         $this->prepareRanges($data);
 
-        $this->prepareUnit($data);
+        $this->prepareUnitsAndPrefixes($data);
 
         $this->setTranslationRequiredLanguage($data);
 
@@ -656,14 +656,17 @@ class Metadata extends AbstractMetadataListener
         }
     }
 
-    protected function prepareUnit(array &$data): void
+    protected function prepareUnitsAndPrefixes(array &$data): void
     {
         foreach ($data['entityDefs'] as $entityType => $entityDefs) {
             if (empty($entityDefs['fields'])) {
                 continue 1;
             }
             foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                if (empty($fieldDefs['measureId'])) {
+                $hasMeasure = !empty($fieldDefs['measureId']);
+                $hasPrefix  = !empty($fieldDefs['prefixId']);
+
+                if (!$hasMeasure && !$hasPrefix) {
                     continue;
                 }
                 if (!empty($fieldDefs['relationVirtualField'])) {
@@ -677,7 +680,7 @@ class Metadata extends AbstractMetadataListener
                     continue;
                 }
 
-                if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                if ($hasMeasure && in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
                     $data['entityDefs'][$entityType]['fields'][$field . 'From']['measureId'] = $fieldDefs['measureId'];
                     $data['entityDefs'][$entityType]['fields'][$field . 'To']['measureId']   = $fieldDefs['measureId'];
                     $notStorable                                                             = !empty($data['entityDefs'][$entityType]['fields'][$field . 'From']['notStorable']);
@@ -685,122 +688,182 @@ class Metadata extends AbstractMetadataListener
                     $notStorable = !empty($fieldDefs['notStorable']);
                 }
 
-                $unitFieldName                                             = $field . 'Unit';
-                $data['entityDefs'][$entityType]['fields'][$unitFieldName] = [
-                    "type"        => "link",
-                    "view"        => "views/fields/unit-link",
-                    "measureId"   => $fieldDefs['measureId'],
-                    "default"     => $fieldDefs['defaultUnit'] ?? null,
-                    "unitIdField" => true,
-                    "mainField"   => $field,
-                    "required"    => !empty($fieldDefs['required']),
-                    "readOnly"    => !empty($fieldDefs['readOnly']),
-                    "protected"   => !empty($fieldDefs['protected']),
-                    "notStorable" => $notStorable,
-                    "emHidden"    => true
-                ];
+                if ($hasMeasure) {
+                    $unitFieldName                                             = $field . 'Unit';
+                    $data['entityDefs'][$entityType]['fields'][$unitFieldName] = [
+                        "type"        => "link",
+                        "view"        => "views/fields/unit-link",
+                        "measureId"   => $fieldDefs['measureId'],
+                        "default"     => $fieldDefs['defaultUnit'] ?? null,
+                        "unitIdField" => true,
+                        "mainField"   => $field,
+                        "required"    => !empty($fieldDefs['required']),
+                        "readOnly"    => !empty($fieldDefs['readOnly']),
+                        "protected"   => !empty($fieldDefs['protected']),
+                        "notStorable" => $notStorable,
+                        "emHidden"    => true
+                    ];
 
-                if (isset($fieldDefs['multilangLocale'])) {
-                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['multilangLocale'] = $fieldDefs['multilangLocale'];
-                }
+                    if (isset($fieldDefs['multilangLocale'])) {
+                        $data['entityDefs'][$entityType]['fields'][$unitFieldName]['multilangLocale'] = $fieldDefs['multilangLocale'];
+                    }
 
-                $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
-                    "type"                        => "belongsTo",
-                    "entity"                      => "Unit",
-                    "skipOrmDefs"                 => $notStorable,
-                    'layoutRelationshipsDisabled' => true,
-                ];
-
-                if ($visibleLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['visible'] ?? null) {
-                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['visible'] = $visibleLogic;
-                }
-
-                if ($readOnly = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['readOnly'] ?? null) {
-                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['readOnly'] = $readOnly;
-                }
-
-                if ($requireLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['required'] ?? null) {
-                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['required'] = $requireLogic;
-                }
-
-                if ($protected = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['protected'] ?? null) {
-                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['protected'] = $protected;
-                }
-
-                if (in_array($fieldDefs['type'], ['int', 'float', 'varchar'])) {
-                    $virtualFieldName                                                = 'unit' . ucfirst($field);
-                    $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = $virtualFieldName;
-                    $data['entityDefs'][$entityType]['fields'][$virtualFieldName]    = [
-                        "type"               => "varchar",
-                        "notStorable"        => true,
-                        "view"               => "views/fields/unit-{$fieldDefs['type']}",
-                        "measureId"          => $fieldDefs['measureId'],
-                        "mainField"          => $field,
-                        "unitField"          => true,
-                        "required"           => false,
-                        "filterDisabled"     => $fieldDefs['type'] === 'varchar',
-                        "massUpdateDisabled" => true,
-                        "importDisabled"     => true,
-                        "emHidden"           => true
+                    $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
+                        "type"                        => "belongsTo",
+                        "entity"                      => "Unit",
+                        "skipOrmDefs"                 => $notStorable,
+                        'layoutRelationshipsDisabled' => true,
                     ];
 
                     if ($visibleLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['visible'] ?? null) {
-                        $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['visible'] = $visibleLogic;
+                        $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['visible'] = $visibleLogic;
                     }
 
                     if ($readOnly = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['readOnly'] ?? null) {
-                        $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['readOnly'] = $readOnly;
+                        $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['readOnly'] = $readOnly;
                     }
 
                     if ($requireLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['required'] ?? null) {
-                        $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['required'] = $requireLogic;
+                        $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['required'] = $requireLogic;
                     }
-                } else {
-                    $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
+
+                    if ($protected = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['protected'] ?? null) {
+                        $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['protected'] = $protected;
+                    }
+
+                    if (in_array($fieldDefs['type'], ['int', 'float', 'varchar'])) {
+                        $virtualFieldName                                                = 'combined' . ucfirst($field);
+                        $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = $virtualFieldName;
+                        $data['entityDefs'][$entityType]['fields'][$virtualFieldName]    = [
+                            "type"               => "varchar",
+                            "notStorable"        => true,
+                            "view"               => "views/fields/combined-{$fieldDefs['type']}",
+                            "measureId"          => $fieldDefs['measureId'],
+                            "prefixId"           => $hasPrefix ? $fieldDefs['prefixId'] : null,
+                            "mainField"          => $field,
+                            "combinedField"      => true,
+                            "required"           => false,
+                            "filterDisabled"     => $fieldDefs['type'] === 'varchar',
+                            "massUpdateDisabled" => true,
+                            "importDisabled"     => true,
+                            "emHidden"           => true
+                        ];
+
+                        if ($visibleLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['visible'] ?? null) {
+                            $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['visible'] = $visibleLogic;
+                        }
+
+                        if ($readOnly = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['readOnly'] ?? null) {
+                            $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['readOnly'] = $readOnly;
+                        }
+
+                        if ($requireLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['required'] ?? null) {
+                            $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['required'] = $requireLogic;
+                        }
+                    } else {
+                        $data['entityDefs'][$entityType]['fields'][$field]['combinedField'] = true;
+                    }
+
+                    foreach (
+                        in_array($fieldDefs['type'], ['int', 'float', 'varchar'])
+                            ? [$field]
+                            : [$field . 'From', $field . 'To'] as $v
+                    ) {
+                        $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
+                            "type"                 => "jsonObject",
+                            "notStorable"          => true,
+                            "mainField"            => $field,
+                            "required"             => false,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
+                        ];
+
+                        if (isset($fieldDefs['multilangLocale'])) {
+                            $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits']['multilangLocale'] = $fieldDefs['multilangLocale'];
+                        }
+
+                        $data['entityDefs'][$entityType]['fields'][$v . 'UnitData'] = [
+                            "type"                 => "jsonObject",
+                            "notStorable"          => true,
+                            "mainField"            => $field,
+                            "required"             => false,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
+                        ];
+
+                        if (isset($fieldDefs['multilangLocale'])) {
+                            $data['entityDefs'][$entityType]['fields'][$v . 'UnitData']['multilangLocale'] = $fieldDefs['multilangLocale'];
+                        }
+                    }
                 }
 
-                foreach (
-                    in_array($fieldDefs['type'], ['int', 'float', 'varchar'])
-                        ? [$field]
-                        : [
-                        $field . 'From',
-                        $field . 'To'
-                    ] as $v
-                ) {
-                    $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
-                        "type"                 => "jsonObject",
-                        "notStorable"          => true,
-                        "mainField"            => $field,
-                        "required"             => false,
-                        "layoutListDisabled"   => true,
-                        "layoutDetailDisabled" => true,
-                        "massUpdateDisabled"   => true,
-                        "filterDisabled"       => true,
-                        "exportDisabled"       => true,
-                        "importDisabled"       => true,
-                        "emHidden"             => true
+                if ($hasPrefix && in_array($fieldDefs['type'], ['int', 'float', 'varchar'])) {
+                    $prefixFieldName                                             = $field . 'Prefix';
+                    $data['entityDefs'][$entityType]['fields'][$prefixFieldName] = [
+                        "type"             => "link",
+                        "view"             => "views/fields/extensible-enum-dropdown",
+                        "extensibleEnumId" => $fieldDefs['prefixId'],
+                        "prefixIdField"    => true,
+                        "mainField"        => $field,
+                        "default"          => $fieldDefs['defaultPrefix'] ?? null,
+                        "required"         => false,
+                        "readOnly"         => !empty($fieldDefs['readOnly']),
+                        "protected"        => !empty($fieldDefs['protected']),
+                        "notStorable"      => $notStorable,
+                        "emHidden"         => true
                     ];
 
                     if (isset($fieldDefs['multilangLocale'])) {
-                        $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits']['multilangLocale'] = $fieldDefs['multilangLocale'];
+                        $data['entityDefs'][$entityType]['fields'][$prefixFieldName]['multilangLocale'] = $fieldDefs['multilangLocale'];
                     }
 
-                    $data['entityDefs'][$entityType]['fields'][$v . 'UnitData'] = [
-                        "type"                 => "jsonObject",
-                        "notStorable"          => true,
-                        "mainField"            => $field,
-                        "required"             => false,
-                        "layoutListDisabled"   => true,
-                        "layoutDetailDisabled" => true,
-                        "massUpdateDisabled"   => true,
-                        "filterDisabled"       => true,
-                        "exportDisabled"       => true,
-                        "importDisabled"       => true,
-                        "emHidden"             => true
+                    $data['entityDefs'][$entityType]['links'][$prefixFieldName] = [
+                        "type"                        => "belongsTo",
+                        "entity"                      => "ExtensibleEnumOption",
+                        "skipOrmDefs"                 => $notStorable,
+                        'layoutRelationshipsDisabled' => true,
                     ];
 
-                    if (isset($fieldDefs['multilangLocale'])) {
-                        $data['entityDefs'][$entityType]['fields'][$v . 'UnitData']['multilangLocale'] = $fieldDefs['multilangLocale'];
+                    // If no measure, the combined virtual display field does not exist yet — create it
+                    $virtualFieldName = 'combined' . ucfirst($field);
+                    if (!isset($data['entityDefs'][$entityType]['fields'][$virtualFieldName])) {
+                        $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = $virtualFieldName;
+                        $data['entityDefs'][$entityType]['fields'][$virtualFieldName]    = [
+                            "type"               => "varchar",
+                            "notStorable"        => true,
+                            "view"               => "views/fields/combined-{$fieldDefs['type']}",
+                            "measureId"          => null,
+                            "prefixId"           => $fieldDefs['prefixId'],
+                            "mainField"          => $field,
+                            "combinedField"      => true,
+                            "required"           => false,
+                            "filterDisabled"     => $fieldDefs['type'] === 'varchar',
+                            "massUpdateDisabled" => true,
+                            "importDisabled"     => true,
+                            "emHidden"           => true
+                        ];
+
+                        if ($visibleLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['visible'] ?? null) {
+                            $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['visible'] = $visibleLogic;
+                        }
+
+                        if ($readOnly = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['readOnly'] ?? null) {
+                            $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['readOnly'] = $readOnly;
+                        }
+
+                        if ($requireLogic = $data['entityDefs'][$entityType]['fields'][$field]['conditionalProperties']['required'] ?? null) {
+                            $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['required'] = $requireLogic;
+                        }
                     }
                 }
             }
@@ -974,24 +1037,21 @@ class Metadata extends AbstractMetadataListener
 
                         if (!empty($additionalFields)) {
                             $relFieldName = $left . ucfirst(Util::pluralize($right));
-                            if (empty($data['entityDefs'][$scope]['fields'][$relFieldName])
-                                && empty($data['entityDefs'][$scope]['links'][$relFieldName])) {
-                                $res[$entityName]['links'][$left]['foreign']         = $relFieldName;
-                                $data['entityDefs'][$scope]['fields'][$relFieldName] = [
-                                    'type'                     => 'linkMultiple',
-                                    'linkToRelationEntity'     => $relationParams['entity'],
-                                    'layoutDetailDisabled'     => true,
-                                    'layoutNavigationDisabled' => true,
-                                    'massUpdateDisabled'       => true,
-                                    'noLoad'                   => true
-                                ];
-                                $data['entityDefs'][$scope]['links'][$relFieldName]  = [
-                                    'type'    => 'hasMany',
-                                    'foreign' => $left,
-                                    'entity'  => $entityName
-                                ];
-                            }
 
+                            $res[$entityName]['links'][$left]['foreign']         = $relFieldName;
+                            $data['entityDefs'][$scope]['fields'][$relFieldName] = array_merge([
+                                'type'                     => 'linkMultiple',
+                                'linkToRelationEntity'     => $relationParams['entity'],
+                                'layoutDetailDisabled'     => true,
+                                'layoutNavigationDisabled' => true,
+                                'massUpdateDisabled'       => true,
+                                'noLoad'                   => true
+                            ], $data['entityDefs'][$scope]['fields'][$relFieldName] ?? []);
+                            $data['entityDefs'][$scope]['links'][$relFieldName]  = array_merge([
+                                'type'    => 'hasMany',
+                                'foreign' => $left,
+                                'entity'  => $entityName
+                            ], $data['entityDefs'][$scope]['links'][$relFieldName] ?? []);
                         }
                     }
 
@@ -1534,6 +1594,10 @@ class Metadata extends AbstractMetadataListener
                             "type"      => "varchar",
                             "maxLength" => 50
                         ],
+                        "prefixValue"    => [
+                            "type"      => "varchar",
+                            "maxLength" => 50
+                        ],
                         "jsonValue"      => [
                             "type" => "jsonObject"
                         ]
@@ -1618,6 +1682,12 @@ class Metadata extends AbstractMetadataListener
                         "referenceValue" => [
                             "columns" => [
                                 "reference_value",
+                                "deleted"
+                            ]
+                        ],
+                        "prefixValue"    => [
+                            "columns" => [
+                                "prefix_value",
                                 "deleted"
                             ]
                         ]
@@ -2607,13 +2677,13 @@ class Metadata extends AbstractMetadataListener
 
             if (!empty($clusterScopeSet[$sourceEntity])) {
                 $data['entityDefs'][$sourceEntity]['fields']['cluster'] = [
-                    'type'                    => 'link',
-                    'notStorable'             => true,
-                    'protected'               => true,
-                    "massUpdateDisabled"      => true,
-                    "importDisabled"          => true,
-                    "exportDisabled"          => true,
-                    "emHidden"                => true
+                    'type'               => 'link',
+                    'notStorable'        => true,
+                    'protected'          => true,
+                    "massUpdateDisabled" => true,
+                    "importDisabled"     => true,
+                    "exportDisabled"     => true,
+                    "emHidden"           => true
                 ];
                 $data['entityDefs'][$sourceEntity]['links']['cluster']  = [
                     'type'        => 'belongsTo',

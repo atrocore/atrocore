@@ -10693,10 +10693,10 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
     background-color: transparent;
 }
 
-.cell > .field :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
+.cell > .field :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .part-select select),
 .cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 .cell > .field > input:not([type=radio]):not([type=checkbox]),
-td.cell :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
+td.cell :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .part-select select),
 td.cell:not(:first-child) > div:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 td.cell > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]),
 td.cell > div .selectize-control > .selectize-input {
@@ -10708,8 +10708,8 @@ td.cell > div .selectize-control > .selectize-input {
     border-bottom-color: transparent;
 }
 
-.cell.has-error > .field :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
-td.cell.has-error :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
+.cell.has-error > .field :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .part-select select),
+td.cell.has-error :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .part-select select),
 td.cell.has-error > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]),
 .cell.has-error > .field > input:not([type=radio]):not([type=checkbox]) {
     background-color: #f2e4e4;
@@ -10722,16 +10722,16 @@ td.cell.has-error > div:not(.input-group) > input:not([type=radio]):not([type=ch
 .cell > .field > .selectize-control > .selectize-input.focus,
 .cell > .field .input-group:has(.selectize-input.focus),
 .cell > .field .input-group:has(> input:focus),
-.cell > .field > :where(.range-container, .unit-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
-.cell > .field > :where(.range-container, .unit-group) > .unit-select select:focus,
+.cell > .field > :where(.range-container, .combined-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
+.cell > .field > :where(.range-container, .combined-group) > .part-select select:focus,
 .cell > .field > input:not([type=radio]):not([type=checkbox]):focus,
 .cell > .field > .array-control-container .selectize-input.focus,
 .cell > .field > textarea:focus,
 td.cell > div:not(.input-group) > .selectize-control > .selectize-input.focus,
 td.cell .input-group:has(.selectize-input.focus),
 td.cell .input-group:has(> input:focus),
-td.cell > div > :where(.range-container, .unit-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
-td.cell > div > :where(.range-container, .unit-group) > .unit-select select:focus,
+td.cell > div > :where(.range-container, .combined-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
+td.cell > div > :where(.range-container, .combined-group) > .part-select select:focus,
 td.cell > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]):focus,
 td.cell > div > .array-control-container .selectize-input.focus,
 td.cell > div > textarea:focus {
@@ -16100,30 +16100,34 @@ span.became .file-link {
     padding: 0 !important;
 }
 
-.cell .unit-group.input-group {
+.cell .combined-group.input-group {
     width: 100%;
 }
 
-.cell .unit-group.input-group .unit-input,
+.cell .combined-group.input-group .unit-input,
 .cell .range-container > input {
     flex: 1;
     min-width: 0;
 }
 
-.cell .unit-group.input-group .unit-select,
-.cell .range-container .unit-select {
+.cell .combined-group.input-group .part-select,
+.cell .range-container .part-select {
     display: inline-block;
     width: fit-content;
     min-width: 100px;
     max-width: 50%;
 }
 
-.cell .unit-group.input-group .unit-select {
+.cell .combined-group.input-group .unit-select {
     margin-left: 10px;
 }
 
-.cell .unit-group.input-group .unit-select .selectize-control,
-.cell .range-container .unit-select .selectize-control {
+.cell .combined-group.input-group .prefix-select {
+    margin-right: 10px;
+}
+
+.cell .combined-group.input-group .part-select .selectize-control,
+.cell .range-container .part-select .selectize-control {
     min-width: auto;
 }
 
@@ -19534,8 +19538,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     padding-left: 15px !important;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input),
-.compare-records .compare-panel table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input) {
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input),
+.compare-records .compare-panel table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input) {
     border-bottom: 0;
 }
 
