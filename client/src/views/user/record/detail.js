@@ -82,6 +82,15 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 'account'
             ];
 
+            if (this.getUser().get('isUserAdmin')) {
+                nonAdminReadOnlyFieldList = [
+                    'isAdmin',
+                    'isEntityAdmin',
+                    'isRoleAdmin',
+                    'isUserAdmin',
+                ];
+            }
+
             nonAdminReadOnlyFieldList.forEach(function (field) {
                 this.setFieldReadOnly(field, true);
             }, this);

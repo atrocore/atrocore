@@ -98,13 +98,6 @@ class CreateVariableHandler extends AbstractHandler
         /** @var \Atro\Services\Variable $service */
         $service = $this->getServiceFactory()->create('Variable');
 
-        $id = $service->createEntity($data);
-
-        $entity = $service->prepareEntityById($id);
-        if (empty($entity)) {
-            throw new Error();
-        }
-
-        return new JsonResponse($entity->toArray());
+        return new JsonResponse($service->createEntity($data));
     }
 }
