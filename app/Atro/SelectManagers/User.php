@@ -15,12 +15,4 @@ use Atro\Core\SelectManagers\Base;
 
 class User extends Base
 {
-    protected function access(&$result)
-    {
-        parent::access($result);
-
-        if (!$this->getUser()->isAdmin()) {
-            $result['whereClause'][] = ['isAdmin' => false];
-        }
-    }
 }

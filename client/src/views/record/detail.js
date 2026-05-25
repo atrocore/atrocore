@@ -3096,7 +3096,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
             }
 
-            return {
+            const props = {
                 scope: this.scope,
                 model: this.model,
                 id: this.model.id,
@@ -3125,7 +3125,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 fetchModel: () => {
                     this.model.fetch();
                 }
+            };
+
+            if (!this.model.isNew() && this.getMetadata().get(['entityDefs', this.scope, 'fields', 'cluster'])) {
+                props.showCluster = true;
             }
+
+            return props;
         }
     });
 });

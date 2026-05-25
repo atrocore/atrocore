@@ -40,7 +40,7 @@ class Record extends RecordService
             $this->modifyEntityFieldsByTimezone($entity, $_GET['timezone']);
         }
 
-        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'ReferenceData') {
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']) !== 'ReferenceData') {
             foreach ($entity->entityDefs['fields'] as $field => $fieldDefs) {
                 $fieldDefs = $entity->entityDefs['fields'][$field];
 
@@ -54,6 +54,23 @@ class Record extends RecordService
                 }
             }
         }
+
+        if (empty($entity->_fromCollection)
+            && !empty($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'fields', 'cluster']))
+        ) {
+            $clusterItem = $this->getEntityManager()
+                ->getRepository('ClusterItem')
+                ->where(['entityName' => $entity->getEntityName(), 'entityId' => $entity->get('id')])
+                ->findOne();
+
+            if (!empty($clusterItem)) {
+                $entity->set('clusterId', $clusterItem->get('clusterId'));
+                $cluster = $clusterItem->get('cluster');
+                if (!empty($cluster)) {
+                    $entity->set('clusterName', $cluster->get('number'));
+                }
+            }
+        }
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
@@ -62,6 +79,57 @@ class Record extends RecordService
 
         foreach ($collection as $entity) {
             $entity->_fromCollection = true;
+        }
+
+        $selectFields    = $selectParams['select'] ?? [];
+        $clusterSelected = empty($selectFields) || in_array('clusterId', $selectFields);
+
+        if (empty($this->getMemoryStorage()->get('exportJobId')) &&
+            $clusterSelected &&
+            !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'cluster']))) {
+            $entityIds = [];
+            foreach ($collection as $entity) {
+                $entityIds[] = $entity->get('id');
+            }
+
+            if (empty($entityIds)) {
+                return;
+            }
+
+            $clusterItems = $this->getEntityManager()
+                ->getRepository('ClusterItem')
+                ->where(['entityName' => $this->entityType, 'entityId' => $entityIds])
+                ->find();
+
+            $itemByEntityId = [];
+            $clusterIds     = [];
+            foreach ($clusterItems as $item) {
+                $itemByEntityId[$item->get('entityId')] = $item;
+                $clusterIds[]                           = $item->get('clusterId');
+            }
+
+            $clusterById = [];
+            if (!empty($clusterIds)) {
+                $clusterCollection = $this->getEntityManager()
+                    ->getRepository('Cluster')
+                    ->select(['id', 'number'])
+                    ->where(['id' => array_unique($clusterIds)])
+                    ->find();
+                foreach ($clusterCollection as $cluster) {
+                    $clusterById[$cluster->get('id')] = $cluster;
+                }
+            }
+
+            foreach ($collection as $entity) {
+                $item = $itemByEntityId[$entity->get('id')] ?? null;
+                if (!empty($item)) {
+                    $entity->set('clusterId', $item->get('clusterId'));
+                    $cluster = $clusterById[$item->get('clusterId')] ?? null;
+                    if (!empty($cluster)) {
+                        $entity->set('clusterName', $cluster->get('number'));
+                    }
+                }
+            }
         }
     }
 
