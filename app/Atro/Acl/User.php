@@ -17,15 +17,6 @@ use Espo\ORM\Entity;
 
 class User extends Base
 {
-    public function checkEntityRead(UserEntity $user, Entity $entity, $data)
-    {
-        if (!$user->isAdmin() && $entity->get('isAdmin')) {
-            return false;
-        }
-
-        return parent::checkEntityRead($user, $entity, $data);
-    }
-
     public function checkEntityEdit(UserEntity $user, Entity $entity, $data)
     {
         if (!$user->isAdmin() && $entity->get('isAdmin')) {
