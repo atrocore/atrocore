@@ -15,7 +15,7 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 
-class V2Dot4Dot0 extends Base
+class V2Dot3Dot3 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
