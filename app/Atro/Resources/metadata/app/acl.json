@@ -35,10 +35,6 @@
     "scopeFieldLevel": {
       "Attachment": {
         "parent": false
-      },
-      "User": {
-        "password": false,
-        "passwordConfirm": false
       }
     }
   },
