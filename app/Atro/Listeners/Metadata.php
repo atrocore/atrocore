@@ -974,24 +974,21 @@ class Metadata extends AbstractMetadataListener
 
                         if (!empty($additionalFields)) {
                             $relFieldName = $left . ucfirst(Util::pluralize($right));
-                            if (empty($data['entityDefs'][$scope]['fields'][$relFieldName])
-                                && empty($data['entityDefs'][$scope]['links'][$relFieldName])) {
-                                $res[$entityName]['links'][$left]['foreign']         = $relFieldName;
-                                $data['entityDefs'][$scope]['fields'][$relFieldName] = [
-                                    'type'                     => 'linkMultiple',
-                                    'linkToRelationEntity'     => $relationParams['entity'],
-                                    'layoutDetailDisabled'     => true,
-                                    'layoutNavigationDisabled' => true,
-                                    'massUpdateDisabled'       => true,
-                                    'noLoad'                   => true
-                                ];
-                                $data['entityDefs'][$scope]['links'][$relFieldName]  = [
-                                    'type'    => 'hasMany',
-                                    'foreign' => $left,
-                                    'entity'  => $entityName
-                                ];
-                            }
 
+                            $res[$entityName]['links'][$left]['foreign']         = $relFieldName;
+                            $data['entityDefs'][$scope]['fields'][$relFieldName] = array_merge([
+                                'type'                     => 'linkMultiple',
+                                'linkToRelationEntity'     => $relationParams['entity'],
+                                'layoutDetailDisabled'     => true,
+                                'layoutNavigationDisabled' => true,
+                                'massUpdateDisabled'       => true,
+                                'noLoad'                   => true
+                            ], $data['entityDefs'][$scope]['fields'][$relFieldName] ?? []);
+                            $data['entityDefs'][$scope]['links'][$relFieldName]  = array_merge([
+                                'type'    => 'hasMany',
+                                'foreign' => $left,
+                                'entity'  => $entityName
+                            ], $data['entityDefs'][$scope]['links'][$relFieldName] ?? []);
                         }
                     }
 
