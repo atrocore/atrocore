@@ -37,12 +37,19 @@ Espo.define('views/role-scope-field/fields/name', 'views/fields/enum', Dep => {
 
         prepareOptionsList() {
             const scope = this.model.get('roleScopeName');
+            const forbiddenList = [
+                'id',
+                'associatedItemRelations',
+                'associatingItemRelations',
+                'associatedItems',
+                'associatingItems'
+            ]
 
             this.params.options = [''];
-            this.translatedOptions = {'': ''};
+            this.translatedOptions = { '': '' };
 
             this.getFieldManager().getScopeFieldList(scope).forEach(field => {
-                if (!['id'].includes(field)) {
+                if (!forbiddenList.includes(field)) {
                     this.translatedOptions[field] = this.translate(field, 'fields', scope);
                 }
             })
