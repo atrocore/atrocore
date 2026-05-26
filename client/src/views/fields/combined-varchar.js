@@ -29,15 +29,16 @@ Espo.define('views/fields/combined-varchar', 'views/fields/base', Dep => {
         setup() {
             Dep.prototype.setup.call(this);
             this.prepareOriginalName();
-            if (this.prefixId) {
+            if (this.prefixEnabled) {
                 this.prefixFieldName = this.originalName + 'PrefixId';
             }
         },
 
         prepareOriginalName() {
             this.originalName = this.name;
-            this.prefixId = this.params.prefixId || this.model.getFieldParam(this.name, 'prefixId');
-            if (this.measureId || this.prefixId) {
+            this.prefixEnabled = this.params.prefixEnabled || this.model.getFieldParam(this.name, 'prefixEnabled');
+            this.prefixWhere   = this.model.getFieldParam(this.name, 'where') ?? [];
+            if (this.measureId || this.prefixEnabled) {
                 this.name = 'combined' + this.originalName.charAt(0).toUpperCase() + this.originalName.slice(1);
             }
         },
@@ -95,8 +96,8 @@ Espo.define('views/fields/combined-varchar', 'views/fields/base', Dep => {
                     name:                    this.originalName,
                     value:                   this.model.get(this.originalName) ?? null,
                     mode:                    this.mode,
-                    prefixValueId:           this.model.get(this.prefixFieldName) ?? null,
-                    prefixExtensibleEnumId:  this.prefixId ?? null,
+                    prefixValueId: this.prefixEnabled ? (this.model.get(this.prefixFieldName) ?? null) : undefined,
+                    prefixWhere:   this.prefixEnabled ? (this.prefixWhere ?? []) : undefined,
                     unitId:                  this.model.get(this.originalName + 'UnitId') ?? null,
                     measureId:               this.measureId ?? null,
                     entityName:              this.model.name ?? '',
@@ -123,7 +124,7 @@ Espo.define('views/fields/combined-varchar', 'views/fields/base', Dep => {
             }
             const result = { [this.originalName]: null };
             if (this.measureId) result[this.originalName + 'UnitId'] = null;
-            if (this.prefixFieldName) result[this.prefixFieldName] = null;
+            if (this.prefixEnabled) result[this.prefixFieldName] = null;
             return result;
         },
 

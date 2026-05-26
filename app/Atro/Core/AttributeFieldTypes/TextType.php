@@ -136,7 +136,7 @@ class TextType extends AbstractFieldType
         }
 
         $hasMeasure = $this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang']);
-        $hasPrefix  = $this->type === 'varchar' && !empty($row['prefix_id']) && empty($row['is_multilang']);
+        $hasPrefix  = $this->type === 'varchar' && !empty($row['prefix_enabled']) && empty($row['is_multilang']);
 
         if ($hasMeasure || $hasPrefix) {
             $entity->entityDefs['fields'][$name]['mainField']        = $name;
@@ -211,7 +211,10 @@ class TextType extends AbstractFieldType
         }
 
         if ($hasPrefix) {
-            $entity->entityDefs['fields'][$name]['prefixId'] = $row['prefix_id'];
+            $where = $this->extractPrefixWhere($row['data'] ?? null);
+
+            $entity->entityDefs['fields'][$name]['prefixEnabled'] = true;
+            $entity->entityDefs['fields'][$name]['where']   = $where;
 
             $entity->fields[$name . 'PrefixId'] = [
                 'type'        => 'varchar',
@@ -226,23 +229,19 @@ class TextType extends AbstractFieldType
                 'notStorable' => true
             ];
             if (empty($skipValueProcessing)) {
-                if (empty($row['av_id']) && !empty($row['default_prefix'])) {
-                    $entity->set($name . 'PrefixId', $row['default_prefix']);
-                } else {
-                    $entity->set($name . 'PrefixId', $row['prefix_value'] ?? null);
-                    $entity->set($name . 'PrefixName', $row['prefix_option_name'] ?? null);
-                }
+                $entity->set($name . 'PrefixId', $row['prefix_value'] ?? null);
+                $entity->set($name . 'PrefixName', $row['prefix_name'] ?? null);
             }
 
             $entity->entityDefs['fields'][$name . 'Prefix'] = [
-                'type'             => 'link',
-                'label'            => "{$row[$nameKey]} " . $this->language->translate('prefixPart'),
-                'entity'           => 'ExtensibleEnumOption',
-                'extensibleEnumId' => $row['prefix_id'],
-                'default'          => $row['default_prefix'] ?? null,
-                'prefixIdField'    => true,
-                'mainField'        => $name,
-                'attributeId'      => $id,
+                'type'                => 'link',
+                'label'               => "{$row[$nameKey]} " . $this->language->translate('prefixPart'),
+                'entity'              => 'Prefix',
+                'prefixEnabled'       => true,
+                'where'         => $where,
+                'prefixIdField'       => true,
+                'mainField'           => $name,
+                'attributeId'         => $id,
                 'layoutDetailDisabled' => true,
             ];
             $attributesDefs[$name . 'Prefix'] = $entity->entityDefs['fields'][$name . 'Prefix'];
@@ -328,7 +327,7 @@ class TextType extends AbstractFieldType
         }
 
         $hasMeasure = $this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang']);
-        $hasPrefix  = $this->type === 'varchar' && !empty($row['prefix_id']) && empty($row['is_multilang']);
+        $hasPrefix  = $this->type === 'varchar' && !empty($row['prefix_enabled']) && empty($row['is_multilang']);
 
         if ($hasMeasure) {
             $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
@@ -342,10 +341,10 @@ class TextType extends AbstractFieldType
         }
 
         if ($hasPrefix) {
-            $qb->leftJoin($alias, $this->conn->quoteIdentifier('extensible_enum_option'), "{$alias}_peeo", "{$alias}_peeo.id={$alias}.prefix_value AND {$alias}_peeo.deleted=:false");
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier('prefix'), "{$alias}_prefix", "{$alias}_prefix.id={$alias}.prefix_value AND {$alias}_prefix.deleted=:false");
 
             $qb->addSelect("{$alias}.prefix_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixId"));
-            $qb->addSelect("{$alias}_peeo.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixName"));
+            $qb->addSelect("{$alias}_prefix.value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixName"));
         }
     }
 

@@ -64,11 +64,9 @@
       ],
       [
         {
-          "name": "prefix"
+          "name": "prefixEnabled"
         },
-        {
-          "name": "defaultPrefix"
-        }
+        false
       ],
       [
         {

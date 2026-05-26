@@ -14,8 +14,6 @@
     "pattern": "Patrón Regex",
     "measure": "Medida",
     "defaultUnit": "Unidad por defecto",
-    "prefix": "Prefijo",
-    "defaultPrefix": "Prefijo por defecto",
     "defaultDate": "Fecha por defecto",
     "isRequired": "Required",
     "isReadOnly": "Sólo lectura",
@@ -47,7 +45,8 @@
     "modifiedExtendedDisabled": "No se registra como modificación",
     "entityType": "Entidad vinculada",
     "entityField": "Campo de entidad",
-    "selectPageSize": "Registros por página (diálogo de selección)"
+    "selectPageSize": "Registros por página (diálogo de selección)",
+    "prefixEnabled": "Enable Prefijo"
   },
   "labels": {
     "Classification": "Clasificación",

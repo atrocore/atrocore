@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "name": "Name",
+    "value": "Value",
+    "createdAt": "Created",
+    "modifiedAt": "Modified",
+    "createdBy": "Created By",
+    "modifiedBy": "Modified By"
+  },
+  "tooltips": {
+    "value": "The string displayed before the field value (e.g. \"Dr.\", \"approx.\")"
+  }
+}

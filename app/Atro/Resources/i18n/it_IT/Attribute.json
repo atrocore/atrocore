@@ -15,8 +15,6 @@
     "pattern": "Modello Regex",
     "measure": "Misura",
     "defaultUnit": "Unità predefinita",
-    "prefix": "Prefisso",
-    "defaultPrefix": "Prefisso predefinito",
     "defaultDate": "Data predefinita",
     "isRequired": "Richiesto",
     "isReadOnly": "In sola lettura",
@@ -47,7 +45,8 @@
     "modifiedExtendedDisabled": "Nessuna registrazione come modifica",
     "entityType": "Entità collegata",
     "entityField": "Campo Entità",
-    "selectPageSize": "Record per pagina (finestra di selezione)"
+    "selectPageSize": "Record per pagina (finestra di selezione)",
+    "prefixEnabled": "Enable Prefisso"
   },
   "exceptions": {
     "attributeIsUsedInProducts": "L'attributo è utilizzato nei prodotti. Per favore, aggiorni prima i prodotti.",

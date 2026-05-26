@@ -47,7 +47,9 @@
         {
           "name": "pattern"
         },
-        false
+        {
+          "name": "prefixEnabled"
+        }
       ],
       [
         {
@@ -55,14 +57,6 @@
         },
         {
           "name": "defaultUnit"
-        }
-      ],
-      [
-        {
-          "name": "prefix"
-        },
-        {
-          "name": "defaultPrefix"
         }
       ],
       [

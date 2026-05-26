@@ -664,7 +664,7 @@ class Metadata extends AbstractMetadataListener
             }
             foreach ($entityDefs['fields'] as $field => $fieldDefs) {
                 $hasMeasure = !empty($fieldDefs['measureId']);
-                $hasPrefix  = !empty($fieldDefs['prefixId']);
+                $hasPrefix  = !empty($fieldDefs['prefixEnabled']);
 
                 if (!$hasMeasure && !$hasPrefix) {
                     continue;
@@ -739,7 +739,7 @@ class Metadata extends AbstractMetadataListener
                             "notStorable"        => true,
                             "view"               => "views/fields/combined-{$fieldDefs['type']}",
                             "measureId"          => $fieldDefs['measureId'],
-                            "prefixId"           => $hasPrefix ? $fieldDefs['prefixId'] : null,
+                            "prefixEnabled"      => $hasPrefix,
                             "mainField"          => $field,
                             "combinedField"      => true,
                             "required"           => false,
@@ -808,19 +808,20 @@ class Metadata extends AbstractMetadataListener
                 }
 
                 if ($hasPrefix && in_array($fieldDefs['type'], ['int', 'float', 'varchar'])) {
-                    $prefixFieldName                                             = $field . 'Prefix';
+                    $prefixFieldName = $field . 'Prefix';
+                    $prefixData      = !empty($fieldDefs['data']) ? (is_string($fieldDefs['data']) ? json_decode($fieldDefs['data'], true) : $fieldDefs['data']) : [];
+                    $where           = $prefixData['where'] ?? [];
+
                     $data['entityDefs'][$entityType]['fields'][$prefixFieldName] = [
-                        "type"             => "link",
-                        "view"             => "views/fields/extensible-enum-dropdown",
-                        "extensibleEnumId" => $fieldDefs['prefixId'],
-                        "prefixIdField"    => true,
-                        "mainField"        => $field,
-                        "default"          => $fieldDefs['defaultPrefix'] ?? null,
-                        "required"         => false,
-                        "readOnly"         => !empty($fieldDefs['readOnly']),
-                        "protected"        => !empty($fieldDefs['protected']),
-                        "notStorable"      => $notStorable,
-                        "emHidden"         => true
+                        "type"          => "link",
+                        "prefixIdField" => true,
+                        "where"         => $where,
+                        "mainField"     => $field,
+                        "required"      => false,
+                        "readOnly"      => !empty($fieldDefs['readOnly']),
+                        "protected"     => !empty($fieldDefs['protected']),
+                        "notStorable"   => $notStorable,
+                        "emHidden"      => true
                     ];
 
                     if (isset($fieldDefs['multilangLocale'])) {
@@ -829,7 +830,7 @@ class Metadata extends AbstractMetadataListener
 
                     $data['entityDefs'][$entityType]['links'][$prefixFieldName] = [
                         "type"                        => "belongsTo",
-                        "entity"                      => "ExtensibleEnumOption",
+                        "entity"                      => "Prefix",
                         "skipOrmDefs"                 => $notStorable,
                         'layoutRelationshipsDisabled' => true,
                     ];
@@ -843,7 +844,8 @@ class Metadata extends AbstractMetadataListener
                             "notStorable"        => true,
                             "view"               => "views/fields/combined-{$fieldDefs['type']}",
                             "measureId"          => null,
-                            "prefixId"           => $fieldDefs['prefixId'],
+                            "prefixEnabled"      => true,
+                            "where"              => $where,
                             "mainField"          => $field,
                             "combinedField"      => true,
                             "required"           => false,

@@ -11,8 +11,6 @@
     "pattern": "Regex Pattern",
     "measure": "Міра",
     "defaultUnit": "Одиниця виміру за замовченням",
-    "prefix": "Префікс",
-    "defaultPrefix": "Префікс за замовчуванням",
     "defaultDate": "Дата за замовченням",
     "isRequired": "Обов'язково",
     "allowNullForBool": "Дозволити нульове значення",
@@ -47,7 +45,8 @@
     "modifiedExtendedDisabled": "Не фіксувати як зміну",
     "entityType": "Пов'язана сутність",
     "entityField": "Поле сутності",
-    "selectPageSize": "Записів на сторінці (діалог вибору)"
+    "selectPageSize": "Записів на сторінці (діалог вибору)",
+    "prefixEnabled": "Enable Префікс"
   },
   "labels": {
     "addNewValue": "Додати нове значення",

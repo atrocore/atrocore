@@ -27,13 +27,41 @@ class V2Dot3Dot3 extends Base
 
     public function up(): void
     {
-        $this->addPrefixIdToAttribute();
-        $this->addDefaultPrefixToAttribute();
+        $this->createPrefixTable();
+        $this->addPrefixEnabledToAttribute();
         $this->addPrefixValueToAttributeValue();
         $this->renameUnitFieldsInLayouts();
     }
 
-    private function addDefaultPrefixToAttribute(): void
+    private function createPrefixTable(): void
+    {
+        $fromSchema = $this->getSchema();
+        $toSchema   = clone $fromSchema;
+
+        if ($toSchema->hasTable('prefix')) {
+            return;
+        }
+
+        $table = $toSchema->createTable('prefix');
+        $table->addColumn('id', 'string', ['length' => 36, 'notnull' => true]);
+        $table->addColumn('name', 'string', ['length' => 255, 'notnull' => false, 'default' => null]);
+        $table->addColumn('value', 'string', ['length' => 255, 'notnull' => false, 'default' => null]);
+        $table->addColumn('deleted', 'boolean', ['notnull' => false, 'default' => false]);
+        $table->addColumn('created_at', 'datetime', ['notnull' => false, 'default' => null]);
+        $table->addColumn('modified_at', 'datetime', ['notnull' => false, 'default' => null]);
+        $table->addColumn('created_by_id', 'string', ['length' => 36, 'notnull' => false, 'default' => null]);
+        $table->addColumn('modified_by_id', 'string', ['length' => 36, 'notnull' => false, 'default' => null]);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['name', 'deleted'], 'IDX_PREFIX_NAME');
+        $table->addIndex(['created_by_id,', 'deleted'], 'IDX_PREFIX_CREATED_BY_ID');
+        $table->addIndex(['modified_by_id,', 'deleted'], 'IDX_PREFIX_MODIFIED_BY_ID');
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->exec($sql);
+        }
+    }
+
+    private function addPrefixEnabledToAttribute(): void
     {
         $fromSchema = $this->getSchema();
         $toSchema   = clone $fromSchema;
@@ -44,11 +72,9 @@ class V2Dot3Dot3 extends Base
 
         $table = $toSchema->getTable('attribute');
 
-        if ($table->hasColumn('default_prefix')) {
-            return;
+        if (!$table->hasColumn('prefix_enabled')) {
+            $table->addColumn('prefix_enabled', 'boolean', ['notnull' => true, 'default' => false]);
         }
-
-        $table->addColumn('default_prefix', 'string', ['length' => 255, 'notnull' => false, 'default' => null]);
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->exec($sql);
@@ -64,35 +90,12 @@ class V2Dot3Dot3 extends Base
             if (!str_ends_with($table->getName(), '_attribute_value')) {
                 continue;
             }
-            if ($table->hasColumn('prefix_value')) {
-                continue;
+
+            if (!$table->hasColumn('prefix_value')) {
+                $table->addColumn('prefix_value', 'string', ['length' => 36, 'notnull' => false, 'default' => null]);
+                $table->addIndex(['prefix_value', 'deleted'], Converter::generateIndexName($table->getName(), 'prefixValue'));
             }
-            $table->addColumn('prefix_value', 'string', ['length' => 255, 'notnull' => false, 'default' => null]);
-            $table->addIndex(['prefix_value', 'deleted'], Converter::generateIndexName($table->getName(), 'prefixValue'));
         }
-
-        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-            $this->exec($sql);
-        }
-    }
-
-    private function addPrefixIdToAttribute(): void
-    {
-        $fromSchema = $this->getSchema();
-        $toSchema   = clone $fromSchema;
-
-        if (!$toSchema->hasTable('attribute')) {
-            return;
-        }
-
-        $table = $toSchema->getTable('attribute');
-
-        if ($table->hasColumn('prefix_id')) {
-            return;
-        }
-
-        $table->addColumn('prefix_id', 'string', ['length' => 36, 'notnull' => false, 'default' => null]);
-        $table->addIndex(['prefix_id', 'deleted'], Converter::generateIndexName('attribute', 'prefixId'));
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->exec($sql);

@@ -112,7 +112,7 @@ class IntType extends AbstractFieldType
         }
 
         $hasMeasure = isset($row['measure_id']);
-        $hasPrefix  = !empty($row['prefix_id']);
+        $hasPrefix  = !empty($row['prefix_enabled']);
         $nameKey    = $this->prepareKey('name', $row);
 
         if ($hasMeasure || $hasPrefix) {
@@ -193,7 +193,10 @@ class IntType extends AbstractFieldType
         }
 
         if ($hasPrefix) {
-            $entity->entityDefs['fields'][$name]['prefixId'] = $row['prefix_id'];
+            $where = $this->extractPrefixWhere($row['data'] ?? null);
+
+            $entity->entityDefs['fields'][$name]['prefixEnabled'] = true;
+            $entity->entityDefs['fields'][$name]['where']   = $where;
 
             $entity->fields[$name . 'PrefixId']   = [
                 'type'        => 'varchar',
@@ -209,26 +212,22 @@ class IntType extends AbstractFieldType
             ];
 
             if (empty($skipValueProcessing)) {
-                if (empty($row['av_id']) && !empty($row['default_prefix'])) {
-                    $entity->set($name . 'PrefixId', $row['default_prefix']);
-                } else {
-                    $entity->set($name . 'PrefixId', $row['prefix_value'] ?? null);
-                    $entity->set($name . 'PrefixName', $row['prefix_option_name'] ?? null);
-                }
+                $entity->set($name . 'PrefixId', $row['prefix_value'] ?? null);
+                $entity->set($name . 'PrefixName', $row['prefix_name'] ?? null);
             }
 
             $entity->entityDefs['fields'][$name . 'Prefix'] = [
                 'type'                 => 'link',
                 'label'                => "{$row[$nameKey]} " . $this->language->translate('prefixPart'),
-                'entity'               => 'ExtensibleEnumOption',
-                'extensibleEnumId'     => $row['prefix_id'],
-                'default'              => $row['default_prefix'] ?? null,
+                'entity'               => 'Prefix',
+                'prefixEnabled'        => true,
+                'where'          => $where,
                 'prefixIdField'        => true,
                 'mainField'            => $name,
                 'attributeId'          => $id,
                 'layoutDetailDisabled' => true,
             ];
-            $attributesDefs[$name . 'Prefix']               = $entity->entityDefs['fields'][$name . 'Prefix'];
+            $attributesDefs[$name . 'Prefix'] = $entity->entityDefs['fields'][$name . 'Prefix'];
         }
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
@@ -250,10 +249,10 @@ class IntType extends AbstractFieldType
             }
         }
 
-        if (!empty($row['prefix_id'])) {
-            $qb->leftJoin($alias, $this->conn->quoteIdentifier('extensible_enum_option'), "{$alias}_peeo", "{$alias}_peeo.id={$alias}.prefix_value AND {$alias}_peeo.deleted=:false");
+        if (!empty($row['prefix_enabled'])) {
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier('prefix'), "{$alias}_prefix", "{$alias}_prefix.id={$alias}.prefix_value AND {$alias}_prefix.deleted=:false");
             $qb->addSelect("{$alias}.prefix_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixId"));
-            $qb->addSelect("{$alias}_peeo.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixName"));
+            $qb->addSelect("{$alias}_prefix.value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixName"));
         }
 
         if ($name === $params['orderBy']) {

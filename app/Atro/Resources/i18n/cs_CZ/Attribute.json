@@ -14,8 +14,6 @@
     "pattern": "Vzor regexu",
     "measure": "Míra",
     "defaultUnit": "Výchozí jednotka",
-    "prefix": "Prefix",
-    "defaultPrefix": "Výchozí prefix",
     "defaultDate": "Výchozí datum",
     "isRequired": "Požadované",
     "isReadOnly": "Pouze pro čtení",
@@ -47,7 +45,8 @@
     "modifiedExtendedDisabled": "Žádný záznam jako změna",
     "entityType": "Propojený subjekt",
     "entityField": "Pole entity",
-    "selectPageSize": "Záznamů na stránce (dialog výběru)"
+    "selectPageSize": "Záznamů na stránce (dialog výběru)",
+    "prefixEnabled": "Enable Prefix"
   },
   "labels": {
     "Classification": "Klasifikace",

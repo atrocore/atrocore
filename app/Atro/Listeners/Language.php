@@ -152,7 +152,7 @@ class Language extends AbstractListener
                             $data[$locale][$entity]['fields'][$mainField . 'Unit'] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, 'unitPart', 'labels');
                         }
 
-                        if (!empty($fieldDefs['prefixId'])) {
+                        if (!empty($fieldDefs['prefixEnabled'])) {
                             $data[$locale][$entity]['fields'][$mainField . 'Prefix'] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, 'prefixPart', 'labels');
                         }
                     }

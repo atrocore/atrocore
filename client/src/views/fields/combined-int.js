@@ -24,7 +24,7 @@ Espo.define('views/fields/combined-int', ['views/fields/base', 'views/fields/com
         setup() {
             Dep.prototype.setup.call(this);
             this.prepareOriginalName();
-            if (this.prefixId) {
+            if (this.prefixEnabled) {
                 this.prefixFieldName = this.originalName + 'PrefixId';
             }
         },
@@ -70,8 +70,8 @@ Espo.define('views/fields/combined-int', ['views/fields/base', 'views/fields/com
                     name:                    this.originalName,
                     value,
                     mode:                    this.mode,
-                    prefixValueId:           this.model.get(this.prefixFieldName) ?? null,
-                    prefixExtensibleEnumId:  this.prefixId ?? null,
+                    prefixValueId: this.prefixEnabled ? (this.model.get(this.prefixFieldName) ?? null) : undefined,
+                    prefixWhere:   this.prefixEnabled ? (this.prefixWhere ?? []) : undefined,
                     unitId:                  this.model.get(this.originalName + 'UnitId') ?? null,
                     measureId:               this.measureId ?? null,
                     entityName:              this.model.name ?? '',
@@ -95,7 +95,7 @@ Espo.define('views/fields/combined-int', ['views/fields/base', 'views/fields/com
             }
             const result = { [this.originalName]: null };
             if (this.measureId) result[this.originalName + 'UnitId'] = null;
-            if (this.prefixFieldName) result[this.prefixFieldName] = null;
+            if (this.prefixEnabled) result[this.prefixFieldName] = null;
             return result;
         },
 
