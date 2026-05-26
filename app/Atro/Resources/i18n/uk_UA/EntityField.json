@@ -129,6 +129,8 @@
   "exceptions": {
     "nullValuesExist": "Деякі записи мають нульові значення",
     "cannotAddRequiredFieldWithExistingRecords": "Ви не можете додати обов'язкове поле до існуючих записів без значення за замовчуванням",
-    "relationAlreadyUsed": "Middle Table Name %s вже використовується, оберіть інше."
+    "relationAlreadyUsed": "Middle Table Name %s вже використовується, оберіть інше.",
+    "optionCodeUsedInDisabledOptionsRules": "Опція '%s' використовується в правилах вимкнених опцій і не може бути змінена.",
+    "optionCodeUsedInDisabledOptionsRulesDelete": "Опція '%s' використовується в правилах вимкнених опцій і не може бути видалена."
   }
 }

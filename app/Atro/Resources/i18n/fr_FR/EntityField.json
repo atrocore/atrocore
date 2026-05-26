@@ -129,6 +129,8 @@
   "exceptions": {
     "nullValuesExist": "Certains enregistrements ont des valeurs nulles",
     "cannotAddRequiredFieldWithExistingRecords": "Vous ne pouvez pas ajouter un champ obligatoire avec des enregistrements existants sans valeur par défaut",
-    "relationAlreadyUsed": "Le Middle Table Name %s est déjà utilisé, veuillez en choisir un autre."
+    "relationAlreadyUsed": "Le Middle Table Name %s est déjà utilisé, veuillez en choisir un autre.",
+    "optionCodeUsedInDisabledOptionsRules": "L'option '%s' est utilisée dans les règles d'options désactivées et ne peut pas être modifiée.",
+    "optionCodeUsedInDisabledOptionsRulesDelete": "L'option '%s' est utilisée dans les règles d'options désactivées et ne peut pas être supprimée."
   }
 }

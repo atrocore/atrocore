@@ -437,6 +437,26 @@ class EntityField extends ReferenceData
                 }
             }
         }
+
+        if (!$entity->isNew() && $entity->isAttributeChanged('options')) {
+            $newOptions = $entity->get('options') ?? [];
+            $deletedOptions = array_diff($entity->getFetched('options') ?? [], $newOptions);
+
+            foreach ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.conditionalProperties.disableOptions") ?? [] as $row) {
+                if (empty($row['options']) || !is_array($row['options'])) {
+                    continue;
+                }
+
+                foreach ($deletedOptions as $deletedOption) {
+                    if (in_array($deletedOption, $row['options'])) {
+                        throw new BadRequest(sprintf(
+                            $this->getLanguage()->translate('optionCodeUsedInDisabledOptionsRulesDelete', 'exceptions', 'EntityField'),
+                            $deletedOption
+                        ));
+                    }
+                }
+            }
+        }
     }
 
     protected function afterSave(OrmEntity $entity, array $options = [])
@@ -457,6 +477,17 @@ class EntityField extends ReferenceData
 
         if (in_array($newValue, $fieldEntity->get('options'))) {
             throw new BadRequest('Such new option code already exists');
+        }
+
+        foreach ($this->getMetadata()->get("entityDefs.{$scope}.fields.{$field}.conditionalProperties.disableOptions") ?? [] as $row) {
+            if (empty($row['options']) || !is_array($row['options']) || !in_array($oldValue, $row['options'])) {
+                continue;
+            }
+
+            throw new BadRequest(sprintf(
+                $this->getLanguage()->translate('optionCodeUsedInDisabledOptionsRules', 'exceptions', 'EntityField'),
+                $oldValue
+            ));
         }
 
         // update options metadata
