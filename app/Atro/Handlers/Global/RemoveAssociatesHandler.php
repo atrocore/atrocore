@@ -11,36 +11,26 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\EntityTypeHandlers;
+namespace Atro\Handlers\Global;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Handlers\AbstractHandler;
 use Atro\Core\Routing\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Atro\Core\Routing\EntityType;
 
 #[Route(
-    path: '/{entityName}/removeAssociates',
+    path: '/removeAssociates',
     methods: [
         'POST',
     ],
-    summary: 'Remove associations between records',
-    description: 'Removes all or a specific association between a main record and a related record. If associationId is provided, only that association is removed; otherwise all associations between the two records are removed.',
-    tag: '{entityName}',
-    parameters: [
-        [
-            'name'        => 'entityName',
-            'in'          => 'path',
-            'required'    => true,
-            'description' => 'Relation entity name (e.g. "ProductAssociation")',
-            'schema'      => [
-                'type' => 'string',
-            ],
-        ],
-    ],
+    summary: 'Remove record associations',
+    description: 'Removes one or all associations between two records linked via an associates-relation entity (e.g. ProductAssociation). Pass associationId to remove a specific association type; omit it to remove all associations between the two records.',
+    tag: 'Global',
     requestBody: [
         'required' => true,
         'content'  => [
@@ -48,10 +38,15 @@ use Atro\Core\Routing\EntityType;
                 'schema' => [
                     'type'       => 'object',
                     'required'   => [
+                        'entityName',
                         'mainRecordId',
                         'relatedRecordId',
                     ],
                     'properties' => [
+                        'entityName'      => [
+                            'type'        => 'string',
+                            'description' => 'Relation entity name (e.g. "ProductAssociation")',
+                        ],
                         'mainRecordId'    => [
                             'type'        => 'string',
                             'description' => 'ID of the main record from which associations are removed',
@@ -88,24 +83,31 @@ use Atro\Core\Routing\EntityType;
         ],
     ],
 )]
-#[EntityType(types: ['Relation'])]
 class RemoveAssociatesHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
-        $data       = $this->getRequestBody($request);
+        $data = $this->getRequestBody($request);
+
+        if (empty($data->entityName) || empty($data->mainRecordId) || empty($data->relatedRecordId)) {
+            throw new BadRequest('entityName, mainRecordId and relatedRecordId are required');
+        }
+
+        $entityName = (string)$data->entityName;
+
+        if (empty($this->getMetadata()->get(['scopes', $entityName, 'associatesForEntity']))) {
+            throw new NotFound();
+        }
 
         if (!$this->getAcl()->check($entityName, 'delete')) {
             throw new Forbidden();
         }
 
-        $associationId = property_exists($data, 'associationId') ? (string) $data->associationId : '';
-        $result        = $this->getRecordService($entityName)->removeAssociates(
-            (string) $data->mainRecordId,
-            (string) $data->relatedRecordId,
-            $associationId
-        );
+        $associationId = property_exists($data, 'associationId') ? (string)$data->associationId : '';
+
+        $result = $this
+            ->getRecordService($entityName)
+            ->removeAssociates((string)$data->mainRecordId, (string)$data->relatedRecordId, $associationId);
 
         return new BoolResponse($result);
     }
