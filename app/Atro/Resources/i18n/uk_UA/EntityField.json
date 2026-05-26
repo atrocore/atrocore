@@ -9,13 +9,11 @@
     "unique": "Унікальний",
     "index": "Індекс бази даних",
     "measure": "Міра",
-    "prefix": "Префікс",
     "trim": "Видалити початкові та кінцеві пробіли",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Враховувати байти замість символів",
     "pattern": "Шаблон регулярного виразу",
     "defaultUnit": "Одиниця виміру за замовчуванням",
-    "defaultPrefix": "Префікс за замовчуванням",
     "default": "Значення за замовчуванням",
     "tooltip": "Підказка",
     "tooltipText": "Текст підказки",
@@ -131,7 +129,8 @@
   "exceptions": {
     "nullValuesExist": "Деякі записи мають нульові значення",
     "cannotAddRequiredFieldWithExistingRecords": "Ви не можете додати обов'язкове поле до існуючих записів без значення за замовчуванням",
-    "relationAlreadyUsed": "Middle Table Name %s вже використовується, оберіть інше."
-  },
-  "prefixEnabled": "Enable Prefix"
+    "relationAlreadyUsed": "Middle Table Name %s вже використовується, оберіть інше.",
+    "optionCodeUsedInDisabledOptionsRules": "Опція '%s' використовується в правилах вимкнених опцій і не може бути змінена.",
+    "optionCodeUsedInDisabledOptionsRulesDelete": "Опція '%s' використовується в правилах вимкнених опцій і не може бути видалена."
+  }
 }

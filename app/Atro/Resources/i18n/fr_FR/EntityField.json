@@ -11,13 +11,12 @@
     "unique": "Unique",
     "index": "Index des bases de données",
     "measure": "Mesure",
-    "prefix": "Préfixe",
     "trim": "Supprimez les espaces blancs de début et de fin",
     "maxLength": "Longueur maximale",
     "countBytesInsteadOfCharacters": "Compter les octets au lieu des caractères",
     "pattern": "Modif Regex",
     "defaultUnit": "Unité par défaut",
-    "defaultPrefix": "Préfixe par défaut",
+    "prefixEnabled": "Enable Prefix",
     "default": "Valeur par défaut",
     "defaultValueType": "Valeur par défaut Type",
     "tooltip": "Info-bulle",
@@ -131,7 +130,8 @@
   "exceptions": {
     "nullValuesExist": "Certains enregistrements ont des valeurs nulles",
     "cannotAddRequiredFieldWithExistingRecords": "Vous ne pouvez pas ajouter un champ obligatoire avec des enregistrements existants sans valeur par défaut",
-    "relationAlreadyUsed": "Le Middle Table Name %s est déjà utilisé, veuillez en choisir un autre."
-  },
-  "prefixEnabled": "Enable Prefix"
+    "relationAlreadyUsed": "Le Middle Table Name %s est déjà utilisé, veuillez en choisir un autre.",
+    "optionCodeUsedInDisabledOptionsRules": "L'option '%s' est utilisée dans les règles d'options désactivées et ne peut pas être modifiée.",
+    "optionCodeUsedInDisabledOptionsRulesDelete": "L'option '%s' est utilisée dans les règles d'options désactivées et ne peut pas être supprimée."
+  }
 }

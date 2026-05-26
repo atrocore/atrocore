@@ -11,13 +11,12 @@
     "unique": "Unikátní",
     "index": "Databázový index",
     "measure": "Míra",
-    "prefix": "Prefix",
+    "prefixEnabled": "Enable Prefix",
     "trim": "Odstranit počáteční a koncové bílé znaky",
     "maxLength": "Maximální délka",
     "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",
     "pattern": "Vzor regexu",
     "defaultUnit": "Výchozí jednotka",
-    "defaultPrefix": "Výchozí prefix",
     "default": "Výchozí hodnota",
     "defaultValueType": "Typ výchozí hodnoty",
     "tooltip": "Popis",
@@ -131,7 +130,8 @@
   "exceptions": {
     "nullValuesExist": "Některé záznamy mají nulové hodnoty",
     "cannotAddRequiredFieldWithExistingRecords": "Nelze přidat povinné pole s existujícími záznamy bez výchozí hodnoty",
-    "relationAlreadyUsed": "Middle Table Name %s je již používán, zvolte jiný."
-  },
-  "prefixEnabled": "Enable Prefix"
+    "relationAlreadyUsed": "Middle Table Name %s je již používán, zvolte jiný.",
+    "optionCodeUsedInDisabledOptionsRules": "Možnost '%s' je použita v pravidlech zakázaných možností a nelze ji změnit.",
+    "optionCodeUsedInDisabledOptionsRulesDelete": "Možnost '%s' je použita v pravidlech zakázaných možností a nelze ji odstranit."
+  }
 }

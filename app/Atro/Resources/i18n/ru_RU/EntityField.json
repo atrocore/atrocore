@@ -11,13 +11,11 @@
     "unique": "Уникальный",
     "index": "Указатель базы данных",
     "measure": "Мера",
-    "prefix": "Префикс",
     "trim": "Удалите ведущие и завершающие пробельные символы",
     "maxLength": "Максимальная длина",
     "countBytesInsteadOfCharacters": "Считайте байты вместо символов",
     "pattern": "Regex Pattern",
     "defaultUnit": "Единица измерения по умолчанию",
-    "defaultPrefix": "Префикс по умолчанию",
     "default": "Значение по умолчанию",
     "defaultValueType": "Значение по умолчанию Тип",
     "tooltip": "Текст подсказки",
@@ -131,7 +129,8 @@
   "exceptions": {
     "nullValuesExist": "Некоторые записи имеют нулевые значения",
     "cannotAddRequiredFieldWithExistingRecords": "Вы не можете добавить обязательное поле к существующим записям без значения по умолчанию",
-    "relationAlreadyUsed": "Middle Table Name %s уже используется, выберите другое."
-  },
-  "prefixEnabled": "Enable Prefix"
+    "relationAlreadyUsed": "Middle Table Name %s уже используется, выберите другое.",
+    "optionCodeUsedInDisabledOptionsRules": "Опция '%s' используется в правилах отключённых опций и не может быть изменена.",
+    "optionCodeUsedInDisabledOptionsRulesDelete": "Опция '%s' используется в правилах отключённых опций и не может быть удалена."
+  }
 }

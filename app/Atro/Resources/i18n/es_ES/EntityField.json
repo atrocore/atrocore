@@ -11,13 +11,12 @@
     "unique": "Único",
     "index": "Índice de la base de datos",
     "measure": "Medida",
-    "prefix": "Prefijo",
+    "prefixEnabled": "Enable Prefix",
     "trim": "Eliminar los espacios en blanco iniciales y finales",
     "maxLength": "Longitud máxima",
     "countBytesInsteadOfCharacters": "Contar bytes en lugar de caracteres",
     "pattern": "Patrón Regex",
     "defaultUnit": "Unidad por defecto",
-    "defaultPrefix": "Prefijo por defecto",
     "default": "Valor por defecto",
     "defaultValueType": "Valor por defecto Type",
     "tooltip": "Información sobre herramientas",
@@ -132,6 +131,5 @@
     "nullValuesExist": "Algunos registros tienen valores nulos",
     "cannotAddRequiredFieldWithExistingRecords": "No se puede añadir un campo obligatorio con registros existentes sin valor por defecto",
     "relationAlreadyUsed": "El Middle Table Name %s ya está en uso, elija otro."
-  },
-  "prefixEnabled": "Enable Prefix"
+  }
 }
