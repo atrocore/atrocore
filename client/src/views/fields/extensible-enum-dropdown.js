@@ -16,29 +16,9 @@ Espo.define('views/fields/extensible-enum-dropdown', 'views/fields/link-dropdown
             this.foreignScope = 'ExtensibleEnumOption';
 
             Dep.prototype.setup.call(this);
-
-            const extensibleEnumIdField = this.getExtensibleEnumIdField();
-            if (extensibleEnumIdField) {
-                this.listenTo(this.model, `change:${extensibleEnumIdField}`, () => {
-                    this.model.set(this.name, null);
-                    this.prepareOptionsList()
-                    this.reRender();
-                });
-            }
-        },
-
-        getExtensibleEnumIdField() {
-            return this.params.extensibleEnumIdField
-                || this.model.getFieldParam(this.name, 'extensibleEnumIdField')
-                || this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumIdField']);
         },
 
         getExtensibleEnumId() {
-            const extensibleEnumIdField = this.getExtensibleEnumIdField();
-            if (extensibleEnumIdField) {
-                return this.model.get(extensibleEnumIdField);
-            }
-
             let extensibleEnumId = this.model.getFieldParam(this.name, 'extensibleEnumId') || this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
             if (this.params.extensibleEnumId) {
                 extensibleEnumId = this.params.extensibleEnumId;

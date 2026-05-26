@@ -16,9 +16,8 @@
       "entity": "Measure"
     },
     {
-      "name": "prefix",
-      "type": "link",
-      "entity": "ExtensibleEnum"
+      "name": "prefixEnabled",
+      "type": "bool"
     },
     {
       "name": "maxLength",
