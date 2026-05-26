@@ -3509,66 +3509,21 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             const rowViews = this._getRowViewsWithEditFields();
             if (!rowViews.length) return;
 
-            const changedRows = [];
-            const noChangeRows = [];
+            const changedRows = this._collectChangedRows(rowViews, false),
+                changedRelationRows = this._collectChangedRows(rowViews, true),
+                allRows = [...changedRows, ...changedRelationRows]
 
-            rowViews.forEach(rowView => {
-                const model = rowView.model;
-                const initialAttrs = (this._inlineEditRowAttrs || {})[model.id] || {};
+            if (!changedRows.length && !changedRelationRows.length) return;
 
-                const fetchedData = {};
-                for (const key in rowView.nestedViews) {
-                    const fv = rowView.nestedViews[key];
-                    if (fv.mode === 'edit' && !fv.disabled && !fv.readOnly && fv.isFullyRendered()) {
-                        Object.assign(fetchedData, fv.fetch());
-                    }
-                }
+            if (this._validateRows(changedRows) || this._validateRows(changedRelationRows)) return;
 
-                const changedAttrs = {};
-                let hasChanges = false;
-                Object.keys(fetchedData).forEach(key => {
-                    if (!_.isEqual(initialAttrs[key], fetchedData[key])) {
-                        changedAttrs[key] = fetchedData[key];
-                        hasChanges = true;
-                    }
-                });
-
-                if (hasChanges) {
-                    changedRows.push({ rowView, model, initialAttrs, changedAttrs });
-                } else {
-                    noChangeRows.push(rowView);
-                }
-            });
-
-            let notValid = false;
-            changedRows.forEach(({ rowView }) => {
-                for (const key in rowView.nestedViews) {
-                    const fv = rowView.nestedViews[key];
-                    if (fv.disabled || fv.readOnly || typeof fv.validate !== 'function') continue;
-                    if (fv.$el && fv.$el.hasClass('hidden')) continue;
-                    const fieldInvalid = fv.validate();
-                    if (fieldInvalid) {
-                        notValid = true;
-                        if (fv.mode !== 'edit' && typeof fv.inlineEdit === 'function') {
-                            fv.inlineEdit();
-                        }
-                    }
-                }
-            });
-
-            if (notValid) return;
-
-            noChangeRows.forEach(rowView => this._closeRowInlineEdit(rowView));
-
-            if (!changedRows.length) return;
+            rowViews.filter(row => !allRows.map(r => r.rowView.cid).includes(row.cid)).forEach(row => this._closeRowInlineEdit(row));
 
             this.notify('Saving...');
 
-            const upsertPayload = changedRows.map(({ model, initialAttrs, changedAttrs }) => {
+            const upsertPayload = allRows.map(({ model, initialAttrs, changedAttrs }) => {
                 const _prev = {};
-                Object.keys(changedAttrs).forEach(field => {
-                    _prev[field] = initialAttrs[field];
-                });
+                Object.keys(changedAttrs).forEach(field => { _prev[field] = initialAttrs[field]; });
                 return {
                     entity: model.name,
                     payload: Object.assign({ id: model.id, _prev, _silentMode: true }, changedAttrs),
@@ -3577,18 +3532,26 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             this.ajaxPostRequest('upsert', upsertPayload)
                 .success(results => {
-                    let anySuccess = false;
+                    let anySuccess = false,
+                        closedRows = [];
+
                     (results || []).forEach((result, i) => {
-                        const { rowView, model, changedAttrs } = changedRows[i];
+                        const { rowView, model, mainModel, changedAttrs } = allRows[i];
                         if (result.status === 'Failed') {
                             this._markRowFieldsInvalid(rowView, result.message);
                         } else {
                             model.set(changedAttrs);
-                            if (this._inlineEditRowAttrs) {
-                                delete this._inlineEditRowAttrs[model.id];
+                            if (model !== mainModel) {
+                                mainModel.set('__relationEntity', Object.assign({}, mainModel.get('__relationEntity') || {}, changedAttrs));
                             }
-                            model.trigger('after:inlineEditSave');
-                            this._closeRowInlineEdit(rowView);
+                            if (!closedRows.includes(mainModel.id)) {
+                                if (this._inlineEditRowAttrs) {
+                                    delete this._inlineEditRowAttrs[mainModel.id];
+                                }
+                                mainModel.trigger('after:inlineEditSave');
+                                this._closeRowInlineEdit(rowView);
+                                closedRows.push(mainModel.id);
+                            }
                             anySuccess = true;
                         }
                     });
@@ -3608,6 +3571,63 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         'error', 1000 * 60 * 60 * 2, true
                     );
                 });
+        },
+
+        _collectChangedRows(rowViews, useRelationModel) {
+            let changedRows = [];
+
+            rowViews.forEach(rowView => {
+                const mainModel = rowView.model,
+                    model = useRelationModel && mainModel.relationModel ? mainModel.relationModel : mainModel,
+                    attrs = (this._inlineEditRowAttrs || {})[mainModel.id] || {},
+                    initialAttrs = useRelationModel ? (attrs['__relationEntity'] || {}) : attrs;
+
+                if (!model) return;
+
+                const fetchedData = {};
+                for (const key in rowView.nestedViews) {
+                    const fv = rowView.nestedViews[key];
+                    if (fv.mode === 'edit' && !fv.disabled && !fv.readOnly && fv.isFullyRendered()) {
+                        if (!!fv.options?.useRelationModel === useRelationModel) {
+                            Object.assign(fetchedData, fv.fetch());
+                        }
+                    }
+                }
+
+                const changedAttrs = {};
+                let hasChanges = false;
+                Object.keys(fetchedData).forEach(key => {
+                    if (!_.isEqual(initialAttrs[key], fetchedData[key])) {
+                        changedAttrs[key] = fetchedData[key];
+                        hasChanges = true;
+                    }
+                });
+
+                if (hasChanges) {
+                    changedRows.push({ rowView, model, mainModel, initialAttrs, changedAttrs });
+                }
+            });
+
+            return changedRows;
+        },
+
+        _validateRows(changedRows) {
+            let notValid = false;
+            changedRows.forEach(({ rowView }) => {
+                for (const key in rowView.nestedViews) {
+                    const fv = rowView.nestedViews[key];
+                    if (fv.disabled || fv.readOnly || typeof fv.validate !== 'function') continue;
+                    if (fv.$el && fv.$el.hasClass('hidden')) continue;
+                    const fieldInvalid = fv.validate();
+                    if (fieldInvalid) {
+                        notValid = true;
+                        if (fv.mode !== 'edit' && typeof fv.inlineEdit === 'function') {
+                            fv.inlineEdit();
+                        }
+                    }
+                }
+            });
+            return notValid;
         },
 
         _getRowViewsWithEditFields() {
