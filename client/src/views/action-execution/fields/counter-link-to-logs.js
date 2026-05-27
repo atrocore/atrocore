@@ -26,8 +26,17 @@ Espo.define('views/action-execution/fields/counter-link-to-logs', 'views/fields/
             this.listScope = this.model.get('listScope');
 
             this.listenTo(this, 'after:render', () => {
-                if (['list', 'detail'].includes(this.mode) && this.model.get(this.name) && this.model.get(this.name) > 0) {
-                    this.$el.children('span').html(`<a href="javascript:" data-action="showList" data-name="${this.name}">${this.model.get(this.name)}</a>`);
+                if (this.model.get(this.name) && this.model.get(this.name) > 0) {
+                    let $el = null;
+                    if (this.mode === 'list') {
+                        $el = this.$el.children('span');
+                    } else if (this.mode === 'detail') {
+                        $el = this.$el.find('.value-container');
+                    }
+
+                    if ($el) {
+                        $el.html(`<a href="javascript:" data-action="showList" data-name="${this.name}">${this.model.get(this.name)}</a>`);
+                    }
                 }
             });
         },

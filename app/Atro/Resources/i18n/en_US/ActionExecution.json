@@ -11,6 +11,9 @@
     "updatedCount": "Updated",
     "failedCount": "Failed"
   },
+  "notifications": {
+    "actionExecutionFinished": "Action Execution is finished. To view the result, <a href=\"/#ActionExecution/view/%s\">click here</a>"
+  },
   "options": {
     "type": {
       "manual": "Manual",

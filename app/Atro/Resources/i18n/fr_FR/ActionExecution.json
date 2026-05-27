@@ -11,6 +11,9 @@
     "finishedAt": "Terminé à",
     "logs": "Journaux"
   },
+  "notifications": {
+    "actionExecutionFinished": "L'exécution de l'action s'est terminée. Pour voir le résultat, <a href=\"/#ActionExecution/view/%s\">cliquez ici</a>"
+  },
   "options": {
     "type": {
       "manual": "Manuel",

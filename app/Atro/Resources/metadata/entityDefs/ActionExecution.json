@@ -97,20 +97,50 @@
       "type": "int",
       "view": "views/action-execution/fields/counter-link",
       "massUpdateDisabled": true,
-      "protected": true
+      "protected": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "createdCount"
+            }
+          ]
+        }
+      }
     },
     "updatedCount": {
       "type": "int",
       "view": "views/action-execution/fields/counter-link",
       "massUpdateDisabled": true,
-      "protected": true
+      "protected": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "updatedCount"
+            }
+          ]
+        }
+      }
     },
     "failedCount": {
       "type": "int",
       "logType": "error",
       "view": "views/action-execution/fields/counter-link-to-logs",
       "massUpdateDisabled": true,
-      "protected": true
+      "protected": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "failedCount"
+            }
+          ]
+        }
+      }
     },
     "logs": {
       "type": "linkMultiple",

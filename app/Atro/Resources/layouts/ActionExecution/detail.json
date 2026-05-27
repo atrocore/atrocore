@@ -35,6 +35,20 @@
       ],
       [
         {
+          "name": "createdCount"
+        },
+        {
+          "name": "updatedCount"
+        }
+      ],
+      [
+        {
+          "name": "failedCount"
+        },
+        false
+      ],
+      [
+        {
           "name": "incomingWebhook"
         },
         false

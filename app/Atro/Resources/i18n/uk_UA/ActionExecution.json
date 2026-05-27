@@ -11,6 +11,9 @@
     "failedCount": "Не вконано",
     "logs": "Журнали"
   },
+  "notifications": {
+    "actionExecutionFinished": "Виконання дії закінчено. Щоб переглянути результат, <a href=\"/#ActionExecution/view/%s\">перейдіть за посиланням</a>"
+  },
   "options": {
     "type": {
       "manual": "Посібник",

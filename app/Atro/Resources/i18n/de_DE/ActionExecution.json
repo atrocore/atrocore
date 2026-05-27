@@ -11,6 +11,9 @@
     "createdCount": "Erstellt",
     "logs": "Protokolle"
   },
+  "notifications": {
+    "actionExecutionFinished": "Aktionsausführung beendet. Um das Ergebnis anzuzeigen, <a href=\"/#ActionExecution/view/%s\">klicken Sie hier</a>"
+  },
   "options": {
     "type": {
       "manual": "Manuell",
