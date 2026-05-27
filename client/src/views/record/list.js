@@ -1101,8 +1101,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     other.collection = collection;
                     other.putAttributesToSelect();
                     collection.data.select = other.fetchAttributeListFromLayout().join(',');
-                    let hasAttributeInLayout =  data.layout.some(fieldData => fieldData.attributeId);
-                    if (!hasAttributeInLayout){
+                    let hasAttributeInLayout = data.layout.some(fieldData => fieldData.attributeId);
+                    if (!hasAttributeInLayout) {
                         collection.data.allAttributes = true
                     }
 
@@ -1379,8 +1379,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.enabledFixedHeader = this.options.enabledFixedHeader || this.enabledFixedHeader;
             this.baseWidth = [];
 
-            if ('hasLayoutEditor' in (this.options || {})) {
-                this.hasLayoutEditor = this.options.hasLayoutEditor;
+            if (this.options?.hasLayoutEditor === false) {
+                this.hasLayoutEditor = false;
             } else {
                 this.hasLayoutEditor = !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && 'list' === this.layoutName && this.getAcl().check('LayoutProfile', 'read');
             }
@@ -3523,7 +3523,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             const upsertPayload = allRows.map(({ model, initialAttrs, changedAttrs }) => {
                 const _prev = {};
-                Object.keys(changedAttrs).forEach(field => { _prev[field] = initialAttrs[field]; });
+                Object.keys(changedAttrs).forEach(field => {
+                    _prev[field] = initialAttrs[field];
+                });
                 return {
                     entity: model.name,
                     payload: Object.assign({ id: model.id, _prev, _silentMode: true }, changedAttrs),
