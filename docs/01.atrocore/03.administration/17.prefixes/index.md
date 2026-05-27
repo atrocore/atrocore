@@ -31,8 +31,6 @@ When combined with a [Measure](../09.measure-units/index.md), the prefix appears
 
 By default, all Prefix records are available in the dropdown. To limit which prefixes are selectable for a specific field, use the **Allowed Prefixes** panel on the field or attribute configuration — this lets you apply filter conditions that restrict the visible prefixes.
 
-![prefix-restrict](./_assets/prefix-restrict.png){.medium}
-
 If no filter is configured, all Prefix records are shown.
 
 ## Prefixes on Attributes
