@@ -21,8 +21,8 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
             this.onModelReady(() => {
                 this.entityField = this?.options?.defs?.entityField || 'searchEntity';
 
-                this.scope = this.model.get(this.entityField);
-                this.url = this.model.get(this.entityField);
+                this.scope = this.resolveScope();
+                this.url = this.scope;
                 this.model.defs.links.entityFilterResult = {
                     entity: this.scope,
                     type: "hasMany"
@@ -80,12 +80,27 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                     this.trigger('panel:rebuild', this.options.defs)
                 });
 
+                this.listenTo(this.model, 'change:prefixEnabled', () => {
+                    const newScope = this.resolveScope();
+                    this.scope = newScope;
+                    this.url = newScope;
+                    this.model.defs.links.entityFilterResult = { entity: newScope, type: 'hasMany' };
+                    this.trigger('panel:rebuild', this.options.defs);
+                });
+
                 if (this.isRendered()) {
                     this.trigger('panel:rebuild', this.options.defs);
                 }
 
                 this.wait(false)
             })
+        },
+
+        resolveScope() {
+            if (this.model.get('prefixEnabled')) {
+                return 'Prefix';
+            }
+            return this.model.get(this.entityField);
         },
 
         setFilter(filter) {
@@ -107,7 +122,8 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
         },
 
         actionOpenSearchFilter() {
-            if (!this.model.get(this.entityField) || !this.getMetadata().get(['scopes', this.model.get(this.entityField)])) {
+            const scope = this.resolveScope();
+            if (!scope || !this.getMetadata().get(['scopes', scope])) {
                 this.notify(this.translate('The search entity is not valid'), 'error');
                 return;
             }
@@ -124,12 +140,12 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                 whereData = this.model.get('data')?.whereData;
             }
 
-            SearchFilterOpener.prototype.open.call(this, this.model.get(this.entityField), whereData,
+            SearchFilterOpener.prototype.open.call(this, scope, whereData,
                 ({ where, whereData }) => {
                     this.model.set('data', _.extend({}, this.model.get('data'), {
                         where,
                         whereData,
-                        whereScope: this.model.get(this.entityField)
+                        whereScope: scope
                     }));
                     this.notify(this.translate('saving', 'messages'));
                     this.ajaxPatchRequest(this.model.name + '/' + this.model.id, { data: this.model.get('data'), _prev: null }).then(() => {
@@ -142,8 +158,9 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
 
         actionShowFullList(data) {
             let whereData = this.model.get('data').whereData || {}
-            this.getStorage().set('listQueryBuilder', this.scope, whereData);
-            window.open(`#${this.scope}`, '_blank');
+            const scope   = this.resolveScope();
+            this.getStorage().set('listQueryBuilder', scope, whereData);
+            window.open(`#${scope}`, '_blank');
         },
 
         actionShowKanban(data) {
@@ -164,7 +181,7 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
         },
 
         panelVisible() {
-            return !!(this.model.get(this.entityField));
+            return !!(this.model.get('prefixEnabled') || this.model.get(this.entityField));
         },
 
     })

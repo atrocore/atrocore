@@ -11,6 +11,9 @@
     "createdCount": "Creato",
     "updatedCount": "Aggiornato"
   },
+  "notifications": {
+    "actionExecutionFinished": "L'esecuzione dell'azione è terminata. Per vedere il risultato, <a href=\"/#ActionExecution/view/%s\">clicca qui</a>"
+  },
   "options": {
     "type": {
       "manual": "Manuale",

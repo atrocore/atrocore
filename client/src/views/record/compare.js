@@ -337,7 +337,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                         continue;
                     }
 
-                    if (this.merging && fieldDef['unitField']) {
+                    if (this.merging && fieldDef['combinedField']) {
                         continue;
                     }
 
@@ -797,7 +797,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                 return result;
             }
 
-            if (fieldDef['unitField']) {
+            if (fieldDef['combinedField']) {
                 let mainField = fieldDef['mainField'];
                 let mainFieldDef = this.model.defs.fields[mainField];
                 let unitIdField = mainField + 'Unit'
@@ -889,7 +889,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
         isAllowFieldUsingFilter(field, fieldDef, equalValueForModels) {
             let fields = this.getFieldManager().getActualAttributeList(this.model.getFieldType(field), field);
             let fieldValues = fields.map(field => this.model.get(field));
-            if (fieldDef['unitField']) {
+            if (fieldDef['combinedField']) {
                 let mainField = fieldDef['mainField'];
                 let unitIdField = mainField + 'Unit';
                 fields = [mainField, unitIdField];

@@ -522,7 +522,7 @@ class Hierarchy extends Base
                 case 'int':
                 case 'float':
                 case 'varchar':
-                    if (empty($fieldDefs['unitField'])) {
+                    if (empty($fieldDefs['combinedField'])) {
                         $input->$field = $parent->get($field);
                     } else {
                         $mainField = $fieldDefs['mainField'];

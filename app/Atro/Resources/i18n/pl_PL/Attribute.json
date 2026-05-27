@@ -44,7 +44,8 @@
     "modifiedExtendedDisabled": "Brak zapisu jako modyfikacja",
     "entityType": "Podmiot powiązany",
     "entityField": "Pole podmiotu",
-    "selectPageSize": "Rekordów na stronie (okno dialogowe wyboru)"
+    "selectPageSize": "Rekordów na stronie (okno dialogowe wyboru)",
+    "prefixEnabled": "Enable Prefiks"
   },
   "labels": {
     "Classification": "Klasyfikacja",

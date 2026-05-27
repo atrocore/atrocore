@@ -11,6 +11,7 @@
     "unique": "Einheitlich",
     "index": "Datenbank-Index",
     "measure": "Maß",
+    "prefixEnabled": "Enable Prefix",
     "trim": "Führende und nachfolgende Whitespaces entfernen",
     "maxLength": "Maximale Länge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
@@ -129,6 +130,8 @@
   "exceptions": {
     "nullValuesExist": "Einige Datensätze haben Nullwerte",
     "cannotAddRequiredFieldWithExistingRecords": "Sie können kein erforderliches Feld mit vorhandenen Datensätzen ohne Standardwert hinzufügen",
-    "relationAlreadyUsed": "Der Middle Table Name %s wird bereits verwendet, wählen Sie einen anderen."
+    "relationAlreadyUsed": "Der Middle Table Name %s wird bereits verwendet, wählen Sie einen anderen.",
+    "optionCodeUsedInDisabledOptionsRules": "Die Option '%s' wird in Regeln für deaktivierte Optionen verwendet und kann nicht geändert werden.",
+    "optionCodeUsedInDisabledOptionsRulesDelete": "Die Option '%s' wird in Regeln für deaktivierte Optionen verwendet und kann nicht gelöscht werden."
   }
 }

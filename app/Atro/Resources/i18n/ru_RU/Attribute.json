@@ -44,7 +44,8 @@
     "modifiedExtendedDisabled": "Нет записи как модификация",
     "entityType": "Связанная сущность",
     "entityField": "Поле сущности",
-    "selectPageSize": "Записей на странице (диалог выбора)"
+    "selectPageSize": "Записей на странице (диалог выбора)",
+    "prefixEnabled": "Enable Префикс"
   },
   "labels": {
     "addNewValue": "Добавить новое значение",

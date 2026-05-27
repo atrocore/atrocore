@@ -44,7 +44,8 @@
     "modifiedExtendedDisabled": "Žádný záznam jako změna",
     "entityType": "Propojený subjekt",
     "entityField": "Pole entity",
-    "selectPageSize": "Záznamů na stránce (dialog výběru)"
+    "selectPageSize": "Záznamů na stránce (dialog výběru)",
+    "prefixEnabled": "Enable Prefix"
   },
   "labels": {
     "Classification": "Klasifikace",

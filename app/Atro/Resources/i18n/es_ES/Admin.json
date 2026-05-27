@@ -197,6 +197,7 @@
     "Storage": "Gestione las ubicaciones físicas de todos los archivos cargados (Sistema de archivos local, Microsoft Sharepoint, Amazon S3, etc.)",
     "listOfSupportedFilesTypes": "Gestione los tipos de archivos para una validación adicional de los mismos (por ejemplo, imágenes, documentos, vídeos, etc.) y su clasificación.",
     "measure": "Gestione sus medidas y unidades de medida, establezca unidades de medida predeterminadas y multiplicadores para la conversión automática de unidades de medida.",
+    "prefix": "Gestione los prefijos que se pueden asignar a campos numéricos y de texto, permitiendo un etiquetado estructurado como valores aproximados o títulos.",
     "connection": "Gestione las conexiones con otros sistemas para un intercambio automático de datos.",
     "scheduledJob": "Gestione los trabajos programados del sistema.",
     "jobs": "Gestione los trabajos del sistema que se ejecutan en segundo plano sin interacción directa del usuario.",

@@ -135,13 +135,19 @@ class TextType extends AbstractFieldType
             $entity->entityDefs['fields'][$name]['label']       = $this->getAttributeLabel($row, '', $languages);
         }
 
-        if ($this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang'])) {
-            $entity->entityDefs['fields'][$name]['measureId']        = $row['measure_id'];
+        $hasMeasure = $this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang']);
+        $hasPrefix  = $this->type === 'varchar' && !empty($row['prefix_enabled']) && empty($row['is_multilang']);
+
+        if ($hasMeasure || $hasPrefix) {
             $entity->entityDefs['fields'][$name]['mainField']        = $name;
-            $entity->entityDefs['fields'][$name]['unitField']        = true;
-            $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
+            $entity->entityDefs['fields'][$name]['combinedField']    = true;
+            $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/combined-{$this->type}";
             $entity->entityDefs['fields'][$name]['detailViewLabel']  = $entity->entityDefs['fields'][$name]['label'];
             $entity->entityDefs['fields'][$name]['label']            = "{$row[$nameKey]} " . $this->language->translate("{$this->type}Part");
+        }
+
+        if ($hasMeasure) {
+            $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
 
             $entity->fields[$name . 'UnitId']   = [
                 'type'        => 'varchar',
@@ -197,15 +203,51 @@ class TextType extends AbstractFieldType
                 'conditionalProperties'     => $conditionals,
                 'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
             ];
-            $attributesDefs[$name]                        = $entity->entityDefs['fields'][$name];
-            $attributesDefs[$name . 'Unit']               = $entity->entityDefs['fields'][$name . 'Unit'];
+            $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
 
             $entity->entityDefs['fields'][$name . 'UnitId'] = [
                 'label' => "{$row[$nameKey]} " . $this->language->translate('unitPart'),
             ];
-        } else {
-            $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
         }
+
+        if ($hasPrefix) {
+            $where = $this->extractPrefixWhere($row['data'] ?? null);
+
+            $entity->entityDefs['fields'][$name]['prefixEnabled'] = true;
+            $entity->entityDefs['fields'][$name]['where']   = $where;
+
+            $entity->fields[$name . 'PrefixId'] = [
+                'type'        => 'varchar',
+                'name'        => $name,
+                'attributeId' => $id,
+                'column'      => 'prefix_value',
+                'required'    => false,
+            ];
+            $entity->fields[$name . 'PrefixName'] = [
+                'type'        => 'varchar',
+                'attributeId' => $id,
+                'notStorable' => true
+            ];
+            if (empty($skipValueProcessing)) {
+                $entity->set($name . 'PrefixId', $row['prefix_value'] ?? null);
+                $entity->set($name . 'PrefixName', $row['prefix_name'] ?? null);
+            }
+
+            $entity->entityDefs['fields'][$name . 'Prefix'] = [
+                'type'                => 'link',
+                'label'               => "{$row[$nameKey]} " . $this->language->translate('prefixPart'),
+                'entity'              => 'Prefix',
+                'prefixEnabled'       => true,
+                'where'         => $where,
+                'prefixIdField'       => true,
+                'mainField'           => $name,
+                'attributeId'         => $id,
+                'layoutDetailDisabled' => true,
+            ];
+            $attributesDefs[$name . 'Prefix'] = $entity->entityDefs['fields'][$name . 'Prefix'];
+        }
+
+        $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }
 
     protected function getLanguageMap(): array
@@ -284,7 +326,10 @@ class TextType extends AbstractFieldType
             }
         }
 
-        if ($this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang'])) {
+        $hasMeasure = $this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang']);
+        $hasPrefix  = $this->type === 'varchar' && !empty($row['prefix_enabled']) && empty($row['is_multilang']);
+
+        if ($hasMeasure) {
             $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
 
             $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
@@ -293,6 +338,13 @@ class TextType extends AbstractFieldType
             if ("{$name}Unit" === $params['orderBy']) {
                 $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName") . ' ' . $params['order']);
             }
+        }
+
+        if ($hasPrefix) {
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier('prefix'), "{$alias}_prefix", "{$alias}_prefix.id={$alias}.prefix_value AND {$alias}_prefix.deleted=:false");
+
+            $qb->addSelect("{$alias}.prefix_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixId"));
+            $qb->addSelect("{$alias}_prefix.value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}PrefixName"));
         }
     }
 

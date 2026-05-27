@@ -44,7 +44,8 @@
     "modifiedExtendedDisabled": "Pas d'enregistrement en tant que modification",
     "entityType": "Entité associée",
     "entityField": "Champ de l'entité",
-    "selectPageSize": "Enregistrements par page (dialogue de sélection)"
+    "selectPageSize": "Enregistrements par page (dialogue de sélection)",
+    "prefixEnabled": "Enable Préfixe"
   },
   "labels": {
     "Classification": "Classification",

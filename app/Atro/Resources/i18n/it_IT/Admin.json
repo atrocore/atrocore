@@ -128,6 +128,7 @@
     "multiLanguagesSettings": "Configuri le lingue da utilizzare.",
     "composer": "Aggiorna il sistema e tutti i moduli installati, installa o rimuove i moduli disponibili pubblicamente o privatamente. La dipendenza dalla versione del modulo viene considerata automaticamente.",
     "measure": "Gestisce le sue misure e le unità di misura, imposta unità di misura predefinite e moltiplicatori per la conversione automatica delle unità di misura.",
+    "prefix": "Gestisci i prefissi che possono essere assegnati a campi numerici e di testo, consentendo un'etichettatura strutturata come valori approssimativi o titoli.",
     "connection": "Gestisce le connessioni con altri sistemi per uno scambio automatico di dati.",
     "settings": "Gestisce le impostazioni generali del sistema, come il locale predefinito, le preferenze di ricerca, le lingue dell'interfaccia attiva, l'uso della cache e altro ancora...",
     "scheduledJob": "Gestisce i lavori di sistema programmati.",

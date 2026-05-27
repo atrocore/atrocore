@@ -146,7 +146,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                         let label = this.translate(name, 'fields', this.scope);
 
                         if (['int', 'float', 'varchar'].includes(type) && this.model.getFieldParam(name, 'measureId')) {
-                            label = this.translate('unit' + this.ucfirst(name), 'fields', this.scope);
+                            label = this.translate('combined' + this.ucfirst(name), 'fields', this.scope);
                             this.model.defs['fields'][name]['view'] = `views/fields/unit-${type}`;
                         }
 

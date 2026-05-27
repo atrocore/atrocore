@@ -179,6 +179,7 @@
     "multiLanguagesSettings": "Skonfiguruj języki do użycia.",
     "composer": "Aktualizuj system i wszystkie zainstalowane moduły, instaluj lub usuwaj publicznie lub prywatnie dostępne moduły. Zależność od wersji modułu jest automatycznie uwzględniana.",
     "measure": "Zarządzaj swoimi miarami i jednostkami miary, ustaw domyślne jednostki miary i mnożniki do automatycznej konwersji jednostek miary.",
+    "prefix": "Zarządzaj prefiksami, które można przypisać do pól numerycznych i tekstowych, umożliwiając strukturowane etykietowanie, takie jak wartości przybliżone lub tytuły.",
     "connection": "Zarządzaj połączeniami z innymi systemami w celu automatycznej wymiany danych.",
     "settings": "Zarządzaj ogólnymi ustawieniami systemu, takimi jak domyślna lokalizacja systemu, preferencje wyszukiwania, aktywne języki interfejsu, użycie pamięci podręcznej i wiele innych...",
     "action": "Konfiguruj akcje, które można wykonać ręcznie, klikając przyciski dodane do interfejsu użytkownika, lub w pełni automatycznie za pomocą zadania Menedżera Harmonogramu.",

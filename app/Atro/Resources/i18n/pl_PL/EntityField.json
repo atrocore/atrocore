@@ -129,6 +129,8 @@
   "exceptions": {
     "nullValuesExist": "Niektóre rekordy mają wartości null",
     "cannotAddRequiredFieldWithExistingRecords": "Nie można dodać pola wymaganego z istniejącymi rekordami bez wartości domyślnej",
-    "relationAlreadyUsed": "Middle Table Name %s jest już używana, wybierz inną."
+    "relationAlreadyUsed": "Middle Table Name %s jest już używana, wybierz inną.",
+    "optionCodeUsedInDisabledOptionsRules": "Opcja '%s' jest używana w regułach wyłączonych opcji i nie może zostać zmieniona.",
+    "optionCodeUsedInDisabledOptionsRulesDelete": "Opcja '%s' jest używana w regułach wyłączonych opcji i nie może zostać usunięta."
   }
 }

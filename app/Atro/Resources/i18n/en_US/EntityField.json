@@ -11,6 +11,7 @@
     "unique": "Unique",
     "index": "Database Index",
     "measure": "Measure",
+    "prefixEnabled": "Enable Prefix",
     "trim": "Remove leading and trailing whitespaces",
     "maxLength": "Max length",
     "countBytesInsteadOfCharacters": "Count bytes instead of characters",
@@ -129,6 +130,8 @@
   "exceptions": {
     "nullValuesExist": "Some records have null values",
     "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value",
-    "relationAlreadyUsed": "The Middle Table Name %s is already used, choose another."
+    "relationAlreadyUsed": "The Middle Table Name %s is already used, choose another.",
+    "optionCodeUsedInDisabledOptionsRules": "Option '%s' is used in Disabled Options rules and cannot be changed.",
+    "optionCodeUsedInDisabledOptionsRulesDelete": "Option '%s' is used in Disabled Options rules and cannot be deleted."
   }
 }

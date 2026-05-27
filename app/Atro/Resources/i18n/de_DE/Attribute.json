@@ -44,7 +44,8 @@
     "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung",
     "entityType": "Verknüpfte Entität",
     "entityField": "Entitätsfeld",
-    "selectPageSize": "Datensätze pro Seite (Auswahldialog)"
+    "selectPageSize": "Datensätze pro Seite (Auswahldialog)",
+    "prefixEnabled": "Enable Präfix"
   },
   "labels": {
     "addNewValue": "Neuen Wert hinzufügen",

@@ -258,7 +258,6 @@ class Relation extends Record
             throw new NotFound();
         }
 
-        $repository = $this->getRepository();
         $where = [];
         if (!empty($mainRecordId)) {
             $where["associatingItemId"] = $mainRecordId;
@@ -269,7 +268,9 @@ class Relation extends Record
         if (!empty($associationId)) {
             $where['associationId'] = $associationId;
         }
-        $repository->where($where)->removeCollection();
+
+        $this->getRepository()->where($where)->removeCollection();
+
         return true;
     }
 

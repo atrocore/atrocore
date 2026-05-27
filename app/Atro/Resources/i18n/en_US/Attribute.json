@@ -14,6 +14,7 @@
     "pattern": "Regex Pattern",
     "measure": "Measure",
     "defaultUnit": "Default Unit",
+    "prefixEnabled": "Enable Prefix",
     "defaultDate": "Default Date",
     "isRequired": "Required",
     "isReadOnly": "Read-only",

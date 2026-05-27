@@ -107,7 +107,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     ]
                 });
 
-                if (this.type === 'edit' && this.getUser().isAdmin() && this.isNew) {
+                if (this.type === 'edit' && (this.getUser().isAdmin() || this.getUser().get('isUserAdmin')) && this.isNew) {
                     layout.push({
                         label: 'Password',
                         rows: [

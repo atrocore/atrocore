@@ -11,6 +11,9 @@
     "createdCount": "Vytvořeno",
     "failedCount": "Neúspěšný"
   },
+  "notifications": {
+    "actionExecutionFinished": "Provedení akce bylo ukončeno. Pro zobrazení výsledku <a href=\"/#ActionExecution/view/%s\">klikněte zde</a>"
+  },
   "options": {
     "type": {
       "manual": "Manuální",

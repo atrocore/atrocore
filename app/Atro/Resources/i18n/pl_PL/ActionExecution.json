@@ -11,6 +11,9 @@
     "finishedAt": "Zakończono w",
     "logs": "Dzienniki"
   },
+  "notifications": {
+    "actionExecutionFinished": "Wykonanie akcji zostało zakończone. Aby zobaczyć wynik, <a href=\"/#ActionExecution/view/%s\">kliknij tutaj</a>"
+  },
   "options": {
     "type": {
       "manual": "Podręcznik",

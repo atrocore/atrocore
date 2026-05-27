@@ -28,16 +28,15 @@ class Update extends AbstractAction
         $action       = $execution->get('action');
         $sourceEntity = $this->getSourceEntity($action, $input);
 
-        if (empty($action->get('applyToPreselectedRecords'))) {
-
-            $whereJson = json_encode($this->getWhere($action) ?? []);
-
-            $templateData = [
-                'entity' => $sourceEntity
-            ];
-
-            $whereJson = $this->getTwig()->renderTemplate($whereJson, $templateData);
-            $where     = @json_decode($whereJson, true);
+        if (empty($action->get('applyToPreselectedRecords')) || (property_exists($input, 'where') && !empty($input->massAction))) {
+            if (!property_exists($input, 'where')) {
+                $templateData = [
+                    'entity' => $sourceEntity
+                ];
+                $where = @json_decode($this->getTwig()->renderTemplate(json_encode($this->getWhere($action) ?? []), $templateData), true);
+            } else {
+                $where = $input->where;
+            }
 
             $searchEntityType = $action->get('searchEntity') ?? $action->get('targetEntity');
 
@@ -228,5 +227,10 @@ class Update extends AbstractAction
         }
 
         return true;
+    }
+
+    public function useMassActions(Entity $action, \stdClass $input): bool
+    {
+        return false;
     }
 }

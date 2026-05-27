@@ -11,6 +11,9 @@
     "createdCount": "Creado",
     "failedCount": "Fallida"
   },
+  "notifications": {
+    "actionExecutionFinished": "La ejecución de la acción ha terminado. Para ver el resultado, <a href=\"/#ActionExecution/view/%s\">haga clic aquí</a>"
+  },
   "options": {
     "type": {
       "manual": "Manual",

@@ -129,7 +129,7 @@ class Language extends AbstractListener
                             $data[$locale][$entity]['fields'][$field . 'From'] = $fieldLabel . ' ' . $fromLabel;
                             $data[$locale][$entity]['fields'][$field . 'To']   = $fieldLabel . ' ' . $toLabel;
 
-                            if (!empty($fieldDefs['unitField'])) {
+                            if (!empty($fieldDefs['combinedField'])) {
                                 $fieldType                                         = $fieldDefs['type'] === 'rangeInt' ? 'int' : 'float';
                                 $typeLabel                                         = !empty($rows['Global']['labels'][$fieldType . 'Part']) ? $rows['Global']['labels'][$fieldType . 'Part'] : "({$fieldType})";
                                 $data[$locale][$entity]['fields'][$field . 'From'] .= ' ' . $typeLabel;
@@ -138,17 +138,23 @@ class Language extends AbstractListener
                             break;
                     }
 
-                    if (!empty($fieldDefs['unitField'])) {
+                    if (!empty($fieldDefs['combinedField'])) {
                         $mainField     = $fieldDefs['mainField'] ?? $field;
                         $fieldLabel    = $this->getLabel($data, $locale, $entity, $mainField);
                         $mainFieldType = $this->getMetadata()->get(['entityDefs', $entity, 'fields', $mainField, 'type']);
 
                         if (!in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
                             $data[$locale][$entity]['fields'][$mainField]                   = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, $mainFieldType . 'Part', 'labels');
-                            $data[$locale][$entity]['fields']['unit' . ucfirst($mainField)] = $fieldLabel;
+                            $data[$locale][$entity]['fields']['combined' . ucfirst($mainField)] = $fieldLabel;
                         }
 
-                        $data[$locale][$entity]['fields'][$mainField . 'Unit'] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, 'unitPart', 'labels');
+                        if (!empty($fieldDefs['measureId'])) {
+                            $data[$locale][$entity]['fields'][$mainField . 'Unit'] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, 'unitPart', 'labels');
+                        }
+
+                        if (!empty($fieldDefs['prefixEnabled'])) {
+                            $data[$locale][$entity]['fields'][$mainField . 'Prefix'] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, 'prefixPart', 'labels');
+                        }
                     }
                 }
             }
