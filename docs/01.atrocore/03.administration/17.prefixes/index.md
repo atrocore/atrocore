@@ -6,10 +6,12 @@ Prefixes allow you to attach a short label **before** a field value — for exam
 
 To manage Prefixes, go to `Administration > Prefixes`.
 
+![prefix-list](./_assets/prefix-list.png){.medium}
+
 ## Prefix Fields
 
 - **Name**: A human-readable label for the prefix (e.g., "Approximate", "Doctor"). Used for identification in the admin panel.
-- **Value**: The string displayed before the field value in the UI and in exports (e.g., `approx.`, `Dr.`). This is what end users see.
+- **Value**: The string displayed before the field value in the UI (e.g., `approx.`, `Dr.`). This is what end users see.
 
 ## Enabling Prefixes on a Field
 
@@ -29,6 +31,8 @@ When combined with a [Measure](../09.measure-units/index.md), the prefix appears
 
 By default, all Prefix records are available in the dropdown. To limit which prefixes are selectable for a specific field, use the **Allowed Prefixes** panel on the field or attribute configuration — this lets you apply filter conditions that restrict the visible prefixes.
 
+![prefix-restrict](./_assets/prefix-restrict.png){.medium}
+
 If no filter is configured, all Prefix records are shown.
 
 ## Prefixes on Attributes
@@ -42,6 +46,5 @@ Prefixes work the same way on [attributes](../12.attribute-management/01.attribu
 | Edit mode | Prefix dropdown + value input (+ unit dropdown if Measure is set) |
 | Detail view | `approx. 3.5` or `approx. 3.5 kg` |
 | List view | `approx. 3.5` or `approx. 3.5 kg` |
-| Export | `approx. 3.5` |
 
 The **Value** field of the Prefix record is used for display (not **Name**). This allows you to keep a descriptive admin name (e.g., "Approximate") while showing a concise label to users (e.g., `approx.`).
