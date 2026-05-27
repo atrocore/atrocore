@@ -35,4 +35,9 @@ class LogoImage extends Image
 
         $this->show($file, $_GET['size'] ?? null);
     }
+
+    protected function checkFile(File $file): bool
+    {
+        return true;
+    }
 }
