@@ -38,6 +38,7 @@ Used for decimal numbers with fractional parts.
 - **Database Index**: Adds a database index for faster searching/filtering
 - **Unique**: Field value must be unique within the entity
 - **Measure**: Unit of measurement for the field value
+- **Enable Prefix**: Allows a [Prefix](../../17.prefixes/index.md) to be selected before the value (e.g., `approx.`, `min.`). Not available when **Is Multilingual** is enabled.
 - **Min, Max**: Minimum and maximum allowed values
 - **Amount of digits after comma**: Number of decimal places to display
 - **Default**: Sets a default value for the field
@@ -63,6 +64,7 @@ Whole numbers without decimal places.
 - **Database Index**: Adds a database index for faster searching/filtering
 - **Unique**: Field value must be unique within the entity
 - **Measure**: Unit of measurement for the field value
+- **Enable Prefix**: Allows a [Prefix](../../17.prefixes/index.md) to be selected before the value (e.g., `approx.`, `min.`). Not available when **Is Multilingual** is enabled.
 - **Min, Max**: Minimum and maximum allowed values
 - **Disable formatting**: Disables number formatting (e.g., thousand separators)
 - **Default**: Sets a default value for the field
@@ -217,6 +219,7 @@ Short text fields for names, titles, and brief descriptions. Limited character c
 - **Database Index**: Adds a database index for faster searching/filtering
 - **Unique**: Field value must be unique within the entity
 - **Measure**: Unit of measurement for the field value
+- **Enable Prefix**: Allows a [Prefix](../../17.prefixes/index.md) to be selected before the value (e.g., `Dr.`, `approx.`). Not available when **Multilingual** is enabled.
 - **Remove leading and trailing whitespaces**: Trims whitespace from the beginning and end of the value
 - **Max length**: Maximum number of characters allowed
 - **Count bytes instead of characters**: Counts bytes instead of characters for **Max length** validation
