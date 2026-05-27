@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fields/link'], (Dep, Link) => {
+Espo.define('views/fields/measure', 'views/fields/link', (Dep) => {
 
     return Dep.extend({
 
@@ -51,7 +51,7 @@ Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fiel
             this.nameName = this.name + 'Name';
             this.foreignScope = 'Unit';
 
-            Link.prototype.setup.call(this);
+            Dep.prototype.setup.call(this);
         },
 
         getMeasureId() {

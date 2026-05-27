@@ -20,7 +20,6 @@
     "amountOfDigitsAfterComma": "Кількість цифр після коми",
     "useDisabledTextareaInViewMode": "Використовуйте відключену текстову область у режимі перегляду",
     "description": "Опис",
-    "extensibleEnum": "Список",
     "min": "Мінімальне значення",
     "max": "Максимальне значення",
     "notNull": "Вимкнути Нульове значення",
@@ -50,7 +49,6 @@
   },
   "labels": {
     "addNewValue": "Додати нове значення",
-    "extensibleEnumOptions": "Опції списку",
     "conditionalProperties": "Умовні властивості",
     "Classification": "Класифікація",
     "viewRecordsWithAttribute": "Записи, що використовують цей атрибут"
@@ -94,7 +92,6 @@
     "type": {
       "array": "Масив",
       "composite": "Композит",
-      "extensibleMultiEnum": "Багатозначний список",
       "markdown": "Уцінка",
       "url": "Url",
       "varchar": "Рядок",
@@ -103,7 +100,6 @@
       "bool": "Булеве значення",
       "date": "Дата",
       "datetime": "Дата і час",
-      "extensibleEnum": "Список",
       "float": "Дійсне число",
       "int": "Ціле число",
       "text": "Текст",

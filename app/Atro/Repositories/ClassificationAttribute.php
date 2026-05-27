@@ -159,31 +159,6 @@ class ClassificationAttribute extends Base
 
         $this->getAttributeRepository()->validateMinMax($entity);
 
-        if (!empty($entity->get('value')) && !empty($entity->get('allowedOptions'))) {
-            switch ($attribute->get('type')) {
-                case 'extensibleEnum':
-                    if (!in_array($entity->get('value'), $entity->get('allowedOptions'))) {
-                        throw new BadRequest(sprintf(
-                            $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
-                            $entity->get('valueName') ?? $entity->get('value'),
-                            $this->getLanguage()->translate('value', 'fields', 'ClassificationAttribute')
-                        ));
-                    }
-                    break;
-                case 'extensibleMultiEnum':
-                    foreach ($entity->get('value') as $optionId) {
-                        if (!in_array($optionId, $entity->get('allowedOptions'))) {
-                            $valueNames = $entity->get('valueNames') ?? new \stdClass();
-                            throw new BadRequest(sprintf(
-                                $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
-                                $valueNames->{$optionId} ?? $optionId,
-                                $this->getLanguage()->translate('value', 'fields', 'ClassificationAttribute')
-                            ));
-                        }
-                    }
-                    break;
-            }
-        }
     }
 
     public function save(Entity $entity, array $options = [])

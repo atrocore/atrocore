@@ -212,21 +212,7 @@
       ],
       [
         {
-          "name": "extensibleEnum"
-        },
-        {
           "name": "dropdown"
-        }
-      ],
-      [
-        {
-          "name": "extensibleEnumOptions",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "allowedOptions"
         },
         false
       ],

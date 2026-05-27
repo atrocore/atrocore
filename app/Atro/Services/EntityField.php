@@ -236,10 +236,6 @@ class EntityField extends ReferenceData
             case 'file':
                 $foreignEntity = 'File';
                 break;
-            case 'extensibleEnum':
-            case 'extensibleMultiEnum':
-                $foreignEntity = 'ExtensibleEnumOption';
-                break;
         }
 
         if (empty($foreignEntity)) {
@@ -247,7 +243,7 @@ class EntityField extends ReferenceData
         }
 
         $repository = $this->getEntityManager()->getRepository($foreignEntity);
-        if (in_array($entity->get('type'), ['linkMultiple', 'extensibleMultiEnum'])) {
+        if ($entity->get('type') === 'linkMultiple') {
             $defaultNames = [];
             foreach ($repository->where(['id' => $entity->get('default')])->find() as $foreign) {
                 $defaultNames[$foreign->get('id')] = $foreign->get('name');

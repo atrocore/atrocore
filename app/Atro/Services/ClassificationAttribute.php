@@ -66,25 +66,6 @@ class ClassificationAttribute extends Base
                 ]);
             }
 
-            if (!empty($attribute->get('extensibleEnumId'))) {
-                $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
-                if ($attribute->get('type') === 'extensibleEnum') {
-                    $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
-                        ->getPreparedOption($attribute->get('extensibleEnumId'), (string)$entity->get('value'));
-                    if (!empty($option)) {
-                        $entity->set('valueName', $option['preparedName']);
-                        $entity->set('valueOptionData', $option);
-                    }
-                } elseif ($attribute->get('type') === 'extensibleMultiEnum') {
-                    $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
-                        ->getPreparedOptions($attribute->get('extensibleEnumId'), $entity->get('value'));
-                    if (isset($options[0])) {
-                        $entity->set('valueNames', array_column($options, 'preparedName', 'id'));
-                        $entity->set('valueOptionsData', $options);
-                    }
-                }
-            }
-
             if ($attribute->get('type') === 'link' && !empty($attribute->get('entityType'))) {
                 $entity->set('attributeEntityType', $attribute->get('entityType'));
                 $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));

@@ -411,31 +411,6 @@ class EntityField extends ReferenceData
                 }
             }
 
-            if (!empty($entity->get('allowedOptions'))) {
-                switch ($entity->get('type')) {
-                    case 'extensibleEnum':
-                        if (!in_array($entity->get('default'), $entity->get('allowedOptions'))) {
-                            throw new BadRequest(sprintf(
-                                $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
-                                $entity->get('defaultName') ?? $entity->get('default'),
-                                $this->getLanguage()->translate('default', 'fields', 'EntityField')
-                            ));
-                        }
-                        break;
-                    case 'extensibleMultiEnum':
-                        foreach ($entity->get('default') as $optionId) {
-                            if (!in_array($optionId, $entity->get('allowedOptions'))) {
-                                $defaultNames = $entity->get('defaultNames') ?? new \stdClass();
-                                throw new BadRequest(sprintf(
-                                    $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
-                                    $defaultNames->{$optionId} ?? $optionId,
-                                    $this->getLanguage()->translate('default', 'fields', 'EntityField')
-                                ));
-                            }
-                        }
-                        break;
-                }
-            }
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('options')) {
@@ -819,19 +794,6 @@ class EntityField extends ReferenceData
             }
 
             $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
-
-            if (in_array($entity->get('type'), ['link', 'linkMultiple']) && $field === 'extensibleEnumId' && !empty($entity->get($field))) {
-                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
-                    'fields' => [
-                        $entity->get('code') => [
-                            "extensibleEnumId" => $entity->get($field)
-                        ]
-                    ]
-                ]);
-
-                $saveMetadata = true;
-                continue;
-            }
 
             if ($field === 'where' && isset($entity->_input->data)) {
                 $value = !empty($where = $entity->_input->data?->where) ? json_decode(json_encode($where), true) : [];

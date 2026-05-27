@@ -1,8 +1,0 @@
-{
-    "fields":{
-       "extensibleEnumOptions":"Opcje listy"
-    },
-    "exceptions":{
-       "extensibleEnumIsUsed":"Lista '%s' jest używana przez pole '%s' w jednostce '%s'."
-    }
- }

@@ -37,7 +37,6 @@
     "conditionalProtected": "Защищенный",
     "conditionalDisableOptions": "Отключенные опции",
     "description": "Описание",
-    "extensibleEnum": "Список",
     "preparedName": "Название",
     "channel": "Канал",
     "conditionalRequired": "Обязательный",
@@ -51,7 +50,6 @@
   "labels": {
     "addNewValue": "Добавить новое значение",
     "Classification": "Классификация",
-    "extensibleEnumOptions": "Параметры списка",
     "conditionalProperties": "Условные свойства"
   },
   "messages": {
@@ -92,7 +90,6 @@
       "bool": "Логичесное значение",
       "composite": "Композит",
       "datetime": "Дата-время",
-      "extensibleMultiEnum": "Многозначный список",
       "markdown": "Уценка",
       "url": "Url",
       "varchar": "Строка",
@@ -102,7 +99,6 @@
       "float": "Поплавок",
       "int": "Целое число",
       "date": "Дата",
-      "extensibleEnum": "Список",
       "file": "Файл",
       "text": "Текст",
       "link": "Ссылка",

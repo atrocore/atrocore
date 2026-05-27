@@ -436,36 +436,6 @@ class OpenApiGenerator
                     'forRead' => true
                 ];
                 break;
-            case "extensibleEnum":
-                $result['components']['schemas'][$entityName]['properties'][$fieldName]               = ['type' => 'string'];
-                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"]       = [
-                    'type'    => 'string',
-                    'forRead' => true
-                ];
-                $result['components']['schemas'][$entityName]['properties']["{$fieldName}OptionData"] = [
-                    'type'       => 'object',
-                    'properties' => $this->getEnumOptionProperties(),
-                    'forRead'    => true
-                ];
-                break;
-            case 'extensibleMultiEnum':
-                $result['components']['schemas'][$entityName]['properties'][$fieldName]                = [
-                    'type'  => 'array',
-                    'items' => ['type' => 'string']
-                ];
-                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"]       = [
-                    'type'    => 'object',
-                    'forRead' => true
-                ];
-                $result['components']['schemas'][$entityName]['properties']["{$fieldName}OptionsData"] = [
-                    'type'    => 'array',
-                    'forRead' => true,
-                    'items'   => [
-                        'type'       => 'object',
-                        'properties' => $this->getEnumOptionProperties()
-                    ]
-                ];
-                break;
             case "linkMultiple":
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = [
                     'type'  => 'array',

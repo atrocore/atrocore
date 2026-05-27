@@ -155,11 +155,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
             res.isNull = ids === null || ids === undefined;
 
-            if (
-                ['list', 'detail'].includes(this.mode)
-                && res.foreignScope === 'ExtensibleEnumOption'
-                && this.idsName !== this.name
-            ) {
+            if (['list', 'detail'].includes(this.mode) && this.idsName !== this.name) {
                 const options = this.model.get('_meta')?.options?.[this.name] || this.getOptionsData();
                 if (options && options.length > 0) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
@@ -184,20 +180,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getOptionsData() {
-            let res = [];
-
-            let ids = this.model.get(this.idsName);
-            if (ids && ids.length > 0) {
-                this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
-                    ids.forEach(id => {
-                        if (option.id === id) {
-                            res.push(option);
-                        }
-                    });
-                });
-            }
-
-            return res;
+            return [];
         },
 
         onInlineEditSave(res, attrs, model) {
@@ -220,15 +203,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getCreateAttributes: function () {
-            let extensibleEnumId = this.getExtensibleEnumId();
-            if (extensibleEnumId) {
-                return {
-                    "extensibleEnumsIds": [extensibleEnumId],
-                    "extensibleEnumsNames": {
-                        [extensibleEnumId]: this.getExtensibleEnumName()
-                    }
-                }
-            }
         },
 
         setup: function () {
@@ -433,17 +407,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.ajaxGetRequest(url, null, {async: false}).success(response => {
                     res = response?.where || res;
                 });
-            }
-
-            if (this.getExtensibleEnumId() && this.foreignScope === 'ExtensibleEnumOption') {
-                res = [
-                    ...(res || []),
-                    {
-                        type: 'linkedWith',
-                        attribute: 'extensibleEnums',
-                        value: [this.getExtensibleEnumId()]
-                    }
-                ]
             }
 
             return res || undefined
@@ -907,12 +870,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         foreignScope = attribute.entityType;
                     }
 
-                    let view = 'views/fields/link-multiple';
-                    if (type === 'extensibleMultiEnum') {
-                        view = 'views/fields/extensible-multi-enum'
-                    }
-
-                    this.createView(inputName, view, {
+                    this.createView(inputName, 'views/fields/link-multiple', {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
@@ -1068,10 +1026,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         model.set('valueNames', nameHash);
                         model.set('valueIds', rule.value);
 
-                        if (type === 'extensibleMultiEnum') {
-                            model.set('value', rule.value);
-                        }
-
                         let view = this.getView(inputName);
 
                         if (rule.data && rule.data['subQuery'] && view) {
@@ -1111,14 +1065,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 'not_linked_with',
             ];
 
-            if (type === 'extensibleMultiEnum') {
-                operators = [
-                    'array_any_of',
-                    'array_none_of',
-                    'is_null',
-                    'is_not_null'
-                ];
-            } else {
+            {
                 let foreignScope = this.defs.params?.attribute?.entityType || this.getForeignScope();
                 if (foreignScope === 'User') {
                     operators = operators.concat(['is_team_member', 'include_me', 'exclude_me'])

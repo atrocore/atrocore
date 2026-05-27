@@ -147,21 +147,13 @@
       ],
       [
         {
-          "name": "extensibleEnum"
-        },
-        {
           "name": "dropdown"
-        }
-      ],
-      [
-        {
-          "name": "selectPageSize"
         },
         false
       ],
       [
         {
-          "name": "allowedOptions"
+          "name": "selectPageSize"
         },
         false
       ],

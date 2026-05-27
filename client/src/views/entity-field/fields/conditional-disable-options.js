@@ -22,8 +22,6 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
 
         typeField: 'type',
 
-        extensibleEnumIdField: 'extensibleEnumId',
-
         events: {
             'click [data-action="editConditions"]': function (e) {
                 var index = parseInt($(e.currentTarget).data('index'));
@@ -101,42 +99,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             let model = new Model();
             model.set('options', this.optionsDefsList[num].options || []);
 
-            if (['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.get(this.typeField))) {
-                const requestData = {
-                    where: [{
-                        type: 'in',
-                        attribute: 'id',
-                        value: model.get('options')
-                    }]
-                };
-
-                this.ajaxGetRequest('ExtensibleEnumOption', requestData, { async: false }).success(res => {
-                    let optionsNames = {};
-                    (res.list || []).forEach(item => {
-                        optionsNames[item.id] = item.name;
-                    })
-                    model.set('optionsNames', optionsNames);
-                });
-
-                this.createView(key, 'views/fields/extensible-multi-enum', {
-                    el: this.getSelector() + ' .options-container[data-key="' + key + '"]',
-                    model: model,
-                    name: 'options',
-                    mode: this.mode,
-                    params: {
-                        extensibleEnumId: this.model.get(this.extensibleEnumIdField),
-                    },
-                    inlineEditDisabled: this.options.inlineEditDisabled,
-                }, view => {
-                    if (this.isRendered()) {
-                        view.render();
-                    }
-
-                    this.listenTo(view, 'change', () => {
-                        this.optionsDefsList[num].options = model.get('options') || [];
-                    });
-                });
-            } else if (['link', 'linkMultiple'].includes(this.model.get(this.typeField))) {
+            if (['link', 'linkMultiple'].includes(this.model.get(this.typeField))) {
                 const foreignScope = this.model.get('foreignEntityId');
                 const ids = model.get('options') || [];
 

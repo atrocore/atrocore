@@ -2468,7 +2468,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                 const type = col.type || model.getFieldType(col.name)
 
-                if (['bool', 'link', 'linkMultiple', 'script', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
+                if (['bool', 'link', 'linkMultiple', 'script'].includes(type)) {
                     delete col.link;
                 }
 

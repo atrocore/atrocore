@@ -15,7 +15,5 @@ Espo.define('views/classification-attribute/fields/conditional-disable-options',
 
         typeField: 'attributeType',
 
-        extensibleEnumIdField: 'attributeExtensibleEnumId'
-
     })
 );

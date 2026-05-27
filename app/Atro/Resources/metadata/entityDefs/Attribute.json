@@ -40,65 +40,6 @@
       "required": true,
       "layoutRemoveDisabled": true
     },
-    "extensibleEnum": {
-      "type": "link",
-      "layoutRemoveDisabled": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "or",
-              "value": [
-                {
-                  "type": "in",
-                  "attribute": "type",
-                  "value": [
-                    "extensibleEnum",
-                    "extensibleMultiEnum"
-                  ]
-                },
-                {
-                  "type": "equals",
-                  "attribute": "entityType",
-                  "value": "ExtensibleEnumOption"
-                }
-              ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "or",
-              "value": [
-                {
-                  "type": "in",
-                  "attribute": "type",
-                  "value": [
-                    "extensibleEnum",
-                    "extensibleMultiEnum"
-                  ]
-                },
-                {
-                  "type": "equals",
-                  "attribute": "entityType",
-                  "value": "ExtensibleEnumOption"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "allowedOptions": {
-      "type": "array",
-      "view": "views/admin/field-manager/fields/allowed-options",
-      "notStorable": true,
-      "virtualField": true,
-      "filterDisabled": true,
-      "emHidden": true,
-      "layoutRemoveDisabled": true
-    },
     "entity": {
       "type": "link",
       "entity": "Entity",
@@ -327,13 +268,6 @@
                 "link",
                 "linkMultiple"
               ]
-            },
-            {
-              "type": "notIn",
-              "attribute": "entityType",
-              "value": [
-                "ExtensibleEnumOption"
-              ]
             }
           ]
         },
@@ -345,13 +279,6 @@
               "value": [
                 "link",
                 "linkMultiple"
-              ]
-            },
-            {
-              "type": "notIn",
-              "attribute": "entityType",
-              "value": [
-                "ExtensibleEnumOption"
               ]
             }
           ]
@@ -551,8 +478,6 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "extensibleEnum",
-                "extensibleMultiEnum",
                 "link",
                 "linkMultiple"
               ]
@@ -577,8 +502,6 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "extensibleEnum",
-                "extensibleMultiEnum",
                 "link",
                 "linkMultiple"
               ]
@@ -767,9 +690,7 @@
               "attribute": "type",
               "value": [
                 "enum",
-                "multiEnum",
-                "extensibleEnum",
-                "extensibleMultiEnum"
+                "multiEnum"
               ]
             }
           ]
@@ -812,11 +733,6 @@
       "type": "belongsTo",
       "foreign": "attributes",
       "entity": "AttributeGroup"
-    },
-    "extensibleEnum": {
-      "type": "belongsTo",
-      "foreign": "attributes",
-      "entity": "ExtensibleEnum"
     },
     "measure": {
       "type": "belongsTo",

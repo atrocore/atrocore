@@ -1,8 +1,0 @@
-{
-  "fields": {
-    "extensibleEnumOptions": "Možnosti seznamu"
-  },
-  "exceptions": {
-    "extensibleEnumIsUsed": "Seznam \"%s\" je používán polem \"%s\" v entitě \"%s\"."
-  }
-}

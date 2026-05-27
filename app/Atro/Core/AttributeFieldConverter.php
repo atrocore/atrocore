@@ -257,15 +257,13 @@ class AttributeFieldConverter
             ->innerJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id AND a.deleted=:false')
             ->leftJoin('a', 'attribute_group', 'ag', 'ag.id=a.attribute_group_id AND ag.deleted=:false')
             ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType AND f.deleted=:false')
-            ->leftJoin('av', $this->conn->quoteIdentifier('extensible_enum_option'), 'eeo', 'eeo.id=av.reference_value AND a.type=:eeType AND eeo.deleted=:false')
             ->leftJoin('av', $this->conn->quoteIdentifier('prefix'), 'p', 'p.id=av.prefix_value AND p.deleted=:false')
             ->where('av.deleted=:false')
             ->andWhere("av.{$tableName}_id=:id")
             ->orderBy('a.sort_order', 'ASC')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $entity->get('id'))
-            ->setParameter('fileType', 'file')
-            ->setParameter('eeType', 'extensibleEnum');
+            ->setParameter('fileType', 'file');
 
         if (class_exists("\\Pim\\Module")) {
             $qb->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id AND c.deleted=:false');

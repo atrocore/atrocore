@@ -22,7 +22,6 @@
     "amountOfDigitsAfterComma": "Nombre de chiffres après la virgule",
     "description": "Description",
     "classifications": "Classifications",
-    "extensibleEnum": "Liste",
     "min": "Min",
     "max": "Max",
     "notNull": "Désactiver la valeur nulle",
@@ -51,7 +50,6 @@
   "labels": {
     "Classification": "Classification",
     "addNewValue": "Ajouter une nouvelle valeur",
-    "extensibleEnumOptions": "Liste des options",
     "conditionalProperties": "Propriétés conditionnelles"
   },
   "options": {
@@ -60,10 +58,8 @@
       "bool": "Booléen",
       "date": "Date",
       "datetime": "Date et heure",
-      "extensibleEnum": "Liste",
       "float": "Flottant",
       "int": "Entier",
-      "extensibleMultiEnum": "Liste multi-valeurs",
       "text": "Texte",
       "markdown": "Markdown",
       "url": "Url",

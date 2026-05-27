@@ -27,7 +27,6 @@
     "amountOfDigitsAfterComma": "Amount of digits after comma",
     "description": "Description",
     "classifications": "Classifications",
-    "extensibleEnum": "List",
     "min": "Min",
     "max": "Max",
     "notNull": "Disable Null Value",
@@ -51,7 +50,6 @@
   "labels": {
     "Classification": "Classification",
     "addNewValue": "Add new value",
-    "extensibleEnumOptions": "List Options",
     "conditionalProperties": "Conditional Properties",
     "viewRecordsWithAttribute": "Records with this attribute"
   },
@@ -62,10 +60,8 @@
       "composite": "Composite",
       "date": "Date",
       "datetime": "Date-time",
-      "extensibleEnum": "List",
       "float": "Float",
       "int": "Integer",
-      "extensibleMultiEnum": "Multi-value list",
       "text": "Text",
       "markdown": "Markdown",
       "url": "Url",
