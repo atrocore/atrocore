@@ -14,15 +14,11 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\AttributeFieldConverter;
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Util;
-use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Attribute extends Base

@@ -45,7 +45,8 @@
     "modifiedExtendedDisabled": "No recording as modification",
     "entityType": "Linked Entity",
     "entityField": "Entity Field",
-    "selectPageSize": "Records per page (select dialog)"
+    "selectPageSize": "Records per page (select dialog)",
+    "options": "Options"
   },
   "labels": {
     "Classification": "Classification",
@@ -62,6 +63,8 @@
       "datetime": "Date-time",
       "float": "Float",
       "int": "Integer",
+      "enum": "List",
+      "multiEnum": "Multi-value list",
       "text": "Text",
       "markdown": "Markdown",
       "url": "Url",

@@ -58,7 +58,8 @@
       }
     },
     "code": {
-      "type": "varchar"
+      "type": "varchar",
+      "required": true
     },
     "type": {
       "type": "varchar",
@@ -127,6 +128,44 @@
           ]
         }
       }
+    },
+    "options": {
+      "type": "array",
+      "notStorable": true,
+      "virtualField": true,
+      "view": "views/entity-field/fields/options",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "in",
+              "value": [
+                "enum",
+                "multiEnum"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "optionColors": {
+      "type": "array",
+      "notStorable": true,
+      "virtualField": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "translatedOptions": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "virtualField": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "filterDisabled": true,
+      "emHidden": true
     },
     "min": {
       "type": "float",
