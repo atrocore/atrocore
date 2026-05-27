@@ -185,6 +185,7 @@
     "multiLanguagesSettings": "Konfigurace používaných jazyků.",
     "composer": "Aktualizace systému a všech nainstalovaných modulů, instalace nebo odebrání veřejně nebo soukromě dostupných modulů. Automaticky se zohlední závislost na verzi modulu.",
     "measure": "Spravujte míry a měrné jednotky, nastavte výchozí měrné jednotky a násobitele pro automatický převod měrných jednotek.",
+    "prefix": "Spravujte předpony, které lze přiřadit numerickým a textovým polím, a umožněte tak strukturované označování, jako jsou přibližné hodnoty nebo tituly.",
     "connection": "Správa spojení s jinými systémy pro automatickou výměnu dat.",
     "settings": "Správa obecných nastavení systému, jako je výchozí systémové prostředí, předvolby vyhledávání, aktivní jazyky rozhraní, používání mezipaměti a další...",
     "scheduledJob": "Správa naplánovaných systémových úloh.",

@@ -11,6 +11,7 @@
     "unique": "Unique",
     "index": "Database Index",
     "measure": "Measure",
+    "prefixEnabled": "Enable Prefix",
     "trim": "Remove leading and trailing whitespaces",
     "maxLength": "Max length",
     "countBytesInsteadOfCharacters": "Count bytes instead of characters",

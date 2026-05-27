@@ -44,7 +44,7 @@ class EditableEntity extends AbstractTwigFunction
 
         $filteredFields = array_map(function ($field) use ($entity) {
             if (!empty($entity->fields[$field]['measureId'])) {
-                return 'unit' . ucfirst($field);
+                return 'combined' . ucfirst($field);
             }
 
             return $field;

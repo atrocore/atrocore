@@ -16,6 +16,7 @@
     "countBytesInsteadOfCharacters": "Compter les octets au lieu des caractères",
     "pattern": "Modif Regex",
     "defaultUnit": "Unité par défaut",
+    "prefixEnabled": "Enable Prefix",
     "default": "Valeur par défaut",
     "defaultValueType": "Valeur par défaut Type",
     "tooltip": "Info-bulle",

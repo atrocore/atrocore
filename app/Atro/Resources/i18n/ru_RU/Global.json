@@ -505,6 +505,7 @@
     "accessManagement": "Управление доступом",
     "Start": "Начните",
     "unitPart": "(Unit)",
+    "prefixPart": "(Префикс)",
     "unselectAll": "Отменить выбор Все",
     "splitHorizontal": "Горизонтальное разделение",
     "splitVertical": "Разделить по вертикали",

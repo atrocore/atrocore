@@ -227,9 +227,11 @@ class AttributeFieldConverter
             'av.varchar_value',
             'av.text_value',
             'av.reference_value',
+            'av.prefix_value',
             'av.json_value',
             'f.name as file_name',
             'eeo.name as extensible_enum_option_name',
+            'p.value as prefix_name',
             'ag.id as attribute_group_id',
             'ag.name as attribute_group_name',
             'ag.sort_order as attribute_group_sort_order',
@@ -256,6 +258,7 @@ class AttributeFieldConverter
             ->leftJoin('a', 'attribute_group', 'ag', 'ag.id=a.attribute_group_id AND ag.deleted=:false')
             ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType AND f.deleted=:false')
             ->leftJoin('av', $this->conn->quoteIdentifier('extensible_enum_option'), 'eeo', 'eeo.id=av.reference_value AND a.type=:eeType AND eeo.deleted=:false')
+            ->leftJoin('av', $this->conn->quoteIdentifier('prefix'), 'p', 'p.id=av.prefix_value AND p.deleted=:false')
             ->where('av.deleted=:false')
             ->andWhere("av.{$tableName}_id=:id")
             ->orderBy('a.sort_order', 'ASC')

@@ -182,6 +182,7 @@
     "intPart": "(Liczba całkowita)",
     "floatPart": "(Liczba zmiennoprzecinkowa)",
     "unitPart": "(Jednostka)",
+    "prefixPart": "(Prefiks)",
     "inheritAllForChildren": "Dziedzicz wszystkie dla elementów podrzędnych",
     "inheritAllFromParent": "Dziedziczy wszystko od rodzica",
     "homepage": "Strona główna",

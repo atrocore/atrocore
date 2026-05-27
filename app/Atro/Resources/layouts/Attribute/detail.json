@@ -47,7 +47,9 @@
         {
           "name": "pattern"
         },
-        false
+        {
+          "name": "prefixEnabled"
+        }
       ],
       [
         {

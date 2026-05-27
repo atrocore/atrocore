@@ -196,6 +196,15 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         ];
     }
 
+    protected function extractPrefixWhere(?string $data): array
+    {
+        if (empty($data)) {
+            return [];
+        }
+        $parsed = json_decode($data, true);
+        return $parsed['where'] ?? [];
+    }
+
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         return [];

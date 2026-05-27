@@ -393,6 +393,31 @@
         }
       }
     },
+    "prefixEnabled": {
+      "type": "bool",
+      "default": false,
+      "notNull": true,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float",
+                "varchar"
+              ]
+            },
+            {
+              "type": "isFalse",
+              "attribute": "isMultilang"
+            }
+          ]
+        }
+      }
+    },
     "defaultUnit": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/default-unit",

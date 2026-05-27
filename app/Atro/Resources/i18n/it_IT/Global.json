@@ -132,6 +132,7 @@
     "floatPart": "(Galleggiante)",
     "varcharPart": "(Stringa)",
     "unitPart": "(Unità)",
+    "prefixPart": "(Prefisso)",
     "inheritAllForChildren": "Eredita tutti gli elementi per i figli",
     "inheritAllFromParent": "Eredita tutto dal genitore",
     "homepage": "Homepage",

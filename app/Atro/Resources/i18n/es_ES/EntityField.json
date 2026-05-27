@@ -11,6 +11,7 @@
     "unique": "Único",
     "index": "Índice de la base de datos",
     "measure": "Medida",
+    "prefixEnabled": "Enable Prefix",
     "trim": "Eliminar los espacios en blanco iniciales y finales",
     "maxLength": "Longitud máxima",
     "countBytesInsteadOfCharacters": "Contar bytes en lugar de caracteres",
@@ -129,8 +130,6 @@
   "exceptions": {
     "nullValuesExist": "Algunos registros tienen valores nulos",
     "cannotAddRequiredFieldWithExistingRecords": "No se puede añadir un campo obligatorio con registros existentes sin valor por defecto",
-    "relationAlreadyUsed": "El Middle Table Name %s ya está en uso, elija otro.",
-    "optionCodeUsedInDisabledOptionsRules": "La opción '%s' se utiliza en las reglas de opciones deshabilitadas y no se puede cambiar.",
-    "optionCodeUsedInDisabledOptionsRulesDelete": "La opción '%s' se utiliza en las reglas de opciones deshabilitadas y no se puede eliminar."
+    "relationAlreadyUsed": "El Middle Table Name %s ya está en uso, elija otro."
   }
 }

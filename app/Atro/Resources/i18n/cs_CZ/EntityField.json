@@ -11,6 +11,7 @@
     "unique": "Unikátní",
     "index": "Databázový index",
     "measure": "Míra",
+    "prefixEnabled": "Enable Prefix",
     "trim": "Odstranit počáteční a koncové bílé znaky",
     "maxLength": "Maximální délka",
     "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",

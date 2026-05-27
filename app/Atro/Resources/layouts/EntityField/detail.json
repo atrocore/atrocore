@@ -64,6 +64,12 @@
       ],
       [
         {
+          "name": "prefixEnabled"
+        },
+        false
+      ],
+      [
+        {
           "name": "trim"
         },
         {

@@ -45,7 +45,8 @@
     "modifiedExtendedDisabled": "Не фіксувати як зміну",
     "entityType": "Пов'язана сутність",
     "entityField": "Поле сутності",
-    "selectPageSize": "Записів на сторінці (діалог вибору)"
+    "selectPageSize": "Записів на сторінці (діалог вибору)",
+    "prefixEnabled": "Enable Префікс"
   },
   "labels": {
     "addNewValue": "Додати нове значення",
