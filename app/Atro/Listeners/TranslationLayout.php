@@ -21,7 +21,10 @@ class TranslationLayout extends AbstractLayoutListener
 {
     protected function getAllUiLanguages(): array
     {
-        return array_unique(array_column($this->getConfig()->get('locales', []), 'language'));
+        $languages = array_column($this->getConfig()->get('referenceData.Locale', []), 'languageCode');
+        $languages = array_merge($languages, array_column($this->getConfig()->get('referenceData.Language', []), 'code'));
+
+        return array_values(array_unique($languages));
     }
 
     public function list(Event $event)
