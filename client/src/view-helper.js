@@ -104,7 +104,7 @@ Espo.define('view-helper', [], function () {
                 className += ' ' + additionalClassName;
             }
 
-            return '<img class="' + className + '" width="' + width + '" height="' + width + '" src="' + basePath + '?entryPoint=avatar&size=' + size + '&id=' + id + '">';
+            return '<img class="' + className + '" style="max-width:' + width + 'px;max-height:' + width + 'px;" src="' + basePath + '?entryPoint=avatar&size=' + size + '&id=' + id + '">';
         },
 
         _registerHandlebarsHelpers: function () {
