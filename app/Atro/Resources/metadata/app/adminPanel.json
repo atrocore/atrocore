@@ -78,6 +78,13 @@
         "docsUrl": "https://help.atrocore.com/atrocore/administration/measure-units"
       },
       {
+        "url": "#Prefix",
+        "label": "Prefix",
+        "description": "prefix",
+        "icon": "ph ph-text-aa",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/prefixes"
+      },
+      {
         "url": "#Measure/view/currency",
         "label": "Currency",
         "description": "currency",

@@ -110,10 +110,10 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
 
                                 this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
 
-                                if (fieldDefs.unitField && ['int', 'float', 'varchar'].includes(fieldDefs.type)) {
+                                if (fieldDefs.combinedField && ['int', 'float', 'varchar'].includes(fieldDefs.type)) {
                                     fieldDefs = Espo.utils.clone(fieldDefs);
 
-                                    field = 'unit' + Espo.utils.upperCaseFirst(field);
+                                    field = 'combined' + Espo.utils.upperCaseFirst(field);
                                     this.params.options.push(field);
 
                                     const parts = fieldDefs.label.split(' ');

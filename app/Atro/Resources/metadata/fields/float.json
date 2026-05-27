@@ -16,6 +16,10 @@
       "entity": "Measure"
     },
     {
+      "name": "prefixEnabled",
+      "type": "bool"
+    },
+    {
       "name": "default",
       "type": "float"
     },

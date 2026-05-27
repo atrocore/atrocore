@@ -348,6 +348,20 @@
         }
       }
     },
+    "prefixEnabled": {
+      "type": "bool",
+      "default": false,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
+    },
     "trim": {
       "type": "bool",
       "default": true

@@ -1140,7 +1140,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 if (this.model.getFieldParam(this.name, 'unitIdField')) {
                     name += 'Id';
                 }
-                this.listenTo(this.model, 'change:' + name, () => {
+                this.listenTo(this.model, 'change:' + name, (model, value, options) => {
+                    if (options.ui) {
+                        return;
+                    }
                     this.reRender();
                 });
                 this.listenTo(this, 'change', () => {

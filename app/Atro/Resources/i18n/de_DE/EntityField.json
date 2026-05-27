@@ -11,6 +11,7 @@
     "unique": "Einheitlich",
     "index": "Datenbank-Index",
     "measure": "Maß",
+    "prefixEnabled": "Enable Prefix",
     "trim": "Führende und nachfolgende Whitespaces entfernen",
     "maxLength": "Maximale Länge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",

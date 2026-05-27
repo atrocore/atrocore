@@ -45,7 +45,8 @@
     "modifiedExtendedDisabled": "No se registra como modificación",
     "entityType": "Entidad vinculada",
     "entityField": "Campo de entidad",
-    "selectPageSize": "Registros por página (diálogo de selección)"
+    "selectPageSize": "Registros por página (diálogo de selección)",
+    "prefixEnabled": "Enable Prefijo"
   },
   "labels": {
     "Classification": "Clasificación",

@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "name": "Name",
+    "value": "Value"
+  },
+  "tooltips": {
+    "value": "The string displayed before the field value (e.g. \"Dr.\", \"approx.\")"
+  }
+}

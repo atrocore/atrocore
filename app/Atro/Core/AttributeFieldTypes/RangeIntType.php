@@ -250,7 +250,7 @@ class RangeIntType extends IntType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if (!empty($item['unitField']) && !str_ends_with($item['attribute'], 'UnitId')) {
+        if (!empty($item['combinedField']) && !str_ends_with($item['attribute'], 'UnitId')) {
             $item['valueColumn'] = str_ends_with($item['attribute'], 'From') ? "{$this->type}Value" : "{$this->type}Value1";
             return $this->convertUnitFieldWhere($entity, $attribute, $item);
         }
