@@ -51,7 +51,7 @@ The search bar supports quick filtering and navigation within large account data
 
 Account records can be linked to:
 - [Address](../01.address/index.md)
-- Contacts
+- [Contacts](../02.contact/index.md)
 
 These relationships allow centralized management of communication and delivery information associated with the Account.
 
