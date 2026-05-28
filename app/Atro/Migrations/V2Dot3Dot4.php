@@ -12,6 +12,8 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\Util;
 
 class V2Dot3Dot4 extends Base
 {
