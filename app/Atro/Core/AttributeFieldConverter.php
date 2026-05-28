@@ -230,7 +230,6 @@ class AttributeFieldConverter
             'av.prefix_value',
             'av.json_value',
             'f.name as file_name',
-            'eeo.name as extensible_enum_option_name',
             'p.value as prefix_name',
             'ag.id as attribute_group_id',
             'ag.name as attribute_group_name',
