@@ -27,7 +27,7 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
 {
     public function connect(Entity $connectionEntity): TransportInterface
     {
-        $factory = new EsmtpTransportFactory;
+        $factory  = new EsmtpTransportFactory;
         $authType = $connectionEntity->get('smtpAuthType');
 
         if (empty($authType) || $authType == 'basic') {
@@ -117,7 +117,7 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
         ]);
 
         $response = curl_exec($ch);
-        $error = curl_error($ch);
+        $error    = curl_error($ch);
         curl_close($ch);
 
         if ($error) {
@@ -127,7 +127,7 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
         $result = json_decode($response, true);
 
         if (empty($result['access_token'])) {
-            throw new BadRequest("Error when trying to get access token");
+            throw new BadRequest("Error when trying to get access token, Response: " . $response);
         }
 
         $result['expires_at'] = time() + ((int)$result['expires_in']) - 10;
