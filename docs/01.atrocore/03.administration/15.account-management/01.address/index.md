@@ -4,7 +4,7 @@ title: Address
 
 ## Overview
 
-The Address system provides centralized management of all company, supplier, buyer, and seller addresses used within the system.
+The Address entity provides centralized management of all company, supplier, buyer, and seller addresses used within the system.
 Addresses are stored as structured records and can be reused across entities and business processes. Each address record has a unique identifier and can be customized independently from default values.
 
 ![Address List](./_assets/Address_list.png){.large}
