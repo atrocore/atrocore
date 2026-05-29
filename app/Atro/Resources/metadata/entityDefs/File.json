@@ -109,7 +109,7 @@
       "required": false
     },
     "folderPath": {
-      "type": "jsonObject",
+      "type": "jsonArray",
       "view": "views/folder/fields/folder-path",
       "notStorable": true,
       "readOnly": true,
