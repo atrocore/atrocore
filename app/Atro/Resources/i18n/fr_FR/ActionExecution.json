@@ -12,7 +12,7 @@
     "logs": "Journaux"
   },
   "notifications": {
-    "actionExecutionFinished": "L'exécution de l'action s'est terminée. Pour voir le résultat, <a href=\"/#ActionExecution/view/%s\">cliquez ici</a>"
+    "actionExecutionFinished": "%s s'est terminée. Pour voir le résultat, <a href=\"/#ActionExecution/view/%s\">cliquez ici</a>"
   },
   "options": {
     "type": {

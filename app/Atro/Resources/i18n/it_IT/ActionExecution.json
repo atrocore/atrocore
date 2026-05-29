@@ -12,7 +12,7 @@
     "updatedCount": "Aggiornato"
   },
   "notifications": {
-    "actionExecutionFinished": "L'esecuzione dell'azione è terminata. Per vedere il risultato, <a href=\"/#ActionExecution/view/%s\">clicca qui</a>"
+    "actionExecutionFinished": "%s è terminata. Per vedere il risultato, <a href=\"/#ActionExecution/view/%s\">clicca qui</a>"
   },
   "options": {
     "type": {

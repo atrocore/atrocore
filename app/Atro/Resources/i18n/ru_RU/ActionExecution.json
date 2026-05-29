@@ -12,7 +12,7 @@
     "updatedCount": "Обновленный"
   },
   "notifications": {
-    "actionExecutionFinished": "Выполнение действия окончено. Для просмотра результата <a href=\"/#ActionExecution/view/%s\">перейдите по ссылке</a>"
+    "actionExecutionFinished": "%s окончено. Для просмотра результата <a href=\"/#ActionExecution/view/%s\">перейдите по ссылке</a>"
   },
   "options": {
     "type": {

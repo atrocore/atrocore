@@ -43,7 +43,7 @@ class ActionExecution extends Base
         if (in_array($entity->get('status'), ['done', 'failed']) && $entity->get('type') === 'manual') {
             $notification = $this->getEntityManager()->getEntity('Notification');
             $notification->set('type', 'Message');
-            $notification->set('message', sprintf($this->getLanguage()->translate('actionExecutionFinished', 'notifications', 'ActionExecution'), $entity->id));
+            $notification->set('message', sprintf($this->getLanguage()->translate('actionExecutionFinished', 'notifications', 'ActionExecution'), $entity->get('name'), $entity->id));
 
             $notification->set('relatedType', $entity->getEntityName());
             $notification->set('relatedId', $entity->get('id'));
