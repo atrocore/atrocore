@@ -53,8 +53,8 @@ class V2Dot3Dot3 extends Base
         $table->addColumn('modified_by_id', 'string', ['length' => 36, 'notnull' => false, 'default' => null]);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['name', 'deleted'], 'IDX_PREFIX_NAME');
-        $table->addIndex(['created_by_id,', 'deleted'], 'IDX_PREFIX_CREATED_BY_ID');
-        $table->addIndex(['modified_by_id,', 'deleted'], 'IDX_PREFIX_MODIFIED_BY_ID');
+        $table->addIndex(['created_by_id', 'deleted'], 'IDX_PREFIX_CREATED_BY_ID');
+        $table->addIndex(['modified_by_id', 'deleted'], 'IDX_PREFIX_MODIFIED_BY_ID');
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->exec($sql);

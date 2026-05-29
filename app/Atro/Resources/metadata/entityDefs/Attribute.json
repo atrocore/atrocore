@@ -653,6 +653,10 @@
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "layoutRemoveDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -668,6 +672,10 @@
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "layoutRemoveDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -687,6 +695,10 @@
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "layoutRemoveDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -702,6 +714,10 @@
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "layoutRemoveDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -717,6 +733,10 @@
       "type": "jsonArray",
       "view": "views/entity-field/fields/conditional-disable-options",
       "layoutRemoveDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -739,6 +759,10 @@
     "conditionalProperties": {
       "type": "jsonObject",
       "notStorable": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
       "view": "views/fields/conditional-properties"
     },
     "modifiedExtendedDisabled": {
