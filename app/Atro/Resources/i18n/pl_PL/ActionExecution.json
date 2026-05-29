@@ -12,7 +12,7 @@
     "logs": "Dzienniki"
   },
   "notifications": {
-    "actionExecutionFinished": "Wykonanie akcji zostało zakończone. Aby zobaczyć wynik, <a href=\"/#ActionExecution/view/%s\">kliknij tutaj</a>"
+    "actionExecutionFinished": "%s zostało zakończone. Aby zobaczyć wynik, <a href=\"/#ActionExecution/view/%s\">kliknij tutaj</a>"
   },
   "options": {
     "type": {
