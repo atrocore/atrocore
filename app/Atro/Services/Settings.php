@@ -53,11 +53,9 @@ class Settings extends AbstractService
             ->select(['id', 'name', 'type', 'matchingRuleSetId', 'matchingId'])
             ->find()->toArray();
 
-        if (!class_exists('\\OpenIdConnectSso\\Module')) {
-            $data['oidcType'] = null;
-        }
-
-        return $data;
+        return $this->getInjection('eventManager')
+            ->dispatch('SettingsService', 'afterGetConfigData', new Event(['data' => $data]))
+            ->getArgument('data');
     }
 
     public function update(\stdClass $data)
