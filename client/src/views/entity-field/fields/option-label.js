@@ -39,7 +39,15 @@ Espo.define('views/entity-field/fields/option-label', 'views/fields/varchar-with
             this.listenToOnce(view, 'after:save', () => {
                 this.model.trigger('label-update');
             });
-        }
+        },
+
+        initInlineLabelEdit() {
+            if (this.options?.entityName === 'Attribute') {
+                return;
+            }
+
+            Dep.prototype.initInlineLabelEdit.call(this);
+        },
 
     });
 });
