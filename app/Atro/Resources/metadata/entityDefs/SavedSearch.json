@@ -6,7 +6,8 @@
       "required": true
     },
     "data": {
-      "type": "jsonObject"
+      "type": "jsonObject",
+      "required": true
     },
     "userId": {
       "type": "varchar",
