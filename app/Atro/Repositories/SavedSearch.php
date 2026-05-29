@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\DataManager;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\Acl;
@@ -88,8 +89,12 @@ class SavedSearch extends Base
     {
         $currentUserId = $this->getEntityManager()->getUser()->id;
 
-        if($entity->isNew()) {
+        if ($entity->isNew()) {
             $entity->set('userId', $currentUserId);
+        }
+
+        if (empty($entity->get('data'))) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('fieldIsRequired', 'exceptions'), 'data'));
         }
 
         parent::beforeSave($entity, $options);

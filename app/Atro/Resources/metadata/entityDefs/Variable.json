@@ -2,7 +2,9 @@
   "fields": {
     "key": {
       "type": "varchar",
-      "view": "views/variable/fields/key"
+      "view": "views/variable/fields/key",
+      "required": true,
+      "unique": true
     },
     "type": {
       "type": "enum",
