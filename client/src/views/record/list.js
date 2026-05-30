@@ -1908,6 +1908,14 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.massActionList.push('removeAttribute');
                 this.checkAllResultMassActionList.push('removeAttribute');
             }
+
+            if (
+                this.isHierarchical()
+                && !this.getMetadata().get(['scopes', this.scope, 'multiParents'])
+                && this.getAcl().check(this.scope, 'edit')
+            ) {
+                this.massActionList.push('inheritAllFromParent');
+            }
         },
 
         isAddRemoveRelationEnabled() {
@@ -2002,6 +2010,23 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     });
                 });
             });
+        },
+
+        massActionInheritAllFromParent() {
+            this.confirm({
+                message: this.translate('confirmInheritAllFromParent', 'messages'),
+                confirmText: this.translate('Apply')
+            }, function () {
+                let ids = [];
+                this.checkedList.forEach(id => ids.push(id));
+
+                this.notify(this.translate('pleaseWait', 'messages'));
+
+                this.ajaxPostRequest(`${this.entityType}/inheritAllFromParentAsync`, {ids: ids}).then(function () {
+                    this.notify(this.translate('jobAdded', 'messages'), 'success');
+                    this.collection.fetch();
+                }.bind(this));
+            }, this);
         },
 
         checkMassActionJob(jobId) {

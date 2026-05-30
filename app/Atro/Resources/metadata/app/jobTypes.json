@@ -124,5 +124,9 @@
   "UniversalMassAction": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\UniversalMassAction"
+  },
+  "InheritAllFromParent": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\InheritAllFromParent"
   }
 }

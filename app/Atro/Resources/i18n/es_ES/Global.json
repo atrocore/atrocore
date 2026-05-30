@@ -675,7 +675,8 @@
     "update": "Guardar",
     "export": "Exportar",
     "select": "Seleccionar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "inheritAllFromParent": "Heredar todo del padre"
   },
   "fields": {
     "number": "Número",

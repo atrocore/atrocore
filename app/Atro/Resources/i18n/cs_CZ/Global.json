@@ -791,7 +791,8 @@
     "download": "Stáhnout",
     "compare": "Porovnat",
     "removeAttribute": "Odstranění atributu",
-    "select": "Vybrat"
+    "select": "Vybrat",
+    "inheritAllFromParent": "Dědit vše od rodiče"
   },
   "dashlets": {
     "Records": "Seznam záznamů",

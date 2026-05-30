@@ -796,7 +796,8 @@
     "massRestore": "Restauration en masse",
     "removeAttribute": "Supprimer un attribut",
     "compare": "Comparer",
-    "select": "Sélectionner"
+    "select": "Sélectionner",
+    "inheritAllFromParent": "Hériter tout du parent"
   },
   "dashlets": {
     "Stream": "Activités",

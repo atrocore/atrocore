@@ -730,7 +730,8 @@
     "download": "Nachladen",
     "compare": "Vergleichen Sie",
     "removeAttribute": "Attribut löschen",
-    "select": "Wählen"
+    "select": "Wählen",
+    "inheritAllFromParent": "Vererben alles von Eltern"
   },
   "fields": {
     "number": "Nummer",
