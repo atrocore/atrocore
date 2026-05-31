@@ -38,6 +38,77 @@ An existing Classification can be **duplicated** to use as a starting point — 
 
 ![Duplicating Classification](./_assets/duplicate-classification.png){.medium}
 
+## Listing
+
+To open the list of Classification records available in the system, click the `Classifications` option in the navigation menu:
+
+![Classifications list view](./_assets/pf-list-view.png){.large}
+
+To change the order of records in the list, click any sortable column title to sort ascending or descending.
+
+Classification records can be searched and filtered according to your needs. For details, refer to the [**Search and Filtering**](../../../11.search-and-filtering/) article.
+
+To view the details of a Classification record, click its name in the list. The [detail view](../../../04.understanding-ui/index.md#detail-view) page will open. Alternatively, select the `View` option from the single record actions menu to open the quick detail pop-up.
+
+### Mass Actions
+
+The following mass actions are available for Classification records on the list view page:
+
+- Remove
+- Compare
+- Mass update
+- Export
+- Translate
+- Add relation
+- Remove relation
+
+![Mass actions](./_assets/pf-mass-actions.png){.medium}
+
+Some actions are only available after purchasing additional modules.
+
+For details, refer to the [**Mass Actions**](../../../04.understanding-ui/index.md#mass-actions) section of the **Views and Panels** article.
+
+### Single Record Actions
+
+The following single record actions are available for Classification records on the list view page:
+
+- View
+- Edit
+- Delete
+- Bookmark
+
+![Single record actions](./_assets/pf-single-actions.png){.medium}
+
+For details, refer to the [**Single Record Actions**](../../../04.understanding-ui/index.md#single-record-actions) section of the **Views and Panels** article.
+
+## Editing
+
+To edit a Classification, click the `Edit` button on the [detail view](../../../04.understanding-ui/index.md#detail-view) page of the currently open Classification record:
+
+![Edit view](./_assets/pf-edit.png){.large}
+
+Edit the desired fields and click `Save`. The **Entity** field cannot be changed after creation.
+
+You can also make changes via [in-line editing](../../../08.record-management/index.md#in-line-editing) on the detail view page, or by selecting `Edit` from the single record actions menu on the list view to open the quick edit pop-up:
+
+![Edit pop-up](./_assets/pf-editing-popup.png){.large}
+
+## Removing
+
+To remove a Classification record, use the `Remove` option from the actions menu on its detail view page:
+
+![Remove from detail view](./_assets/remove-details.png){.small}
+
+or from the single record actions menu on the list view page:
+
+![Remove from list view](./_assets/remove-list.png){.medium}
+
+By default, it is not possible to remove a Classification if it is used in records.
+
+## Duplicating
+
+Use the `Duplicate` option from the actions menu to open the Classification creation page with all field values copied from the current record. The **Code** must be changed, as it must be unique.
+
 ## Managing Classification Attributes
 
 After saving, the detail view opens with two panels: **Classification Attributes** and **Products**.
@@ -64,6 +135,8 @@ The panel displays the following columns:
 - **Attribute**
 - **Required**
 - **Default Value**
+- **Conditional Properties**
+- **Audit Completeness** (available only with the [Data Quality](https://store.atrocore.com/en/data-quality/20218) module)
 
 ### Attribute Actions
 
@@ -71,10 +144,14 @@ Click the three-dot menu on any attribute row to access:
 
 - **View** — opens the attribute's detail view
 - **Edit** — opens an editor to configure classification-level settings, including whether the attribute is required, its default value, and any conditional properties (see [Attribute Fields](../01.attributes/index.md#attribute-fields))
-- **Delete and retain for records** — removes the attribute from the Classification but keeps it on existing records
+- **Delete and retain for records** — removes the attribute from the Classification but keeps it on existing records. When a *required* attribute is removed this way, it becomes non-required on those records.
 - **Delete and from records** — removes the attribute from the Classification and from all linked records (requires confirmation)
 
 ![Attributes actions menu](./_assets/attributes-actions-menu.png){.medium}
+
+The **Delete and from records** action requires confirmation before it is applied:
+
+![Removal confirmation](./_assets/attribute-remove-confirmation.png){.medium}
 
 > When an attribute is linked to a Classification, it is automatically linked to all records of that Classification. If the attribute already exists on a record, it becomes a Classification attribute and its existing value is preserved.
 
@@ -106,10 +183,10 @@ By default, Classifications are available for Products. To enable them for anoth
 
 Once **Has Classifications** is enabled, the following additional options become available for that entity:
 
-- **Delete attribute values after unlinking classifications**. When enabled, all Classification attribute values are removed from a record when that Classification is unlinked from it. When disabled, the attribute values are kept on the record even after the Classification is removed.
+- **Disable direct attribute linking**. When enabled, attributes can only be added to records via a Classification — users cannot link attributes to records manually. This enforces that all attributes on a record come from an assigned Classification, which is useful when strict data governance is required.
+- **Delete attribute values after unlinking classifications**. When enabled, all Classification attribute values are removed from a record when that Classification is unlinked from it. When disabled, the attribute values are kept on the record even after the Classification is removed. This option is only available when **Disable direct attribute linking** is disabled.
 
 ![Delete attribute values option](./_assets/Delete-attribute-values.png){.medium}
 
-- **Disable direct attribute linking**. When enabled, attributes can only be added to records via a Classification — users cannot link attributes to records manually. This enforces that all attributes on a record come from an assigned Classification, which is useful when strict data governance is required.
 - **Single Classification only**. When enabled, a record can be assigned to only one Classification at a time. Attempting to add a second Classification will replace the existing one. Use this when your data model requires exactly one classification template per record.
 - **Link Attributes with the Classification automatically**. When enabled, if a user directly links an attribute to a record, and that record is already assigned to a Classification, the attribute will also be automatically added to that Classification. This keeps Classifications in sync with attributes that editors add on individual records. This option is only available when **Has Attributes** is enabled and **Disable direct attribute linking** is disabled.
