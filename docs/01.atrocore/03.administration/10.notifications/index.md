@@ -78,8 +78,8 @@ An Email Template includes:
 
 -   **Name** - The name of the template (required)
 -   **Code** - A unique identifier for the template (e.g., "emailMention")
--   **Subject** - The email subject line using [Twig](../../../10.developer-guide/80.twig-tutorial/) template syntax
--   **HTML** - Set the checkbox if you want your content to have HTML formatting
--   **Body** - The content of the email using [Twig](../../../10.developer-guide/80.twig-tutorial/) template syntax.
+-   **Subject** - The email subject line. Supports [Twig](../../../10.developer-guide/80.twig-tutorial/) template syntax
+-   **HTML** - Enable this option if you want the email body to be formatted as HTML
+-   **Body** - The content of the email. Supports [Twig](../../../10.developer-guide/80.twig-tutorial/) template syntax and, when the `HTML` option is enabled, HTML formatting.
 
 > Email Templates are only supposed to be used in workflows after an update (i.e. not via a button), otherwise an error will occur.
