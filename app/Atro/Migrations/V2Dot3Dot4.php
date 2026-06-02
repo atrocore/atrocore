@@ -26,6 +26,12 @@ class V2Dot3Dot4 extends Base
 
     public function up(): void
     {
+        $this->getDbal()->createQueryBuilder()
+            ->update($this->getDbal()->quoteIdentifier('attribute'))
+            ->set('code', 'id')
+            ->where('code IS NULL')
+            ->executeQuery();
+
         foreach (['equal' => 'fieldEqual', 'similar' => 'fieldSimilar', 'contains' => 'fieldContains'] as $old => $new) {
             $this->getDbal()->createQueryBuilder()
                 ->update('matching_rule')

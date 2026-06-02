@@ -59,6 +59,7 @@
     },
     "code": {
       "type": "varchar",
+      "view": "views/admin/field-manager/fields/code",
       "required": true
     },
     "type": {
