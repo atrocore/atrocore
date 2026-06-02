@@ -2008,36 +2008,21 @@ class Base
                     $relationType = $seed->getRelationType($link);
 
                     if ($relationType === 'manyMany') {
-                        $connection = $this->getEntityManager()->getConnection();
-                        $ta = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
-                        $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));
-                        $aliasMiddle = $alias . 'Middle';
-                        $relationTable = $seed->getRelationParam($attribute, 'relationName');
-                        $foreignTable = $seed->getRelationParam($attribute, 'entity');
-                        $midKeys = $seed->getRelationParam($attribute, 'midKeys');
-
-                        if (empty($relationTable) || empty($foreignTable) || empty($midKeys) || count($midKeys) < 2) {
-                            break;
-                        }
-
-                        $relationTable = $connection->quoteIdentifier(Util::toUnderScore($relationTable));
-                        $foreignTable = $connection->quoteIdentifier(Util::toUnderScore($foreignTable));
-                        $midKeys = [Util::toUnderScore($midKeys[0]), Util::toUnderScore($midKeys[1])];
-
-                        $subQb = $connection->createQueryBuilder()
-                            ->select('1')
-                            ->from($relationTable, $aliasMiddle)
-                            ->join($aliasMiddle, $foreignTable, $alias, "$aliasMiddle.{$midKeys[1]} = $alias.id AND $alias.deleted = :false")
-                            ->where("$aliasMiddle.$midKeys[0] = $ta.id")
-                            ->andWhere("$aliasMiddle.deleted = :false");
+                        $midKeys      = $seed->getRelationParam($attribute, 'midKeys');
+                        $relationName = $seed->getRelationParam($attribute, 'relationName');
+                        $relTable     = Util::toUnderScore($relationName);
+                        $nearKey      = Util::toUnderScore($midKeys[0]);
+                        $uid          = IdGenerator::unsortableId();
+                        $exAlias      = 'inl_' . $uid;
+                        $falseParam   = 'inl_del_' . $uid;
+                        $ta           = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
 
                         $part['innerSql'] = [
-                            'sql'        => 'NOT EXISTS (' . $subQb->getSQL() . ')',
-                            'parameters' => $subQb->getParameters(),
+                            'sql'        => "NOT EXISTS (SELECT 1 FROM {$relTable} {$exAlias} WHERE {$exAlias}.{$nearKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
+                            'parameters' => [$falseParam => false],
                         ];
-                    } elseif (in_array($relationType, ['hasMany', 'hasOne', 'hasChildren'])) {
-                        $foreignKey   = $seed->getRelationParam($link, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id');
-                        $foreignKey   = Util::toUnderScore($foreignKey);
+                    } elseif (in_array($relationType, ['hasMany', 'hasOne'])) {
+                        $foreignKey   = Util::toUnderScore($seed->getRelationParam($link, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id'));
                         $foreignTable = Util::toUnderScore($seed->getRelationParam($link, 'entity'));
                         $uid          = IdGenerator::unsortableId();
                         $exAlias      = 'inl_' . $uid;
@@ -2078,7 +2063,7 @@ class Base
                             'sql'        => "EXISTS (SELECT 1 FROM {$relTable} {$exAlias} WHERE {$exAlias}.{$nearKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
                             'parameters' => [$falseParam => false],
                         ];
-                    } elseif (in_array($relationType, ['hasMany', 'hasOne', 'hasChildren'])) {
+                    } elseif (in_array($relationType, ['hasMany', 'hasOne'])) {
                         $foreignKey   = $seed->getRelationParam($attribute, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id');
                         $foreignKey   = Util::toUnderScore($foreignKey);
                         $foreignTable = Util::toUnderScore($seed->getRelationParam($attribute, 'entity'));
@@ -2132,27 +2117,26 @@ class Base
                         }
 
                         $part = ['id' => $part];
-                    } else {
-                        if ($relationType == 'hasMany') {
-                            $this->addLeftJoin([$link, $alias], $result);
+                    } elseif (in_array($relationType, ['hasMany', 'hasOne'])) {
+                        $foreignKey   = Util::toUnderScore($seed->getRelationParam($link, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id'));
+                        $foreignTable = Util::toUnderScore($seed->getRelationParam($link, 'entity'));
+                        $uid          = IdGenerator::unsortableId();
+                        $falseParam   = 'lw_del_' . $uid;
+                        $idsParam     = 'lw_ids_' . $uid;
 
-                            $part[$alias . '.id'] = $value;
-                        } else {
-                            if ($relationType == 'belongsTo') {
-                                $key = $seed->getRelationParam($link, 'key');
-                                if (!empty($key)) {
-                                    $part[$key] = $value;
-                                }
-                            } else {
-                                if ($relationType == 'hasOne') {
-                                    $this->addLeftJoin([$link, $alias], $result);
-                                    $part[$alias . '.id'] = $value;
-                                } else {
-                                    break;
-                                }
-                            }
+                        $part = [
+                            'id' => [
+                                'innerSql' => [
+                                    'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN (:{$idsParam})",
+                                    'parameters' => [$falseParam => false, $idsParam => $value],
+                                ],
+                            ],
+                        ];
+                    } elseif (in_array($relationType, ['belongsTo', 'belongsToParent'])) {
+                        $key = $seed->getRelationParam($link, 'key');
+                        if (!empty($key)) {
+                            $part[$key] = $value;
                         }
-                        $this->setDistinct(true, $result);
                     }
                     break;
 
@@ -2189,27 +2173,26 @@ class Base
                                 ],
                             ],
                         ];
-                    } else {
-                        if ($relationType == 'hasMany') {
-                            $this->addLeftJoin([$link, $alias], $result);
-                            $result['joinConditions'][$alias] = ['id' => $value];
-                            $part[$alias . '.id'] = null;
-                        } else {
-                            if ($relationType == 'belongsTo') {
-                                $key = $seed->getRelationParam($link, 'key');
-                                if (!empty($key)) {
-                                    $part[$key . '!='] = $value;
-                                }
-                            } else {
-                                if ($relationType == 'hasOne') {
-                                    $this->addLeftJoin([$link, $alias], $result);
-                                    $part[$alias . '.id!='] = $value;
-                                } else {
-                                    break;
-                                }
-                            }
+                    } elseif (in_array($relationType, ['hasMany', 'hasOne'])) {
+                        $foreignKey   = Util::toUnderScore($seed->getRelationParam($link, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id'));
+                        $foreignTable = Util::toUnderScore($seed->getRelationParam($link, 'entity'));
+                        $uid          = IdGenerator::unsortableId();
+                        $falseParam   = 'nlw_del_' . $uid;
+                        $idsParam     = 'nlw_ids_' . $uid;
+
+                        $part = [
+                            'id!=' => [
+                                'innerSql' => [
+                                    'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN (:{$idsParam})",
+                                    'parameters' => [$falseParam => false, $idsParam => $value],
+                                ],
+                            ],
+                        ];
+                    } elseif (in_array($relationType, ['belongsTo', 'belongsToParent'])) {
+                        $key = $seed->getRelationParam($link, 'key');
+                        if (!empty($key)) {
+                            $part[$key . '!='] = $value;
                         }
-                        $this->setDistinct(true, $result);
                     }
                     break;
 
