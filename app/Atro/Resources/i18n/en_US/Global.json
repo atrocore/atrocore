@@ -690,7 +690,8 @@
     "download": "Download",
     "compare": "Compare",
     "removeAttribute": "Delete Attribute",
-    "select": "Select"
+    "select": "Select",
+    "inheritAllFromParent": "Inherit all from parent"
   },
   "fields": {
     "__currentUser": "Current User",

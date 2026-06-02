@@ -987,7 +987,8 @@
     "download": "Scaricare",
     "compare": "Confronta",
     "removeAttribute": "Cancellare l'attributo",
-    "select": "Seleziona"
+    "select": "Seleziona",
+    "inheritAllFromParent": "Eredita tutto dal genitore"
   },
   "fields": {
     "__currentUser": "Utente attuale",

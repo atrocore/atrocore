@@ -675,7 +675,8 @@
     "removeAttribute": "Usuń atrybut",
     "update": "Aktualizuj",
     "delete": "Usuń",
-    "select": "Wybierz"
+    "select": "Wybierz",
+    "inheritAllFromParent": "Dziedziczy wszystko od rodzica"
   },
   "fields": {
     "number": "Numer",

@@ -686,7 +686,8 @@
     "compare": "Порівняння",
     "removeAttribute": "Видалити атрибут",
     "select": "Виберіть",
-    "deletePermanently": "Видалити назавжди"
+    "deletePermanently": "Видалити назавжди",
+    "inheritAllFromParent": "Успадкувати все від батьківського елементу"
   },
   "fields": {
     "number": "Номер",
