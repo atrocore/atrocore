@@ -2035,7 +2035,7 @@ class Base
                             'sql'        => 'NOT EXISTS (' . $subQb->getSQL() . ')',
                             'parameters' => $subQb->getParameters(),
                         ];
-                    } elseif ($relationType === 'hasMany' || $relationType === 'hasOne') {
+                    } elseif (in_array($relationType, ['hasMany', 'hasOne', 'hasChildren'])) {
                         $foreignKey   = $seed->getRelationParam($link, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id');
                         $foreignKey   = Util::toUnderScore($foreignKey);
                         $foreignTable = Util::toUnderScore($seed->getRelationParam($link, 'entity'));
@@ -2048,14 +2048,9 @@ class Base
                             'sql'        => "NOT EXISTS (SELECT 1 FROM {$foreignTable} {$exAlias} WHERE {$exAlias}.{$foreignKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
                             'parameters' => [$falseParam => false],
                         ];
-                    } elseif ($relationType === 'belongsTo') {
+                    } elseif (in_array($relationType, ['belongsTo', 'belongsToParent'])) {
                         $key        = $seed->getRelationParam($link, 'key') ?? ($link . 'Id');
                         $part[$key] = null;
-                    } else {
-                        $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));
-                        $part[$alias . '.id'] = null;
-                        $this->setDistinct(true, $result);
-                        $this->addLeftJoin([$attribute, $alias], $result);
                     }
 
                     break;
@@ -2083,7 +2078,7 @@ class Base
                             'sql'        => "EXISTS (SELECT 1 FROM {$relTable} {$exAlias} WHERE {$exAlias}.{$nearKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
                             'parameters' => [$falseParam => false],
                         ];
-                    } elseif ($relationType === 'hasMany' || $relationType === 'hasOne') {
+                    } elseif (in_array($relationType, ['hasMany', 'hasOne', 'hasChildren'])) {
                         $foreignKey   = $seed->getRelationParam($attribute, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id');
                         $foreignKey   = Util::toUnderScore($foreignKey);
                         $foreignTable = Util::toUnderScore($seed->getRelationParam($attribute, 'entity'));
@@ -2093,14 +2088,9 @@ class Base
                             'sql'        => "EXISTS (SELECT 1 FROM {$foreignTable} {$exAlias} WHERE {$exAlias}.{$foreignKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
                             'parameters' => [$falseParam => false],
                         ];
-                    } elseif ($relationType === 'belongsTo') {
+                    } elseif (in_array($relationType, ['belongsTo', 'belongsToParent'])) {
                         $key        = $seed->getRelationParam($attribute, 'key') ?? ($attribute . 'Id');
                         $part[$key . '!='] = null;
-                    } else {
-                        $alias = $attribute . 'IsLinkedFilter' . strval(rand(10000, 99999));
-                        $part[$alias . '.id!='] = null;
-                        $this->setDistinct(true, $result);
-                        $this->addLeftJoin([$attribute, $alias], $result);
                     }
                     break;
 
