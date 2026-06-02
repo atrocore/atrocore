@@ -949,7 +949,8 @@
       "allValues": "Toutes les valeurs",
       "filled": "Rempli",
       "empty": "Vide",
-      "optional": "Optionel"
+      "optional": "Optionel",
+      "withDifferences": "Avec différences"
     },
     "dateSearchRanges": {
       "currentMonth": "Mois courant",
