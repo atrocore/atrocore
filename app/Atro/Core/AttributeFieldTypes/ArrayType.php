@@ -18,6 +18,7 @@ use Espo\ORM\IEntity;
 
 class ArrayType extends AbstractFieldType
 {
+    protected string $type = 'array';
     protected string $column = 'json_value';
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
@@ -43,7 +44,6 @@ class ArrayType extends AbstractFieldType
             $entity->set($name, is_array($value) ? $value : null);
         }
 
-
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
             'attributeValueId'          => $row['av_id'] ?? null,
@@ -58,7 +58,7 @@ class ArrayType extends AbstractFieldType
                 'name'      => $row['attribute_group_name'] ?? null,
                 'sortOrder' => $row['attribute_group_sort_order'] ?? null,
             ],
-            'type'                      => 'array',
+            'type'                      => $this->type,
             'required'                  => !empty($row['is_required']),
             'readOnly'                  => !empty($row['is_read_only']),
             'protected'                 => !empty($row['is_protected']),

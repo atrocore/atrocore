@@ -147,6 +147,12 @@
       ],
       [
         {
+          "name": "options"
+        },
+        false
+      ],
+      [
+        {
           "name": "dropdown"
         },
         false
