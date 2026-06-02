@@ -163,7 +163,6 @@
     "translatedOptions": {
       "type": "jsonObject",
       "notStorable": true,
-      "virtualField": true,
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "filterDisabled": true,

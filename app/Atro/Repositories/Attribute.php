@@ -785,6 +785,11 @@ class Attribute extends Base
                     ->executeStatement();
             }
         }
+
+        if (in_array($entity->get('type'), ['enum', 'multiEnum']) && $entity->has('translatedOptions')) {
+            $this->getLanguage()->set($entity->get('entityId'), 'options', $entity->get('code'), (array)$entity->get('translatedOptions'));
+            $this->getLanguage()->save();
+        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
