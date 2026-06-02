@@ -21,17 +21,39 @@ class InheritAllFromParent extends AbstractJob implements JobInterface
     {
         $data = $job->getPayload();
 
-        if (empty($data['entityType']) || empty($data['ids'])) {
+        if (empty($data['entityType']) || !isset($data['where'])) {
             return;
         }
 
-        $service = $this->getServiceFactory()->create($data['entityType']);
+        $service      = $this->getServiceFactory()->create($data['entityType']);
+        $repository   = $this->getEntityManager()->getRepository($data['entityType']);
 
-        foreach ($data['ids'] as $id) {
-            try {
-                $service->inheritAllFromParent($id);
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error("Inherit from parent failed for {$data['entityType']} $id' failed: {$e->getMessage()}");
+        $selectParams = $service->getSelectParams(['where' => $data['where']]);
+        $selectParams['select'] = ['id'];
+
+        $offset       = 0;
+        $limit        = 2000;
+
+        while (true) {
+            $records = $repository
+                ->limit($offset, $limit)
+                ->order('id', 'ASC')
+                ->find($selectParams);
+
+            $ids = array_column($records->toArray(), 'id');
+
+            if (empty($ids)) {
+                break;
+            }
+
+            $offset += $limit;
+
+            foreach ($ids as $id) {
+                try {
+                    $service->inheritAllFromParent($id);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error("Inherit from parent failed for {$data['entityType']} '$id': {$e->getMessage()}");
+                }
             }
         }
     }

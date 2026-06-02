@@ -1915,6 +1915,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 && this.getAcl().check(this.scope, 'edit')
             ) {
                 this.massActionList.push('inheritAllFromParent');
+                this.checkAllResultMassActionList.push('inheritAllFromParent');
             }
         },
 
@@ -2017,12 +2018,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 message: this.translate('confirmInheritAllFromParent', 'messages'),
                 confirmText: this.translate('Apply')
             }, function () {
-                let ids = [];
-                this.checkedList.forEach(id => ids.push(id));
+                let where = this.allResultIsChecked
+                    ? this.collection.getWhere()
+                    : [{type: 'in', attribute: 'id', value: this.checkedList}];
 
                 this.notify(this.translate('pleaseWait', 'messages'));
 
-                this.ajaxPostRequest(`${this.entityType}/inheritAllFromParentAsync`, {ids: ids}).then(function () {
+                this.ajaxPostRequest(`${this.entityType}/inheritAllFromParentAsync`, {where}).then(function () {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                     this.collection.fetch();
                 }.bind(this));

@@ -48,13 +48,15 @@ use Psr\Http\Server\RequestHandlerInterface;
                 'schema' => [
                     'type'       => 'object',
                     'required'   => [
-                        'ids',
+                        'where',
                     ],
                     'properties' => [
-                        'ids' => [
+                        'where' => [
                             'type'        => 'array',
-                            'items'       => ['type' => 'string'],
-                            'description' => 'IDs of the children records to inherit into',
+                            'description' => 'Filter conditions that define which records to inherit into.',
+                            'items'       => [
+                                'type'       => 'object',
+                            ],
                         ],
                     ],
                 ],
@@ -73,7 +75,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'IDs of the children records are missing or empty',
+            'description' => 'where parameter is missing',
         ],
     ],
 )]
@@ -85,7 +87,7 @@ class InheritAllFromParentAsyncHandler extends AbstractHandler
         $entityName = $this->getEntityName($request);
         $data       = $this->getRequestBody($request);
 
-        if (empty($data->ids)) {
+        if (!isset($data->where)) {
             throw new BadRequest();
         }
 
@@ -95,7 +97,7 @@ class InheritAllFromParentAsyncHandler extends AbstractHandler
             'type'    => 'InheritAllFromParent',
             'payload' => [
                 'entityType' => $entityName,
-                'ids'        => array_values($data->ids),
+                'where'      => json_decode(json_encode($data->where), true),
             ],
         ]);
         $this->getEntityManager()->saveEntity($job);
