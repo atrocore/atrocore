@@ -29,7 +29,7 @@ When a new notification arrives, a preview appears at the bottom of the screen. 
 
 ![Notification preview](./_assets/notification-preview.png){.small}
 
-The preview disappears automatically after a few seconds.
+The preview notification disappears automatically after a few seconds. However, if the notification contains an error message, it will remain visible until it is manually closed.
 
 ## Notification Types
 
