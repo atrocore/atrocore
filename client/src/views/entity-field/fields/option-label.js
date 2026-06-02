@@ -41,13 +41,5 @@ Espo.define('views/entity-field/fields/option-label', 'views/fields/varchar-with
             });
         },
 
-        initInlineLabelEdit() {
-            if (this.options?.entityName === 'Attribute') {
-                return;
-            }
-
-            Dep.prototype.initInlineLabelEdit.call(this);
-        },
-
     });
 });
