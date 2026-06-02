@@ -156,6 +156,8 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
       "emHidden": true
     },
     "translatedOptions": {
@@ -165,6 +167,8 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
       "emHidden": true
     },
     "min": {
