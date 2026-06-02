@@ -41,8 +41,11 @@ Each user has the following core properties:
 - **Layout Profile**: Custom [layout configuration](../../13.user-interface/02.layouts/index.md#layout-profiles) for the user's interface
 
 **Access Control**:
-- **Is Active**: Controls whether the user can log into the system
-- **Is Admin**: Grants administrator privileges with maximum system access
+- **Active**: Controls whether the user can log into the system
+- **Global Administrator**: Grants full administrator privileges with maximum system access
+- **User Administrator**: Grants administrative privileges to create and manage users. This permission does not allow granting administrator privileges to other users
+- **Entity Administrator**: Grants administrative privileges for managing entities
+- **Role Administrator**: Grants administrative privileges for managing roles
 - **Teams**: Assigns user to specific [teams](../02.teams/) for collaborative access
 - **Roles**: Defines user permissions through [role](../03.roles/) assignments
 - **Default Team**: Sets the primary team for the user
