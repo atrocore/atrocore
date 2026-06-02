@@ -911,7 +911,8 @@
       "filled": "Vyplněno",
       "empty": "Prázdný",
       "optional": "Volitelně",
-      "required": "Požadované"
+      "required": "Požadované",
+      "withDifferences": "S rozdíly"
     },
     "languageFilter": {
       "main": "Hlavní jazyk",

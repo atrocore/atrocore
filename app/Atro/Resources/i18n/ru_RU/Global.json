@@ -953,7 +953,8 @@
       "filled": "Заполненые значения",
       "empty": "Пустые значения",
       "optional": "Необязательный",
-      "required": "Обязательный"
+      "required": "Обязательный",
+      "withDifferences": "С различиями"
     },
     "languageFilter": {
       "allLanguages": "Все языки",
