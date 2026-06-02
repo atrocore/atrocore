@@ -766,7 +766,9 @@ class Record extends RecordService
         }
 
         $input->masterRecordId = $primaryEntity->get('id');
-        $skippedFields         = ['id', 'createdAt', 'modifiedAt', 'createdById', 'modifiedById', 'deleted'];
+        $skippedFields         = [
+            'id', 'createdAt', 'modifiedAt', 'createdById', 'modifiedById',
+            'ownerUserId', 'assignedUserId', 'teamsIds', 'followersIds', 'deleted'];
 
         foreach ($primaryEntity->toArray() as $field => $value) {
             if (in_array($field, $skippedFields)) {
@@ -791,12 +793,7 @@ class Record extends RecordService
         // build input for many-to-many relations
         foreach ($primaryEntity->getRelations() as $link => $defs) {
             if (!empty($defs['relationName'])) {
-                if ($defs['relationName'] === 'EntityTeam') {
-                    $input->teamsIds = $primaryEntity->getLinkMultipleIdList('teams');
-                    continue;
-                }
-
-                if (in_array($link, ['children', 'parents']) || empty($defs['key']) || empty($defs['midKeys'][0])) {
+                if (in_array($link, ['children', 'parents', 'followers', 'teams']) || empty($defs['key']) || empty($defs['midKeys'][0])) {
                     continue;
                 }
 
