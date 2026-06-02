@@ -40,19 +40,17 @@ class InheritAllFromParent extends AbstractJob implements JobInterface
                 ->order('id', 'ASC')
                 ->find($selectParams);
 
-            $ids = array_column($records->toArray(), 'id');
-
-            if (empty($ids)) {
+            if (empty($records[0])) {
                 break;
             }
 
             $offset += $limit;
 
-            foreach ($ids as $id) {
+            foreach ($records as $record) {
                 try {
-                    $service->inheritAllFromParent($id);
+                    $service->inheritFromParent($record->get('id'));
                 } catch (\Throwable $e) {
-                    $GLOBALS['log']->error("Inherit from parent failed for {$data['entityType']} '$id': {$e->getMessage()}");
+                    $GLOBALS['log']->error("Inherit from parent failed for {$data['entityType']} '{$record->get('id')}': {$e->getMessage()}");
                 }
             }
         }

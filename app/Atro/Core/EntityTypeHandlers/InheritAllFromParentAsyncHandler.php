@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Core\EntityTypeHandlers;
 
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\EntityType;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
+use Atro\Core\Templates\Services\Hierarchy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -27,8 +27,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'POST',
     ],
-    summary: 'Inherit all fields and links from parent for multiple records',
-    description: 'For each given entity record ID, pulls all inheritable field values and linked records from the parent record into that record. Only fields that are currently null are updated — already-set values are not overwritten.',
+    summary: 'Inherit all fields and links from the corresponding parent record (if one exists) for the record(s) included in the selection. Relevant only if multi-parent parameter is disabled for the entity.',
+    description: 'For each entity record(s) that match the filter criteria, retrieves all inherited field values and linked records from the corresponding parent (if one exists) into the record. Only those fields that currently have null values are updated — existing values are not overwritten. Relevant only if multi-parent parameter is disabled for the entity.',
     tag: '{entityName}',
     parameters: [
         [
@@ -53,9 +53,25 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'properties' => [
                         'where' => [
                             'type'        => 'array',
-                            'description' => 'Filter conditions that define which records to inherit into.',
+                            'description' => 'Filter conditions that define which records to inherit into. Uses the same format as the list endpoint `where` parameter.',
                             'items'       => [
                                 'type'       => 'object',
+                                'properties' => [
+                                    'type'      => [
+                                        'type'        => 'string',
+                                        'description' => 'Filter operator (e.g. "equals", "notEquals", "in", "isNull", "between")',
+                                        'example'     => 'equals',
+                                    ],
+                                    'attribute' => [
+                                        'type'        => 'string',
+                                        'description' => 'Field name to filter on',
+                                        'example'     => 'status',
+                                    ],
+                                    'value'     => [
+                                        'description' => 'Value for match (type depends on the operator and field type)',
+                                        'example'     => 'Draft',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -65,17 +81,26 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Whether the background job was successfully created',
+            'description' => 'Reference to the created background job that asynchronously performs data inheritance for the entity record(s) that match the filter criteria',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        'type'       => 'object',
+                        'properties' => [
+                            'jobId' => [
+                                'type'        => 'string',
+                                'description' => 'ID of the created background job',
+                            ],
+                        ],
                     ],
                 ],
             ],
         ],
         400 => [
-            'description' => 'where parameter is missing',
+            'description' => 'Bad request — multi-parent parameter is activated for the given entity type',
+        ],
+        403 => [
+            'description' => 'Forbidden — the current user does not have edit access to the given entity type',
         ],
     ],
 )]
@@ -85,23 +110,11 @@ class InheritAllFromParentAsyncHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $entityName = $this->getEntityName($request);
-        $data       = $this->getRequestBody($request);
+        $data = $this->getRequestBody($request);
 
-        if (!isset($data->where)) {
-            throw new BadRequest();
-        }
+        /** @var Hierarchy $service */
+        $service = $this->getRecordService($entityName);
 
-        $job = $this->getEntityManager()->getEntity('Job');
-        $job->set([
-            'name'    => $this->getLanguage()->translate('inheritAllFromParent', 'massActions'),
-            'type'    => 'InheritAllFromParent',
-            'payload' => [
-                'entityType' => $entityName,
-                'where'      => json_decode(json_encode($data->where), true),
-            ],
-        ]);
-        $this->getEntityManager()->saveEntity($job);
-
-        return new BoolResponse(true);
+        return new JsonResponse($service->inheritAllFromParentViaJob($data->where));
     }
 }

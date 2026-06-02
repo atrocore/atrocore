@@ -100,6 +100,31 @@ class Hierarchy extends Base
         return true;
     }
 
+    public function inheritAllFromParentViaJob(array $where): array
+    {
+        if (!$this->getAcl()->check($this->entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'], false)) {
+            throw new BadRequest();
+        }
+
+        $job = $this->getEntityManager()->getEntity('Job');
+        $job->set([
+            'name'    => $this->getLanguage()->translate('inheritAllFromParent', 'massActions'),
+            'type'    => 'InheritAllFromParent',
+            'payload' => [
+                'entityType' => $this->entityType,
+                'where'      => json_decode(json_encode($where), true),
+            ],
+        ]);
+
+        $this->getEntityManager()->saveEntity($job);
+
+        return ['jobId' => $job->get('id')];
+    }
+
     public function inheritAllFromParent(string $id): bool
     {
         if (!$this->getAcl()->check($this->entityType, 'edit')) {
@@ -110,6 +135,11 @@ class Hierarchy extends Base
             throw new BadRequest();
         }
 
+        return $this->inheritFromParent($id);
+    }
+
+    public function inheritFromParent(string $id): bool
+    {
         $entity = $this->getRepository()->get($id);
         if (empty($entity)) {
             throw new NotFound();
@@ -537,7 +567,7 @@ class Hierarchy extends Base
 
             foreach ($input as $k => $v) {
                 if (property_exists($resultInput, $k) && $resultInput->$k !== $v) {
-                    throw new BadRequest($this->getInjection('language')->translate('parentRecordsHaveDifferentValues', 'exceptions'));
+                    throw new BadRequest($this->getLanguage()->translate('parentRecordsHaveDifferentValues', 'exceptions'));
                 }
             }
 
@@ -1307,5 +1337,10 @@ class Hierarchy extends Base
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
         return $this->getInjection(AttributeFieldConverter::class);
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('language');
     }
 }
