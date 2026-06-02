@@ -972,7 +972,8 @@
       "filled": "Filled",
       "empty": "Empty",
       "optional": "Optional",
-      "required": "Required"
+      "required": "Required",
+      "withDifferences": "With differences"
     },
     "languageFilter": {
       "allLanguages": "All Languages",

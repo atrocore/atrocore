@@ -1032,7 +1032,8 @@
       "filled": "Ausgefüllte Werte",
       "empty": "Leere Werte",
       "optional": "Optional",
-      "required": "Erforderlich"
+      "required": "Erforderlich",
+      "withDifferences": "Mit Unterschieden"
     },
     "languageFilter": {
       "allLanguages": "Alle Sprachen",

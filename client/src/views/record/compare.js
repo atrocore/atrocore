@@ -913,6 +913,9 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                     case 'required':
                         success = this.model.getFieldParam(field, 'required')
                         break;
+                    case 'withDifferences':
+                        success = !equalValueForModels;
+                        break;
                 }
 
                 if (!success) {
@@ -1086,6 +1089,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                     props: {
                         scope: this.scope,
                         storageKey: 'compareFieldFilters',
+                        allFilters: ['filled', 'empty', 'optional', 'required', 'withDifferences'],
                         onExecute: (evt, selectedFilters) => {
                             this.selectedFilters = selectedFilters;
                             this.model.trigger('overview-filters-changed', this.selectedFilters);
