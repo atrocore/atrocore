@@ -598,63 +598,6 @@ class Base
         return $operator;
     }
 
-    protected function applyLinkedWith($link, $idsValue, &$result)
-    {
-        $part = array();
-
-        if (is_array($idsValue) && count($idsValue) == 1) {
-            $idsValue = $idsValue[0];
-        }
-
-        $seed = $this->getSeed();
-
-        if (!$seed->hasRelation($link)) {
-            return;
-        }
-
-        $relDefs = $this->getSeed()->getRelations();
-
-        $relationType = $seed->getRelationType($link);
-
-        $defs = $relDefs[$link];
-        if ($relationType == 'manyMany') {
-            $this->addLeftJoin([$link, $link . 'Filter'], $result);
-            $midKeys = $seed->getRelationParam($link, 'midKeys');
-
-            if (!empty($midKeys)) {
-                $key = $midKeys[1];
-                $part[$link . 'Filter' . 'Middle.' . $key] = $idsValue;
-            }
-        } else {
-            if ($relationType == 'hasMany') {
-                $alias = $link . 'Filter';
-                $this->addLeftJoin([$link, $alias], $result);
-
-                $part[$alias . '.id'] = $idsValue;
-            } else {
-                if ($relationType == 'belongsTo') {
-                    $key = $seed->getRelationParam($link, 'key');
-                    if (!empty($key)) {
-                        $part[$key] = $idsValue;
-                    }
-                } else {
-                    if ($relationType == 'hasOne') {
-                        $this->addJoin([$link, $link . 'Filter'], $result);
-                        $part[$link . 'Filter' . '.id'] = $idsValue;
-                    } else {
-                        return;
-                    }
-                }
-            }
-        }
-
-        if (!empty($part)) {
-            $result['whereClause'][] = $part;
-        }
-
-        $this->setDistinct(true, $result);
-    }
-
     protected function q($params, &$result)
     {
         if (isset($params['q']) && $params['q'] !== '') {
@@ -2054,57 +1997,6 @@ class Base
                     }
                     break;
 
-                case 'columnLike':
-                case 'columnIn':
-                case 'columnIsNull':
-                case 'columnNotIn':
-                    $link = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'link']);
-                    $column = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'column']);
-                    $alias = $link . 'Filter' . strval(rand(10000, 99999));
-                    $this->setDistinct(true, $result);
-                    $this->addLeftJoin([$link, $alias], $result);
-                    $columnKey = $alias . 'Middle.' . $column;
-                    if ($type === 'columnIn') {
-                        $part[$columnKey] = $value;
-                    } else {
-                        if ($type === 'columnNotIn') {
-                            $part[$columnKey . '!='] = $value;
-                        } else {
-                            if ($type === 'columnIsNull') {
-                                $part[$columnKey] = null;
-                            } else {
-                                if ($type === 'columnIsNotNull') {
-                                    $part[$columnKey . '!='] = null;
-                                } else {
-                                    if ($type === 'columnLike') {
-                                        $part[$columnKey . '*'] = $value;
-                                    } else {
-                                        if ($type === 'columnStartsWith') {
-                                            $part[$columnKey . '*'] = $value . '%';
-                                        } else {
-                                            if ($type === 'columnEndsWith') {
-                                                $part[$columnKey . '*'] = '%' . $value;
-                                            } else {
-                                                if ($type === 'columnContains') {
-                                                    $part[$columnKey . '*'] = '%' . $value . '%';
-                                                } else {
-                                                    if ($type === 'columnEquals') {
-                                                        $part[$columnKey . '='] = $value;
-                                                    } else {
-                                                        if ($type === 'columnNotEquals') {
-                                                            $part[$columnKey . '!='] = $value;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    break;
-
                 case 'isNotLinked':
                     if (!$result) {
                         break;
@@ -2143,6 +2035,22 @@ class Base
                             'sql'        => 'NOT EXISTS (' . $subQb->getSQL() . ')',
                             'parameters' => $subQb->getParameters(),
                         ];
+                    } elseif ($relationType === 'hasMany' || $relationType === 'hasOne') {
+                        $foreignKey   = $seed->getRelationParam($link, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id');
+                        $foreignKey   = Util::toUnderScore($foreignKey);
+                        $foreignTable = Util::toUnderScore($seed->getRelationParam($link, 'entity'));
+                        $uid          = IdGenerator::unsortableId();
+                        $exAlias      = 'inl_' . $uid;
+                        $falseParam   = 'inl_del_' . $uid;
+                        $ta           = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
+
+                        $part['innerSql'] = [
+                            'sql'        => "NOT EXISTS (SELECT 1 FROM {$foreignTable} {$exAlias} WHERE {$exAlias}.{$foreignKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
+                            'parameters' => [$falseParam => false],
+                        ];
+                    } elseif ($relationType === 'belongsTo') {
+                        $key        = $seed->getRelationParam($link, 'key') ?? ($link . 'Id');
+                        $part[$key] = null;
                     } else {
                         $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));
                         $part[$alias . '.id'] = null;
@@ -2150,17 +2058,50 @@ class Base
                         $this->addLeftJoin([$attribute, $alias], $result);
                     }
 
-
                     break;
 
                 case 'isLinked':
                     if (!$result) {
                         break;
                     }
-                    $alias = $attribute . 'IsLinkedFilter' . strval(rand(10000, 99999));
-                    $part[$alias . '.id!='] = null;
-                    $this->setDistinct(true, $result);
-                    $this->addLeftJoin([$attribute, $alias], $result);
+
+                    $seed         = $this->getSeed();
+                    $relationType = $seed->getRelationType($attribute);
+                    $uid          = IdGenerator::unsortableId();
+                    $falseParam   = 'il_del_' . $uid;
+
+                    $ta = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
+
+                    if ($relationType === 'manyMany') {
+                        $midKeys      = $seed->getRelationParam($attribute, 'midKeys');
+                        $relationName = $seed->getRelationParam($attribute, 'relationName');
+                        $relTable     = Util::toUnderScore($relationName);
+                        $nearKey      = Util::toUnderScore($midKeys[0]);
+                        $exAlias      = 'il_' . $uid;
+
+                        $part['innerSql'] = [
+                            'sql'        => "EXISTS (SELECT 1 FROM {$relTable} {$exAlias} WHERE {$exAlias}.{$nearKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
+                            'parameters' => [$falseParam => false],
+                        ];
+                    } elseif ($relationType === 'hasMany' || $relationType === 'hasOne') {
+                        $foreignKey   = $seed->getRelationParam($attribute, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id');
+                        $foreignKey   = Util::toUnderScore($foreignKey);
+                        $foreignTable = Util::toUnderScore($seed->getRelationParam($attribute, 'entity'));
+                        $exAlias      = 'il_' . $uid;
+
+                        $part['innerSql'] = [
+                            'sql'        => "EXISTS (SELECT 1 FROM {$foreignTable} {$exAlias} WHERE {$exAlias}.{$foreignKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
+                            'parameters' => [$falseParam => false],
+                        ];
+                    } elseif ($relationType === 'belongsTo') {
+                        $key        = $seed->getRelationParam($attribute, 'key') ?? ($attribute . 'Id');
+                        $part[$key . '!='] = null;
+                    } else {
+                        $alias = $attribute . 'IsLinkedFilter' . strval(rand(10000, 99999));
+                        $part[$alias . '.id!='] = null;
+                        $this->setDistinct(true, $result);
+                        $this->addLeftJoin([$attribute, $alias], $result);
+                    }
                     break;
 
                 case 'linkedWith':
@@ -2179,13 +2120,28 @@ class Base
                     $relationType = $seed->getRelationType($link);
 
                     if ($relationType == 'manyMany') {
-                        $this->addLeftJoin([$link, $alias], $result);
-                        $midKeys = $seed->getRelationParam($link, 'midKeys');
+                        $midKeys      = $seed->getRelationParam($link, 'midKeys');
+                        $relationName = $seed->getRelationParam($link, 'relationName');
+                        $relTable     = Util::toUnderScore($relationName);
+                        $nearKey      = Util::toUnderScore($midKeys[0]);
+                        $distantKey   = Util::toUnderScore($midKeys[1]);
+                        $uid          = IdGenerator::unsortableId();
+                        $falseParam   = 'mm_del_' . $uid;
 
-                        if (!empty($midKeys)) {
-                            $key = $midKeys[1];
-                            $part[$alias . 'Middle.' . $key] = $value;
+                        if (is_array($value) && isset($value['innerSql'])) {
+                            $part['innerSql'] = [
+                                'sql'        => "SELECT {$nearKey} FROM {$relTable} WHERE deleted = :{$falseParam} AND {$distantKey} IN ({$value['innerSql']['sql']})",
+                                'parameters' => array_merge([$falseParam => false], $value['innerSql']['parameters']),
+                            ];
+                        } else {
+                            $idsParam = 'mm_ids_' . $uid;
+                            $part['innerSql'] = [
+                                'sql'        => "SELECT {$nearKey} FROM {$relTable} WHERE deleted = :{$falseParam} AND {$distantKey} IN (:{$idsParam})",
+                                'parameters' => [$falseParam => false, $idsParam => $value],
+                            ];
                         }
+
+                        $part = ['id' => $part];
                     } else {
                         if ($relationType == 'hasMany') {
                             $this->addLeftJoin([$link, $alias], $result);
@@ -2206,8 +2162,8 @@ class Base
                                 }
                             }
                         }
+                        $this->setDistinct(true, $result);
                     }
-                    $this->setDistinct(true, $result);
                     break;
 
                 case 'notLinkedWith':
@@ -2226,14 +2182,23 @@ class Base
                     $alias = $link . 'NotLinkedFilter' . strval(rand(10000, 99999));
 
                     if ($relationType == 'manyMany') {
-                        $this->addLeftJoin([$link, $alias], $result);
-                        $midKeys = $seed->getRelationParam($link, 'midKeys');
+                        $midKeys      = $seed->getRelationParam($link, 'midKeys');
+                        $relationName = $seed->getRelationParam($link, 'relationName');
+                        $relTable     = Util::toUnderScore($relationName);
+                        $nearKey      = Util::toUnderScore($midKeys[0]);
+                        $distantKey   = Util::toUnderScore($midKeys[1]);
+                        $uid          = IdGenerator::unsortableId();
+                        $falseParam   = 'mm_ndel_' . $uid;
+                        $idsParam     = 'mm_nids_' . $uid;
 
-                        if (!empty($midKeys)) {
-                            $key = $midKeys[1];
-                            $result['joinConditions'][$alias] = [$key => $value];
-                            $part[$alias . 'Middle.' . $key] = null;
-                        }
+                        $part = [
+                            'id!=' => [
+                                'innerSql' => [
+                                    'sql'        => "SELECT {$nearKey} FROM {$relTable} WHERE deleted = :{$falseParam} AND {$distantKey} IN (:{$idsParam})",
+                                    'parameters' => [$falseParam => false, $idsParam => $value],
+                                ],
+                            ],
+                        ];
                     } else {
                         if ($relationType == 'hasMany') {
                             $this->addLeftJoin([$link, $alias], $result);
@@ -2254,8 +2219,8 @@ class Base
                                 }
                             }
                         }
+                        $this->setDistinct(true, $result);
                     }
-                    $this->setDistinct(true, $result);
                     break;
 
                 case 'arrayAnyOf':
