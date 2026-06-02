@@ -25,14 +25,14 @@ class InheritAllFromParent extends AbstractJob implements JobInterface
             return;
         }
 
-        $service      = $this->getServiceFactory()->create($data['entityType']);
-        $repository   = $this->getEntityManager()->getRepository($data['entityType']);
+        $service = $this->getServiceFactory()->create($data['entityType']);
+        $repository = $this->getEntityManager()->getRepository($data['entityType']);
 
         $selectParams = $service->getSelectParams(['where' => $data['where']]);
         $selectParams['select'] = ['id'];
 
-        $offset       = 0;
-        $limit        = 2000;
+        $offset = 0;
+        $limit = 2000;
 
         while (true) {
             $records = $repository
