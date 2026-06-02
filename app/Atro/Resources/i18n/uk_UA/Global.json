@@ -967,7 +967,8 @@
       "filled": "Заповнені значення",
       "empty": "Порожні значення",
       "optional": "Необов'язковий",
-      "required": "Обов'язковий"
+      "required": "Обов'язковий",
+      "withDifferences": "З відмінностями"
     },
     "languageFilter": {
       "allLanguages": "Усі мови",

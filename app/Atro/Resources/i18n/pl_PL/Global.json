@@ -953,7 +953,8 @@
       "filled": "Wypełnione",
       "empty": "Puste",
       "optional": "Opcjonalne",
-      "required": "Wymagane"
+      "required": "Wymagane",
+      "withDifferences": "Z różnicami"
     },
     "languageFilter": {
       "allLanguages": "Wszystkie Języki",

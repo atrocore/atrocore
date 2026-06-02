@@ -618,7 +618,8 @@
       "filled": "Riempito",
       "empty": "Vuoto",
       "optional": "Opzionale",
-      "required": "Richiesto"
+      "required": "Richiesto",
+      "withDifferences": "Con differenze"
     },
     "languageFilter": {
       "allLanguages": "Tutte le lingue",
