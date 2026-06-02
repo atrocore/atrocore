@@ -106,10 +106,6 @@ class Hierarchy extends Base
             throw new Forbidden();
         }
 
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'], false)) {
-            throw new BadRequest();
-        }
-
         $job = $this->getEntityManager()->getEntity('Job');
         $job->set([
             'name'    => $this->getLanguage()->translate('inheritAllFromParent', 'massActions'),
@@ -129,10 +125,6 @@ class Hierarchy extends Base
     {
         if (!$this->getAcl()->check($this->entityType, 'edit')) {
             throw new Forbidden();
-        }
-
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'], false)) {
-            throw new BadRequest();
         }
 
         return $this->inheritFromParent($id);

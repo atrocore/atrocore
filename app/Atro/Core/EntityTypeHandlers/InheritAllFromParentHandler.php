@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\EntityTypeHandlers;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Handlers\AbstractHandler;
 use Atro\Core\Routing\Route;
@@ -60,6 +61,9 @@ use Atro\Core\Routing\EntityType;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'Bad request — entity is not Hierarchy type or multi-parent parameter is activated for the given entity type',
+        ],
         403 => [
             'description' => 'Forbidden — the current user does not have edit access to this entity type',
         ],
@@ -75,6 +79,14 @@ class InheritAllFromParentHandler extends AbstractHandler
     {
         $entityName = $this->getEntityName($request);
         $id         = $request->getAttribute('id');
+
+        if ($this->getMetadata()->get(['scopes', $entityName, 'type'], 'Base') !== 'Hierarchy') {
+            throw new BadRequest("The entity type is not a Hierarchy type.");
+        }
+
+        if ($this->getMetadata()->get(['scopes', $entityName, 'multiParents'], false)) {
+            throw new BadRequest("Multi-parents for the entity are activated.");
+        }
 
         $result = $this->getRecordService($entityName)->inheritAllFromParent($id);
 
