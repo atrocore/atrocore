@@ -53,10 +53,6 @@ class AttributeFieldConverter
 
     public static function prepareFieldName(array $row): string
     {
-        if (empty($row['code']) || !self::isValidCode($row['code'])) {
-            throw new Error('Invalid attribute code: ' . $row['code']);
-        }
-
         return $row['code'];
     }
 
