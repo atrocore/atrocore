@@ -177,7 +177,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
             this.setupFilterActions();
 
             this.listenTo(this, 'after-groupPanels-rendered', () => {
-                setTimeout(() =>  this.regulateTableSizes(), 500)
+                setTimeout(() => this.regulateTableSizes(), 500)
             });
 
             this.fetchCollectionGroups(() => this.reRender());
@@ -201,7 +201,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
                 const assignedUserName = this.getUser().get('name');
                 this.ajaxPostRequest('upsert', attributesIds.map(attributeId => ({
                     entity: 'ClassificationAttribute',
-                    payload: {classificationId, attributeId, assignedUserId, assignedUserName}
+                    payload: { classificationId, attributeId, assignedUserId, assignedUserName }
                 }))).then(() => {
                     this.notify('Linked', 'success');
                     this.actionRefresh();
@@ -239,7 +239,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
                     const assignedUserName = this.getUser().get('name');
                     this.ajaxPostRequest('upsert', models.map(model => ({
                         entity: 'ClassificationAttribute',
-                        payload: {classificationId, attributeId: model.get('id'), assignedUserId, assignedUserName}
+                        payload: { classificationId, attributeId: model.get('id'), assignedUserId, assignedUserName }
                     }))).then(() => {
                         this.notify('Linked', 'success');
                         this.actionRefresh();
@@ -254,7 +254,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
                 model = this.collection.get(data.id);
             }
 
-            this.ajaxPostRequest(`ClassificationAttribute/action/inheritCa`, {id: data.id}).then(response => {
+            this.ajaxPostRequest(`ClassificationAttribute/action/inheritCa`, { id: data.id }).then(response => {
                 this.notify('Saved', 'success');
                 model?.trigger('after:attributesSave');
                 this.$el.parents('.panel').find('.action[data-action=refresh]').click();
@@ -329,7 +329,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
                 createButton: false,
                 massRelateEnabled: false,
                 boolFilterList: ['withNotLinkedAttributesToClassification'],
-                boolFilterData: {withNotLinkedAttributesToClassification: this.model.id},
+                boolFilterData: { withNotLinkedAttributesToClassification: this.model.id },
                 whereAdditional: [
                     {
                         type: 'isLinked',
@@ -397,7 +397,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
         },
 
         fetchCollectionGroups(callback) {
-            this.getHelper().layoutManager.get(this.scope, this.layoutName,this.model.name, data => {
+            this.getHelper().layoutManager.get(this.scope, this.layoutName, this.model.name, data => {
                 let list = [
                     "conditionalVisible",
                     "conditionalRequired",
@@ -470,7 +470,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
         },
 
         fetchCollectionPart(callback) {
-            this.collection.fetch({remove: false, more: true}).then(response => {
+            this.collection.fetch({ remove: false, more: true }).then(response => {
                 if (!response.list) {
                     callback();
                     return;
@@ -530,7 +530,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
             (this.groups || []).forEach(group => {
                 this.getCollectionFactory().create(this.scope, collection => {
                     let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'views/record/list';
-                    this.getHelper().layoutManager.get(this.scope, this.layoutName,this.model.name, data => {
+                    this.getHelper().layoutManager.get(this.scope, this.layoutName, this.model.name, data => {
                         this.createView(group.key, viewName, {
                             collection: this.prepareGroupCollection(group, collection),
                             layoutName: this.layoutName,
@@ -546,7 +546,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
                             view.render();
                             this.listenTo(view, 'after:render', () => {
                                 areRendered.push(group.key);
-                                if(areRendered.length === this.groups.length) {
+                                if (areRendered.length === this.groups.length) {
                                     areRendered = []
                                     this.trigger('after-groupPanels-rendered');
                                 }
@@ -562,7 +562,7 @@ Espo.define('views/classification/record/panels/classification-attributes',
                 collection.add(this.collection.get(id));
             });
             collection.total = group.rowList.length
-            collection.url = `Classification/${this.model.id}/classificationAttributes`;
+            collection.url = collection.urlRoot = this.collection.url;
             collection.where = [
                 {
                     type: 'bool',
