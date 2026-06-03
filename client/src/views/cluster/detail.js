@@ -34,7 +34,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
 
         loadingMoreByEntityType: {},
 
-        itemsPageSize: 2,
+        itemsPageSize: 20,
 
         getEntityTypes() {
             if (!this.model.get(this.entityTypeField)) {

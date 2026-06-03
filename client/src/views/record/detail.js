@@ -3153,6 +3153,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             if (!this.model.isNew() && this.getMetadata().get(['entityDefs', this.scope, 'fields', 'cluster'])) {
                 props.showCluster = true;
+                props.clusterId = this.model.get('clusterId') || '';
+
+                this.listenTo(this.model, 'sync', () => {
+                    if (window.SvelteEntityContextPanel?.$set) {
+                        window.SvelteEntityContextPanel.$set('clusterId', this.model.get('clusterId'));
+                    }
+                });
             }
 
             return props;
