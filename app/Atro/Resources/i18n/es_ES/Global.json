@@ -497,6 +497,7 @@
     "searchPanel": "Buscar",
     "unitPart": "(Unit)",
     "prefixPart": "(Prefijo)",
+    "availablePrefixes": "Prefijos disponibles",
     "unlinkAll": "Desenlazar todo",
     "addItem": "Agregar elemento",
     "accessManagement": "Access Management",

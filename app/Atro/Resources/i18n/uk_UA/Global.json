@@ -520,6 +520,7 @@
     "Download": "Завантажити",
     "unitPart": "(Unit)",
     "prefixPart": "(Префікс)",
+    "availablePrefixes": "Доступні префікси",
     "Username can not be empty!": "Ім'я користувача не може бути порожнім!",
     "script": "Скрипт",
     "openLink": "Відкрити посилання",

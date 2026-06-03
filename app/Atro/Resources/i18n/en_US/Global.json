@@ -168,6 +168,7 @@
   "labels": {
     "purgeAll": "Purge all clusters",
     "entityFilterResult": "Filter Result",
+    "availablePrefixes": "Available Prefixes",
     "System": "System",
     "matchings": "Matchings",
     "addFields": "Add Fields",

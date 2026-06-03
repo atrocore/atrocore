@@ -180,6 +180,7 @@
     "floatPart": "(Liczba zmiennoprzecinkowa)",
     "unitPart": "(Jednostka)",
     "prefixPart": "(Prefiks)",
+    "availablePrefixes": "Dostępne prefiksy",
     "inheritAllForChildren": "Dziedzicz wszystkie dla elementów podrzędnych",
     "inheritAllFromParent": "Dziedziczy wszystko od rodzica",
     "homepage": "Strona główna",
