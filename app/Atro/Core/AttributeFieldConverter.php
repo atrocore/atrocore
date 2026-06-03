@@ -328,6 +328,14 @@ class AttributeFieldConverter
                             }
                         }
 
+                        if (!empty($classificationAttributeData['where'])
+                            && !empty($classificationAttributeData['whereScope'])
+                            && in_array($attribute['type'], ['link', 'linkMultiple'])
+                            && ($attributeData['field']['entityType'] ?? null) === $classificationAttributeData['whereScope']
+                        ) {
+                            $attributeData['where'] = $classificationAttributeData['where'];
+                        }
+
                         $res[$k]['data'] = json_encode($attributeData);
                     }
                 }
