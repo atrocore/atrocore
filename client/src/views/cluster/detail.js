@@ -37,7 +37,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
         itemsPageSize: 2,
 
         getEntityTypes() {
-            if (!this.model.get(this.entityTypeField)){
+            if (!this.model.get(this.entityTypeField)) {
                 return []
             }
 
@@ -63,22 +63,24 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
         },
 
         reloadModels(callback) {
+            const previousOffsets = { ...this.offsetByEntityType };
             this.hasMoreByEntityType = {};
             this.offsetByEntityType = {};
 
             const entityTypes = this.getEntityTypes();
             const perTypePromises = entityTypes.map(entityType => {
-                const whereRelation = JSON.stringify([{attribute: 'entityName', type: 'equals', value: entityType}]);
+                const loadedCount = previousOffsets[entityType] || this.itemsPageSize;
+                const whereRelation = JSON.stringify([{ attribute: 'entityName', type: 'equals', value: entityType }]);
                 return this.loadSelectionItemModels(
-                    `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=${this.itemsPageSize + 1}&whereRelation=${encodeURIComponent(whereRelation)}`
+                    `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=${loadedCount + 1}&whereRelation=${encodeURIComponent(whereRelation)}`
                 ).then(models => {
-                    if (models.length > this.itemsPageSize) {
-                        models = models.slice(0, this.itemsPageSize);
+                    if (models.length > loadedCount) {
+                        models = models.slice(0, loadedCount);
                         this.hasMoreByEntityType[entityType] = true;
                     } else {
                         this.hasMoreByEntityType[entityType] = false;
                     }
-                    this.offsetByEntityType[entityType] = this.itemsPageSize;
+                    this.offsetByEntityType[entityType] = loadedCount;
                     return models;
                 });
             });
@@ -111,7 +113,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                         if (window.itemsListPanel) {
                             window.itemsListPanel?.setRecords(this.getRecordForPanels());
                             window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
-                            window.itemsListPanel?.setHasMoreByType({...this.hasMoreByEntityType});
+                            window.itemsListPanel?.setHasMoreByType({ ...this.hasMoreByEntityType });
                         }
                     });
 
@@ -122,17 +124,17 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
         },
 
         loadMoreForEntityType(entityType) {
-            const loading = {...this.loadingMoreByEntityType, [entityType]: true};
+            const loading = { ...this.loadingMoreByEntityType, [entityType]: true };
             this.loadingMoreByEntityType = loading;
             if (window.itemsListPanel) {
-                window.itemsListPanel?.setLoadingMoreByType({...this.loadingMoreByEntityType});
+                window.itemsListPanel?.setLoadingMoreByType({ ...this.loadingMoreByEntityType });
             }
 
             const offset = this.offsetByEntityType[entityType] || 0;
-            const whereRelation = JSON.stringify([{attribute: 'entityName', type: 'equals', value: entityType}]);
+            const where = JSON.stringify([{ attribute: 'entityName', type: 'equals', value: entityType }]);
 
             this.loadSelectionItemModels(
-                `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=${offset}&maxSize=${this.itemsPageSize + 1}&whereRelation=${encodeURIComponent(whereRelation)}`
+                `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=${offset}&maxSize=${this.itemsPageSize + 1}&where=${encodeURIComponent(where)}`
             ).then(models => {
                 let hasMore = false;
                 if (models.length > this.itemsPageSize) {
@@ -142,7 +144,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
 
                 this.hasMoreByEntityType[entityType] = hasMore;
                 this.offsetByEntityType[entityType] = offset + this.itemsPageSize;
-                this.loadingMoreByEntityType = {...this.loadingMoreByEntityType, [entityType]: false};
+                this.loadingMoreByEntityType = { ...this.loadingMoreByEntityType, [entityType]: false };
 
                 const newIds = models.map(m => m.id);
                 this.hiddenIds.push(...newIds);
@@ -151,8 +153,8 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                 if (window.itemsListPanel) {
                     window.itemsListPanel?.setRecords(this.getRecordForPanels());
                     window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
-                    window.itemsListPanel?.setHasMoreByType({...this.hasMoreByEntityType});
-                    window.itemsListPanel?.setLoadingMoreByType({...this.loadingMoreByEntityType});
+                    window.itemsListPanel?.setHasMoreByType({ ...this.hasMoreByEntityType });
+                    window.itemsListPanel?.setLoadingMoreByType({ ...this.loadingMoreByEntityType });
                 }
             });
         },
@@ -200,8 +202,8 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                     records: this.getRecordForPanels(),
                     selectedIds: this.getSelectedIds(),
                     selectionViewMode: this.selectionViewMode,
-                    hasMoreByType: {...this.hasMoreByEntityType},
-                    loadingMoreByType: {...this.loadingMoreByEntityType},
+                    hasMoreByType: { ...this.hasMoreByEntityType },
+                    loadingMoreByType: { ...this.loadingMoreByEntityType },
                     onLoadMoreForType: (entityType) => this.loadMoreForEntityType(entityType),
                     onMountRowActions: (el, itemId, relationName) => {
                         const model = [...(this.selectionItemModels || []), ...(this.rejectedItems || [])]
@@ -228,7 +230,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                             if (this.getView('record')) {
                                 this.getView('record').showLoader();
                             }
-                            this.trigger('refresh');
+                            this.trigger('refresh', { noReload: true });
                         }
                     },
                     onSelectAll: (entityType) => {
@@ -246,7 +248,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                                 this.getView('record').showLoader();
                             }
                             window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
-                            this.trigger('refresh');
+                            this.trigger('refresh', { noReload: true });
                         }
                     },
                     onUnSelectAll: (entityType) => {
@@ -264,7 +266,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                                 this.getView('record').showLoader();
                             }
                             window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
-                            this.trigger('refresh');
+                            this.trigger('refresh', { noReload: true });
                         }
                     }
                 }
@@ -275,10 +277,10 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
 
-                if (typeof   Relationship.prototype[method] == 'function') {
+                if (typeof Relationship.prototype[method] == 'function') {
                     var data = $el.data();
                     let model = this.selectionItemModels.find(m => m.item.id === data.id);
-                    if(!model) {
+                    if (!model) {
                         model = this.rejectedItems.find(m => m.item.id === data.id);
                     }
                     let thisClone = Espo.utils.clone(this);
