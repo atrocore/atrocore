@@ -177,7 +177,7 @@ class Translation extends Base
             $rowPlaceholders[] = '(' . implode(', ', $placeholders) . ')';
         }
 
-        $updateColumns = array_values(array_filter($columns, fn($c) => $c !== 'id'));
+        $updateColumns = array_values(array_filter($columns, fn($c) => !in_array($c, ['id', 'created_at'])));
 
         if (Converter::isPgSQL($conn)) {
             $setClauses = array_map(
