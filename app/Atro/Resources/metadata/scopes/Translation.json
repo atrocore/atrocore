@@ -1,11 +1,25 @@
 {
-  "type": "ReferenceData",
+  "type": "Base",
   "object": true,
   "notificationDisabled": true,
   "entity": true,
   "layouts": false,
   "tab": true,
-  "acl": false,
+  "acl": true,
+  "aclActionLevelListMap": {
+    "read": [
+      "all",
+      "no"
+    ],
+    "edit": [
+      "all",
+      "no"
+    ],
+    "delete": [
+      "all",
+      "no"
+    ]
+  },
   "customizable": false,
   "streamDisabled": true,
   "importable": false,

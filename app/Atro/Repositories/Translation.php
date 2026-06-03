@@ -13,13 +13,15 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Atro\Core\Utils\Language;
-use Atro\Core\DataManager;
-use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
-class Translation extends ReferenceData
+class Translation extends Base
 {
     protected string $cacheFilePath = 'data/translations.json';
 
@@ -87,18 +89,174 @@ class Translation extends ReferenceData
 
     public function refreshToDefault(): void
     {
-        $records = self::getSimplifiedTranslates((new Language($this->getInjection('container')))->getModulesData());
-        foreach ($this->getAllItems() as $item) {
-            if (!empty($item['isCustomized'])) {
-                $records[$item['code']] = $item;
+        $records = $this->getSimplifiedTranslates((new Language($this->getInjection('container')))->getModulesData());
+
+        $existingMap = $this->fetchNonCustomizedCodeIdMap();
+
+        $toInsert = [];
+        $toUpdate = [];
+
+        foreach ($records as $key => $row) {
+            if (isset($existingMap[$key])) {
+                $row['id'] = $existingMap[$key];
+                $toUpdate[] = $row;
+            } else {
+                $row['id'] = IdGenerator::uuid();
+                $toInsert[] = $row;
             }
         }
 
-        $this->saveDataToFile($records);
+        $orphanedIds = array_values(array_diff_key($existingMap, $records));
+        foreach (array_chunk($orphanedIds, 1000) as $chunk) {
+            $this->getDbal()->createQueryBuilder()
+                ->delete($this->getDbal()->quoteIdentifier('translation'))
+                ->where('id IN (:ids)')
+                ->setParameter('ids', $chunk, $this->getDbal()::PARAM_STR_ARRAY)
+                ->executeQuery();
+        }
+
+        foreach (array_chunk($toUpdate, 1000) as $rows) {
+            $this->bulkUpdate($rows);
+        }
+
+        foreach (array_chunk($toInsert, 1000) as $rows) {
+            $this->bulkInsert($rows);
+        }
+
         $this->refreshTimestamp([]);
     }
 
-    public static function getSimplifiedTranslates(array $data): array
+    private function fetchNonCustomizedCodeIdMap(): array
+    {
+        $rows = $this->getDbal()->createQueryBuilder()
+            ->select('code', 'id')
+            ->from($this->getDbal()->quoteIdentifier('translation'))
+            ->where('is_customized = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        return array_column($rows, 'id', 'code');
+    }
+
+    private function bulkUpdate(array $rows): void
+    {
+        if (empty($rows)) {
+            return;
+        }
+
+        $allKeys = [];
+        foreach ($rows as $row) {
+            foreach (array_keys($row) as $key) {
+                $allKeys[$key] = true;
+            }
+        }
+        $allKeys = array_keys($allKeys);
+
+        $conn = $this->getDbal();
+        $columns = array_map(fn(string $k) => Util::toUnderScore($k), $allKeys);
+        $quotedColumns = array_map(fn(string $c) => $conn->quoteIdentifier($c), $columns);
+
+        $rowPlaceholders = [];
+        $params = [];
+        $types = [];
+
+        foreach ($rows as $row) {
+            $placeholders = [];
+            foreach ($allKeys as $key) {
+                $value = $row[$key] ?? null;
+                $placeholders[] = '?';
+                $params[] = $value;
+                if (is_bool($value)) {
+                    $types[] = ParameterType::BOOLEAN;
+                } elseif ($value === null) {
+                    $types[] = ParameterType::NULL;
+                } else {
+                    $types[] = ParameterType::STRING;
+                }
+            }
+            $rowPlaceholders[] = '(' . implode(', ', $placeholders) . ')';
+        }
+
+        $updateColumns = array_values(array_filter($columns, fn($c) => $c !== 'id'));
+
+        if (Converter::isPgSQL($conn)) {
+            $setClauses = array_map(
+                fn($c) => $conn->quoteIdentifier($c) . ' = EXCLUDED.' . $conn->quoteIdentifier($c),
+                $updateColumns
+            );
+            $onConflict = ' ON CONFLICT (' . $conn->quoteIdentifier('id') . ') DO UPDATE SET ' . implode(', ', $setClauses);
+        } else {
+            $setClauses = array_map(
+                fn($c) => $conn->quoteIdentifier($c) . ' = VALUES(' . $conn->quoteIdentifier($c) . ')',
+                $updateColumns
+            );
+            $onConflict = ' ON DUPLICATE KEY UPDATE ' . implode(', ', $setClauses);
+        }
+
+        $sql = sprintf(
+            'INSERT INTO %s (%s) VALUES %s%s',
+            $conn->quoteIdentifier('translation'),
+            implode(', ', $quotedColumns),
+            implode(', ', $rowPlaceholders),
+            $onConflict
+        );
+
+        $conn->executeStatement($sql, $params, $types);
+    }
+
+    private function bulkInsert(array $rows): void
+    {
+        if (empty($rows)) {
+            return;
+        }
+
+        // Collect all unique keys across all rows (rows may have different column sets)
+        $allKeys = [];
+        foreach ($rows as $row) {
+            foreach (array_keys($row) as $key) {
+                $allKeys[$key] = true;
+            }
+        }
+        $allKeys = array_keys($allKeys);
+
+        $conn = $this->getDbal();
+        $quotedColumns = array_map(
+            fn(string $key) => $conn->quoteIdentifier(Util::toUnderScore($key)),
+            $allKeys
+        );
+
+        $rowPlaceholders = [];
+        $params = [];
+        $types = [];
+
+        foreach ($rows as $row) {
+            $placeholders = [];
+            foreach ($allKeys as $key) {
+                $value = $row[$key] ?? null;
+                $placeholders[] = '?';
+                $params[] = $value;
+                if (is_bool($value)) {
+                    $types[] = ParameterType::BOOLEAN;
+                } elseif ($value === null) {
+                    $types[] = ParameterType::NULL;
+                } else {
+                    $types[] = ParameterType::STRING;
+                }
+            }
+            $rowPlaceholders[] = '(' . implode(', ', $placeholders) . ')';
+        }
+
+        $sql = sprintf(
+            'INSERT INTO %s (%s) VALUES %s',
+            $conn->quoteIdentifier('translation'),
+            implode(', ', $quotedColumns),
+            implode(', ', $rowPlaceholders)
+        );
+
+        $conn->executeStatement($sql, $params, $types);
+    }
+
+    public function getSimplifiedTranslates(array $data): array
     {
         $records = [];
         foreach ($data as $module => $moduleData) {
@@ -106,7 +264,6 @@ class Translation extends ReferenceData
                 $preparedLocaleData = [];
                 self::toSimpleArray($localeData, $preparedLocaleData);
                 foreach ($preparedLocaleData as $key => $value) {
-                    $records[$key]['id'] = md5($key);
                     $records[$key]['code'] = $key;
                     $records[$key]['module'] = $module;
                     $records[$key]['isCustomized'] = $module === 'custom';
@@ -149,17 +306,6 @@ class Translation extends ReferenceData
         }
     }
 
-    protected function saveDataToFile(array $data): bool
-    {
-        $res = parent::saveDataToFile($data);
-
-        if ($res) {
-            $this->saveCacheFile($data);
-        }
-
-        return $res;
-    }
-
     protected function prepareTreeValue(array $data, &$result, $value): void
     {
         if (!empty($data)) {
@@ -167,8 +313,8 @@ class Translation extends ReferenceData
             if (!empty($data)) {
                 $this->prepareTreeValue($data, $result[$first], $value);
             } else {
-                if(preg_match('/^[0-9]+$/', $first)){
-                    $first = '__integer__'.$first;
+                if (preg_match('/^[0-9]+$/', $first)) {
+                    $first = '__integer__' . $first;
                 }
                 $result[$first] = $value;
             }
@@ -203,5 +349,10 @@ class Translation extends ReferenceData
 
         $this->addDependency('container');
         $this->addDependency('language');
+    }
+
+    protected function getIdGenerator(): IdGenerator
+    {
+        return $this->getInjection('container')->get(IdGenerator::class);
     }
 }
