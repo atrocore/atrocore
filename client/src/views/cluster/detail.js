@@ -28,6 +28,10 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
 
         rejectedItems: [],
 
+        hasMoreClusterItems: false,
+
+        clusterItemsOffset: 0,
+
         getEntityTypes() {
             let entities = [this.model.get('masterEntity')];
             this.getStagingEntities(this.model.get(this.entityTypeField)).forEach(stagingEntity => {
@@ -50,8 +54,17 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
         },
 
         reloadModels(callback) {
-            this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`)
+            this.hasMoreClusterItems = false;
+            this.clusterItemsOffset = 0;
+
+            this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=21`)
                 .then(models => {
+                    if (models.length > 20) {
+                        models = models.slice(0, 20);
+                        this.hasMoreClusterItems = true;
+                        this.clusterItemsOffset = 20;
+                    }
+
                     if (models.length > 0) {
                         this.selectionItemModels = models;
                         let allIds = models.map(m => m.id);
@@ -77,11 +90,41 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                             if (window.itemsListPanel) {
                                 window.itemsListPanel?.setRecords(this.getRecordForPanels());
                                 window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                                window.itemsListPanel?.setHasMore(this.hasMoreClusterItems);
                             }
                         });
 
                     if (callback) {
                         callback();
+                    }
+                });
+        },
+
+        loadMoreClusterItems() {
+            if (window.itemsListPanel) {
+                window.itemsListPanel?.setLoadingMore(true);
+            }
+
+            this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=${this.clusterItemsOffset}&maxSize=21`)
+                .then(models => {
+                    let hasMore = false;
+                    if (models.length > 20) {
+                        models = models.slice(0, 20);
+                        hasMore = true;
+                    }
+
+                    this.hasMoreClusterItems = hasMore;
+                    this.clusterItemsOffset += 20;
+
+                    const newIds = models.map(m => m.id);
+                    this.hiddenIds.push(...newIds);
+                    this.selectionItemModels = [...this.selectionItemModels, ...models];
+
+                    if (window.itemsListPanel) {
+                        window.itemsListPanel?.setRecords(this.getRecordForPanels());
+                        window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                        window.itemsListPanel?.setHasMore(this.hasMoreClusterItems);
+                        window.itemsListPanel?.setLoadingMore(false);
                     }
                 });
         },
@@ -129,6 +172,8 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                     records: this.getRecordForPanels(),
                     selectedIds: this.getSelectedIds(),
                     selectionViewMode: this.selectionViewMode,
+                    hasMore: this.hasMoreClusterItems || false,
+                    onLoadMore: () => this.loadMoreClusterItems(),
                     onMountRowActions: (el, itemId, relationName) => {
                         const model = [...(this.selectionItemModels || []), ...(this.rejectedItems || [])]
                             .find(m => m.id === itemId);
