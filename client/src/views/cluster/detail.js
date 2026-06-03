@@ -34,6 +34,8 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
 
         loadingMoreByEntityType: {},
 
+        itemsPageSize: 2,
+
         getEntityTypes() {
             if (!this.model.get(this.entityTypeField)){
                 return []
@@ -68,15 +70,15 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
             const perTypePromises = entityTypes.map(entityType => {
                 const whereRelation = JSON.stringify([{attribute: 'entityName', type: 'equals', value: entityType}]);
                 return this.loadSelectionItemModels(
-                    `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=21&whereRelation=${encodeURIComponent(whereRelation)}`
+                    `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=${this.itemsPageSize + 1}&whereRelation=${encodeURIComponent(whereRelation)}`
                 ).then(models => {
-                    if (models.length > 20) {
-                        models = models.slice(0, 20);
+                    if (models.length > this.itemsPageSize) {
+                        models = models.slice(0, this.itemsPageSize);
                         this.hasMoreByEntityType[entityType] = true;
                     } else {
                         this.hasMoreByEntityType[entityType] = false;
                     }
-                    this.offsetByEntityType[entityType] = 20;
+                    this.offsetByEntityType[entityType] = this.itemsPageSize;
                     return models;
                 });
             });
@@ -103,7 +105,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                     }
                 }
 
-                this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=rejectedClusterItems&id=${this.model.id}&select=entityName,entity,entityId&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`)
+                this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=rejectedClusterItems&id=${this.model.id}&select=entityName,entity,entityId&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=${this.itemsPageSize}`)
                     .then(models => {
                         this.rejectedItems = models;
                         if (window.itemsListPanel) {
@@ -130,16 +132,16 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
             const whereRelation = JSON.stringify([{attribute: 'entityName', type: 'equals', value: entityType}]);
 
             this.loadSelectionItemModels(
-                `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=${offset}&maxSize=21&whereRelation=${encodeURIComponent(whereRelation)}`
+                `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=${offset}&maxSize=${this.itemsPageSize + 1}&whereRelation=${encodeURIComponent(whereRelation)}`
             ).then(models => {
                 let hasMore = false;
-                if (models.length > 20) {
-                    models = models.slice(0, 20);
+                if (models.length > this.itemsPageSize) {
+                    models = models.slice(0, this.itemsPageSize);
                     hasMore = true;
                 }
 
                 this.hasMoreByEntityType[entityType] = hasMore;
-                this.offsetByEntityType[entityType] = offset + 20;
+                this.offsetByEntityType[entityType] = offset + this.itemsPageSize;
                 this.loadingMoreByEntityType = {...this.loadingMoreByEntityType, [entityType]: false};
 
                 const newIds = models.map(m => m.id);
