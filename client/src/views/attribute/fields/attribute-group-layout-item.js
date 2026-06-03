@@ -11,6 +11,8 @@
 Espo.define('views/attribute/fields/attribute-group-layout-item', 'views/fields/base',
     Dep => Dep.extend({
 
+        isAttributeGroupLayoutItem: true,
+
         readOnly: true,
 
         afterRender() {

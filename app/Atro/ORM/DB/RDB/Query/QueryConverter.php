@@ -1251,16 +1251,9 @@ class QueryConverter
                 $foreignKey = $keySet['foreignKey'];
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
-
                 $relTable = $this->toDb($relOpt['relationName']);
-
                 $distantTable = $this->toDb($relOpt['entity']);
-
-                if (strpos($alias, 'Filter') !== false) {
-                    $midAlias = $alias . 'Middle';
-                } else {
-                    $midAlias = $this->toDb($alias) . '_mm';
-                }
+                $midAlias = $this->toDb($alias) . '_mm';
 
                 $condition = self::TABLE_ALIAS . ".{$this->toDb($key)} = {$midAlias}.{$this->toDb($nearKey)}";
                 if (!$withDeleted) {

@@ -14,15 +14,12 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\AttributeFieldConverter;
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
-use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Attribute extends Base
@@ -273,6 +270,21 @@ class Attribute extends Base
         if($entity->get('type') === 'bool') {
             $entity->set('allowNullForBool', empty($entity->get('notNull')));
         }
+
+        if($entity->get('type') === 'bool') {
+            $entity->set('allowNullForBool', empty($entity->get('notNull')));
+        }
+
+        if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
+            $translatedOptions = null;
+            foreach ($entity->get('options') ?? [] as $option) {
+                if (empty($translatedOptions)) {
+                    $translatedOptions = new \stdClass();
+                }
+                $translatedOptions->$option = $this->getLanguage()->translateOption($option, $entity->get('code'), $entity->get('entityId'));
+            }
+            $entity->set('translatedOptions', $translatedOptions);
+        }
     }
 
     public function updateEntity(string $id, \stdClass $data): bool
@@ -296,6 +308,11 @@ class Attribute extends Base
         $this->addDependency(AttributeFieldConverter::class);
     }
 
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('language');
+    }
+
     /**
      * Get multilang fields
      *
@@ -313,8 +330,7 @@ class Attribute extends Base
     {
         $attributeList = array_keys($this->getInjection('metadata')->get(['attributes']));
         if (!in_array($entity->get('type'), $attributeList)) {
-            throw new Forbidden(str_replace('{type}', $entity->get('type'),
-                $this->getInjection('language')->translate('invalidType', 'exceptions', 'Attribute')));
+            throw new Forbidden(str_replace('{type}', $entity->get('type'), $this->getLanguage()->translate('invalidType', 'exceptions', 'Attribute')));
         }
 
         parent::checkFieldsWithPattern($entity);
