@@ -51,7 +51,7 @@ class Translation extends Base
     public function getPreparedTranslations(): array
     {
         if (!file_exists($this->cacheFilePath)) {
-            $this->saveCacheFile($this->getAllItems());
+            $this->saveCacheFile($this->find()->toArray());
         }
 
         return json_decode(file_get_contents($this->cacheFilePath), true);
@@ -349,10 +349,5 @@ class Translation extends Base
 
         $this->addDependency('container');
         $this->addDependency('language');
-    }
-
-    protected function getIdGenerator(): IdGenerator
-    {
-        return $this->getInjection('container')->get(IdGenerator::class);
     }
 }
