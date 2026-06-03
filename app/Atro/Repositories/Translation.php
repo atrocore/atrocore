@@ -91,22 +91,29 @@ class Translation extends Base
     {
         $records = $this->getSimplifiedTranslates((new Language($this->getInjection('container')))->getModulesData());
 
-        $existingMap = $this->fetchNonCustomizedCodeIdMap();
+        $existingMap = $this->fetchExistingCodeMap();
 
         $toInsert = [];
         $toUpdate = [];
+        $orphanedIds = [];
 
         foreach ($records as $key => $row) {
-            if (isset($existingMap[$key])) {
-                $row['id'] = $existingMap[$key];
-                $toUpdate[] = $row;
-            } else {
+            if (!isset($existingMap[$key])) {
                 $row['id'] = IdGenerator::uuid();
                 $toInsert[] = $row;
+            } elseif (!$existingMap[$key]['isCustomized']) {
+                $row['id'] = $existingMap[$key]['id'];
+                $toUpdate[] = $row;
+            }
+            // customized version exists — skip, do not touch
+        }
+
+        foreach ($existingMap as $code => $entry) {
+            if (!$entry['isCustomized'] && !isset($records[$code])) {
+                $orphanedIds[] = $entry['id'];
             }
         }
 
-        $orphanedIds = array_values(array_diff_key($existingMap, $records));
         foreach (array_chunk($orphanedIds, 1000) as $chunk) {
             $this->getDbal()->createQueryBuilder()
                 ->delete($this->getDbal()->quoteIdentifier('translation'))
@@ -126,16 +133,24 @@ class Translation extends Base
         $this->refreshTimestamp([]);
     }
 
-    private function fetchNonCustomizedCodeIdMap(): array
+    private function fetchExistingCodeMap(): array
     {
         $rows = $this->getDbal()->createQueryBuilder()
-            ->select('code', 'id')
+            ->select('code', 'id', 'is_customized')
             ->from($this->getDbal()->quoteIdentifier('translation'))
-            ->where('is_customized = :false')
+            ->where('deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
-        return array_column($rows, 'id', 'code');
+        $map = [];
+        foreach ($rows as $row) {
+            $map[$row['code']] = [
+                'id'           => $row['id'],
+                'isCustomized' => (bool) $row['is_customized'],
+            ];
+        }
+
+        return $map;
     }
 
     private function bulkUpdate(array $rows): void

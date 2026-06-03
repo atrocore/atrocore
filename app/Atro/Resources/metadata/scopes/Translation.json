@@ -22,7 +22,7 @@
   },
   "customizable": false,
   "streamDisabled": true,
-  "importable": false,
+  "importable": true,
   "notifications": false,
   "hasOwner": false,
   "hasAssignedUser": false,
