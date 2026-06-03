@@ -113,6 +113,17 @@
         }
       }
     },
+    "fieldDefs": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "field": {
       "type": "enum",
       "view": "views/matching-rule/fields/entity-field",
