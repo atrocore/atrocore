@@ -35,10 +35,15 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
         loadingMoreByEntityType: {},
 
         getEntityTypes() {
-            let entities = [this.model.get('masterEntity')];
+            if (!this.model.get(this.entityTypeField)){
+                return []
+            }
+
+            let entities = [this.model.get(this.entityTypeField)];
             this.getStagingEntities(this.model.get(this.entityTypeField)).forEach(stagingEntity => {
                 entities.push(stagingEntity);
             });
+
             return entities;
         },
 
