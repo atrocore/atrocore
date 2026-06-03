@@ -28,9 +28,11 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
 
         rejectedItems: [],
 
-        hasMoreClusterItems: false,
+        hasMoreByEntityType: {},
 
-        clusterItemsOffset: 0,
+        offsetByEntityType: {},
+
+        loadingMoreByEntityType: {},
 
         getEntityTypes() {
             let entities = [this.model.get('masterEntity')];
@@ -54,79 +56,98 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
         },
 
         reloadModels(callback) {
-            this.hasMoreClusterItems = false;
-            this.clusterItemsOffset = 0;
+            this.hasMoreByEntityType = {};
+            this.offsetByEntityType = {};
 
-            this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=21`)
-                .then(models => {
+            const entityTypes = this.getEntityTypes();
+            const perTypePromises = entityTypes.map(entityType => {
+                const whereRelation = JSON.stringify([{attribute: 'entityName', type: 'equals', value: entityType}]);
+                return this.loadSelectionItemModels(
+                    `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=21&whereRelation=${encodeURIComponent(whereRelation)}`
+                ).then(models => {
                     if (models.length > 20) {
                         models = models.slice(0, 20);
-                        this.hasMoreClusterItems = true;
-                        this.clusterItemsOffset = 20;
+                        this.hasMoreByEntityType[entityType] = true;
+                    } else {
+                        this.hasMoreByEntityType[entityType] = false;
                     }
-
-                    if (models.length > 0) {
-                        this.selectionItemModels = models;
-                        let allIds = models.map(m => m.id);
-                        // remove dead Ids
-                        this.hiddenIds = this.hiddenIds.filter(id => allIds.includes(id));
-
-                        for (const id of allIds.reverse()) {
-                            if ((allIds.length - this.hiddenIds.length) <= this.maxForComparison) {
-                                break;
-                            }
-
-                            if (this.hiddenIds.includes(id)) {
-                                continue;
-                            }
-
-                            this.hiddenIds.push(id);
-                        }
-                    }
-
-                    this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=rejectedClusterItems&id=${this.model.id}&select=entityName,entity,entityId&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`)
-                        .then(models => {
-                            this.rejectedItems = models;
-                            if (window.itemsListPanel) {
-                                window.itemsListPanel?.setRecords(this.getRecordForPanels());
-                                window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
-                                window.itemsListPanel?.setHasMore(this.hasMoreClusterItems);
-                            }
-                        });
-
-                    if (callback) {
-                        callback();
-                    }
+                    this.offsetByEntityType[entityType] = 20;
+                    return models;
                 });
+            });
+
+            Promise.all(perTypePromises).then(allModels => {
+                let models = allModels.flat();
+
+                if (models.length > 0) {
+                    this.selectionItemModels = models;
+                    let allIds = models.map(m => m.id);
+                    // remove dead Ids
+                    this.hiddenIds = this.hiddenIds.filter(id => allIds.includes(id));
+
+                    for (const id of allIds.reverse()) {
+                        if ((allIds.length - this.hiddenIds.length) <= this.maxForComparison) {
+                            break;
+                        }
+
+                        if (this.hiddenIds.includes(id)) {
+                            continue;
+                        }
+
+                        this.hiddenIds.push(id);
+                    }
+                }
+
+                this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=rejectedClusterItems&id=${this.model.id}&select=entityName,entity,entityId&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`)
+                    .then(models => {
+                        this.rejectedItems = models;
+                        if (window.itemsListPanel) {
+                            window.itemsListPanel?.setRecords(this.getRecordForPanels());
+                            window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                            window.itemsListPanel?.setHasMoreByType({...this.hasMoreByEntityType});
+                        }
+                    });
+
+                if (callback) {
+                    callback();
+                }
+            });
         },
 
-        loadMoreClusterItems() {
+        loadMoreForEntityType(entityType) {
+            const loading = {...this.loadingMoreByEntityType, [entityType]: true};
+            this.loadingMoreByEntityType = loading;
             if (window.itemsListPanel) {
-                window.itemsListPanel?.setLoadingMore(true);
+                window.itemsListPanel?.setLoadingMoreByType({...this.loadingMoreByEntityType});
             }
 
-            this.loadSelectionItemModels(`entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=${this.clusterItemsOffset}&maxSize=21`)
-                .then(models => {
-                    let hasMore = false;
-                    if (models.length > 20) {
-                        models = models.slice(0, 20);
-                        hasMore = true;
-                    }
+            const offset = this.offsetByEntityType[entityType] || 0;
+            const whereRelation = JSON.stringify([{attribute: 'entityName', type: 'equals', value: entityType}]);
 
-                    this.hasMoreClusterItems = hasMore;
-                    this.clusterItemsOffset += 20;
+            this.loadSelectionItemModels(
+                `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=${offset}&maxSize=21&whereRelation=${encodeURIComponent(whereRelation)}`
+            ).then(models => {
+                let hasMore = false;
+                if (models.length > 20) {
+                    models = models.slice(0, 20);
+                    hasMore = true;
+                }
 
-                    const newIds = models.map(m => m.id);
-                    this.hiddenIds.push(...newIds);
-                    this.selectionItemModels = [...this.selectionItemModels, ...models];
+                this.hasMoreByEntityType[entityType] = hasMore;
+                this.offsetByEntityType[entityType] = offset + 20;
+                this.loadingMoreByEntityType = {...this.loadingMoreByEntityType, [entityType]: false};
 
-                    if (window.itemsListPanel) {
-                        window.itemsListPanel?.setRecords(this.getRecordForPanels());
-                        window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
-                        window.itemsListPanel?.setHasMore(this.hasMoreClusterItems);
-                        window.itemsListPanel?.setLoadingMore(false);
-                    }
-                });
+                const newIds = models.map(m => m.id);
+                this.hiddenIds.push(...newIds);
+                this.selectionItemModels = [...this.selectionItemModels, ...models];
+
+                if (window.itemsListPanel) {
+                    window.itemsListPanel?.setRecords(this.getRecordForPanels());
+                    window.itemsListPanel?.setSelectedIds(this.getSelectedIds());
+                    window.itemsListPanel?.setHasMoreByType({...this.hasMoreByEntityType});
+                    window.itemsListPanel?.setLoadingMoreByType({...this.loadingMoreByEntityType});
+                }
+            });
         },
 
         getRecordForPanels() {
@@ -172,8 +193,9 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                     records: this.getRecordForPanels(),
                     selectedIds: this.getSelectedIds(),
                     selectionViewMode: this.selectionViewMode,
-                    hasMore: this.hasMoreClusterItems || false,
-                    onLoadMore: () => this.loadMoreClusterItems(),
+                    hasMoreByType: {...this.hasMoreByEntityType},
+                    loadingMoreByType: {...this.loadingMoreByEntityType},
+                    onLoadMoreForType: (entityType) => this.loadMoreForEntityType(entityType),
                     onMountRowActions: (el, itemId, relationName) => {
                         const model = [...(this.selectionItemModels || []), ...(this.rejectedItems || [])]
                             .find(m => m.id === itemId);
