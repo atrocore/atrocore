@@ -521,6 +521,7 @@
     "script": "Script",
     "unitPart": "(Maßeinheit)",
     "prefixPart": "(Präfix)",
+    "availablePrefixes": "Verfügbare Präfixe",
     "Details": "Details",
     "Filter": "Filter",
     "openLink": "Link öffnen",

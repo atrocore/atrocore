@@ -86,12 +86,12 @@ class EntityField extends ReferenceData
         if (in_array($fieldDefs['type'], ['link', 'linkMultiple'])) {
             $linkDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'links', $fieldName], []);
             if ($fieldDefs['type'] === 'linkMultiple') {
-                $fieldDefs['relationType'] = !empty($linkDefs['relationName']) ? 'manyToMany' : 'oneToMany';
-                $fieldDefs['relationName'] = $linkDefs['relationName'] ?? null;
+                $fieldDefs['relationType']      = !empty($linkDefs['relationName']) ? 'manyToMany' : 'oneToMany';
+                $fieldDefs['relationName']      = $linkDefs['relationName'] ?? null;
                 $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
             }
             if (!empty($linkDefs['entity'])) {
-                $fieldDefs['foreignEntityId'] = $linkDefs['entity'];
+                $fieldDefs['foreignEntityId']   = $linkDefs['entity'];
                 $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
             } else {
                 $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName], []);
@@ -100,7 +100,7 @@ class EntityField extends ReferenceData
                     $foreignScope = $this->getMetadata()->get(['scopes', $fieldDefs['entity']], []);
 
                     if (!empty($foreignScope) && !empty($foreignScope['type']) && $foreignScope['type'] == 'ReferenceData') {
-                        $fieldDefs['foreignEntityId'] = $fieldDefs['entity'];
+                        $fieldDefs['foreignEntityId']   = $fieldDefs['entity'];
                         $fieldDefs['foreignEntityName'] = $this->translate($fieldDefs['entity'], 'scopeNames');
                     }
                 }
@@ -109,7 +109,7 @@ class EntityField extends ReferenceData
         }
 
         $label = $this->translate($fieldName, 'fields', $entityName);
-        if (in_array($fieldDefs['type'], ['int', 'float', 'varchar']) && !empty($fieldDefs['measureId'])) {
+        if (in_array($fieldDefs['type'], ['int', 'float', 'varchar']) && (!empty($fieldDefs['measureId']) || !empty($fieldDefs['prefixEnabled']))) {
             $label = $this->translate('combined' . ucfirst($fieldName), 'fields', $entityName);
         }
 
@@ -150,7 +150,7 @@ class EntityField extends ReferenceData
             $result['data']['where'] = $where;
         }
 
-        if($fieldDefs['type'] === 'bool') {
+        if ($fieldDefs['type'] === 'bool') {
             $result['allowNullForBool'] = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.notNull") === false;
         }
 
@@ -287,11 +287,11 @@ class EntityField extends ReferenceData
         if (!$entity->isNew() && $entity->get('type') === 'bool' && empty($entity->get('allowNullForBool')) && $entity->isAttributeChanged('allowNullForBool')) {
             $connection = $this->getEntityManager()->getConnection();
             $entityName = $entity->get('entityId');
-            $type = $this->getMetadata()->get("scopes.{$entityName}.type");
+            $type       = $this->getMetadata()->get("scopes.{$entityName}.type");
 
             if (!empty($type) && $type !== 'ReferenceData') {
                 $tableName = $this->getEntityManager()->getMapper()->toDb($entityName);
-                $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
+                $column    = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
                 $connection->createQueryBuilder()
                     ->update($connection->quoteIdentifier($tableName))
                     ->set($column, ':false')
@@ -303,12 +303,12 @@ class EntityField extends ReferenceData
 
         if (!$entity->isNew() && !empty($entity->get('unique')) && $entity->isAttributeChanged('unique')) {
             $entityName = $entity->get('entityId');
-            $type = $this->getMetadata()->get("scopes.{$entityName}.type");
+            $type       = $this->getMetadata()->get("scopes.{$entityName}.type");
 
             if (!empty($type) && $type !== 'ReferenceData') {
                 $connection = $this->getEntityManager()->getConnection();
-                $tableName = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
-                $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entity->get('code')));
+                $tableName  = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
+                $column     = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entity->get('code')));
 
                 $values = $this->getEntityManager()->getConnection()->createQueryBuilder()
                     ->select($column, 'deleted')
@@ -330,13 +330,13 @@ class EntityField extends ReferenceData
 
         if (!empty($entity->get('required') && $entity->isAttributeChanged('required'))) {
             $entityName = $entity->get('entityId');
-            $type = $this->getMetadata()->get("scopes.{$entityName}.type");
-            $fieldType = $entity->get('type');
+            $type       = $this->getMetadata()->get("scopes.{$entityName}.type");
+            $fieldType  = $entity->get('type');
 
             if (!empty($type) && $type !== 'ReferenceData' && $fieldType !== 'linkMultiple') {
                 $connection = $this->getEntityManager()->getConnection();
-                $tableName = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
-                $fieldName = $entity->get('code');
+                $tableName  = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
+                $fieldName  = $entity->get('code');
 
                 if ($entity->isNew()) {
                     if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
@@ -366,7 +366,7 @@ class EntityField extends ReferenceData
 
                     if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
                         $fromColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'From'));
-                        $toColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'To'));
+                        $toColumn   = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'To'));
 
                         $conditions[] = '(' . $fromColumn . ' IS NULL AND ' . $toColumn . ' IS NULL)';
                     } else {
@@ -382,7 +382,7 @@ class EntityField extends ReferenceData
                     }
 
                     if (!empty($entity->get('measureId')) && in_array($fieldType, ['int', 'float', 'varchar', 'rangeInt', 'rangeFloat'])) {
-                        $unitColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'UnitId'));
+                        $unitColumn   = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'UnitId'));
                         $conditions[] = '(' . $unitColumn . ' IS NULL OR ' . $unitColumn . ' = :empty)';
                     }
 
@@ -414,7 +414,7 @@ class EntityField extends ReferenceData
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('options')) {
-            $newOptions = $entity->get('options') ?? [];
+            $newOptions     = $entity->get('options') ?? [];
             $deletedOptions = array_diff($entity->getFetched('options') ?? [], $newOptions);
 
             foreach ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.conditionalProperties.disableOptions") ?? [] as $row) {
@@ -443,7 +443,7 @@ class EntityField extends ReferenceData
 
     public function updateOptionCode(string $scope, string $field, string $oldValue, string $newValue): bool
     {
-        $type = $this->getMetadata()->get("scopes.{$scope}.type");
+        $type        = $this->getMetadata()->get("scopes.{$scope}.type");
         $fieldEntity = $this->get($scope . '_' . $field);
 
         if (!in_array($oldValue, $fieldEntity->get('options'))) {
@@ -466,8 +466,8 @@ class EntityField extends ReferenceData
         }
 
         // update options metadata
-        $options = $fieldEntity->get('options');
-        $key = array_search($oldValue, $options);
+        $options       = $fieldEntity->get('options');
+        $key           = array_search($oldValue, $options);
         $options[$key] = $newValue;
         $fieldEntity->set('options', $options);
         $this->save($fieldEntity);
@@ -499,7 +499,7 @@ class EntityField extends ReferenceData
         if ($type === 'ReferenceData') {
             $file = ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $scope . '.json';
             if (file_exists($file)) {
-                $data = json_decode(file_get_contents($file), true);
+                $data         = json_decode(file_get_contents($file), true);
                 $shouldUpdate = false;
                 foreach ($data as $code => $item) {
 
@@ -509,15 +509,15 @@ class EntityField extends ReferenceData
 
                     if ($fieldEntity->get('type') === 'enum' && $item[$field] === $oldValue) {
                         $data[$code][$field] = $item[$field] = $newValue;
-                        $shouldUpdate = true;
+                        $shouldUpdate        = true;
                     }
 
                     if ($fieldEntity->get('type') === 'multiEnum' && in_array($oldValue, $values = $item[$field] ?? [])) {
                         $key = array_search($oldValue, $values);
                         if ($key !== false) {
-                            $values[$key] = $newValue;
+                            $values[$key]        = $newValue;
                             $data[$code][$field] = $item[$field] = $values;
-                            $shouldUpdate = true;
+                            $shouldUpdate        = true;
                         }
                     }
                 }
@@ -527,8 +527,8 @@ class EntityField extends ReferenceData
             }
         } else {
             $connection = $this->getEntityManager()->getConnection();
-            $tableName = $this->getEntityManager()->getMapper()->toDb($scope);
-            $column = $this->getEntityManager()->getMapper()->toDb($field);
+            $tableName  = $this->getEntityManager()->getMapper()->toDb($scope);
+            $column     = $this->getEntityManager()->getMapper()->toDb($field);
 
             if ($fieldEntity->get('type') === 'enum') {
                 $connection->createQueryBuilder()
@@ -592,7 +592,7 @@ class EntityField extends ReferenceData
                     throw new BadRequest("Middle Table Name is invalid.");
                 }
 
-                if($this->getMetadata()->get(['scopes', $entity->get('relationName')])) {
+                if ($this->getMetadata()->get(['scopes', $entity->get('relationName')])) {
                     throw new BadRequest(sprintf($this->getLanguage()->translate('relationAlreadyUsed', 'exceptions', 'EntityField'), $entity->get('relationName')));
                 }
             }
@@ -783,7 +783,7 @@ class EntityField extends ReferenceData
         }
 
         foreach (array_merge($commonFields, $typeFields) as $field) {
-            if($this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.notStorable")) {
+            if ($this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.notStorable")) {
                 continue;
             }
 
@@ -860,27 +860,27 @@ class EntityField extends ReferenceData
         $conditionalPropertiesChanged = false;
         if ($entity->isAttributeChanged('conditionalRequired')) {
             $conditionalProperties['required'] = $entity->get('conditionalRequired');
-            $conditionalPropertiesChanged = true;
+            $conditionalPropertiesChanged      = true;
         }
 
         if ($entity->isAttributeChanged('conditionalReadOnly')) {
             $conditionalProperties['readOnly'] = $entity->get('conditionalReadOnly');
-            $conditionalPropertiesChanged = true;
+            $conditionalPropertiesChanged      = true;
         }
 
         if ($entity->isAttributeChanged('conditionalProtected')) {
             $conditionalProperties['protected'] = $entity->get('conditionalProtected');
-            $conditionalPropertiesChanged = true;
+            $conditionalPropertiesChanged       = true;
         }
 
         if ($entity->isAttributeChanged('conditionalVisible')) {
             $conditionalProperties['visible'] = $entity->get('conditionalVisible');
-            $conditionalPropertiesChanged = true;
+            $conditionalPropertiesChanged     = true;
         }
 
         if ($entity->isAttributeChanged('conditionalDisableOptions')) {
             $conditionalProperties['disableOptions'] = $entity->get('conditionalDisableOptions');
-            $conditionalPropertiesChanged = true;
+            $conditionalPropertiesChanged            = true;
         }
 
         if ($conditionalPropertiesChanged) {
@@ -910,12 +910,12 @@ class EntityField extends ReferenceData
         }
 
         if (($entity->isNew() || $entity->isAttributeChanged('translatedOptions')) && in_array($entity->get('type'), ['enum', 'multiEnum'])) {
-            $deletedOptions = [];
-            $updatedOrCreatedOptions = [];
-            $newTranslationOptions = $entity->get('translatedOptions') ?? new \stdClass();
+            $deletedOptions           = [];
+            $updatedOrCreatedOptions  = [];
+            $newTranslationOptions    = $entity->get('translatedOptions') ?? new \stdClass();
             $fetchedTranslatedOptions = $entity->getFetched('translatedOptions') ?? new \stdClass();
-            $fetchedOptions = $entity->getFetched('options') ?? [];
-            $newOptions = $entity->get('options') ?? [];
+            $fetchedOptions           = $entity->getFetched('options') ?? [];
+            $newOptions               = $entity->get('options') ?? [];
             foreach ($fetchedOptions as $option) {
                 if (!in_array($option, $newOptions)) {
                     $deletedOptions[] = $option;
@@ -948,21 +948,21 @@ class EntityField extends ReferenceData
             }
         }
 
-        if($entity->get('type') === 'bool') {
+        if ($entity->get('type') === 'bool') {
             $notNull = null;
-            if($entity->isNew() && !empty($entity->get('allowNullForBool'))) {
+            if ($entity->isNew() && !empty($entity->get('allowNullForBool'))) {
                 $notNull = false;
             }
 
-            if(!$entity->isNew() && $entity->isAttributeChanged('allowNullForBool') && !empty($entity->get('allowNullForBool'))) {
+            if (!$entity->isNew() && $entity->isAttributeChanged('allowNullForBool') && !empty($entity->get('allowNullForBool'))) {
                 $notNull = false;
             }
 
-            if(!$entity->isNew() && $entity->isAttributeChanged('allowNullForBool') && empty($entity->get('allowNullForBool'))) {
+            if (!$entity->isNew() && $entity->isAttributeChanged('allowNullForBool') && empty($entity->get('allowNullForBool'))) {
                 $notNull = true;
             }
 
-            if($notNull === false) {
+            if ($notNull === false) {
                 $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                     'fields' => [
                         $entity->get('code') => [
@@ -971,7 +971,7 @@ class EntityField extends ReferenceData
                     ],
                 ]);
                 $saveMetadata = true;
-            }else if($notNull === true) {
+            } else if ($notNull === true) {
                 $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
                     "fields.{$entity->get('code')}.notNull"
                 ]);
@@ -1001,7 +1001,7 @@ class EntityField extends ReferenceData
     public function deleteFromMetadata(OrmEntity $entity): void
     {
         $scope = $entity->get('entityId');
-        $name = $entity->get('code');
+        $name  = $entity->get('code');
 
 
         $foreignScope = $this->getMetadata()->get("entityDefs.$scope.links.$name.entity");
@@ -1017,7 +1017,7 @@ class EntityField extends ReferenceData
 
     protected function updateEntityFromVirtualFields(OrmEntity $entity): void
     {
-        $entityEntity = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
+        $entityEntity          = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
         $virtualToEntityFields = [
             "isNonComparable"         => "nonComparableFields",
             "isDuplicatableRelation"  => "duplicatableRelations",
@@ -1036,7 +1036,7 @@ class EntityField extends ReferenceData
                     }
                 } else {
                     $oldValues = $values;
-                    $values = [];
+                    $values    = [];
                     foreach ($oldValues as $value) {
                         if ($value === $entity->get('code')) {
                             continue;
@@ -1056,7 +1056,7 @@ class EntityField extends ReferenceData
 
     protected function prepareVirtualBoolFields(OrmEntity $entity): void
     {
-        $entityEntity = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
+        $entityEntity          = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
         $virtualToEntityFields = [
             "isNonComparable"         => "nonComparableFields",
             "isDuplicatableRelation"  => "duplicatableRelations",

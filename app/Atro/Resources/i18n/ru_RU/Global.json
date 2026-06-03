@@ -503,6 +503,7 @@
     "Start": "Начните",
     "unitPart": "(Unit)",
     "prefixPart": "(Префикс)",
+    "availablePrefixes": "Доступные префиксы",
     "unselectAll": "Отменить выбор Все",
     "splitHorizontal": "Горизонтальное разделение",
     "splitVertical": "Разделить по вертикали",
