@@ -352,6 +352,8 @@ class Translation extends Base
             return;
         }
 
+//        $this->saveCacheFile($this->find()->toArray());
+
         $this->getInjection('language')->clearCache();
 
         $this->getConfig()->set('cacheTimestamp', time());
