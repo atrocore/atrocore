@@ -23,7 +23,7 @@ use Espo\ORM\Entity;
 
 class Translation extends Base
 {
-    protected string $cacheFilePath = 'data/translations.json';
+    private array $cachedCodes = [];
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -48,19 +48,19 @@ class Translation extends Base
         }
     }
 
-    public function getPreparedTranslations(): array
+    public function findByCode(string $code): ?Entity
     {
-        if (!file_exists($this->cacheFilePath)) {
-            $this->saveCacheFile($this->find()->toArray());
+        if (!isset($this->cachedCodes[$code])) {
+            $this->cachedCodes[$code] = $this->where(['code' => $code])->findOne();
         }
 
-        return json_decode(file_get_contents($this->cacheFilePath), true);
+        return $this->cachedCodes[$code];
     }
 
-    protected function saveCacheFile(array $data): void
+    public function getPreparedTranslations(): array
     {
         $preparedTranslationData = [];
-        foreach ($data as $record) {
+        foreach ($this->find()->toArray() as $record) {
             foreach ($this->getMetadata()->get('multilang.languageList', []) as $locale) {
                 $row = [];
                 $field = Util::toCamelCase(strtolower($locale));
@@ -84,7 +84,8 @@ class Translation extends Base
         }
         // remove normalize number key to remove __integer
         $this->normalizeIntegerKey($preparedTranslationData);
-        file_put_contents($this->cacheFilePath, json_encode($preparedTranslationData));
+
+        return $preparedTranslationData;
     }
 
     public function refreshToDefault(): void
@@ -351,8 +352,6 @@ class Translation extends Base
         if (!empty($options['keepCache'])) {
             return;
         }
-
-//        $this->saveCacheFile($this->find()->toArray());
 
         $this->getInjection('language')->clearCache();
 

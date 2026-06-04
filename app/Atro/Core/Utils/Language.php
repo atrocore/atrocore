@@ -19,6 +19,7 @@ use Atro\Repositories\Translation as TranslationRepository;
 use Atro\Services\AbstractService;
 use Espo\Core\Utils\File\Unifier;
 use Atro\Entities\User;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 class Language
@@ -86,60 +87,69 @@ class Language
         $this->localeId = $localeId;
     }
 
-    public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
+    public function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
     {
-        if (is_array($label)) {
-            $translated = [];
-
-            foreach ($label as $subLabel) {
-                $translated[$subLabel] = $this->translate($subLabel, $category, $scope, $requiredOptions);
-            }
-
-            return $translated;
+        $translate = $this->getEntityManager()->getRepository('Translation')->findByCode("$scope.$category.$label");
+        if ($translate === null) {
+            return $label;
         }
 
-        $key = $scope . '.' . $category . '.' . $label;
-        $translated = $this->get($key);
-
-        if (!isset($translated)) {
-            $key = 'Global.' . $category . '.' . $label;
-            $translated = $this->get($key, $label);
-        }
-
-        if (is_array($translated) && isset($requiredOptions)) {
-
-            $translated = array_intersect_key($translated, array_flip($requiredOptions));
-
-            $optionKeys = array_keys($translated);
-            foreach ($requiredOptions as $option) {
-                if (!in_array($option, $optionKeys)) {
-                    $translated[$option] = $option;
-                }
-            }
-        }
-
-        return $translated;
+        return $this->resolveTranslation($translate) ?? $label;
     }
 
-    public function translateOption($value, $field, $scope = 'Global')
+    public function translateOption(string $value, string $field, string $scope = 'Global')
     {
-        $options = $this->get($scope . '.options.' . $field);
-        if (is_array($options) && array_key_exists($value, $options)) {
-            return $options[$value];
-        } else {
-            if ($scope !== 'Global') {
-                $options = $this->get('Global.options.' . $field);
-                if (is_array($options) && array_key_exists($value, $options)) {
-                    return $options[$value];
-                }
-            }
+        $translate = $this->getEntityManager()->getRepository('Translation')->findByCode("$scope.options.$field.$value");
+        if ($translate === null) {
+            return $value;
         }
-        return $value;
+
+        return $this->resolveTranslation($translate) ?? $value;
     }
 
-    public function get($key = null, $returns = null)
+    public function getAll()
     {
-        $data = $this->getData();
+        if (empty($this->data)) {
+            $this->init();
+        }
+
+        if (!empty($this->language)) {
+            $data = $this->data[self::DEFAULT_LANGUAGE];
+            if ($this->language !== self::DEFAULT_LANGUAGE) {
+                $data = Util::merge($this->data[self::DEFAULT_LANGUAGE], $this->data[$this->language]);
+            }
+        }
+
+        if (!empty($this->localeId)) {
+            $cacheName = "locale_{$this->localeId}";
+
+            $data = $this->getDataManager()->getCacheData($cacheName);
+            if (empty($data)) {
+                $data = $this->data[self::DEFAULT_LANGUAGE];
+                $locales = $this->getConfig()->get('locales') ?? [];
+
+                $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
+                if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
+                    $data = Util::merge($data, $this->data[$fallbackLanguage]);
+                }
+
+                $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+
+                if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
+                    $key = $locales[$this->localeId]['language'] . '_with_labels_in_content_language';
+                    if (array_key_exists($key, $this->data)) {
+                        $language = $key;
+                    }
+                }
+
+                if (array_key_exists($language, $this->data)) {
+                    $data = Util::merge($data, $this->data[$language]);
+                }
+
+                $this->getDataManager()->setCacheData($cacheName, $data);
+            }
+        }
+
         if (!empty($this->changedData)) {
             $data = Util::merge($data, $this->changedData);
         }
@@ -148,12 +158,7 @@ class Language
             return null;
         }
 
-        return Util::getValueByKey($data, $key, $returns);
-    }
-
-    public function getAll()
-    {
-        return $this->get();
+        return Util::getValueByKey($data);
     }
 
     public function save()
@@ -341,7 +346,7 @@ class Language
         $data = [];
 
         if ($installed) {
-            $data = $this->getEntityManager()->getRepository('Translation')->getPreparedTranslations();
+//            $data = $this->getEntityManager()->getRepository('Translation')->getPreparedTranslations();
         }
 
         if (empty($data)) {
@@ -384,56 +389,6 @@ class Language
                 ->dispatch('Language', 'modify', new Event(['data' => $this->data]))
                 ->getArgument('data');
         }
-    }
-
-    protected function getData()
-    {
-        if (empty($this->data)) {
-            $this->init();
-        }
-
-        if (!empty($this->language)) {
-            $data = $this->data[self::DEFAULT_LANGUAGE];
-            if ($this->language !== self::DEFAULT_LANGUAGE) {
-                $data = Util::merge($this->data[self::DEFAULT_LANGUAGE], $this->data[$this->language]);
-            }
-
-            return $data;
-        }
-
-        if (!empty($this->localeId)) {
-            $cacheName = "locale_{$this->localeId}";
-
-            $data = $this->getDataManager()->getCacheData($cacheName);
-            if (empty($data)) {
-                $data = $this->data[self::DEFAULT_LANGUAGE];
-                $locales = $this->getConfig()->get('locales') ?? [];
-
-                $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
-                if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
-                    $data = Util::merge($data, $this->data[$fallbackLanguage]);
-                }
-
-                $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
-
-                if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
-                    $key = $locales[$this->localeId]['language'] . '_with_labels_in_content_language';
-                    if (array_key_exists($key, $this->data)) {
-                        $language = $key;
-                    }
-                }
-
-                if (array_key_exists($language, $this->data)) {
-                    $data = Util::merge($data, $this->data[$language]);
-                }
-
-                $this->getDataManager()->setCacheData($cacheName, $data);
-            }
-
-            return $data;
-        }
-
-        return $this->data[self::DEFAULT_LANGUAGE];
     }
 
     public static function getLocalizedFieldName(Container $container, string $scope, string $fieldName): string
@@ -489,5 +444,43 @@ class Language
     protected function getConfig(): Config
     {
         return $this->container->get('config');
+    }
+
+    protected static function languageToField(string $language): string
+    {
+        return Util::toCamelCase(strtolower($language));
+    }
+
+    private function resolveTranslation(Entity $translate): ?string
+    {
+        if (empty($this->localeId)) {
+            return null;
+        }
+
+        $locales = $this->getConfig()->get('locales') ?? [];
+        $language = $locales[$this->localeId]['language'] ?? null;
+
+        if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
+            $key = $language . '_with_labels_in_content_language';
+            if (array_key_exists($key, $this->data)) {
+                $language = $key;
+            }
+        }
+
+        if (!empty($language)) {
+            $res = $translate->get(self::languageToField($language));
+            if ($res !== null) {
+                return $res;
+            }
+        }
+
+        if (!empty($locales[$this->localeId]['fallbackLanguage'])) {
+            $res = $translate->get(self::languageToField($locales[$this->localeId]['fallbackLanguage']));
+            if ($res !== null) {
+                return $res;
+            }
+        }
+
+        return $translate->get(self::languageToField(self::DEFAULT_LANGUAGE));
     }
 }
