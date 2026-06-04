@@ -37,13 +37,9 @@ The way Classifications and attributes interact on product records can be adjust
 
 Full descriptions of each option are in the [AtroCore Classifications documentation](../../01.atrocore/03.administration/12.attribute-management/04.classifications/index.md#enabling-classifications-for-an-entity).
 
-## Content Completeness
-
-For each Classification you can mark certain attributes as **Required**. This defines the minimum data a product must have to be considered complete. If the [Data Quality](https://store.atrocore.com/en/data-quality/20218) module is installed, the system automatically calculates a completeness score for each product based on how many of its required attributes have been filled in. This helps content managers identify and prioritize incomplete products before publication or export.
-
 ## Recommended Extensions
 
 - **[Advanced Classification](https://store.atrocore.com/en/advanced-classification/20110)** — adds greater control over attribute inheritance and classification-to-record relationships
 - **[ETIM Classification](https://store.atrocore.com/en/etim-classification/20132)** — enables working with the international ETIM standard for classifying technical products, relevant for the electrical and electronics industries
-- **[Data Quality](https://store.atrocore.com/en/data-quality/20218)** — tracks content completeness based on required attributes defined in Classifications
+- **[Data Quality](https://store.atrocore.com/en/data-quality/20218)** — tracks content completeness based on attributes defined in Classifications. Automatically calculates a completeness score per product based on filled-in attributes, helping teams identify and prioritize incomplete products before publication or export.
 - **[Translations](https://store.atrocore.com/en/translations/20191)** — provides automatic translation for multilingual Classification fields such as name and description
