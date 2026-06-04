@@ -68,6 +68,44 @@ Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
             }
         },
 
+        initInlineActions: function () {
+            Dep.prototype.initInlineActions.call(this);
+
+            this.listenTo(this, 'after:render', () => {
+                this.initUrlCopyAction();
+            }, this);
+        },
+
+        initUrlCopyAction: function () {
+            const value = this.model.get(this.name);
+            if (!value) return;
+
+            const $cell = this.getCellElement();
+            const $inlineActions = this.getInlineActionsContainer();
+
+            $inlineActions.find('.ph-copy-simple').parent().remove();
+
+            const $copyLink = $(`<a href="javascript:" class="copy-url hidden" title="${this.translate('Copy')}"><i class="ph ph-copy-simple"></i></a>`);
+
+            if ($inlineActions.size()) {
+                $inlineActions.prepend($copyLink);
+            } else {
+                $cell.prepend($copyLink);
+            }
+
+            $copyLink.on('click', () => {
+                this.copyToClipboard(value, () => this.notify('Copied', 'success'));
+            });
+
+            $cell.on('mouseenter', e => {
+                e.stopPropagation();
+                $copyLink.removeClass('hidden');
+            }).on('mouseleave', e => {
+                e.stopPropagation();
+                $copyLink.addClass('hidden');
+            });
+        },
+
         strip: function (value) {
             value = value.trim();
             if (value.indexOf('http://') === 0) {
