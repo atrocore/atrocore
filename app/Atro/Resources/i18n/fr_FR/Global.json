@@ -223,6 +223,7 @@
     "varcharPart": "(Chaine de caractères)",
     "unitPart": "(Unité)",
     "prefixPart": "(Préfixe)",
+    "availablePrefixes": "Préfixes disponibles",
     "inheritAllForChildren": "Hériter tout pour les éléments enfants",
     "inheritAllFromParent": "Hériter tout du parent",
     "homepage": "Page d'accueil",
@@ -796,7 +797,8 @@
     "massRestore": "Restauration en masse",
     "removeAttribute": "Supprimer un attribut",
     "compare": "Comparer",
-    "select": "Sélectionner"
+    "select": "Sélectionner",
+    "inheritAllFromParent": "Hériter tout du parent"
   },
   "dashlets": {
     "Stream": "Activités",
@@ -949,7 +951,8 @@
       "allValues": "Toutes les valeurs",
       "filled": "Rempli",
       "empty": "Vide",
-      "optional": "Optionel"
+      "optional": "Optionel",
+      "withDifferences": "Avec différences"
     },
     "dateSearchRanges": {
       "currentMonth": "Mois courant",

@@ -497,6 +497,7 @@
     "searchPanel": "Buscar",
     "unitPart": "(Unit)",
     "prefixPart": "(Prefijo)",
+    "availablePrefixes": "Prefijos disponibles",
     "unlinkAll": "Desenlazar todo",
     "addItem": "Agregar elemento",
     "accessManagement": "Access Management",
@@ -675,7 +676,8 @@
     "update": "Guardar",
     "export": "Exportar",
     "select": "Seleccionar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "inheritAllFromParent": "Heredar todo del padre"
   },
   "fields": {
     "number": "Número",
@@ -1019,7 +1021,8 @@
       "allValues": "Todos los valores",
       "filled": "Relleno",
       "empty": "Vacío",
-      "required": "Required"
+      "required": "Required",
+      "withDifferences": "Con diferencias"
     },
     "languageFilter": {
       "allLanguages": "Todas las lenguas",

@@ -193,6 +193,7 @@
     "floatPart": "(desetinné číslo)",
     "unitPart": "(Jednotka)",
     "prefixPart": "(Prefix)",
+    "availablePrefixes": "Dostupné předpony",
     "inheritAllForChildren": "Dědit vše pro podřízené položky",
     "inheritAllFromParent": "Dědit vše od rodiče",
     "homepage": "Domovská stránka",
@@ -791,7 +792,8 @@
     "download": "Stáhnout",
     "compare": "Porovnat",
     "removeAttribute": "Odstranění atributu",
-    "select": "Vybrat"
+    "select": "Vybrat",
+    "inheritAllFromParent": "Dědit vše od rodiče"
   },
   "dashlets": {
     "Records": "Seznam záznamů",
@@ -911,7 +913,8 @@
       "filled": "Vyplněno",
       "empty": "Prázdný",
       "optional": "Volitelně",
-      "required": "Požadované"
+      "required": "Požadované",
+      "withDifferences": "S rozdíly"
     },
     "languageFilter": {
       "main": "Hlavní jazyk",

@@ -79,9 +79,10 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
         prepareListOptions() {
             this.translatedOptions = {};
             this.originalOptionList = this.params.options = [];
+
             delete this.params.groupOptions;
 
-            if (!['fieldEqual', 'fieldSimilar', 'fieldContains'].includes(this.model.get('type'))) {
+            if (this.model.get('type') === 'set') {
                 return;
             }
 
@@ -100,6 +101,16 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
                 ];
                 this.params.options.push('_addAttribute');
                 this.translatedOptions['_addAttribute'] = this.translate('_addAttribute', 'labels', 'MatchingRule');
+
+                if (this.model.get('attributeId')) {
+                    let field = this.model.get('field');
+                    let fieldDefs = this.model.get('fieldDefs');
+
+                    this.getMetadata().data.entityDefs[entityName].fields[field] = fieldDefs;
+                    this.getLanguage().data[entityName] = this.getLanguage().data[entityName] || {};
+                    this.getLanguage().data[entityName].fields = this.getLanguage().data[entityName].fields || {};
+                    this.getLanguage().data[entityName].fields[field] = fieldDefs.label;
+                }
             }
 
             $.each(this.getMetadata().get(['entityDefs', entityName, 'fields'], {}), (field, fieldDefs) => {

@@ -545,28 +545,35 @@ class File extends Base
             $file->set('height', $image->getImageHeight());
             $file->set('heightUnitId', 'pixel');
 
-            $colorspaceName = match ($image->getImageColorspace()) {
-                Imagick::COLORSPACE_RGB => 'RGB',
-                Imagick::COLORSPACE_GRAY => 'Grayscale',
-                Imagick::COLORSPACE_TRANSPARENT => 'Transparent',
-                Imagick::COLORSPACE_OHTA => 'OHTA',
-                Imagick::COLORSPACE_LAB => 'LAB',
-                Imagick::COLORSPACE_XYZ => 'XYZ',
-                Imagick::COLORSPACE_YCBCR => 'YCbCr',
-                Imagick::COLORSPACE_YCC => 'YCC',
-                Imagick::COLORSPACE_YIQ => 'YIQ',
-                Imagick::COLORSPACE_YPBPR => 'YPbPr',
-                Imagick::COLORSPACE_YUV => 'YUV',
-                Imagick::COLORSPACE_CMYK => 'CMYK',
-                Imagick::COLORSPACE_SRGB => 'sRGB',
-                Imagick::COLORSPACE_HSB => 'HSB',
-                Imagick::COLORSPACE_HSL => 'HSL',
-                Imagick::COLORSPACE_HWB => 'HWB',
-                Imagick::COLORSPACE_REC601LUMA => 'Rec601Luma',
-                Imagick::COLORSPACE_REC709LUMA => 'Rec709Luma',
-                Imagick::COLORSPACE_LOG => 'Log',
-                default => 'Unknown'
-            };
+            $constNames = [
+                'COLORSPACE_RGB'         => 'RGB',
+                'COLORSPACE_GRAY'        => 'Grayscale',
+                'COLORSPACE_TRANSPARENT' => 'Transparent',
+                'COLORSPACE_OHTA'        => 'OHTA',
+                'COLORSPACE_LAB'         => 'LAB',
+                'COLORSPACE_XYZ'         => 'XYZ',
+                'COLORSPACE_YCBCR'       => 'YCbCr',
+                'COLORSPACE_YCC'         => 'YCC',
+                'COLORSPACE_YIQ'         => 'YIQ',
+                'COLORSPACE_YPBPR'       => 'YPbPr',
+                'COLORSPACE_YUV'         => 'YUV',
+                'COLORSPACE_CMYK'        => 'CMYK',
+                'COLORSPACE_SRGB'        => 'sRGB',
+                'COLORSPACE_HSB'         => 'HSB',
+                'COLORSPACE_HSL'         => 'HSL',
+                'COLORSPACE_HWB'         => 'HWB',
+                'COLORSPACE_REC601LUMA'  => 'Rec601Luma',
+                'COLORSPACE_REC709LUMA'  => 'Rec709Luma',
+                'COLORSPACE_LOG'         => 'Log'
+            ];
+
+            $colorspaceMap = [];
+            foreach ($constNames as $constName => $label) {
+                if (defined('Imagick::' . $constName)) {
+                    $colorspaceMap[constant('Imagick::' . $constName)] = $label;
+                }
+            }
+            $colorspaceName = $colorspaceMap[$image->getImageColorspace()] ?? 'Unknown';
             $file->set('colorSpace', $colorspaceName);
             $image->clear();
         } catch (\ImagickException $e) {

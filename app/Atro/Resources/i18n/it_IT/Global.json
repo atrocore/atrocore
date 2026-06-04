@@ -131,6 +131,7 @@
     "varcharPart": "(Stringa)",
     "unitPart": "(Unità)",
     "prefixPart": "(Prefisso)",
+    "availablePrefixes": "Prefissi disponibili",
     "inheritAllForChildren": "Eredita tutti gli elementi per i figli",
     "inheritAllFromParent": "Eredita tutto dal genitore",
     "homepage": "Homepage",
@@ -618,7 +619,8 @@
       "filled": "Riempito",
       "empty": "Vuoto",
       "optional": "Opzionale",
-      "required": "Richiesto"
+      "required": "Richiesto",
+      "withDifferences": "Con differenze"
     },
     "languageFilter": {
       "allLanguages": "Tutte le lingue",
@@ -986,7 +988,8 @@
     "download": "Scaricare",
     "compare": "Confronta",
     "removeAttribute": "Cancellare l'attributo",
-    "select": "Seleziona"
+    "select": "Seleziona",
+    "inheritAllFromParent": "Eredita tutto dal genitore"
   },
   "fields": {
     "__currentUser": "Utente attuale",

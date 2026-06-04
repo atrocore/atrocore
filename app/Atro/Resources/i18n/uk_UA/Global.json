@@ -520,6 +520,7 @@
     "Download": "Завантажити",
     "unitPart": "(Unit)",
     "prefixPart": "(Префікс)",
+    "availablePrefixes": "Доступні префікси",
     "Username can not be empty!": "Ім'я користувача не може бути порожнім!",
     "script": "Скрипт",
     "openLink": "Відкрити посилання",
@@ -686,7 +687,8 @@
     "compare": "Порівняння",
     "removeAttribute": "Видалити атрибут",
     "select": "Виберіть",
-    "deletePermanently": "Видалити назавжди"
+    "deletePermanently": "Видалити назавжди",
+    "inheritAllFromParent": "Успадкувати все від батьківського елементу"
   },
   "fields": {
     "number": "Номер",
@@ -967,7 +969,8 @@
       "filled": "Заповнені значення",
       "empty": "Порожні значення",
       "optional": "Необов'язковий",
-      "required": "Обов'язковий"
+      "required": "Обов'язковий",
+      "withDifferences": "З відмінностями"
     },
     "languageFilter": {
       "allLanguages": "Усі мови",

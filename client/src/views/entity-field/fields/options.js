@@ -197,6 +197,7 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 name: 'label',
                 mode: this.mode,
                 inlineEditDisabled: true,
+                entityName: this.model.name,
                 scope: this.model.get('entityId'),
                 field: this.model.get('code'),
                 params: {

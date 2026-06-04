@@ -76,12 +76,13 @@ class Attribute extends Base
 
         if (class_exists("\\Pim\\Module") && !empty($channels)) {
             $channelSqlParts = [];
-            foreach ($channels as $channelId) {
+            foreach ($channels as $k => $channelId) {
                 if ($channelId === 'withoutChannel') {
                     $channelSqlParts[] = "a.channel_id IS NULL";
                 } else {
-                    $channelSqlParts[] = "a.channel_id = :$channelId";
-                    $qb->setParameter($channelId, $channelId);
+                    $paramName         = "channelId{$k}";
+                    $channelSqlParts[] = "a.channel_id = :$paramName";
+                    $qb->setParameter($paramName, $channelId);
                 }
             }
             $qb->andWhere(implode(' OR ', $channelSqlParts));
@@ -388,7 +389,7 @@ class Attribute extends Base
             $value = json_encode($value);
         }
 
-        if($value === null && isset($entity->entityDefs['fields'][$fieldName]['default'])) {
+        if ($value === null && isset($entity->entityDefs['fields'][$fieldName]['default'])) {
             $value = $entity->entityDefs['fields'][$fieldName]['default'];
         }
 
@@ -783,6 +784,11 @@ class Attribute extends Base
                     ->setParameter('attributeId', $entity->get('id'))
                     ->executeStatement();
             }
+        }
+
+        if (in_array($entity->get('type'), ['enum', 'multiEnum']) && $entity->has('translatedOptions')) {
+            $this->getLanguage()->set($entity->get('entityId'), 'options', $entity->get('code'), (array)$entity->get('translatedOptions'));
+            $this->getLanguage()->save();
         }
     }
 

@@ -43,10 +43,12 @@ Espo.define('views/classification-attribute/fields/attribute', 'views/fields/lin
 
         setAttributeData() {
             this.model.set('attributeType', null);
+            this.model.set('attributeEntityType', null);
 
             if (this.model.get('attributeId')) {
                 this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attribute => {
                     this.model.set('attributeType', attribute.type);
+                    this.model.set('attributeEntityType', attribute.entityType ?? null);
                     this.model.set('attributeMeasureId', attribute.measureId);
                     this.model.set('attributeNotNull', attribute.notNull);
                     this.model.set('maxLength', attribute.maxLength);

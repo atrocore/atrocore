@@ -521,6 +521,7 @@
     "script": "Script",
     "unitPart": "(Maßeinheit)",
     "prefixPart": "(Präfix)",
+    "availablePrefixes": "Verfügbare Präfixe",
     "Details": "Details",
     "Filter": "Filter",
     "openLink": "Link öffnen",
@@ -730,7 +731,8 @@
     "download": "Nachladen",
     "compare": "Vergleichen Sie",
     "removeAttribute": "Attribut löschen",
-    "select": "Wählen"
+    "select": "Wählen",
+    "inheritAllFromParent": "Vererben alles von Eltern"
   },
   "fields": {
     "number": "Nummer",
@@ -1032,7 +1034,8 @@
       "filled": "Ausgefüllte Werte",
       "empty": "Leere Werte",
       "optional": "Optional",
-      "required": "Erforderlich"
+      "required": "Erforderlich",
+      "withDifferences": "Mit Unterschieden"
     },
     "languageFilter": {
       "allLanguages": "Alle Sprachen",

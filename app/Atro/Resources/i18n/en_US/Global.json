@@ -168,6 +168,7 @@
   "labels": {
     "purgeAll": "Purge all clusters",
     "entityFilterResult": "Filter Result",
+    "availablePrefixes": "Available Prefixes",
     "System": "System",
     "matchings": "Matchings",
     "addFields": "Add Fields",
@@ -690,7 +691,8 @@
     "download": "Download",
     "compare": "Compare",
     "removeAttribute": "Delete Attribute",
-    "select": "Select"
+    "select": "Select",
+    "inheritAllFromParent": "Inherit all from parent"
   },
   "fields": {
     "__currentUser": "Current User",
@@ -972,7 +974,8 @@
       "filled": "Filled",
       "empty": "Empty",
       "optional": "Optional",
-      "required": "Required"
+      "required": "Required",
+      "withDifferences": "With differences"
     },
     "languageFilter": {
       "allLanguages": "All Languages",

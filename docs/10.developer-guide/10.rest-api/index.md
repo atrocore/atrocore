@@ -373,41 +373,6 @@ For array fields:
 
 ------------------------------------------------------------------------
 
-#### Special Case: List Options (`ExtensibleEnumOption`)
-
-If a link field references a `ExtensibleEnumOption` entity, the system
-automatically resolves the correct list during creation.
-
-##### How It Works
-
-When creating or linking an option:
-
-1.  The system determines the correct list associated with the field.
-2.  It searches for the option inside that specific list.
-3.  If found --- links the existing option.
-4.  If not found --- creates a new option inside that list.
-5.  The option is linked to the main entity.
-
-###### Example
-
-``` json
-{
-  "status": {
-    "name": "In Progress"
-  }
-}
-```
-
-If `status` is linked to `ExtensibleEnumOption`:
-
--   The system automatically determines which list belongs to `status`.
--   `listId` is not required.
--   The option is created in the correct list if missing.
-
-> Option lookup is always restricted to the list configured for the field.
-
-------------------------------------------------------------------------
-
 #### Matching Rules
 
 The provided object fields are used for:
@@ -844,9 +809,7 @@ For advanced use cases, attributes can be retrieved and updated as part of the e
 
 ##### Attribute Basics
 
-Each attribute is stored with a unique internal ID and may optionally have a **code**. When a code is defined, it is used as the key name for the virtual field in API responses. If no code is provided, the attribute ID is used instead.
-
-> Define a `code` for each attribute to produce more readable, developer-friendly API responses.
+Each attribute is stored with a unique internal ID and a **code** (required). The code is used as the key name for the virtual field in API responses.
 
 An attribute may generate **multiple virtual fields** depending on its type. For example, a price attribute with a unit might result in a float field (e.g., `priceAmount`), a unit ID field (e.g., `priceAmountUnitId`), a unit name field, and additional supporting fields.
 
@@ -966,9 +929,9 @@ For [List Option](../../01.atrocore/03.administration/08.lists/index.md#list-opt
 - Use the **simple endpoints** (`/attributeValues`, `/addAttributes`, `/upsertAttributeValues`) for the recommended integration approach — these are fully described in the OpenAPI schema.
 - Use the **flattened format** only for advanced use cases — this approach is not in the OpenAPI schema and is documented here only.
 - One attribute may produce multiple virtual fields (value, unit, etc.).
-- Use attribute codes for clean, readable keys in your payloads.
+- Each attribute has a required **code**, which is used as the key name for its virtual field(s).
 - Attributes not mentioned in an update request remain unchanged.
-- To add attributes in flattened format, use `__attributes` with an array of attribute IDs or codes.
+- To add attributes in flattened format, use `__attributes` with an array of attribute codes or IDs.
 
 
 ## The `With-Meta` Header
