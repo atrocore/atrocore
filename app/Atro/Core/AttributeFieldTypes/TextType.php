@@ -42,9 +42,9 @@ class TextType extends AbstractFieldType
         $attributeData = !empty($row['data']) ? @json_decode($row['data'], true)['field'] ?? null : null;
 
         // Resolve once per attribute — avoids repeated detectLocale + getEntity calls inside prepareKey
-        $nameKey       = $this->prepareKey('name', $row);
-        $tooltipKey    = $this->prepareKey('tooltip', $row);
-        $conditionals  = $this->prepareConditionalProperties($row);
+        $nameKey      = $this->prepareKey('name', $row);
+        $tooltipKey   = $this->prepareKey('tooltip', $row);
+        $conditionals = $this->prepareConditionalProperties($row);
 
         $entity->fields[$name] = [
             'type'                     => $this->type,
@@ -203,7 +203,7 @@ class TextType extends AbstractFieldType
                 'conditionalProperties'     => $conditionals,
                 'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
             ];
-            $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
+            $attributesDefs[$name . 'Unit']               = $entity->entityDefs['fields'][$name . 'Unit'];
 
             $entity->entityDefs['fields'][$name . 'UnitId'] = [
                 'label' => "{$row[$nameKey]} " . $this->language->translate('unitPart'),
@@ -214,9 +214,9 @@ class TextType extends AbstractFieldType
             $where = $this->extractPrefixWhere($row['data'] ?? null);
 
             $entity->entityDefs['fields'][$name]['prefixEnabled'] = true;
-            $entity->entityDefs['fields'][$name]['where']   = $where;
+            $entity->entityDefs['fields'][$name]['where']         = $where;
 
-            $entity->fields[$name . 'PrefixId'] = [
+            $entity->fields[$name . 'PrefixId']   = [
                 'type'        => 'varchar',
                 'name'        => $name,
                 'attributeId' => $id,
@@ -234,17 +234,17 @@ class TextType extends AbstractFieldType
             }
 
             $entity->entityDefs['fields'][$name . 'Prefix'] = [
-                'type'                => 'link',
-                'label'               => "{$row[$nameKey]} " . $this->language->translate('prefixPart'),
-                'entity'              => 'Prefix',
-                'prefixEnabled'       => true,
-                'where'         => $where,
-                'prefixIdField'       => true,
-                'mainField'           => $name,
-                'attributeId'         => $id,
+                'type'                 => 'link',
+                'label'                => "{$row[$nameKey]} " . $this->language->translate('prefixPart'),
+                'entity'               => 'Prefix',
+                'prefixEnabled'        => true,
+                'where'                => $where,
+                'prefixIdField'        => true,
+                'mainField'            => $name,
+                'attributeId'          => $id,
                 'layoutDetailDisabled' => true,
             ];
-            $attributesDefs[$name . 'Prefix'] = $entity->entityDefs['fields'][$name . 'Prefix'];
+            $attributesDefs[$name . 'Prefix']               = $entity->entityDefs['fields'][$name . 'Prefix'];
         }
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
@@ -259,7 +259,7 @@ class TextType extends AbstractFieldType
         $this->cachedLanguages = [];
         if (!empty($this->config->get('isMultilangActive'))) {
             $referenceLanguages = $this->config->get('referenceData.Language', []);
-            $codeToName = [];
+            $codeToName         = [];
             foreach ($referenceLanguages as $v) {
                 $codeToName[$v['code']] = $v['name'];
             }
@@ -371,6 +371,28 @@ class TextType extends AbstractFieldType
                     $this->convertSubquery($entity, 'Unit', $item);
                 }
                 $item['attribute'] = 'referenceValue';
+            }
+        } else if (str_ends_with($item['attribute'], 'PrefixId')) {
+            if ($item['type'] === 'isNull') {
+                $item = [
+                    'type'  => 'or',
+                    'value' => [
+                        [
+                            'type'      => 'equals',
+                            'attribute' => 'prefixValue',
+                            'value'     => ''
+                        ],
+                        [
+                            'type'      => 'isNull',
+                            'attribute' => 'prefixValue'
+                        ],
+                    ]
+                ];
+            } else {
+                if (!empty($item['subQuery'])) {
+                    $this->convertSubquery($entity, 'Prefix', $item);
+                }
+                $item['attribute'] = 'prefixValue';
             }
         } else {
             $item['attribute'] = Util::toCamelCase($this->column);
