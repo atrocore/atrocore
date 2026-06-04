@@ -51,6 +51,8 @@ Each user has the following core properties:
 - **Default Team**: Sets the primary team for the user
 - **Disable Action Logging**: Prevents tracking of user actions in [Action History](../04.action-history/)
 
+> For users with a Global Administrator, User Administrator or Role Administrator level of access, the 'Administration' interface is not available. We recommend creating special [layot profiles](../../13.user-interface/02.layouts/index.md#layout-profiles) for such users, with links to the relevant entities for executing the relevant administrator functions.
+
 **Security**:
 
 The Security section is only visible during user creation and provides essential account setup options:
