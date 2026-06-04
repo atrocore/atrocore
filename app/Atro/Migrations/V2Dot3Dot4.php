@@ -12,8 +12,10 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
+use Doctrine\DBAL\Schema\Schema;
 
 class V2Dot3Dot4 extends Base
 {
@@ -24,6 +26,25 @@ class V2Dot3Dot4 extends Base
 
     public function up(): void
     {
+        foreach (['equal' => 'fieldEqual', 'similar' => 'fieldSimilar', 'contains' => 'fieldContains'] as $old => $new) {
+            $this->getDbal()->createQueryBuilder()
+                ->update('matching_rule')
+                ->set('type', ':new')
+                ->where('type = :old')
+                ->setParameter('new', $new)
+                ->setParameter('old', $old)
+                ->executeQuery();
+        }
+
+        $this->exec("ALTER TABLE matching_rule ADD attribute_id VARCHAR(36) DEFAULT NULL");
+
+        $this->migrateOptionsToMetadata();
+
+        $this->createPrefixTable();
+        $this->addPrefixEnabledToAttribute();
+        $this->addPrefixValueToAttributeValue();
+        $this->renameUnitFieldsInLayouts();
+
         $this->migrateExtensibleEnumsToLinks();
         $this->migrateAttributeTypes();
         $this->createCustomExtensibleEnumEntity();
@@ -690,10 +711,360 @@ class V2Dot3Dot4 extends Base
         ];
     }
 
-    protected function exec(string $sql): void
+    // extensibleEnumId => [systemOptions, [Entity => fieldName]]
+    private array $map = [
+        // atrocore
+        'gender'                  => [['Male', 'Female', 'Neutral'],                                                                                                  ['User' => 'gender', 'Contact' => 'gender', 'Prospect' => 'gender']],
+        'role'                    => [['supplier', 'customer'],                                                                                                        ['Account' => 'role', 'Prospect' => 'role']],
+        'addressType'             => [['billing', 'delivery'],                                                                                                        ['Address' => 'type']],
+        'product_group_item_type' => [['physical_goods', 'services', 'digital_products', 'legal_rights'],                                                             ['ProductGroup' => 'itemType']],
+        'team_position'           => [[],                                                                                                                             ['TeamUser' => 'role']],
+        'update_type'             => [['basic', 'script'],                                                                                                            ['Action' => 'updateType']],
+        'content_items'           => [['highlight', 'top_features_list', 'story'],                                                                                    ['ContentItem' => 'type']],
+        'listing_status'          => [['listing_draft', 'listing_prepared', 'buyable', 'discoverable', 'listing_error'],                                             ['Listing' => 'status']],
+        'pdfTemplateType'         => [['pdfTemplateHtml', 'pdfTemplateODT', 'pdfTemplateCatalog'],                                                                    ['PdfFeed' => 'type']],
+        'budget_item_status'      => [[],                                                                                                                             ['BudgetItem' => 'status']],
+        // sales
+        'saleStatus'              => [['new', 'approved', 'in_progress', 'fulfilled', 'provided', 'partly_invoiced', 'invoiced', 'cancelled'],                        ['Sale' => 'status', 'Settings' => 'consideredSaleStatuses']],
+        'billingStatus'           => [['openBillingStatus', 'inProgressBS', 'cancelledBS', 'partlyBilledBS', 'billedBS'],                                             ['Sale' => 'billingStatus']],
+        'shippingStatus'          => [['openShippingStatus', 'cancelledShippingStatus', 'returnedShippingStatus', 'shippedShippingStatus'],                           ['Sale' => 'shippingStatus']],
+        'shippingMethod'          => [[],                                                                                                                             ['Sale' => 'shippingMethod']],
+        'documentType'            => [['documentTypeSection', 'documentTypeGroup', 'documentTypeItem', 'documentTypeNote', 'documentTypeSubtotal'],                   ['SaleItem' => 'type', 'QuotationItem' => 'type', 'SubscriptionItem' => 'type', 'InvoiceItem' => 'type', 'DebitNoteItem' => 'type', 'CreditNoteItem' => 'type']],
+        'saleItemStatus'          => [['newSIS', 'approvedSIS', 'inProgressSIS', 'fulfilledSIS', 'invoicedSIS', 'cancelledSIS'],                                      ['SaleItem' => 'status']],
+        'saleReturnStatus'        => [['newSaleReturnStatus', 'dispatchedSRS', 'returnedSRS'],                                                                        ['SaleReturn' => 'status']],
+        'quotationStatus'         => [['newQuotationStatus', 'approvedQuotationStatus', 'negotiatingQS', 'acceptedQS', 'rejectedQS', 'cancelledQuotationStatus'],     ['Quotation' => 'status']],
+        'prospectStatus'          => [['newPS', 'contactedPS', 'engagedPS', 'qualifiedPS', 'processingPS', 'quotedPS', 'followUpPS', 'wonPS', 'lostPS', 'disqualifiedPS'], ['Prospect' => 'status']],
+        'confirmationStatus'      => [['newCS', 'sentCS'],                                                                                                            ['OrderConfirmation' => 'status']],
+        'recurringPeriod'         => [['days', 'weeks', 'months', 'years'],                                                                                           ['Subscription' => 'recurringPeriod', 'RecurringPrice' => 'recurringPeriod']],
+        'paymentSchedule'         => [['advancedPSchedule', 'deferredPSchedule'],                                                                                     ['Subscription' => 'paymentSchedule']],
+        'subscriptionStatus'      => [['newSubscriptionStatus', 'activeSS', 'cancelledSS', 'pausedSS'],                                                               ['Subscription' => 'status']],
+        // accounting
+        'invoiceType'             => [['standardInvoiceType', 'correctionInvoiceType', 'proformaInvoiceType'],                                                         ['Invoice' => 'type']],
+        'debitNoteType'           => [['standardDebitNoteType', 'correctionDNT', 'priceIncreaseDNT', 'commissionDNT'],                                                 ['DebitNote' => 'type']],
+        'creditNoteType'          => [['standardCNT', 'priceReductionCNT', 'correctionCNT', 'commissionCNT'],                                                          ['CreditNote' => 'type']],
+        'invoiceStatus'           => [['draftInvoiceStatus', 'readyInvoiceStatus', 'sentInvoiceStatus', 'paidInvoiceStatus', 'canceledInvoiceStatus', 'unpaidInvoiceStatus'], ['Invoice' => 'status', 'DebitNote' => 'status', 'CreditNote' => 'status']],
+        // inventory
+        'locationType'            => [['warehouseID', 'areaId', 'positionId'],                                                                                        ['Location' => 'type']],
+        'deliveryStatus'          => [['newDeliveryStatus', 'dispatchedDeliveryStatus', 'shippedDeliveryStatus'],                                                      ['Delivery' => 'status']],
+        // activities
+        'task_status'             => [['task_status_new', 'task_status_in_progress', 'task_status_done', 'task_status_cancelled'],                                     ['Task' => 'status']],
+        'task_priority'           => [['task_priority_normal', 'task_priority_low', 'task_priority_high'],                                                             ['Task' => 'priority']],
+        // components
+        'componentStatus'         => [['component_draft', 'component_draft_warning', 'component_prepared', 'component_accepted', 'component_rejected', 'component_approved', 'component_error'], ['Component' => 'status']],
+        // amazon-adapter
+        'componentChannelStatus'  => [['component_draft', 'component_accepted', 'component_rejected', 'component_approved'],                                          ['ComponentChannel' => 'status']],
+    ];
+
+    private function migrateOptionsToMetadata(): void
+    {
+        $additionalLocales = $this->getAdditionalLocales();
+        $translations      = $this->loadTranslations();
+
+        foreach ($this->map as $enumId => [$systemOptions, $entityFields]) {
+            if (empty($entityFields)) {
+                continue;
+            }
+
+            foreach ($entityFields as $entity => $field) {
+                $tableName = Util::toUnderScore(lcfirst($entity));
+                $columnName = Util::toUnderScore(lcfirst($field));
+
+                if ($this->isPgSQL()) {
+                    $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " ALTER $columnName TYPE VARCHAR(255)");
+                } else {
+                    $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " CHANGE $columnName $columnName VARCHAR(255) DEFAULT NULL");
+                }
+            }
+
+            $allOptions    = $this->getEnumOptionsWithNames($enumId, $additionalLocales);
+            $customOptions = array_filter($allOptions, fn($row) => !in_array($row['id'], $systemOptions));
+
+            if (empty($customOptions)) {
+                continue;
+            }
+
+            // Write option IDs to data/metadata/entityDefs
+            $ids = array_column(array_values($customOptions), 'id');
+            foreach ($entityFields as $entity => $field) {
+                $file = 'data/metadata/entityDefs/' . $entity . '.json';
+                $data = file_exists($file) ? json_decode(file_get_contents($file), true) ?? [] : [];
+                $data['fields'][$field]['options'] = array_merge(['__APPEND__'], $ids);
+                file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            }
+
+            // Write translations for each custom option into Translation.json
+            foreach ($customOptions as $row) {
+                $optionId = $row['id'];
+                foreach ($entityFields as $entity => $field) {
+                    $code = "$entity.options.$field.$optionId";
+                    if (!isset($translations[$code])) {
+                        $translations[$code] = [
+                            'id'          => md5($code),
+                            'code'        => $code,
+                            'module'      => 'custom',
+                            'isCustomized' => true,
+                            'createdAt'   => date('Y-m-d H:i:s'),
+                        ];
+                    }
+                    // Main name → enUs
+                    $translations[$code]['enUs'] = $row['name'];
+                    // Additional locales: name_de_de → deDe
+                    foreach ($additionalLocales as $locale) {
+                        $dbCol   = 'name_' . strtolower($locale);           // name_de_de
+                        $jsonKey = $this->localeToCamel($locale);            // deDe
+                        if (!empty($row[$dbCol])) {
+                            $translations[$code][$jsonKey] = $row[$dbCol];
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->saveTranslations($translations);
+    }
+
+    private function getAdditionalLocales(): array
+    {
+        $file = 'data/reference-data/Language.json';
+        if (!file_exists($file)) {
+            return [];
+        }
+
+        $locales = [];
+        foreach (json_decode(file_get_contents($file), true) ?? [] as $row) {
+            if (($row['role'] ?? '') === 'additional' && !empty($row['code'])) {
+                $locales[] = $row['code'];
+            }
+        }
+
+        return $locales;
+    }
+
+    private function loadTranslations(): array
+    {
+        $file = 'data/reference-data/Translation.json';
+
+        return file_exists($file) ? json_decode(file_get_contents($file), true) ?? [] : [];
+    }
+
+    private function saveTranslations(array $translations): void
+    {
+        file_put_contents(
+            'data/reference-data/Translation.json',
+            json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+        );
+    }
+
+    private function localeToCamel(string $locale): string
+    {
+        // 'de_DE' → 'deDe',  'uk_UA' → 'ukUa'
+        $parts = explode('_', strtolower($locale));
+
+        return $parts[0] . ucfirst($parts[1] ?? '');
+    }
+
+    private function getEnumOptionsWithNames(string $enumId, array $additionalLocales): array
+    {
+        try {
+            $langCols = implode(', ', array_map(
+                fn($l) => 'eeo.name_' . strtolower($l),
+                $additionalLocales
+            ));
+            $select = 'eeo.id, eeo.name' . ($langCols ? ", $langCols" : '');
+
+            $stmt = $this->getPDO()->prepare("
+                SELECT $select
+                FROM extensible_enum_option eeo
+                INNER JOIN extensible_enum_extensible_enum_option eeeeo
+                    ON eeeeo.extensible_enum_option_id = eeo.id
+                WHERE eeeeo.extensible_enum_id = :enumId
+                  AND eeo.deleted = false
+                  AND eeeeo.deleted = false
+                ORDER BY eeeeo.sorting ASC, eeo.id ASC
+            ");
+            $stmt->execute([':enumId' => $enumId]);
+
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    private function createPrefixTable(): void
+    {
+        $fromSchema = $this->getSchema();
+        $toSchema   = clone $fromSchema;
+
+        if ($toSchema->hasTable('prefix')) {
+            return;
+        }
+
+        $table = $toSchema->createTable('prefix');
+        $table->addColumn('id', 'string', ['length' => 36, 'notnull' => true]);
+        $table->addColumn('name', 'string', ['length' => 255, 'notnull' => false, 'default' => null]);
+        $table->addColumn('value', 'string', ['length' => 255, 'notnull' => false, 'default' => null]);
+        $table->addColumn('deleted', 'boolean', ['notnull' => false, 'default' => false]);
+        $table->addColumn('created_at', 'datetime', ['notnull' => false, 'default' => null]);
+        $table->addColumn('modified_at', 'datetime', ['notnull' => false, 'default' => null]);
+        $table->addColumn('created_by_id', 'string', ['length' => 36, 'notnull' => false, 'default' => null]);
+        $table->addColumn('modified_by_id', 'string', ['length' => 36, 'notnull' => false, 'default' => null]);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['name', 'deleted'], 'IDX_PREFIX_NAME');
+        $table->addIndex(['created_by_id', 'deleted'], 'IDX_PREFIX_CREATED_BY_ID');
+        $table->addIndex(['modified_by_id', 'deleted'], 'IDX_PREFIX_MODIFIED_BY_ID');
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->exec($sql);
+        }
+    }
+
+    private function addPrefixEnabledToAttribute(): void
+    {
+        $fromSchema = $this->getSchema();
+        $toSchema   = clone $fromSchema;
+
+        if (!$toSchema->hasTable('attribute')) {
+            return;
+        }
+
+        $table = $toSchema->getTable('attribute');
+
+        if (!$table->hasColumn('prefix_enabled')) {
+            $table->addColumn('prefix_enabled', 'boolean', ['notnull' => true, 'default' => false]);
+        }
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->exec($sql);
+        }
+    }
+
+    private function addPrefixValueToAttributeValue(): void
+    {
+        $fromSchema = $this->getSchema();
+        $toSchema   = clone $fromSchema;
+
+        foreach ($toSchema->getTables() as $table) {
+            if (!str_ends_with($table->getName(), '_attribute_value')) {
+                continue;
+            }
+
+            if (!$table->hasColumn('prefix_value')) {
+                $table->addColumn('prefix_value', 'string', ['length' => 36, 'notnull' => false, 'default' => null]);
+                $table->addIndex(['prefix_value', 'deleted'], Converter::generateIndexName($table->getName(), 'prefixValue'));
+            }
+        }
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->exec($sql);
+        }
+    }
+
+    private function renameUnitFieldsInLayouts(): void
+    {
+        // layout_list_item has attribute_id, so we can check attribute-based items
+        $listItems = $this->fetchRows("
+            SELECT lli.id, lli.name, lli.attribute_id, l.entity
+            FROM layout_list_item lli
+            JOIN layout l ON l.id = lli.layout_id AND l.deleted = false
+            WHERE lli.deleted = false
+              AND lli.name LIKE 'unit%'
+        ");
+
+        foreach ($listItems as $item) {
+            if ($this->shouldRename($item['name'], $item['entity'], $item['attribute_id'])) {
+                $newName = 'combined' . substr($item['name'], 4);
+                $this->updateName('layout_list_item', $item['id'], $newName);
+            }
+        }
+
+        // layout_row_item has no attribute_id, entity column check only
+        $rowItems = $this->fetchRows("
+            SELECT lri.id, lri.name, l.entity
+            FROM layout_row_item lri
+            JOIN layout_section ls ON ls.id = lri.section_id AND ls.deleted = false
+            JOIN layout l ON l.id = ls.layout_id AND l.deleted = false
+            WHERE lri.deleted = false
+              AND lri.name LIKE 'unit%'
+        ");
+
+        foreach ($rowItems as $item) {
+            if ($this->shouldRename($item['name'], $item['entity'], null)) {
+                $newName = 'combined' . substr($item['name'], 4);
+                $this->updateName('layout_row_item', $item['id'], $newName);
+            }
+        }
+    }
+
+    private function shouldRename(string $name, ?string $entity, ?string $attributeId): bool
+    {
+        if (strlen($name) <= 4) {
+            return false;
+        }
+
+        $fieldName = lcfirst(substr($name, 4)); // "unitHeight" → "height"
+
+        if (!empty($attributeId)) {
+            return $this->attributeMatchesFieldName($attributeId, $fieldName);
+        }
+
+        if (empty($entity)) {
+            return false;
+        }
+
+        $tableName  = Util::toUnderScore(lcfirst($entity));
+        $columnName = Util::toUnderScore($fieldName);
+        $schema     = $this->getSchema();
+
+        return $schema->hasTable($tableName)
+            && $schema->getTable($tableName)->hasColumn($columnName);
+    }
+
+    private function attributeMatchesFieldName(string $attributeId, string $fieldName): bool
+    {
+        try {
+            $stmt = $this->getPDO()->prepare("
+                SELECT id FROM attribute
+                WHERE id = :id
+                  AND (code = :fieldName OR id = :fieldName)
+                  AND deleted = false
+            ");
+            $stmt->execute([':id' => $attributeId, ':fieldName' => $fieldName]);
+            return $stmt->fetchColumn() !== false;
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    private function getSchema(): Schema
+    {
+        if ($this->currentSchema === null) {
+            $this->currentSchema = $this->getCurrentSchema();
+        }
+        return $this->currentSchema;
+    }
+
+    private function exec(string $sql): void
     {
         try {
             $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+        }
+    }
+
+    private function fetchRows(string $sql): array
+    {
+        try {
+            return $this->getPDO()->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    private function updateName(string $table, string $id, string $newName): void
+    {
+        try {
+            $stmt = $this->getPDO()->prepare("UPDATE {$table} SET name = :name WHERE id = :id");
+            $stmt->execute([':name' => $newName, ':id' => $id]);
         } catch (\Throwable $e) {
         }
     }

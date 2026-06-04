@@ -103,8 +103,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.refresh();
             });
 
-            this.listenTo(this, 'refresh', () => {
-                this.refresh();
+            this.listenTo(this, 'refresh', (options) => {
+                this.refresh(options?.noReload ?? false);
             });
 
             this.listenTo(this.model, 'init-collection:' + this.link, (collection) => {
@@ -134,9 +134,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.notify(this.translate('Loading...'));
         },
 
-        refresh() {
+        refresh(noReload = false) {
             this.notify(this.translate('Loading...'));
-            if (['compare', 'merge'].includes(this.selectionViewMode)) {
+            if (['compare', 'merge'].includes(this.selectionViewMode) && !noReload) {
                 this.reloadModels(() => {
                     if (this.selectionItemModels.length < 2) {
                         this.selectionViewMode = 'standard'

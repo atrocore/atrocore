@@ -48,16 +48,12 @@ class AttributeFieldConverter
 
     public static function isValidCode(string $code): bool
     {
-        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $code) === 1;
+        return preg_match('/^[a-zA-Z0-9_-]*$/', $code) === 1;
     }
 
     public static function prepareFieldName(array $row): string
     {
-        if (!empty($row['code']) && self::isValidCode($row['code'])) {
-            return $row['code'];
-        }
-
-        return $row['id'];
+        return $row['code'];
     }
 
     public static function getAttributeIdFromFieldName(string $name): string
@@ -326,6 +322,14 @@ class AttributeFieldConverter
                             foreach ($classificationAttributeData['field'] as $param => $paramValue) {
                                 $attributeData['field'][$param] = $paramValue;
                             }
+                        }
+
+                        if (!empty($classificationAttributeData['where'])
+                            && !empty($classificationAttributeData['whereScope'])
+                            && in_array($attribute['type'], ['link', 'linkMultiple'])
+                            && ($attributeData['field']['entityType'] ?? null) === $classificationAttributeData['whereScope']
+                        ) {
+                            $attributeData['where'] = $classificationAttributeData['where'];
                         }
 
                         $res[$k]['data'] = json_encode($attributeData);

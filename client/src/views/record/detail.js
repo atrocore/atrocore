@@ -1732,10 +1732,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             const fieldFilter = this.getStorage().get('fieldFilter', this.scope) || ['allValues'];
+            const fieldHideMap = {};
 
             $.each(this.getFieldViews(), (name, fieldView) => {
                 name = fieldView.name || name
                 if (fieldView.model.getFieldParam(name, 'advancedFilterDisabled') === true) {
+                    return;
+                }
+
+                // attribute group headers have no real values; handle them after the main loop
+                if (fieldView.isAttributeGroupLayoutItem) {
                     return;
                 }
 
@@ -1766,7 +1772,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
 
+                fieldHideMap[name] = hide;
                 this.controlFieldVisibility(fieldView, hide);
+            });
+
+            // Show attribute group headers only when at least one field in the group is visible
+            const attributesDefs = this.model.get('attributesDefs') || {};
+            $.each(this.getFieldViews(), (key, groupHeaderView) => {
+                if (!groupHeaderView.isAttributeGroupLayoutItem) {
+                    return;
+                }
+                const headerName = groupHeaderView.name || key;
+                const underscoreIdx = headerName.indexOf('_');
+                if (underscoreIdx === -1) return;
+                const attributeGroupId = headerName.substring(underscoreIdx + 1);
+                const anyVisible = Object.keys(attributesDefs).some(fieldName => {
+                    const def = attributesDefs[fieldName];
+                    return def?.attributeGroup?.id === attributeGroupId && fieldHideMap[fieldName] !== true;
+                });
+                this.controlFieldVisibility(groupHeaderView, !anyVisible);
             });
         },
 
@@ -3129,6 +3153,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             if (!this.model.isNew() && this.getMetadata().get(['entityDefs', this.scope, 'fields', 'cluster'])) {
                 props.showCluster = true;
+                props.clusterId = this.model.get('clusterId') || '';
+
+                this.listenTo(this.model, 'sync', () => {
+                    if (window.SvelteEntityContextPanel?.$set) {
+                        window.SvelteEntityContextPanel.$set('clusterId', this.model.get('clusterId'));
+                    }
+                });
             }
 
             return props;

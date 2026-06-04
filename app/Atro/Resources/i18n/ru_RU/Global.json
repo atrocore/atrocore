@@ -503,6 +503,7 @@
     "Start": "Начните",
     "unitPart": "(Unit)",
     "prefixPart": "(Префикс)",
+    "availablePrefixes": "Доступные префиксы",
     "unselectAll": "Отменить выбор Все",
     "splitHorizontal": "Горизонтальное разделение",
     "splitVertical": "Разделить по вертикали",
@@ -953,7 +954,8 @@
       "filled": "Заполненые значения",
       "empty": "Пустые значения",
       "optional": "Необязательный",
-      "required": "Обязательный"
+      "required": "Обязательный",
+      "withDifferences": "С различиями"
     },
     "languageFilter": {
       "allLanguages": "Все языки",

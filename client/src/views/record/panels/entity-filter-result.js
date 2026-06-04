@@ -22,6 +22,7 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                 this.entityField = this?.options?.defs?.entityField || 'searchEntity';
 
                 this.scope = this.resolveScope();
+                this.defs.label = this.resolvePanelName();
                 this.url = this.scope;
                 this.model.defs.links.entityFilterResult = {
                     entity: this.scope,
@@ -83,6 +84,7 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                 this.listenTo(this.model, 'change:prefixEnabled', () => {
                     const newScope = this.resolveScope();
                     this.scope = newScope;
+                    this.defs.label  = this.resolvePanelName();
                     this.url = newScope;
                     this.model.defs.links.entityFilterResult = { entity: newScope, type: 'hasMany' };
                     this.trigger('panel:rebuild', this.options.defs);
@@ -101,6 +103,13 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                 return 'Prefix';
             }
             return this.model.get(this.entityField);
+        },
+
+        resolvePanelName(){
+            if (this.model.get('prefixEnabled')) {
+                return 'availablePrefixes';
+            }
+            return 'entityFilterResult';
         },
 
         setFilter(filter) {

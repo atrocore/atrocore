@@ -180,6 +180,7 @@
     "floatPart": "(Liczba zmiennoprzecinkowa)",
     "unitPart": "(Jednostka)",
     "prefixPart": "(Prefiks)",
+    "availablePrefixes": "Dostępne prefiksy",
     "inheritAllForChildren": "Dziedzicz wszystkie dla elementów podrzędnych",
     "inheritAllFromParent": "Dziedziczy wszystko od rodzica",
     "homepage": "Strona główna",
@@ -675,7 +676,8 @@
     "removeAttribute": "Usuń atrybut",
     "update": "Aktualizuj",
     "delete": "Usuń",
-    "select": "Wybierz"
+    "select": "Wybierz",
+    "inheritAllFromParent": "Dziedziczy wszystko od rodzica"
   },
   "fields": {
     "number": "Numer",
@@ -953,7 +955,8 @@
       "filled": "Wypełnione",
       "empty": "Puste",
       "optional": "Opcjonalne",
-      "required": "Wymagane"
+      "required": "Wymagane",
+      "withDifferences": "Z różnicami"
     },
     "languageFilter": {
       "allLanguages": "Wszystkie Języki",
