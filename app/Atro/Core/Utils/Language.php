@@ -15,7 +15,6 @@ use Atro\Core\Container;
 use Atro\Core\DataManager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
-use Atro\Repositories\Translation;
 use Atro\Repositories\Translation as TranslationRepository;
 use Atro\Services\AbstractService;
 use Espo\Core\Utils\File\Unifier;
@@ -156,52 +155,36 @@ class Language
             $this->init();
         }
 
+        $data = $this->data[self::DEFAULT_LANGUAGE];
+
         if (!empty($this->language)) {
             $data = $this->data[self::DEFAULT_LANGUAGE];
             if ($this->language !== self::DEFAULT_LANGUAGE) {
                 $data = Util::merge($this->data[self::DEFAULT_LANGUAGE], $this->data[$this->language]);
             }
-        }
+        } elseif (!empty($this->localeId)) {
+            $locales = $this->getConfig()->get('locales') ?? [];
 
-        if (!empty($this->localeId)) {
-            $cacheName = "locale_{$this->localeId}";
+            $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
+            if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
+                $data = Util::merge($data, $this->data[$fallbackLanguage]);
+            }
 
-            $data = $this->getDataManager()->getCacheData($cacheName);
-            if (empty($data)) {
-                $data = $this->data[self::DEFAULT_LANGUAGE];
-                $locales = $this->getConfig()->get('locales') ?? [];
+            $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
 
-                $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
-                if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
-                    $data = Util::merge($data, $this->data[$fallbackLanguage]);
+            if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
+                $key = $locales[$this->localeId]['language'] . '_with_labels_in_content_language';
+                if (array_key_exists($key, $this->data)) {
+                    $language = $key;
                 }
+            }
 
-                $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
-
-                if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
-                    $key = $locales[$this->localeId]['language'] . '_with_labels_in_content_language';
-                    if (array_key_exists($key, $this->data)) {
-                        $language = $key;
-                    }
-                }
-
-                if (array_key_exists($language, $this->data)) {
-                    $data = Util::merge($data, $this->data[$language]);
-                }
-
-                $this->getDataManager()->setCacheData($cacheName, $data);
+            if (array_key_exists($language, $this->data)) {
+                $data = Util::merge($data, $this->data[$language]);
             }
         }
 
-        if (!empty($this->changedData)) {
-            $data = Util::merge($data, $this->changedData);
-        }
-
-        if (!isset($data) || $data === false) {
-            return null;
-        }
-
-        return Util::getValueByKey($data);
+        return $data;
     }
 
     public function save()
@@ -353,7 +336,7 @@ class Language
         }
     }
 
-    protected function undelete(string $scope, string $category, string $name): void
+    private function undelete(string $scope, string $category, string $name): void
     {
         if (isset($this->deletedData[$scope][$category])) {
             foreach ($this->deletedData[$scope][$category] as $key => $labelName) {
@@ -364,7 +347,7 @@ class Language
         }
     }
 
-    protected function undeleteOption(string $scope, string $field, string $name): void
+    private function undeleteOption(string $scope, string $field, string $name): void
     {
         $category = 'options';
         if (isset($this->deletedData[$scope][$category][$field])) {
@@ -376,12 +359,7 @@ class Language
         }
     }
 
-    public function clearCache(): void
-    {
-        $this->getDataManager()->clearCache(true);
-    }
-
-    protected function init(): void
+    private function init(): void
     {
         /** @var bool $installed */
         $installed = $this->getConfig()->get('isInstalled', false);
@@ -459,37 +437,7 @@ class Language
         return $fieldName;
     }
 
-    protected function unify(string $path): array
-    {
-        return $this->unifier->unify('i18n', $path, true);
-    }
-
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->container->get('entityManager');
-    }
-
-    protected function getMetadata(): Metadata
-    {
-        return $this->container->get('metadata');
-    }
-
-    protected function getEventManager(): Manager
-    {
-        return $this->container->get('eventManager');
-    }
-
-    protected function getDataManager(): DataManager
-    {
-        return $this->container->get('dataManager');
-    }
-
-    protected function getConfig(): Config
-    {
-        return $this->container->get('config');
-    }
-
-    protected static function languageToField(string $language): string
+    private static function languageToField(string $language): string
     {
         return Util::toCamelCase(strtolower($language));
     }
@@ -533,29 +481,43 @@ class Language
 
     private function getPreparedTranslations(): array
     {
-        $preparedTranslationData = [];
-        foreach ($this->getEntityManager()->getRepository('Translation')->find()->toArray() as $record) {
-            foreach ($this->getMetadata()->get('multilang.languageList', []) as $locale) {
-                $row = [];
-                $field = Util::toCamelCase(strtolower($locale));
-                if (array_key_exists($field, $record) && $record[$field] !== null) {
-                    $insideRow = [];
-
-                    $hasDots = strpos($record['code'], '...') !== false;
-                    $parts = explode('.', $record['code']);
-                    if ($hasDots) {
-                        array_pop($parts);
-                        array_pop($parts);
-                        array_pop($parts);
-                        $parts[] = array_pop($parts) . '...';
-                    }
-
-                    $this->prepareTreeValue($parts, $insideRow, $record[$field]);
-                    $row[$record['module']][$locale] = $insideRow;
-                    $preparedTranslationData = Util::merge($preparedTranslationData, $row);
-                }
+        $languages = [self::languageToField(self::DEFAULT_LANGUAGE) => self::DEFAULT_LANGUAGE];
+        foreach ($this->getConfig()->get('locales') ?? [] as $locale) {
+            if (!empty($locale['language'])) {
+                $languages[self::languageToField($locale['language'])] = $locale['language'];
+            }
+            if (!empty($locale['fallbackLanguage'])) {
+                $languages[self::languageToField($locale['fallbackLanguage'])] = $locale['fallbackLanguage'];
             }
         }
+        $languageFields = array_keys($languages);
+
+        $translations = $this->getRepository()
+            ->select(array_merge(['id', 'code', 'module'], $languageFields))
+            ->find();
+
+        $preparedTranslationData = [];
+        foreach ($translations as $translation) {
+            $code = $translation->get('code');
+            foreach ($languages as $field => $language) {
+                $row = [];
+                $insideRow = [];
+
+                $parts = explode('.', $code);
+
+                if (str_contains($code, '...') !== false) {
+                    array_pop($parts);
+                    array_pop($parts);
+                    array_pop($parts);
+                    $parts[] = array_pop($parts) . '...';
+                }
+
+                $this->prepareTreeValue($parts, $insideRow, $translation->get($field));
+                $row[$translation->get('module')][$language] = $insideRow;
+                $preparedTranslationData = Util::merge($preparedTranslationData, $row);
+            }
+        }
+
         // remove normalize number key to remove __integer
         $this->normalizeIntegerKey($preparedTranslationData);
 
@@ -627,8 +589,38 @@ class Language
         }
     }
 
-    private function getRepository(): Translation
+    private function getRepository(): TranslationRepository
     {
         return $this->getEntityManager()->getRepository('Translation');
+    }
+
+    private function unify(string $path): array
+    {
+        return $this->unifier->unify('i18n', $path, true);
+    }
+
+    private function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
+    }
+
+    private function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
+    }
+
+    private function getEventManager(): Manager
+    {
+        return $this->container->get('eventManager');
+    }
+
+    private function getDataManager(): DataManager
+    {
+        return $this->container->get('dataManager');
+    }
+
+    private function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 }
