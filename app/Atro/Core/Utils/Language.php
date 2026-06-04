@@ -12,7 +12,6 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
-use Atro\Core\DataManager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Repositories\Translation as TranslationRepository;
@@ -155,33 +154,34 @@ class Language
             $this->init();
         }
 
-        $data = $this->data[self::DEFAULT_LANGUAGE];
-
         if (!empty($this->language)) {
             $data = $this->data[self::DEFAULT_LANGUAGE];
             if ($this->language !== self::DEFAULT_LANGUAGE) {
                 $data = Util::merge($this->data[self::DEFAULT_LANGUAGE], $this->data[$this->language]);
             }
-        } elseif (!empty($this->localeId)) {
-            $locales = $this->getConfig()->get('locales') ?? [];
+            return $data;
+        }
 
-            $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
-            if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
-                $data = Util::merge($data, $this->data[$fallbackLanguage]);
+        $data = $this->data[self::DEFAULT_LANGUAGE];
+
+        $locales = $this->getConfig()->get('locales') ?? [];
+
+        $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
+        if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
+            $data = Util::merge($data, $this->data[$fallbackLanguage]);
+        }
+
+        $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+
+        if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
+            $key = $locales[$this->localeId]['language'] . '_with_labels_in_content_language';
+            if (array_key_exists($key, $this->data)) {
+                $language = $key;
             }
+        }
 
-            $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
-
-            if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
-                $key = $locales[$this->localeId]['language'] . '_with_labels_in_content_language';
-                if (array_key_exists($key, $this->data)) {
-                    $language = $key;
-                }
-            }
-
-            if (array_key_exists($language, $this->data)) {
-                $data = Util::merge($data, $this->data[$language]);
-            }
+        if (array_key_exists($language, $this->data)) {
+            $data = Util::merge($data, $this->data[$language]);
         }
 
         return $data;
@@ -239,22 +239,6 @@ class Language
         $this->changedData = [];
         $this->deletedData = [];
         $this->init();
-    }
-
-    public function getModulesData(): array
-    {
-        $data = [];
-
-        // load core
-        $data['core'] = $this->unify(CORE_PATH . '/Atro/Resources/i18n');
-
-        // load modules
-        foreach ($this->getMetadata()->getModules() as $name => $module) {
-            $data[$name] = [];
-            $module->loadTranslates($data[$name]);
-        }
-
-        return $data;
     }
 
     public function set(string $scope, string $category, $name, $value): void
@@ -500,6 +484,10 @@ class Language
         foreach ($translations as $translation) {
             $code = $translation->get('code');
             foreach ($languages as $field => $language) {
+                if ($translation->get($field) === null) {
+                    continue;
+                }
+
                 $row = [];
                 $insideRow = [];
 
@@ -589,6 +577,22 @@ class Language
         }
     }
 
+    private function getModulesData(): array
+    {
+        $data = [];
+
+        // load core
+        $data['core'] = $this->unify(CORE_PATH . '/Atro/Resources/i18n');
+
+        // load modules
+        foreach ($this->getMetadata()->getModules() as $name => $module) {
+            $data[$name] = [];
+            $module->loadTranslates($data[$name]);
+        }
+
+        return $data;
+    }
+
     private function getRepository(): TranslationRepository
     {
         return $this->getEntityManager()->getRepository('Translation');
@@ -612,11 +616,6 @@ class Language
     private function getEventManager(): Manager
     {
         return $this->container->get('eventManager');
-    }
-
-    private function getDataManager(): DataManager
-    {
-        return $this->container->get('dataManager');
     }
 
     private function getConfig(): Config

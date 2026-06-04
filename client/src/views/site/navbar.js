@@ -324,7 +324,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                     createDisabled = true;
                 }
             }
-            let label = this.getLanguage().translate(name, translateCategory);
+            let label = this.getLanguage().translate(name, translateCategory) || '';
             result = {
                 id: id,
                 link: link,
