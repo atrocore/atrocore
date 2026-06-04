@@ -2706,7 +2706,9 @@ class Metadata extends AbstractMetadataListener
 
             if (empty($data['entityDefs']['File']['fields'][$field])) {
                 $data['entityDefs']['File']['fields'][$field] = [
-                    'type'                     => 'varchar',
+                    'type'                     => 'url',
+                    'view'                     => 'views/file/fields/thumbnail',
+                    'size'                     => $size,
                     'notStorable'              => true,
                     'readOnly'                 => true,
                     'layoutMassUpdateDisabled' => true,
