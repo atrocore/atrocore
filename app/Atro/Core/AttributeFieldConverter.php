@@ -60,7 +60,9 @@ class AttributeFieldConverter
     {
         $id = $name;
 
-        if (str_ends_with($id, 'UnitId')) {
+        if (str_ends_with($id, 'PrefixId')) {
+            $id = substr($id, 0, -8);
+        } elseif (str_ends_with($id, 'UnitId')) {
             $id = substr($id, 0, -6);
         } elseif (str_ends_with($id, 'From')) {
             $id = substr($id, 0, -4);
