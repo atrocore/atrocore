@@ -48,7 +48,7 @@ class AttributeFieldConverter
 
     public static function isValidCode(string $code): bool
     {
-        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $code) === 1;
+        return preg_match('/^[a-zA-Z0-9_-]*$/', $code) === 1;
     }
 
     public static function prepareFieldName(array $row): string
