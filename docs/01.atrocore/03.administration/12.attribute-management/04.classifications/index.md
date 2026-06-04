@@ -38,76 +38,7 @@ An existing Classification can be **duplicated** to use as a starting point — 
 
 ![Duplicating Classification](./_assets/duplicate-classification.png){.medium}
 
-## Listing
-
-To open the list of Classification records available in the system, click the `Classifications` option in the navigation menu:
-
-![Classifications list view](./_assets/pf-list-view.png){.large}
-
-To change the order of records in the list, click any sortable column title to sort ascending or descending.
-
-Classification records can be searched and filtered according to your needs. For details, refer to the [**Search and Filtering**](../../../11.search-and-filtering/) article.
-
-To view the details of a Classification record, click its name in the list. The [detail view](../../../04.understanding-ui/index.md#detail-view) page will open. Alternatively, select the `View` option from the single record actions menu to open the quick detail pop-up.
-
-### Mass Actions
-
-The following mass actions are available for Classification records on the list view page:
-
-- Remove
-- Compare
-- Mass update
-- Export
-- Translate
-- Add relation
-- Remove relation
-
-![Mass actions](./_assets/pf-mass-actions.png){.medium}
-
-Some actions are only available after purchasing additional modules.
-
-For details, refer to the [**Mass Actions**](../../../04.understanding-ui/index.md#mass-actions) section of the **Views and Panels** article.
-
-### Single Record Actions
-
-The following single record actions are available for Classification records on the list view page:
-
-- View
-- Edit
-- Delete
-- Bookmark
-
-![Single record actions](./_assets/pf-single-actions.png){.medium}
-
-For details, refer to the [**Single Record Actions**](../../../04.understanding-ui/index.md#single-record-actions) section of the **Views and Panels** article.
-
-## Editing
-
-To edit a Classification, click the `Edit` button on the [detail view](../../../04.understanding-ui/index.md#detail-view) page of the currently open Classification record:
-
-![Edit view](./_assets/pf-edit.png){.large}
-
-Edit the desired fields and click `Save`. The **Entity** field cannot be changed after creation.
-
-You can also make changes via [in-line editing](../../../08.record-management/index.md#in-line-editing) on the detail view page, or by selecting `Edit` from the single record actions menu on the list view to open the quick edit pop-up:
-
-![Edit pop-up](./_assets/pf-editing-popup.png){.large}
-
-## Removing
-
-To remove a Classification record, use the `Remove` option from the actions menu on its detail view page:
-
-![Remove from detail view](./_assets/remove-details.png){.small}
-
-or from the single record actions menu on the list view page:
-
-![Remove from list view](./_assets/remove-list.png){.medium}
-
-By default, it is not possible to remove a Classification if it is used in records.
-
-## Duplicating
-
-Use the `Duplicate` option from the actions menu to open the Classification creation page with all field values copied from the current record. The **Code** must be changed, as it must be unique.
+!! By default, it is not possible to remove a Classification if it is used in records.
 
 ## Managing Classification Attributes
 
