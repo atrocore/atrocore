@@ -38,7 +38,7 @@ An existing Classification can be **duplicated** to use as a starting point — 
 
 ![Duplicating Classification](./_assets/duplicate-classification.png){.medium}
 
-!! By default, it is not possible to remove a Classification if it is used in records.
+!! It is not possible to remove a Classification if it is used in records.
 
 ## Managing Classification Attributes
 
