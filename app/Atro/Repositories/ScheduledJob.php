@@ -58,9 +58,13 @@ class ScheduledJob extends Base
                 $where['id!='] = $entity->id;
             }
 
+            if ($entity->get('type') === 'ScanStorage') {
+                $where['storageId'] = $entity->get('storageId');
+            }
+
             $exists = $this->where($where)->findOne();
             if (!empty($exists)) {
-                $message = $this->getInjection('language')->translate('onlyOneJobTypeAllowed', 'exceptions', 'ScheduledJob');
+                $message   = $this->getInjection('language')->translate('onlyOneJobTypeAllowed', 'exceptions', 'ScheduledJob');
                 $typeLabel = $this->getInjection('language')->translateOption($entity->get('type'), 'type', 'ScheduledJob');
 
                 throw new BadRequest(sprintf($message, $typeLabel));
