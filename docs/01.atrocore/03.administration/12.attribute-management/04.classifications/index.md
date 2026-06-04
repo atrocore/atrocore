@@ -136,7 +136,6 @@ The panel displays the following columns:
 - **Required**
 - **Default Value**
 - **Conditional Properties**
-- **Audit Completeness** (available only with the [Data Quality](https://store.atrocore.com/en/data-quality/20218) module)
 
 ### Attribute Actions
 
