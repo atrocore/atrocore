@@ -38,6 +38,8 @@ An existing Classification can be **duplicated** to use as a starting point — 
 
 ![Duplicating Classification](./_assets/duplicate-classification.png){.medium}
 
+!! It is not possible to remove a Classification if it is used in records.
+
 ## Managing Classification Attributes
 
 After saving, the detail view opens with two panels: **Classification Attributes** and **Products**.
@@ -64,6 +66,7 @@ The panel displays the following columns:
 - **Attribute**
 - **Required**
 - **Default Value**
+- **Conditional Properties**
 
 ### Attribute Actions
 
@@ -71,10 +74,14 @@ Click the three-dot menu on any attribute row to access:
 
 - **View** — opens the attribute's detail view
 - **Edit** — opens an editor to configure classification-level settings, including whether the attribute is required, its default value, and any conditional properties (see [Attribute Fields](../01.attributes/index.md#attribute-fields))
-- **Delete and retain for records** — removes the attribute from the Classification but keeps it on existing records
+- **Delete and retain for records** — removes the attribute from the Classification but keeps it on existing records. When a *required* attribute is removed this way, it becomes non-required on those records.
 - **Delete and from records** — removes the attribute from the Classification and from all linked records (requires confirmation)
 
 ![Attributes actions menu](./_assets/attributes-actions-menu.png){.medium}
+
+The **Delete and from records** action requires confirmation before it is applied:
+
+![Removal confirmation](./_assets/attribute-remove-confirmation.png){.medium}
 
 > When an attribute is linked to a Classification, it is automatically linked to all records of that Classification. If the attribute already exists on a record, it becomes a Classification attribute and its existing value is preserved.
 
@@ -106,10 +113,10 @@ By default, Classifications are available for Products. To enable them for anoth
 
 Once **Has Classifications** is enabled, the following additional options become available for that entity:
 
-- **Delete attribute values after unlinking classifications**. When enabled, all Classification attribute values are removed from a record when that Classification is unlinked from it. When disabled, the attribute values are kept on the record even after the Classification is removed.
+- **Disable direct attribute linking**. When enabled, attributes can only be added to records via a Classification — users cannot link attributes to records manually. This enforces that all attributes on a record come from an assigned Classification, which is useful when strict data governance is required.
+- **Delete attribute values after unlinking classifications**. When enabled, all Classification attribute values are removed from a record when that Classification is unlinked from it. When disabled, the attribute values are kept on the record even after the Classification is removed. This option is only available when **Disable direct attribute linking** is disabled.
 
 ![Delete attribute values option](./_assets/Delete-attribute-values.png){.medium}
 
-- **Disable direct attribute linking**. When enabled, attributes can only be added to records via a Classification — users cannot link attributes to records manually. This enforces that all attributes on a record come from an assigned Classification, which is useful when strict data governance is required.
 - **Single Classification only**. When enabled, a record can be assigned to only one Classification at a time. Attempting to add a second Classification will replace the existing one. Use this when your data model requires exactly one classification template per record.
 - **Link Attributes with the Classification automatically**. When enabled, if a user directly links an attribute to a record, and that record is already assigned to a Classification, the attribute will also be automatically added to that Classification. This keeps Classifications in sync with attributes that editors add on individual records. This option is only available when **Has Attributes** is enabled and **Disable direct attribute linking** is disabled.
