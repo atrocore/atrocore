@@ -45,7 +45,7 @@ class TranslationRefreshHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->getRecordService('Translation')->refreshCache();
+        $this->getLanguage()->refreshTranslations();
 
         return new BoolResponse(true);
     }

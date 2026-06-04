@@ -16,11 +16,6 @@ use Espo\ORM\Entity;
 
 class Translation extends Base
 {
-    public function refreshCache(): void
-    {
-        $this->getRepository()->refreshToDefault();
-    }
-
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);

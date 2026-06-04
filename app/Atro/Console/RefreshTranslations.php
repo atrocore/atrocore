@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
-use Atro\Core\DataManager;
-use Espo\ORM\EntityManager;
+use Atro\Core\Utils\Language;
 
 class RefreshTranslations extends AbstractConsole
 {
@@ -25,19 +24,13 @@ class RefreshTranslations extends AbstractConsole
 
     public function run(array $data): void
     {
-        $this->getEntityManager()->getRepository('Translation')->refreshToDefault();
-        $this->getDataManager()->clearCache();
+        $this->getLanguage()->refreshTranslations();
 
         self::show('Translations refreshed successfully.', self::SUCCESS);
     }
 
-    protected function getEntityManager(): EntityManager
+    protected function getLanguage(): Language
     {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    protected function getDataManager(): DataManager
-    {
-        return $this->getContainer()->get('dataManager');
+        return $this->getContainer()->get('language');
     }
 }

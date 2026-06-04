@@ -15,6 +15,7 @@ use Atro\Core\Container;
 use Atro\Core\DataManager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
+use Atro\Repositories\Translation;
 use Atro\Repositories\Translation as TranslationRepository;
 use Atro\Services\AbstractService;
 use Espo\Core\Utils\File\Unifier;
@@ -24,7 +25,7 @@ use Espo\ORM\EntityManager;
 
 class Language
 {
-    public const DEFAULT_LANGUAGE = 'en_US';
+    public const string DEFAULT_LANGUAGE = 'en_US';
 
     protected Container $container;
 
@@ -89,7 +90,7 @@ class Language
 
     public function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
     {
-        $translate = $this->getEntityManager()->getRepository('Translation')->findByCode("$scope.$category.$label");
+        $translate = $this->getRepository()->findByCode("$scope.$category.$label");
         if ($translate === null) {
             return $label;
         }
@@ -99,12 +100,54 @@ class Language
 
     public function translateOption(string $value, string $field, string $scope = 'Global')
     {
-        $translate = $this->getEntityManager()->getRepository('Translation')->findByCode("$scope.options.$field.$value");
+        $translate = $this->getRepository()->findByCode("$scope.options.$field.$value");
         if ($translate === null) {
             return $value;
         }
 
         return $this->resolveTranslation($translate) ?? $value;
+    }
+
+    public function refreshTranslations(): void
+    {
+        $records = $this->getSimplifiedTranslates($this->getModulesData());
+
+        $existingMap = $this->getRepository()->fetchExistingCodeMap();
+
+        $toInsert = [];
+        $toUpdate = [];
+        $orphanedIds = [];
+
+        foreach ($records as $key => $row) {
+            if (!isset($existingMap[$key])) {
+                $row['id'] = IdGenerator::uuid();
+                $toInsert[] = $row;
+            } elseif (!$existingMap[$key]['isCustomized']) {
+                $row['id'] = $existingMap[$key]['id'];
+                $toUpdate[] = $row;
+            }
+            // customized version exists — skip, do not touch
+        }
+
+        foreach ($existingMap as $code => $entry) {
+            if (!$entry['isCustomized'] && !isset($records[$code])) {
+                $orphanedIds[] = $entry['id'];
+            }
+        }
+
+        foreach (array_chunk($orphanedIds, 1000) as $chunk) {
+            $this->getRepository()->bulkDelete($chunk);
+        }
+
+        foreach (array_chunk($toUpdate, 1000) as $rows) {
+            $this->getRepository()->bulkUpdate($rows);
+        }
+
+        foreach (array_chunk($toInsert, 1000) as $rows) {
+            $this->getRepository()->bulkInsert($rows);
+        }
+
+        $this->getRepository()->refreshTimestamp([]);
     }
 
     public function getAll()
@@ -165,7 +208,7 @@ class Language
     {
         if (!empty($this->changedData)) {
             $simplifiedTranslates = [];
-            TranslationRepository::toSimpleArray($this->changedData, $simplifiedTranslates);
+            self::toSimpleArray($this->changedData, $simplifiedTranslates);
 
             foreach ($simplifiedTranslates as $key => $value) {
                 $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode($key);
@@ -346,7 +389,7 @@ class Language
         $data = [];
 
         if ($installed) {
-//            $data = $this->getEntityManager()->getRepository('Translation')->getPreparedTranslations();
+            $data = $this->getPreparedTranslations();
         }
 
         if (empty($data)) {
@@ -453,6 +496,10 @@ class Language
 
     private function resolveTranslation(Entity $translate): ?string
     {
+        if (!empty($this->language)) {
+            return $translate->get(self::languageToField($this->language)) ?? $translate->get(self::languageToField(self::DEFAULT_LANGUAGE));
+        }
+
         if (empty($this->localeId)) {
             return null;
         }
@@ -482,5 +529,106 @@ class Language
         }
 
         return $translate->get(self::languageToField(self::DEFAULT_LANGUAGE));
+    }
+
+    private function getPreparedTranslations(): array
+    {
+        $preparedTranslationData = [];
+        foreach ($this->getEntityManager()->getRepository('Translation')->find()->toArray() as $record) {
+            foreach ($this->getMetadata()->get('multilang.languageList', []) as $locale) {
+                $row = [];
+                $field = Util::toCamelCase(strtolower($locale));
+                if (array_key_exists($field, $record) && $record[$field] !== null) {
+                    $insideRow = [];
+
+                    $hasDots = strpos($record['code'], '...') !== false;
+                    $parts = explode('.', $record['code']);
+                    if ($hasDots) {
+                        array_pop($parts);
+                        array_pop($parts);
+                        array_pop($parts);
+                        $parts[] = array_pop($parts) . '...';
+                    }
+
+                    $this->prepareTreeValue($parts, $insideRow, $record[$field]);
+                    $row[$record['module']][$locale] = $insideRow;
+                    $preparedTranslationData = Util::merge($preparedTranslationData, $row);
+                }
+            }
+        }
+        // remove normalize number key to remove __integer
+        $this->normalizeIntegerKey($preparedTranslationData);
+
+        return $preparedTranslationData;
+    }
+
+    private function normalizeIntegerKey(array &$data): void
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($data[$key])) {
+                $this->normalizeIntegerKey($data[$key]);
+            }
+            if (is_string($key) && str_starts_with($key, '__integer__')) {
+                $realKey = str_replace('__integer__', '', $key);
+                $data[$realKey] = $data[$key];;
+                unset($data[$key]);
+            }
+        }
+    }
+
+    private function prepareTreeValue(array $data, &$result, $value): void
+    {
+        if (!empty($data)) {
+            $first = array_shift($data);
+            if (!empty($data)) {
+                $this->prepareTreeValue($data, $result[$first], $value);
+            } else {
+                if (preg_match('/^[0-9]+$/', $first)) {
+                    $first = '__integer__' . $first;
+                }
+                $result[$first] = $value;
+            }
+        }
+    }
+
+    private function getSimplifiedTranslates(array $data): array
+    {
+        $records = [];
+        foreach ($data as $module => $moduleData) {
+            foreach ($moduleData as $locale => $localeData) {
+                $preparedLocaleData = [];
+                self::toSimpleArray($localeData, $preparedLocaleData);
+                foreach ($preparedLocaleData as $key => $value) {
+                    $records[$key]['code'] = $key;
+                    $records[$key]['module'] = $module;
+                    $records[$key]['isCustomized'] = $module === 'custom';
+                    $records[$key]['createdAt'] = date('Y-m-d H:i:s');
+                    $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
+                }
+            }
+        }
+
+        return $records;
+    }
+
+    private static function toSimpleArray(array $data, array &$result, array &$parents = []): void
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $parents[] = $key;
+                self::toSimpleArray($value, $result, $parents);
+            } else {
+                $result[implode('.', array_merge($parents, [$key]))] = $value;
+            }
+        }
+
+        if (!empty($parents)) {
+            array_pop($parents);
+        }
+    }
+
+    private function getRepository(): Translation
+    {
+        return $this->getEntityManager()->getRepository('Translation');
     }
 }
