@@ -124,7 +124,6 @@ class Language
                 $row['id'] = $existingMap[$key]['id'];
                 $toUpdate[] = $row;
             }
-            // customized version exists — skip, do not touch
         }
 
         foreach ($existingMap as $code => $entry) {
@@ -185,6 +184,31 @@ class Language
         }
 
         return $data;
+    }
+
+    public static function getLocalizedFieldName(Container $container, string $scope, string $fieldName): string
+    {
+        $user = $container->get('user');
+        $config = $container->get('config');
+
+        if (!empty($user) && !empty($config->get('isMultilangActive')) && !empty($container->get('metadata')->get(['entityDefs', $scope, 'fields', $fieldName, 'isMultilang']))) {
+            $userLanguageCode = self::detectLanguage($config, $user);
+            $mainLanguageCode = $config->get('mainLanguage');
+
+            if (!in_array($userLanguageCode, $config->get('inputLanguageList'))) {
+                $userLanguageCode = null;
+            }
+
+            $field = $fieldName;
+
+            if (!empty($userLanguageCode) && $userLanguageCode !== $mainLanguageCode) {
+                $field .= ucfirst(Util::toCamelCase(strtolower($userLanguageCode)));
+            }
+
+            return $field;
+        }
+
+        return $fieldName;
     }
 
     public function save()
@@ -394,31 +418,6 @@ class Language
                 ->dispatch('Language', 'modify', new Event(['data' => $this->data]))
                 ->getArgument('data');
         }
-    }
-
-    public static function getLocalizedFieldName(Container $container, string $scope, string $fieldName): string
-    {
-        $user = $container->get('user');
-        $config = $container->get('config');
-
-        if (!empty($user) && !empty($config->get('isMultilangActive')) && !empty($container->get('metadata')->get(['entityDefs', $scope, 'fields', $fieldName, 'isMultilang']))) {
-            $userLanguageCode = self::detectLanguage($config, $user);
-            $mainLanguageCode = $config->get('mainLanguage');
-
-            if (!in_array($userLanguageCode, $config->get('inputLanguageList'))) {
-                $userLanguageCode = null;
-            }
-
-            $field = $fieldName;
-
-            if (!empty($userLanguageCode) && $userLanguageCode !== $mainLanguageCode) {
-                $field .= ucfirst(Util::toCamelCase(strtolower($userLanguageCode)));
-            }
-
-            return $field;
-        }
-
-        return $fieldName;
     }
 
     private static function languageToField(string $language): string
