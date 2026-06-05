@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
+use Atro\Core\Utils\Language as LanguageUtil;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
@@ -23,8 +24,27 @@ class Translation extends Base
 {
     private array $cachedCodes = [];
 
+    public static function languageToField(string $language): string
+    {
+        return Util::toCamelCase(strtolower($language));
+    }
+
     public function setTranslation(string $scope, string $category, string $name, string $value): void
     {
+        $code = "$scope.$category.$name";
+
+        $translation = $this->findByCode($code);
+        if (empty($translation)) {
+            $translation = $this->get();
+            $translation->set('code', $code);
+        }
+
+        $language = LanguageUtil::detectLanguage($this->getConfig(), $this->getEntityManager()->getUser()->get('delegator'));
+
+        $translation->set(self::languageToField($language), $value);
+        $this->save($translation);
+
+        $this->cachedCodes[$code] = $translation;
     }
 
     public function deleteTranslation(string $scope, string $category, string $name): void

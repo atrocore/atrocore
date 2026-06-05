@@ -289,7 +289,7 @@ class Language
 
     private static function languageToField(string $language): string
     {
-        return Util::toCamelCase(strtolower($language));
+        return TranslationRepository::languageToField($language);
     }
 
     private function resolveTranslation(Entity $translation): ?string
