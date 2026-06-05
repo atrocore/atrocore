@@ -1214,7 +1214,6 @@ class Metadata extends AbstractMetadataListener
             $data['entityDefs'][$scope]['fields']['routes'] = [
                 "type"               => "jsonArray",
                 "view"               => "views/fields/hierarchy-routes",
-                "filterType"         => "varchar",
                 "protected"          => true,
                 "massUpdateDisabled" => true,
                 "importDisabled"     => true,
@@ -1585,7 +1584,7 @@ class Metadata extends AbstractMetadataListener
                         ],
                         "prefixValue"    => [
                             "type"      => "varchar",
-                            "maxLength" => 50
+                            "len" => 36
                         ],
                         "jsonValue"      => [
                             "type" => "jsonObject"
