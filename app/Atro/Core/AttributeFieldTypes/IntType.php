@@ -196,7 +196,7 @@ class IntType extends AbstractFieldType
             $where = $this->extractPrefixWhere($row['data'] ?? null);
 
             $entity->entityDefs['fields'][$name]['prefixEnabled'] = true;
-            $entity->entityDefs['fields'][$name]['where']   = $where;
+            $entity->entityDefs['fields'][$name]['where']         = $where;
 
             $entity->fields[$name . 'PrefixId']   = [
                 'type'        => 'varchar',
@@ -221,13 +221,13 @@ class IntType extends AbstractFieldType
                 'label'                => "{$row[$nameKey]} " . $this->language->translate('prefixPart'),
                 'entity'               => 'Prefix',
                 'prefixEnabled'        => true,
-                'where'          => $where,
+                'where'                => $where,
                 'prefixIdField'        => true,
                 'mainField'            => $name,
                 'attributeId'          => $id,
                 'layoutDetailDisabled' => true,
             ];
-            $attributesDefs[$name . 'Prefix'] = $entity->entityDefs['fields'][$name . 'Prefix'];
+            $attributesDefs[$name . 'Prefix']               = $entity->entityDefs['fields'][$name . 'Prefix'];
         }
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
@@ -287,6 +287,28 @@ class IntType extends AbstractFieldType
                     $this->convertSubquery($entity, 'Unit', $item);
                 }
                 $item['attribute'] = 'referenceValue';
+            }
+        } else if (str_ends_with($item['attribute'], 'PrefixId')) {
+            if ($item['type'] === 'isNull') {
+                $item = [
+                    'type'  => 'or',
+                    'value' => [
+                        [
+                            'type'      => 'equals',
+                            'attribute' => 'prefixValue',
+                            'value'     => ''
+                        ],
+                        [
+                            'type'      => 'isNull',
+                            'attribute' => 'prefixValue'
+                        ],
+                    ]
+                ];
+            } else {
+                if (!empty($item['subQuery'])) {
+                    $this->convertSubquery($entity, 'Prefix', $item);
+                }
+                $item['attribute'] = 'prefixValue';
             }
         } else {
             $item['attribute'] = "{$this->type}Value";
