@@ -49,18 +49,77 @@ class Translation extends Base
 
     public function deleteTranslation(string $scope, string $category, string $name): void
     {
+        $code = "$scope.$category.$name";
+
+        $translation = $this->findByCode($code);
+
+        if (!empty($translation)) {
+            $this->getEntityManager()->removeEntity($translation);
+            if (isset($this->cachedCodes[$code])) {
+                unset($this->cachedCodes[$code]);
+            }
+        }
     }
 
     public function setTranslationOption(string $scope, string $field, string $name, string $value): void
     {
+        $code = "$scope.options.$field.$name";
+
+        $translation = $this->findByCode($code);
+        if (empty($translation)) {
+            $translation = $this->get();
+            $translation->set('code', $code);
+        }
+
+        $language = LanguageUtil::detectLanguage($this->getConfig(), $this->getEntityManager()->getUser()->get('delegator'));
+
+        $translation->set(self::languageToField($language), $value);
+        $this->save($translation);
+
+        $this->cachedCodes[$code] = $translation;
     }
 
     public function setTranslationOptions(string $scope, string $field, array $values): void
     {
+        $prefix = "$scope.options.$field.";
+
+        $existingRows = $this->getDbal()->createQueryBuilder()
+            ->select('code')
+            ->from($this->getDbal()->quoteIdentifier('translation'))
+            ->where('code LIKE :prefix')
+            ->andWhere('deleted = :false')
+            ->setParameter('prefix', $prefix . '%')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+
+        foreach ($existingRows as $code) {
+            $parts = explode('.', $code);
+            $name = $parts[3];
+            if (!array_key_exists($name, $values)) {
+                $this->deleteTranslationOption($scope, $field, $name);
+            }
+        }
+
+        foreach ($values as $name => $value) {
+            if (empty($value)) {
+                continue;
+            }
+            $this->setTranslationOption($scope, $field, (string)$name, (string)$value);
+        }
     }
 
     public function deleteTranslationOption(string $scope, string $field, string $name): void
     {
+        $code = "$scope.options.$field.$name";
+
+        $translation = $this->findByCode($code);
+
+        if (!empty($translation)) {
+            $this->getEntityManager()->removeEntity($translation);
+            if (isset($this->cachedCodes[$code])) {
+                unset($this->cachedCodes[$code]);
+            }
+        }
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
