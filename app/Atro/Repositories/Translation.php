@@ -23,6 +23,26 @@ class Translation extends Base
 {
     private array $cachedCodes = [];
 
+    public function setTranslation(string $scope, string $category, string $name, string $value): void
+    {
+    }
+
+    public function deleteTranslation(string $scope, string $category, string $name): void
+    {
+    }
+
+    public function setTranslationOption(string $scope, string $field, string $name, string $value): void
+    {
+    }
+
+    public function setTranslationOptions(string $scope, string $field, array $values): void
+    {
+    }
+
+    public function deleteTranslationOption(string $scope, string $field, string $name): void
+    {
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('module') === 'custom' && !$entity->isNew() && !$entity->get('isCustomized')) {
