@@ -800,15 +800,26 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
             if (fieldDef['combinedField']) {
                 let mainField = fieldDef['mainField'];
                 let mainFieldDef = this.model.defs.fields[mainField];
-                let unitIdField = mainField + 'Unit'
-                let unitFieldDef = this.model.defs.fields[unitIdField];
-                let result = this.areEquals(current, others, unitIdField, unitFieldDef);
-                if (mainField !== field) {
-                    return result && this.areEquals(current, others, mainField, mainFieldDef);
+
+                if (fieldDef['measureId']){
+                    let unitIdField = mainField + 'Unit'
+                    let unitFieldDef = this.model.defs.fields[unitIdField];
+                    if (!this.areEquals(current, others, unitIdField, unitFieldDef)){
+                        return false
+                    }
                 }
 
-                if (!result) {
-                    return false;
+                if (fieldDef['prefixEnabled']){
+                    let prefixField = mainField + 'Prefix';
+                    let prefixFieldDef = this.model.defs.fields[prefixField];
+                    if (!this.areEquals(current, others, prefixField, prefixFieldDef)){
+                        return false
+                    }
+                }
+
+
+                if (mainField !== field) {
+                    return this.areEquals(current, others, mainField, mainFieldDef);
                 }
             }
 
@@ -888,13 +899,20 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
 
         isAllowFieldUsingFilter(field, fieldDef, equalValueForModels) {
             let fields = this.getFieldManager().getActualAttributeList(this.model.getFieldType(field), field);
-            let fieldValues = fields.map(field => this.model.get(field));
+
             if (fieldDef['combinedField']) {
                 let mainField = fieldDef['mainField'];
-                let unitIdField = mainField + 'Unit';
-                fields = [mainField, unitIdField];
-                fieldValues = fields.map(field => this.model.get(field));
+                fields = [mainField];
+
+                if (fieldDef['measureId']) {
+                    fields.push(mainField + 'UnitId')
+                }
+                if (fieldDef['prefixEnabled']) {
+                    fields.push(mainField + 'PrefixId')
+                }
             }
+
+            let fieldValues = fields.map(field => this.model.get(field));
 
 
             for (const filter of this.selectedFilters) {
