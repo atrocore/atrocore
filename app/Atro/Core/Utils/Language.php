@@ -28,7 +28,6 @@ class Language
     protected Container $container;
 
     protected Unifier $unifier;
-    protected array $data = [];
     protected ?string $localeId;
     protected ?string $language = null;
 
@@ -155,43 +154,85 @@ class Language
         $this->getRepository()->refreshTimestamp([]);
     }
 
-    public function getAll()
+    public function getAll(): array
     {
-        if (empty($this->data)) {
-            $this->init();
+        $installed = $this->getConfig()->get('isInstalled', false);
+
+        $data = [];
+
+        if ($installed) {
+            $data = $this->getPreparedTranslations();
+        }
+
+        if (empty($data)) {
+            $data = $this->getModulesData();
+        }
+
+        $fullData = [];
+
+        if (!empty($data['core'])) {
+            $fullData = Util::merge($fullData, $data['core']);
+        }
+
+        foreach ($this->getMetadata()->getModules() as $name => $module) {
+            if (!empty($data[$name])) {
+                $fullData = Util::merge($fullData, $data[$name]);
+            }
+        }
+
+        if (!empty($data['custom'])) {
+            $fullData = Util::merge($fullData, $data['custom']);
+        }
+
+        foreach ($fullData as $i18nName => $i18nData) {
+            if (!empty($i18nData['User']) && !empty($i18nData['Global']['labels']['Followed'])) {
+                foreach ($this->getMetadata()->get("entityDefs.User.links") as $link => $defs) {
+                    if (!empty($defs['foreign']) && $defs['foreign'] === 'followers' && !empty($i18nData['Global']['scopeNamesPlural'][$defs['entity']])) {
+                        $i18nData['User']['fields'][$link] = $i18nData['Global']['scopeNamesPlural'][$defs['entity']] . ' (' . $i18nData['Global']['labels']['Followed'] . ')';
+                    }
+                }
+                $i18nData['UserProfile'] = $i18nData['User'];
+            }
+            $fullData[$i18nName] = $i18nData;
+        }
+
+        if ($installed) {
+            $fullData = $this->getEventManager()
+                ->dispatch('Language', 'modify', new Event(['data' => $fullData]))
+                ->getArgument('data');
         }
 
         if (!empty($this->language)) {
-            $data = $this->data[self::DEFAULT_LANGUAGE];
+            $result = $fullData[self::DEFAULT_LANGUAGE] ?? [];
             if ($this->language !== self::DEFAULT_LANGUAGE) {
-                $data = Util::merge($this->data[self::DEFAULT_LANGUAGE], $this->data[$this->language]);
+                $result = Util::merge($result, $fullData[$this->language] ?? []);
             }
-            return $data;
+            return $result;
         }
 
-        $data = $this->data[self::DEFAULT_LANGUAGE];
+        $result = $fullData[self::DEFAULT_LANGUAGE] ?? [];
 
         $locales = $this->getConfig()->get('locales') ?? [];
 
         $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
         if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
-            $data = Util::merge($data, $this->data[$fallbackLanguage]);
+            $result = Util::merge($result, $fullData[$fallbackLanguage] ?? []);
         }
 
         $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
 
         if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
-            $key = $locales[$this->localeId]['language'] . '_with_labels_in_content_language';
-            if (array_key_exists($key, $this->data)) {
+            $key = $language . '_with_labels_in_content_language';
+            if (array_key_exists($key, $fullData)) {
                 $language = $key;
             }
         }
 
-        if (array_key_exists($language, $this->data)) {
-            $data = Util::merge($data, $this->data[$language]);
+        if (array_key_exists($language, $fullData)) {
+            $result = Util::merge($result, $fullData[$language]);
         }
 
-        return $data;
+        return $result;
     }
 
     public static function getLocalizedFieldName(Container $container, string $scope, string $fieldName): string
@@ -234,59 +275,6 @@ class Language
         $this->translateCache[$this->localeId][$scope][$category][$name] = $value;
     }
 
-    private function init(): void
-    {
-        /** @var bool $installed */
-        $installed = $this->getConfig()->get('isInstalled', false);
-
-        $data = [];
-
-        if ($installed) {
-            $data = $this->getPreparedTranslations();
-        }
-
-        if (empty($data)) {
-            $data = $this->getModulesData();
-        }
-
-        $fullData = [];
-
-        // load core
-        if (!empty($data['core'])) {
-            $fullData = Util::merge($fullData, $data['core']);
-        }
-
-        // load modules
-        foreach ($this->getMetadata()->getModules() as $name => $module) {
-            if (!empty($data[$name])) {
-                $fullData = Util::merge($fullData, $data[$name]);
-            }
-        }
-
-        // load custom
-        if (!empty($data['custom'])) {
-            $fullData = Util::merge($fullData, $data['custom']);
-        }
-
-        foreach ($fullData as $i18nName => $i18nData) {
-            if (!empty($i18nData['User']) && !empty($i18nData['Global']['labels']['Followed'])) {
-                foreach ($this->getMetadata()->get("entityDefs.User.links") as $link => $defs) {
-                    if (!empty($defs['foreign']) && $defs['foreign'] === 'followers' && !empty($i18nData['Global']['scopeNamesPlural'][$defs['entity']])) {
-                        $i18nData['User']['fields'][$link] = $i18nData['Global']['scopeNamesPlural'][$defs['entity']] . ' (' . $i18nData['Global']['labels']['Followed'] . ')';
-                    }
-                }
-                $i18nData['UserProfile'] = $i18nData['User'];
-            }
-            $this->data[$i18nName] = $i18nData;
-        }
-
-        if ($installed) {
-            $this->data = $this->getEventManager()
-                ->dispatch('Language', 'modify', new Event(['data' => $this->data]))
-                ->getArgument('data');
-        }
-    }
-
     private static function languageToField(string $language): string
     {
         return TranslationRepository::languageToField($language);
@@ -304,13 +292,6 @@ class Language
 
         $locales = $this->getConfig()->get('locales') ?? [];
         $language = $locales[$this->localeId]['language'] ?? null;
-
-        if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
-            $key = $language . '_with_labels_in_content_language';
-            if (array_key_exists($key, $this->data)) {
-                $language = $key;
-            }
-        }
 
         if (!empty($language)) {
             $res = $translation->get(self::languageToField($language));
