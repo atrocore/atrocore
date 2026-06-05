@@ -62,6 +62,16 @@ class Translation extends Base
         $this->refreshTimestamp($options);
     }
 
+    public function getTranslation(string $scope, string $category, string $name): ?Entity
+    {
+        return $this->findByCode("$scope.$category.$name");
+    }
+
+    public function getOptionTranslation(string $scope, string $field, string $value): ?Entity
+    {
+        return $this->findByCode("$scope.options.$field.$value");
+    }
+
     public function findByCode(string $code): ?Entity
     {
         if (!isset($this->cachedCodes[$code])) {

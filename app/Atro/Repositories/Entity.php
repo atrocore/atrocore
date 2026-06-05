@@ -764,7 +764,6 @@ class Entity extends ReferenceData
     {
         parent::init();
 
-        $this->addDependency('baseLanguage');
         $this->addDependency('dataManager');
     }
 

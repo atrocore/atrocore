@@ -72,13 +72,7 @@ class ThumbnailType extends ReferenceData
 
         $this->getMetadata()->save();
 
-        $this->getLanguage()->set('Global', 'thumbnailTypes', $entity->get('code'), $entity->get('name'));
-        $this->getLanguage()->save();
-
-        if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
-            $this->getBaseLanguage()->set('Global', 'thumbnailTypes', $entity->get('code'), $entity->get('name'));
-            $this->getBaseLanguage()->save();
-        }
+        $this->getTranslationRepository()->setTranslation('Global', 'thumbnailTypes', $entity->get('code'), $entity->get('name'));
 
         return true;
     }
@@ -102,8 +96,7 @@ class ThumbnailType extends ReferenceData
         }
 
         if ($entity->isAttributeChanged('name')) {
-            $this->getLanguage()->set('Global', 'thumbnailTypes', $entity->get('code'), $entity->get('name'));
-            $this->getLanguage()->save();
+            $this->getTranslationRepository()->setTranslation('Global', 'thumbnailTypes', $entity->get('code'), $entity->get('name'));
         }
 
         return true;
@@ -127,15 +120,8 @@ class ThumbnailType extends ReferenceData
         }
     }
 
-    protected function init()
+    protected function getTranslationRepository(): Translation
     {
-        parent::init();
-
-        $this->addDependency('baseLanguage');
-    }
-
-    protected function getBaseLanguage(): \Atro\Core\Utils\Language
-    {
-        return $this->getInjection('baseLanguage');
+        return $this->getEntityManager()->getRepository('Translation');
     }
 }

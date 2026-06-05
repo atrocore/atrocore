@@ -29,8 +29,6 @@ class Language
 
     protected Unifier $unifier;
     protected array $data = [];
-    protected array $deletedData = [];
-    protected array $changedData = [];
     protected ?string $localeId;
     protected ?string $language = null;
 
@@ -86,24 +84,24 @@ class Language
         $this->localeId = $localeId;
     }
 
-    public function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
+    public function translate(string $name, string $category = 'labels', string $scope = 'Global'): string
     {
-        $translate = $this->getRepository()->findByCode("$scope.$category.$label");
-        if ($translate === null) {
-            return $label;
+        $translation = $this->getRepository()->getTranslation($scope, $category, $name);
+        if ($translation === null) {
+            return $name;
         }
 
-        return $this->resolveTranslation($translate) ?? $label;
+        return $this->resolveTranslation($translation) ?? $name;
     }
 
-    public function translateOption(string $value, string $field, string $scope = 'Global')
+    public function translateOption(string $value, string $field, string $scope = 'Global'): string
     {
-        $translate = $this->getRepository()->findByCode("$scope.options.$field.$value");
-        if ($translate === null) {
+        $translation = $this->getRepository()->getOptionTranslation($scope, $field, $value);
+        if ($translation === null) {
             return $value;
         }
 
-        return $this->resolveTranslation($translate) ?? $value;
+        return $this->resolveTranslation($translation) ?? $value;
     }
 
     public function refreshTranslations(): void
@@ -211,6 +209,10 @@ class Language
         return $fieldName;
     }
 
+    public function set(string $scope, string $category, string $name, string $value): void
+    {
+    }
+
     private function init(): void
     {
         /** @var bool $installed */
@@ -269,10 +271,10 @@ class Language
         return Util::toCamelCase(strtolower($language));
     }
 
-    private function resolveTranslation(Entity $translate): ?string
+    private function resolveTranslation(Entity $translation): ?string
     {
         if (!empty($this->language)) {
-            return $translate->get(self::languageToField($this->language)) ?? $translate->get(self::languageToField(self::DEFAULT_LANGUAGE));
+            return $translation->get(self::languageToField($this->language)) ?? $translation->get(self::languageToField(self::DEFAULT_LANGUAGE));
         }
 
         if (empty($this->localeId)) {
@@ -290,20 +292,20 @@ class Language
         }
 
         if (!empty($language)) {
-            $res = $translate->get(self::languageToField($language));
+            $res = $translation->get(self::languageToField($language));
             if ($res !== null) {
                 return $res;
             }
         }
 
         if (!empty($locales[$this->localeId]['fallbackLanguage'])) {
-            $res = $translate->get(self::languageToField($locales[$this->localeId]['fallbackLanguage']));
+            $res = $translation->get(self::languageToField($locales[$this->localeId]['fallbackLanguage']));
             if ($res !== null) {
                 return $res;
             }
         }
 
-        return $translate->get(self::languageToField(self::DEFAULT_LANGUAGE));
+        return $translation->get(self::languageToField(self::DEFAULT_LANGUAGE));
     }
 
     private function getPreparedTranslations(): array
