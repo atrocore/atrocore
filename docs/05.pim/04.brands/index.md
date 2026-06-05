@@ -40,7 +40,7 @@ The following mass actions are available for brand records on the list view page
 - Compare
 - Merge
 - Select
-- Mass update
+- Update
 - Export
 - Add relation
 - Remove relation

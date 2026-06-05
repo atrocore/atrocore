@@ -39,7 +39,7 @@ AtroPIM stands out because it adapts to your business, not the other way around.
 
 ### Scalability
 
-AtroPIM is engineered to grow alongside your business, capable of handling everything from small catalogs to enterprise environments with millions of records. The system utilizes a robust Job Manager subsystem to handle resource-intensive tasks—such as bulk data imports, channel feeds, and mass updates—in background queues. This ensures that the user interface remains fast and responsive even during heavy data processing. As your data volume increases, AtroPIM supports both vertical scaling (adding CPU/RAM resources) and efficient load management, allowing you to expand your product range and sales channels without performance bottlenecks.
+AtroPIM is engineered to grow alongside your business, capable of handling everything from small catalogs to enterprise environments with millions of records. The system utilizes a robust Job Manager subsystem to handle resource-intensive tasks—such as bulk data imports, channel feeds, and updates—in background queues. This ensures that the user interface remains fast and responsive even during heavy data processing. As your data volume increases, AtroPIM supports both vertical scaling (adding CPU/RAM resources) and efficient load management, allowing you to expand your product range and sales channels without performance bottlenecks.
 
 ### Modularity
 

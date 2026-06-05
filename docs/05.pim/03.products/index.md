@@ -51,7 +51,7 @@ The following mass actions are available for product records on the list/plate v
 - Compare
 - Merge
 - Select
-- Mass Update
+- Update
 - Export
 - Add relation
 - Remove relation

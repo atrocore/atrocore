@@ -32,7 +32,7 @@ In the jobs list, users can:
 
 - View all jobs and their current statuses
 - See jobs details, such as execution times, start/end times, priorities
-- Perform mass updates on job statuses and priorities
+- Perform updates on job statuses and priorities
 - Delete jobs
 
 For example, to mass cancel the jobs - select required jobs and change their statuses to 'Canceled' as described in [Mass Actions](../../12.mass-actions/) article.

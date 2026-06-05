@@ -9,7 +9,7 @@ The Job Manager is AtroCore's subsystem for handling background task execution. 
 The Job Manager pop-up displays all operations executing in background mode, including:
 - Import and export jobs
 - Completeness calculations
-- Mass update or mass delete operations
+- Update or delete operations
 - Other long-running tasks
 
 ## Controls

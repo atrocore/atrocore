@@ -50,37 +50,37 @@ Select is a tool used to add records to a Selection for further comparison or me
 
 ## Update
 
-Update is a tool used to quickly modify information that is the same for different records. You can mass update all the fields and/or attributes for records. To perform a mass update, choose the records you want to modify, then click `Actions/Update` to open the Mass Update popup.
+Update is a tool used to quickly modify information that is the same for different records. You can update all the fields and/or attributes for records. To perform an update, choose the records you want to modify, then click `Actions/Update` to open the Update popup.
 
-![Mass update select](./_assets/mass-update-options.png){.medium}
+![update select](./_assets/mass-update-options.png){.medium}
 
 You can select any number of fields and/or attributes to update.
 
-![Selecting mass update](./_assets/mass-update-selected.png){.large}
+![Selecting update](./_assets/mass-update-selected.png){.large}
 
 When all fields and/or attributes you wanted are selected and their values are set press `Update` to start updating process. If everything is ok you will see `Success` message.
 
 ### Update to fields
 
-To update field select `Select Field` in Mass Update popup. Then select a field you need from a new popup menu. Then apply field value as usual. If the field is already selected, it will not be shown in the list. You can select multiple fields at once.
+To update field select `Select Field` in Update popup. Then select a field you need from a new popup menu. Then apply field value as usual. If the field is already selected, it will not be shown in the list. You can select multiple fields at once.
 
-![Mass update to fields](./_assets/mass-update-field.png){.large}
+![update to fields](./_assets/mass-update-field.png){.large}
 
-> Unique to each record fields (such as Id) can not be mass updated.
+> Unique to each record fields (such as Id) can not be updated.
 
-![Mass update to fields view](./_assets/mass-update-fiel-view.png){.medium}
+![update to fields view](./_assets/mass-update-fiel-view.png){.medium}
 
 ### Update to attributes
 
 To update an attribute, select `Select attribute` in the Update pop-up. Then select the attribute you need from the new pop-up. You can select multiple attributes at once. If an attribute is already selected, selecting it again will have no effect. You can filter attributes in this popup.
 
-If any/all of your products selected to be mass updated have no attribute the attribute will be linked to the product.
+If any/all of your products selected to be updated have no attribute the attribute will be linked to the product.
 
-![Mass update to attributes](./_assets/mass-update-atribute-popup.png){.large}
+![update to attributes](./_assets/mass-update-atribute-popup.png){.large}
 
 If an attribute is multilingual it will be added in all available languages.
 
-![Mass update to attributes language](./_assets/mass-update-atribute-ml.png){.medium}
+![update to attributes language](./_assets/mass-update-atribute-ml.png){.medium}
 
 > Attributes with different language are treated as different attribute values.
 

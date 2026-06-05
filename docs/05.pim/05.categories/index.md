@@ -68,7 +68,7 @@ The following mass actions are available for category records on the list view p
 - Remove
 - Compare
 - Select
-- Mass update
+- Update
 - Export
 - Add relation
 - Remove relation
