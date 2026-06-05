@@ -68,7 +68,7 @@ All other type changes are not allowed. When changing the attribute type to Scri
 There are several ways to link attributes to records of an entity. You can:
 
 - Add individual attributes directly from the record page
-- Add attributes to multiple records at once by [mass update](../../../12.mass-actions/index.md#update-to-attributes)
+- Add attributes to multiple records at once by [update](../../../12.mass-actions/index.md#update-to-attributes)
 - Apply a set of attributes using a [Classification](../04.classifications/index.md#enabling-classifications-for-an-entity)
 - Import attributes together with their values
 

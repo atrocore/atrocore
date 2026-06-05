@@ -55,7 +55,7 @@ Channel records can be searched and filtered according to your needs. For detail
 The following mass actions are available for channel records on the list view page:
 
 - Remove
-- Mass update
+- Update
 - Export
 - Add relation
 - Remove relation
