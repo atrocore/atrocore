@@ -643,7 +643,6 @@ class EntityField extends ReferenceData
     protected function updateField(OrmEntity $entity, array $loadedData): void
     {
         $saveMetadata = $entity->isNew();
-        $saveLanguage = $entity->isNew();
 
         if ($entity->isNew()) {
             if ($entity->get('type') === 'link') {
@@ -831,15 +830,15 @@ class EntityField extends ReferenceData
         }
 
         if ($entity->isAttributeChanged('name')) {
-            $this->getLanguage()
-                ->set($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get('name'));
-            $saveLanguage = true;
+            $this
+                ->getTranslationRepository()
+                ->setTranslation($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get('name'));
         }
 
         if ($entity->isAttributeChanged('tooltipText')) {
-            $this->getLanguage()
-                ->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $entity->get('tooltipText'));
-            $saveLanguage = true;
+            $this
+                ->getTranslationRepository()
+                ->setTranslation($entity->get('entityId'), 'tooltips', $entity->get('code'), $entity->get('tooltipText'));
         }
 
         if ($entity->get('type') === 'linkMultiple' && $entity->isAttributeChanged('linkMultipleField')) {
@@ -933,18 +932,18 @@ class EntityField extends ReferenceData
             }
 
             foreach ($deletedOptions as $option) {
-                $this->getLanguage()
-                    ->deleteOption($entity->get('entityId'), $entity->get('code'), $option);
-                $saveLanguage = true;
+                $this
+                    ->getTranslationRepository()
+                    ->deleteTranslationOption($entity->get('entityId'), $entity->get('code'), $option);
             }
 
             foreach ($updatedOrCreatedOptions as $option) {
                 if (empty($newTranslationOptions->{$option})) {
                     continue;
                 }
-                $this->getLanguage()
-                    ->setOption($entity->get('entityId'), $entity->get('code'), $option, $newTranslationOptions->{$option});
-                $saveLanguage = true;
+                $this
+                    ->getTranslationRepository()
+                    ->setTranslationOption($entity->get('entityId'), $entity->get('code'), $option, $newTranslationOptions->{$option});
             }
         }
 
@@ -982,10 +981,6 @@ class EntityField extends ReferenceData
         if ($saveMetadata) {
             $this->getMetadata()->save();
             $this->getDataManager()->rebuild();
-        }
-
-        if ($saveLanguage) {
-            $this->getLanguage()->save();
         }
     }
 
@@ -1119,5 +1114,10 @@ class EntityField extends ReferenceData
     protected function getDataManager(): DataManager
     {
         return $this->getInjection('dataManager');
+    }
+
+    protected function getTranslationRepository(): Translation
+    {
+        return $this->getEntityManager()->getRepository('Translation');
     }
 }

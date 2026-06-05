@@ -787,8 +787,9 @@ class Attribute extends Base
         }
 
         if (in_array($entity->get('type'), ['enum', 'multiEnum']) && $entity->has('translatedOptions')) {
-            $this->getLanguage()->set($entity->get('entityId'), 'options', $entity->get('code'), (array)$entity->get('translatedOptions'));
-            $this->getLanguage()->save();
+            $this
+                ->getTranslationRepository()
+                ->setTranslationOptions($entity->get('entityId'), $entity->get('code'), (array)$entity->get('translatedOptions'));
         }
     }
 
@@ -836,5 +837,10 @@ class Attribute extends Base
     protected function getAclManager(): AclManager
     {
         return $this->getInjection('container')->get('aclManager');
+    }
+
+    protected function getTranslationRepository(): Translation
+    {
+        return $this->getEntityManager()->getRepository('Translation');
     }
 }

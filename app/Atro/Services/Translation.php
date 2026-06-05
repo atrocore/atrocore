@@ -11,16 +11,11 @@
 
 namespace Atro\Services;
 
-use Atro\Core\Templates\Services\ReferenceData;
+use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
-class Translation extends ReferenceData
+class Translation extends Base
 {
-    public function refreshCache(): void
-    {
-        $this->getRepository()->refreshToDefault();
-    }
-
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);

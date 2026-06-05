@@ -12,27 +12,26 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
-use Atro\Core\DataManager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Repositories\Translation as TranslationRepository;
 use Atro\Services\AbstractService;
 use Espo\Core\Utils\File\Unifier;
 use Atro\Entities\User;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 class Language
 {
-    public const DEFAULT_LANGUAGE = 'en_US';
+    public const string DEFAULT_LANGUAGE = 'en_US';
 
     protected Container $container;
 
     protected Unifier $unifier;
-    protected array $data = [];
-    protected array $deletedData = [];
-    protected array $changedData = [];
     protected ?string $localeId;
     protected ?string $language = null;
+
+    private array $translateCache = [];
 
     public function __construct(Container $container, ?string $localeId = null)
     {
@@ -86,262 +85,83 @@ class Language
         $this->localeId = $localeId;
     }
 
-    public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
+    public function translate(string $name, string $category = 'labels', string $scope = 'Global'): string
     {
-        if (is_array($label)) {
-            $translated = [];
-
-            foreach ($label as $subLabel) {
-                $translated[$subLabel] = $this->translate($subLabel, $category, $scope, $requiredOptions);
+        if (!isset($this->translateCache[$this->localeId][$scope][$category][$name])) {
+            $translation = $this->getRepository()->getTranslation($scope, $category, $name);
+            if ($translation === null) {
+                return $name;
             }
 
-            return $translated;
+            $this->translateCache[$this->localeId][$scope][$category][$name] = $this->resolveTranslation($translation) ?? $name;
         }
 
-        $key = $scope . '.' . $category . '.' . $label;
-        $translated = $this->get($key);
+        return $this->translateCache[$this->localeId][$scope][$category][$name];
+    }
 
-        if (!isset($translated)) {
-            $key = 'Global.' . $category . '.' . $label;
-            $translated = $this->get($key, $label);
-        }
-
-        if (is_array($translated) && isset($requiredOptions)) {
-
-            $translated = array_intersect_key($translated, array_flip($requiredOptions));
-
-            $optionKeys = array_keys($translated);
-            foreach ($requiredOptions as $option) {
-                if (!in_array($option, $optionKeys)) {
-                    $translated[$option] = $option;
-                }
+    public function translateOption(string $value, string $field, string $scope = 'Global'): string
+    {
+        if (!isset($this->translateCache[$this->localeId][$scope]['options'][$field][$value])) {
+            $translation = $this->getRepository()->getOptionTranslation($scope, $field, $value);
+            if ($translation === null) {
+                return $value;
             }
+
+            $this->translateCache[$this->localeId][$scope]['options'][$field][$value] = $this->resolveTranslation($translation) ?? $value;
         }
 
-        return $translated;
+        return $this->translateCache[$this->localeId][$scope]['options'][$field][$value];
     }
 
-    public function translateOption($value, $field, $scope = 'Global')
+    public function refreshTranslations(): void
     {
-        $options = $this->get($scope . '.options.' . $field);
-        if (is_array($options) && array_key_exists($value, $options)) {
-            return $options[$value];
-        } else {
-            if ($scope !== 'Global') {
-                $options = $this->get('Global.options.' . $field);
-                if (is_array($options) && array_key_exists($value, $options)) {
-                    return $options[$value];
-                }
-            }
-        }
-        return $value;
-    }
+        $records = $this->getSimplifiedTranslates($this->getModulesData());
 
-    public function get($key = null, $returns = null)
-    {
-        $data = $this->getData();
-        if (!empty($this->changedData)) {
-            $data = Util::merge($data, $this->changedData);
-        }
+        $existingMap = $this->getRepository()->fetchExistingCodeMap();
 
-        if (!isset($data) || $data === false) {
-            return null;
-        }
+        $toInsert = [];
+        $toUpdate = [];
+        $orphanedIds = [];
 
-        return Util::getValueByKey($data, $key, $returns);
-    }
-
-    public function getAll()
-    {
-        return $this->get();
-    }
-
-    public function save()
-    {
-        if (!empty($this->changedData)) {
-            $simplifiedTranslates = [];
-            TranslationRepository::toSimpleArray($this->changedData, $simplifiedTranslates);
-
-            foreach ($simplifiedTranslates as $key => $value) {
-                $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode($key);
-                if (empty($label)) {
-                    $label = $this->getEntityManager()->getRepository('Translation')->get();
-                    $label->id = md5($key);
-                    $label->set(['code' => $key, 'module' => 'custom']);
-                }
-                $label->set('isCustomized', true);
-                $label->set(Util::toCamelCase(strtolower($this->getLanguage())), $value);
-
-                $this->getEntityManager()->saveEntity($label);
+        foreach ($records as $key => $row) {
+            if (!isset($existingMap[$key])) {
+                $row['id'] = IdGenerator::uuid();
+                $toInsert[] = $row;
+            } elseif (!$existingMap[$key]['isCustomized']) {
+                $row['id'] = $existingMap[$key]['id'];
+                $toUpdate[] = $row;
             }
         }
 
-        if (!empty($this->deletedData)) {
-            foreach ($this->deletedData as $scope => $unsetData) {
-                foreach ($unsetData as $category => $names) {
-                    if ($category === 'options') {
-                        $newNames = [];
-                        foreach ($names as $field => $options) {
-                            foreach ($options as $option) {
-                                $newNames[] = "$field.$option";
-                            }
-                        }
-                        $names = $newNames;
-                    }
-                    foreach ($names as $name) {
-                        $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode("$scope.$category.$name");
-                        if (!empty($label) && $label->get('module') === 'custom' && !empty($label->get('isCustomized'))) {
-                            $this->getEntityManager()->removeEntity($label);
-                        }
-                    }
-                }
+        foreach ($existingMap as $code => $entry) {
+            if (!$entry['isCustomized'] && !isset($records[$code])) {
+                $orphanedIds[] = $entry['id'];
             }
         }
 
-        $this->clearChanges();
+        foreach (array_chunk($orphanedIds, 1000) as $chunk) {
+            $this->getRepository()->bulkDelete($chunk);
+        }
 
-        return true;
+        foreach (array_chunk($toUpdate, 1000) as $rows) {
+            $this->getRepository()->bulkUpdate($rows);
+        }
+
+        foreach (array_chunk($toInsert, 1000) as $rows) {
+            $this->getRepository()->bulkInsert($rows);
+        }
+
+        $this->getRepository()->refreshTimestamp([]);
     }
 
-    public function clearChanges(): void
+    public function getAll(): array
     {
-        $this->changedData = [];
-        $this->deletedData = [];
-        $this->init();
-    }
-
-    public function getModulesData(): array
-    {
-        $data = [];
-
-        // load core
-        $data['core'] = $this->unify(CORE_PATH . '/Atro/Resources/i18n');
-
-        // load modules
-        foreach ($this->getMetadata()->getModules() as $name => $module) {
-            $data[$name] = [];
-            $module->loadTranslates($data[$name]);
-        }
-
-        return $data;
-    }
-
-    public function set(string $scope, string $category, $name, $value): void
-    {
-        if (is_array($name)) {
-            foreach ($name as $rowLabel => $rowValue) {
-                $this->set($scope, $category, $rowLabel, $rowValue);
-            }
-            return;
-        }
-
-        $this->changedData[$scope][$category][$name] = $value;
-
-        $currentLanguage = $this->getLanguage();
-        if (!isset($this->data[$currentLanguage])) {
-            $this->init();
-        }
-        $this->data[$currentLanguage][$scope][$category][$name] = $value;
-
-        $this->undelete($scope, $category, $name);
-    }
-
-    public function setOption(string $scope, string $field, string $option, $value): void
-    {
-        $category = 'options';
-
-        $this->changedData[$scope][$category][$field][$option] = $value;
-
-        $currentLanguage = $this->getLanguage();
-        if (!isset($this->data[$currentLanguage])) {
-            $this->init();
-        }
-        $this->data[$currentLanguage][$scope][$category][$field][$option] = $value;
-
-        $this->undeleteOption($scope, $field, $option);
-    }
-
-    public function delete(string $scope, string $category, $name): void
-    {
-        if (is_array($name)) {
-            foreach ($name as $rowLabel) {
-                $this->delete($scope, $category, $rowLabel);
-            }
-            return;
-        }
-
-        $this->deletedData[$scope][$category][] = $name;
-
-        $currentLanguage = $this->getLanguage();
-        if (!isset($this->data[$currentLanguage])) {
-            $this->init();
-        }
-
-        if (isset($this->data[$currentLanguage][$scope][$category][$name])) {
-            unset($this->data[$currentLanguage][$scope][$category][$name]);
-        }
-
-        if (isset($this->changedData[$scope][$category][$name])) {
-            unset($this->changedData[$scope][$category][$name]);
-        }
-    }
-
-    public function deleteOption(string $scope, string $field, $name): void
-    {
-        $category = 'options';
-        $this->deletedData[$scope][$category][$field][] = $name;
-
-        $currentLanguage = $this->getLanguage();
-        if (!isset($this->data[$currentLanguage])) {
-            $this->init();
-        }
-
-        if (isset($this->data[$currentLanguage][$scope][$category][$field][$name])) {
-            unset($this->data[$currentLanguage][$scope][$category][$field][$name]);
-        }
-
-        if (isset($this->changedData[$scope][$category][$field][$name])) {
-            unset($this->changedData[$scope][$category][$field][$name]);
-        }
-    }
-
-    protected function undelete(string $scope, string $category, string $name): void
-    {
-        if (isset($this->deletedData[$scope][$category])) {
-            foreach ($this->deletedData[$scope][$category] as $key => $labelName) {
-                if ($name === $labelName) {
-                    unset($this->deletedData[$scope][$category][$key]);
-                }
-            }
-        }
-    }
-
-    protected function undeleteOption(string $scope, string $field, string $name): void
-    {
-        $category = 'options';
-        if (isset($this->deletedData[$scope][$category][$field])) {
-            foreach ($this->deletedData[$scope][$category][$field] as $key => $labelName) {
-                if ($name === $labelName) {
-                    unset($this->deletedData[$scope][$category][$field][$key]);
-                }
-            }
-        }
-    }
-
-    public function clearCache(): void
-    {
-        $this->getDataManager()->clearCache(true);
-    }
-
-    protected function init(): void
-    {
-        /** @var bool $installed */
         $installed = $this->getConfig()->get('isInstalled', false);
 
         $data = [];
 
         if ($installed) {
-            $data = $this->getEntityManager()->getRepository('Translation')->getPreparedTranslations();
+            $data = $this->getPreparedTranslations();
         }
 
         if (empty($data)) {
@@ -350,19 +170,16 @@ class Language
 
         $fullData = [];
 
-        // load core
         if (!empty($data['core'])) {
             $fullData = Util::merge($fullData, $data['core']);
         }
 
-        // load modules
         foreach ($this->getMetadata()->getModules() as $name => $module) {
             if (!empty($data[$name])) {
                 $fullData = Util::merge($fullData, $data[$name]);
             }
         }
 
-        // load custom
         if (!empty($data['custom'])) {
             $fullData = Util::merge($fullData, $data['custom']);
         }
@@ -376,64 +193,46 @@ class Language
                 }
                 $i18nData['UserProfile'] = $i18nData['User'];
             }
-            $this->data[$i18nName] = $i18nData;
+            $fullData[$i18nName] = $i18nData;
         }
 
         if ($installed) {
-            $this->data = $this->getEventManager()
-                ->dispatch('Language', 'modify', new Event(['data' => $this->data]))
+            $fullData = $this->getEventManager()
+                ->dispatch('Language', 'modify', new Event(['data' => $fullData]))
                 ->getArgument('data');
-        }
-    }
-
-    protected function getData()
-    {
-        if (empty($this->data)) {
-            $this->init();
         }
 
         if (!empty($this->language)) {
-            $data = $this->data[self::DEFAULT_LANGUAGE];
+            $result = $fullData[self::DEFAULT_LANGUAGE] ?? [];
             if ($this->language !== self::DEFAULT_LANGUAGE) {
-                $data = Util::merge($this->data[self::DEFAULT_LANGUAGE], $this->data[$this->language]);
+                $result = Util::merge($result, $fullData[$this->language] ?? []);
             }
-
-            return $data;
+            return $result;
         }
 
-        if (!empty($this->localeId)) {
-            $cacheName = "locale_{$this->localeId}";
+        $result = $fullData[self::DEFAULT_LANGUAGE] ?? [];
 
-            $data = $this->getDataManager()->getCacheData($cacheName);
-            if (empty($data)) {
-                $data = $this->data[self::DEFAULT_LANGUAGE];
-                $locales = $this->getConfig()->get('locales') ?? [];
+        $locales = $this->getConfig()->get('locales') ?? [];
 
-                $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
-                if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
-                    $data = Util::merge($data, $this->data[$fallbackLanguage]);
-                }
-
-                $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
-
-                if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
-                    $key = $locales[$this->localeId]['language'] . '_with_labels_in_content_language';
-                    if (array_key_exists($key, $this->data)) {
-                        $language = $key;
-                    }
-                }
-
-                if (array_key_exists($language, $this->data)) {
-                    $data = Util::merge($data, $this->data[$language]);
-                }
-
-                $this->getDataManager()->setCacheData($cacheName, $data);
-            }
-
-            return $data;
+        $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
+        if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
+            $result = Util::merge($result, $fullData[$fallbackLanguage] ?? []);
         }
 
-        return $this->data[self::DEFAULT_LANGUAGE];
+        $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+
+        if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
+            $key = $language . '_with_labels_in_content_language';
+            if (array_key_exists($key, $fullData)) {
+                $language = $key;
+            }
+        }
+
+        if (array_key_exists($language, $fullData)) {
+            $result = Util::merge($result, $fullData[$language]);
+        }
+
+        return $result;
     }
 
     public static function getLocalizedFieldName(Container $container, string $scope, string $fieldName): string
@@ -461,32 +260,212 @@ class Language
         return $fieldName;
     }
 
-    protected function unify(string $path): array
+    /**
+     * Sets a translation value to memory cache for the specified scope, category, and name.
+     *
+     * @param string $scope    The scope of the translation.
+     * @param string $category The category of the translation.
+     * @param string $name     The name of the translation entry.
+     * @param string $value    The translation value to set.
+     *
+     * @return void
+     */
+    public function set(string $scope, string $category, string $name, string $value): void
+    {
+        $this->translateCache[$this->localeId][$scope][$category][$name] = $value;
+    }
+
+    private static function languageToField(string $language): string
+    {
+        return TranslationRepository::languageToField($language);
+    }
+
+    private function resolveTranslation(Entity $translation): ?string
+    {
+        if (!empty($this->language)) {
+            return $translation->get(self::languageToField($this->language)) ?? $translation->get(self::languageToField(self::DEFAULT_LANGUAGE));
+        }
+
+        if (empty($this->localeId)) {
+            return null;
+        }
+
+        $locales = $this->getConfig()->get('locales') ?? [];
+        $language = $locales[$this->localeId]['language'] ?? null;
+
+        if (!empty($language)) {
+            $res = $translation->get(self::languageToField($language));
+            if ($res !== null) {
+                return $res;
+            }
+        }
+
+        if (!empty($locales[$this->localeId]['fallbackLanguage'])) {
+            $res = $translation->get(self::languageToField($locales[$this->localeId]['fallbackLanguage']));
+            if ($res !== null) {
+                return $res;
+            }
+        }
+
+        return $translation->get(self::languageToField(self::DEFAULT_LANGUAGE));
+    }
+
+    private function getPreparedTranslations(): array
+    {
+        $languages = [self::languageToField(self::DEFAULT_LANGUAGE) => self::DEFAULT_LANGUAGE];
+        foreach ($this->getConfig()->get('locales') ?? [] as $locale) {
+            if (!empty($locale['language'])) {
+                $languages[self::languageToField($locale['language'])] = $locale['language'];
+            }
+            if (!empty($locale['fallbackLanguage'])) {
+                $languages[self::languageToField($locale['fallbackLanguage'])] = $locale['fallbackLanguage'];
+            }
+        }
+        $languageFields = array_keys($languages);
+
+        $translations = $this->getRepository()
+            ->select(array_merge(['id', 'code', 'module'], $languageFields))
+            ->find();
+
+        $preparedTranslationData = [];
+        foreach ($translations as $translation) {
+            $code = $translation->get('code');
+            foreach ($languages as $field => $language) {
+                if ($translation->get($field) === null) {
+                    continue;
+                }
+
+                $row = [];
+                $insideRow = [];
+
+                $parts = explode('.', $code);
+
+                if (str_contains($code, '...') !== false) {
+                    array_pop($parts);
+                    array_pop($parts);
+                    array_pop($parts);
+                    $parts[] = array_pop($parts) . '...';
+                }
+
+                $this->prepareTreeValue($parts, $insideRow, $translation->get($field));
+                $row[$translation->get('module')][$language] = $insideRow;
+                $preparedTranslationData = Util::merge($preparedTranslationData, $row);
+            }
+        }
+
+        // remove normalize number key to remove __integer
+        $this->normalizeIntegerKey($preparedTranslationData);
+
+        return $preparedTranslationData;
+    }
+
+    private function normalizeIntegerKey(array &$data): void
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($data[$key])) {
+                $this->normalizeIntegerKey($data[$key]);
+            }
+            if (is_string($key) && str_starts_with($key, '__integer__')) {
+                $realKey = str_replace('__integer__', '', $key);
+                $data[$realKey] = $data[$key];;
+                unset($data[$key]);
+            }
+        }
+    }
+
+    private function prepareTreeValue(array $data, &$result, $value): void
+    {
+        if (!empty($data)) {
+            $first = array_shift($data);
+            if (!empty($data)) {
+                $this->prepareTreeValue($data, $result[$first], $value);
+            } else {
+                if (preg_match('/^[0-9]+$/', $first)) {
+                    $first = '__integer__' . $first;
+                }
+                $result[$first] = $value;
+            }
+        }
+    }
+
+    private function getSimplifiedTranslates(array $data): array
+    {
+        $records = [];
+        foreach ($data as $module => $moduleData) {
+            foreach ($moduleData as $locale => $localeData) {
+                $preparedLocaleData = [];
+                self::toSimpleArray($localeData, $preparedLocaleData);
+                foreach ($preparedLocaleData as $key => $value) {
+                    $records[$key]['code'] = $key;
+                    $records[$key]['module'] = $module;
+                    $records[$key]['isCustomized'] = $module === 'custom';
+                    $records[$key]['createdAt'] = date('Y-m-d H:i:s');
+                    $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
+                }
+            }
+        }
+
+        return $records;
+    }
+
+    private static function toSimpleArray(array $data, array &$result, array &$parents = []): void
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $parents[] = $key;
+                self::toSimpleArray($value, $result, $parents);
+            } else {
+                $result[implode('.', array_merge($parents, [$key]))] = $value;
+            }
+        }
+
+        if (!empty($parents)) {
+            array_pop($parents);
+        }
+    }
+
+    private function getModulesData(): array
+    {
+        $data = [];
+
+        // load core
+        $data['core'] = $this->unify(CORE_PATH . '/Atro/Resources/i18n');
+
+        // load modules
+        foreach ($this->getMetadata()->getModules() as $name => $module) {
+            $data[$name] = [];
+            $module->loadTranslates($data[$name]);
+        }
+
+        return $data;
+    }
+
+    private function getRepository(): TranslationRepository
+    {
+        return $this->getEntityManager()->getRepository('Translation');
+    }
+
+    private function unify(string $path): array
     {
         return $this->unifier->unify('i18n', $path, true);
     }
 
-    protected function getEntityManager(): EntityManager
+    private function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
     }
 
-    protected function getMetadata(): Metadata
+    private function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
     }
 
-    protected function getEventManager(): Manager
+    private function getEventManager(): Manager
     {
         return $this->container->get('eventManager');
     }
 
-    protected function getDataManager(): DataManager
-    {
-        return $this->container->get('dataManager');
-    }
-
-    protected function getConfig(): Config
+    private function getConfig(): Config
     {
         return $this->container->get('config');
     }

@@ -13,15 +13,114 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
-use Atro\Core\Utils\Language;
-use Atro\Core\DataManager;
-use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Utils\Language as LanguageUtil;
+use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
-class Translation extends ReferenceData
+class Translation extends Base
 {
-    protected string $cacheFilePath = 'data/translations.json';
+    private array $cachedCodes = [];
+
+    public static function languageToField(string $language): string
+    {
+        return Util::toCamelCase(strtolower($language));
+    }
+
+    public function setTranslation(string $scope, string $category, string $name, string $value): void
+    {
+        $code = "$scope.$category.$name";
+
+        $translation = $this->findByCode($code);
+        if (empty($translation)) {
+            $translation = $this->get();
+            $translation->set('code', $code);
+        }
+
+        $language = LanguageUtil::detectLanguage($this->getConfig(), $this->getEntityManager()->getUser()->get('delegator'));
+
+        $translation->set(self::languageToField($language), $value);
+        $this->save($translation);
+
+        $this->cachedCodes[$code] = $translation;
+    }
+
+    public function deleteTranslation(string $scope, string $category, string $name): void
+    {
+        $code = "$scope.$category.$name";
+
+        $translation = $this->findByCode($code);
+
+        if (!empty($translation)) {
+            $this->getEntityManager()->removeEntity($translation);
+            if (isset($this->cachedCodes[$code])) {
+                unset($this->cachedCodes[$code]);
+            }
+        }
+    }
+
+    public function setTranslationOption(string $scope, string $field, string $name, string $value): void
+    {
+        $code = "$scope.options.$field.$name";
+
+        $translation = $this->findByCode($code);
+        if (empty($translation)) {
+            $translation = $this->get();
+            $translation->set('code', $code);
+        }
+
+        $language = LanguageUtil::detectLanguage($this->getConfig(), $this->getEntityManager()->getUser()->get('delegator'));
+
+        $translation->set(self::languageToField($language), $value);
+        $this->save($translation);
+
+        $this->cachedCodes[$code] = $translation;
+    }
+
+    public function setTranslationOptions(string $scope, string $field, array $values): void
+    {
+        $prefix = "$scope.options.$field.";
+
+        $existingRows = $this->getDbal()->createQueryBuilder()
+            ->select('code')
+            ->from($this->getDbal()->quoteIdentifier('translation'))
+            ->where('code LIKE :prefix')
+            ->andWhere('deleted = :false')
+            ->setParameter('prefix', $prefix . '%')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+
+        foreach ($existingRows as $code) {
+            $parts = explode('.', $code);
+            $name = $parts[3];
+            if (!array_key_exists($name, $values)) {
+                $this->deleteTranslationOption($scope, $field, $name);
+            }
+        }
+
+        foreach ($values as $name => $value) {
+            if (empty($value)) {
+                continue;
+            }
+            $this->setTranslationOption($scope, $field, (string)$name, (string)$value);
+        }
+    }
+
+    public function deleteTranslationOption(string $scope, string $field, string $name): void
+    {
+        $code = "$scope.options.$field.$name";
+
+        $translation = $this->findByCode($code);
+
+        if (!empty($translation)) {
+            $this->getEntityManager()->removeEntity($translation);
+            if (isset($this->cachedCodes[$code])) {
+                unset($this->cachedCodes[$code]);
+            }
+        }
+    }
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -39,145 +138,179 @@ class Translation extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
-        if (!empty($entity->_input) && $entity->isAttributeChanged('isCustomized') && !$entity->get('isCustomized')) {
-            $this->refreshToDefault();
+        $this->refreshTimestamp($options);
+    }
+
+    public function getTranslation(string $scope, string $category, string $name): ?Entity
+    {
+        return $this->findByCode("$scope.$category.$name");
+    }
+
+    public function getOptionTranslation(string $scope, string $field, string $value): ?Entity
+    {
+        return $this->findByCode("$scope.options.$field.$value");
+    }
+
+    public function findByCode(string $code): ?Entity
+    {
+        if (!isset($this->cachedCodes[$code])) {
+            $this->cachedCodes[$code] = $this->where(['code' => $code])->findOne();
+        }
+
+        return $this->cachedCodes[$code];
+    }
+
+    public function fetchExistingCodeMap(): array
+    {
+        $rows = $this->getDbal()->createQueryBuilder()
+            ->select('code', 'id', 'is_customized')
+            ->from($this->getDbal()->quoteIdentifier('translation'))
+            ->where('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        $map = [];
+        foreach ($rows as $row) {
+            $map[$row['code']] = [
+                'id'           => $row['id'],
+                'isCustomized' => (bool)$row['is_customized'],
+            ];
+        }
+
+        return $map;
+    }
+
+    public function bulkInsert(array $rows): void
+    {
+        if (empty($rows)) {
+            return;
+        }
+
+        // Collect all unique keys across all rows (rows may have different column sets)
+        $allKeys = [];
+        foreach ($rows as $row) {
+            foreach (array_keys($row) as $key) {
+                $allKeys[$key] = true;
+            }
+        }
+        $allKeys = array_keys($allKeys);
+
+        $conn = $this->getDbal();
+        $quotedColumns = array_map(
+            fn(string $key) => $conn->quoteIdentifier(Util::toUnderScore($key)),
+            $allKeys
+        );
+
+        $rowPlaceholders = [];
+        $params = [];
+        $types = [];
+
+        foreach ($rows as $row) {
+            $placeholders = [];
+            foreach ($allKeys as $key) {
+                $value = $row[$key] ?? null;
+                $placeholders[] = '?';
+                $params[] = $value;
+                if (is_bool($value)) {
+                    $types[] = ParameterType::BOOLEAN;
+                } elseif ($value === null) {
+                    $types[] = ParameterType::NULL;
+                } else {
+                    $types[] = ParameterType::STRING;
+                }
+            }
+            $rowPlaceholders[] = '(' . implode(', ', $placeholders) . ')';
+        }
+
+        $sql = sprintf(
+            'INSERT INTO %s (%s) VALUES %s',
+            $conn->quoteIdentifier('translation'),
+            implode(', ', $quotedColumns),
+            implode(', ', $rowPlaceholders)
+        );
+
+        $conn->executeStatement($sql, $params, $types);
+    }
+
+    public function bulkUpdate(array $rows): void
+    {
+        if (empty($rows)) {
+            return;
+        }
+
+        $allKeys = [];
+        foreach ($rows as $row) {
+            foreach (array_keys($row) as $key) {
+                $allKeys[$key] = true;
+            }
+        }
+        $allKeys = array_keys($allKeys);
+
+        $conn = $this->getDbal();
+        $columns = array_map(fn(string $k) => Util::toUnderScore($k), $allKeys);
+        $quotedColumns = array_map(fn(string $c) => $conn->quoteIdentifier($c), $columns);
+
+        $rowPlaceholders = [];
+        $params = [];
+        $types = [];
+
+        foreach ($rows as $row) {
+            $placeholders = [];
+            foreach ($allKeys as $key) {
+                $value = $row[$key] ?? null;
+                $placeholders[] = '?';
+                $params[] = $value;
+                if (is_bool($value)) {
+                    $types[] = ParameterType::BOOLEAN;
+                } elseif ($value === null) {
+                    $types[] = ParameterType::NULL;
+                } else {
+                    $types[] = ParameterType::STRING;
+                }
+            }
+            $rowPlaceholders[] = '(' . implode(', ', $placeholders) . ')';
+        }
+
+        $updateColumns = array_values(array_filter($columns, fn($c) => !in_array($c, ['id', 'created_at'])));
+
+        if (Converter::isPgSQL($conn)) {
+            $setClauses = array_map(
+                fn($c) => $conn->quoteIdentifier($c) . ' = EXCLUDED.' . $conn->quoteIdentifier($c),
+                $updateColumns
+            );
+            $onConflict = ' ON CONFLICT (' . $conn->quoteIdentifier('id') . ') DO UPDATE SET ' . implode(', ', $setClauses);
         } else {
-            $this->refreshTimestamp($options);
+            $setClauses = array_map(
+                fn($c) => $conn->quoteIdentifier($c) . ' = VALUES(' . $conn->quoteIdentifier($c) . ')',
+                $updateColumns
+            );
+            $onConflict = ' ON DUPLICATE KEY UPDATE ' . implode(', ', $setClauses);
         }
+
+        $sql = sprintf(
+            'INSERT INTO %s (%s) VALUES %s%s',
+            $conn->quoteIdentifier('translation'),
+            implode(', ', $quotedColumns),
+            implode(', ', $rowPlaceholders),
+            $onConflict
+        );
+
+        $conn->executeStatement($sql, $params, $types);
     }
 
-    public function getPreparedTranslations(): array
+    public function bulkDelete(array $ids): void
     {
-        if (!file_exists($this->cacheFilePath)) {
-            $this->saveCacheFile($this->getAllItems());
+        if (empty($ids)) {
+            return;
         }
 
-        return json_decode(file_get_contents($this->cacheFilePath), true);
+        $this->getDbal()->createQueryBuilder()
+            ->delete($this->getDbal()->quoteIdentifier('translation'))
+            ->where('id IN (:ids)')
+            ->setParameter('ids', $ids, $this->getDbal()::PARAM_STR_ARRAY)
+            ->executeQuery();
     }
 
-    protected function saveCacheFile(array $data): void
-    {
-        $preparedTranslationData = [];
-        foreach ($data as $record) {
-            foreach ($this->getMetadata()->get('multilang.languageList', []) as $locale) {
-                $row = [];
-                $field = Util::toCamelCase(strtolower($locale));
-                if (array_key_exists($field, $record) && $record[$field] !== null) {
-                    $insideRow = [];
-
-                    $hasDots = strpos($record['code'], '...') !== false;
-                    $parts = explode('.', $record['code']);
-                    if ($hasDots) {
-                        array_pop($parts);
-                        array_pop($parts);
-                        array_pop($parts);
-                        $parts[] = array_pop($parts) . '...';
-                    }
-
-                    $this->prepareTreeValue($parts, $insideRow, $record[$field]);
-                    $row[$record['module']][$locale] = $insideRow;
-                    $preparedTranslationData = Util::merge($preparedTranslationData, $row);
-                }
-            }
-        }
-        // remove normalize number key to remove __integer
-        $this->normalizeIntegerKey($preparedTranslationData);
-        file_put_contents($this->cacheFilePath, json_encode($preparedTranslationData));
-    }
-
-    public function refreshToDefault(): void
-    {
-        $records = self::getSimplifiedTranslates((new Language($this->getInjection('container')))->getModulesData());
-        foreach ($this->getAllItems() as $item) {
-            if (!empty($item['isCustomized'])) {
-                $records[$item['code']] = $item;
-            }
-        }
-
-        $this->saveDataToFile($records);
-        $this->refreshTimestamp([]);
-    }
-
-    public static function getSimplifiedTranslates(array $data): array
-    {
-        $records = [];
-        foreach ($data as $module => $moduleData) {
-            foreach ($moduleData as $locale => $localeData) {
-                $preparedLocaleData = [];
-                self::toSimpleArray($localeData, $preparedLocaleData);
-                foreach ($preparedLocaleData as $key => $value) {
-                    $records[$key]['id'] = md5($key);
-                    $records[$key]['code'] = $key;
-                    $records[$key]['module'] = $module;
-                    $records[$key]['isCustomized'] = $module === 'custom';
-                    $records[$key]['createdAt'] = date('Y-m-d H:i:s');
-                    $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
-                }
-            }
-        }
-
-        return $records;
-    }
-
-    public static function toSimpleArray(array $data, array &$result, array &$parents = []): void
-    {
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $parents[] = $key;
-                self::toSimpleArray($value, $result, $parents);
-            } else {
-                $result[implode('.', array_merge($parents, [$key]))] = $value;
-            }
-        }
-
-        if (!empty($parents)) {
-            array_pop($parents);
-        }
-    }
-
-    protected function normalizeIntegerKey(array &$data): void
-    {
-        foreach ($data as $key => $value) {
-            if (is_array($data[$key])) {
-                $this->normalizeIntegerKey($data[$key]);
-            }
-            if (is_string($key) && str_starts_with($key, '__integer__')) {
-                $realKey = str_replace('__integer__', '', $key);
-                $data[$realKey] = $data[$key];;
-                unset($data[$key]);
-            }
-        }
-    }
-
-    protected function saveDataToFile(array $data): bool
-    {
-        $res = parent::saveDataToFile($data);
-
-        if ($res) {
-            $this->saveCacheFile($data);
-        }
-
-        return $res;
-    }
-
-    protected function prepareTreeValue(array $data, &$result, $value): void
-    {
-        if (!empty($data)) {
-            $first = array_shift($data);
-            if (!empty($data)) {
-                $this->prepareTreeValue($data, $result[$first], $value);
-            } else {
-                if(preg_match('/^[0-9]+$/', $first)){
-                    $first = '__integer__'.$first;
-                }
-                $result[$first] = $value;
-            }
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
@@ -185,23 +318,13 @@ class Translation extends ReferenceData
         $this->refreshTimestamp($options);
     }
 
-    protected function refreshTimestamp(array $options): void
+    public function refreshTimestamp(array $options): void
     {
         if (!empty($options['keepCache'])) {
             return;
         }
 
-        $this->getInjection('language')->clearCache();
-
         $this->getConfig()->set('cacheTimestamp', time());
         $this->getConfig()->save();
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-        $this->addDependency('language');
     }
 }

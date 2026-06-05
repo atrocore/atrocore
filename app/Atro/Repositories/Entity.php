@@ -296,12 +296,8 @@ class Entity extends ReferenceData
                 $this->getMetadata()->save();
             }
 
-            $this->getLanguage()->set('Global', 'scopeNames', $entity->get('code'), $entity->get('name'));
-            $this->getLanguage()->set('Global', 'scopeNamesPlural', $entity->get('code'), $entity->get('namePlural'));
-            $this->getLanguage()->save();
-            if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
-                $this->getBaseLanguage()->save();
-            }
+            $this->getTranslationRepository()->setTranslation('Global', 'scopeNames', $entity->get('code'), $entity->get('name'));
+            $this->getTranslationRepository()->setTranslation('Global', 'scopeNamesPlural', $entity->get('code'), $entity->get('namePlural'));
 
             $this->getDataManager()->rebuild();
 
@@ -381,7 +377,6 @@ class Entity extends ReferenceData
     protected function updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
     {
         $saveMetadata = $isCustom;
-        $saveLanguage = $isCustom;
 
         foreach ($entity->toArray() as $field => $value) {
             if ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields', $field, 'notStorable'])) {
@@ -402,11 +397,7 @@ class Entity extends ReferenceData
                 $saveMetadata = true;
             } elseif (in_array($field, ['name', 'namePlural'])) {
                 $category = $field === 'namePlural' ? 'scopeNamesPlural' : 'scopeNames';
-                $this->getLanguage()->set('Global', $category, $entity->get('code'), $entity->get($field));
-                if ($isCustom) {
-                    $this->getBaseLanguage()->set('Global', $category, $entity->get('code'), $entity->get($field));
-                }
-                $saveLanguage = true;
+                $this->getTranslationRepository()->setTranslation('Global', $category, $entity->get('code'), $entity->get($field));
             } elseif ($field === 'sortBy') {
                 $loadedVal = $loadedData['entityDefs'][$entity->get('code')]['collection']['sortBy'] ?? null;
                 if ($loadedVal === $entity->get($field)) {
@@ -463,15 +454,6 @@ class Entity extends ReferenceData
         if ($saveMetadata) {
             $this->getMetadata()->save();
             $this->getDataManager()->rebuild();
-        }
-
-        if ($saveLanguage) {
-            $this->getLanguage()->save();
-            if ($isCustom) {
-                if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
-                    $this->getBaseLanguage()->save();
-                }
-            }
         }
     }
 
@@ -782,17 +764,16 @@ class Entity extends ReferenceData
     {
         parent::init();
 
-        $this->addDependency('baseLanguage');
         $this->addDependency('dataManager');
-    }
-
-    protected function getBaseLanguage(): \Atro\Core\Utils\Language
-    {
-        return $this->getInjection('baseLanguage');
     }
 
     protected function getDataManager(): DataManager
     {
         return $this->getInjection('dataManager');
+    }
+
+    protected function getTranslationRepository(): Translation
+    {
+        return $this->getEntityManager()->getRepository('Translation');
     }
 }

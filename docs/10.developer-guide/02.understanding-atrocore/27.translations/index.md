@@ -2,12 +2,12 @@
 title: Translations
 ---
 
-**AtroCore** provides a powerful and easy-to-use localization system to support multiple languages. All translation data is stored in **JSON** format within the `Resources/i18n` folder of the core or any custom modules.
+**AtroCore** provides a flexible localization system that supports multiple languages. Translation data is stored in **JSON** files within the `Resources/i18n` folder of the core and each module, and is synchronized to the `Translation` database entity via the `refresh translations` command.
 
-Each language has its own folder named after the language code (e.g., `en_US` for US English). These folders contain two types of files:
+Each language has its own subfolder named after the language code (e.g., `en_US`). Supported translation categories:
 
-* **`Global.json`**: Contains translations for global elements like entity names and universal labels.
-* **`{EntityName}.json`**: Provides specific translations for a given entity, including `fields`, `options`, `labels`, `messages`, `tooltips`, and `exceptions`.
+* **`Global.json`** — global labels, scope names, and universal strings.
+* **`{EntityName}.json`** — entity-specific translations: `fields`, `options`, `labels`, `messages`, `tooltips`, `exceptions`.
 
 **Example: `en_US/Example.json`**
 
@@ -17,155 +17,125 @@ Each language has its own folder named after the language code (e.g., `en_US` fo
     "type": "Type"
   },
   "options": {
-      "type": {
-          "simple": "Simple",
-          "composite": "Composite"
-      }
+    "type": {
+      "simple": "Simple",
+      "composite": "Composite"
+    }
   },
   "labels": {
-   "myLabel": "My label"
+    "myLabel": "My label"
   },
   "messages": {
     "myMessage": "My message"
   },
-  "tooltips":{
-      "type": "Use to define the type of example"
+  "tooltips": {
+    "type": "Use to define the type of example"
   },
   "exceptions": {
-      "errorWhenCreating": "There was an error when creating"
+    "errorWhenCreating": "There was an error when creating"
   }
 }
 ```
 
-Translations from the core and all modules are loaded and merged during system initialization. Similar to [Metadata](../02.metadata/index.md), any module can add or update translations for any entity.
+Translations from the core and all modules are merged during system initialization. Any module can override translations for any entity.
 
-## Regenerating System Translations
+---
 
-System translations are managed through a command-line utility. The translation data is not sourced directly from JSON files but is compiled into a database entity for performance and consistency.
+## Synchronizing Translations
 
-**Command:**
+JSON files are the source of truth for system-provided translations. They are synchronized to the database via:
 
 ```bash
 php console.php refresh translations
 ```
 
-**Process:**
-The `refresh translations` command executes a process that:
-
-* **Loads:** All translation data from the JSON files across all modules.
-* **Merges:** The loaded data into a single, comprehensive translation set.
-* **Persists:** This merged data into the `Translation` `ReferenceData` entity.
-
-This approach ensures the application has a single source of truth for all localization strings, which is the `Translation` entity.
+This command loads all i18n JSON files from all modules, merges them, and upserts the result into the `Translation` entity. Records marked as `isCustomized = true` (user-edited via UI) are never overwritten.
 
 > Learn more about the `ReferenceData` entity type in the [Entities section](../05.entities/index.md).
 
------
+---
 
-## Accessing Translations
+## Reading Translations (Language utility)
 
-Use the `language` service from the container to access translations.
+The `Language` utility (`\Atro\Core\Utils\Language`) is responsible **only for reading** — translating keys into strings for the current user's locale. It uses **lazy loading**: each key is fetched from the database on first access and cached in memory for the duration of the request.
 
-```php
-/** @var Espo\Core\Utils\Language $language */
-$language = $container->get('language');
-
-$localizeField = $language->translate($tranlationKey, $categorie, $scope);
-```
-
-* `$tranlationKey` is a JSON key from within a translation file.
-* `$category` is the top-level key (`fields`, `labels`, etc.).
-* `$scope` is the entity name, or `Global` by default.
-
-For the particular of translating options for static list fields use :
+Use the `language` service from the container:
 
 ```php
-/** @var Espo\Core\Utils\Language $language */
+/** @var \Atro\Core\Utils\Language $language */
 $language = $container->get('language');
 
-$localizeOption= $language->translateOption($optionCode, $field, $scope);
+// Translate a label
+$text = $language->translate('type', 'fields', 'Example');
+// Returns "Type" for en_US
+
+// Translate a static-list option
+$text = $language->translateOption('simple', 'type', 'Example');
+// Returns "Simple" for en_US
 ```
-* `$option` is a JSON key from within a translation file.
-* `$field` static list field of the entity  `$scope`.
-* `$scope` is the entity name
 
-The system automatically detects the user's language or uses a fallback language from the configuration.
+**Parameters:**
 
-**Example Usage**:
-Assuming the user's language is English (`en_US`):
+| Method | Parameters |
+|---|---|
+| `translate($name, $category, $scope)` | `$name` — translation key; `$category` — `fields`, `labels`, `tooltips`, etc.; `$scope` — entity name or `Global` |
+| `translateOption($value, $field, $scope)` | `$value` — option code; `$field` — field name; `$scope` — entity name |
+
+The language is resolved automatically from the current user's locale. To override it explicitly:
 
 ```php
-/** @var Espo\Core\Utils\Language $language */
-$language = $container->get('language');
-
-$localizeField = $language->translate('type', 'fields', 'Example');
-// $localizeField is "Type"
-
-$localizeLabel = $language->translate('myLabel', 'labels', 'Example');
-// $localizeField is "My label"
-
-
-$localizeOption = $language->translateOption('simple', 'type', 'Example');
-// $localizeField is Simple
+$language->setLanguage('de_DE');
+// or by locale ID:
+$language->setLocale($localeId);
 ```
 
-To set a specific language, use the `setLangage` method:
-
-```php
-/** @var Espo\Core\Utils\Language $language */
-$language = $container->get('language');
-
-$language->setLangage('de_DE'); // Sets the language to German
-//or set the locale directly by using $language->setLocale($localeId)
-$localizeText = $language->translate('type', 'fields', 'Example');
-```
-
-In the frontend, the `translate` method is also available in any view:
+In the frontend, the same keys are available on any view:
 
 ```js
-let localizeField = this.translate('type', 'fields', 'Example');
-// localizeField is "Type"
+let text = this.translate('type', 'fields', 'Example');
 ```
 
-## Updating Translation in code
-As we have seen above, the translations is persisted using the entity `Translation`.
-The container service Language  convenient means to make modification like:
-* Localize a new key
-* Update an existing localization
-* Delete a localization
-**How it works***
+---
+
+## Writing Translations (Translation repository)
+
+To create, update, or delete translations in code use the `Translation` repository directly. The `Language` utility does **not** write to the database.
 
 ```php
-/** @var Espo\Core\Utils\Language $language */
-$language = $container->get('language');
+/** @var \Atro\Repositories\Translation $repo */
+$repo = $entityManager->getRepository('Translation');
 
-// create or update (if it exists)
-$language->set($scope, $category, $key, $newValue);
+// Create or update a translation for the current user's language
+$repo->setTranslation($scope, $category, $name, $value);
 
-// delete
-$language->delete($scope, $category, $key);
+// Delete a translation
+$repo->deleteTranslation($scope, $category, $name);
 
-// create or update and option's translation (if it exists)
-$language->setOption($scope, $field, $optionName, $newValue);
+// Create or update a single enum/multiEnum option translation
+$repo->setTranslationOption($scope, $field, $optionCode, $value);
 
-// delete an option's translation
-$language->deleteOption($scope, $field, $optionName);
+// Replace all option translations for a field (add new, update changed, delete removed)
+$repo->setTranslationOptions($scope, $field, $valuesArray);
 
-// apply change
-$language->save();
+// Delete a single option translation
+$repo->deleteTranslationOption($scope, $field, $optionCode);
 ```
 
-> Translation modified this way will not change after refreshing translation regeneration. To modify translation in the UI go to Administration / Translation
+**`setTranslationOptions`** performs a full replace: options absent from `$valuesArray` are deleted, new ones are inserted, existing ones are updated. Use it when saving the complete set of translated options for a field.
 
-**Example:**
+**Example — saving a field label and tooltip from a repository:**
 
 ```php
-/** @var Espo\Core\Utils\Language $language */
-$language = $container->get('language');
- $language->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $entity->get('tooltipText'));
+$translationRepo = $entityManager->getRepository('Translation');
+
+$translationRepo->setTranslation($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get('name'));
+$translationRepo->setTranslation($entity->get('entityId'), 'tooltips', $entity->get('code'), $entity->get('tooltipText'));
 ```
 
-## Dynamic extension via listener
+> Translations written via the repository are marked `isCustomized = true` and will not be overwritten by `refresh translations`.
+
+---
+
+## Dynamic Extension via Listener
 
 Check the section [Extending with listener](../20.listeners) for more information.
-
