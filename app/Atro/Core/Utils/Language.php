@@ -32,6 +32,8 @@ class Language
     protected ?string $localeId;
     protected ?string $language = null;
 
+    private array $translateCache = [];
+
     public function __construct(Container $container, ?string $localeId = null)
     {
         if ($localeId === null) {
@@ -86,22 +88,30 @@ class Language
 
     public function translate(string $name, string $category = 'labels', string $scope = 'Global'): string
     {
-        $translation = $this->getRepository()->getTranslation($scope, $category, $name);
-        if ($translation === null) {
-            return $name;
+        if (!isset($this->translateCache[$this->localeId][$scope][$category][$name])) {
+            $translation = $this->getRepository()->getTranslation($scope, $category, $name);
+            if ($translation === null) {
+                return $name;
+            }
+
+            $this->translateCache[$this->localeId][$scope][$category][$name] = $this->resolveTranslation($translation) ?? $name;
         }
 
-        return $this->resolveTranslation($translation) ?? $name;
+        return $this->translateCache[$this->localeId][$scope][$category][$name];
     }
 
     public function translateOption(string $value, string $field, string $scope = 'Global'): string
     {
-        $translation = $this->getRepository()->getOptionTranslation($scope, $field, $value);
-        if ($translation === null) {
-            return $value;
+        if (!isset($this->translateCache[$this->localeId][$scope]['options'][$field][$value])) {
+            $translation = $this->getRepository()->getOptionTranslation($scope, $field, $value);
+            if ($translation === null) {
+                return $value;
+            }
+
+            $this->translateCache[$this->localeId][$scope]['options'][$field][$value] = $this->resolveTranslation($translation) ?? $value;
         }
 
-        return $this->resolveTranslation($translation) ?? $value;
+        return $this->translateCache[$this->localeId][$scope]['options'][$field][$value];
     }
 
     public function refreshTranslations(): void
@@ -209,8 +219,19 @@ class Language
         return $fieldName;
     }
 
+    /**
+     * Sets a translation value to memory cache for the specified scope, category, and name.
+     *
+     * @param string $scope    The scope of the translation.
+     * @param string $category The category of the translation.
+     * @param string $name     The name of the translation entry.
+     * @param string $value    The translation value to set.
+     *
+     * @return void
+     */
     public function set(string $scope, string $category, string $name, string $value): void
     {
+        $this->translateCache[$this->localeId][$scope][$category][$name] = $value;
     }
 
     private function init(): void
