@@ -35,28 +35,22 @@ The following parameters are available when configuring a Matching:
 
 Matching Rules define the individual comparison criteria used within a Matching configuration. Multiple Matching Rules can be associated with a single Matching record.
 
-![Matching Rules](./_assets/Matching_Rules.png){.medium}
-
 The following parameters are available when defining a Matching Rule:
 
 - Name – descriptive label for the rule.
 - Code – unique system identifier. Immutable after creation.
 - Type – determines how field values are compared. Immutable after creation. Available types:
-  - Equal – strict equality between values.
-  - Similar – pattern-based similarity.
-  
-  For array-based fields ([array](../../03.administration/11.entity-management/02.data-types/index.md#array), [multi-value list](../../03.administration/11.entity-management/02.data-types/index.md#multi-value-list), [static multi-value list](../../03.administration/11.entity-management/02.data-types/index.md#static-multi-value-list)), values are considered similar if they contain the same elements regardless of order.
-  Example: [1,2,3] and [1,3,2] are considered similar.
-
-  To detect duplicates based on approximate text matches – not just exact values – the [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module provides Fuzzy Search support. When enabled, the Similar rule uses it to group records with exactly or approximately matching field values. The match score is proportional to the similarity percentage – a closer match produces a higher score.
-  - Contains – checks if the source value contains the target value.
-
-  For array-based fields (array, extensibleMultiEnum, multiEnum), this means that all elements of the source value must be present in the target value.
-  Example: [1,2] and [3,1,2] – the second value contains the first.
-  
+  - Field is Equal – strict equality between values.
+  - Field is Similar – normalized string comparison (lowercased, trimmed, spaces removed). For array-based fields ([array](../../03.administration/11.entity-management/02.data-types/index.md#array), [multi-value list](../../03.administration/11.entity-management/02.data-types/index.md#multi-value-list), [static multi-value list](../../03.administration/11.entity-management/02.data-types/index.md#static-multi-value-list)), values are considered similar if they contain the same elements regardless of order. Example: [1,2,3] and [1,3,2] are considered similar.
+  - Field Contains – checks if the source value contains the target value. For array-based fields (array, extensibleMultiEnum, multiEnum), this means that all elements of the source value must be present in the target value. Example: [1,2] and [3,1,2] – the second value contains the first.
   - Set – represents a grouped collection of subordinate Matching Rules that are evaluated together. A Set rule enables composite matching logic by aggregating multiple conditions into a single weighted rule. A Set has an Operator parameter that defines how its sub-rules are evaluated:
     - Operator: AND - All sub-rules within the Set must evaluate to true for the Set to be considered true.
     - Operator: OR - At least one sub-rule must evaluate to true for the Set to be considered true.
+
+  The [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module provides additional rule types for approximate matching:
+
+  - Field is Similar (Fuzzy) – finds records with approximately matching field values, including typos and slight variations. The match score is proportional to the similarity.
+  - Field is Similar (Levenshtein) – finds records based on the number of character edits required to transform one value into another. The allowed edit distance is configurable.
 - Matching – references the parent Matching configuration. Immutable after creation.
 - Weight – numerical value defining the rule’s importance in the overall similarity score.
 - Staging Entity (Unidirectional only) – entity from which external or temporary data originates. Inherited from parent Matching. Immutable.
