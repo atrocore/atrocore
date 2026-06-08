@@ -14,6 +14,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 
 class V2Dot3Dot6 extends Base
@@ -73,15 +74,23 @@ class V2Dot3Dot6 extends Base
 
         $conn = $this->getDbal();
 
-        foreach (array_chunk($rows, 500) as $chunk) {
-            $allColumns = [];
-            foreach ($chunk as $row) {
-                foreach (array_keys($row) as $col) {
-                    $allColumns[$col] = true;
-                }
-            }
-            $allColumns = array_keys($allColumns);
+        $allColumns = [
+            'id', 'code', 'module', 'is_customized', 'created_at', 'modified_at', 'created_by_id', 'modified_by_id',
+            'af_za', 'sq_al', 'ar_dz', 'ar_bh', 'ar_eg', 'ar_iq', 'ar_jo', 'ar_kw', 'ar_lb', 'ar_ly', 'ar_ma', 'ar_om',
+            'ar_qa', 'ar_sa', 'ar_sy', 'ar_tn', 'ar_ae', 'ar_ye', 'hy_am', 'az_az', 'eu_es', 'be_by', 'bn_in', 'bs_ba',
+            'bg_bg', 'ca_es', 'zh_cn', 'zh_hk', 'zh_mo', 'zh_sg', 'zh_tw', 'hr_hr', 'cs_cz', 'da_dk', 'nl_be', 'nl_nl',
+            'en_au', 'en_bz', 'en_ca', 'en_ie', 'en_jm', 'en_nz', 'en_ph', 'en_za', 'en_tt', 'en_vi', 'en_gb', 'en_us', 'en_zw',
+            'et_ee', 'fo_fo', 'fi_fi', 'fr_be', 'fr_ca', 'fr_fr', 'fr_lu', 'fr_mc', 'fr_ch', 'gl_es', 'ka_ge',
+            'de_at', 'de_de', 'de_li', 'de_lu', 'de_ch', 'el_gr', 'gu_in', 'he_il', 'hi_in', 'hu_hu', 'is_is', 'id_id',
+            'it_it', 'it_ch', 'ja_jp', 'kn_in', 'kk_kz', 'kok_in', 'ko_kr', 'lv_lv', 'lt_lt', 'mk_mk', 'ms_bn', 'ms_my',
+            'ml_in', 'mt_mt', 'mr_in', 'mn_mn', 'se_no', 'nb_no', 'nn_no', 'fa_ir', 'pl_pl', 'pt_br', 'pt_pt', 'pa_in',
+            'ro_ro', 'ru_ru', 'sr_ba', 'sr_cs', 'sk_sk', 'sl_si', 'es_ar', 'es_bo', 'es_cl', 'es_co', 'es_cr', 'es_do',
+            'es_ec', 'es_sv', 'es_gt', 'es_hn', 'es_mx', 'es_ni', 'es_pa', 'es_py', 'es_pe', 'es_pr', 'es_es', 'es_uy', 'es_ve',
+            'sw_ke', 'sv_fi', 'sv_se', 'syr_sy', 'ta_in', 'te_in', 'th_th', 'tn_za', 'tr_tr', 'uk_ua', 'uz_uz', 'vi_vn',
+            'cy_gb', 'xh_za', 'zu_za',
+        ];
 
+        foreach (array_chunk($rows, 500) as $chunk) {
             $quotedColumns = array_map(fn($c) => $conn->quoteIdentifier($c), $allColumns);
             $rowPlaceholders = [];
             $params = [];
@@ -113,7 +122,7 @@ class V2Dot3Dot6 extends Base
 
             try {
                 $conn->executeStatement($sql, $params, $types);
-            } catch (\Throwable $e) {
+            } catch (UniqueConstraintViolationException $e) {
             }
         }
 
