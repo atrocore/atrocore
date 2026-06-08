@@ -78,10 +78,6 @@ Espo.define('views/fields/classifications-single', ['views/fields/link', 'views/
 
             return data;
         },
-/*
-        inlineEditSave: function () {
-            Classifications.prototype.inlineEditSave.call(this);
-        },*/
 
         createFilterView: function (rule, inputName, type, delay = true) {
             Classifications.prototype.createFilterView.call(this, rule, inputName, type, delay);
