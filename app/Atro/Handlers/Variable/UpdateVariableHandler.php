@@ -48,7 +48,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                 'schema' => [
                     'type'       => 'object',
                     'properties' => [
-                        'key'   => ['type' => 'string', 'nullable' => true],
+                        'key'   => ['type' => 'string'],
                         'type'  => ['type' => 'string', 'nullable' => true],
                         'value' => [
                             'anyOf' => [
@@ -73,7 +73,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'type'       => 'object',
                         'properties' => [
                             'id'    => ['type' => 'string'],
-                            'key'   => ['type' => 'string', 'nullable' => true],
+                            'key'   => ['type' => 'string'],
                             'type'  => ['type' => 'string', 'nullable' => true],
                             'value' => [
                                 'anyOf' => [
