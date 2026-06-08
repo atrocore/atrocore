@@ -14,15 +14,22 @@ declare(strict_types=1);
 namespace Atro\Core\Utils\Database\DBAL\Driver\PDO\MySQL;
 
 use Atro\Core\Utils\Database\DBAL\Platforms\MariaDBPlatform;
+use Atro\Core\Utils\Database\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\DBAL\Driver\PDO\Exception;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MariaDb1027Platform;
 use PDO;
 use PDOException;
 
 final class Driver extends AbstractMySQLDriver
 {
+    public function getSchemaManager(\Doctrine\DBAL\Connection $conn, AbstractPlatform $platform): MySQLSchemaManager
+    {
+        return new MySQLSchemaManager($conn, $platform);
+    }
+
     public function createDatabasePlatformForVersion($version)
     {
         $platform = parent::createDatabasePlatformForVersion($version);

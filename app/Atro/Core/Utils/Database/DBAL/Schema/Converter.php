@@ -274,6 +274,8 @@ class Converter
                 break;
         }
 
+        $isUniqueVarchar = !empty($fieldDefs['unique']) && $type === 'string';
+
         foreach ($fieldDefs as $key => $value) {
             if (!in_array($key, $allowedParams)) {
                 unset($fieldDefs[$key]);
@@ -281,7 +283,10 @@ class Converter
         }
 
         if (!$table->hasColumn($columnName)) {
-            $table->addColumn($columnName, $type, $fieldDefs);
+            $column = $table->addColumn($columnName, $type, $fieldDefs);
+            if ($isUniqueVarchar && !self::isPgSQL($this->connection)) {
+                $column->setPlatformOption('collation', 'utf8_bin');
+            }
         }
 
         if (!empty($fieldDefs['autoincrement'])) {
