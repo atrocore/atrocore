@@ -1734,7 +1734,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             const fieldFilter = this.getStorage().get('fieldFilter', this.scope) || ['allValues'];
             const fieldHideMap = {};
 
-            $.each(this.getFieldViews(), (name, fieldView) => {
+            const processField = (name, fieldView) => {
                 name = fieldView.name || name
                 if (fieldView.model.getFieldParam(name, 'advancedFilterDisabled') === true) {
                     return;
@@ -1745,7 +1745,37 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     return;
                 }
 
+                // composite attributes
+                if ((fieldView.childrenFields || []).length > 0) {
+                    let allHidden = true
+                    fieldView.childrenFields.forEach(child => {
+                        allHidden = processField(child.name, fieldView.getView(child.name)) && allHidden
+                    });
+
+                    fieldHideMap[name] = allHidden;
+                    this.controlFieldVisibility(fieldView, allHidden);
+                    return allHidden;
+                }
+
                 let fields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
+
+                let fieldDef = fieldView.model.defs.fields[name];
+                if (!fieldDef && fieldView.originalName) {
+                    fieldDef = fieldView.model.defs.fields[fieldView.originalName]
+                }
+
+                if (fieldDef && fieldDef['combinedField']) {
+                    let mainField = fieldDef['mainField'];
+                    fields = [mainField];
+
+                    if (fieldDef['measureId']) {
+                        fields.push(mainField + 'UnitId')
+                    }
+                    if (fieldDef['prefixEnabled']) {
+                        fields.push(mainField + 'PrefixId')
+                    }
+                }
+
                 let fieldValues = fields.map(field => fieldView.model.get(field));
 
                 let hide = false;
@@ -1774,6 +1804,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 fieldHideMap[name] = hide;
                 this.controlFieldVisibility(fieldView, hide);
+                return hide
+            }
+
+            $.each(this.getFieldViews(), (name, fieldView) => {
+                processField(name, fieldView);
             });
 
             // Show attribute group headers only when at least one field in the group is visible
@@ -1788,7 +1823,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 const attributeGroupId = headerName.substring(underscoreIdx + 1);
                 const anyVisible = Object.keys(attributesDefs).some(fieldName => {
                     const def = attributesDefs[fieldName];
-                    return def?.attributeGroup?.id === attributeGroupId && fieldHideMap[fieldName] !== true;
+                    return def?.attributeGroup?.id === attributeGroupId && fieldHideMap[fieldName] === false;
                 });
                 this.controlFieldVisibility(groupHeaderView, !anyVisible);
             });
