@@ -30,6 +30,8 @@ class Installer extends HasContainer
 {
     protected ?PasswordHash $passwordHash = null;
 
+    private array $allTranslations = [];
+
     /**
      * Get requireds list
      *
@@ -95,7 +97,7 @@ class Installer extends HasContainer
      */
     public function getTranslations(): array
     {
-        $all = $this->getLanguage()->getAll();
+        $all = $this->getAllTranslations();
 
         $result = $all['Installer'];
         $result['labels']['languages'] = $all['Global']['options']['language'];
@@ -379,12 +381,9 @@ class Installer extends HasContainer
     /**
      * @inheritDoc
      */
-    protected function translate(string $label, string $category = 'labels', string $scope = 'Global', array $requiredOptions = null): string
+    protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
     {
-        return $this
-            ->getContainer()
-            ->get('baseLanguage')
-            ->translate($label, $category, $scope, $requiredOptions);
+        return $this->getAllTranslations()[$scope][$category][$label] ?? $label;
     }
 
     /**
@@ -655,5 +654,14 @@ class Installer extends HasContainer
     private function getSeederFactory(): SeederFactory
     {
         return $this->getContainer()->get('seederFactory');
+    }
+
+    private function getAllTranslations(): array
+    {
+        if (empty($this->allTranslations)) {
+            $this->allTranslations = $this->getLanguage()->getAll();
+        }
+
+        return $this->allTranslations;
     }
 }
