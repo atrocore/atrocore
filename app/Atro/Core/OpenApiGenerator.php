@@ -237,7 +237,7 @@ class OpenApiGenerator
                 continue;
             }
             unset($propSchema['readOnly']);
-            if (isset($propSchema['type'])) {
+            if (isset($propSchema['type']) && !in_array($prop, $readRequired)) {
                 $propSchema['nullable'] = true;
             }
             $writeProps[$prop] = $propSchema;
