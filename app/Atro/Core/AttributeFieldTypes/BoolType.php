@@ -48,6 +48,7 @@ class BoolType extends AbstractFieldType
             'attributeId'               => $row['id'],
             'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'classificationId'           => $row['classification_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'channelName'               => $row['channel_name'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
