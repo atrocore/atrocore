@@ -36,10 +36,10 @@ use Psr\Http\Server\RequestHandlerInterface;
             'application/json' => [
                 'schema' => [
                     'type'       => 'object',
-                    'required'   => ['type'],
+                    'required'   => ['key', 'type'],
                     'properties' => [
                         'id'    => ['type' => 'string', 'nullable' => true],
-                        'key'   => ['type' => 'string', 'nullable' => true],
+                        'key'   => ['type' => 'string'],
                         'type'  => ['type' => 'string'],
                         'value' => [
                             'anyOf' => [
@@ -64,7 +64,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'type'       => 'object',
                         'properties' => [
                             'id'    => ['type' => 'string'],
-                            'key'   => ['type' => 'string', 'nullable' => true],
+                            'key'   => ['type' => 'string'],
                             'type'  => ['type' => 'string', 'nullable' => true],
                             'value' => [
                                 'anyOf' => [
