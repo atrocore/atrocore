@@ -95,15 +95,10 @@ class Installer extends HasContainer
      */
     public function getTranslations(): array
     {
-        // create language
-        $language = $this->getLanguage();
+        $all = $this->getLanguage()->getAll();
 
-        $result = $language->get('Installer');
-
-        // add languages
-        $languages = $language->get('Global.options.language');
-
-        $result['labels']['languages'] = $languages;
+        $result = $all['Installer'];
+        $result['labels']['languages'] = $all['Global']['options']['language'];
 
         return $result;
     }
