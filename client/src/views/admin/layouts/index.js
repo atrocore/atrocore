@@ -133,7 +133,8 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     defs: {
                         name: 'relatedEntity'
                     },
-                    mode: 'edit'
+                    mode: 'edit',
+                    disableToggleVisibility: true
                 });
 
                 this.createView('layoutProfile', 'views/layout/fields/layout-profile-dropdown', {

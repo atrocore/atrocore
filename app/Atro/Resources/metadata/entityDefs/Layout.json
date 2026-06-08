@@ -19,8 +19,11 @@
           "conditionGroup": [
             {
               "attribute": "viewType",
-              "type": "equals",
-              "value": "list"
+              "type": "in",
+              "value": [
+                "list",
+                "detail"
+              ]
             }
           ]
         }
