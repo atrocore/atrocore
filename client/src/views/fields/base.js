@@ -1623,6 +1623,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         validateRequired: function () {
             if (this.isRequired()) {
+                const classificationId = this.model.getFieldParam(this.name, 'classificationId');
+                if (classificationId && this.model.has('classificationsIds')) {
+                    const classificationsIds = this.model.get('classificationsIds') || [];
+                    if (!classificationsIds.includes(classificationId)) {
+                        return false;
+                    }
+                }
+
                 if (this.model.get(this.name) === '' || this.model.get(this.name) === null) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg);
