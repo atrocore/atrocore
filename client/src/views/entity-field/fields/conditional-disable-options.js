@@ -100,7 +100,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             model.set('options', this.optionsDefsList[num].options || []);
 
             if (['link', 'linkMultiple'].includes(this.model.get(this.typeField))) {
-                const foreignScope = this.model.get('foreignEntityId');
+                const foreignScope = this.model.get('foreignEntityId') ?? this.model.get('entityType');
                 const ids = model.get('options') || [];
 
                 model.set('optionsIds', ids);
