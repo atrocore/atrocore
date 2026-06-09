@@ -13,6 +13,7 @@ This section contains links to the guides that describe how to prepare your serv
 * [Docker configuration](../01.installation/01.docker-configuration)
 * [Apache web server preparation](../01.installation/02.apache-web-server) (RECOMMENDED)
 * [Nginx web server preparation](../01.installation/03.nginx-web-server)
+* [AppArmor configuration](../01.installation/05.apparmor-configuration)
 
 ## 2. Install AtroCore (AtroPIM) Application
 This section describes how to install AtroCore Application on the prepared web server.
@@ -92,6 +93,34 @@ sudo find . -type d -exec chmod 755 {} + && sudo find . -type f -exec chmod 644 
 ```
 sudo find data upload public -type d -exec chmod 775 {} + && sudo find data upload public -type f -exec chmod 664 {} +
 ```
+
+**AppArmor (Ubuntu 26.04+):** AppArmor is enabled by default and restricts what directories Ghostscript (`gs`) can access. If the `gs` profile is active, it must be granted read access to uploaded files and write access to the thumbnail directory. Check whether the profile is loaded:
+
+```bash
+sudo aa-status --filter.profiles=gs
+```
+
+Output can be similar to the following:
+
+```
+apparmor module is loaded.
+185 profiles are loaded.
+1 profiles are in enforce mode.
+   gs
+```
+
+If `gs` is in the enforced mode, add the required path rules and reload the profile:
+
+```bash
+sudo cat >> /etc/apparmor.d/local/gs << 'EOF'
+/var/www/<my-atrocore-project>/upload/files/** r,
+/var/www/<my-atrocore-project>/upload/files/.img-from-pdf/** rw,
+EOF
+sudo apparmor_parser -r /etc/apparmor.d/gs
+```
+
+> Replace `my-atrocore-project` with the actual project name.
+
 ### 6. Configure the crontab
    6.1. Open crontab for your webserver user, which is www-data in our case:
 ```
