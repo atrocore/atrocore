@@ -62,6 +62,10 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                     this.reRenderByConditionalProperties();
                 }
             });
+
+            this.listenTo(this.model, 'after:inlineEditSave', () => {
+                this.inlineEditClose(true);
+            });
         },
 
         getAttributeIds(optionsDefsList) {
