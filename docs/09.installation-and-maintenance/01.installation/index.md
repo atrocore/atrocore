@@ -13,7 +13,6 @@ This section contains links to the guides that describe how to prepare your serv
 * [Docker configuration](../01.installation/01.docker-configuration)
 * [Apache web server preparation](../01.installation/02.apache-web-server) (RECOMMENDED)
 * [Nginx web server preparation](../01.installation/03.nginx-web-server)
-* [AppArmor configuration](../01.installation/05.apparmor-configuration)
 
 ## 2. Install AtroCore (AtroPIM) Application
 This section describes how to install AtroCore Application on the prepared web server.
