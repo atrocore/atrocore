@@ -25,9 +25,14 @@ Espo.define('views/attribute/fields/type', 'views/fields/enum',
         },
 
         updateOptions() {
-            this.params.options = ['']
+            this.params.options = [];
             this.params.groupOptions = [];
-            this.translatedOptions = {'': ''};
+            this.translatedOptions = {};
+
+            if (!this.params.required) {
+                this.params.options.push('');
+                this.translatedOptions[''] = '';
+            }
 
             if (this.model.isNew()) {
                 $.each(this.getMetadata().get(['attributes']), (attributeType, attributeDefs) => {
