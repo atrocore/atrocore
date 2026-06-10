@@ -49,7 +49,7 @@ class V2Dot3Dot7 extends Base
     private function migrateSourceEntities(): void
     {
         $rows = $this->getDbal()->createQueryBuilder()
-            ->select('id', 'source_entity', 'merging_script')
+            ->select('id', 'source_entity')
             ->from('master_data_entity')
             ->where('deleted = :false')
             ->andWhere('source_entity IS NOT NULL')
