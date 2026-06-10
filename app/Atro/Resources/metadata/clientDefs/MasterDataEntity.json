@@ -17,7 +17,14 @@
         "label": "sourceEntities",
         "view": "views/master-data-entity/record/panels/source-entities",
         "canClose": true,
-        "collapseByDefault": false
+        "collapseByDefault": false,
+        "select": false,
+        "unlinkAll": false,
+        "actions": {
+          "unlinkRelated": {
+            "disabled": true
+          }
+        }
       }
     ]
   },
@@ -28,16 +35,6 @@
           "disabled": true
         },
         "removeRelated": {
-          "disabled": true
-        }
-      }
-    },
-    "masterDataEntitySources": {
-      "select": false,
-      "unlinkAll": false,
-      "hideShowFullList": true,
-      "actions": {
-        "unlinkRelated": {
           "disabled": true
         }
       }
