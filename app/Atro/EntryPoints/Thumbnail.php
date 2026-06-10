@@ -24,7 +24,7 @@ class Thumbnail extends AbstractEntryPoint
             throw new BadRequest();
         }
 
-        $id = $_GET['id'];
+        $id   = $_GET['id'];
         $size = $_GET['size'];
 
         /** @var File $file */
@@ -34,7 +34,7 @@ class Thumbnail extends AbstractEntryPoint
         }
 
         $originFilePath = $file->getFilePath();
-        $thumbnailPath = $this->getThumbnailCreator()->preparePath($file, $size);
+        $thumbnailPath  = $this->getThumbnailCreator()->preparePath($file, $size);
 
         if (!$this->getThumbnailCreator()->hasThumbnail($file, $size)) {
             if (!$this->getThumbnailCreator()->isThumbnailSupported($file)) {
@@ -52,7 +52,9 @@ class Thumbnail extends AbstractEntryPoint
             }
         }
 
-        header("Location: /{$thumbnailPath}");
+        $thumbnailPath = \Atro\Services\File::prepareThumbnailPath($thumbnailPath);
+
+        header("Location: /$thumbnailPath");
         exit;
     }
 
