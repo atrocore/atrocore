@@ -134,15 +134,18 @@ Espo.define('model', [], function () {
                 for (var field in this.defs.fields) {
                     var defaultValue = this.getFieldParam(field, 'default');
 
-                    if (this.getFieldParam(field, 'type') === "varchar" && defaultValue && typeof defaultValue === 'string') {
-                        if (defaultValue.includes('{{') && defaultValue.includes('}}') && seed && seed[field] != null) {
-                            defaultValue = seed[field]
+                    if (defaultValue) {
+                        if (this.getFieldParam(field, 'type') === "varchar" && typeof defaultValue === 'string') {
+                            if (defaultValue.includes('{{') && defaultValue.includes('}}') && seed && seed[field] != null) {
+                                defaultValue = seed[field]
+                            }
+                        } else if (this.getFieldParam(field, 'type') === "link") {
+                            defaultHash[field + 'Id'] = defaultValue;
+                        } else if (this.getFieldParam(field, 'type') === "linkMultiple") {
+                            defaultHash[field + 'Ids'] = defaultValue;
+                        } else {
+                            defaultHash[field] = this.parseDefaultValue(defaultValue);
                         }
-                    }
-
-                    if (defaultValue != null) {
-                        var defaultValue = this.parseDefaultValue(defaultValue);
-                        defaultHash[field] = defaultValue;
                     }
 
                     var defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
