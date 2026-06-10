@@ -53,6 +53,9 @@ class Entity extends AbstractListener
 
         // find matchings if it needs
         $this->getContainer()->get('matchingManager')->findMatchingsAfterEntitySave($entity);
+
+        $this->syncStagingFromSource($entity);
+        $this->syncStagingSourcesAfterMasterChange($entity);
     }
 
     public function beforeRemove(Event $event): void
@@ -210,6 +213,34 @@ class Entity extends AbstractListener
         $attributeRepository = $this->getEntityManager()->getRepository('Attribute');
         foreach ($attributeIds as $attributeId) {
             $attributeRepository->removeAttributeValue($entityName, $entityId, $attributeId);
+        }
+    }
+
+    private function syncStagingFromSource(OrmEntity $entity): void
+    {
+        if ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', 'stagingRecord', 'type']) !== 'belongsTo') {
+            return;
+        }
+
+        try {
+            $this->getService('MasterDataEntitySource')->syncFromSource($entity);
+        } catch (\Throwable $e) {
+        }
+    }
+
+    private function syncStagingSourcesAfterMasterChange(OrmEntity $entity): void
+    {
+        if (empty($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'primaryEntityId']))) {
+            return;
+        }
+
+        if (!$entity->isAttributeChanged('masterRecordId')) {
+            return;
+        }
+
+        try {
+            $this->getService('MasterDataEntitySource')->syncAllSourcesOfStaging($entity);
+        } catch (\Throwable $e) {
         }
     }
 
