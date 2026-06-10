@@ -59,7 +59,7 @@ class File extends Base
         }
 
         // when we try to open a file only
-        if(empty($entity->_pathPrepared) && !$entity->isStorageAvailable()) {
+        if (empty($entity->_pathPrepared) && !$entity->isStorageAvailable()) {
             throw new BadRequest('The Storage ' . $entity->getStorage()->get('name') . ' of this file is not available.');
         }
 
@@ -74,7 +74,7 @@ class File extends Base
                     if ($entity->hasField($field)) {
                         try {
                             if (!empty($url = $this->getRepository()->getStorage($entity)->getThumbnail($entity, $size))) {
-                                $url = $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $url;
+                                $url = $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $this->prepareThumbnailPath($url);
                             }
                         } catch (BadRequest|NotFound $e) {
                             $url = null;
@@ -96,7 +96,7 @@ class File extends Base
                         'parentId'   => $parent->get('id'),
                         'parentName' => $parent->get('name'),
                     ];
-                    $current = $parent;
+                    $current      = $parent;
                 }
             }
             $entity->set('folderPath', $folderPath);
@@ -109,13 +109,23 @@ class File extends Base
         }
     }
 
+    public static function prepareThumbnailPath(string $path): string
+    {
+        if (urldecode($path) !== $path) {
+            // Filename contains literal percent-encoded characters; double-encode "%" so Apache's single URL-decode pass yields the correct filesystem path.
+            $path = str_replace('%', '%25', $path);
+        }
+
+        return $path;
+    }
+
     public function createEntityAndBuildResponse(\stdClass $attachment): array
     {
         if (!$this->getAcl()->check('File', 'create')) {
             throw new Forbidden();
         }
 
-        $id = $this->createEntity($attachment);
+        $id     = $this->createEntity($attachment);
         $entity = $this->prepareEntityById($id);
 
         return $this->buildFileResponse($entity, $attachment);
@@ -191,7 +201,7 @@ class File extends Base
         if (count($chunks) === $attachment->piecesCount) {
             $attachment->allChunks = $chunks;
             try {
-                $id = $this->createFileEntity($attachment);
+                $id     = $this->createFileEntity($attachment);
                 $entity = $this->prepareEntityById($id);
                 $result = $this->buildFileResponse($entity, $attachment);
             } catch (NotUnique $e) {
@@ -223,7 +233,7 @@ class File extends Base
 
         if (!property_exists($attachment, 'name')) {
             $attachment->name = basename($url);
-            $extension = pathinfo($attachment->name, PATHINFO_EXTENSION);
+            $extension        = pathinfo($attachment->name, PATHINFO_EXTENSION);
             if (empty($extension)) {
                 throw new BadRequest("The filename does not have an extension");
             }
@@ -254,7 +264,7 @@ class File extends Base
 
         if (!empty($attachment->share)) {
             $sharingRepo = $this->getEntityManager()->getRepository('Sharing');
-            $sharing = $sharingRepo->get();
+            $sharing     = $sharingRepo->get();
             $sharing->set('fileId', $entity->get('id'));
             $this->getEntityManager()->saveEntity($sharing);
             $this->getRecordService('Sharing')->prepareEntityForOutput($sharing);
@@ -267,7 +277,7 @@ class File extends Base
     protected function createFileEntity(\stdClass $attachment): string
     {
         if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
-            $attachment->id = $attachment->reupload;
+            $attachment->id                   = $attachment->reupload;
             $attachment->_skipIsEntityUpdated = true;
             parent::updateEntity($attachment->id, $attachment);
         } else {
@@ -311,10 +321,10 @@ class File extends Base
             throw new Forbidden();
         }
 
-        $params['action'] = 'download';
+        $params['action']             = 'download';
         $params['maxCountWithoutJob'] = 0;
-        $params['maxChunkSize'] = $this->getConfig()->get('massDownloadMaxChunkSize', 1000);
-        $params['minChunkSize'] = $this->getConfig()->get('massDownloadMinChunkSize', 400);
+        $params['maxChunkSize']       = $this->getConfig()->get('massDownloadMaxChunkSize', 1000);
+        $params['minChunkSize']       = $this->getConfig()->get('massDownloadMinChunkSize', 400);
 
         $this->executeMassAction($params);
 
