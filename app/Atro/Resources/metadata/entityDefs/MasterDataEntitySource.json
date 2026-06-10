@@ -29,16 +29,15 @@
       "type": "text",
       "view": "views/fields/script",
       "language": "json",
-      "default": "{# { \"skipped\": false, \"masterRecordData\": { \"name\" : \"{{ stagingRecord.name }}\" } } #}",
+      "default": "{# { \"stagingRecordData\": { \"name\" : \"{{ sourceRecord.name }}\" } } #}",
       "editorActions": {
         "addFields": {
           "entityNameField": "sourceEntity"
         }
       },
       "twigVariables": [
-        "stagingRecord",
-        "masterRecord",
-        "stagingRecords"
+        "sourceRecord",
+        "stagingRecord"
       ],
       "customizable": false,
       "layoutRemoveDisabled": true,

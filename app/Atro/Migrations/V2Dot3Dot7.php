@@ -81,7 +81,7 @@ class V2Dot3Dot7 extends Base
                         ->setParameter('false', false, ParameterType::BOOLEAN)
                         ->setParameter('masterDataEntityId', $row['id'])
                         ->setParameter('sourceEntity', $sourceEntity)
-                        ->setParameter('mergingScript', $row['merging_script'])
+                        ->setParameter('mergingScript', '{# { "stagingRecordData": { "name" : "{{ sourceRecord.name }}" } } #}')
                         ->executeStatement();
                 } catch (\Throwable $e) {
                 }
