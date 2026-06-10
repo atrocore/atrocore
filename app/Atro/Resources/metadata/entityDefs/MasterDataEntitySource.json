@@ -79,7 +79,7 @@
     }
   },
   "uniqueIndexes": {
-    "unique_master_data_entity_source": [
+    "unique_source_entity": [
       "deleted",
       "source_entity"
     ]
