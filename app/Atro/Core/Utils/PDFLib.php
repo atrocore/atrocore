@@ -211,16 +211,21 @@ class PDFLib
         $output = $this->executeGS(
             "-dSAFER -dBATCH -dNOPAUSE -sDEVICE=" . $this->imageDeviceCommand . " " . $this->pngDownScaleFactor . " -r" . $this->resolution
             . " -dNumRenderingThreads=4 -dFirstPage=" . $this->page_start . " -dLastPage=" . $this->page_end . " -o\"" . $image_path . "\" -dJPEGQ=" . $this->jpeg_quality
-            . " -q \"" . ($this->pdf_path) . "\" -c quit"
+            . " -q \"" . ($this->pdf_path) . "\" -c quit",
+            false,
+            $exitCode
         );
+
+        if ($exitCode !== 0) {
+            throw new \Exception('PDF_CONVERSION_ERROR gs exited with code ' . $exitCode . '. ' . implode('; ', $output));
+        }
 
         $fileArray = [];
         for ($i = 1; $i <= ($this->page_end - $this->page_start + 1); ++$i) {
             $fileArray[] = $this->file_prefix . "$i." . $this->imageExtention;
         }
         if (!$this->checkFilesExists($this->output_path, $fileArray)) {
-            $errrorinfo = implode(",", $output);
-            throw new \Exception('PDF_CONVERSION_ERROR ' . $errrorinfo);
+            throw new \Exception('PDF_CONVERSION_ERROR output files not found: ' . implode(', ', $fileArray));
         }
         return $fileArray;
     }
@@ -295,9 +300,15 @@ class PDFLib
         return $output;
     }
 
-    private function executeGS($command, $is_shell = false)
+    private function executeGS($command, $is_shell = false, &$exitCode = null)
     {
-        return $this->execute($this->gs_command . " " . $command, $is_shell);
+        $fullCommand = $this->gs_command . " " . $command;
+        if ($is_shell) {
+            return shell_exec($fullCommand);
+        }
+        $output = [];
+        exec($fullCommand, $output, $exitCode);
+        return $output;
     }
 
     private function checkFilesExists($source_path, $fileNameArray)

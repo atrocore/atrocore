@@ -71,6 +71,7 @@
     "type": {
       "type": "varchar",
       "required": true,
+      "default": "text",
       "view": "views/admin/field-manager/fields/type",
       "conditionalProperties": {
         "readOnly": {

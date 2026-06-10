@@ -300,6 +300,7 @@ class AttributeFieldConverter
                 foreach ($classificationAttrs as $classificationAttribute) {
                     if ($attribute['id'] === $classificationAttribute['attribute_id']) {
                         $res[$k]['classification_attribute_id'] = $classificationAttribute['id'];
+                        $res[$k]['classification_id']           = $classificationAttribute['classification_id'];
                         $res[$k]['is_required']                 = $classificationAttribute['is_required'];
                         $res[$k]['is_read_only']                = $classificationAttribute['is_read_only'];
                         $res[$k]['is_protected']                = $classificationAttribute['is_protected'];
