@@ -1,5 +1,4 @@
 {
   "controller": "controllers/record",
-  "iconClass": "database",
-  "createDisabled": true
+  "iconClass": "database"
 }
