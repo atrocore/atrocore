@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "sourceEntities": "Джерела"
+  },
   "fields": {
     "masterEntity": "Мастер",
     "mergingScript": "Скрипт трансформації",

@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "sourceEntities": "Quellentitäten"
+  },
   "fields": {
     "masterEntity": "Stammdaten-Entität",
     "mergingScript": "Skript zusammenführen",

@@ -192,6 +192,11 @@
     }
   },
   "links": {
+    "masterDataEntitySources": {
+      "type": "hasMany",
+      "entity": "MasterDataEntitySource",
+      "foreign": "masterDataEntity"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"

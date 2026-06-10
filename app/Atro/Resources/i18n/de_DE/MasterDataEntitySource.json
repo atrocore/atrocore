@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "masterDataEntity": "Stammdaten-Entität",
+    "sourceEntity": "Quellentität",
+    "mergingScript": "Skript zusammenführen"
+  },
+  "tooltips": {
+    "mergingScript": "Konfigurieren Sie, wie Quelldaten transformiert und dem Stammsatz zugeordnet werden."
+  }
+}

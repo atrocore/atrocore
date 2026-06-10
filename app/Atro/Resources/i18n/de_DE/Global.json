@@ -1,6 +1,7 @@
 {
   "scopeNames": {
     "MasterDataEntity": "Stammdaten-Entität",
+    "MasterDataEntitySource": "Stammdaten-Entität-Quelle",
     "IncomingWebhook": "Eingehender Webhook",
     "Classification": "Klassifikation",
     "ClassificationAttribute": "Klassifikationsattribut",
@@ -88,6 +89,7 @@
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Stammdaten-Entitäten",
+    "MasterDataEntitySource": "Stammdaten-Entität-Quellen",
     "IncomingWebhook": "Eingehende Webhooks",
     "Classification": "Klassifikationen",
     "ClassificationAttribute": "Klassifikationsattribute",
@@ -166,6 +168,7 @@
     "entityFilterResult": "Ergebnis filtern",
     "System": "System",
     "matchings": "Übereinstimmungen",
+    "sourceEntities": "Quellentitäten",
     "addFields": "Felder hinzufügen",
     "addAttributes": "Attribute hinzufügen",
     "fieldValueFilters": "Feldwert-Filter",

@@ -214,44 +214,52 @@ class Metadata extends AbstractMetadataListener
         }
 
         try {
-            $res = MasterDataEntity::getRecordsWithSourceEntities($this->getConnection());
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('s.master_data_entity_id', 's.source_entity')
+                ->from('master_data_entity_source', 's')
+                ->where('s.deleted = :false')
+                ->andWhere('s.source_entity IS NOT NULL')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
         } catch (\Throwable $e) {
             $res = [];
         }
 
         foreach ($res as $item) {
-            $stagingEntity  = $item['id'];
-            $sourceEntities = json_decode($item['source_entity'], true) ?? [];
+            $stagingEntity = $item['master_data_entity_id'];
+            $sourceEntity  = $item['source_entity'];
 
-            foreach ($sourceEntities as $sourceEntity) {
-                $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
-
-                $data['entityDefs'][$sourceEntity]['fields']['stagingRecord'] = [
-                    'type' => 'link',
-                ];
-
-                $data['entityDefs'][$sourceEntity]['links']['stagingRecord'] = [
-                    'type'    => 'belongsTo',
-                    'foreign' => $foreign,
-                    'entity'  => $stagingEntity
-                ];
-
-                $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_staging_record'] = [
-                    "deleted",
-                    "staging_record_id"
-                ];
-
-                $data['entityDefs'][$stagingEntity]['fields'][$foreign] = [
-                    'type'     => 'linkMultiple',
-                    'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
-                    'noLoad'   => true,
-                ];
-                $data['entityDefs'][$stagingEntity]['links'][$foreign]  = [
-                    'type'    => 'hasMany',
-                    'foreign' => 'stagingRecord',
-                    'entity'  => $sourceEntity
-                ];
+            if (empty($stagingEntity) || empty($sourceEntity)) {
+                continue;
             }
+
+            $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
+
+            $data['entityDefs'][$sourceEntity]['fields']['stagingRecord'] = [
+                'type' => 'link',
+            ];
+
+            $data['entityDefs'][$sourceEntity]['links']['stagingRecord'] = [
+                'type'    => 'belongsTo',
+                'foreign' => $foreign,
+                'entity'  => $stagingEntity
+            ];
+
+            $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_staging_record'] = [
+                "deleted",
+                "staging_record_id"
+            ];
+
+            $data['entityDefs'][$stagingEntity]['fields'][$foreign] = [
+                'type'     => 'linkMultiple',
+                'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
+                'noLoad'   => true,
+            ];
+            $data['entityDefs'][$stagingEntity]['links'][$foreign] = [
+                'type'    => 'hasMany',
+                'foreign' => 'stagingRecord',
+                'entity'  => $sourceEntity
+            ];
         }
     }
 

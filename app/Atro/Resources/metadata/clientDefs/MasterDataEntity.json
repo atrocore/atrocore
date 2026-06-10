@@ -11,6 +11,13 @@
         "view": "views/master-data-entity/record/panels/matchings",
         "canClose": true,
         "collapseByDefault": false
+      },
+      {
+        "name": "masterDataEntitySources",
+        "label": "sourceEntities",
+        "view": "views/master-data-entity/record/panels/source-entities",
+        "canClose": true,
+        "collapseByDefault": false
       }
     ]
   },
@@ -21,6 +28,13 @@
           "disabled": true
         },
         "removeRelated": {
+          "disabled": true
+        }
+      }
+    },
+    "masterDataEntitySources": {
+      "actions": {
+        "unlinkRelated": {
           "disabled": true
         }
       }

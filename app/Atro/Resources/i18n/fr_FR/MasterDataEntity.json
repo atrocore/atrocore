@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "sourceEntities": "Entités sources"
+  },
   "fields": {
     "masterEntity": "Entité de référence",
     "mergingScript": "Script de mapping",

@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "masterDataEntity": "Entité de référence",
+    "sourceEntity": "Entité source",
+    "mergingScript": "Script de mapping"
+  },
+  "tooltips": {
+    "mergingScript": "Configurez la façon dont les données sources sont transformées et mises en correspondance avec la fiche."
+  }
+}

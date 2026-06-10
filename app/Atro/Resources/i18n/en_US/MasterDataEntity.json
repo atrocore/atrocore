@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "sourceEntities": "Source Entities"
+  },
   "fields": {
     "masterEntity": "Master Entity",
     "sourceEntity": "Source Entity",

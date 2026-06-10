@@ -1,6 +1,7 @@
 {
   "scopeNames": {
     "MasterDataEntity": "Сутність основних даних",
+    "MasterDataEntitySource": "Джерело сутності основних даних",
     "Classification": "Класифікація",
     "ClassificationAttribute": "Атрибут класифікації",
     "Attribute": "Атрибут",
@@ -88,6 +89,7 @@
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сутності основних даних",
+    "MasterDataEntitySource": "Джерела сутності основних даних",
     "Classification": "Класифікації",
     "ClassificationAttribute": "Атрибути класифікації",
     "Attribute": "Атрибути",
@@ -165,6 +167,7 @@
   "labels": {
     "System": "Система",
     "matchings": "Відповідності",
+    "sourceEntities": "Джерела",
     "addFields": "Додати поля",
     "addAttributes": "Додати атрибути",
     "selectAll": "Вибрати все",

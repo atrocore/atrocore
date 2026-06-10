@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "masterDataEntity": "Master Data Entity",
+    "sourceEntity": "Source Entity",
+    "mergingScript": "Merging Script"
+  },
+  "tooltips": {
+    "mergingScript": "Configure how source data is transformed and mapped to the master record."
+  }
+}
