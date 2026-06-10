@@ -33,6 +33,9 @@
       }
     },
     "masterDataEntitySources": {
+      "select": false,
+      "unlinkAll": false,
+      "hideShowFullList": true,
       "actions": {
         "unlinkRelated": {
           "disabled": true
