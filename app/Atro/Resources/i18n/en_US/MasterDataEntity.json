@@ -4,7 +4,6 @@
   },
   "fields": {
     "masterEntity": "Master Entity",
-    "sourceEntity": "Source Entity",
     "mergingScript": "Merging Script",
     "updateMasterAutomatically": "Update Master Automatically",
     "minimumMatchingScore": "Minimum Matching Score",

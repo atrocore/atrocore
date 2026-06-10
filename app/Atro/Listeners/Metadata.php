@@ -205,11 +205,11 @@ class Metadata extends AbstractMetadataListener
             return;
         }
 
-        // Prepare options for the 'sourceEntity' field of the 'MasterDataEntity' entity.
-        $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'] = [];
+        // Prepare options for the 'sourceEntity' field of the 'MasterDataEntitySource' entity.
+        $data['entityDefs']['MasterDataEntitySource']['fields']['sourceEntity']['options'] = [];
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && $scope !== 'MasterDataEntity') {
-                $data['entityDefs']['MasterDataEntity']['fields']['sourceEntity']['options'][] = $scope;
+                $data['entityDefs']['MasterDataEntitySource']['fields']['sourceEntity']['options'][] = $scope;
             }
         }
 

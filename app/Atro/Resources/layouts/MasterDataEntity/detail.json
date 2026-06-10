@@ -19,9 +19,7 @@
         {
           "name": "masterEntity"
         },
-        {
-          "name": "sourceEntity"
-        }
+        false
       ],
       [
         {
