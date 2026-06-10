@@ -3,10 +3,19 @@
     "masterDataEntity": {
       "type": "link",
       "required": true,
-      "protected": true,
       "customizable": false,
       "layoutRemoveDisabled": true,
-      "view": "views/master-data-entity-source/fields/master-data-entity"
+      "view": "views/master-data-entity-source/fields/master-data-entity",
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "sourceEntity": {
       "type": "varchar",
