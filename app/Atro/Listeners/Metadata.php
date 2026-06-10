@@ -208,7 +208,7 @@ class Metadata extends AbstractMetadataListener
         // Prepare options for the 'sourceEntity' field of the 'MasterDataEntitySource' entity.
         $data['entityDefs']['MasterDataEntitySource']['fields']['sourceEntity']['options'] = [];
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && $scope !== 'MasterDataEntity') {
+            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'MasterDataEntity') {
                 $data['entityDefs']['MasterDataEntitySource']['fields']['sourceEntity']['options'][] = $scope;
             }
         }
