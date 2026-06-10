@@ -35,6 +35,37 @@ class ScanStorage extends AbstractJob implements JobInterface
             return;
         }
 
+        if (empty($scheduledJob)) {
+            // search for a scheduled job for this storage
+            $scheduledJob = $this->getEntityManager()->getRepository('ScheduledJob')
+                ->where(['storageId' => $storageId])
+                ->findOne();
+        }
+
+        $where = [
+            'id!='  => $job->get('id'),
+            'status' => 'Running',
+            'type'  => 'ScanStorage',
+        ];
+
+        if (!empty($scheduledJob)) {
+            $where['OR'] = [
+                'scheduledJobId' => $scheduledJob->get('id'),
+                'payload*'       => '%"storageId":"' . $storageId . '"%'
+            ];
+        } else {
+            $where['payload*'] = '%"storageId":"' . $storageId . '"%';
+        }
+
+        $runningJob = $this->getEntityManager()->getRepository('Job')
+            ->where($where)
+            ->findOne();
+
+        // Skip if a scan is already running
+        if (!empty($runningJob)) {
+            return;
+        }
+
         $storage = $this->getEntityManager()->getEntity('Storage', $storageId);
         if (empty($storage) || empty($storage->get('isActive'))) {
             return;

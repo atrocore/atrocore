@@ -244,6 +244,38 @@ Once the command runs successfully on its own, re-run the system update — the 
 
 ---
 
+### Issue: PDF Preview Generation Fails – AppArmor Blocking Ghostscript
+
+**Symptom:** PDF previews are not generated. The application log contains an entry similar to:
+
+```
+Log.ERROR: EntryPoint error: PDF_CONVERSION_ERROR gs exited with code 1. Error: /undefinedfilename in (*.pdf)
+```
+
+**Cause:** AppArmor is enabled by default on Ubuntu 26.04+ and assigns a security profile to Ghostscript (`gs`) that does not include your project directory. As a result, `gs` cannot open the PDF file and exits with code 1.
+
+**How to Diagnose and Fix:**
+
+Check whether the `gs` profile is active and in enforce mode:
+
+```bash
+sudo aa-status --filter.profiles=gs
+```
+
+If `gs` is listed, add the required path rules and reload the profile:
+
+```bash
+sudo cat >> /etc/apparmor.d/local/gs << ‘EOF’
+/var/www/<my-atrocore-project>/upload/files/** r,
+/var/www/<my-atrocore-project>/upload/files/.img-from-pdf/** rw,
+EOF
+sudo apparmor_parser -r /etc/apparmor.d/gs
+```
+
+> Replace `my-atrocore-project` with the actual project directory name.
+
+---
+
 ## What’s Next
 
 The Typical Issues section will be continuously updated as new cases are identified and verified. Stay tuned — we’ll document more problems and their solutions as they emerge.
