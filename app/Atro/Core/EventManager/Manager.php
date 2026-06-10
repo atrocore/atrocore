@@ -73,6 +73,9 @@ class Manager
                 try {
                     $object = $this->createListener($row[0]);
                 } catch (\Throwable $e) {
+                    if ($GLOBALS['log'] ?? null) {
+                        $GLOBALS['log']->error('Failed to create listener: ' . $row[0] . ' - ' . $e->getMessage());
+                    }
                     continue 1;
                 }
 

@@ -50,17 +50,23 @@ final class Container implements ContainerInterface
     }
 
     /**
-     * @template T of object
+     * @jiti/core-prompt-templates.86f48222.cjs T of object
      * @param class-string<T>|string $id
      * @return T|mixed
      */
     public function get(string $id): mixed
     {
+        if ($this->sm === null) {
+            throw new \RuntimeException('ServiceManager is not initialized.');
+        }
         return $this->sm->get($id);
     }
 
     public function has(string $id): bool
     {
+        if ($this->sm === null) {
+            return false;
+        }
         return $this->sm->has($id);
     }
 
