@@ -36,11 +36,12 @@ class V2Dot3Dot7 extends Base
             );
             $this->exec("CREATE UNIQUE INDEX UNIQ_MASTER_DATA_ENTITY_SOURCE ON master_data_entity_source (source_entity, deleted)");
             $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_SOURCE_MASTER_DATA_ENTITY_ID ON master_data_entity_source (master_data_entity_id, deleted)");
+            $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_SOURCE_CREATED_AT ON master_data_entity_source (created_at, deleted)");
             $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_SOURCE_CREATED_BY_ID ON master_data_entity_source (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_SOURCE_MODIFIED_BY_ID ON master_data_entity_source (modified_by_id, deleted)");
         } else {
             $this->exec(
-                "CREATE TABLE master_data_entity_source (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', master_data_entity_id VARCHAR(36) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, merging_script LONGTEXT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_MASTER_DATA_ENTITY_SOURCE (source_entity, deleted), INDEX IDX_MASTER_DATA_ENTITY_SOURCE_MASTER_DATA_ENTITY_ID (master_data_entity_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_SOURCE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_SOURCE_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+                "CREATE TABLE master_data_entity_source (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', master_data_entity_id VARCHAR(36) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, merging_script LONGTEXT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_MASTER_DATA_ENTITY_SOURCE (source_entity, deleted), INDEX IDX_MASTER_DATA_ENTITY_SOURCE_MASTER_DATA_ENTITY_ID (master_data_entity_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_SOURCE_CREATED_AT (created_at, deleted), INDEX IDX_MASTER_DATA_ENTITY_SOURCE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_SOURCE_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
             );
         }
     }
