@@ -45,7 +45,7 @@
       "massUpdateDisabled": true
     },
     "dashboardLayout": {
-      "type": "jsonObject",
+      "type": "jsonArray",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "layoutDetailDisabled": true,
