@@ -19,22 +19,22 @@ use Atro\Core\Twig\Twig;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
-class MasterDataEntitySource extends Base
+class SourceToStagingPipeline extends Base
 {
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
-        $masterDataEntityId = $entity->get('masterDataEntityId');
-        if (!empty($masterDataEntityId)) {
-            $entity->set('masterDataEntityName', $this->getInjection('language')->translate($masterDataEntityId, 'scopeNames', 'Global'));
+        $stagingEntityId = $entity->get('stagingEntityId');
+        if (!empty($stagingEntityId)) {
+            $entity->set('stagingEntityName', $this->getInjection('language')->translate($stagingEntityId, 'scopeNames', 'Global'));
         }
     }
 
     public function syncFromSource(Entity $sourceRecord): void
     {
         $mdes = $this->getEntityManager()
-            ->getRepository('MasterDataEntitySource')
+            ->getRepository('SourceToStagingPipeline')
             ->where(['sourceEntity' => $sourceRecord->getEntityName()])
             ->findOne();
 
@@ -90,8 +90,8 @@ class MasterDataEntitySource extends Base
     public function syncAllSourcesOfStaging(Entity $stagingRecord): void
     {
         $sources = $this->getEntityManager()
-            ->getRepository('MasterDataEntitySource')
-            ->where(['masterDataEntityId' => $stagingRecord->getEntityName()])
+            ->getRepository('SourceToStagingPipeline')
+            ->where(['stagingEntityId' => $stagingRecord->getEntityName()])
             ->find();
 
         foreach ($sources as $mdes) {

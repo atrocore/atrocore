@@ -1,6 +1,6 @@
 {
   "fields": {
-    "masterDataEntity": "Мастер-сутність",
+    "stagingEntity": "Стейджинг-сутність",
     "sourceEntity": "Джерело",
     "mergingScript": "Скрипт трансформації"
   },

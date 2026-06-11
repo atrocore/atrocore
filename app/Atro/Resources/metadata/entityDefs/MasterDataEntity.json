@@ -168,10 +168,10 @@
     }
   },
   "links": {
-    "masterDataEntitySources": {
+    "sourceToStagingPipelines": {
       "type": "hasMany",
-      "entity": "MasterDataEntitySource",
-      "foreign": "masterDataEntity"
+      "entity": "SourceToStagingPipeline",
+      "foreign": "stagingEntity"
     },
     "createdBy": {
       "type": "belongsTo",

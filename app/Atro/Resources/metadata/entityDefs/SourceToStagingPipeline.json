@@ -1,11 +1,10 @@
 {
   "fields": {
-    "masterDataEntity": {
+    "stagingEntity": {
       "type": "link",
       "required": true,
       "customizable": false,
       "layoutRemoveDisabled": true,
-      "view": "views/master-data-entity-source/fields/master-data-entity",
       "conditionalProperties": {
         "protected": {
           "conditionGroup": [
@@ -72,7 +71,7 @@
     }
   },
   "links": {
-    "masterDataEntity": {
+    "stagingEntity": {
       "type": "belongsTo",
       "entity": "MasterDataEntity",
       "foreignName": "id"
@@ -93,9 +92,9 @@
     ]
   },
   "indexes": {
-    "masterDataEntityId": {
+    "stagingEntityId": {
       "columns": [
-        "masterDataEntityId",
+        "stagingEntityId",
         "deleted"
       ]
     },

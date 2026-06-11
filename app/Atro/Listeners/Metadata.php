@@ -205,18 +205,18 @@ class Metadata extends AbstractMetadataListener
             return;
         }
 
-        // Prepare options for the 'sourceEntity' field of the 'MasterDataEntitySource' entity.
-        $data['entityDefs']['MasterDataEntitySource']['fields']['sourceEntity']['options'] = [];
+        // Prepare options for the 'sourceEntity' field of the 'SourceToStagingPipeline' entity.
+        $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'] = [];
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'MasterDataEntity') {
-                $data['entityDefs']['MasterDataEntitySource']['fields']['sourceEntity']['options'][] = $scope;
+                $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'][] = $scope;
             }
         }
 
         try {
             $res = $this->getConnection()->createQueryBuilder()
-                ->select('s.master_data_entity_id', 's.source_entity')
-                ->from('master_data_entity_source', 's')
+                ->select('s.staging_entity_id', 's.source_entity')
+                ->from('source_to_staging_pipeline', 's')
                 ->where('s.deleted = :false')
                 ->andWhere('s.source_entity IS NOT NULL')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -226,7 +226,7 @@ class Metadata extends AbstractMetadataListener
         }
 
         foreach ($res as $item) {
-            $stagingEntity = $item['master_data_entity_id'];
+            $stagingEntity = $item['staging_entity_id'];
             $sourceEntity  = $item['source_entity'];
 
             if (empty($stagingEntity) || empty($sourceEntity)) {

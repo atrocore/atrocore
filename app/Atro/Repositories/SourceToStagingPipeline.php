@@ -17,7 +17,7 @@ use Atro\Core\DataManager;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
-class MasterDataEntitySource extends Base
+class SourceToStagingPipeline extends Base
 {
     protected function afterSave(Entity $entity, array $options = [])
     {

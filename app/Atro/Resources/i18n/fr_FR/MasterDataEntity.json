@@ -1,6 +1,6 @@
 {
   "labels": {
-    "sourceEntities": "Entités sources"
+    "sourceEntities": "Source-to-Staging Pipelines"
   },
   "fields": {
     "masterEntity": "Entité de référence",

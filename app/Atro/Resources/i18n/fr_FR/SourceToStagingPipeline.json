@@ -1,6 +1,6 @@
 {
   "fields": {
-    "masterDataEntity": "Entité maître",
+    "stagingEntity": "Entité de staging",
     "sourceEntity": "Entité source",
     "mergingScript": "Script de fusion"
   },

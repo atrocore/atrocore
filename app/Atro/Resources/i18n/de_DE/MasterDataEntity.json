@@ -1,6 +1,6 @@
 {
   "labels": {
-    "sourceEntities": "Quellentitäten"
+    "sourceEntities": "Source-to-Staging Pipelines"
   },
   "fields": {
     "masterEntity": "Stammdaten-Entität",

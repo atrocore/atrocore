@@ -13,7 +13,7 @@
         "collapseByDefault": false
       },
       {
-        "name": "masterDataEntitySources",
+        "name": "sourceToStagingPipelines",
         "label": "sourceEntities",
         "view": "views/master-data-entity/record/panels/source-entities",
         "canClose": true,
