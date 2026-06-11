@@ -157,6 +157,13 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                                 if (fieldDefs.multilangField === name) {
                                     this.addField(field, this.translate(field, 'fields', this.scope));
                                 }
+
+                                if (fieldDefs.multilangField === name || field === name) {
+                                    const statusField = field + 'TranslationStatus';
+                                    if (this.getMetadata().get(`entityDefs.${this.scope}.fields.${statusField}`)) {
+                                        this.addField(statusField, this.translate(statusField, 'fields', this.scope));
+                                    }
+                                }
                             })
                         }
                     })
@@ -199,6 +206,13 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                             if (!defs.layoutDetailDisabled) {
                                 this.model.defs['fields'][name] = defs;
                                 this.addField(name, defs.label);
+                                if (defs.multilangField || defs.isMultilang) {
+                                    const statusField = name + 'TranslationStatus';
+                                    if (res[statusField]) {
+                                        this.model.defs['fields'][statusField] = res[statusField];
+                                        this.addField(statusField, res[statusField].label);
+                                    }
+                                }
                             }
                         })
                     })
