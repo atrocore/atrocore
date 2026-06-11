@@ -17,11 +17,13 @@ class HttpResponseDTO
 {
     protected int $code;
     protected string $output;
+    protected array $headers;
 
-    public function __construct(int $code, ?string $output)
+    public function __construct(int $code, ?string $output, array $headers = [])
     {
         $this->code = $code;
         $this->output = $output;
+        $this->headers = $headers;
     }
 
     public function getCode(): int
@@ -32,5 +34,10 @@ class HttpResponseDTO
     public function getOutput(): ?string
     {
         return $this->output;
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
     }
 }
