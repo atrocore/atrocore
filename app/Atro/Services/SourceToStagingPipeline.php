@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Container;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
 use Atro\Core\UserContext;
-use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class SourceToStagingPipeline extends Base
@@ -155,6 +155,11 @@ class SourceToStagingPipeline extends Base
         }
     }
 
+    protected function getContainer(): Container
+    {
+        return $this->getInjection('container');
+    }
+
     protected function getTwig(): Twig
     {
         return $this->getInjection('twig');
@@ -164,6 +169,7 @@ class SourceToStagingPipeline extends Base
     {
         parent::init();
 
+        $this->addDependency('container');
         $this->addDependency('language');
         $this->addDependency('twig');
     }
