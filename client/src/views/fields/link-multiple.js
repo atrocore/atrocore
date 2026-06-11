@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/colored-enum'], function (Dep, ColoredEnum) {
+Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/colored-enum', 'views/fields/link'], function (Dep, ColoredEnum, Link) {
 
     return Dep.extend({
 
@@ -203,6 +203,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getCreateAttributes: function () {
+            return Link.prototype.getCreateAttributes.call(this);
         },
 
         setup: function () {
