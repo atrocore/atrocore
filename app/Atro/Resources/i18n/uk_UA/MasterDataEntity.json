@@ -1,6 +1,6 @@
 {
   "labels": {
-    "sourceEntities": "Source-to-Staging Pipelines"
+    "sourceEntities": "Пайплайни джерело-стейджинг"
   },
   "fields": {
     "masterEntity": "Мастер",

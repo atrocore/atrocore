@@ -1,7 +1,7 @@
 {
   "scopeNames": {
     "MasterDataEntity": "Сутність основних даних",
-    "SourceToStagingPipeline": "Source-to-Staging Pipeline",
+    "SourceToStagingPipeline": "Пайплайн джерело-стейджинг",
     "Classification": "Класифікація",
     "ClassificationAttribute": "Атрибут класифікації",
     "Attribute": "Атрибут",
@@ -89,7 +89,7 @@
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сутності основних даних",
-    "SourceToStagingPipeline": "Source-to-Staging Pipelines",
+    "SourceToStagingPipeline": "Пайплайни джерело-стейджинг",
     "Classification": "Класифікації",
     "ClassificationAttribute": "Атрибути класифікації",
     "Attribute": "Атрибути",
