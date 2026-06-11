@@ -188,6 +188,52 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         },
 
         getCreateAttributes: function () {
+            let attributes = {};
+
+            // prepare attributes by where filter
+            (this.model?.defs?.fields?.[this.name]?.where || []).forEach(item => {
+                if (item.condition === 'AND' && item.rules?.[0]) {
+                    item.rules.forEach(rule => {
+                        if (rule.operator === 'linked_with') {
+                            let type = this.getMetadata().get(`entityDefs.${this.foreignScope}.fields.${rule.field}.type`);
+                            let entityName = this.getMetadata().get(`entityDefs.${this.foreignScope}.links.${rule.field}.entity`);
+
+                            this.ajaxGetRequest(
+                                entityName,
+                                {
+                                    where: [
+                                        {
+                                            type: 'in',
+                                            attribute: 'id',
+                                            value: rule.value
+                                        }
+                                    ],
+                                    silent: true
+                                },
+                                {
+                                    async: false
+                                }
+                            ).then(res => {
+                                if (res?.list?.[0]) {
+                                    if (type === 'link') {
+                                        attributes[rule.field + 'Id'] = res.list[0]['id'];
+                                        attributes[rule.field + 'Name'] = res.list[0]['name'];
+                                    } else if (type === 'linkMultiple') {
+                                        let names = {};
+                                        res.list.forEach(item => {
+                                            names[item.id] = item.name;
+                                        })
+                                        attributes[rule.field + 'Ids'] = Object.keys(names);
+                                        attributes[rule.field + 'Names'] = names;
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            return attributes;
         },
 
         setup: function () {
