@@ -62,7 +62,7 @@ class NotificationManager
             return;
         }
 
-        $isNote = $entity->getEntityType() === 'Note';
+        $isNote        = $entity->getEntityType() === 'Note';
         $noteHasParent = $entity->get('parentType') && $entity->get('parentId');
 
         if ($isNote && $entity->get('type') !== 'Post') {
@@ -99,13 +99,13 @@ class NotificationManager
                     $entity->get($link . 'Id') ? NotificationOccurrence::OWNERSHIP_ASSIGNMENT : NotificationOccurrence::UNLIKING_OWNERSHIP_ASSIGNMENT,
                     $entity,
                     [
-                        "isOwnership" => $link === 'ownerUser',
+                        "isOwnership"  => $link === 'ownerUser',
                         "isAssignment" => $link === 'assignedUser',
-                        "entities" => [
+                        "entities"     => [
                             [
-                                "name" => $link,
+                                "name"       => $link,
                                 "entityType" => "User",
-                                "entityId" => $entity->get($link . 'Id')
+                                "entityId"   => $entity->get($link . 'Id')
                             ]
                         ]
                     ]
@@ -120,7 +120,7 @@ class NotificationManager
             return;
         }
 
-        $isNote = $entity->getEntityType() === 'Note';
+        $isNote        = $entity->getEntityType() === 'Note';
         $noteHasParent = $entity->get('parentType') && $entity->get('parentId');
 
         $this->sendNotificationsRelationEntity($entity, NotificationOccurrence::UNLINK);
@@ -140,7 +140,7 @@ class NotificationManager
 
     public function sendNotifications(string $occurrence, Entity $entity, array $params = []): void
     {
-        $actionUser = $this->container->get('user');
+        $actionUser = $this->container->get('user')->get('delegator');
 
         if (empty($actionUser)) {
             return;
@@ -195,17 +195,17 @@ class NotificationManager
                     $dataForTemplate = array_merge($this->transformData($params), [
                         "occurrence" => $occurrence,
                         "actionUser" => $actionUser,
-                        "siteUrl" => $this->getConfig()->get('siteUrl'),
-                        "entity" => $entity,
-                        "parent" => $parent
+                        "siteUrl"    => $this->getConfig()->get('siteUrl'),
+                        "entity"     => $entity,
+                        "parent"     => $parent
                     ]);
-                    if($occurrence === NotificationOccurrence::UPDATE) {
+                    if ($occurrence === NotificationOccurrence::UPDATE) {
                         $changedFieldData = $this->getNoteUtil()->getChangedFieldsData($entity);
                         if (empty($changedFieldData['fields']) || empty($changedFieldData['attributes']['was']) || empty($changedFieldData['attributes']['became'])) {
-                            return ;
+                            return;
                         }
 
-                        if(count($changedFieldData['fields']) === 1 && in_array('modifiedBy',$changedFieldData['fields'])){
+                        if (count($changedFieldData['fields']) === 1 && in_array('modifiedBy', $changedFieldData['fields'])) {
                             return;
                         }
 
@@ -243,7 +243,7 @@ class NotificationManager
                     $transport->send($user, $template, $params);
                 } catch (\Throwable $e) {
                     $occurrence = !empty($params['occurrence']) ? $params['occurrence'] : '';
-                    $entity = !empty($params['entity']) ? $params['entity'] : '';
+                    $entity     = !empty($params['entity']) ? $params['entity'] : '';
                     $GLOBALS['log']->error("Failed to send Notification[Occurrence: $occurrence][Entity: {$entity->getEntityType()}[User: {$user->id}:  . {$e->getMessage()}");
                 }
             }
@@ -359,11 +359,11 @@ class NotificationManager
             if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation') {
                 $relationFields = $this->getEntityManager()->getRepository($entity->getEntityType())->getRelationFields();
                 if (isset($relationFields[1]) && isset($relationFields[0])) {
-                    $this->relationEntityData[$entity->getEntityType()]['field1'] = $relationFields[0] . 'Id';
+                    $this->relationEntityData[$entity->getEntityType()]['field1']  = $relationFields[0] . 'Id';
                     $this->relationEntityData[$entity->getEntityType()]['entity1'] = $this->getMetadata()
                         ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[0], 'entity']);
 
-                    $this->relationEntityData[$entity->getEntityType()]['field2'] = $relationFields[1] . 'Id';
+                    $this->relationEntityData[$entity->getEntityType()]['field2']  = $relationFields[1] . 'Id';
                     $this->relationEntityData[$entity->getEntityType()]['entity2'] = $this->getMetadata()
                         ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[1], 'entity']);
                 }
@@ -389,8 +389,8 @@ class NotificationManager
                 [
                     "entities" => [
                         [
-                            "name" => $name,
-                            "entityId" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                            "name"       => $name,
+                            "entityId"   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
                             "entityType" => $this->relationEntityData[$entity->getEntityType()]['entity2'],
                         ],
                     ],
@@ -412,8 +412,8 @@ class NotificationManager
                 [
                     "entities" => [
                         [
-                            "name" => $name,
-                            "entityId" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                            "name"       => $name,
+                            "entityId"   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
                             "entityType" => $this->relationEntityData[$entity->getEntityType()]['entity1'],
                         ],
                     ],
@@ -473,9 +473,9 @@ class NotificationManager
             [
                 "entities" => [
                     [
-                        "name" => "parent",
+                        "name"       => "parent",
                         "entityType" => $entity->get('parentType'),
-                        "entityId" => $entity->get('parentId')
+                        "entityId"   => $entity->get('parentId')
                     ]
                 ]
             ]
