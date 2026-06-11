@@ -19,7 +19,7 @@ use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\File;
-use Atro\Repositories\MasterDataEntity;
+use Atro\Repositories\SourceToStagingPipeline as SourceToStagingPipelineRepository;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -213,17 +213,7 @@ class Metadata extends AbstractMetadataListener
             }
         }
 
-        try {
-            $res = $this->getConnection()->createQueryBuilder()
-                ->select('s.staging_entity_id', 's.source_entity')
-                ->from('source_to_staging_pipeline', 's')
-                ->where('s.deleted = :false')
-                ->andWhere('s.source_entity IS NOT NULL')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
-        } catch (\Throwable $e) {
-            $res = [];
-        }
+        $res = SourceToStagingPipelineRepository::getPipelinesWithSourceEntities($this->getDbal());
 
         foreach ($res as $item) {
             $stagingEntity = $item['staging_entity_id'];

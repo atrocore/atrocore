@@ -5,12 +5,6 @@
       "required": true,
       "customizable": false,
       "layoutRemoveDisabled": true,
-      "where": [
-        {
-          "type": "isNotEmpty",
-          "attribute": "masterEntity"
-        }
-      ],
       "conditionalProperties": {
         "protected": {
           "conditionGroup": [
