@@ -1,4 +1,7 @@
 {
   "controller": "controllers/record",
-  "iconClass": "database"
+  "iconClass": "database",
+  "quickActions": [
+    "quickEdit"
+  ]
 }
