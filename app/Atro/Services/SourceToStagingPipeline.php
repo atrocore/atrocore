@@ -16,6 +16,7 @@ namespace Atro\Services;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
+use Atro\Core\UserContext;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
@@ -52,13 +53,23 @@ class SourceToStagingPipeline extends Base
             ? $this->getEntityManager()->getEntity($stagingEntityType, $stagingId)
             : null;
 
-        if (empty($stagingRecord)) {
-            $stagingRecord = $this->createStagingRecord($mdes, $sourceRecord, $stagingEntityType);
+        $em = $this->getEntityManager();
+        $userContext = $this->getContainer()->get(UserContext::class);
+        $previousUser = $userContext->getUser();
+        $em->setUser($em->getRepository('User')->getGlobalSystemUser());
+        $userContext->set($em->getRepository('User')->getGlobalSystemUser());
+
+        try {
             if (empty($stagingRecord)) {
-                return;
+                $this->createStagingRecord($mdes, $sourceRecord, $stagingEntityType);
+            } else {
+                $this->applyScript($mdes, $sourceRecord, $stagingRecord);
             }
-        } else {
-            $this->applyScript($mdes, $sourceRecord, $stagingRecord);
+        } finally {
+            if ($previousUser !== null) {
+                $em->setUser($previousUser);
+                $userContext->set($previousUser);
+            }
         }
     }
 
@@ -106,9 +117,20 @@ class SourceToStagingPipeline extends Base
                 ->find();
 
             foreach ($sourceRecords as $sourceRecord) {
+                $em = $this->getEntityManager();
+                $userContext = $this->getContainer()->get(UserContext::class);
+                $previousUser = $userContext->getUser();
+                $em->setUser($em->getRepository('User')->getGlobalSystemUser());
+                $userContext->set($em->getRepository('User')->getGlobalSystemUser());
+
                 try {
                     $this->applyScript($mdes, $sourceRecord, $stagingRecord);
                 } catch (\Throwable $e) {
+                } finally {
+                    if ($previousUser !== null) {
+                        $em->setUser($previousUser);
+                        $userContext->set($previousUser);
+                    }
                 }
             }
         }

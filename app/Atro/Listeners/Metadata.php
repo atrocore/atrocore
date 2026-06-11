@@ -236,7 +236,8 @@ class Metadata extends AbstractMetadataListener
             $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
 
             $data['entityDefs'][$sourceEntity]['fields']['stagingRecord'] = [
-                'type' => 'link',
+                'type'      => 'link',
+                'protected' => true,
             ];
 
             $data['entityDefs'][$sourceEntity]['links']['stagingRecord'] = [
