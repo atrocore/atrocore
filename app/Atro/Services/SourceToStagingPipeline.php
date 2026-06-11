@@ -32,14 +32,14 @@ class SourceToStagingPipeline extends Base
         }
     }
 
-    public function syncFromSource(Entity $sourceRecord): void
+    public function pushToStaging(Entity $sourceRecord): void
     {
-        $mdes = $this->getEntityManager()
+        $pipeline = $this->getEntityManager()
             ->getRepository('SourceToStagingPipeline')
             ->where(['sourceEntity' => $sourceRecord->getEntityName()])
             ->findOne();
 
-        if (empty($mdes) || empty($mdes->get('mergingScript'))) {
+        if (empty($pipeline) || empty($pipeline->get('mergingScript'))) {
             return;
         }
 
@@ -61,9 +61,9 @@ class SourceToStagingPipeline extends Base
 
         try {
             if (empty($stagingRecord)) {
-                $this->createStagingRecord($mdes, $sourceRecord, $stagingEntityType);
+                $this->createStagingRecord($pipeline->get('mergingScript'), $sourceRecord, $stagingEntityType);
             } else {
-                $this->applyScript($mdes, $sourceRecord, $stagingRecord);
+                $this->updateStagingRecord($pipeline->get('mergingScript'), $sourceRecord, $stagingRecord);
             }
         } finally {
             if ($previousUser !== null) {
@@ -73,9 +73,9 @@ class SourceToStagingPipeline extends Base
         }
     }
 
-    private function createStagingRecord(Entity $mdes, Entity $sourceRecord, string $stagingEntityType): ?Entity
+    private function createStagingRecord(string $mergingScript, Entity $sourceRecord, string $stagingEntityType): ?Entity
     {
-        $res = $this->getTwig()->renderTemplate($mdes->get('mergingScript'), [
+        $res = $this->getTwig()->renderTemplate($mergingScript, [
             'sourceRecord'  => $sourceRecord,
             'stagingRecord' => null,
         ]);
@@ -98,15 +98,15 @@ class SourceToStagingPipeline extends Base
         return $this->getEntityManager()->getEntity($stagingEntityType, $stagingId);
     }
 
-    public function syncAllSourcesOfStaging(Entity $stagingRecord): void
+    public function pushAllToStaging(Entity $stagingRecord): void
     {
         $sources = $this->getEntityManager()
             ->getRepository('SourceToStagingPipeline')
             ->where(['stagingEntityId' => $stagingRecord->getEntityName()])
             ->find();
 
-        foreach ($sources as $mdes) {
-            $sourceEntityType = $mdes->get('sourceEntity');
+        foreach ($sources as $pipeline) {
+            $sourceEntityType = $pipeline->get('sourceEntity');
             if (empty($sourceEntityType)) {
                 continue;
             }
@@ -124,7 +124,7 @@ class SourceToStagingPipeline extends Base
                 $userContext->set($em->getRepository('User')->getGlobalSystemUser());
 
                 try {
-                    $this->applyScript($mdes, $sourceRecord, $stagingRecord);
+                    $this->updateStagingRecord($pipeline->get('mergingScript'), $sourceRecord, $stagingRecord);
                 } catch (\Throwable $e) {
                 } finally {
                     if ($previousUser !== null) {
@@ -136,9 +136,9 @@ class SourceToStagingPipeline extends Base
         }
     }
 
-    private function applyScript(Entity $mdes, Entity $sourceRecord, Entity $stagingRecord): void
+    private function updateStagingRecord(string $mergingScript, Entity $sourceRecord, Entity $stagingRecord): void
     {
-        $res = $this->getTwig()->renderTemplate($mdes->get('mergingScript'), [
+        $res = $this->getTwig()->renderTemplate($mergingScript, [
             'sourceRecord'  => $sourceRecord,
             'stagingRecord' => $stagingRecord,
         ]);
