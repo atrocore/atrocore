@@ -5,5 +5,13 @@
   },
   {
     "name": "sourceEntity"
+  },
+  {
+    "name": "modifiedAt",
+    "widthPx": 200
+  },
+  {
+    "name": "modifiedBy",
+    "widthPx": 200
   }
 ]

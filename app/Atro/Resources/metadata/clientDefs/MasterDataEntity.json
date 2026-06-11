@@ -29,6 +29,13 @@
     ]
   },
   "relationshipPanels": {
+    "sourceToStagingPipelines": {
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
+    },
     "matchings": {
       "actions": {
         "unlinkRelated": {
