@@ -22,48 +22,5 @@ class V2Dot3Dot8 extends Base
 
     public function up(): void
     {
-        self::removeDir('data/migrations');
-
-        $data = @json_decode(file_get_contents('composer.json'), true);
-        if (!empty($data['autoload']['psr-0'][''])) {
-            $psr0 = [];
-            foreach ($data['autoload']['psr-0'][''] as $item) {
-                if ($item !== 'data/migrations/') {
-                    $psr0[] = $item;
-                }
-            }
-
-            $data['autoload']['psr-0'][''] = $psr0;
-            file_put_contents('composer.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        }
-    }
-
-    public static function scanDir(string $dir): array
-    {
-        $result = [];
-
-        if (file_exists($dir) && is_dir($dir)) {
-            foreach (scandir($dir) as $item) {
-                if (!in_array($item, ['.', '..'])) {
-                    $result[] = $item;
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    public static function removeDir(string $dir): void
-    {
-        if (file_exists($dir) && is_dir($dir)) {
-            foreach (self::scanDir($dir) as $object) {
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $object)) {
-                    self::removeDir($dir . DIRECTORY_SEPARATOR . $object);
-                } else {
-                    unlink($dir . DIRECTORY_SEPARATOR . $object);
-                }
-            }
-            rmdir($dir);
-        }
     }
 }

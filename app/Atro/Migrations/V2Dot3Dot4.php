@@ -543,20 +543,19 @@ class V2Dot3Dot4 extends Base
 
         foreach ($rows as $row) {
             $newType = $row['type'] === 'extensibleEnum' ? 'link' : 'linkMultiple';
-            $data    = !empty($row['data']) ? (@json_decode((string)$row['data'], true) ?? []) : [];
+            $data = !empty($row['data']) ? (@json_decode((string)$row['data'], true) ?? []) : [];
 
             if (!isset($data['field'])) {
                 $data['field'] = [];
             }
 
-            $data['field']['entityType']  = 'ExtensibleEnumOption';
+            $data['field']['entityType'] = 'ExtensibleEnumOption';
             $data['field']['entityField'] = 'name';
             unset($data['field']['allowedOptions']);
 
-            $this->getDbal()->update('attribute', [
-                'type' => $newType,
-                'data' => json_encode($data),
-            ], ['id' => $row['id']]);
+//            62a08450ce18d616d
+
+            $this->getDbal()->update('attribute', ['type' => $newType, 'data' => json_encode($data)], ['id' => $row['id']]);
         }
     }
 

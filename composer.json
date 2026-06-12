@@ -53,6 +53,7 @@
   "autoload": {
     "psr-0": {
       "": [
+        "../../../data/migrations/",
         "../../../data/module-manager-events/",
         "../../../data/custom-code/"
       ]
