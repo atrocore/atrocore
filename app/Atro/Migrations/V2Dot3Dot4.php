@@ -463,6 +463,7 @@ class V2Dot3Dot4 extends Base
             $tableName = Util::toUnderScore(lcfirst($entityName));
             $defs = json_decode(file_get_contents($file), true) ?? [];
             $changed = false;
+            $renameMap = [];
 
             foreach ($defs['fields'] ?? [] as $field => $fieldDefs) {
                 $col = Util::toUnderScore(lcfirst($field));
@@ -471,6 +472,8 @@ class V2Dot3Dot4 extends Base
                 $foreignName = lcfirst($field) . ucfirst(lcfirst($entityName)) . 's' . substr(md5($entityName . $field), 0, 8);
 
                 if ($type === 'extensibleEnum') {
+                    $renameMap[$field] = $field . 'Id';
+
                     $this->renameColumn($tableName, $col, $col . '_id');
 
                     $defs['fields'][$field] = $this->buildLinkDefs($fieldDefs, $enumId);
@@ -493,11 +496,13 @@ class V2Dot3Dot4 extends Base
                 }
 
                 if ($type === 'extensibleMultiEnum') {
+                    $renameMap[$field] = $field . 'Ids';
+
                     $relationName = $entityName . ucfirst($field);
 
                     $this->createRelationTable($relationName, $tableName);
                     $this->migrateJsonToRelation($tableName, $col, $relationName);
-                    $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " DROP COLUMN " . $this->getDbal()->quoteIdentifier($col));
+//                    $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " DROP COLUMN " . $this->getDbal()->quoteIdentifier($col));
 
                     $defs['fields'][$field] = $this->buildLinkMultipleDefs($fieldDefs, $enumId);
                     $defs['links'][$field] = [
@@ -521,6 +526,20 @@ class V2Dot3Dot4 extends Base
                 }
             }
 
+            if (!empty($renameMap)) {
+                foreach ($defs['fields'] as $fName => &$fDefs) {
+                    if (!isset($fDefs['conditionalProperties'])) {
+                        continue;
+                    }
+                    $updated = $this->applyConditionalPropertiesRename($fDefs['conditionalProperties'], $renameMap);
+                    if ($updated !== $fDefs['conditionalProperties']) {
+                        $fDefs['conditionalProperties'] = $updated;
+                        $changed = true;
+                    }
+                }
+                unset($fDefs);
+            }
+
             if ($changed) {
                 file_put_contents($file, json_encode($defs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
             }
@@ -535,7 +554,7 @@ class V2Dot3Dot4 extends Base
     {
         try {
             $rows = $this->getPDO()
-                ->query("SELECT id, type, data FROM attribute WHERE type IN ('extensibleEnum','extensibleMultiEnum') AND deleted=false")
+                ->query("SELECT id, type, data, extensible_enum_id FROM attribute WHERE type IN ('extensibleEnum','extensibleMultiEnum') AND deleted=false")
                 ->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Throwable $e) {
             return;
@@ -543,21 +562,67 @@ class V2Dot3Dot4 extends Base
 
         foreach ($rows as $row) {
             $newType = $row['type'] === 'extensibleEnum' ? 'link' : 'linkMultiple';
-            $data    = !empty($row['data']) ? (@json_decode((string)$row['data'], true) ?? []) : [];
+            $data = !empty($row['data']) ? (@json_decode((string)$row['data'], true) ?? []) : [];
 
             if (!isset($data['field'])) {
                 $data['field'] = [];
             }
 
-            $data['field']['entityType']  = 'ExtensibleEnumOption';
-            $data['field']['entityField'] = 'name';
-            unset($data['field']['allowedOptions']);
+            if (isset($data['field']['allowedOptions'])) {
+                unset($data['field']['allowedOptions']);
+            }
 
-            $this->getDbal()->update('attribute', [
-                'type' => $newType,
-                'data' => json_encode($data),
-            ], ['id' => $row['id']]);
+            $data['field']['entityType'] = 'ExtensibleEnumOption';
+            $data['field']['entityField'] = 'name';
+
+            $data['whereScope'] = 'ExtensibleEnumOption';
+            $data["where"] = [
+                [
+                    "condition" => "AND",
+                    "rules"     => [
+                        [
+                            "id"       => "extensibleEnums",
+                            "field"    => "extensibleEnums",
+                            "type"     => "string",
+                            "operator" => "linked_with",
+                            "value"    => [$row['extensible_enum_id']],
+                        ]
+                    ],
+                    "valid"     => true
+                ]
+            ];
+
+            $this->getDbal()->update('attribute', ['type' => $newType, 'data' => json_encode($data)], ['id' => $row['id']]);
         }
+    }
+
+    private function applyConditionalPropertiesRename(array $conditionalProperties, array $renameMap): array
+    {
+        foreach ($conditionalProperties as &$propDef) {
+            if (isset($propDef['conditionGroup'])) {
+                // Standard form: { conditionGroup: [...] }
+                foreach ($propDef['conditionGroup'] as &$condition) {
+                    if (isset($condition['attribute']) && array_key_exists($condition['attribute'], $renameMap)) {
+                        $condition['attribute'] = $renameMap[$condition['attribute']];
+                    }
+                }
+                unset($condition);
+            } else {
+                // Array form (e.g. disableOptions): [{ options: [...], conditionGroup: [...] }, ...]
+                foreach ($propDef as &$entry) {
+                    foreach ($entry['conditionGroup'] ?? [] as &$condition) {
+                        if (isset($condition['attribute']) && array_key_exists($condition['attribute'], $renameMap)) {
+                            $condition['attribute'] = $renameMap[$condition['attribute']];
+                        }
+                    }
+                    unset($condition);
+                }
+                unset($entry);
+            }
+        }
+        unset($propDef);
+
+        return $conditionalProperties;
     }
 
     private function renameColumn(string $table, string $from, string $to): void
@@ -575,22 +640,21 @@ class V2Dot3Dot4 extends Base
 
     private function createRelationTable(string $relationName, string $entityTable): void
     {
-        $table = $this->getDbal()->quoteIdentifier(Util::toUnderScore(lcfirst($relationName)));
+        $table = Util::toUnderScore(lcfirst($relationName));
+        $indexName = strtoupper($table);
+        $upperEntityTable = strtoupper($entityTable);
 
         if ($this->isPgSQL()) {
-            $this->exec("CREATE TABLE IF NOT EXISTS $table (
-                id VARCHAR(36) NOT NULL,
-                deleted BOOLEAN NOT NULL DEFAULT FALSE,
-                {$entityTable}_id VARCHAR(36),
-                extensible_enum_option_id VARCHAR(36)
-            )");
+            $this->exec("CREATE TABLE $table (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, extensible_enum_option_id VARCHAR(36) DEFAULT NULL, {$entityTable}_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE UNIQUE INDEX IDX_{$indexName}_UNIQUE_RELATION ON $table (deleted, extensible_enum_option_id, {$entityTable}_id)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_CREATED_BY_ID ON $table (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_MODIFIED_BY_ID ON $table (modified_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_EXTENSIBLE_ENUM_OPTION_ID ON $table (extensible_enum_option_id, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_{$upperEntityTable}_ID ON $table ({$entityTable}_id, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_CREATED_AT ON $table (created_at, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_MODIFIED_AT ON $table (modified_at, deleted)");
         } else {
-            $this->exec("CREATE TABLE IF NOT EXISTS $table (
-                id VARCHAR(36) NOT NULL,
-                deleted TINYINT(1) NOT NULL DEFAULT 0,
-                {$entityTable}_id VARCHAR(36) DEFAULT NULL,
-                extensible_enum_option_id VARCHAR(36) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $this->exec("CREATE TABLE $table (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, extensible_enum_option_id VARCHAR(36) DEFAULT NULL, {$entityTable}_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_{$indexName}_UNIQUE_RELATION (deleted, extensible_enum_option_id, {$entityTable}_id), INDEX IDX_{$indexName}_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_{$indexName}_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_{$indexName}_EXTENSIBLE_ENUM_OPTION_ID (extensible_enum_option_id, deleted), INDEX IDX_{$indexName}_{$upperEntityTable}_ID ({$entityTable}_id, deleted), INDEX IDX_{$indexName}_CREATED_AT (created_at, deleted), INDEX IDX_{$indexName}_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
     }
 
@@ -618,7 +682,6 @@ class V2Dot3Dot4 extends Base
                 try {
                     $this->getDbal()->insert($relTable, [
                         'id'                        => $this->generateId(),
-                        'deleted'                   => false,
                         $entityTable . '_id'        => $row['id'],
                         'extensible_enum_option_id' => $optionId,
                     ]);

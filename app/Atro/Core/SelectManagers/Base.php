@@ -35,6 +35,7 @@ use Atro\Core\Utils\Util;
 use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
+use phpseclib3\Crypt\EC\Curves\brainpoolP160r1;
 
 class Base
 {
@@ -1654,6 +1655,29 @@ class Base
 
         if (!is_null($attribute) && !is_string($attribute)) {
             throw new Error('Bad attribute in where statement');
+        }
+
+        // for backward compatibility (extensibleEnum)
+        if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'type']) === 'link') {
+            $attribute = $attribute . 'Id';
+        }
+
+        // for backward compatibility (extensibleMultiEnum)
+        if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'type']) === 'linkMultiple' && !empty($item['type'])) {
+            switch ($item['type']) {
+                case 'arrayAnyOf':
+                    $item['type'] = 'linkedWith';
+                    break;
+                case 'arrayNoneOf':
+                    $item['type'] = 'notLinkedWith';
+                    break;
+                case 'arrayIsEmpty':
+                    $item['type'] = 'isNotLinked';
+                    break;
+                case 'arrayIsNotEmpty':
+                    $item['type'] = 'isLinked';
+                    break;
+            }
         }
 
         if (

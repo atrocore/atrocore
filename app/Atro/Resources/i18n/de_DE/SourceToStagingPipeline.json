@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "stagingEntity": "Staging-Entität",
+    "sourceEntity": "Quellentität",
+    "mergingScript": "Zusammenführungs-Skript"
+  },
+  "tooltips": {
+    "mergingScript": "Konfigurieren Sie, wie die Daten aus dem Quelldatensatz transformiert und dem Staging-Datensatz zugeordnet werden."
+  }
+}

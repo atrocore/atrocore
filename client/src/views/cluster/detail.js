@@ -72,7 +72,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                 const loadedCount = previousOffsets[entityType] || this.itemsPageSize;
                 const whereRelation = JSON.stringify([{ attribute: 'entityName', type: 'equals', value: entityType }]);
                 return this.loadSelectionItemModels(
-                    `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=${loadedCount + 1}&whereRelation=${encodeURIComponent(whereRelation)}`
+                    `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=${loadedCount + 1}&where=${encodeURIComponent(whereRelation)}`
                 ).then(models => {
                     if (models.length > loadedCount) {
                         models = models.slice(0, loadedCount);
@@ -372,6 +372,10 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
         },
 
         canMerge() {
+            if (['empty', 'invalid'].includes(this.model.get('state'))) {
+                return false;
+            }
+
             if (this.selectionViewMode === 'standard') {
                 return !(!this.collection || this.collection.models.length <= 1);
             }

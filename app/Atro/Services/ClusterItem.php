@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\UserContext;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
@@ -40,7 +41,7 @@ class ClusterItem extends Base
             $goldenRecordChanged = true;
         } else {
             $goldenRecord = $cluster->get('goldenRecord');
-            $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
+            $record       = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
 
             if (empty($record)) {
                 throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
@@ -90,7 +91,9 @@ class ClusterItem extends Base
 
         $this->createClusterNote($cluster->get('id'), 'confirmed', $entity->get('entityName'), $entity->get('entityId'));
         if ($goldenRecordChanged) {
-            $this->createClusterNote($cluster->get('id'), 'goldenRecord', $entity->get('entityName'), $entity->get('entityId'));
+            $this->runAsSystemUser(function () use ($cluster, $entity) {
+                $this->createClusterNote($cluster->get('id'), 'goldenRecord', $entity->get('entityName'), $entity->get('entityId'));
+            });
         }
 
         return true;
@@ -151,10 +154,10 @@ class ClusterItem extends Base
 
     public function reject(array $params): array
     {
-        $params['action'] = 'reject';
+        $params['action']             = 'reject';
         $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
-        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
-        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['maxChunkSize']       = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize']       = $this->getConfig()->get('massUpdateMinChunkSize', 400);
         $params['singleActionMethod'] = 'rejectItem';
 
         list($count, $errors, $sync) = $this->executeMassAction($params, function ($id) {
@@ -180,15 +183,17 @@ class ClusterItem extends Base
         }
 
         if ($this->isClusterItemConfirmed($entity)) {
-            foreach ($entity->getStagingRecords() as $stagingRecord) {
-                $stagingRecord->set('masterRecordId', null);
-                $this->getEntityManager()->saveEntity($stagingRecord);
-            }
+            $this->runAsSystemUser(function () use ($entity, $cluster) {
+                foreach ($entity->getStagingRecords() as $stagingRecord) {
+                    $stagingRecord->set('masterRecordId', null);
+                    $this->getEntityManager()->saveEntity($stagingRecord);
+                }
 
-            if ($entity->get('entityName') === $cluster->get('masterEntity')) {
-                $cluster->set('goldenRecordId', null);
-                $this->getEntityManager()->saveEntity($cluster);
-            }
+                if ($entity->get('entityName') === $cluster->get('masterEntity')) {
+                    $cluster->set('goldenRecordId', null);
+                    $this->getEntityManager()->saveEntity($cluster);
+                }
+            });
         }
 
         $entity->set('confirmedAutomatically', false);
@@ -229,24 +234,23 @@ class ClusterItem extends Base
             $entity->set('matchedRecordId', $item['id']);
         }
 
-        if (empty($newClusterId)) {
-            $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
-            $newCluster->set('masterEntity', $cluster->get('masterEntity'));;
-
-            $this->getEntityManager()->saveEntity($newCluster);
-            $newClusterId = $newCluster->get('id');
-        }
-
         if ($entity->isAttributeChanged('confirmedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
             $this->getEntityManager()->saveEntity($entity);
         }
 
         $this->createClusterNote($cluster->get('id'), 'rejected', $entity->get('entityName'), $entity->get('entityId'));
-        $this->createClusterNote($cluster->get('id'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
 
-        $this->getRepository()->moveToCluster($entity->get('id'), $newClusterId);
-
-        $this->createClusterNote($newClusterId, 'linked', $entity->get('entityName'), $entity->get('entityId'));
+        $this->runAsSystemUser(function () use ($cluster, $entity, &$newClusterId) {
+            if (empty($newClusterId)) {
+                $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
+                $newCluster->set('masterEntity', $cluster->get('masterEntity'));
+                $this->getEntityManager()->saveEntity($newCluster);
+                $newClusterId = $newCluster->get('id');
+            }
+            $this->createClusterNote($cluster->get('id'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
+            $this->getRepository()->moveToCluster($entity->get('id'), $newClusterId);
+            $this->createClusterNote($newClusterId, 'linked', $entity->get('entityName'), $entity->get('entityId'));
+        });
 
         $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newClusterId]);
         return true;
@@ -256,7 +260,7 @@ class ClusterItem extends Base
     {
         if (!empty($params['where'])) {
             $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
-            $collection = $this->getRepository()->find($selectParams);
+            $collection   = $this->getRepository()->find($selectParams);
         } else {
             if (empty($ids = $params['ids'])) {
                 throw new BadRequest("No ids provided.");
@@ -280,18 +284,25 @@ class ClusterItem extends Base
             }
         }
 
-        $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
-        $newCluster->set('masterEntity', $cluster->get('masterEntity'));
-        $this->getEntityManager()->saveEntity($newCluster);
+        $newCluster = null;
+        $this->runAsSystemUser(function () use (&$newCluster, $cluster) {
+            $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
+            $newCluster->set('masterEntity', $cluster->get('masterEntity'));
+            $this->getEntityManager()->saveEntity($newCluster);
+        });
 
         foreach ($entities as $entity) {
             if ($this->isClusterItemConfirmed($entity)) {
-                $this->unConfirmClusterItem($entity);
+                $this->runAsSystemUser(function () use ($entity) {
+                    $this->unConfirmClusterItem($entity);
+                });
             }
 
             $this->createClusterNote($cluster->get('id'), 'moved', $entity->get('entityName'), $entity->get('entityId'));
             $this->getRepository()->moveToCluster($entity->get('id'), $newCluster->get('id'));
-            $this->createClusterNote($newCluster->get('id'), 'linked', $entity->get('entityName'), $entity->get('entityId'));
+            $this->runAsSystemUser(function () use ($newCluster, $entity) {
+                $this->createClusterNote($newCluster->get('id'), 'linked', $entity->get('entityName'), $entity->get('entityId'));
+            });
         }
 
         $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newCluster->get('id')]);
@@ -301,7 +312,7 @@ class ClusterItem extends Base
 
     public function unreject(string $clusterItemId, string $rejectedClusterItemId): bool
     {
-        $clusterItem = $this->getEntity($clusterItemId);
+        $clusterItem         = $this->getEntity($clusterItemId);
         $rejectedClusterItem = $this->getEntityManager()->getEntity('RejectedClusterItem', $rejectedClusterItemId);
 
         if (empty($clusterItem) || empty($rejectedClusterItem)) {
@@ -396,8 +407,8 @@ class ClusterItem extends Base
         parent::putAclMeta($entity);
 
         $isConfirmed = $this->isClusterItemConfirmed($entity);
-        $isStaging = !empty($this->getMetadata()->get(['scopes', $entity->get('entityName'), 'primaryEntityId']));
-        $record = $this->getEntityManager()->hasRepository($entity->get('entityName')) ?
+        $isStaging   = !empty($this->getMetadata()->get(['scopes', $entity->get('entityName'), 'primaryEntityId']));
+        $record      = $this->getEntityManager()->hasRepository($entity->get('entityName')) ?
             $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId')) :
             null;
 
@@ -485,7 +496,7 @@ class ClusterItem extends Base
 
         if (!empty($params['where'])) {
             $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
-            $collection = $this->getRepository()->find($selectParams);
+            $collection   = $this->getRepository()->find($selectParams);
         } else {
             if (empty($ids = $params['ids'])) {
                 throw new BadRequest("No ids provided.");
@@ -493,7 +504,7 @@ class ClusterItem extends Base
             $collection = $this->getRepository()->findByIds($ids);
         }
 
-        $moved = 0;
+        $moved   = 0;
         $skipped = 0;
 
         foreach ($collection as $entity) {
@@ -530,7 +541,9 @@ class ClusterItem extends Base
         $sourceClusterId = $clusterItem->get('clusterId');
 
         if ($this->isClusterItemConfirmed($clusterItem)) {
-            $this->unConfirmClusterItem($clusterItem);
+            $this->runAsSystemUser(function () use ($clusterItem) {
+                $this->unConfirmClusterItem($clusterItem);
+            });
         }
 
         $this->getRepository()->moveToCluster($clusterItem->get('id'), $targetClusterId);
@@ -548,5 +561,19 @@ class ClusterItem extends Base
         $this->getEntityManager()->getRepository('ClusterItem')->createClusterActivityNote(
             $clusterId, $action, $relatedType, $relatedId
         );
+    }
+
+    private function runAsSystemUser(callable $callback): void
+    {
+        $user       = $this->getUser();
+        $systemUser = $user->getSystemUser();
+        $this->getEntityManager()->setUser($systemUser);
+        $this->getEntityManager()->getContainer()->get(UserContext::class)->set($systemUser);
+        try {
+            $callback();
+        } finally {
+            $this->getEntityManager()->setUser($user);
+            $this->getEntityManager()->getContainer()->get(UserContext::class)->set($user);
+        }
     }
 }

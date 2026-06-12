@@ -1,8 +1,10 @@
 {
+  "labels": {
+    "sourceEntities": "Source-to-Staging Pipelines"
+  },
   "fields": {
     "masterEntity": "Entité de référence",
     "mergingScript": "Script de mapping",
-    "sourceEntity": "Entité source",
     "updateMasterAutomatically": "Mise à jour automatique du master",
     "executeMergeAs": "Exécuter la fusion en tant que",
     "minimumMatchingScore": "Score minimum de correspondance",
