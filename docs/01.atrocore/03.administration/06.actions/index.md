@@ -288,8 +288,6 @@ Removes records from the system based on specified criteria.
   - **Unchecked**: Action can target different entities and use filtering criteria. For example, Source Entity can be "Category" while the action deletes all "Products" filtered by that category.
 - **Filter Result**: Available only when "Apply to pre-selected records" is unchecked. Define which records should be deleted using query conditions - see [Search and Filtering](../../11.search-and-filtering) for details
 
-
-
 ### Data Exchange
 
 #### **Webhook**
