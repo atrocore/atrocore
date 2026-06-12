@@ -1539,6 +1539,8 @@ class Metadata extends AbstractMetadataListener
                     "notMergeable"                => true
                 ];
 
+                $metadata['app']['nonDuplicatableRelations'][] = lcfirst($scope) . "AttributeValues";
+
                 $metadata["entityDefs"][$entityName] = [
                     "fields"        => [
                         lcfirst($scope)  => [
