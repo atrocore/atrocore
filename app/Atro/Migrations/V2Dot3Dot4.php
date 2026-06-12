@@ -549,6 +549,10 @@ class V2Dot3Dot4 extends Base
                 $data['field'] = [];
             }
 
+            if (isset($data['field']['allowedOptions'])) {
+                unset($data['field']['allowedOptions']);
+            }
+
             $data['field']['entityType'] = 'ExtensibleEnumOption';
             $data['field']['entityField'] = 'name';
 
@@ -568,8 +572,6 @@ class V2Dot3Dot4 extends Base
                     "valid"     => true
                 ]
             ];
-
-            unset($data['field']['allowedOptions']);
 
             $this->getDbal()->update('attribute', ['type' => $newType, 'data' => json_encode($data)], ['id' => $row['id']]);
         }
