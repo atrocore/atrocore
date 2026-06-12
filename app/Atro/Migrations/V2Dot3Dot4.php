@@ -592,22 +592,21 @@ class V2Dot3Dot4 extends Base
 
     private function createRelationTable(string $relationName, string $entityTable): void
     {
-        $table = $this->getDbal()->quoteIdentifier(Util::toUnderScore(lcfirst($relationName)));
+        $table = Util::toUnderScore(lcfirst($relationName));
+        $indexName = strtoupper($table);
+        $upperEntityTable = strtoupper($entityTable);
 
         if ($this->isPgSQL()) {
-            $this->exec("CREATE TABLE IF NOT EXISTS $table (
-                id VARCHAR(36) NOT NULL,
-                deleted BOOLEAN NOT NULL DEFAULT FALSE,
-                {$entityTable}_id VARCHAR(36),
-                extensible_enum_option_id VARCHAR(36)
-            )");
+            $this->exec("CREATE TABLE $table (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, extensible_enum_option_id VARCHAR(36) DEFAULT NULL, {$entityTable}_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE UNIQUE INDEX IDX_{$indexName}_UNIQUE_RELATION ON $table (deleted, extensible_enum_option_id, {$entityTable}_id)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_CREATED_BY_ID ON $table (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_MODIFIED_BY_ID ON $table (modified_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_EXTENSIBLE_ENUM_OPTION_ID ON $table (extensible_enum_option_id, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_{$upperEntityTable}_ID ON $table ({$entityTable}_id, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_CREATED_AT ON $table (created_at, deleted)");
+            $this->exec("CREATE INDEX IDX_{$indexName}_MODIFIED_AT ON $table (modified_at, deleted)");
         } else {
-            $this->exec("CREATE TABLE IF NOT EXISTS $table (
-                id VARCHAR(36) NOT NULL,
-                deleted TINYINT(1) NOT NULL DEFAULT 0,
-                {$entityTable}_id VARCHAR(36) DEFAULT NULL,
-                extensible_enum_option_id VARCHAR(36) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            $this->exec("CREATE TABLE $table (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, extensible_enum_option_id VARCHAR(36) DEFAULT NULL, {$entityTable}_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_{$indexName}_UNIQUE_RELATION (deleted, extensible_enum_option_id, {$entityTable}_id), INDEX IDX_{$indexName}_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_{$indexName}_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_{$indexName}_EXTENSIBLE_ENUM_OPTION_ID (extensible_enum_option_id, deleted), INDEX IDX_{$indexName}_{$upperEntityTable}_ID ({$entityTable}_id, deleted), INDEX IDX_{$indexName}_CREATED_AT (created_at, deleted), INDEX IDX_{$indexName}_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
     }
 
