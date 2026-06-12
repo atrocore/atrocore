@@ -30,6 +30,30 @@
       "acl": "delete"
     }
   },
+  "listActions": {
+    "purge": {
+      "name": "purge",
+      "url": "Cluster/{{id}}/purge",
+      "method": "DELETE",
+      "confirm": true,
+      "refresh": true,
+      "iconClass": "ph ph-trash",
+      "acl": "purge",
+      "sortOrder": 150
+    }
+  },
+  "detailActions": {
+    "purge": {
+      "name": "purge",
+      "url": "Cluster/{{id}}/purge",
+      "method": "DELETE",
+      "confirm": true,
+      "exit": true,
+      "iconClass": "ph ph-trash",
+      "acl": "purge",
+      "sortOrder": 150
+    }
+  },
   "views": {
     "detail": "views/cluster/detail"
   },
@@ -75,7 +99,11 @@
           "modalSelectEntity": "Cluster",
           "modalSelectResultParam": "targetClusterId",
           "modalSelectWhere": [
-            {"type": "equals", "attribute": "masterEntity", "value": "{{masterEntity}}"}
+            {
+              "type": "equals",
+              "attribute": "masterEntity",
+              "value": "{{masterEntity}}"
+            }
           ]
         },
         "removeRelated": {

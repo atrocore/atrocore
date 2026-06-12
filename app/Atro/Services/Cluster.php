@@ -14,6 +14,7 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\ORM\Repositories\RDB;
@@ -37,11 +38,18 @@ class Cluster extends Base
                 }
             }
 
-            $sp = $this->getSelectParams([
+            $this->calculateVirtualFields($entity);
+        }
+    }
+
+    private function calculateVirtualFields(Entity $entity)
+    {
+        if ($entity->get('state') === null) {
+            $sp                      = $this->getSelectParams([
                 'select' => ['state', 'stagingItemCount', 'masterItemCount'],
             ]);
             $sp['whereClause']['id'] = $entity->get('id');
-            $sp['noCache'] = true;
+            $sp['noCache']           = true;
 
             $record = $this->getRepository()->findOne($sp);
             if (!empty($record)) {
@@ -64,7 +72,7 @@ class Cluster extends Base
         foreach ($entityIds as $entityType => $records) {
             $ids = array_map(fn($entity) => $entity->get('goldenRecordId'), $records);
 
-            $select = ['id'];
+            $select    = ['id'];
             $nameField = $this->getMetadata()->get(['scopes', $entityType, 'nameField']) ?? 'name';
             if ($this->getMetadata()->get(['entityDefs', $entityType, 'fields', $nameField])) {
                 $select[] = $nameField;
@@ -82,12 +90,34 @@ class Cluster extends Base
         }
     }
 
+    public function putAclMeta(Entity $entity): void
+    {
+        parent::putAclMeta($entity);
+
+        if ($entity->getMeta('permissions', 'delete')) {
+            $canPurge = false;
+            $this->calculateVirtualFields($entity);
+            if ($entity->get('state') !== 'empty') {
+                $entity->setMetaPermission('delete', false);
+                $canPurge = true;
+            }
+
+            $entity->setMetaPermission('purge', $canPurge);
+        } else {
+            $entity->setMetaPermission('purge', false);
+        }
+    }
+
     public function purge(array $params): array
     {
-        $params['action'] = 'purge';
+        if (!$this->getAcl()->check('Cluster', 'delete')) {
+            throw new Forbidden();
+        }
+
+        $params['action']             = 'purge';
         $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
-        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
-        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['maxChunkSize']       = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize']       = $this->getConfig()->get('massUpdateMinChunkSize', 400);
         $params['singleActionMethod'] = 'purgeCluster';
 
         list($count, $errors, $sync) = $this->executeMassAction($params, function ($id) {
@@ -101,7 +131,11 @@ class Cluster extends Base
     {
         $cluster = $this->getEntity($id);
         if (empty($cluster)) {
-            return;
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($cluster, 'delete')) {
+            throw new Forbidden();
         }
 
         $this->getEntityManager()->getRepository('ClusterItem')
@@ -159,7 +193,7 @@ class Cluster extends Base
             }
 
             if (empty($goldenRecord)) {
-                $id = $masterService->createEntity($attributes->input);
+                $id           = $masterService->createEntity($attributes->input);
                 $goldenRecord = $this->getEntityManager()->getEntity($cluster->get('masterEntity'), $id);
             }
         }
@@ -206,10 +240,10 @@ class Cluster extends Base
             }
             if (!empty($data['toUpsert'])) {
                 foreach ($data['toUpsert'] as $payload) {
-                    $input = new \stdClass();
-                    $input->entity = $data['scope'];
+                    $input          = new \stdClass();
+                    $input->entity  = $data['scope'];
                     $input->payload = (object)$payload;
-                    $upsertData[] = $input;
+                    $upsertData[]   = $input;
                 }
             }
 
@@ -224,7 +258,7 @@ class Cluster extends Base
 
         try {
             $attributes->input->_skipCheckForConflicts = true;
-            $goldenRecord->_avoidLocking = true;
+            $goldenRecord->_avoidLocking               = true;
             $masterService->updateEntity($goldenRecord->get('id'), $attributes->input);
         } catch (NotModified $e) {
 
