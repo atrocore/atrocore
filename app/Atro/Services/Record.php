@@ -843,4 +843,40 @@ class Record extends RecordService
 
         return $this->getEntityManager()->getEntity($this->getEntityType(), $id);
     }
+
+    protected function afterCreateProcessDuplicating(Entity $entity, $data)
+    {
+        parent::afterCreateProcessDuplicating($entity, $data);
+
+        if (empty($data->_duplicatingEntityId)) {
+            return;
+        }
+
+        if (!$this->getMetadata()->get("scopes.{$entity->getEntityName()}.hasAttribute")) {
+            return;
+        }
+
+        $this->duplicateAttributeValues($entity, $data->_duplicatingEntityId);
+    }
+
+    protected function duplicateAttributeValues(Entity $entity, string $sourceId): void
+    {
+        $sourceEntity = $this->getEntityManager()->getEntity($entity->getEntityName(), $sourceId);
+        if (!$sourceEntity) {
+            return;
+        }
+
+        $this->getInjection(\Atro\Core\AttributeFieldConverter::class)->putAttributesToEntity($sourceEntity);
+
+        /** @var \Atro\Repositories\Attribute $attributeRepo */
+        $attributeRepo = $this->getEntityManager()->getRepository('Attribute');
+
+        foreach ($sourceEntity->fields as $fieldName => $fieldDefs) {
+            if (empty($fieldDefs['attributeId']) || empty($fieldDefs['column'])) {
+                continue;
+            }
+
+            $attributeRepo->upsertAttributeValue($entity, $fieldName, $sourceEntity->get($fieldName), false);
+        }
+    }
 }
