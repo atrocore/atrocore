@@ -535,7 +535,7 @@ class V2Dot3Dot4 extends Base
     {
         try {
             $rows = $this->getPDO()
-                ->query("SELECT id, type, data FROM attribute WHERE type IN ('extensibleEnum','extensibleMultiEnum') AND deleted=false")
+                ->query("SELECT id, type, data, extensible_enum_id FROM attribute WHERE type IN ('extensibleEnum','extensibleMultiEnum') AND deleted=false")
                 ->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Throwable $e) {
             return;
@@ -543,20 +543,37 @@ class V2Dot3Dot4 extends Base
 
         foreach ($rows as $row) {
             $newType = $row['type'] === 'extensibleEnum' ? 'link' : 'linkMultiple';
-            $data    = !empty($row['data']) ? (@json_decode((string)$row['data'], true) ?? []) : [];
+            $data = !empty($row['data']) ? (@json_decode((string)$row['data'], true) ?? []) : [];
 
             if (!isset($data['field'])) {
                 $data['field'] = [];
             }
 
-            $data['field']['entityType']  = 'ExtensibleEnumOption';
-            $data['field']['entityField'] = 'name';
-            unset($data['field']['allowedOptions']);
+            if (isset($data['field']['allowedOptions'])) {
+                unset($data['field']['allowedOptions']);
+            }
 
-            $this->getDbal()->update('attribute', [
-                'type' => $newType,
-                'data' => json_encode($data),
-            ], ['id' => $row['id']]);
+            $data['field']['entityType'] = 'ExtensibleEnumOption';
+            $data['field']['entityField'] = 'name';
+
+            $data['whereScope'] = 'ExtensibleEnumOption';
+            $data["where"] = [
+                [
+                    "condition" => "AND",
+                    "rules"     => [
+                        [
+                            "id"       => "extensibleEnums",
+                            "field"    => "extensibleEnums",
+                            "type"     => "string",
+                            "operator" => "linked_with",
+                            "value"    => [$row['extensible_enum_id']],
+                        ]
+                    ],
+                    "valid"     => true
+                ]
+            ];
+
+            $this->getDbal()->update('attribute', ['type' => $newType, 'data' => json_encode($data)], ['id' => $row['id']]);
         }
     }
 
