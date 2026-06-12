@@ -36,30 +36,6 @@
         }
       }
     },
-    "sourceEntity": {
-      "type": "multiEnum",
-      "optionsType": "entityName",
-      "options": [],
-      "customizable": false,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "masterEntity"
-            }
-          ]
-        },
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "masterEntity"
-            }
-          ]
-        }
-      }
-    },
     "executeMergeAs": {
       "type": "enum",
       "default": "system",
@@ -192,6 +168,11 @@
     }
   },
   "links": {
+    "sourceToStagingPipelines": {
+      "type": "hasMany",
+      "entity": "SourceToStagingPipeline",
+      "foreign": "stagingEntity"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
