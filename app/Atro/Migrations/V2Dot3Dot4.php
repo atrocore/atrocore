@@ -634,7 +634,6 @@ class V2Dot3Dot4 extends Base
                 try {
                     $this->getDbal()->insert($relTable, [
                         'id'                        => $this->generateId(),
-                        'deleted'                   => false,
                         $entityTable . '_id'        => $row['id'],
                         'extensible_enum_option_id' => $optionId,
                     ]);
