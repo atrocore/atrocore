@@ -497,7 +497,7 @@ class V2Dot3Dot4 extends Base
 
                     $this->createRelationTable($relationName, $tableName);
                     $this->migrateJsonToRelation($tableName, $col, $relationName);
-                    $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " DROP COLUMN " . $this->getDbal()->quoteIdentifier($col));
+//                    $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " DROP COLUMN " . $this->getDbal()->quoteIdentifier($col));
 
                     $defs['fields'][$field] = $this->buildLinkMultipleDefs($fieldDefs, $enumId);
                     $defs['links'][$field] = [
