@@ -57,7 +57,7 @@
     "auditableDisabled": "Не створювати активність в записі",
     "modifiedExtendedDisabled": "Не фіксувати як зміну",
     "modifiedExtendedEnabled": "Записати зміни як модифікацію",
-    "duplicateIgnore": "Несвоєчасний",
+    "duplicateIgnore": "Не дублювати",
     "recordRelatedChangesInStream": "Записати зміни пов'язаних записів для поточної сутності.",
     "conditionalRequired": "Обов'язковий",
     "conditionalVisible": "Видимий",
