@@ -535,7 +535,7 @@ class V2Dot3Dot4 extends Base
     {
         try {
             $rows = $this->getPDO()
-                ->query("SELECT id, type, data FROM attribute WHERE type IN ('extensibleEnum','extensibleMultiEnum') AND deleted=false")
+                ->query("SELECT id, type, data, extensible_enum_id FROM attribute WHERE type IN ('extensibleEnum','extensibleMultiEnum') AND deleted=false")
                 ->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Throwable $e) {
             return;
@@ -551,9 +551,25 @@ class V2Dot3Dot4 extends Base
 
             $data['field']['entityType'] = 'ExtensibleEnumOption';
             $data['field']['entityField'] = 'name';
-            unset($data['field']['allowedOptions']);
 
-//            62a08450ce18d616d
+            $data['whereScope'] = 'ExtensibleEnumOption';
+            $data["where"] = [
+                [
+                    "condition" => "AND",
+                    "rules"     => [
+                        [
+                            "id"       => "extensibleEnums",
+                            "field"    => "extensibleEnums",
+                            "type"     => "string",
+                            "operator" => "linked_with",
+                            "value"    => [$row['extensible_enum_id']],
+                        ]
+                    ],
+                    "valid"     => true
+                ]
+            ];
+
+            unset($data['field']['allowedOptions']);
 
             $this->getDbal()->update('attribute', ['type' => $newType, 'data' => json_encode($data)], ['id' => $row['id']]);
         }
