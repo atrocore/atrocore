@@ -70,9 +70,6 @@ class PostUpdate
             // copy modules event
             self::copyModulesEvent();
 
-            // copy modules migrations
-            self::copyModulesMigrations();
-
             // upload demo data if it needs
             self::uploadDemoData();
 
@@ -314,61 +311,6 @@ class PostUpdate
                 if (file_exists($src)) {
                     copy($src, $dest);
                 }
-            }
-        }
-    }
-
-    /**
-     * Copy modules migrations classes
-     */
-    private static function copyModulesMigrations(): void
-    {
-        if (self::isInstalled() && !self::isChanged()) {
-            return;
-        }
-
-        self::renderLine('Copying migration scripts');
-
-        // prepare data
-        $data = [];
-
-        $data['Atro'] = 'vendor/atrocore/core/app/Atro/Migrations';
-
-        foreach (self::getModules() as $id) {
-            // prepare src
-            $src = dirname((new \ReflectionClass("\\$id\\Module"))->getFileName()) . '/Migrations';
-
-            if (file_exists($src) && is_dir($src)) {
-                $data[$id] = $src;
-            }
-        }
-
-        // copy
-        foreach ($data as $id => $src) {
-            // prepare dest
-            $dest = "data/migrations/{$id}/Migrations";
-
-            // create dir
-            self::createDir($dest);
-
-            // skip
-            if (!file_exists($src) || !is_dir($src)) {
-                continue 1;
-            }
-
-            foreach (scandir($src) as $file) {
-                // skip
-                if (in_array($file, ['.', '..'])) {
-                    continue 1;
-                }
-
-                // delete old
-                if (file_exists("$dest/$file")) {
-                    unlink("$dest/$file");
-                }
-
-                // copy
-                copy("$src/$file", "$dest/$file");
             }
         }
     }
