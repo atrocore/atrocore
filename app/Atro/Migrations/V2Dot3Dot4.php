@@ -463,6 +463,7 @@ class V2Dot3Dot4 extends Base
             $tableName = Util::toUnderScore(lcfirst($entityName));
             $defs = json_decode(file_get_contents($file), true) ?? [];
             $changed = false;
+            $renameMap = [];
 
             foreach ($defs['fields'] ?? [] as $field => $fieldDefs) {
                 $col = Util::toUnderScore(lcfirst($field));
@@ -471,6 +472,8 @@ class V2Dot3Dot4 extends Base
                 $foreignName = lcfirst($field) . ucfirst(lcfirst($entityName)) . 's' . substr(md5($entityName . $field), 0, 8);
 
                 if ($type === 'extensibleEnum') {
+                    $renameMap[$field] = $field . 'Id';
+
                     $this->renameColumn($tableName, $col, $col . '_id');
 
                     $defs['fields'][$field] = $this->buildLinkDefs($fieldDefs, $enumId);
@@ -493,6 +496,8 @@ class V2Dot3Dot4 extends Base
                 }
 
                 if ($type === 'extensibleMultiEnum') {
+                    $renameMap[$field] = $field . 'Ids';
+
                     $relationName = $entityName . ucfirst($field);
 
                     $this->createRelationTable($relationName, $tableName);
@@ -519,6 +524,20 @@ class V2Dot3Dot4 extends Base
                     $changed = true;
                     $enumOptionChanged = true;
                 }
+            }
+
+            if (!empty($renameMap)) {
+                foreach ($defs['fields'] as $fName => &$fDefs) {
+                    if (!isset($fDefs['conditionalProperties'])) {
+                        continue;
+                    }
+                    $updated = $this->applyConditionalPropertiesRename($fDefs['conditionalProperties'], $renameMap);
+                    if ($updated !== $fDefs['conditionalProperties']) {
+                        $fDefs['conditionalProperties'] = $updated;
+                        $changed = true;
+                    }
+                }
+                unset($fDefs);
             }
 
             if ($changed) {
@@ -575,6 +594,35 @@ class V2Dot3Dot4 extends Base
 
             $this->getDbal()->update('attribute', ['type' => $newType, 'data' => json_encode($data)], ['id' => $row['id']]);
         }
+    }
+
+    private function applyConditionalPropertiesRename(array $conditionalProperties, array $renameMap): array
+    {
+        foreach ($conditionalProperties as &$propDef) {
+            if (isset($propDef['conditionGroup'])) {
+                // Standard form: { conditionGroup: [...] }
+                foreach ($propDef['conditionGroup'] as &$condition) {
+                    if (isset($condition['attribute']) && array_key_exists($condition['attribute'], $renameMap)) {
+                        $condition['attribute'] = $renameMap[$condition['attribute']];
+                    }
+                }
+                unset($condition);
+            } else {
+                // Array form (e.g. disableOptions): [{ options: [...], conditionGroup: [...] }, ...]
+                foreach ($propDef as &$entry) {
+                    foreach ($entry['conditionGroup'] ?? [] as &$condition) {
+                        if (isset($condition['attribute']) && array_key_exists($condition['attribute'], $renameMap)) {
+                            $condition['attribute'] = $renameMap[$condition['attribute']];
+                        }
+                    }
+                    unset($condition);
+                }
+                unset($entry);
+            }
+        }
+        unset($propDef);
+
+        return $conditionalProperties;
     }
 
     private function renameColumn(string $table, string $from, string $to): void
