@@ -43,7 +43,8 @@ class Attribute extends Base
             $converter->getFieldType($row['type'])->convert($entity, $row, $attributesDefs);
         }
 
-        return $attributesDefs;
+        return $this->getInjection('eventManager')->dispatch('AttributeFieldConverter', 'afterPutAttributesToEntity', new Event(['entity' => $entity, 'attributes' => $attributes, 'attributesDefs' => $attributesDefs]))
+            ->getArgument('attributesDefs');
     }
 
     public function createAttributeValuesFromClassification(string $classificationId, string $entityName, string $entityId): void
@@ -73,8 +74,8 @@ class Attribute extends Base
                 continue;
             }
 
-            $data = $ca->get('data')?->default ?? new \stdClass();
-            $data = json_decode(json_encode($data), true);
+            $data                = $ca->get('data')?->default ?? new \stdClass();
+            $data                = json_decode(json_encode($data), true);
             $data['attributeId'] = $ca->get('attributeId');
 
             $created = $this->createAttributeValue([
@@ -97,8 +98,8 @@ class Attribute extends Base
     public function createAttributeValue(array $pseudoTransactionData): bool
     {
         $entityName = $pseudoTransactionData['entityName'] ?? null;
-        $entityId = $pseudoTransactionData['entityId'] ?? null;
-        $data = $pseudoTransactionData['data'] ?? [];
+        $entityId   = $pseudoTransactionData['entityId'] ?? null;
+        $data       = $pseudoTransactionData['data'] ?? [];
 
         if (empty($entityName) || empty($entityId) || empty($data)) {
             return false;
@@ -167,7 +168,7 @@ class Attribute extends Base
             $selectParams = $this
                 ->getSelectManager()
                 ->getSelectParams(['where' => json_decode(json_encode($where), true)], true);
-            $attributes = $this->getRepository()->find($selectParams);
+            $attributes   = $this->getRepository()->find($selectParams);
         } elseif ($ids !== null) {
             $attributes = $this->getRepository()->where(['id' => $ids])->find();
         }
@@ -267,11 +268,11 @@ class Attribute extends Base
             $entity->set('fullWidth', in_array($entity->get('type'), ['wysiwyg', 'markdown', 'text', 'composite']));
         }
 
-        if($entity->get('type') === 'bool') {
+        if ($entity->get('type') === 'bool') {
             $entity->set('allowNullForBool', empty($entity->get('notNull')));
         }
 
-        if($entity->get('type') === 'bool') {
+        if ($entity->get('type') === 'bool') {
             $entity->set('allowNullForBool', empty($entity->get('notNull')));
         }
 
