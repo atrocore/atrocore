@@ -288,38 +288,7 @@ Removes records from the system based on specified criteria.
   - **Unchecked**: Action can target different entities and use filtering criteria. For example, Source Entity can be "Category" while the action deletes all "Products" filtered by that category.
 - **Filter Result**: Available only when "Apply to pre-selected records" is unchecked. Define which records should be deleted using query conditions - see [Search and Filtering](../../11.search-and-filtering) for details
 
-#### **Suggest value**
 
-Suggests modifications for existing records based on defined templates. The user can then modify the result. These suggested values only appear in the front end and must be saved manually.
-
-![Suggest value Configuration](_assets/action-type-value.png){.medium}
-
-> The ["AI Integration"](https://store.atrocore.com/en/ai-integration/20202) module adds **Suggest value by AI**, which works the same way but lets AI determine the suggested values rather than manually configured templates.
-
-**Configuration:**
-
-- **Source Entity**: Entity type for records
-- **Update Type**: Method for record updating (Basic or Script)
-- **Usage**: Defines when the suggestion is displayed
-  - **On field focus**: Displays when user focuses on the field during record editing or inline editing
-  - **On field change**: Automatically triggers when the value of the specified field is modified
-  - **On record create / update**: Displays when creating a new record or updating an existing record
-
-When using [Script Mode](#script) for Suggest value action additional Twig functions are available:
-
-- "uiRecord": Record data array. Variable contains data that you have on frontend side,
-- "uiRecordFromName": The name of the entity from which you open current entity,
-- "uiRecordFrom": Record data array of the entity from which you open current entity.
-
-#### **Copy**
-<!-- TODO: investigate further -->
-Duplicates existing records to create new copies.
-
-![Copy Configuration](_assets/action-type-copy.png){.medium}
-
-**Configuration:**
-
-- **Target Entity**: Entity type to copy
 
 ### Data Exchange
 
@@ -421,53 +390,7 @@ For example, you can send an email to all users who are related to the particula
   - `emailCc`: Array of CC recipient email addresses (can be empty: `[]`)
   - `emailTemplateId`: ID of the email template to use (e.g., `'some-id'`)
 
-#### **Send Notification**  
-
-Sends internal system notifications to users within the AtroCore application.
-
-Can be used to send notifications to any users of the system in response to a specific trigger (record modification, changing of the specific field, etc.). You can select a specific user from the list of all system users, as well as select users associated with a specific entity.
-
-![Send Notification Configuration](_assets/demo-send-notification-configured.png){.medium}
-
-**Configuration:**
-
-- **System Template**: Notification template (required) - links to Notification Templates. You can choose any of the pre-configured templates or create your own
-- **System Users**: Specific users to receive notifications - links to Users
-- **Entity Users**: Role-based recipients related to the entity record. The list of available fields depends on the entity selected in the **Source Entity** field. All user-related fields from the selected entity are presented here (Owner, Assigned User, Followers, etc.)
-
-Notifications can have flexible recipients. This can be achieved using script mode and determine the user ID:
-
-![Send Notification](_assets/send-notification-configured.png){.medium}
-
-Here is an example of a script that determines the user ID:
-
-```
-{% set ids = [] %}
-
-{% for team in entity.categories[0].teams ?? [] %}
-    {% for user in team.get('users') %}
-        {% set ids = ids | merge([user.id]) %}
-    {% endfor %}
-{% endfor %}
-
-{ "notificationSystemTemplateId" : "systemUpdateEntity", "usersIds": {{ids|json_encode|raw}} }
-```
-
 ### Utility Actions
-
-#### **Error Message**
-
-Displays custom error messages to prevent operations. Primarily used with "Before" workflow triggers for data validation.
-
-![Error Message Configuration](_assets/error-message-configured.png){.medium}
-
-**Configuration:**
-
-- **Error Message**: Text content for the error message (supports dynamic content with [Twig syntax](../../../10.developer-guide/80.twig-tutorial/index.md))
-
-! This action is typically used within [Workflows](https://store.atrocore.com/en/workflows/20194) for conditional error handling.
-
-It is usually set up with an empty **Display** field so it does not appear as an action button, and the error message is shown whenever the action is triggered in the workflow.
 
 #### **Action Set**
 
