@@ -74,6 +74,12 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'Some records could not be restored',
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class EntityRestoreHandler extends AbstractHandler
@@ -82,17 +88,17 @@ class EntityRestoreHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'entityName') || empty($data->entityName)) {
-            throw new BadRequest();
-        }
-
         $entityName = (string) $data->entityName;
 
         if (!$this->getAcl()->check($entityName, 'edit')) {
             throw new Forbidden();
         }
 
-        $this->getRecordService($entityName)->massRestore($this->buildMassParams($data));
+        $result = $this->getRecordService($entityName)->massRestore($this->buildMassParams($data));
+
+        if (!empty($result['errors'])) {
+            throw new BadRequest('Some records could not be restored.');
+        }
 
         return new BoolResponse(true);
     }

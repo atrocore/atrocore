@@ -3391,7 +3391,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);
                     }.bind(this)
-                ).fail(function () {
+                ).fail(function (result) {
+                    this.notify(false);
                     this.notify('Error occured', 'error');
                     this.collection.push(model);
                 }.bind(this))
