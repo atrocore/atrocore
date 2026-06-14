@@ -183,4 +183,10 @@ class LinkType extends AbstractFieldType
 
         return $item;
     }
+
+    public function getSelectCost(array $row): int
+    {
+        // 1 reference_value (id) + 1 foreign name + 1 attribute_value_id
+        return 3;
+    }
 }

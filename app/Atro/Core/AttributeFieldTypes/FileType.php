@@ -111,6 +111,12 @@ class FileType extends AbstractFieldType
         }
     }
 
+    public function getSelectCost(array $row): int
+    {
+        // 1 reference_value (file_id) + 1 file.name + 1 attribute_value_id
+        return 3;
+    }
+
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if (!empty($item['subQuery'])) {

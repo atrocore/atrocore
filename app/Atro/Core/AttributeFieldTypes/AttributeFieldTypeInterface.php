@@ -24,4 +24,6 @@ interface AttributeFieldTypeInterface
     public function getWherePart(IEntity $entity, array $attribute, array &$item): void;
 
     public function getValueColumn(): string;
+
+    public function getSelectCost(array $row): int;
 }

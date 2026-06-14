@@ -235,8 +235,14 @@ class RangeIntType extends IntType
 
         $qb->addSelect("{$alias}.{$this->type}_value as " . $mapper->getQueryConverter()->fieldToAlias($name . 'From'));
         $qb->addSelect("{$alias}.{$this->type}_value1 as " . $mapper->getQueryConverter()->fieldToAlias($name . 'To'));
-        $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
-        $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
+        if (isset($row['measure_id'])) {
+            $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
+            $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
+
+            if ("{$name}Unit" === $params['orderBy']) {
+                $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName") . ' ' . $params['order']);
+            }
+        }
 
         switch ($params['orderBy']) {
             case "{$name}From":
@@ -245,12 +251,15 @@ class RangeIntType extends IntType
             case "{$name}To":
                 $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias("{$name}To") . ' ' . $params['order']);
                 break;
-            case "{$name}Unit":
-                $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName") . ' ' . $params['order']);
-                break;
         }
     }
 
+    public function getSelectCost(array $row): int
+    {
+        // 1 {type}_value (from) + 1 {type}_value1 (to) + 1 attribute_value_id
+        // + 2 if measure_id: reference_value (unit_id) + unit.name
+        return 3 + (isset($row['measure_id']) ? 2 : 0);
+    }
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
