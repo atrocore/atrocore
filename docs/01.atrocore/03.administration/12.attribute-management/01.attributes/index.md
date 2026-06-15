@@ -31,6 +31,7 @@ The Attribute entity comes with the following preconfigured fields; mandatory ar
 | Multilingual               | If the checkbox is selected, when adding an attribute to a record, a separate field will be added for each of the languages |
 | Protected               | If the checkbox is selected, the field value becomes read-only in both the UI and the API. 'Protected' property on the [Classifications](../04.classifications/index.md) attribute, has a higher priority than on the 'Attribute'.  |
 | No recording as modification               | Selecting the checkbox means that changes to the attribute value on the record page will not affect the modification date of the record.  |
+| Non Duplicatable               | When checked, the attribute value is not copied when [duplicating a record](../../../08.record-management/index.md#single-record-actions). The duplicate form will open with this attribute value left empty.  |
 
 The above fields are common to all attributes. There are also some specific fields that are typical only for certain types.
 
