@@ -8,20 +8,34 @@ Product is a [Hierarchy](../../01.atrocore/03.administration/11.entity-managemen
 
 ## Product Fields
 
-The product entity comes with the following preconfigured fields; mandatory fields are marked with \*:
+The following fields are available on the Product entity out of the box. Mandatory fields are marked with \*. The detail view groups them into panels — **Master Data**, **State**, **Description**, and **Taxonomy** — with Main Image shown in the side panel. Fields not included in the default layout can be added via `Administration > Layouts > Product`.
 
-| **Field Name** | **Description** |
-| --- | --- |
-| Name \* | The unique product name used for identification and display purposes. |
-| Active | Indicates whether the product is active. Inactive products can be excluded from exports and listings. |
-| Brand | Reference to the [Brand](../04.brands/index.md) associated with the product. |
-| Number \* | The internal or external product number (e.g., SKU, model number, or article number). |
-| Status \* | Defines the lifecycle state of the product (e.g., Draft, Ready). Available values depend on system configuration. |
-| Tag | Used to assign tags for categorization, search, and filtering purposes. |
-| Short Description | A brief description of the product, typically used in listings or summary views. |
-| Long Description | A detailed description used for extended product information, marketing content, or technical specifications. |
-| Classification | Specifies the [Classification](../07.classifications/index.md) assigned to the product, which determines which attributes are available. |
-| Main Image | The primary image of the product, used as the default visual representation in the UI. |
+| **Field** | **Panel** | **Description** |
+| --- | --- | --- |
+| Main Image | Side panel | Read-only. The primary image of the product, automatically determined from the product's linked files. |
+| Name \* | Master Data | The product name. Supports multiple languages if multilingual mode is enabled. |
+| Brand | Master Data | Reference to the [Brand](../04.brands/index.md) associated with the product. |
+| Number \* | Master Data | The internal or external product identifier (e.g., SKU, article number). Unique; not inherited from parent products. |
+| Country of Origin | Master Data | The country where the product was manufactured or produced. |
+| Customs Number | Master Data | The customs tariff number for the product (up to 16 characters). |
+| Recommended Retail Price (RRP) | Master Data | The suggested retail price, stored with a currency unit. |
+| Sort Order | Master Data | The display order among sibling products in the hierarchy. Visible only for root-level products. |
+| Status \* | State | The lifecycle state of the product. Default options: Draft, Prepared, Reviewed, Not Ready, Ready. |
+| Tag | State | Multi-select tags for categorization, filtering, and quick identification. |
+| Active | State | Indicates whether the product is active. Inactive products can be excluded from exports and channel feeds. |
+| Short Description | Description | A plain-text summary of the product, typically used in listings or preview contexts. Supports multiple languages. |
+| Long Description | Description | A full HTML description with rich formatting support (headings, lists, tables, embedded media, etc.). Intended for detailed marketing or technical content. Supports multiple languages. |
+| Classifications | Taxonomy | The [Classifications](../07.classifications/index.md) assigned to the product, which determine which attributes are available. A product can have more than one Classification. |
+| Product Group | Taxonomy | Groups the product within an internal product group structure. |
+| Categories | Taxonomy | The [Categories](../05.categories/index.md) the product belongs to. A product can be assigned to multiple leaf categories. |
+| Channels | Taxonomy | The [Channels](../06.channels/index.md) through which the product is distributed (e.g., online stores, marketplaces). |
+| Parent | Taxonomy | The [parent](#parent-products) product in the product hierarchy. |
+| GTIN/EAN | — | The product barcode in EAN-8, EAN-12, EAN-13, or EAN-14 format. Not in the default layout. |
+| Manufacturer Number (MPN) | — | The manufacturer's part number. Not inherited from parent products. Not in the default layout. |
+| Purchase Price | — | The purchase or cost price, stored with a currency unit. Not in the default layout. |
+| Quantity | — | The product quantity (minimum 0). Not in the default layout. |
+| Default Supplier | — | The default supplier (linked Account) for this product. Not in the default layout. |
+| Note | — | A plain-text internal note. Not in the default layout. |
 
 To add new fields or modify the product [entity](../../01.atrocore/03.administration/11.entity-management/index.md), go to `Administration > Entities > Product`.
 
@@ -59,7 +73,7 @@ In addition to all standard [search and filtering](../../01.atrocore/11.search-a
 
 **Without Main Image** — shows only products that have no Main Image assigned. Useful for identifying records that need visual content before publication or export.
 
-**Multiple Classifications** — shows products assigned to more than one Classification. Useful for detecting potential data inconsistencies, as a product is typically expected to belong to a single Classification.
+**Multiple Classifications** — shows products assigned to more than one Classification. This is a supported feature that allows a product to belong to multiple Classifications simultaneously.
 
 ## Product Hierarchy
 
@@ -70,6 +84,8 @@ Two hierarchy panels are available by default on the product detail view.
 ### Parent Products
 
 This panel shows the parent product of the current record. If the [Multiple Parents](../../01.atrocore/03.administration/11.entity-management/04.hierarchies-and-inheritance/index.md#core-hierarchy-settings) option is enabled for the entity, more than one parent can be displayed. From this panel you can link an existing product as a parent or remove an existing parent relationship.
+
+> By default, the **Parent** field also appears in the Taxonomy panel of the detail form. An administrator can remove it from the Taxonomy panel via [Layout Management](../../01.atrocore/03.administration/13.user-interface/02.layouts/index.md) to avoid redundancy.
 
 ![Parent Products panel](./_assets/Parent-Products-panel.png){.large}
 
@@ -96,57 +112,21 @@ If any panel is missing, contact your administrator to check your access rights.
 
 ### Attributes
 
-Product attributes are characteristics that distinguish a product from others — for example, size, color, or material. They are also used as filters in product searches.
+Product attributes are characteristics that distinguish a product from others — for example, size, color, or material. They are displayed on the `Attributes` panel, grouped by [attribute groups](../../01.atrocore/03.administration/12.attribute-management/02.attribute-groups/index.md).
 
-The most efficient way to add attributes to a product is through a [Classification](../07.classifications/index.md). When you assign a Classification to a product, all attributes defined in that Classification are automatically linked to it. Attributes can also be linked to a product directly, without going through a Classification, by selecting from the full list of attributes available for the Product entity — unless the administrator has disabled direct attribute linking.
-
-Attributes are displayed on the `Attributes` panel, grouped by [attribute groups](../../01.atrocore/03.administration/12.attribute-management/02.attribute-groups/index.md). Their order depends on the sort order configured for each group.
+The most efficient way to add attributes to a product is through a [Classification](../07.classifications/index.md) — all attributes defined in the Classification are automatically linked. Attributes can also be linked directly from the `Attributes` panel using the `+` button, unless the administrator has disabled direct linking.
 
 ![Product attributes panel](./_assets/product-attributes-panel.png){.large}
 
-To link a new attribute directly, click the `+` button in the upper right corner of the `Attributes` panel, then select the attribute from the list in the pop-up:
-
-![Creating attributes](./_assets/attribute-create.png){.small}
-
-Alternatively, use the `Add Attribute` option from the single record actions menu — it opens the same selection pop-up.
-
-![Adding attributes](./_assets/attributes-select.png){.small}
-
-Attribute values can be edited, removed, or inherited directly from the product view. These controls are visible in Edit mode for all attributes, and in View mode when hovering over an attribute row.
-
-![Attributes actions](./_assets/attributes-actions-menu.png){.medium}
-
-Removing an attribute from a product requires confirmation. For full details on attributes, see the [Attributes](../../01.atrocore/03.administration/12.attribute-management/01.attributes/index.md) documentation.
+For full details, see the [Attributes](../../01.atrocore/03.administration/12.attribute-management/01.attributes/index.md) documentation.
 
 ### Categories
 
-[Categories](../05.categories/index.md) linked to the product are shown in the `Categories` field on the product detail view. A product can be assigned to multiple categories. Categories can be linked by selecting existing ones or creating new ones directly from this field.
+[Categories](../05.categories/index.md) linked to the product are shown in the `Categories` field on the product detail view. A product can be assigned to multiple categories. By default, products can only be assigned to leaf categories (categories with no children) — this behavior is configurable in [PIM Settings](../01.administration/index.md).
 
 ![Product categories field](./_assets/product-categories-panel.png){.small}
 
-#### Assigning Categories to a Product
-
-To assign one or more categories to a product, click the `▼` icon in the `Categories` field and select `Select`. In the pop-up, choose the required categories and click `Select`. When categories from different trees have similar names, refer to the **Category Code** to avoid ambiguity.
-
-> Products can only be assigned to **leaf categories** (categories with no child categories). Attempting to link a product to a non-leaf (parent) category will result in an error.
-
-![Info](./_assets/ap-actions-menu.png){.large}
-
-When a category is assigned to a product, the product becomes part of that category's hierarchy for navigation and filtering purposes.
-
-#### Assigning Products from the Category Page
-
-You can also manage this relationship from the other direction. On the [category detail view](../05.categories/index.md), the `Products` panel lists all products assigned to that category. Click the `▼` icon in the panel header and select the products to add.
-
-![Info](./_assets/ap-actions-menu.png){.large}
-
-#### Bulk Category Assignment
-
-On the product list page, you can add or remove category relationships for multiple products at once using the `Add Relation` and `Remove Relation` [mass actions](../../01.atrocore/12.mass-actions/index.md). After selecting the target products (e.g. using a filter), click `Add Relation` or `Remove Relation`, set the `Select Entity` field to `Product Categories`, and choose the relevant categories.
-
-![Info](./_assets/ap-actions-menu.png){.large}
-
-![Info](./_assets/ap-actions-menu.png){.large}
+Categories can be linked by selecting existing ones or creating new ones directly from this field.
 
 ### Channels
 
@@ -170,64 +150,18 @@ Products to which the current product is linked through an [association](../../0
 
 ### Files
 
-Files linked to the product are shown on the `Files` panel, which displays Preview, Name, Type, File Size, File Modification Date, and Tags columns.
+Files linked to the product are shown on the `Files` panel. Files can be linked by selecting existing ones or uploaded directly from this panel. The display order can be set via drag-and-drop, and any image file can be promoted to the product's Main Image using the row action menu.
 
 ![Files panel](./_assets/images-panel.png){.large}
 
-You can link files to a product by selecting existing ones or uploading new files using the `Upload` option, which is unique to this panel. Uploaded files are automatically linked to the current product.
-
-![`Upload` option](./_assets/images-Upload.png){.large}
-
-![`Upload` option menu](./_assets/images-Upload-menu.png){.large}
-
-The order of images within the product can be defined via drag-and-drop on the `Files` panel:
-
-![Images order](./_assets/images-order.png){.large}
-
-To set any image file as the product's Main Image, use the `Set as Main Image` action in the file row menu:
-
-![set as Main Image action](./_assets/images-set-as-Main-Image.png){.medium}
-
 For more information about file management, see [File Operations](../../01.atrocore/13.file-operations/index.md).
-
-## Dashboards
-
-For quick navigation and an overview of your product data, use [Dashboards](../../01.atrocore/07.dashboards/index.md). Dashlets can display summarized product information based on built-in filters, giving you a quick view of your catalog's status without opening individual records.
 
 ## Product Preview
 
-After filling in a product record, you can preview how the product page will appear in a marketplace or other destination where it is exported. This is done using the **Product Preview** feature, a variant of [Record Preview](../../01.atrocore/10.html-css-preview/index.md).
+Product Preview lets you see how a product will appear in a destination such as a marketplace or export feed. It renders field values and attributes using a configurable template, and fields can be edited directly from the preview without opening the edit form.
 
-Product Preview renders field values and attributes according to a configurable template. The default template is available at `Administration > Preview Templates > Product preview`.
-
-![Preview template](./_assets/preview-template.png){.large}
-
-You can edit the existing template or create additional ones. Each new template added here automatically generates a corresponding action on the product record.
-
-The default template includes the product name, long description, a table of configurable fields (`tableFields`), badge fields (`badgeFields`), and the main image. Fields configured as `editableBadgeFields` can be edited directly within the preview; all table fields are editable by default.
+The default template is available at `Administration > Preview Templates > Product preview`. Additional templates can be created there; each one automatically generates a corresponding action on the product record.
 
 ![Field preview](./_assets/field-preview.png){.large}
 
-After the field list, the preview also shows product files, the attribute table, and components (if any).
-
-To edit a field or attribute directly from the preview, click on the element — it will appear in an edit panel on the right side of the screen.
-
-![Edit from preview](./_assets/edit-from-preview.png){.large}
-
-The square icon reveals all editable elements. The other three icons let you preview the product card layout on phone, tablet, or desktop.
-
-![Editable elements](./_assets/edit-elements.png){.large}
-
-When **Auto-save** is enabled, changes are saved automatically. Uncheck it to save manually.
-
-If multiple interface languages are configured, you can switch the preview language in the top-right corner of the page. The field and attribute names, as well as multilingual attribute values, will update accordingly.
-
-![Language prism](./_assets/language-prism.png){.large}
-
-To display field values in all configured languages simultaneously, use the `getAllLanguageFields` function in the template. Pass the entity name and the field name (or an array of field names):
-
-```twig
-getAllLanguageFields('Product', 'name')
-```
-
-For full details on template syntax, see [Twig Templating](../../10.developer-guide/80.twig-tutorial/index.md).
+For full details, see [Record Preview](../../01.atrocore/10.html-css-preview/index.md).
