@@ -16,7 +16,7 @@ Espo.define('views/file/record/detail', 'views/record/detail',
         setupActionItems() {
             Dep.prototype.setupActionItems.call(this);
 
-            if (this.getMetadata().get('app.file.image.hasPreviewExtensions').includes(this.model.get('extension'))) {
+            if (this.getMetadata().get('app.typesWithWebPreview').includes(this.model.get('mimeType'))) {
                 this.dropdownItemList.push({
                     'label': 'Open',
                     'name': 'openInTab'
@@ -33,7 +33,7 @@ Espo.define('views/file/record/detail', 'views/record/detail',
                 name: 'download'
             });
 
-            if (this.getMetadata().get('app.file.image.hasPreviewExtensions').includes(this.model.get('extension'))) {
+            if (this.getMetadata().get('app.file.image.extensions').includes(this.model.get('extension'))) {
                 this.dropdownItemList.push({
                     name: 'customDownload',
                     label: 'customDownload'
@@ -52,7 +52,7 @@ Espo.define('views/file/record/detail', 'views/record/detail',
                 fullFormDisabled: true,
                 layoutName: 'upload',
                 multiUpload: false,
-                attributes: _.extend(this.model.attributes, {reupload: this.model.id}),
+                attributes: _.extend(this.model.attributes, { reupload: this.model.id }),
             }, view => {
                 view.render();
                 this.notify(false);

@@ -61,7 +61,7 @@ class Sharing extends Download
             exit;
         }
 
-        if (!empty($_GET['view']) && in_array($file->get('mimeType'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
+        if (!empty($_GET['view']) && in_array($file->get('mimeType'), $this->getMetadata()->get(['app', 'typesWithWebPreview'], []))) {
             header('Content-Type: ' . $file->get('mimeType'));
             echo $file->getContents(); // nosemgrep: php.lang.security.injection.echoed-request.echoed-request
             exit;

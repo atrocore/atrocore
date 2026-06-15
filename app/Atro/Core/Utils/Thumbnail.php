@@ -14,18 +14,17 @@ declare(strict_types=1);
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
-use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Entities\File as FileEntity;
 use Espo\Core\ORM\EntityManager;
-use Atro\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
-use Atro\Core\Utils\Metadata;
 use Gumlet\ImageResize;
 use Gumlet\ImageResizeException;
 
 class Thumbnail
 {
     protected Container $container;
+
+    private ?string $largestSizeKey = null;
 
     public function __construct(Container $container)
     {
@@ -39,7 +38,7 @@ class Thumbnail
             $thumbnailPath .= DIRECTORY_SEPARATOR . trim($file->get('thumbnailsPath'));
         }
 
-        if (!$this->isThumbnailSupported($file)) {
+        if (!$this->isResizeSupported($file)) {
             return $thumbnailPath . DIRECTORY_SEPARATOR . $file->get('name');
         }
 
@@ -59,19 +58,42 @@ class Thumbnail
         return file_exists('public' . DIRECTORY_SEPARATOR . $this->preparePath($file, $size));
     }
 
-    public function getPath(FileEntity $file, string $size, string $originFilePath = null): ?string
+    public function getPath(FileEntity $file, string $size): ?string
     {
-        if (!in_array($file->get('mimeType'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
+        $ext = strtolower(pathinfo($file->get('name'), PATHINFO_EXTENSION));
+        if (!in_array($ext, $this->getMetadata()->get(['app', 'extensionsWithThumbnail'], []))) {
             return null;
         }
 
-        $thumbnailPath = $this->preparePath($file, $size);
+        return "thumbnail/{$size}/{$file->get('id')}.png";
+    }
 
-        if (!$this->hasThumbnail($file, $size)) {
-            $thumbnailPath = "thumbnail/{$size}/{$file->get('id')}.png";
+    public function getLargestSizeKey(): string
+    {
+        if ($this->largestSizeKey !== null) {
+            return $this->largestSizeKey;
         }
 
-        return $thumbnailPath;
+        $largest  = '';
+        $bestArea = 0;
+        foreach ($this->getMetadata()->get('app.thumbnailTypes', []) as $key => $cfg) {
+            [$w, $h] = $cfg['size'] ?? [0, 0];
+            if ($w * $h > $bestArea) {
+                $bestArea = $w * $h;
+                $largest  = $key;
+            }
+        }
+
+        return $this->largestSizeKey = ($largest ?: 'large');
+    }
+
+    public function createLargestThumbnail(FileEntity $file, string $localPath, bool $sync = false): void
+    {
+        if (!$this->isResizeSupported($file)) {
+            return;
+        }
+        $sizeKey = $this->getLargestSizeKey();
+        $this->create($localPath, $sizeKey, $this->preparePath($file, $sizeKey));
     }
 
     public function create(string $originFilePath, string $size, string $thumbnailPath): bool
@@ -86,10 +108,19 @@ class Thumbnail
             return false;
         }
 
+        $pdfTmpDir = null;
+        if ($this->isPdf($originFilePath)) {
+            [$originFilePath, $pdfTmpDir] = $this->createImageFromPdf($originFilePath);
+        }
+
         try {
             $image = new ImageResize($originFilePath);
         } catch (ImageResizeException $e) {
             return false;
+        } finally {
+            if ($pdfTmpDir !== null) {
+                Util::removeDir($pdfTmpDir);
+            }
         }
 
         list($w, $h) = $imageSizes;
@@ -104,12 +135,37 @@ class Thumbnail
         return $this->getFileManager()->putContents($thumbnailPath, $image->getImageAsString());
     }
 
+    public function deleteAllThumbnails(FileEntity $file): void
+    {
+        foreach (array_keys($this->getMetadata()->get(['app', 'thumbnailTypes'], [])) as $size) {
+            $path = 'public' . DIRECTORY_SEPARATOR . $this->preparePath($file, $size);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+    }
+
+    protected function createImageFromPdf(string $pdfPath): array
+    {
+        $tmpDir = 'data' . DIRECTORY_SEPARATOR . '.pdf-thumbnail-tmp' . DIRECTORY_SEPARATOR . uniqid();
+        $this->getFileManager()->mkdir($tmpDir, 0777, true);
+        $pdflib = new PDFLib($this->getConfig());
+        $pdflib->setPdfPath($pdfPath);
+        $pdflib->setOutputPath($tmpDir);
+        $pdflib->setImageFormat(PDFLib::$IMAGE_FORMAT_PNG);
+        $pdflib->setPageRange(1, 1);
+        $pdflib->setFilePrefix('page-');
+        $pdflib->convert();
+
+        return [$tmpDir . '/page-1.png', $tmpDir];
+    }
+
     public function isSvg(FileEntity $file): bool
     {
         return $file->get('mimeType') === 'image/svg+xml';
     }
 
-    public function isThumbnailSupported(FileEntity $file): bool
+    public function isResizeSupported(FileEntity $file): bool
     {
         if ($file->get('mimeType') === 'image/avif') {
             return gd_info()['AVIF Support'] ?? false;
@@ -127,30 +183,6 @@ class Thumbnail
         $parts = explode('.', $fileName);
 
         return strtolower(array_pop($parts)) === 'pdf';
-    }
-
-    public function createImageFromPdf(FileEntity $file, string $pdfPath): string
-    {
-        /** @var FileStorageInterface $storage */
-        $storage = $this->getEntityManager()->getRepository('File')->getStorage($file);
-
-        $dirPath = $storage->getThumbnailPdfImageCachePath($file);
-        if (!is_dir($dirPath)) {
-            $this->getFileManager()->mkdir($dirPath, 0777, true);
-        }
-
-        $original = $dirPath . '/page-1.png';
-        if (!file_exists($original)) {
-            $pdflib = new PDFLib($this->getConfig());
-            $pdflib->setPdfPath($pdfPath);
-            $pdflib->setOutputPath($dirPath);
-            $pdflib->setImageFormat(PDFLib::$IMAGE_FORMAT_PNG);
-            $pdflib->setPageRange(1, 1);
-            $pdflib->setFilePrefix('page-');
-            $pdflib->convert();
-        }
-
-        return $original;
     }
 
     protected function getEntityManager(): EntityManager

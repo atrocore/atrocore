@@ -65,7 +65,7 @@ class File extends Base
 
         if (!empty($downloadUrl = $entity->getDownloadUrl())) {
             $entity->set('downloadUrl', $downloadUrl);
-            if (in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', []))) {
+            if (in_array($entity->get('extension'), $this->getMetadata()->get(['app', 'extensionsWithThumbnail'], []))) {
                 $entity->set('hasOpen', true);
 
                 foreach ($this->getMetadata()->get(['app', 'thumbnailTypes'], []) as $size => $typeData) {
