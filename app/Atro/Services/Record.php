@@ -844,6 +844,7 @@ class Record extends RecordService
         return $this->getEntityManager()->getEntity($this->getEntityType(), $id);
     }
 
+
     public function getDuplicateAttributes($id)
     {
         $attributes = parent::getDuplicateAttributes($id);
