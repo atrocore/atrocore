@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Cluster;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,79 +23,40 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Cluster/purge',
+    path: '/Cluster/{id}/purge',
     methods: [
         'DELETE',
     ],
-    summary: 'Purge cluster(s)',
-    description: 'Deletes all ClusterItems and RejectedClusterItems belonging to the selected clusters, then deletes the clusters themselves. Exactly one of all=true (query), idList, or where (request body) must be provided.',
+    summary: 'Purge a single cluster',
+    description: 'Deletes all ClusterItems and RejectedClusterItems belonging to the specified cluster, then deletes the cluster itself.',
     tag: 'Cluster',
     parameters: [
         [
-            'name'        => 'all',
-            'in'          => 'query',
-            'required'    => false,
-            'description' => 'Set to true to purge all clusters, ignoring body parameters.',
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the Cluster to purge.',
             'schema'      => [
-                'type' => 'boolean',
-            ],
-        ],
-    ],
-    requestBody: [
-        'required' => false,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'        => 'object',
-                    'description' => 'Ignored when all=true is set in the query. Otherwise exactly one of idList or where must be provided.',
-                    'properties'  => [
-                        'idList' => [
-                            'type'        => 'array',
-                            'items'       => ['type' => 'string'],
-                            'description' => 'List of Cluster IDs to purge. Required when all=true is not set and where is omitted.',
-                        ],
-                        'where'  => [
-                            'type'        => 'array',
-                            'description' => 'Filter criteria selecting Clusters to purge. Required when all=true is not set and idList is omitted.',
-                        ],
-                    ],
-                ],
+                'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Purge result.',
+            'description' => 'true if the cluster was purged successfully.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'count'  => [
-                                'type'        => 'integer',
-                                'description' => 'Number of clusters successfully purged.',
-                            ],
-                            'sync'   => [
-                                'type'        => 'boolean',
-                                'description' => 'true if executed synchronously, false if dispatched as a background job.',
-                            ],
-                            'errors' => [
-                                'type'        => 'array',
-                                'items'       => [
-                                    'type' => 'string',
-                                ],
-                                'description' => 'List of error messages, if any.',
-                            ],
-                        ],
+                        'type' => 'boolean',
                     ],
                 ],
             ],
         ],
-        400 => [
-            'description' => 'None of all, idList, or where was provided.',
-        ],
         403 => [
             'description' => 'Current user does not have delete access on Cluster.',
+        ],
+        404 => [
+            'description' => 'Cluster not found.',
         ],
     ],
 )]
@@ -103,24 +64,10 @@ class ClusterPurgeHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('Cluster', 'delete')) {
-            throw new Forbidden();
-        }
+        $id = (string)$request->getAttribute('id');
 
-        $query = $request->getQueryParams();
-        $data = $this->getRequestBody($request);
-        $params = [];
+        $this->getRecordService('Cluster')->purgeCluster($id);
 
-        if (!empty($query['all']) && $query['all'] !== 'false') {
-            $params['where'] = [];
-        } elseif (!empty($data->idList) && is_array($data->idList)) {
-            $params['ids'] = $data->idList;
-        } elseif (isset($data->where) && is_array($data->where)) {
-            $params['where'] = $data->where;
-        } else {
-            throw new BadRequest('One of all, idList, or where is required.');
-        }
-
-        return new JsonResponse($this->getRecordService('Cluster')->purge($params));
+        return new BoolResponse(true);
     }
 }

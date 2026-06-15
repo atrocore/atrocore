@@ -23,6 +23,9 @@
       "mergedManually": "Manuell zusammengeführt"
     }
   },
+  "actionConfirms": {
+    "purge": "Sind Sie sicher, dass Sie diesen Cluster bereinigen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+  },
   "exceptions": {
     "cannotMergeWithoutGoldenRecord": "Eine Zusammenführung ohne Golden Record ist nicht möglich"
   },
