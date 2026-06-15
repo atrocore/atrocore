@@ -225,8 +225,14 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             if (this.fieldList.includes(name)) {
                 return;
             }
-            let html = `<div class="cell form-group col-sm-6" data-name="${name}"><div class="pull-right inline-actions"></div><label class="control-label">${label}</label><div class="field" data-name="${name}" /></div>`;
-            this.$el.find('.fields-container').append(html);
+            let cellHtml = `<div class="cell form-group col-sm-6" data-name="${name}"><div class="pull-right inline-actions"></div><label class="control-label">${label}</label><div class="field" data-name="${name}" /></div>`;
+            let $container = this.$el.find('.fields-container');
+            let $lastRow = $container.children('.row').last();
+            if ($lastRow.length === 0 || $lastRow.children('.cell').length >= 2) {
+                $lastRow = $('<div class="row"></div>');
+                $container.append($lastRow);
+            }
+            $lastRow.append(cellHtml);
 
             let type = this.model.getFieldType(name);
 
@@ -261,7 +267,12 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             $link.on('click', () => {
                 this.clearView(view);
-                this.$el.find('.cell[data-name="' + view.name + '"]').remove();
+                const $cell = this.$el.find('.cell[data-name="' + view.name + '"]');
+                const $row = $cell.parent('.row');
+                $cell.remove();
+                if ($row.children('.cell').length === 0) {
+                    $row.remove();
+                }
 
                 this.model.unset(view.name);
 

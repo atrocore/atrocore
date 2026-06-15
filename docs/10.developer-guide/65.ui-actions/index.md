@@ -4,19 +4,19 @@ title: UI Actions
 
 ## Overview
 
-AtroCore allows you to expose backend actions directly in the UI — on list views, detail pages, and relationship panels — without writing any frontend JavaScript. You define the action entirely in the entity's `clientDefs` metadata file and a corresponding PHP controller method. The frontend picks it up automatically.
+AtroCore lets you expose backend actions directly in the UI — on list views, detail pages, and relationship panels — without writing any frontend JavaScript. You define the action entirely in the entity's `clientDefs` metadata file and a corresponding PHP handler. The frontend picks it up automatically.
 
-This is useful for triggering business logic (approve, reject, export, sync, etc.) with a button or menu item directly tied to a record.
+This is useful for triggering business logic (approve, reject, export, sync, publish, etc.) with a button or menu item directly tied to a record.
 
 ---
 
 ## How It Works
 
 Each action entry in `clientDefs` maps an action name to:
-- a **backend URL** that receives a POST request when the action is triggered
-- optional **UI behavior** (confirmation dialog, icon, display order, etc.)
+- a **backend URL** that receives a request when the action is triggered
+- optional **UI behavior** (HTTP method, confirmation dialog, icon, display order, etc.)
 
-The action label and confirmation/success messages come from the entity's i18n translation files.
+The action label and confirmation messages come from the entity's i18n translation files.
 
 Action visibility per record is controlled by the backend via the `_meta.permissions` map returned with each record. If `_meta.permissions.myAction` is not truthy, the action is hidden for that record.
 
@@ -28,20 +28,26 @@ Action visibility per record is controlled by the backend via the `_meta.permiss
 
 Adds items to the per-record action menu (the three-dot menu on each row in the list).
 
+Use `{{fieldName}}` placeholders in the URL — they are replaced with the record's field values at execution time.
+
 ```json
 // app/Atro/Resources/metadata/clientDefs/MyEntity.json
 {
   "listActions": {
-    "approve": {
-      "url": "MyEntity/action/approve",
+    "publish": {
+      "url": "MyEntity/{{id}}/publish",
+      "method": "POST",
       "confirm": true,
       "refresh": true,
-      "iconClass": "ph ph-check",
+      "iconClass": "ph ph-paper-plane-tilt",
+      "acl": "edit",
       "sortOrder": 10
     }
   }
 }
 ```
+
+The request body always contains `{ "action": "publish", "scope": "MyEntity", "id": "<recordId>" }`.
 
 ---
 
@@ -49,25 +55,35 @@ Adds items to the per-record action menu (the three-dot menu on each row in the 
 
 Adds items to the action menu (or as a standalone button) on the record detail page.
 
+The `exit` parameter navigates the user back to the list page after the action succeeds — useful for destructive actions like archive or delete that render the current detail page meaningless.
+
 ```json
 {
   "detailActions": {
     "publish": {
-      "url": "MyEntity/action/publish",
-      "confirm": false,
+      "url": "MyEntity/{{id}}/publish",
+      "method": "POST",
+      "confirm": true,
       "refresh": true,
+      "iconClass": "ph ph-paper-plane-tilt",
       "sortOrder": 10
     },
     "archive": {
-      "url": "MyEntity/action/archive",
+      "url": "MyEntity/{{id}}/archive",
+      "method": "POST",
       "confirm": true,
+      "exit": true,
       "singleButton": true,
-      "style": "primary",
+      "style": "danger",
       "sortOrder": 20
     }
   }
 }
 ```
+
+When `exit: true` is set, the user is redirected to the list view after the action completes. When `refresh: true` is set instead, the record is re-fetched in place. Only one of the two should be used.
+
+The request body always contains `{ "action": "publish", "scope": "MyEntity", "id": "<recordId>" }`.
 
 ---
 
@@ -84,7 +100,8 @@ Adds per-record actions inside a relationship panel on the detail page. Also sup
           "disabled": true
         },
         "ship": {
-          "url": "OrderLine/action/ship",
+          "url": "OrderLine/{{id}}/ship",
+          "method": "POST",
           "confirm": true,
           "refresh": true,
           "iconClass": "ph ph-truck",
@@ -100,37 +117,41 @@ Adds per-record actions inside a relationship panel on the detail page. Also sup
 
 ### `massActions` — toolbar mass actions
 
-Mass actions are declared under their own top-level `massActions` key, independent of `listActions`. Each entry points to its own bulk endpoint. The payload always contains a `where` clause that describes the selection.
+Mass actions are declared under their own top-level `massActions` key. Each entry points to its own bulk endpoint. The confirmation dialog is shown automatically when a `massActionConfirmMessages` translation key exists for the action name — no explicit `confirm: true` is needed.
 
 ```json
 {
   "massActions": {
     "reject": {
       "url": "MyEntity/massReject",
+      "method": "POST",
       "refresh": true,
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
     "move": {
       "url": "MyEntity/massMove",
+      "method": "PATCH",
       "refresh": true,
       "iconClass": "ph ph-arrow-right",
       "sortOrder": 40,
       "modalSelectEntity": "Folder",
       "modalSelectResultParam": "targetFolderId"
     },
-    "update": { "disabled": true },
-    "addRelation": { "disabled": true },
+    "update":         { "disabled": true },
+    "addRelation":    { "disabled": true },
     "removeRelation": { "disabled": true }
   }
 }
 ```
 
+The request body contains `{ "where": [...], "entityType": "MyEntity", "idList": [...] }`. If a modal selection was made, the chosen value is merged in under `modalSelectResultParam`.
+
 Key points:
 
-- Built-in mass actions (`update`, `addRelation`, `removeRelation`, etc.) can be turned off for the entity by declaring them with `"disabled": true`.
-- Actions that need a target picked at execution time can use `modalSelectEntity` (the scope of the selection dialog) together with `modalSelectResultParam` (the key under which the chosen ID is posted).
-- The confirmation message and success message both come from the entity's i18n file (see [Translations](#translations)).
+- Built-in mass actions (`update`, `addRelation`, `removeRelation`, etc.) can be turned off by declaring them with `"disabled": true`.
+- Actions that need a target picked at execution time use `modalSelectEntity` (scope of the selection dialog) together with `modalSelectResultParam` (the key under which the chosen ID is posted).
+- The confirmation and success messages come from the entity's i18n file (see [Translations](#translations)).
 
 ---
 
@@ -138,106 +159,161 @@ Key points:
 
 | Property | Type | Applies to | Description |
 |---|---|---|---|
-| `url` | string | all | Backend endpoint. Called via POST. Format: `EntityName/action/methodName` for single-record, `EntityName/massXxx` for mass actions. |
-| `method` | string | all | HTTP verb for the endpoint. Default: `POST`. |
-| `confirm` | bool | all | Show a confirmation dialog before executing. Default: `false`. |
-| `refresh` | bool | all | Refresh the record/collection after the action completes. Default: `false`. |
-| `disabled` | bool | all | Hide the action from the UI entirely. Used to suppress built-in actions — e.g. `"update": { "disabled": true }` under `massActions` removes the built-in Mass Update. |
-| `iconClass` | string | listActions, massActions, relationshipPanels | Phosphor icon class shown next to the label. Example: `"ph ph-check"`. |
+| `url` | string | all | Backend endpoint URL. Use `{{fieldName}}` placeholders — they are replaced with the record's field values. |
+| `method` | string | all | HTTP verb. Default: `POST`. Use `DELETE`, `PATCH`, etc. for REST-aligned actions. |
+| `confirm` | bool | listActions, detailActions, relationshipPanels | Show a confirmation dialog before executing. The message comes from the `actionConfirms` i18n group. Default: `false`. For `massActions`, confirmation is triggered automatically by the presence of a `massActionConfirmMessages` entry. |
+| `refresh` | bool | all | Re-fetch the record or collection after the action completes. Default: `false`. |
+| `exit` | bool | detailActions only | Navigate back to the list page after the action completes. Use for actions that make the current record inaccessible (archive, delete). Takes precedence over `refresh`. |
+| `disabled` | bool | all | Hide the action from the UI entirely. Used to suppress built-in actions — e.g. `"update": { "disabled": true }` under `massActions` removes built-in Mass Update. |
+| `iconClass` | string | listActions, massActions, detailActions, relationshipPanels | Phosphor icon class shown next to the label. Example: `"ph ph-check"`. |
+| `acl` | string | listActions, massActions | ACL permission required to show the action (`"edit"`, `"delete"`). |
 | `sortOrder` | int | all | Controls position in the menu. Lower = higher up. Built-in actions start at 110. |
-| `modalSelectEntity` | string | massActions, listActions | Entity scope for a selection modal opened before the request is sent. Used by actions that need a target chosen at runtime (e.g. "Move to…"). |
-| `modalSelectResultParam` | string | massActions, listActions | Name of the POST field under which the chosen record's ID is sent. Pairs with `modalSelectEntity`. |
 | `singleButton` | bool | detailActions only | Render as a standalone button rather than a dropdown item. |
-| `style` | string | detailActions only | Button style when `singleButton` is true. Values: `"primary"`, `"default"`, `"secondary"`. |
+| `style` | string | detailActions only | Button style when `singleButton` is true. Values: `"primary"`, `"danger"`, `"default"`. |
+| `modalSelectEntity` | string | massActions, listActions | Entity scope for a selection modal opened before the request is sent. |
+| `modalSelectResultParam` | string | massActions, listActions | Name of the field under which the chosen record's ID is sent. Pairs with `modalSelectEntity`. |
+| `modalSelectWhere` | array | massActions, listActions | Additional `where` filters pre-applied to the selection modal. Supports `{{fieldName}}` placeholders. |
+| `modalSelectMultiple` | bool | massActions, listActions | Allow selecting multiple records in the modal. The value is posted as an array. |
 
 ---
 
-## Backend Endpoint
+## Backend Handler
 
-The action calls `POST` to the specified `url`. Implement it as a method on the entity's controller using the signature `actionXxx($params, $data, $request)`, where `$data` is a `stdClass` object containing the POST body.
+Register a handler for the action URL. See the [Handlers guide](../12.handlers/index.md) for the full pattern.
 
-### Single record action
+### Single-record action (listActions / detailActions)
 
-When triggered from a row or detail page, `$data` contains:
-- `$data->id` — the ID of the record
+The `{{id}}` in the URL is resolved to the record ID before the request is sent. The path parameter `{id}` is available via `$request->getAttribute('id')`.
 
 ```php
-// app/Atro/Controllers/MyEntity.php
+// app/Atro/Handlers/MyEntity/MyEntityPublishHandler.php
 
-public function actionApprove($params, $data, $request)
+#[Route(
+    path: '/MyEntity/{id}/publish',
+    methods: ['POST'],
+    summary: 'Publish a MyEntity record',
+    tag: 'MyEntity',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the record to publish.',
+            'schema'      => ['type' => 'string'],
+        ],
+    ],
+    responses: [
+        200 => [
+            'description' => 'true if published successfully.',
+            'content'     => ['application/json' => ['schema' => ['type' => 'boolean']]],
+        ],
+        403 => ['description' => 'Insufficient permissions.'],
+        404 => ['description' => 'Record not found.'],
+    ],
+)]
+class MyEntityPublishHandler extends AbstractHandler
 {
-    if (!$request->isPost()) {
-        throw new \Atro\Core\Exceptions\BadRequest();
-    }
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $id            = (string)$request->getAttribute('id');
+        $recordService = $this->getRecordService('MyEntity');
 
-    if (!property_exists($data, 'id') || empty($data->id)) {
-        throw new \Atro\Core\Exceptions\BadRequest('ID is required.');
-    }
+        $entity = $recordService->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
 
-    if (!$this->getAcl()->check('MyEntity', 'edit')) {
-        throw new \Atro\Core\Exceptions\Forbidden();
+        return new BoolResponse($recordService->publish($entity));
     }
-
-    $entity = $this->getRecordService()->getEntity((string)$data->id);
-    if (empty($entity)) {
-        throw new \Atro\Core\Exceptions\NotFound();
-    }
-
-    return $this->getRecordService()->approve($entity);
 }
 ```
 
 ### Mass action endpoint
 
-Each entry under `massActions` points at its own bulk endpoint — typically named `EntityName/massXxx`. The `$data` object will contain:
-- `$data->where` — filter clause describing the selection
-
-If the action also needs a target chosen via a modal (`modalSelectEntity` / `modalSelectResultParam`), that value arrives under the key you declared in `modalSelectResultParam`.
-
-A typical mass handler:
+Each `massActions` entry points at its own bulk endpoint. The request body contains a `where` clause describing the selection.
 
 ```php
-public function actionMassReject($params, $data, $request)
+#[Route(
+    path: '/MyEntity/massReject',
+    methods: ['POST'],
+    summary: 'Mass-reject MyEntity records',
+    tag: 'MyEntity',
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'properties' => [
+                        'where' => [
+                            'type'        => 'array',
+                            'description' => 'Filter criteria selecting the records to reject.',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    responses: [
+        200 => [
+            'description' => 'Rejection result.',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'count'  => ['type' => 'integer', 'description' => 'Number of records rejected.'],
+                            'sync'   => ['type' => 'boolean', 'description' => 'true if run synchronously.'],
+                            'errors' => ['type' => 'array', 'items' => ['type' => 'string']],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        403 => ['description' => 'Insufficient permissions.'],
+    ],
+)]
+class MyEntityMassRejectHandler extends AbstractHandler
 {
-    if (!$request->isPost()) {
-        throw new \Atro\Core\Exceptions\BadRequest();
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        if (!$this->getAcl()->check('MyEntity', 'edit')) {
+            throw new Forbidden();
+        }
+
+        $data   = $this->getRequestBody($request);
+        $params = [];
+
+        if (!empty($data->where) && is_array($data->where)) {
+            $params['where'] = $data->where;
+        } elseif (!empty($data->idList) && is_array($data->idList)) {
+            $params['ids'] = $data->idList;
+        } else {
+            throw new BadRequest('A where filter or idList is required.');
+        }
+
+        return new JsonResponse($this->getRecordService('MyEntity')->reject($params));
     }
-
-    if (!$this->getAcl()->check('MyEntity', 'edit')) {
-        throw new \Atro\Core\Exceptions\Forbidden();
-    }
-
-    if (!property_exists($data, 'where')) {
-        throw new \Atro\Core\Exceptions\BadRequest('A where filter is required.');
-    }
-
-    $actionParams = [
-        'where' => json_decode(json_encode($data->where), true),
-    ];
-
-    return $this->getRecordService()->reject($actionParams);
 }
 ```
 
-Return `['count' => $n]` from the service method so the success message can use the `{count}` placeholder.
+### Service method for mass actions
 
-### Service method
-
-The controller delegates to a service method that uses `executeMassAction()` — a built-in helper in `Atro\Services\Record` that decides whether to run synchronously or dispatch background jobs based on record count.
+The handler delegates to a service method that calls `executeMassAction()` — a helper in `Atro\Services\Record` that runs synchronously for small sets and dispatches background jobs for large ones.
 
 ```php
 // app/Atro/Services/MyEntity.php
 
 public function reject(array $params): array
 {
-    $params['action']             = 'reject'; // must match the listAction key in clientDefs
+    $params['action']             = 'reject';
     $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
     $params['maxChunkSize']       = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
     $params['minChunkSize']       = $this->getConfig()->get('massUpdateMinChunkSize', 400);
-    $params['singleActionMethod'] = 'rejectItem'; // service method called by background jobs
+    $params['singleActionMethod'] = 'rejectItem';
 
     [$count, $errors, $sync] = $this->executeMassAction($params, function (string $id) {
-        $this->rejectItem($id); // used for synchronous execution
+        $this->rejectItem($id);
     });
 
     return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
@@ -247,47 +323,47 @@ public function rejectItem(string $id): bool
 {
     $entity = $this->getEntity($id);
     if (empty($entity)) {
-        throw new \Atro\Core\Exceptions\NotFound();
+        return false;
     }
 
-    // ... your per-record business logic ...
+    // ... per-record business logic ...
 
     $this->getEntityManager()->saveEntity($entity);
     return true;
 }
 ```
 
-There are **two execution paths** — both must be covered:
+There are two execution paths — both must be covered:
 
 **Synchronous** (total ≤ `maxCountWithoutJob`): `executeMassAction` runs the closure inline, one ID at a time.
 
-**Asynchronous** (total > `maxCountWithoutJob`): `executeMassAction` creates a `MassActionCreator` job that splits the IDs into chunks and dispatches one `UniversalMassAction` background job per chunk. That job instantiates the entity service and calls `$service->{singleActionMethod}($id)` for each ID in its chunk.
+**Asynchronous** (total > `maxCountWithoutJob`): `executeMassAction` creates a `MassActionCreator` job that splits the IDs into chunks and dispatches one `UniversalMassAction` background job per chunk. That job calls `$service->{singleActionMethod}($id)` for each ID in its chunk.
 
-This is why **both** `$params['singleActionMethod']` and the closure are required — they serve different paths but both call the same per-record method. The closure handles sync; `singleActionMethod` is the string the background job uses to reach back into the service.
+Both the closure and `singleActionMethod` are required — they serve different execution paths but ultimately call the same per-record method.
 
-`executeMassAction` resolves `$params['where']` automatically — the service does not need to handle the selection itself.
+Return `['count' => $n]` so the success message can use the `{count}` placeholder.
 
 ---
 
 ## Controlling Visibility per Record
 
-Actions are only shown for a record if the backend sets the action name to `true` in `_meta.permissions`. The correct way to do this is to override `putAclMeta()` in the entity's **service** class and call `$entity->setMetaPermission()`. This method is called automatically by the framework for every record returned by the API.
+Actions are shown only when the backend sets the action name to `true` in `_meta.permissions`. Override `putAclMeta()` in the entity's **service** class:
 
 ```php
 // app/Atro/Services/MyEntity.php
 
 public function putAclMeta(\Espo\ORM\Entity $entity): void
 {
-    parent::putAclMeta($entity); // always call parent — sets edit/delete/stream permissions
+    parent::putAclMeta($entity); // always call parent
 
     $isPending = $entity->get('status') === 'pending';
 
-    $entity->setMetaPermission('approve', $isPending && $this->getAcl()->check($entity, 'edit'));
-    $entity->setMetaPermission('reject', $isPending && $this->getAcl()->check($entity, 'edit'));
+    $entity->setMetaPermission('publish', $isPending && $this->getAcl()->check($entity, 'edit'));
+    $entity->setMetaPermission('reject',  $isPending && $this->getAcl()->check($entity, 'edit'));
 }
 ```
 
-For relationship panel actions (called via `putAclMetaForLink`), override that method instead:
+For relationship panel actions, override `putAclMetaForLink()` instead:
 
 ```php
 public function putAclMetaForLink(\Espo\ORM\Entity $entityFrom, string $link, \Espo\ORM\Entity $entity): void
@@ -298,26 +374,27 @@ public function putAclMetaForLink(\Espo\ORM\Entity $entityFrom, string $link, \E
 }
 ```
 
-The `ClusterItem` service is a real-world reference showing both patterns — it overrides `putAclMeta()` for list/detail actions (`confirm`, `reject`, `unmerge`) and `putAclMetaForLink()` for relationship panel actions (`unreject`, `unlink`).
-
 ---
 
 ## Translations
-
-Add labels and messages to the entity's i18n file for each locale.
 
 ```json
 // app/Atro/Resources/i18n/en_US/MyEntity.json
 {
   "actions": {
-    "approve": "Approve",
-    "reject": "Reject"
+    "publish": "Publish",
+    "reject": "Reject",
+    "archive": "Archive"
+  },
+  "actionConfirms": {
+    "publish": "Are you sure you want to publish this record?",
+    "archive": "Are you sure you want to archive this record? It will no longer be visible in the list."
   },
   "massActions": {
     "reject": "Reject Selected"
   },
   "massActionConfirmMessages": {
-    "reject": "Are you sure you want to reject the selected records?"
+    "reject": "Are you sure you want to reject the selected records? This action cannot be undone."
   },
   "massActionSuccessMessages": {
     "reject": "{count} record(s) rejected successfully."
@@ -325,13 +402,19 @@ Add labels and messages to the entity's i18n file for each locale.
 }
 ```
 
-The `actions` key provides the label shown in the UI for both list/detail and mass actions. The `massActionConfirmMessages` key is shown in the confirmation dialog before a mass action runs. The `massActionSuccessMessages` key is shown after success, and supports the `{count}` placeholder if the backend returns a `count` value.
+| Key group | Used for | Trigger |
+|---|---|---|
+| `actions` | Label shown in the UI for list, detail, and relationship panel actions | Always |
+| `actionConfirms` | Confirmation dialog message for `listActions`, `detailActions`, and relationship panel actions | `"confirm": true` in the action definition |
+| `massActions` | Label shown in the toolbar mass actions menu | Always |
+| `massActionConfirmMessages` | Confirmation dialog message for mass actions | Shown automatically when the key is present |
+| `massActionSuccessMessages` | Success notification after a mass action completes. Supports `{count}` placeholder | Shown automatically when the key is present |
 
 ---
 
 ## Real-World Example
 
-The `ClusterItem` entity declares its row actions and toolbar mass actions side by side:
+The `ClusterItem` entity:
 
 ```json
 // app/Atro/Resources/metadata/clientDefs/ClusterItem.json
@@ -340,6 +423,7 @@ The `ClusterItem` entity declares its row actions and toolbar mass actions side 
     "quickEdit": { "disabled": true },
     "confirm": {
       "url": "ClusterItem/{{id}}/confirm",
+      "method": "POST",
       "confirm": false,
       "refresh": true,
       "iconClass": "ph ph-check",
@@ -347,12 +431,14 @@ The `ClusterItem` entity declares its row actions and toolbar mass actions side 
     },
     "reject": {
       "url": "ClusterItem/{{id}}/reject",
+      "method": "POST",
       "refresh": true,
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
     "unmerge": {
       "url": "ClusterItem/{{id}}/unmerge",
+      "method": "POST",
       "refresh": true,
       "iconClass": "ph ph-arrows-split",
       "sortOrder": 30
@@ -371,18 +457,21 @@ The `ClusterItem` entity declares its row actions and toolbar mass actions side 
   "massActions": {
     "reject": {
       "url": "ClusterItem/massReject",
+      "method": "POST",
       "refresh": true,
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
     "unmerge": {
       "url": "ClusterItem/massUnmerge",
+      "method": "POST",
       "refresh": true,
       "iconClass": "ph ph-arrows-split",
       "sortOrder": 30
     },
     "move": {
       "url": "ClusterItem/massMove",
+      "method": "POST",
       "refresh": true,
       "iconClass": "ph ph-arrow-right",
       "sortOrder": 40,
@@ -400,6 +489,6 @@ The `ClusterItem` entity declares its row actions and toolbar mass actions side 
 This configuration:
 
 - Disables the built-in `quickEdit` row action.
-- Adds four custom row actions — **Confirm**, **Reject**, **Unmerge**, and **Move** — each with its own single-record endpoint. **Move** opens a `Cluster` picker first and posts the chosen ID under `targetClusterId`.
-- Declares three toolbar mass actions (**Reject**, **Unmerge**, **Move**) that point at dedicated bulk endpoints (`massReject`, `massUnmerge`, `massMove`).
-- Suppresses the built-in **Mass Update**, **Add Relation**, and **Remove Relation** entries so they don't clutter the toolbar for this entity.
+- Adds four custom row actions — **Confirm**, **Reject**, **Unmerge**, and **Move** — each using `{{id}}` in the URL. **Move** opens a `Cluster` picker first and posts the chosen ID under `targetClusterId`.
+- Declares three toolbar mass actions pointing at dedicated bulk endpoints.
+- Suppresses the built-in **Mass Update**, **Add Relation**, and **Remove Relation** entries.

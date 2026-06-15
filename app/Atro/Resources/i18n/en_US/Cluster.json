@@ -32,6 +32,9 @@
     "purge": "Are you sure you want to purge selected clusters? This action cannot be undone.",
     "purgeAll": "Are you sure you want to purge all clusters? This action cannot be undone."
   },
+  "actionConfirms": {
+    "purge": "Are you sure you want to purge this cluster? This action cannot be undone."
+  },
   "exceptions": {
     "cannotDelete": "Only empty clusters can be deleted",
     "cannotMergeWithoutGoldenRecord": "It is not possible to merge without a golden record"

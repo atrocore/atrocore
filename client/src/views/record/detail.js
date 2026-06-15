@@ -461,10 +461,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 $.each(model.attributes || {}, (key, value) => {
                     url = url.replaceAll(`{{${key}}}`, value);
                 });
-                this.ajaxPostRequest(url, { action: name, scope: scope, id: id })
+
+                this.ajaxRequest(url, actionDefs.method || 'POST', JSON.stringify({
+                    action: name,
+                    scope: scope,
+                    id: id
+                }))
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
-                        if (actionDefs.refresh) {
+                        if (actionDefs.exit) {
+                            this.exit('delete');
+                        } else if (actionDefs.refresh) {
                             this.model.fetch();
                         }
                     });

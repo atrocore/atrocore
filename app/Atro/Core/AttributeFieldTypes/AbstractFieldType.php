@@ -139,6 +139,12 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         return $this->column;
     }
 
+    public function getSelectCost(array $row): int
+    {
+        // 1 for the value column + 1 for attribute_value_id (always selected in prepareSelect)
+        return 2;
+    }
+
     public function afterSelect(IEntity $entity, string $name, array $dataArr): void
     {
     }
