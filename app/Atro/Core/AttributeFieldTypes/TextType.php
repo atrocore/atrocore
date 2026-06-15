@@ -350,6 +350,26 @@ class TextType extends AbstractFieldType
         }
     }
 
+    public function getSelectCost(array $row): int
+    {
+        if (!empty($row['is_multilang'])) {
+            // 1 main value + 1 attribute_value_id + 1 per active input language
+            return 2 + count($this->config->get('inputLanguageList', []));
+        }
+
+        if ($this->type === 'varchar') {
+            // 1 value column + 1 attribute_value_id
+            // + 2 if measure_id: unit_id + unit_name
+            // + 2 if prefix_enabled: prefix_id + prefix_name
+            return 2
+                + (isset($row['measure_id']) ? 2 : 0)
+                + (!empty($row['prefix_enabled']) ? 2 : 0);
+        }
+
+        // 1 value column + 1 attribute_value_id
+        return 2;
+    }
+
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if (str_ends_with($item['attribute'], 'UnitId')) {
