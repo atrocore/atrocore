@@ -32,7 +32,8 @@ class DateType extends AbstractFieldType
             'attributeId'              => $row['id'],
             'column'                   => $this->column,
             'required'                 => !empty($row['is_required']),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'          => !empty($row['duplicate_ignore'])
         ];
 
         if (empty($skipValueProcessing)) {
@@ -49,7 +50,7 @@ class DateType extends AbstractFieldType
             'attributeId'               => $row['id'],
             'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
-            'classificationId'           => $row['classification_id'] ?? null,
+            'classificationId'          => $row['classification_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
             'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
@@ -69,7 +70,8 @@ class DateType extends AbstractFieldType
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
             'conditionalProperties'     => $this->prepareConditionalProperties($row),
-            'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'           => !empty($row['duplicate_ignore'])
         ];
 
         if (!empty($row['disable_field_value_lock'])) {

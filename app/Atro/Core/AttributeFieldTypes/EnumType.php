@@ -38,7 +38,8 @@ class EnumType extends AbstractFieldType
             'attributeId'              => $id,
             'column'                   => $this->column,
             'required'                 => !empty($row['is_required']),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'          => !empty($row['duplicate_ignore'])
         ];
 
         if (empty($skipValueProcessing)) {
@@ -49,7 +50,7 @@ class EnumType extends AbstractFieldType
             'attributeId'               => $id,
             'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
-            'classificationId'           => $row['classification_id'] ?? null,
+            'classificationId'          => $row['classification_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
             'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
@@ -70,6 +71,7 @@ class EnumType extends AbstractFieldType
             'tooltipText'               => $row[$tooltipKey],
             'conditionalProperties'     => $conditionals,
             'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'           => !empty($row['duplicate_ignore']),
             'options'                   => $attributeData['options'] ?? [],
             'optionColors'              => $attributeData['optionColors'] ?? [],
         ];

@@ -24,10 +24,11 @@ class CompositeType extends AbstractFieldType
         $name = AttributeFieldConverter::prepareFieldName($row);
 
         $entity->fields[$name] = [
-            'type'        => 'composite',
-            'name'        => $name,
-            'attributeId' => $row['id'],
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'type'                     => 'composite',
+            'name'                     => $name,
+            'attributeId'              => $row['id'],
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'          => !empty($row['duplicate_ignore'])
         ];
 
         if (empty($skipValueProcessing)) {
@@ -38,7 +39,7 @@ class CompositeType extends AbstractFieldType
             'attributeId'               => $row['id'],
             'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
-            'classificationId'           => $row['classification_id'] ?? null,
+            'classificationId'          => $row['classification_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
             'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
@@ -54,7 +55,8 @@ class CompositeType extends AbstractFieldType
             'fullWidth'                 => true,
             'notSortable'               => true,
             'conditionalProperties'     => $this->prepareConditionalProperties($row),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'           => !empty($row['duplicate_ignore'])
         ];
 
         $entity->entityDefs['fields'][$name]['childrenIds'] = $this->em->getConnection()->createQueryBuilder()

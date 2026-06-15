@@ -49,6 +49,7 @@ class LinkType extends AbstractFieldType
             'column'                   => 'reference_value',
             'required'                 => !empty($row['is_required']),
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'          => !empty($row['duplicate_ignore']),
             'isLinkEntityId'           => true
         ];
 
@@ -75,7 +76,7 @@ class LinkType extends AbstractFieldType
                 'attributeId'               => $id,
                 'attributeValueId'          => $row['av_id'] ?? null,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
-                'classificationId'           => $row['classification_id'] ?? null,
+                'classificationId'          => $row['classification_id'] ?? null,
                 'attributePanelId'          => $row['attribute_panel_id'] ?? null,
                 'sortOrder'                 => $row['sort_order'] ?? null,
                 'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
@@ -99,6 +100,7 @@ class LinkType extends AbstractFieldType
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
                 'conditionalProperties'     => $this->prepareConditionalProperties($row),
                 'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
+                'duplicateIgnore'           => !empty($row['duplicate_ignore']),
                 'where'                     => $data['where'] ?? [],
                 'selectPageSize'            => $attributeData['selectPageSize'] ?? null
             ];

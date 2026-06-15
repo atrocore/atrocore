@@ -51,7 +51,8 @@ class RangeIntType extends IntType
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
-            'conditionalProperties'     => $this->prepareConditionalProperties($row)
+            'conditionalProperties'     => $this->prepareConditionalProperties($row),
+            'duplicateIgnore'           => !empty($row['duplicate_ignore'])
         ];
 
         $entity->fields[$name . 'From'] = [
@@ -108,7 +109,7 @@ class RangeIntType extends IntType
             'attributeId'               => $id,
             'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
-            'classificationId'           => $row['classification_id'] ?? null,
+            'classificationId'          => $row['classification_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
             'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
