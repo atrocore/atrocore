@@ -829,13 +829,13 @@ class EntityField extends ReferenceData
             $saveMetadata = true;
         }
 
-        if ($entity->isAttributeChanged('name')) {
+        if ($entity->isAttributeChanged('name') && !empty($entity->get('name'))) {
             $this
                 ->getTranslationRepository()
                 ->setTranslation($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get('name'));
         }
 
-        if ($entity->isAttributeChanged('tooltipText')) {
+        if ($entity->isAttributeChanged('tooltipText') && !empty($entity->get('tooltipText'))) {
             $this
                 ->getTranslationRepository()
                 ->setTranslation($entity->get('entityId'), 'tooltips', $entity->get('code'), $entity->get('tooltipText'));
