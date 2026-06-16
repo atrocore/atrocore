@@ -451,11 +451,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             return $thumbnailCreator->preparePath($file, $size);
         }
 
-        $result = $thumbnailCreator->getPath($file, $size);
-
-        $this->getFileManager()->removeAllInDir($this->getThumbnailPdfImageCachePath($file));
-
-        return $result;
+        return $thumbnailCreator->getPath($file, $size);
     }
 
     public function getThumbnailPdfImageCachePath(File $file): string

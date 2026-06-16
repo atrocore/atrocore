@@ -206,7 +206,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         hasPreview: function (name) {
-            const hasPreviewExtensions = this.getMetadata().get('app.file.image.hasPreviewExtensions') || [];
+            const hasPreviewExtensions = this.getMetadata().get('app.extensionsWithThumbnail') || [];
             return $.inArray(this.getFileExtension(name), hasPreviewExtensions) !== -1;
         },
 
