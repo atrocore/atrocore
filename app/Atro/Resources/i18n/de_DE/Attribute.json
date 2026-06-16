@@ -42,6 +42,7 @@
     "conditionalReadOnly": "Schreibgeschützt",
     "conditionalProtected": "Geschützt",
     "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung",
+    "duplicateIgnore": "Nicht entlastbar",
     "entityType": "Verknüpfte Entität",
     "entityField": "Entitätsfeld",
     "selectPageSize": "Datensätze pro Seite (Auswahldialog)",

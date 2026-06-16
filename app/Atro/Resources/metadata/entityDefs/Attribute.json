@@ -773,6 +773,12 @@
     },
     "modifiedExtendedDisabled": {
       "type": "bool"
+    },
+    "duplicateIgnore": {
+      "type": "bool",
+      "default": false,
+      "notNull": true,
+      "layoutRemoveDisabled": true
     }
   },
   "links": {

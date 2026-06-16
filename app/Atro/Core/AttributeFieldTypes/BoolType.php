@@ -25,12 +25,13 @@ class BoolType extends AbstractFieldType
         $name = AttributeFieldConverter::prepareFieldName($row);
 
         $entity->fields[$name] = [
-            'type'        => 'bool',
-            'name'        => $name,
-            'attributeId' => $row['id'],
-            'column'      => "bool_value",
-            'required'    => !empty($row['is_required']),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'type'                     => 'bool',
+            'name'                     => $name,
+            'attributeId'              => $row['id'],
+            'column'                   => "bool_value",
+            'required'                 => !empty($row['is_required']),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'          => !empty($row['duplicate_ignore'])
         ];
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
@@ -48,7 +49,7 @@ class BoolType extends AbstractFieldType
             'attributeId'               => $row['id'],
             'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
-            'classificationId'           => $row['classification_id'] ?? null,
+            'classificationId'          => $row['classification_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'channelName'               => $row['channel_name'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
@@ -69,7 +70,8 @@ class BoolType extends AbstractFieldType
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
             'conditionalProperties'     => $this->prepareConditionalProperties($row),
-            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
+            'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'           => !empty($row['duplicate_ignore'])
         ];
 
         if(!empty($row['not_null'])) {

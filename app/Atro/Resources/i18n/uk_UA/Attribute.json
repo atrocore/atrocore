@@ -42,6 +42,7 @@
     "classifications": "Класифікації",
     "channel": "Ла-Манш",
     "modifiedExtendedDisabled": "Не фіксувати як зміну",
+    "duplicateIgnore": "Не дублювати",
     "entityType": "Пов'язана сутність",
     "entityField": "Поле сутності",
     "selectPageSize": "Записів на сторінці (діалог вибору)",

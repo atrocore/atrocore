@@ -39,6 +39,7 @@ class LinkMultipleType extends AbstractFieldType
             'required'                 => !empty($row['is_required']),
             'fullWidth'                => !empty($attributeData['fullWidth']),
             'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'          => !empty($row['duplicate_ignore']),
             'isLinkMultipleIdList'     => true
         ];
 
@@ -114,7 +115,7 @@ class LinkMultipleType extends AbstractFieldType
             'attributeId'               => $row['id'],
             'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
-            'classificationId'           => $row['classification_id'] ?? null,
+            'classificationId'          => $row['classification_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
             'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
@@ -138,6 +139,7 @@ class LinkMultipleType extends AbstractFieldType
             'notSortable'               => true,
             'conditionalProperties'     => $this->prepareConditionalProperties($row),
             'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled']),
+            'duplicateIgnore'           => !empty($row['duplicate_ignore']),
             'where'                     => $data['where'] ?? [],
             'selectPageSize'            => $attributeData['selectPageSize'] ?? null
         ];

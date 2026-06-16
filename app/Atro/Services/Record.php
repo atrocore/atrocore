@@ -843,4 +843,33 @@ class Record extends RecordService
 
         return $this->getEntityManager()->getEntity($this->getEntityType(), $id);
     }
+
+
+    public function getDuplicateAttributes($id)
+    {
+        $attributes = parent::getDuplicateAttributes($id);
+
+        if (!$this->getMetadata()->get(['scopes', $this->entityName, 'hasAttribute'])) {
+            return $attributes;
+        }
+
+        $entity = $this->getEntity($id);
+        if (!$entity) {
+            return $attributes;
+        }
+
+        foreach ($entity->entityDefs['fields'] as $fieldName => $fieldDefs) {
+            if (empty($fieldDefs['attributeId']) || empty($fieldDefs['duplicateIgnore'])) {
+                continue;
+            }
+            unset($attributes->$fieldName);
+            unset($attributes->{$fieldName . 'Id'});
+            unset($attributes->{$fieldName . 'Name'});
+            unset($attributes->{$fieldName . 'Ids'});
+            unset($attributes->{$fieldName . 'Names'});
+            unset($attributes->attributesDefs[$fieldName]);
+        }
+
+        return $attributes;
+    }
 }

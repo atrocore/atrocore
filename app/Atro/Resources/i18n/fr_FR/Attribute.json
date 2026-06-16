@@ -42,6 +42,7 @@
     "channel": "Canal",
     "entity": "Entité",
     "modifiedExtendedDisabled": "Pas d'enregistrement en tant que modification",
+    "duplicateIgnore": "Non duplicable",
     "entityType": "Entité associée",
     "entityField": "Champ de l'entité",
     "selectPageSize": "Enregistrements par page (dialogue de sélection)",

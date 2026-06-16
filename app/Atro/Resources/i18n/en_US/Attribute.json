@@ -43,6 +43,7 @@
     "conditionalProtected": "Protected",
     "conditionalDisableOptions": "Disabled Options",
     "modifiedExtendedDisabled": "No recording as modification",
+    "duplicateIgnore": "Non Duplicatable",
     "entityType": "Linked Entity",
     "entityField": "Entity Field",
     "selectPageSize": "Records per page (select dialog)",
