@@ -102,12 +102,10 @@ class EntityRestoreAsyncHandler extends AbstractHandler
         $data = $this->getRequestBody($request);
         $data->byWhere = true;
 
-        $entityName = (string)$data->entityName;
-
         $params = $this->buildMassParams($data);
         $params['maxCountWithoutJob'] = -1;
 
-        $result = $this->getRecordService($entityName)->massRestore($params);
+        $result = $this->getRecordService($data->entityName)->massRestore($params);
 
         return new JsonResponse($result);
     }

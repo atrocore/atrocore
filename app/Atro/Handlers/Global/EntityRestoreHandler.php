@@ -95,15 +95,13 @@ class EntityRestoreHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        $entityName = (string)$data->entityName;
-
         $ids = $data->ids ?? [];
         $limit = $this->getConfig()->get('massRestoreMaxCountWithoutJob', 200);
         if (count($ids) > $limit) {
             throw new BadRequest("Too many ids: maximum allowed is $limit. Use /entityRestoreAsync for large batches.");
         }
 
-        $result = $this->getRecordService($entityName)->massRestore($this->buildMassParams($data));
+        $result = $this->getRecordService($data->entityName)->massRestore($this->buildMassParams($data));
 
         return new JsonResponse(['restored' => $result['count'], 'errors' => $result['errors']]);
     }
