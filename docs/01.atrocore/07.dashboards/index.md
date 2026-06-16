@@ -178,3 +178,23 @@ This dashlet displays a list of entities. The user can choose which entities to 
 You can customize only Entity List Type you choose to display.
 
 ![Entities dashlet Options](././_assets/Entities-dashlet-options.png){.medium}
+
+## Dashboards in Layout Profiles
+
+Dashboards can be configured on a [Layout Profile](../03.administration/13.user-interface/02.layouts/index.md#layout-profiles) level, allowing different groups of users to see different dashboard configurations.
+
+When a Dashboard is assigned to a Layout Profile, users associated with that Layout Profile will see the configured Dashboard instead of the system default Dashboard upon login or navigation to the dashboard view.
+
+This functionality enables administrators to provide role-specific dashboards tailored to the needs of different user groups, departments, or business processes.
+
+### Managing Dashboards in Layout Profiles
+
+To configure a Dashboard for a Layout Profile:
+- Navigate to Administration > Layout Profiles.
+- Open the desired Layout Profile record.
+- Click the Dashboards button.
+- Create, edit, or assign dashboard widgets and layouts as required.
+
+![Managing Dashboards in Layout Profiles](././_assets/Dashboards-in-Layout-Profiles.png){.small}
+
+Changes made to a Layout Profile Dashboard affect all users assigned to that Layout Profile.
