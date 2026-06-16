@@ -79,7 +79,9 @@
     "Jobs": "Aufträge",
     "GeneralSetting": "Allgemeine Einstellungen",
     "System": "System",
-    "clusters": "Cluster"
+    "clusters": "Cluster",
+    "sourceToStagingPipeline": "Source-to-Staging-Pipelines",
+    "MasterDataManagement": "Stammdatenverwaltung"
   },
   "logicalOperators": {
     "and": "UND",
@@ -218,6 +220,7 @@
     "thumbnailTypes": "Verwalten Sie die Vorschaubild-Typen, um die Breite oder Höhe eines Vorschaubildes zu ändern oder um ein neues zu erstellen.",
     "scheduledJob": "Verwalten Sie geplante System-Aufträge.",
     "jobs": "Verwalten Sie System-Aufträge, die ohne direkte Benutzerinteraktion im Hintergrund laufen.",
-    "clusters": "Verwenden Sie Cluster, um ähnliche Datensätze in der Stammdatenverwaltung zu gruppieren und sie miteinander abzugleichen."
+    "clusters": "Verwenden Sie Cluster, um ähnliche Datensätze in der Stammdatenverwaltung zu gruppieren und sie miteinander abzugleichen.",
+    "sourceToStagingPipeline": "Definieren Sie Zuordnungsregeln, die Quelldatensätze automatisch transformieren und in die entsprechenden Staging-Entitäten übertragen."
   }
 }
