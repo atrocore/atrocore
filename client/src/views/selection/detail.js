@@ -75,7 +75,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         this.selectionViewMode = 'standard';
                     }
 
-                    this.updateUrl();
+                    this.updateUrl(null, false, true);
                     Dep.prototype.setup.call(this);
                     this.setupCustomButtons();
                 });
@@ -200,10 +200,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
         },
 
-        updateUrl(mode = null, trigger = false) {
+        updateUrl(mode = null, trigger = false, replace = false) {
             mode = mode ?? this.selectionViewMode;
             const link = '#' + this.scope + '/view/' + this.model.id + '/selectionViewMode=' + mode;
-            this.getRouter().navigate(link, { trigger: trigger });
+            this.getRouter().navigate(link, { trigger: trigger, replace: replace });
         },
 
         actionShowSelectionView: function (data) {
@@ -443,7 +443,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
 
                 this.selectionViewMode = 'standard';
-                this.updateUrl()
+                this.updateUrl(null, false, true);
                 this.refreshContent();
                 return;
             }
