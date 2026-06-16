@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "stagingEntity": "Staging Entity",
+    "sourceEntity": "Source Entity",
+    "mergingScript": "Merging Script"
+  },
+  "tooltips": {
+    "mergingScript": "Configure how source record data is transformed and mapped to the staging record."
+  }
+}

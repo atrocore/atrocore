@@ -110,6 +110,18 @@
         "description": "multiLanguagesSettings",
         "icon": "ph ph-translate",
         "docsUrl": "https://help.atrocore.com/atrocore/administration/languages"
+      }
+    ],
+    "order": 0
+  },
+  "masterDataManagement": {
+    "label": "MasterDataManagement",
+    "itemList": [
+      {
+        "url": "#Matching",
+        "label": "matchings",
+        "description": "matchings",
+        "icon": "ph ph-shuffle"
       },
       {
         "url": "#Cluster",
@@ -118,13 +130,12 @@
         "icon": "ph ph-copy"
       },
       {
-        "url": "#Matching",
-        "label": "matchings",
-        "description": "matchings",
-        "icon": "ph ph-shuffle"
+        "url": "#SourceToStagingPipeline",
+        "label": "sourceToStagingPipeline",
+        "description": "sourceToStagingPipeline",
+        "icon": "ph ph-line-segment"
       }
-    ],
-    "order": 0
+    ]
   },
   "files": {
     "label": "FileManagement",

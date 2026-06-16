@@ -1,8 +1,10 @@
 {
+  "labels": {
+    "sourceEntities": "Пайплайни джерело-стейджинг"
+  },
   "fields": {
     "masterEntity": "Мастер",
     "mergingScript": "Скрипт трансформації",
-    "sourceEntity": "Джерело",
     "updateMasterAutomatically": "Автоматично оновлювати майстер",
     "minimumMatchingScore": "Мінімальний бал відповідності",
     "confirmAutomatically": "Підтвердити автоматично",
