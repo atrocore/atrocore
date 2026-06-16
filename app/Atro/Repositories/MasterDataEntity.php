@@ -13,43 +13,22 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\DataManager;
 use Atro\Core\Templates\Repositories\Base;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class MasterDataEntity extends Base
 {
-    public static function getRecordsWithSourceEntities(Connection $conn): array
+    protected function afterRemove(Entity $entity, array $options = [])
     {
-        return $conn->createQueryBuilder()
-            ->select('*')
-            ->from('master_data_entity')
-            ->where('deleted=:false')
-            ->andWhere('source_entity IS NOT NULL')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
-    }
+        parent::afterRemove($entity, $options);
 
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
+        $pipelines = $this->getEntityManager()
+            ->getRepository('SourceToStagingPipeline')
+            ->where(['stagingEntityId' => $entity->get('id')])
+            ->find();
 
-        if ($entity->isAttributeChanged('sourceEntity') && !empty($entity->get('sourceEntity'))) {
-            $this->getDataManager()->rebuild();
+        foreach ($pipelines as $pipeline) {
+            $this->getEntityManager()->removeEntity($pipeline);
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
-    }
-
-    protected function getDataManager(): DataManager
-    {
-        return $this->getInjection('dataManager');
     }
 }

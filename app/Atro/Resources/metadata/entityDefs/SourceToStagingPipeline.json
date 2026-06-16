@@ -1,0 +1,108 @@
+{
+  "fields": {
+    "stagingEntity": {
+      "type": "link",
+      "required": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "sourceEntity": {
+      "type": "varchar",
+      "view": "views/fields/entity-type",
+      "required": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "mergingScript": {
+      "type": "text",
+      "view": "views/fields/script",
+      "language": "json",
+      "default": "{# { \"stagingRecordData\": { \"name\" : \"{{ sourceRecord.name }}\" } } #}",
+      "editorActions": {
+        "addFields": {
+          "entityNameField": "sourceEntity"
+        }
+      },
+      "twigVariables": [
+        "sourceRecord",
+        "stagingRecord"
+      ],
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "tooltip": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "stagingEntity": {
+      "type": "belongsTo",
+      "entity": "MasterDataEntity",
+      "foreignName": "id"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "uniqueIndexes": {
+    "unique_source_entity": [
+      "deleted",
+      "source_entity"
+    ]
+  },
+  "indexes": {
+    "stagingEntityId": {
+      "columns": [
+        "stagingEntityId",
+        "deleted"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    }
+  }
+}

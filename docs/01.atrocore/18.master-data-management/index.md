@@ -49,36 +49,48 @@ This button allows users to quickly switch from a Staging entity to its correspo
 
 Please note that the button is displayed only if the user has permission to view the corresponding entity. If the user does not have the required access rights, the button will not be visible.
 
-### Creating Staging Data from Source Data
+### Source-to-Staging Pipelines
 
-Data is created in the staging entity automatically from the source entity (or entities) using actions of type [Create](../03.administration/06.actions/index.md#create) or [Create or Update](../03.administration/06.actions/index.md#create-or-update).
+To define how source data is transferred to the staging entity, configure one or more **Source-to-Staging Pipelines**. Each pipeline connects one source entity type to a staging entity and defines the transformation logic.
 
-From each record in a source entity, a separate record is created in the staging entity.
+Pipelines are managed from the **Source-to-Staging Pipelines** panel on the staging entity's detail page.
 
-During this process, data can be modified, transformed, or composed from multiple fields using a script defined in the action.
+![Source-to-Staging Pipelines panel](./_assets/source-staging-pipelines.png){.medium}
 
-The same script also defines the mapping between fields of the source entity and the staging entity.
+Each pipeline record contains the following fields:
 
-![Action example](./_assets/action-example.png){.medium}
+- **Staging Entity** – the staging entity this pipeline writes to.
+- **Source Entity** – the source entity type this pipeline reads from.
+- **Merging Script** – a Twig script that defines how source record data is transformed and mapped to the staging record.
 
-Action script allows:
+Both the Staging Entity and Source Entity fields are locked after the pipeline is created and cannot be changed.
 
-- normalization and unification of data formats
-- combining or splitting fields
-- applying transformation logic
+#### Merging Script
 
-### Source – Staging relationships
+The merging script is a Twig template that must return a JSON object with the key `stagingRecordData`, containing the field values to write to the staging record:
 
-To identify which Source entity a particular Staging entity belongs to, you can specify a Source Entity in the Master Data Entity configuration for the corresponding Staging entity.
+```twig
+{# {
+  "stagingRecordData": {
+    "name": "{{ sourceRecord.name }}"
+  }
+} #}
+```
 
-![Source-staging relation](./_assets/source-staging-relation.png){.medium}
+Two variables are available in the script:
 
-If a Source Entity is defined, the system automatically creates a real relationship field between Source and Staging records. One Source record can be linked to multiple Staging records simultaneously.
+- `sourceRecord` – the source record that triggered the sync.
+- `stagingRecord` – the existing staging record, or `null` when the staging record does not yet exist.
 
-This relationship is particularly useful in the following scenarios:
+#### Automatic synchronization
 
-- Updating Staging records (and subsequently Master records) when related Source records are updated.
-- Creating relationships between Master records based on relationships that exist between the corresponding Source records.
+Once a pipeline is configured, the system automatically:
+
+- **Creates** a new staging record when a source record is saved and has no linked staging record yet.
+- **Updates** the staging record when the source record is saved and is already linked.
+- **Re-applies** all pipelines for the staging entity when the staging record itself is updated.
+
+All synchronization operations are performed on behalf of the system user, regardless of who triggered the save.
 
 
 ### Data Unification and Deduplication
