@@ -37,7 +37,7 @@ The category entity comes with the following preconfigured fields; mandatory are
 
 | **Field Name**           | **Description**                                                                                                                                                               |
 |--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Active                   | Activity state of the category record. Activating a category automatically activates all its parent categories; deactivating it automatically deactivates all child categories. |
+| Active                   | Activity state of the category record. Activating cascades to parents; deactivating cascades to children.                                                                     |
 | Name (multi-lang) *      | The category name.                                                                                                                                                            |
 | Parent Category          | The category to be used as a parent for this category.                                                                                                                        |
 | Code                     | Unique value used to identify the category. It can only consist of lowercase letters, digits and underscore symbols.                                                          |
@@ -57,10 +57,10 @@ Categories are displayed as a hierarchical **tree view**, reflecting the parentâ
 
 By default, the following fields are displayed on the [list view](../../01.atrocore/04.understanding-ui/index.md#list-view) page for category records:
 
- - Name
- - Main image
- - Code
- - Channels
+- Name
+- Main image
+- Code
+- Channels
 
 To change the category records order in the list, click any sortable column title; this will sort the column either ascending or descending.
 
