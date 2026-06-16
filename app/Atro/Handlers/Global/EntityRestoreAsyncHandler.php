@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,12 +23,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/entityRestore',
+    path: '/entityRestoreAsync',
     methods: [
         'POST',
     ],
-    summary: 'Restore records',
-    description: 'Restores one or multiple soft-deleted records from the recycle bin synchronously by their IDs.',
+    summary: 'Restore records (asynchronous)',
+    description: 'Schedules a restore as a background job and returns immediately with the job ID. The actual restore logic is identical to `POST /entityRestore` but runs asynchronously via the job queue.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -37,19 +38,31 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'type'       => 'object',
                     'required'   => [
                         'entityName',
-                        'ids',
+                        'where',
                     ],
                     'properties' => [
                         'entityName' => [
                             'type'    => 'string',
                             'example' => 'Product',
                         ],
-                        'ids'        => [
+                        'where'       => [
                             'type'        => 'array',
-                            'description' => 'IDs of the records to restore.',
+                            'description' => 'Filter conditions that define which records to restore. Uses the same format as the list endpoint `where` parameter. Pass an empty array to restore all records.',
                             'items'       => [
-                                'type' => 'string',
-                                'example' => 'some-id',
+                                'type'       => 'object',
+                                'properties' => [
+                                    'type'      => [
+                                        'type'    => 'string',
+                                        'example' => 'equals',
+                                    ],
+                                    'attribute' => [
+                                        'type'    => 'string',
+                                        'example' => 'status',
+                                    ],
+                                    'value'     => [
+                                        'example' => 'Draft',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -59,52 +72,43 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Restore result.',
+            'description' => 'Reference to the created background job.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
+                        'required'   => [
+                            'jobId',
+                        ],
                         'properties' => [
-                            'restored' => [
-                                'type'        => 'integer',
-                                'description' => 'Number of successfully restored records.',
-                            ],
-                            'errors'   => [
-                                'type'        => 'array',
-                                'description' => 'List of error messages for records that could not be restored.',
-                                'items'       => [
-                                    'type' => 'string',
-                                ],
+                            'jobId' => [
+                                'type'        => 'string',
+                                'description' => 'ID of the created background job.',
                             ],
                         ],
                     ],
                 ],
             ],
         ],
-        400 => [
-            'description' => 'entityName or ids are missing, or ids count exceeds the configured limit',
-        ],
         403 => [
             'description' => 'Access denied',
         ],
     ],
 )]
-class EntityRestoreHandler extends AbstractHandler
+class EntityRestoreAsyncHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getRequestBody($request);
+        $data->byWhere = true;
 
         $entityName = (string)$data->entityName;
 
-        $ids = $data->ids ?? [];
-        $limit = $this->getConfig()->get('massRestoreMaxCountWithoutJob', 200);
-        if (count($ids) > $limit) {
-            throw new BadRequest("Too many ids: maximum allowed is $limit. Use /entityRestoreAsync for large batches.");
-        }
+        $params = $this->buildMassParams($data);
+        $params['maxCountWithoutJob'] = -1;
 
-        $result = $this->getRecordService($entityName)->massRestore($this->buildMassParams($data));
+        $result = $this->getRecordService($entityName)->massRestore($params);
 
-        return new JsonResponse(['restored' => $result['count'], 'errors' => $result['errors']]);
+        return new JsonResponse($result);
     }
 }
