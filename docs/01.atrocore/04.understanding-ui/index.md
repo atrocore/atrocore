@@ -241,10 +241,6 @@ The **Access Management** panel (if available) typically shows who is responsibl
 
 The exact set of panels and fields depends on the entity and enabled features. An administrator can configure both the Insights layout (which panels are shown and in which order) and the Summary panel contents (which fields are displayed).
 
-If [Matching](../../01.atrocore/18.master-data-management/17.matching/index.md) is enabled for this entity, the `Matched records` panel is added to the Insights tab.
-
-![Matched records](./_assets/Matched-Records.png){.medium}
-
 #### Activities tab
 
 The Activities tab is enabled or disabled by the administrator for each entity. This tab allows you to track changes to the record and/or leave and read comments.
@@ -252,6 +248,12 @@ The Activities tab is enabled or disabled by the administrator for each entity. 
  ![Activities](./_assets/activities.png){.medium}
 
 Some functions, such as **Discussions** are added by modules. In this case by [Discussions](https://store.atrocore.com/en/discussions/20128) module.
+
+#### Cluster Information tab
+
+If the record belongs to a [Cluster](../../01.atrocore/18.master-data-management/19.clusters/index.md#cluster-information-in-record-detail-view), a dedicated **Cluster Information** tab appears in the side view. It shows the cluster status, last modification date, and lists of linked Master and Staging Records.
+
+ ![Activities](./_assets/cluster-tab.png){.medium}
 
 ### List View tabs
 

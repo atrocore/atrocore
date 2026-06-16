@@ -75,6 +75,33 @@ The Golden Record is indicated by a horizontal gold line in the comparison table
 
 To control which items are shown in the comparison table, open the `Item` tab in the left sidebar. It lists all items belonging to the cluster, grouped by entity. Use the eye icon next to each item to show or hide it in the table.
 
+Items in the left sidebar are grouped by status within each entity section:
+
+- **All items** – all items that have not been rejected, shown at the top of the section.
+- **Confirmed** – a collapsible group listing confirmed items.
+- **Rejected** – a collapsible group listing rejected items; collapsed by default.
+
+Grouping is applied separately for Master and Staging entities. Each item in the sidebar has an actions button (⋮) that provides item-level actions directly from the sidebar without opening the item's detail page.
+
+![Cluster left sidebar](./_assets/cluster-left-sidebar.png){.large}
+
+## Cluster Information in Record Detail View
+
+When a record belongs to a cluster, a Cluster Information block is displayed in the right sidebar of the record's detail page. This block provides a quick overview of the associated cluster without navigating to the cluster itself.
+
+![Cluster sidebar in record](./_assets/cluster-sidebar-record.png){.medium}
+
+The block includes the cluster status (e.g., Merged) and the date of last modification.
+
+Below the cluster summary, two collapsible panels are displayed:
+
+- **Master Records** – lists all master records linked to the cluster.
+- **Staging Records** – lists all staging records linked to the cluster.
+
+Record names within both panels are clickable links that open the respective record's detail page.
+
+The status of each item is visually indicated by a colored horizontal line on the left side of the record name. Items confirmed automatically display an additional icon.
+
 ## Merge Cluster Items
 
 The Merge View allows you to manually create or update the Golden Record within a cluster by selecting individual field values from staging records via radio buttons.
