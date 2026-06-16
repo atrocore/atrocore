@@ -82,7 +82,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'entityName or ids are missing, or ids count exceeds the configured limit',
+            'description' => 'IDs count exceeds the configured limit',
         ],
         403 => [
             'description' => 'Access denied',
