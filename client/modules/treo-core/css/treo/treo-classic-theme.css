@@ -16135,6 +16135,10 @@ span.became .file-link {
     min-height: auto;
 }
 
+.url-field-link {
+    word-break: break-all;
+}
+
 .has-error .email-address-block .form-control {
     border: 1px solid #eaeaea;
     box-shadow: none;
