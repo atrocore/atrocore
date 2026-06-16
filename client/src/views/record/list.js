@@ -819,7 +819,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         massActionRestore: function () {
-            if (!this.getAcl().check(this.entityType, 'delete')) {
+            if (!this.getAcl().check(this.entityType, 'edit')) {
                 this.notify('Access denied', 'error');
                 return false;
             }
@@ -830,26 +830,31 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }, function () {
                 this.notify(this.translate('restoring', 'labels', 'Global'));
 
-                var ids = [];
-                var data = {};
-                if (this.allResultIsChecked) {
-                    data.where = this.collection.getWhereForCheckedRecords();
-                    data.selectData = this.collection.data || {};
-                    data.byWhere = true;
-                } else {
-                    data.ids = ids;
-                }
+                const threshold = this.getConfig().get('massRestoreMaxCountWithoutJob') || 200,
+                    isAsync = this.allResultIsChecked || !this.checkedList || this.checkedList.length > threshold,
+                    url = isAsync ? 'entityRestoreAsync' : 'entityRestore';
 
-                for (var i in this.checkedList) {
+                let ids = [];
+                for (let i in this.checkedList) {
                     ids.push(this.checkedList[i]);
                 }
 
+                let requestData = { entityName: this.entityType };
+                if (isAsync) {
+                    requestData.where = this.collection.getWhereForCheckedRecords();
+                } else {
+                    requestData.ids = ids;
+                }
+
                 $.ajax({
-                    url: 'entityRestore',
+                    url: url,
                     type: 'POST',
-                    data: JSON.stringify(Object.assign({ entityName: this.entityType }, data))
+                    data: JSON.stringify(requestData)
                 }).done(function (result) {
-                    this.collection.fetch().then(() => this.notify(this.translate('Restored'), 'success'));
+                    result.sync = !isAsync;
+                    this.notify(false);
+                    this.processMassActionResult(result);
+                    this.collection.fetch();
                 }.bind(this));
             }, this);
         },
@@ -1009,6 +1014,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (result.errors.length > 20) {
                         error += '<br> ' + (result.errors.length - 20) + ' more errors'
                     }
+                    Espo.Ui.notify(false);
                     Espo.ui.error(error);
                 } else {
                     Espo.Ui.success(this.translate('Done'));
@@ -3388,13 +3394,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     type: 'POST',
                     data: JSON.stringify({ entityName: this.entityType, ids: [id] })
                 }).done(function (result) {
-                        this.notify('Restored', 'success');
-                        this.removeRecordFromList(id);
+                        result.sync = true;
+                        this.processMassActionResult(result);
+                        this.collection.fetch();
                     }.bind(this)
-                ).fail(function () {
-                    this.notify('Error occured', 'error');
-                    this.collection.push(model);
-                }.bind(this))
+                )
             }, this);
         },
 
