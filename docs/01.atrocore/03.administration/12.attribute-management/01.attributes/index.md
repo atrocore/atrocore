@@ -98,6 +98,25 @@ You can also disable the ability to add attributes directly to records for the p
 
 You can then add attributes to layouts. To learn how to do this, go to the [Attributes](../../12.attribute-management/01.attributes/index.md) page.
 
+### Deleting Attributes
+
+Attributes can be deleted using either the `Delete` single-record action from the attribute detail view or the `Remove` mass action from the attribute list view. Both actions permanently remove:
+- The selected attribute records.
+- All attribute values associated with those attributes across all entities to which the attributes are linked.
+
+![`Remove` mass action](./_assets/Remove-mass-action.png){.small}
+
+When an attribute is deleted, it is moved to a soft-deleted state rather than being permanently removed immediately. By default, the Permanent Deletion Period for attributes is 60 days.
+
+During this period:
+- Deleted attributes can be restored.
+- All attribute values associated with the deleted attributes can also be restored.
+- Relationships and configurations of the attribute are preserved.
+
+Once the permanent deletion period expires, the attribute and all related attribute values are permanently removed from the system and can no longer be recovered.
+
+>The permanent deletion period can be configured by administrators. Restoring an attribute restores both the attribute definition and its associated values.
+
 ## Channel-specific Attributes
 
 The channel functionality is provided by the [PIM](../../../../05.pim/06.channels/index.md) module and is primarily used in products for exporting data to various destinations.
