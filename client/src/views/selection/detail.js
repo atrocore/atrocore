@@ -64,21 +64,30 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         setup: function () {
 
             if (!this.selectionItemModels?.length && ['merge', 'compare'].includes(this.selectionViewMode)) {
-                this.wait(true)
-                this.reloadModels(() => {
+                this.wait(true);
 
-                    if (this.selectionViewMode === 'merge' && !this.canMerge()) {
-                        this.selectionViewMode = "compare";
-                    }
+                const startReload = () => {
+                    this.reloadModels(() => {
 
-                    if (this.selectionItemModels.length <= 1) {
-                        this.selectionViewMode = 'standard';
-                    }
+                        if (this.selectionViewMode === 'merge' && !this.canMerge()) {
+                            this.selectionViewMode = "compare";
+                        }
 
-                    this.updateUrl(null, false, true);
-                    Dep.prototype.setup.call(this);
-                    this.setupCustomButtons();
-                });
+                        if (this.selectionItemModels.length <= 1) {
+                            this.selectionViewMode = 'standard';
+                        }
+
+                        this.updateUrl(null, false, true);
+                        Dep.prototype.setup.call(this);
+                        this.setupCustomButtons();
+                    });
+                };
+
+                if (!this.model.get(this.entityTypeField)) {
+                    this.listenToOnce(this.model, 'sync', startReload);
+                } else {
+                    startReload();
+                }
             } else {
                 Dep.prototype.setup.call(this);
                 this.setupCustomButtons();
