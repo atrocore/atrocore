@@ -505,13 +505,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             headerButtons: this.getMenu()
                         }, view.getRecordButtons())
                     }));
+                    // Svelte flushes DOM updates as microtasks, so defer until after the flush
+                    // to ensure [data-name="massAction"] is in the DOM before querying it.
+                    setTimeout(() => this.renderCompareActionsContainer(view), 0);
                 });
 
                 this.listenTo(view, 'all-panels-rendered', () => {
                     $('#main > .content-wrapper > main').css('overflow-y', 'auto');
                     this.enableButtons();
                     this.notify(false);
-                    this.renderCompareActionsContainer(view);
                 });
 
                 this.listenTo(view, 'layout-refreshed', () => {
