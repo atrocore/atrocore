@@ -117,6 +117,21 @@ Once the permanent deletion period expires, the attribute and all related attrib
 
 >The permanent deletion period can be configured by administrators. Restoring an attribute restores both the attribute definition and its associated values.
 
+#### Deleting Attributes from a record
+
+Entities that support attributes provide the `Delete Attribute` mass action, which allows users to remove attribute values from multiple records simultaneously. To delete attribute values in bulk:
+1) select the records from which attribute values should be removed
+2) Choose the mass action
+3) Select one or more attributes whose values should be deleted
+4) Confirm the operation
+
+![Delete Attribute](./_assets/Delete-Attribute.png){.small}
+
+During execution:
+- The system removes the selected attribute values from all selected records.
+- If a record does not contain a value for a selected attribute, that record is skipped for that attribute.
+- Only attribute values are removed; the attributs themselves remain available in the system.
+
 ## Channel-specific Attributes
 
 The channel functionality is provided by the [PIM](../../../../05.pim/06.channels/index.md) module and is primarily used in products for exporting data to various destinations.
