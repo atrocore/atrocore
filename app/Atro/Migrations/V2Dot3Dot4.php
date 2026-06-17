@@ -15,6 +15,7 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Schema\Schema;
 
 class V2Dot3Dot4 extends Base
@@ -50,6 +51,56 @@ class V2Dot3Dot4 extends Base
         $this->createCustomExtensibleEnumEntity();
         $this->seedExtensibleEnumLayouts();
         $this->migrateExtensibleEnumTranslations();
+        $this->migrateActions();
+    }
+
+    private function migrateActions(): void
+    {
+        $dbal = $this->getDbal();
+
+        $actions = $dbal->createQueryBuilder()
+            ->select('*')
+            ->from($dbal->quoteIdentifier('action'))
+            ->where('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        foreach ($actions as $action) {
+            $data = @json_decode($action['data'] ?? '{}', true);
+            if (empty($data['fieldData'])){
+                continue;
+            }
+
+            $updated = false;
+
+            foreach ($data['fieldData'] as $key => $value) {
+                if (str_ends_with($key, 'Name')) {
+                    $base = substr($key, 0, -strlen('Name'));
+                    if (isset($data['fieldData'][$base])) {
+                        $data['fieldData'][$base . 'Id'] = $data['fieldData'][$base];
+                        unset($data['fieldData'][$base]);
+                        $updated = true;
+                    }
+                } elseif (str_ends_with($key, 'Names')) {
+                    $base = substr($key, 0, -strlen('Names'));
+                    if (isset($data['fieldData'][$base])) {
+                        $data['fieldData'][$base . 'Ids'] = $data['fieldData'][$base];
+                        unset($data['fieldData'][$base]);
+                        $updated = true;
+                    }
+                }
+            }
+
+            if ($updated) {
+                $dbal->createQueryBuilder()
+                    ->update($dbal->quoteIdentifier('action'))
+                    ->set('data', ':data')
+                    ->where('id = :id')
+                    ->setParameter('id', $action['id'])
+                    ->setParameter('data', json_encode($data))
+                    ->executeQuery();
+            }
+        }
     }
 
     private function createCustomExtensibleEnumEntity(): void
