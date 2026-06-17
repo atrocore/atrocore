@@ -3192,7 +3192,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.listenTo(this.model, 'sync', () => {
                     if (window.SvelteEntityContextPanel?.$set) {
-                        window.SvelteEntityContextPanel.$set('clusterId', this.model.get('clusterId'));
+                        window.SvelteEntityContextPanel.$set({'clusterId': this.model.get('clusterId')});
                     }
                 });
             }
