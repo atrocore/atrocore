@@ -514,13 +514,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             headerButtons: this.getMenu()
                         }, view.getRecordButtons())
                     }));
+                    this.renderCompareActionsContainer(view);
                 });
 
                 this.listenTo(view, 'all-panels-rendered', () => {
                     $('#main > .content-wrapper > main').css('overflow-y', 'auto');
                     this.enableButtons();
                     this.notify(false);
-                    this.renderCompareActionsContainer(view);
                 });
 
                 this.listenTo(view, 'layout-refreshed', () => {
