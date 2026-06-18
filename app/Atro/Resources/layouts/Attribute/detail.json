@@ -25,13 +25,13 @@
       ],
       [
         {
-          "name": "channel"
+          "name": "systemName"
         },
         false
       ],
       [
         {
-          "name": "systemName"
+          "name": "channel"
         },
         false
       ],
