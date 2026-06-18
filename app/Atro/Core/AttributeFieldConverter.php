@@ -48,7 +48,7 @@ class AttributeFieldConverter
 
     public static function isValidSystemName(string $name): bool
     {
-        return preg_match('/^[a-z][a-zA-Z0-9_]*$/', $name) === 1;
+        return preg_match('/^[a-z]([a-zA-Z0-9_]*[a-zA-Z0-9])?$/', $name) === 1;
     }
 
     public static function prepareFieldName(array $row): string

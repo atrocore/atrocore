@@ -564,7 +564,7 @@ class EntityField extends ReferenceData
 
     public function insertEntity(OrmEntity $entity): bool
     {
-        if (!preg_match('/^[a-z][a-zA-Z0-9_]*$/', $entity->get('code'))) {
+        if (!preg_match('/^[a-z]([a-zA-Z0-9_]*[a-zA-Z0-9])?$/', $entity->get('code'))) {
             throw new BadRequest("System Name is invalid.");
         }
 
@@ -575,7 +575,7 @@ class EntityField extends ReferenceData
         if (in_array($entity->get('type'), ['link', 'linkMultiple'])) {
             if (
                 empty($entity->get('foreignCode'))
-                || !preg_match('/^[a-z][a-zA-Z0-9_]*$/', $entity->get('foreignCode'))
+                || !preg_match('/^[a-z]([a-zA-Z0-9_]*[a-zA-Z0-9])?$/', $entity->get('foreignCode'))
             ) {
                 throw new BadRequest("Foreign System Name is invalid.");
             }
