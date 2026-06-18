@@ -25,20 +25,18 @@ class V2Dot3Dot5 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
+            $this->exec("DELETE FROM attribute WHERE deleted = true");
             $this->exec("DROP INDEX idx_attribute_unique_code");
             $this->exec("ALTER TABLE attribute RENAME COLUMN code TO system_name");
             $this->exec("CREATE UNIQUE INDEX IDX_ATTRIBUTE_UNIQUE_ATTRIBUTE ON attribute (deleted, entity_id, system_name)");
         } else {
+            $this->exec("DELETE FROM attribute WHERE deleted = 1");
             $this->exec("DROP INDEX IDX_ATTRIBUTE_UNIQUE_CODE ON attribute");
             $this->exec("ALTER TABLE attribute CHANGE code system_name VARCHAR(255) DEFAULT NULL");
             $this->exec("CREATE UNIQUE INDEX IDX_ATTRIBUTE_UNIQUE_ATTRIBUTE ON attribute (deleted, entity_id, system_name)");
         }
 
-//        $this->getDbal()->createQueryBuilder()
-//            ->update($this->getDbal()->quoteIdentifier('attribute'))
-//            ->set('code', 'id')
-//            ->where('code IS NULL')
-//            ->executeQuery();
+        $this->fillSystemNames();
 
         $this->createSourceToStagingPipelineTable();
         $this->migrateSourceEntities();
@@ -103,6 +101,86 @@ class V2Dot3Dot5 extends Base
                 }
             }
         }
+    }
+
+    private function fillSystemNames(): void
+    {
+        $offset = 0;
+        $limit  = 5000;
+
+        while (true) {
+            $rows = $this->getDbal()->createQueryBuilder()
+                ->select('id', 'name', 'system_name')
+                ->from('attribute')
+                ->orderBy('id')
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->fetchAllAssociative();
+
+            if (empty($rows)) {
+                break;
+            }
+
+            foreach ($rows as $row) {
+                $sn = (string)($row['system_name'] ?? '');
+
+                if ($sn !== '' && $this->isValidSystemName($sn)) {
+                    continue;
+                }
+
+                $source = $sn !== '' ? $sn : (string)($row['name'] ?? '');
+                $base   = $this->sanitizeSystemName($source);
+                if ($base === '') {
+                    $base = 'attribute';
+                }
+
+                $candidate = $base;
+                $i         = 2;
+                while (true) {
+                    try {
+                        $this->getDbal()->createQueryBuilder()
+                            ->update('attribute')
+                            ->set('system_name', ':systemName')
+                            ->where('id = :id')
+                            ->setParameter('systemName', $candidate)
+                            ->setParameter('id', $row['id'])
+                            ->executeStatement();
+                        break;
+                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+                        $candidate = $base . '_' . $i;
+                        $i++;
+                    } catch (\Throwable $e) {
+                        break;
+                    }
+                }
+            }
+
+            $offset += $limit;
+        }
+    }
+
+    private function isValidSystemName(string $name): bool
+    {
+        return preg_match('/^[a-z]([a-zA-Z0-9_]*[a-zA-Z0-9])?$/', $name) === 1;
+    }
+
+    private function sanitizeSystemName(string $input): string
+    {
+        $cleaned = preg_replace('/[^a-zA-Z0-9_]/', '', $input);
+
+        $noLeading = preg_replace('/^[^a-zA-Z]+/', '', (string)$cleaned);
+
+        if ($noLeading === null || $noLeading === '') {
+            return '';
+        }
+
+        $noTrailing = rtrim($noLeading, '_');
+
+        if ($noTrailing === '') {
+            return '';
+        }
+
+        return lcfirst($noTrailing);
     }
 
     private function exec(string $sql): void
