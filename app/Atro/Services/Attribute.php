@@ -24,7 +24,7 @@ use Espo\ORM\Entity;
 
 class Attribute extends Base
 {
-    protected $mandatorySelectAttributeList = ['sortOrder', 'attributeGroupSortOrder', 'data', 'measureId', 'defaultUnit', 'entityId', 'outputType'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'attributeGroupSortOrder', 'data', 'measureId', 'defaultUnit', 'entityId', 'outputType', 'systemName'];
 
     public function getAttributesDefs(string $entityName, array $attributesIds): array
     {
@@ -281,7 +281,7 @@ class Attribute extends Base
                 if (empty($translatedOptions)) {
                     $translatedOptions = new \stdClass();
                 }
-                $translatedOptions->$option = $this->getLanguage()->translateOption($option, $entity->get('code'), $entity->get('entityId'));
+                $translatedOptions->$option = $this->getLanguage()->translateOption($option, $entity->get('systemName'), $entity->get('entityId'));
             }
             $entity->set('translatedOptions', $translatedOptions);
         }

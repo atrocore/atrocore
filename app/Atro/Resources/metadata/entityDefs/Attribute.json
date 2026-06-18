@@ -60,7 +60,17 @@
     "systemName": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/code",
-      "required": true
+      "required": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "type": {
       "type": "varchar",
