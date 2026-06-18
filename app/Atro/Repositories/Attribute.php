@@ -122,7 +122,7 @@ class Attribute extends Base
         return $this->getDbal()->createQueryBuilder()
             ->select('id')
             ->from($this->getDbal()->quoteIdentifier("attribute"))
-            ->where('id in (:values) or code in (:values)')
+            ->where('id in (:values) or system_name in (:values)')
             ->andWhere('entity_id=:entityName and deleted=:false')
             ->setParameter('values', $values, Connection::PARAM_STR_ARRAY)
             ->setParameter('entityName', $entityName)
@@ -734,7 +734,7 @@ class Attribute extends Base
 
     public function getEntityAttributes(string $scope): array
     {
-        $select = ['id', 'code', 'type'];
+        $select = ['id', 'system_name', 'type'];
 
         if (class_exists('\AdvancedDataTypes\Module')) {
             $select[] = 'output_type';
@@ -781,7 +781,7 @@ class Attribute extends Base
         }
 
         if (in_array($entity->get('type'), ['enum', 'multiEnum']) && $entity->has('translatedOptions')) {
-            $this->getLanguage()->set($entity->get('entityId'), 'options', $entity->get('code'), (array)$entity->get('translatedOptions'));
+            $this->getLanguage()->set($entity->get('entityId'), 'options', $entity->get('systemName'), (array)$entity->get('translatedOptions'));
             $this->getLanguage()->save();
         }
     }
