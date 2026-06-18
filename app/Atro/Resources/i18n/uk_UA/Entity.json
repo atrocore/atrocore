@@ -2,6 +2,7 @@
   "fields": {
     "name": "Ім'я в однині",
     "namePlural": "Ім'я множина",
+    "code": "Системна назва",
     "disabled": "Відключено",
     "customizable": "Налаштовується",
     "hasArchive": "Архівується",

@@ -2,9 +2,7 @@
   "fields": {
     "attributeGroup": "Група атрибутів",
     "attributePanel": "Панель атрибутів",
-    "type": "Тип атрибута",
-    "code": "Код",
-    "name": "Назва атрибута",
+    "systemName": "Системна назва",
     "products": "Продукти",
     "isMultilang": "Багатомовність",
     "fileType": "Тип файлу",

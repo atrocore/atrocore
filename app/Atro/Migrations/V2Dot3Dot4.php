@@ -15,6 +15,7 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Schema\Schema;
 
 class V2Dot3Dot4 extends Base
@@ -50,6 +51,118 @@ class V2Dot3Dot4 extends Base
         $this->createCustomExtensibleEnumEntity();
         $this->seedExtensibleEnumLayouts();
         $this->migrateExtensibleEnumTranslations();
+        $this->migrateActions();
+        $this->migrateNotes();
+    }
+
+    private function migrateNotes(): void
+    {
+        $dbal = $this->getDbal();
+
+        $offset = 0;
+        $limit = 2000;
+        while (true) {
+            $notes = $dbal->createQueryBuilder()
+                ->select('id, data')
+                ->from($dbal->quoteIdentifier('note'))
+                ->where('deleted = :false')
+                ->andWhere('type = :type')
+                ->andWhere('data LIKE :data')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('type', 'Update')
+                ->setParameter('data', '%OptionsData"%')
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->fetchAllAssociative();
+
+            $offset = $offset + $limit;
+
+            if (empty($notes)) {
+                break;
+            }
+
+            foreach ($notes as $note) {
+                $data = @json_decode($note['data'] ?? '{}', true);
+                if (empty($data['attributes']['was']) || empty($data['attributes']['became'])) {
+                    continue;
+                }
+
+                $updated = false;
+
+                foreach (['was', 'became'] as $type) {
+                    foreach ($data['attributes'][$type] as $key => $value) {
+                        if (isset($data['attributes']['was'][$key . 'Name']) || isset($data['attributes']['became'][$key . 'Name'])) {
+                            $data['attributes'][$type][$key . 'Id'] = $data['attributes'][$type][$key];
+                            unset($data['attributes'][$type][$key]);
+                            $updated = true;
+                        } elseif (isset($data['attributes']['was'][$key . 'Names']) || isset($data['attributes']['became'][$key . 'Names'])) {
+                            $data['attributes'][$type][$key . 'Ids'] = $data['attributes'][$type][$key];
+                            unset($data['attributes'][$type][$key]);
+                            $updated = true;
+                        }
+                    }
+                }
+
+                if ($updated) {
+                    $dbal->createQueryBuilder()
+                        ->update('note')
+                        ->set('data', ':data')
+                        ->where('id = :id')
+                        ->setParameter('id', $note['id'])
+                        ->setParameter('data', json_encode($data))
+                        ->executeQuery();
+                }
+            }
+        }
+    }
+
+    private function migrateActions(): void
+    {
+        $dbal = $this->getDbal();
+
+        $actions = $dbal->createQueryBuilder()
+            ->select('*')
+            ->from($dbal->quoteIdentifier('action'))
+            ->where('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        foreach ($actions as $action) {
+            $data = @json_decode($action['data'] ?? '{}', true);
+            if (empty($data['fieldData'])){
+                continue;
+            }
+
+            $updated = false;
+
+            foreach ($data['fieldData'] as $key => $value) {
+                if (str_ends_with($key, 'Name')) {
+                    $base = substr($key, 0, -strlen('Name'));
+                    if (isset($data['fieldData'][$base])) {
+                        $data['fieldData'][$base . 'Id'] = $data['fieldData'][$base];
+                        unset($data['fieldData'][$base]);
+                        $updated = true;
+                    }
+                } elseif (str_ends_with($key, 'Names')) {
+                    $base = substr($key, 0, -strlen('Names'));
+                    if (isset($data['fieldData'][$base])) {
+                        $data['fieldData'][$base . 'Ids'] = $data['fieldData'][$base];
+                        unset($data['fieldData'][$base]);
+                        $updated = true;
+                    }
+                }
+            }
+
+            if ($updated) {
+                $dbal->createQueryBuilder()
+                    ->update($dbal->quoteIdentifier('action'))
+                    ->set('data', ':data')
+                    ->where('id = :id')
+                    ->setParameter('id', $action['id'])
+                    ->setParameter('data', json_encode($data))
+                    ->executeQuery();
+            }
+        }
     }
 
     private function createCustomExtensibleEnumEntity(): void

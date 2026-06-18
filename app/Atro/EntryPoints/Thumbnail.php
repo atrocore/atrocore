@@ -15,6 +15,7 @@ use Atro\Entities\File;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Thumbnail as ThumbnailCreator;
+use Atro\Core\Utils\Util;
 
 class Thumbnail extends AbstractEntryPoint
 {
@@ -33,26 +34,46 @@ class Thumbnail extends AbstractEntryPoint
             throw new NotFound();
         }
 
-        $originFilePath = $file->getFilePath();
-        $thumbnailPath  = $this->getThumbnailCreator()->preparePath($file, $size);
+        $tc = $this->getThumbnailCreator();
 
-        if (!$this->getThumbnailCreator()->hasThumbnail($file, $size)) {
-            if (!$this->getThumbnailCreator()->isThumbnailSupported($file)) {
-                $this
-                    ->getFileManager()
-                    ->putContents('public' . DIRECTORY_SEPARATOR . $thumbnailPath, $file->getContents());
-            } else {
-                if ($this->getThumbnailCreator()->isPdf($originFilePath)) {
-                    $originFilePath = $this->getThumbnailCreator()->createImageFromPdf($file, $originFilePath);
+        if (!$tc->hasThumbnail($file, $size)) {
+            if (!$tc->isResizeSupported($file)) {
+                // SVG: copy original to thumbnail path using storage abstraction
+                $tmpDir = 'data/.thumbnail-tmp' . DIRECTORY_SEPARATOR . $id;
+                Util::createDir($tmpDir);
+                try {
+                    $localPath = $file->findOrCreateLocalFilePath($tmpDir);
+                    $target    = 'public' . DIRECTORY_SEPARATOR . $tc->preparePath($file, $size);
+                    $this->getFileManager()->mkdir(dirname($target), 0777, true);
+                    copy($localPath, $target);
+                } finally {
+                    Util::removeDir($tmpDir);
                 }
-
-                if (!$this->getThumbnailCreator()->create($originFilePath, $size, $thumbnailPath)) {
-                    throw new NotFound();
+            } else {
+                $largestSize = $tc->getLargestSizeKey();
+                if ($size !== $largestSize && $tc->hasThumbnail($file, $largestSize)) {
+                    // Derive smaller size from the already-created large thumbnail
+                    if (!$tc->create('public' . DIRECTORY_SEPARATOR . $tc->preparePath($file, $largestSize), $size, $tc->preparePath($file, $size))) {
+                        throw new NotFound();
+                    }
+                } else {
+                    // Get original from storage (downloads only for remote storages)
+                    $tmpDir = 'data/.thumbnail-tmp' . DIRECTORY_SEPARATOR . $id;
+                    Util::createDir($tmpDir);
+                    try {
+                        $localPath = $file->findOrCreateLocalFilePath($tmpDir);
+                        $tc->createLargestThumbnail($file, $localPath, true);
+                        if ($size !== $largestSize) {
+                            $tc->create('public' . DIRECTORY_SEPARATOR . $tc->preparePath($file, $largestSize), $size, $tc->preparePath($file, $size));
+                        }
+                    } finally {
+                        Util::removeDir($tmpDir);
+                    }
                 }
             }
         }
 
-        $thumbnailPath = \Atro\Services\File::prepareThumbnailPath($thumbnailPath);
+        $thumbnailPath = \Atro\Services\File::prepareThumbnailPath($tc->preparePath($file, $size));
 
         header("Location: /$thumbnailPath");
         exit;

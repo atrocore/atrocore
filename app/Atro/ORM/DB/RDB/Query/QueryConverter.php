@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB\Query;
 
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Doctrine\DBAL\Connection;
 use Atro\Core\Utils\Util;
@@ -120,7 +121,7 @@ class QueryConverter
     public function __construct(EntityFactory $entityFactory, Connection $connection)
     {
         $this->entityFactory = $entityFactory;
-        $this->connection = $connection;
+        $this->connection    = $connection;
     }
 
     public function createSelectQuery(string $entityType, array $params = [], bool $deleted = false): array
@@ -153,19 +154,19 @@ class QueryConverter
         $wherePart = $this->getWhere($entity, $whereClause, 'AND', $params);
 
         $havingClause = $params['havingClause'];
-        $havingPart = '';
+        $havingPart   = '';
         if (!empty($havingClause)) {
             $havingPart = $this->getWhere($entity, $havingClause, 'AND', $params);
         }
 
         if (empty($params['aggregation'])) {
             $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength'], $params['skipBelongsToJoins']);
-            $orderPart = $this->getOrderPart($entity, $params['orderBy'], $params['order']);
+            $orderPart  = $this->getOrderPart($entity, $params['orderBy'], $params['order']);
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $relColumnName = $this->toDb($this->sanitize($column));
-                    $selectPart[] = "{$this->getRelationAlias($entity, $params['relationName'])}.{$relColumnName} AS {$this->fieldToAlias($relColumnName)}";
+                    $selectPart[]  = "{$this->getRelationAlias($entity, $params['relationName'])}.{$relColumnName} AS {$this->fieldToAlias($relColumnName)}";
                     if ($params['orderBy'] === $field) {
                         $orderPart = "{$this->getRelationAlias($entity, $params['relationName'])}.$relColumnName " . $this->prepareOrderParameter($params['order']);
                     }
@@ -254,9 +255,9 @@ class QueryConverter
         ];
 
         if (empty($params['aggregation'])) {
-            $result['order'] = $orderPart;
-            $result['offset'] = $params['offset'];
-            $result['limit'] = $params['limit'];
+            $result['order']    = $orderPart;
+            $result['offset']   = $params['offset'];
+            $result['limit']    = $params['limit'];
             $result['distinct'] = $params['distinct'];
         } else {
             $result['aggregation'] = $params['aggregation'];
@@ -327,7 +328,7 @@ class QueryConverter
         }
 
         $function = substr($expression, 0, $delimiterPosition);
-        $rest = substr($expression, $delimiterPosition + 1);
+        $rest     = substr($expression, $delimiterPosition + 1);
 
         if (empty($rest)) {
             throw new \Exception("Empty MATCH parameters.");
@@ -339,7 +340,7 @@ class QueryConverter
         }
 
         $columns = substr($rest, 0, $delimiterPosition);
-        $query = mb_substr($rest, $delimiterPosition + 1);
+        $query   = mb_substr($rest, $delimiterPosition + 1);
 
         $columnList = explode(',', $columns);
 
@@ -364,13 +365,13 @@ class QueryConverter
     protected function convertComplexExpression($entity, $field, $distinct = false)
     {
         $function = null;
-        $relName = null;
+        $relName  = null;
 
         $entityType = $entity->getEntityType();
 
         if (strpos($field, ':')) {
             $dilimeterPosition = strpos($field, ':');
-            $function = substr($field, 0, $dilimeterPosition);
+            $function          = substr($field, 0, $dilimeterPosition);
 
             if (in_array($function, $this->matchFunctionList)) {
                 return $this->convertMatchExpression($entity, $field);
@@ -466,7 +467,7 @@ class QueryConverter
             if (array_key_exists($attribute, $entity->fields)) {
                 $fieldDefs = $entity->fields[$attribute];
             } else {
-                $part = $this->convertComplexExpression($entity, $attribute, $distinct);
+                $part  = $this->convertComplexExpression($entity, $attribute, $distinct);
                 $arr[] = "{$part} AS {$this->fieldToAlias($attribute)}";
                 continue;
             }
@@ -498,8 +499,8 @@ class QueryConverter
             $r = $entity->relations[$relationName];
         }
 
-        $keySet = $this->getKeys($entity, $relationName);
-        $key = $keySet['key'];
+        $keySet     = $this->getKeys($entity, $relationName);
+        $key        = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
 
         if (!$alias) {
@@ -575,7 +576,7 @@ class QueryConverter
                 foreach ($orderBy as $item) {
                     if (is_array($item)) {
                         $orderByInternal = $item[0];
-                        $orderInternal = null;
+                        $orderInternal   = null;
                         if (!empty($item[1])) {
                             $orderInternal = $item[1];
                         }
@@ -683,7 +684,7 @@ class QueryConverter
     {
         if (!isset($this->aliasesCache[$entity->getEntityType()])) {
             $this->aliasesCache[$entity->getEntityType()] = [];
-            $occurrenceHash = [];
+            $occurrenceHash                               = [];
             foreach ($entity->relations as $name => $r) {
                 if ($r['type'] == IEntity::BELONGS_TO) {
                     if (!array_key_exists($name, $this->aliasesCache[$entity->getEntityType()])) {
@@ -738,8 +739,8 @@ class QueryConverter
             switch ($f['type']) {
                 case 'foreign':
                     if (isset($f['relation'])) {
-                        $relationName = $f['relation'];
-                        $foreign = $f['foreign'];
+                        $relationName  = $f['relation'];
+                        $foreign       = $f['foreign'];
                         $foreignEntity = $entity->relations[$relationName]['entity'] ?? null;
                         if (is_array($foreign)) {
                             foreach ($foreign as $i => $value) {
@@ -776,7 +777,7 @@ class QueryConverter
 
         if ($localizedField !== $field) {
             $localizedFieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($localizedField);
-            $fieldPath = "COALESCE(NULLIF(TRIM($localizedFieldPath), ''), $fieldPath)";
+            $fieldPath          = "COALESCE(NULLIF(TRIM($localizedFieldPath), ''), $fieldPath)";
         }
 
         return $fieldPath;
@@ -795,7 +796,7 @@ class QueryConverter
             if (is_int($field)) {
                 if (is_string($value)) {
                     if (strpos($value, 'MATCH_') === 0) {
-                        $rightPart = $this->convertMatchExpression($entity, $value);
+                        $rightPart    = $this->convertMatchExpression($entity, $value);
                         $whereParts[] = $rightPart;
                         continue;
                     }
@@ -829,40 +830,34 @@ class QueryConverter
             if (!in_array($field, self::$sqlOperators)) {
                 $isComplex = false;
 
-                $operator = '=';
+                $operator    = '=';
                 $operatorOrm = '=';
 
                 $leftPart = null;
 
                 $isNotValue = false;
                 if (substr($field, -1) === ':') {
-                    $field = substr($field, 0, strlen($field) - 1);
+                    $field      = substr($field, 0, strlen($field) - 1);
                     $isNotValue = true;
                 }
 
                 if (!preg_match('/^[a-z0-9]+$/i', $field)) {
                     foreach (self::$comparisonOperators as $op => $opDb) {
                         if (strpos($field, $op) !== false) {
-                            $field = trim(str_replace($op, '', $field));
+                            $field       = trim(str_replace($op, '', $field));
                             $operatorOrm = $op;
-                            $operator = $opDb;
+                            $operator    = $opDb;
                             break;
                         }
                     }
                 }
 
                 if (strpos($field, '.') !== false || strpos($field, ':') !== false) {
-                    $leftPart = $this->convertComplexExpression($entity, $field);
+                    $leftPart  = $this->convertComplexExpression($entity, $field);
                     $isComplex = true;
                 }
 
                 if (empty($isComplex)) {
-                    if (!isset($entity->fields[$field])) {
-                        $whereParts[] = ':false';
-                        $this->parameters['false'] = false;
-                        continue;
-                    }
-
                     $fieldDefs = $entity->fields[$field];
 
                     $operatorModified = $operator;
@@ -910,6 +905,36 @@ class QueryConverter
                                 }
                             }
                         }
+                    }
+
+                    if ($field === 'parentId' && $entity instanceof \Atro\Core\Templates\Entities\Hierarchy) {
+                        $hierarchyTable = $this->toDb($entity->getEntityName() . 'Hierarchy');
+                        $ta             = self::TABLE_ALIAS;
+                        switch ($operatorModified) {
+                            case 'IS NULL':
+                                $whereParts[] = "NOT EXISTS(SELECT 1 FROM $hierarchyTable ht WHERE ht.entity_id = $ta.id AND ht.deleted = :false)"; // nosemgrep
+                                break;
+                            case 'IS NOT NULL':
+                                $whereParts[] = "EXISTS(SELECT 1 FROM $hierarchyTable ht WHERE ht.entity_id = $ta.id AND ht.deleted = :false)"; // nosemgrep
+                                break;
+                            case 'IN':
+                                $paramName                    = 'parentIds_' . IdGenerator::unsortableId();
+                                $whereParts[]                 = "EXISTS(SELECT 1 FROM $hierarchyTable ht WHERE ht.parent_id IN (:$paramName) AND ht.entity_id = $ta.id AND ht.deleted = :false)"; // nosemgrep
+                                $this->parameters[$paramName] = $value;
+                                break;
+                            case 'NOT IN':
+                                $paramName                    = 'parentIds_' . IdGenerator::unsortableId();
+                                $whereParts[]                 = "NOT EXISTS(SELECT 1 FROM $hierarchyTable ht WHERE ht.parent_id IN (:$paramName) AND ht.entity_id = $ta.id AND ht.deleted = :false)"; // nosemgrep
+                                $this->parameters[$paramName] = $value;
+                                break;
+                            default:
+                                $paramName                    = 'parentId_' . IdGenerator::unsortableId();
+                                $neg                          = $operatorModified === '<>' ? 'NOT ' : '';
+                                $whereParts[]                 = "{$neg}EXISTS(SELECT 1 FROM $hierarchyTable ht WHERE ht.parent_id = :$paramName AND ht.entity_id = $ta.id AND ht.deleted = :false)"; // nosemgrep
+                                $this->parameters[$paramName] = $value;
+                        }
+                        $this->parameters['false'] = false;
+                        continue;
                     }
 
                     if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
@@ -998,18 +1023,18 @@ class QueryConverter
                             }
                         }
                     } else {
-                        $oppose = '';
+                        $oppose     = '';
                         $emptyValue = false;
                         if ($operator == '<>') {
-                            $oppose = 'NOT ';
+                            $oppose     = 'NOT ';
                             $emptyValue = true;
                         }
                         if (!empty($value)) {
                             if (!isset($value['innerSql'])) {
-                                $parts = explode('.', $field);
-                                $param = $parts[1] ?? $parts[0];
-                                $param = "{$param}_w2_" . Util::generateUniqueHash();
-                                $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param})";
+                                $parts                    = explode('.', $field);
+                                $param                    = $parts[1] ?? $parts[0];
+                                $param                    = "{$param}_w2_" . Util::generateUniqueHash();
+                                $whereParts[]             = $leftPart . " {$oppose}IN " . "(:{$param})";
                                 $this->parameters[$param] = $value;
                             } else {
                                 $whereParts[] = $leftPart . " {$oppose}IN " . "({$value['innerSql']['sql']})";
@@ -1018,7 +1043,7 @@ class QueryConverter
                                 }
                             }
                         } else {
-                            $whereParts[] = ':emptyValue';
+                            $whereParts[]                   = ':emptyValue';
                             $this->parameters['emptyValue'] = $emptyValue;
                         }
                     }
@@ -1093,7 +1118,7 @@ class QueryConverter
                 }
             } else {
                 $relationName = $item;
-                $alias = $this->relationNameToAlias($relationName);
+                $alias        = $this->relationNameToAlias($relationName);
             }
             $conditions = [];
             if (!empty($joinConditions[$alias])) {
@@ -1118,14 +1143,14 @@ class QueryConverter
 
         $isNotValue = false;
         if (substr($left, -1) === ':') {
-            $left = substr($left, 0, strlen($left) - 1);
+            $left       = substr($left, 0, strlen($left) - 1);
             $isNotValue = true;
         }
 
         if (!preg_match('/^[a-z0-9]+$/i', $left)) {
             foreach (self::$comparisonOperators as $op => $opDb) {
                 if (strpos($left, $op) !== false) {
-                    $left = trim(str_replace($op, '', $left));
+                    $left     = trim(str_replace($op, '', $left));
                     $operator = $opDb;
                     break;
                 }
@@ -1134,11 +1159,11 @@ class QueryConverter
 
         if (strpos($left, '.') > 0) {
             list($alias, $attribute) = explode('.', $left);
-            $alias = $this->sanitize($alias);
-            $column = $this->toDb($this->sanitize($attribute));
+            $alias         = $this->sanitize($alias);
+            $column        = $this->toDb($this->sanitize($attribute));
             $parameterName = "{$attribute}_j44";
         } else {
-            $column = $this->toDb($this->sanitize($left));
+            $column        = $this->toDb($this->sanitize($left));
             $parameterName = "{$left}_j44";
         }
         $sql .= "{$alias}.{$column}";
@@ -1154,7 +1179,7 @@ class QueryConverter
             }
             if (count($arr)) {
                 if (!isset($right['innerSql']['sql'])) {
-                    $sql .= " " . $operator . " (:{$parameterName})";
+                    $sql                              .= " " . $operator . " (:{$parameterName})";
                     $this->parameters[$parameterName] = $arr;
                 } else {
                     $sql .= " " . $operator . " ({$right['innerSql']['sql']})";
@@ -1189,11 +1214,11 @@ class QueryConverter
 
             if ($isNotValue) {
                 $rightPart = $this->convertComplexExpression($entity, $value);
-                $sql .= " " . $operator . " " . $rightPart;
+                $sql       .= " " . $operator . " " . $rightPart;
                 return $sql;
             }
 
-            $sql .= " " . $operator . " :" . $parameterName;
+            $sql                              .= " " . $operator . " :" . $parameterName;
             $this->parameters[$parameterName] = $value;
 
             return $sql;
@@ -1247,9 +1272,9 @@ class QueryConverter
 
         switch ($type) {
             case IEntity::MANY_MANY:
-                $key = $keySet['key'];
+                $key        = $keySet['key'];
                 $foreignKey = $keySet['foreignKey'];
-                $nearKey = $keySet['nearKey'];
+                $nearKey    = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
                 $relTable = $this->toDb($relOpt['relationName']);
                 $distantTable = $this->toDb($relOpt['entity']);
@@ -1292,12 +1317,12 @@ class QueryConverter
                 return $res;
             case IEntity::HAS_MANY:
             case IEntity::HAS_ONE:
-                $foreignKey = $keySet['foreignKey'];
+                $foreignKey   = $keySet['foreignKey'];
                 $distantTable = $this->toDb($relOpt['entity']);
 
                 $condition = self::TABLE_ALIAS . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey);
                 if (!$withDeleted) {
-                    $condition .= " AND {$alias}.deleted = :deleted_j1";
+                    $condition                      .= " AND {$alias}.deleted = :deleted_j1";
                     $this->parameters['deleted_j1'] = false;
                 }
 
@@ -1320,7 +1345,7 @@ class QueryConverter
                 ];
 
             case IEntity::BELONGS_TO:
-                $join = $this->getBelongsToJoin($entity, $relationName, null, $alias, $withDeleted);
+                $join         = $this->getBelongsToJoin($entity, $relationName, null, $alias, $withDeleted);
                 $join['type'] = $left ? 'left' : 'inner';
                 return [$join];
         }
@@ -1351,7 +1376,7 @@ class QueryConverter
 
     public function getKeys(IEntity $entity, string $relationName): array
     {
-        $relOpt = $entity->relations[$relationName];
+        $relOpt  = $entity->relations[$relationName];
         $relType = $relOpt['type'];
 
         switch ($relType) {
@@ -1412,10 +1437,10 @@ class QueryConverter
                 if (isset($relOpt['foreignKey'])) {
                     $foreignKey = $relOpt['foreignKey'];
                 }
-                $nearKey = $this->toDb($entity->getEntityType()) . 'Id';
+                $nearKey    = $this->toDb($entity->getEntityType()) . 'Id';
                 $distantKey = $this->toDb($relOpt['entity']) . 'Id';
                 if (isset($relOpt['midKeys']) && is_array($relOpt['midKeys'])) {
-                    $nearKey = $relOpt['midKeys'][0];
+                    $nearKey    = $relOpt['midKeys'][0];
                     $distantKey = $relOpt['midKeys'][1];
                 }
                 return array(
@@ -1425,7 +1450,7 @@ class QueryConverter
                     'distantKey' => $distantKey,
                 );
             case IEntity::BELONGS_TO_PARENT:
-                $key = $relationName . 'Id';
+                $key     = $relationName . 'Id';
                 $typeKey = $relationName . 'Type';
                 return array(
                     'key'        => $key,

@@ -8,7 +8,7 @@
     },
     "code": {
       "type": "varchar",
-      "maxLength": 30,
+      "maxLength": 60,
       "view": "views/admin/field-manager/fields/code",
       "required": true,
       "trim": true,

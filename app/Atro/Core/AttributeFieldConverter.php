@@ -46,14 +46,14 @@ class AttributeFieldConverter
         $this->container    = $container;
     }
 
-    public static function isValidCode(string $code): bool
+    public static function isValidSystemName(string $name): bool
     {
-        return preg_match('/^[a-zA-Z0-9_-]*$/', $code) === 1;
+        return preg_match('/^[a-z]([a-zA-Z0-9_]*[a-zA-Z0-9])?$/', $name) === 1;
     }
 
     public static function prepareFieldName(array $row): string
     {
-        return $row['code'];
+        return $row['system_name'];
     }
 
     public static function getAttributeIdFromFieldName(string $name): string
@@ -483,7 +483,7 @@ class AttributeFieldConverter
                 ->select('a.*, c.name as channel_name')
                 ->from($this->conn->quoteIdentifier('attribute'), 'a')
                 ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id = a.channel_id AND c.deleted=:false')
-                ->where('a.id IN (:ids) or a.code IN (:ids)')
+                ->where('a.id IN (:ids) or a.system_name IN (:ids)')
                 ->andWhere('a.deleted=:false')
                 ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -493,7 +493,7 @@ class AttributeFieldConverter
         return $this->conn->createQueryBuilder()
             ->select('*')
             ->from($this->conn->quoteIdentifier('attribute'))
-            ->where('id IN (:ids) or code IN (:ids)')
+            ->where('id IN (:ids) or system_name IN (:ids)')
             ->andWhere('deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)

@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nom singulier",
     "namePlural": "Nom pluriel",
+    "code": "Nom du système",
     "disabled": "Désactivée",
     "customizable": "Personnalisable",
     "hasArchive": "Archivable",

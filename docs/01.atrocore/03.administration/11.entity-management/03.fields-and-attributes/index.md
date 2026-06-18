@@ -39,6 +39,31 @@ When creating a new field, the following fields must be configured:
 
 > Code, Type, Entity values cannot be changed after field creation.
 
+### Default value
+
+Default values can be configured for fields to automatically populate them when new records are created. To configure a default value:
+-  Select a Default Value Type.
+-  Specify the value in the Default Value field.
+
+The following default value types are available:
+-  Basic
+Uses a static value as the default. The specified value is automatically assigned to the field when a new record is created.
+
+![Basic Value Type](./_assets/Basic-Value-Type.png){.small}
+
+-  Script
+Uses a dynamic value generated from a [Twig](../../../10.developer-guide/80.twig-tutorial/index.md) template. The template is evaluated during record creation, allowing the default value to be calculated based on system data, current user information, dates, or other available variables.
+
+![Script Value Type](./_assets/Script-Value-Type.png){.small}
+
+#### Behavior
+- Default values are applied only when a new record is created.
+- A default value is not applied if the field already contains a value.
+- For script-based defaults, the generated value depends on the result of the Twig template evaluation at runtime.
+- Incorrect Twig syntax may prevent the default value from being generated correctly.
+
+Using default values helps standardize data entry, reduce manual input, and ensure consistent record creation across the system.
+
 ### Configuration Options
 
 Additional configuration options are available when creating fields.

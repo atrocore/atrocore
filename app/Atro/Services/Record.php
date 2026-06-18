@@ -322,9 +322,8 @@ class Record extends RecordService
                 try {
                     $actionOperation($id);
                 } catch (\Throwable $e) {
-                    $message = "{$action} {$this->getEntityType()} '$id' failed: {$e->getTraceAsString()}";
-                    $GLOBALS['log']->error($message);
-                    $entity   = $this->getRepository()->get($id);
+                    $GLOBALS['log']->error("{$action} {$this->getEntityType()} '$id' failed: {$e->getTraceAsString()}");
+                    $entity   = $this->getRepository()->where(['id' => $id])->findOne(['withDeleted' => true]);
                     $name     = !empty($entity) ? $entity->get('name') : $id;
                     $errors[] = "Error for '$name': {$e->getMessage()}";
                 }

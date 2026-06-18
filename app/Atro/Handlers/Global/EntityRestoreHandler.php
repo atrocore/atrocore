@@ -14,8 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\Global;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -28,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'POST',
     ],
     summary: 'Restore records',
-    description: 'Restores one or multiple soft-deleted records from the recycle bin.',
+    description: 'Restores one or multiple soft-deleted records from the recycle bin synchronously by their IDs.',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -38,25 +37,20 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'type'       => 'object',
                     'required'   => [
                         'entityName',
+                        'ids',
                     ],
                     'properties' => [
                         'entityName' => [
-                            'type' => 'string',
+                            'type'    => 'string',
+                            'example' => 'Product',
                         ],
                         'ids'        => [
-                            'type'  => 'array',
-                            'items' => [
+                            'type'        => 'array',
+                            'description' => 'IDs of the records to restore.',
+                            'items'       => [
                                 'type' => 'string',
+                                'example' => 'some-id',
                             ],
-                        ],
-                        'where'      => [
-                            'type' => 'array',
-                        ],
-                        'selectData' => [
-                            'type' => 'object',
-                        ],
-                        'byWhere'    => [
-                            'type' => 'boolean',
                         ],
                     ],
                 ],
@@ -65,14 +59,33 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'Restore result.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        'type'       => 'object',
+                        'properties' => [
+                            'restored' => [
+                                'type'        => 'integer',
+                                'description' => 'Number of successfully restored records.',
+                            ],
+                            'errors'   => [
+                                'type'        => 'array',
+                                'description' => 'List of error messages for records that could not be restored.',
+                                'items'       => [
+                                    'type' => 'string',
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'IDs count exceeds the configured limit',
+        ],
+        403 => [
+            'description' => 'Access denied',
         ],
     ],
 )]
@@ -82,18 +95,14 @@ class EntityRestoreHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'entityName') || empty($data->entityName)) {
-            throw new BadRequest();
+        $ids = $data->ids ?? [];
+        $limit = $this->getConfig()->get('massRestoreMaxCountWithoutJob', 200);
+        if (count($ids) > $limit) {
+            throw new BadRequest("Too many ids: maximum allowed is $limit. Use /entityRestoreAsync for large batches.");
         }
 
-        $entityName = (string) $data->entityName;
+        $result = $this->getRecordService($data->entityName)->massRestore($this->buildMassParams($data));
 
-        if (!$this->getAcl()->check($entityName, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $this->getRecordService($entityName)->massRestore($this->buildMassParams($data));
-
-        return new BoolResponse(true);
+        return new JsonResponse(['restored' => $result['count'], 'errors' => $result['errors']]);
     }
 }

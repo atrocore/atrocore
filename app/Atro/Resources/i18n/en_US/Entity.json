@@ -2,6 +2,7 @@
   "fields": {
     "name": "Name singular",
     "namePlural": "Name plural",
+    "code": "System Name",
     "disabled": "Disabled",
     "customizable": "Customizable",
     "hasArchive": "Archivable",

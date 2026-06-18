@@ -43,7 +43,7 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
         },
 
         hasImagePreview() {
-            return (this.getMetadata().get('app.file.image.hasPreviewExtensions') || []).includes(this.model.get('extension'));
+            return (this.getMetadata().get('app.extensionsWithThumbnail') || []).includes(this.model.get('extension'));
         },
 
         hasVideoPlayer: function () {

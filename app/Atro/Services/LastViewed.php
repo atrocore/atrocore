@@ -45,7 +45,7 @@ class LastViewed extends AbstractService
         foreach ($data['collection'] as $item) {
             $result[] = [
                 'id'             => $item->get('targetId'),
-                'name'           => $item->get('targetName') ?? $item->get('targetId'),
+                'name'           => (string)($item->get('targetName') ?? $item->get('targetId')),
                 'offset'         => $offset + $i,
                 'total'          => $data['total'],
                 'disabled'       => false,
