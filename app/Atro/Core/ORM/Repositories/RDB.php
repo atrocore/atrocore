@@ -1210,13 +1210,12 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     public function getAvailableVersionsData(string $entityId): array
     {
         $entityType = $this->entityType;
-
-        return $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select('a.id, a.name, a.created_at')
-            ->from(Util::toUnderScore(lcfirst("{$entityType}Version")), 'a')
+        return $this->getEntityManager()->getDbal()->createQueryBuilder()
+            ->select('id, name, created_at, created_by_id')
+            ->from(Util::toUnderScore(lcfirst("{$entityType}Version")))
             ->where(Util::toUnderScore(lcfirst($entityType) . 'Id') . ' = :entityId')
             ->setParameter('entityId', $entityId)
-            ->orderby('a.created_at', 'DESC')
+            ->orderby('created_at', 'DESC')
             ->fetchAllAssociative();
     }
 

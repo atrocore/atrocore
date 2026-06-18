@@ -3204,6 +3204,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
             }
 
+            if (!this.model.isNew() && this.getMetadata().get(['scopes', this.scope, 'enableVersioning'])) {
+                props.showVersions = true;
+            }
+
             return props;
         }
     });
