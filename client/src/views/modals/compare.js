@@ -48,7 +48,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             this.versionComparison = this.options.versionComparison ?? false;
             this.versions = this.options.versions ?? [];
-            this.currentVersion = this.versions[0]?.name
+            this.currentVersion = this.options.initialVersion ?? this.versions[0]?.name
 
             this.derivativeComparison = this.options.derivativeComparison ?? false;
 

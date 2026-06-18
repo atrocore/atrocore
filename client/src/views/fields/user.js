@@ -36,27 +36,13 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
 
         searchTemplate: 'fields/user/search',
 
-        listTemplate: 'fields/user/list',
+        listTemplate: '',
 
-        detailTemplate: 'fields/user/detail',
+        detailTemplate: '',
 
         foreignScope: 'User',
 
-        data: function () {
-            const data = Dep.prototype.data.call(this);
-
-            const auditMeta = this.model.getMeta('audit', this.name);
-            if (auditMeta) {
-                data.actorId = auditMeta.actor.id;
-                data.actorName = auditMeta.actor.name;
-                data.actorIsLink = !auditMeta.actor.isSystem;
-                data.delegatorId = auditMeta.delegator.id;
-                data.delegatorName = auditMeta.delegator.name;
-                data.delegatorIsLink = !auditMeta.delegator.isSystem;
-            }
-
-            return data;
-        },
+        svelteComponent: null,
 
         setupSearch: function () {
             Dep.prototype.setupSearch.call(this);
@@ -112,6 +98,30 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
         },
 
         afterRender: function () {
+            if (this.mode === 'detail' || this.mode === 'list') {
+                this.removeSvelteComponent();
+
+                const target = this.$el[0];
+                if (!target) return;
+
+                const auditMeta = this.model.getMeta('audit', this.name);
+                const userId = this.model.get(this.name + 'Id') || '';
+                const userName = this.model.get(this.name + 'Name') || '';
+
+                this.svelteComponent = new Svelte.UserField({
+                    target,
+                    props: {
+                        mode: this.mode,
+                        userId,
+                        userName,
+                        valueIsSet: this.model.has(this.name + 'Id'),
+                        meta: auditMeta || null,
+                    },
+                });
+
+                return;
+            }
+
             Dep.prototype.afterRender.call(this);
 
             if (this.mode == 'search') {
@@ -163,6 +173,18 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                     }, this);
                 }
             }
+        },
+
+        removeSvelteComponent: function () {
+            if (this.svelteComponent) {
+                try { this.svelteComponent.$destroy(); } catch (e) {}
+                this.svelteComponent = null;
+            }
+        },
+
+        remove: function (dontEmpty) {
+            this.removeSvelteComponent();
+            Dep.prototype.remove.call(this, dontEmpty);
         },
 
         deleteLinkTeams: function (id) {
