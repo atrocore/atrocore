@@ -77,7 +77,7 @@ Espo.define('views/login', 'view', function (Dep) {
                 history.replaceState(null, '', '/');
             }
 
-            if (this.getConfig().get('oidcType')) {
+            if (this.getConfig().get('hasOidcLogin')) {
                 this.ajaxGetRequest('oidcLoginUrl', {}, {async: false}).then(data => {
                     this.oidcLoginUrl = data.url || '';
                 });
