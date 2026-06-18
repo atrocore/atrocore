@@ -122,7 +122,7 @@ class Attribute extends Base
         return $this->getDbal()->createQueryBuilder()
             ->select('id')
             ->from($this->getDbal()->quoteIdentifier("attribute"))
-            ->where('id in (:values) or code in (:values)')
+            ->where('id in (:values) or system_name in (:values)')
             ->andWhere('entity_id=:entityName and deleted=:false')
             ->setParameter('values', $values, Connection::PARAM_STR_ARRAY)
             ->setParameter('entityName', $entityName)
@@ -614,17 +614,11 @@ class Attribute extends Base
             }
         }
 
-        if ($entity->get('code') === '') {
-            $entity->set('code', null);
+        if (!AttributeFieldConverter::isValidSystemName($entity->get('systemName'))) {
+            throw new BadRequest("The System Name must start with a lowercase letter and can contain only letters, numbers, and underscores.");
         }
-
-        if ($entity->get('code') !== null) {
-            if (!AttributeFieldConverter::isValidCode($entity->get('code'))) {
-                throw new BadRequest("The code must start with a letter and can contain only letters, numbers, and underscores. No spaces or other special characters are allowed.");
-            }
-            if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}")) {
-                throw new BadRequest("Field with such code exists for the {$entity->get('entityId')}.");
-            }
+        if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('systemName')}")) {
+            throw new BadRequest("Field with such System Name exists for the {$entity->get('entityId')}.");
         }
 
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
@@ -740,7 +734,7 @@ class Attribute extends Base
 
     public function getEntityAttributes(string $scope): array
     {
-        $select = ['id', 'code', 'type'];
+        $select = ['id', 'systemName', 'type'];
 
         if (class_exists('\AdvancedDataTypes\Module')) {
             $select[] = 'output_type';
@@ -789,7 +783,7 @@ class Attribute extends Base
         if (in_array($entity->get('type'), ['enum', 'multiEnum']) && $entity->has('translatedOptions')) {
             $this
                 ->getTranslationRepository()
-                ->setTranslationOptions($entity->get('entityId'), $entity->get('code'), (array)$entity->get('translatedOptions'));
+                ->setTranslationOptions($entity->get('entityId'), $entity->get('systemName'), (array)$entity->get('translatedOptions'));
         }
     }
 

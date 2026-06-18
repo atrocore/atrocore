@@ -1,13 +1,11 @@
 {
   "fields": {
     "products": "Produkte",
-    "type": "Attributtyp",
     "attributeGroup": "Attributgruppe",
     "attributePanel": "Attribut-Panel",
-    "code": "Code",
+    "systemName": "Systemname",
     "isMultilang": "Mehrsprachig",
     "fileType": "Datei-Typ",
-    "name": "Attributname",
     "pattern": "Regex-Muster",
     "measure": "Maß",
     "defaultUnit": "Standard Maßeinheit",

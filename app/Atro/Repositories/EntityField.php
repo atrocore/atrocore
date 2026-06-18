@@ -564,8 +564,8 @@ class EntityField extends ReferenceData
 
     public function insertEntity(OrmEntity $entity): bool
     {
-        if (!preg_match('/^[a-z][A-Za-z0-9]*$/', $entity->get('code'))) {
-            throw new BadRequest("Code is invalid.");
+        if (!preg_match('/^[a-z]([a-zA-Z0-9_]*[a-zA-Z0-9])?$/', $entity->get('code'))) {
+            throw new BadRequest("System Name is invalid.");
         }
 
         if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}")) {
@@ -575,9 +575,9 @@ class EntityField extends ReferenceData
         if (in_array($entity->get('type'), ['link', 'linkMultiple'])) {
             if (
                 empty($entity->get('foreignCode'))
-                || !preg_match('/^[a-z][A-Za-z0-9]*$/', $entity->get('foreignCode'))
+                || !preg_match('/^[a-z]([a-zA-Z0-9_]*[a-zA-Z0-9])?$/', $entity->get('foreignCode'))
             ) {
-                throw new BadRequest("Foreign Code is invalid.");
+                throw new BadRequest("Foreign System Name is invalid.");
             }
 
             if ($this->getMetadata()->get("entityDefs.{$entity->get('foreignEntityId')}.fields.{$entity->get('foreignCode')}")) {

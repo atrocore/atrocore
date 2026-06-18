@@ -2,6 +2,7 @@
   "fields": {
     "name": "Jméno singulární",
     "namePlural": "Jméno v množném čísle",
+    "code": "Systémový název",
     "disabled": "Zakázáno",
     "customizable": "Přizpůsobitelné",
     "hasArchive": "Archivovatelné",
