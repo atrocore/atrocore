@@ -2499,7 +2499,13 @@ class Metadata extends AbstractMetadataListener
                             $relationName       = "{$scope}Hierarchy";
                             $linkDefs['entity'] = $scope;
                         } else {
-                            $relationName = 'derivativeMiddle_' . md5("{$linkDefs['relationName']}_$scope");
+                            $relationName = $scope . $linkDefs['entity'];
+
+                            $i = 2;
+                            while (!empty($data['entityDefs'][$relationName])) {
+                                $relationName = $relationName . $i;
+                                $i++;
+                            }
 
                             if (($linkDefs['entity'] ?? null) === $primaryEntity) {
                                 $linkDefs['entity'] = $scope;
