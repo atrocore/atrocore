@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nazwa pojedyncza",
     "namePlural": "Liczba mnoga nazwiska",
+    "code": "Nazwa systemowa",
     "disabled": "Wyłączony",
     "customizable": "Możliwość dostosowania",
     "hasArchive": "Archiwalny",

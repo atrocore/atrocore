@@ -15,30 +15,36 @@ Espo.define('views/admin/field-manager/fields/code', 'views/fields/varchar', Dep
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:code', () => {
+            this.listenTo(this.model, `change:${this.name}`, () => {
                 if (!this.model.get('name')) {
-                    this.model.set('name', this.model.get('code'));
+                    this.model.set('name', this.model.get(this.name));
                 }
-                this.model.set('code', this.sanitize(this.model.get('code')));
+                this.model.set(this.name, this.sanitize(this.model.get(this.name)));
             });
 
             this.listenTo(this.model, 'change:name', () => {
-                if (!this.model.get('code')) {
-                    this.model.set('code', this.sanitize(this.model.get('name')));
+                if (!this.model.get(this.name)) {
+                    this.model.set(this.name, this.sanitize(this.model.get('name')));
                 }
             });
         },
 
         sanitize(input) {
-            const alphanumericOnly = input.replace(/[^a-zA-Z0-9]/g, "");
+            const cleaned = input.replace(/[^a-zA-Z0-9_]/g, "");
 
-            const noLeadingNumber = alphanumericOnly.replace(/^[0-9]+/, "");
+            const noLeadingInvalid = cleaned.replace(/^[^a-zA-Z]+/, "");
 
-            if (noLeadingNumber.length === 0) {
+            if (noLeadingInvalid.length === 0) {
                 return "";
             }
 
-            return this.lcfirst(noLeadingNumber.charAt(0).toUpperCase() + noLeadingNumber.slice(1));
+            const noTrailingUnderscore = noLeadingInvalid.replace(/_+$/, "");
+
+            if (noTrailingUnderscore.length === 0) {
+                return "";
+            }
+
+            return noTrailingUnderscore.charAt(0).toLowerCase() + noTrailingUnderscore.slice(1);
         },
 
         lcfirst(str) {

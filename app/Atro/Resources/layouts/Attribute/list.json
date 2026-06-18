@@ -4,6 +4,9 @@
     "link": true
   },
   {
+    "name": "systemName"
+  },
+  {
     "name": "entity"
   },
   {
@@ -17,9 +20,6 @@
   },
   {
     "name": "type"
-  },
-  {
-    "name": "code"
   },
   {
     "name": "conditionalProperties",

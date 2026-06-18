@@ -2,6 +2,7 @@
   "fields": {
     "name": "Name Singular",
     "namePlural": "Name Plural",
+    "code": "Systemname",
     "disabled": "Deaktiviert",
     "hasArchive": "Archivierbar",
     "hasActive": "Aktivierbar",
