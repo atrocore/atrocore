@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nome singolare",
     "namePlural": "Nome plurale",
+    "code": "Nome di sistema",
     "disabled": "Disabilitato",
     "customizable": "Personalizzabile",
     "unInheritedRelations": "Relazioni non ereditate",

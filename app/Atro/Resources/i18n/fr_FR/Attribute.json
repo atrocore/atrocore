@@ -1,9 +1,7 @@
 {
   "fields": {
     "attributeGroup": "Groupe d'attributs",
-    "type": "Type d'attribut",
-    "code": "Code",
-    "name": "Nom de l'attribut",
+    "systemName": "Nom du système",
     "products": "Produits",
     "isMultilang": "Multilingue",
     "fileType": "Type de fichier",

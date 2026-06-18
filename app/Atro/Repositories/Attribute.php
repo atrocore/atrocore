@@ -614,17 +614,11 @@ class Attribute extends Base
             }
         }
 
-        if ($entity->get('code') === '') {
-            $entity->set('code', null);
+        if (!AttributeFieldConverter::isValidSystemName($entity->get('systemName'))) {
+            throw new BadRequest("The System Name must start with a lowercase letter and can contain only letters, numbers, and underscores.");
         }
-
-        if ($entity->get('code') !== null) {
-            if (!AttributeFieldConverter::isValidCode($entity->get('code'))) {
-                throw new BadRequest("The code must start with a letter and can contain only letters, numbers, and underscores. No spaces or other special characters are allowed.");
-            }
-            if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}")) {
-                throw new BadRequest("Field with such code exists for the {$entity->get('entityId')}.");
-            }
+        if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('systemName')}")) {
+            throw new BadRequest("Field with such System Name exists for the {$entity->get('entityId')}.");
         }
 
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
