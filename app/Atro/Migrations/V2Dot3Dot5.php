@@ -24,11 +24,21 @@ class V2Dot3Dot5 extends Base
 
     public function up(): void
     {
-        $this->getDbal()->createQueryBuilder()
-            ->update($this->getDbal()->quoteIdentifier('attribute'))
-            ->set('code', 'id')
-            ->where('code IS NULL')
-            ->executeQuery();
+        if ($this->isPgSQL()) {
+            $this->exec("DROP INDEX idx_attribute_unique_code");
+            $this->exec("ALTER TABLE attribute RENAME COLUMN code TO system_name");
+            $this->exec("CREATE UNIQUE INDEX IDX_ATTRIBUTE_UNIQUE_ATTRIBUTE ON attribute (deleted, entity_id, system_name)");
+        } else {
+            $this->exec("DROP INDEX IDX_ATTRIBUTE_UNIQUE_CODE ON attribute");
+            $this->exec("ALTER TABLE attribute CHANGE code system_name VARCHAR(255) DEFAULT NULL");
+            $this->exec("CREATE UNIQUE INDEX IDX_ATTRIBUTE_UNIQUE_ATTRIBUTE ON attribute (deleted, entity_id, system_name)");
+        }
+
+//        $this->getDbal()->createQueryBuilder()
+//            ->update($this->getDbal()->quoteIdentifier('attribute'))
+//            ->set('code', 'id')
+//            ->where('code IS NULL')
+//            ->executeQuery();
 
         $this->createSourceToStagingPipelineTable();
         $this->migrateSourceEntities();

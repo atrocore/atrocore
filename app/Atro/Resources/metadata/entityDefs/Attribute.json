@@ -57,7 +57,7 @@
         }
       }
     },
-    "code": {
+    "systemName": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/code",
       "required": true
@@ -825,14 +825,14 @@
     "asc": false,
     "textFilterFields": [
       "name",
-      "code"
+      "system_name"
     ]
   },
   "uniqueIndexes": {
-    "unique_code": [
+    "unique_attribute": [
       "deleted",
       "entity_id",
-      "code"
+      "system_name"
     ]
   }
 }
