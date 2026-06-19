@@ -48,6 +48,7 @@
     "masterRecords": "master records",
     "masterRecordsPanel": "Master Records",
     "confirmed": "Confirmed",
+    "unconfirmed": "Unconfirmed",
     "rejected": "Rejected"
   },
   "streamMessages": {
