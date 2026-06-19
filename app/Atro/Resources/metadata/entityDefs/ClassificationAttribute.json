@@ -675,7 +675,9 @@
               "attribute": "attributeType",
               "value": [
                 "enum",
-                "multiEnum"
+                "multiEnum",
+                "link",
+                "linkMultiple"
               ]
             }
           ]
@@ -697,7 +699,9 @@
               "attribute": "attributeType",
               "value": [
                 "enum",
-                "multiEnum"
+                "multiEnum",
+                "link",
+                "linkMultiple"
               ]
             }
           ]

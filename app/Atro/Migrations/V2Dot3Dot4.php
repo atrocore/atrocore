@@ -53,6 +53,58 @@ class V2Dot3Dot4 extends Base
         $this->migrateExtensibleEnumTranslations();
         $this->migrateActions();
         $this->migrateNotes();
+        $this->migrateCaDefaults();
+    }
+
+    private function migrateCaDefaults(): void
+    {
+        $dbal = $this->getDbal();
+
+        $offset = 0;
+        $limit = 5000;
+        while (true) {
+            $attributes = $dbal->createQueryBuilder()
+                ->select('ca.*, a.type')
+                ->from('classification_attribute', 'ca')
+                ->innerJoin('ca', $dbal->quoteIdentifier('attribute'), 'a', 'a.id=ca.attribute_id AND a.deleted=:false')
+                ->where('ca.deleted=:false')
+                ->andHaving('ca.data IS NOT NULL')
+                ->andWhere('a.type IN (:types)')
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('types', ['link', 'linkMultiple'], $dbal::PARAM_STR_ARRAY)
+                ->fetchAllAssociative();
+
+            if (empty($attributes)) {
+                break;
+            }
+
+            $offset = $offset + $limit;
+
+            foreach ($attributes as $attribute) {
+                $data = json_decode($attribute['data'], true);
+                if (isset($data['default']['value'])) {
+                    if ($attribute['type'] === 'link') {
+                        $data['default']['valueId'] = $data['default']['value'];
+                        unset($data['default']['value']);
+                    } elseif ($attribute['type'] === 'linkMultiple') {
+                        $data['default']['valueIds'] = $data['default']['value'];
+                        unset($data['default']['value']);
+                    } else {
+                        continue;
+                    }
+
+                    $dbal->createQueryBuilder()
+                        ->update('classification_attribute')
+                        ->set('data', ':data')
+                        ->where('id=:id')
+                        ->setParameter('data', json_encode($data))
+                        ->setParameter('id', $attribute['id'])
+                        ->executeQuery();
+                }
+            }
+        }
     }
 
     private function migrateNotes(): void
@@ -67,10 +119,11 @@ class V2Dot3Dot4 extends Base
                 ->from($dbal->quoteIdentifier('note'))
                 ->where('deleted = :false')
                 ->andWhere('type = :type')
-                ->andWhere('data LIKE :data')
+                ->andWhere('data LIKE :optionsData OR data LIKE :optionData')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setParameter('type', 'Update')
-                ->setParameter('data', '%OptionsData"%')
+                ->setParameter('optionsData', '%OptionsData"%')
+                ->setParameter('optionData', '%OptionData"%')
                 ->setFirstResult($offset)
                 ->setMaxResults($limit)
                 ->fetchAllAssociative();
