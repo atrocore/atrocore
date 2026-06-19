@@ -807,6 +807,18 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     records: this.getRecordForPanels(),
                     selectedIds: this.getSelectedIds(),
                     selectionViewMode: this.selectionViewMode,
+                    onMountRowActions: (el, itemId, relationName) => {
+                        const model = (this.selectionItemModels || []).find(m => m.id === itemId);
+                        if (!model) return;
+                        this.createView('rowActions_' + itemId, 'views/record/row-actions/relationship', {
+                            el: el,
+                            model: model.item,
+                            parentModelName: 'Selection',
+                            relationName: relationName
+                        }, view => {
+                            view.render();
+                        });
+                    },
                     onItemClicked: (e, itemId) => {
                         if (this.selectionViewMode === 'standard') {
                             return;
