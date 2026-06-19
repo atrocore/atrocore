@@ -32,8 +32,8 @@ class ActionExecution extends Base
             $entity->set('action', $action);
             $entity->set('actionName', $action->get('name'));
 
-            if (in_array($action->get('type'), ['create', 'update', 'createOrUpdate'])) {
-                $entity->set('listScope', $action->get('targetEntity'));
+            if (in_array($action->get('type'), ['create', 'update', 'createOrUpdate', 'createRendition'])) {
+                $entity->set('listScope', $action->get('targetEntity') ??  $action->get('sourceEntity'));
                 $this->getRepository()->prepareCount($entity, 'createdCount');
                 $this->getRepository()->prepareCount($entity, 'updatedCount');
                 $this->getRepository()->prepareCount($entity, 'failedCount');

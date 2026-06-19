@@ -86,7 +86,7 @@ class ReferenceData extends Repository implements Injectable
     public function order(string $field = 'id', string $direction = "ASC"): self
     {
         $this->listParams['orderBy'] = $field;
-        $this->listParams['order'] = $direction;
+        $this->listParams['order']   = $direction;
 
         return $this;
     }
@@ -94,7 +94,7 @@ class ReferenceData extends Repository implements Injectable
     public function limit(int $offset, int $limit): self
     {
         $this->listParams['offset'] = $offset;
-        $this->listParams['limit'] = $limit;
+        $this->listParams['limit']  = $limit;
 
         return $this;
     }
@@ -169,8 +169,8 @@ class ReferenceData extends Repository implements Injectable
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) as $field => $fieldDefs) {
             if (!empty($fieldDefs['maxLength'])) {
                 $fieldValue = (string)$entity->get($field);
-                $length = strlen($fieldValue);
-                $maxLength = (int)$fieldDefs['maxLength'];
+                $length     = strlen($fieldValue);
+                $maxLength  = (int)$fieldDefs['maxLength'];
 
                 if ($length > $maxLength) {
                     $fieldLabel = $this->getLanguage()->translate($field, 'fields', $entity->getEntityType());
@@ -187,7 +187,7 @@ class ReferenceData extends Repository implements Injectable
             unset($item['deleted']);
         }
 
-        $items = $this->getAllItems();
+        $items                       = $this->getAllItems();
         $items[$entity->get('code')] = $item;
 
         return $this->saveDataToFile($items);
@@ -223,7 +223,7 @@ class ReferenceData extends Repository implements Injectable
     public function save(Entity $entity, array $options = [])
     {
         $nowString = date('Y-m-d H:i:s');
-        $user = $this->getEntityManager()->getUser();
+        $user      = $this->getEntityManager()->getUser();
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
@@ -358,6 +358,9 @@ class ReferenceData extends Repository implements Injectable
         foreach ($params['whereClause'] ?? [] as $row) {
             if (!empty($row['AND'])) {
                 $row = $row['AND'][0];
+            } else if (!empty($row['OR'][0])) {
+                // for array_any_of filter with single element
+                $row = $row['OR'][0];
             }
             foreach ($row as $field => $value) {
                 // skip if SQL operator
@@ -368,10 +371,18 @@ class ReferenceData extends Repository implements Injectable
                 // filter by * alias
                 if (preg_match('/^(.+)\*$/', $field, $matches)) {
                     $search = str_replace('%', '', $value);
-                    $items = array_filter($items, function ($item) use ($search, $matches) {
-                        return isset($item[$matches[1]]) && preg_match('/^' . preg_quote($search, '/') . '/i', $item[$matches[1]]);
+                    $items  = array_filter($items, function ($item) use ($search, $matches) {
+                        if (!isset($item[$matches[1]])) {
+                            return false;
+                        }
+                        $value = $item[$matches[1]];
+                        if (is_array($value)) {
+                            $value = json_encode($value);
+                            return preg_match('/' . preg_quote($search, '/') . '/i', $value);
+                        }
+                        return preg_match('/^' . preg_quote($search, '/') . '/i', $value);
                     });
-                    $items = array_values($items);
+                    $items  = array_values($items);
                     continue;
                 }
 
@@ -407,7 +418,11 @@ class ReferenceData extends Repository implements Injectable
                 $filtered = [];
 
                 foreach ($params['whereClause'][$key]['OR'] as $k => $v) {
-                    $field = str_replace('*', '', (string) $k);
+                    if (is_int($k)) {
+                        // this is not a text filter
+                        continue 2;
+                    }
+                    $field  = str_replace('*', '', (string)$k);
                     $search = str_replace('%', '', $v);
                     foreach ($items as $item) {
                         if (!isset($item[$field])) {
@@ -455,7 +470,7 @@ class ReferenceData extends Repository implements Injectable
         $collection->setAsFetched();
 
         $this->whereClause = [];
-        $this->listParams = [];
+        $this->listParams  = [];
 
         return $collection;
     }
@@ -463,7 +478,7 @@ class ReferenceData extends Repository implements Injectable
     public function findRelated(Entity $entity, string $link, array $selectParams): EntityCollection
     {
         $relationType = $entity->getRelationType($link);
-        $entityType = $entity->getRelationParam($link, 'entity');
+        $entityType   = $entity->getRelationParam($link, 'entity');
 
         if ($relationType === IEntity::HAS_MANY) {
             $idsField = $link . 'Ids';
@@ -489,8 +504,8 @@ class ReferenceData extends Repository implements Injectable
 
     public function findByIds(array $ids)
     {
-        $result = $this->getAllItems();
-        $result = array_filter(array_values($result), fn($item) => in_array($item['id'], $ids));
+        $result     = $this->getAllItems();
+        $result     = array_filter(array_values($result), fn($item) => in_array($item['id'], $ids));
         $collection = new EntityCollection($result, $this->entityName, $this->entityFactory);
         $collection->setAsFetched();
 
