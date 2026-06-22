@@ -163,11 +163,13 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
             if (!this.selectionItemModels) {
                 return [];
             }
+            const masterEntityType = this.model.get(this.entityTypeField);
             let records = this.selectionItemModels.map(model => {
                 return {
                     id: model.id,
                     name: this.getModelTitle(model),
                     entityType: model.name,
+                    isMaster: model.name === masterEntityType,
                     confirm: model.item?.get('_meta')?.cluster?.confirmed ?? false,
                     confirmedAutomatically: model.item?.get('confirmedAutomatically') ?? false,
                     rejected: false
@@ -179,6 +181,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                     id: model.id,
                     name: this.getModelTitle(model),
                     entityType: model.name,
+                    isMaster: model.name === masterEntityType,
                     confirm: false,
                     confirmedAutomatically: false,
                     rejected: true
