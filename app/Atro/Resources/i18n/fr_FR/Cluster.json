@@ -34,6 +34,7 @@
     "masterRecord": "enregistrement de référence",
     "masterRecords": "enregistrements de référence",
     "confirmed": "Confirmé",
+    "unconfirmed": "Non confirmé",
     "rejected": "Rejeté"
   },
   "streamMessages": {

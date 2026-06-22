@@ -35,6 +35,7 @@
     "masterRecord": "master-Datensatz",
     "masterRecords": "master-Datensätze",
     "confirmed": "Bestätigt",
+    "unconfirmed": "Unbestätigt",
     "rejected": "Abgelehnt"
   },
   "streamMessages": {

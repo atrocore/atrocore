@@ -34,6 +34,7 @@
     "masterRecord": "майстер-запис",
     "masterRecords": "майстер-записи",
     "confirmed": "Підтверджено",
+    "unconfirmed": "Непідтверджено",
     "rejected": "Відхилено"
   },
   "streamMessages": {
