@@ -2355,7 +2355,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             o.useRelationModel = true
                             o.defs.name = parts[1]
                             if (!cellDefs.customLabel) {
-                                cellDefs.customLabel = this.translate(o.defs.name, 'fields', relEntity) + ' (Relation)'
+                                cellDefs.customLabel = this.translate(o.defs.name, 'fields', relEntity) + ' (' + this.translate('Relation', 'labels') + ')'
                             }
                         }
 
