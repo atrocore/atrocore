@@ -45,7 +45,7 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
                 }
             ];
 
-            if (['create', 'createOrUpdate'].includes(this.model.get('type'))) {
+            if (['create', 'createOrUpdate', 'createRendition'].includes(this.model.get('type'))) {
                 layout.push({
                     "name": "createdCount",
                     "notSortable": true,
@@ -61,7 +61,7 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
                 });
             }
 
-            if (['create', 'update', 'createOrUpdate'].includes(this.model.get('type'))) {
+            if (['create', 'update', 'createOrUpdate', 'createRendition'].includes(this.model.get('type'))) {
                 layout.push({
                     "name": "failedCount",
                     "notSortable": true,

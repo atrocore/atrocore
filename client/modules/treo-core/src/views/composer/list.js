@@ -247,7 +247,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 this.listenTo(view, 'save', saveData => {
                     this.actionsInProgress++;
                     this.notify(this.translate('settingModuleForUpdating', 'labels', 'Composer'));
-                    this.ajaxRequest('Composer/updateModule', 'PUT', JSON.stringify(saveData), {timeout: 180000}).then(response => {
+                    this.ajaxRequest('Composer/updateModule', 'PATCH', JSON.stringify(saveData), {timeout: 180000}).then(response => {
                         if (response) {
                             this.notify(this.translate('setModuleForUpdating', 'labels', 'Composer'), 'success');
                             this.installedCollection.fetch();

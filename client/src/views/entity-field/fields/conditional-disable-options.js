@@ -104,7 +104,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             model.set('options', this.optionsDefsList[num].options || []);
 
             if (['link', 'linkMultiple'].includes(this.model.get(this.typeField))) {
-                const foreignScope = this.model.get('foreignEntityId') ?? this.model.get('entityType');
+                const foreignScope = this.model.get('foreignEntityId') || this.model.get('entityType') || this.model.get('attributeEntityType');
                 const ids = model.get('options') || [];
 
                 model.set('optionsIds', ids);
@@ -124,7 +124,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                     name: 'options',
                     mode: this.mode,
                     foreignScope: foreignScope,
-                    whereAdditional: this.model.get('data')?.where || undefined,
+                    whereAdditional: this.model.get('attributeData')?.where || this.model.get('data')?.where || undefined,
                     inlineEditDisabled: this.options.inlineEditDisabled,
                 }, view => {
                     if (this.isRendered()) view.render();
