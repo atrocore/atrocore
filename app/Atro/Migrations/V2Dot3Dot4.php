@@ -52,7 +52,10 @@ class V2Dot3Dot4 extends Base
         $this->seedExtensibleEnumLayouts();
         $this->migrateExtensibleEnumTranslations();
         $this->migrateActions();
+
         $this->migrateNotes();
+        $this->migrateNotes2();
+
         $this->migrateCaDefaults();
     }
 
@@ -101,6 +104,61 @@ class V2Dot3Dot4 extends Base
                         ->where('id=:id')
                         ->setParameter('data', json_encode($data))
                         ->setParameter('id', $attribute['id'])
+                        ->executeQuery();
+                }
+            }
+        }
+    }
+
+    private function migrateNotes2(): void
+    {
+        $dbal = $this->getDbal();
+
+        $offset = 0;
+        $limit = 2000;
+        while (true) {
+            $notes = $dbal->createQueryBuilder()
+                ->select('id, data')
+                ->from($dbal->quoteIdentifier('note'))
+                ->where('deleted = :false')
+                ->andWhere('type = :type')
+                ->andWhere('data LIKE :extensibleEnum OR data LIKE :extensibleMultiEnum')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('type', 'Update')
+                ->setParameter('extensibleEnum', '%"fieldType":"extensibleEnum"%')
+                ->setParameter('extensibleMultiEnum', '%"fieldType":"extensibleMultiEnum"%')
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->fetchAllAssociative();
+
+            $offset = $offset + $limit;
+
+            if (empty($notes)) {
+                break;
+            }
+
+            foreach ($notes as $note) {
+                $data = @json_decode($note['data'] ?? '{}', true);
+                if (empty($data['attributeData'])) {
+                    continue;
+                }
+
+                $updated = false;
+                foreach ($data['attributeData'] as $fieldName => $defs) {
+                    if (empty($defs['fieldType'])) {
+                        continue;
+                    }
+                    $data['attributeData'][$fieldName]['fieldType'] = $defs['fieldType'] === 'extensibleEnum' ? 'link' : 'linkMultiple';
+                    $updated = true;
+                }
+
+                if ($updated) {
+                    $dbal->createQueryBuilder()
+                        ->update('note')
+                        ->set('data', ':data')
+                        ->where('id = :id')
+                        ->setParameter('id', $note['id'])
+                        ->setParameter('data', json_encode($data))
                         ->executeQuery();
                 }
             }
