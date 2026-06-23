@@ -18,6 +18,10 @@
   "labels": {
     "selectAttributeGroup": "Attributgruppe auswählen"
   },
+  "actions": {
+    "unlinkRelatedAttribute": "Löschen und für Datensätze aufbewahren",
+    "cascadeUnlinkRelatedAttribute": "Hier und aus Datensätzen löschen"
+  },
   "exceptions": {
     "classificationHasRecords": "Klassifizierungen mit Bezugsdatensätzen können nicht gelöscht werden.",
     "entityCannotBeChanged": "Die Entität kann nicht geändert werden.",

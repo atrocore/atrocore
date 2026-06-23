@@ -33,8 +33,6 @@
   },
   "labels": {
     "classificationAttribute": "Atributo de la clasificación",
-    "unlinkRelatedAttribute": "Borrar y conservar para registros",
-    "cascadeUnlinkRelatedAttribute": "Borrar y de registros",
     "conditionalProperties": "Propiedades condicionales"
   },
   "options": {
