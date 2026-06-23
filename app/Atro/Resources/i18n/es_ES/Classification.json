@@ -18,6 +18,10 @@
   "labels": {
     "selectAttributeGroup": "Seleccionar grupo de atributos"
   },
+  "actions": {
+    "unlinkRelatedAttribute": "Borrar y conservar para registros",
+    "cascadeUnlinkRelatedAttribute": "Borrar y de registros"
+  },
   "exceptions": {
     "entityCannotBeChanged": "La entidad no puede modificarse.",
     "classificationForToAnotherEntity": "La clasificación no puede vincularse con este registro, porque se utiliza para otra Entidad.",

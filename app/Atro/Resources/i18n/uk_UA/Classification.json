@@ -18,6 +18,10 @@
   "labels": {
     "selectAttributeGroup": "Вибрати групу атрибута"
   },
+  "actions": {
+    "unlinkRelatedAttribute": "Видалити та зберегти для записів",
+    "cascadeUnlinkRelatedAttribute": "Видалення і з записів"
+  },
   "exceptions": {
     "entityCannotBeChanged": "Сутність не може бути змінена.",
     "classificationForToAnotherEntity": "Класифікація не може бути пов'язана з цим записом, оскільки він використовується для іншого об'єкта.",

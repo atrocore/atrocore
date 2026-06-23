@@ -33,8 +33,6 @@
   },
   "labels": {
     "classificationAttribute": "Atrybut z klasyfikacji",
-    "unlinkRelatedAttribute": "Usunąć i zachować do celów archiwizacji",
-    "cascadeUnlinkRelatedAttribute": "Usuwanie z rekordów",
     "conditionalProperties": "Właściwości warunkowe"
   },
   "options": {

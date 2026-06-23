@@ -33,8 +33,6 @@
   },
   "labels": {
     "classificationAttribute": "Атрибут з Класифікації",
-    "unlinkRelatedAttribute": "Видалити та зберегти для записів",
-    "cascadeUnlinkRelatedAttribute": "Видалення і з записів",
     "conditionalProperties": "Умовні властивості"
   },
   "options": {

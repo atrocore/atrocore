@@ -18,6 +18,10 @@
   "labels": {
     "selectAttributeGroup": "Proszę wybrać grupę atrybutów"
   },
+  "actions": {
+    "unlinkRelatedAttribute": "Usunąć i zachować do celów archiwizacji",
+    "cascadeUnlinkRelatedAttribute": "Usuwanie z rekordów"
+  },
   "exceptions": {
     "entityCannotBeChanged": "Podmiot nie może zostać zmieniony.",
     "classificationForToAnotherEntity": "Klasyfikacja nie może być powiązana z tym rekordem, ponieważ jest używana dla innego podmiotu.",

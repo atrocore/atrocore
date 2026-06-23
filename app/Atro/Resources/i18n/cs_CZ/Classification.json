@@ -18,6 +18,10 @@
   "labels": {
     "selectAttributeGroup": "Vybrat skupinu atributů"
   },
+  "actions": {
+    "unlinkRelatedAttribute": "Vymazat a uchovat pro evidenci",
+    "cascadeUnlinkRelatedAttribute": "Odstranit a ze záznamů"
+  },
   "exceptions": {
     "entityCannotBeChanged": "Entitu nelze změnit.",
     "classificationForToAnotherEntity": "Klasifikaci nelze s tímto záznamem spojit, protože se používá pro jiný subjekt.",

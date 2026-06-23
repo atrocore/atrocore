@@ -18,6 +18,10 @@
       "general": "Général"
     }
   },
+  "actions": {
+    "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers",
+    "conditionalProperties": "Propriétés conditionnelles"
+  },
   "exceptions": {
     "entityCannotBeChanged": "L'entité ne peut être modifiée.",
     "classificationForToAnotherEntity": "La classification ne peut pas être liée à cet enregistrement, car elle est utilisée pour une autre entité.",
