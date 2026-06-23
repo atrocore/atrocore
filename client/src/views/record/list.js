@@ -2383,7 +2383,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                 if (this.isRelationField(item.name)) {
                     const name = item.name.split('__')[1]
-                    item.label = this.translate(name, 'fields', this.relationScope) + ' (Relation)'
+                    item.label = this.translate(name, 'fields', this.relationScope) + ' (' + this.translate('Relation', 'labels') + ')'
                 } else {
                     item.label = this.translate(item.name, 'fields', this.collection.name)
                 }
