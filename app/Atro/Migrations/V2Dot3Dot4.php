@@ -68,7 +68,7 @@ class V2Dot3Dot4 extends Base
                 ->from('classification_attribute', 'ca')
                 ->innerJoin('ca', $dbal->quoteIdentifier('attribute'), 'a', 'a.id=ca.attribute_id AND a.deleted=:false')
                 ->where('ca.deleted=:false')
-                ->andHaving('ca.data IS NOT NULL')
+                ->andWhere('ca.data IS NOT NULL')
                 ->andWhere('a.type IN (:types)')
                 ->setFirstResult($offset)
                 ->setMaxResults($limit)

@@ -108,6 +108,16 @@ class V2Dot3Dot5 extends Base
         $offset = 0;
         $limit  = 5000;
 
+        $checkRules = [];
+        $updateCheckRules = false;
+
+        if (file_exists('data/reference-data/QualityCheckRule.json')) {
+            $fileData = @json_decode(file_get_contents('data/reference-data/QualityCheckRule.json'), true);
+            if (!empty($fileData) && is_array($fileData)) {
+                $checkRules = $fileData;
+            }
+        }
+
         while (true) {
             $rows = $this->getDbal()->createQueryBuilder()
                 ->select('id', 'name', 'system_name')
@@ -134,6 +144,10 @@ class V2Dot3Dot5 extends Base
                     $base = 'attribute';
                 }
 
+                if ($base === $sn) {
+                    continue;
+                }
+
                 $candidate = $base;
                 $i         = 2;
                 while (true) {
@@ -145,6 +159,17 @@ class V2Dot3Dot5 extends Base
                             ->setParameter('systemName', $candidate)
                             ->setParameter('id', $row['id'])
                             ->executeStatement();
+
+                        foreach ($checkRules as $k => $checkRule) {
+                            if (empty($checkRule['attributeId']) || $checkRule['attributeId'] !== $row['id']) {
+                                continue;
+                            }
+
+                            $code = empty($row['system_name']) ? $row['id'] : $row['system_name'];
+                            $checkRules[$k]['entityField'] = str_replace($code, $candidate, $checkRule['entityField']);
+
+                            $updateCheckRules = true;
+                        }
                         break;
                     } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
                         $candidate = $base . '_' . $i;
@@ -156,6 +181,10 @@ class V2Dot3Dot5 extends Base
             }
 
             $offset += $limit;
+        }
+
+        if ($updateCheckRules) {
+            file_put_contents('data/reference-data/QualityCheckRule.json', json_encode($checkRules));
         }
     }
 
