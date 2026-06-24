@@ -18,6 +18,7 @@ use Atro\Entities\Cluster;
 use Atro\Entities\Job;
 use Atro\Repositories\ClusterItem;
 use Atro\Repositories\MatchedRecord;
+use Atro\Repositories\Matching as MatchingRepository;
 use Espo\ORM\Entity;
 
 class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
@@ -27,6 +28,24 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
         $masterEntity = $job->getPayload()['masterEntity'] ?? null;
         if (empty($masterEntity)) {
             return;
+        }
+
+        /** @var MatchingRepository $matchingRepo */
+        $matchingRepo = $this->getEntityManager()->getRepository('Matching');
+
+        foreach ($matchingRepo->find() as $matching) {
+            if (empty($matching->get('isActive'))) {
+                continue;
+            }
+
+            $resolvedMaster = $this->getMetadata()->get("scopes.{$matching->get('masterEntity')}.primaryEntityId") ?? $matching->get('masterEntity');
+            if ($resolvedMaster !== $masterEntity) {
+                continue;
+            }
+
+            if ($matchingRepo->hasUnprocessedRecords($matching)) {
+                throw new \RuntimeException("Skipped: matching '{$matching->id}' still has unprocessed records for master entity '{$masterEntity}'. FindMatches must complete first.");
+            }
         }
 
         /** @var MatchedRecord $matchedRecordRepo */
