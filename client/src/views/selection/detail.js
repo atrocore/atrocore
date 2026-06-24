@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/list'], function (Dep, Model, List) {
+Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/list', 'views/record/panels/relationship', 'collection'], function (Dep, Model, List, Relationship, Collection) {
 
     return Dep.extend({
 
@@ -862,7 +862,35 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         }
                     }
                 }
-            })
+            });
+
+            $(element).on('click', '[data-action]', (e) => {
+                var $el = $(e.currentTarget);
+                var action = $el.data('action');
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+
+                if (typeof Relationship.prototype[method] == 'function') {
+                    var data = $el.data();
+                    let model = this.selectionItemModels.find(m => m.item.id === data.id);
+                    if (!model) {
+                        model = (this.rejectedItems || []).find(m => m.item.id === data.id);
+                    }
+                    let thisClone = Espo.utils.clone(this);
+                    let collection = new Collection();
+                    collection.add(model.item);
+                    thisClone.collection = collection;
+                    thisClone['getModel'] = (data, evt) => {
+                        if (data.cid) {
+                            return thisClone.collection.get(data.cid)
+                        }
+                        return thisClone.collection.get(data.id)
+                    };
+
+                    Relationship.prototype[method].call(thisClone, data, e);
+
+                    e.preventDefault();
+                }
+            });
         },
 
         renderLeftPanel() {
