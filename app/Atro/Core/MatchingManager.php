@@ -47,37 +47,6 @@ class MatchingManager
         return $ruleType;
     }
 
-    public function createFindMatchesJob(MatchingEntity $matching): void
-    {
-        $exists = $this->getEntityManager()->getRepository('Job')
-            ->where([
-                'name'   => "Find matches for Matching {$matching->id} immediately",
-                'type'   => 'FindMatchesForMatching',
-                'status' => [
-                    'Pending',
-                    'Running',
-                ],
-            ])
-            ->findOne();
-
-        if (!empty($exists)) {
-            return;
-        }
-
-        $jobEntity = $this->getEntityManager()->getEntity('Job');
-        $jobEntity->set([
-            'name'     => "Find matches for Matching {$matching->id} immediately",
-            'type'     => 'FindMatchesForMatching',
-            'status'   => 'Pending',
-            'priority' => 200,
-            'payload'  => [
-                'matching' => $matching->toPayload()
-            ],
-        ]);
-
-        $this->getEntityManager()->saveEntity($jobEntity);
-    }
-
     public function collectAllMatchingFields(?EntityCollection $matchingRules, array &$fields): void
     {
         foreach ($matchingRules ?? [] as $rule) {

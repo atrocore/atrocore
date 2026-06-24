@@ -37,7 +37,7 @@ class CreateClusters extends AbstractJob implements JobInterface
             $masterEntities[$this->getMetadata()->get("scopes.{$matching->get('masterEntity')}.primaryEntityId") ?? $matching->get('masterEntity')] = true;
         }
 
-        foreach ($masterEntities as $masterEntity => $v) {
+        foreach (array_keys($masterEntities) as $masterEntity) {
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
                 'name'     => "Create Clusters for {$masterEntity}",
