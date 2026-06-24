@@ -42,37 +42,37 @@ cd /var/www/my-atrocore-project
 
 run
 ```
-sudo git clone https://gitlab.atrocore.com/atrocore/skeleton-pim.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-pim.git . && sudo php composer.phar self-update && sudo php composer.phar update
 ```
 
 #### If want to install the AtroPIM without demo data
 
 run
 ```
-sudo git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-pim-no-demo.git . && sudo php composer.phar self-update && sudo php composer.phar update
 ```
 
 #### If you want to install AtroCore with demo data
 run
 ```
-sudo git clone https://gitlab.atrocore.com/atrocore/skeleton-atrocore.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-atrocore.git . && sudo php composer.phar self-update && sudo php composer.phar update
 ```
 
 #### If want to install the AtroCore without demo data
 
 run
 ```
-sudo git clone https://gitlab.atrocore.com/atrocore/skeleton-atrocore-no-demo.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-atrocore-no-demo.git . && sudo php composer.phar self-update && sudo php composer.phar update
 ```
 
 #### Installation without `git`
 If you have no git installed you may still copy the files to the project folder manually.
 
 You can download the files from one of these repositories:
-- https://gitlab.atrocore.com/atrocore/skeleton-pim
-- https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo
-- https://gitlab.atrocore.com/atrocore/skeleton-atrocore
-- https://gitlab.atrocore.com/atrocore/skeleton-atrocore-no-demo
+- https://github.com/atrocore/skeleton-pim
+- https://github.com/atrocore/skeleton-pim-no-demo
+- https://github.com/atrocore/skeleton-atrocore
+- https://github.com/atrocore/skeleton-atrocore-no-demo
 
 Then upload the files to your project folder and run
 ```
