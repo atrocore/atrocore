@@ -160,6 +160,9 @@ class V2Dot3Dot5 extends Base
                             ->setParameter('id', $row['id'])
                             ->executeStatement();
 
+                        $oldCode = $sn !== '' ? $sn : $row['id'];
+                        $this->fixExportConfiguratorItems($row['id'], $oldCode, $candidate);
+
                         foreach ($checkRules as $k => $checkRule) {
                             if (empty($checkRule['attributeId']) || $checkRule['attributeId'] !== $row['id']) {
                                 continue;
@@ -210,6 +213,39 @@ class V2Dot3Dot5 extends Base
         }
 
         return lcfirst($noTrailing);
+    }
+
+    private function fixExportConfiguratorItems(string $attributeId, string $oldPrefix, string $newPrefix): void
+    {
+        if ($oldPrefix === $newPrefix) {
+            return;
+        }
+
+        try {
+            $items = $this->getDbal()->createQueryBuilder()
+                ->select('id', 'name')
+                ->from('export_configurator_item')
+                ->where('entity_attribute_id = :attributeId')
+                ->andWhere('deleted = :false')
+                ->setParameter('attributeId', $attributeId)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            foreach ($items as $item) {
+                if (!str_starts_with($item['name'], $oldPrefix)) {
+                    continue;
+                }
+
+                $this->getDbal()->createQueryBuilder()
+                    ->update('export_configurator_item')
+                    ->set('name', ':name')
+                    ->where('id = :id')
+                    ->setParameter('name', $newPrefix . substr($item['name'], strlen($oldPrefix)))
+                    ->setParameter('id', $item['id'])
+                    ->executeStatement();
+            }
+        } catch (\Throwable $e) {
+        }
     }
 
     private function exec(string $sql): void

@@ -18,6 +18,10 @@
   "labels": {
     "selectAttributeGroup": "Выбрать группу атрибута"
   },
+  "actions": {
+    "unlinkRelatedAttribute": "Удаляйте и сохраняйте для записей",
+    "cascadeUnlinkRelatedAttribute": "Удаление и выбор записей"
+  },
   "exceptions": {
     "entityCannotBeChanged": "Сущность не может быть изменена.",
     "classificationForToAnotherEntity": "Классификация не может быть связана с этой записью, поскольку она используется для другой сущности.",

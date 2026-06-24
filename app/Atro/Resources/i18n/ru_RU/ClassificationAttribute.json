@@ -33,8 +33,6 @@
   },
   "labels": {
     "classificationAttribute": "Атрибут из классификации",
-    "unlinkRelatedAttribute": "Удаляйте и сохраняйте для записей",
-    "cascadeUnlinkRelatedAttribute": "Удаление и выбор записей",
     "conditionalProperties": "Условные свойства"
   },
   "options": {

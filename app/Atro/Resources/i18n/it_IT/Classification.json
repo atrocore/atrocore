@@ -18,6 +18,10 @@
   "labels": {
     "selectAttributeGroup": "Selezionare il gruppo di attributi"
   },
+  "actions": {
+    "unlinkRelatedAttribute": "È sicuro di voler eliminare l'Attributo selezionato dalla Classificazione selezionata? Tutti i record correlati manterranno questo Attributo.",
+    "cascadeUnlinkRelatedAttribute": "È sicuro di voler eliminare l'attributo selezionato dalla Classificazione selezionata e dai record correlati? Verranno rimossi anche tutti i valori degli attributi correlati."
+  },
   "exceptions": {
     "entityCannotBeChanged": "L'entità non può essere modificata.",
     "classificationForToAnotherEntity": "La classificazione non può essere collegata a questo record, perché è utilizzata per un'altra Entità.",

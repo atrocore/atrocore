@@ -33,8 +33,6 @@
   },
   "labels": {
     "classificationAttribute": "Attribut aus Klassifikation",
-    "unlinkRelatedAttribute": "Löschen und für Datensätze aufbewahren",
-    "cascadeUnlinkRelatedAttribute": "Hier und aus Datensätzen löschen",
     "conditionalProperties": "Bedingte Eigenschaften"
   },
   "options": {

@@ -33,8 +33,6 @@
   },
   "labels": {
     "classificationAttribute": "Atribut z klasifikace",
-    "unlinkRelatedAttribute": "Vymazat a uchovat pro evidenci",
-    "cascadeUnlinkRelatedAttribute": "Odstranit a ze záznamů",
     "conditionalProperties": "Podmíněné vlastnosti"
   },
   "options": {

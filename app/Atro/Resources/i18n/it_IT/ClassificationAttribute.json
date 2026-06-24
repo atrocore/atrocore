@@ -33,8 +33,6 @@
   },
   "messages": {
     "savedForNotAllChannels": "L'attributo '%s' non è stato collegato a tutti i canali scelti.",
-    "unlinkRelatedAttribute": "È sicuro di voler eliminare l'Attributo selezionato dalla Classificazione selezionata? Tutti i record correlati manterranno questo Attributo.",
-    "cascadeUnlinkRelatedAttribute": "È sicuro di voler eliminare l'attributo selezionato dalla Classificazione selezionata e dai record correlati? Verranno rimossi anche tutti i valori degli attributi correlati.",
     "removeRelatedAttributeGroup": "È sicuro di voler eliminare tutti gli Attributi per il Gruppo di Attributi selezionato dalla Classificazione selezionata? Tutti i record correlati manterranno questi Attributi.",
     "removeRelatedAttributeGroupCascade": "È sicuro di voler eliminare tutti gli attributi per il Gruppo di attributi selezionato dalla Classificazione selezionata e i relativi record? Verranno rimossi anche tutti i valori degli attributi correlati."
   },

@@ -33,8 +33,6 @@
   },
   "labels": {
     "unlinkRelatedAttribute": "Supprimer ici et conserver pour les archives",
-    "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers",
-    "conditionalProperties": "Propriétés conditionnelles",
     "classificationAttribute": "Attribut de la classification"
   },
   "options": {

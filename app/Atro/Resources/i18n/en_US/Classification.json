@@ -18,6 +18,10 @@
   "labels": {
     "selectAttributeGroup": "Select Attribute Group"
   },
+  "actions": {
+    "unlinkRelatedAttribute": "Delete and retain for records",
+    "cascadeUnlinkRelatedAttribute": "Delete and from records"
+  },
   "exceptions": {
     "entityCannotBeChanged": "Entity cannot be changed.",
     "classificationForToAnotherEntity": "Classification cannot be linked with this record, because it is used for another Entity.",

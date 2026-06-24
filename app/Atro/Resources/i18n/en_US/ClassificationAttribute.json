@@ -33,8 +33,6 @@
   },
   "labels": {
     "classificationAttribute": "Attribute from Classification",
-    "unlinkRelatedAttribute": "Delete and retain for records",
-    "cascadeUnlinkRelatedAttribute": "Delete and from records",
     "conditionalProperties": "Conditional Properties"
   },
   "options": {
