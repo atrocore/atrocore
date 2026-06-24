@@ -306,7 +306,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             let entityByScope = {};
                             let order = 0;
                             for (const entityData of result.list) {
-                                if (!entityData.entity){
+                                if (!entityData.entity) {
                                     continue
                                 }
                                 let scope = entityData.entityName;
@@ -330,7 +330,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                             let currentModel = model.clone();
                                             let item = itemModel.clone();
                                             item.set(data._item);
-                                            if(data._item.__relationEntity) {
+                                            if (data._item.__relationEntity) {
                                                 relationModel = new Model();
                                                 relationModel.set(data._item.__relationEntity);
                                                 item.relationModel = relationModel;
@@ -700,8 +700,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             if (!this.model.get('entityTypes')) {
                                 this.model.set('entityTypes', []);
                             }
-                            if (!this.model.get('entityTypes').includes(model.get('entityType'))) {
-                                this.model.get('entityTypes').push(model.get('entityType'))
+                            if (!this.model.get('entityTypes').includes(model.get('entityName'))) {
+                                this.model.get('entityTypes').push(model.get('entityName'))
                             }
                         }
                         this.model.trigger('after:relate', this.link);
@@ -887,12 +887,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     let thisClone = Espo.utils.clone(this);
                     let collection = new Collection();
                     collection.add(model.item);
+                    collection.fetch = () => {}
                     thisClone.collection = collection;
                     thisClone['getModel'] = (data, evt) => {
-                        if (data.cid) {
-                            return thisClone.collection.get(data.cid)
-                        }
-                        return thisClone.collection.get(data.id)
+                       return model.item;
                     };
 
                     Relationship.prototype[method].call(thisClone, data, e);
