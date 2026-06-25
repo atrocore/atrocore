@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\MatchingManager;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
@@ -198,6 +197,36 @@ class Matching extends Base
         $qb->executeQuery();
     }
 
+    public function hasUnprocessedRecords(MatchingEntity $matching): bool
+    {
+        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $conn   = $this->getDbal();
+
+        foreach (array_unique([$matching->get('entity'), $matching->get('masterEntity')]) as $entityName) {
+            if (empty($entityName)) {
+                continue;
+            }
+            $table = $conn->quoteIdentifier(Util::toUnderScore(lcfirst($entityName)));
+            try {
+                $res = $conn->createQueryBuilder()
+                    ->select('id')
+                    ->from($table)
+                    ->where("$column IS NULL")
+                    ->andWhere('deleted = :false')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setMaxResults(1)
+                    ->fetchAssociative();
+
+                if (!empty($res)) {
+                    return true;
+                }
+            } catch (\Throwable $e) {
+            }
+        }
+
+        return false;
+    }
+
     public function isMatchingSearchedForStaging(MatchingEntity $matching, Entity $entity): bool
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -227,9 +256,6 @@ class Matching extends Base
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('null', null, ParameterType::NULL)
             ->executeQuery();
-
-        // it needs for immediate start of finding matched records
-        $this->getMatchingManager()->createFindMatchesJob($matching);
     }
 
     public function unmarkMatchingSearchedForEntity(MatchingEntity $matching, Entity $entity): void
@@ -310,12 +336,6 @@ class Matching extends Base
     {
         parent::init();
 
-        $this->addDependency('matchingManager');
         $this->addDependency('language');
-    }
-
-    protected function getMatchingManager(): MatchingManager
-    {
-        return $this->getInjection('matchingManager');
     }
 }
