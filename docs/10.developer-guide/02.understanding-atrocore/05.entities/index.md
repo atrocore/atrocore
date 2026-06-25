@@ -496,7 +496,7 @@ This file configures how the entity appears and behaves in the frontend interfac
 | Parameter    | Description                          | Available Values                                                                                                                     |
 |--------------|--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | `controller` | Backbone.js controller for rendering | `controllers/record` (default)                                                                                                       |
-| `iconClass`  | Font Awesome icon class              | See [systemIcons.json](https://gitlab.atrocore.com/atrocore/atrocore/-/blob/master/app/Atro/Resources/metadata/app/systemIcons.json) |
+| `iconClass`  | Font Awesome icon class              | See [systemIcons.json](https://github.com/atrocore/atrocore/-/blob/master/app/Atro/Resources/metadata/app/systemIcons.json) |
 
 > [AtroCore Toolkit](https://plugins.jetbrains.com/plugin/28159-atrocore-toolkit) PhpStorm plugin can automatically
 > generate these entity files, saving time and reducing errors.
