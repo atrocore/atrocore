@@ -3,7 +3,7 @@ title: Creating a module
 ---
 ## Overview
 In this tutorial you will learn how to create and install your own module for AtroCore software development platform.
-Example module we refer to in this guide can be found here: [https://gitlab.atrocore.com/atrocore/example-module](https://gitlab.atrocore.com/atrocore/example-module)
+Example module we refer to in this guide can be found here: [https://github.com/atrocore/example-module](https://github.com/atrocore/example-module)
 
 ## Module structure
 Module consist of backend and frontend parts.

@@ -55,12 +55,12 @@ sudo docker run hello-world
 
 ### Downloading Docker Compose configuration
 
-Configuration is hosted on our GitLab repository: [https://gitlab.atrocore.com/atrocore/docker](https://gitlab.atrocore.com/atrocore/docker)
+Configuration is hosted on our GitLab repository: [https://github.com/atrocore/docker](https://github.com/atrocore/docker)
 
 You can choose any directory your user has access. You can use `git` to clone repository locally:
 
 ```bash
-git clone https://gitlab.atrocore.com/atrocore/docker.git <my-atrocore-project>
+git clone https://github.com/atrocore/docker.git <my-atrocore-project>
 ```
 
 > **<my-atrocore-project\>** is your project name
@@ -229,7 +229,7 @@ on `Database configuration` step.
 ```
 
 8. After the update to AtroCore 2.0, container configuration needs to be changed. Inside a directory with docker-compose
-   run `git pull` to download the new migration script (or [download it manually](https://gitlab.atrocore.com/atrocore/docker/-/blob/master/migrate-config.sh?ref_type=heads)
+   run `git pull` to download the new migration script (or [download it manually](https://github.com/atrocore/docker/-/blob/master/migrate-config.sh?ref_type=heads)
    and place right to the `docker-compose.yaml` file) and run it with command `sudo ./migrate-config.sh`.
 9. If you are planning to use `pdf-generator` module, set `BUILD_VARIANT` to `pdf` in `.env` file. Users with an already
    installed system should rebuild their `web` image and recreate a container. After that, on the
