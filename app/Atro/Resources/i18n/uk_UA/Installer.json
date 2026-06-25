@@ -2,10 +2,10 @@
   "fields": {
     "host": "Назва хоста",
     "dbname": "Назва бази даних",
-    "user": "База даних ім'я користувача",
+    "user": "Ім'я користувача бази даних",
     "username": "Ім'я користувача",
     "password": "Пароль",
-    "confirmPassword": "Підтвердіть пароль"
+    "confirmPassword": "Підтвердьте пароль"
   },
   "labels": {
     "licenseAgreement": "Ліцензійна угода",
@@ -16,8 +16,8 @@
     "acceptTheAgreement": "Я приймаю умови угоди",
     "hostName": "Назва хоста",
     "databaseName": "Назва бази даних",
-    "databaseUserName": "База даних ім'я користувача",
-    "databaseUserPassword": "База даних пароль користувача",
+    "databaseUserName": "Ім'я користувача бази даних",
+    "databaseUserPassword": "Пароль користувача бази даних",
     "port": "Порт",
     "testConnection": "Перевірка з'єднання",
     "reCheck": "Повторна перевірка",
@@ -25,7 +25,7 @@
     "password": "Пароль",
     "confirmYourPassword": "Підтвердіть пароль",
     "back": "Назад",
-    "next": "Наступна",
+    "next": "Далі",
     "finish": "Завершити",
     "required": "Обов'язково",
     "currentVersion": "Поточна версія",
@@ -46,7 +46,7 @@
     "pleaseConfigureYourSystemToStart": "Будь ласка, налаштуйте вашу систему для запуску"
   },
   "requirements": {
-    "phpVersion": "PHP version",
+    "phpVersion": "Версія PHP",
     "mysqlVersion": "версія MySQL"
   }
 }

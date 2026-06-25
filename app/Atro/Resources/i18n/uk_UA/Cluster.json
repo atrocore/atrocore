@@ -2,31 +2,28 @@
   "fields": {
     "clusterItems": "Кластерні елементи",
     "number": "Номер",
-    "masterEntity": "Мастер",
+    "masterEntity": "Майстер-сутність",
     "rejectedClusterItems": "Відхилені елементи кластера",
-    "stagingItemCount": "Підрахунок елементів постановки",
-    "masterItemCount": "Основний підрахунок елементів",
-    "state": "Регіон"
+    "stagingItemCount": "Кількість staging-елементів",
+    "masterItemCount": "Кількість основних елементів",
+    "state": "Стан"
   },
   "actions": {
     "reject": "Відхилити",
     "confirm": "Підтвердити",
-    "unreject": "Відхилити"
+    "unreject": "Скасувати відхилення"
   },
   "options": {
     "state": {
-      "empty": "Порожні значення",
-      "review": "Перевірка",
+      "empty": "Порожній",
+      "review": "На перевірці",
       "invalid": "Недійсний",
       "mergedAutomatically": "Об'єднано автоматично",
       "mergedManually": "Об'єднано вручну"
     }
   },
   "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "Об'єднання без еталонного запису неможливе"
-  },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Непідтверджені елементи не можуть бути додані до об'єднання"
+    "cannotDelete": "Можна видаляти лише порожні кластери"
   },
   "labels": {
     "stagingRecord": "проміжний запис",

@@ -16,19 +16,19 @@
       "ComposerAutoUpdate": "Автооновлення модулів",
       "ClearEntities": "Очистити видалені дані",
       "UpdateCurrencyExchangeViaECB": "Оновлення курсу валют через ЄЦБ",
-      "CheckUpdates": "Перевірте оновлення системи",
+      "CheckUpdates": "Перевірити оновлення системи",
       "ScanStorage": "Сканувати сховище",
       "FindMatches": "Знайти збіги",
-      "CalculateScriptFieldsForEntities": "Обчислення полів скрипта",
+      "CalculateScriptFieldsForEntities": "Обчислити поля скриптів",
       "SendReports": "Надсилати анонімні повідомлення про помилки",
-      "CreateClusters": "Створення кластерів"
+      "CreateClusters": "Створити кластери"
     }
   },
   "tooltips": {
     "scheduling": "Визначає періодичність виконання завдання.\n\n```/5 * * * * * `` - кожні 5 хвилин\n\n``0 */2 * * * `` - кожні 2 години\n\n``30 1 * * * `` - кожен день один раз о 01:30\n\n``0 0 1 * * * `` - кожен перший день місяця"
   },
   "messages": {
-    "jobLaunched": "Робоче місце створено",
-    "jobAlreadyExist": "Вакансія була створена менше хвилини тому"
+    "jobLaunched": "Завдання було створено",
+    "jobAlreadyExist": "Завдання було створено менше хвилини тому"
   }
 }

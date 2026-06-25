@@ -1,21 +1,18 @@
 {
-  "labels": {
-    "confirmedAutomatically": "Підтверджено автоматично"
-  },
   "fields": {
-    "entityName": "Назва суб'єкта Назва суб'єкта",
+    "entityName": "Назва сутності",
     "entityId": "Ідентифікатор сутності",
     "record": "Запис",
     "cluster": "Кластер",
-    "matchedRecord": "Співставлений запис",
+    "matchedRecord": "Зіставлений запис",
     "confirmedAutomatically": "Підтверджено автоматично",
-    "matchedScore": "Відповідний рахунок"
+    "matchedScore": "Оцінка збігу"
   },
   "exceptions": {
     "notFound": "Запис елемента кластера не знайдено",
     "cannotReject": "Цей елемент кластера не може бути відхилений",
-    "cannotUnreject": "Цей елемент кластера не може бути відхилений",
-    "idOrIdListOrWhereRequired": "Вкажіть принаймні одне з наступного: ID, список ID або фільтр пошуку."
+    "idOrIdListOrWhereRequired": "Вкажіть принаймні одне з наступного: ID, список ID або фільтр пошуку.",
+    "cannotUnreject": "Для цього елемента кластера неможливо скасувати відхилення"
   },
   "massActions": {
     "reject": "Відхилити"

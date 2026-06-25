@@ -1,6 +1,6 @@
 {
   "fields": {
-    "configuration": "Configuration"
+    "configuration": "Конфігурація"
   },
   "exceptions": {
     "notValidYaml": "Конфігурація не є дійсною YAML."
