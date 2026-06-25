@@ -125,7 +125,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             this.getCollectionFactory().create(this.itemScope, (collection) => {
                 self.collection = collection;
                 self.collection.add(itemModel);
-                self.collection.url = this.selectionModel.name + '/' + this.selectionModel.id + '/' + this.relationName;
+                self.collection.fetch = () => {}
                 callback(self);
             });
         },
