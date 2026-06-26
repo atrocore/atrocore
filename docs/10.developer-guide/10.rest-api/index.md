@@ -907,8 +907,6 @@ Flatten-Attributes: true
 
 With `Flatten-Attributes: true`, you can pass an object instead of a raw ID. The system will find an existing record matching the given fields and link it, or create and link a new one if no match is found.
 
-For [List Option](../../01.atrocore/03.administration/08.lists/index.md#list-options) attributes, the correct option list is resolved automatically from the attribute configuration — `listId` is not required. Option lookup is always restricted to the list configured for the attribute.
-
 > **Restrictions:** Only single-link attributes are supported. Matching and creation use simple field types only (`string`, `integer`, `boolean`, etc.). Nested objects within the linked record are not processed.
 
 #### Approach Comparison

@@ -47,7 +47,6 @@ Translates data content for link presentations throughout the system. When speci
 **Link Presentation Fields**:
 - [Entities](../11.entity-management/03.fields-and-attributes/): Name field
 - [Measure Units](../09.measure-units/): Name field
-- [List Options](../08.lists/): Option value field
 
 > If a specific field has been designated as the record identifier, it takes priority. If no identifier is preset, the Name field is used. If neither exists, the record's ID is displayed.
 

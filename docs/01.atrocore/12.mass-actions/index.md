@@ -104,7 +104,7 @@ You can also export fields and attributes without any export feed pre-written. T
 
 > Fields and attributes can be exported by this method without any modifications.
 
-> The `~` symbol is used as the delimiter for multi-value lists (fields, attributes).
+> The `~` symbol is used as the delimiter for multi-value fields (Multiple Link, Array).
 
 ## Add relation
 
