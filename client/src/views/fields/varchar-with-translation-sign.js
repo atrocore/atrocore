@@ -23,7 +23,7 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
         getEntityFieldName() {
             return this.name;
         },
-        
+
         initInlineActions() {
             Dep.prototype.initInlineActions.call(this);
 
@@ -75,9 +75,9 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
                 key = `${this.getEntityScope()}.${this.getCategory()}.${this.getEntityFieldName()}`;
 
             this.ajaxGetRequest(`${scope}?where[0][type]=textFilter&where[0][value]=${key}`).then(res => {
-                let data = {id: null, code: key};
+                let data = { id: null, code: key, module: 'custom' };
                 res.list.forEach(v => {
-                    if(v.code === key) {
+                    if (v.code === key) {
                         data = v
                     }
                 })
@@ -92,16 +92,18 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
                     };
 
                     this.createView('modal', viewName, options, view => {
-                      this.modalRenderedCallback(view, key);
+                        this.modalRenderedCallback(view, data);
                     });
                 });
             });
         },
 
-        modalRenderedCallback(view, key) {
+        modalRenderedCallback(view, data) {
             Espo.Ui.notify(false);
-            if (!view.model.get('code')) {
-                view.model.set('code', key);
+            for (let key of ['code', 'module']) {
+                if (!view.model.get(key)) {
+                    view.model.set(key, data[key]);
+                }
             }
 
             view.render();
