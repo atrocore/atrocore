@@ -225,14 +225,14 @@ example-module/
 
 ### Core View Architecture
 
-All views in AtroCore are accessible at this [location](https://gitlab.atrocore.com/atrocore/atrocore/-/tree/master/client/src/views).
+All views in AtroCore are accessible at this [location](https://github.com/atrocore/atrocore/-/tree/master/client/src/views).
 
 
 The view system is hierarchical, with most views extending from the base `view.js` class. This provides a consistent set of methods and behaviors across all views.
 
 ### View Types
 
-AtroCore provides various specialized views for different use cases. All views are located [here](https://gitlab.atrocore.com/atrocore/atrocore/-/tree/master/client/src/views/record).
+AtroCore provides various specialized views for different use cases. All views are located [here](https://github.com/atrocore/atrocore/-/tree/master/client/src/views/record).
 
 **Understanding View Hierarchy**:
 
@@ -503,7 +503,7 @@ Controllers in AtroCore manage the application flow and coordinate between views
 
 ### Standard Controllers
 
-Most entity pages use the default [record](https://gitlab.atrocore.com/atrocore/atrocore/-/blob/master/client/src/controllers/record.js) controller.
+Most entity pages use the default [record](https://github.com/atrocore/atrocore/-/blob/master/client/src/controllers/record.js) controller.
 
 This controller handles:
 - Record listing, creation, editing
@@ -525,7 +525,7 @@ AtroCore controllers support specific route patterns that map directly to contro
 
 **Example 1**: Dashboard controller (non-entity page)
 
-Reference [here](https://gitlab.atrocore.com/atrocore/atrocore/-/blob/master/client/src/controllers/home.js).
+Reference [here](https://github.com/atrocore/atrocore/-/blob/master/client/src/controllers/home.js).
 
 File: `client/modules/example-module/src/controllers/dashboard.js`
 
@@ -615,7 +615,7 @@ For pages that don't represent database entities (like Dashboard), you need to c
 }
 ```
 
-`IconClass` a key for entity icon, all the available icons can be checked [here](https://gitlab.atrocore.com/atrocore/atrocore/-/blob/master/app/Atro/Resources/metadata/app/systemIcons.json).
+`IconClass` a key for entity icon, all the available icons can be checked [here](https://github.com/atrocore/atrocore/-/blob/master/app/Atro/Resources/metadata/app/systemIcons.json).
 
 
 ### Available Controller Methods
@@ -678,7 +678,7 @@ Relationship panels display related entities in detail views. You can customize 
 
 ### Base Relationship Panel
 
-The core relationship panel is located [here](https://gitlab.atrocore.com/atrocore/atrocore/-/blob/master/client/src/views/record/panels/relationship.js).
+The core relationship panel is located [here](https://github.com/atrocore/atrocore/-/blob/master/client/src/views/record/panels/relationship.js).
 
 ### Creating a Custom Relationship Panel
 
@@ -755,7 +755,7 @@ Field views control how individual fields are displayed and edited. Each field t
 
 ### Available Field Views
 
-All field views are located [here](https://gitlab.atrocore.com/atrocore/atrocore/-/tree/master/client/src/views/fields)
+All field views are located [here](https://github.com/atrocore/atrocore/-/tree/master/client/src/views/fields)
 
 Common field types include:
 - `enum`: Dropdown selection
@@ -1031,7 +1031,7 @@ AtroCore provides a structured way to load external JavaScript libraries into yo
 
 ### Available Core Libraries
 
-Core libraries are defined [here](https://gitlab.atrocore.com/atrocore/atrocore/-/blob/master/app/Atro/Resources/metadata/app/jsLibs.json).
+Core libraries are defined [here](https://github.com/atrocore/atrocore/-/blob/master/app/Atro/Resources/metadata/app/jsLibs.json).
 
 These include common libraries like jQuery, Backbone, Handlebars, and utility libraries.
 
@@ -1179,7 +1179,7 @@ afterRender: function() {
 
 ## Base View Methods
 
-All views in AtroCore extend from the base [view]( https://gitlab.atrocore.com/atrocore/atrocore/-/blob/master/client/src/view.js).
+All views in AtroCore extend from the base [view]( https://github.com/atrocore/atrocore/-/blob/master/client/src/view.js).
 
 This base class provides a comprehensive set of methods available to all views.
 
@@ -1720,11 +1720,11 @@ var selector = this.getSelector();
 
 ## Additional Resources
 
-- AtroCore Core [Views](https://gitlab.atrocore.com/atrocore/atrocore/-/tree/master/client/src/views)
-- Field [Views](https://gitlab.atrocore.com/atrocore/atrocore/-/tree/master/client/src/views/fields):
-- Record [Controller](https://gitlab.atrocore.com/atrocore/atrocore/-/blob/master/client/src/controllers/record.js)
-- Base [View]( https://gitlab.atrocore.com/atrocore/atrocore/-/blob/master/client/src/view.js)
-- ClientDefs [Reference](https://gitlab.atrocore.com/atrocore/atrocore/-/tree/master/app/Atro/Resources/metadata/clientDefs)
+- AtroCore Core [Views](https://github.com/atrocore/atrocore/-/tree/master/client/src/views)
+- Field [Views](https://github.com/atrocore/atrocore/-/tree/master/client/src/views/fields):
+- Record [Controller](https://github.com/atrocore/atrocore/-/blob/master/client/src/controllers/record.js)
+- Base [View]( https://github.com/atrocore/atrocore/-/blob/master/client/src/view.js)
+- ClientDefs [Reference](https://github.com/atrocore/atrocore/-/tree/master/app/Atro/Resources/metadata/clientDefs)
 - Module Development [Guide](https://help.atrocore.com/developer-guide/own-modules)
 
 ---

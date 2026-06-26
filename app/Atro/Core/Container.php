@@ -56,11 +56,19 @@ final class Container implements ContainerInterface
      */
     public function get(string $id): mixed
     {
+        if ($this->sm === null) {
+            throw new \RuntimeException('ServiceManager has not been initialized.');
+        }
+
         return $this->sm->get($id);
     }
 
     public function has(string $id): bool
     {
+        if ($this->sm === null) {
+            throw new \RuntimeException('ServiceManager has not been initialized.');
+        }
+
         return $this->sm->has($id);
     }
 

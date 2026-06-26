@@ -80,7 +80,7 @@ $image1 = $metadata->get(['examples', 'images', 'image1']);
 ```
 
 ### Real-World Example
-Check out a production implementation: [Metadata.php in AtroPim module](https://gitlab.atrocore.com/atrocore/atropim/-/tree/1.14.26/app/Listeners/Metadata.php)
+Check out a production implementation: [Metadata.php in AtroPim module](https://github.com/atrocore/atropim/-/tree/1.14.26/app/Listeners/Metadata.php)
 
 ---
 

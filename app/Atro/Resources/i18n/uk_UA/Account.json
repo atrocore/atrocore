@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Ім'я",
+    "name": "Назва",
     "emailAddress": "Адреса ел. пошти",
     "phoneNumber": "Телефон",
     "description": "Опис",
@@ -13,12 +13,12 @@
   },
   "options": {
     "type": {
-      "individual": "індивідуальний",
+      "individual": "Фізична особа",
       "company": "Компанія"
     },
     "role": {
       "supplier": "Постачальник",
-      "customer": "Замовник"
+      "customer": "Клієнт"
     }
   },
   "exceptions": {

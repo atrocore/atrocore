@@ -24,18 +24,18 @@
     "uploaded": "завантажено",
     "putUploadUrl": "Вкажіть URL-адресу файлу, якщо ви хочете завантажити його за допомогою URL-адреси",
     "zipDownloadNotification": "Ви можете <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">скачати</a> файл",
-    "Share": "Поділитися",
+    "Share": "Спільний доступ",
     "thumbnailUrl": "URL-адреса мініатюри (%s)"
   },
   "insightsPanels": {
-    "sharing": "Шеринг"
+    "sharing": "Спільний доступ"
   },
   "messages": {
-    "notAllFilesWereUploaded": "XX з YY файли не були завантажені.",
+    "notAllFilesWereUploaded": "XX із YY файлів не були завантажені.",
     "fileCouldNotBeUploaded": "Файл не вдалося завантажити.",
     "fileHasDuplicate": "Вже існує принаймні один <a target=\"_blank\" href=\"/#File/view/{{id}}\">дублікат</a> цього файлу.",
     "cannotDefineFileName": "Система не може розпізнати ім'я файлу за URL-адресою.",
-    "urlExpected": "сВказано невірну URL-адресу",
+    "urlExpected": "Вказано невірну URL-адресу",
     "fileExtensionCorrectedAutomatically": "Розширення файлу було виправлено автоматично.",
     "downloadJobsCreated": "Для підготовки архівного файлу було створено фонове завдання."
   },
@@ -46,7 +46,7 @@
     "fileCreateFailed": "Не вдалося створити файл.",
     "fileRenameFailed": "Перейменування файлу не вдалося.",
     "fileDeleteFailed": "Видалення файлу не вдалося.",
-    "fileNameNotValidByUserRegex": "Ім'я файлу невірне. Воно повинно відповідати регексу '%s'.",
+    "fileNameNotValidByUserRegex": "Ім'я файлу недійсне. Воно має відповідати регулярному виразу '%s'.",
     "notAllowToFileWithEntity": "Вам не дозволено зв'язувати файл типу '%s' з '%s'. Єдині дозволені типи - це '%s'",
     "fileMoveFailed": "Переміщення файлу не вдалося."
   }

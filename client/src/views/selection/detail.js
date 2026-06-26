@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/list'], function (Dep, Model, List) {
+Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/list', 'views/record/panels/relationship', 'collection'], function (Dep, Model, List, Relationship, Collection) {
 
     return Dep.extend({
 
@@ -306,7 +306,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             let entityByScope = {};
                             let order = 0;
                             for (const entityData of result.list) {
-                                if (!entityData.entity){
+                                if (!entityData.entity) {
                                     continue
                                 }
                                 let scope = entityData.entityName;
@@ -330,7 +330,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                             let currentModel = model.clone();
                                             let item = itemModel.clone();
                                             item.set(data._item);
-                                            if(data._item.__relationEntity) {
+                                            if (data._item.__relationEntity) {
                                                 relationModel = new Model();
                                                 relationModel.set(data._item.__relationEntity);
                                                 item.relationModel = relationModel;
@@ -700,8 +700,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             if (!this.model.get('entityTypes')) {
                                 this.model.set('entityTypes', []);
                             }
-                            if (!this.model.get('entityTypes').includes(model.get('entityType'))) {
-                                this.model.get('entityTypes').push(model.get('entityType'))
+                            if (!this.model.get('entityTypes').includes(model.get('entityName'))) {
+                                this.model.get('entityTypes').push(model.get('entityName'))
                             }
                         }
                         this.model.trigger('after:relate', this.link);
@@ -871,7 +871,33 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         }
                     }
                 }
-            })
+            });
+
+            $(element).on('click', '[data-action]', (e) => {
+                var $el = $(e.currentTarget);
+                var action = $el.data('action');
+                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+
+                if (typeof Relationship.prototype[method] == 'function') {
+                    var data = $el.data();
+                    let model = this.selectionItemModels.find(m => m.item.id === data.id);
+                    if (!model) {
+                        model = (this.rejectedItems || []).find(m => m.item.id === data.id);
+                    }
+                    let thisClone = Espo.utils.clone(this);
+                    let collection = new Collection();
+                    collection.add(model.item);
+                    collection.fetch = () => {}
+                    thisClone.collection = collection;
+                    thisClone['getModel'] = (data, evt) => {
+                       return model.item;
+                    };
+
+                    Relationship.prototype[method].call(thisClone, data, e);
+
+                    e.preventDefault();
+                }
+            });
         },
 
         renderLeftPanel() {

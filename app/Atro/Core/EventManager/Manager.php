@@ -73,7 +73,8 @@ class Manager
                 try {
                     $object = $this->createListener($row[0]);
                 } catch (\Throwable $e) {
-                    continue 1;
+                    $GLOBALS['log']->error('Failed to create listener: ' . $row[0] . ' - ' . $e->getMessage());
+                    continue;
                 }
 
                 // set container
