@@ -242,7 +242,7 @@ class EntityField extends ReferenceData
             $attribute = $this->getEntityManager()->getRepository('Attribute')
                 ->where([
                     'entityId' => $entity->get('entityId'),
-                    'code'     => $entity->get('code')
+                    'systemName'     => $entity->get('code')
                 ])
                 ->findOne();
 
