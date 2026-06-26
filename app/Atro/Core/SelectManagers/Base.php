@@ -731,8 +731,6 @@ class Base
 
     protected function accessOnlyTeam(&$result)
     {
-        $this->setDistinct(true, $result);
-
         $result['callbacks'][] = [$this, 'applyAccessOnlyTeam'];
     }
 
