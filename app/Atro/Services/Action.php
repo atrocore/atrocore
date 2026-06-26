@@ -266,7 +266,15 @@ class Action extends Base
             ];
         }
 
-        return array_merge($dynamicPreviewActions, $res);
+        $result = array_merge($dynamicPreviewActions, $res);
+
+        return $this->dispatchEvent('afterGetDynamicActions', new Event([
+            'result'  => $result,
+            'scope'   => $scope,
+            'id'      => $id,
+            'type'    => $type,
+            'display' => $display,
+        ]))->getArgument('result');
     }
 
     protected function getActionManager(): ActionManager
