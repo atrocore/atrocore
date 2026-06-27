@@ -204,6 +204,10 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                     trim: true
                 },
             }, view => {
+                if (this.mode !== 'detail') {
+                    view.initInlineActions();
+                }
+
                 if (this.isRendered()) {
                     view.render();
                 }
