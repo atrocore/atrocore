@@ -42,7 +42,7 @@ class ConnectionOtto extends ConnectionHttp implements ConnectionInterface
                 ),
             ));
             if ($connectionEntity->get('verifySsl') === false) {
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
             }
 
@@ -84,7 +84,7 @@ class ConnectionOtto extends ConnectionHttp implements ConnectionInterface
             ),
         ));
         if ($connection->get('verifySsl') === false) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         }
 

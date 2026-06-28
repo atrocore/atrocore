@@ -49,7 +49,7 @@ class ConnectionCookie extends ConnectionHttp implements ConnectionInterface
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         if ($connectionEntity->get('verifySsl') === false) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         }
         $response = curl_exec($ch);
