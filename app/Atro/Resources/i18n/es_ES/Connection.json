@@ -44,7 +44,8 @@
     "smtpAuthType": "Auth Type",
     "dsn": "Dsn",
     "server": "Servidor",
-    "headers": "Cabeceras"
+    "headers": "Cabeceras",
+    "verifySsl": "Verificar SSL"
   },
   "labels": {
     "connectionSuccess": "La conexión se ha establecido correctamente",

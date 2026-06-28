@@ -19,21 +19,22 @@ use Espo\ORM\Entity;
 
 class ConnectionTokenAuthApi extends ConnectionHttp implements ConnectionInterface
 {
-    public function connect(Entity $connection)
+    public function connect(Entity $connectionEntity)
     {
-        $body = $this->buildBody($connection);
+        $body = $this->buildBody($connectionEntity);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$connection->get('loginUrl'));
+        curl_setopt($ch, CURLOPT_URL, $connectionEntity->get('loginUrl'));
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
+        if ($connectionEntity->get('verifySsl') === false) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
         $response = curl_exec($ch);
         if ($response === false) {
             $message = curl_error($ch);
@@ -41,13 +42,12 @@ class ConnectionTokenAuthApi extends ConnectionHttp implements ConnectionInterfa
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-
         if (!empty($response) && $httpCode == 200) {
-            return @json_decode($response, true);
+            return @json_decode($response, true) ?? $response;
         }
 
-        $GLOBALS['log']->error('Connection Token Auth Failed: '.$response);
-        throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
+        $GLOBALS['log']->error('Connection Token Auth Failed: ' . ($message ?? $response));
+        throw new BadRequest(sprintf($this->exception('connectionFailed'), $message ?? 'Connection failed.'));
     }
 
 
@@ -59,12 +59,20 @@ class ConnectionTokenAuthApi extends ConnectionHttp implements ConnectionInterfa
             'response' => $connectionData
         ]);
 
-        return @json_decode($headerString, true) ?? [];
+        $decoded = @json_decode($headerString, true) ?? [];
+
+        $headers = [];
+        foreach ($decoded as $key => $value) {
+            $headers[] = is_string($key) ? "$key: $value" : $value;
+        }
+
+        return $headers;
     }
 
     protected function buildBody(Entity $connection): array
     {
         $payload = $this->getTwig()->renderTemplate($connection->get('payload'), [
+            'username' => $connection->get('user'),
             'password' => $this->decryptPassword($this->connectionEntity->get('password')),
         ]);
 

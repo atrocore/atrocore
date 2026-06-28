@@ -44,7 +44,8 @@
     "smtpAuthType": "Tipo di autorizzazione",
     "dsn": "Dsn",
     "server": "Server",
-    "headers": "Intestazioni"
+    "headers": "Intestazioni",
+    "verifySsl": "Verifica SSL"
   },
   "labels": {
     "connectionSuccess": "La connessione è stata stabilita con successo",

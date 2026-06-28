@@ -44,7 +44,8 @@
     "smtpAuthType": "Typ ověřování",
     "dsn": "Dsn",
     "server": "Server",
-    "headers": "Záhlaví"
+    "headers": "Záhlaví",
+    "verifySsl": "Ověřit SSL"
   },
   "labels": {
     "connectionSuccess": "Spojení bylo úspěšně navázáno",

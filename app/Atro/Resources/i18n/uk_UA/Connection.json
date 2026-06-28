@@ -16,6 +16,7 @@
     "dsn": "DSN",
     "server": "Сервер",
     "headers": "Заголовок",
+    "verifySsl": "Перевірити SSL",
     "ftpSsl": "TLS/SSL",
     "oauthUrl": "URL-адреса OAuth",
     "oauthGrantType": "Тип гранта OAuth",

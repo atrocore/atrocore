@@ -35,10 +35,10 @@ class ConnectionCookie extends ConnectionHttp implements ConnectionInterface
         return $payload;
     }
 
-    public function connect(Entity $connection): array
+    public function connect(Entity $connectionEntity): array
     {
-        $body = $this->buildBody($connection);
-        $url = $connection->get('loginUrl');
+        $body = $this->buildBody($connectionEntity);
+        $url = $connectionEntity->get('loginUrl');
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -48,6 +48,10 @@ class ConnectionCookie extends ConnectionHttp implements ConnectionInterface
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        if ($connectionEntity->get('verifySsl') === false) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
         $response = curl_exec($ch);
         if ($response === false) {
             $message = curl_error($ch);
