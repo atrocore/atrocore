@@ -49,7 +49,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public static function parseInputFileContent(string $fileContent): string
     {
-        $arr = explode(',', $fileContent);
+        $arr      = explode(',', $fileContent);
         $contents = '';
         if (count($arr) > 1) {
             $contents = $arr[1];
@@ -241,7 +241,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     public function renameFile(File $file): bool
     {
         $from = $this->getLocalPath($file, true);
-        $to = $this->getLocalPath($file);
+        $to   = $this->getLocalPath($file);
 
         if (file_exists($from)) {
             return $this->getFileManager()->move($from, $to);
@@ -367,7 +367,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     public function getFileTrashPath(File $file): string
     {
         $storagePath = $file->getStorage()->get('path');
-        $trashDir = $storagePath . DIRECTORY_SEPARATOR . self::TRASH_DIR;
+        $trashDir    = $storagePath . DIRECTORY_SEPARATOR . self::TRASH_DIR;
 
         $this->getFileManager()->mkdir($trashDir, 0777, true);
 
@@ -530,7 +530,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         // prepare entity data
         $foldersData = [];
         foreach ($dirs as $dir) {
-            $parts = explode(DIRECTORY_SEPARATOR, $dir);
+            $parts   = explode(DIRECTORY_SEPARATOR, $dir);
             $dirName = array_pop($parts);
 
             $id = $xattr->get($dir, 'atroId');
@@ -576,7 +576,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             if (isset($exists[$folderData['id']])) {
                 $entity = $exists[$folderData['id']];
             } else {
-                $entity = $folderRepository->get();
+                $entity     = $folderRepository->get();
                 $entity->id = $folderData['id'];
                 $entity->set('storageId', $storage->get('id'));
             }
@@ -662,8 +662,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         $ids = [];
 
         foreach (array_chunk($files, $limit) as $chunk) {
-            $toCreate = [];
-            $toUpdate = [];
+            $toCreate       = [];
+            $toUpdate       = [];
             $toUpdateByFile = [];
 
             foreach ($chunk as $fileName) {
@@ -682,7 +682,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
                 if (!empty($storage->get('syncFolders'))) {
                     $entityData['folderId'] = $xattr->get($fileInfo['dirname'], 'atroId') ?? $storage->get('folderId');
                 } else {
-                    $entityData['path'] = ltrim($fileInfo['dirname'], trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
+                    $prefix  = trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+                    $dirname = $fileInfo['dirname'];
+
+                    $entityData['path']     = str_starts_with($dirname, $prefix) ? substr($dirname, strlen($prefix)) : $dirname;
                     $entityData['folderId'] = $storage->get('folderId');
                 }
 
@@ -702,7 +705,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
                 foreach ($toUpdateByFile as $k => $v) {
                     if (isset($exists[$k])) {
                         $existEntity = $exists[$k];
-                        $skip = true;
+                        $skip        = true;
                         foreach ($v as $field => $val) {
                             if ($field !== '_fileName' && $existEntity->get($field) !== $val) {
                                 $skip = false;
@@ -780,8 +783,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             $this->getEntityManager()->saveEntity($file, ['scanning' => true]);
         } catch (NotUnique $e) {
             $parts = explode('.', $file->get('name'));
-            $ext = array_pop($parts);
-            $from = $this->getLocalPath($file);
+            $ext   = array_pop($parts);
+            $from  = $this->getLocalPath($file);
             $file->set('name', implode('.', $parts) . '_.' . $ext);
             rename($from, $this->getLocalPath($file));
             $this->saveFileViaScan($file);
