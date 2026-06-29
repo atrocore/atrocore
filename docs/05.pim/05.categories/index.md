@@ -120,6 +120,12 @@ To add products to a category directly from the category side, open the `Product
 
 Products listed in the `Products` panel can be reordered by drag-and-drop. The order is saved per category and is independent for each category tree.
 
+### Setting a main category for a product
+
+Within the `Products` panel on the category page, each product–category link can be marked as the **Main Category** for that product within the given category tree. This field is not shown by default — to enable it, an administrator must first add the `Main Category` relation field to the `Products` panel layout via [Configure Layout](../../01.atrocore/03.administration/13.user-interface/02.layouts/index.md) on that panel.
+
+Once the field is visible in the panel, a **Main Category** checkbox appears for each product row. Checking it marks the current category as the main one for that product within its category tree. Only one category per category tree can be marked as the main category for a given product — setting it on one category automatically unsets it on any other category in the same tree.
+
 ### Mass addition, change, or removal of categories for selected products
 
 On the product list page, a relation to one or more categories can be added or removed for several selected products at once (e.g. after filtering), using the `Add Relation` and `Remove Relation` mass actions.
