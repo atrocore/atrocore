@@ -199,7 +199,7 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 inlineEditDisabled: true,
                 entityName: this.model.name,
                 scope: this.model.get('entityId'),
-                field: this.model.get('code'),
+                field: this.model.name === 'Attribute' ? this.model.get('systemName') : this.model.get('code'),
                 params: {
                     trim: true
                 },
