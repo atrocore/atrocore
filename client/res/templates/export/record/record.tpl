@@ -22,3 +22,8 @@
     <label class="control-label" data-name="exportFeed"><a href="#ExportFeed" target="_blank">{{translate 'ExportFeed' category='scopeNames' scope='Global'}}</a></label>
     <div class="field" data-name="exportFeed">{{{exportFeed}}}</div>
 </div>
+
+<div class="cell form-group" data-name="contentLanguage">
+    <label class="control-label" data-name="contentLanguage">{{translate 'contentLanguage' category='labels' scope='ExportFeed'}}</label>
+    <div class="field" data-name="contentLanguage">{{{contentLanguage}}}</div>
+</div>

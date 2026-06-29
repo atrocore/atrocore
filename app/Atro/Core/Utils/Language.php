@@ -275,7 +275,7 @@ class Language
         $this->translateCache[$this->localeId][$scope][$category][$name] = $value;
     }
 
-    private static function languageToField(string $language): string
+    public static function languageToField(string $language): string
     {
         return TranslationRepository::languageToField($language);
     }
