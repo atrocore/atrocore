@@ -102,6 +102,10 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                     ignoreFilter: this.model.get('ignoreFilter'),
                     entityFilterData: this.options.entityFilterData
                 };
+                const contentLanguageId = this.model.get('contentLanguageId');
+                if (contentLanguageId) {
+                    data.contentLanguageId = contentLanguageId;
+                }
             } else {
                 let fieldDefs = null;
                 if (!this.model.get('exportAllField') && this.model.get('fieldList')) {

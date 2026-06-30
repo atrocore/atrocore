@@ -115,6 +115,19 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 mode: 'edit'
             });
 
+            this.createView('contentLanguage', 'views/fields/link-dropdown', {
+                model: this.model,
+                el: `${this.options.el} .field[data-name="contentLanguage"]`,
+                defs: {
+                    name: 'contentLanguage',
+                    params: {
+                        entity: 'Language'
+                    }
+                },
+                foreignScope: 'Language',
+                mode: 'edit'
+            });
+
             this.model.set('ignoreFilter', true);
 
             this.listenTo(this.model, 'change:useExistingExportFeed', () => {
@@ -123,6 +136,7 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                         $(`${this.options.el} [data-name="${field}"]`).hide();
                     })
                     $(`${this.options.el} [data-name="exportFeed"]`).show();
+                    $(`${this.options.el} [data-name="contentLanguage"]`).show();
                 } else {
                     ['fileType', 'exportAllField'].forEach((field) => {
                         $(`${this.options.el} [data-name="${field}"]`).show();
@@ -131,6 +145,7 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                         $(`${this.options.el} [data-name="fieldList"]`).show();
                     }
                     $(`${this.options.el} [data-name="exportFeed"]`).hide();
+                    $(`${this.options.el} [data-name="contentLanguage"]`).hide();
                 }
             });
 
@@ -145,6 +160,7 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
         afterRender() {
             if(!this.model.get('useExistingExportFeed'))  {
                 $(`${this.options.el} [data-name="exportFeed"]`).hide();
+                $(`${this.options.el} [data-name="contentLanguage"]`).hide();
             }
         }
     });
