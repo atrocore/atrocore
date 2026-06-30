@@ -8,15 +8,15 @@ use Espo\ORM\Entity;
 
 class ConnectionOauth1 extends ConnectionHttp implements ConnectionInterface
 {
-    public function connect(Entity $connection)
+    public function connect(Entity $connectionEntity)
     {
-        if (empty($connection->get('oauthToken')) || empty($connection->get('oauthTokenSecret'))) {
+        if (empty($connectionEntity->get('oauthToken')) || empty($connectionEntity->get('oauthTokenSecret'))) {
             throw new BadRequest(sprintf($this->exception('connectionFailed'), 'You should authorize this connection on the provider using the callback and link urls below'));
         }
 
         if (empty($this->data['httpUrl'])) {
-            $httpUrl = $connection->get('apiTestUrl');
-            $authorization = $this->buildAuthorizationHeaderForAPIRequest($connection, 'GET', $httpUrl);
+            $httpUrl = $connectionEntity->get('apiTestUrl');
+            $authorization = $this->buildAuthorizationHeaderForAPIRequest($connectionEntity, 'GET', $httpUrl);
 
             $curl = curl_init();
 
@@ -34,6 +34,10 @@ class ConnectionOauth1 extends ConnectionHttp implements ConnectionInterface
                     'Accept: application/json',
                 ],
             ));
+            if ($connectionEntity->get('verifySsl') === false) {
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            }
 
             $response = curl_exec($curl);
             $curlInfo = curl_getinfo($curl);
@@ -45,7 +49,7 @@ class ConnectionOauth1 extends ConnectionHttp implements ConnectionInterface
         } else {
             $httpUrl = $this->data['httpUrl'];
             $method = empty($this->data['method']) ? 'GET' : $this->data['method'];
-            $authorization = $this->buildAuthorizationHeaderForAPIRequest($connection, $method, $httpUrl);
+            $authorization = $this->buildAuthorizationHeaderForAPIRequest($connectionEntity, $method, $httpUrl);
 
             return [
                 "token_type"   => "Oauth",

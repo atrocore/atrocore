@@ -43,6 +43,7 @@
     "smtpAuthType": "Auth Type",
     "dsn": "Dsn",
     "headers": "Nagłówki",
+    "verifySsl": "Weryfikuj SSL",
     "smtpOauthScope": "Zakres OAuth",
     "server": "Serwer SMTP"
   },

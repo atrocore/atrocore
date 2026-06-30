@@ -236,7 +236,8 @@
                 "sftp",
                 "cookie",
                 "pdoSql",
-                "vertica"
+                "vertica",
+                "tokenAuthApi"
               ]
             }
           ]
@@ -1299,6 +1300,30 @@
               "type": "in",
               "attribute": "type",
               "value": [
+                "tokenAuthApi"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "verifySsl": {
+      "type": "bool",
+      "notStorable": true,
+      "dataField": true,
+      "default": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore",
+                "oauth2",
+                "oauth1",
+                "otto",
+                "cookie",
                 "tokenAuthApi"
               ]
             }

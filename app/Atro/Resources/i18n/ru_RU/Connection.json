@@ -44,6 +44,7 @@
     "smtpUsername": "Имя пользователя",
     "smtpPassword": "Пароль",
     "headers": "Заголовки",
+    "verifySsl": "Проверять SSL",
     "atrocoreUrl": "URL"
   },
   "labels": {

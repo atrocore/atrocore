@@ -29,6 +29,10 @@ class ConnectionHttp extends AbstractConnection implements HttpConnectionInterfa
             curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, array_values(array_unique(array_merge($headers, $this->getHeaders()))));
+        if ($this->connectionEntity->get('verifySsl') === false) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
         $rawOutput = curl_exec($ch);
         if ($rawOutput === false) {
             throw new BadRequest('Curl error: ' . curl_error($ch));

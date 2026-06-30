@@ -19,14 +19,14 @@ use Espo\ORM\Entity;
 
 class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
 {
-    public function connect(Entity $connection)
+    public function connect(Entity $connectionEntity)
     {
-        $body = ['grant_type' => $connection->get('oauthGrantType')];
+        $body = ['grant_type' => $connectionEntity->get('oauthGrantType')];
 
         switch ($body['grant_type']) {
             case 'client_credentials':
-                $body['client_id'] = $connection->get('oauthClientId');
-                $body['client_secret'] = $this->decryptPassword($connection->get('oauthClientSecret'));
+                $body['client_id'] = $connectionEntity->get('oauthClientId');
+                $body['client_secret'] = $this->decryptPassword($connectionEntity->get('oauthClientSecret'));
                 break;
             default:
                 throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
@@ -35,7 +35,7 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
         $dataManager = $this->getDataManager();
 
         $key = $this->getCacheKey();
-        $hash = md5($connection->get('oauthUrl') . '-' . json_encode($body));
+        $hash = md5($connectionEntity->get('oauthUrl') . '-' . json_encode($body));
 
         $data = $dataManager->getCacheData($key);
         if (!empty($data['expires_at']) && !empty($data['hash']) &&
@@ -44,13 +44,17 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
         }
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $connection->get('oauthUrl'));
+        curl_setopt($ch, CURLOPT_URL, $connectionEntity->get('oauthUrl'));
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        if ($connectionEntity->get('verifySsl') === false) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
         $response = curl_exec($ch);
         curl_close($ch);
 

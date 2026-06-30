@@ -18,16 +18,16 @@ use Espo\ORM\Entity;
 
 class ConnectionOtto extends ConnectionHttp implements ConnectionInterface
 {
-    public function connect(Entity $connection)
+    public function connect(Entity $connectionEntity)
     {
-        $providerAccessToken = $this->getProviderAccessToken($connection);
+        $providerAccessToken = $this->getProviderAccessToken($connectionEntity);
 
-        $scopes = urldecode(join(" ",$connection->get('vendorOauthScopes')));
+        $scopes = urldecode(join(" ",$connectionEntity->get('vendorOauthScopes')));
         if($providerAccessToken !== null){
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => $connection->get('vendorOauthUrl'),
+                CURLOPT_URL => $connectionEntity->get('vendorOauthUrl'),
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -41,6 +41,10 @@ class ConnectionOtto extends ConnectionHttp implements ConnectionInterface
                     "Authorization: Bearer {$providerAccessToken}"
                 ),
             ));
+            if ($connectionEntity->get('verifySsl') === false) {
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            }
 
             $response = curl_exec($curl);
 
@@ -79,6 +83,10 @@ class ConnectionOtto extends ConnectionHttp implements ConnectionInterface
                 'Content-Type: application/x-www-form-urlencoded'
             ),
         ));
+        if ($connection->get('verifySsl') === false) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
 
         $response = curl_exec($ch);
 

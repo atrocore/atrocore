@@ -15,6 +15,7 @@
     "outboundEmailFromAddress": "Absenderadresse",
     "server": "Server",
     "headers": "Header",
+    "verifySsl": "SSL verifizieren",
     "oauthClientId": "OAuth-Client-ID",
     "oauthClientSecret": "OAuth-Client-Geheimnis",
     "oauthScope": "Oauth-Geltungsbereich",
