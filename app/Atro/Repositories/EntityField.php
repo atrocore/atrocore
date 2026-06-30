@@ -48,7 +48,7 @@ class EntityField extends ReferenceData
         return null;
     }
 
-    protected function prepareItem(string $entityName, string $fieldName, ?array $fieldDefs = null): ?array
+    protected function prepareItem(string $entityName, string $fieldName, ?array $fieldDefs = null, bool $allowHidden = false): ?array
     {
         if (empty($fieldDefs)) {
             $fieldDefs = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName");
@@ -58,7 +58,11 @@ class EntityField extends ReferenceData
             return null;
         }
 
-        if (!empty($fieldDefs['emHidden']) || !empty($this->getMetadata()->get("scopes.$entityName.emHidden"))) {
+        if (!empty($this->getMetadata()->get("scopes.$entityName.emHidden"))) {
+            return null;
+        }
+
+        if (!$allowHidden && !empty($fieldDefs['emHidden'])) {
             return null;
         }
 
@@ -161,12 +165,17 @@ class EntityField extends ReferenceData
     {
         $entities = [];
 
-        $entityName = null;
+        $entityName           = null;
+        $allowHidden          = !empty($params['skipEmHidden']);
+        $filterExportDisabled = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['entityId='])) {
                 $entityName = $item['entityId='];
             } elseif (!empty($item['entityId'])) {
                 $entityName = $item['entityId'];
+            }
+            if (isset($item['exportDisabled!='])) {
+                $filterExportDisabled = true;
             }
         }
 
@@ -209,7 +218,15 @@ class EntityField extends ReferenceData
                     continue;
                 }
 
-                if (!empty($item = $this->prepareItem($entityName, $fieldName, $fieldDefs))) {
+                if (!$allowHidden && !empty($fieldDefs['emHidden'])) {
+                    continue;
+                }
+
+                if ($filterExportDisabled && (!empty($fieldDefs['exportDisabled']) || !empty($fieldDefs['combinedField']) || !empty($fieldDefs['unitIdField']))) {
+                    continue;
+                }
+
+                if (!empty($item = $this->prepareItem($entityName, $fieldName, $fieldDefs, $allowHidden))) {
                     $items[] = $item;
                 }
             }
@@ -241,8 +258,8 @@ class EntityField extends ReferenceData
         if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.hasAttribute")) {
             $attribute = $this->getEntityManager()->getRepository('Attribute')
                 ->where([
-                    'entityId' => $entity->get('entityId'),
-                    'systemName'     => $entity->get('code')
+                    'entityId'   => $entity->get('entityId'),
+                    'systemName' => $entity->get('code')
                 ])
                 ->findOne();
 
