@@ -280,6 +280,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     if (this.dragableSortField) {
                         this.collection.sortBy = this.dragableSortField;
                     }
+                    if (dragDropDefs.orderSaveUrl) {
+                        this.listRowsOrderSaveUrl = this.listRowsOrderSaveUrl || dragDropDefs.orderSaveUrl;
+                    }
                 }
             }
 
@@ -1843,7 +1846,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             } else if (this.listRowsOrderSaveUrl) {
                 url = this.listRowsOrderSaveUrl;
                 data = {
-                    ids: this.getIdsFromDom()
+                    ids: this.getIdsFromDom(),
+                    parentId: parentModel?.id
                 };
             }
             if (url) {
