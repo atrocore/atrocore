@@ -71,14 +71,14 @@ class Base
 
     public function __construct(EntityManager $entityManager, User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory, Language $language)
     {
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-        $this->acl = $acl;
-        $this->aclManager = $aclManager;
-        $this->metadata = $metadata;
-        $this->config = $config;
+        $this->entityManager     = $entityManager;
+        $this->user              = $user;
+        $this->acl               = $acl;
+        $this->aclManager        = $aclManager;
+        $this->metadata          = $metadata;
+        $this->config            = $config;
         $this->injectableFactory = $injectableFactory;
-        $this->language = $language;
+        $this->language          = $language;
     }
 
     protected function limit($offset = null, $maxSize = null, &$result = [])
@@ -96,7 +96,7 @@ class Base
         if (!empty($sortBy)) {
 
             $result['orderBy'] = $sortBy;
-            $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
+            $type              = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
             if (in_array($type, ['link', 'file', 'image'])) {
                 $result['orderBy'] .= 'Name';
             } else {
@@ -126,7 +126,7 @@ class Base
     {
         $result = ['id'];
 
-        $fields = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
+        $fields           = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
         $textFilterFields = $this->getMetadata()->get(['scopes', $this->entityType, 'textFilterFields'], []);
         foreach ($fields as $field => $fieldDefs) {
             if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['filterDisabled'])) {
@@ -255,12 +255,12 @@ class Base
             } else {
                 // for attributes
                 $additionForAttribute = [];
-                $attribute = "";
+                $attribute            = "";
                 if (!empty($item['id'])) {
                     $attribute = $item['id'];
                     if (str_contains($item['id'], 'attr_')) {
-                        $parts = explode('_', $item['id']);
-                        $additionForAttribute['attribute'] = $result['attributesIds'][] = $parts[1];
+                        $parts                               = explode('_', $item['id']);
+                        $additionForAttribute['attribute']   = $result['attributesIds'][] = $parts[1];
                         $additionForAttribute['isAttribute'] = true;
 
                         if (!empty($parts[2])) {
@@ -270,7 +270,7 @@ class Base
                                 $language = Util::toUnderScore($parts[2]);
                                 $language = explode('_', $language);
                                 if (count($language) === 2) {
-                                    $language = $language[0] . '_' . strtoupper($language[1]);
+                                    $language                         = $language[0] . '_' . strtoupper($language[1]);
                                     $additionForAttribute['language'] = $language;
                                 }
                             }
@@ -282,7 +282,7 @@ class Base
 
                 if (!empty($item['data']['subQuery']) && !empty($item['operator']) && !empty($item['id'])) {
                     $value = [];
-                    $type = $this->qbOperatorToType((string)$item['operator']);
+                    $type  = $this->qbOperatorToType((string)$item['operator']);
                     if (!empty($item['value'])) {
                         $value = $item['value'];
                     }
@@ -300,7 +300,7 @@ class Base
 
                     if (!empty($value)) {
                         $condition = in_array($item['type'], ['linkedWith', 'in']) ? 'or' : 'and';
-                        $item = [
+                        $item      = [
                             'type'  => $condition,
                             'value' => [
                                 $item,
@@ -340,14 +340,14 @@ class Base
                         }
 
                         $isTrueCondition = ($boolValue && $item['operator'] === 'equal') || (!$boolValue && $item['operator'] === 'not_equal');
-                        $item = [
+                        $item            = [
                             'attribute' => $attribute,
                             'type'      => $isTrueCondition ? 'isTrue' : 'isFalse',
                         ];
                     } else if (in_array($type, ['is_me', 'is_not_me', 'is_team_member', 'include_me', 'exclude_me', 'is_my_team', 'is_not_my_team'])) {
-                        $seed = $this->getSeed();
-                        $link = substr($item['id'], -2) === 'Id' ? substr($item['id'], 0, -2) : $item['id'];
-                        $entity = $seed->getRelationParam($link, 'entity');
+                        $seed         = $this->getSeed();
+                        $link         = substr($item['id'], -2) === 'Id' ? substr($item['id'], 0, -2) : $item['id'];
+                        $entity       = $seed->getRelationParam($link, 'entity');
                         $relationType = $seed->getRelationType($link);
                         if ($entity === 'User') {
                             if ($relationType === 'belongsTo') {
@@ -443,7 +443,7 @@ class Base
                         }
                     } else {
                         $isUnitField = !empty($item['data']['combinedField']);
-                        $item = [
+                        $item        = [
                             'attribute' => $attribute,
                             'type'      => $type,
                             'value'     => $item['value'],
@@ -455,7 +455,7 @@ class Base
                                 $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute]);
                                 if (!empty($fieldDefs['mainField']) && !empty($fieldDefs['measureId'])) {
                                     $item['combinedField'] = true;
-                                    $item['attribute'] = $fieldDefs['mainField'];
+                                    $item['attribute']     = $fieldDefs['mainField'];
                                 }
                             }
                         }
@@ -698,7 +698,7 @@ class Base
                     continue;
                 }
 
-                $sp = $this->createSelectManager($entityName)->getSelectParams([], true, true);
+                $sp           = $this->createSelectManager($entityName)->getSelectParams([], true, true);
                 $sp['select'] = ['id'];
 
                 $qb1 = $mapper->createSelectQueryBuilder($this->getEntityManager()->getRepository($entityName)->get(), $sp);
@@ -740,11 +740,13 @@ class Base
 
         $ta = $mapper->getQueryConverter()->getMainTableAlias();
 
+        $entityTypeParam = 'entity_type_' . IdGenerator::unsortableId();
+
         $parts = [];
         if ($this->hasTeamsField()) {
-            $parts[] = "($ta.id IN (SELECT entity_id FROM entity_team WHERE deleted=:false AND entity_type=:entityType AND team_id IN (:teamsIds)))";
+            $parts[] = "($ta.id IN (SELECT entity_id FROM entity_team WHERE deleted=:false AND entity_type=:$entityTypeParam AND team_id IN (:teamsIds)))";
             $qb->setParameter('teamsIds', $this->getUser()->getLinkMultipleIdList('teams'), Connection::PARAM_STR_ARRAY);
-            $qb->setParameter('entityType', $this->entityType);
+            $qb->setParameter($entityTypeParam, $this->entityType);
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
         }
 
@@ -829,8 +831,8 @@ class Base
 
     protected function boolFilterOnlyDeleted(array &$result): void
     {
-        $result['withDeleted'] = true;
-        $result['whereClause'][] = [
+        $result['withDeleted']                                                       = true;
+        $result['whereClause'][]                                                     = [
             "deleted" => true
         ];
         $result['additionalSelectColumns'][QueryConverter::TABLE_ALIAS . ".deleted"] = "deleted";
@@ -879,7 +881,7 @@ class Base
         $methodName = 'filteringBy' . ucfirst($data['field']);
         if (method_exists($handler, $methodName)) {
             $result['reportSpecific'] = $data;
-            $result['callbacks'][] = [$handler, $methodName];
+            $result['callbacks'][]    = [$handler, $methodName];
         }
     }
 
@@ -897,7 +899,7 @@ class Base
 
     public function applyMultipleClassifications(QueryBuilder $qb, $entity, $params, Mapper $mapper): void
     {
-        $cqb = $this->getEntityManager()->getRepository('Classification')->getMultipleClassificationsQb($entity->getEntityType());
+        $cqb       = $this->getEntityManager()->getRepository('Classification')->getMultipleClassificationsQb($entity->getEntityType());
         $mainAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
         $qb->andWhere($qb->expr()->in("$mainAlias.id", $cqb->getSQL()));
@@ -1173,7 +1175,7 @@ class Base
     {
         $format = 'Y-m-d H:i:s';
 
-        $value = null;
+        $value    = null;
         $timeZone = 'UTC';
 
         $attribute = null;
@@ -1204,7 +1206,7 @@ class Base
             return null;
         }
 
-        $where = array();
+        $where              = array();
         $where['attribute'] = $attribute;
 
         $dt = new \DateTime('now', new \DateTimeZone($timeZone));
@@ -1216,7 +1218,7 @@ class Base
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
                 $dt->modify('+1 day -1 second');
-                $to = $dt->format($format);
+                $to             = $dt->format($format);
                 $where['value'] = [$from, $to];
                 break;
             case 'past':
@@ -1285,7 +1287,7 @@ class Base
                 break;
             case 'olderThanXDays':
                 $where['type'] = 'before';
-                $number = strval(intval($item['value']));
+                $number        = strval(intval($item['value']));
                 $dt->modify('-' . $number . ' day');
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new \DateTimeZone('UTC'));
@@ -1293,7 +1295,7 @@ class Base
                 break;
             case 'afterXDays':
                 $where['type'] = 'after';
-                $number = strval(intval($item['value']));
+                $number        = strval(intval($item['value']));
                 $dt->modify('+' . $number . ' day');
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new \DateTimeZone('UTC'));
@@ -1306,18 +1308,18 @@ class Base
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $from = $dt->format($format);
                 $dt->modify('+1 day -1 second');
-                $to = $dt->format($format);
+                $to             = $dt->format($format);
                 $where['value'] = [$from, $to];
                 break;
             case 'before':
                 $where['type'] = 'before';
-                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dt            = new \DateTime($value, new \DateTimeZone($timeZone));
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
                 break;
             case 'after':
                 $where['type'] = 'after';
-                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
+                $dt            = new \DateTime($value, new \DateTimeZone($timeZone));
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
                 break;
@@ -1330,7 +1332,7 @@ class Base
 
                     $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
-                    $to = $dt->format($format);
+                    $to             = $dt->format($format);
                     $where['value'] = [$from, $to];
                 }
                 break;
@@ -1347,20 +1349,20 @@ class Base
         }
 
         $where['dateTime'] = false;
-        $result = $this->getWherePart($where);
+        $result            = $this->getWherePart($where);
 
         return $result;
     }
 
     protected function convertUnitFieldWhere(array $item): array
     {
-        $type = $item['type'];
-        $value = $item['value'] ?? null;
-        $mainField = $item['attribute'];
+        $type            = $item['type'];
+        $value           = $item['value'] ?? null;
+        $mainField       = $item['attribute'];
         $mainFieldColumn = Util::toUnderScore($mainField);
-        $unitColumn = $mainFieldColumn . '_unit_id';
-        $ta = QueryConverter::TABLE_ALIAS;
-        $isInt = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $mainField, 'type']) === 'int';
+        $unitColumn      = $mainFieldColumn . '_unit_id';
+        $ta              = QueryConverter::TABLE_ALIAS;
+        $isInt           = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $mainField, 'type']) === 'int';
 
         if ($type === 'isNull') {
             return [
@@ -1381,7 +1383,7 @@ class Base
         }
 
         // Pre-convert filter value into each unit used in the table for sargable (index-friendly) queries
-        $tableName = Util::toUnderScore($this->entityType);
+        $tableName    = Util::toUnderScore($this->entityType);
         $measureUnits = $this->getMeasureUnitsData($tableName, $unitColumn);
         if (empty($measureUnits)) {
             return [];
@@ -1393,21 +1395,21 @@ class Base
             }
 
             $baseFrom = $this->resolveUnitFilterValue($value[0], $measureUnits);
-            $baseTo = $this->resolveUnitFilterValue($value[1], $measureUnits);
+            $baseTo   = $this->resolveUnitFilterValue($value[1], $measureUnits);
             if ($baseFrom === null || $baseTo === null) {
                 return [];
             }
 
-            $orParts = [];
+            $orParts    = [];
             $parameters = [];
             foreach ($measureUnits as $uid => $multiplier) {
-                $pUid = 'uf_uid_' . IdGenerator::unsortableId();
-                $pFrom = 'uf_from_' . IdGenerator::unsortableId();
-                $pTo = 'uf_to_' . IdGenerator::unsortableId();
-                $orParts[] = "($ta.$unitColumn = :$pUid AND $ta.$mainFieldColumn >= :$pFrom AND $ta.$mainFieldColumn <= :$pTo)";
-                $parameters[$pUid] = $uid;
+                $pUid               = 'uf_uid_' . IdGenerator::unsortableId();
+                $pFrom              = 'uf_from_' . IdGenerator::unsortableId();
+                $pTo                = 'uf_to_' . IdGenerator::unsortableId();
+                $orParts[]          = "($ta.$unitColumn = :$pUid AND $ta.$mainFieldColumn >= :$pFrom AND $ta.$mainFieldColumn <= :$pTo)";
+                $parameters[$pUid]  = $uid;
                 $parameters[$pFrom] = $isInt ? (int)round($baseFrom / $multiplier) : $baseFrom / $multiplier;
-                $parameters[$pTo] = $isInt ? (int)round($baseTo / $multiplier) : $baseTo / $multiplier;
+                $parameters[$pTo]   = $isInt ? (int)round($baseTo / $multiplier) : $baseTo / $multiplier;
             }
 
             return [
@@ -1428,12 +1430,12 @@ class Base
             return [];
         }
 
-        $orParts = [];
+        $orParts    = [];
         $parameters = [];
         foreach ($measureUnits as $uid => $multiplier) {
-            $pUid = 'uf_uid_' . IdGenerator::unsortableId();
-            $pVal = 'uf_val_' . IdGenerator::unsortableId();
-            $orParts[] = "($ta.$unitColumn = :$pUid AND $ta.$mainFieldColumn $sqlOperator :$pVal)";
+            $pUid              = 'uf_uid_' . IdGenerator::unsortableId();
+            $pVal              = 'uf_val_' . IdGenerator::unsortableId();
+            $orParts[]         = "($ta.$unitColumn = :$pUid AND $ta.$mainFieldColumn $sqlOperator :$pVal)";
             $parameters[$pUid] = $uid;
             $parameters[$pVal] = $isInt ? (int)round($baseValue / $multiplier) : $baseValue / $multiplier;
         }
@@ -1696,17 +1698,17 @@ class Base
         }
 
         if (!empty($item['subQuery'])) {
-            $link = substr($attribute, -2) === 'Id' ? substr($attribute, 0, -2) : $attribute;
+            $link          = substr($attribute, -2) === 'Id' ? substr($attribute, 0, -2) : $attribute;
             $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'entity']) ?? $item['foreignEntity'] ?? null;
-            $foreignField = $item['foreignField'] ?? 'id';
+            $foreignField  = $item['foreignField'] ?? 'id';
             if (!empty($foreignEntity)) {
-                $foreignRepository = $this->getEntityManager()->getRepository($foreignEntity);
-                $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
-                $sp['select'] = [$foreignField];
+                $foreignRepository             = $this->getEntityManager()->getRepository($foreignEntity);
+                $sp                            = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
+                $sp['select']                  = [$foreignField];
                 $sp['additionalSelectColumns'] = [];
-                $sp['orderBy'] = null;
-                $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp, true);
-                $item['value'] = [
+                $sp['orderBy']                 = null;
+                $qb1                           = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp, true);
+                $item['value']                 = [
                     "innerSql" => [
                         "sql"        => str_replace($this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias(), 'sbq_' . IdGenerator::unsortableId(), $qb1->getSql()),
                         "parameters" => $qb1->getParameters()
@@ -1796,10 +1798,10 @@ class Base
 
                 case 'similar':
                     if (!is_null($value) && $value !== '') {
-                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 1);
-                        $colName = Util::toUnderScore($attribute);
-                        $paramVal = 'sim_v_' . IdGenerator::unsortableId();
-                        $paramThr = 'sim_t_' . IdGenerator::unsortableId();
+                        $threshold        = (float)$this->getConfig()->get('similarityThreshold', 1);
+                        $colName          = Util::toUnderScore($attribute);
+                        $paramVal         = 'sim_v_' . IdGenerator::unsortableId();
+                        $paramThr         = 'sim_t_' . IdGenerator::unsortableId();
                         $part['innerSql'] = [
                             'sql'        => 'similarity(' . QueryConverter::TABLE_ALIAS . '.' . $colName . ', :' . $paramVal . ') >= :' . $paramThr,
                             'parameters' => [$paramVal => $value, $paramThr => $threshold],
@@ -1809,10 +1811,10 @@ class Base
 
                 case 'wordSimilar':
                     if (!is_null($value) && $value !== '') {
-                        $threshold = (float)$this->getConfig()->get('similarityThreshold', 1);
-                        $colName = Util::toUnderScore($attribute);
-                        $paramVal = 'wsim_v_' . IdGenerator::unsortableId();
-                        $paramThr = 'wsim_t_' . IdGenerator::unsortableId();
+                        $threshold        = (float)$this->getConfig()->get('similarityThreshold', 1);
+                        $colName          = Util::toUnderScore($attribute);
+                        $paramVal         = 'wsim_v_' . IdGenerator::unsortableId();
+                        $paramThr         = 'wsim_t_' . IdGenerator::unsortableId();
                         $part['innerSql'] = [
                             'sql'        => 'word_similarity(:' . $paramVal . ', ' . QueryConverter::TABLE_ALIAS . '.' . $colName . ') >= :' . $paramThr,
                             'parameters' => [$paramVal => $value, $paramThr => $threshold],
@@ -1846,7 +1848,7 @@ class Base
                 case 'in':
                     if (!empty($item['attribute'])) {
                         $hasEmpty = is_array($value) && in_array('', $value);
-                        $value = $this->prepareValueOptions($value, $item['attribute']);
+                        $value    = $this->prepareValueOptions($value, $item['attribute']);
                         if ($hasEmpty) {
                             $value[] = '';
                         }
@@ -1857,7 +1859,7 @@ class Base
                 case 'notIn':
                     if (!empty($item['attribute'])) {
                         $hasEmpty = is_array($value) && in_array('', $value);
-                        $value = $this->prepareValueOptions($value, $item['attribute']);
+                        $value    = $this->prepareValueOptions($value, $item['attribute']);
                         if ($hasEmpty) {
                             $value[] = '';
                         }
@@ -1905,8 +1907,8 @@ class Base
                     break;
 
                 case 'lastXDays':
-                    $dt1 = new \DateTime();
-                    $dt2 = clone $dt1;
+                    $dt1    = new \DateTime();
+                    $dt2    = clone $dt1;
                     $number = strval(intval($value));
 
                     $dt2->modify('-' . $number . ' days');
@@ -1919,8 +1921,8 @@ class Base
                     break;
 
                 case 'nextXDays':
-                    $dt1 = new \DateTime();
-                    $dt2 = clone $dt1;
+                    $dt1    = new \DateTime();
+                    $dt2    = clone $dt1;
                     $number = strval(intval($value));
                     $dt2->modify('+' . $number . ' days');
                     $dt1->setTime(0, 0, 0);
@@ -1932,21 +1934,21 @@ class Base
                     break;
 
                 case 'olderThanXDays':
-                    $dt1 = new \DateTime();
+                    $dt1    = new \DateTime();
                     $number = strval(intval($value));
                     $dt1->modify('-' . $number . ' days');
                     $part[$attribute . '<'] = $dt1->format('Y-m-d');
                     break;
 
                 case 'afterXDays':
-                    $dt1 = new \DateTime();
+                    $dt1    = new \DateTime();
                     $number = strval(intval($value));
                     $dt1->modify('+' . $number . ' days');
                     $part[$attribute . '>'] = $dt1->format('Y-m-d');
                     break;
 
                 case 'currentMonth':
-                    $dt = new \DateTime();
+                    $dt          = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
                         $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
@@ -1954,7 +1956,7 @@ class Base
                     break;
 
                 case 'lastMonth':
-                    $dt = new \DateTime();
+                    $dt          = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
                         $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
@@ -1962,7 +1964,7 @@ class Base
                     break;
 
                 case 'nextMonth':
-                    $dt = new \DateTime();
+                    $dt          = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of next month')->format('Y-m-d'),
                         $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
@@ -1970,7 +1972,7 @@ class Base
                     break;
 
                 case 'currentQuarter':
-                    $dt = new \DateTime();
+                    $dt      = new \DateTime();
                     $quarter = ceil($dt->format('m') / 3);
                     $dt->modify('first day of January this year');
                     $part['AND'] = [
@@ -1980,7 +1982,7 @@ class Base
                     break;
 
                 case 'lastQuarter':
-                    $dt = new \DateTime();
+                    $dt      = new \DateTime();
                     $quarter = ceil($dt->format('m') / 3);
                     $dt->modify('first day of January this year');
                     $quarter--;
@@ -1995,7 +1997,7 @@ class Base
                     break;
 
                 case 'currentYear':
-                    $dt = new \DateTime();
+                    $dt          = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
                         $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
@@ -2003,7 +2005,7 @@ class Base
                     break;
 
                 case 'lastYear':
-                    $dt = new \DateTime();
+                    $dt          = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
                         $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
@@ -2026,7 +2028,7 @@ class Base
 
                     $link = $attribute;
                     /** @var Entity $seed */
-                    $seed = $this->getSeed();
+                    $seed         = $this->getSeed();
                     $relationType = $seed->getRelationType($link);
 
                     if ($relationType === 'manyMany') {
@@ -2096,7 +2098,7 @@ class Base
                             'parameters' => [$falseParam => false],
                         ];
                     } elseif (in_array($relationType, ['belongsTo', 'belongsToParent'])) {
-                        $key        = $seed->getRelationParam($attribute, 'key') ?? ($attribute . 'Id');
+                        $key               = $seed->getRelationParam($attribute, 'key') ?? ($attribute . 'Id');
                         $part[$key . '!='] = null;
                     }
                     break;
@@ -2131,7 +2133,7 @@ class Base
                                 'parameters' => array_merge([$falseParam => false], $value['innerSql']['parameters']),
                             ];
                         } else {
-                            $idsParam = 'mm_ids_' . $uid;
+                            $idsParam         = 'mm_ids_' . $uid;
                             $part['innerSql'] = [
                                 'sql'        => "SELECT {$nearKey} FROM {$relTable} WHERE deleted = :{$falseParam} AND {$distantKey} IN (:{$idsParam})",
                                 'parameters' => [$falseParam => false, $idsParam => $value],
@@ -2495,7 +2497,7 @@ class Base
     protected function isValidNumber(string $value, string $thousandSeparator = ',', string $decimalSeparator = '.'): bool
     {
         $escapedThousandSeparator = preg_quote($thousandSeparator, '/');
-        $escapedDecimalSeparator = preg_quote($decimalSeparator, '/');
+        $escapedDecimalSeparator  = preg_quote($decimalSeparator, '/');
 
         $pattern = '/^';
         $pattern .= '-?';
@@ -2511,13 +2513,13 @@ class Base
     {
         $autocompletion = false;
         if (mb_strpos($textFilter, 'AUTOCOMPLETE:') === 0) {
-            $textFilter = mb_substr($textFilter, strlen('AUTOCOMPLETE:'));
+            $textFilter     = mb_substr($textFilter, strlen('AUTOCOMPLETE:'));
             $autocompletion = true;
         }
-        $type = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']);
+        $type      = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']);
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
-        $group = [];
+        $group     = [];
 
         $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
 
@@ -2529,11 +2531,11 @@ class Base
 
         if (mb_strpos($textFilter, '*') !== false) {
             $skipWildcards = true;
-            $textFilter = str_replace('*', '%', $textFilter);
+            $textFilter    = str_replace('*', '%', $textFilter);
         }
 
         $fuzzyTextTypes = ['varchar', 'text', 'wysiwyg'];
-        $useFuzzy = $type !== 'ReferenceData' && !$skipWildcards
+        $useFuzzy       = $type !== 'ReferenceData' && !$skipWildcards
             && mb_strlen($textFilter) >= 3
             && class_exists('AdvancedDataManagement\Core\FuzzySearch') &&
             \AdvancedDataManagement\Core\FuzzySearch::isAvailable($this->getEntityManager()->getDbal());
@@ -2557,10 +2559,10 @@ class Base
 
             if (in_array($attributeType, ['int', 'float'])) {
                 $thousandSeparator = $this->getConfig()->get('thousandSeparator', ',');
-                $decimalMark = $this->getConfig()->get('decimalMark', '.');
+                $decimalMark       = $this->getConfig()->get('decimalMark', '.');
                 if ($this->getUser() && !empty($locale = $this->getUser()->getLocale())) {
                     $thousandSeparator = $locale->get('thousandSeparator') ?? $thousandSeparator;
-                    $decimalMark = $locale->get('decimalMark') ?? $decimalMark;
+                    $decimalMark       = $locale->get('decimalMark') ?? $decimalMark;
                 }
 
                 if ($this->isValidNumber($textFilter, $thousandSeparator, $decimalMark)) {
@@ -2606,9 +2608,9 @@ class Base
 
             if ($field === 'name' && $autocompletion) {
                 $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($expression) {
-                    $ta = $mapper->getQueryConverter()->getMainTableAlias();
+                    $ta        = $mapper->getQueryConverter()->getMainTableAlias();
                     $parameter = 'name_' . IdGenerator::unsortableId();
-                    $alias = 'match_priority_' . IdGenerator::unsortableId();
+                    $alias     = 'match_priority_' . IdGenerator::unsortableId();
                     $qb->addSelect("CASE WHEN LOWER($ta.name) LIKE LOWER(:$parameter) THEN 1 ELSE 2 END AS $alias");
                     $qb->orderBy("$alias");
                     $qb->addOrderBy("$ta.name");
@@ -2619,8 +2621,8 @@ class Base
 
         if (!empty($fuzzyFields)) {
             $threshold = (float)$this->getConfig()->get('similarityThreshold', 1);
-            $words = array_values(array_filter(array_map('trim', explode(' ', $textFilter))));
-            $ta = QueryConverter::TABLE_ALIAS;
+            $words     = array_values(array_filter(array_map('trim', explode(' ', $textFilter))));
+            $ta        = QueryConverter::TABLE_ALIAS;
 
             $groupItem = [
                 'AND' => []
@@ -2628,11 +2630,11 @@ class Base
 
             // Each word must match at least one fuzzy field (AND of OR-per-field), added via innerSql
             foreach ($words as $word) {
-                $paramVal = 'ftrgm_v_' . IdGenerator::unsortableId();
-                $paramThr = 'ftrgm_t_' . IdGenerator::unsortableId();
+                $paramVal   = 'ftrgm_v_' . IdGenerator::unsortableId();
+                $paramThr   = 'ftrgm_t_' . IdGenerator::unsortableId();
                 $conditions = [];
                 foreach ($fuzzyFields as $f) {
-                    $colName = Util::toUnderScore($f);
+                    $colName      = Util::toUnderScore($f);
                     $conditions[] = "word_similarity(:$paramVal, $ta.$colName) >= :$paramThr";
                 }
                 $groupItem['AND'][] = [
@@ -2647,10 +2649,10 @@ class Base
 
             // Autocomplete: order by similarity of full input to name (requires callback for addSelect/orderBy)
             if ($autocompletion && in_array('name', $fuzzyFields)) {
-                $paramVal = 'ftrgm_ord_' . IdGenerator::unsortableId();
-                $scoreAlias = 'fuzzy_name_score_' . IdGenerator::unsortableId();
+                $paramVal              = 'ftrgm_ord_' . IdGenerator::unsortableId();
+                $scoreAlias            = 'fuzzy_name_score_' . IdGenerator::unsortableId();
                 $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($paramVal, $scoreAlias, $textFilter) {
-                    $ta = $mapper->getQueryConverter()->getMainTableAlias();
+                    $ta      = $mapper->getQueryConverter()->getMainTableAlias();
                     $colName = Util::toUnderScore('name');
                     $qb->addSelect("word_similarity(:$paramVal, $ta.$colName) AS $scoreAlias");
                     $qb->orderBy($scoreAlias, 'DESC');
@@ -2729,7 +2731,7 @@ class Base
         }
 
         $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) {
-            $ta = $mapper->getQueryConverter()->getMainTableAlias();
+            $ta  = $mapper->getQueryConverter()->getMainTableAlias();
             $sql = "($ta.id IN (SELECT entity_id FROM entity_team WHERE deleted=:false AND entity_type=:entityType AND team_id IN (:teamsIds)))";
 
             $qb->andWhere($sql)
@@ -2911,7 +2913,7 @@ class Base
 
     protected function createSelectManager(string $scope): Base
     {
-        $selectManager = $this->getSelectManagerFactory()->create($scope);
+        $selectManager             = $this->getSelectManagerFactory()->create($scope);
         $selectManager->isSubQuery = true;
 
         return $selectManager;
@@ -2964,14 +2966,14 @@ class Base
 
     public function getWherePartForClusterId(array $item, array $result): array
     {
-        $entityName = $this->entityType;
-        $suffix = str_replace('.', '_', uniqid('', true));
-        $alias = 'ci_' . $suffix;
+        $entityName      = $this->entityType;
+        $suffix          = str_replace('.', '_', uniqid('', true));
+        $alias           = 'ci_' . $suffix;
         $entityNameParam = 'cl_en_' . $suffix;
-        $mainAlias = QueryConverter::TABLE_ALIAS;
+        $mainAlias       = QueryConverter::TABLE_ALIAS;
 
         $baseCondition = "$alias.entity_name = :$entityNameParam AND $alias.entity_id = $mainAlias.id AND $alias.deleted = :false";
-        $params = [$entityNameParam => $entityName];
+        $params        = [$entityNameParam => $entityName];
 
         switch ($item['type']) {
             case 'isNull':
@@ -2993,7 +2995,7 @@ class Base
                 if (empty($value)) {
                     return [];
                 }
-                $values = is_array($value) ? $value : [$value];
+                $values       = is_array($value) ? $value : [$value];
                 $clusterParam = 'cl_ids_' . $suffix;
                 return [
                     'innerSql' => [
@@ -3006,7 +3008,7 @@ class Base
                 if (empty($value)) {
                     return [];
                 }
-                $values = is_array($value) ? $value : [$value];
+                $values       = is_array($value) ? $value : [$value];
                 $clusterParam = 'cl_ids_not_' . $suffix;
                 return [
                     'innerSql' => [
