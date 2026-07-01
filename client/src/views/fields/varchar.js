@@ -221,16 +221,9 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultValueType']) === 'script'
                     && (this.model.defaults == null || this.model.defaults[this.name] == null)
                 ) {
-                    // fetch default value from server
-                    const seedResult = $.ajax({
-                        url: this.model.name + '/action/Seed?silent=true',
-                        type: 'GET',
-                        dataType: 'json',
-                        async: false,
-                    }).responseJSON
-                    if (seedResult != null) {
-                        this.model.defaults = seedResult
-                    }
+                    this.ajaxPostRequest('entityScriptDefaultFields', {entityName: this.model.name}, {async:false}).success(defaults => {
+                        this.model.defaults = defaults;
+                    });
                 }
             }
         },
