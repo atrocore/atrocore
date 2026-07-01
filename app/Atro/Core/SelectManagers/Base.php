@@ -126,10 +126,10 @@ class Base
     {
         $result = ['id'];
 
-        $fields           = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
+        $fields = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
         $textFilterFields = $this->getMetadata()->get(['scopes', $this->entityType, 'textFilterFields'], []);
         foreach ($fields as $field => $fieldDefs) {
-            if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['filterDisabled'])) {
+            if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['filterDisabled']) || !empty($fieldDefs['attributeId'])) {
                 continue;
             }
 
