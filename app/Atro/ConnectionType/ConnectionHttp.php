@@ -29,7 +29,7 @@ class ConnectionHttp extends AbstractConnection implements HttpConnectionInterfa
             curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, array_values(array_unique(array_merge($headers, $this->getHeaders()))));
-        if ($this->connectionEntity->get('verifySsl') === false) {
+        if (isset($this->connectionEntity) && $this->connectionEntity->get('verifySsl') === false) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         }
@@ -37,7 +37,7 @@ class ConnectionHttp extends AbstractConnection implements HttpConnectionInterfa
         if ($rawOutput === false) {
             throw new BadRequest('Curl error: ' . curl_error($ch));
         }
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $httpCode   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         curl_close($ch);
 

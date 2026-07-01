@@ -73,7 +73,7 @@ class ActionManager
 
             $this->getServiceFactory()->create($action->get('sourceEntity'))->executeMassAction($params,
                 function ($id) use ($action, $input) {
-                    $newInput = clone $input;
+                    $newInput           = clone $input;
                     $newInput->entityId = $id;
                     $this->executeNow($action, $newInput);
                 });
@@ -87,7 +87,7 @@ class ActionManager
 
         // prepare current user ID
         $currentUser = $this->container->get('user');
-        $user = $this->getExecuteAsUser($action);
+        $user        = $this->getExecuteAsUser($action);
 
         $userChanged = $currentUser !== $user;
 
@@ -108,6 +108,28 @@ class ActionManager
             if (!empty($workflow)) {
                 $execution->set('name', $workflow->get('name'));
                 $execution->set('workflowId', $workflow->get('id'));
+
+                if (!empty($this->getMemoryStorage()->get('importJobId'))) {
+                    /** @var \Atro\Repositories\ActionExecution $actionExecutionRepo */
+                    $actionExecutionRepo = $this->getEntityManager()->getRepository('ActionExecution');
+                    $input->importJobId  = $this->getMemoryStorage()->get('importJobId');
+
+                    if ($actionExecutionRepo->isWorkflowLooping($workflow->get('id'), $input)) {
+                        $workflow->set('isActive', false);
+                        $this->getEntityManager()->saveEntity($workflow);
+
+                        $execution->set('status', 'failed');
+                        $execution->set('payload', $this->preparePayload(clone $input));
+                        $execution->set('statusMessage', 'Workflow auto-deactivated: execution loop detected.');
+                        $this->getEntityManager()->saveEntity($execution);
+
+                        if ($userChanged) {
+                            $this->auth($currentUser);
+                        }
+
+                        return false;
+                    }
+                }
             }
         } elseif (!empty($input->executedViaWebhook)) {
             $execution->set('type', 'incomingWebhook');
