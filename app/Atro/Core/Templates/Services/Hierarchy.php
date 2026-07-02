@@ -884,11 +884,14 @@ class Hierarchy extends Base
             }
 
             if (empty($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'multiParents']))) {
-                $route = $entity->get('routesNames')[0] ?? [];
-                $parent = array_pop($route);
+                $routesNames = $entity->get('routesNames');
+                if ($routesNames !== null) {
+                    $route = $routesNames[0] ?? [];
+                    $parent = array_pop($route);
 
-                $entity->set('parentId', $parent['id'] ?? null);
-                $entity->set('parentName', $parent['name'] ?? null);
+                    $entity->set('parentId', $parent['id'] ?? null);
+                    $entity->set('parentName', $parent['name'] ?? null);
+                }
             }
         }
     }
