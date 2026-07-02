@@ -74,13 +74,8 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
                 viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) || 'views/modals/edit',
                 key = `${this.getEntityScope()}.${this.getCategory()}.${this.getEntityFieldName()}`;
 
-            this.ajaxGetRequest(`${scope}?where[0][type]=textFilter&where[0][value]=${key}`).then(res => {
-                let data = { id: null, code: key, module: 'custom' };
-                res.list.forEach(v => {
-                    if (v.code === key) {
-                        data = v
-                    }
-                })
+            this.ajaxGetRequest(`${scope}?where[0][type]=equals&where[0][field]=code&where[0][value]=${encodeURIComponent(key)}`).then(res => {
+                let data = res.list[0] ?? { id: null, code: key, module: 'custom' };
                 this.getModelFactory().create(scope, model => {
                     model.set(data);
 
