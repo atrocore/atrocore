@@ -40,8 +40,17 @@
         "protected": {
           "conditionGroup": [
             {
-              "type": "isNotEmpty",
-              "attribute": "id"
+              "type": "or",
+              "value": [
+                {
+                  "type": "isNotEmpty",
+                  "attribute": "id"
+                },
+                {
+                  "type": "isNotEmpty",
+                  "attribute": "primaryEntityId"
+                }
+              ]
             }
           ]
         }
@@ -573,9 +582,18 @@
     "role": {
       "type": "enum",
       "options": [
+        "base",
         "staging"
       ],
       "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -653,7 +671,7 @@
     "primaryEntity": {
       "type": "link",
       "view": "views/entity/fields/primary-entity",
-      "protected": true,
+      "readOnly": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -668,6 +686,14 @@
             {
               "type": "isNotEmpty",
               "attribute": "primaryEntityId"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }
@@ -914,6 +940,27 @@
         }
       }
     },
+    "derivativeEntities": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": ["Base", "Hierarchy"]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
     "deleteValuesAfterUnlinkingClassification": {
       "type": "bool",
       "view": "views/entity/fields/delete-values-after-unlinking-classification"
@@ -927,7 +974,13 @@
   "links": {
     "primaryEntity": {
       "type": "belongsTo",
-      "entity": "Entity"
+      "entity": "Entity",
+      "foreign": "derivativeEntities"
+    },
+    "derivativeEntities": {
+      "type": "hasMany",
+      "entity": "Entity",
+      "foreign": "primaryEntity"
     },
     "stagingEntity": {
       "type": "belongsTo",

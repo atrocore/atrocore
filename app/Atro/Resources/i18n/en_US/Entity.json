@@ -43,6 +43,7 @@
     "deleteValuesAfterUnlinkingClassification": "Delete attribute values after unlinking classifications",
     "linkAttributesWithClassificationAutomatically": "Link Attributes with the Classification automatically",
     "primaryEntity": "Primary Entity",
+    "derivativeEntities": "Derivatives",
     "role": "Role",
     "hasStaging": "Enable Staging",
     "stagingEntity": "Staging Entity",
@@ -61,6 +62,7 @@
       "desc": "Descending"
     },
     "role": {
+      "base": "Base",
       "staging": "Staging"
     }
   },

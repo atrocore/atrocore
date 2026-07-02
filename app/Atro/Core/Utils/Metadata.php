@@ -41,13 +41,13 @@ class Metadata
 
     public function __construct(Container $container)
     {
-        $this->container = $container;
-        $this->fileManager = $container->get('fileManager');
-        $this->dataManager = $container->get('dataManager');
+        $this->container     = $container;
+        $this->fileManager   = $container->get('fileManager');
+        $this->dataManager   = $container->get('dataManager');
         $this->moduleManager = $container->get('moduleManager');
-        $this->eventManager = $container->get('eventManager');
-        $this->objUnifier = new Unifier($this->fileManager, $this, true);
-        $this->helper = new Helper($this);
+        $this->eventManager  = $container->get('eventManager');
+        $this->objUnifier    = new Unifier($this->fileManager, $this, true);
+        $this->helper        = new Helper($this);
     }
 
     public function isCached(): bool
@@ -120,11 +120,11 @@ class Metadata
     {
         $data = $this->getObjData();
 
-        $frontendHiddenPathList = $data->app->frontendHiddenPathList;
+        $frontendHiddenPathList   = $data->app->frontendHiddenPathList;
         $frontendHiddenPathList[] = ['app', 'frontendHiddenPathList'];
 
         foreach ($frontendHiddenPathList as $row) {
-            $p =& $data;
+            $p    =& $data;
             $path = [&$p];
             foreach ($row as $i => $item) {
                 if (is_array($item)) {
@@ -146,7 +146,7 @@ class Metadata
                         }
                     }
                 } else {
-                    $p =& $p->$item;
+                    $p      =& $p->$item;
                     $path[] = &$p;
                 }
             }
@@ -159,8 +159,8 @@ class Metadata
                     continue;
                 }
 
-                $id = new \stdClass();
-                $id->type = 'varchar';
+                $id             = new \stdClass();
+                $id->type       = 'varchar';
                 $id->emDisabled = true;
 
                 $data->entityDefs->{$entityType}->fields = (object)array_merge(['id' => $id],
@@ -327,7 +327,7 @@ class Metadata
      */
     public function getCustom($key1, $key2, $default = null)
     {
-        $filePath = [$this->customPath, $key1, $key2 . '.json'];
+        $filePath    = [$this->customPath, $key1, $key2 . '.json'];
         $fileContent = $this->fileManager->getContents($filePath);
 
         if ($fileContent) {
@@ -356,7 +356,7 @@ class Metadata
             }
         }
 
-        $filePath = [$this->customPath, $key1, $key2 . '.json'];
+        $filePath    = [$this->customPath, $key1, $key2 . '.json'];
         $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         $result = $this->fileManager->putContents($filePath, $changedData);
@@ -393,7 +393,7 @@ class Metadata
         );
 
         $this->changedData = Util::merge($this->changedData, $newData);
-        $this->data = Util::merge($this->getData(), $newData);
+        $this->data        = Util::merge($this->getData(), $newData);
 
         $this->undelete($key1, $key2, $data);
     }
@@ -436,12 +436,12 @@ class Metadata
                 break;
         }
 
-        $normalizedData = array(
+        $normalizedData    = array(
             '__APPEND__',
         );
         $metadataUnsetData = array();
         foreach ($unsets as $unsetItem) {
-            $normalizedData[] = $unsetItem;
+            $normalizedData[]    = $unsetItem;
             $metadataUnsetData[] = implode('.', array($key1, $key2, $unsetItem));
         }
 
@@ -664,7 +664,7 @@ class Metadata
         foreach ($data['entityDefs'] as $entityType => $entityDefs) {
             if (!empty($entityDefs['fields'])) {
                 foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                    foreach ($fieldDefs as $param => $paramValue) {
+                    foreach ($fieldDefs ?? [] as $param => $paramValue) {
                         if (in_array($param, $boolParameters) && $paramValue === false) {
                             if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'bool' && $param === 'notNull') {
                                 continue;

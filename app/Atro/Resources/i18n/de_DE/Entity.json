@@ -43,6 +43,7 @@
     "customizable": "Anpassbar",
     "fields": "Felder",
     "primaryEntity": "Primäre Entität",
+    "derivativeEntities": "Derivatives",
     "matchDuplicates": "Duplikate abgleichen",
     "matchMasterRecords": "Stammdaten abgleichen",
     "role": "Rolle",
@@ -61,6 +62,7 @@
       "desc": "Absteigend"
     },
     "role": {
+      "base": "Base",
       "staging": "Staging"
     }
   },

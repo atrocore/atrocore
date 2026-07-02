@@ -26,12 +26,13 @@ Espo.define('views/entity/fields/primary-entity', 'views/fields/link',
         setup() {
             Dep.prototype.setup.call(this);
 
-            if (this.model.isNew()) {
-                this.listenTo(this.model, 'change:type', () => {
-                    this.model.set(this.idName, null);
-                    this.model.set(this.nameName, null);
-                });
-            }
+            this.listenTo(this.model, 'prepareAttributesForCreateRelated', (attributes, link, cb) => {
+                if (link === 'derivativeEntities') {
+                    attributes.primaryEntityId = this.model.id;
+                    attributes.type = this.model.get('type');
+                    cb(attributes)
+                }
+            })
         },
 
     })

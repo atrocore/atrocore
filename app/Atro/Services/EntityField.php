@@ -109,10 +109,11 @@ class EntityField extends ReferenceData
         return is_array($renderedWhere) ? $renderedWhere : $where;
     }
 
-    public function updateOptionCode(string $scope, string $field, string  $oldValue, string $newValue): bool
+    public function updateOptionCode(string $scope, string $field, string $oldValue, string $newValue): bool
     {
         return $this->getRepository()->updateOptionCode($scope, $field, $oldValue, $newValue);
     }
+
     public function resetToDefault(string $scope, string $field): bool
     {
         if ($this->getMetadata()->get("entityDefs.$scope.fields.$field.isCustom")) {
@@ -140,7 +141,7 @@ class EntityField extends ReferenceData
         }
 
         $outputType = property_exists($data, 'outputType') ? $data->outputType : 'text';
-        $entity = $this->getEntityManager()->getRepository($data->scope)->order('id', 'ASC')->findOne();
+        $entity     = $this->getEntityManager()->getRepository($data->scope)->order('id', 'ASC')->findOne();
         if ($this->getMetadata()->get("scopes.{$data->scope}.hasAttribute")) {
             $this->getAttributeFieldConverter()->putAttributesToEntity($entity);
         }
@@ -183,6 +184,17 @@ class EntityField extends ReferenceData
         $entity->set('customizable', true);
         if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
             $entity->set('customizable', false);
+        }
+
+        if ($entity->get('isCustom')) {
+            $entityId        = $entity->get('entityId');
+            $primaryEntityId = $this->getMetadata()->get("scopes.$entityId.primaryEntityId");
+            if (!empty($primaryEntityId)
+                && !empty($this->getEntity("{$primaryEntityId}_{$entity->get('code')}"))
+            ) {
+                $entity->set('isCustom', false);
+                $entity->setMetaPermission('delete', false);
+            }
         }
     }
 
