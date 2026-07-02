@@ -16,6 +16,7 @@ namespace Atro\Repositories;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Util;
 use Atro\Entities\ActionExecution as ActionExecutionEntity;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ActionExecution extends Base
@@ -90,5 +91,38 @@ class ActionExecution extends Base
             ->select(['id'])
             ->where(['type' => $type, 'actionExecutionId' => $actionExecutionId])
             ->count();
+    }
+
+    public function isWorkflowLooping(string $workflowId, \stdClass $input): bool
+    {
+        $entityType  = $input->triggeredEntityType ?? null;
+        $entityId    = $input->triggeredEntityId ?? null;
+
+        if (empty($entityType) || empty($entityId)) {
+            return false;
+        }
+
+        $threshold     = (int)$this->getConfig()->get('workflowLoopThreshold', 5);
+        $windowMinutes = (int)$this->getConfig()->get('workflowLoopWindowMinutes', 5);
+        $since         = (new \DateTime("-{$windowMinutes} minutes"))->format('Y-m-d H:i:s');
+
+        $count = $this->getDbal()->createQueryBuilder()
+            ->select('COUNT(*)')
+            ->from('action_execution')
+            ->where('workflow_id = :workflowId')
+            ->andWhere('payload LIKE :entityType')
+            ->andWhere('payload LIKE :entityId')
+            ->andWhere('payload LIKE :importJobExists')
+            ->andWhere('deleted = :false')
+            ->andWhere('created_at > :since')
+            ->setParameter('workflowId', $workflowId)
+            ->setParameter('entityType', '%"triggeredEntityType":"' . $entityType . '"%')
+            ->setParameter('entityId', '%"triggeredEntityId":"' . $entityId . '"%')
+            ->setParameter('importJobExists', '%"importJobId":%')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('since', $since)
+            ->fetchOne();
+
+        return (int)$count >= $threshold;
     }
 }
