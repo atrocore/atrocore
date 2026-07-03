@@ -16,10 +16,10 @@ The Attribute entity comes with the following preconfigured fields; mandatory ar
 
 | **Field Name**           | **Description**                   |
 |--------------------------|-----------------------------------|
-| Attribute Type *					   | Attribute types are predefined in the system and can be defined via the drop-down menu                |
+| Type *					   | Attribute types are predefined in the system and can be defined via the drop-down menu                |
 | Entity *                 |Defines the entity for which the attribute can be used. One attribute can be linked to only one entity and the value of this field cannot be changed in the future.                     |
-| Code                    | Unique attribute code, consisting of small letters (a..z), numbers (0..9) and underscore symbol ("\_")        |
-| Attribute Name *      | Attribute name, can be set in different [languages](../../03.languages/index.md)                    |
+| System Name *           | Unique attribute system name, consisting of small letters (a..z), numbers (0..9) and underscore symbol ("\_"). Required and read-only.        |
+| Name *      | Attribute name, can be set in different [languages](../../03.languages/index.md)                    |
 | Channel                  | Allows you to set channel-specific attribute values. If a channel is added to an attribute, its name will be automatically added to the attribute name on the record page (for example, Image / Amazon). [Channels](../../../../05.pim/06.channels/index.md) are only available with the PIM module installed.
 | Attribute Group          | [Attribute group](../02.attribute-groups/index.md) name               |
 | Attribute Panel *        | [Attribute panel](../03.attribute-panels/index.md) name                 |
@@ -39,13 +39,13 @@ An attribute is a standard entity in AtroCore, for which the same functionality 
 
 Attribute records can be searched and filtered according to your needs. For details refer to the [Search and Filtering](../../../11.search-and-filtering/index.md) article in this user guide.
 
-## Attribute Codes
+## System Name
 
-It happens that you have to use attributes with the same name for different products. For example, the "size" attribute for shoes is not the same as the "size" attribute for outerwear. Such attributes can be of different types as well as have different possible values. In order to distinguish such attributes, an informative attribute code can be given, which should be unique for each attribute. For the example above, the following codes could be used: `size_footwear` and `size_clothes`.
+It happens that you have to use attributes with the same name for different products. For example, the "size" attribute for shoes is not the same as the "size" attribute for outerwear. Such attributes can be of different types as well as have different possible values. In order to distinguish such attributes, an informative system name can be given, which should be unique for each attribute. For the example above, the following system names could be used: `size_footwear` and `size_clothes`.
 
-![Attribute codes](./_assets/attribute-code.png){.medium}
+![System Name](./_assets/attribute-code.png){.medium}
 
-The attribute code is also used to reference attribute values in [script-type](../../../../10.developer-guide/80.twig-tutorial/) fields and serves as the key name for attributes in [API](../../../../10.developer-guide/10.rest-api/) responses. If code is not specified, the attribute's unique ID is used as a fallback.
+The system name is also used to reference attribute values in [script-type](../../../../10.developer-guide/80.twig-tutorial/) fields and serves as the key name for attributes in [API](../../../../10.developer-guide/10.rest-api/) responses. If the system name is not specified, the attribute's unique ID is used as a fallback.
 
 ## Available Attribute Types
 
