@@ -46,7 +46,7 @@ class V2Dot3Dot6 extends Base
             'fileTags'           => [
                 'entityNames' => ['File'],
                 'fieldName'   => 'tags',
-                'options'     => []
+                'options'     => ['no-such-id']
             ],
             'addressType'        => [
                 'entityNames' => ['Address'],
@@ -179,7 +179,7 @@ class V2Dot3Dot6 extends Base
             'shippingMethod'     => [
                 'entityNames' => ['Sale'],
                 'fieldName'   => 'shippingMethod',
-                'options'     => []
+                'options'     => ['no-such-id']
             ],
             'confirmationStatus' => [
                 'entityNames' => ['OrderConfirmation'],
