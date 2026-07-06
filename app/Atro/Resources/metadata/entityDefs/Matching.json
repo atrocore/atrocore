@@ -1,5 +1,10 @@
 {
   "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
     "type": {
       "type": "enum",
       "required": true,
@@ -10,6 +15,12 @@
       "protected": true,
       "customizable": false,
       "layoutRemoveDisabled": true
+    },
+    "code": {
+      "type": "varchar",
+      "unique": true,
+      "protected": true,
+      "customizable": false
     },
     "description": {
       "type": "text"
