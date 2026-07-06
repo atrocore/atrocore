@@ -272,10 +272,6 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
-        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")) {
-            throw new Forbidden();
-        }
-
         if (!empty($entity->get('foreignEntityId'))) {
             if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.primaryEntityId")) {
                 throw new Forbidden();

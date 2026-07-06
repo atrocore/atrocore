@@ -15,10 +15,62 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class LayoutProfile extends Base
 {
+    public function getUserLayoutPreferences(
+        string $entityName,
+        string $viewType,
+        ?string $relatedEntity,
+        ?string $relatedLink,
+        string $userId
+    ): array {
+        $conn = $this->getDbal();
+
+        $relatedEntityCondition = empty($relatedEntity) ? "related_entity is null" : "related_entity=:relatedEntity";
+        $relatedLinkCondition   = empty($relatedLink)   ? "related_link is null"   : "related_link=:relatedLink";
+
+        $selectedProfileId = $conn->createQueryBuilder()
+            ->select('layout_profile_id')
+            ->from('user_entity_layout')
+            ->where("user_id=:userId and entity=:entity and view_type=:viewType and $relatedEntityCondition and $relatedLinkCondition and deleted=:false")
+            ->setParameters([
+                'entity'        => $entityName,
+                'viewType'      => $viewType,
+                'relatedEntity' => $relatedEntity,
+                'relatedLink'   => $relatedLink,
+                'userId'        => $userId,
+            ])
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchOne();
+
+        $storedProfiles = $conn->createQueryBuilder()
+            ->select('lp.id', 'lp.name')
+            ->from('layout', 'l')
+            ->innerJoin('l', 'layout_profile', 'lp', 'l.layout_profile_id=lp.id')
+            ->where("l.entity=:entity and l.view_type=:viewType and $relatedEntityCondition and $relatedLinkCondition and l.deleted=:false and lp.deleted=:false")
+            ->setParameters([
+                'entity'        => $entityName,
+                'viewType'      => $viewType,
+                'relatedEntity' => $relatedEntity,
+                'relatedLink'   => $relatedLink,
+            ])
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        $selectedProfileId = $selectedProfileId ?: null;
+        if (!empty($selectedProfileId) && !in_array($selectedProfileId, array_column($storedProfiles, 'id'))) {
+            $selectedProfileId = null;
+        }
+
+        return [
+            'storedProfiles'    => $storedProfiles,
+            'selectedProfileId' => $selectedProfileId,
+        ];
+    }
+
     /**
      * @inheritDoc
      */

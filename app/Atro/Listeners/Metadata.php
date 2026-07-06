@@ -248,7 +248,7 @@ class Metadata extends AbstractMetadataListener
                 'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
                 'noLoad'   => true,
             ];
-            $data['entityDefs'][$stagingEntity]['links'][$foreign] = [
+            $data['entityDefs'][$stagingEntity]['links'][$foreign]  = [
                 'type'    => 'hasMany',
                 'foreign' => 'stagingRecord',
                 'entity'  => $sourceEntity
@@ -413,8 +413,8 @@ class Metadata extends AbstractMetadataListener
                     )
                     && empty($fieldDefs['view'])) {
                     if (!empty($fieldDefs['dropdown'])) {
-                        $viewType = $fieldDefs['type'] === 'linkMultiple' ? 'link-multiple' : $fieldDefs['type'];
-                        $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/$viewType-dropdown";
+                        $viewType                                                                 = $fieldDefs['type'] === 'linkMultiple' ? 'link-multiple' : $fieldDefs['type'];
+                        $data['entityDefs'][$entityType]['fields'][$field]['view']                = "views/fields/$viewType-dropdown";
                         $data['entityDefs'][$entityType]['fields'][$field]['ignoreViewForSearch'] = true;
                     }
                 }
@@ -1587,8 +1587,8 @@ class Metadata extends AbstractMetadataListener
                             "maxLength" => 50
                         ],
                         "prefixValue"    => [
-                            "type"      => "varchar",
-                            "len" => 36
+                            "type" => "varchar",
+                            "len"  => 36
                         ],
                         "jsonValue"      => [
                             "type" => "jsonObject"
@@ -2402,31 +2402,41 @@ class Metadata extends AbstractMetadataListener
 
             $primaryEntity = $scopeDefs['primaryEntityId'];
 
+            $isBaseRole = ($scopeDefs['role'] ?? null) === 'base';
+
             // clone entity defs
             foreach ($data['entityDefs'][$primaryEntity]['fields'] ?? [] as $fieldName => $fieldDefs) {
                 if (empty($fieldDefs['type'])) {
                     continue;
                 }
 
-                // disable require
-                if (!empty($fieldDefs['required'])) {
-                    $fieldDefs['required'] = false;
+                if (!$isBaseRole) {
+                    // disable require
+                    if (!empty($fieldDefs['required'])) {
+                        $fieldDefs['required'] = false;
+                    }
+
+                    // disable notNull
+                    if (!empty($fieldDefs['notNull']) && $fieldDefs['type'] !== 'bool') {
+                        $fieldDefs['notNull'] = false;
+                    }
+
+                    // disable require via conditional properties
+                    if (!empty($fieldDefs['conditionalProperties']['required'])) {
+                        unset($fieldDefs['conditionalProperties']['required']);
+                    }
+
+                    // disable unique indexes
+                    if (!empty($fieldDefs['unique'])) {
+                        $fieldDefs['unique'] = false;
+                    }
                 }
 
-                // disable notNull
-                if (!empty($fieldDefs['notNull']) && $fieldDefs['type'] !== 'bool') {
-                    $fieldDefs['notNull'] = false;
+                $mergedFieldDefs = array_merge($fieldDefs, $data['entityDefs'][$scope]['fields'][$fieldName] ?? []);
+                if (!empty($data['entityDefs'][$scope]['fields'][$fieldName]['conditionalProperties'])) {
+                    $mergedFieldDefs['conditionalProperties'] = array_merge($fieldDefs['conditionalProperties'] ?? [], $data['entityDefs'][$scope]['fields'][$fieldName]['conditionalProperties']);
                 }
-
-                // disable require via conditional properties
-                if (!empty($fieldDefs['conditionalProperties']['required'])) {
-                    unset($fieldDefs['conditionalProperties']['required']);
-                }
-
-                // disable unique indexes
-                if (!empty($fieldDefs['unique'])) {
-                    $fieldDefs['unique'] = false;
-                }
+                $fieldDefs = $mergedFieldDefs;
 
                 if ($fieldDefs['type'] === 'link') {
                     $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
@@ -2564,11 +2574,12 @@ class Metadata extends AbstractMetadataListener
                 $data['entityDefs'][$scope]['collection'] = $data['entityDefs'][$primaryEntity]['collection'];
             }
 
+
             // clone scope defs
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
                 'primaryEntityId'      => $primaryEntity,
                 'isCustom'             => true,
-                'customizable'         => false,
+                'customizable'         => true,
                 'role'                 => $scopeDefs['role'] ?? null,
                 'description'          => $scopeDefs['description'] ?? null,
                 'sortBy'               => $scopeDefs['sortBy'] ?? null,
@@ -2582,13 +2593,12 @@ class Metadata extends AbstractMetadataListener
                 'enableVersioning'     => $scopeDefs['enableVersioning'] ?? false,
                 'defaultVersionName'   => $scopeDefs['defaultVersionName'] ?? null,
                 'enableFieldValueLock' => $scopeDefs['enableFieldValueLock'] ?? false,
-                'layouts'              => false
+                'layouts'              => $isBaseRole,
             ]);
             if (array_key_exists('module', $data['scopes'][$scope])) {
                 unset($data['scopes'][$scope]['module']);
             }
 
-            // clone client defs
             $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
                 'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null,
             ]);

@@ -42,6 +42,7 @@
     "deleteValuesAfterUnlinkingClassification": "Usuwanie wartości atrybutów po odłączeniu klasyfikacji",
     "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją",
     "primaryEntity": "Podmiot główny",
+    "derivativeEntities": "Derivatives",
     "role": "Rola",
     "stagingEntity": "Podmiot etapowy",
     "hasStaging": "Proszę włączyć etapowanie",
@@ -60,6 +61,7 @@
       "desc": "Zstępujący"
     },
     "role": {
+      "base": "Base",
       "staging": "Inscenizacja"
     }
   },

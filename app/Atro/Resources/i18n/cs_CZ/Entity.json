@@ -42,6 +42,7 @@
     "deleteValuesAfterUnlinkingClassification": "Odstranění hodnot atributů po zrušení propojení klasifikací",
     "linkAttributesWithClassificationAutomatically": "Automatické propojení atributů s klasifikací",
     "primaryEntity": "Primární entita",
+    "derivativeEntities": "Derivatives",
     "hasStaging": "Povolení etapizace",
     "stagingEntity": "Entita etapizace",
     "matchDuplicates": "Párování duplikátů",
@@ -60,6 +61,7 @@
       "desc": "Sestupně"
     },
     "role": {
+      "base": "Base",
       "staging": "Etapizace"
     }
   },

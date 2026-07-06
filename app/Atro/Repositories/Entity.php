@@ -124,7 +124,7 @@ class Entity extends ReferenceData
     {
         if ($relationName === 'fields') {
             $params['offset'] = 0;
-            $params['limit'] = \PHP_INT_MAX;
+            $params['limit']  = \PHP_INT_MAX;
             return count($this->findRelated($entity, $relationName, $params));
         }
 
@@ -182,11 +182,11 @@ class Entity extends ReferenceData
     {
         $scopeTypes = $params['whereClause'][0]['type'] ?? null;
 
-        $canHasAttributes = false;
-        $canHasClassifications = false;
-        $canHasComponents = false;
-        $canHasAssociates = false;
-        $primaryEntityId = null;
+        $canHasAttributes         = false;
+        $canHasClassifications    = false;
+        $canHasComponents         = false;
+        $canHasAssociates         = false;
+        $primaryEntityId          = null;
         $onlyForDerivativeEnabled = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
@@ -270,14 +270,17 @@ class Entity extends ReferenceData
 
         // create derived entity
         if (!empty($entity->get('primaryEntityId'))) {
-            foreach ($this->getMetadata()->get('scopes', []) as $scopeDefs) {
-                if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $entity->get('primaryEntityId')) {
-                    $role = $scopeDefs['role'] ?? 'staging';
-                    if ($entity->get('role') === $role) {
-                        throw new BadRequest($this->getLanguage()->translate('derivativeWithSuchRoleExists', 'exceptions', 'Entity'));
+            if ($entity->get('role') !== 'base') {
+                foreach ($this->getMetadata()->get('scopes', []) as $scopeDefs) {
+                    if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $entity->get('primaryEntityId')) {
+                        $role = $scopeDefs['role'] ?? 'base';
+                        if ($entity->get('role') === $role) {
+                            throw new BadRequest($this->getLanguage()->translate('derivativeWithSuchRoleExists', 'exceptions', 'Entity'));
+                        }
                     }
                 }
             }
+
 
             $data = [
                 'primaryEntityId' => $entity->get('primaryEntityId'),
@@ -324,7 +327,7 @@ class Entity extends ReferenceData
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             $entityType = $entity->get('type');
-            $filePath = CORE_PATH . "/Atro/Core/Templates/Metadata/{$entityType}/$type.json";
+            $filePath   = CORE_PATH . "/Atro/Core/Templates/Metadata/{$entityType}/$type.json";
             if (!file_exists($filePath)) {
                 continue;
             }
@@ -367,7 +370,7 @@ class Entity extends ReferenceData
         }
 
         $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
-        $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
+        $isCustom   = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
 
         $this->updateScope($entity, $loadedData, $isCustom);
 
@@ -412,7 +415,7 @@ class Entity extends ReferenceData
                 $saveMetadata = true;
             } elseif ($field === 'sortDirection') {
                 $loadedVal = $loadedData['entityDefs'][$entity->get('code')]['collection']['asc'] ?? null;
-                $asc = $entity->get($field) === 'asc';
+                $asc       = $entity->get($field) === 'asc';
                 if ($loadedVal === $asc) {
                     $this->getMetadata()->delete('entityDefs', $entity->get('code'), ['collection.asc']);
                 } else {
@@ -514,20 +517,16 @@ class Entity extends ReferenceData
             throw new Forbidden();
         }
 
-        if (!empty($entity->get('primaryEntityId'))) {
-            throw new BadRequest($this->getLanguage()->translate('cannotRemoveDerivativeDirectly', 'exceptions', 'Entity'));
-        }
-
         parent::beforeRemove($entity, $options);
     }
 
     public function deleteEntity(OrmEntity $entity): bool
     {
-        if (!empty($entity->get('hasStaging')) && !empty($stagingEntityId = $this->getStagingEntityId($entity->get('code')))) {
-            $stagingEntity = $this->get($stagingEntityId);
+        foreach ($this->getDerivativeEntitiesIds($entity->get('code')) as $derivativeEntityId) {
+            $derivativeEntity = $this->get($derivativeEntityId);
 
-            if (!empty($stagingEntity)) {
-                $this->deleteEntity($stagingEntity);
+            if (!empty($derivativeEntity)) {
+                $this->deleteEntity($derivativeEntity);
             }
         }
 
@@ -551,9 +550,6 @@ class Entity extends ReferenceData
             }
         }
 
-        // delete layouts
-        Util::removeDir("data/layouts/{$entity->get('code')}");
-
         // delete translations
         $labels = $this->getEntityManager()->getRepository('Translation')->find();
         foreach ($labels as $label) {
@@ -573,7 +569,7 @@ class Entity extends ReferenceData
         }
 
         if (!empty($entity->get('matchDuplicates'))) {
-            $code = Matching::createCodeForDuplicate($entity->id);
+            $code     = Matching::createCodeForDuplicate($entity->id);
             $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
             if (!empty($matching)) {
                 $this->getEntityManager()->removeEntity($matching);
@@ -581,7 +577,7 @@ class Entity extends ReferenceData
         }
 
         if (!empty($entity->get('matchMasterRecords'))) {
-            $code = Matching::createCodeForMasterRecord($entity->id);
+            $code     = Matching::createCodeForMasterRecord($entity->id);
             $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
             if (!empty($matching)) {
                 $this->getEntityManager()->removeEntity($matching);
@@ -605,53 +601,55 @@ class Entity extends ReferenceData
 
     protected function afterSave(OrmEntity $entity, array $options = [])
     {
-        if ($entity->isAttributeChanged('auditedDisabledFields')) {
-            foreach ($entity->get('fields') ?? [] as $field) {
-                $changed = false;
-                if (in_array($field->get('code'), $entity->get('auditedDisabledFields'))) {
-                    $field->set('auditableDisabled', true);
-                    $changed = true;
-                } else if (!empty($field->get('auditableDisabled'))) {
-                    $field->set('auditableDisabled', false);
-                    $changed = true;
-                }
+        if (empty($entity->get('primaryEntityId')) || $entity->get('role') == 'base') {
+            if ($entity->isAttributeChanged('auditedDisabledFields')) {
+                foreach ($entity->get('fields') ?? [] as $field) {
+                    $changed = false;
+                    if (in_array($field->get('code'), $entity->get('auditedDisabledFields'))) {
+                        $field->set('auditableDisabled', true);
+                        $changed = true;
+                    } else if (!empty($field->get('auditableDisabled'))) {
+                        $field->set('auditableDisabled', false);
+                        $changed = true;
+                    }
 
-                if ($changed) {
-                    $this->getEntityManager()->getRepository('EntityField')->save($field);
-                }
-            }
-        }
-
-        if ($entity->isAttributeChanged('auditedEnabledRelations')) {
-            foreach ($entity->get('fields') ?? [] as $field) {
-                $changed = false;
-                if (in_array($field->get('code'), $entity->get('auditedEnabledRelations'))) {
-                    $field->set('auditableEnabled', true);
-                    $changed = true;
-                } else if (!empty($field->get('auditableEnabled'))) {
-                    $field->set('auditableEnabled', false);
-                    $changed = true;
-                }
-
-                if ($changed) {
-                    $this->getEntityManager()->getRepository('EntityField')->save($field);
+                    if ($changed) {
+                        $this->getEntityManager()->getRepository('EntityField')->save($field);
+                    }
                 }
             }
-        }
 
-        if ($entity->isAttributeChanged('nonDuplicatableFields')) {
-            foreach ($entity->get('fields') ?? [] as $field) {
-                $changed = false;
-                if (in_array($field->get('code'), $entity->get('nonDuplicatableFields'))) {
-                    $field->set('duplicateIgnore', true);
-                    $changed = true;
-                } else if (!empty($field->get('duplicateIgnore'))) {
-                    $field->set('duplicateIgnore', false);
-                    $changed = true;
+            if ($entity->isAttributeChanged('auditedEnabledRelations')) {
+                foreach ($entity->get('fields') ?? [] as $field) {
+                    $changed = false;
+                    if (in_array($field->get('code'), $entity->get('auditedEnabledRelations'))) {
+                        $field->set('auditableEnabled', true);
+                        $changed = true;
+                    } else if (!empty($field->get('auditableEnabled'))) {
+                        $field->set('auditableEnabled', false);
+                        $changed = true;
+                    }
+
+                    if ($changed) {
+                        $this->getEntityManager()->getRepository('EntityField')->save($field);
+                    }
                 }
+            }
 
-                if ($changed) {
-                    $this->getEntityManager()->getRepository('EntityField')->save($field);
+            if ($entity->isAttributeChanged('nonDuplicatableFields')) {
+                foreach ($entity->get('fields') ?? [] as $field) {
+                    $changed = false;
+                    if (in_array($field->get('code'), $entity->get('nonDuplicatableFields'))) {
+                        $field->set('duplicateIgnore', true);
+                        $changed = true;
+                    } else if (!empty($field->get('duplicateIgnore'))) {
+                        $field->set('duplicateIgnore', false);
+                        $changed = true;
+                    }
+
+                    if ($changed) {
+                        $this->getEntityManager()->getRepository('EntityField')->save($field);
+                    }
                 }
             }
         }
@@ -704,7 +702,7 @@ class Entity extends ReferenceData
     {
         // prepare auditedDisabledFields
         $fields = [];
-        $scope = $entity->get('code') ?? $entity->get('name');
+        $scope  = $entity->get('code') ?? $entity->get('name');
         foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) ?? [] as $field => $fieldDef) {
             if (!empty($fieldDef['auditableDisabled'])) {
                 $fields[] = $field;
@@ -766,6 +764,18 @@ class Entity extends ReferenceData
         }
 
         return null;
+    }
+
+    protected function getDerivativeEntitiesIds(string $code): array
+    {
+        $res = [];
+        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
+            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $code) {
+                $res[] = $scopeName;
+            }
+        }
+
+        return $res;
     }
 
     protected function init()

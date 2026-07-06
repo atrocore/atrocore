@@ -23,7 +23,6 @@ use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\User;
 use Atro\Services\AbstractService;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Json;
 use Espo\ORM\IEntity;
@@ -68,12 +67,10 @@ class LayoutManager
         $scope = $this->sanitizeInput($scope);
 
         // prepare name
-        $viewType = $this->sanitizeInput($viewType);
-
-        if ($this->getMetadata()->get("scopes.$scope.primaryEntityId")) {
-            $derivativeScope = $scope;
-            $scope = $this->getMetadata()->get("scopes.$scope.primaryEntityId");
-        }
+        $viewType        = $this->sanitizeInput($viewType);
+        $keepIds         = true;
+        $primaryEntityId = $this->getMetadata()->get("scopes.$scope.primaryEntityId");
+        $role            = null;
 
         if (empty($relatedEntity)) {
             $relatedEntity = null;
@@ -83,61 +80,46 @@ class LayoutManager
             $relatedLink = null;
         }
 
-        $selectedProfileId = $this->getEntityManager()->getConnection()
-            ->createQueryBuilder()
-            ->select('layout_profile_id')
-            ->from('user_entity_layout', 'uel')
-            ->where('uel.user_id=:userId and uel.entity=:entity and uel.view_type=:viewType and '
-                . (empty($relatedEntity) ? "uel.related_entity is null" : "uel.related_entity=:relatedEntity")
-                . ' and '
-                . (empty($relatedLink) ? "uel.related_link is null" : "uel.related_link=:relatedLink")
-                . ' and deleted=:false')
-            ->setParameters([
-                'entity'        => $scope,
-                'viewType'      => $viewType,
-                'relatedEntity' => $relatedEntity,
-                'relatedLink'   => $relatedLink,
-                'userId'        => $this->getUser()->id,
-            ])
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchOne();
+        if (!empty($primaryEntityId)) {
+            $role = $this->getMetadata()->get("scopes.$scope.role");
+            if ($role === 'base') {
+                // Resolve preferences for the derivative scope first so the final profile
+                // is known before checking whether a custom layout exists.
+                ['storedProfiles' => $storedProfiles, 'selectedProfileId' => $selectedProfileId] =
+                    $this->getEntityManager()->getRepository('LayoutProfile')
+                        ->getUserLayoutPreferences($scope, $viewType, $relatedEntity, $relatedLink, $this->getUser()->id);
 
-        $storedProfiles = $this->getEntityManager()->getConnection()
-            ->createQueryBuilder()
-            ->select('lp.id', 'lp.name')
-            ->from('layout', 'l')
-            ->innerJoin('l', 'layout_profile', 'lp', 'l.layout_profile_id=lp.id')
-            ->where("l.entity=:entity and l.view_type=:viewType and "
-                . (empty($relatedEntity) ? "l.related_entity is null" : "l.related_entity=:relatedEntity")
-                . ' and '
-                . (empty($relatedLink) ? "l.related_link is null" : "l.related_link=:relatedLink")
-                . " and l.deleted=:false and lp.deleted=:false")
-            ->setParameters([
-                'entity'        => $scope,
-                'viewType'      => $viewType,
-                'relatedEntity' => $relatedEntity,
-                'relatedLink'   => $relatedLink,
-            ])->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
+                $layoutProfileId = $this->resolveFinalLayoutProfileId($selectedProfileId, $layoutProfileId);
 
-        if (!empty($selectedProfileId) && !in_array($selectedProfileId, array_column($storedProfiles, 'id'))) {
-            $selectedProfileId = null;
-        }
-
-        if (!empty($selectedProfileId) && empty($layoutProfileId)) {
-            $layoutProfileId = $selectedProfileId;
-        }
-
-        $layoutProfile = null;
-        if (!empty($layoutProfileId)) {
-            $layoutProfile = $this->getEntityManager()->getEntity('LayoutProfile', $layoutProfileId);
-            if (empty($layoutProfile)) {
-                $layoutProfileId = null;
+                [$customLayout] = $this->getCustomLayout($scope, $viewType, $relatedEntity, $relatedLink, $layoutProfileId);
+                if (empty($customLayout)) {
+                    // No own custom layout — inherit from primary entity scope
+                    $derivativeScope = $scope;
+                    $scope           = $primaryEntityId;
+                    $keepIds         = false;
+                }
+                // else: derivative has its own custom layout — $storedProfiles and $layoutProfileId
+                // already set for the derivative scope; $scope stays as derivative
+            } else {
+                $derivativeScope = $scope;
+                $scope           = $primaryEntityId;
             }
         }
 
+        if (!isset($storedProfiles)) {
+            ['storedProfiles' => $storedProfiles, 'selectedProfileId' => $selectedProfileId] =
+                $this->getEntityManager()->getRepository('LayoutProfile')
+                    ->getUserLayoutPreferences($scope, $viewType, $relatedEntity, $relatedLink, $this->getUser()->id);
+
+            $layoutProfileId = $this->resolveFinalLayoutProfileId($selectedProfileId, $layoutProfileId);
+        }
+
+        $layoutProfile = !empty($layoutProfileId)
+            ? $this->getEntityManager()->getEntity('LayoutProfile', $layoutProfileId)
+            : null;
+
         // compose
-        list($layout, $storedProfile) = $this->compose($scope, $viewType, $relatedEntity, $relatedLink, $layoutProfileId);
+        list($layout, $storedProfile) = $this->compose($scope, $viewType, $relatedEntity, $relatedLink, $layoutProfileId, $keepIds);
 
         // remove fields from layout if this fields not exist in metadata
         $layout = $this->disableNotExistingFields($scope, $relatedEntity, $relatedLink, $viewType, $layout);
@@ -154,7 +136,7 @@ class LayoutManager
             }
         }
 
-        if (!empty($derivativeScope)) {
+        if (!empty($derivativeScope) && $role !== 'base') {
             if ($viewType === 'detail') {
                 array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], false]);
             } elseif ($viewType === 'list') {
@@ -188,10 +170,10 @@ class LayoutManager
         if (is_array($layout)) {
             foreach ($layout as $k => $item) {
                 if (is_array($item) && isset($item['width'])) {
-                    $layout[$k]['width'] = (float) $item['width'];
+                    $layout[$k]['width'] = (float)$item['width'];
                 }
                 if (is_array($item) && isset($item['widthPx'])) {
-                    $layout[$k]['widthPx'] = (float) $item['widthPx'];
+                    $layout[$k]['widthPx'] = (float)$item['widthPx'];
                 }
             }
         }
@@ -223,7 +205,7 @@ class LayoutManager
     {
         /* @var $repository RDB */
         $repository = $this->getEntityManager()->getRepository('UserEntityLayout');
-        $record = $repository
+        $record     = $repository
             ->where([
                 'userId'        => $this->getUser()->id,
                 'entity'        => $scope,
@@ -266,7 +248,7 @@ class LayoutManager
     public function resetToDefault(string $scope, string $name, string $relatedScope, string $relatedLink, string $layoutProfileId)
     {
         $scope = $this->sanitizeInput($scope);
-        $name = $this->sanitizeInput($name);
+        $name  = $this->sanitizeInput($name);
 
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $layoutRepo->where(['entity'          => $scope,
@@ -310,7 +292,7 @@ class LayoutManager
     public function save(string $scope, string $layoutName, ?string $relatedEntity, ?string $relatedLink, string $layoutProfileId, array $layoutData): bool
     {
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
-        $where = ['entity' => $scope, 'viewType' => $layoutName, 'layoutProfileId' => $layoutProfileId];
+        $where      = ['entity' => $scope, 'viewType' => $layoutName, 'layoutProfileId' => $layoutProfileId];
         if (in_array($layoutName, ['list', 'detail'])) {
             if (!empty($relatedEntity)) {
                 // validate related entity
@@ -320,7 +302,7 @@ class LayoutManager
             }
 
             $where['relatedEntity'] = empty($relatedEntity) ? null : $relatedEntity;
-            $where['relatedLink'] = empty($relatedLink) ? null : $relatedLink;
+            $where['relatedLink']   = empty($relatedLink) ? null : $relatedLink;
         }
 
         if ($layoutName === 'list') {
@@ -385,11 +367,21 @@ class LayoutManager
     }
 
 
+    protected function resolveFinalLayoutProfileId(?string $selectedProfileId, ?string $layoutProfileId): ?string
+    {
+        $id = !empty($layoutProfileId) ? $layoutProfileId : ($selectedProfileId ?: null);
+        if (empty($id)) {
+            return null;
+        }
+
+        return !empty($this->getEntityManager()->getEntity('LayoutProfile', $id)) ? $id : null;
+    }
+
     protected function getCustomLayout(string $scope, string $name, ?string $relatedEntity, ?string $relatedLink, ?string $layoutProfileId, bool $keepIds = true): array
     {
-        $layoutRepo = $this->getEntityManager()->getRepository('Layout');
+        $layoutRepo             = $this->getEntityManager()->getRepository('Layout');
         $defaultLayoutProfileId = $this->getDefaultLayoutProfileId();
-        $isOriginal = false;
+        $isOriginal             = false;
 
         $where = [
             'entity'        => $scope,
@@ -443,10 +435,10 @@ class LayoutManager
         return [[], null];
     }
 
-    protected function compose(string $scope, string $name, ?string $relatedEntity, ?string $relatedLink, ?string $layoutProfileId): array
+    protected function compose(string $scope, string $name, ?string $relatedEntity, ?string $relatedLink, ?string $layoutProfileId, bool $keepIds = true): array
     {
         // from custom layout
-        list ($customLayout, $storedProfile) = $this->getCustomLayout($scope, $name, $relatedEntity, $relatedLink, $layoutProfileId);
+        list ($customLayout, $storedProfile) = $this->getCustomLayout($scope, $name, $relatedEntity, $relatedLink, $layoutProfileId, $keepIds);
         if (!empty($customLayout)) {
             return [$customLayout, $storedProfile];
         }
@@ -472,7 +464,7 @@ class LayoutManager
 
         // default by method
         if (empty($data)) {
-            $type = $this->getMetadata()->get(['scopes', $scope, 'type']);
+            $type   = $this->getMetadata()->get(['scopes', $scope, 'type']);
             $method = "getDefaultFor{$type}EntityType";
             if (!empty($this->getMetadata()->get(['scopes', $scope, 'associatesForEntity']))) {
                 $method = "getDefaultForAssociates";
@@ -522,8 +514,8 @@ class LayoutManager
 
     public function getLayoutFromFiles(string $scope, string $name): array
     {
-        $data = [];
-        $filePath = $this->concatPath(CORE_PATH . '/Atro/Resources/layouts', $scope);
+        $data         = [];
+        $filePath     = $this->concatPath(CORE_PATH . '/Atro/Resources/layouts', $scope);
         $fileFullPath = $this->concatPath($filePath, $name . '.json');
         if (file_exists($fileFullPath)) {
             // get file data
@@ -544,7 +536,7 @@ class LayoutManager
 
     protected function getDefaultForAssociates(string $scope, string $name): array
     {
-        $mainField = "associatingItem";
+        $mainField    = "associatingItem";
         $relatedField = "associatedItem";
 
         $data = [];
@@ -648,7 +640,7 @@ class LayoutManager
     protected function injectMultiLanguageFields(array $data, string $viewType, string $scope, ?string $relatedEntity, ?string $relatedLink): array
     {
         $multiLangFields = $this->getMultiLangFields($scope);
-        $relationScope = $this->getRelationScope($scope, $relatedEntity, $relatedLink);
+        $relationScope   = $this->getRelationScope($scope, $relatedEntity, $relatedLink);
         if (!empty($relationScope)) {
             $multiLangFields = array_merge($multiLangFields, $this->getMultiLangFields($relationScope));
         }
@@ -673,7 +665,7 @@ class LayoutManager
                             continue;
                         }
 
-                        $newRow = [];
+                        $newRow       = [];
                         $fullWidthRow = count($row) == 1;
 
                         foreach ($row as $field) {
@@ -698,9 +690,9 @@ class LayoutManager
                                     }
 
                                     foreach ($needToAdd as $item) {
-                                        $newField = $field;
+                                        $newField         = $field;
                                         $newField['name'] = $item;
-                                        $newRow[] = $newField;
+                                        $newRow[]         = $newField;
                                     }
                                 }
                             }
@@ -776,8 +768,8 @@ class LayoutManager
         }
 
 
-        $systemLocales = $config->get('inputLanguageList', []);
-        $mainLocaleCode = self::getSystemMainLocaleCode($config);
+        $systemLocales   = $config->get('inputLanguageList', []);
+        $mainLocaleCode  = self::getSystemMainLocaleCode($config);
         $systemLocales[] = $mainLocaleCode;
 
         $locales = array_diff($systemLocales, $disabledLanguages);
@@ -858,12 +850,12 @@ class LayoutManager
             if (!empty($relatedScope) && in_array($name, ['list', 'detail'])) {
                 $linkData = $this->getMetadata()->get(['entityDefs', $relatedScope, 'links', $relatedLink]) ?? [];
                 if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
-                    $relationScope = ucfirst($linkData['relationName']);
-                    $relationFields = $this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? [];
-                    $relationFields = array_keys(array_filter($relationFields, fn($defs) => empty($defs['multilangField'])));
+                    $relationScope    = ucfirst($linkData['relationName']);
+                    $relationFields   = $this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? [];
+                    $relationFields   = array_keys(array_filter($relationFields, fn($defs) => empty($defs['multilangField'])));
                     $relationFields[] = 'id';
-                    $relationFields = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
-                    $fields = array_merge($fields, $relationFields);
+                    $relationFields   = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
+                    $fields           = array_merge($fields, $relationFields);
                 }
             }
 
@@ -899,8 +891,8 @@ class LayoutManager
                             $fields[] = $attrField;
                             foreach ($data as $key => $row) {
                                 if ($row['name'] === $attrField) {
-                                    $data[$key]['label'] = $attributeDefs['detailViewLabel'] ?? $attributeDefs['label'];
-                                    $data[$key]['notSortable'] = !empty($attributeDefs['notSortable']);
+                                    $data[$key]['label']         = $attributeDefs['detailViewLabel'] ?? $attributeDefs['label'];
+                                    $data[$key]['notSortable']   = !empty($attributeDefs['notSortable']);
                                     $data[$key]['attributeDefs'] = array_merge($attributeDefs, ['name' => $attrField]);
                                     if (!empty($attributeDefs['channelName'])) {
                                         $data[$key]['label'] .= ' / ' . $attributeDefs['channelName'];

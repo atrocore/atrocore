@@ -42,6 +42,7 @@
     "deleteValuesAfterUnlinkingClassification": "Borrar valores de atributos tras desvincular clasificaciones",
     "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación",
     "primaryEntity": "Entidad primaria",
+    "derivativeEntities": "Derivatives",
     "role": "Rol",
     "hasStaging": "Habilitar la puesta a disposición",
     "stagingEntity": "Entidad de puesta en escena",
@@ -60,6 +61,7 @@
       "desc": "Descendente"
     },
     "role": {
+      "base": "Base",
       "staging": "Puesta en escena"
     }
   },

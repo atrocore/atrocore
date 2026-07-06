@@ -18,6 +18,14 @@
         }
       },
       "hideShowFullList": true
+    },
+    "derivativeEntities": {
+      "select": false,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
     }
   },
   "bottomPanels": {
