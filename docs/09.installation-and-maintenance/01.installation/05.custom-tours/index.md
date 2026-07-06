@@ -12,22 +12,24 @@ Custom tours are displayed directly within the user interface and highlight spec
 
 # How to Set Up a Custom Tour
 
-To create a custom tour, navigate to the root directory of the project or module for which the tour should be available.
+To create a custom tour, navigate to the module for which the tour should be available and locate its `app/Resources/metadata/` directory.
 
 Create the following directory structure if it does not already exist:
 ```
-metadata/
-└── tourData/
+app/
+└── Resources/
+    └── metadata/
+        └── tourData/
 ```
-Inside the `tourData` directory, create a JSON file that defines the tour configuration.
+Inside the `tourData` directory, create a JSON file named exactly after the entity scope the tour applies to, e.g. `ExportFeed.json`. The file name is used to associate the tour with its entity – a tour defined in a file with a different name will not be picked up.
 
-Each tour file contains one or more sections corresponding to system views, such as:
+Each tour file contains one or more sections corresponding to system views:
 
 - edit — displayed on [edit views](../../../01.atrocore/04.understanding-ui/index.md#edit-view)
 - detail — displayed on [detail views](../../../01.atrocore/04.understanding-ui/index.md#detail-view)
 - list — displayed on [list views](../../../01.atrocore/04.understanding-ui/index.md#list-view)
 
-Within each section, UI elements are identified using CSS selectors. For each selector, a description can be defined in one or more languages.
+Within each section, UI elements are identified using CSS selectors. For each selector, a title and/or description can be defined in one or more languages.
 
 ## Tour File Structure
 
@@ -56,9 +58,10 @@ The basic structure of a tour configuration file is:
 
 The top-level object key defines the view where the tour step will be displayed.
 
-Supported values include:
+Supported values:
 - edit
 - detail
+- list
 
 Each view can contain multiple tour steps.
 
@@ -74,47 +77,52 @@ Examples:
 
 The selector must uniquely identify a visible element on the page.
 
-### Description
+### Title and Description
 
-The description object contains the text displayed to the user when the tour reaches the selected element.
+The `title` and `description` objects contain the text displayed to the user when the tour reaches the selected element. `title` is optional; `description` is required.
 
-Descriptions support multiple languages.
+Both support multiple languages. If the text for the current interface language is missing, the `en_US` value is used as a fallback.
 
 Example:
 ```
 {
   "description": {
-    "en_US": "Set the name for your import feed."
+    "en_US": "Set the name for your export feed."
   }
 }
+```
 
 Additional languages can be added:
-
+```
 {
+  "title": {
+    "en_US": "Feed name",
+    "de_DE": "Feed-Name"
+  },
   "description": {
-    "en_US": "Set the name for your import feed.",
-    "de_DE": "Geben Sie den Namen Ihres Import-Feeds ein."
+    "en_US": "Set the name for your export feed.",
+    "de_DE": "Geben Sie den Namen Ihres Export-Feeds ein."
   }
 }
 ```
 
 ## Example
 
-The following example demonstrates a tour configuration for the Import Feeds module:
+The following example demonstrates a tour configuration for the Export Feeds module. The file is named `ExportFeed.json` and placed in `export/app/Resources/metadata/tourData/`:
 
 ```
 {
-  "edit": {
+  "detail": {
     "[data-name=\"name\"]": {
       "description": {
-        "en_US": "Set the name for your import feed."
+        "en_US": "Set the name for your export feed."
       }
     }
   }
 }
 ```
 
-When a user opens the edit view, the tour highlights the Name field and displays the configured description.
+When a user opens the detail view of an export feed, the tour highlights the Name field and displays the configured description.
 
 ## Best Practices
 
@@ -129,7 +137,7 @@ When a user opens the edit view, the tour highlights the Name field and displays
 
 After creating or modifying a tour file:
 
-1) Save the JSON file in the metadata/tourData directory.
+1) Save the JSON file in the module's `app/Resources/metadata/tourData` directory, named after the entity scope.
 2) Clear the application cache if required.
 3) Rebuild metadata if applicable.
 4) Reload the application.
