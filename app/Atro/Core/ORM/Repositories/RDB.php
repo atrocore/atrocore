@@ -1073,8 +1073,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     public function calculateScriptFields(Entity $entity, $save = true): bool
     {
         $currentUser = $this->getEntityManager()->getUser();
-        $systemUser  = $currentUser->getSystemUser();
-        $userChanged = $currentUser->get('id') !== $systemUser->get('id');
+        $systemUser  = $currentUser !== null
+            ? $currentUser->getSystemUser()
+            : $this->getEntityManager()->getRepository('User')->getGlobalSystemUser();
+        $userChanged = $currentUser === null || $currentUser->get('id') !== $systemUser->get('id');
 
         if ($userChanged) {
             $this->getEntityManager()->setUser($systemUser);
@@ -1106,7 +1108,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
             return $updated;
         } finally {
-            if ($userChanged) {
+            if ($userChanged && $currentUser !== null) {
                 $this->getEntityManager()->setUser($currentUser);
                 $this->getInjection('container')->get(UserContext::class)->set($currentUser);
             }
