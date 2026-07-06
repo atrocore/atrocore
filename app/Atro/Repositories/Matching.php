@@ -58,7 +58,6 @@ class Matching extends Base
     protected function beforeSave(OrmEntity $entity, array $options = []): void
     {
         if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {
-            $entity->set('sourceEntity', $entity->get('entity'));
             $entity->set('masterEntity', $entity->get('entity'));
         }
 
@@ -70,10 +69,6 @@ class Matching extends Base
                 $entity->set('code', self::createCodeForMasterRecord($entity->get('entity')));
                 $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->get('entity')}.primaryEntityId"));
             }
-        }
-
-        if ($entity->isAttributeChanged('name') && $entity->get('type') === 'masterRecord') {
-            $entity->set('foreignName', $entity->get('name'));
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('isActive') && !empty($entity->get('isActive'))) {

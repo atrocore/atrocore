@@ -2689,9 +2689,9 @@ class Metadata extends AbstractMetadataListener
 
         // Build the list of entities that should have the cluster link.
         $clusterScopeSet = [];
-        foreach ($matchings as $matching) {
+        foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
             if (!empty($defs['matchDuplicates']) || !empty($defs['matchMasterRecords'])) {
-                $clusterScopeSet[$matching['entity']] = true;
+                $clusterScopeSet[$sourceEntity] = true;
                 if (!empty($defs['primaryEntityId'])) {
                     $clusterScopeSet[$defs['primaryEntityId']] = true;
                 }
