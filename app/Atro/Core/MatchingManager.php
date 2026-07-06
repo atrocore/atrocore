@@ -96,7 +96,7 @@ class MatchingManager
 
     public function findMatches(MatchingEntity $matching, Entity $entity): void
     {
-        if (empty($this->getConfig()->get("matchings.{$matching->get('code')}"))) {
+        if (empty($this->getMetadata()->get("app.matchings.{$matching->id}.isActive"))) {
             return;
         }
 

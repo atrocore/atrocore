@@ -29,7 +29,7 @@ class FindMatchesForRecord extends FindMatchesForRecords
             return;
         }
 
-        if (empty($this->getConfig()->get("matchings.{$matchingData['code']}"))) {
+        if (empty($this->getMetadata()->get("app.matchings.{$matchingData['id']}.isActive"))) {
             return;
         }
 

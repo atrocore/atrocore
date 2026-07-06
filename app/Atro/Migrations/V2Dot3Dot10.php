@@ -92,6 +92,10 @@ class V2Dot3Dot10 extends Base
                 ])
                 ->executeQuery();
         }
+
+        // the matchings activation state is kept in the matching table and cached via metadata now
+        $this->getConfig()->remove('matchings');
+        $this->getConfig()->save();
     }
 
     public function migrateDerivativeMiddle(): void

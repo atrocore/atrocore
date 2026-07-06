@@ -25,7 +25,7 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
             return;
         }
 
-        if (empty($this->getConfig()->get("matchings.{$matchingData['code']}"))) {
+        if (empty($this->getMetadata()->get("app.matchings.{$matchingData['id']}.isActive"))) {
             return;
         }
 
@@ -54,7 +54,7 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
                 break;
             }
 
-            if (empty($this->getConfig()->get("matchings.{$matchingData['code']}"))) {
+            if (empty($this->getMetadata()->get("app.matchings.{$matchingData['id']}.isActive"))) {
                 break;
             }
 

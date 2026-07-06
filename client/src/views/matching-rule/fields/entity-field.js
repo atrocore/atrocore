@@ -61,19 +61,16 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
         },
 
         _getEntityName() {
-            let entityName = null;
             let matchingId = this.model.get('matchingId');
             if (this.model.get('matchingRuleSetId')) {
                 matchingId = this.findMatchingId(this.model.get('matchingRuleSetId'));
             }
 
-            (this.getConfig().get('matchings') || []).forEach(item => {
-                if (item.id === matchingId) {
-                    entityName = item.masterEntity;
-                }
-            });
+            if (!matchingId) {
+                return null;
+            }
 
-            return entityName;
+            return this.getMetadata().get(['app', 'matchings', matchingId, 'masterEntity']) || null;
         },
 
         prepareListOptions() {

@@ -2647,7 +2647,7 @@ class Metadata extends AbstractMetadataListener
         if ($matchings === null) {
             try {
                 $matchings = $this->getDbal()->createQueryBuilder()
-                    ->select('id, code, type, entity')
+                    ->select('id, code, type, entity, master_entity, is_active')
                     ->from('matching')
                     ->where('deleted=:false')
                     ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -2659,6 +2659,11 @@ class Metadata extends AbstractMetadataListener
         }
 
         foreach ($matchings as $matching) {
+            $data['app']['matchings'][$matching['id']] = [
+                'masterEntity' => $matching['master_entity'],
+                'isActive'     => !empty($matching['is_active']),
+            ];
+
             if ($matching['type'] === 'duplicate') {
                 $data['scopes'][$matching['entity']]['matchDuplicates'] = true;
                 $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['code'])] = [

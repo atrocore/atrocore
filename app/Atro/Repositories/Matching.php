@@ -143,14 +143,10 @@ class Matching extends Base
             }
         }
 
-        if ($entity->isAttributeChanged('isActive')) {
-            $matchings = $this->getConfig()->get('matchings', []);
-            $matchings[$entity->get('code')] = !empty($entity->get('isActive'));
+        if (!$entity->isNew() && $entity->isAttributeChanged('isActive')) {
+            $this->getInjection('dataManager')->clearCache();
 
-            $this->getConfig()->set('matchings', $matchings);
-            $this->getConfig()->save();
-
-            if (!$entity->isNew() && empty($entity->get('isActive'))) {
+            if (empty($entity->get('isActive'))) {
                 $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
             }
         }
@@ -189,13 +185,6 @@ class Matching extends Base
     protected function afterRemove(OrmEntity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
-
-        $matchings = $this->getConfig()->get('matchings', []);
-        if (!empty($entity->get('code')) && array_key_exists($entity->get('code'), $matchings)) {
-            unset($matchings[$entity->get('code')]);
-            $this->getConfig()->set('matchings', $matchings);
-            $this->getConfig()->save();
-        }
 
         $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
 
