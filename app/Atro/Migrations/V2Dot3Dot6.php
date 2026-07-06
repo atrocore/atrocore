@@ -237,7 +237,7 @@ class V2Dot3Dot6 extends Base
                         }
                     }
 
-                    $entityDefs['fields'][$row['fieldName']]['options'] = array_merge($row['options'], $enumOptions);
+                    $entityDefs['fields'][$row['fieldName']]['options'] = $row['options'] === ['no-such-id'] ? $enumOptions : array_merge($row['options'], $enumOptions);
 
                     file_put_contents($metadataFileName, json_encode($entityDefs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
