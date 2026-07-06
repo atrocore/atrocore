@@ -20,6 +20,7 @@
     "matchedRecordsMax": "Wenn die Anzahl der übereinstimmenden Datensätze für einen Datensatz diesen Wert überschreitet, wird die Übereinstimmung deaktiviert. Lassen Sie dieses Feld leer, um eine unbegrenzte Anzahl übereinstimmender Datensätze zuzulassen."
   },
   "exceptions": {
-    "noRules": "Die Aktivierung ist blockiert. Für diese Übereinstimmung wurden keine passenden Regeln definiert."
+    "noRules": "Die Aktivierung ist blockiert. Für diese Übereinstimmung wurden keine passenden Regeln definiert.",
+    "matchingAlreadyExists": "Ein Matching vom Typ %s für die Entität %s existiert bereits."
   }
 }

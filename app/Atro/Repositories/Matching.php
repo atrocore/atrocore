@@ -69,6 +69,16 @@ class Matching extends Base
                 $entity->set('code', self::createCodeForMasterRecord($entity->get('entity')));
                 $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->get('entity')}.primaryEntityId"));
             }
+
+            if (!empty($entity->get('code')) && !empty($this->where(['code' => $entity->get('code')])->findOne())) {
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()->translate('matchingAlreadyExists', 'exceptions', 'Matching'),
+                        $this->getLanguage()->translateOption($entity->get('type'), 'type', 'Matching'),
+                        $entity->get('entity')
+                    )
+                );
+            }
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('isActive') && !empty($entity->get('isActive'))) {
@@ -77,7 +87,7 @@ class Matching extends Base
                 ->findOne();
 
             if (empty($rule)) {
-                throw new BadRequest($this->getInjection('language')->translate('noRules', 'exceptions', 'Matching'));
+                throw new BadRequest($this->getLanguage()->translate('noRules', 'exceptions', 'Matching'));
             }
         }
 
@@ -168,6 +178,15 @@ class Matching extends Base
     {
         parent::afterRemove($entity, $options);
 
+        $matchings = $this->getConfig()->get('matchings', []);
+        if (!empty($entity->get('code')) && array_key_exists($entity->get('code'), $matchings)) {
+            unset($matchings[$entity->get('code')]);
+            $this->getConfig()->set('matchings', $matchings);
+            $this->getConfig()->save();
+        }
+
+        $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
+
         if ($entity->get('type') === 'duplicate') {
             $this->deleteMasterDataEntity($entity, $entity->get('entity'));
         } elseif ($entity->get('type') === 'masterRecord') {
@@ -180,6 +199,8 @@ class Matching extends Base
                 $this->getEntityManager()->removeEntity($rule);
             }
         }
+
+        $this->rebuild();
     }
 
     public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId, string $matchedAt, bool $onlyIfAlreadySearched = false): void
@@ -334,7 +355,6 @@ class Matching extends Base
     {
         parent::init();
 
-        $this->addDependency('language');
         $this->addDependency('dataManager');
     }
 }
