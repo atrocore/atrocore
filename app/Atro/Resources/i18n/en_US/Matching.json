@@ -21,6 +21,7 @@
   },
   "exceptions": {
     "noRules": "Activation is blocked. No matching rules have been defined for this matching.",
-    "matchingAlreadyExists": "A %s matching for the entity %s already exists."
+    "matchingAlreadyExists": "A %s matching for the entity %s already exists.",
+    "masterRecordEntityInvalid": "The entity %s cannot be used for a Master Record matching. Only a derived entity with the Staging role is allowed."
   }
 }

@@ -21,6 +21,7 @@
   },
   "exceptions": {
     "noRules": "Aktivace je blokována. Pro toto přiřazení nebyla definována žádná pravidla.",
-    "matchingAlreadyExists": "Přiřazování typu %s pro entitu %s již existuje."
+    "matchingAlreadyExists": "Přiřazování typu %s pro entitu %s již existuje.",
+    "masterRecordEntityInvalid": "Entitu %s nelze použít pro přiřazování typu Hlavní záznam. Povolena je pouze odvozená entita s rolí Staging."
   }
 }

@@ -61,6 +61,18 @@ class Matching extends Base
             $entity->set('masterEntity', $entity->get('entity'));
         }
 
+        if ($entity->get('type') === 'masterRecord' && ($entity->isNew() || $entity->isAttributeChanged('entity'))) {
+            $scopeDefs = $this->getMetadata()->get("scopes.{$entity->get('entity')}") ?? [];
+            if (empty($scopeDefs['primaryEntityId']) || ($scopeDefs['role'] ?? null) !== 'staging') {
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()->translate('masterRecordEntityInvalid', 'exceptions', 'Matching'),
+                        (string)$entity->get('entity')
+                    )
+                );
+            }
+        }
+
         if ($entity->isNew()) {
             if ($entity->get('type') === 'duplicate') {
                 $entity->set('code', self::createCodeForDuplicate($entity->get('entity')));

@@ -21,6 +21,7 @@
   },
   "exceptions": {
     "noRules": "Die Aktivierung ist blockiert. Für diese Übereinstimmung wurden keine passenden Regeln definiert.",
-    "matchingAlreadyExists": "Ein Matching vom Typ %s für die Entität %s existiert bereits."
+    "matchingAlreadyExists": "Ein Matching vom Typ %s für die Entität %s existiert bereits.",
+    "masterRecordEntityInvalid": "Die Entität %s kann nicht für ein Stammdatensatz-Matching verwendet werden. Nur eine abgeleitete Entität mit der Rolle Staging ist zulässig."
   }
 }

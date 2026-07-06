@@ -12,6 +12,37 @@ Espo.define('views/matching/fields/matching-entity-type', 'views/fields/entity-t
 
     return Dep.extend({
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:type', () => {
+                this.setupOptions();
+                this.setupTranslation();
+                this.originalOptionList = null;
+                if (this.model.get(this.name) && !this.params.options.includes(this.model.get(this.name))) {
+                    this.model.set(this.name, null);
+                }
+                this.reRender();
+            });
+        },
+
+        checkAvailability(entityType) {
+            if (!this.model.get('type')) {
+                return false;
+            }
+
+            if (!Dep.prototype.checkAvailability.call(this, entityType)) {
+                return false;
+            }
+
+            if (this.model.get('type') === 'masterRecord') {
+                const defs = this.scopesMetadataDefs[entityType] || {};
+                return !!defs.primaryEntityId && defs.role === 'staging';
+            }
+
+            return true;
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 

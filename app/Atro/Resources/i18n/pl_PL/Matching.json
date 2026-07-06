@@ -21,6 +21,7 @@
   },
   "exceptions": {
     "noRules": "Aktywacja jest zablokowana. Nie zdefiniowano żadnych reguł dopasowania dla tego dopasowania.",
-    "matchingAlreadyExists": "Dopasowanie typu %s dla encji %s już istnieje."
+    "matchingAlreadyExists": "Dopasowanie typu %s dla encji %s już istnieje.",
+    "masterRecordEntityInvalid": "Encji %s nie można użyć dla dopasowania typu Główny rekord. Dozwolona jest tylko encja pochodna z rolą Staging."
   }
 }

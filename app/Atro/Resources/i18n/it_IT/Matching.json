@@ -21,6 +21,7 @@
   },
   "exceptions": {
     "noRules": "L'attivazione è bloccata. Non sono state definite regole di abbinamento per questo abbinamento.",
-    "matchingAlreadyExists": "Un abbinamento di tipo %s per l'entità %s esiste già."
+    "matchingAlreadyExists": "Un abbinamento di tipo %s per l'entità %s esiste già.",
+    "masterRecordEntityInvalid": "L'entità %s non può essere utilizzata per un abbinamento di tipo Record principale. È consentita solo un'entità derivata con il ruolo Staging."
   }
 }

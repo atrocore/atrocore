@@ -21,6 +21,7 @@
   },
   "exceptions": {
     "noRules": "L'activation est bloquée. Aucune règle de correspondance n'a été définie pour cette correspondance.",
-    "matchingAlreadyExists": "Un appariement de type %s pour l'entité %s existe déjà."
+    "matchingAlreadyExists": "Un appariement de type %s pour l'entité %s existe déjà.",
+    "masterRecordEntityInvalid": "L'entité %s ne peut pas être utilisée pour un appariement de type Enregistrement de référence. Seule une entité dérivée avec le rôle Staging est autorisée."
   }
 }
