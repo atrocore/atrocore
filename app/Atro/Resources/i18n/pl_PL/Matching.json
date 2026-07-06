@@ -20,6 +20,8 @@
     "matchedRecordsMax": "Jeśli liczba dopasowanych rekordów dla dowolnego rekordu przekroczy tę wartość, dopasowanie zostanie wyłączone. Proszę pozostawić to pole puste, aby zezwolić na nieograniczoną liczbę dopasowanych rekordów. "
   },
   "exceptions": {
-    "noRules": "Aktywacja jest zablokowana. Nie zdefiniowano żadnych reguł dopasowania dla tego dopasowania."
+    "noRules": "Aktywacja jest zablokowana. Nie zdefiniowano żadnych reguł dopasowania dla tego dopasowania.",
+    "matchingAlreadyExists": "Dopasowanie typu %s dla encji %s już istnieje.",
+    "masterRecordEntityInvalid": "Encji %s nie można użyć dla dopasowania typu Główny rekord. Dozwolona jest tylko encja pochodna z rolą Staging."
   }
 }

@@ -20,6 +20,8 @@
     "matchedRecordsMax": "Se il numero di record abbinati per qualsiasi record supera questo valore, l'abbinamento sarà disattivato. Lasci questo campo vuoto per consentire un numero illimitato di record abbinati. "
   },
   "exceptions": {
-    "noRules": "L'attivazione è bloccata. Non sono state definite regole di abbinamento per questo abbinamento."
+    "noRules": "L'attivazione è bloccata. Non sono state definite regole di abbinamento per questo abbinamento.",
+    "matchingAlreadyExists": "Un abbinamento di tipo %s per l'entità %s esiste già.",
+    "masterRecordEntityInvalid": "L'entità %s non può essere utilizzata per un abbinamento di tipo Record principale. È consentita solo un'entità derivata con il ruolo Staging."
   }
 }

@@ -45,9 +45,7 @@
     "primaryEntity": "Entité primaire",
     "role": "Rôle",
     "hasStaging": "Activer la préproduction",
-    "stagingEntity": "Entité de préproduction",
-    "matchDuplicates": "Apparier les doublons",
-    "matchMasterRecords": "Apparier les enregistrements de référence"
+    "stagingEntity": "Entité de préproduction"
   },
   "options": {
     "type": {

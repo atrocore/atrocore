@@ -26,11 +26,4 @@ class Matching extends Base
             $entity->set('entity', $entity->get('sourceEntity'));
         }
     }
-
-    public function putAclMeta(Entity $entity): void
-    {
-        parent::putAclMeta($entity);
-
-        $entity->setMetaPermission('delete', false);
-    }
 }

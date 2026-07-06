@@ -5,6 +5,14 @@
     "rows": [
       [
         {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
           "name": "type"
         },
         {

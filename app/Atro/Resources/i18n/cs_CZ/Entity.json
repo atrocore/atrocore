@@ -45,8 +45,6 @@
     "derivativeEntities": "Derivatives",
     "hasStaging": "Povolení etapizace",
     "stagingEntity": "Entita etapizace",
-    "matchDuplicates": "Párování duplikátů",
-    "matchMasterRecords": "Párování hlavních záznamů",
     "role": "Role"
   },
   "options": {

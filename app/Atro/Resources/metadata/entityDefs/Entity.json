@@ -531,54 +531,6 @@
       "type": "bool",
       "protected": true
     },
-    "matchMasterRecords": {
-      "type": "bool",
-      "view": "views/entity/fields/match-master-records",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "primaryEntityId"
-            },
-            {
-              "type": "isFalse",
-              "attribute": "matchingDisabled"
-            }
-          ]
-        }
-      }
-    },
-    "matchDuplicates": {
-      "type": "bool",
-      "view": "views/entity/fields/match-duplicates",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            },
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "isFalse",
-              "attribute": "matchingDisabled"
-            }
-          ]
-        }
-      }
-    },
     "role": {
       "type": "enum",
       "options": [

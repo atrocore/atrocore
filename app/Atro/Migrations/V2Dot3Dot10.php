@@ -23,6 +23,79 @@ class V2Dot3Dot10 extends Base
 
     public function up(): void
     {
+        $this->migrateMatchings();
+        $this->migrateDerivativeMiddle();
+    }
+
+    public function migrateMatchings(): void
+    {
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE matching ADD name VARCHAR(255) DEFAULT NULL");
+            $this->exec("ALTER TABLE matching ADD code VARCHAR(255) DEFAULT NULL");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_DC10F28977153098EB3B4E33 ON matching (code, deleted)");
+        } else {
+            $this->exec("ALTER TABLE matching ADD name VARCHAR(255) DEFAULT NULL, ADD code VARCHAR(255) DEFAULT NULL COLLATE `utf8_bin`");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_DC10F28977153098EB3B4E33 ON matching (code, deleted)");
+        }
+
+        $this->getDbal()->createQueryBuilder()
+            ->delete('matching')
+            ->where('deleted = :true')
+            ->setParameter('true', true, \Doctrine\DBAL\ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        try {
+            $res = $this->getDbal()->createQueryBuilder()
+                ->select('*')
+                ->from('matching')
+                ->where('deleted = :false')
+                ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        } catch (\Throwable) {
+            $res = [];
+        }
+
+        foreach ($res as $item) {
+            $uuid = \Atro\Core\Utils\IdGenerator::uuid();
+
+            $this->getDbal()->createQueryBuilder()
+                ->update('matching')
+                ->set('name', ':name')
+                ->set('code', ':code')
+                ->set('id', ':uuid')
+                ->where('id = :id')
+                ->setParameters([
+                    'name' => $item['id'],
+                    'code' => $item['id'],
+                    'id'   => $item['id'],
+                    'uuid' => $uuid,
+                ])
+                ->executeQuery();
+
+            $this->getDbal()->createQueryBuilder()
+                ->update('matching_rule')
+                ->set('matching_id', ':uuid')
+                ->where('matching_id = :id')
+                ->setParameters([
+                    'id'   => $item['id'],
+                    'uuid' => $uuid,
+                ])
+                ->executeQuery();
+
+            $this->getDbal()->createQueryBuilder()
+                ->update('matched_record')
+                ->set('matching_id', ':uuid')
+                ->where('matching_id = :id')
+                ->setParameters([
+                    'id'   => $item['id'],
+                    'uuid' => $uuid,
+                ])
+                ->executeQuery();
+        }
+    }
+
+    public function migrateDerivativeMiddle(): void
+    {
         $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
 
         foreach ($metadata->get('scopes') ?? [] as $scope => $scopeDefs) {

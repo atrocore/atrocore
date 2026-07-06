@@ -20,6 +20,8 @@
     "matchedRecordsMax": "Si el número de registros coincidentes para cualquier registro supera este valor, se desactivará la coincidencia. Deje este campo vacío para permitir un número ilimitado de registros coincidentes. "
   },
   "exceptions": {
-    "noRules": "La activación está bloqueada. No se han definido reglas de concordancia para esta concordancia."
+    "noRules": "La activación está bloqueada. No se han definido reglas de concordancia para esta concordancia.",
+    "matchingAlreadyExists": "Ya existe una concordancia de tipo %s para la entidad %s.",
+    "masterRecordEntityInvalid": "La entidad %s no se puede utilizar para una concordancia de tipo Registro maestro. Solo se permite una entidad derivada con el rol Staging."
   }
 }

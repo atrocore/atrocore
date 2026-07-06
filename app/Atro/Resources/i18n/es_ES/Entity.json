@@ -45,9 +45,7 @@
     "derivativeEntities": "Derivatives",
     "role": "Rol",
     "hasStaging": "Habilitar la puesta a disposición",
-    "stagingEntity": "Entidad de puesta en escena",
-    "matchDuplicates": "Coincidir duplicados",
-    "matchMasterRecords": "Registros maestros de partidos"
+    "stagingEntity": "Entidad de puesta en escena"
   },
   "options": {
     "type": {

@@ -58,12 +58,39 @@ class Matching extends Base
     protected function beforeSave(OrmEntity $entity, array $options = []): void
     {
         if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {
-            $entity->set('sourceEntity', $entity->get('entity'));
             $entity->set('masterEntity', $entity->get('entity'));
         }
 
-        if ($entity->isAttributeChanged('name') && $entity->get('type') === 'masterRecord') {
-            $entity->set('foreignName', $entity->get('name'));
+        if ($entity->get('type') === 'masterRecord' && ($entity->isNew() || $entity->isAttributeChanged('entity'))) {
+            $scopeDefs = $this->getMetadata()->get("scopes.{$entity->get('entity')}") ?? [];
+            if (empty($scopeDefs['primaryEntityId']) || ($scopeDefs['role'] ?? null) !== 'staging') {
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()->translate('masterRecordEntityInvalid', 'exceptions', 'Matching'),
+                        (string)$entity->get('entity')
+                    )
+                );
+            }
+        }
+
+        if ($entity->isNew()) {
+            if ($entity->get('type') === 'duplicate') {
+                $entity->set('code', self::createCodeForDuplicate($entity->get('entity')));
+                $entity->set('masterEntity', $entity->get('entity'));
+            } elseif ($entity->get('type') === 'masterRecord') {
+                $entity->set('code', self::createCodeForMasterRecord($entity->get('entity')));
+                $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->get('entity')}.primaryEntityId"));
+            }
+
+            if (!empty($entity->get('code')) && !empty($this->where(['code' => $entity->get('code')])->findOne())) {
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()->translate('matchingAlreadyExists', 'exceptions', 'Matching'),
+                        $this->getLanguage()->translateOption($entity->get('type'), 'type', 'Matching'),
+                        $entity->get('entity')
+                    )
+                );
+            }
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('isActive') && !empty($entity->get('isActive'))) {
@@ -72,7 +99,7 @@ class Matching extends Base
                 ->findOne();
 
             if (empty($rule)) {
-                throw new BadRequest($this->getInjection('language')->translate('noRules', 'exceptions', 'Matching'));
+                throw new BadRequest($this->getLanguage()->translate('noRules', 'exceptions', 'Matching'));
             }
         }
 
@@ -104,6 +131,7 @@ class Matching extends Base
         parent::afterSave($entity, $options);
 
         if ($entity->isNew()) {
+            $this->rebuild();
             if ($entity->get('type') === 'duplicate') {
                 $this->createMasterDataEntity($entity->get('entity'));
                 if (!empty($masterEntity = $this->getMetadata()->get(['scopes', $entity->get('entity'), 'primaryEntityId']))) {
@@ -113,13 +141,11 @@ class Matching extends Base
                 $this->createMasterDataEntity($entity->get('entity'));
                 $this->createMasterDataEntity($entity->get('masterEntity'));
             }
-
-            $this->rebuild();
         }
 
         if ($entity->isAttributeChanged('isActive')) {
             $matchings = $this->getConfig()->get('matchings', []);
-            $matchings[$entity->id] = !empty($entity->get('isActive'));
+            $matchings[$entity->get('code')] = !empty($entity->get('isActive'));
 
             $this->getConfig()->set('matchings', $matchings);
             $this->getConfig()->save();
@@ -138,7 +164,7 @@ class Matching extends Base
 
     protected function deleteMasterDataEntity(MatchingEntity $matching, string $entityName): void
     {
-        $exists = $this->where(['sourceEntity' => $entityName, 'id!=' => $matching->id])->findOne();
+        $exists = $this->where(['entity' => $entityName, 'id!=' => $matching->id])->findOne();
         if (!empty($exists)) {
             return;
         }
@@ -164,6 +190,15 @@ class Matching extends Base
     {
         parent::afterRemove($entity, $options);
 
+        $matchings = $this->getConfig()->get('matchings', []);
+        if (!empty($entity->get('code')) && array_key_exists($entity->get('code'), $matchings)) {
+            unset($matchings[$entity->get('code')]);
+            $this->getConfig()->set('matchings', $matchings);
+            $this->getConfig()->save();
+        }
+
+        $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
+
         if ($entity->get('type') === 'duplicate') {
             $this->deleteMasterDataEntity($entity, $entity->get('entity'));
         } elseif ($entity->get('type') === 'masterRecord') {
@@ -176,12 +211,14 @@ class Matching extends Base
                 $this->getEntityManager()->removeEntity($rule);
             }
         }
+
+        $this->rebuild();
     }
 
     public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId, string $matchedAt, bool $onlyIfAlreadySearched = false): void
     {
         $conn = $this->getDbal();
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
 
         $qb = $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))))
@@ -199,7 +236,7 @@ class Matching extends Base
 
     public function hasUnprocessedRecords(MatchingEntity $matching): bool
     {
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
         $conn   = $this->getDbal();
 
         foreach (array_unique([$matching->get('entity'), $matching->get('masterEntity')]) as $entityName) {
@@ -231,7 +268,7 @@ class Matching extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
 
         $res = $conn->createQueryBuilder()
             ->select("id, $column as val")
@@ -247,7 +284,7 @@ class Matching extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('entity')))))
             ->set($column, ':null')
@@ -262,7 +299,7 @@ class Matching extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entity->getEntityName()))))
             ->set($column, ':null')
@@ -323,19 +360,13 @@ class Matching extends Base
 
     protected function rebuild(): void
     {
-        $jobEntity = $this->getEntityManager()->getEntity('Job');
-        $jobEntity->set([
-            'name'     => "Rebuild database",
-            'type'     => 'Rebuild',
-            'priority' => 800,
-        ]);
-        $this->getEntityManager()->saveEntity($jobEntity);
+        $this->getInjection('dataManager')->rebuild();
     }
 
     protected function init()
     {
         parent::init();
 
-        $this->addDependency('language');
+        $this->addDependency('dataManager');
     }
 }
