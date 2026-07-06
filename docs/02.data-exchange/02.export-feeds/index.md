@@ -143,6 +143,21 @@ Added items are displayed as a list with `Field`, `Column Name`, and `Remove` co
 
 > Fields order in the export file is controlled via drag-and-drop in `Configurator`.
 
+### Relation Fields
+
+For fields that reference multiple related records (e.g., *Categories*, *Classifications*), additional settings control which related records are exported and how:
+
+![Limit and Offset](_assets/limit-offset.png){.medium}
+
+- **Related Entity Fields** – field(s) of the related entity to export.
+- **Separate** – exports each related record into its own column instead of combining them into one value.
+- **Offset** – number of related records to skip before exporting.
+- **Limit** – maximum number of related records to export (default: `20`).
+- **Sort Order (Field)** – field used to sort related records before applying `Offset` and `Limit`.
+- **Sort Order (Direction)** – `ASC` (smallest first) or `DESC` (largest first).
+
+!! On MySQL/MariaDB, keep `Limit` at or below 25 for fields with a large number of related records. Higher values may exceed the database's `group_concat_max_len` setting, causing related records to be silently dropped from the exported column. This restriction does not apply to PostgreSQL.
+
 ### Attributes
 
 Attributes can be added to the export in two ways:
