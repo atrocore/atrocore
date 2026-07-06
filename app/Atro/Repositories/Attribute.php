@@ -736,7 +736,7 @@ class Attribute extends Base
     {
         $select = ['id', 'systemName', 'type'];
 
-        if (class_exists('\AdvancedDataTypes\Module')) {
+        if (class_exists('\AdvancedDataManagement\Module')) {
             $select[] = 'output_type';
         }
 

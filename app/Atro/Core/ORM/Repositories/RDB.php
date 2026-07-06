@@ -15,6 +15,7 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\EventManager\Event;
+use Atro\Core\UserContext;
 use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -1071,29 +1072,47 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     public function calculateScriptFields(Entity $entity, $save = true): bool
     {
-        $updated = false;
-        foreach ($entity->entityDefs['fields'] as $field => $fieldDefs) {
-            $fieldDefs = $entity->entityDefs['fields'][$field];
+        $currentUser = $this->getEntityManager()->getUser();
+        $systemUser  = $currentUser !== null
+            ? $currentUser->getSystemUser()
+            : $this->getEntityManager()->getRepository('User')->getGlobalSystemUser();
+        $userChanged = $currentUser === null || $currentUser->get('id') !== $systemUser->get('id');
 
-            if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
-                $contents = $this->getInjection('container')->get('twig')
-                    ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
+        if ($userChanged) {
+            $this->getEntityManager()->setUser($systemUser);
+            $this->getInjection('container')->get(UserContext::class)->set($systemUser);
+        }
 
-                if ($entity->get($field) === $contents) {
-                    continue;
+        try {
+            $updated = false;
+            foreach ($entity->entityDefs['fields'] as $field => $fieldDefs) {
+                $fieldDefs = $entity->entityDefs['fields'][$field];
+
+                if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
+                    $contents = $this->getInjection('container')->get('twig')
+                        ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
+
+                    if ($entity->get($field) === $contents) {
+                        continue;
+                    }
+
+                    $entity->set($field, $contents);
+                    $updated = true;
                 }
 
-                $entity->set($field, $contents);
-                $updated = true;
             }
 
-        }
+            if ($updated && $save) {
+                $this->save($entity, ['recalculatingScriptFields' => true]);
+            }
 
-        if ($updated && $save) {
-            $this->save($entity, ['recalculatingScriptFields' => true]);
+            return $updated;
+        } finally {
+            if ($userChanged && $currentUser !== null) {
+                $this->getEntityManager()->setUser($currentUser);
+                $this->getInjection('container')->get(UserContext::class)->set($currentUser);
+            }
         }
-
-        return $updated;
     }
 
     public function clearEntityField(string $field): void
@@ -1133,7 +1152,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
         }
 
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute']) && class_exists('\AdvancedDataTypes\Module')) {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute']) && class_exists('\AdvancedDataManagement\Module')) {
             $atTable       = $table . '_attribute_value';
             $foreignColumn = Util::toUnderScore(lcfirst($this->entityType)) . "_id";
             $qb->leftJoin('t', $atTable, 'at', "t.id = at.$foreignColumn AND at.deleted = :false")
@@ -1141,7 +1160,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 ->setParameter('script', 'script')
                 ->setParameter('entityId', $this->entityType);
 
-            /** @var \AdvancedDataTypes\AttributeFieldTypes\ScriptType $scriptType */
+            /** @var \AdvancedDataManagement\AttributeFieldTypes\ScriptType $scriptType */
             $scriptType = $this->getEntityManager()->getContainer()->get(AttributeFieldConverter::class)->getFieldType('script');
 
             foreach (['int', 'float', 'bool', 'date', 'datetime', 'text', 'wysiwyg'] as $outputType) {
