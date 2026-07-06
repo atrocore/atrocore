@@ -2,8 +2,22 @@
   "entity": true,
   "layouts": false,
   "type": "Base",
-  "tab": false,
-  "acl": false,
+  "tab": true,
+  "acl": true,
+  "aclActionLevelListMap": {
+    "read": [
+      "all",
+      "no"
+    ],
+    "edit": [
+      "all",
+      "no"
+    ],
+    "delete": [
+      "all",
+      "no"
+    ]
+  },
   "customizable": false,
   "streamDisabled": true,
   "notificationDisabled": true,
