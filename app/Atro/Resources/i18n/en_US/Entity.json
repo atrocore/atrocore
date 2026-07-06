@@ -46,9 +46,7 @@
     "derivativeEntities": "Derivatives",
     "role": "Role",
     "hasStaging": "Enable Staging",
-    "stagingEntity": "Staging Entity",
-    "matchDuplicates": "Match Duplicates",
-    "matchMasterRecords": "Match Master Records"
+    "stagingEntity": "Staging Entity"
   },
   "options": {
     "type": {

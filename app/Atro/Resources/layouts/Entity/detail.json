@@ -186,19 +186,6 @@
     ]
   },
   {
-    "label": "matchings",
-    "rows": [
-      [
-        {
-          "name": "matchDuplicates"
-        },
-        {
-          "name": "matchMasterRecords"
-        }
-      ]
-    ]
-  },
-  {
     "label": "hierarchyManagement",
     "rows": [
       [

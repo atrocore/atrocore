@@ -44,9 +44,7 @@
     "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione",
     "role": "Ruolo",
     "hasStaging": "Abilita la messa in scena",
-    "stagingEntity": "Entità di stazionamento",
-    "matchDuplicates": "Abbinare i duplicati",
-    "matchMasterRecords": "Registri master delle partite"
+    "stagingEntity": "Entità di stazionamento"
   },
   "labels": {
     "resetToDefault": "Ripristino delle impostazioni predefinite",

@@ -62,6 +62,16 @@ class Matching extends Base
             $entity->set('masterEntity', $entity->get('entity'));
         }
 
+        if ($entity->isNew()) {
+            if ($entity->get('type') === 'duplicate') {
+                $entity->set('code', self::createCodeForDuplicate($entity->get('entity')));
+                $entity->set('masterEntity', $entity->get('entity'));
+            } elseif ($entity->get('type') === 'masterRecord') {
+                $entity->set('code', self::createCodeForMasterRecord($entity->get('entity')));
+                $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->get('entity')}.primaryEntityId"));
+            }
+        }
+
         if ($entity->isAttributeChanged('name') && $entity->get('type') === 'masterRecord') {
             $entity->set('foreignName', $entity->get('name'));
         }
@@ -104,6 +114,7 @@ class Matching extends Base
         parent::afterSave($entity, $options);
 
         if ($entity->isNew()) {
+            $this->rebuild();
             if ($entity->get('type') === 'duplicate') {
                 $this->createMasterDataEntity($entity->get('entity'));
                 if (!empty($masterEntity = $this->getMetadata()->get(['scopes', $entity->get('entity'), 'primaryEntityId']))) {
@@ -113,8 +124,6 @@ class Matching extends Base
                 $this->createMasterDataEntity($entity->get('entity'));
                 $this->createMasterDataEntity($entity->get('masterEntity'));
             }
-
-            $this->rebuild();
         }
 
         if ($entity->isAttributeChanged('isActive')) {
@@ -138,7 +147,7 @@ class Matching extends Base
 
     protected function deleteMasterDataEntity(MatchingEntity $matching, string $entityName): void
     {
-        $exists = $this->where(['sourceEntity' => $entityName, 'id!=' => $matching->id])->findOne();
+        $exists = $this->where(['entity' => $entityName, 'id!=' => $matching->id])->findOne();
         if (!empty($exists)) {
             return;
         }
@@ -323,13 +332,7 @@ class Matching extends Base
 
     protected function rebuild(): void
     {
-        $jobEntity = $this->getEntityManager()->getEntity('Job');
-        $jobEntity->set([
-            'name'     => "Rebuild database",
-            'type'     => 'Rebuild',
-            'priority' => 800,
-        ]);
-        $this->getEntityManager()->saveEntity($jobEntity);
+        $this->getInjection('dataManager')->rebuild();
     }
 
     protected function init()
@@ -337,5 +340,6 @@ class Matching extends Base
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('dataManager');
     }
 }

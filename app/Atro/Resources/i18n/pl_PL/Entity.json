@@ -45,9 +45,7 @@
     "derivativeEntities": "Derivatives",
     "role": "Rola",
     "stagingEntity": "Podmiot etapowy",
-    "hasStaging": "Proszę włączyć etapowanie",
-    "matchDuplicates": "Dopasuj duplikaty",
-    "matchMasterRecords": "Główne rekordy meczu"
+    "hasStaging": "Proszę włączyć etapowanie"
   },
   "options": {
     "type": {

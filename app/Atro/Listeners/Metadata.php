@@ -2584,8 +2584,6 @@ class Metadata extends AbstractMetadataListener
                 'description'          => $scopeDefs['description'] ?? null,
                 'sortBy'               => $scopeDefs['sortBy'] ?? null,
                 'sortDirection'        => $scopeDefs['sortDirection'] ?? null,
-                'matchDuplicates'      => $scopeDefs['matchDuplicates'] ?? false,
-                'matchMasterRecords'   => $scopeDefs['matchMasterRecords'] ?? false,
                 'createdAt'            => $scopeDefs['createdAt'] ?? null,
                 'modifiedAt'           => $scopeDefs['modifiedAt'] ?? null,
                 'createdById'          => $scopeDefs['createdById'] ?? null,
@@ -2645,11 +2643,55 @@ class Metadata extends AbstractMetadataListener
             return;
         }
 
+        $matchings = $this->getDataManager()->getCacheData('matchings');
+        if ($matchings === null) {
+            try {
+                $matchings = $this->getDbal()->createQueryBuilder()
+                    ->select('id, code, type, entity')
+                    ->from('matching')
+                    ->where('deleted=:false')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable) {
+                $matchings = [];
+            }
+            $this->getDataManager()->setCacheData('matchings', $matchings);
+        }
+
+        foreach ($matchings as $matching) {
+            if ($matching['type'] === 'duplicate') {
+                $data['scopes'][$matching['entity']]['matchDuplicates'] = true;
+                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['code'])] = [
+                    'type'                 => 'datetime',
+                    "layoutListDisabled"   => true,
+                    "layoutDetailDisabled" => true,
+                    "massUpdateDisabled"   => true,
+                    "filterDisabled"       => true,
+                    "importDisabled"       => true,
+                    "exportDisabled"       => true,
+                    "emHidden"             => true
+                ];
+
+            } elseif ($matching['type'] === 'masterRecord') {
+                $data['scopes'][$matching['entity']]['matchMasterRecords'] = true;
+                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['code'])] = [
+                    'type'                 => 'datetime',
+                    "layoutListDisabled"   => true,
+                    "layoutDetailDisabled" => true,
+                    "massUpdateDisabled"   => true,
+                    "filterDisabled"       => true,
+                    "importDisabled"       => true,
+                    "exportDisabled"       => true,
+                    "emHidden"             => true
+                ];
+            }
+        }
+
         // Build the list of entities that should have the cluster link.
         $clusterScopeSet = [];
-        foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
+        foreach ($matchings as $matching) {
             if (!empty($defs['matchDuplicates']) || !empty($defs['matchMasterRecords'])) {
-                $clusterScopeSet[$sourceEntity] = true;
+                $clusterScopeSet[$matching['entity']] = true;
                 if (!empty($defs['primaryEntityId'])) {
                     $clusterScopeSet[$defs['primaryEntityId']] = true;
                 }
@@ -2657,32 +2699,6 @@ class Metadata extends AbstractMetadataListener
         }
 
         foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
-            if (!empty($defs['matchDuplicates'])) {
-                $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForDuplicate($sourceEntity))] = [
-                    'type'                 => 'datetime',
-                    "layoutListDisabled"   => true,
-                    "layoutDetailDisabled" => true,
-                    "massUpdateDisabled"   => true,
-                    "filterDisabled"       => true,
-                    "importDisabled"       => true,
-                    "exportDisabled"       => true,
-                    "emHidden"             => true
-                ];
-            }
-
-            if (!empty($defs['matchMasterRecords'])) {
-                $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForMasterRecord($sourceEntity))] = [
-                    'type'                 => 'datetime',
-                    "layoutListDisabled"   => true,
-                    "layoutDetailDisabled" => true,
-                    "massUpdateDisabled"   => true,
-                    "filterDisabled"       => true,
-                    "importDisabled"       => true,
-                    "exportDisabled"       => true,
-                    "emHidden"             => true
-                ];
-            }
-
             if (!empty($clusterScopeSet[$sourceEntity])) {
                 $data['entityDefs'][$sourceEntity]['fields']['cluster'] = [
                     'type'               => 'link',

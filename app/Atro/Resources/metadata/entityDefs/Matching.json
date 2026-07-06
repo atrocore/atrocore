@@ -12,9 +12,18 @@
         "duplicate",
         "masterRecord"
       ],
-      "protected": true,
       "customizable": false,
-      "layoutRemoveDisabled": true
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "code": {
       "type": "varchar",
@@ -44,9 +53,19 @@
     "entity": {
       "type": "varchar",
       "view": "views/matching/fields/matching-entity-type",
-      "protected": true,
+      "required": true,
       "customizable": false,
-      "layoutRemoveDisabled": true
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "masterEntity": {
       "type": "varchar",
@@ -57,6 +76,10 @@
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
             {
               "type": "equals",
               "attribute": "type",

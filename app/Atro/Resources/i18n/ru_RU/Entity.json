@@ -42,8 +42,6 @@
     "deleteValuesAfterUnlinkingClassification": "Удалите значения атрибутов после отсоединения классификаций",
     "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически",
     "primaryEntity": "Первичная сущность",
-    "matchDuplicates": "Поиск дубликатов",
-    "matchMasterRecords": "Поиск мастер записи",
     "role": "Роль",
     "hasStaging": "Включить постановку",
     "stagingEntity": "Постановочная сущность"

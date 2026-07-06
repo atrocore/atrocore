@@ -44,8 +44,6 @@
     "fields": "Felder",
     "primaryEntity": "Primäre Entität",
     "derivativeEntities": "Derivatives",
-    "matchDuplicates": "Duplikate abgleichen",
-    "matchMasterRecords": "Stammdaten abgleichen",
     "role": "Rolle",
     "hasStaging": "Staging aktivieren",
     "stagingEntity": "Staging-Entität"

@@ -568,21 +568,10 @@ class Entity extends ReferenceData
             }
         }
 
-        if (!empty($entity->get('matchDuplicates'))) {
-            $code     = Matching::createCodeForDuplicate($entity->id);
-            $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
-            if (!empty($matching)) {
-                $this->getEntityManager()->removeEntity($matching);
-            }
-        }
-
-        if (!empty($entity->get('matchMasterRecords'))) {
-            $code     = Matching::createCodeForMasterRecord($entity->id);
-            $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
-            if (!empty($matching)) {
-                $this->getEntityManager()->removeEntity($matching);
-            }
-        }
+        // cascade remove Entity Matchings
+        $this->getEntityManager()->getRepository('Matching')
+            ->where(['entity' => $entity->id])
+            ->removeCollection();
 
         $this->getEntityManager()->getRepository('ClusterItem')->afterDeleteEntity($entity->get('code'));
 
@@ -651,47 +640,6 @@ class Entity extends ReferenceData
                         $this->getEntityManager()->getRepository('EntityField')->save($field);
                     }
                 }
-            }
-        }
-
-        if ($entity->isAttributeChanged('matchDuplicates')) {
-            $code = Matching::createCodeForDuplicate($entity->id);
-            if (empty($entity->get('matchDuplicates'))) {
-                $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
-                if (!empty($matching)) {
-                    $this->getEntityManager()->removeEntity($matching);
-                }
-            } else {
-                $matching = $this->getEntityManager()->getRepository('Matching')->get();
-                $matching->set([
-                    'id'           => $code,
-                    'type'         => 'duplicate',
-                    'minimumScore' => 100,
-                    'entity'       => $entity->id,
-                    'isActive'     => false,
-                ]);
-                $this->getEntityManager()->saveEntity($matching);
-            }
-        }
-
-        if ($entity->isAttributeChanged('matchMasterRecords')) {
-            $code = Matching::createCodeForMasterRecord($entity->id);
-            if (empty($entity->get('matchMasterRecords'))) {
-                $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
-                if (!empty($matching)) {
-                    $this->getEntityManager()->removeEntity($matching);
-                }
-            } else {
-                $matching = $this->getEntityManager()->getRepository('Matching')->get();
-                $matching->set([
-                    'id'           => $code,
-                    'type'         => 'masterRecord',
-                    'minimumScore' => 100,
-                    'entity'       => $entity->id,
-                    'masterEntity' => $entity->get('primaryEntityId'),
-                    'isActive'     => false,
-                ]);
-                $this->getEntityManager()->saveEntity($matching);
             }
         }
 
