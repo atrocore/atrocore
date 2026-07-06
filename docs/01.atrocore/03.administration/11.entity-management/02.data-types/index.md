@@ -338,25 +338,6 @@ Reference to another entity record. Creates relationships between different enti
 
 !! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
-#### Link to List Options
-
-A Link field can also reference records from the *List Options* entity, allowing the selectable values to be constrained to a specific list. When *List Options* is selected as the **Linked Entity**, an additional **List** field appears in the configuration – use it to select the list whose options should be available for selection.
-
-The selected list acts as a built-in filter: it is not visible in the UI filter panel, but only options belonging to that list appear when selecting a value. Additional filter conditions can be applied via **Filter Results** if needed.
-
-### List
-
-> The List field can be replaced with a Link field in the entity view, following the same migration approach as for [attribute](../../12.attribute-management/01.attributes/index.md#how-to-migrate-to-link-and-multiple-link).
-
-Single selection from a customizable list of options. Used for categories, statuses, and enumerated values.
-
-**Configuration options:**
-
-- **List**: Specifies the [list](../../08.lists/) of selectable values for the field
-- **Dropdown**: Displays the field as a dropdown selection in the UI
-- **Disable Empty Value**: Prevents the field from being set to an empty value
-- **Default**: Sets a default value for the field
-
 ### Measure
 
 > **Field only** - Not available for attributes
@@ -369,21 +350,6 @@ Single selection from a customizable list of measure units.
 - **Dropdown**: Displays the field as a dropdown selection in the UI
 - **Disable Empty Value**: Prevents the field from being set to an empty value
 - **Default**: Sets a default value for the field
-
-### Multi-value List
-
-> The Multi-value List field can be replaced with a Multiple Link field in the entity view, following the same migration approach as for [attribute](../../12.attribute-management/01.attributes/index.md#how-to-migrate-to-link-and-multiple-link).
-
-Multiple selections from a customizable list. Allows multiple categories or tags per record.
-
-**Configuration options:**
-
-- **List**: Specifies the [list](../../08.lists/) of selectable values for the field
-- **Dropdown**: Displays the field as a dropdown selection in the UI
-- **Default**: Sets a default value for the field
-- **Records per page (select dialog)**: Sets the number of records shown per page when selecting a value via the dialog.
-
-!! Avoid setting **Records per page (select dialog)** too high – it may slow down or freeze the user's browser.
 
 ### Multiple Link
 
@@ -453,28 +419,28 @@ Single currency selection from predefined options.
 
 - **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
 
-### Static List
+### List
 
 > **Field only** - Not available for attributes
 
-A Static List is a single-select field type that allows users to choose exactly one value from a predefined set of options. All options are defined directly within the field configuration. These options are referenced by code, do not have IDs, and cannot be reused in other fields.
+A List is a single-select field type that allows users to choose exactly one value from a predefined set of options. All options are defined directly within the field configuration. These options are referenced by code, do not have IDs, and cannot be reused in other fields.
 
 **Configuration options:**
 
 - **Options**: A list of predefined values available for selection
 - **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
 
-Static List options can have color as well as [List](#list) options.
+List options can have color.
 
-### Static Multi-value List
+### Multi-value List
 
 > **Field only** - Not available for attributes
 
-A Static Multi-value List is a multi-select field type that allows users to select one or more values from a predefined list. As with the Static List, options are field-specific, code-based, and do not have IDs.
+A Multi-value List is a multi-select field type that allows users to select one or more values from a predefined list. As with the List, options are field-specific, code-based, and do not have IDs.
 
 **Configuration options:**
 
 - **Options**: The predefined set of selectable values
 - **Is sorted (alphabetically)**: Enables automatic alphabetical sorting of values
 
-Static Multi-value List options can have color as well as [Multi-value List](#multi-value-list) options.
+Multi-value List options can have color.

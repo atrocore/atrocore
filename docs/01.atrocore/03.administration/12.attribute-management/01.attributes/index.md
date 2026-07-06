@@ -16,10 +16,10 @@ The Attribute entity comes with the following preconfigured fields; mandatory ar
 
 | **Field Name**           | **Description**                   |
 |--------------------------|-----------------------------------|
-| Attribute Type *					   | Attribute types are predefined in the system and can be defined via the drop-down menu                |
+| Type *					   | Attribute types are predefined in the system and can be defined via the drop-down menu                |
 | Entity *                 |Defines the entity for which the attribute can be used. One attribute can be linked to only one entity and the value of this field cannot be changed in the future.                     |
-| Code                    | Unique attribute code, consisting of small letters (a..z), numbers (0..9) and underscore symbol ("\_")        |
-| Attribute Name *      | Attribute name, can be set in different [languages](../../03.languages/index.md)                    |
+| System Name *           | Unique attribute system name, consisting of small letters (a..z), numbers (0..9) and underscore symbol ("\_"). Required and read-only.        |
+| Name *      | Attribute name, can be set in different [languages](../../03.languages/index.md)                    |
 | Channel                  | Allows you to set channel-specific attribute values. If a channel is added to an attribute, its name will be automatically added to the attribute name on the record page (for example, Image / Amazon). [Channels](../../../../05.pim/06.channels/index.md) are only available with the PIM module installed.
 | Attribute Group          | [Attribute group](../02.attribute-groups/index.md) name               |
 | Attribute Panel *        | [Attribute panel](../03.attribute-panels/index.md) name                 |
@@ -39,13 +39,13 @@ An attribute is a standard entity in AtroCore, for which the same functionality 
 
 Attribute records can be searched and filtered according to your needs. For details refer to the [Search and Filtering](../../../11.search-and-filtering/index.md) article in this user guide.
 
-## Attribute Codes
+## System Name
 
-It happens that you have to use attributes with the same name for different products. For example, the "size" attribute for shoes is not the same as the "size" attribute for outerwear. Such attributes can be of different types as well as have different possible values. In order to distinguish such attributes, an informative attribute code can be given, which should be unique for each attribute. For the example above, the following codes could be used: `size_footwear` and `size_clothes`.
+It happens that you have to use attributes with the same name for different products. For example, the "size" attribute for shoes is not the same as the "size" attribute for outerwear. Such attributes can be of different types as well as have different possible values. In order to distinguish such attributes, an informative system name can be given, which should be unique for each attribute. For the example above, the following system names could be used: `size_footwear` and `size_clothes`.
 
-![Attribute codes](./_assets/attribute-code.png){.medium}
+![System Name](./_assets/attribute-code.png){.medium}
 
-The attribute code is also used to reference attribute values in [script-type](../../../../10.developer-guide/80.twig-tutorial/) fields and serves as the key name for attributes in [API](../../../../10.developer-guide/10.rest-api/) responses. If code is not specified, the attribute's unique ID is used as a fallback.
+The system name is also used to reference attribute values in [script-type](../../../../10.developer-guide/80.twig-tutorial/) fields and serves as the key name for attributes in [API](../../../../10.developer-guide/10.rest-api/) responses. If the system name is not specified, the attribute's unique ID is used as a fallback.
 
 ## Available Attribute Types
 
@@ -60,7 +60,6 @@ Attributes are automatically validated according to their type. For a complete l
 Once an attribute has been created, its type cannot be changed to another type available in the system, with the following exceptions:
 
 - Any attribute type can be changed to the Script type.
-- The List type can be changed to Multi-value List.
 
 All other type changes are not allowed. When changing the attribute type to Script, the attribute values will be changed to Null. Please use this feature with care.
 
@@ -243,50 +242,6 @@ The **Allow null value** option determines whether the attribute can hold a Null
 If this checkbox is not selected (default), the attribute can only be **Yes** or **No**, and is displayed as a checkbox.
 
 If this checkbox is selected, the attribute can also be set to **Null** (no value set), and is displayed as a dropdown with options: Null, Yes, No.
-
-## Attributes of List and Multi-value List type
-
-!! **List** and **Multi-value List** attribute types remain available but will be deprecated in a future release. For new implementations, it is recommended to use **Link** and **Multiple Link** attribute types instead. See the [migration guidance](#how-to-migrate-to-link-and-multiple-link) below.
-
-List and Multi-value List attribute types are used to represent characteristics whose possible values are known in advance.
-
-The value of such an attribute is selected from a predefined list.
-
-- A **List** attribute allows selection of only one value.
-- A **Multi-List** attribute allows selection of multiple values.
-
-For both attribute types, the List field is mandatory and must be specified when creating the attribute. This field links the attribute to a predefined set of options, which must be created beforehand. The list defines the range of valid values that can be selected for the attribute. Read more about the List entity [here](../../08.lists/index.md).
-
-### Allowed Options setting
-
-A single List can be reused across multiple attributes or fields of type List or Multi-value List. However, in some cases, not all list options are relevant for every attribute.
-
-For example, an attribute like Material might use the same list, but require different options depending on context:
-
-- For clothing: Linen, Cotton, Wool
-- For jewelry: Gold, Silver, brass.
-
-However, for both attributes that characterize the material, the same list can be used. To avoid displaying irrelevant options when selecting a value for an attribute, you can configure the `Allowed Options` setting.
-
-![Allowed options](./_assets/allowed-options.png){.large}
-
-On the attribute page, use the `Allowed Options` field to define which values from the list are valid for that specific attribute. Only the specified options will be shown when a user selects a value for the attribute.
-
-This setting can also be defined per classification, allowing even more granular control over which options are visible in specific contexts.
-
-### How to migrate to Link and Multiple Link
-
-To replace a **List** attribute, create a new attribute with **Attribute Type** set to `Link`. To replace a **Multi-value List** attribute, set **Attribute Type** to `Multiple Link`.
-
-In both cases, set the **Linked Entity** field to `List Options`. Once selected, a **List** field will appear — select the same list that was used in the original attribute. After saving, the system automatically configures a filter so that only options from the selected list are shown.
-
-The selected list acts as a built-in filter: it is not visible in the UI filter panel, but only options belonging to that list appear when selecting a value. 
-
-> The `Allowed Options` configured on the original List or Multi-value List attribute or other additional filter conditions can be reflected in the `Filter Results` panel on the new Link or Multiple Link attribute. For further configuration, see [Filter Results](../../11.entity-management/03.fields-and-attributes/index.md#filter-results).
-
-To apply the new attribute to records, follow the steps described in [Add attributes to a record](#add-attributes-to-a-record).
-
-> For bulk replacement, [export](../../../../02.data-exchange/02.export-feeds/index.md) the records, update the attribute type and name to match the newly created attribute, then reimport them via [import](../../../../02.data-exchange/01.import-feeds/index.md).
 
 ## Attributes of Link and Multiple Link type
 

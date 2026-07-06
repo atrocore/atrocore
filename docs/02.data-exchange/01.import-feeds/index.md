@@ -101,7 +101,7 @@ The `Data Sourcing` section is type-dependent—each import feed type has its ow
 ![Import feed data processing](_assets/import-feeds-create-data-processing.png){.medium}
 
 - **Source Fields** – this field is initially empty. After uploading the file in the `Data sourcing` panel, you will see here the list of available columns from the imported file.
-- **List Value Separator** – separator for multi-value fields ([Multi-value List](../../01.atrocore/03.administration/11.entity-management/02.data-types/index.md#multi-value-list), [Array](../../01.atrocore/03.administration/11.entity-management/02.data-types/index.md#array))
+- **List Value Separator** – separator for multi-value fields ([Multiple Link](../../01.atrocore/03.administration/11.entity-management/02.data-types/index.md#multiple-link), [Array](../../01.atrocore/03.administration/11.entity-management/02.data-types/index.md#array))
 - **Field delimiter for relation** – separator for fields of related records
 - **Thousand separator** – optional thousand separator symbol. Numerical values without thousand separator will also be imported (e.g., both values 1234,34 and 1.234,34 will be imported if "." is defined as a thousand separator).
 - **Decimal mark** – decimal separator. Usually `.` or `,` should be defined here.
@@ -178,9 +178,9 @@ For [Integer Range](../../01.atrocore/03.administration/11.entity-management/02.
 
 In the configurator, it is needed to create two separate mapping rules for each Range field/attribute: select your Range field or attribute and choose `field name (From)` and `field name (To)`.
 
-### Multi-value List and Array Fields
+### Multiple Link and Array Fields
 
-Import [Multi-value list](../../01.atrocore/03.administration/11.entity-management/02.data-types/index.md#multi-value-list) and [Array](../../01.atrocore/03.administration/11.entity-management/02.data-types/index.md#array) values using `List Value Separator`:
+Import [Multiple Link](../../01.atrocore/03.administration/11.entity-management/02.data-types/index.md#multiple-link) and [Array](../../01.atrocore/03.administration/11.entity-management/02.data-types/index.md#array) values using `List Value Separator`:
 
 ![Configurator multi enum](_assets/import-feeds-example-multienum.png).
 
@@ -244,24 +244,6 @@ For URL-based file imports, configure the URL field rule. The 'Request headers' 
 ![Request headers](_assets/request-headers.png){.large}
 
 **Exception:** Product Main Image can be imported with product data. Provide image URL in the "Main Image" field, which will both create the file record and set it as the main image.
-
-### How To Import List Options
-
-List options can be imported into the system using import data from any type of [Data Sourcing](#Data-Sourcing). This enables users to create or update multiple options at once.
-
-The import data should contain:
-- A list of option values
-- A reference to the List each option belongs to (required only when creating new options or updating list assignments)
-
-Target entity should always be List Option. Each row represents a single List Option record.
-
-![Import List Options](./_assets/Import-List-Options.png){.medium}
-
-To correctly match existing records during import, it is recommended that system IDs of list options are used as unique identifiers when updating existing options in the list. If all option values are unique within the system, however, the option value (name) can be used as an identifier instead. The example feed configuration is shown in the image below:
-
-![field mapping](./_assets/field-mapping.png){.medium}
-
-When creating new list options it is recommended to link options to their corresponding lists within the same import feed usung [multiple relations](#multiple-relations) method. This ensures that all required relationships are established during the import process and prevents orphaned option records.
 
 ## Running Import Feed
 

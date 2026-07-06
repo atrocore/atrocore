@@ -138,7 +138,7 @@ Specifies that the field should be displayed in a non-editable state in the UI w
 
 ### Disabled options
 
-This property only appears for **List** and **Multi-value list** type fields. It specifies that the selected options should be disabled when certain conditions are met.
+This property only appears for **List**, **Multi-value List**, **Link**, and **Multiple Link** type fields. It specifies that the selected options should be disabled when certain conditions are met.
 
 ## Fields vs Attributes
 
