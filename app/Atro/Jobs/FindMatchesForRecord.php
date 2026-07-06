@@ -25,11 +25,11 @@ class FindMatchesForRecord extends FindMatchesForRecords
         $entityName = $job->getPayload()['entityName'] ?? null;
         $entityId = $job->getPayload()['entityId'] ?? null;
 
-        if (empty($entityName) || empty($entityId) || empty($matchingData['id'])) {
+        if (empty($entityName) || empty($entityId) || empty($matchingData['code'])) {
             return;
         }
 
-        if (empty($this->getConfig()->get("matchings.{$matchingData['id']}"))) {
+        if (empty($this->getConfig()->get("matchings.{$matchingData['code']}"))) {
             return;
         }
 
@@ -38,7 +38,7 @@ class FindMatchesForRecord extends FindMatchesForRecords
             return;
         }
 
-        if (!empty($entity->get(Matching::prepareFieldName($matchingData['id'])))) {
+        if (!empty($entity->get(Matching::prepareFieldName($matchingData['code'])))) {
             return;
         }
 

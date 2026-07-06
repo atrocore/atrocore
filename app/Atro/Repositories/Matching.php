@@ -128,7 +128,7 @@ class Matching extends Base
 
         if ($entity->isAttributeChanged('isActive')) {
             $matchings = $this->getConfig()->get('matchings', []);
-            $matchings[$entity->id] = !empty($entity->get('isActive'));
+            $matchings[$entity->get('code')] = !empty($entity->get('isActive'));
 
             $this->getConfig()->set('matchings', $matchings);
             $this->getConfig()->save();
@@ -190,7 +190,7 @@ class Matching extends Base
     public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId, string $matchedAt, bool $onlyIfAlreadySearched = false): void
     {
         $conn = $this->getDbal();
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
 
         $qb = $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))))
@@ -208,7 +208,7 @@ class Matching extends Base
 
     public function hasUnprocessedRecords(MatchingEntity $matching): bool
     {
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
         $conn   = $this->getDbal();
 
         foreach (array_unique([$matching->get('entity'), $matching->get('masterEntity')]) as $entityName) {
@@ -240,7 +240,7 @@ class Matching extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
 
         $res = $conn->createQueryBuilder()
             ->select("id, $column as val")
@@ -256,7 +256,7 @@ class Matching extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('entity')))))
             ->set($column, ':null')
@@ -271,7 +271,7 @@ class Matching extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entity->getEntityName()))))
             ->set($column, ':null')

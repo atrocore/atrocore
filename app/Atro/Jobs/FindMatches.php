@@ -39,7 +39,7 @@ class FindMatches extends AbstractJob implements JobInterface
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
-                'name'     => "Find matches for Matching {$matching->id}",
+                'name'     => "Find matches for Matching {$matching->get('code')}",
                 'type'     => 'FindMatchesForMatching',
                 'status'   => 'Pending',
                 'priority' => 20,

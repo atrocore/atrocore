@@ -25,11 +25,11 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
             return;
         }
 
-        if (empty($this->getConfig()->get("matchings.{$matchingData['id']}"))) {
+        if (empty($this->getConfig()->get("matchings.{$matchingData['code']}"))) {
             return;
         }
 
-        $fieldName = \Atro\Repositories\Matching::prepareFieldName($matchingData['id']);
+        $fieldName = \Atro\Repositories\Matching::prepareFieldName($matchingData['code']);
 
         $count = $this->getEntityManager()->getRepository($matchingData['entity'])
             ->where([$fieldName => null])
@@ -54,7 +54,7 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
                 break;
             }
 
-            if (empty($this->getConfig()->get("matchings.{$matchingData['id']}"))) {
+            if (empty($this->getConfig()->get("matchings.{$matchingData['code']}"))) {
                 break;
             }
 

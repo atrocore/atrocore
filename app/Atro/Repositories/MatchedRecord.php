@@ -152,7 +152,7 @@ class MatchedRecord extends Base
         }
 
         $userId = $this->getEntityManager()->getUser()->id;
-        $hash = md5(implode('_', [$matching->id, $matching->get('entity'), $sourceId, $matching->get('masterEntity'), $masterId]));
+        $hash = md5(implode('_', [$matching->get('code'), $matching->get('entity'), $sourceId, $matching->get('masterEntity'), $masterId]));
 
         $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
 
