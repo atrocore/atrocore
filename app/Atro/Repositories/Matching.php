@@ -31,14 +31,14 @@ class Matching extends Base
 
     public static function createCodeForMasterRecord(string $entityName): string
     {
-        return "$entityName-S2M";
+        return "$entityName-C2M";
     }
 
     public static function prepareFieldName(string $code): string
     {
         $parts = explode('-', $code);
 
-        return 'matching' . $parts[0] . ucfirst(strtolower($parts[1]));
+        return ucfirst($parts[0]) . ucfirst(strtolower($parts[1]));
     }
 
     public function activate(string $id): void

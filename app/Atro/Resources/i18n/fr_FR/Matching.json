@@ -9,8 +9,8 @@
   },
   "options": {
     "type": {
-      "duplicate": "Dupliquer",
-      "masterRecord": "Enregistrement de référence"
+      "duplicate": "Doublon - Doublon",
+      "masterRecord": "Contributeur - Maître"
     }
   },
   "labels": {

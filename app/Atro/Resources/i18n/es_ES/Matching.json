@@ -9,8 +9,8 @@
   },
   "options": {
     "type": {
-      "masterRecord": "Registro maestro",
-      "duplicate": "Duplicar"
+      "masterRecord": "Contribuidor - Maestro",
+      "duplicate": "Duplicado - Duplicado"
     }
   },
   "labels": {

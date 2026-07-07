@@ -56,7 +56,18 @@ class V2Dot3Dot10 extends Base
         }
 
         foreach ($res as $item) {
+            $tableName = Util::toUnderScore(lcfirst($item['entity']));
+
+            if ($this->isPgSQL()) {
+                $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " RENAME COLUMN matching_{$tableName}_s2m to {$tableName}_c2m");
+                $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " RENAME COLUMN matching_{$tableName}_d2d to {$tableName}_d2d");
+            } else {
+                $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " CHANGE matching_{$tableName}_s2m {$tableName}_c2m DATETIME DEFAULT NULL");
+                $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " CHANGE matching_{$tableName}_d2d {$tableName}_d2d DATETIME DEFAULT NULL");
+            }
+
             $uuid = \Atro\Core\Utils\IdGenerator::uuid();
+            $code = str_replace('-S2M', '-C2M', $item['id']);
 
             $this->getDbal()->createQueryBuilder()
                 ->update('matching')
@@ -65,8 +76,8 @@ class V2Dot3Dot10 extends Base
                 ->set('id', ':uuid')
                 ->where('id = :id')
                 ->setParameters([
-                    'name' => $item['id'],
-                    'code' => $item['id'],
+                    'name' => $code,
+                    'code' => $code,
                     'id'   => $item['id'],
                     'uuid' => $uuid,
                 ])

@@ -9,8 +9,8 @@
   },
   "options": {
     "type": {
-      "duplicate": "Duplikat",
-      "masterRecord": "Stammdatensatz"
+      "duplicate": "Duplikat - Duplikat",
+      "masterRecord": "Kontributor - Master"
     }
   },
   "labels": {

@@ -9,8 +9,8 @@
   },
   "options": {
     "type": {
-      "duplicate": "Duplikat",
-      "masterRecord": "Główny rekord"
+      "duplicate": "Duplikat - Duplikat",
+      "masterRecord": "Kontrybutor - Master"
     }
   },
   "labels": {

@@ -9,8 +9,8 @@
   },
   "options": {
     "type": {
-      "duplicate": "Дублікат",
-      "masterRecord": "Майстер-запис"
+      "duplicate": "Дублікат - Дублікат",
+      "masterRecord": "Контриб'ютор - Майстер"
     }
   },
   "labels": {
