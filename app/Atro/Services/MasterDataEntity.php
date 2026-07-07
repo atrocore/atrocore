@@ -26,6 +26,8 @@ class MasterDataEntity extends Base
 {
     public function updateMasterRecord(Entity $staging, ?Entity $master = null): bool
     {
+        // @todo
+
         if ($master === null) {
             $master = $staging->get('masterRecord');
         }
@@ -74,6 +76,8 @@ class MasterDataEntity extends Base
 
     public function createMasterRecord(Entity $staging): ?Entity
     {
+        // @todo
+
         $masterEntity = $this->getMetadata()->get(['scopes', $staging->getEntityName(), 'primaryEntityId']);
 
         if (empty($masterEntity) || !$this->getAcl()->check($masterEntity, 'create')) {
@@ -152,22 +156,6 @@ class MasterDataEntity extends Base
 
         $this->getEntityManager()->setUser($user);
         $this->getContainer()->get(\Atro\Core\UserContext::class)->set($user);
-    }
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        $entity->set('name', $this->getInjection('language')->translate($entity->id, 'scopeNames', 'Global'));
-        $entity->set('entity', $entity->id);
-        $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->id}.primaryEntityId"));
-    }
-
-    protected function checkProtectedFields(Entity $entity, \stdClass $data): void
-    {
-        $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->id}.primaryEntityId"));
-
-        parent::checkProtectedFields($entity, $data);
     }
 
     protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string

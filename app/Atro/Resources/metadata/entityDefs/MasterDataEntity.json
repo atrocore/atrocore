@@ -2,14 +2,9 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "notStorable": true,
-      "protected": true
-    },
-    "entity": {
-      "type": "varchar",
       "view": "views/fields/entity-type",
       "required": true,
-      "notStorable": true,
+      "unique": true,
       "customizable": false,
       "layoutRemoveDisabled": true,
       "conditionalProperties": {
@@ -25,34 +20,7 @@
     },
     "updateMasterAutomatically": {
       "type": "bool",
-      "default": false,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "masterEntity"
-            }
-          ]
-        }
-      }
-    },
-    "masterEntity": {
-      "type": "varchar",
-      "notStorable": true,
-      "protected": true,
-      "customizable": false,
-      "layoutRemoveDisabled": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "masterEntity"
-            }
-          ]
-        }
-      }
+      "default": false
     },
     "executeMergeAs": {
       "type": "enum",
@@ -61,75 +29,35 @@
         "system",
         "sameUser"
       ],
-      "tooltip": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "masterEntity"
-            }
-          ]
-        }
-      }
+      "tooltip": true
     },
     "mergingScript": {
       "type": "text",
       "view": "views/fields/script",
       "language": "json",
-      "default": "{# { \"skipped\": false, \"masterRecordData\": { \"name\" : \"{{ stagingRecord.name }}\" } } #}",
+      "default": "{# { \"skipped\": false, \"masterRecordData\": { \"name\" : \"{{ contributorRecord.name }}\" } } #}",
       "editorActions": {
         "addFields": {
-          "entityNameField": "masterEntity"
+          "entityNameField": "entityName"
         },
         "addAttributes": {
-          "entityNameField": "masterEntity"
+          "entityNameField": "entityName"
         }
       },
       "twigVariables": [
-        "stagingRecord",
-        "masterRecord",
-        "stagingRecords"
+        "contributorRecord",
+        "contributorRecords",
+        "masterRecord"
       ],
       "customizable": false,
       "layoutRemoveDisabled": true,
-      "tooltip": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "masterEntity"
-            }
-          ]
-        }
-      }
+      "tooltip": true
     },
     "confirmAutomatically": {
-      "type": "bool",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "masterEntity"
-            }
-          ]
-        }
-      }
+      "type": "bool"
     },
     "deleteInvalidMastersAutomatically": {
-      "type": "bool",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "masterEntity"
-            }
-          ]
-        }
-      }
+      "type": "bool"
     },
     "minimumMatchingScore": {
       "type": "int",
@@ -142,10 +70,6 @@
             {
               "type": "isTrue",
               "attribute": "confirmAutomatically"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "masterEntity"
             }
           ]
         },
@@ -154,10 +78,6 @@
             {
               "type": "isTrue",
               "attribute": "confirmAutomatically"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "masterEntity"
             }
           ]
         }

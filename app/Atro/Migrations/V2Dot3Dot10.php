@@ -12,10 +12,14 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Atro\Core\Utils\IdGenerator;
 
 class V2Dot3Dot10 extends Base
 {
+    private ?Metadata $metadata = null;
+
     public function getMigrationDateTime(): ?\DateTime
     {
         return new \DateTime('2026-06-18 17:00:00');
@@ -30,6 +34,48 @@ class V2Dot3Dot10 extends Base
 
     public function migrateMasterDataEntity(): void
     {
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE master_data_entity ADD name VARCHAR(255) DEFAULT NULL");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_64DEC5F45E237E06EB3B4E33 ON master_data_entity (name, deleted)");
+        } else {
+            $this->exec("ALTER TABLE master_data_entity ADD name VARCHAR(255) DEFAULT NULL COLLATE `utf8_bin`");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_64DEC5F45E237E06EB3B4E33 ON master_data_entity (name, deleted)");
+        }
+
+        $derivatives = [];
+        foreach ($this->getMetadata()->get('scopes') ?? [] as $entityName => $defs) {
+            if (!empty($defs['primaryEntityId'])) {
+                $derivatives[] = $entityName;
+            }
+        }
+
+        if (!empty($derivatives)) {
+            $this->getDbal()->createQueryBuilder()
+                ->delete('master_data_entity')
+                ->where('id IN (:ids)')
+                ->setParameter('ids', $derivatives, $this->getDbal()::PARAM_STR_ARRAY)
+                ->executeQuery();
+        }
+
+        $res = $this->getDbal()->createQueryBuilder()
+            ->select('*')
+            ->from('master_data_entity')
+            ->where('name IS NULL')
+            ->fetchAllAssociative();
+
+        foreach ($res as $row) {
+            $this->getDbal()->createQueryBuilder()
+                ->update('master_data_entity')
+                ->set('name', 'id')
+                ->set('id', ':uuid')
+                ->set('merging_script', ':mergingScript')
+                ->where('id = :id')
+                ->setParameter('id', $row['id'])
+                ->setParameter('uuid', IdGenerator::uuid())
+                ->setParameter('mergingScript', str_replace('stagingRecord', 'contributorRecord', $row['merging_script']))
+                ->executeQuery();
+        }
+
         $path = 'data/metadata/scopes';
 
         if (is_dir($path)) {
@@ -70,6 +116,7 @@ class V2Dot3Dot10 extends Base
                 ->select('*')
                 ->from('matching')
                 ->where('deleted = :false')
+                ->andWhere('code IS NULL')
                 ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
                 ->fetchAllAssociative();
         } catch (\Throwable) {
@@ -87,7 +134,7 @@ class V2Dot3Dot10 extends Base
                 $this->exec("ALTER TABLE " . $this->getDbal()->quoteIdentifier($tableName) . " CHANGE matching_{$tableName}_d2d {$tableName}_d2d DATETIME DEFAULT NULL");
             }
 
-            $uuid = \Atro\Core\Utils\IdGenerator::uuid();
+            $uuid = IdGenerator::uuid();
             $code = str_replace('-S2M', '-C2M', $item['id']);
 
             $this->getDbal()->createQueryBuilder()
@@ -132,7 +179,7 @@ class V2Dot3Dot10 extends Base
 
     public function migrateDerivativeMiddle(): void
     {
-        $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
+        $metadata = $this->getMetadata();
 
         foreach ($metadata->get('scopes') ?? [] as $scope => $scopeDefs) {
             if (empty($scopeDefs['primaryEntityId'])) {
@@ -174,6 +221,15 @@ class V2Dot3Dot10 extends Base
                 }
             }
         }
+    }
+
+    private function getMetadata(): Metadata
+    {
+        if ($this->metadata === null) {
+            $this->metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
+        }
+
+        return $this->metadata;
     }
 
     private function exec(string $sql): void
