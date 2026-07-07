@@ -2,6 +2,8 @@
   "fields": {
     "name": {
       "type": "enum",
+      "translation": "Global.scopeNames",
+      "isSorted": true,
       "required": true,
       "unique": true,
       "customizable": false,

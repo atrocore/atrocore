@@ -2,5 +2,23 @@
   {
     "name": "name",
     "link": true
+  },
+  {
+    "name": "executeMergeAs"
+  },
+  {
+    "name": "updateMasterAutomatically"
+  },
+  {
+    "name": "confirmAutomatically"
+  },
+  {
+    "name": "minimumMatchingScore"
+  },
+  {
+    "name": "deleteInvalidMastersAutomatically"
+  },
+  {
+    "name": "description"
   }
 ]
