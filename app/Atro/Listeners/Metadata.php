@@ -2639,7 +2639,7 @@ class Metadata extends AbstractMetadataListener
 
     protected function prepareMetadataViaMatchings(array &$data): void
     {
-        if (!$this->getConfig()->get('isInstalled', false)) {
+        if (!$this->getConfig()->get('isInstalled', false) || \Atro\Core\Application::isSystemUpdating()) {
             return;
         }
 
@@ -2650,6 +2650,10 @@ class Metadata extends AbstractMetadataListener
                     ->select('id, code, type, entity, master_entity, is_active')
                     ->from('matching')
                     ->where('deleted=:false')
+                    ->andWhere('code IS NOT NULL')
+                    ->andWhere('type IS NOT NULL')
+                    ->andWhere('entity IS NOT NULL')
+                    ->andWhere('master_entity IS NOT NULL')
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->fetchAllAssociative();
             } catch (\Throwable) {
