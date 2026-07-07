@@ -3,6 +3,7 @@
     "sourceEntities": "Source-to-Staging Pipelines"
   },
   "fields": {
+    "entity": "Entité",
     "masterEntity": "Entité de référence",
     "mergingScript": "Script de mapping",
     "updateMasterAutomatically": "Mise à jour automatique du master",
@@ -16,7 +17,9 @@
   },
   "exceptions": {
     "mergingScriptIsMissing": "Le script de fusion n'est pas disponible pour l'entité maître",
-    "mergingScriptIsNotValid": "Le script de fusion renvoie une charge utile invalide : %s"
+    "mergingScriptIsNotValid": "Le script de fusion renvoie une charge utile invalide : %s",
+    "entityTypeInvalid": "Le type d'entité \"%s\" ne peut pas être utilisé pour la gestion des données de référence",
+    "masterDataEntityAlreadyExists": "La Master Data Entity pour \"%s\" existe déjà"
   },
   "options": {
     "executeMergeAs": {

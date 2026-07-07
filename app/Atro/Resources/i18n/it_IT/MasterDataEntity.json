@@ -1,5 +1,6 @@
 {
   "fields": {
+    "entity": "Entità",
     "masterEntity": "Entità master",
     "mergingScript": "Script di mappatura",
     "sourceEntity": "Entità sorgente",
@@ -14,7 +15,9 @@
   },
   "exceptions": {
     "mergingScriptIsMissing": "Manca lo script di fusione per l'entità master",
-    "mergingScriptIsNotValid": "Lo script di fusione restituisce un carico utile non valido: %s"
+    "mergingScriptIsNotValid": "Lo script di fusione restituisce un carico utile non valido: %s",
+    "entityTypeInvalid": "Il tipo di entità \"%s\" non può essere utilizzato per la gestione dei dati master",
+    "masterDataEntityAlreadyExists": "La Master Data Entity per \"%s\" esiste già"
   },
   "options": {
     "executeMergeAs": {

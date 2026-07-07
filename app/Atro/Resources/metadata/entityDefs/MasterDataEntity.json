@@ -5,6 +5,24 @@
       "notStorable": true,
       "protected": true
     },
+    "entity": {
+      "type": "varchar",
+      "view": "views/fields/entity-type",
+      "required": true,
+      "notStorable": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
     "updateMasterAutomatically": {
       "type": "bool",
       "default": false,

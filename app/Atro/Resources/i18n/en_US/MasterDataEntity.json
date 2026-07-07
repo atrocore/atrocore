@@ -3,6 +3,7 @@
     "sourceEntities": "Source-to-Staging Pipelines"
   },
   "fields": {
+    "entity": "Entity",
     "masterEntity": "Master Entity",
     "mergingScript": "Merging Script",
     "updateMasterAutomatically": "Update Master Automatically",
@@ -23,6 +24,8 @@
   },
   "exceptions": {
     "mergingScriptIsMissing": "Merging script is missing for master entity",
-    "mergingScriptIsNotValid": "Merging script return invalid payload: %s"
+    "mergingScriptIsNotValid": "Merging script return invalid payload: %s",
+    "entityTypeInvalid": "Entity type \"%s\" cannot be used for master data management",
+    "masterDataEntityAlreadyExists": "Master Data Entity for \"%s\" already exists"
   }
 }

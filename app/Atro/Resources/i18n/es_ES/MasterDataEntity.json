@@ -1,5 +1,6 @@
 {
   "fields": {
+    "entity": "Entidad",
     "masterEntity": "Entidad principal",
     "mergingScript": "Guión cartográfico",
     "sourceEntity": "Entidad de origen",
@@ -14,7 +15,9 @@
   },
   "exceptions": {
     "mergingScriptIsMissing": "Falta el script de fusión para la entidad maestra",
-    "mergingScriptIsNotValid": "El script de fusión devuelve una carga útil no válida: %s"
+    "mergingScriptIsNotValid": "El script de fusión devuelve una carga útil no válida: %s",
+    "entityTypeInvalid": "El tipo de entidad \"%s\" no se puede utilizar para la gestión de datos maestros",
+    "masterDataEntityAlreadyExists": "La Master Data Entity para \"%s\" ya existe"
   },
   "options": {
     "executeMergeAs": {

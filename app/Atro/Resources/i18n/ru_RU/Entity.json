@@ -42,9 +42,7 @@
     "deleteValuesAfterUnlinkingClassification": "Удалите значения атрибутов после отсоединения классификаций",
     "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически",
     "primaryEntity": "Первичная сущность",
-    "role": "Роль",
-    "hasStaging": "Включить постановку",
-    "stagingEntity": "Постановочная сущность"
+    "role": "Роль"
   },
   "options": {
     "type": {
@@ -67,7 +65,7 @@
     "other": "Другие",
     "resetToDefault": "Восстановить по умолчанию",
     "attributes": "Атрибуты",
-    "mdm": "Управление основными данными"
+    "derivation": "Производность"
   },
   "confirmations": {
     "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"

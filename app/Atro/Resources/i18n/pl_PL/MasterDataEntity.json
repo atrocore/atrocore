@@ -1,5 +1,6 @@
 {
   "fields": {
+    "entity": "Encja",
     "masterEntity": "Podmiot główny",
     "mergingScript": "Skrypt mapowania",
     "sourceEntity": "Źródłowa Jednostka",
@@ -14,7 +15,9 @@
   },
   "exceptions": {
     "mergingScriptIsMissing": "Brakuje skryptu scalającego dla jednostki master",
-    "mergingScriptIsNotValid": "Skrypt scalania zwraca nieprawidłowy ładunek: %s"
+    "mergingScriptIsNotValid": "Skrypt scalania zwraca nieprawidłowy ładunek: %s",
+    "entityTypeInvalid": "Typ encji \"%s\" nie może być używany do zarządzania danymi podstawowymi",
+    "masterDataEntityAlreadyExists": "Master Data Entity dla \"%s\" już istnieje"
   },
   "options": {
     "executeMergeAs": {

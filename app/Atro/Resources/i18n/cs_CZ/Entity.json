@@ -43,8 +43,6 @@
     "linkAttributesWithClassificationAutomatically": "Automatické propojení atributů s klasifikací",
     "primaryEntity": "Primární entita",
     "derivativeEntities": "Derivatives",
-    "hasStaging": "Povolení etapizace",
-    "stagingEntity": "Entita etapizace",
     "role": "Role"
   },
   "options": {
@@ -69,7 +67,7 @@
     "other": "Další",
     "resetToDefault": "Obnovení výchozího nastavení",
     "attributes": "Atributy",
-    "mdm": "Správa hlavních dat"
+    "derivation": "Odvození"
   },
   "confirmations": {
     "resetToDefault": "Jste si jisti, že chcete obnovit výchozí konfiguraci?"

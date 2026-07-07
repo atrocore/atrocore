@@ -1,5 +1,6 @@
 {
   "fields": {
+    "entity": "Сущность",
     "masterEntity": "Мастер",
     "mergingScript": "Скрипт трансформации",
     "sourceEntity": "Исходная сущность",
@@ -14,7 +15,9 @@
   },
   "exceptions": {
     "mergingScriptIsMissing": "Скрипт слияния отсутствует для главной сущности",
-    "mergingScriptIsNotValid": "Скрипт слияния возвращает недопустимую полезную нагрузку: %s"
+    "mergingScriptIsNotValid": "Скрипт слияния возвращает недопустимую полезную нагрузку: %s",
+    "entityTypeInvalid": "Тип сущности \"%s\" не может использоваться для управления основными данными",
+    "masterDataEntityAlreadyExists": "Master Data Entity для \"%s\" уже существует"
   },
   "options": {
     "executeMergeAs": {

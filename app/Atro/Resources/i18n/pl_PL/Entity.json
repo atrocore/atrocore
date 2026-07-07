@@ -43,9 +43,7 @@
     "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją",
     "primaryEntity": "Podmiot główny",
     "derivativeEntities": "Derivatives",
-    "role": "Rola",
-    "stagingEntity": "Podmiot etapowy",
-    "hasStaging": "Proszę włączyć etapowanie"
+    "role": "Rola"
   },
   "options": {
     "type": {
@@ -69,7 +67,7 @@
     "other": "Inne",
     "resetToDefault": "Resetuj do domyślnego",
     "attributes": "Atrybuty",
-    "mdm": "Zarządzanie danymi podstawowymi"
+    "derivation": "Derywacja"
   },
   "confirmations": {
     "resetToDefault": "Czy na pewno chce Pan przywrócić domyślną konfigurację?"

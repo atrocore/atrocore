@@ -3,6 +3,7 @@
     "sourceEntities": "Source-to-Staging Pipelines"
   },
   "fields": {
+    "entity": "Entität",
     "masterEntity": "Stammdaten-Entität",
     "mergingScript": "Skript zusammenführen",
     "updateMasterAutomatically": "Master automatisch aktualisieren",
@@ -16,7 +17,9 @@
   },
   "exceptions": {
     "mergingScriptIsMissing": "Zusammenführungsskript fehlt für Master-Entität",
-    "mergingScriptIsNotValid": "Skript zum Zusammenführen gibt ungültige Nutzdaten zurück: %s"
+    "mergingScriptIsNotValid": "Skript zum Zusammenführen gibt ungültige Nutzdaten zurück: %s",
+    "entityTypeInvalid": "Der Entitätstyp \"%s\" kann nicht für das Stammdaten-Management verwendet werden",
+    "masterDataEntityAlreadyExists": "Master Data Entity für \"%s\" existiert bereits"
   },
   "options": {
     "executeMergeAs": {

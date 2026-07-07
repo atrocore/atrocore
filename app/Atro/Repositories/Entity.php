@@ -154,8 +154,6 @@ class Entity extends ReferenceData
             $row[$boolField] = !empty($row[$boolField]);
         }
 
-        $stagingEntityId = $this->getStagingEntityId($code);
-
         $res = array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
@@ -168,10 +166,6 @@ class Entity extends ReferenceData
             'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
             'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
             'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
-            'hasMasterDataEntity'   => $this->getMetadata()->get(['scopes', $code, 'matchDuplicates']) || $this->getMetadata()->get(['scopes', $code, 'matchMasterRecords']),
-            'hasStaging'            => !empty($stagingEntityId),
-            'stagingEntityId'       => $stagingEntityId,
-            'stagingEntityName'     => empty($stagingEntityId) ? null : $this->getLanguage()->translate($stagingEntityId, 'scopeNames'),
         ]);
 
 
@@ -426,19 +420,6 @@ class Entity extends ReferenceData
                     ]);
                 }
                 $saveMetadata = true;
-            } elseif ($field === 'hasStaging') {
-                if (!empty($entity->get($field))) {
-                    $staging = $this->get();
-                    $staging->set('code', $entity->get('code') . 'Staging');
-                    $staging->set('name', $entity->get('code') . 'Staging');
-                    $staging->set('namePlural', $entity->get('code') . 'Stagings');
-                    $staging->set('primaryEntityId', $entity->id);
-                    $staging->set('role', 'contributor');
-                    $this->save($staging);
-                } else {
-                    $stagingEntity = $this->get($entity->get('stagingEntityId'));
-                    $this->deleteEntity($stagingEntity);
-                }
             } else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
 
@@ -698,20 +679,6 @@ class Entity extends ReferenceData
             }
         }
         $entity->set('nonDuplicatableFields', $fields);
-    }
-
-    protected function getStagingEntityId(string $code): ?string
-    {
-        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
-            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $code) {
-                $role = $scopeDefs['role'] ?? 'contributor';
-                if ($role === 'contributor') {
-                    return $scopeName;
-                }
-            }
-        }
-
-        return null;
     }
 
     protected function getDerivativeEntitiesIds(string $code): array

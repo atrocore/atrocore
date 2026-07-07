@@ -43,9 +43,7 @@
     "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación",
     "primaryEntity": "Entidad primaria",
     "derivativeEntities": "Derivatives",
-    "role": "Rol",
-    "hasStaging": "Habilitar la puesta a disposición",
-    "stagingEntity": "Entidad de puesta en escena"
+    "role": "Rol"
   },
   "options": {
     "type": {
@@ -69,7 +67,7 @@
     "other": "Otros",
     "resetToDefault": "Restablecer a (por defecto)",
     "attributes": "Atributos",
-    "mdm": "Gestión de datos maestros"
+    "derivation": "Derivación"
   },
   "confirmations": {
     "resetToDefault": "¿Está seguro de que desea restablecer la configuración por defecto?"

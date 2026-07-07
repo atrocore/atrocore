@@ -205,11 +205,14 @@ class Metadata extends AbstractMetadataListener
             return;
         }
 
-        // Prepare options for the 'sourceEntity' field of the 'SourceToStagingPipeline' entity.
+        // Prepare options for the 'sourceEntity' field of the 'SourceToStagingPipeline' entity
+        // and for the 'entity' field of the 'MasterDataEntity' entity.
         $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'] = [];
+        $data['entityDefs']['MasterDataEntity']['fields']['entity']['options'] = [];
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'MasterDataEntity') {
                 $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'][] = $scope;
+                $data['entityDefs']['MasterDataEntity']['fields']['entity']['options'][] = $scope;
             }
         }
 

@@ -43,9 +43,7 @@
     "deleteValuesAfterUnlinkingClassification": "Видалити значення атрибутів після від’єднання класифікацій",
     "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації",
     "primaryEntity": "Первинна сутність",
-    "role": "Роль",
-    "hasStaging": "Увімкнути staging",
-    "stagingEntity": "Staging-сутність"
+    "role": "Роль"
   },
   "options": {
     "type": {
@@ -68,7 +66,7 @@
     "other": "Інше",
     "resetToDefault": "Скинути до значень за замовчуванням",
     "attributes": "Атрибути",
-    "mdm": "Управління основними даними"
+    "derivation": "Похідність"
   },
   "confirmations": {
     "resetToDefault": "Ви впевнені, що хочете скинути конфігурацію до заводських налаштувань?"

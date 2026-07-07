@@ -3,6 +3,7 @@
     "sourceEntities": "Пайплайни джерело-стейджинг"
   },
   "fields": {
+    "entity": "Сутність",
     "masterEntity": "Майстер-сутність",
     "mergingScript": "Скрипт трансформації",
     "updateMasterAutomatically": "Автоматично оновлювати майстер-запис",
@@ -16,7 +17,9 @@
   },
   "exceptions": {
     "mergingScriptIsMissing": "Відсутній сценарій злиття для головної сутності",
-    "mergingScriptIsNotValid": "Скрипт злиття повертає некоректне корисне навантаження: %s"
+    "mergingScriptIsNotValid": "Скрипт злиття повертає некоректне корисне навантаження: %s",
+    "entityTypeInvalid": "Тип сутності \"%s\" не може використовуватися для управління основними даними",
+    "masterDataEntityAlreadyExists": "Master Data Entity для \"%s\" вже існує"
   },
   "options": {
     "executeMergeAs": {

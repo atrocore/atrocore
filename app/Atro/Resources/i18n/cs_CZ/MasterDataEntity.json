@@ -1,5 +1,6 @@
 {
   "fields": {
+    "entity": "Entita",
     "masterEntity": "Hlavní subjekt",
     "mergingScript": "Mapovací skript",
     "sourceEntity": "Zdrojová entita",
@@ -14,7 +15,9 @@
   },
   "exceptions": {
     "mergingScriptIsMissing": "Chybí skript pro sloučení pro hlavní entitu",
-    "mergingScriptIsNotValid": "Slučovací skript vrací neplatné užitečné zatížení: %s"
+    "mergingScriptIsNotValid": "Slučovací skript vrací neplatné užitečné zatížení: %s",
+    "entityTypeInvalid": "Typ entity \"%s\" nelze použít pro správu hlavních dat",
+    "masterDataEntityAlreadyExists": "Master Data Entity pro \"%s\" již existuje"
   },
   "options": {
     "executeMergeAs": {
