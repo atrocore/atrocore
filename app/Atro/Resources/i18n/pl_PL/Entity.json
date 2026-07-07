@@ -60,7 +60,7 @@
     },
     "role": {
       "base": "Base",
-      "staging": "Inscenizacja"
+      "contributor": "Współtwórca"
     }
   },
   "labels": {

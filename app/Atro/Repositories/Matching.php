@@ -63,7 +63,7 @@ class Matching extends Base
 
         if ($entity->get('type') === 'masterRecord' && ($entity->isNew() || $entity->isAttributeChanged('entity'))) {
             $scopeDefs = $this->getMetadata()->get("scopes.{$entity->get('entity')}") ?? [];
-            if (empty($scopeDefs['primaryEntityId']) || ($scopeDefs['role'] ?? null) !== 'staging') {
+            if (empty($scopeDefs['primaryEntityId']) || ($scopeDefs['role'] ?? null) !== 'contributor') {
                 throw new BadRequest(
                     sprintf(
                         $this->getLanguage()->translate('masterRecordEntityInvalid', 'exceptions', 'Matching'),

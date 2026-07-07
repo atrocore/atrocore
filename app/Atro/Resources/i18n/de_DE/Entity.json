@@ -61,7 +61,7 @@
     },
     "role": {
       "base": "Base",
-      "staging": "Staging"
+      "contributor": "Mitwirkender"
     }
   },
   "labels": {

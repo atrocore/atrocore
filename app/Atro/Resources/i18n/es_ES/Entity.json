@@ -60,7 +60,7 @@
     },
     "role": {
       "base": "Base",
-      "staging": "Puesta en escena"
+      "contributor": "Contribuidor"
     }
   },
   "labels": {

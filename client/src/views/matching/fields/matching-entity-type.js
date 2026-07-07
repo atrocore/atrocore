@@ -37,7 +37,7 @@ Espo.define('views/matching/fields/matching-entity-type', 'views/fields/entity-t
 
             if (this.model.get('type') === 'masterRecord') {
                 const defs = this.scopesMetadataDefs[entityType] || {};
-                return !!defs.primaryEntityId && defs.role === 'staging';
+                return !!defs.primaryEntityId && defs.role === 'contributor';
             }
 
             return true;

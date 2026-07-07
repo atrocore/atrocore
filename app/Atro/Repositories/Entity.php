@@ -433,7 +433,7 @@ class Entity extends ReferenceData
                     $staging->set('name', $entity->get('code') . 'Staging');
                     $staging->set('namePlural', $entity->get('code') . 'Stagings');
                     $staging->set('primaryEntityId', $entity->id);
-                    $staging->set('role', 'staging');
+                    $staging->set('role', 'contributor');
                     $this->save($staging);
                 } else {
                     $stagingEntity = $this->get($entity->get('stagingEntityId'));
@@ -704,8 +704,8 @@ class Entity extends ReferenceData
     {
         foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
             if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $code) {
-                $role = $scopeDefs['role'] ?? 'staging';
-                if ($role === 'staging') {
+                $role = $scopeDefs['role'] ?? 'contributor';
+                if ($role === 'contributor') {
                     return $scopeName;
                 }
             }

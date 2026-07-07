@@ -60,7 +60,7 @@
     },
     "role": {
       "base": "Base",
-      "staging": "Etapizace"
+      "contributor": "Přispěvatel"
     }
   },
   "labels": {

@@ -44,7 +44,7 @@ class SourceToStagingPipeline extends Base
         $stagingEntityId = $entity->get('stagingEntityId');
         if (!empty($stagingEntityId)) {
             $scopeDefs = $this->getMetadata()->get(['scopes', $stagingEntityId]) ?? [];
-            if (empty($scopeDefs['primaryEntityId']) || ($scopeDefs['role'] ?? null) !== 'staging') {
+            if (empty($scopeDefs['primaryEntityId']) || ($scopeDefs['role'] ?? null) !== 'contributor') {
                 throw new BadRequest("Entity '$stagingEntityId' is not a valid staging entity.");
             }
         }
