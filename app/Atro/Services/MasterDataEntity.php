@@ -24,21 +24,19 @@ use Espo\ORM\EntityCollection;
 
 class MasterDataEntity extends Base
 {
-    public function updateMasterRecord(Entity $staging, ?Entity $master = null): bool
+    public function updateMasterRecord(Entity $contributor, ?Entity $master = null): bool
     {
-        // @todo
-
         if ($master === null) {
-            $master = $staging->get('masterRecord');
+            $master = $contributor->get('masterRecord');
         }
 
         if (empty($master) || !$this->getAcl()->check($master->getEntityName(), 'edit')) {
             throw new Forbidden();
         }
 
-        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $staging->getEntityName());
+        $masterDataEntity = $this->getRepository()->getByEntityName($master->getEntityName());
         if (empty($masterDataEntity)) {
-            throw new BadRequest("MasterDataEntity with entityType {$staging->getEntityName()} not found.");
+            throw new BadRequest("MasterDataEntity for entity {$master->getEntityName()} not found.");
         }
 
         $mergingScript = $masterDataEntity->get('mergingScript');
@@ -47,9 +45,9 @@ class MasterDataEntity extends Base
         }
 
         $templateData = [
-            'stagingRecord'  => $staging,
-            'masterRecord'   => $master,
-            'stagingRecords' => $master->get("derived{$staging->getEntityName()}Records", ['noCache' => true])
+            'contributorRecord'  => $contributor,
+            'masterRecord'       => $master,
+            'contributorRecords' => $master->get("derived{$contributor->getEntityName()}Records", ['noCache' => true])
         ];
 
         $res = $this->getTwig()->renderTemplate($mergingScript, $templateData);
@@ -74,19 +72,17 @@ class MasterDataEntity extends Base
         return true;
     }
 
-    public function createMasterRecord(Entity $staging): ?Entity
+    public function createMasterRecord(Entity $contributor): ?Entity
     {
-        // @todo
-
-        $masterEntity = $this->getMetadata()->get(['scopes', $staging->getEntityName(), 'primaryEntityId']);
+        $masterEntity = $this->getMetadata()->get(['scopes', $contributor->getEntityName(), 'primaryEntityId']);
 
         if (empty($masterEntity) || !$this->getAcl()->check($masterEntity, 'create')) {
             throw new Forbidden();
         }
 
-        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $staging->getEntityName());
+        $masterDataEntity = $this->getRepository()->getByEntityName($masterEntity);
         if (empty($masterDataEntity)) {
-            throw new BadRequest("MasterDataEntity with entityType {$staging->getEntityName()} not found.");
+            throw new BadRequest("MasterDataEntity for entity {$masterEntity} not found.");
         }
 
         $mergingScript = $masterDataEntity->get('mergingScript');
@@ -95,9 +91,9 @@ class MasterDataEntity extends Base
         }
 
         $templateData = [
-            'stagingRecord'  => $staging,
-            'masterRecord'   => null,
-            'stagingRecords' => new EntityCollection([], $staging->getEntityName())
+            'contributorRecord'  => $contributor,
+            'masterRecord'       => null,
+            'contributorRecords' => new EntityCollection([], $contributor->getEntityName())
         ];
 
         $res = $this->getTwig()->renderTemplate($mergingScript, $templateData);
