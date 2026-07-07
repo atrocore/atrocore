@@ -18,7 +18,9 @@
     "mergingScriptIsMissing": "Falta el script de fusión para la entidad maestra",
     "mergingScriptIsNotValid": "El script de fusión devuelve una carga útil no válida: %s",
     "entityTypeInvalid": "El tipo de entidad \"%s\" no se puede utilizar para la consolidación",
-    "consolidationAlreadyExists": "La consolidación para \"%s\" ya existe"
+    "consolidationAlreadyExists": "La consolidación para \"%s\" ya existe",
+    "contributorAlreadyExists": "La entidad \"%s\" ya tiene un derivado con el rol «Contribuidor»",
+    "contributorCodeIsBusy": "El código de entidad \"%s\" ya está en uso"
   },
   "options": {
     "executeMergeAs": {

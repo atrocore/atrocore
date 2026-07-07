@@ -78,6 +78,7 @@
     "apiRequest": "API request",
     "style": "Styles",
     "incomingWebhook": "Incoming Webhooks",
+    "consolidation": "Consolidations",
     "matchings": "Matchings",
     "clusters": "Clusters",
     "sourceToStagingPipeline": "Source-to-Staging Pipelines",
@@ -174,6 +175,7 @@
     "rebuildDb": "The changes that will be applied to your database when you click the 'Apply' button are listed below. Some data may be incompatible with the new software version and could be lost. This action is irreversible."
   },
   "descriptions": {
+    "consolidation": "Configure consolidation for an entity to merge data from its contributor records into consolidated master records.",
     "matchings": "Matchings helps identify similar records across entities by using user-defined rules.",
     "clusters": "Use clusters to group similar records within master data management and match them with each other.",
     "sourceToStagingPipeline": "Define mapping rules that automatically transform and push source entity records to their corresponding staging entities.",

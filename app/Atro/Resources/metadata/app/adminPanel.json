@@ -118,6 +118,12 @@
     "label": "MasterDataManagement",
     "itemList": [
       {
+        "url": "#Consolidation",
+        "label": "consolidation",
+        "description": "consolidation",
+        "icon": "ph ph-crown"
+      },
+      {
         "url": "#Matching",
         "label": "matchings",
         "description": "matchings",

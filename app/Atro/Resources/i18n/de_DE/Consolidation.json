@@ -18,7 +18,9 @@
     "mergingScriptIsMissing": "Zusammenführungsskript fehlt für Master-Entität",
     "mergingScriptIsNotValid": "Skript zum Zusammenführen gibt ungültige Nutzdaten zurück: %s",
     "entityTypeInvalid": "Der Entitätstyp \"%s\" kann nicht für die Konsolidierung verwendet werden",
-    "consolidationAlreadyExists": "Konsolidierung für \"%s\" existiert bereits"
+    "consolidationAlreadyExists": "Konsolidierung für \"%s\" existiert bereits",
+    "contributorAlreadyExists": "Die Entität \"%s\" hat bereits eine Ableitung mit der Rolle \"Mitwirkender\"",
+    "contributorCodeIsBusy": "Der Entitätscode \"%s\" wird bereits verwendet"
   },
   "options": {
     "executeMergeAs": {

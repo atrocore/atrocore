@@ -29,6 +29,17 @@ class Consolidation extends Base
         return $this->where(['name' => $entityName])->findOne();
     }
 
+    public function getContributorEntityName(string $masterEntityName): ?string
+    {
+        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
+            if (($scopeDefs['primaryEntityId'] ?? null) === $masterEntityName && ($scopeDefs['role'] ?? null) === 'contributor') {
+                return $scopeName;
+            }
+        }
+
+        return null;
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
@@ -52,6 +63,24 @@ class Consolidation extends Base
                 );
             }
 
+            if (!empty($this->getContributorEntityName($entityName))) {
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()->translate('contributorAlreadyExists', 'exceptions', 'Consolidation'),
+                        $entityName
+                    )
+                );
+            }
+
+            if (!empty($this->getMetadata()->get(['scopes', $entityName . 'Contributor']))) {
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()->translate('contributorCodeIsBusy', 'exceptions', 'Consolidation'),
+                        $entityName . 'Contributor'
+                    )
+                );
+            }
+
             // remove a soft-deleted record with the same name to avoid a unique index collision
             $this->getDbal()->createQueryBuilder()
                 ->delete($this->getDbal()->quoteIdentifier('consolidation'))
@@ -63,6 +92,31 @@ class Consolidation extends Base
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->isNew()) {
+            $this->createContributorEntity($entity);
+        }
+    }
+
+    protected function createContributorEntity(Entity $entity): void
+    {
+        $code = $entity->get('name') . 'Contributor';
+
+        $entityRepository = $this->getEntityManager()->getRepository('Entity');
+
+        $contributor = $entityRepository->get();
+        $contributor->set('code', $code);
+        $contributor->set('name', $code);
+        $contributor->set('namePlural', $code . 's');
+        $contributor->set('primaryEntityId', $entity->get('name'));
+        $contributor->set('role', 'contributor');
+
+        $entityRepository->save($contributor);
     }
 
     protected function isEntityTypeAllowed(string $entityName): bool
@@ -90,6 +144,23 @@ class Consolidation extends Base
 
         foreach ($pipelines as $pipeline) {
             $this->getEntityManager()->removeEntity($pipeline);
+        }
+
+        $this->removeContributorEntity($entity);
+    }
+
+    protected function removeContributorEntity(Entity $entity): void
+    {
+        $contributorEntityName = $this->getContributorEntityName((string)$entity->get('name'));
+        if (empty($contributorEntityName)) {
+            return;
+        }
+
+        $entityRepository = $this->getEntityManager()->getRepository('Entity');
+
+        $contributor = $entityRepository->get($contributorEntityName);
+        if (!empty($contributor)) {
+            $entityRepository->deleteEntity($contributor);
         }
     }
 }

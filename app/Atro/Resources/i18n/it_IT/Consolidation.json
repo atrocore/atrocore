@@ -18,7 +18,9 @@
     "mergingScriptIsMissing": "Manca lo script di fusione per l'entità master",
     "mergingScriptIsNotValid": "Lo script di fusione restituisce un carico utile non valido: %s",
     "entityTypeInvalid": "Il tipo di entità \"%s\" non può essere utilizzato per il consolidamento",
-    "consolidationAlreadyExists": "Il consolidamento per \"%s\" esiste già"
+    "consolidationAlreadyExists": "Il consolidamento per \"%s\" esiste già",
+    "contributorAlreadyExists": "L'entità \"%s\" ha già un derivato con il ruolo «Contributore»",
+    "contributorCodeIsBusy": "Il codice entità \"%s\" è già in uso"
   },
   "options": {
     "executeMergeAs": {

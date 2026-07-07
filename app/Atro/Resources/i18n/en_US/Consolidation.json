@@ -24,6 +24,8 @@
     "mergingScriptIsMissing": "Merging script is missing for master entity",
     "mergingScriptIsNotValid": "Merging script return invalid payload: %s",
     "entityTypeInvalid": "Entity type \"%s\" cannot be used for consolidation",
-    "consolidationAlreadyExists": "Consolidation for \"%s\" already exists"
+    "consolidationAlreadyExists": "Consolidation for \"%s\" already exists",
+    "contributorAlreadyExists": "Entity \"%s\" already has a derivative with the Contributor role",
+    "contributorCodeIsBusy": "Entity code \"%s\" is already in use"
   }
 }

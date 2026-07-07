@@ -529,28 +529,14 @@
     },
     "role": {
       "type": "enum",
+      "protected": true,
+      "default": "base",
       "options": [
         "base",
         "contributor"
       ],
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        },
         "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "primaryEntityId"
-            }
-          ]
-        },
-        "required": {
           "conditionGroup": [
             {
               "type": "isNotEmpty",
