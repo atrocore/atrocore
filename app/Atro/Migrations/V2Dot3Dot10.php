@@ -25,6 +25,27 @@ class V2Dot3Dot10 extends Base
     {
         $this->migrateMatchings();
         $this->migrateDerivativeMiddle();
+        $this->migrateMasterDataEntity();
+    }
+
+    public function migrateMasterDataEntity(): void
+    {
+        $path = 'data/metadata/scopes';
+
+        if (is_dir($path)) {
+            foreach (scandir($path) as $file) {
+                if (in_array($file, ['.', '..'])) {
+                    continue;
+                }
+
+                $scopeData = @json_decode(file_get_contents("$path/$file"), true);
+
+                if (is_array($scopeData) && ($scopeData['role'] ?? null) === 'staging') {
+                    $scopeData['role'] = 'contributor';
+                    file_put_contents("$path/$file", json_encode($scopeData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                }
+            }
+        }
     }
 
     public function migrateMatchings(): void
