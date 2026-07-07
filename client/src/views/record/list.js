@@ -1307,8 +1307,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             //remove disabled
             $.each(this.getMetadata().get(['clientDefs', this.scope, 'massActions']) || {}, (actionName, actionData) => {
                 if (actionData.disabled) {
-                    this.massActionList = this.massActionList.filter(name => name !== actionName)
-                    this.checkAllResultMassActionList = this.checkAllResultMassActionList.filter(name => name !== actionName)
+                    const exclude = item => {
+                        if (typeof item === 'string') return item !== actionName;
+                        if (item && item.id) return item.id !== actionName;
+                        return true;
+                    };
+                    this.massActionList = this.massActionList.filter(exclude);
+                    this.checkAllResultMassActionList = this.checkAllResultMassActionList.filter(exclude);
                 }
             });
 

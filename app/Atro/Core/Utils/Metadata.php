@@ -168,6 +168,11 @@ class Metadata
             }
         }
 
+        $data = $this
+            ->getEventManager()
+            ->dispatch('FrontendMetadata', 'modify', new Event(['data' => $data]))
+            ->getArgument('data');
+
         return $data;
     }
 
