@@ -20,10 +20,19 @@ use Espo\ORM\Entity;
 
 class MasterDataEntity extends Base
 {
+    public function getByEntityName(?string $entityName): ?Entity
+    {
+        if (empty($entityName)) {
+            return null;
+        }
+
+        return $this->where(['name' => $entityName])->findOne();
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
-            $entityName = $entity->get('entity');
+            $entityName = $entity->get('name');
 
             if (empty($entityName) || !$this->isEntityTypeAllowed((string)$entityName)) {
                 throw new BadRequest(
@@ -34,34 +43,23 @@ class MasterDataEntity extends Base
                 );
             }
 
-            $existing = $this->getDbal()->createQueryBuilder()
-                ->select('id, deleted')
-                ->from($this->getDbal()->quoteIdentifier('master_data_entity'))
-                ->where('id = :id')
-                ->setParameter('id', $entityName)
-                ->fetchAssociative();
-
-            if (!empty($existing)) {
-                if (empty($existing['deleted'])) {
-                    throw new BadRequest(
-                        sprintf(
-                            $this->getLanguage()->translate('masterDataEntityAlreadyExists', 'exceptions', 'MasterDataEntity'),
-                            $entityName
-                        )
-                    );
-                }
-
-                // remove the soft-deleted record with the same ID to avoid a primary key collision
-                $this->getDbal()->createQueryBuilder()
-                    ->delete($this->getDbal()->quoteIdentifier('master_data_entity'))
-                    ->where('id = :id')
-                    ->andWhere('deleted = :true')
-                    ->setParameter('id', $entityName)
-                    ->setParameter('true', true, ParameterType::BOOLEAN)
-                    ->executeQuery();
+            if (!empty($this->getByEntityName($entityName))) {
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()->translate('masterDataEntityAlreadyExists', 'exceptions', 'MasterDataEntity'),
+                        $entityName
+                    )
+                );
             }
 
-            $entity->id = $entityName;
+            // remove a soft-deleted record with the same name to avoid a unique index collision
+            $this->getDbal()->createQueryBuilder()
+                ->delete($this->getDbal()->quoteIdentifier('master_data_entity'))
+                ->where('name = :name')
+                ->andWhere('deleted = :true')
+                ->setParameter('name', $entityName)
+                ->setParameter('true', true, ParameterType::BOOLEAN)
+                ->executeQuery();
         }
 
         parent::beforeSave($entity, $options);
@@ -77,7 +75,8 @@ class MasterDataEntity extends Base
 
         return !empty($scopeDefs)
             && in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy'])
-            && ($scopeDefs['customizable'] ?? true) !== false;
+            && ($scopeDefs['customizable'] ?? true) !== false
+            && empty($scopeDefs['primaryEntityId']);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

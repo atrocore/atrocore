@@ -217,17 +217,18 @@ class ClusterItem extends Base
         ]);
     }
 
-    public function getClustersToConfirmAutomatically(string $stagingEntityName, int $offset = 0, int $limit = PHP_INT_MAX): array
+    public function getClustersToConfirmAutomatically(string $contributorEntityName, int $offset = 0, int $limit = PHP_INT_MAX): array
     {
-        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $stagingEntityName);
+        $masterEntityName = $this->getMetadata()->get("scopes.$contributorEntityName.primaryEntityId");
+
+        $masterDataEntity = $this->getEntityManager()->getRepository('MasterDataEntity')->getByEntityName((string)$masterEntityName);
 
         if (empty($masterDataEntity) || empty($masterDataEntity->get('confirmAutomatically'))) {
             return [];
         }
 
         $minimumScore = $masterDataEntity->get('minimumMatchingScore');
-        $stagingTableName = Util::toUnderScore(lcfirst($stagingEntityName));
-        $masterEntityName = $this->getMetadata()->get("scopes.$stagingEntityName.primaryEntityId");
+        $stagingTableName = Util::toUnderScore(lcfirst($contributorEntityName));
         $masterTableName = Util::toUnderScore(lcfirst((string)$masterEntityName));
 
         $qb = $this->getDbal()->createQueryBuilder()
@@ -243,9 +244,9 @@ class ClusterItem extends Base
             ->innerJoin('ci', 'cluster', 'c', 'c.id=ci.cluster_id and c.deleted=:false')
             ->innerJoin('ci', $stagingTableName, 'se', 'se.id=ci.entity_id and se.deleted=:false')
             ->leftJoin('se', $masterTableName, 'me', 'me.id=se.master_record_id and me.deleted=:false')
-            ->where('ci.entity_name=:stagingEntityName and ci.matched_score>=:minimumScore and ci.deleted=:false')
+            ->where('ci.entity_name=:contributorEntityName and ci.matched_score>=:minimumScore and ci.deleted=:false')
             ->andWhere('me.id is null or me.id <> c.golden_record_id')
-            ->setParameter('stagingEntityName', $stagingEntityName)
+            ->setParameter('contributorEntityName', $contributorEntityName)
             ->setParameter('minimumScore', $minimumScore)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setFirstResult($offset)
