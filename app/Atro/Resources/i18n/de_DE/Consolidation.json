@@ -7,6 +7,7 @@
     "updateMasterAutomatically": "Master automatisch aktualisieren",
     "minimumMatchingScore": "Minimum Matching Score",
     "confirmAutomatically": "Automatisch bestätigen",
+    "deleteInvalidMastersAutomatically": "Ungültige Master automatisch löschen",
     "executeMergeAs": "Zusammenführung ausführen als"
   },
   "tooltips": {
@@ -16,8 +17,8 @@
   "exceptions": {
     "mergingScriptIsMissing": "Zusammenführungsskript fehlt für Master-Entität",
     "mergingScriptIsNotValid": "Skript zum Zusammenführen gibt ungültige Nutzdaten zurück: %s",
-    "entityTypeInvalid": "Der Entitätstyp \"%s\" kann nicht für das Stammdaten-Management verwendet werden",
-    "masterDataEntityAlreadyExists": "Master Data Entity für \"%s\" existiert bereits"
+    "entityTypeInvalid": "Der Entitätstyp \"%s\" kann nicht für die Konsolidierung verwendet werden",
+    "consolidationAlreadyExists": "Konsolidierung für \"%s\" existiert bereits"
   },
   "options": {
     "executeMergeAs": {

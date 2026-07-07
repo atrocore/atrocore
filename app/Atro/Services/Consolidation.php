@@ -22,7 +22,7 @@ use Atro\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-class MasterDataEntity extends Base
+class Consolidation extends Base
 {
     public function updateMasterRecord(Entity $contributor, ?Entity $master = null): bool
     {
@@ -34,14 +34,14 @@ class MasterDataEntity extends Base
             throw new Forbidden();
         }
 
-        $masterDataEntity = $this->getRepository()->getByEntityName($master->getEntityName());
-        if (empty($masterDataEntity)) {
-            throw new BadRequest("MasterDataEntity for entity {$master->getEntityName()} not found.");
+        $consolidation = $this->getRepository()->getByEntityName($master->getEntityName());
+        if (empty($consolidation)) {
+            throw new BadRequest("Consolidation for entity {$master->getEntityName()} not found.");
         }
 
-        $mergingScript = $masterDataEntity->get('mergingScript');
+        $mergingScript = $consolidation->get('mergingScript');
         if (empty($mergingScript)) {
-            throw new BadRequest($this->translate('mergingScriptIsMissing', 'exceptions', 'MasterDataEntity'));
+            throw new BadRequest($this->translate('mergingScriptIsMissing', 'exceptions', 'Consolidation'));
         }
 
         $templateData = [
@@ -54,14 +54,14 @@ class MasterDataEntity extends Base
         $input = json_decode($res, true);
 
         if (!is_array($input) || empty($input['masterRecordData'])) {
-            throw new BadRequest(sprintf($this->translate('mergingScriptIsNotValid', 'exceptions', 'MasterDataEntity'), $res));
+            throw new BadRequest(sprintf($this->translate('mergingScriptIsNotValid', 'exceptions', 'Consolidation'), $res));
         }
 
         if (!empty($input['skipped'])) {
             return false;
         }
 
-        $this->executeAsMergeUser($masterDataEntity, function () use ($input, $master) {
+        $this->executeAsMergeUser($consolidation, function () use ($input, $master) {
             try {
                 $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($input['masterRecordData'])));
             } catch (NotModified) {
@@ -80,14 +80,14 @@ class MasterDataEntity extends Base
             throw new Forbidden();
         }
 
-        $masterDataEntity = $this->getRepository()->getByEntityName($masterEntity);
-        if (empty($masterDataEntity)) {
-            throw new BadRequest("MasterDataEntity for entity {$masterEntity} not found.");
+        $consolidation = $this->getRepository()->getByEntityName($masterEntity);
+        if (empty($consolidation)) {
+            throw new BadRequest("Consolidation for entity {$masterEntity} not found.");
         }
 
-        $mergingScript = $masterDataEntity->get('mergingScript');
+        $mergingScript = $consolidation->get('mergingScript');
         if (empty($mergingScript)) {
-            throw new BadRequest($this->translate('mergingScriptIsMissing', 'exceptions', 'MasterDataEntity'));
+            throw new BadRequest($this->translate('mergingScriptIsMissing', 'exceptions', 'Consolidation'));
         }
 
         $templateData = [
@@ -100,7 +100,7 @@ class MasterDataEntity extends Base
         $input = json_decode($res, true);
 
         if (!is_array($input) || empty($input['masterRecordData'])) {
-            throw new BadRequest(sprintf($this->translate('mergingScriptIsNotValid', 'exceptions', 'MasterDataEntity'), $res));
+            throw new BadRequest(sprintf($this->translate('mergingScriptIsNotValid', 'exceptions', 'Consolidation'), $res));
         }
 
         if (!empty($input['skipped'])) {
@@ -109,7 +109,7 @@ class MasterDataEntity extends Base
 
         $id = null;
 
-        $this->executeAsMergeUser($masterDataEntity, function () use ($input, $masterEntity, &$id) {
+        $this->executeAsMergeUser($consolidation, function () use ($input, $masterEntity, &$id) {
             $id = $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($input['masterRecordData'])));
         });
 
@@ -120,9 +120,9 @@ class MasterDataEntity extends Base
         return $this->getEntityManager()->getEntity($masterEntity, $id);
     }
 
-    private function executeAsMergeUser(Entity $masterDataEntity, $callback): void
+    private function executeAsMergeUser(Entity $consolidation, $callback): void
     {
-        if ($masterDataEntity->get('executeMergeAs') === 'system') {
+        if ($consolidation->get('executeMergeAs') === 'system') {
             $executeAsUser = $this->getEntityManager()->getRepository('User')->getGlobalSystemUser();
         } else {
             $executeAsUser = $this->getContainer()->get('user')->getSystemUser();

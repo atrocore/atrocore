@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/master-data-entity/record/panels/matchings', ['views/record/panels/relationship', 'search-manager'],
+Espo.define('views/consolidation/record/panels/matchings', ['views/record/panels/relationship', 'search-manager'],
     (Dep, SearchManager) => Dep.extend({
 
         setup() {

@@ -221,13 +221,13 @@ class ClusterItem extends Base
     {
         $masterEntityName = $this->getMetadata()->get("scopes.$contributorEntityName.primaryEntityId");
 
-        $masterDataEntity = $this->getEntityManager()->getRepository('MasterDataEntity')->getByEntityName((string)$masterEntityName);
+        $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName((string)$masterEntityName);
 
-        if (empty($masterDataEntity) || empty($masterDataEntity->get('confirmAutomatically'))) {
+        if (empty($consolidation) || empty($consolidation->get('confirmAutomatically'))) {
             return [];
         }
 
-        $minimumScore = $masterDataEntity->get('minimumMatchingScore');
+        $minimumScore = $consolidation->get('minimumMatchingScore');
         $stagingTableName = Util::toUnderScore(lcfirst($contributorEntityName));
         $masterTableName = Util::toUnderScore(lcfirst((string)$masterEntityName));
 

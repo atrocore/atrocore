@@ -1,6 +1,6 @@
 {
   "scopeNames": {
-    "MasterDataEntity": "Stammdaten-Entität",
+    "Consolidation": "Konsolidierung",
     "SourceToStagingPipeline": "Source-to-Staging Pipeline",
     "IncomingWebhook": "Eingehender Webhook",
     "Classification": "Klassifikation",
@@ -88,7 +88,7 @@
     "ClusterItem": "Cluster Artikel"
   },
   "scopeNamesPlural": {
-    "MasterDataEntity": "Stammdaten-Entitäten",
+    "Consolidation": "Konsolidierungen",
     "SourceToStagingPipeline": "Source-to-Staging Pipelines",
     "IncomingWebhook": "Eingehende Webhooks",
     "Classification": "Klassifikationen",

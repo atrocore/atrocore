@@ -1,10 +1,13 @@
 {
+  "labels": {
+    "sourceEntities": "Pipeline da sorgente a staging"
+  },
   "fields": {
     "mergingScript": "Script di mappatura",
-    "sourceEntity": "Entità sorgente",
     "updateMasterAutomatically": "Aggiorna automaticamente il Master",
     "minimumMatchingScore": "Punteggio minimo di corrispondenza",
     "confirmAutomatically": "Conferma automatica",
+    "deleteInvalidMastersAutomatically": "Elimina automaticamente i master non validi",
     "executeMergeAs": "Eseguire l'unione come"
   },
   "tooltips": {
@@ -14,8 +17,8 @@
   "exceptions": {
     "mergingScriptIsMissing": "Manca lo script di fusione per l'entità master",
     "mergingScriptIsNotValid": "Lo script di fusione restituisce un carico utile non valido: %s",
-    "entityTypeInvalid": "Il tipo di entità \"%s\" non può essere utilizzato per la gestione dei dati master",
-    "masterDataEntityAlreadyExists": "La Master Data Entity per \"%s\" esiste già"
+    "entityTypeInvalid": "Il tipo di entità \"%s\" non può essere utilizzato per il consolidamento",
+    "consolidationAlreadyExists": "Il consolidamento per \"%s\" esiste già"
   },
   "options": {
     "executeMergeAs": {

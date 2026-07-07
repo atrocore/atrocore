@@ -36,7 +36,7 @@ class Metadata extends AbstractMetadataListener
         $this->addFollowersField($data);
         $this->prepareUserProfile($data);
 
-        $this->prepareMasterDataEntity($data);
+        $this->prepareConsolidation($data);
 
         $event->setArgument('data', $data);
     }
@@ -199,20 +199,20 @@ class Metadata extends AbstractMetadataListener
         }
     }
 
-    protected function prepareMasterDataEntity(array &$data): void
+    protected function prepareConsolidation(array &$data): void
     {
         if (!$this->getConfig()->get('isInstalled', false)) {
             return;
         }
 
         $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'] = [];
-        $data['entityDefs']['MasterDataEntity']['fields']['name']['options'] = [];
+        $data['entityDefs']['Consolidation']['fields']['name']['options'] = [];
 
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'MasterDataEntity') {
+            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'Consolidation') {
                 $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'][] = $scope;
                 if (empty($scopeDefs['primaryEntityId'])) {
-                    $data['entityDefs']['MasterDataEntity']['fields']['name']['options'][] = $scope;
+                    $data['entityDefs']['Consolidation']['fields']['name']['options'][] = $scope;
                 }
             }
         }

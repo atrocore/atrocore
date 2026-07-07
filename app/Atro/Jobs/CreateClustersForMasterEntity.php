@@ -190,8 +190,8 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
         }
 
         // Delete unconfirmed master items in invalid clusters
-        $masterDataEntity = $this->getEntityManager()->getRepository('MasterDataEntity')->getByEntityName($masterEntity);
-        if (!empty($masterDataEntity) && !empty($masterDataEntity->get('deleteInvalidMastersAutomatically'))) {
+        $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($masterEntity);
+        if (!empty($consolidation) && !empty($consolidation->get('deleteInvalidMastersAutomatically'))) {
             foreach ($clusterItemRepo->getInvalidClusterMasterItemIds($masterEntity) as $itemId) {
                 $item = $this->getEntityManager()->getEntity('ClusterItem', $itemId);
                 if (!empty($item)) {

@@ -103,13 +103,13 @@ class Base extends RDB
             return;
         }
 
-        $masterDataEntity = $this->getEntityManager()->getRepository('MasterDataEntity')->getByEntityName($masterEntityName);
-        if (empty($masterDataEntity) || empty($masterDataEntity->get('updateMasterAutomatically'))) {
+        $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($masterEntityName);
+        if (empty($consolidation) || empty($consolidation->get('updateMasterAutomatically'))) {
             return;
         }
 
         try {
-            $this->getInjection('serviceFactory')->create('MasterDataEntity')->updateMasterRecord($entity);
+            $this->getInjection('serviceFactory')->create('Consolidation')->updateMasterRecord($entity);
         } catch (Forbidden|BadRequest $e) {
             // ignore
         }

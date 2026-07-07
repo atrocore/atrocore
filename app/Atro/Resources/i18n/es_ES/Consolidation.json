@@ -1,11 +1,14 @@
 {
+  "labels": {
+    "sourceEntities": "Pipelines de origen a staging"
+  },
   "fields": {
     "mergingScript": "Guión cartográfico",
-    "sourceEntity": "Entidad de origen",
     "updateMasterAutomatically": "Actualizar maestro automáticamente",
     "executeMergeAs": "Ejecutar fusión como",
     "minimumMatchingScore": "Puntuación mínima de concordancia",
-    "confirmAutomatically": "Confirmar automáticamente"
+    "confirmAutomatically": "Confirmar automáticamente",
+    "deleteInvalidMastersAutomatically": "Eliminar automáticamente los maestros no válidos"
   },
   "tooltips": {
     "mergingScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro.",
@@ -14,8 +17,8 @@
   "exceptions": {
     "mergingScriptIsMissing": "Falta el script de fusión para la entidad maestra",
     "mergingScriptIsNotValid": "El script de fusión devuelve una carga útil no válida: %s",
-    "entityTypeInvalid": "El tipo de entidad \"%s\" no se puede utilizar para la gestión de datos maestros",
-    "masterDataEntityAlreadyExists": "La Master Data Entity para \"%s\" ya existe"
+    "entityTypeInvalid": "El tipo de entidad \"%s\" no se puede utilizar para la consolidación",
+    "consolidationAlreadyExists": "La consolidación para \"%s\" ya existe"
   },
   "options": {
     "executeMergeAs": {

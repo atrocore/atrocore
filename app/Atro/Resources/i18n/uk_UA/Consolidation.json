@@ -7,6 +7,7 @@
     "updateMasterAutomatically": "Автоматично оновлювати майстер-запис",
     "minimumMatchingScore": "Мінімальна оцінка збігу",
     "confirmAutomatically": "Підтверджувати автоматично",
+    "deleteInvalidMastersAutomatically": "Автоматично видаляти недійсні мастер-записи",
     "executeMergeAs": "Виконувати об'єднання від імені"
   },
   "tooltips": {
@@ -16,8 +17,8 @@
   "exceptions": {
     "mergingScriptIsMissing": "Відсутній сценарій злиття для головної сутності",
     "mergingScriptIsNotValid": "Скрипт злиття повертає некоректне корисне навантаження: %s",
-    "entityTypeInvalid": "Тип сутності \"%s\" не може використовуватися для управління основними даними",
-    "masterDataEntityAlreadyExists": "Master Data Entity для \"%s\" вже існує"
+    "entityTypeInvalid": "Тип сутності \"%s\" не може використовуватися для консолідації",
+    "consolidationAlreadyExists": "Консолідація для \"%s\" вже існує"
   },
   "options": {
     "executeMergeAs": {

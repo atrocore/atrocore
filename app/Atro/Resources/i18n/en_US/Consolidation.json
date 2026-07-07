@@ -23,7 +23,7 @@
   "exceptions": {
     "mergingScriptIsMissing": "Merging script is missing for master entity",
     "mergingScriptIsNotValid": "Merging script return invalid payload: %s",
-    "entityTypeInvalid": "Entity type \"%s\" cannot be used for master data management",
-    "masterDataEntityAlreadyExists": "Master Data Entity for \"%s\" already exists"
+    "entityTypeInvalid": "Entity type \"%s\" cannot be used for consolidation",
+    "consolidationAlreadyExists": "Consolidation for \"%s\" already exists"
   }
 }

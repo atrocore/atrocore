@@ -73,7 +73,7 @@
   "links": {
     "stagingEntity": {
       "type": "belongsTo",
-      "entity": "MasterDataEntity",
+      "entity": "Consolidation",
       "foreignName": "id"
     },
     "createdBy": {

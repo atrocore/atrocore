@@ -87,7 +87,7 @@ class UpdateMasterRecordHandler extends AbstractHandler
             throw new NotFound();
         }
 
-        $this->getServiceFactory()->create('MasterDataEntity')->updateMasterRecord($staging);
+        $this->getServiceFactory()->create('Consolidation')->updateMasterRecord($staging);
 
         return new BoolResponse(true);
     }

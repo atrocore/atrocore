@@ -1,10 +1,13 @@
 {
+  "labels": {
+    "sourceEntities": "Pipeline'y źródło-staging"
+  },
   "fields": {
     "mergingScript": "Skrypt mapowania",
-    "sourceEntity": "Źródłowa Jednostka",
     "updateMasterAutomatically": "Automatyczna aktualizacja mastera",
     "minimumMatchingScore": "Minimalny wynik dopasowania",
     "confirmAutomatically": "Potwierdź automatycznie",
+    "deleteInvalidMastersAutomatically": "Automatycznie usuwaj nieprawidłowe rekordy główne",
     "executeMergeAs": "Wykonać scalanie jako"
   },
   "tooltips": {
@@ -14,8 +17,8 @@
   "exceptions": {
     "mergingScriptIsMissing": "Brakuje skryptu scalającego dla jednostki master",
     "mergingScriptIsNotValid": "Skrypt scalania zwraca nieprawidłowy ładunek: %s",
-    "entityTypeInvalid": "Typ encji \"%s\" nie może być używany do zarządzania danymi podstawowymi",
-    "masterDataEntityAlreadyExists": "Master Data Entity dla \"%s\" już istnieje"
+    "entityTypeInvalid": "Typ encji \"%s\" nie może być używany do konsolidacji",
+    "consolidationAlreadyExists": "Konsolidacja dla \"%s\" już istnieje"
   },
   "options": {
     "executeMergeAs": {

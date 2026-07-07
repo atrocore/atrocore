@@ -1,11 +1,14 @@
 {
+  "labels": {
+    "sourceEntities": "Pipeline zdroj-staging"
+  },
   "fields": {
     "mergingScript": "Mapovací skript",
-    "sourceEntity": "Zdrojová entita",
     "updateMasterAutomatically": "Automatická aktualizace předlohy",
     "minimumMatchingScore": "Minimální skóre shody",
     "executeMergeAs": "Provést sloučení jako",
-    "confirmAutomatically": "Automatické potvrzení"
+    "confirmAutomatically": "Automatické potvrzení",
+    "deleteInvalidMastersAutomatically": "Automaticky mazat neplatné hlavní záznamy"
   },
   "tooltips": {
     "mergingScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu.",
@@ -14,8 +17,8 @@
   "exceptions": {
     "mergingScriptIsMissing": "Chybí skript pro sloučení pro hlavní entitu",
     "mergingScriptIsNotValid": "Slučovací skript vrací neplatné užitečné zatížení: %s",
-    "entityTypeInvalid": "Typ entity \"%s\" nelze použít pro správu hlavních dat",
-    "masterDataEntityAlreadyExists": "Master Data Entity pro \"%s\" již existuje"
+    "entityTypeInvalid": "Typ entity \"%s\" nelze použít pro konsolidaci",
+    "consolidationAlreadyExists": "Konsolidace pro \"%s\" již existuje"
   },
   "options": {
     "executeMergeAs": {

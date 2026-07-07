@@ -7,7 +7,8 @@
     "updateMasterAutomatically": "Mise à jour automatique du master",
     "executeMergeAs": "Exécuter la fusion en tant que",
     "minimumMatchingScore": "Score minimum de correspondance",
-    "confirmAutomatically": "Confirmer automatiquement"
+    "confirmAutomatically": "Confirmer automatiquement",
+    "deleteInvalidMastersAutomatically": "Supprimer automatiquement les masters non valides"
   },
   "tooltips": {
     "mergingScript": "Configurez la façon dont les données sources sont transformées, unifiées et mises en correspondance avec la fiche.",
@@ -16,8 +17,8 @@
   "exceptions": {
     "mergingScriptIsMissing": "Le script de fusion n'est pas disponible pour l'entité maître",
     "mergingScriptIsNotValid": "Le script de fusion renvoie une charge utile invalide : %s",
-    "entityTypeInvalid": "Le type d'entité \"%s\" ne peut pas être utilisé pour la gestion des données de référence",
-    "masterDataEntityAlreadyExists": "La Master Data Entity pour \"%s\" existe déjà"
+    "entityTypeInvalid": "Le type d'entité \"%s\" ne peut pas être utilisé pour la consolidation",
+    "consolidationAlreadyExists": "La consolidation pour \"%s\" existe déjà"
   },
   "options": {
     "executeMergeAs": {

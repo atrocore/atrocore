@@ -1,6 +1,6 @@
 {
   "scopeNames": {
-    "MasterDataEntity": "Сущность основных данных",
+    "Consolidation": "Консолидация",
     "Attribute": "Атрибут",
     "AttributeGroup": "Группа атрибута",
     "Storage": "Хранилище",
@@ -87,7 +87,7 @@
     "ClusterItem": "Кластерный элемент"
   },
   "scopeNamesPlural": {
-    "MasterDataEntity": "Сущности основных данных",
+    "Consolidation": "Консолидации",
     "Attribute": "Атрибуты",
     "AttributeGroup": "Группы атрибутов",
     "Storage": "Хранилища",

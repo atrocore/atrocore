@@ -18,7 +18,7 @@ use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
-class MasterDataEntity extends Base
+class Consolidation extends Base
 {
     public function getByEntityName(?string $entityName): ?Entity
     {
@@ -37,7 +37,7 @@ class MasterDataEntity extends Base
             if (empty($entityName) || !$this->isEntityTypeAllowed((string)$entityName)) {
                 throw new BadRequest(
                     sprintf(
-                        $this->getLanguage()->translate('entityTypeInvalid', 'exceptions', 'MasterDataEntity'),
+                        $this->getLanguage()->translate('entityTypeInvalid', 'exceptions', 'Consolidation'),
                         (string)$entityName
                     )
                 );
@@ -46,7 +46,7 @@ class MasterDataEntity extends Base
             if (!empty($this->getByEntityName($entityName))) {
                 throw new BadRequest(
                     sprintf(
-                        $this->getLanguage()->translate('masterDataEntityAlreadyExists', 'exceptions', 'MasterDataEntity'),
+                        $this->getLanguage()->translate('consolidationAlreadyExists', 'exceptions', 'Consolidation'),
                         $entityName
                     )
                 );
@@ -54,7 +54,7 @@ class MasterDataEntity extends Base
 
             // remove a soft-deleted record with the same name to avoid a unique index collision
             $this->getDbal()->createQueryBuilder()
-                ->delete($this->getDbal()->quoteIdentifier('master_data_entity'))
+                ->delete($this->getDbal()->quoteIdentifier('consolidation'))
                 ->where('name = :name')
                 ->andWhere('deleted = :true')
                 ->setParameter('name', $entityName)
@@ -67,7 +67,7 @@ class MasterDataEntity extends Base
 
     protected function isEntityTypeAllowed(string $entityName): bool
     {
-        if ($entityName === 'MasterDataEntity') {
+        if ($entityName === 'Consolidation') {
             return false;
         }
 

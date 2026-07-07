@@ -1,6 +1,6 @@
 {
   "scopeNames": {
-    "MasterDataEntity": "Сутність основних даних",
+    "Consolidation": "Консолідація",
     "SourceToStagingPipeline": "Пайплайн джерело-стейджинг",
     "Classification": "Класифікація",
     "ClassificationAttribute": "Атрибут класифікації",
@@ -88,7 +88,7 @@
     "ClusterItem": "Елемент кластера"
   },
   "scopeNamesPlural": {
-    "MasterDataEntity": "Сутності основних даних",
+    "Consolidation": "Консолідації",
     "SourceToStagingPipeline": "Пайплайни джерело-стейджинг",
     "Classification": "Класифікації",
     "ClassificationAttribute": "Атрибути класифікації",

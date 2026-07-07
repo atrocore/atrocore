@@ -8,7 +8,7 @@
  *  @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/master-data-entity/record/panels/source-entities', 'views/record/panels/relationship',
+Espo.define('views/consolidation/record/panels/source-entities', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
         setup() {

@@ -30,6 +30,74 @@ class V2Dot3Dot10 extends Base
         $this->migrateMatchings();
         $this->migrateDerivativeMiddle();
         $this->migrateMasterDataEntity();
+        $this->renameMasterDataEntityToConsolidation();
+    }
+
+    public function renameMasterDataEntityToConsolidation(): void
+    {
+        $this->exec("ALTER TABLE master_data_entity RENAME TO consolidation");
+        $this->exec("ALTER TABLE user_followed_master_data_entity RENAME TO user_followed_consolidation");
+
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE user_followed_consolidation RENAME COLUMN master_data_entity_id TO consolidation_id");
+            $this->exec("ALTER TABLE consolidation RENAME CONSTRAINT master_data_entity_pkey TO consolidation_pkey");
+            $this->exec("ALTER TABLE user_followed_consolidation RENAME CONSTRAINT user_followed_master_data_entity_pkey TO user_followed_consolidation_pkey");
+
+            foreach (['created_by_id', 'modified_by_id', 'owner_user_id', 'assigned_user_id', 'created_at', 'modified_at'] as $name) {
+                $this->exec("ALTER INDEX idx_master_data_entity_{$name} RENAME TO IDX_CONSOLIDATION_" . strtoupper($name));
+            }
+            $this->exec("ALTER INDEX uniq_64dec5f45e237e06eb3b4e33 RENAME TO UNIQ_3FE49D9B5E237E06EB3B4E33");
+
+            foreach (['unique_relation', 'created_by_id', 'modified_by_id', 'user_id', 'created_at', 'modified_at'] as $name) {
+                $this->exec("ALTER INDEX idx_user_followed_master_data_entity_{$name} RENAME TO IDX_USER_FOLLOWED_CONSOLIDATION_" . strtoupper($name));
+            }
+            $this->exec("ALTER INDEX idx_user_followed_master_data_entity_master_data_entity_id RENAME TO IDX_USER_FOLLOWED_CONSOLIDATION_CONSOLIDATION_ID");
+        } else {
+            $this->exec("ALTER TABLE user_followed_consolidation CHANGE master_data_entity_id consolidation_id VARCHAR(36) DEFAULT NULL");
+
+            foreach (['created_by_id', 'modified_by_id', 'owner_user_id', 'assigned_user_id', 'created_at', 'modified_at'] as $name) {
+                $this->exec("ALTER TABLE consolidation RENAME INDEX idx_master_data_entity_{$name} TO IDX_CONSOLIDATION_" . strtoupper($name));
+            }
+            $this->exec("ALTER TABLE consolidation RENAME INDEX UNIQ_64DEC5F45E237E06EB3B4E33 TO UNIQ_3FE49D9B5E237E06EB3B4E33");
+
+            foreach (['unique_relation', 'created_by_id', 'modified_by_id', 'user_id', 'created_at', 'modified_at'] as $name) {
+                $this->exec("ALTER TABLE user_followed_consolidation RENAME INDEX idx_user_followed_master_data_entity_{$name} TO IDX_USER_FOLLOWED_CONSOLIDATION_" . strtoupper($name));
+            }
+            $this->exec("ALTER TABLE user_followed_consolidation RENAME INDEX idx_user_followed_master_data_entity_master_data_entity_id TO IDX_USER_FOLLOWED_CONSOLIDATION_CONSOLIDATION_ID");
+        }
+
+        // update entity name references in system tables
+        $columns = [
+            'note'                  => ['parent_type'],
+            'action_history_record' => ['target_type'],
+            'bookmark'              => ['entity_type'],
+            'saved_search'          => ['entity_type'],
+            'notification'          => ['related_type', 'related_parent_type'],
+            'layout'                => ['entity', 'related_entity'],
+        ];
+        foreach ($columns as $table => $tableColumns) {
+            foreach ($tableColumns as $column) {
+                try {
+                    $this->getDbal()->createQueryBuilder()
+                        ->update($this->getDbal()->quoteIdentifier($table))
+                        ->set($column, ':new')
+                        ->where("$column = :old")
+                        ->setParameter('new', 'Consolidation')
+                        ->setParameter('old', 'MasterDataEntity')
+                        ->executeQuery();
+                } catch (\Throwable $e) {
+                }
+            }
+        }
+
+        // update config scope lists
+        foreach (['tabList', 'quickCreateList'] as $key) {
+            $list = $this->getConfig()->get($key);
+            if (is_array($list) && in_array('MasterDataEntity', $list)) {
+                $this->getConfig()->set($key, array_map(fn($item) => $item === 'MasterDataEntity' ? 'Consolidation' : $item, $list));
+                $this->getConfig()->save();
+            }
+        }
     }
 
     public function migrateMasterDataEntity(): void

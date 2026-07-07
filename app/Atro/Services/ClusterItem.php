@@ -63,7 +63,7 @@ class ClusterItem extends Base
             }
 
             if (empty($goldenRecord)) {
-                $goldenRecord = $this->getRecordService('MasterDataEntity')->createMasterRecord($record);
+                $goldenRecord = $this->getRecordService('Consolidation')->createMasterRecord($record);
 
                 if (empty($goldenRecord)) {
                     return false;
@@ -79,7 +79,7 @@ class ClusterItem extends Base
                 $this->getEntityManager()->saveEntity($cluster);
                 $goldenRecordChanged = true;
             } else {
-                $this->getRecordService('MasterDataEntity')->updateMasterRecord($record, $goldenRecord);
+                $this->getRecordService('Consolidation')->updateMasterRecord($record, $goldenRecord);
             }
 
             $record->set('masterRecordId', $goldenRecord->get('id'));
