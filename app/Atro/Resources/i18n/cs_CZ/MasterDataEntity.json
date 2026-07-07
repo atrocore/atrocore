@@ -1,7 +1,5 @@
 {
   "fields": {
-    "entity": "Entita",
-    "masterEntity": "Hlavní subjekt",
     "mergingScript": "Mapovací skript",
     "sourceEntity": "Zdrojová entita",
     "updateMasterAutomatically": "Automatická aktualizace předlohy",

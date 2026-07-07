@@ -3,8 +3,6 @@
     "sourceEntities": "Source-to-Staging Pipelines"
   },
   "fields": {
-    "entity": "Entité",
-    "masterEntity": "Entité de référence",
     "mergingScript": "Script de mapping",
     "updateMasterAutomatically": "Mise à jour automatique du master",
     "executeMergeAs": "Exécuter la fusion en tant que",

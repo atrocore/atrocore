@@ -1,7 +1,5 @@
 {
   "fields": {
-    "entity": "Encja",
-    "masterEntity": "Podmiot główny",
     "mergingScript": "Skrypt mapowania",
     "sourceEntity": "Źródłowa Jednostka",
     "updateMasterAutomatically": "Automatyczna aktualizacja mastera",

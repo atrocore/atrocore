@@ -1,7 +1,5 @@
 {
   "fields": {
-    "entity": "Сущность",
-    "masterEntity": "Мастер",
     "mergingScript": "Скрипт трансформации",
     "sourceEntity": "Исходная сущность",
     "updateMasterAutomatically": "Автоматическое обновление мастера",

@@ -1,7 +1,5 @@
 {
   "fields": {
-    "entity": "Entidad",
-    "masterEntity": "Entidad principal",
     "mergingScript": "Guión cartográfico",
     "sourceEntity": "Entidad de origen",
     "updateMasterAutomatically": "Actualizar maestro automáticamente",

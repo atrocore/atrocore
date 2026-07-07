@@ -3,8 +3,6 @@
     "sourceEntities": "Source-to-Staging Pipelines"
   },
   "fields": {
-    "entity": "Entity",
-    "masterEntity": "Master Entity",
     "mergingScript": "Merging Script",
     "updateMasterAutomatically": "Update Master Automatically",
     "minimumMatchingScore": "Minimum Matching Score",

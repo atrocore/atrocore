@@ -1,8 +1,7 @@
 {
   "fields": {
     "name": {
-      "type": "varchar",
-      "view": "views/fields/entity-type",
+      "type": "enum",
       "required": true,
       "unique": true,
       "customizable": false,
@@ -38,10 +37,10 @@
       "default": "{# { \"skipped\": false, \"masterRecordData\": { \"name\" : \"{{ contributorRecord.name }}\" } } #}",
       "editorActions": {
         "addFields": {
-          "entityNameField": "entityName"
+          "entityNameField": "name"
         },
         "addAttributes": {
-          "entityNameField": "entityName"
+          "entityNameField": "name"
         }
       },
       "twigVariables": [
