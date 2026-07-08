@@ -72,4 +72,12 @@ class Entity extends Base
             'notPrimaryOfContributorDerivative' => true
         ];
     }
+
+    protected function boolFilterOnlyConsolidation(&$result)
+    {
+        $result['whereClause'][] = [
+            'onlyConsolidation' => true,
+            'onlyBaseAndHierarchyTypes' => true
+        ];
+    }
 }

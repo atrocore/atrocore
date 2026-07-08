@@ -26,7 +26,7 @@ class Consolidation extends Base
             return null;
         }
 
-        return $this->where(['name' => $entityName])->findOne();
+        return $this->where(['entityId' => $entityName])->findOne();
     }
 
     public function getContributorEntityName(string $masterEntityName): ?string
@@ -43,7 +43,7 @@ class Consolidation extends Base
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
-            $entityName = $entity->get('name');
+            $entityName = $entity->get('entityId');
 
             if (empty($entityName) || empty($this->getContributorEntityName((string)$entityName))) {
                 throw new BadRequest(
@@ -66,7 +66,7 @@ class Consolidation extends Base
             // remove a soft-deleted record with the same name to avoid a unique index collision
             $this->getDbal()->createQueryBuilder()
                 ->delete($this->getDbal()->quoteIdentifier('consolidation'))
-                ->where('name = :name')
+                ->where('entity_id = :name')
                 ->andWhere('deleted = :true')
                 ->setParameter('name', $entityName)
                 ->setParameter('true', true, ParameterType::BOOLEAN)

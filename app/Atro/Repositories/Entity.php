@@ -186,6 +186,7 @@ class Entity extends ReferenceData
         $notContributorOrChangeRequestDerivative = false;
         $onlyBaseAndHierarchyTypes               = false;
         $notPrimaryOfContributorDerivative       = false;
+        $onlyConsolidation       = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
@@ -215,6 +216,10 @@ class Entity extends ReferenceData
                 $onlyBaseAndHierarchyTypes = true;
             }
 
+            if (!empty($item['onlyConsolidation'])) {
+                $onlyConsolidation = true;
+            }
+
             if (!empty($item['notPrimaryOfContributorDerivative'])) {
                 $notPrimaryOfContributorDerivative = true;
             }
@@ -227,7 +232,7 @@ class Entity extends ReferenceData
         }
 
         $primaryOfContributorDerivative = [];
-        if ($notPrimaryOfContributorDerivative) {
+        if ($notPrimaryOfContributorDerivative || $onlyConsolidation) {
             foreach ($this->getMetadata()->get('scopes', []) as $scopeDefs) {
                 if (!empty($scopeDefs['primaryEntityId']) && ($scopeDefs['role'] ?? null) === 'contributor') {
                     $primaryOfContributorDerivative[$scopeDefs['primaryEntityId']] = true;
@@ -276,6 +281,10 @@ class Entity extends ReferenceData
             }
 
             if ($notPrimaryOfContributorDerivative && isset($primaryOfContributorDerivative[$code])) {
+                continue;
+            }
+
+            if ($onlyConsolidation && !isset($primaryOfContributorDerivative[$code])) {
                 continue;
             }
 

@@ -31,7 +31,30 @@ class V2Dot3Dot10 extends Base
         $this->migrateDerivativeMiddle();
         $this->migrateMasterDataEntity();
         $this->renameMasterDataEntityToConsolidation();
+        $this->migrateConsolidation();
         $this->migrateDataPipelines();
+    }
+
+    public function migrateConsolidation(): void
+    {
+        if ($this->isPgSQL()) {
+            $this->exec("CREATE SEQUENCE consolidation_number_seq INCREMENT BY 1 MINVALUE 1 START 1");
+            $this->exec("DROP INDEX uniq_3fe49d9b5e237e06eb3b4e33");
+            $this->exec("ALTER TABLE consolidation ADD number INT DEFAULT nextval('consolidation_number_seq') NOT NULL");
+            $this->exec("ALTER TABLE consolidation ADD entity_id VARCHAR(36) DEFAULT NULL");
+        } else {
+            $this->exec("DROP INDEX UNIQ_3FE49D9B5E237E06EB3B4E33 ON consolidation");
+            $this->exec("LTER TABLE consolidation ADD number INT NOT NULL, ADD entity_id VARCHAR(36) DEFAULT NULL");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_3FE49D9B96901F54 ON consolidation (number)");
+            $this->exec("ALTER TABLE consolidation CHANGE number number INT AUTO_INCREMENT NOT NULL");
+        }
+
+        $this->exec("CREATE UNIQUE INDEX IDX_CONSOLIDATION_UNIQUE_ENTITY ON consolidation (deleted, entity_id)");
+
+        $this->getDbal()->createQueryBuilder()
+            ->update('consolidation')
+            ->set('entity_id', 'name')
+            ->executeQuery();
     }
 
     public function migrateDataPipelines():void

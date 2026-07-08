@@ -1,14 +1,17 @@
 {
   "fields": {
-    "name": {
-      "type": "enum",
-      "translation": "Global.scopeNames",
-      "isSorted": true,
+    "number": {
+      "type": "autoincrement"
+    },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "selectBoolFilterList": [
+        "onlyConsolidation"
+      ],
       "required": true,
-      "unique": true,
       "customizable": false,
       "layoutRemoveDisabled": true,
-      "tooltip": true,
       "conditionalProperties": {
         "protected": {
           "conditionGroup": [
@@ -130,5 +133,11 @@
         "deleted"
       ]
     }
+  },
+  "uniqueIndexes": {
+    "unique_entity": [
+      "deleted",
+      "entity_id"
+    ]
   }
 }

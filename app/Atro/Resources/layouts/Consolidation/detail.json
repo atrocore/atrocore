@@ -5,14 +5,10 @@
     "rows": [
       [
         {
-          "name": "name"
+          "name": "number"
         },
-        false
-      ],
-      [
         {
-          "name": "description",
-          "fullWidth": true
+          "name": "entity"
         }
       ],
       [
@@ -42,6 +38,12 @@
           "name": "deleteInvalidMastersAutomatically"
         },
         false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
       ]
     ]
   }
