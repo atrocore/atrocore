@@ -3,6 +3,10 @@
     "sourceEntity": {
       "type": "link",
       "entity": "Entity",
+      "selectBoolFilterList": [
+        "notContributorOrChangeRequestDerivative",
+        "onlyBaseAndHierarchyTypes"
+      ],
       "required": true,
       "customizable": false,
       "layoutRemoveDisabled": true,

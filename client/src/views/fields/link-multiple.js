@@ -209,6 +209,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.selectBoolFilterList = Espo.Utils.cloneDeep(this.selectBoolFilterList);
+
+            ;(this.model.getFieldParam(this.name, 'selectBoolFilterList') || []).forEach(item => {
+                if (!this.selectBoolFilterList.includes(item)) {
+                    this.selectBoolFilterList.push(item);
+                }
+            });
+
             if (this.nameHashName === null) {
                 this.nameHashName = this.name + 'Names';
             }

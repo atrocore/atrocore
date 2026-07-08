@@ -182,6 +182,9 @@ class Entity extends ReferenceData
         $canHasAssociates         = false;
         $primaryEntityId          = null;
         $onlyForDerivativeEnabled = false;
+
+        $notContributorOrChangeRequestDerivative = false;
+        $onlyBaseAndHierarchyTypes               = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
@@ -201,6 +204,14 @@ class Entity extends ReferenceData
 
             if (!empty($item['onlyForDerivativeEnabled'])) {
                 $onlyForDerivativeEnabled = true;
+            }
+
+            if (!empty($item['notContributorOrChangeRequestDerivative'])) {
+                $notContributorOrChangeRequestDerivative = true;
+            }
+
+            if (!empty($item['onlyBaseAndHierarchyTypes'])) {
+                $onlyBaseAndHierarchyTypes = true;
             }
 
             if (!empty($item['primaryEntityId='])) {
@@ -237,6 +248,16 @@ class Entity extends ReferenceData
             }
 
             if ($onlyForDerivativeEnabled && ((empty($row['isCustom']) && empty($row['derivativeEnabled'])) || !empty($row['primaryEntityId']))) {
+                continue;
+            }
+
+            if ($notContributorOrChangeRequestDerivative
+                && !empty($row['primaryEntityId'])
+                && in_array($row['role'] ?? null, ['contributor', 'changeRequest'], true)) {
+                continue;
+            }
+
+            if ($onlyBaseAndHierarchyTypes && !in_array($row['type'] ?? null, ['Base', 'Hierarchy'], true)) {
                 continue;
             }
 

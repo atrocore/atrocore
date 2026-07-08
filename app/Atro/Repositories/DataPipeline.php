@@ -41,11 +41,20 @@ class DataPipeline extends Base
     {
         parent::beforeSave($entity, $options);
 
-        $stagingEntityId = $entity->get('stagingEntityId');
-        if (!empty($stagingEntityId)) {
-            $scopeDefs = $this->getMetadata()->get(['scopes', $stagingEntityId]) ?? [];
-            if (empty($scopeDefs['primaryEntityId']) || ($scopeDefs['role'] ?? null) !== 'contributor') {
-                throw new BadRequest("Entity '$stagingEntityId' is not a valid staging entity.");
+        $sourceEntityId = $entity->get('sourceEntityId');
+        if (!empty($sourceEntityId) && ($entity->isNew() || $entity->isAttributeChanged('sourceEntityId'))) {
+            $scopeDefs = $this->getMetadata()->get(['scopes', $sourceEntityId]) ?? [];
+
+            if (!in_array($scopeDefs['type'] ?? null, ['Base', 'Hierarchy'], true)) {
+                throw new BadRequest(
+                    sprintf($this->translateException('sourceEntityTypeNotAllowed'), $sourceEntityId)
+                );
+            }
+
+            if (!empty($scopeDefs['primaryEntityId']) && in_array($scopeDefs['role'] ?? null, ['contributor', 'changeRequest'], true)) {
+                throw new BadRequest(
+                    sprintf($this->translateException('sourceEntityCannotBeContributorOrChangeRequestDerivative'), $sourceEntityId)
+                );
             }
         }
     }

@@ -1,10 +1,14 @@
 {
   "fields": {
-    "stagingEntity": "Staging-Entität",
+    "targetEntity": "Zielentität",
     "sourceEntity": "Quellentität",
     "mergingScript": "Zusammenführungs-Skript"
   },
   "tooltips": {
     "mergingScript": "Konfigurieren Sie, wie die Daten aus dem Quelldatensatz transformiert und dem Staging-Datensatz zugeordnet werden."
+  },
+  "exceptions": {
+    "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Die Entität '%s' ist eine Contributor- oder Change-Request-Ableitung und kann nicht als Quellentität verwendet werden.",
+    "sourceEntityTypeNotAllowed": "Die Entität '%s' kann nicht als Quellentität verwendet werden: Nur die Typen Base und Hierarchy sind zulässig."
   }
 }

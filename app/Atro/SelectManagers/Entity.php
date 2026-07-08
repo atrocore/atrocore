@@ -51,4 +51,18 @@ class Entity extends Base
             'onlyForDerivativeEnabled' => true
         ];
     }
+
+    protected function boolFilterNotContributorOrChangeRequestDerivative(&$result)
+    {
+        $result['whereClause'][] = [
+            'notContributorOrChangeRequestDerivative' => true
+        ];
+    }
+
+    protected function boolFilterOnlyBaseAndHierarchyTypes(&$result)
+    {
+        $result['whereClause'][] = [
+            'onlyBaseAndHierarchyTypes' => true
+        ];
+    }
 }
