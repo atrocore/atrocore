@@ -154,8 +154,6 @@ class MatchingRule extends Base
      */
     protected function beforeRemove(OrmEntity $entity, array $options = [])
     {
-        $this->validateIsMatchingActive($entity);
-
         parent::beforeRemove($entity, $options);
 
         if ($entity->get('type') === 'set') {

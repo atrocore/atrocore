@@ -147,10 +147,8 @@ class Matching extends Base
 
         $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
 
-        foreach ($this->getEntityManager()->getRepository('MatchingRule')->find() as $rule) {
-            if ($rule->get('matchingId') === $entity->get('id')) {
-                $this->getEntityManager()->removeEntity($rule);
-            }
+        foreach ($entity->get('matchingRules') ?? [] as $rule) {
+            $this->getEntityManager()->removeEntity($rule);
         }
 
         $this->rebuild();
