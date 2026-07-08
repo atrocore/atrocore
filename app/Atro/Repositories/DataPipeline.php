@@ -57,6 +57,26 @@ class DataPipeline extends Base
                 );
             }
         }
+
+        $targetEntityId = $entity->get('targetEntityId');
+        if (!empty($targetEntityId) && ($entity->isNew() || $entity->isAttributeChanged('targetEntityId'))) {
+            if ($this->isPrimaryOfContributorDerivative($targetEntityId)) {
+                throw new BadRequest(
+                    sprintf($this->translateException('targetEntityCannotBePrimaryOfContributorDerivative'), $targetEntityId)
+                );
+            }
+        }
+    }
+
+    protected function isPrimaryOfContributorDerivative(string $entityName): bool
+    {
+        foreach ($this->getMetadata()->get('scopes', []) as $scopeDefs) {
+            if (($scopeDefs['primaryEntityId'] ?? null) === $entityName && ($scopeDefs['role'] ?? null) === 'contributor') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function afterSave(Entity $entity, array $options = [])

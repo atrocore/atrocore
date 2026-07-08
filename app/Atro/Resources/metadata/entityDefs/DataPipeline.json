@@ -24,6 +24,10 @@
     "targetEntity": {
       "type": "link",
       "entity": "Entity",
+      "selectBoolFilterList": [
+        "notPrimaryOfContributorDerivative",
+        "onlyBaseAndHierarchyTypes"
+      ],
       "required": true,
       "customizable": false,
       "layoutRemoveDisabled": true,

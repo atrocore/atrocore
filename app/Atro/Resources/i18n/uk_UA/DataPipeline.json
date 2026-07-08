@@ -9,6 +9,7 @@
   },
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Сутність '%s' є деривативом з роллю contributor або change request і не може бути використана як сутність-джерело.",
-    "sourceEntityTypeNotAllowed": "Сутність '%s' не може бути використана як сутність-джерело: дозволені лише типи Base та Hierarchy."
+    "sourceEntityTypeNotAllowed": "Сутність '%s' не може бути використана як сутність-джерело: дозволені лише типи Base та Hierarchy.",
+    "targetEntityCannotBePrimaryOfContributorDerivative": "Сутність '%s' є primary-сутністю contributor-деривативу і не може бути використана як цільова сутність."
   }
 }

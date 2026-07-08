@@ -65,4 +65,11 @@ class Entity extends Base
             'onlyBaseAndHierarchyTypes' => true
         ];
     }
+
+    protected function boolFilterNotPrimaryOfContributorDerivative(&$result)
+    {
+        $result['whereClause'][] = [
+            'notPrimaryOfContributorDerivative' => true
+        ];
+    }
 }

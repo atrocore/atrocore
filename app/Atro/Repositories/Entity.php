@@ -185,6 +185,7 @@ class Entity extends ReferenceData
 
         $notContributorOrChangeRequestDerivative = false;
         $onlyBaseAndHierarchyTypes               = false;
+        $notPrimaryOfContributorDerivative       = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
@@ -214,10 +215,23 @@ class Entity extends ReferenceData
                 $onlyBaseAndHierarchyTypes = true;
             }
 
+            if (!empty($item['notPrimaryOfContributorDerivative'])) {
+                $notPrimaryOfContributorDerivative = true;
+            }
+
             if (!empty($item['primaryEntityId='])) {
                 $primaryEntityId = $item['primaryEntityId='];
             } elseif (!empty($item['primaryEntityId'])) {
                 $primaryEntityId = $item['primaryEntityId'];
+            }
+        }
+
+        $primaryOfContributorDerivative = [];
+        if ($notPrimaryOfContributorDerivative) {
+            foreach ($this->getMetadata()->get('scopes', []) as $scopeDefs) {
+                if (!empty($scopeDefs['primaryEntityId']) && ($scopeDefs['role'] ?? null) === 'contributor') {
+                    $primaryOfContributorDerivative[$scopeDefs['primaryEntityId']] = true;
+                }
             }
         }
 
@@ -258,6 +272,10 @@ class Entity extends ReferenceData
             }
 
             if ($onlyBaseAndHierarchyTypes && !in_array($row['type'] ?? null, ['Base', 'Hierarchy'], true)) {
+                continue;
+            }
+
+            if ($notPrimaryOfContributorDerivative && isset($primaryOfContributorDerivative[$code])) {
                 continue;
             }
 

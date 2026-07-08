@@ -9,6 +9,7 @@
   },
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "L'entité '%s' est une dérivation de type contributor ou change request et ne peut pas être utilisée comme entité source.",
-    "sourceEntityTypeNotAllowed": "L'entité '%s' ne peut pas être utilisée comme entité source : seuls les types Base et Hierarchy sont autorisés."
+    "sourceEntityTypeNotAllowed": "L'entité '%s' ne peut pas être utilisée comme entité source : seuls les types Base et Hierarchy sont autorisés.",
+    "targetEntityCannotBePrimaryOfContributorDerivative": "L'entité '%s' est l'entité primaire d'une dérivation de type contributor et ne peut pas être utilisée comme entité cible."
   }
 }
