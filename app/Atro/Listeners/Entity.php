@@ -246,7 +246,11 @@ class Entity extends AbstractListener
 
     protected function recalculateScriptField(OrmEntity $entity): void
     {
-        if ($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']) === 'ReferenceData') {
+        if (in_array($entity->getEntityName(), ['UserProfile', 'MatchedRecord', 'Notification', 'AuthToken', 'Bookmark'])) {
+            return;
+        }
+
+        if (in_array($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']), ['Base', 'Hierarchy'])) {
             return;
         }
 
