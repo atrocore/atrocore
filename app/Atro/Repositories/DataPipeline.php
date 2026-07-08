@@ -86,7 +86,7 @@ class DataPipeline extends Base
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->isNew() || $entity->isAttributeChanged('sourceEntity')) {
+        if ($entity->isNew() || $entity->isAttributeChanged('sourceEntityId') || $entity->isAttributeChanged('targetEntityId')) {
             $this->getDataManager()->rebuild();
         }
     }

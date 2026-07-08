@@ -233,14 +233,14 @@ class Metadata extends AbstractMetadataListener
 
             $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
 
-            $data['entityDefs'][$sourceEntity]['fields']['targetEntityRecord'] = [
+            $data['entityDefs'][$sourceEntity]['fields']['targetRecord'] = [
                 'type'               => 'link',
                 'readOnly'           => true,
                 'importDisabled'     => true,
                 'massUpdateDisabled' => true,
             ];
 
-            $data['entityDefs'][$sourceEntity]['links']['targetEntityRecord'] = [
+            $data['entityDefs'][$sourceEntity]['links']['targetRecord'] = [
                 'type'    => 'belongsTo',
                 'foreign' => $foreign,
                 'entity'  => $targetEntity
@@ -248,7 +248,7 @@ class Metadata extends AbstractMetadataListener
 
             $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_target_record'] = [
                 "deleted",
-                "target_entity_record_id"
+                "target_record_id"
             ];
 
             $data['entityDefs'][$targetEntity]['fields'][$foreign] = [
@@ -258,7 +258,7 @@ class Metadata extends AbstractMetadataListener
             ];
             $data['entityDefs'][$targetEntity]['links'][$foreign] = [
                 'type'    => 'hasMany',
-                'foreign' => 'targetEntityRecord',
+                'foreign' => 'targetRecord',
                 'entity'  => $sourceEntity
             ];
         }

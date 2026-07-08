@@ -22,17 +22,7 @@ use Espo\ORM\Entity;
 
 class DataPipeline extends Base
 {
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        $stagingEntityId = $entity->get('stagingEntityId');
-        if (!empty($stagingEntityId)) {
-            $entity->set('stagingEntityName', $this->getInjection('language')->translate($stagingEntityId, 'scopeNames', 'Global'));
-        }
-    }
-
-    public function pushToStaging(Entity $sourceRecord): void
+    public function pushToTarget(Entity $sourceRecord): void
     {
         $pipeline = $this->getEntityManager()
             ->getRepository('DataPipeline')
@@ -43,15 +33,13 @@ class DataPipeline extends Base
             return;
         }
 
-        $stagingEntityType = $this->getMetadata()->get(['entityDefs', $sourceRecord->getEntityName(), 'links', 'stagingRecord', 'entity']);
-        if (empty($stagingEntityType)) {
+        $targetEntityType = $this->getMetadata()->get(['entityDefs', $sourceRecord->getEntityName(), 'links', 'targetRecord', 'entity']);
+        if (empty($targetEntityType)) {
             return;
         }
 
-        $stagingId = $sourceRecord->get('stagingRecordId');
-        $stagingRecord = !empty($stagingId)
-            ? $this->getEntityManager()->getEntity($stagingEntityType, $stagingId)
-            : null;
+        $targetId = $sourceRecord->get('targetRecordId');
+        $targetRecord = !empty($targetId) ? $this->getEntityManager()->getEntity($targetEntityType, $targetId) : null;
 
         $em = $this->getEntityManager();
         $userContext = $this->getContainer()->get(UserContext::class);
@@ -60,10 +48,10 @@ class DataPipeline extends Base
         $userContext->set($em->getRepository('User')->getGlobalSystemUser());
 
         try {
-            if (empty($stagingRecord)) {
-                $this->createStagingRecord($pipeline->get('mergingScript'), $sourceRecord, $stagingEntityType);
+            if (empty($targetRecord)) {
+                $this->createTargetRecord($pipeline->get('mergingScript'), $sourceRecord, $targetEntityType);
             } else {
-                $this->updateStagingRecord($pipeline->get('mergingScript'), $sourceRecord, $stagingRecord);
+                $this->updateTargetRecord($pipeline->get('mergingScript'), $sourceRecord, $targetRecord);
             }
         } finally {
             if ($previousUser !== null) {
@@ -73,36 +61,11 @@ class DataPipeline extends Base
         }
     }
 
-    private function createStagingRecord(string $mergingScript, Entity $sourceRecord, string $stagingEntityType): ?Entity
-    {
-        $res = $this->getTwig()->renderTemplate($mergingScript, [
-            'sourceRecord'  => $sourceRecord,
-            'stagingRecord' => null,
-        ]);
-
-        $input = json_decode($res, true);
-        if (!is_array($input) || empty($input['stagingRecordData'])) {
-            return null;
-        }
-
-        $stagingId = $this->getRecordService($stagingEntityType)
-            ->createEntity(json_decode(json_encode($input['stagingRecordData'])));
-
-        if (empty($stagingId)) {
-            return null;
-        }
-
-        $this->getRecordService($sourceRecord->getEntityName())
-            ->updateEntity($sourceRecord->get('id'), (object)['stagingRecordId' => $stagingId]);
-
-        return $this->getEntityManager()->getEntity($stagingEntityType, $stagingId);
-    }
-
-    public function pushAllToStaging(Entity $stagingRecord): void
+    public function pushAllToTarget(Entity $targetRecord): void
     {
         $sources = $this->getEntityManager()
             ->getRepository('DataPipeline')
-            ->where(['stagingEntityId' => $stagingRecord->getEntityName()])
+            ->where(['targetEntityId' => $targetRecord->getEntityName()])
             ->find();
 
         foreach ($sources as $pipeline) {
@@ -113,7 +76,7 @@ class DataPipeline extends Base
 
             $sourceRecords = $this->getEntityManager()
                 ->getRepository($sourceEntityType)
-                ->where(['stagingRecordId' => $stagingRecord->get('id')])
+                ->where(['targetRecordId' => $targetRecord->get('id')])
                 ->find();
 
             foreach ($sourceRecords as $sourceRecord) {
@@ -124,7 +87,7 @@ class DataPipeline extends Base
                 $userContext->set($em->getRepository('User')->getGlobalSystemUser());
 
                 try {
-                    $this->updateStagingRecord($pipeline->get('mergingScript'), $sourceRecord, $stagingRecord);
+                    $this->updateTargetRecord($pipeline->get('mergingScript'), $sourceRecord, $targetRecord);
                 } catch (\Throwable $e) {
                 } finally {
                     if ($previousUser !== null) {
@@ -136,21 +99,49 @@ class DataPipeline extends Base
         }
     }
 
-    private function updateStagingRecord(string $mergingScript, Entity $sourceRecord, Entity $stagingRecord): void
+    private function createTargetRecord(string $mergingScript, Entity $sourceRecord, string $targetEntityType): ?Entity
     {
         $res = $this->getTwig()->renderTemplate($mergingScript, [
             'sourceRecord'  => $sourceRecord,
-            'stagingRecord' => $stagingRecord,
+            'targetRecord' => null,
         ]);
 
         $input = json_decode($res, true);
-        if (!is_array($input) || empty($input['stagingRecordData'])) {
+        if (!is_array($input) || empty($input['targetRecordData'])) {
+            return null;
+        }
+
+        $targetId = $this
+            ->getRecordService($targetEntityType)
+            ->createEntity(json_decode(json_encode($input['targetRecordData'])));
+
+        if (empty($targetId)) {
+            return null;
+        }
+
+        $this
+            ->getRecordService($sourceRecord->getEntityName())
+            ->updateEntity($sourceRecord->get('id'), (object)['targetRecordId' => $targetId]);
+
+        return $this->getEntityManager()->getEntity($targetEntityType, $targetId);
+    }
+
+    private function updateTargetRecord(string $mergingScript, Entity $sourceRecord, Entity $targetRecord): void
+    {
+        $res = $this->getTwig()->renderTemplate($mergingScript, [
+            'sourceRecord' => $sourceRecord,
+            'targetRecord' => $targetRecord,
+        ]);
+
+        $input = json_decode($res, true);
+        if (!is_array($input) || empty($input['targetRecordData'])) {
             return;
         }
 
         try {
-            $this->getRecordService($stagingRecord->getEntityName())
-                ->updateEntity($stagingRecord->get('id'), json_decode(json_encode($input['stagingRecordData'])));
+            $this
+                ->getRecordService($targetRecord->getEntityName())
+                ->updateEntity($targetRecord->get('id'), json_decode(json_encode($input['targetRecordData'])));
         } catch (NotModified) {
         }
     }
@@ -162,7 +153,7 @@ class DataPipeline extends Base
 
     protected function getTwig(): Twig
     {
-        return $this->getInjection('twig');
+        return $this->getContainer()->get('twig');
     }
 
     protected function init()
@@ -170,7 +161,5 @@ class DataPipeline extends Base
         parent::init();
 
         $this->addDependency('container');
-        $this->addDependency('language');
-        $this->addDependency('twig');
     }
 }
