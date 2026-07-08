@@ -10,6 +10,8 @@
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Entity '%s' is a contributor or change request derivative and cannot be used as a source entity.",
     "sourceEntityTypeNotAllowed": "Entity '%s' cannot be used as a source entity: only Base and Hierarchy types are allowed.",
-    "targetEntityCannotBePrimaryOfContributorDerivative": "Entity '%s' is the primary entity of a contributor derivative and cannot be used as a target entity."
+    "targetEntityCannotBePrimaryOfContributorDerivative": "Entity '%s' is the primary entity of a contributor derivative and cannot be used as a target entity.",
+    "sourceAndTargetEntityCannotBeSame": "Source Entity and Target Entity cannot be the same.",
+    "dataPipelineAlreadyExists": "A data pipeline for this pair of entities already exists."
   }
 }

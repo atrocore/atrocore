@@ -10,6 +10,8 @@
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Die Entität '%s' ist eine Contributor- oder Change-Request-Ableitung und kann nicht als Quellentität verwendet werden.",
     "sourceEntityTypeNotAllowed": "Die Entität '%s' kann nicht als Quellentität verwendet werden: Nur die Typen Base und Hierarchy sind zulässig.",
-    "targetEntityCannotBePrimaryOfContributorDerivative": "Die Entität '%s' ist die Primärentität einer Contributor-Ableitung und kann nicht als Zielentität verwendet werden."
+    "targetEntityCannotBePrimaryOfContributorDerivative": "Die Entität '%s' ist die Primärentität einer Contributor-Ableitung und kann nicht als Zielentität verwendet werden.",
+    "sourceAndTargetEntityCannotBeSame": "Quellentität und Zielentität dürfen nicht identisch sein.",
+    "dataPipelineAlreadyExists": "Für dieses Entitätenpaar existiert bereits eine Data Pipeline."
   }
 }

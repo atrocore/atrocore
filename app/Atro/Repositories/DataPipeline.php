@@ -16,27 +16,10 @@ namespace Atro\Repositories;
 use Atro\Core\DataManager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class DataPipeline extends Base
 {
-    public static function getPipelinesWithSourceEntities(Connection $connection): array
-    {
-        try {
-            return $connection->createQueryBuilder()
-                ->select('s.staging_entity_id', 's.source_entity')
-                ->from('source_to_staging_pipeline', 's')
-                ->where('s.deleted = :false')
-                ->andWhere('s.source_entity IS NOT NULL')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
-        } catch (\Throwable $e) {
-            return [];
-        }
-    }
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
@@ -64,6 +47,26 @@ class DataPipeline extends Base
                 throw new BadRequest(
                     sprintf($this->translateException('targetEntityCannotBePrimaryOfContributorDerivative'), $targetEntityId)
                 );
+            }
+        }
+
+        if ($entity->isAttributeChanged('sourceEntityId') || $entity->isAttributeChanged('targetEntityId')) {
+            if ($sourceEntityId === $targetEntityId) {
+                throw new BadRequest($this->translateException('sourceAndTargetEntityCannotBeSame'));
+            }
+
+            $hashData = [$entity->get('sourceEntityId'), $entity->get('targetEntityId')];
+            sort($hashData);
+
+            $entity->set('hash', md5(implode('|', $hashData)));
+
+            $where = ['hash' => $entity->get('hash')];
+            if (!$entity->isNew()) {
+                $where['id!='] = $entity->get('id');
+            }
+
+            if (!empty($this->where($where)->findOne())) {
+                throw new BadRequest($this->translateException('dataPipelineAlreadyExists'));
             }
         }
     }

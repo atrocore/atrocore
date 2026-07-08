@@ -64,7 +64,6 @@
       "type": "varchar",
       "protected": true,
       "unique": true,
-      "required": true,
       "customizable": false
     },
     "createdAt": {

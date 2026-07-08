@@ -37,6 +37,7 @@ class Metadata extends AbstractMetadataListener
         $this->prepareUserProfile($data);
 
         $this->prepareConsolidation($data);
+        $this->prepareDataPipeline($data);
 
         $event->setArgument('data', $data);
     }
@@ -199,6 +200,70 @@ class Metadata extends AbstractMetadataListener
         }
     }
 
+    protected function prepareDataPipeline(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false) || $this->isSystemUpdating()) {
+            return;
+        }
+
+        $res = $this->getDataManager()->getCacheData('data_pipeline');
+        if ($res === null) {
+            try {
+                $res = $this->getDbal()->createQueryBuilder()
+                    ->select('id, source_entity_id, target_entity_id')
+                    ->from('data_pipeline')
+                    ->where('deleted = :false')
+                    ->andWhere('source_entity_id IS NOT NULL')
+                    ->andWhere('target_entity_id IS NOT NULL')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $res = [];
+            }
+        }
+        $this->getDataManager()->setCacheData('data_pipeline', $res);
+
+        foreach ($res as $item) {
+            if (empty($item['target_entity_id']) || empty($item['source_entity_id'])) {
+                continue;
+            }
+
+            $sourceEntity = $item['source_entity_id'];
+            $targetEntity = $item['target_entity_id'];
+
+            $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
+
+            $data['entityDefs'][$sourceEntity]['fields']['targetEntityRecord'] = [
+                'type'               => 'link',
+                'readOnly'           => true,
+                'importDisabled'     => true,
+                'massUpdateDisabled' => true,
+            ];
+
+            $data['entityDefs'][$sourceEntity]['links']['targetEntityRecord'] = [
+                'type'    => 'belongsTo',
+                'foreign' => $foreign,
+                'entity'  => $targetEntity
+            ];
+
+            $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_target_record'] = [
+                "deleted",
+                "target_entity_record_id"
+            ];
+
+            $data['entityDefs'][$targetEntity]['fields'][$foreign] = [
+                'type'     => 'linkMultiple',
+                'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
+                'noLoad'   => true,
+            ];
+            $data['entityDefs'][$targetEntity]['links'][$foreign] = [
+                'type'    => 'hasMany',
+                'foreign' => 'targetEntityRecord',
+                'entity'  => $sourceEntity
+            ];
+        }
+    }
+
     protected function prepareConsolidation(array &$data): void
     {
         if (!$this->getConfig()->get('isInstalled', false)) {
@@ -223,47 +288,7 @@ class Metadata extends AbstractMetadataListener
             }
         }
 
-//        $res = DataPipelineRepository::getPipelinesWithSourceEntities($this->getDbal());
-//
-//        foreach ($res as $item) {
-//            $stagingEntity = $item['staging_entity_id'];
-//            $sourceEntity  = $item['source_entity'];
-//
-//            if (empty($stagingEntity) || empty($sourceEntity)) {
-//                continue;
-//            }
-//
-//            $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
-//
-//            $data['entityDefs'][$sourceEntity]['fields']['stagingRecord'] = [
-//                'type'               => 'link',
-//                'readOnly'           => true,
-//                'importDisabled'     => true,
-//                'massUpdateDisabled' => true,
-//            ];
-//
-//            $data['entityDefs'][$sourceEntity]['links']['stagingRecord'] = [
-//                'type'    => 'belongsTo',
-//                'foreign' => $foreign,
-//                'entity'  => $stagingEntity
-//            ];
-//
-//            $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_staging_record'] = [
-//                "deleted",
-//                "staging_record_id"
-//            ];
-//
-//            $data['entityDefs'][$stagingEntity]['fields'][$foreign] = [
-//                'type'     => 'linkMultiple',
-//                'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
-//                'noLoad'   => true,
-//            ];
-//            $data['entityDefs'][$stagingEntity]['links'][$foreign]  = [
-//                'type'    => 'hasMany',
-//                'foreign' => 'stagingRecord',
-//                'entity'  => $sourceEntity
-//            ];
-//        }
+
     }
 
     protected function prepareUserProfile(array &$data): void
