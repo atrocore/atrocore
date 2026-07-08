@@ -672,6 +672,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function updateModifiedAtForIntermediateEntities(Entity $entity)
     {
+        if ($entity->isNew() || !$entity->shouldApplyUpdatedFields()) {
+            return;
+        }
+
         foreach ($this->getMetadata()->get(['scopes', $this->entityType, 'modifiedExtendedIntermediateRelations'], []) as $relation) {
             $defs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relation], []);
 
