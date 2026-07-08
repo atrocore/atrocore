@@ -43,9 +43,7 @@
     "deleteValuesAfterUnlinkingClassification": "Supprimer les valeurs d'attributs après avoir dissocié les classifications",
     "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification",
     "primaryEntity": "Entité primaire",
-    "role": "Rôle",
-    "hasStaging": "Activer la préproduction",
-    "stagingEntity": "Entité de préproduction"
+    "role": "Rôle"
   },
   "options": {
     "type": {
@@ -59,7 +57,7 @@
       "desc": "Descente"
     },
     "role": {
-      "staging": "Préproduction"
+      "contributor": "Contributeur"
     }
   },
   "labels": {
@@ -68,7 +66,7 @@
     "other": "Autre",
     "resetToDefault": "Réinitialiser par défaut",
     "attributes": "Attributs",
-    "mdm": "Gestion des données de référence"
+    "derivation": "Dérivation"
   },
   "confirmations": {
     "resetToDefault": "Êtes-vous sûr de vouloir réinitialiser la configuration par défaut ?"

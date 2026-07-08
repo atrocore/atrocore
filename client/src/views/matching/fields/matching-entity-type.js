@@ -37,18 +37,10 @@ Espo.define('views/matching/fields/matching-entity-type', 'views/fields/entity-t
 
             if (this.model.get('type') === 'masterRecord') {
                 const defs = this.scopesMetadataDefs[entityType] || {};
-                return !!defs.primaryEntityId && defs.role === 'staging';
+                return !!defs.primaryEntityId && defs.role === 'contributor';
             }
 
             return true;
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.model.get(this.name) !== null && ['list', 'detail'].includes(this.mode)) {
-                this.$el.html(`<a href="/#MasterDataEntity/view/${this.model.get(this.name)}">${this.$el.html()}</a>`);
-            }
         },
 
     });

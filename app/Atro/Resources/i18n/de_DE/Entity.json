@@ -44,9 +44,7 @@
     "fields": "Felder",
     "primaryEntity": "Primäre Entität",
     "derivativeEntities": "Derivatives",
-    "role": "Rolle",
-    "hasStaging": "Staging aktivieren",
-    "stagingEntity": "Staging-Entität"
+    "role": "Rolle"
   },
   "options": {
     "type": {
@@ -61,7 +59,7 @@
     },
     "role": {
       "base": "Base",
-      "staging": "Staging"
+      "contributor": "Mitwirkender"
     }
   },
   "labels": {
@@ -70,7 +68,7 @@
     "other": "Sonstige",
     "resetToDefault": "Auf Standardwert zurücksetzen",
     "attributes": "Attribute",
-    "mdm": "Stammdaten-Management"
+    "derivation": "Ableitung"
   },
   "confirmations": {
     "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardeinstellungen zurücksetzen möchten?"

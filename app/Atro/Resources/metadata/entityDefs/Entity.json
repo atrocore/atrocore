@@ -523,98 +523,31 @@
         }
       }
     },
-    "hasMasterDataEntity": {
-      "type": "bool",
-      "protected": true
-    },
     "matchingDisabled": {
       "type": "bool",
       "protected": true
     },
     "role": {
       "type": "enum",
+      "default": "base",
       "options": [
         "base",
-        "staging"
+        "contributor"
       ],
       "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        },
         "protected": {
           "conditionGroup": [
             {
               "type": "isNotEmpty",
               "attribute": "id"
-            }
-          ]
-        },
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "primaryEntityId"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "primaryEntityId"
-            }
-          ]
-        }
-      }
-    },
-    "hasStaging": {
-      "type": "bool",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            },
-            {
-              "type": "isEmpty",
-              "attribute": "primaryEntityId"
-            }
-          ]
-        }
-      }
-    },
-    "stagingEntity": {
-      "type": "link",
-      "view": "views/fields/link",
-      "protected": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "hasStaging"
-            },
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "isEmpty",
-              "attribute": "primaryEntityId"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "stagingEntityId"
             }
           ]
         }
@@ -933,10 +866,6 @@
       "type": "hasMany",
       "entity": "Entity",
       "foreign": "primaryEntity"
-    },
-    "stagingEntity": {
-      "type": "belongsTo",
-      "entity": "Entity"
     },
     "createdBy": {
       "type": "belongsTo",

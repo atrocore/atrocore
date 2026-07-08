@@ -42,9 +42,7 @@
     "nonDuplicatableFields": "Campi non duplicati",
     "deleteValuesAfterUnlinkingClassification": "Cancellare i valori degli attributi dopo aver scollegato le classificazioni",
     "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione",
-    "role": "Ruolo",
-    "hasStaging": "Abilita la messa in scena",
-    "stagingEntity": "Entità di stazionamento"
+    "role": "Ruolo"
   },
   "labels": {
     "resetToDefault": "Ripristino delle impostazioni predefinite",
@@ -52,7 +50,7 @@
     "accessManagement": "Gestione degli accessi",
     "hierarchyManagement": "Gestione della gerarchia",
     "other": "Altro",
-    "mdm": "Gestione dei dati master"
+    "derivation": "Derivazione"
   },
   "options": {
     "type": {
@@ -66,7 +64,7 @@
       "desc": "In discesa"
     },
     "role": {
-      "staging": "Stabilizzazione"
+      "contributor": "Contributore"
     }
   },
   "confirmations": {

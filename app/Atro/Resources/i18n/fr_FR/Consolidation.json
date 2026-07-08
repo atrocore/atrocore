@@ -1,0 +1,30 @@
+{
+  "labels": {
+    "sourceEntities": "Source-to-Staging Pipelines"
+  },
+  "fields": {
+    "mergingScript": "Script de mapping",
+    "updateMasterAutomatically": "Mise à jour automatique du master",
+    "executeMergeAs": "Exécuter la fusion en tant que",
+    "minimumMatchingScore": "Score minimum de correspondance",
+    "confirmAutomatically": "Confirmer automatiquement",
+    "deleteInvalidMastersAutomatically": "Supprimer automatiquement les masters non valides"
+  },
+  "tooltips": {
+    "name": "Seules les entités maîtres possédant déjà un dérivé avec le rôle « Contributeur » peuvent être sélectionnées.",
+    "mergingScript": "Configurez la façon dont les données sources sont transformées, unifiées et mises en correspondance avec la fiche.",
+    "executeMergeAs": "Le compte d'utilisateur qui sera utilisé pour exécuter le script de fusion."
+  },
+  "exceptions": {
+    "mergingScriptIsMissing": "Le script de fusion n'est pas disponible pour l'entité maître",
+    "mergingScriptIsNotValid": "Le script de fusion renvoie une charge utile invalide : %s",
+    "entityTypeInvalid": "Le type d'entité \"%s\" ne peut pas être utilisé pour la consolidation",
+    "consolidationAlreadyExists": "La consolidation pour \"%s\" existe déjà"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Même utilisateur",
+      "system": "Système"
+    }
+  }
+}

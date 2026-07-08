@@ -2,8 +2,8 @@
   "scopeNames": {
     "Cluster": "Cluster",
     "ClusterItem": "Cluster Item",
-    "MasterDataEntity": "Master Data Entity",
-    "SourceToStagingPipeline": "Source-to-Staging Pipeline",
+    "Consolidation": "Consolidation",
+    "DataPipeline": "Data Pipeline",
     "MatchedRecord": "Matched Record",
     "Matching": "Matching",
     "ThumbnailType": "Thumbnail Type",
@@ -90,8 +90,8 @@
   "scopeNamesPlural": {
     "Cluster": "Clusters",
     "ClusterItem": "Cluster Items",
-    "MasterDataEntity": "Master Data Entities",
-    "SourceToStagingPipeline": "Source-to-Staging Pipelines",
+    "Consolidation": "Consolidations",
+    "DataPipeline": "Data Pipelines",
     "MatchedRecord": "Matched Records",
     "Matching": "Matchings",
     "ThumbnailType": "Thumbnail Types",

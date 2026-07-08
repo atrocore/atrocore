@@ -241,6 +241,12 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
 
             this.selectBoolFilterList = Espo.Utils.cloneDeep(this.selectBoolFilterList)
 
+            ;(this.model.getFieldParam(this.name, 'selectBoolFilterList') || []).forEach(item => {
+                if (!this.selectBoolFilterList.includes(item)) {
+                    this.selectBoolFilterList.push(item);
+                }
+            });
+
             if (this.nameName === null) {
                 this.nameName = this.name + 'Name';
             }

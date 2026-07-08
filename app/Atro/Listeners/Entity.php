@@ -54,8 +54,8 @@ class Entity extends AbstractListener
         // find matchings if it needs
         $this->getContainer()->get('matchingManager')->findMatchingsAfterEntitySave($entity);
 
-        $this->syncStagingFromSource($entity);
-        $this->syncStagingSourcesAfterMasterChange($entity);
+        $this->syncTargetFromSource($entity);
+        $this->syncTargetSourcesAfterMasterChange($entity);
     }
 
     public function beforeRemove(Event $event): void
@@ -216,19 +216,19 @@ class Entity extends AbstractListener
         }
     }
 
-    private function syncStagingFromSource(OrmEntity $entity): void
+    private function syncTargetFromSource(OrmEntity $entity): void
     {
-        if ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', 'stagingRecord', 'type']) !== 'belongsTo') {
+        if ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', 'targetRecord', 'type']) !== 'belongsTo') {
             return;
         }
 
         try {
-            $this->getService('SourceToStagingPipeline')->pushToStaging($entity);
+            $this->getService('DataPipeline')->pushToTarget($entity);
         } catch (\Throwable $e) {
         }
     }
 
-    private function syncStagingSourcesAfterMasterChange(OrmEntity $entity): void
+    private function syncTargetSourcesAfterMasterChange(OrmEntity $entity): void
     {
         if (empty($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'primaryEntityId']))) {
             return;
@@ -239,7 +239,7 @@ class Entity extends AbstractListener
         }
 
         try {
-            $this->getService('SourceToStagingPipeline')->pushAllToStaging($entity);
+            $this->getService('DataPipeline')->pushAllToTarget($entity);
         } catch (\Throwable $e) {
         }
     }

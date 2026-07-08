@@ -128,7 +128,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
             if (entityName) {
                 const primaryEntityId = this.getMetadata().get(['scopes', entityName, 'primaryEntityId']);
-                if (primaryEntityId && this.getMetadata().get(['scopes', entityName, 'role']) === 'staging') {
+                if (primaryEntityId && this.getMetadata().get(['scopes', entityName, 'role']) === 'contributor') {
                     statusIconsHtml += `<i class="ph ph-signpost entity-role-icon" title="${this.translate('stagingRecord', 'labels', 'Cluster')}"></i>`;
                 } else {
                     statusIconsHtml += `<i class="ph ph-crown entity-role-icon" title="${this.translate('masterRecord', 'labels', 'Cluster')}"></i>`;

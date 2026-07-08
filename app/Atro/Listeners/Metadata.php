@@ -19,7 +19,7 @@ use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\File;
-use Atro\Repositories\SourceToStagingPipeline as SourceToStagingPipelineRepository;
+use Atro\Repositories\DataPipeline as DataPipelineRepository;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -36,7 +36,8 @@ class Metadata extends AbstractMetadataListener
         $this->addFollowersField($data);
         $this->prepareUserProfile($data);
 
-        $this->prepareMasterDataEntity($data);
+        $this->prepareConsolidation($data);
+        $this->prepareDataPipeline($data);
 
         $event->setArgument('data', $data);
     }
@@ -199,61 +200,95 @@ class Metadata extends AbstractMetadataListener
         }
     }
 
-    protected function prepareMasterDataEntity(array &$data): void
+    protected function prepareDataPipeline(array &$data): void
     {
-        if (!$this->getConfig()->get('isInstalled', false)) {
+        if (!$this->getConfig()->get('isInstalled', false) || $this->isSystemUpdating()) {
             return;
         }
 
-        // Prepare options for the 'sourceEntity' field of the 'SourceToStagingPipeline' entity.
-        $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'] = [];
-        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'MasterDataEntity') {
-                $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'][] = $scope;
+        $res = $this->getDataManager()->getCacheData('data_pipeline');
+        if ($res === null) {
+            try {
+                $res = $this->getDbal()->createQueryBuilder()
+                    ->select('id, source_entity_id, target_entity_id')
+                    ->from('data_pipeline')
+                    ->where('deleted = :false')
+                    ->andWhere('source_entity_id IS NOT NULL')
+                    ->andWhere('target_entity_id IS NOT NULL')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $res = [];
             }
         }
-
-        $res = SourceToStagingPipelineRepository::getPipelinesWithSourceEntities($this->getDbal());
+        $this->getDataManager()->setCacheData('data_pipeline', $res);
 
         foreach ($res as $item) {
-            $stagingEntity = $item['staging_entity_id'];
-            $sourceEntity  = $item['source_entity'];
-
-            if (empty($stagingEntity) || empty($sourceEntity)) {
+            if (empty($item['target_entity_id']) || empty($item['source_entity_id'])) {
                 continue;
             }
 
+            $sourceEntity = $item['source_entity_id'];
+            $targetEntity = $item['target_entity_id'];
+
             $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
 
-            $data['entityDefs'][$sourceEntity]['fields']['stagingRecord'] = [
+            $data['entityDefs'][$sourceEntity]['fields']['targetRecord'] = [
                 'type'               => 'link',
                 'readOnly'           => true,
                 'importDisabled'     => true,
                 'massUpdateDisabled' => true,
             ];
 
-            $data['entityDefs'][$sourceEntity]['links']['stagingRecord'] = [
+            $data['entityDefs'][$sourceEntity]['links']['targetRecord'] = [
                 'type'    => 'belongsTo',
                 'foreign' => $foreign,
-                'entity'  => $stagingEntity
+                'entity'  => $targetEntity
             ];
 
-            $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_staging_record'] = [
+            $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_target_record'] = [
                 "deleted",
-                "staging_record_id"
+                "target_record_id"
             ];
 
-            $data['entityDefs'][$stagingEntity]['fields'][$foreign] = [
+            $data['entityDefs'][$targetEntity]['fields'][$foreign] = [
                 'type'     => 'linkMultiple',
                 'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
                 'noLoad'   => true,
             ];
-            $data['entityDefs'][$stagingEntity]['links'][$foreign]  = [
+            $data['entityDefs'][$targetEntity]['links'][$foreign] = [
                 'type'    => 'hasMany',
-                'foreign' => 'stagingRecord',
+                'foreign' => 'targetRecord',
                 'entity'  => $sourceEntity
             ];
         }
+    }
+
+    protected function prepareConsolidation(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        // masters that already have a contributor-role derivative are the only ones consolidation can be created for
+        $mastersWithContributor = [];
+        foreach ($data['scopes'] ?? [] as $scopeDefs) {
+            if (!empty($scopeDefs['primaryEntityId']) && ($scopeDefs['role'] ?? null) === 'contributor') {
+                $mastersWithContributor[$scopeDefs['primaryEntityId']] = true;
+            }
+        }
+
+        $data['entityDefs']['Consolidation']['fields']['name']['options'] = [];
+
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'Consolidation') {
+                if (!empty($mastersWithContributor[$scope])) {
+                    $data['entityDefs']['Consolidation']['fields']['name']['options'][] = $scope;
+                }
+            }
+        }
+
+
     }
 
     protected function prepareUserProfile(array &$data): void
@@ -439,10 +474,10 @@ class Metadata extends AbstractMetadataListener
             $connection = $this->getConnection();
             try {
                 $actions = $connection->createQueryBuilder()
-                    ->select('t.*')
-                    ->from($connection->quoteIdentifier('action'), 't')
-                    ->where('t.deleted = :false')
-                    ->andWhere('t.is_active = :true')
+                    ->select('*')
+                    ->from($connection->quoteIdentifier('action'))
+                    ->where('deleted = :false')
+                    ->andWhere('is_active = :true')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->fetchAllAssociative();
@@ -1889,7 +1924,7 @@ class Metadata extends AbstractMetadataListener
         $previewTemplates = $dataManager->getCacheData(PreviewTemplate::CACHE_NAME);
         if ($previewTemplates === null) {
             try {
-                $previewTemplates = $this->getConnection()->createQueryBuilder()
+                $previewTemplates = $this->getDbal()->createQueryBuilder()
                     ->select('id, name, entity_type, data')
                     ->from('preview_template')
                     ->where('is_active = :true')
@@ -2639,7 +2674,7 @@ class Metadata extends AbstractMetadataListener
 
     protected function prepareMetadataViaMatchings(array &$data): void
     {
-        if (!$this->getConfig()->get('isInstalled', false) || \Atro\Core\Application::isSystemUpdating()) {
+        if (!$this->getConfig()->get('isInstalled', false) || $this->isSystemUpdating()) {
             return;
         }
 
@@ -2762,5 +2797,10 @@ class Metadata extends AbstractMetadataListener
                 ];
             }
         }
+    }
+
+    protected function isSystemUpdating(): bool
+    {
+        return \Atro\Core\Application::isSystemUpdating();
     }
 }

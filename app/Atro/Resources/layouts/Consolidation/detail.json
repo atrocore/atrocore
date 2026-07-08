@@ -1,0 +1,48 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "mergingScript",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "executeMergeAs"
+        },
+        {
+          "name": "updateMasterAutomatically"
+        }
+      ],
+      [
+        {
+          "name": "confirmAutomatically"
+        },
+        {
+          "name": "minimumMatchingScore"
+        }
+      ],
+      [
+        {
+          "name": "deleteInvalidMastersAutomatically"
+        },
+        false
+      ]
+    ]
+  }
+]

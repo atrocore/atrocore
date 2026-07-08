@@ -63,7 +63,7 @@ class Matching extends Base
 
         if ($entity->get('type') === 'masterRecord' && ($entity->isNew() || $entity->isAttributeChanged('entity'))) {
             $scopeDefs = $this->getMetadata()->get("scopes.{$entity->get('entity')}") ?? [];
-            if (empty($scopeDefs['primaryEntityId']) || ($scopeDefs['role'] ?? null) !== 'staging') {
+            if (empty($scopeDefs['primaryEntityId']) || ($scopeDefs['role'] ?? null) !== 'contributor') {
                 throw new BadRequest(
                     sprintf(
                         $this->getLanguage()->translate('masterRecordEntityInvalid', 'exceptions', 'Matching'),
@@ -106,20 +106,6 @@ class Matching extends Base
         parent::beforeSave($entity, $options);
     }
 
-    protected function createMasterDataEntity(string $id): void
-    {
-        $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get($id);
-        if (empty($mde)) {
-            $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get();
-            $mde->id = $id;
-            $mde->set([
-                'ownerUserId'    => $this->getEntityManager()->getUser()->id,
-                'assignedUserId' => $this->getEntityManager()->getUser()->id,
-            ]);
-            $this->getEntityManager()->saveEntity($mde);
-        }
-    }
-
     /**
      * @param MatchingEntity $entity
      * @param array          $options
@@ -132,15 +118,6 @@ class Matching extends Base
 
         if ($entity->isNew()) {
             $this->rebuild();
-            if ($entity->get('type') === 'duplicate') {
-                $this->createMasterDataEntity($entity->get('entity'));
-                if (!empty($masterEntity = $this->getMetadata()->get(['scopes', $entity->get('entity'), 'primaryEntityId']))) {
-                    $this->createMasterDataEntity($masterEntity);
-                }
-            } elseif ($entity->get('type') === 'masterRecord') {
-                $this->createMasterDataEntity($entity->get('entity'));
-                $this->createMasterDataEntity($entity->get('masterEntity'));
-            }
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('isActive')) {
@@ -158,24 +135,6 @@ class Matching extends Base
         }
     }
 
-    protected function deleteMasterDataEntity(MatchingEntity $matching, string $entityName): void
-    {
-        $exists = $this->where(['entity' => $entityName, 'id!=' => $matching->id])->findOne();
-        if (!empty($exists)) {
-            return;
-        }
-
-        $exists = $this->where(['masterEntity' => $entityName, 'id!=' => $matching->id])->findOne();
-        if (!empty($exists)) {
-            return;
-        }
-
-        $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get($entityName);
-        if (!empty($mde)) {
-            $this->getEntityManager()->removeEntity($mde);
-        }
-    }
-
     /**
      * @param MatchingEntity $entity
      * @param array          $options
@@ -187,13 +146,6 @@ class Matching extends Base
         parent::afterRemove($entity, $options);
 
         $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
-
-        if ($entity->get('type') === 'duplicate') {
-            $this->deleteMasterDataEntity($entity, $entity->get('entity'));
-        } elseif ($entity->get('type') === 'masterRecord') {
-            $this->deleteMasterDataEntity($entity, $entity->get('entity'));
-            $this->deleteMasterDataEntity($entity, $entity->get('masterEntity'));
-        }
 
         foreach ($this->getEntityManager()->getRepository('MatchingRule')->find() as $rule) {
             if ($rule->get('matchingId') === $entity->get('id')) {
