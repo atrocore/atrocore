@@ -556,7 +556,6 @@
     "primaryEntity": {
       "type": "link",
       "view": "views/entity/fields/primary-entity",
-      "readOnly": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -567,10 +566,6 @@
                 "Base",
                 "Hierarchy"
               ]
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "primaryEntityId"
             }
           ]
         },
