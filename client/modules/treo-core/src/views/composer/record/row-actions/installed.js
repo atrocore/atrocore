@@ -38,7 +38,7 @@ Espo.define('treo-core:views/composer/record/row-actions/installed', 'views/reco
                 if (this.model.get('hasDocs')) {
                     list.push({
                         action: 'readDocs',
-                        label: 'Docs',
+                        label: this.translate('Docs', 'labels', 'Composer'),
                         data: {
                             id: this.model.id
                         }
@@ -48,7 +48,7 @@ Espo.define('treo-core:views/composer/record/row-actions/installed', 'views/reco
 
                 list.push({
                     action: 'showReleaseNotes',
-                    label: 'showReleaseNotes',
+                    label: this.translate('showReleaseNotes', 'labels', 'Composer'),
                     data: {
                         id: this.model.id
                     }
@@ -57,7 +57,7 @@ Espo.define('treo-core:views/composer/record/row-actions/installed', 'views/reco
                 if (this.model.get('status')) {
                     list.push({
                         action: 'cancelModule',
-                        label: 'cancelModule',
+                        label: this.translate('cancelModule', 'labels', 'Composer'),
                         data: {
                             id: this.model.id,
                             status: this.model.get('status')
