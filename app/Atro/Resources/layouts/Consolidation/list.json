@@ -1,22 +1,10 @@
 [
   {
-    "name": "name",
+    "name": "number",
     "link": true
   },
   {
-    "name": "executeMergeAs"
-  },
-  {
-    "name": "updateMasterAutomatically"
-  },
-  {
-    "name": "confirmAutomatically"
-  },
-  {
-    "name": "minimumMatchingScore"
-  },
-  {
-    "name": "deleteInvalidMastersAutomatically"
+    "name": "entity"
   },
   {
     "name": "description"

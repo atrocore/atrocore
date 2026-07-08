@@ -19,7 +19,6 @@ use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\File;
-use Atro\Repositories\DataPipeline as DataPipelineRepository;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -36,7 +35,6 @@ class Metadata extends AbstractMetadataListener
         $this->addFollowersField($data);
         $this->prepareUserProfile($data);
 
-        $this->prepareConsolidation($data);
         $this->prepareDataPipeline($data);
 
         $event->setArgument('data', $data);
@@ -262,33 +260,6 @@ class Metadata extends AbstractMetadataListener
                 'entity'  => $sourceEntity
             ];
         }
-    }
-
-    protected function prepareConsolidation(array &$data): void
-    {
-        if (!$this->getConfig()->get('isInstalled', false)) {
-            return;
-        }
-
-        // masters that already have a contributor-role derivative are the only ones consolidation can be created for
-        $mastersWithContributor = [];
-        foreach ($data['scopes'] ?? [] as $scopeDefs) {
-            if (!empty($scopeDefs['primaryEntityId']) && ($scopeDefs['role'] ?? null) === 'contributor') {
-                $mastersWithContributor[$scopeDefs['primaryEntityId']] = true;
-            }
-        }
-
-        $data['entityDefs']['Consolidation']['fields']['name']['options'] = [];
-
-        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'Consolidation') {
-                if (!empty($mastersWithContributor[$scope])) {
-                    $data['entityDefs']['Consolidation']['fields']['name']['options'][] = $scope;
-                }
-            }
-        }
-
-
     }
 
     protected function prepareUserProfile(array &$data): void
