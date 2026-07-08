@@ -82,7 +82,7 @@
     "matchings": "Shody",
     "clusters": "Klastry",
     "MasterDataManagement": "Správa hlavních dat",
-    "sourceToStagingPipeline": "Pipeline zdroj-staging"
+    "dataPipeline": "Datové pipeline"
   },
   "layouts": {
     "relationships": "Vztahy",
@@ -218,7 +218,7 @@
     "apiRequest": "Pomocí této funkce můžete rychle vytvářet složité datové struktury, například konfigurované importní nebo exportní kanály.",
     "style": "Vytváření, aktualizace a přizpůsobení nových stylů pro úpravy standardního CSS",
     "clusters": "Pomocí clusterů můžete seskupovat podobné záznamy v rámci správy hlavních dat a vzájemně je přiřazovat.",
-    "sourceToStagingPipeline": "Definujte pravidla mapování, která automaticky transformují a odesílají záznamy zdrojových entit do odpovídajících staging entit."
+    "dataPipeline": "Definujte pravidla mapování, která automaticky transformují a odesílají záznamy zdrojových entit do odpovídajících staging entit."
   },
   "logicalOperators": {
     "and": "A",

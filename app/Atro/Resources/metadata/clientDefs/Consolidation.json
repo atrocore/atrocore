@@ -9,31 +9,10 @@
         "view": "views/consolidation/record/panels/matchings",
         "canClose": true,
         "collapseByDefault": false
-      },
-      {
-        "name": "sourceToStagingPipelines",
-        "label": "sourceEntities",
-        "view": "views/consolidation/record/panels/source-entities",
-        "canClose": true,
-        "collapseByDefault": false,
-        "select": false,
-        "unlinkAll": false,
-        "actions": {
-          "unlinkRelated": {
-            "disabled": true
-          }
-        }
       }
     ]
   },
   "relationshipPanels": {
-    "sourceToStagingPipelines": {
-      "actions": {
-        "unlinkRelated": {
-          "disabled": true
-        }
-      }
-    },
     "matchings": {
       "actions": {
         "unlinkRelated": {

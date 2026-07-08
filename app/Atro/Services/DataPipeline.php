@@ -20,7 +20,7 @@ use Atro\Core\Twig\Twig;
 use Atro\Core\UserContext;
 use Espo\ORM\Entity;
 
-class SourceToStagingPipeline extends Base
+class DataPipeline extends Base
 {
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -35,7 +35,7 @@ class SourceToStagingPipeline extends Base
     public function pushToStaging(Entity $sourceRecord): void
     {
         $pipeline = $this->getEntityManager()
-            ->getRepository('SourceToStagingPipeline')
+            ->getRepository('DataPipeline')
             ->where(['sourceEntity' => $sourceRecord->getEntityName()])
             ->findOne();
 
@@ -101,7 +101,7 @@ class SourceToStagingPipeline extends Base
     public function pushAllToStaging(Entity $stagingRecord): void
     {
         $sources = $this->getEntityManager()
-            ->getRepository('SourceToStagingPipeline')
+            ->getRepository('DataPipeline')
             ->where(['stagingEntityId' => $stagingRecord->getEntityName()])
             ->find();
 

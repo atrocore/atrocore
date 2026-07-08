@@ -19,7 +19,7 @@ use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\File;
-use Atro\Repositories\SourceToStagingPipeline as SourceToStagingPipelineRepository;
+use Atro\Repositories\DataPipeline as DataPipelineRepository;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -213,59 +213,57 @@ class Metadata extends AbstractMetadataListener
             }
         }
 
-        $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'] = [];
         $data['entityDefs']['Consolidation']['fields']['name']['options'] = [];
 
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'Consolidation') {
-                $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'][] = $scope;
                 if (!empty($mastersWithContributor[$scope])) {
                     $data['entityDefs']['Consolidation']['fields']['name']['options'][] = $scope;
                 }
             }
         }
 
-        $res = SourceToStagingPipelineRepository::getPipelinesWithSourceEntities($this->getDbal());
-
-        foreach ($res as $item) {
-            $stagingEntity = $item['staging_entity_id'];
-            $sourceEntity  = $item['source_entity'];
-
-            if (empty($stagingEntity) || empty($sourceEntity)) {
-                continue;
-            }
-
-            $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
-
-            $data['entityDefs'][$sourceEntity]['fields']['stagingRecord'] = [
-                'type'               => 'link',
-                'readOnly'           => true,
-                'importDisabled'     => true,
-                'massUpdateDisabled' => true,
-            ];
-
-            $data['entityDefs'][$sourceEntity]['links']['stagingRecord'] = [
-                'type'    => 'belongsTo',
-                'foreign' => $foreign,
-                'entity'  => $stagingEntity
-            ];
-
-            $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_staging_record'] = [
-                "deleted",
-                "staging_record_id"
-            ];
-
-            $data['entityDefs'][$stagingEntity]['fields'][$foreign] = [
-                'type'     => 'linkMultiple',
-                'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
-                'noLoad'   => true,
-            ];
-            $data['entityDefs'][$stagingEntity]['links'][$foreign]  = [
-                'type'    => 'hasMany',
-                'foreign' => 'stagingRecord',
-                'entity'  => $sourceEntity
-            ];
-        }
+//        $res = DataPipelineRepository::getPipelinesWithSourceEntities($this->getDbal());
+//
+//        foreach ($res as $item) {
+//            $stagingEntity = $item['staging_entity_id'];
+//            $sourceEntity  = $item['source_entity'];
+//
+//            if (empty($stagingEntity) || empty($sourceEntity)) {
+//                continue;
+//            }
+//
+//            $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
+//
+//            $data['entityDefs'][$sourceEntity]['fields']['stagingRecord'] = [
+//                'type'               => 'link',
+//                'readOnly'           => true,
+//                'importDisabled'     => true,
+//                'massUpdateDisabled' => true,
+//            ];
+//
+//            $data['entityDefs'][$sourceEntity]['links']['stagingRecord'] = [
+//                'type'    => 'belongsTo',
+//                'foreign' => $foreign,
+//                'entity'  => $stagingEntity
+//            ];
+//
+//            $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_staging_record'] = [
+//                "deleted",
+//                "staging_record_id"
+//            ];
+//
+//            $data['entityDefs'][$stagingEntity]['fields'][$foreign] = [
+//                'type'     => 'linkMultiple',
+//                'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
+//                'noLoad'   => true,
+//            ];
+//            $data['entityDefs'][$stagingEntity]['links'][$foreign]  = [
+//                'type'    => 'hasMany',
+//                'foreign' => 'stagingRecord',
+//                'entity'  => $sourceEntity
+//            ];
+//        }
     }
 
     protected function prepareUserProfile(array &$data): void

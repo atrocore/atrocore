@@ -20,7 +20,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
-class SourceToStagingPipeline extends Base
+class DataPipeline extends Base
 {
     public static function getPipelinesWithSourceEntities(Connection $connection): array
     {

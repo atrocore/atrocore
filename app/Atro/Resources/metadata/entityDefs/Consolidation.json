@@ -108,11 +108,6 @@
     }
   },
   "links": {
-    "sourceToStagingPipelines": {
-      "type": "hasMany",
-      "entity": "SourceToStagingPipeline",
-      "foreign": "stagingEntity"
-    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"

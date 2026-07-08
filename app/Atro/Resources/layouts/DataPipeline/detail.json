@@ -5,10 +5,10 @@
     "rows": [
       [
         {
-          "name": "stagingEntity"
+          "name": "sourceEntity"
         },
         {
-          "name": "sourceEntity"
+          "name": "targetEntity"
         }
       ],
       [

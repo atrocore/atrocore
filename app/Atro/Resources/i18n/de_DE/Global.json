@@ -1,7 +1,7 @@
 {
   "scopeNames": {
     "Consolidation": "Konsolidierung",
-    "SourceToStagingPipeline": "Source-to-Staging Pipeline",
+    "DataPipeline": "Daten-Pipeline",
     "IncomingWebhook": "Eingehender Webhook",
     "Classification": "Klassifikation",
     "ClassificationAttribute": "Klassifikationsattribut",
@@ -89,7 +89,7 @@
   },
   "scopeNamesPlural": {
     "Consolidation": "Konsolidierungen",
-    "SourceToStagingPipeline": "Source-to-Staging Pipelines",
+    "DataPipeline": "Daten-Pipelines",
     "IncomingWebhook": "Eingehende Webhooks",
     "Classification": "Klassifikationen",
     "ClassificationAttribute": "Klassifikationsattribute",

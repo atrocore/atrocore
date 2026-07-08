@@ -223,7 +223,7 @@ class Entity extends AbstractListener
         }
 
         try {
-            $this->getService('SourceToStagingPipeline')->pushToStaging($entity);
+            $this->getService('DataPipeline')->pushToStaging($entity);
         } catch (\Throwable $e) {
         }
     }
@@ -239,7 +239,7 @@ class Entity extends AbstractListener
         }
 
         try {
-            $this->getService('SourceToStagingPipeline')->pushAllToStaging($entity);
+            $this->getService('DataPipeline')->pushAllToStaging($entity);
         } catch (\Throwable $e) {
         }
     }

@@ -75,18 +75,4 @@ class Consolidation extends Base
 
         parent::beforeSave($entity, $options);
     }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        parent::afterRemove($entity, $options);
-
-        $pipelines = $this->getEntityManager()
-            ->getRepository('SourceToStagingPipeline')
-            ->where(['stagingEntityId' => $entity->get('id')])
-            ->find();
-
-        foreach ($pipelines as $pipeline) {
-            $this->getEntityManager()->removeEntity($pipeline);
-        }
-    }
 }

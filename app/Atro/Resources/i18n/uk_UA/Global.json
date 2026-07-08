@@ -1,7 +1,7 @@
 {
   "scopeNames": {
     "Consolidation": "Консолідація",
-    "SourceToStagingPipeline": "Пайплайн джерело-стейджинг",
+    "DataPipeline": "Пайплайн даних",
     "Classification": "Класифікація",
     "ClassificationAttribute": "Атрибут класифікації",
     "Attribute": "Атрибут",
@@ -89,7 +89,7 @@
   },
   "scopeNamesPlural": {
     "Consolidation": "Консолідації",
-    "SourceToStagingPipeline": "Пайплайни джерело-стейджинг",
+    "DataPipeline": "Пайплайни даних",
     "Classification": "Класифікації",
     "ClassificationAttribute": "Атрибути класифікації",
     "Attribute": "Атрибути",

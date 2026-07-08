@@ -136,9 +136,9 @@
         "icon": "ph ph-copy"
       },
       {
-        "url": "#SourceToStagingPipeline",
-        "label": "sourceToStagingPipeline",
-        "description": "sourceToStagingPipeline",
+        "url": "#DataPipeline",
+        "label": "dataPipeline",
+        "description": "dataPipeline",
         "icon": "ph ph-line-segment"
       }
     ]

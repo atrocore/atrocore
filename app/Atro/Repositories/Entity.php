@@ -563,7 +563,7 @@ class Entity extends ReferenceData
         $this->getEntityManager()->getRepository('ClusterItem')->afterDeleteEntity($entity->get('code'));
 
         $pipelines = $this->getEntityManager()
-            ->getRepository('SourceToStagingPipeline')
+            ->getRepository('DataPipeline')
             ->where(['sourceEntity' => $entity->get('code')])
             ->find();
         foreach ($pipelines as $pipeline) {

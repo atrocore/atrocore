@@ -1,7 +1,8 @@
 {
   "fields": {
-    "stagingEntity": {
+    "sourceEntity": {
       "type": "link",
+      "entity": "Entity",
       "required": true,
       "customizable": false,
       "layoutRemoveDisabled": true,
@@ -16,9 +17,9 @@
         }
       }
     },
-    "sourceEntity": {
-      "type": "varchar",
-      "view": "views/fields/entity-type",
+    "targetEntity": {
+      "type": "link",
+      "entity": "Entity",
       "required": true,
       "customizable": false,
       "layoutRemoveDisabled": true,
@@ -37,7 +38,7 @@
       "type": "text",
       "view": "views/fields/script",
       "language": "json",
-      "default": "{# { \"stagingRecordData\": { \"name\" : \"{{ sourceRecord.name }}\" } } #}",
+      "default": "{# { \"targetRecordData\": { \"name\" : \"{{ sourceRecord.name }}\" } } #}",
       "editorActions": {
         "addFields": {
           "entityNameField": "sourceEntity"
@@ -45,11 +46,18 @@
       },
       "twigVariables": [
         "sourceRecord",
-        "stagingRecord"
+        "targetRecord"
       ],
       "customizable": false,
       "layoutRemoveDisabled": true,
       "tooltip": true
+    },
+    "hash": {
+      "type": "varchar",
+      "protected": true,
+      "unique": true,
+      "required": true,
+      "customizable": false
     },
     "createdAt": {
       "type": "datetime",
@@ -71,11 +79,6 @@
     }
   },
   "links": {
-    "stagingEntity": {
-      "type": "belongsTo",
-      "entity": "Consolidation",
-      "foreignName": "id"
-    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
@@ -85,16 +88,16 @@
       "entity": "User"
     }
   },
-  "uniqueIndexes": {
-    "unique_source_entity": [
-      "deleted",
-      "source_entity"
-    ]
-  },
   "indexes": {
-    "stagingEntityId": {
+    "sourceEntityId": {
       "columns": [
-        "stagingEntityId",
+        "sourceEntityId",
+        "deleted"
+      ]
+    },
+    "targetEntityId": {
+      "columns": [
+        "targetEntityId",
         "deleted"
       ]
     },

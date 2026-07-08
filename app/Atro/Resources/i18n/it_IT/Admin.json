@@ -82,7 +82,7 @@
     "matchings": "Abbinamenti",
     "clusters": "Cluster",
     "MasterDataManagement": "Gestione dei dati master",
-    "sourceToStagingPipeline": "Pipeline da sorgente a staging"
+    "dataPipeline": "Pipeline di dati"
   },
   "fields": {
     "isPersonalData": "I dati personali",
@@ -163,7 +163,7 @@
     "apiRequest": "Utilizzi questa funzione per creare rapidamente strutture di dati complesse, come i feed di importazione o esportazione configurati.",
     "style": "Creare, aggiornare e personalizzare nuovi stili per apportare modifiche ai CSS standard.",
     "clusters": "Utilizza i cluster per raggruppare record simili all'interno della gestione dei dati master e abbinarli tra loro.",
-    "sourceToStagingPipeline": "Definisci regole di mappatura che trasformano e inviano automaticamente i record delle entità sorgente alle corrispondenti entità di staging."
+    "dataPipeline": "Definisci regole di mappatura che trasformano e inviano automaticamente i record delle entità sorgente alle corrispondenti entità di staging."
   },
   "logicalOperators": {
     "and": "E",

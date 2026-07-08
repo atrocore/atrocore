@@ -81,7 +81,7 @@
     "GeneralSetting": "Allgemeine Einstellungen",
     "System": "System",
     "clusters": "Cluster",
-    "sourceToStagingPipeline": "Source-to-Staging-Pipelines",
+    "dataPipeline": "Daten-Pipelines",
     "MasterDataManagement": "Stammdatenverwaltung"
   },
   "logicalOperators": {
@@ -223,6 +223,6 @@
     "scheduledJob": "Verwalten Sie geplante System-Aufträge.",
     "jobs": "Verwalten Sie System-Aufträge, die ohne direkte Benutzerinteraktion im Hintergrund laufen.",
     "clusters": "Verwenden Sie Cluster, um ähnliche Datensätze in der Stammdatenverwaltung zu gruppieren und sie miteinander abzugleichen.",
-    "sourceToStagingPipeline": "Definieren Sie Zuordnungsregeln, die Quelldatensätze automatisch transformieren und in die entsprechenden Staging-Entitäten übertragen."
+    "dataPipeline": "Definieren Sie Zuordnungsregeln, die Quelldatensätze automatisch transformieren und in die entsprechenden Staging-Entitäten übertragen."
   }
 }

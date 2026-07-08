@@ -81,7 +81,7 @@
     "consolidation": "Consolidations",
     "matchings": "Matchings",
     "clusters": "Clusters",
-    "sourceToStagingPipeline": "Source-to-Staging Pipelines",
+    "dataPipeline": "Data Pipelines",
     "MasterDataManagement": "Master Data Management"
   },
   "layouts": {
@@ -178,7 +178,7 @@
     "consolidation": "Configure consolidation for an entity to merge data from its contributor records into consolidated master records.",
     "matchings": "Matchings helps identify similar records across entities by using user-defined rules.",
     "clusters": "Use clusters to group similar records within master data management and match them with each other.",
-    "sourceToStagingPipeline": "Define mapping rules that automatically transform and push source entity records to their corresponding staging entities.",
+    "dataPipeline": "Define mapping rules that automatically transform and push source entity records to their corresponding staging entities.",
     "incomingWebhook": "Incoming Webhooks let you trigger predefined Actions via external HTTP requests, with optional security like hash verification and IP whitelisting.",
     "Storage": "Manage physical locations for all uploaded files (Local File System, Microsoft Sharepoint, Amazon S3, etc.)",
     "listOfSupportedFilesTypes": "Manage file types for additional file validation (e.g. images, documents, videos, etc.) and classification.",
