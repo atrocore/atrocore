@@ -359,7 +359,8 @@ class OpenApiGenerator
 
         // TODO: value-container fields are polymorphic (scalar or array depending on field type being configured).
         // This anyOf is a temporary workaround until field-level API types are modelled properly.
-        if (!empty($fieldData['view']) && str_contains($fieldData['view'], 'value-container')) {
+        $isPolymorphic = !empty($fieldData['openApiPolymorphic']) || (!empty($fieldData['view']) && str_contains($fieldData['view'], 'value-container'));
+        if ($isPolymorphic) {
             $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
                 'anyOf'    => [
                     ['type' => 'string', 'nullable' => true],
