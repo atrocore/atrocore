@@ -1,5 +1,8 @@
 {
   "fields": {
+    "number": {
+      "type": "autoincrement"
+    },
     "sourceEntity": {
       "type": "link",
       "entity": "Entity",

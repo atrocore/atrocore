@@ -44,8 +44,13 @@ class V2Dot3Dot10 extends Base
             $this->exec("CREATE INDEX IDX_DATA_PIPELINE_SOURCE_ENTITY_ID ON data_pipeline (source_entity_id, deleted)");
             $this->exec("CREATE INDEX IDX_DATA_PIPELINE_TARGET_ENTITY_ID ON data_pipeline (target_entity_id, deleted)");
             $this->exec("CREATE INDEX IDX_DATA_PIPELINE_CREATED_AT ON data_pipeline (created_at, deleted)");
+            $this->exec("CREATE SEQUENCE data_pipeline_number_seq INCREMENT BY 1 MINVALUE 1 START 1");
+            $this->exec("ALTER TABLE data_pipeline ADD number INT DEFAULT nextval('data_pipeline_number_seq') NOT NULL");
         } else {
             $this->exec("CREATE TABLE data_pipeline (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', merging_script LONGTEXT DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL COLLATE `utf8_bin`, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, source_entity_id VARCHAR(36) DEFAULT NULL, target_entity_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_B7221005D1B862B8EB3B4E33 (hash, deleted), INDEX IDX_DATA_PIPELINE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_DATA_PIPELINE_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_DATA_PIPELINE_SOURCE_ENTITY_ID (source_entity_id, deleted), INDEX IDX_DATA_PIPELINE_TARGET_ENTITY_ID (target_entity_id, deleted), INDEX IDX_DATA_PIPELINE_CREATED_AT (created_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec("ALTER TABLE data_pipeline ADD number INT NOT NULL");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_B722100596901F54 ON data_pipeline (number)");
+            $this->exec("ALTER TABLE data_pipeline CHANGE number number INT AUTO_INCREMENT NOT NULL");
         }
     }
 

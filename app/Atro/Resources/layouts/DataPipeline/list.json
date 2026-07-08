@@ -1,5 +1,9 @@
 [
   {
+    "name": "number",
+    "link": true
+  },
+  {
     "name": "sourceEntity"
   },
   {
