@@ -45,7 +45,7 @@ class Consolidation extends Base
         if ($entity->isNew()) {
             $entityName = $entity->get('name');
 
-            if (empty($entityName) || !$this->isEntityTypeAllowed((string)$entityName)) {
+            if (empty($entityName) || empty($this->getContributorEntityName((string)$entityName))) {
                 throw new BadRequest(
                     sprintf(
                         $this->getLanguage()->translate('entityTypeInvalid', 'exceptions', 'Consolidation'),
@@ -63,24 +63,6 @@ class Consolidation extends Base
                 );
             }
 
-            if (!empty($this->getContributorEntityName($entityName))) {
-                throw new BadRequest(
-                    sprintf(
-                        $this->getLanguage()->translate('contributorAlreadyExists', 'exceptions', 'Consolidation'),
-                        $entityName
-                    )
-                );
-            }
-
-            if (!empty($this->getMetadata()->get(['scopes', $entityName . 'Contributor']))) {
-                throw new BadRequest(
-                    sprintf(
-                        $this->getLanguage()->translate('contributorCodeIsBusy', 'exceptions', 'Consolidation'),
-                        $entityName . 'Contributor'
-                    )
-                );
-            }
-
             // remove a soft-deleted record with the same name to avoid a unique index collision
             $this->getDbal()->createQueryBuilder()
                 ->delete($this->getDbal()->quoteIdentifier('consolidation'))
@@ -94,45 +76,6 @@ class Consolidation extends Base
         parent::beforeSave($entity, $options);
     }
 
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        if ($entity->isNew()) {
-            $this->createContributorEntity($entity);
-        }
-    }
-
-    protected function createContributorEntity(Entity $entity): void
-    {
-        $code = $entity->get('name') . 'Contributor';
-
-        $entityRepository = $this->getEntityManager()->getRepository('Entity');
-
-        $contributor = $entityRepository->get();
-        $contributor->set('code', $code);
-        $contributor->set('name', $code);
-        $contributor->set('namePlural', $code . 's');
-        $contributor->set('primaryEntityId', $entity->get('name'));
-        $contributor->set('role', 'contributor');
-
-        $entityRepository->save($contributor);
-    }
-
-    protected function isEntityTypeAllowed(string $entityName): bool
-    {
-        if ($entityName === 'Consolidation') {
-            return false;
-        }
-
-        $scopeDefs = $this->getMetadata()->get(['scopes', $entityName]);
-
-        return !empty($scopeDefs)
-            && in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy'])
-            && ($scopeDefs['customizable'] ?? true) !== false
-            && empty($scopeDefs['primaryEntityId']);
-    }
-
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
@@ -144,23 +87,6 @@ class Consolidation extends Base
 
         foreach ($pipelines as $pipeline) {
             $this->getEntityManager()->removeEntity($pipeline);
-        }
-
-        $this->removeContributorEntity($entity);
-    }
-
-    protected function removeContributorEntity(Entity $entity): void
-    {
-        $contributorEntityName = $this->getContributorEntityName((string)$entity->get('name'));
-        if (empty($contributorEntityName)) {
-            return;
-        }
-
-        $entityRepository = $this->getEntityManager()->getRepository('Entity');
-
-        $contributor = $entityRepository->get($contributorEntityName);
-        if (!empty($contributor)) {
-            $entityRepository->deleteEntity($contributor);
         }
     }
 }

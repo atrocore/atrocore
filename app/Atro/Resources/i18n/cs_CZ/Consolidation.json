@@ -18,9 +18,7 @@
     "mergingScriptIsMissing": "Chybí skript pro sloučení pro hlavní entitu",
     "mergingScriptIsNotValid": "Slučovací skript vrací neplatné užitečné zatížení: %s",
     "entityTypeInvalid": "Typ entity \"%s\" nelze použít pro konsolidaci",
-    "consolidationAlreadyExists": "Konsolidace pro \"%s\" již existuje",
-    "contributorAlreadyExists": "Entita \"%s\" již má odvozeninu s rolí „Přispěvatel\"",
-    "contributorCodeIsBusy": "Kód entity \"%s\" je již používán"
+    "consolidationAlreadyExists": "Konsolidace pro \"%s\" již existuje"
   },
   "options": {
     "executeMergeAs": {

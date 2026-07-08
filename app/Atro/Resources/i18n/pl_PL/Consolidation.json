@@ -18,9 +18,7 @@
     "mergingScriptIsMissing": "Brakuje skryptu scalającego dla jednostki master",
     "mergingScriptIsNotValid": "Skrypt scalania zwraca nieprawidłowy ładunek: %s",
     "entityTypeInvalid": "Typ encji \"%s\" nie może być używany do konsolidacji",
-    "consolidationAlreadyExists": "Konsolidacja dla \"%s\" już istnieje",
-    "contributorAlreadyExists": "Encja \"%s\" ma już pochodną z rolą „Współtwórca\"",
-    "contributorCodeIsBusy": "Kod encji \"%s\" jest już zajęty"
+    "consolidationAlreadyExists": "Konsolidacja dla \"%s\" już istnieje"
   },
   "options": {
     "executeMergeAs": {

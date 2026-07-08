@@ -205,13 +205,21 @@ class Metadata extends AbstractMetadataListener
             return;
         }
 
+        // masters that already have a contributor-role derivative are the only ones consolidation can be created for
+        $mastersWithContributor = [];
+        foreach ($data['scopes'] ?? [] as $scopeDefs) {
+            if (!empty($scopeDefs['primaryEntityId']) && ($scopeDefs['role'] ?? null) === 'contributor') {
+                $mastersWithContributor[$scopeDefs['primaryEntityId']] = true;
+            }
+        }
+
         $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'] = [];
         $data['entityDefs']['Consolidation']['fields']['name']['options'] = [];
 
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (in_array($scopeDefs['type'] ?? '', ['Base', 'Hierarchy']) && ($scopeDefs['customizable'] ?? true) !== false && $scope !== 'Consolidation') {
                 $data['entityDefs']['SourceToStagingPipeline']['fields']['sourceEntity']['options'][] = $scope;
-                if (empty($scopeDefs['primaryEntityId'])) {
+                if (!empty($mastersWithContributor[$scope])) {
                     $data['entityDefs']['Consolidation']['fields']['name']['options'][] = $scope;
                 }
             }
@@ -443,10 +451,10 @@ class Metadata extends AbstractMetadataListener
             $connection = $this->getConnection();
             try {
                 $actions = $connection->createQueryBuilder()
-                    ->select('t.*')
-                    ->from($connection->quoteIdentifier('action'), 't')
-                    ->where('t.deleted = :false')
-                    ->andWhere('t.is_active = :true')
+                    ->select('*')
+                    ->from($connection->quoteIdentifier('action'))
+                    ->where('deleted = :false')
+                    ->andWhere('is_active = :true')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->fetchAllAssociative();
@@ -1893,7 +1901,7 @@ class Metadata extends AbstractMetadataListener
         $previewTemplates = $dataManager->getCacheData(PreviewTemplate::CACHE_NAME);
         if ($previewTemplates === null) {
             try {
-                $previewTemplates = $this->getConnection()->createQueryBuilder()
+                $previewTemplates = $this->getDbal()->createQueryBuilder()
                     ->select('id, name, entity_type, data')
                     ->from('preview_template')
                     ->where('is_active = :true')
@@ -2643,7 +2651,7 @@ class Metadata extends AbstractMetadataListener
 
     protected function prepareMetadataViaMatchings(array &$data): void
     {
-        if (!$this->getConfig()->get('isInstalled', false) || \Atro\Core\Application::isSystemUpdating()) {
+        if (!$this->getConfig()->get('isInstalled', false) || $this->isSystemUpdating()) {
             return;
         }
 
@@ -2766,5 +2774,10 @@ class Metadata extends AbstractMetadataListener
                 ];
             }
         }
+    }
+
+    protected function isSystemUpdating(): bool
+    {
+        return \Atro\Core\Application::isSystemUpdating();
     }
 }

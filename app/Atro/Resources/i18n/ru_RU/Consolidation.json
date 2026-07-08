@@ -18,9 +18,7 @@
     "mergingScriptIsMissing": "Скрипт слияния отсутствует для главной сущности",
     "mergingScriptIsNotValid": "Скрипт слияния возвращает недопустимую полезную нагрузку: %s",
     "entityTypeInvalid": "Тип сущности \"%s\" не может использоваться для консолидации",
-    "consolidationAlreadyExists": "Консолидация для \"%s\" уже существует",
-    "contributorAlreadyExists": "Сущность \"%s\" уже имеет дериватив с ролью «Контрибьютор»",
-    "contributorCodeIsBusy": "Код сущности \"%s\" уже занят"
+    "consolidationAlreadyExists": "Консолидация для \"%s\" уже существует"
   },
   "options": {
     "executeMergeAs": {

@@ -554,6 +554,12 @@ class Entity extends ReferenceData
             ->where(['entity' => $entity->id])
             ->removeCollection();
 
+        // cascade remove the Consolidation record
+        $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($entity->get('code'));
+        if (!empty($consolidation)) {
+            $this->getEntityManager()->removeEntity($consolidation);
+        }
+
         $this->getEntityManager()->getRepository('ClusterItem')->afterDeleteEntity($entity->get('code'));
 
         $pipelines = $this->getEntityManager()

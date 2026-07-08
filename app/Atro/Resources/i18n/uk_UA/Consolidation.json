@@ -18,9 +18,7 @@
     "mergingScriptIsMissing": "Відсутній сценарій злиття для головної сутності",
     "mergingScriptIsNotValid": "Скрипт злиття повертає некоректне корисне навантаження: %s",
     "entityTypeInvalid": "Тип сутності \"%s\" не може використовуватися для консолідації",
-    "consolidationAlreadyExists": "Консолідація для \"%s\" вже існує",
-    "contributorAlreadyExists": "Сутність \"%s\" вже має дериватив із роллю «Контриб'ютор»",
-    "contributorCodeIsBusy": "Код сутності \"%s\" вже зайнятий"
+    "consolidationAlreadyExists": "Консолідація для \"%s\" вже існує"
   },
   "options": {
     "executeMergeAs": {
