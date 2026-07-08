@@ -11,6 +11,7 @@
     "executeMergeAs": "Execute Merge As"
   },
   "tooltips": {
+    "name": "Only master entities that already have a derivative with the Contributor role can be selected.",
     "mergingScript": "Configure how source data is transformed, unified, and mapped to the master record.",
     "executeMergeAs": "The user account that will be used to execute the merge script."
   },

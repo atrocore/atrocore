@@ -11,6 +11,7 @@
     "deleteInvalidMastersAutomatically": "Eliminar automáticamente los maestros no válidos"
   },
   "tooltips": {
+    "name": "Solo se pueden seleccionar entidades maestras que ya tengan un derivado con el rol «Contribuidor».",
     "mergingScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro.",
     "executeMergeAs": "La cuenta de usuario que se utilizará para ejecutar el script de fusión."
   },

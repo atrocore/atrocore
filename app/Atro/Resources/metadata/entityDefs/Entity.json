@@ -529,7 +529,6 @@
     },
     "role": {
       "type": "enum",
-      "protected": true,
       "default": "base",
       "options": [
         "base",
@@ -541,6 +540,14 @@
             {
               "type": "isNotEmpty",
               "attribute": "primaryEntityId"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }

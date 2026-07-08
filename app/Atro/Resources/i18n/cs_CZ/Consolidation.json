@@ -11,6 +11,7 @@
     "deleteInvalidMastersAutomatically": "Automaticky mazat neplatné hlavní záznamy"
   },
   "tooltips": {
+    "name": "Lze vybrat pouze tu hlavní entitu, pro kterou již existuje odvozenina s rolí „Přispěvatel“.",
     "mergingScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu.",
     "executeMergeAs": "Uživatelský účet, který bude použit ke spuštění skriptu sloučení."
   },

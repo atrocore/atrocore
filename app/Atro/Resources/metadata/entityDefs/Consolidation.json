@@ -8,6 +8,7 @@
       "unique": true,
       "customizable": false,
       "layoutRemoveDisabled": true,
+      "tooltip": true,
       "conditionalProperties": {
         "protected": {
           "conditionGroup": [

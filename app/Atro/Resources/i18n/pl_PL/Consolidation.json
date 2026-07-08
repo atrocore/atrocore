@@ -11,6 +11,7 @@
     "executeMergeAs": "Wykonać scalanie jako"
   },
   "tooltips": {
+    "name": "Można wybrać tylko taką encję główną, dla której już istnieje pochodna z rolą „Współtwórca”.",
     "mergingScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego.",
     "executeMergeAs": "Konto użytkownika, które zostanie użyte do wykonania skryptu scalającego."
   },
