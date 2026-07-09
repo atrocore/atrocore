@@ -206,6 +206,41 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return Link.prototype.getCreateAttributes.call(this);
         },
 
+        loadForeignNames: function (ids) {
+            this.model.set(this.idsName, null);
+            this.model.set(this.nameHashName, null);
+
+            const foreignName = this.getForeignName();
+            this.ajaxGetRequest(this.foreignScope, {
+                select: `id,${foreignName}`,
+                collectionOnly: true,
+                where: [{ type: 'in', attribute: 'id', value: ids }]
+            }).done(function (response) {
+                const names = {};
+                (response.list || []).forEach(item => {
+                    names[item.id] = item[foreignName];
+                });
+                names._localeId = this.getUser().get('localeId');
+
+                this.nameHash = names;
+                this.ids = Object.keys(names).filter(id => id !== '_localeId');
+
+                this.model.set(this.nameHashName, this.nameHash);
+                this.model.set(this.idsName, this.ids);
+
+                this.reRender();
+            }.bind(this));
+        },
+
+        applyDefaultValue: function () {
+            const defaultValue = this.model.getFieldParam(this.name, 'default');
+            if (!this.foreignScope || !Array.isArray(defaultValue) || !defaultValue.length) {
+                return;
+            }
+
+            this.loadForeignNames(this.model.parseDefaultValue(defaultValue));
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -225,6 +260,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             }
 
             this.foreignScope = this.options.foreignScope || this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
+
+            // prepare default value
+            let foreignIds = this.model.get(this.idsName);
+            if (this.mode === 'edit' && !this.model.get('id') && Array.isArray(foreignIds) && foreignIds.length && this.foreignScope && !this.model.has(this.nameHashName)) {
+                this.loadForeignNames(foreignIds);
+            }
 
             this.createDisabled = this.createDisabled || this.model.getFieldParam(this.name, 'createDisabled');
 
