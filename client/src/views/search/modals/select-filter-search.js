@@ -123,7 +123,9 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
                         this.listenToOnce(view, 'after:build-rows', function () {
                             this.wait(false);
                         }, this);
-                        this.collection.fetch();
+                        this.collection.fetch().fail(() => {
+                            this.wait(false);
+                        });
                     }.bind(this));
             });
         },
