@@ -339,6 +339,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.on('after:render', function () {
                 this.initLinkIfAttribute();
                 this.toggleRequiredMarker();
+                this.initSetDefaultValueAction();
 
                 if (this.readOnly) {
                     this.getCellElement().attr('data-readonly', true);
@@ -680,6 +681,51 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 e.stopPropagation();
                 if (this.mode === 'detail') {
                     $recalculateLink.addClass('hidden');
+                }
+            });
+        },
+
+        initSetDefaultValueAction: function () {
+            this.getInlineActionsContainer().find('.set-default-value-link').remove();
+
+            if (this.mode !== 'edit' || this.readOnly || this.disabled) {
+                return;
+            }
+
+            const defaultValue = this.model.getFieldParam(this.name, 'default');
+            if (defaultValue === null || defaultValue === '' || (Array.isArray(defaultValue) && defaultValue.length === 0)) {
+                return;
+            }
+
+            this.initStatusContainer();
+
+            const $setDefaultLink = $(`<a href="javascript:" class="set-default-value-link" title="${this.translate('setDefaultValue')}"><i class="ph ph-pen-nib"></i></a>`);
+            this.getInlineActionsContainer().prepend($setDefaultLink);
+
+            $setDefaultLink.on('click', () => {
+                if (this.model.getFieldParam(this.name, 'defaultValueType') === 'script') {
+                    this.applyScriptDefaultValue();
+                } else {
+                    this.applyDefaultValue();
+                }
+            });
+        },
+
+        applyDefaultValue: function () {
+            this.model.set(this.name, this.model.getFieldParam(this.name, 'default'));
+        },
+
+        applyScriptDefaultValue: function () {
+            this.notify('Please wait...');
+
+            this.ajaxPostRequest('evaluateScriptFieldDefault', {
+                entityName: this.model.name,
+                field: this.name
+            }).success(res => {
+                this.notify(false);
+
+                if (res.default !== null) {
+                    this.model.set(this.name, res.default);
                 }
             });
         },
