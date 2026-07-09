@@ -64,6 +64,12 @@ Uses a dynamic value generated from a [Twig](../../../10.developer-guide/80.twig
 
 Using default values helps standardize data entry, reduce manual input, and ensure consistent record creation across the system.
 
+If a field has a Default Value configured, a `Set default value` icon appears next to it whenever the field is in edit mode — not only during record creation but also when editing an existing record. Clicking this icon (re-)applies the configured default value to the field, overwriting its current content.
+
+![Set default value icon](./_assets/set-default-value-icon.png){.small}
+
+For Script default values, clicking the icon re-evaluates the Twig template at that moment, using the current context rather than the value calculated when the record was originally created.
+
 ### Configuration Options
 
 Additional configuration options are available when creating fields.

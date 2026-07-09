@@ -113,6 +113,8 @@ Both full edit mode and quick edit mode use the same layout - the only differenc
 
 For detailed information about edit view layout and navigation, see the [Edit View](../04.understanding-ui/index.md#edit-view) section.
 
+Fields that have a configured Default Value display a `Set default value` icon while in edit mode, letting you (re-)apply that default at any time — see [Default value](../03.administration/11.entity-management/03.fields-and-attributes/index.md#default-value) for details.
+
 ### In-Line Editing
 
 For quick field updates without entering full edit mode, you can use in-line editing:
