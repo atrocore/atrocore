@@ -573,7 +573,7 @@
     "accessDenied": "Accès refusé",
     "currentSelection": "Sélection Courante",
     "rejectItem": "Rejeter",
-    "openStagingEntity": "Entité de transit ouverte",
+    "openContributorEntity": "Ouvrir l'entité contributor",
     "openPrimaryEntity": "Entité maître ouverte",
     "isLinked": "Est lié",
     "entityFilterResult": "Résultat du filtre",

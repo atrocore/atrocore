@@ -543,7 +543,7 @@
     "removeItem": "Remove",
     "rejectItem": "Reject",
     "isLinked": "Is Linked",
-    "openStagingEntity": "Open Staging Entity",
+    "openContributorEntity": "Open Contributor Entity",
     "openPrimaryEntity": "Open Master Entity",
     "currentSelection": "Current Selection"
   },

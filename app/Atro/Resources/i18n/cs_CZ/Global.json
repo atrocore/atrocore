@@ -527,7 +527,7 @@
     "replaceItem": "Nahradit",
     "removeItem": "Smazat",
     "isLinked": "Je propojen",
-    "openStagingEntity": "Otevřený subjekt etapizace",
+    "openContributorEntity": "Otevřít entitu contributor",
     "openPrimaryEntity": "Otevřený hlavní subjekt",
     "currentSelection": "Aktuální výběr",
     "rejectItem": "Odmítnout",

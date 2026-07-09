@@ -528,7 +528,7 @@
     "accessDenied": "В доступе отказано",
     "isLinked": "Связано",
     "rejectItem": "Отклонить",
-    "openStagingEntity": "Открытая организация постановки",
+    "openContributorEntity": "Открыть contributor-сущность",
     "openPrimaryEntity": "Открытая главная сущность",
     "currentSelection": "Текущий выбор",
     "System": "Система",

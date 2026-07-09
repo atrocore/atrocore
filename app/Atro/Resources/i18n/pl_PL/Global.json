@@ -529,7 +529,7 @@
     "isLinked": "Jest powiązany",
     "currentSelection": "Bieżący wybór",
     "rejectItem": "Proszę odrzucić",
-    "openStagingEntity": "Open Staging Entity",
+    "openContributorEntity": "Otwórz encję contributor",
     "openPrimaryEntity": "Otwarty podmiot główny",
     "entityFilterResult": "Wynik filtra",
     "System": "System"

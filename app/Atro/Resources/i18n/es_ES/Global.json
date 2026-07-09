@@ -530,7 +530,7 @@
     "openPrimaryEntity": "Entidad maestra abierta",
     "currentSelection": "Selección actual",
     "rejectItem": "Rechace",
-    "openStagingEntity": "Entidad de puesta en escena abierta",
+    "openContributorEntity": "Abrir entidad contributor",
     "entityFilterResult": "Resultado del filtrado",
     "System": "Sistema"
   },

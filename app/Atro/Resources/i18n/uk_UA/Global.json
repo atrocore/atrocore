@@ -536,7 +536,7 @@
     "Saved Filters": "Збережені фільтри",
     "replaceItem": "Замінити",
     "removeItem": "Видалити",
-    "openStagingEntity": "Відкрити staging-сутність",
+    "openContributorEntity": "Відкрити contributor-сутність",
     "openPrimaryEntity": "Відкрити майстер-сутність",
     "currentSelection": "Поточний вибір",
     "rejectItem": "Відхилити",
