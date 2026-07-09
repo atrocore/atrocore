@@ -3,7 +3,7 @@
     "sourceEntities": "Pipeline'y źródło-staging"
   },
   "fields": {
-    "mergingScript": "Skrypt mapowania",
+    "consolidationScript": "Skrypt konsolidacji",
     "updateMasterAutomatically": "Automatyczna aktualizacja mastera",
     "minimumMatchingScore": "Minimalny wynik dopasowania",
     "confirmAutomatically": "Potwierdź automatycznie",
@@ -12,12 +12,12 @@
   },
   "tooltips": {
     "name": "Można wybrać tylko taką encję główną, dla której już istnieje pochodna z rolą „Współtwórca”.",
-    "mergingScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego.",
+    "consolidationScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego.",
     "executeMergeAs": "Konto użytkownika, które zostanie użyte do wykonania skryptu scalającego."
   },
   "exceptions": {
-    "mergingScriptIsMissing": "Brakuje skryptu scalającego dla jednostki master",
-    "mergingScriptIsNotValid": "Skrypt scalania zwraca nieprawidłowy ładunek: %s",
+    "consolidationScriptIsMissing": "Brakuje skryptu konsolidacji dla jednostki master",
+    "consolidationScriptIsNotValid": "Skrypt konsolidacji zwraca nieprawidłowy ładunek: %s",
     "entityTypeInvalid": "Typ encji \"%s\" nie może być używany do konsolidacji",
     "consolidationAlreadyExists": "Konsolidacja dla \"%s\" już istnieje"
   },

@@ -36,7 +36,7 @@
       ],
       "tooltip": true
     },
-    "mergingScript": {
+    "consolidationScript": {
       "type": "text",
       "view": "views/fields/script",
       "language": "json",

@@ -39,9 +39,9 @@ class Consolidation extends Base
             throw new BadRequest("Consolidation for entity {$master->getEntityName()} not found.");
         }
 
-        $mergingScript = $consolidation->get('mergingScript');
-        if (empty($mergingScript)) {
-            throw new BadRequest($this->translate('mergingScriptIsMissing', 'exceptions', 'Consolidation'));
+        $consolidationScript = $consolidation->get('consolidationScript');
+        if (empty($consolidationScript)) {
+            throw new BadRequest($this->translate('consolidationScriptIsMissing', 'exceptions', 'Consolidation'));
         }
 
         $templateData = [
@@ -50,11 +50,11 @@ class Consolidation extends Base
             'contributorRecords' => $master->get("derived{$contributor->getEntityName()}Records", ['noCache' => true])
         ];
 
-        $res = $this->getTwig()->renderTemplate($mergingScript, $templateData);
+        $res = $this->getTwig()->renderTemplate($consolidationScript, $templateData);
         $input = json_decode($res, true);
 
         if (!is_array($input) || empty($input['masterRecordData'])) {
-            throw new BadRequest(sprintf($this->translate('mergingScriptIsNotValid', 'exceptions', 'Consolidation'), $res));
+            throw new BadRequest(sprintf($this->translate('consolidationScriptIsNotValid', 'exceptions', 'Consolidation'), $res));
         }
 
         if (!empty($input['skipped'])) {
@@ -85,9 +85,9 @@ class Consolidation extends Base
             throw new BadRequest("Consolidation for entity {$masterEntity} not found.");
         }
 
-        $mergingScript = $consolidation->get('mergingScript');
-        if (empty($mergingScript)) {
-            throw new BadRequest($this->translate('mergingScriptIsMissing', 'exceptions', 'Consolidation'));
+        $consolidationScript = $consolidation->get('consolidationScript');
+        if (empty($consolidationScript)) {
+            throw new BadRequest($this->translate('consolidationScriptIsMissing', 'exceptions', 'Consolidation'));
         }
 
         $templateData = [
@@ -96,11 +96,11 @@ class Consolidation extends Base
             'contributorRecords' => new EntityCollection([], $contributor->getEntityName())
         ];
 
-        $res = $this->getTwig()->renderTemplate($mergingScript, $templateData);
+        $res = $this->getTwig()->renderTemplate($consolidationScript, $templateData);
         $input = json_decode($res, true);
 
         if (!is_array($input) || empty($input['masterRecordData'])) {
-            throw new BadRequest(sprintf($this->translate('mergingScriptIsNotValid', 'exceptions', 'Consolidation'), $res));
+            throw new BadRequest(sprintf($this->translate('consolidationScriptIsNotValid', 'exceptions', 'Consolidation'), $res));
         }
 
         if (!empty($input['skipped'])) {

@@ -3,7 +3,7 @@
     "sourceEntities": "Pipeline da sorgente a staging"
   },
   "fields": {
-    "mergingScript": "Script di mappatura",
+    "consolidationScript": "Script di consolidamento",
     "updateMasterAutomatically": "Aggiorna automaticamente il Master",
     "minimumMatchingScore": "Punteggio minimo di corrispondenza",
     "confirmAutomatically": "Conferma automatica",
@@ -12,12 +12,12 @@
   },
   "tooltips": {
     "name": "Possono essere selezionate solo le entità master che dispongono già di un derivato con il ruolo «Contributore».",
-    "mergingScript": "Configura il modo in cui i dati di origine vengono trasformati, unificati e mappati nel record master.",
+    "consolidationScript": "Configura il modo in cui i dati di origine vengono trasformati, unificati e mappati nel record master.",
     "executeMergeAs": "L'account utente che verrà utilizzato per eseguire lo script di unione."
   },
   "exceptions": {
-    "mergingScriptIsMissing": "Manca lo script di fusione per l'entità master",
-    "mergingScriptIsNotValid": "Lo script di fusione restituisce un carico utile non valido: %s",
+    "consolidationScriptIsMissing": "Manca lo script di consolidamento per l'entità master",
+    "consolidationScriptIsNotValid": "Lo script di consolidamento restituisce un carico utile non valido: %s",
     "entityTypeInvalid": "Il tipo di entità \"%s\" non può essere utilizzato per il consolidamento",
     "consolidationAlreadyExists": "Il consolidamento per \"%s\" esiste già"
   },
