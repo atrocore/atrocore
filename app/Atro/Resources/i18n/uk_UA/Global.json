@@ -84,8 +84,8 @@
     "ActionExecution": "Виконання дії",
     "ActionExecutionLog": "Журнал виконання дій",
     "Layout": "Макет",
-    "Cluster": "Кластер",
-    "ClusterItem": "Елемент кластера"
+    "Cluster": "Кластер зіставлення",
+    "ClusterItem": "Елемент кластера зіставлення"
   },
   "scopeNamesPlural": {
     "Consolidation": "Консолідації",
@@ -158,8 +158,8 @@
     "ActionExecution": "Виконання дій",
     "ActionExecutionLog": "Журнали виконання дій",
     "Layout": "Макети",
-    "Cluster": "Кластери",
-    "ClusterItem": "Кластерні елементи"
+    "Cluster": "Кластери зіставлення",
+    "ClusterItem": "Елементи кластера зіставлення"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"

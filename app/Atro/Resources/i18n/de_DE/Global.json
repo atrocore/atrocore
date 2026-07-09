@@ -84,8 +84,8 @@
     "ActionExecution": "Aktions-Ausführung",
     "ActionExecutionLog": "Aktions-Ausführungsprotokoll",
     "Layout": "Layout",
-    "Cluster": "Cluster",
-    "ClusterItem": "Cluster Artikel"
+    "Cluster": "Übereinstimmungs-Cluster",
+    "ClusterItem": "Übereinstimmungs-Cluster-Artikel"
   },
   "scopeNamesPlural": {
     "Consolidation": "Konsolidierungen",
@@ -158,8 +158,8 @@
     "ActionExecution": "Aktions-Ausführungen",
     "ActionExecutionLog": "Protokolle der Aktionsausführung",
     "Layout": "Layouts",
-    "Cluster": "Cluster",
-    "ClusterItem": "Cluster-Artikel"
+    "Cluster": "Übereinstimmungs-Cluster",
+    "ClusterItem": "Übereinstimmungs-Cluster-Artikel"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"

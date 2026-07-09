@@ -83,8 +83,8 @@
     "ActionExecution": "Wykonanie akcji",
     "ActionExecutionLog": "Dziennik wykonania akcji",
     "Layout": "Układ",
-    "Cluster": "Klaster",
-    "ClusterItem": "Pozycja klastra"
+    "Cluster": "Klaster dopasowań",
+    "ClusterItem": "Pozycja klastra dopasowań"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -156,8 +156,8 @@
     "ActionExecution": "Wykonywanie akcji",
     "ActionExecutionLog": "Dzienniki wykonania akcji",
     "Layout": "Układy",
-    "Cluster": "Klastry",
-    "ClusterItem": "Elementy klastra"
+    "Cluster": "Klastry dopasowań",
+    "ClusterItem": "Elementy klastra dopasowań"
   },
   "labels": {
     "selectAll": "Wybierz wszystko",

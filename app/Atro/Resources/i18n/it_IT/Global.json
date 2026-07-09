@@ -83,8 +83,8 @@
     "ActionExecution": "Esecuzione dell'azione",
     "ActionExecutionLog": "Registro di esecuzione dell'azione",
     "Layout": "Layout",
-    "Cluster": "Cluster",
-    "ClusterItem": "Articolo del cluster"
+    "Cluster": "Cluster di abbinamento",
+    "ClusterItem": "Articolo del cluster di abbinamento"
   },
   "labels": {
     "inherited": "Ereditato",
@@ -941,8 +941,8 @@
     "ActionExecution": "Esecuzioni di azioni",
     "ActionExecutionLog": "Registri di esecuzione delle azioni",
     "Layout": "Layout",
-    "Cluster": "Cluster",
-    "ClusterItem": "Articoli del cluster"
+    "Cluster": "Cluster di abbinamento",
+    "ClusterItem": "Articoli del cluster di abbinamento"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."

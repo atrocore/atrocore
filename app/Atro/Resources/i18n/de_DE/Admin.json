@@ -80,7 +80,7 @@
     "Jobs": "Aufträge",
     "GeneralSetting": "Allgemeine Einstellungen",
     "System": "System",
-    "clusters": "Cluster",
+    "clusters": "Übereinstimmungs-Cluster",
     "dataPipeline": "Daten-Pipelines",
     "MasterDataManagement": "Stammdatenverwaltung"
   },

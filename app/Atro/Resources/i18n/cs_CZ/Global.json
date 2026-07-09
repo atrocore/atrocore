@@ -83,8 +83,8 @@
     "ActionExecution": "Provedení akce",
     "ActionExecutionLog": "Protokol o provedení akce",
     "Layout": "Rozložení",
-    "Cluster": "Cluster",
-    "ClusterItem": "Položka klastru"
+    "Cluster": "Klastr párování",
+    "ClusterItem": "Položka klastru párování"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
@@ -156,8 +156,8 @@
     "ActionExecution": "Provádění akcí",
     "ActionExecutionLog": "Protokoly o provádění akcí",
     "Layout": "Rozložení",
-    "Cluster": "Klastry",
-    "ClusterItem": "Položky klastru"
+    "Cluster": "Klastry párování",
+    "ClusterItem": "Položky klastru párování"
   },
   "labels": {
     "basic": "Basic",

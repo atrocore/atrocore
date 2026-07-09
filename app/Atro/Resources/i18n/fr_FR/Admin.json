@@ -80,7 +80,7 @@
     "upsert": "Ajout/Insert",
     "execute": "Exécuter",
     "status": "Statut",
-    "clusters": "Groupes d'entreprises",
+    "clusters": "Grappes d'appariement",
     "dataPipeline": "Pipelines de données",
     "MasterDataManagement": "Gestion des données de référence"
   },

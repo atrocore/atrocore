@@ -1,7 +1,7 @@
 {
   "scopeNames": {
-    "Cluster": "Cluster",
-    "ClusterItem": "Cluster Item",
+    "Cluster": "Matching Cluster",
+    "ClusterItem": "Matching Cluster Item",
     "Consolidation": "Consolidation",
     "DataPipeline": "Data Pipeline",
     "MatchedRecord": "Matched Record",
@@ -88,8 +88,8 @@
     "Layout": "Layout"
   },
   "scopeNamesPlural": {
-    "Cluster": "Clusters",
-    "ClusterItem": "Cluster Items",
+    "Cluster": "Matching Clusters",
+    "ClusterItem": "Matching Cluster Items",
     "Consolidation": "Consolidations",
     "DataPipeline": "Data Pipelines",
     "MatchedRecord": "Matched Records",

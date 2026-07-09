@@ -83,8 +83,8 @@
     "ActionExecution": "Выполнение действий",
     "ActionExecutionLog": "Журнал выполнения действий",
     "Layout": "Макет",
-    "Cluster": "Кластер",
-    "ClusterItem": "Кластерный элемент"
+    "Cluster": "Кластер соответствий",
+    "ClusterItem": "Элемент кластера соответствий"
   },
   "scopeNamesPlural": {
     "Consolidation": "Консолидации",
@@ -156,8 +156,8 @@
     "ActionExecutionLog": "Журналы выполнения действий",
     "ActionExecution": "Выполнение действий",
     "Layout": "Лейауты",
-    "Cluster": "Кластеры",
-    "ClusterItem": "Предметы кластера"
+    "Cluster": "Кластеры соответствий",
+    "ClusterItem": "Элементы кластера соответствий"
   },
   "labels": {
     "matchings": "Соответствия",

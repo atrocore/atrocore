@@ -80,7 +80,7 @@
     "incomingWebhook": "Webhook in arrivo",
     "consolidation": "Consolidamenti",
     "matchings": "Abbinamenti",
-    "clusters": "Cluster",
+    "clusters": "Cluster di abbinamento",
     "MasterDataManagement": "Gestione dei dati master",
     "dataPipeline": "Pipeline di dati"
   },

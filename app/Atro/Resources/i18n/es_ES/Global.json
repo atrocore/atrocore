@@ -83,8 +83,8 @@
     "ActionExecution": "Ejecución de la acción",
     "ActionExecutionLog": "Registro de ejecución de acciones",
     "Layout": "Diseño",
-    "ClusterItem": "Cluster Item",
-    "Cluster": "Cluster"
+    "ClusterItem": "Elemento del clúster de coincidencias",
+    "Cluster": "Clúster de coincidencias"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -156,8 +156,8 @@
     "ActionExecution": "Ejecución de acciones",
     "ActionExecutionLog": "Registros de ejecución de acciones",
     "Layout": "Diseño",
-    "Cluster": "Agrupaciones",
-    "ClusterItem": "Partidas agrupadas"
+    "Cluster": "Clústeres de coincidencias",
+    "ClusterItem": "Elementos del clúster de coincidencias"
   },
   "labels": {
     "selectAll": "Seleccionar todo",
