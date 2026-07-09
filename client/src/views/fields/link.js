@@ -236,6 +236,30 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             return attributes;
         },
 
+        setForeignValueById: function (foreignId) {
+            this.model.set(this.idName, null);
+            this.model.set(this.nameName, null);
+
+            this.ajaxGetRequest(this.foreignScope + '/' + foreignId, { silent: true })
+                .done(function (response) {
+                    this.model.set(this.idName, response.id);
+                    this.model.set(this.nameName, response.name);
+                    this.reRender();
+                }.bind(this))
+                .always(function (error) {
+                    this.trigger('linkLoaded');
+                }.bind(this));
+        },
+
+        applyDefaultValue: function () {
+            const defaultValue = this.model.getFieldParam(this.name, 'default');
+            if (!this.foreignScope || defaultValue === null || defaultValue === '') {
+                return;
+            }
+
+            this.setForeignValueById(this.model.parseDefaultValue(defaultValue));
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -262,20 +286,9 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             }
 
             // prepare default value
-            const fieldDefs = this.model.defs.fields[this.name] || null;
-            let foreignId = this.model.get(this.idName) || (fieldDefs?.defaultId);
-            if ((this.model.get(this.name + 'HasDefaultAttributes') || (fieldDefs && (fieldDefs.defaultAttributes || fieldDefs.defaultId))) && this.mode === 'edit' && !this.model.get('id') && foreignId && this.foreignScope) {
-                this.model.set(this.idName, null);
-                this.model.set(this.nameName, null);
-                this.ajaxGetRequest(this.foreignScope + '/' + foreignId, { silent: true })
-                    .done(function (response) {
-                        this.model.set(this.idName, response.id);
-                        this.model.set(this.nameName, response.name);
-                        this.reRender();
-                    }.bind(this))
-                    .always(function (error) {
-                        this.trigger('linkLoaded');
-                    }.bind(this));
+            let foreignId = this.model.get(this.idName);
+            if (this.mode === 'edit' && !this.model.get('id') && foreignId && this.foreignScope && !this.model.has(this.nameName)) {
+                this.setForeignValueById(foreignId);
             }
 
             this.createDisabled = this.createDisabled || this.model.getFieldParam(this.name, 'createDisabled');
