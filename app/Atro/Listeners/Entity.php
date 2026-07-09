@@ -31,8 +31,6 @@ class Entity extends AbstractListener
         $entity = $event->getArgument('entity');
 
         $this->validateClassificationAttributesForRecord($entity);
-
-        $this->recalculateScriptField($entity);
     }
 
     public function afterSave(Event $event): void
@@ -242,18 +240,5 @@ class Entity extends AbstractListener
             $this->getService('DataPipeline')->pushAllToTarget($entity);
         } catch (\Throwable $e) {
         }
-    }
-
-    protected function recalculateScriptField(OrmEntity $entity): void
-    {
-        if (in_array($entity->getEntityName(), ['UserProfile', 'MatchedRecord', 'Notification', 'AuthToken', 'Bookmark', 'Entity', 'EntityField'])) {
-            return;
-        }
-
-        if (!in_array($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']), ['Base', 'Hierarchy'])) {
-            return;
-        }
-
-        $this->getEntityManager()->getRepository($entity->getEntityType())->calculateScriptFields($entity, false);
     }
 }
