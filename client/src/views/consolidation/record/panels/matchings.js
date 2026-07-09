@@ -45,6 +45,13 @@ Espo.define('views/consolidation/record/panels/matchings', ['views/record/panels
         },
 
         getWhereDataForFilter() {
+            let entities = [this.model.get('entityId')]
+            $.each(this.getMetadata().get('scopes') || {}, (scope, defs) => {
+                if (defs?.role === 'contributor' && defs?.primaryEntityId === this.model.get('entityId')) {
+                    entities.push(scope);
+                }
+            });
+
             return {
                 queryBuilder: {
                     condition: 'OR',
@@ -52,14 +59,14 @@ Espo.define('views/consolidation/record/panels/matchings', ['views/record/panels
                         {
                             id: 'entity',
                             field: 'entity',
-                            value: [this.model.id],
+                            value: entities,
                             type: 'string',
                             operator: 'in'
                         },
                         {
                             id: 'masterEntity',
                             field: 'masterEntity',
-                            value: [this.model.id],
+                            value: entities,
                             type: 'string',
                             operator: 'in'
                         }
