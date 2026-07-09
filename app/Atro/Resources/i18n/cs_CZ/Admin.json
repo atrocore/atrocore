@@ -78,8 +78,11 @@
     "apiRequest": "Požadavek API",
     "style": "Styly",
     "incomingWebhook": "Příchozí Webhooks",
+    "consolidation": "Konsolidace",
     "matchings": "Shody",
-    "clusters": "Klastry"
+    "clusters": "Klastry párování",
+    "MasterDataManagement": "Správa hlavních dat",
+    "dataPipeline": "Datové pipeline"
   },
   "layouts": {
     "relationships": "Vztahy",
@@ -172,6 +175,7 @@
     "rebuildDb": "Změny, které se použijí v databázi po kliknutí na tlačítko \"Použít\", jsou uvedeny níže. Některá data mohou být s novou verzí softwaru nekompatibilní a může dojít k jejich ztrátě. Tato akce je nevratná."
   },
   "descriptions": {
+    "consolidation": "Nakonfigurujte konsolidaci pro entitu, abyste sloučili data z přispěvatelských záznamů do konsolidovaných hlavních záznamů.",
     "matchings": "Porovnávání pomáhá identifikovat podobné záznamy napříč entitami pomocí pravidel definovaných uživatelem.",
     "incomingWebhook": "Příchozí webové háčky umožňují spouštět předdefinované akce prostřednictvím externích požadavků HTTP s volitelným zabezpečením, jako je ověření hash a whitelisting IP.",
     "Storage": "Správa fyzických umístění všech nahraných souborů (místní souborový systém, Microsoft Sharepoint, Amazon S3 atd.).",
@@ -213,7 +217,8 @@
     "layoutProfiles": "Správa a přizpůsobení různých konfigurací rozvržení uživatelského rozhraní systému.",
     "apiRequest": "Pomocí této funkce můžete rychle vytvářet složité datové struktury, například konfigurované importní nebo exportní kanály.",
     "style": "Vytváření, aktualizace a přizpůsobení nových stylů pro úpravy standardního CSS",
-    "clusters": "Pomocí clusterů můžete seskupovat podobné záznamy v rámci správy hlavních dat a vzájemně je přiřazovat."
+    "clusters": "Pomocí clusterů můžete seskupovat podobné záznamy v rámci správy hlavních dat a vzájemně je přiřazovat.",
+    "dataPipeline": "Definujte pravidla mapování, která automaticky transformují a odesílají záznamy zdrojových entit do odpovídajících staging entit."
   },
   "logicalOperators": {
     "and": "A",

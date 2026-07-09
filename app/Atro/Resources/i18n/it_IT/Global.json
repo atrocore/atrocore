@@ -79,12 +79,12 @@
     "ProductGroup": "Gruppo di prodotti",
     "Selection": "Selezione",
     "SelectionItem": "Record di selezione",
-    "MasterDataEntity": "Entità di dati master",
+    "Consolidation": "Consolidamento",
     "ActionExecution": "Esecuzione dell'azione",
     "ActionExecutionLog": "Registro di esecuzione dell'azione",
     "Layout": "Layout",
-    "Cluster": "Cluster",
-    "ClusterItem": "Articolo del cluster"
+    "Cluster": "Cluster di abbinamento",
+    "ClusterItem": "Articolo del cluster di abbinamento"
   },
   "labels": {
     "inherited": "Ereditato",
@@ -171,6 +171,7 @@
     "New": "Nuovo",
     "General": "Generale",
     "Merge": "Unire",
+    "Consolidate": "Consolidare",
     "None": "Nessuno",
     "Home": "Casa",
     "by": "da",
@@ -454,7 +455,7 @@
     "accessDenied": "Accesso negato",
     "isLinked": "È collegato",
     "rejectItem": "Rifiuta",
-    "openStagingEntity": "Entità di stazionamento aperta",
+    "openContributorEntity": "Apri entità contributor",
     "openPrimaryEntity": "Entità master aperta",
     "currentSelection": "Selezione attuale",
     "System": "Sistema",
@@ -937,12 +938,12 @@
     "ProductGroup": "Gruppi di prodotti",
     "Selection": "Selezioni",
     "SelectionItem": "Registri di selezione",
-    "MasterDataEntity": "Entità di dati master",
+    "Consolidation": "Consolidamenti",
     "ActionExecution": "Esecuzioni di azioni",
     "ActionExecutionLog": "Registri di esecuzione delle azioni",
     "Layout": "Layout",
-    "Cluster": "Cluster",
-    "ClusterItem": "Articoli del cluster"
+    "Cluster": "Cluster di abbinamento",
+    "ClusterItem": "Articoli del cluster di abbinamento"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."

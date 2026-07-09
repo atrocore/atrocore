@@ -1,0 +1,18 @@
+[
+  {
+    "name": "number",
+    "link": true
+  },
+  {
+    "name": "sourceEntity"
+  },
+  {
+    "name": "targetEntity"
+  },
+  {
+    "name": "modifiedAt"
+  },
+  {
+    "name": "modifiedBy"
+  }
+]

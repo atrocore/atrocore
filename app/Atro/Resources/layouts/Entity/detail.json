@@ -165,7 +165,7 @@
     ]
   },
   {
-    "label": "mdm",
+    "label": "derivation",
     "rows": [
       [
         {
@@ -173,14 +173,6 @@
         },
         {
           "name": "role"
-        }
-      ],
-      [
-        {
-          "name": "hasStaging"
-        },
-        {
-          "name": "stagingEntity"
         }
       ]
     ]

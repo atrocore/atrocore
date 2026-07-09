@@ -79,12 +79,12 @@
     "Action": "Acción",
     "Selection": "Selección",
     "SelectionItem": "Registro de selección",
-    "MasterDataEntity": "Entidad de datos maestros",
+    "Consolidation": "Consolidación",
     "ActionExecution": "Ejecución de la acción",
     "ActionExecutionLog": "Registro de ejecución de acciones",
     "Layout": "Diseño",
-    "ClusterItem": "Cluster Item",
-    "Cluster": "Cluster"
+    "ClusterItem": "Elemento del clúster de coincidencias",
+    "Cluster": "Clúster de coincidencias"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -152,18 +152,19 @@
     "Action": "Acciones",
     "Selection": "Selecciones",
     "SelectionItem": "Registros de selección",
-    "MasterDataEntity": "Entidades de datos maestros",
+    "Consolidation": "Consolidaciones",
     "ActionExecution": "Ejecución de acciones",
     "ActionExecutionLog": "Registros de ejecución de acciones",
     "Layout": "Diseño",
-    "Cluster": "Agrupaciones",
-    "ClusterItem": "Partidas agrupadas"
+    "Cluster": "Clústeres de coincidencias",
+    "ClusterItem": "Elementos del clúster de coincidencias"
   },
   "labels": {
     "selectAll": "Seleccionar todo",
     "contentLanguages": "Lenguas de contenido",
     "customizeLayout": "Personalizar diseño",
     "Merge": "Unir",
+    "Consolidate": "Consolidar",
     "None": "Ninguno",
     "Home": "Inicio",
     "by": "por",
@@ -529,7 +530,7 @@
     "openPrimaryEntity": "Entidad maestra abierta",
     "currentSelection": "Selección actual",
     "rejectItem": "Rechace",
-    "openStagingEntity": "Entidad de puesta en escena abierta",
+    "openContributorEntity": "Abrir entidad contributor",
     "entityFilterResult": "Resultado del filtrado",
     "System": "Sistema"
   },

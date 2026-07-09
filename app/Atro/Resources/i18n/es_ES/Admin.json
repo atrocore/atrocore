@@ -72,6 +72,7 @@
     "GeneralSetting": "Ajustes generales",
     "rebuildDb": "Reconstruir la base de datos",
     "rebuildDbWarning": "La estructura de la base de datos ha cambiado. Es necesario reconstruirla para garantizar su correcto funcionamiento.",
+    "consolidation": "Consolidaciones",
     "matchings": "Partidos",
     "Selected": "Selección",
     "status": "Estado",
@@ -79,7 +80,9 @@
     "Action": "Acciones",
     "Locale": "Localización",
     "multiLanguages": "Languages",
-    "clusters": "Agrupaciones"
+    "clusters": "Clústeres de coincidencias",
+    "MasterDataManagement": "Gestión de datos maestros",
+    "dataPipeline": "Pipelines de datos"
   },
   "layouts": {
     "list": "Lista",
@@ -193,6 +196,7 @@
     "contacts": "Almacene las personas individuales asociadas a las Cuentas, incluyendo sus funciones y detalles de comunicación para la interacción y la coordinación.",
     "addresses": "Son detalles de ubicación estructurados para las cuentas, lo que permite una identificación, facturación y operaciones de envío precisas.",
     "emailTemplates": "Administre plantillas de correo electrónico para entrega de correo electrónico manual o automatizada (no para notificaciones estándar).",
+    "consolidation": "Configure la consolidación de una entidad para fusionar los datos de sus registros contribuidores en registros maestros consolidados.",
     "matchings": "Las coincidencias ayudan a identificar registros similares entre entidades mediante el uso de reglas definidas por el usuario.",
     "Storage": "Gestione las ubicaciones físicas de todos los archivos cargados (Sistema de archivos local, Microsoft Sharepoint, Amazon S3, etc.)",
     "listOfSupportedFilesTypes": "Gestione los tipos de archivos para una validación adicional de los mismos (por ejemplo, imágenes, documentos, vídeos, etc.) y su clasificación.",
@@ -213,7 +217,8 @@
     "apiRequest": "Utilice esta función para crear rápidamente estructuras de datos complejas, como feeds de importación o exportación configurados.",
     "style": "Cree, actualice y personalice nuevos estilos para realizar ajustes en el CSS estándar",
     "incomingWebhook": "Los Webhooks entrantes le permiten desencadenar Acciones predefinidas a través de peticiones HTTP externas, con seguridad opcional como verificación de hash y listas blancas de IP.",
-    "clusters": "Utilice los clústeres para agrupar registros similares dentro de la gestión de datos maestros y hacerlos coincidir entre sí."
+    "clusters": "Utilice los clústeres para agrupar registros similares dentro de la gestión de datos maestros y hacerlos coincidir entre sí.",
+    "dataPipeline": "Defina reglas de mapeo que transformen y envíen automáticamente los registros de las entidades de origen a sus correspondientes entidades de staging."
   },
   "logicalOperators": {
     "and": "Y",

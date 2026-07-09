@@ -1,0 +1,27 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "crown",
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "matchings",
+        "label": "matchings",
+        "view": "views/consolidation/record/panels/matchings",
+        "canClose": true,
+        "collapseByDefault": false
+      }
+    ]
+  },
+  "relationshipPanels": {
+    "matchings": {
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "removeRelated": {
+          "disabled": true
+        }
+      }
+    }
+  }
+}

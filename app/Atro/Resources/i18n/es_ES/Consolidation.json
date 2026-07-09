@@ -1,0 +1,30 @@
+{
+  "labels": {
+    "sourceEntities": "Pipelines de origen a staging"
+  },
+  "fields": {
+    "consolidationScript": "Script de consolidación",
+    "updateMasterAutomatically": "Actualizar maestro automáticamente",
+    "executeMergeAs": "Ejecutar fusión como",
+    "minimumMatchingScore": "Puntuación mínima de concordancia",
+    "confirmAutomatically": "Confirmar automáticamente",
+    "deleteInvalidMastersAutomatically": "Eliminar automáticamente los maestros no válidos"
+  },
+  "tooltips": {
+    "name": "Solo se pueden seleccionar entidades maestras que ya tengan un derivado con el rol «Contribuidor».",
+    "consolidationScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro.",
+    "executeMergeAs": "La cuenta de usuario que se utilizará para ejecutar el script de fusión."
+  },
+  "exceptions": {
+    "consolidationScriptIsMissing": "Falta el script de consolidación para la entidad maestra",
+    "consolidationScriptIsNotValid": "El script de consolidación devuelve una carga útil no válida: %s",
+    "entityTypeInvalid": "El tipo de entidad \"%s\" no se puede utilizar para la consolidación",
+    "consolidationAlreadyExists": "La consolidación para \"%s\" ya existe"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Mismo usuario",
+      "system": "Sistema"
+    }
+  }
+}

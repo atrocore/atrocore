@@ -78,8 +78,11 @@
     "apiRequest": "Richiesta API",
     "style": "Stili",
     "incomingWebhook": "Webhook in arrivo",
+    "consolidation": "Consolidamenti",
     "matchings": "Abbinamenti",
-    "clusters": "Cluster"
+    "clusters": "Cluster di abbinamento",
+    "MasterDataManagement": "Gestione dei dati master",
+    "dataPipeline": "Pipeline di dati"
   },
   "fields": {
     "isPersonalData": "I dati personali",
@@ -118,6 +121,7 @@
   },
   "descriptions": {
     "authLog": "Esamini la cronologia degli accessi.",
+    "consolidation": "Configura il consolidamento per un'entità per unire i dati dei record contributori in record master consolidati.",
     "matchings": "Le corrispondenze aiutano a identificare record simili tra entità diverse utilizzando regole definite dall'utente.",
     "incomingWebhook": "I Webhook in arrivo le consentono di attivare azioni predefinite tramite richieste HTTP esterne, con sicurezza opzionale come la verifica dell'hash e il whitelisting IP.",
     "Storage": "Gestisce le ubicazioni fisiche di tutti i file caricati (File System locale, Microsoft Sharepoint, Amazon S3, ecc.)",
@@ -158,7 +162,8 @@
     "layoutProfiles": "Gestisce e personalizza diverse configurazioni di layout per l'interfaccia utente del sistema.",
     "apiRequest": "Utilizzi questa funzione per creare rapidamente strutture di dati complesse, come i feed di importazione o esportazione configurati.",
     "style": "Creare, aggiornare e personalizzare nuovi stili per apportare modifiche ai CSS standard.",
-    "clusters": "Utilizza i cluster per raggruppare record simili all'interno della gestione dei dati master e abbinarli tra loro."
+    "clusters": "Utilizza i cluster per raggruppare record simili all'interno della gestione dei dati master e abbinarli tra loro.",
+    "dataPipeline": "Definisci regole di mappatura che trasformano e inviano automaticamente i record delle entità sorgente alle corrispondenti entità di staging."
   },
   "logicalOperators": {
     "and": "E",

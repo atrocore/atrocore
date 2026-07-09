@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "targetEntity": "Entité cible",
+    "sourceEntity": "Entité source",
+    "mergingScript": "Script de fusion"
+  },
+  "tooltips": {
+    "mergingScript": "Configurez la façon dont les données du enregistrement source sont transformées et mappées vers l'enregistrement de staging."
+  },
+  "exceptions": {
+    "sourceEntityCannotBeContributorOrChangeRequestDerivative": "L'entité '%s' est une dérivation de type contributor ou change request et ne peut pas être utilisée comme entité source.",
+    "sourceEntityTypeNotAllowed": "L'entité '%s' ne peut pas être utilisée comme entité source : seuls les types Base et Hierarchy sont autorisés.",
+    "targetEntityCannotBePrimaryOfContributorDerivative": "L'entité '%s' est l'entité primaire d'une dérivation de type contributor et ne peut pas être utilisée comme entité cible.",
+    "sourceAndTargetEntityCannotBeSame": "L'entité source et l'entité cible ne peuvent pas être identiques.",
+    "dataPipelineAlreadyExists": "Un data pipeline pour ce couple d'entités existe déjà."
+  }
+}

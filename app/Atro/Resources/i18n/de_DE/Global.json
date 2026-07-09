@@ -1,7 +1,7 @@
 {
   "scopeNames": {
-    "MasterDataEntity": "Stammdaten-Entität",
-    "SourceToStagingPipeline": "Source-to-Staging Pipeline",
+    "Consolidation": "Konsolidierung",
+    "DataPipeline": "Daten-Pipeline",
     "IncomingWebhook": "Eingehender Webhook",
     "Classification": "Klassifikation",
     "ClassificationAttribute": "Klassifikationsattribut",
@@ -84,12 +84,12 @@
     "ActionExecution": "Aktions-Ausführung",
     "ActionExecutionLog": "Aktions-Ausführungsprotokoll",
     "Layout": "Layout",
-    "Cluster": "Cluster",
-    "ClusterItem": "Cluster Artikel"
+    "Cluster": "Übereinstimmungs-Cluster",
+    "ClusterItem": "Übereinstimmungs-Cluster-Artikel"
   },
   "scopeNamesPlural": {
-    "MasterDataEntity": "Stammdaten-Entitäten",
-    "SourceToStagingPipeline": "Source-to-Staging Pipelines",
+    "Consolidation": "Konsolidierungen",
+    "DataPipeline": "Daten-Pipelines",
     "IncomingWebhook": "Eingehende Webhooks",
     "Classification": "Klassifikationen",
     "ClassificationAttribute": "Klassifikationsattribute",
@@ -158,8 +158,8 @@
     "ActionExecution": "Aktions-Ausführungen",
     "ActionExecutionLog": "Protokolle der Aktionsausführung",
     "Layout": "Layouts",
-    "Cluster": "Cluster",
-    "ClusterItem": "Cluster-Artikel"
+    "Cluster": "Übereinstimmungs-Cluster",
+    "ClusterItem": "Übereinstimmungs-Cluster-Artikel"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
@@ -242,6 +242,7 @@
     "New": "Neu",
     "General": "Allgemeines",
     "Merge": "Zusammenführen",
+    "Consolidate": "Konsolidieren",
     "None": "Kein(e)",
     "Home": "Telefon Privat",
     "by": "nach",
@@ -536,7 +537,7 @@
     "Saved Filters": "Gespeicherte Filter",
     "replaceItem": "Ersetzen",
     "removeItem": "Entfernen",
-    "openStagingEntity": "Staging-Entität öffnen",
+    "openContributorEntity": "Contributor-Entität öffnen",
     "openPrimaryEntity": "Master-Entität öffnen",
     "currentSelection": "Aktuelle Auswahl",
     "isLinked": "Ist verknüpft",

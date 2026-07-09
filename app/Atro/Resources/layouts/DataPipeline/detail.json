@@ -1,0 +1,28 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "number"
+        },
+        false
+      ],
+      [
+        {
+          "name": "sourceEntity"
+        },
+        {
+          "name": "targetEntity"
+        }
+      ],
+      [
+        {
+          "name": "mergingScript",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

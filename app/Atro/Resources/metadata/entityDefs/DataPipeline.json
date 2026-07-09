@@ -1,0 +1,121 @@
+{
+  "fields": {
+    "number": {
+      "type": "autoincrement"
+    },
+    "sourceEntity": {
+      "type": "link",
+      "entity": "Entity",
+      "selectBoolFilterList": [
+        "notContributorOrChangeRequestDerivative",
+        "onlyBaseAndHierarchyTypes"
+      ],
+      "required": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "targetEntity": {
+      "type": "link",
+      "entity": "Entity",
+      "selectBoolFilterList": [
+        "notPrimaryOfContributorDerivative",
+        "onlyBaseAndHierarchyTypes"
+      ],
+      "required": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "mergingScript": {
+      "type": "text",
+      "view": "views/fields/script",
+      "language": "json",
+      "default": "{# { \"targetRecordData\": { \"name\" : \"{{ sourceRecord.name }}\" } } #}",
+      "editorActions": {
+        "addFields": {
+          "entityNameField": "sourceEntity"
+        }
+      },
+      "twigVariables": [
+        "sourceRecord",
+        "targetRecord"
+      ],
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "tooltip": true
+    },
+    "hash": {
+      "type": "varchar",
+      "protected": true,
+      "unique": true,
+      "customizable": false
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "indexes": {
+    "sourceEntityId": {
+      "columns": [
+        "sourceEntityId",
+        "deleted"
+      ]
+    },
+    "targetEntityId": {
+      "columns": [
+        "targetEntityId",
+        "deleted"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    }
+  }
+}

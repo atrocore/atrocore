@@ -192,13 +192,13 @@
     "LayoutProfile": "Profil de Disposition",
     "Selection": "Sélection",
     "SelectionItem": "Élément de sélection",
-    "MasterDataEntity": "Entité de reférence",
-    "SourceToStagingPipeline": "Source-to-Staging Pipeline",
+    "Consolidation": "Consolidation",
+    "DataPipeline": "Pipeline de données",
     "ActionExecution": "Exécution de l'action",
     "ActionExecutionLog": "Journal d'exécution de l'action",
     "Layout": "Disposition",
-    "Cluster": "Groupement d'entreprises",
-    "ClusterItem": "Poste de la grappe"
+    "Cluster": "Grappe d'appariement",
+    "ClusterItem": "Élément de la grappe d'appariement"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
@@ -430,6 +430,7 @@
     "Ownership Information": "Gestion des accès",
     "New": "Nouveau",
     "Merge": "Fusionner",
+    "Consolidate": "Consolider",
     "None": "Aucun",
     "Instance comparison": "Comparaison d'instances",
     "previewTemplate": "Modèles de prévisualisation",
@@ -572,7 +573,7 @@
     "accessDenied": "Accès refusé",
     "currentSelection": "Sélection Courante",
     "rejectItem": "Rejeter",
-    "openStagingEntity": "Entité de transit ouverte",
+    "openContributorEntity": "Ouvrir l'entité contributor",
     "openPrimaryEntity": "Entité maître ouverte",
     "isLinked": "Est lié",
     "entityFilterResult": "Résultat du filtre",
@@ -756,13 +757,13 @@
     "RoleScopeField": "Champs",
     "Selection": "Sélections",
     "SelectionItem": "Elements de sélection",
-    "MasterDataEntity": "Entités de reference",
-    "SourceToStagingPipeline": "Source-to-Staging Pipelines",
+    "Consolidation": "Consolidations",
+    "DataPipeline": "Pipelines de données",
     "ActionExecution": "Exécutions de l'action",
     "ActionExecutionLog": "Journaux d'exécution de l'action",
     "Layout": "Dispositions",
-    "Cluster": "Groupes d'entreprises",
-    "ClusterItem": "Éléments de la grappe"
+    "Cluster": "Grappes d'appariement",
+    "ClusterItem": "Éléments de la grappe d'appariement"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"

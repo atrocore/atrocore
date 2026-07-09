@@ -1,0 +1,143 @@
+{
+  "fields": {
+    "number": {
+      "type": "autoincrement"
+    },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "selectBoolFilterList": [
+        "onlyConsolidation"
+      ],
+      "required": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "updateMasterAutomatically": {
+      "type": "bool",
+      "default": false
+    },
+    "executeMergeAs": {
+      "type": "enum",
+      "default": "system",
+      "options": [
+        "system",
+        "sameUser"
+      ],
+      "tooltip": true
+    },
+    "consolidationScript": {
+      "type": "text",
+      "view": "views/fields/script",
+      "language": "json",
+      "default": "{# { \"skipped\": false, \"masterRecordData\": { \"name\" : \"{{ contributorRecord.name }}\" } } #}",
+      "editorActions": {
+        "addFields": {
+          "entityNameField": "name"
+        },
+        "addAttributes": {
+          "entityNameField": "name"
+        }
+      },
+      "twigVariables": [
+        "contributorRecord",
+        "contributorRecords",
+        "masterRecord"
+      ],
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "tooltip": true
+    },
+    "confirmAutomatically": {
+      "type": "bool"
+    },
+    "deleteInvalidMastersAutomatically": {
+      "type": "bool"
+    },
+    "minimumMatchingScore": {
+      "type": "int",
+      "default": 100,
+      "min": 1,
+      "max": 100,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "confirmAutomatically"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "confirmAutomatically"
+            }
+          ]
+        }
+      }
+    },
+    "description": {
+      "type": "text"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    }
+  },
+  "uniqueIndexes": {
+    "unique_entity": [
+      "deleted",
+      "entity_id"
+    ]
+  }
+}

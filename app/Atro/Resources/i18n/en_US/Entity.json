@@ -44,9 +44,7 @@
     "linkAttributesWithClassificationAutomatically": "Link Attributes with the Classification automatically",
     "primaryEntity": "Primary Entity",
     "derivativeEntities": "Derivatives",
-    "role": "Role",
-    "hasStaging": "Enable Staging",
-    "stagingEntity": "Staging Entity"
+    "role": "Role"
   },
   "options": {
     "type": {
@@ -61,7 +59,7 @@
     },
     "role": {
       "base": "Base",
-      "staging": "Staging"
+      "contributor": "Contributor"
     }
   },
   "labels": {
@@ -70,7 +68,7 @@
     "other": "Other",
     "resetToDefault": "Reset to default",
     "attributes": "Attributes",
-    "mdm": "Master Data Management"
+    "derivation": "Derivation"
   },
   "confirmations": {
     "resetToDefault": "Are you sure you want to reset configuration to default?"

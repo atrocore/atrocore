@@ -1,9 +1,9 @@
 {
   "scopeNames": {
-    "Cluster": "Cluster",
-    "ClusterItem": "Cluster Item",
-    "MasterDataEntity": "Master Data Entity",
-    "SourceToStagingPipeline": "Source-to-Staging Pipeline",
+    "Cluster": "Matching Cluster",
+    "ClusterItem": "Matching Cluster Item",
+    "Consolidation": "Consolidation",
+    "DataPipeline": "Data Pipeline",
     "MatchedRecord": "Matched Record",
     "Matching": "Matching",
     "ThumbnailType": "Thumbnail Type",
@@ -88,10 +88,10 @@
     "Layout": "Layout"
   },
   "scopeNamesPlural": {
-    "Cluster": "Clusters",
-    "ClusterItem": "Cluster Items",
-    "MasterDataEntity": "Master Data Entities",
-    "SourceToStagingPipeline": "Source-to-Staging Pipelines",
+    "Cluster": "Matching Clusters",
+    "ClusterItem": "Matching Cluster Items",
+    "Consolidation": "Consolidations",
+    "DataPipeline": "Data Pipelines",
     "MatchedRecord": "Matched Records",
     "Matching": "Matchings",
     "ThumbnailType": "Thumbnail Types",
@@ -251,6 +251,7 @@
     "New": "New",
     "General": "General",
     "Merge": "Merge",
+    "Consolidate": "Consolidate",
     "None": "None",
     "Home": "Home",
     "by": "by",
@@ -542,7 +543,7 @@
     "removeItem": "Remove",
     "rejectItem": "Reject",
     "isLinked": "Is Linked",
-    "openStagingEntity": "Open Staging Entity",
+    "openContributorEntity": "Open Contributor Entity",
     "openPrimaryEntity": "Open Master Entity",
     "currentSelection": "Current Selection"
   },

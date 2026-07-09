@@ -1,6 +1,6 @@
 {
   "scopeNames": {
-    "MasterDataEntity": "Сущность основных данных",
+    "Consolidation": "Консолидация",
     "Attribute": "Атрибут",
     "AttributeGroup": "Группа атрибута",
     "Storage": "Хранилище",
@@ -83,11 +83,11 @@
     "ActionExecution": "Выполнение действий",
     "ActionExecutionLog": "Журнал выполнения действий",
     "Layout": "Макет",
-    "Cluster": "Кластер",
-    "ClusterItem": "Кластерный элемент"
+    "Cluster": "Кластер соответствий",
+    "ClusterItem": "Элемент кластера соответствий"
   },
   "scopeNamesPlural": {
-    "MasterDataEntity": "Сущности основных данных",
+    "Consolidation": "Консолидации",
     "Attribute": "Атрибуты",
     "AttributeGroup": "Группы атрибутов",
     "Storage": "Хранилища",
@@ -156,8 +156,8 @@
     "ActionExecutionLog": "Журналы выполнения действий",
     "ActionExecution": "Выполнение действий",
     "Layout": "Лейауты",
-    "Cluster": "Кластеры",
-    "ClusterItem": "Предметы кластера"
+    "Cluster": "Кластеры соответствий",
+    "ClusterItem": "Элементы кластера соответствий"
   },
   "labels": {
     "matchings": "Соответствия",
@@ -190,6 +190,7 @@
     "inherited": "Наследуется",
     "resetAllToDefault": "Восстановить все по умолчанию",
     "Merge": "Объединить",
+    "Consolidate": "Консолидировать",
     "None": "Нет",
     "Home": "Главная",
     "by": "по",
@@ -527,7 +528,7 @@
     "accessDenied": "В доступе отказано",
     "isLinked": "Связано",
     "rejectItem": "Отклонить",
-    "openStagingEntity": "Открытая организация постановки",
+    "openContributorEntity": "Открыть contributor-сущность",
     "openPrimaryEntity": "Открытая главная сущность",
     "currentSelection": "Текущий выбор",
     "System": "Система",

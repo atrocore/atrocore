@@ -75,11 +75,14 @@
     "ThumbnailTypes": "Thumbnail Types",
     "rebuildDbWarning": "Struktura bazy danych uległa zmianie. Wymagana jest przebudowa, aby zapewnić prawidłowe działanie.",
     "incomingWebhook": "Przychodzące webhooki",
+    "consolidation": "Konsolidacje",
     "matchings": "Dopasowania",
     "Available": "Dostępny",
     "execute": "Wykonaj",
     "status": "Status",
-    "clusters": "Klastry"
+    "clusters": "Klastry dopasowań",
+    "MasterDataManagement": "Zarządzanie danymi podstawowymi",
+    "dataPipeline": "Pipeline'y danych"
   },
   "layouts": {
     "relationships": "Relacje",
@@ -208,12 +211,14 @@
     "apiRequest": "Funkcja ta umożliwia szybkie tworzenie złożonych struktur danych, takich jak skonfigurowane kanały importu lub eksportu.",
     "style": "Tworzenie, aktualizowanie i dostosowywanie nowych stylów w celu dostosowania do standardowego CSS",
     "incomingWebhook": "Przychodzące Webhooki umożliwiają wyzwalanie predefiniowanych akcji za pośrednictwem zewnętrznych żądań HTTP, z opcjonalnymi zabezpieczeniami, takimi jak weryfikacja hash i biała lista adresów IP.",
+    "consolidation": "Skonfiguruj konsolidację dla encji, aby scalać dane z rekordów współtwórców w skonsolidowane rekordy główne.",
     "matchings": "Dopasowywanie pomaga identyfikować podobne rekordy w różnych jednostkach przy użyciu reguł zdefiniowanych przez użytkownika.",
     "scheduledJob": "Zarządzanie zaplanowanymi zadaniami systemowymi.",
     "notificationTemplates": "Proszę zarządzać szablonem standardowego powiadomienia systemu.",
     "notificationProfiles": "Skonfiguruj profile powiadomień i reguły powiadomień, aby skutecznie usprawnić proces zarządzania alertami, tak aby były one aktualne i istotne.",
     "layoutProfiles": "Zarządzanie i dostosowywanie różnych konfiguracji układu interfejsu użytkownika systemu",
-    "clusters": "Klastry służą do grupowania podobnych rekordów w ramach zarządzania danymi podstawowymi i dopasowywania ich do siebie."
+    "clusters": "Klastry służą do grupowania podobnych rekordów w ramach zarządzania danymi podstawowymi i dopasowywania ich do siebie.",
+    "dataPipeline": "Zdefiniuj reguły mapowania, które automatycznie przekształcają i przesyłają rekordy encji źródłowych do odpowiadających im encji staging."
   },
   "logicalOperators": {
     "and": "ORAZ",

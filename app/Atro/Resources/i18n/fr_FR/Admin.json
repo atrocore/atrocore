@@ -69,6 +69,7 @@
     "apiRequest": "Requête API",
     "style": "Styles",
     "incomingWebhook": "Webhooks entrants",
+    "consolidation": "Consolidations",
     "matchings": "Appariements",
     "ThumbnailTypes": "Types de vignettes",
     "rebuildDbWarning": "La structure de la base de données a été modifiée. Une reconstruction est nécessaire pour assurer le bon fonctionnement de la base de données.",
@@ -79,8 +80,8 @@
     "upsert": "Ajout/Insert",
     "execute": "Exécuter",
     "status": "Statut",
-    "clusters": "Groupes d'entreprises",
-    "sourceToStagingPipeline": "Pipelines source vers staging",
+    "clusters": "Grappes d'appariement",
+    "dataPipeline": "Pipelines de données",
     "MasterDataManagement": "Gestion des données de référence"
   },
   "fieldTypes": {
@@ -195,6 +196,7 @@
     "emailTemplates": "Gérer les modèles d’e-mails pour l’envoi manuel ou automatisé (hors notifications standard).",
     "notificationTemplates": "Gérer le modèle de notification standard du système.",
     "layoutProfiles": "Gérer et personnaliser les différentes configuration des dispositions de l'interface utilisateur du système",
+    "consolidation": "Configurez la consolidation pour une entité afin de fusionner les données de ses enregistrements contributeurs en enregistrements maîtres consolidés.",
     "matchings": "Les correspondances permettent d'identifier des enregistrements similaires entre différentes entités à l'aide de règles définies par l'utilisateur.",
     "incomingWebhook": "Les webhooks entrants permettent de déclencher des actions prédéfinies via des requêtes HTTP externes, avec des options de sécurité comme la vérification par hachage et la liste blanche d’adresses IP.",
     "thumbnailTypes": "Gérer les types de vignettes pour modifier la largeur ou la hauteur d'une vignette, ou pour en créer une nouvelle.",
@@ -203,7 +205,7 @@
     "apiRequest": "Utiliser cette fonction pour créer rapidement des structures de données complexes telles que des flux d'importation ou d'exportation configurés.",
     "style": "Créer, mettre à jour et personnaliser de nouveaux styles afin d'apporter des ajustements aux feuilles de style standard",
     "clusters": "Utilisez les clusters pour regrouper les enregistrements similaires dans la gestion des données de référence et les faire correspondre les uns aux autres.",
-    "sourceToStagingPipeline": "Définissez des règles de mappage qui transforment automatiquement les enregistrements source et les transmettent aux entités de staging correspondantes."
+    "dataPipeline": "Définissez des règles de mappage qui transforment automatiquement les enregistrements source et les transmettent aux entités de staging correspondantes."
   },
   "logicalOperators": {
     "and": "ET",

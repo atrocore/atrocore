@@ -1,0 +1,30 @@
+{
+  "labels": {
+    "sourceEntities": "Pipeline zdroj-staging"
+  },
+  "fields": {
+    "consolidationScript": "Konsolidační skript",
+    "updateMasterAutomatically": "Automatická aktualizace předlohy",
+    "minimumMatchingScore": "Minimální skóre shody",
+    "executeMergeAs": "Provést sloučení jako",
+    "confirmAutomatically": "Automatické potvrzení",
+    "deleteInvalidMastersAutomatically": "Automaticky mazat neplatné hlavní záznamy"
+  },
+  "tooltips": {
+    "name": "Lze vybrat pouze tu hlavní entitu, pro kterou již existuje odvozenina s rolí „Přispěvatel“.",
+    "consolidationScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu.",
+    "executeMergeAs": "Uživatelský účet, který bude použit ke spuštění skriptu sloučení."
+  },
+  "exceptions": {
+    "consolidationScriptIsMissing": "Chybí konsolidační skript pro hlavní entitu",
+    "consolidationScriptIsNotValid": "Konsolidační skript vrací neplatné užitečné zatížení: %s",
+    "entityTypeInvalid": "Typ entity \"%s\" nelze použít pro konsolidaci",
+    "consolidationAlreadyExists": "Konsolidace pro \"%s\" již existuje"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Stejný uživatel",
+      "system": "Systém"
+    }
+  }
+}

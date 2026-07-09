@@ -1,0 +1,50 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "number"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "consolidationScript",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "executeMergeAs"
+        },
+        {
+          "name": "updateMasterAutomatically"
+        }
+      ],
+      [
+        {
+          "name": "confirmAutomatically"
+        },
+        {
+          "name": "minimumMatchingScore"
+        }
+      ],
+      [
+        {
+          "name": "deleteInvalidMastersAutomatically"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

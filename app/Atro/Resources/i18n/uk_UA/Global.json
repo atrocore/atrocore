@@ -1,7 +1,7 @@
 {
   "scopeNames": {
-    "MasterDataEntity": "Сутність основних даних",
-    "SourceToStagingPipeline": "Пайплайн джерело-стейджинг",
+    "Consolidation": "Консолідація",
+    "DataPipeline": "Пайплайн даних",
     "Classification": "Класифікація",
     "ClassificationAttribute": "Атрибут класифікації",
     "Attribute": "Атрибут",
@@ -84,12 +84,12 @@
     "ActionExecution": "Виконання дії",
     "ActionExecutionLog": "Журнал виконання дій",
     "Layout": "Макет",
-    "Cluster": "Кластер",
-    "ClusterItem": "Елемент кластера"
+    "Cluster": "Кластер зіставлення",
+    "ClusterItem": "Елемент кластера зіставлення"
   },
   "scopeNamesPlural": {
-    "MasterDataEntity": "Сутності основних даних",
-    "SourceToStagingPipeline": "Пайплайни джерело-стейджинг",
+    "Consolidation": "Консолідації",
+    "DataPipeline": "Пайплайни даних",
     "Classification": "Класифікації",
     "ClassificationAttribute": "Атрибути класифікації",
     "Attribute": "Атрибути",
@@ -158,8 +158,8 @@
     "ActionExecution": "Виконання дій",
     "ActionExecutionLog": "Журнали виконання дій",
     "Layout": "Макети",
-    "Cluster": "Кластери",
-    "ClusterItem": "Кластерні елементи"
+    "Cluster": "Кластери зіставлення",
+    "ClusterItem": "Елементи кластера зіставлення"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
@@ -207,6 +207,7 @@
     "notInherited": "Не успадковується",
     "resetAllToDefault": "Відновити все за замовчуванням",
     "Merge": "Об'єднати",
+    "Consolidate": "Консолідувати",
     "None": "Немає",
     "Home": "Головна",
     "by": "за",
@@ -535,7 +536,7 @@
     "Saved Filters": "Збережені фільтри",
     "replaceItem": "Замінити",
     "removeItem": "Видалити",
-    "openStagingEntity": "Відкрити staging-сутність",
+    "openContributorEntity": "Відкрити contributor-сутність",
     "openPrimaryEntity": "Відкрити майстер-сутність",
     "currentSelection": "Поточний вибір",
     "rejectItem": "Відхилити",

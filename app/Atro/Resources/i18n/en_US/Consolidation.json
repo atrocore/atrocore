@@ -1,0 +1,30 @@
+{
+  "labels": {
+    "sourceEntities": "Source-to-Staging Pipelines"
+  },
+  "fields": {
+    "consolidationScript": "Consolidation Script",
+    "updateMasterAutomatically": "Update Master Automatically",
+    "minimumMatchingScore": "Minimum Matching Score",
+    "confirmAutomatically": "Confirm Automatically",
+    "deleteInvalidMastersAutomatically": "Delete Invalid Masters Automatically",
+    "executeMergeAs": "Execute Merge As"
+  },
+  "tooltips": {
+    "name": "Only master entities that already have a derivative with the Contributor role can be selected.",
+    "consolidationScript": "Configure how source data is transformed, unified, and mapped to the master record.",
+    "executeMergeAs": "The user account that will be used to execute the merge script."
+  },
+  "options": {
+    "executeMergeAs": {
+      "system": "System",
+      "sameUser": "Same User"
+    }
+  },
+  "exceptions": {
+    "consolidationScriptIsMissing": "Consolidation script is missing for master entity",
+    "consolidationScriptIsNotValid": "Consolidation script return invalid payload: %s",
+    "entityTypeInvalid": "Entity type \"%s\" cannot be used for consolidation",
+    "consolidationAlreadyExists": "Consolidation for \"%s\" already exists"
+  }
+}

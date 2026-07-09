@@ -197,7 +197,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         getComparisonScope: function () {
             const scopeDefs = this.getMetadata().get(['scopes', this.scope]) || {};
-            if (scopeDefs.primaryEntityId && scopeDefs.role === 'staging') {
+            if (scopeDefs.primaryEntityId && scopeDefs.role === 'contributor') {
                 return scopeDefs.primaryEntityId;
             }
 

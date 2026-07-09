@@ -1,0 +1,30 @@
+{
+  "labels": {
+    "sourceEntities": "Пайплайни джерело-стейджинг"
+  },
+  "fields": {
+    "consolidationScript": "Скрипт консолідації",
+    "updateMasterAutomatically": "Автоматично оновлювати майстер-запис",
+    "minimumMatchingScore": "Мінімальна оцінка збігу",
+    "confirmAutomatically": "Підтверджувати автоматично",
+    "deleteInvalidMastersAutomatically": "Автоматично видаляти недійсні мастер-записи",
+    "executeMergeAs": "Виконувати об'єднання від імені"
+  },
+  "tooltips": {
+    "name": "Можна обрати лише ту мастер-сутність, для якої вже існує дериватив із роллю «Контриб'ютор».",
+    "consolidationScript": "Налаштуйте спосіб перетворення, уніфікації та зіставлення вихідних даних із майстер-записом.",
+    "executeMergeAs": "Обліковий запис користувача, який буде використано для виконання скрипта об'єднання."
+  },
+  "exceptions": {
+    "consolidationScriptIsMissing": "Відсутній скрипт консолідації для головної сутності",
+    "consolidationScriptIsNotValid": "Скрипт консолідації повертає некоректне корисне навантаження: %s",
+    "entityTypeInvalid": "Тип сутності \"%s\" не може використовуватися для консолідації",
+    "consolidationAlreadyExists": "Консолідація для \"%s\" вже існує"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Той самий користувач",
+      "system": "Система"
+    }
+  }
+}

@@ -118,6 +118,12 @@
     "label": "MasterDataManagement",
     "itemList": [
       {
+        "url": "#Consolidation",
+        "label": "consolidation",
+        "description": "consolidation",
+        "icon": "ph ph-crown"
+      },
+      {
         "url": "#Matching",
         "label": "matchings",
         "description": "matchings",
@@ -130,9 +136,9 @@
         "icon": "ph ph-copy"
       },
       {
-        "url": "#SourceToStagingPipeline",
-        "label": "sourceToStagingPipeline",
-        "description": "sourceToStagingPipeline",
+        "url": "#DataPipeline",
+        "label": "dataPipeline",
+        "description": "dataPipeline",
         "icon": "ph ph-line-segment"
       }
     ]

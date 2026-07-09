@@ -79,12 +79,12 @@
     "RoleScopeAttribute": "Atrybut",
     "Selection": "Wybór",
     "SelectionItem": "Rekord wyboru",
-    "MasterDataEntity": "Podmiot danych podstawowych",
+    "Consolidation": "Konsolidacja",
     "ActionExecution": "Wykonanie akcji",
     "ActionExecutionLog": "Dziennik wykonania akcji",
     "Layout": "Układ",
-    "Cluster": "Klaster",
-    "ClusterItem": "Pozycja klastra"
+    "Cluster": "Klaster dopasowań",
+    "ClusterItem": "Pozycja klastra dopasowań"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -152,12 +152,12 @@
     "RoleScopeField": "Pola",
     "Selection": "Wybór",
     "SelectionItem": "Rekordy selekcji",
-    "MasterDataEntity": "Podmioty danych podstawowych",
+    "Consolidation": "Konsolidacje",
     "ActionExecution": "Wykonywanie akcji",
     "ActionExecutionLog": "Dzienniki wykonania akcji",
     "Layout": "Układy",
-    "Cluster": "Klastry",
-    "ClusterItem": "Elementy klastra"
+    "Cluster": "Klastry dopasowań",
+    "ClusterItem": "Elementy klastra dopasowań"
   },
   "labels": {
     "selectAll": "Wybierz wszystko",
@@ -216,6 +216,7 @@
     "New": "Nowy",
     "General": "Ogólne",
     "Merge": "Scal",
+    "Consolidate": "Skonsoliduj",
     "None": "Brak",
     "Home": "Strona główna",
     "by": "przez",
@@ -528,7 +529,7 @@
     "isLinked": "Jest powiązany",
     "currentSelection": "Bieżący wybór",
     "rejectItem": "Proszę odrzucić",
-    "openStagingEntity": "Open Staging Entity",
+    "openContributorEntity": "Otwórz encję contributor",
     "openPrimaryEntity": "Otwarty podmiot główny",
     "entityFilterResult": "Wynik filtra",
     "System": "System"

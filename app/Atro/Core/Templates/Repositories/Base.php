@@ -98,17 +98,18 @@ class Base extends RDB
 
     protected function updateMasterRecord(Entity $entity): void
     {
-        if (!$this->getMetadata()->get("scopes.{$entity->getEntityName()}.primaryEntityId")) {
+        $masterEntityName = $this->getMetadata()->get("scopes.{$entity->getEntityName()}.primaryEntityId");
+        if (!$masterEntityName) {
             return;
         }
 
-        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $entity->getEntityName());
-        if (empty($masterDataEntity) || empty($masterDataEntity->get('updateMasterAutomatically'))) {
+        $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($masterEntityName);
+        if (empty($consolidation) || empty($consolidation->get('updateMasterAutomatically'))) {
             return;
         }
 
         try {
-            $this->getInjection('serviceFactory')->create('MasterDataEntity')->updateMasterRecord($entity);
+            $this->getInjection('serviceFactory')->create('Consolidation')->updateMasterRecord($entity);
         } catch (Forbidden|BadRequest $e) {
             // ignore
         }

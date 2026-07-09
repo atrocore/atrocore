@@ -1,0 +1,30 @@
+{
+  "labels": {
+    "sourceEntities": "Source-to-Staging Pipelines"
+  },
+  "fields": {
+    "consolidationScript": "Konsolidierungsskript",
+    "updateMasterAutomatically": "Master automatisch aktualisieren",
+    "minimumMatchingScore": "Minimum Matching Score",
+    "confirmAutomatically": "Automatisch bestätigen",
+    "deleteInvalidMastersAutomatically": "Ungültige Master automatisch löschen",
+    "executeMergeAs": "Zusammenführung ausführen als"
+  },
+  "tooltips": {
+    "name": "Es können nur Master-Entitäten ausgewählt werden, die bereits eine Ableitung mit der Rolle \"Mitwirkender\" besitzen.",
+    "consolidationScript": "Konfigurieren Sie, wie Quelldaten transformiert, vereinheitlicht und dem Stammsatz zugeordnet werden.",
+    "executeMergeAs": "Das Benutzerkonto, das für die Ausführung des Zusammenführungsskripts verwendet werden soll."
+  },
+  "exceptions": {
+    "consolidationScriptIsMissing": "Konsolidierungsskript fehlt für Master-Entität",
+    "consolidationScriptIsNotValid": "Konsolidierungsskript gibt ungültige Nutzdaten zurück: %s",
+    "entityTypeInvalid": "Der Entitätstyp \"%s\" kann nicht für die Konsolidierung verwendet werden",
+    "consolidationAlreadyExists": "Konsolidierung für \"%s\" existiert bereits"
+  },
+  "options": {
+    "executeMergeAs": {
+      "sameUser": "Gleicher Benutzer",
+      "system": "System"
+    }
+  }
+}
