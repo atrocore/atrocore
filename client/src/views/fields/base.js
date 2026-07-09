@@ -688,7 +688,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         initSetDefaultValueAction: function () {
             this.getInlineActionsContainer().find('.set-default-value-link').remove();
 
-            if (this.mode !== 'edit' || this.readOnly || this.disabled) {
+            if (this.mode !== 'edit' || this.readOnly || this.disabled || this.isListView()) {
                 return;
             }
 
