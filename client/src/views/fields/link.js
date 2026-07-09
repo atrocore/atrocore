@@ -237,16 +237,16 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         },
 
         setForeignValueById: function (foreignId) {
-            this.model.set(this.idName, null);
-            this.model.set(this.nameName, null);
-
-            this.ajaxGetRequest(this.foreignScope + '/' + foreignId, { silent: true })
+            return this.ajaxGetRequest(this.foreignScope + '/' + foreignId, {silent: true})
                 .done(function (response) {
-                    this.model.set(this.idName, response.id);
-                    this.model.set(this.nameName, response.name);
-                    this.reRender();
-                }.bind(this))
-                .always(function (error) {
+                        this.model.set(this.idName, response.id);
+                        this.model.set(this.nameName, response.name);
+                        this.reRender();
+                    }.bind(this)
+                ).error(() => {
+                    this.model.set(this.idName, null);
+                    this.model.set(this.nameName, null);
+                }).always(function (error) {
                     this.trigger('linkLoaded');
                 }.bind(this));
         },
@@ -257,7 +257,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 return;
             }
 
-            this.setForeignValueById(this.model.parseDefaultValue(defaultValue));
+            return this.setForeignValueById(this.model.parseDefaultValue(defaultValue));
         },
 
         setup: function () {

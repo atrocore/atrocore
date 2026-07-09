@@ -207,29 +207,32 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         loadForeignNames: function (ids) {
-            this.model.set(this.idsName, null);
-            this.model.set(this.nameHashName, null);
-
             const foreignName = this.getForeignName();
-            this.ajaxGetRequest(this.foreignScope, {
+
+            return this.ajaxGetRequest(this.foreignScope, {
                 select: `id,${foreignName}`,
                 collectionOnly: true,
-                where: [{ type: 'in', attribute: 'id', value: ids }]
+                where: [{type: 'in', attribute: 'id', value: ids}]
             }).done(function (response) {
-                const names = {};
-                (response.list || []).forEach(item => {
-                    names[item.id] = item[foreignName];
-                });
-                names._localeId = this.getUser().get('localeId');
+                    const names = {};
+                    (response.list || []).forEach(item => {
+                        names[item.id] = item[foreignName];
+                    });
+                    names._localeId = this.getUser().get('localeId');
 
-                this.nameHash = names;
-                this.ids = Object.keys(names).filter(id => id !== '_localeId');
+                    this.nameHash = names;
+                    this.ids = Object.keys(names).filter(id => id !== '_localeId');
 
-                this.model.set(this.nameHashName, this.nameHash);
-                this.model.set(this.idsName, this.ids);
+                    this.model.set(this.nameHashName, this.nameHash);
+                    this.model.set(this.idsName, this.ids);
 
-                this.reRender();
-            }.bind(this));
+                    this.reRender();
+                }.bind(this)
+            ).error(() => {
+                this.model.set(this.idsName, null);
+                this.model.set(this.nameHashName, null);
+
+            });
         },
 
         applyDefaultValue: function () {
@@ -238,7 +241,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 return;
             }
 
-            this.loadForeignNames(this.model.parseDefaultValue(defaultValue));
+            return this.loadForeignNames(this.model.parseDefaultValue(defaultValue));
         },
 
         setup: function () {

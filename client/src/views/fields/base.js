@@ -693,7 +693,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             const defaultValue = this.model.getFieldParam(this.name, 'default');
-            if (defaultValue === null || defaultValue === '' || (Array.isArray(defaultValue) && defaultValue.length === 0)) {
+            if (defaultValue === null || defaultValue === '' || (Array.isArray(defaultValue) && !defaultValue.length)) {
                 return;
             }
 
@@ -703,10 +703,25 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.getInlineActionsContainer().prepend($setDefaultLink);
 
             $setDefaultLink.on('click', () => {
-                if (this.model.getFieldParam(this.name, 'defaultValueType') === 'script') {
-                    this.applyScriptDefaultValue();
+                const $icon = $setDefaultLink.find('i');
+                if ($icon.hasClass('ph-spin')) {
+                    return;
+                }
+
+                $icon.removeClass('ph-pen-nib').addClass('ph-circle-notch ph-spin');
+
+                const promise = this.model.getFieldParam(this.name, 'defaultValueType') === 'script'
+                    ? this.applyScriptDefaultValue()
+                    : this.applyDefaultValue();
+
+                const restoreIcon = () => {
+                    $icon.removeClass('ph-circle-notch ph-spin').addClass('ph-pen-nib');
+                };
+
+                if (promise && typeof promise.then === 'function') {
+                    Promise.resolve(promise).finally(restoreIcon);
                 } else {
-                    this.applyDefaultValue();
+                    restoreIcon();
                 }
             });
         },
@@ -718,7 +733,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         applyScriptDefaultValue: function () {
             this.notify('Please wait...');
 
-            this.ajaxPostRequest('evaluateScriptFieldDefault', {
+            return this.ajaxPostRequest('evaluateScriptFieldDefault', {
                 entityName: this.model.name,
                 field: this.name
             }).success(res => {
