@@ -46,7 +46,7 @@ class ConfirmSingleClusterItems extends AbstractClusterJob implements JobInterfa
             }
         }
 
-        if ($this->hasPendingSiblings('ConfirmSingleClusterItems', $masterEntity)) {
+        if ($this->hasPendingSiblings('ConfirmSingleClusterItems', $masterEntity, $job)) {
             return;
         }
 

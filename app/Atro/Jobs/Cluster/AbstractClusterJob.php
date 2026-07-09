@@ -22,19 +22,19 @@ use Espo\ORM\Entity;
 abstract class AbstractClusterJob extends AbstractJob
 {
     private const JOB_NAMES = [
-        'ClusterMatchedRecords'      => 'Group matched records into clusters',
-        'RejectInvalidClusterItems'  => 'Reject invalid cluster items',
+        'ClusterMatchedRecords'        => 'Group matched records into clusters',
+        'RejectInvalidClusterItems'    => 'Reject invalid cluster items',
         'ConfirmClustersAutomatically' => 'Auto-confirm clusters',
-        'ConfirmSingleClusterItems'  => 'Confirm single-item clusters',
-        'CreateClustersForOrphans'   => 'Create clusters for unmatched records',
-        'DeleteInvalidMasterItems'   => 'Delete invalid master records',
+        'ConfirmSingleClusterItems'    => 'Confirm single-item clusters',
+        'CreateClustersForOrphans'     => 'Create clusters for unmatched records',
+        'DeleteInvalidMasterItems'     => 'Delete invalid master records',
     ];
 
     protected function spawnJob(string $type, array $payload, Job $parent, int $num = 1): void
     {
         $masterEntity = $payload['masterEntity'] ?? '';
         $baseName     = self::JOB_NAMES[$type] ?? $type;
-        $job = $this->getEntityManager()->getEntity('Job');
+        $job          = $this->getEntityManager()->getEntity('Job');
         $job->set([
             'name'        => $baseName . ($masterEntity ? " [$masterEntity]" : '') . ' #' . $num,
             'type'        => $type,
@@ -47,26 +47,32 @@ abstract class AbstractClusterJob extends AbstractJob
         $this->getEntityManager()->saveEntity($job);
     }
 
-    protected function hasPendingSiblings(string $type, string $masterEntity): bool
+    protected function hasPendingSiblings(string $type, string $masterEntity, ?Job $currentJob = null): bool
     {
+        $where = [
+            'type'     => $type,
+            'status'   => ['Pending', 'Running'],
+            'payload*' => '%"masterEntity":"' . $masterEntity . '"%',
+        ];
+
+        if (!empty($currentJob)) {
+            $where['id!='] = $currentJob->id;
+        }
+
         return $this->getEntityManager()->getRepository('Job')
-            ->where([
-                'type'     => $type,
-                'status'   => ['Pending', 'Running'],
-                'payload*' => '%"masterEntity":"' . $masterEntity . '"%',
-            ])
-            ->count() > 0;
+                ->where($where)
+                ->count() > 0;
     }
 
     protected function nextPhaseAlreadySpawned(string $type, string $masterEntity): bool
     {
         return $this->getEntityManager()->getRepository('Job')
-            ->where([
-                'type'     => $type,
-                'status'   => ['Pending', 'Running', 'Awaiting'],
-                'payload*' => '%"masterEntity":"' . $masterEntity . '"%',
-            ])
-            ->count() > 0;
+                ->where([
+                    'type'     => $type,
+                    'status'   => ['Pending', 'Running', 'Awaiting'],
+                    'payload*' => '%"masterEntity":"' . $masterEntity . '"%',
+                ])
+                ->count() > 0;
     }
 
     protected function getStagingEntityName(string $masterEntity): ?string

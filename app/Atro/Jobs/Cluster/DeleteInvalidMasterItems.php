@@ -27,8 +27,8 @@ class DeleteInvalidMasterItems extends AbstractClusterJob implements JobInterfac
             return;
         }
 
-        $masterDataEntity = $this->getEntityManager()->getEntity('MasterDataEntity', $masterEntity);
-        if (empty($masterDataEntity) || empty($masterDataEntity->get('deleteInvalidMastersAutomatically'))) {
+        $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($masterEntity);
+        if (empty($consolidation) || empty($consolidation->get('deleteInvalidMastersAutomatically'))) {
             return;
         }
 

@@ -49,7 +49,7 @@ class CreateClustersForOrphans extends AbstractClusterJob implements JobInterfac
             }
         }
 
-        if ($this->hasPendingSiblings('CreateClustersForOrphans', $masterEntity)) {
+        if ($this->hasPendingSiblings('CreateClustersForOrphans', $masterEntity, $job)) {
             return;
         }
 

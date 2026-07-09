@@ -48,7 +48,7 @@ class ConfirmClustersAutomatically extends AbstractClusterJob implements JobInte
             }
         }
 
-        if ($this->hasPendingSiblings('ConfirmClustersAutomatically', $masterEntity)) {
+        if ($this->hasPendingSiblings('ConfirmClustersAutomatically', $masterEntity, $job)) {
             return;
         }
 

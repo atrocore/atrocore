@@ -59,7 +59,7 @@ class RejectInvalidClusterItems extends AbstractClusterJob implements JobInterfa
             }
         }
 
-        if ($this->hasPendingSiblings('RejectInvalidClusterItems', $masterEntity)) {
+        if ($this->hasPendingSiblings('RejectInvalidClusterItems', $masterEntity, $job)) {
             return;
         }
 
