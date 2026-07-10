@@ -272,6 +272,12 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
+        $primaryEntityId = $this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId");
+        if (!empty($primaryEntityId) &&
+            !empty($this->getMetadata()->get("entityDefs.$primaryEntityId.fields.{$entity->get('code')}.type"))) {
+            throw new Forbidden("You cannot modify properties of the primary entity.");
+        }
+
         if (!empty($entity->get('foreignEntityId'))) {
             if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.primaryEntityId")) {
                 throw new Forbidden();

@@ -70,7 +70,6 @@ class LayoutManager
         $viewType        = $this->sanitizeInput($viewType);
         $keepIds         = true;
         $primaryEntityId = $this->getMetadata()->get("scopes.$scope.primaryEntityId");
-        $role            = null;
 
         if (empty($relatedEntity)) {
             $relatedEntity = null;
@@ -81,28 +80,20 @@ class LayoutManager
         }
 
         if (!empty($primaryEntityId)) {
-            $role = $this->getMetadata()->get("scopes.$scope.role");
-            if ($role === 'base') {
-                // Resolve preferences for the derivative scope first so the final profile
-                // is known before checking whether a custom layout exists.
-                ['storedProfiles' => $storedProfiles, 'selectedProfileId' => $selectedProfileId] =
-                    $this->getEntityManager()->getRepository('LayoutProfile')
-                        ->getUserLayoutPreferences($scope, $viewType, $relatedEntity, $relatedLink, $this->getUser()->id);
+            // Resolve preferences for the derivative scope first so the final profile
+            // is known before checking whether a custom layout exists.
+            ['storedProfiles' => $storedProfiles, 'selectedProfileId' => $selectedProfileId] =
+                $this->getEntityManager()->getRepository('LayoutProfile')
+                    ->getUserLayoutPreferences($scope, $viewType, $relatedEntity, $relatedLink, $this->getUser()->id);
 
-                $layoutProfileId = $this->resolveFinalLayoutProfileId($selectedProfileId, $layoutProfileId);
+            $layoutProfileId = $this->resolveFinalLayoutProfileId($selectedProfileId, $layoutProfileId);
 
-                [$customLayout] = $this->getCustomLayout($scope, $viewType, $relatedEntity, $relatedLink, $layoutProfileId);
-                if (empty($customLayout)) {
-                    // No own custom layout — inherit from primary entity scope
-                    $derivativeScope = $scope;
-                    $scope           = $primaryEntityId;
-                    $keepIds         = false;
-                }
-                // else: derivative has its own custom layout — $storedProfiles and $layoutProfileId
-                // already set for the derivative scope; $scope stays as derivative
-            } else {
+            [$customLayout] = $this->getCustomLayout($scope, $viewType, $relatedEntity, $relatedLink, $layoutProfileId);
+            if (empty($customLayout)) {
+                // No own custom layout — inherit from primary entity scope
                 $derivativeScope = $scope;
                 $scope           = $primaryEntityId;
+                $keepIds         = false;
             }
         }
 
@@ -136,7 +127,7 @@ class LayoutManager
             }
         }
 
-        if (!empty($derivativeScope) && $role !== 'base') {
+        if (!empty($derivativeScope)) {
             if ($viewType === 'detail') {
                 array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], false]);
             } elseif ($viewType === 'list') {
