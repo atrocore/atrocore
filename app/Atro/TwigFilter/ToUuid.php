@@ -13,14 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\TwigFilter;
 
-use Atro\Core\Container;
 use Atro\Core\Twig\AbstractTwigFilter;
 use Atro\Core\Utils\IdGenerator;
 
 class ToUuid extends AbstractTwigFilter
 {
-    protected Container $container;
-
     public function __construct(private readonly IdGenerator $idGenerator)
     {
     }
