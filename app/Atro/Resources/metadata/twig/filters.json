@@ -31,5 +31,8 @@
   },
   "md5": {
     "handler": "\\Atro\\TwigFilter\\Md5"
+  },
+  "toUuid": {
+    "handler": "\\Atro\\TwigFilter\\ToUuid"
   }
 }
