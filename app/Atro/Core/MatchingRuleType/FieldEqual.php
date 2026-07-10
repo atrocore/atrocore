@@ -64,10 +64,12 @@ class FieldEqual extends AbstractMatchingRule
 
         $value = $stageEntity->get($fieldName);
 
+        if ($value === null) {
+            return '1=0';
+        }
+
         if (in_array($fieldType, ['array', 'multiEnum'])) {
-            if ($value !== null) {
-                $value = json_encode($value);
-            }
+            $value = json_encode($value);
         }
 
         $parameter = IdGenerator::unsortableId();
@@ -90,6 +92,10 @@ class FieldEqual extends AbstractMatchingRule
                 return 0.0;
             }
 
+            if ($stageValue === null && $masterValue === null) {
+                return 0.0;
+            }
+
             return $stageValue === $masterValue ? $this->getWeight() : 0.0;
         }
 
@@ -106,6 +112,10 @@ class FieldEqual extends AbstractMatchingRule
             if ($value !== null) {
                 $value = json_encode($value);
             }
+        }
+
+        if ($value === null && ($masterEntityData[$fieldName] ?? null) === null) {
+            return 0.0;
         }
 
         if ($value === $masterEntityData[$fieldName]) {
@@ -143,9 +153,7 @@ class FieldEqual extends AbstractMatchingRule
             . " AND {$subAlias}.deleted = :false";
 
         if ($value === null) {
-            return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
-                . " WHERE {$baseCondition}"
-                . " AND {$subAlias}.{$col} IS NULL)";
+            return '1=0';
         }
 
         $valParam = IdGenerator::unsortableId();
