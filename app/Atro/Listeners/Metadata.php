@@ -254,7 +254,7 @@ class Metadata extends AbstractMetadataListener
                 'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
                 'noLoad'   => true,
             ];
-            $data['entityDefs'][$targetEntity]['links'][$foreign] = [
+            $data['entityDefs'][$targetEntity]['links'][$foreign]  = [
                 'type'    => 'hasMany',
                 'foreign' => 'targetRecord',
                 'entity'  => $sourceEntity
@@ -2408,34 +2408,30 @@ class Metadata extends AbstractMetadataListener
 
             $primaryEntity = $scopeDefs['primaryEntityId'];
 
-            $isBaseRole = ($scopeDefs['role'] ?? null) === 'base';
-
             // clone entity defs
             foreach ($data['entityDefs'][$primaryEntity]['fields'] ?? [] as $fieldName => $fieldDefs) {
                 if (empty($fieldDefs['type'])) {
                     continue;
                 }
 
-                if (!$isBaseRole) {
-                    // disable require
-                    if (!empty($fieldDefs['required'])) {
-                        $fieldDefs['required'] = false;
-                    }
+                // disable require
+                if (!empty($fieldDefs['required'])) {
+                    $fieldDefs['required'] = false;
+                }
 
-                    // disable notNull
-                    if (!empty($fieldDefs['notNull']) && $fieldDefs['type'] !== 'bool') {
-                        $fieldDefs['notNull'] = false;
-                    }
+                // disable notNull
+                if (!empty($fieldDefs['notNull']) && $fieldDefs['type'] !== 'bool') {
+                    $fieldDefs['notNull'] = false;
+                }
 
-                    // disable require via conditional properties
-                    if (!empty($fieldDefs['conditionalProperties']['required'])) {
-                        unset($fieldDefs['conditionalProperties']['required']);
-                    }
+                // disable require via conditional properties
+                if (!empty($fieldDefs['conditionalProperties']['required'])) {
+                    unset($fieldDefs['conditionalProperties']['required']);
+                }
 
-                    // disable unique indexes
-                    if (!empty($fieldDefs['unique'])) {
-                        $fieldDefs['unique'] = false;
-                    }
+                // disable unique indexes
+                if (!empty($fieldDefs['unique'])) {
+                    $fieldDefs['unique'] = false;
                 }
 
                 $mergedFieldDefs = array_merge($fieldDefs, $data['entityDefs'][$scope]['fields'][$fieldName] ?? []);
@@ -2597,7 +2593,7 @@ class Metadata extends AbstractMetadataListener
                 'enableVersioning'     => $scopeDefs['enableVersioning'] ?? false,
                 'defaultVersionName'   => $scopeDefs['defaultVersionName'] ?? null,
                 'enableFieldValueLock' => $scopeDefs['enableFieldValueLock'] ?? false,
-                'layouts'              => $isBaseRole,
+                'layouts'              => true,
             ]);
             if (array_key_exists('module', $data['scopes'][$scope])) {
                 unset($data['scopes'][$scope]['module']);
@@ -2675,7 +2671,7 @@ class Metadata extends AbstractMetadataListener
             ];
 
             if ($matching['type'] === 'duplicate') {
-                $data['scopes'][$matching['entity']]['matchDuplicates'] = true;
+                $data['scopes'][$matching['entity']]['matchDuplicates']                                                     = true;
                 $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['code'])] = [
                     'type'                 => 'datetime',
                     "layoutListDisabled"   => true,
@@ -2688,7 +2684,7 @@ class Metadata extends AbstractMetadataListener
                 ];
 
             } elseif ($matching['type'] === 'masterRecord') {
-                $data['scopes'][$matching['entity']]['matchMasterRecords'] = true;
+                $data['scopes'][$matching['entity']]['matchMasterRecords']                                                  = true;
                 $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['code'])] = [
                     'type'                 => 'datetime',
                     "layoutListDisabled"   => true,

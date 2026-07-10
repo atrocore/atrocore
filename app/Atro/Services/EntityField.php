@@ -186,15 +186,16 @@ class EntityField extends ReferenceData
             $entity->set('customizable', false);
         }
 
-        if ($entity->get('isCustom')) {
-            $entityId        = $entity->get('entityId');
-            $primaryEntityId = $this->getMetadata()->get("scopes.$entityId.primaryEntityId");
-            if (!empty($primaryEntityId)
-                && !empty($this->getEntity("{$primaryEntityId}_{$entity->get('code')}"))
-            ) {
+        $entityId        = $entity->get('entityId');
+        $primaryEntityId = $this->getMetadata()->get("scopes.$entityId.primaryEntityId");
+        if (!empty($primaryEntityId)
+            && !empty($this->getMetadata()->get("entityDefs.$primaryEntityId.fields.{$entity->get('code')}.type"))
+        ) {
+            if ($entity->get('isCustom')) {
                 $entity->set('isCustom', false);
                 $entity->setMetaPermission('delete', false);
             }
+            $entity->setMetaPermission('edit', false);
         }
     }
 
