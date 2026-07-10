@@ -26,8 +26,9 @@
     "cannotDelete": "Можна видаляти лише порожні кластери"
   },
   "labels": {
-    "stagingRecord": "проміжний запис",
-    "stagingRecords": "проміжні записи",
+    "contributorRecord": "contributor-запис",
+    "contributorRecords": "contributor-записи",
+    "contributorRecordsPanel": "Contributor-записи",
     "masterRecord": "майстер-запис",
     "masterRecords": "майстер-записи",
     "confirmed": "Підтверджено",

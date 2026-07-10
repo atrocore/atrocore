@@ -29,8 +29,9 @@
     "cannotMergeUnconfirmedItems": "Gli elementi non confermati non possono essere aggiunti alla fusione"
   },
   "labels": {
-    "stagingRecord": "record di allestimento",
-    "stagingRecords": "record di allestimento",
+    "contributorRecord": "record contributore",
+    "contributorRecords": "record contributori",
+    "contributorRecordsPanel": "Record contributori",
     "masterRecord": "record master",
     "masterRecords": "record master",
     "confirmed": "Confermato",

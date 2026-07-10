@@ -1102,7 +1102,7 @@
     "updatedCountFilterActionExecution": "Aggiornato dall'esecuzione dell'azione",
     "field": "Campo",
     "sourceRecord": "Fonte Record",
-    "stagingRecords": "Registri di allestimento",
+    "contributorRecords": "Record contributori",
     "masterRecord": "Record principale"
   },
   "tooltips": {

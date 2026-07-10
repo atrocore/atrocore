@@ -59,7 +59,7 @@ Espo.define('views/stream/notes/cluster-note', 'views/stream/note', function (De
                 var masterRecords  = data.masterRecords  || [];
 
                 if (stagingRecords.length) {
-                    var stagingLabel = this.translate(stagingRecords.length === 1 ? 'stagingRecord' : 'stagingRecords', 'labels', 'Cluster');
+                    var stagingLabel = this.translate(stagingRecords.length === 1 ? 'contributorRecord' : 'contributorRecords', 'labels', 'Cluster');
                     var sep = stagingRecords.length === 1 ? ' ' : ': ';
                     parts.push(stagingLabel + sep + buildLinks(stagingRecords));
                 }

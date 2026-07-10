@@ -29,8 +29,9 @@
     "cannotMergeUnconfirmedItems": "Nepotvrzené položky nelze přidat ke sloučení"
   },
   "labels": {
-    "stagingRecord": "záznam etapizace",
-    "stagingRecords": "záznamy etapizace",
+    "contributorRecord": "záznam přispěvatele",
+    "contributorRecords": "záznamy přispěvatelů",
+    "contributorRecordsPanel": "Záznamy přispěvatelů",
     "masterRecord": "hlavní záznam",
     "masterRecords": "hlavní záznamy",
     "confirmed": "Potvrzeno",

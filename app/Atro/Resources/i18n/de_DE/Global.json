@@ -745,7 +745,7 @@
     "derivedRecords": "Abgeleitete Datensätze",
     "goldenRecord": "Goldener Datensatz",
     "sourceRecords": "Quelldatensätze",
-    "stagingRecords": "Staging Datensätze",
+    "contributorRecords": "Contributor-Datensätze",
     "width": "Breite",
     "height": "Höhe",
     "action": "Aktion",

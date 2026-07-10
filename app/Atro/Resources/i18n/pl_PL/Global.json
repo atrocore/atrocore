@@ -790,7 +790,7 @@
     "updatedCountFilterActionExecution": "Aktualizacja przez wykonanie akcji",
     "field": "Pole",
     "sourceRecord": "Źródło: Record",
-    "stagingRecords": "Staging Records",
+    "contributorRecords": "Rekordy współtwórców",
     "masterRecord": "Główny rekord"
   },
   "dashlets": {

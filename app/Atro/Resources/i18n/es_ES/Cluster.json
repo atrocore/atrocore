@@ -29,8 +29,9 @@
     "cannotMergeUnconfirmedItems": "No se pueden añadir elementos no confirmados a la fusión"
   },
   "labels": {
-    "stagingRecord": "registro de ensayo",
-    "stagingRecords": "registros de ensayo",
+    "contributorRecord": "registro contribuidor",
+    "contributorRecords": "registros contribuidores",
+    "contributorRecordsPanel": "Registros contribuidores",
     "masterRecord": "registro maestro",
     "masterRecords": "registros maestros",
     "confirmed": "Confirmado",

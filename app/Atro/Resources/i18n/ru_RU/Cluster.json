@@ -29,8 +29,9 @@
     "cannotMergeUnconfirmedItems": "Неподтверждённые элементы не могут быть добавлены к объединению"
   },
   "labels": {
-    "stagingRecord": "промежуточная запись",
-    "stagingRecords": "промежуточные записи",
+    "contributorRecord": "contributor-запись",
+    "contributorRecords": "contributor-записи",
+    "contributorRecordsPanel": "Contributor-записи",
     "masterRecord": "мастер-запись",
     "masterRecords": "мастер-записи",
     "confirmed": "Подтверждено",

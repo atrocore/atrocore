@@ -44,9 +44,9 @@
     "noClusterFound": "No cluster found for this record"
   },
   "labels": {
-    "stagingRecord": "staging record",
-    "stagingRecords": "staging records",
-    "stagingRecordsPanel": "Staging Records",
+    "contributorRecord": "contributor record",
+    "contributorRecords": "contributor records",
+    "contributorRecordsPanel": "Contributor Records",
     "masterRecord": "master record",
     "masterRecords": "master records",
     "masterRecordsPanel": "Master Records",

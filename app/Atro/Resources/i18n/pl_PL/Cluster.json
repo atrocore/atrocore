@@ -29,8 +29,9 @@
     "cannotMergeUnconfirmedItems": "Niepotwierdzone elementy nie mogą być dodane do scalania"
   },
   "labels": {
-    "stagingRecord": "rekord etapu",
-    "stagingRecords": "rekordy etapu",
+    "contributorRecord": "rekord współtwórcy",
+    "contributorRecords": "rekordy współtwórców",
+    "contributorRecordsPanel": "Rekordy współtwórców",
     "masterRecord": "rekord główny",
     "masterRecords": "rekordy główne",
     "confirmed": "Potwierdzone",

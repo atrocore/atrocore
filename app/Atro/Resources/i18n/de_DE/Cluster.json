@@ -33,8 +33,9 @@
     "cannotMergeUnconfirmedItems": "Unbestätigte Einträge können nicht zur Zusammenführung hinzugefügt werden"
   },
   "labels": {
-    "stagingRecord": "staging-Datensatz",
-    "stagingRecords": "staging-Datensätze",
+    "contributorRecord": "Contributor-Datensatz",
+    "contributorRecords": "Contributor-Datensätze",
+    "contributorRecordsPanel": "Contributor-Datensätze",
     "masterRecord": "master-Datensatz",
     "masterRecords": "master-Datensätze",
     "confirmed": "Bestätigt",

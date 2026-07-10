@@ -789,7 +789,7 @@
     "createdCountFilterActionExecution": "Создано с помощью Action Execution",
     "updatedCountFilterActionExecution": "Обновлено выполнением действия",
     "sourceRecord": "Источник записи",
-    "stagingRecords": "Постановочные записи",
+    "contributorRecords": "Contributor-записи",
     "masterRecord": "Мастер запись"
   },
   "dashlets": {

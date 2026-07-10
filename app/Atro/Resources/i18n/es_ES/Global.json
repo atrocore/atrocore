@@ -790,7 +790,7 @@
     "createdCountFilterActionExecution": "Creado por Ejecución de acciones",
     "field": "Campo",
     "sourceRecord": "Fuente Registro",
-    "stagingRecords": "Registros de puesta en escena",
+    "contributorRecords": "Registros contribuidores",
     "masterRecord": "Registro maestro"
   },
   "dashlets": {

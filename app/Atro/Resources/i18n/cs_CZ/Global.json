@@ -644,7 +644,7 @@
     "updatedCountFilterActionExecution": "Aktualizováno provedením akce",
     "field": "Pole",
     "sourceRecord": "zdroj Záznam",
-    "stagingRecords": "záznamy o etapách",
+    "contributorRecords": "Záznamy přispěvatelů",
     "masterRecord": "Hlavní záznam"
   },
   "descriptions": {
