@@ -248,6 +248,26 @@ Example:
 {% set convertedValue = convertMeasureUnit(100, 'currency', 'usd', 'eur') %}
 ```
 
+### ID Generation
+
+uuid()
+- Description – generates a new UUID (version 7, time-ordered). Each call returns a different value.
+- Returns: string (UUID).
+
+Example:
+```twig
+{% set id = uuid() %}
+```
+
+value | toUuid
+- Description – converts a string into a UUID and stores the mapping, so the same input string always resolves to the same UUID. Useful for building stable identifiers from external keys.
+- Returns: string (UUID) or null for an empty or non-string value.
+
+Example:
+```twig
+{{ entity.get('number') | toUuid }}
+```
+
 ## Best Practices
 
 ### Performance

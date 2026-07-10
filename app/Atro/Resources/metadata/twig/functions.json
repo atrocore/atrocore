@@ -84,5 +84,8 @@
   },
   "getLeafRecords": {
     "handler": "\\Atro\\TwigFunction\\GetLeafRecords"
+  },
+  "uuid": {
+    "handler": "\\Atro\\TwigFunction\\GenerateUuid"
   }
 }
