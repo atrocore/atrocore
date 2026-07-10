@@ -637,6 +637,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
+            if (!this.model.id) {
+                return;
+            }
+
             const $cell = this.getCellElement();
             const $inlineActions = this.getInlineActionsContainer();
 
