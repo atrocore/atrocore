@@ -12,9 +12,11 @@
 
 declare(strict_types=1);
 
-namespace Atro\Jobs;
+namespace Atro\Jobs\Cluster;
 
 use Atro\Entities\Job;
+use Atro\Jobs\AbstractJob;
+use Atro\Jobs\JobInterface;
 
 class CreateClusters extends AbstractJob implements JobInterface
 {

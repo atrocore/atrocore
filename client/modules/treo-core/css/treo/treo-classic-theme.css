@@ -12429,6 +12429,7 @@ h5 {
 }
 
 .cell .inline-actions > .fullscreen,
+.cell .inline-actions > .set-default-value-link,
 .cell .inline-actions > .inline-save-link,
 .cell .inline-actions > .inline-cancel-link {
     padding-left: 6px;

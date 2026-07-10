@@ -140,14 +140,14 @@ class Cluster extends Base
 
         $this->getEntityManager()->getRepository('ClusterItem')
             ->where(['clusterId' => $id])
-            ->removeCollection();
+            ->removeCollection(['skipActivity' => true]);
 
         // Remove rejected cluster item records for this cluster
         $this->getEntityManager()->getRepository('RejectedClusterItem')
             ->where(['clusterId' => $id])
             ->removeCollection();
 
-        $this->getEntityManager()->removeEntity($cluster);
+        $this->getEntityManager()->removeEntity($cluster, ['isPurge' => true]);
     }
 
     public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes): Entity

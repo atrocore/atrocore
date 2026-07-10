@@ -192,6 +192,8 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             this.recordHelper = this.options.recordHelper;
             this.scope = this.entityType = (this.options.scope ?? this.model.name);
 
+            this.mode = this.options.mode || this.mode;
+
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;

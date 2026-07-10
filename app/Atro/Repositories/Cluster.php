@@ -22,10 +22,12 @@ class Cluster extends Base
     {
         parent::beforeRemove($entity, $options);
 
-        $item = $this->getEntityManager()->getRepository('ClusterItem')->where(['clusterId' => $entity->get('id')])->findOne();
+        if (empty($options['isPurge'])) {
+            $item = $this->getEntityManager()->getRepository('ClusterItem')->where(['clusterId' => $entity->get('id')])->findOne();
 
-        if (!empty($item)) {
-            throw new BadRequest($this->getLanguage()->translate('cannotDelete', 'exceptions', 'Cluster'));
+            if (!empty($item)) {
+                throw new BadRequest($this->getLanguage()->translate('cannotDelete', 'exceptions', 'Cluster'));
+            }
         }
     }
 }

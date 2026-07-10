@@ -474,6 +474,7 @@
     "associatedTitle": "L'élément actuel est lié à :name to :",
     "associatingTitle": "Lié à l'élément actuel en tant que :name :",
     "recalculateScript": "Recalculer le script",
+    "setDefaultValue": "Définir la valeur par défaut",
     "editLabels": "Modifier les libellés",
     "Duplicates": "Doublons",
     "matchedRecords": "Enregistrements appariés",

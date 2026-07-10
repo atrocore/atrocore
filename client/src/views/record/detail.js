@@ -1306,6 +1306,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.exit = this.options.exit || this.exit;
             this.columnCount = this.options.columnCount || this.columnCount;
 
+            this.mode = this.options.mode || this.mode;
+            this.fieldsMode = this.options.mode || this.fieldsMode;
+
             Bull.View.prototype.init.call(this);
         },
 
