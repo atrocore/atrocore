@@ -45,7 +45,8 @@ class V2Dot3Dot10 extends Base
             $this->exec("ALTER TABLE consolidation RENAME COLUMN merging_script TO consolidation_script");
         } else {
             $this->exec("DROP INDEX UNIQ_3FE49D9B5E237E06EB3B4E33 ON consolidation");
-            $this->exec("LTER TABLE consolidation ADD number INT NOT NULL, ADD entity_id VARCHAR(36) DEFAULT NULL");
+            $this->exec("ALTER TABLE consolidation ADD number INT NOT NULL");
+            $this->exec("ALTER TABLE consolidation ADD entity_id VARCHAR(36) DEFAULT NULL");
             $this->exec("CREATE UNIQUE INDEX UNIQ_3FE49D9B96901F54 ON consolidation (number)");
             $this->exec("ALTER TABLE consolidation CHANGE number number INT AUTO_INCREMENT NOT NULL");
             $this->exec("ALTER TABLE consolidation CHANGE merging_script consolidation_script LONGTEXT DEFAULT NULL");
