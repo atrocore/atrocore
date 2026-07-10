@@ -46,6 +46,10 @@ class FieldSimilar extends AbstractMatchingRule
         $value = $stageEntity->get($field);
         $parameter = IdGenerator::unsortableId();
 
+        if ($value === null) {
+            return '1=0';
+        }
+
         if (empty($value)) {
             return "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
         }
@@ -82,6 +86,10 @@ class FieldSimilar extends AbstractMatchingRule
                 return $stageValue === $masterValue ? $this->getWeight() : 0.0;
             }
 
+            if ($stageValue === null && $masterValue === null) {
+                return 0.0;
+            }
+
             $stageValue  = str_replace(' ', '', strtolower(trim((string)$stageValue)));
             $masterValue = str_replace(' ', '', strtolower(trim((string)$masterValue)));
 
@@ -109,6 +117,10 @@ class FieldSimilar extends AbstractMatchingRule
             sort($masterValue);
 
             return $stageValue === $masterValue ? $this->getWeight() : 0.0;
+        }
+
+        if ($stageEntity->get($field) === null && ($masterEntityData[$field] ?? null) === null) {
+            return 0.0;
         }
 
         $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
@@ -145,9 +157,7 @@ class FieldSimilar extends AbstractMatchingRule
             . " AND {$subAlias}.deleted = :false";
 
         if ($value === null) {
-            return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"
-                . " WHERE {$baseCondition}"
-                . " AND ({$subAlias}.{$col} IS NULL OR {$subAlias}.{$col} = '' OR {$subAlias}.{$col} = '[]'))";
+            return '1=0';
         }
 
         if (is_array($value)) {
