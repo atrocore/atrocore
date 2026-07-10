@@ -40,7 +40,7 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
         }
 
         $offset = 0;
-        $limit = $count > 20000 ? 2000 : 100;
+        $limit = $count > 20000 ? $this->getConfig()->get('findMatchesMaxChunkSize', 2000) : 100;
 
         $chunkNumber = 1;
         $allChunks = $count < $limit ? 1 : ceil($count / $limit);

@@ -182,7 +182,7 @@ class ClusterItem extends Base
         }
     }
 
-    public function getRecordsWithNoClusterItems(string $stagingEntityName, int $limit = PHP_INT_MAX): array
+    public function getRecordsWithNoClusterItems(string $stagingEntityName, int $limit = PHP_INT_MAX, int $offset = 0): array
     {
         return $this->getDbal()->createQueryBuilder()
             ->select('id')
@@ -191,30 +191,57 @@ class ClusterItem extends Base
             ->andWhere('se.id not in (select entity_id from cluster_item where entity_name=:stagingEntityType and deleted=:false)')
             ->setParameter('stagingEntityType', $stagingEntityName)
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setFirstResult(0)
+            ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->addOrderBy('se.id', 'ASC')
             ->fetchFirstColumn();
     }
 
-    public function getSingleClusterItemsToConfirmAutomatically($stagingEntityName, $offset = 0, $limit = 2000): EntityCollection
+    public function getInvalidClusterItemDataPage(int $offset, int $limit): array
+    {
+        return $this->getDbal()->createQueryBuilder()
+            ->select('ci.id', 'MIN(mr2.id) AS other_matched_record_id')
+            ->from('cluster_item', 'ci')
+            ->leftJoin('ci', 'matched_record', 'mr', 'mr.id = ci.matched_record_id AND mr.deleted = :false')
+            ->leftJoin('ci', 'matched_record', 'mr2', '
+                ((mr2.source_entity = ci.entity_name AND mr2.source_entity_id = ci.entity_id)
+                OR (mr2.master_entity = ci.entity_name AND mr2.master_entity_id = ci.entity_id))
+                AND ci.cluster_id = (SELECT MAX(ci2.cluster_id) FROM cluster_item ci2 WHERE ci2.entity_name = mr2.source_entity AND ci2.entity_id = mr2.source_entity_id AND ci2.deleted = :false)
+                AND ci.cluster_id = (SELECT MAX(ci3.cluster_id) FROM cluster_item ci3 WHERE ci3.entity_name = mr2.master_entity AND ci3.entity_id = mr2.master_entity_id AND ci3.deleted = :false)
+                AND mr2.deleted = :false
+                AND mr2.has_cluster = :true')
+            ->where('ci.matched_record_id IS NOT NULL')
+            ->andWhere('mr.id IS NULL')
+            ->andWhere('ci.deleted = :false')
+            ->groupBy('ci.id')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+    }
+
+    public function getSingleClusterItemIdsPage(string $stagingEntityName, int $offset, int $limit): array
     {
         $masterEntityName = $this->getMetadata()->get("scopes.$stagingEntityName.primaryEntityId");
-        $masterTableName = Util::toUnderScore(lcfirst((string)$masterEntityName));
+        $stagingTableName = Util::toUnderScore(lcfirst($stagingEntityName));
+        $masterTableName  = Util::toUnderScore(lcfirst((string)$masterEntityName));
 
-        return $this->limit($offset, $limit)->find([
-            'callbacks' => [function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($stagingEntityName, $masterTableName) {
-                $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-                $stagingTableName = $mapper->toDb($stagingEntityName);
-
-                $qb->innerJoin($tableAlias, $stagingTableName, 'se_chk', "se_chk.id=$tableAlias.entity_id and se_chk.deleted=:false")
-                    ->leftJoin('se_chk', $masterTableName, 'me_chk', 'me_chk.id=se_chk.master_record_id and me_chk.deleted=:false')
-                    ->andWhere("$tableAlias.entity_name = :stagingEntityName and $tableAlias.matched_score is null")
-                    ->andWhere("(select count(id) from cluster_item ci where ci.cluster_id=$tableAlias.cluster_id and deleted=:false) = 1")
-                    ->andWhere('me_chk.id is null')
-                    ->setParameter('stagingEntityName', $stagingEntityName);
-            }]
-        ]);
+        return $this->getDbal()->createQueryBuilder()
+            ->select('ci.id')
+            ->from('cluster_item', 'ci')
+            ->innerJoin('ci', $stagingTableName, 'se_chk', 'se_chk.id = ci.entity_id AND se_chk.deleted = :false')
+            ->leftJoin('se_chk', $masterTableName, 'me_chk', 'me_chk.id = se_chk.master_record_id AND me_chk.deleted = :false')
+            ->where('ci.entity_name = :stagingEntityName')
+            ->andWhere('ci.matched_score IS NULL')
+            ->andWhere('ci.deleted = :false')
+            ->andWhere('(SELECT COUNT(ci2.id) FROM cluster_item ci2 WHERE ci2.cluster_id = ci.cluster_id AND ci2.deleted = :false) = 1')
+            ->andWhere('me_chk.id IS NULL')
+            ->setParameter('stagingEntityName', $stagingEntityName)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->fetchFirstColumn();
     }
 
     public function getClustersToConfirmAutomatically(string $contributorEntityName, int $offset = 0, int $limit = PHP_INT_MAX): array
@@ -317,7 +344,9 @@ class ClusterItem extends Base
 
         $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('entityName'), $entity->get('entityId'));
 
-        $this->createClusterActivityNote($entity->get('clusterId'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
+        if (empty($options['skipActivity'])){
+            $this->createClusterActivityNote($entity->get('clusterId'), 'unlinked', $entity->get('entityName'), $entity->get('entityId'));
+        }
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

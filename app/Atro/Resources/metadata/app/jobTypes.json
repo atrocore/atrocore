@@ -101,11 +101,35 @@
   "CreateClusters": {
     "scheduledJob": true,
     "unique": true,
-    "handler": "\\Atro\\Jobs\\CreateClusters"
+    "handler": "\\Atro\\Jobs\\Cluster\\CreateClusters"
   },
   "CreateClustersForMasterEntity": {
     "scheduledJob": false,
-    "handler": "\\Atro\\Jobs\\CreateClustersForMasterEntity"
+    "handler": "\\Atro\\Jobs\\Cluster\\CreateClustersForMasterEntity"
+  },
+  "ClusterMatchedRecords": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\Cluster\\ClusterMatchedRecords"
+  },
+  "RejectInvalidClusterItems": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\Cluster\\RejectInvalidClusterItems"
+  },
+  "ConfirmClustersAutomatically": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\Cluster\\ConfirmClustersAutomatically"
+  },
+  "ConfirmSingleClusterItems": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\Cluster\\ConfirmSingleClusterItems"
+  },
+  "CreateClustersForOrphans": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\Cluster\\CreateClustersForOrphans"
+  },
+  "DeleteInvalidMasterItems": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\Cluster\\DeleteInvalidMasterItems"
   },
   "CalculateScriptFieldsForEntities": {
     "scheduledJob": true,
