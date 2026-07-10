@@ -265,7 +265,7 @@ value | toUuid
 
 Example:
 ```twig
-{{ entity.get('sku') | toUuid }}
+{{ entity.get('number') | toUuid }}
 ```
 
 ## Best Practices
