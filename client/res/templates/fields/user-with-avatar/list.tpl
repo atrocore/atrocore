@@ -1,8 +1,1 @@
-{{#if actorId}}
-{{#if actorIsLink}}<a class="user-link" href="#User/view/{{actorId}}">{{actorName}}</a>{{else}}{{actorName}}{{/if}} <span class="text-muted">‹</span> {{#if delegatorIsLink}}<a class="user-link" href="#User/view/{{delegatorId}}">{{delegatorName}}</a>{{else}}{{delegatorName}}{{/if}}
-{{else}}
-{{#if idValue}}
-{{{avatar}}}
-<a class="user-link" href="#{{foreignScope}}/view/{{idValue}}">{{nameValue}}</a>
-{{/if}}
-{{/if}}
+<div class="value-container"></div>

@@ -2,5 +2,8 @@
   "notCreatable": true,
   "notMergeable": true,
   "notSortable": true,
-  "filter": false
+  "filter": false,
+  "fieldTypeDefs": {
+    "exportDisabled": true
+  }
 }

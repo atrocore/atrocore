@@ -57,9 +57,6 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             'keyup input.with-text-length': function (e) {
                 this.updateTextCounter();
             },
-            'focusin input': function () {
-                this.applyDefaultValue()
-            },
             'keydown': function (e) {
                 let value = this.$el.find('input.main-element').val();
                 let isNullValue = this.$el.find('input.main-element').attr('placeholder') === 'Null'
@@ -114,6 +111,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             this.validationPatternString = patternString;
 
             this.setScriptDefaultValue();
+            this.applyDefaultValue();
 
             if (this.mode === 'listLink' && this.model.id) {
                 this.events[`click a[data-id="${this.model.id}"]`] = function (e) {

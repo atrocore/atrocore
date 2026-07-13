@@ -97,6 +97,13 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
             }
         },
 
+        createSvelteComponent: function (target, data) {
+            this.svelteComponent = new Svelte.UserField({
+                target,
+                props: data
+            });
+        },
+
         afterRender: function () {
             if (this.mode === 'detail' || this.mode === 'list') {
                 this.removeSvelteComponent();
@@ -108,15 +115,12 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                 const userId = this.model.get(this.name + 'Id') || '';
                 const userName = this.model.get(this.name + 'Name') || '';
 
-                this.svelteComponent = new Svelte.UserField({
-                    target,
-                    props: {
-                        mode: this.mode,
-                        userId,
-                        userName,
-                        valueIsSet: this.model.has(this.name + 'Id'),
-                        meta: auditMeta || null,
-                    },
+                this.createSvelteComponent(target, {
+                    mode: this.mode,
+                    userId,
+                    userName,
+                    valueIsSet: this.model.has(this.name + 'Id'),
+                    meta: auditMeta || null,
                 });
 
                 return;

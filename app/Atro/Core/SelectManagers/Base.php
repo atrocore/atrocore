@@ -2110,8 +2110,6 @@ class Base
                         break;
                     }
 
-                    $alias = $link . 'Filter' . strval(rand(10000, 99999));
-
                     if (is_null($value) || !$value && !is_array($value)) {
                         break;
                     }
@@ -2146,16 +2144,27 @@ class Base
                         $foreignTable = Util::toUnderScore($seed->getRelationParam($link, 'entity'));
                         $uid          = IdGenerator::unsortableId();
                         $falseParam   = 'lw_del_' . $uid;
-                        $idsParam     = 'lw_ids_' . $uid;
 
-                        $part = [
-                            'id' => [
-                                'innerSql' => [
-                                    'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN (:{$idsParam})",
-                                    'parameters' => [$falseParam => false, $idsParam => $value],
+                        if (is_array($value) && isset($value['innerSql'])) {
+                            $part = [
+                                'id' => [
+                                    'innerSql' => [
+                                        'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN ({$value['innerSql']['sql']})",
+                                        'parameters' => array_merge([$falseParam => false], $value['innerSql']['parameters']),
+                                    ],
                                 ],
-                            ],
-                        ];
+                            ];
+                        } else {
+                            $idsParam = 'lw_ids_' . $uid;
+                            $part     = [
+                                'id' => [
+                                    'innerSql' => [
+                                        'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN (:{$idsParam})",
+                                        'parameters' => [$falseParam => false, $idsParam => $value],
+                                    ],
+                                ],
+                            ];
+                        }
                     } elseif (in_array($relationType, ['belongsTo', 'belongsToParent'])) {
                         $key = $seed->getRelationParam($link, 'key');
                         if (!empty($key)) {
@@ -2177,8 +2186,6 @@ class Base
 
                     $relationType = $seed->getRelationType($link);
 
-                    $alias = $link . 'NotLinkedFilter' . strval(rand(10000, 99999));
-
                     if ($relationType == 'manyMany') {
                         $midKeys      = $seed->getRelationParam($link, 'midKeys');
                         $relationName = $seed->getRelationParam($link, 'relationName');
@@ -2187,31 +2194,53 @@ class Base
                         $distantKey   = Util::toUnderScore($midKeys[1]);
                         $uid          = IdGenerator::unsortableId();
                         $falseParam   = 'mm_ndel_' . $uid;
-                        $idsParam     = 'mm_nids_' . $uid;
 
-                        $part = [
-                            'id!=' => [
-                                'innerSql' => [
-                                    'sql'        => "SELECT {$nearKey} FROM {$relTable} WHERE deleted = :{$falseParam} AND {$distantKey} IN (:{$idsParam})",
-                                    'parameters' => [$falseParam => false, $idsParam => $value],
+                        if (is_array($value) && isset($value['innerSql'])) {
+                            $part = [
+                                'id!=' => [
+                                    'innerSql' => [
+                                        'sql'        => "SELECT {$nearKey} FROM {$relTable} WHERE deleted = :{$falseParam} AND {$distantKey} IN ({$value['innerSql']['sql']})",
+                                        'parameters' => array_merge([$falseParam => false], $value['innerSql']['parameters']),
+                                    ],
                                 ],
-                            ],
-                        ];
+                            ];
+                        } else {
+                            $idsParam = 'mm_nids_' . $uid;
+                            $part     = [
+                                'id!=' => [
+                                    'innerSql' => [
+                                        'sql'        => "SELECT {$nearKey} FROM {$relTable} WHERE deleted = :{$falseParam} AND {$distantKey} IN (:{$idsParam})",
+                                        'parameters' => [$falseParam => false, $idsParam => $value],
+                                    ],
+                                ],
+                            ];
+                        }
                     } elseif (in_array($relationType, ['hasMany', 'hasOne'])) {
                         $foreignKey   = Util::toUnderScore($seed->getRelationParam($link, 'foreignKey') ?? (lcfirst($seed->getEntityType()) . 'Id'));
                         $foreignTable = Util::toUnderScore($seed->getRelationParam($link, 'entity'));
                         $uid          = IdGenerator::unsortableId();
                         $falseParam   = 'nlw_del_' . $uid;
-                        $idsParam     = 'nlw_ids_' . $uid;
 
-                        $part = [
-                            'id!=' => [
-                                'innerSql' => [
-                                    'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN (:{$idsParam})",
-                                    'parameters' => [$falseParam => false, $idsParam => $value],
+                        if (is_array($value) && isset($value['innerSql'])) {
+                            $part = [
+                                'id!=' => [
+                                    'innerSql' => [
+                                        'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN ({$value['innerSql']['sql']})",
+                                        'parameters' => array_merge([$falseParam => false], $value['innerSql']['parameters']),
+                                    ],
                                 ],
-                            ],
-                        ];
+                            ];
+                        } else {
+                            $idsParam = 'nlw_ids_' . $uid;
+                            $part     = [
+                                'id!=' => [
+                                    'innerSql' => [
+                                        'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN (:{$idsParam})",
+                                        'parameters' => [$falseParam => false, $idsParam => $value],
+                                    ],
+                                ],
+                            ];
+                        }
                     } elseif (in_array($relationType, ['belongsTo', 'belongsToParent'])) {
                         $key = $seed->getRelationParam($link, 'key');
                         if (!empty($key)) {
