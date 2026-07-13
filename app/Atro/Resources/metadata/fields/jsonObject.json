@@ -1,5 +1,8 @@
 {
   "notCreatable": true,
   "notMergeable": true,
-  "filter": false
+  "filter": false,
+  "fieldTypeDefs": {
+    "exportDisabled": true
+  }
 }
