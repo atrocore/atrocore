@@ -69,15 +69,19 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 ? this.searchParams.value
                 : '';
 
+            let notNull = this.params?.notNull
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']) ?? false;
+
             this.svelteComponent = new Svelte.TextField({
                 target,
                 props: {
                     name: this.name,
-                    value: this.model.get(this.name) ?? '',
+                    value: this.model.get(this.name) ?? null,
                     mode: this.mode,
                     entityName: this.model.name,
                     entityId: this.model.id,
                     params: this.params || {},
+                    notNull,
                     searchType,
                     searchValue,
                 },
