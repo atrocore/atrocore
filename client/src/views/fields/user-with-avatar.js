@@ -40,17 +40,6 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
         tooltipInstance: null,
 
-        data: function () {
-            var o = _.extend({}, Dep.prototype.data.call(this));
-            o.avatar = this.getAvatarHtml();
-
-            return o;
-        },
-
-        getAvatarHtml: function () {
-            return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 26, 'avatar-link');
-        },
-
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -61,6 +50,15 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
                 this.tooltipInstance = null;
             })
+        },
+
+        createSvelteComponent: function (target, data) {
+            data.avatarPath = this.getConfig().get('avatarsDisabled') ? '' : (this.basePath || '') + '?entryPoint=avatar&size=small&id=' + (data.userId || '');
+
+            this.svelteComponent = new Svelte.UserField({
+                target: $(target).find('.value-container').get(0),
+                props: data
+            });
         },
 
         afterRender: function () {
