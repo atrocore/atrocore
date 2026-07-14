@@ -41,6 +41,30 @@ Espo.define('views/admin/entity-manager/record/detail', 'views/record/detail', D
             });
         },
 
+        prepareLayoutData(data) {
+            Dep.prototype.prepareLayoutData.call(this, data);
+
+            if (!this.model.get('primaryEntityId')) {
+                return;
+            }
+
+            const standardFields = ['code', 'name', 'namePlural', 'type', 'primaryEntity', 'iconClass'];
+            const derivativeFields = this.getMetadata().get('app.derivativeEntityFields') || [];
+            const allowedFields = new Set([...standardFields, ...derivativeFields]);
+
+            (data.layout || []).forEach(panel => {
+                if (!panel.rows) {
+                    return;
+                }
+
+                panel.rows = panel.rows
+                    .map(row => row.map(cell => (cell && allowedFields.has(cell.name)) ? cell : false))
+                    .filter(row => row.some(cell => cell !== false));
+            });
+
+            data.layout = (data.layout || []).filter(panel => panel.rows && panel.rows.length > 0);
+        },
+
         setupFieldLevelSecurity: function () {
             const list = this.getMetadata().get('scopes.' + this.model.id + '.onlyEditableEmFields')
 

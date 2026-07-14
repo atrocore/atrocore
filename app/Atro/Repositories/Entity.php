@@ -612,7 +612,7 @@ class Entity extends ReferenceData
 
         $pipelines = $this->getEntityManager()
             ->getRepository('DataPipeline')
-            ->where(['sourceEntity' => $entity->get('code')])
+            ->where(['sourceEntityId' => $entity->get('code')])
             ->find();
         foreach ($pipelines as $pipeline) {
             $this->getEntityManager()->removeEntity($pipeline);
