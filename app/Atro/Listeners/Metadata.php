@@ -2577,24 +2577,22 @@ class Metadata extends AbstractMetadataListener
             }
 
 
-            // clone scope defs
-            $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
-                'primaryEntityId'      => $primaryEntity,
-                'isCustom'             => true,
-                'customizable'         => true,
-                'role'                 => $scopeDefs['role'] ?? null,
-                'description'          => $scopeDefs['description'] ?? null,
-                'sortBy'               => $scopeDefs['sortBy'] ?? null,
-                'sortDirection'        => $scopeDefs['sortDirection'] ?? null,
-                'createdAt'            => $scopeDefs['createdAt'] ?? null,
-                'modifiedAt'           => $scopeDefs['modifiedAt'] ?? null,
-                'createdById'          => $scopeDefs['createdById'] ?? null,
-                'modifiedById'         => $scopeDefs['modifiedById'] ?? null,
-                'enableVersioning'     => $scopeDefs['enableVersioning'] ?? false,
-                'defaultVersionName'   => $scopeDefs['defaultVersionName'] ?? null,
-                'enableFieldValueLock' => $scopeDefs['enableFieldValueLock'] ?? false,
-                'layouts'              => true,
-            ]);
+            $derivativeOverride = [
+                'primaryEntityId' => $primaryEntity,
+                'isCustom'        => true,
+                'customizable'    => true,
+                'layouts'         => true,
+                'createdAt'       => $scopeDefs['createdAt'] ?? null,
+                'modifiedAt'      => $scopeDefs['modifiedAt'] ?? null,
+                'createdById'     => $scopeDefs['createdById'] ?? null,
+                'modifiedById'    => $scopeDefs['modifiedById'] ?? null,
+            ];
+            foreach ($data['app']['derivativeEntityFields'] ?? [] as $field) {
+                $derivativeOverride[$field] = $scopeDefs[$field] ?? null;
+            }
+            $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], $derivativeOverride);
+
+
             if (array_key_exists('module', $data['scopes'][$scope])) {
                 unset($data['scopes'][$scope]['module']);
             }
