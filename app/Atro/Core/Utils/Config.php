@@ -26,23 +26,6 @@ class Config extends \Espo\Core\Utils\Config
             'user'  => '',
             'group' => '',
         ],
-        'permissionMap'             => [
-            /** array('0664', '0775') */
-            'writable' => [
-                'data',
-                'custom',
-            ],
-            /** array('0644', '0755') */
-            'readable' => [
-                'api',
-                'application',
-                'client',
-                'vendor',
-                'index.php',
-                'main.html',
-                'reset.html',
-            ],
-        ],
         'jobMaxPortion'             => 15, /** Max number of jobs per one execution. */
         'jobPeriod'                 => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
         'jobPeriodForActiveProcess' => 36000, /** Max execution time (in seconds) allocated for a sinle job with active process. If exceeded then set to Failed.*/

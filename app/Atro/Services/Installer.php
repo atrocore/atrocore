@@ -279,12 +279,24 @@ class Installer extends HasContainer
      */
     public function checkPermissions(): bool
     {
-        $this->getFileManager()->getPermissionUtils()->setMapPermission();
+        $errors = [];
 
-        $error = $this->getFileManager()->getPermissionUtils()->getLastError();
+        foreach (['data' => true, 'public' => true, 'upload' => true, 'vendor' => false, 'console.php' => false] as $path => $mustBeWritable) {
+            if (!file_exists($path)) {
+                continue;
+            }
 
-        if (!empty($error)) {
-            throw new Exceptions\InternalServerError(is_array($error) ? implode(' ;', $error) : $error);
+            @chmod($path, is_dir($path) ? 0775 : 0664);
+
+            if (!is_readable($path)) {
+                $errors[] = "'{$path}' should be readable";
+            } elseif ($mustBeWritable && !is_writable($path)) {
+                $errors[] = "'{$path}' should be writable";
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new Exceptions\InternalServerError(implode('; ', $errors));
         }
 
         return true;
