@@ -26,29 +26,15 @@ class Config extends \Espo\Core\Utils\Config
             'user'  => '',
             'group' => '',
         ],
-        'jobMaxPortion'             => 15, /** Max number of jobs per one execution. */
-        'jobPeriod'                 => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
-        'jobPeriodForActiveProcess' => 36000, /** Max execution time (in seconds) allocated for a sinle job with active process. If exceeded then set to Failed.*/
-        'jobRerunAttemptNumber'     => 1, /** Number of attempts to re-run failed jobs. */
-        'crud'                      => [
-            'get'    => 'read',
-            'post'   => 'create',
-            'put'    => 'update',
-            'patch'  => 'patch',
-            'delete' => 'delete',
-        ],
         'systemItems'               => [
             'systemItems',
             'adminItems',
             'configPath',
             'cachePath',
             'database',
-            'crud',
             'logger',
             'isInstalled',
             'defaultPermissions',
-            'permissionMap',
-            'permissionRules',
             'passwordSalt',
             'cryptKey',
             'userLimit',
@@ -57,9 +43,6 @@ class Config extends \Espo\Core\Utils\Config
         ],
         'adminItems'                => [
             'devMode',
-            'jobMaxPortion',
-            'jobPeriod',
-            'jobRerunAttemptNumber',
             'adminPanelIframeUrl',
             'authTokenLifetime',
             'authTokenMaxIdleTime',
