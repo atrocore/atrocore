@@ -8,9 +8,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/entity-manager/record/edit', 'views/record/edit', Dep => {
+Espo.define('views/admin/entity-manager/record/edit', ['views/record/edit', 'views/admin/entity-manager/record/detail'], (Dep,Detail) => {
 
     return Dep.extend({
+        prepareLayoutData: function (data) {
+            Detail.prototype.prepareLayoutData.call(this, data);
+        },
+
         setupFieldLevelSecurity: function () {
             const list = this.getMetadata().get('scopes.' + this.model.id + '.onlyEditableEmFields')
 
