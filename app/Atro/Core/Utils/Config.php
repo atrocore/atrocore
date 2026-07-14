@@ -12,9 +12,91 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Espo\Core\Utils\Util;
 
 class Config extends \Espo\Core\Utils\Config
 {
+    /**
+     * System config defaults, merged under data/config.php on load
+     */
+    protected array $systemConfig = [
+        'defaultPermissions'        => [
+            'dir'   => '0775',
+            'file'  => '0664',
+            'user'  => '',
+            'group' => '',
+        ],
+        'permissionMap'             => [
+            /** array('0664', '0775') */
+            'writable' => [
+                'data',
+                'custom',
+            ],
+            /** array('0644', '0755') */
+            'readable' => [
+                'api',
+                'application',
+                'client',
+                'vendor',
+                'index.php',
+                'main.html',
+                'reset.html',
+            ],
+        ],
+        'jobMaxPortion'             => 15, /** Max number of jobs per one execution. */
+        'jobPeriod'                 => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
+        'jobPeriodForActiveProcess' => 36000, /** Max execution time (in seconds) allocated for a sinle job with active process. If exceeded then set to Failed.*/
+        'jobRerunAttemptNumber'     => 1, /** Number of attempts to re-run failed jobs. */
+        'crud'                      => [
+            'get'    => 'read',
+            'post'   => 'create',
+            'put'    => 'update',
+            'patch'  => 'patch',
+            'delete' => 'delete',
+        ],
+        'systemItems'               => [
+            'systemItems',
+            'adminItems',
+            'configPath',
+            'cachePath',
+            'database',
+            'crud',
+            'logger',
+            'isInstalled',
+            'defaultPermissions',
+            'permissionMap',
+            'permissionRules',
+            'passwordSalt',
+            'cryptKey',
+            'userLimit',
+            'stylesheet',
+            'userItems',
+        ],
+        'adminItems'                => [
+            'devMode',
+            'jobMaxPortion',
+            'jobPeriod',
+            'jobRerunAttemptNumber',
+            'adminPanelIframeUrl',
+            'authTokenLifetime',
+            'authTokenMaxIdleTime',
+            'leadCaptureAllowOrigin',
+            // secrets: must stay readable/writable for admins via Settings UI,
+            // but hidden from non-admin API responses and script (Twig) contexts
+            'smtpPassword',
+            'oidcClientSecret',
+            'gitlabApiToken',
+            'oktaApiToken',
+            'etimClientSecret',
+            'icecatPassword',
+        ],
+        'userItems'                 => [
+            'outboundEmailFromAddress',
+            'integrations',
+        ],
+        'isInstalled'               => false,
+    ];
+
     protected ?array $referenceData = null;
 
     public function clearReferenceDataCache(): void
@@ -24,7 +106,14 @@ class Config extends \Espo\Core\Utils\Config
 
     protected function loadConfig($reload = false)
     {
+        // parent::loadConfig skips re-reading when data is already loaded — merge defaults only on actual load
+        $justLoaded = $reload || empty($this->data);
+
         parent::loadConfig($reload);
+
+        if ($justLoaded) {
+            $this->data = Util::merge($this->systemConfig, $this->data);
+        }
 
         // put reference data into config
         $this->putReferenceDataIntoConfig();

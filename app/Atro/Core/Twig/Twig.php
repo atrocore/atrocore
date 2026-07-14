@@ -15,6 +15,7 @@ namespace Atro\Core\Twig;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
+use Atro\Core\DataManager;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
@@ -23,6 +24,23 @@ class Twig
 {
     protected Container $container;
 
+    protected ?\Twig\Environment $twig = null;
+    protected ?\Twig\Loader\ArrayLoader $loader = null;
+
+    /**
+     * Handlers resolved on first use in a template, reused for all subsequent renders
+     *
+     * @var AbstractTwigFilter[]
+     */
+    protected array $resolvedFilters = [];
+
+    /**
+     * @var AbstractTwigFunction[]
+     */
+    protected array $resolvedFunctions = [];
+
+    protected array $templateData = [];
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -30,7 +48,7 @@ class Twig
 
     public function renderTemplate(string $template, array $templateData, string $outputType = 'text')
     {
-        $twig = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['template' => $template]));
+        $twig = $this->getTwigEnvironment();
         $templateData['config'] = $this->getConfig()->getData();
 
         foreach (['entity', 'record'] as $key) {
@@ -40,23 +58,17 @@ class Twig
         }
 
         try {
-            foreach ($this->getMetadata()->get(['twig', 'filters'], []) as $alias => $data) {
-                $className = is_array($data) ? $data['handler'] : $data;
-                $filter = $this->container->get($className);
-                if ($filter instanceof AbstractTwigFilter) {
-                    $filter->setTemplateData($templateData);
-                    $twig->addFilter(new \Twig\TwigFilter($alias, [$filter, 'filter']));
-                }
+            $this->templateData = $templateData;
+            foreach ($this->resolvedFilters as $filter) {
+                $filter->setTemplateData($templateData);
+            }
+            foreach ($this->resolvedFunctions as $twigFunction) {
+                $twigFunction->setTemplateData($templateData);
             }
 
-            foreach ($this->getMetadata()->get(['twig', 'functions'], []) as $alias => $data) {
-                $className = is_array($data) ? $data['handler'] : $data;
-                $twigFunction = $this->container->get($className);
-                if ($twigFunction instanceof AbstractTwigFunction && method_exists($twigFunction, 'run')) {
-                    $twigFunction->setTemplateData($templateData);
-                    $twig->addFunction(new \Twig\TwigFunction($alias, [$twigFunction, 'run']));
-                }
-            }
+            // ArrayLoader derives the cache key from the template source, so reusing
+            // the name for different scripts cannot collide in the compile cache
+            $this->loader->setTemplate('template', $template);
 
             $res = $twig->render('template', $templateData);
         } catch (\Throwable $e) {
@@ -104,6 +116,50 @@ class Twig
         }
 
         return $res;
+    }
+
+    protected function getTwigEnvironment(): \Twig\Environment
+    {
+        if ($this->twig === null) {
+            $this->loader = new \Twig\Loader\ArrayLoader();
+            $this->twig = new \Twig\Environment($this->loader, [
+                'cache' => new \Twig\Cache\FilesystemCache(DataManager::CACHE_DIR_PATH . '/twig'),
+            ]);
+
+            $this->twig->registerUndefinedFilterCallback(function (string $alias) {
+                $data = $this->getMetadata()->get(['twig', 'filters', $alias]);
+                if ($data === null) {
+                    return false;
+                }
+                $className = is_array($data) ? $data['handler'] : $data;
+                $filter = $this->container->get($className);
+                if (!$filter instanceof AbstractTwigFilter) {
+                    return false;
+                }
+                $filter->setTemplateData($this->templateData);
+                $this->resolvedFilters[$alias] = $filter;
+
+                return new \Twig\TwigFilter($alias, [$filter, 'filter']);
+            });
+
+            $this->twig->registerUndefinedFunctionCallback(function (string $alias) {
+                $data = $this->getMetadata()->get(['twig', 'functions', $alias]);
+                if ($data === null) {
+                    return false;
+                }
+                $className = is_array($data) ? $data['handler'] : $data;
+                $twigFunction = $this->container->get($className);
+                if (!$twigFunction instanceof AbstractTwigFunction || !method_exists($twigFunction, 'run')) {
+                    return false;
+                }
+                $twigFunction->setTemplateData($this->templateData);
+                $this->resolvedFunctions[$alias] = $twigFunction;
+
+                return new \Twig\TwigFunction($alias, [$twigFunction, 'run']);
+            });
+        }
+
+        return $this->twig;
     }
 
     protected function getConfig(): Config
