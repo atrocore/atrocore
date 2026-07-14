@@ -5,7 +5,9 @@
   "recordViews": {
     "list": "views/admin/entity-manager/record/list",
     "detail": "views/admin/entity-manager/record/detail",
-    "edit": "views/admin/entity-manager/record/edit"
+    "detailSmall": "views/admin/entity-manager/record/detail",
+    "edit": "views/admin/entity-manager/record/edit",
+    "editSmall": "views/admin/entity-manager/record/edit"
   },
   "relationshipPanels": {
     "fields": {
