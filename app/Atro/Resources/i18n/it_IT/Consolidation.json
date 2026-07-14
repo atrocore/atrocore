@@ -13,7 +13,7 @@
   "tooltips": {
     "name": "Possono essere selezionate solo le entità master che dispongono già di un derivato con il ruolo «Contributore».",
     "consolidationScript": "Configura il modo in cui i dati di origine vengono trasformati, unificati e mappati nel record master.",
-    "executeMergeAs": "L'account utente che verrà utilizzato per eseguire lo script di unione."
+    "executeMergeAs": "L'account utente che verrà utilizzato per eseguire lo script di consolidamento."
   },
   "exceptions": {
     "consolidationScriptIsMissing": "Manca lo script di consolidamento per l'entità master",
