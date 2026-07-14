@@ -25,7 +25,6 @@ Espo.define('views/admin/entity-manager/record/detail', 'views/record/detail', D
             }
 
             if (this.model.get('primaryEntityId')) {
-                this.removeButton('delete');
                 this.removeButton('duplicate');
             }
         },
