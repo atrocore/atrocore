@@ -59,17 +59,13 @@ class ServiceManagerConfig
         'seederFactory'            => \Atro\Core\SeederFactory::class,
         'condition'                => \Atro\Core\ConditionChecker::class,
         'matchingManager'          => \Atro\Core\MatchingManager::class,
-        'crypt'                    => \Espo\Core\Utils\Crypt::class,
         'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
         'aclManager'               => \Espo\Core\AclManager::class,
-        'dateTime'                 => \Espo\Core\Factories\DateTime::class,
         'entityManager'            => \Espo\Core\Factories\EntityManager::class,
         'injectableFactory'        => \Espo\Core\InjectableFactory::class,
-        'number'                   => \Espo\Core\Factories\Number::class,
         'ormMetadata'              => \Espo\Core\Utils\Metadata\OrmMetadata::class,
         'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
         'serviceFactory'           => \Espo\Core\ServiceFactory::class,
-        'templateFileManager'      => \Espo\Core\Utils\TemplateFileManager::class,
         'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
     ];
 
