@@ -39,41 +39,55 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
             return;
         }
 
-        $offset = 0;
-        $limit = $count > 20000 ? $this->getConfig()->get('findMatchesMaxChunkSize', 2000) : 100;
+        $entityName = $matchingData['entity'];
+        $limit      = $count > 20000 ? $this->getConfig()->get('findMatchesMaxChunkSize', 2000) : 100;
+        $allChunks  = (int)ceil($count / $limit);
 
+        // Phase 1: create all jobs as Awaiting so no FindMatchesForRecords job starts
+        // running while we are still paginating — that would shift the offset and cause
+        // duplicates or missed records.
+        $jobs        = [];
+        $offset      = 0;
         $chunkNumber = 1;
-        $allChunks = $count < $limit ? 1 : ceil($count / $limit);
 
         while (true) {
-            $collection = $this->getEntityManager()->getRepository($matchingData['entity'])
-                ->where([$fieldName => null])
-                ->limit($offset, $limit)
-                ->find();
-            if (empty($collection[0])) {
+            if (empty($this->getMetadata()->get("app.matchings.{$matchingData['id']}.isActive"))) {
                 break;
             }
 
-            if (empty($this->getMetadata()->get("app.matchings.{$matchingData['id']}.isActive"))) {
+            $collection = $this->getEntityManager()->getRepository($entityName)
+                ->where([$fieldName => null])
+                ->limit($offset, $limit)
+                ->find();
+
+            if (empty($collection[0])) {
                 break;
             }
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
-                'name'     => "Find matches for {$collection[0]->getEntityName()} ($chunkNumber-$allChunks)",
-                'type'     => 'FindMatchesForRecords',
-                'status'   => 'Pending',
+                'name'        => "Find matches for {$entityName} ($chunkNumber/$allChunks)",
+                'type'        => 'FindMatchesForRecords',
+                'status'      => 'Awaiting',
                 'priority' => 20,
-                'payload'  => [
+                'payload'     => [
                     'matching'    => $matchingData,
-                    'entityName'  => $collection[0]->getEntityName(),
+                    'entityName'  => $entityName,
                     'entitiesIds' => array_column($collection->toArray(), 'id'),
-                ]
+                ],
             ]);
             $this->getEntityManager()->saveEntity($jobEntity);
 
+            $jobs[] = $jobEntity;
             $offset += $limit;
             $chunkNumber++;
+        }
+
+        // Phase 2: flip all to Pending so the daemon can pick them up
+        foreach ($jobs as $jobEntity) {
+            $jobEntity->set('status', 'Pending');
+            $jobEntity->set('executeTime', (new \DateTime())->format('Y-m-d H:i:s'));
+            $this->getEntityManager()->saveEntity($jobEntity);
         }
     }
 }
