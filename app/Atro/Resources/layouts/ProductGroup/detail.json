@@ -12,6 +12,14 @@
       ],
       [
         {
+          "name": "parent"
+        },
+        {
+          "name": "sortOrder"
+        }
+      ],
+      [
+        {
           "name": "itemType"
         },
         false

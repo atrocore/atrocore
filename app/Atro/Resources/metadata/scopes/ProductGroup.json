@@ -7,5 +7,8 @@
   "importable": true,
   "notifications": true,
   "disabled": false,
-  "type": "Base"
+  "type": "Hierarchy",
+  "dragAndDrop": true,
+  "fieldValueInheritance": false,
+  "relationInheritance": false
 }

@@ -8,6 +8,45 @@
     "description": {
       "type": "text"
     },
+    "code": {
+      "type": "varchar",
+      "trim": true,
+      "defaultValueType": "basic",
+      "unique": true,
+      "index": true
+    },
+    "itemType": {
+      "type": "enum",
+      "options": [
+        "physical_goods",
+        "services",
+        "digital_products",
+        "legal_rights"
+      ]
+    },
+    "products": {
+      "type": "linkMultiple",
+      "foreignName": "name",
+      "noLoad": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "children": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutNavigationDisabled": true,
+      "noLoad": true
+    },
+    "parents": {
+      "type": "linkMultiple",
+      "view": "views/fields/hierarchy-parents",
+      "layoutNavigationDisabled": true,
+      "noLoad": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "default": null
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -25,27 +64,34 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "code": {
-      "type": "varchar",
-      "trim": true,
-      "defaultValueType": "basic",
-      "unique": true,
-      "index": true
-    },
-    "itemType": {
-      "type": "enum",
-      "options": ["physical_goods", "services", "digital_products", "legal_rights"]
-    },
-    "products": {
-      "type": "linkMultiple",
-      "foreignName": "name",
-      "noLoad": true,
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true
     }
   },
   "links": {
+    "products": {
+      "type": "hasMany",
+      "foreign": "productGroup",
+      "entity": "Product"
+    },
+    "children": {
+      "type": "hasMany",
+      "relationName": "ProductGroupHierarchy",
+      "foreign": "parents",
+      "entity": "ProductGroup",
+      "midKeys": [
+        "entityId",
+        "parentId"
+      ]
+    },
+    "parents": {
+      "type": "hasMany",
+      "relationName": "ProductGroupHierarchy",
+      "foreign": "children",
+      "entity": "ProductGroup",
+      "midKeys": [
+        "parentId",
+        "entityId"
+      ]
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
@@ -53,11 +99,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "products": {
-      "type": "hasMany",
-      "foreign": "productGroup",
-      "entity": "Product"
     }
   },
   "indexes": {

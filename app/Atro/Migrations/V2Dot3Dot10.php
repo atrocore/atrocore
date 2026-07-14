@@ -33,6 +33,28 @@ class V2Dot3Dot10 extends Base
         $this->renameMasterDataEntityToConsolidation();
         $this->migrateConsolidation();
         $this->migrateDataPipelines();
+        $this->migrateProductGroup();
+    }
+
+    public function migrateProductGroup(): void
+    {
+        if ($this->isPgSQL()) {
+            $this->exec("CREATE TABLE product_group_hierarchy (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, hierarchy_sort_order INT DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, parent_id VARCHAR(36) DEFAULT NULL, entity_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE UNIQUE INDEX IDX_PRODUCT_GROUP_HIERARCHY_UNIQUE_RELATION ON product_group_hierarchy (deleted, parent_id, entity_id)");
+            $this->exec("CREATE INDEX IDX_PRODUCT_GROUP_HIERARCHY_CREATED_BY_ID ON product_group_hierarchy (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_PRODUCT_GROUP_HIERARCHY_MODIFIED_BY_ID ON product_group_hierarchy (modified_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_PRODUCT_GROUP_HIERARCHY_PARENT_ID ON product_group_hierarchy (parent_id, deleted)");
+            $this->exec("CREATE INDEX IDX_PRODUCT_GROUP_HIERARCHY_ENTITY_ID ON product_group_hierarchy (entity_id, deleted)");
+            $this->exec("CREATE INDEX IDX_PRODUCT_GROUP_HIERARCHY_CREATED_AT ON product_group_hierarchy (created_at, deleted)");
+            $this->exec("CREATE INDEX IDX_PRODUCT_GROUP_HIERARCHY_MODIFIED_AT ON product_group_hierarchy (modified_at, deleted)");
+            $this->exec("ALTER TABLE product_group ADD sort_order INT DEFAULT NULL");
+            $this->exec("ALTER TABLE product_group ADD routes TEXT DEFAULT NULL");
+            $this->exec("COMMENT ON COLUMN product_group.routes IS '(DC2Type:jsonArray)'");
+            $this->exec("CREATE INDEX IDX_PRODUCT_GROUP_ROUTES ON product_group (routes, deleted)");
+        } else {
+            $this->exec("CREATE TABLE product_group_hierarchy (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, hierarchy_sort_order INT DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, parent_id VARCHAR(36) DEFAULT NULL, entity_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_PRODUCT_GROUP_HIERARCHY_UNIQUE_RELATION (deleted, parent_id, entity_id), INDEX IDX_PRODUCT_GROUP_HIERARCHY_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_PRODUCT_GROUP_HIERARCHY_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_PRODUCT_GROUP_HIERARCHY_PARENT_ID (parent_id, deleted), INDEX IDX_PRODUCT_GROUP_HIERARCHY_ENTITY_ID (entity_id, deleted), INDEX IDX_PRODUCT_GROUP_HIERARCHY_CREATED_AT (created_at, deleted), INDEX IDX_PRODUCT_GROUP_HIERARCHY_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec("ALTER TABLE product_group ADD sort_order INT DEFAULT NULL, ADD routes LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
+        }
     }
 
     public function migrateConsolidation(): void
