@@ -4,7 +4,7 @@
     "number": "Numero",
     "masterEntity": "Entità master",
     "rejectedClusterItems": "Articoli del cluster rifiutati",
-    "stagingItemCount": "Conteggio degli articoli in fase di allestimento",
+    "stagingItemCount": "Numero di record contributori",
     "masterItemCount": "Conteggio articoli master",
     "state": "Stato"
   },
@@ -56,9 +56,9 @@
     "clusterDeletedThis": "{user} ha eliminato questo cluster",
     "clusterRecordDeleted": "{user} ha eliminato {relatedEntity} da questo cluster",
     "clusterRecordDeletedThis": "{user} ha eliminato {relatedEntity} da questo cluster",
-    "clusterMovedToCluster":     "{user} ha spostato {records} dal cluster {clusterLink} a {entity}",
+    "clusterMovedToCluster": "{user} ha spostato {records} dal cluster {clusterLink} a {entity}",
     "clusterMovedToClusterThis": "{user} ha spostato {records} dal cluster {clusterLink} a questo cluster",
-    "clusterMovedFromCluster":     "{user} ha spostato {records} da {entity} al cluster {clusterLink}",
+    "clusterMovedFromCluster": "{user} ha spostato {records} da {entity} al cluster {clusterLink}",
     "clusterMovedFromClusterThis": "{user} ha spostato {records} da questo cluster al cluster {clusterLink}"
   }
 }

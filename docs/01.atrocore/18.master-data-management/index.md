@@ -6,7 +6,7 @@ AtroСore can be used as a Master Data Management (MDM) system. This means that 
 
 Imported data can be modified during the import process. However, in some cases it is important to preserve the original data exactly as it was received and not modify it, while at the same time creating new records in other entities based on this data. This is especially relevant when data comes from multiple source systems that may differ in their field sets, data formats, or structures.
 
-To manage such scenarios, AtroСore provides the concept of Master Data Management (MDM). With this approach, the data structure consists of three main layers: Source Entities, Staging Entity, and Master Entity.
+To manage such scenarios, AtroСore provides the concept of Master Data Management (MDM). With this approach, the data structure consists of three main layers: Source Entities, Contributor Entity, and Master Entity.
 
 ## Source Entity
 
@@ -16,62 +16,61 @@ A Source Entity is the initial entity (or multiple entities) into which users im
 - It reflects the raw or near-raw data as provided by external systems.
 - Multiple source entities can exist if data is coming from different systems with different schemas.
 
-## Staging Entity (Derivative Entity)
+## Contributor Entity (Derivative Entity)
 
-The Staging Entity (also called a Derivative entity) is used as an intermediate layer between source data and master data.
+The Contributor Entity (a Derivative entity with the `Contributor` role) is used as an intermediate layer between source data and master data.
 
 It is a full copy of the Master Entity and reproduces its data model exactly, with only one important difference – it does not contain any mandatory or unique fields.
 
-- The staging entity is always a single entity per master entity.
+- The contributor entity is always a single entity per master entity.
 - It is linked to the master entity with a one-to-one relationship.
 
-### Create Staging entity 
+### Create Contributor entity
 
-To enable derivative (staging) entities, activate the `Enable Staging` checkbox in the Master Data Management panel of the corresponding entity settings under `Administration / Entities`.
+To create a contributor entity, go to `Administration / Entities` and create a new entity. In the Derivation panel, set the `Primary Entity` field to the master entity and select `Contributor` in the `Role` field.
 
- ![Enable staging](./_assets/enable-staging.png){.medium}
+Please note:
 
-Once enabled, a staging entity is created automatically and displayed in the corresponding field.
+- The role cannot be changed after the derivative entity is created.
+- Only one derivative entity with the same role can exist per master entity.
+- A derivative entity cannot be created from another derivative entity.
+- Derivative entities cannot be deleted directly.
 
-The staging entity contains a Primary Record field, which can be used to link the staging record to the corresponding record in the master entity.
+All derivatives of a master entity are listed in its `Derivatives` panel.
 
- ![Primary record](./_assets/primary-record.png){.medium}
+The contributor entity contains a Master Record field, which can be used to link the contributor record to the corresponding record in the master entity.
 
-The staging entity fully inherits the fields, attributes, and layouts of the master entity. These settings cannot be modified manually for the staging entity, as they are always inherited automatically from the master entity.
+The contributor entity fully inherits the fields, attributes, and layouts of the master entity. These settings cannot be modified manually for the contributor entity, as they are always inherited automatically from the master entity.
 
-### Navigation between Staging and Master entities
+### Navigation between Contributor and Master entities
 
-For convenient navigation between Staging and Master entities, a button "Open Staging/Master Entity" is available in the top-right corner of the list view.
+For convenient navigation between Contributor and Master entities, the buttons "Open Contributor Entity" and "Open Master Entity" are available in the top-right corner of the list view.
 
- ![Navigation between Staging and Master](./_assets/navigation.png){.medium}
-
-This button allows users to quickly switch from a Staging entity to its corresponding Master entity and vice versa.
+These buttons allow users to quickly switch from a Contributor entity to its corresponding Master entity and vice versa.
 
 Please note that the button is displayed only if the user has permission to view the corresponding entity. If the user does not have the required access rights, the button will not be visible.
 
-### Source-to-Staging Pipelines
+### Data Pipelines
 
-To define how source data is transferred to the staging entity, configure one or more **Source-to-Staging Pipelines**. Each pipeline connects one source entity type to a staging entity and defines the transformation logic.
+To define how source data is transferred to the contributor entity, configure one or more **Data Pipelines**. Each pipeline connects one source entity to a target entity and defines the transformation logic.
 
-Pipelines are managed from the **Source-to-Staging Pipelines** panel on the staging entity's detail page.
-
-![Source-to-Staging Pipelines panel](./_assets/source-staging-pipelines.png){.medium}
+Pipelines are managed under `Administration / Data Pipelines` in the Master Data Management section.
 
 Each pipeline record contains the following fields:
 
-- **Staging Entity** – the staging entity this pipeline writes to.
-- **Source Entity** – the source entity type this pipeline reads from.
-- **Merging Script** – a Twig script that defines how source record data is transformed and mapped to the staging record.
+- **Source Entity** – the source entity this pipeline reads from.
+- **Target Entity** – the target entity this pipeline writes to (e.g. the contributor entity).
+- **Merging Script** – a Twig script that defines how source record data is transformed and mapped to the target record.
 
-Both the Staging Entity and Source Entity fields are locked after the pipeline is created and cannot be changed.
+Both the Source Entity and Target Entity fields are locked after the pipeline is created and cannot be changed. Only one pipeline can exist per pair of entities.
 
 #### Merging Script
 
-The merging script is a Twig template that must return a JSON object with the key `stagingRecordData`, containing the field values to write to the staging record:
+The merging script is a Twig template that must return a JSON object with the key `targetRecordData`, containing the field values to write to the target record:
 
 ```twig
 {# {
-  "stagingRecordData": {
+  "targetRecordData": {
     "name": "{{ sourceRecord.name }}"
   }
 } #}
@@ -80,25 +79,59 @@ The merging script is a Twig template that must return a JSON object with the ke
 Two variables are available in the script:
 
 - `sourceRecord` – the source record that triggered the sync.
-- `stagingRecord` – the existing staging record, or `null` when the staging record does not yet exist.
+- `targetRecord` – the existing target record, or `null` when the target record does not yet exist.
 
 #### Automatic synchronization
 
 Once a pipeline is configured, the system automatically:
 
-- **Creates** a new staging record when a source record is saved and has no linked staging record yet.
-- **Updates** the staging record when the source record is saved and is already linked.
-- **Re-applies** all pipelines for the staging entity when the staging record itself is updated.
+- **Creates** a new target record when a source record is saved and has no linked target record yet. The created record is linked to the source record via its Target Record field.
+- **Updates** the target record when the source record is saved and is already linked.
+- **Re-applies** all pipelines for the target entity when the target record itself is updated.
 
 All synchronization operations are performed on behalf of the system user, regardless of who triggered the save.
 
 
 ### Data Unification and Deduplication
 
-At the staging level, data is prepared for consolidation into the master entity. Two key processes take place here: data unification and duplicate detection.
+At the contributor level, data is prepared for consolidation into the master entity. Two key processes take place here: data unification and duplicate detection.
 
 Data unification means bringing data into a consistent and standardized format. This may include, for example, representing phone numbers in a single unified format, normalizing country codes, aligning date formats, or standardizing naming conventions. Such transformations ensure that data coming from different source systems becomes comparable and consistent.
 
 Duplicate detection is performed using the [Matching](./17.matching/index.md) mechanism in PIM. In this mechanism, you can define matching rules that determine how potential duplicates are identified. These rules may be based on one or multiple fields (for example, name, email, phone number, external ID, or combinations of these) and can include exact or fuzzy matching logic.
 
 After unification and duplicate detection, unified and validated data is transferred to the Master Entity, where it forms a single, consolidated, and reliable version of each record.
+
+## Consolidation
+
+The consolidation of contributor records into master records is configured via **Consolidation** records, managed under `Administration / Consolidations` in the Master Data Management section. One Consolidation record exists per master entity and contains the following settings:
+
+- **Entity** – the master entity this configuration applies to. Only master entities that already have a derivative with the Contributor role can be selected.
+- **Consolidation Script** – a Twig script that defines how contributor record data is transformed, unified, and mapped to the master record. See [below](#consolidation-script).
+- **Execute Merge As** – the user account that will be used to execute the Consolidation Script: `System` or `Same User`.
+- **Update Master Automatically** – when enabled, any update to a contributor record automatically triggers an update of the linked master record according to the Consolidation Script.
+- **Confirm Automatically** – when enabled, cluster items are confirmed automatically by the `Create Clusters` scheduled job. When checked, the **Minimum Matching Score** field becomes required and defines the confirmation threshold.
+- **Delete Invalid Masters Automatically** – when enabled, excess master records in invalid clusters are deleted automatically.
+
+See [Clusters](./19.clusters/index.md) for details on how these settings are applied during the clustering and confirmation workflow.
+
+### Consolidation Script
+
+The consolidation script is a Twig template that must return a JSON object with the key `masterRecordData`, containing the field values to write to the master record:
+
+```twig
+{# {
+  "skipped": false,
+  "masterRecordData": {
+    "name": "{{ contributorRecord.name }}"
+  }
+} #}
+```
+
+Three variables are available in the script:
+
+- `contributorRecord` – the contributor record being consolidated.
+- `contributorRecords` – all contributor records linked to the master record.
+- `masterRecord` – the existing master record, or `null` when the master record does not yet exist.
+
+If the returned object contains `"skipped": true`, the operation is skipped and the master record is neither created nor updated.

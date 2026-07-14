@@ -17,13 +17,13 @@ The following parameters are available when configuring a Matching:
   - On creation of new records in the selected entity.
   - Whenever a field used by Matching Rules is modified.
 - Type – determines how the system compares entities. This field is immutable after creation and accepts the following values:
-  - Duplicate – compares records within the same entity to detect duplicates.
+  - Duplicate - Duplicate – compares records within the same entity to detect duplicates.
   
   ![Matching Configuration Duplicate](./_assets/Matching_Configuration.png){.medium}
 
-  - Master Record – compares records between staging entity and an master entity.
+  - Contributor - Master – compares records between a contributor entity and its master entity.
     
-  ![Matching Configuration Master Record](./_assets/Matching_Configuration_Unidirectional.png){.medium}
+  ![Matching Configuration Contributor - Master](./_assets/Matching_Configuration_Unidirectional.png){.medium}
 
 - Description – optional text describing the matching logic or purpose.
 - Minimum Score, % – a threshold defining the minimum weighted score required for a successful match. The system evaluates Matching Rules based on their individual weight values, and if the resulting score meets or exceeds the defined percentage, the records are considered similar.
@@ -53,15 +53,15 @@ The following parameters are available when defining a Matching Rule:
   - Field is Similar (Levenshtein) – finds records based on the number of character edits required to transform one value into another. The allowed edit distance is configurable.
 - Matching – references the parent Matching configuration. Immutable after creation.
 - Weight – numerical value defining the rule’s importance in the overall similarity score.
-- Staging Entity (Unidirectional only) – entity from which external or temporary data originates. Inherited from parent Matching. Immutable.
-- Master Entity (Unidirectional only) – primary entity containing the reference data. Inherited from parent Matching. Immutable.
+- Entity (Contributor - Master only) – the contributor entity from which external or temporary data originates. Inherited from parent Matching. Immutable.
+- Master Entity (Contributor - Master only) – primary entity containing the reference data. Inherited from parent Matching. Immutable.
 - Source Field – field (or attribute) from the selected entity being evaluated.
-  - For Bidirectional, this refers to the field used to compare values between two records within the same entity.
-  - For Unidirectional, this refers to the field in the Staging Entity.
+  - For Duplicate - Duplicate matchings, this refers to the field used to compare values between two records within the same entity.
+  - For Contributor - Master matchings, this refers to the field in the Contributor Entity.
   - For entities that support [attributes](../../03.administration/12.attribute-management/index.md) (e.g., Product, Listing), an attribute can be selected instead of a regular field by choosing **[Add Attribute]** from the field dropdown. Only attribute types compatible with the selected rule type are shown. If the attribute value is absent in either compared record, the rule contributes a score of `0` for that pair.
 - Target Field – field (or attribute) against which the source is compared.
-  - For Bidirectional, this may be the same as Source Field.
-  - For Unidirectional, this refers to the field in the Master Entity.
+  - For Duplicate - Duplicate matchings, this may be the same as Source Field.
+  - For Contributor - Master matchings, this refers to the field in the Master Entity.
 
 > Each Matching Rule can belong to one Matching only. A Matching can contain multiple rules.
 

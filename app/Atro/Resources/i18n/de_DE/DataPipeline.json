@@ -5,7 +5,7 @@
     "mergingScript": "Zusammenführungs-Skript"
   },
   "tooltips": {
-    "mergingScript": "Konfigurieren Sie, wie die Daten aus dem Quelldatensatz transformiert und dem Staging-Datensatz zugeordnet werden."
+    "mergingScript": "Konfigurieren Sie, wie die Daten aus dem Quelldatensatz transformiert und dem Zieldatensatz zugeordnet werden."
   },
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Die Entität '%s' ist eine Contributor- oder Change-Request-Ableitung und kann nicht als Quellentität verwendet werden.",

@@ -4,7 +4,7 @@
     "number": "Číslo",
     "masterEntity": "Hlavní subjekt",
     "rejectedClusterItems": "Odmítnuté položky klastru",
-    "stagingItemCount": "Počet položek etapizace",
+    "stagingItemCount": "Počet záznamů přispěvatelů",
     "masterItemCount": "Hlavní počet položek",
     "state": "Stát"
   },
@@ -56,9 +56,9 @@
     "clusterDeletedThis": "{user} smazal tento cluster",
     "clusterRecordDeleted": "{user} smazal {relatedEntity} z tohoto clusteru",
     "clusterRecordDeletedThis": "{user} smazal {relatedEntity} z tohoto clusteru",
-    "clusterMovedToCluster":     "{user} přesunul {records} z clusteru {clusterLink} do {entity}",
+    "clusterMovedToCluster": "{user} přesunul {records} z clusteru {clusterLink} do {entity}",
     "clusterMovedToClusterThis": "{user} přesunul {records} z clusteru {clusterLink} do tohoto clusteru",
-    "clusterMovedFromCluster":     "{user} přesunul {records} z {entity} do clusteru {clusterLink}",
+    "clusterMovedFromCluster": "{user} přesunul {records} z {entity} do clusteru {clusterLink}",
     "clusterMovedFromClusterThis": "{user} přesunul {records} z tohoto clusteru do clusteru {clusterLink}"
   }
 }

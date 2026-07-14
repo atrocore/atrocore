@@ -251,7 +251,7 @@ Some functions, such as **Discussions** are added by modules. In this case by [D
 
 #### Cluster Information tab
 
-If the record belongs to a [Cluster](../../01.atrocore/18.master-data-management/19.clusters/index.md#cluster-information-in-record-detail-view), a dedicated **Cluster Information** tab appears in the side view. It shows the cluster status, last modification date, and lists of linked Master and Staging Records.
+If the record belongs to a [Cluster](../../01.atrocore/18.master-data-management/19.clusters/index.md#cluster-information-in-record-detail-view), a dedicated **Cluster Information** tab appears in the side view. It shows the cluster status, last modification date, and lists of linked Master and Contributor Records.
 
  ![Activities](./_assets/cluster-tab.png){.medium}
 

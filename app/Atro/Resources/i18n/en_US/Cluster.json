@@ -4,7 +4,7 @@
     "masterEntity": "Master Entity",
     "clusterItems": "Cluster Items",
     "rejectedClusterItems": "Rejected Cluster Items",
-    "stagingItemCount": "Staging Item Count",
+    "stagingItemCount": "Contributor Item Count",
     "masterItemCount": "Master Item Count",
     "state": "State"
   },
@@ -73,9 +73,9 @@
     "clusterDeletedThis": "{user} deleted this cluster",
     "clusterRecordDeleted": "{user} deleted {relatedEntity} from this cluster",
     "clusterRecordDeletedThis": "{user} deleted {relatedEntity} from this cluster",
-    "clusterMovedToCluster":       "{user} moved {records} from cluster {clusterLink} to {entity}",
-    "clusterMovedToClusterThis":   "{user} moved {records} from cluster {clusterLink} to this cluster",
-    "clusterMovedFromCluster":     "{user} moved {records} from {entity} to cluster {clusterLink}",
+    "clusterMovedToCluster": "{user} moved {records} from cluster {clusterLink} to {entity}",
+    "clusterMovedToClusterThis": "{user} moved {records} from cluster {clusterLink} to this cluster",
+    "clusterMovedFromCluster": "{user} moved {records} from {entity} to cluster {clusterLink}",
     "clusterMovedFromClusterThis": "{user} moved {records} from this cluster to cluster {clusterLink}"
   }
 }

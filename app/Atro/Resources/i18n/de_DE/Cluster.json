@@ -4,7 +4,7 @@
     "number": "Retourenummer",
     "masterEntity": "Stammdaten-Entität",
     "rejectedClusterItems": "Abgelehnte Cluster Items",
-    "stagingItemCount": "Anzahl der Artikel bei der Inszenierung",
+    "stagingItemCount": "Anzahl der Contributor-Datensätze",
     "masterItemCount": "Master Item Count",
     "state": "Bundesland/Kanton"
   },
@@ -61,9 +61,9 @@
     "clusterDeletedThis": "{user} hat diesen Cluster gelöscht",
     "clusterRecordDeleted": "{user} hat {relatedEntity} aus diesem Cluster gelöscht",
     "clusterRecordDeletedThis": "{user} hat {relatedEntity} aus diesem Cluster gelöscht",
-    "clusterMovedToCluster":     "{user} hat {records} von Cluster {clusterLink} nach {entity} verschoben",
+    "clusterMovedToCluster": "{user} hat {records} von Cluster {clusterLink} nach {entity} verschoben",
     "clusterMovedToClusterThis": "{user} hat {records} von Cluster {clusterLink} in diesen Cluster verschoben",
-    "clusterMovedFromCluster":     "{user} hat {records} von {entity} in Cluster {clusterLink} verschoben",
+    "clusterMovedFromCluster": "{user} hat {records} von {entity} in Cluster {clusterLink} verschoben",
     "clusterMovedFromClusterThis": "{user} hat {records} von diesem Cluster in Cluster {clusterLink} verschoben"
   }
 }

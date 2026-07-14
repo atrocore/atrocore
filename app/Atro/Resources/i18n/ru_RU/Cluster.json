@@ -4,7 +4,7 @@
     "number": "Номер",
     "masterEntity": "Мастер сущность",
     "rejectedClusterItems": "Отклоненные элементы кластера",
-    "stagingItemCount": "Счетчик предметов постановки",
+    "stagingItemCount": "Количество Contributor-записей",
     "masterItemCount": "Мастер подсчета предметов",
     "state": "Регион"
   },
@@ -56,9 +56,9 @@
     "clusterDeletedThis": "{user} удалил этот кластер",
     "clusterRecordDeleted": "{user} удалил {relatedEntity} из этого кластера",
     "clusterRecordDeletedThis": "{user} удалил {relatedEntity} из этого кластера",
-    "clusterMovedToCluster":     "{user} переместил {records} из кластера {clusterLink} в {entity}",
+    "clusterMovedToCluster": "{user} переместил {records} из кластера {clusterLink} в {entity}",
     "clusterMovedToClusterThis": "{user} переместил {records} из кластера {clusterLink} в этот кластер",
-    "clusterMovedFromCluster":     "{user} переместил {records} из {entity} в кластер {clusterLink}",
+    "clusterMovedFromCluster": "{user} переместил {records} из {entity} в кластер {clusterLink}",
     "clusterMovedFromClusterThis": "{user} переместил {records} из этого кластера в кластер {clusterLink}"
   }
 }

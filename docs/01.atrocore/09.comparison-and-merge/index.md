@@ -29,12 +29,12 @@ Please, note that for Uniform selections, the Entity field cannot be changed onc
 
 | Type | Description |
 |---|---|
-| **Uniform** | All items belong to the same entity or its derivative (staging) entities. The Entity field is required and is always set to the master entity. Enables direct comparison of records across an entity and its derivatives. |
+| **Uniform** | All items belong to the same entity or its derivative (contributor) entities. The Entity field is required and is always set to the master entity. Enables direct comparison of records across an entity and its derivatives. |
 | **Mixed** | Items can belong to different, unrelated entities. The Entity field is not available. |
 
 ### Adding Items to a Uniform Selection
 
-For Uniform selections, if the selected Entity has a Staging derivative entity, the Add Item button includes a dropdown on the right with the option to add a record from that Staging entity. If no Staging entity exists for the selected Entity, the dropdown is not shown.
+For Uniform selections, if the selected Entity has a Contributor derivative entity, the Add Item button includes a dropdown on the right with the option to add a record from that Contributor entity. If no Contributor entity exists for the selected Entity, the dropdown is not shown.
 
 ![Uniform Selection](_assets/uniform-selection.png){.medium}
 
@@ -54,8 +54,8 @@ The options Select, Compare, and Merge are also available in the action menu of 
 
 When the Select action is triggered from any record list page, the Current Selection is updated according to the following rules:
 
-- If the selected record belongs to a staging entity, the Selection type is set to Uniform and the Entity is set to the master entity of that derivative.
-- If the Select action is triggered for a record that does not belong to the selection's current Entity or its staging entity, the selection type is automatically changed to Mixed, the Entity field is set to NULL, and the new item is added to the selection.
+- If the selected record belongs to a contributor entity, the Selection type is set to Uniform and the Entity is set to the master entity of that derivative.
+- If the Select action is triggered for a record that does not belong to the selection's current Entity or its contributor entity, the selection type is automatically changed to Mixed, the Entity field is set to NULL, and the new item is added to the selection.
 
 ## Compare Records
 

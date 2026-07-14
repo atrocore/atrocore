@@ -4,9 +4,9 @@ title: Clusters
 
 A Cluster is a system entity that virtually groups one or more records based on the [Matching Rules](../17.matching/index.md#matching-rules) defined for a given entity. Unlike standard relationships, the connection between records within a cluster exists on a virtual level – no physical link is created between them at this stage.
 
-Clusters are used as part of the duplicate detection workflow. When duplicate search is enabled for an entity – within the master data, within the staging data, or between master and staging – the system automatically groups the detected duplicates into clusters to facilitate review and processing.
+Clusters are used as part of the duplicate detection workflow. When duplicate search is enabled for an entity – within the master data, within the contributor data, or between master and contributor – the system automatically groups the detected duplicates into clusters to facilitate review and processing.
 
-A correctly formed cluster contains one master record and one or more staging records. Once the user confirms a cluster item, a real relationship between the master and staging records is established.
+A correctly formed cluster contains one master record and one or more contributor records. Once the user confirms a cluster item, a real relationship between the master and contributor records is established.
 
 ## Creating and Deleting Clusters
 
@@ -23,10 +23,10 @@ A cluster can only be deleted if it has no cluster items (i.e., its state is Emp
 | Field | Description |
 |---|---|
 | **Number**             | A unique auto-incremented identifier, assigned automatically by the system. Read-only.|
-| **Master Entity**       |  The master entity this cluster belongs to. A cluster is always scoped to a single entity and may only contain records from that master entity and its corresponding staging entity.|
-| **Golden Record**      |The primary master record to which staging records will be linked upon confirmation. Only one Golden Record can be set per cluster. If the Golden Record is deleted, all staging items are unlinked from it. |
+| **Master Entity**       |  The master entity this cluster belongs to. A cluster is always scoped to a single entity and may only contain records from that master entity and its corresponding contributor entity.|
+| **Golden Record**      |The primary master record to which contributor records will be linked upon confirmation. Only one Golden Record can be set per cluster. If the Golden Record is deleted, all contributor items are unlinked from it. |
 | **State**              |  A read-only, dynamically calculated field reflecting the current state of the cluster. Updated automatically on any change to cluster items.|
-| **Staging Item Count**  |  The number of staging records currently linked to the cluster. Read-only.|
+| **Contributor Item Count**  |  The number of contributor records currently linked to the cluster. Read-only.|
 | **Master Item Count**   |  The number of master records currently linked to the cluster. Read-only.|
 
 The State field of the Cluster can have the following values:
@@ -35,15 +35,15 @@ The State field of the Cluster can have the following values:
 - **Review** – the cluster has items, but is not yet fully merged.
 - **Merged Manually** – all cluster items have been confirmed, and at least one was confirmed manually.
 - **Merged Automatically** – all cluster items have been confirmed automatically.
-- **Invalid** – the cluster contains more than one master record, or contains no staging records.
+- **Invalid** – the cluster contains more than one master record, or contains no contributor records.
 
 ## Cluster Items
 
-Cluster Items panel lists all master and staging records that the system has linked to the current cluster based on the entity's Matching Rules. Each item displays the Entity Name, the linked Record, and its Matched Score.
+Cluster Items panel lists all master and contributor records that the system has linked to the current cluster based on the entity's Matching Rules. Each item displays the Entity Name, the linked Record, and its Matched Score.
 
 Cluster items cannot be added or removed manually. If a Matched Record is deleted, the corresponding Cluster Item is not removed – instead, it is reassigned to another cluster (existing or newly created).
 
-Every staging record must belong to a cluster. If the system detects no duplicates for a given record, a cluster with a single item is created and that item is confirmed automatically.
+Every contributor record must belong to a cluster. If the system detects no duplicates for a given record, a cluster with a single item is created and that item is confirmed automatically.
 
 Cluster items are created, populated, and automatically confirmed by the Create Clusters scheduled job. If matching rules change, or a record is created or updated causing a Matched Records pair to be added, removed, or have its Matched Score changed, the cluster is not updated immediately – changes take effect on the next job run.
 
@@ -55,7 +55,7 @@ The Cluster entity supports three view modes, switchable via the buttons in the 
 
 - **Comparison View** – displays a comparison table with the fields and attributes defined in the [Selection Layout](../../09.comparison-and-merge/index.md#configuring-the-comparison-table-layout) of the corresponding entity.
 
-- **Merge View** – displays all cluster items side by side with radio buttons for selecting field values from each record. Used to manually build or update the Golden Record by choosing specific values from staging records. See [Merge Cluster Items](#merge-cluster-items) for details.
+- **Merge View** – displays all cluster items side by side with radio buttons for selecting field values from each record. Used to manually build or update the Golden Record by choosing specific values from contributor records. See [Merge Cluster Items](#merge-cluster-items) for details.
 
 ![Comparison mode](./_assets/compare-mode.png){.large}
 
@@ -68,10 +68,10 @@ The Matched Score row in each column shows icons indicating the entity role and 
 ![Cluster icons](./_assets/cluster-icons.png){.large}
 
 - **1** – the record is a master entity record.
-- **2** – the record is a staging entity record.
+- **2** – the record is a contributor entity record.
 - **3** – the item was confirmed automatically.
 
-The Golden Record is indicated by a horizontal gold line in the comparison table. A confirmed staging record is indicated by a horizontal blue line.
+The Golden Record is indicated by a horizontal gold line in the comparison table. A confirmed contributor record is indicated by a horizontal blue line.
 
 To control which items are shown in the comparison table, open the `Item` tab in the left sidebar. It lists all items belonging to the cluster, grouped by entity. Use the eye icon next to each item to show or hide it in the table.
 
@@ -81,7 +81,7 @@ Items in the left sidebar are grouped by status within each entity section:
 - **Confirmed** – a collapsible group listing confirmed items.
 - **Rejected** – a collapsible group listing rejected items; collapsed by default.
 
-Grouping is applied separately for Master and Staging entities. Each item in the sidebar has an actions button (⋮) that provides item-level actions directly from the sidebar without opening the item's detail page.
+Grouping is applied separately for Master and Contributor entities. Each item in the sidebar has an actions button (⋮) that provides item-level actions directly from the sidebar without opening the item's detail page.
 
 ![Cluster left sidebar](./_assets/cluster-left-sidebar.png){.large}
 
@@ -96,7 +96,7 @@ The block includes the cluster status (e.g., Merged) and the date of last modifi
 Below the cluster summary, two collapsible panels are displayed:
 
 - **Master Records** – lists all master records linked to the cluster.
-- **Staging Records** – lists all staging records linked to the cluster.
+- **Contributor Records** – lists all contributor records linked to the cluster.
 
 Record names within both panels are clickable links that open the respective record's detail page.
 
@@ -104,7 +104,7 @@ The status of each item is visually indicated by a colored horizontal line on th
 
 ## Merge Cluster Items
 
-The Merge View allows you to manually create or update the Golden Record within a cluster by selecting individual field values from staging records via radio buttons.
+The Merge View allows you to manually create or update the Golden Record within a cluster by selecting individual field values from contributor records via radio buttons.
 
 ![Merge cluster items](./_assets/merge-cluster-items.png){.large}
 
@@ -115,24 +115,24 @@ All cluster items are shown in the merge view by default. To exclude an item fro
 **Behavior on execution:**
 
 - If no Golden Record exists, it is created; if one already exists, it is updated.
-- Field values are taken from the staging records based on the radio button selection in the merge view.
-- Participating staging records are **not** processed through the [Merging Script](#merging-script) – selected values are applied directly.
+- Field values are taken from the contributor records based on the radio button selection in the merge view.
+- Participating contributor records are **not** processed through the [Consolidation Script](#consolidation-script) – selected values are applied directly.
 - Participating cluster items have their state changed to Confirmed after the merge is executed.
-- Staging records that did not participate in the merge (i.e., removed from the merge interface) remain unchanged.
+- Contributor records that did not participate in the merge (i.e., removed from the merge interface) remain unchanged.
 - If a field in the Golden Record is locked via a value lock, the lock is ignored – the selected value is applied regardless.
 
 ## Cluster Item Actions
 
 The following actions are available for cluster items in both Standard and Comparison views:
 
-- **Confirm** – creates a link between the staging and master records. Two scenarios apply:
+- **Confirm** – creates a link between the contributor and master records. Two scenarios apply:
 
-  - If a master record already exists in the cluster, the staging record is linked to it.
-  - If no master record exists yet, a new master record is created based on the selected staging record and linked to it.
+  - If a master record already exists in the cluster, the contributor record is linked to it.
+  - If no master record exists yet, a new master record is created based on the selected contributor record and linked to it.
 
     An already confirmed item cannot be confirmed again.
 
-- **Reject** – removes the cluster item from the current cluster and reassigns it to another cluster (existing or newly created). The rejected item remains visible in the `Rejected Cluster Items` panel. If a confirmed master record is rejected, all already confirmed staging records in the cluster are automatically unconfirmed and the link between the master and staging records is removed. If a confirmed staging record is rejected, that record is unconfirmed. Available as a mass action – can be executed for multiple cluster items at once.
+- **Reject** – removes the cluster item from the current cluster and reassigns it to another cluster (existing or newly created). The rejected item remains visible in the `Rejected Cluster Items` panel. If a confirmed master record is rejected, all already confirmed contributor records in the cluster are automatically unconfirmed and the link between the master and contributor records is removed. If a confirmed contributor record is rejected, that record is unconfirmed. Available as a mass action – can be executed for multiple cluster items at once.
 
 - **Unreject** – Available for items in the `Rejected Cluster Items` panel. Returns the item to the cluster. If the item was previously confirmed, then rejected, and then returned to the cluster, it will have an unconfirmed status and must be confirmed again.
 
@@ -144,20 +144,19 @@ The following actions are available for cluster items in both Standard and Compa
 
 ## Confirming Cluster Items
 
-When a cluster item (master or staging record) is confirmed, the system creates a Golden Record for the cluster if one does not yet exist. If a Golden Record is already set, confirming additional items links the corresponding staging records to that master record. The linked staging records become visible in the relevant relation panel on the master record's detail page.
+When a cluster item (master or contributor record) is confirmed, the system creates a Golden Record for the cluster if one does not yet exist. If a Golden Record is already set, confirming additional items links the corresponding contributor records to that master record. The linked contributor records become visible in the relevant relation panel on the master record's detail page.
 
-### Merging Script
+### Consolidation Script
 
-During confirmation, all cluster items are processed through the Merging Script defined in the Master Data Entities configuration for the corresponding staging entity.
+During confirmation, all cluster items are processed through the Consolidation Script defined in the [Consolidation](../index.md#consolidation) configuration for the corresponding master entity.
 
-![Master data entities](./_assets/master-data.png){.large}
 
-This script describes the logic by which the master record is created or updated based on the staging record – specifying which fields should be copied, under what conditions, and whether any field transformations should be applied.
+This script describes the logic by which the master record is created or updated based on the contributor record – specifying which fields should be copied, under what conditions, and whether any field transformations should be applied.
 
 ### Automatic Confirmation
 
 Cluster items can be confirmed manually by the user or automatically by the `Create Clusters` scheduled job.
-To enable automatic confirmation, check the `Confirm Automatically` checkbox in the configuration of the corresponding staging entity under Master Data Entities. When enabled, the Minimum Matching Score field becomes required and defines the threshold for automatic confirmation.
+To enable automatic confirmation, check the `Confirm Automatically` checkbox in the Consolidation record of the corresponding master entity. When enabled, the Minimum Matching Score field becomes required and defines the threshold for automatic confirmation.
 
 A cluster item is confirmed automatically if its Matched Score is greater than or equal to the Minimum Matching Score. If the score falls below this threshold, the item will not be confirmed automatically, even if the setting is enabled for the entity.
 
@@ -169,13 +168,13 @@ Items confirmed automatically are marked with a dedicated icon in the cluster.
 
 ### Automatic Master Update
 
-When Update Master Automatically is enabled in the Master Data Entities configuration, any update to a staging record will automatically trigger an update of the corresponding master record according to the Merging Script – without requiring a manual re-confirmation.
+When Update Master Automatically is enabled in the Consolidation configuration, any update to a contributor record will automatically trigger an update of the corresponding master record according to the Consolidation Script – without requiring a manual re-confirmation.
 
-If automatic [field locking](https://store.atrocore.com/en/advanced-data-management/20113) on manual modification is enabled, updates from staging records will not overwrite fields in the master record that have been modified manually.
+If automatic [field locking](https://store.atrocore.com/en/advanced-data-management/20113) on manual modification is enabled, updates from contributor records will not overwrite fields in the master record that have been modified manually.
 
 ### Automatic Removal of Invalid Masters
 
-When **Delete Invalid Masters Automatically** is enabled in the Master Data Entities configuration, the system automatically removes invalid master records from clusters that already have a Golden Record set.
+When **Delete Invalid Masters Automatically** is enabled in the Consolidation configuration, the system automatically removes invalid master records from clusters that already have a Golden Record set.
 
 A cluster is considered to have invalid masters when it contains more than one master record — a state reflected by the **Invalid** cluster state. In this situation, all master records in the cluster except the designated Golden Record are considered invalid. With this option enabled, those excess master records are deleted automatically during the `Create Clusters` job run.
 

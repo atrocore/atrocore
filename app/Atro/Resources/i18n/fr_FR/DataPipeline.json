@@ -5,7 +5,7 @@
     "mergingScript": "Script de fusion"
   },
   "tooltips": {
-    "mergingScript": "Configurez la façon dont les données du enregistrement source sont transformées et mappées vers l'enregistrement de staging."
+    "mergingScript": "Configurez la façon dont les données de l'enregistrement source sont transformées et mappées vers l'enregistrement cible."
   },
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "L'entité '%s' est une dérivation de type contributor ou change request et ne peut pas être utilisée comme entité source.",

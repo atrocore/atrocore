@@ -4,7 +4,7 @@
     "number": "Numer",
     "masterEntity": "Podmiot główny",
     "rejectedClusterItems": "Odrzucone elementy klastra",
-    "stagingItemCount": "Liczba elementów etapu",
+    "stagingItemCount": "Liczba rekordów współtwórców",
     "masterItemCount": "Główna liczba pozycji",
     "state": "State"
   },
@@ -56,9 +56,9 @@
     "clusterDeletedThis": "{user} usunął ten klaster",
     "clusterRecordDeleted": "{user} usunął {relatedEntity} z tego klastra",
     "clusterRecordDeletedThis": "{user} usunął {relatedEntity} z tego klastra",
-    "clusterMovedToCluster":     "{user} przeniósł {records} z klastra {clusterLink} do {entity}",
+    "clusterMovedToCluster": "{user} przeniósł {records} z klastra {clusterLink} do {entity}",
     "clusterMovedToClusterThis": "{user} przeniósł {records} z klastra {clusterLink} do tego klastra",
-    "clusterMovedFromCluster":     "{user} przeniósł {records} z {entity} do klastra {clusterLink}",
+    "clusterMovedFromCluster": "{user} przeniósł {records} z {entity} do klastra {clusterLink}",
     "clusterMovedFromClusterThis": "{user} przeniósł {records} z tego klastra do klastra {clusterLink}"
   }
 }

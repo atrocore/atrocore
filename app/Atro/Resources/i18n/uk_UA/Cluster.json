@@ -4,7 +4,7 @@
     "number": "Номер",
     "masterEntity": "Майстер-сутність",
     "rejectedClusterItems": "Відхилені елементи кластера",
-    "stagingItemCount": "Кількість staging-елементів",
+    "stagingItemCount": "Кількість Contributor-записів",
     "masterItemCount": "Кількість основних елементів",
     "state": "Стан"
   },
@@ -54,9 +54,9 @@
     "clusterDeletedThis": "{user} видалив цей кластер",
     "clusterRecordDeleted": "{user} видалив {relatedEntity} з цього кластера",
     "clusterRecordDeletedThis": "{user} видалив {relatedEntity} з цього кластера",
-    "clusterMovedToCluster":     "{user} перемістив {records} з кластера {clusterLink} до {entity}",
+    "clusterMovedToCluster": "{user} перемістив {records} з кластера {clusterLink} до {entity}",
     "clusterMovedToClusterThis": "{user} перемістив {records} з кластера {clusterLink} до цього кластера",
-    "clusterMovedFromCluster":     "{user} перемістив {records} з {entity} до кластера {clusterLink}",
+    "clusterMovedFromCluster": "{user} перемістив {records} з {entity} до кластера {clusterLink}",
     "clusterMovedFromClusterThis": "{user} перемістив {records} з цього кластера до кластера {clusterLink}"
   }
 }

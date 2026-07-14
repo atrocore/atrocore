@@ -5,7 +5,7 @@
     "mergingScript": "Merging Script"
   },
   "tooltips": {
-    "mergingScript": "Configure how source record data is transformed and mapped to the staging record."
+    "mergingScript": "Configure how source record data is transformed and mapped to the target record."
   },
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Entity '%s' is a contributor or change request derivative and cannot be used as a source entity.",
