@@ -69,12 +69,14 @@ Both the Source Entity and Target Entity fields are locked after the pipeline is
 The merging script is a Twig template that must return a JSON object with the key `targetRecordData`, containing the field values to write to the target record:
 
 ```twig
-{# {
+{
   "targetRecordData": {
     "name": "{{ sourceRecord.name }}"
   }
-} #}
+}
 ```
+
+> The default value of the field is wrapped in a Twig comment (`{# ... #}`) and serves only as an example of the expected format – a script wrapped in comment markers produces no output and is ignored. Remove the comment markers and adjust the script to activate the pipeline.
 
 Two variables are available in the script:
 
@@ -87,7 +89,7 @@ Once a pipeline is configured, the system automatically:
 
 - **Creates** a new target record when a source record is saved and has no linked target record yet. The created record is linked to the source record via its Target Record field.
 - **Updates** the target record when the source record is saved and is already linked.
-- **Re-applies** all pipelines for the target entity when the target record itself is updated.
+- **Re-applies** all pipelines for the target entity when the Master Record link of the target (contributor) record is changed – data from all linked source records is pushed to the target record again.
 
 All synchronization operations are performed on behalf of the system user, regardless of who triggered the save.
 
@@ -120,13 +122,15 @@ See [Clusters](./19.clusters/index.md) for details on how these settings are app
 The consolidation script is a Twig template that must return a JSON object with the key `masterRecordData`, containing the field values to write to the master record:
 
 ```twig
-{# {
+{
   "skipped": false,
   "masterRecordData": {
     "name": "{{ contributorRecord.name }}"
   }
-} #}
+}
 ```
+
+> The default value of the field is wrapped in a Twig comment (`{# ... #}`) and serves only as an example of the expected format – a script wrapped in comment markers produces no output. Remove the comment markers and adjust the script to activate the consolidation.
 
 Three variables are available in the script:
 

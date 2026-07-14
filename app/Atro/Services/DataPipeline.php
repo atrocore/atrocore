@@ -26,7 +26,7 @@ class DataPipeline extends Base
     {
         $pipeline = $this->getEntityManager()
             ->getRepository('DataPipeline')
-            ->where(['sourceEntity' => $sourceRecord->getEntityName()])
+            ->where(['sourceEntityId' => $sourceRecord->getEntityName()])
             ->findOne();
 
         if (empty($pipeline) || empty($pipeline->get('mergingScript'))) {
@@ -69,7 +69,7 @@ class DataPipeline extends Base
             ->find();
 
         foreach ($sources as $pipeline) {
-            $sourceEntityType = $pipeline->get('sourceEntity');
+            $sourceEntityType = $pipeline->get('sourceEntityId');
             if (empty($sourceEntityType)) {
                 continue;
             }

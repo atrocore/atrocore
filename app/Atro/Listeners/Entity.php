@@ -223,6 +223,7 @@ class Entity extends AbstractListener
         try {
             $this->getService('DataPipeline')->pushToTarget($entity);
         } catch (\Throwable $e) {
+            $GLOBALS['log']->error("Data pipeline push to target failed for {$entity->getEntityName()} '{$entity->get('id')}': " . $e->getMessage());
         }
     }
 
@@ -239,6 +240,7 @@ class Entity extends AbstractListener
         try {
             $this->getService('DataPipeline')->pushAllToTarget($entity);
         } catch (\Throwable $e) {
+            $GLOBALS['log']->error("Data pipeline push all to target failed for {$entity->getEntityName()} '{$entity->get('id')}': " . $e->getMessage());
         }
     }
 }
