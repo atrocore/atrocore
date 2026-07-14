@@ -75,12 +75,12 @@ abstract class AbstractClusterJob extends AbstractJob
                 ->count() > 0;
     }
 
-    protected function getStagingEntityName(string $masterEntity): ?string
+    protected function getContributorEntityName(string $masterEntity): ?string
     {
         foreach ($this->getMetadata()->get('scopes') ?? [] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['primaryEntityId'])
                 && $scopeDefs['primaryEntityId'] === $masterEntity
-                && ($scopeDefs['role'] ?? null) === 'staging') {
+                && ($scopeDefs['role'] ?? null) === 'contributor') {
                 return $scope;
             }
         }
@@ -139,8 +139,8 @@ abstract class AbstractClusterJob extends AbstractJob
 
     protected function spawnConfirmClustersAutomatically(string $masterEntity, Job $parent): void
     {
-        $stagingEntity = $this->getStagingEntityName($masterEntity);
-        if (empty($stagingEntity)) {
+        $contributorEntity = $this->getContributorEntityName($masterEntity);
+        if (empty($contributorEntity)) {
             $this->spawnConfirmSingleClusterItems($masterEntity, $parent);
             return;
         }
@@ -152,7 +152,7 @@ abstract class AbstractClusterJob extends AbstractJob
         $limit    = 1000;
         $batchNum = 0;
 
-        while (!empty($page = $clusterItemRepo->getClustersToConfirmAutomatically($stagingEntity, $offset, $limit))) {
+        while (!empty($page = $clusterItemRepo->getClustersToConfirmAutomatically($contributorEntity, $offset, $limit))) {
             $batchNum++;
             $clusters = array_map(fn($row) => [
                 'clusterId'      => $row['cluster_id'],
@@ -176,8 +176,8 @@ abstract class AbstractClusterJob extends AbstractJob
 
     protected function spawnConfirmSingleClusterItems(string $masterEntity, Job $parent): void
     {
-        $stagingEntity = $this->getStagingEntityName($masterEntity);
-        if (empty($stagingEntity)) {
+        $contributorEntity = $this->getContributorEntityName($masterEntity);
+        if (empty($contributorEntity)) {
             $this->spawnCreateClustersForOrphans($masterEntity, $parent);
             return;
         }
@@ -189,7 +189,7 @@ abstract class AbstractClusterJob extends AbstractJob
         $limit    = 1000;
         $batchNum = 0;
 
-        while (!empty($page = $clusterItemRepo->getSingleClusterItemIdsPage($stagingEntity, $offset, $limit))) {
+        while (!empty($page = $clusterItemRepo->getSingleClusterItemIdsPage($contributorEntity, $offset, $limit))) {
             $batchNum++;
             $this->spawnJob('ConfirmSingleClusterItems', [
                 'masterEntity'   => $masterEntity,
@@ -208,8 +208,8 @@ abstract class AbstractClusterJob extends AbstractJob
 
     protected function spawnCreateClustersForOrphans(string $masterEntity, Job $parent): void
     {
-        $stagingEntity = $this->getStagingEntityName($masterEntity);
-        if (empty($stagingEntity)) {
+        $contributorEntity = $this->getContributorEntityName($masterEntity);
+        if (empty($contributorEntity)) {
             $this->spawnDeleteInvalidMasterItems($masterEntity, $parent);
             return;
         }
@@ -221,7 +221,7 @@ abstract class AbstractClusterJob extends AbstractJob
         $limit    = 1000;
         $batchNum = 0;
 
-        while (!empty($page = $clusterItemRepo->getRecordsWithNoClusterItems($stagingEntity, $limit, $offset))) {
+        while (!empty($page = $clusterItemRepo->getRecordsWithNoClusterItems($contributorEntity, $limit, $offset))) {
             $batchNum++;
             $this->spawnJob('CreateClustersForOrphans', [
                 'masterEntity' => $masterEntity,

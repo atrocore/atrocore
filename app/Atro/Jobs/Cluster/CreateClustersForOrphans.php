@@ -28,8 +28,8 @@ class CreateClustersForOrphans extends AbstractClusterJob implements JobInterfac
             return;
         }
 
-        $stagingEntity = $this->getStagingEntityName($masterEntity);
-        if (empty($stagingEntity)) {
+        $contributorEntity = $this->getContributorEntityName($masterEntity);
+        if (empty($contributorEntity)) {
             return;
         }
 
@@ -37,7 +37,7 @@ class CreateClustersForOrphans extends AbstractClusterJob implements JobInterfac
 
         foreach ($recordIds as $recordId) {
             $cluster     = $this->createCluster($masterEntity);
-            $clusterItem = $this->createClusterItem($cluster->get('id'), $stagingEntity, $recordId);
+            $clusterItem = $this->createClusterItem($cluster->get('id'), $contributorEntity, $recordId);
 
             $clusterItem->set('cluster', $cluster);
             $cluster->set('clusterItems', [$clusterItem]);
