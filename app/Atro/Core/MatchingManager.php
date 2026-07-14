@@ -47,13 +47,24 @@ class MatchingManager
         return $ruleType;
     }
 
-    public function collectAllMatchingFields(?EntityCollection $matchingRules, array &$fields): void
+    public function collectAllMatchingFields(?EntityCollection $matchingRules, array &$fields, string $entityName): void
     {
         foreach ($matchingRules ?? [] as $rule) {
-            if (!empty($rule->get('field')) && !in_array($rule->get('field'), $fields)) {
-                $fields[] = $rule->get('field');
+            if (!empty($rule->get('field'))) {
+                $field     = $rule->get('field');
+                $fieldType = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$field}.type");
+
+                if ($fieldType === 'link') {
+                    $field .= 'Id';
+                } elseif ($fieldType === 'linkMultiple') {
+                    $field .= 'Ids';
+                }
+
+                if (!in_array($field, $fields)) {
+                    $fields[] = $field;
+                }
             }
-            $this->collectAllMatchingFields($rule->get('matchingRules'), $fields);
+            $this->collectAllMatchingFields($rule->get('matchingRules'), $fields, $entityName);
         }
     }
 
@@ -74,7 +85,7 @@ class MatchingManager
 
             if ($matching->get('masterEntity') === $entity->getEntityName()) {
                 $fields = [];
-                $this->collectAllMatchingFields($matching->get('matchingRules'), $fields);
+                $this->collectAllMatchingFields($matching->get('matchingRules'), $fields, $matching->get('masterEntity'));
                 foreach ($fields as $field) {
                     if ($entity->isAttributeChanged($field)) {
                         $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
@@ -83,7 +94,7 @@ class MatchingManager
                 }
             } elseif ($matching->get('entity') === $entity->getEntityName()) {
                 $fields = [];
-                $this->collectAllMatchingFields($matching->get('matchingRules'), $fields);
+                $this->collectAllMatchingFields($matching->get('matchingRules'), $fields, $matching->get('entity'));
                 foreach ($fields as $field) {
                     if ($entity->isAttributeChanged($field)) {
                         $this->getMatchingRepository()->unmarkMatchingSearchedForEntity($matching, $entity);
