@@ -157,18 +157,83 @@ class V2Dot3Dot10 extends Base
             $this->exec("CREATE UNIQUE INDEX UNIQ_64DEC5F45E237E06EB3B4E33 ON master_data_entity (name, deleted)");
         }
 
-        $derivatives = [];
+        $derivativeToMaster = [];
         foreach ($this->getMetadata()->get('scopes') ?? [] as $entityName => $defs) {
             if (!empty($defs['primaryEntityId'])) {
-                $derivatives[] = $entityName;
+                $derivativeToMaster[$entityName] = $defs['primaryEntityId'];
             }
         }
 
-        if (!empty($derivatives)) {
+        // in the old model the settings were kept on the record keyed by the derivative (staging) entity,
+        // so move them to the master-keyed record before the derivative-keyed records get deleted
+        foreach ($derivativeToMaster as $derivative => $masterEntity) {
+            $derivativeRow = $this->getDbal()->createQueryBuilder()
+                ->select('*')
+                ->from('master_data_entity')
+                ->where('id = :id')
+                ->andWhere('deleted = :false')
+                ->setParameter('id', $derivative)
+                ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->fetchAssociative();
+
+            if (empty($derivativeRow)) {
+                continue;
+            }
+
+            $masterRow = $this->getDbal()->createQueryBuilder()
+                ->select('*')
+                ->from('master_data_entity')
+                ->where('id = :id')
+                ->setParameter('id', $masterEntity)
+                ->fetchAssociative();
+
+            if (empty($masterRow)) {
+                $qb = $this->getDbal()->createQueryBuilder()
+                    ->insert('master_data_entity')
+                    ->values([
+                        'id'                                   => ':masterId',
+                        'deleted'                              => ':false',
+                        'merging_script'                       => ':mergingScript',
+                        'execute_merge_as'                     => ':executeMergeAs',
+                        'update_master_automatically'          => ':updateMasterAutomatically',
+                        'confirm_automatically'                => ':confirmAutomatically',
+                        'minimum_matching_score'               => ':minimumMatchingScore',
+                        'delete_invalid_masters_automatically' => ':deleteInvalidMasters',
+                        'description'                          => ':description',
+                        'created_at'                           => ':createdAt',
+                        'created_by_id'                        => ':createdById',
+                    ])
+                    ->setParameter('deleteInvalidMasters', !empty($derivativeRow['delete_invalid_masters_automatically']), \Doctrine\DBAL\ParameterType::BOOLEAN)
+                    ->setParameter('description', $derivativeRow['description'] ?? null)
+                    ->setParameter('createdAt', $derivativeRow['created_at'] ?? null)
+                    ->setParameter('createdById', $derivativeRow['created_by_id'] ?? null);
+            } else {
+                $qb = $this->getDbal()->createQueryBuilder()
+                    ->update('master_data_entity')
+                    ->set('deleted', ':false')
+                    ->set('merging_script', ':mergingScript')
+                    ->set('execute_merge_as', ':executeMergeAs')
+                    ->set('update_master_automatically', ':updateMasterAutomatically')
+                    ->set('confirm_automatically', ':confirmAutomatically')
+                    ->set('minimum_matching_score', ':minimumMatchingScore')
+                    ->where('id = :masterId');
+            }
+
+            $qb->setParameter('masterId', $masterEntity)
+                ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->setParameter('mergingScript', $derivativeRow['merging_script'] ?? null)
+                ->setParameter('executeMergeAs', $derivativeRow['execute_merge_as'] ?? null)
+                ->setParameter('updateMasterAutomatically', !empty($derivativeRow['update_master_automatically']), \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->setParameter('confirmAutomatically', !empty($derivativeRow['confirm_automatically']), \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->setParameter('minimumMatchingScore', $derivativeRow['minimum_matching_score'] ?? null)
+                ->executeQuery();
+        }
+
+        if (!empty($derivativeToMaster)) {
             $this->getDbal()->createQueryBuilder()
                 ->delete('master_data_entity')
                 ->where('id IN (:ids)')
-                ->setParameter('ids', $derivatives, $this->getDbal()::PARAM_STR_ARRAY)
+                ->setParameter('ids', array_keys($derivativeToMaster), $this->getDbal()::PARAM_STR_ARRAY)
                 ->executeQuery();
         }
 
@@ -187,7 +252,7 @@ class V2Dot3Dot10 extends Base
                 ->where('id = :id')
                 ->setParameter('id', $row['id'])
                 ->setParameter('uuid', IdGenerator::uuid())
-                ->setParameter('mergingScript', str_replace('stagingRecord', 'contributorRecord', $row['merging_script']))
+                ->setParameter('mergingScript', is_string($row['merging_script']) ? str_replace('stagingRecord', 'contributorRecord', $row['merging_script']) : null)
                 ->executeQuery();
         }
 
