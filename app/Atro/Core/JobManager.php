@@ -30,6 +30,15 @@ class JobManager
         $this->container = $container;
     }
 
+    public static function getPid(): ?int
+    {
+        if (function_exists('getmypid')) {
+            return getmypid();
+        }
+
+        return null;
+    }
+
     public function executeJob(Entity $job): bool
     {
         $userId = $job->get('ownerUserId');
@@ -49,7 +58,7 @@ class JobManager
             $this->container->get(\Atro\Core\UserContext::class)->set($user);
         }
 
-        $job->set('pid', System::getPid());
+        $job->set('pid', self::getPid());
         $job->set('startedAt', (new \DateTime())->format('Y-m-d H:i:s'));
 
         $className = $this->getMetadata()->get(['app', 'jobTypes', $job->get('type'), 'handler']);
