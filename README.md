@@ -25,9 +25,25 @@ We believe you’ll find Atrocore not only solid and flexible, but exciting to w
 Dive into the [Developer Guide](https://help.atrocore.com/developer-guide) to set up, debug, work with the API, and reshape the system using a wide range of tools.
 
 ## History
-Our software has been in active development since 2018. It all began with a simple idea: to create a better open-source PIM solution for our customers.
 
-We are now able to confidently assure our customers that their requirements, extending well beyond just PIM, can be fully addressed without compromise. Our software offers a robust, comprehensive, and highly flexible toolbox designed to meet a wide range of business needs.
+Active development of our software began in 2018, driven by a clear mission: to engineer a highly customizable, open-source Product Information Management (PIM) solution that overcomes the limitations of rigid enterprise platforms.
+
+Today, our software has evolved into a robust, comprehensive ecosystem built on a highly flexible, modular architecture. This adaptable framework allows us to confidently assure our clients that their requirements—extending far beyond standard PIM functions—can be fully accommodated without compromise. By offering a versatile technical toolbox, we enable organizations to seamlessly scale, integrate, and customize their data models to meet complex, ever-changing business demands.
+
+
+## Our Customers
+
+Our primary client base consists of manufacturers, wholesalers, and distributors managing highly complex product portfolios with intricate technical specifications and variant structures.
+
+We are proud to partner with leading global brands and enterprise market leaders, including:
+- Acer
+- Dallmayr
+- Bridgestone
+- AEG
+- Ryobi
+- Milwaukee
+- Dirt Devil.
+
 
 ## Use Cases:
 
@@ -38,6 +54,7 @@ We are now able to confidently assure our customers that their requirements, ext
 - Data Warehouse Software
 - Digital Asset Management
 - Reference Data Management
+- Compliance
 - Low-code Platform for Custom Business Apps
 
 ### Free vs Paid
