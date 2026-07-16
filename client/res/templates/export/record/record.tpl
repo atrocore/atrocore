@@ -27,3 +27,8 @@
     <label class="control-label" data-name="contentLanguage">{{translate 'contentLanguage' category='labels' scope='ExportFeed'}}</label>
     <div class="field" data-name="contentLanguage">{{{contentLanguage}}}</div>
 </div>
+
+<div class="cell form-group" data-name="locale">
+    <label class="control-label" data-name="locale">{{translate 'locale' category='fields' scope='ExportFeed'}}</label>
+    <div class="field" data-name="locale">{{{locale}}}</div>
+</div>

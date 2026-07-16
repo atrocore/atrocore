@@ -106,6 +106,10 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 if (contentLanguageId) {
                     data.contentLanguageId = contentLanguageId;
                 }
+                const localeId = this.model.get('localeId');
+                if (localeId) {
+                    data.localeId = localeId;
+                }
             } else {
                 let fieldDefs = null;
                 if (!this.model.get('exportAllField') && this.model.get('fieldList')) {
