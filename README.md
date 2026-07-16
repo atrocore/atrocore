@@ -59,11 +59,12 @@ We are proud to partner with leading global brands and enterprise market leaders
 
 ### Free vs Paid
 
-Every user, from small businesses to large enterprises, uses the same free core: AtroCore. This core can be extended with additional free and premium modules as needed.
-We also offer SaaS Editions, hosted in the cloud, which include some or all premium modules depending on the edition.
+Every business, from small startups to large enterprises, use the exact same powerful, open-source core: AtroCore. Because our free core modules – including AtroPIM, Import, and Export – are incredibly feature-rich, the **free version is more than enough to satisfy the needs of the vast majority of users**.
 
-- The core modules, including AtroCore, AtroPIM, Import, Export, and several others, are open-source and freely available. These free modules are more than enough for the needs of most users.
-- Selected enterprise-level features, such as AI integration, advanced reporting, and automated data quality management, are offered through Premium Modules.
+You only need to expand your system with paid Premium Modules if your business scales to require highly specialized, enterprise-grade capabilities.
+
+For teams that prefer a managed cloud environment, we offer hosted SaaS plans.
+
 
 ## Feature Overview
 
