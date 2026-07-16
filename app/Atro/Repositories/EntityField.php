@@ -165,9 +165,10 @@ class EntityField extends ReferenceData
     {
         $entities = [];
 
-        $entityName           = null;
-        $allowHidden          = !empty($params['skipEmHidden']);
-        $filterExportDisabled = false;
+        $entityName               = null;
+        $allowHidden              = !empty($params['skipEmHidden']);
+        $filterExportDisabled     = false;
+        $filterMassUpdateDisabled = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['entityId='])) {
                 $entityName = $item['entityId='];
@@ -176,6 +177,9 @@ class EntityField extends ReferenceData
             }
             if (isset($item['exportDisabled!='])) {
                 $filterExportDisabled = true;
+            }
+            if (isset($item['massUpdateDisabled!='])) {
+                $filterMassUpdateDisabled = true;
             }
         }
 
@@ -223,6 +227,10 @@ class EntityField extends ReferenceData
                 }
 
                 if ($filterExportDisabled && (!empty($fieldDefs['exportDisabled']) || !empty($fieldDefs['combinedField']) || !empty($fieldDefs['unitIdField']))) {
+                    continue;
+                }
+
+                if ($filterMassUpdateDisabled && (!empty($fieldDefs['massUpdateDisabled']) || !empty($fieldDefs['layoutMassUpdateDisabled']))) {
                     continue;
                 }
 

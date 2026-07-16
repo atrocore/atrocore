@@ -34,6 +34,33 @@ class V2Dot3Dot10 extends Base
         $this->migrateConsolidation();
         $this->migrateDataPipelines();
         $this->migrateProductGroup();
+        $this->migrateLocaleDisableForUi();
+    }
+
+    public function migrateLocaleDisableForUi(): void
+    {
+        $path = 'data/reference-data/Locale.json';
+        if (!file_exists($path)) {
+            return;
+        }
+
+        $locales = json_decode(file_get_contents($path), true);
+        if (!is_array($locales)) {
+            return;
+        }
+
+        $modified = false;
+        foreach ($locales as &$locale) {
+            if (!array_key_exists('disableForUi', $locale)) {
+                $locale['disableForUi'] = false;
+                $modified = true;
+            }
+        }
+        unset($locale);
+
+        if ($modified) {
+            file_put_contents($path, json_encode($locales, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        }
     }
 
     public function migrateProductGroup(): void
