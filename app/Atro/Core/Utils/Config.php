@@ -130,6 +130,7 @@ class Config extends \Espo\Core\Utils\Config
                                 'thousandSeparator'              => $row['thousandSeparator'] ?? '',
                                 'decimalMark'                    => $row['decimalMark'] ?? '.',
                                 'displayLabelsInContentLanguage' => $row['displayLabelsInContentLanguage'] ?? false,
+                                'disableForUi'                   => $row['disableForUi'] ?? false,
                             ];
                         }
 
