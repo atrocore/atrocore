@@ -22,6 +22,12 @@
       "notNull": true,
       "default": false
     },
+    "disableForUi": {
+      "type": "bool",
+      "notNull": true,
+      "default": false,
+      "tooltip": true
+    },
     "languageCode": {
       "type": "enum",
       "required": true,

@@ -237,7 +237,19 @@
     },
     "locale": {
       "type": "link",
-      "entity": "Locale"
+      "entity": "Locale",
+      "where": [
+        {
+          "condition": "AND",
+          "rules": [
+            {
+              "type": "equals",
+              "attribute": "disableForUi",
+              "value": false
+            }
+          ]
+        }
+      ]
     },
     "disabledLanguages": {
       "type": "jsonArray",

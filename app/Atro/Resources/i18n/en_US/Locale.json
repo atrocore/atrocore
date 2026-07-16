@@ -8,7 +8,11 @@
     "timeFormat": "Time Format",
     "thousandSeparator": "Thousand Separator",
     "decimalMark": "Decimal Mark",
-    "displayLabelsInContentLanguage": "Display Labels in Content Language"
+    "displayLabelsInContentLanguage": "Display Labels in Content Language",
+    "disableForUi": "Disable for UI"
+  },
+  "tooltips": {
+    "disableForUi": "When enabled, this locale will not appear in the toolbar locale switcher or user profile dropdown. It remains available for Export Feed, Channel, and Import Feed configuration."
   },
   "labels": {
     "sunday": "Sunday",
