@@ -1658,8 +1658,11 @@ class Base
         }
 
         // for backward compatibility (extensibleEnum)
-        if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'type']) === 'link') {
-            $attribute = $attribute . 'Id';
+        if (
+            $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'type']) === 'link'
+            && !in_array($item['type'] ?? '', ['linkedWith', 'notLinkedWith', 'isLinked', 'isNotLinked'])
+        ) {
+            $attribute .= 'Id';
         }
 
         // for backward compatibility (extensibleMultiEnum)

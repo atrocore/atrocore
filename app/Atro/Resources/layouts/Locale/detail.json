@@ -29,8 +29,14 @@
           "name": "displayLabelsInContentLanguage"
         },
         {
-          "name": "timeZone"
+          "name": "disableForUi"
         }
+      ],
+      [
+        {
+          "name": "timeZone"
+        },
+        false
       ],
       [
         {

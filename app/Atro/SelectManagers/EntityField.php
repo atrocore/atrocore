@@ -23,4 +23,10 @@ class EntityField extends Base
         $result['whereClause'][] = ['exportDisabled!=' => true];
     }
 
+    protected function boolFilterMassUpdatable(array &$result): void
+    {
+        $result['skipEmHidden']  = true;
+        $result['whereClause'][] = ['massUpdateDisabled!=' => true];
+    }
+
 }

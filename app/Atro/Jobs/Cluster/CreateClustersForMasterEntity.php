@@ -43,22 +43,40 @@ class CreateClustersForMasterEntity extends AbstractClusterJob implements JobInt
             }
         }
 
-        // Phase 0: FindMatches must be complete
         /** @var MatchingRepository $matchingRepo */
         $matchingRepo = $this->getEntityManager()->getRepository('Matching');
 
+        // Phase 0: collect matching IDs for this master entity, then wait for all FindMatches jobs to finish
+        $matchingIds = [];
         foreach ($matchingRepo->find() as $matching) {
             if (empty($matching->get('isActive'))) {
                 continue;
             }
-
             $resolvedMaster = $this->getMetadata()->get("scopes.{$matching->get('masterEntity')}.primaryEntityId") ?? $matching->get('masterEntity');
-            if ($resolvedMaster !== $masterEntity) {
-                continue;
+            if ($resolvedMaster === $masterEntity) {
+                $matchingIds[] = $matching->id;
             }
+        }
 
-            if ($matchingRepo->hasUnprocessedRecords($matching)) {
-                throw new \RuntimeException("Skipped: matching '{$matching->id}' still has unprocessed records for '$masterEntity'. FindMatches must complete first.");
+        if (!empty($matchingIds)) {
+            $jobRepo = $this->getEntityManager()->getRepository('Job');
+            while (true) {
+                $hasPending = false;
+                foreach ($matchingIds as $matchingId) {
+                    $count = $jobRepo->where([
+                        'type'     => ['FindMatchesForRecords', 'FindMatchesForRecord', 'FindMatchesForMatching'],
+                        'status'   => ['Pending', 'Running', 'Awaiting'],
+                        'payload*' => '%"id":"' . $matchingId . '"%',
+                    ])->count();
+                    if ($count > 0) {
+                        $hasPending = true;
+                        break;
+                    }
+                }
+                if (!$hasPending) {
+                    break;
+                }
+                sleep(5);
             }
         }
 

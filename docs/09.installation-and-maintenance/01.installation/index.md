@@ -3,7 +3,7 @@ title: Installation
 ---
 
 This Installation Guide is prepared for **Ubuntu** Operating System. Of course, you can use any UNIX-based system, but in this case you need to adopt this manual by yourself.
-Before your start make sure your have a **dedicated (virtual) server with root permission**. On a usual hosting the system will not work!
+A **dedicated (virtual) server with root permissions** is recommended. However, the installation on a shared or managed hosting is also possible, as long as the environment is configured correctly — see [Installation on Shared / Managed Hosting](../01.installation/06.shared-hosting).
 
 ## 1. Linux Server Preparation
 This section contains links to the guides that describe how to prepare your server for the installation of the AtroCore Application.
@@ -13,6 +13,7 @@ This section contains links to the guides that describe how to prepare your serv
 * [Docker configuration](../01.installation/01.docker-configuration)
 * [Apache web server preparation](../01.installation/02.apache-web-server) (RECOMMENDED)
 * [Nginx web server preparation](../01.installation/03.nginx-web-server)
+* [Installation on Shared / Managed Hosting](../01.installation/06.shared-hosting)
 
 ## 2. Install AtroCore (AtroPIM) Application
 This section describes how to install AtroCore Application on the prepared web server.

@@ -19,5 +19,6 @@
   "hideFieldTypeFilters": true,
   "duplicatableRelations": [
     "fields"
-  ]
+  ],
+  "selectionDisabled": true
 }
