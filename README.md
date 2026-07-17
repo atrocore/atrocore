@@ -106,8 +106,8 @@ The following full-fledged software products are already available on the AtroCo
 ![Architecture and Technologies](_assets/architecture-and-technologies.png)
 
 - Backend: PHP, powered by enterprise-grade Symfony and Laminas components.
-- Frontend: JavaScript, migrating from legacy Backbone.js and jQuery to a modern, reactive Svelte architecture.
-- Databases: PostgreSQL, MySQL, and MariaDB, managed via the Doctrine DBAL abstraction layer.
+- Frontend: JavaScript, migrating from legacy Backbone.js to a modern, reactive Svelte architecture.
+- Database: PostgreSQL, MySQL, and MariaDB, managed via the Doctrine DBAL abstraction layer.
 - API: Fully standardized using OpenAPI (Swagger) specifications.
 - Update Management: Driven by Composer for seamless dependency and version handling.
 
