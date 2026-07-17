@@ -28,21 +28,24 @@ Dive into the [Developer Guide](https://help.atrocore.com/developer-guide) to se
 
 Active development of our software began in 2018, driven by a clear mission: to engineer a highly customizable, open-source Product Information Management (PIM) solution that overcomes the limitations of rigid enterprise platforms.
 
-Today, our software has evolved into a robust, comprehensive ecosystem built on a highly flexible, modular architecture. This adaptable framework allows us to confidently assure our clients that their requirements—extending far beyond standard PIM functions—can be fully accommodated without compromise. By offering a versatile technical toolbox, we enable organizations to seamlessly scale, integrate, and customize their data models to meet complex, ever-changing business demands.
+Today, our software has evolved into a robust, comprehensive ecosystem built on a highly flexible, modular architecture. This adaptable framework allows us to confidently assure our clients that their requirements – extending far beyond standard PIM functions – can be fully accommodated without compromise. By offering a versatile technical toolbox, we enable organizations to seamlessly scale, integrate, and customize their data models to meet complex, ever-changing business demands.
 
 
 ## Our Customers
 
-Our primary client base consists of manufacturers, wholesalers, and distributors managing highly complex product portfolios with intricate technical specifications and variant structures.
+Our customers are manufacturers, wholesalers, and distributors that manage complex and business critical data across products, assets, and processes. They rely on AtroCore to handle large and sophisticated data models, extensive product portfolios, and complex variant, classification, and integration requirements.
 
-We are proud to partner with leading global brands and enterprise market leaders, including:
-- Acer
-- Dallmayr
-- Bridgestone
-- AEG
-- Ryobi
-- Milwaukee
-- Dirt Devil.
+From mid market companies to global enterprises, organizations choose AtroCore when their needs go beyond the limitations of standard software solutions and when flexibility, scalability, and seamless integration with existing software landscapes are essential.
+
+We are proud to work with leading international brands and market leaders, including:
+
+* Acer
+* Dallmayr
+* Bridgestone
+* AEG
+* Ryobi
+* Milwaukee
+* Dirt Devil
 
 
 ## Use Cases:
@@ -78,17 +81,19 @@ Please note that you currently need to install the PIM module to use Attribute M
 
 AtroCore is the best fit **for businesses**, who want to:
 
-* Unify all types of data across the organization
-* Improve overall data quality
-* Address custom business challenges with tailored solutions
-* Store diverse data types and streamline associated business processes
-* Synchronize any data across multiple third-party systems
-* Extend and enhance the capabilities of existing software infrastructure
-* Deliver added value and an optimal experience for employees, customers, and partners.
+* Unify and manage all types of data across the organization from a single platform
+* Improve data quality, consistency, and governance
+* Centralize data from multiple systems and eliminate data silos
+* Build tailored business applications and address custom business requirements
+* Store and manage complex and diverse data structures and relationships
+* Model, automate, and streamline data-driven business processes and workflows
+* Synchronize and distribute data across any third party systems and channels
+* Integrate existing software and extend its capabilities without replacing it
+* Create a scalable and flexible foundation for future digital initiatives
+* Reduce manual work and improve operational efficiency through automation
+* Enable cross departmental collaboration and transparency
+* Deliver added value and an optimal experience for employees, customers, partners, and end users.
 
-### Who is our Typical Adopter?
-
-Companies whose needs go beyond the limitations of standard software solutions.
 
 ## Software which extends AtroCore
 
@@ -138,19 +143,22 @@ You can **build your own fully automated integration** with any third-party syst
 Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 
 
-## What Are the Advantages of Using It?
+## Why Developers Choose AtroCore?
 
-* API-first development approach
-* Really quick time-to-market and low implementation costs
-* Highly configurable 
-* Extensible - you can use our or write your own modules
-* Open source (licensed under GPLv3), free with some Premium Modules
-* REST API everything, incl. your custom configurations
-* Web-based and platform independent
-* Based on modern technologies
-* Good code quality
-* Modern mobile-friendly UI
-* Easy to install, maintain and support.
+* API first architecture with complete REST API coverage, including custom configurations and data models
+* Rapid development and quick time to market with low implementation costs
+* Highly configurable and adaptable to virtually any business use case
+* Easily extensible through modules, plugins, and custom development
+* Open source (GPLv3 licensed) with a free core and optional Premium Modules
+* Flexible data model that can be tailored without modifying the core code
+* Web based and platform independent
+* Built on modern, proven technologies and development standards
+* Clean, maintainable, and well structured codebase
+* Modern, responsive, and mobile friendly user interface
+* Easy to install, maintain, upgrade, and support
+* Seamless integration with third party systems through REST APIs and webhooks
+* Suitable for building custom business applications, data management solutions, and integration platforms
+* Scalable architecture for projects ranging from small implementations to enterprise deployments
 
 ## Requirements
 
