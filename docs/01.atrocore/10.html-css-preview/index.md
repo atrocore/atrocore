@@ -42,7 +42,7 @@ By clicking on the square icon, you will be able to see all the elements that ca
 
 ### Multi-language Support
 
-If the interface has several languages, you can switch the preview language at the top right of the page. As a result, the names of the fields and attributes and the values of multilingual attributes will be displayed in the selected language.
+If the interface has several languages, you can switch the preview language at the top right of the page. As a result, the names of the fields and attributes, the values of multilingual fields, and the values of multilingual attributes will be displayed in the selected language.
 
 ![Language preview](_assets/language-prism.png){.large}
 
@@ -58,5 +58,3 @@ The product preview also allows you to:
 
 - Filter data by channel using the **Channels** drop-down to see product attributes from the perspective of that specific channel
 - Change the product status directly from the preview page after reviewing all information
-
-If inconsistencies in the product information are found, close the preview and correct them on the product detail page.
