@@ -129,10 +129,10 @@ You can also use import and export functions or use our modules (import feeds an
 
 We offer the following native paid integrations:
 
-- **Multichannel Tools:** Channable, ChannelPilot, ChannelAdvisor and others
-- **ERPs:** Odoo, SAP, SAP Business One, Business Central, Xentral, Infor and others
-- **Marketplaces:** Amazon, Otto
-- **E-Commerce Platforms:** Adobe Commerce (Magento 2), Shopware, Prestashop, WooCommerce, Shopify, Sylius and others.
+- **Multichannel tools**: Channable, ChannelPilot, Lengow, Feedonomics, Productsup, Channelengine, ChannelAdvisor, and others
+- **ERPs**: SAP S/4 HANA, Odoo, SAP Business One, Oracle Fusion, Business Central, Acumatica, Infor, Oracle Netsuite, Xentral, Infor, Epicor. Work4all, and others
+- **E-Commerce Platforms**: Adobe Commerce (Magento 2), Bigcommerce, Saleor, Commercetools, Sap Commerce Cloud, Salesforce Commerce Cloud, Shopware, Prestashop, WooCommerce, Shopify, Sylius, Vendure,  and others
+- **Marketplaces**: Amazon, Otto.
 
 Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
 
