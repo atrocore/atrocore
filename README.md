@@ -160,12 +160,17 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 * Suitable for building custom business applications, data management solutions, and integration platforms
 * Scalable architecture for projects ranging from small implementations to enterprise deployments
 
-## Requirements
+## System Requirements
 
-* Dedicated (virtual) Linux-based server with root permissions. 
-* Ubuntu as Operating System is recommended but not required.
-* PHP 8.1 - 8.4.
-* PostgreSQL 14.9 (or above, recommended) or MySQL 5.5.3 (or above).
+- Linux-based **root or managed server** (recommended: Ubuntu LTS). 
+- **Minimum Ressources:**
+  - 2 vCPU
+  - 4 GB RAM
+  - 80 GB SSD Storage
+- **Software**:
+  - Apache Web Server or Nginx
+  - PHP 8.1 - 8.4.
+  - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ MariaDB 5.5+.
 
 > Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
 
