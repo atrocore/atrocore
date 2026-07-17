@@ -24,7 +24,7 @@ To tackle complex and long-running tasks, AtroCore includes a robust Job Manager
 We believe you’ll find Atrocore not only solid and flexible, but exciting to work with.  
 Dive into the [Developer Guide](https://help.atrocore.com/developer-guide) to set up, debug, work with the API, and reshape the system using a wide range of tools.
 
-## History
+## Evolution
 
 Active development of our software began in 2018, driven by a clear mission: to engineer a highly customizable, open-source Product Information Management (PIM) solution that overcomes the limitations of rigid enterprise platforms.
 
@@ -172,7 +172,7 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
   - PHP 8.1 - 8.4.
   - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ MariaDB 5.5+.
 
-> Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
+> Please note, system will definitely NOT work on a usual shared hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
 
 ## Installation (Getting Started)
 
