@@ -113,11 +113,11 @@ The following full-fledged software products are already available on the AtroCo
 
 ### Standards & Components
 
-AtroCore is built around **open standards**, not framework lock-in. We adopt components from the PHP ecosystem where they are the best fit for the task — and replace them when better options exist.
+AtroCore is built around **open standards**, not framework lock-in. We adopt components from the PHP ecosystem where they are the best fit for the task – and replace them when better options exist.
 
-**HTTP layer** follows [PSR-7](https://www.php-fig.org/psr/psr-7/) (HTTP messages) and [PSR-15](https://www.php-fig.org/psr/psr-15/) (middleware and request handlers) strictly. Every request passes through a typed middleware pipeline dispatched via [FastRoute](https://github.com/nikic/FastRoute). Handlers are registered via PHP attributes and documented automatically as OpenAPI 3.0. A route that is not fully documented is simply not registered — incomplete API definitions cannot exist at runtime. Every request and response is automatically validated against the OpenAPI schema, so the API documentation is always a truthful contract, not a wishful description.
+**HTTP layer** follows [PSR-7](https://www.php-fig.org/psr/psr-7/) (HTTP messages) and [PSR-15](https://www.php-fig.org/psr/psr-15/) (middleware and request handlers) strictly. Every request passes through a typed middleware pipeline dispatched via [FastRoute](https://github.com/nikic/FastRoute). Handlers are registered via PHP attributes and documented automatically as OpenAPI 3.0. A route that is not fully documented is simply not registered – incomplete API definitions cannot exist at runtime. Every request and response is automatically validated against the OpenAPI schema, so the API documentation is always a truthful contract, not a wishful description.
 
-**Dependency injection** is powered by [Laminas ServiceManager](https://github.com/laminas/laminas-servicemanager) — a [PSR-11](https://www.php-fig.org/psr/psr-11/) compliant container. We are part of the Laminas ecosystem where it makes sense, but we are not tied to it. We take the best from it.
+**Dependency injection** is powered by [Laminas ServiceManager](https://github.com/laminas/laminas-servicemanager) – a [PSR-11](https://www.php-fig.org/psr/psr-11/) compliant container. We are part of the Laminas ecosystem where it makes sense, but we are not tied to it. We take the best from it.
 
 **Database** access goes through [Doctrine DBAL](https://www.doctrine-project.org/projects/dbal.html), supporting PostgreSQL (recommended), MySQL, and MariaDB.
 
