@@ -45,7 +45,7 @@ class CreateClusters extends AbstractJob implements JobInterface
                 'name'     => "Create Clusters for {$masterEntity}",
                 'type'     => 'CreateClustersForMasterEntity',
                 'status'   => 'Pending',
-                'priority' => 20,
+                'priority' => 30,
                 'payload'  => [
                     'masterEntity' => $masterEntity
                 ]
