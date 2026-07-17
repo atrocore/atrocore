@@ -170,9 +170,9 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 - **Software**:
   - Apache Web Server or Nginx
   - PHP 8.1 - 8.4.
-  - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ MariaDB 5.5+.
+  - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ or MariaDB 5.5+.
 
-> Please note, system will definitely NOT work on a usual shared hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
+> Please note that AtroCore/AtroPIM will not run on standard shared hosting environments due to its technical requirements and resource needs. Managed server hosting can be suitable, but each provider and configuration should be evaluated individually. In most cases it will work.
 
 ## Installation (Getting Started)
 
