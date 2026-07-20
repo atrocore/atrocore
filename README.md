@@ -220,6 +220,7 @@ Would you like to help us translate UIs into your language, or improve existing 
 ## Documentation
 
 - Please visit our Help Center (Documentation) - https://help.atrocore.com/
+- Developer Documentation: https://help.atrocore.com/latest/developer-guide
 
 
 ## Other Resources
