@@ -608,6 +608,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupActionItems: function () {
+            this.buttonList = _.clone(this._initialButtonList);
+            this.buttonEditList = _.clone(this._initialButtonEditList);
+            this.dropdownItemList = _.clone(this._initialDropdownItemList);
+            this.dropdownEditItemList = _.clone(this._initialDropdownEditItemList);
+            this.additionalButtons = _.clone(this._initialAdditionalButtons);
+            this.additionalEditButtons = _.clone(this._initialAdditionalEditButtons);
+
             if (this.getMetadata().get(['scopes', this.model.name, 'disabled']) || this.getMetadata().get(['scopes', this.model.name, 'type']) === 'Archive') {
                 this.buttonList = []
                 this.dropdownItemList = []
@@ -691,22 +698,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                 }
             }
-
-            let dropdownItemList = [];
-            (this.dropdownItemList || []).forEach(item => {
-                if (!item.name || item.name !== 'dynamicAction') {
-                    dropdownItemList.push(item);
-                }
-            });
-            this.dropdownItemList = dropdownItemList;
-
-            let additionalButtons = [];
-            (this.additionalButtons || []).forEach(item => {
-                if (!item.action || item.action !== 'dynamicAction') {
-                    additionalButtons.push(item);
-                }
-            });
-            this.additionalButtons = additionalButtons;
 
             if (this.selfAssignAction) {
                 if (
@@ -1404,6 +1395,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 label: 'Remove'
             }];
 
+            this._initialButtonList = _.clone(this.buttonList);
+            this._initialButtonEditList = _.clone(this.buttonEditList);
+            this._initialDropdownItemList = _.clone(this.dropdownItemList);
+            this._initialDropdownEditItemList = _.clone(this.dropdownEditItemList);
+            this._initialAdditionalButtons = _.clone(this.additionalButtons);
+            this._initialAdditionalEditButtons = _.clone(this.additionalEditButtons);
+
             this.isNew = this.model.isNew()
 
             this.setupBeforeFinal();
@@ -1412,7 +1410,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.setupActionItems();
                 window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
 
-                this.listenTo(this.model, 'sync', () => {
+                this.listenTo(this.model, 'sync after:save after:inlineEditSave', () => {
                     this.setupActionItems();
                     window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
                 });
@@ -2258,8 +2256,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return null;
             }
 
-            this.cleanDuplicatedButtons();
-
             return {
                 buttons: this.buttonList,
                 editButtons: this.buttonEditList,
@@ -2268,24 +2264,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 additionalButtons: this.additionalButtons,
                 additionalEditButtons: this.additionalEditButtons,
             }
-        },
-
-        cleanDuplicatedButtons() {
-            let buttonTypes = ['additionalButtons', 'additionalEditButtons', 'dropdownItemList', 'dropdownEditItemList', 'buttonList', 'buttonEditList'];
-            buttonTypes.forEach((type) => {
-                if (!Array.isArray(this[type])) {
-                    return;
-                }
-                let existing = [];
-                this[type] = this[type].filter(el => {
-                    let code = el.action || el.name;
-                    if (!existing.includes(code)) {
-                        existing.push(code);
-                        return true;
-                    }
-                    return false;
-                });
-            });
         },
 
         convertDetailLayout: function (simplifiedLayout, el) {
