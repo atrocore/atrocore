@@ -15,7 +15,6 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\Core\Utils\IdGenerator;
-use Doctrine\DBAL\ParameterType;
 
 class V2Dot3Dot10 extends Base
 {
@@ -36,7 +35,6 @@ class V2Dot3Dot10 extends Base
         $this->migrateDataPipelines();
         $this->migrateProductGroup();
         $this->migrateLocaleDisableForUi();
-        $this->fixImportConfiguratorItemsMissedInV2Dot3Dot5();
     }
 
     public function migrateLocaleDisableForUi(): void
@@ -461,39 +459,6 @@ class V2Dot3Dot10 extends Base
         }
 
         return $this->metadata;
-    }
-
-    private function fixImportConfiguratorItemsMissedInV2Dot3Dot5(): void
-    {
-        // V2Dot3Dot5 updated attribute.system_name but forgot to update import_configurator_item.name.
-        // Fix items where name starts with the attribute ID (the fallback prefix when code was empty).
-        try {
-            $items = $this->getDbal()->createQueryBuilder()
-                ->select('i.id', 'i.name', 'i.entity_attribute_id', 'a.system_name')
-                ->from('import_configurator_item', 'i')
-                ->innerJoin('i', 'attribute', 'a', 'a.id = i.entity_attribute_id AND a.deleted = :false')
-                ->where('i.deleted = :false')
-                ->andWhere('a.system_name IS NOT NULL')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
-
-            foreach ($items as $item) {
-                if (!str_starts_with($item['name'], $item['entity_attribute_id'])) {
-                    continue;
-                }
-
-                $newName = $item['system_name'] . substr($item['name'], strlen($item['entity_attribute_id']));
-
-                $this->getDbal()->createQueryBuilder()
-                    ->update('import_configurator_item')
-                    ->set('name', ':name')
-                    ->where('id = :id')
-                    ->setParameter('name', $newName)
-                    ->setParameter('id', $item['id'])
-                    ->executeStatement();
-            }
-        } catch (\Throwable $e) {
-        }
     }
 
     private function exec(string $sql): void
