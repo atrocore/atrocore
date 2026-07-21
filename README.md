@@ -73,9 +73,39 @@ For teams that prefer a managed cloud environment, we offer hosted SaaS plans.
 
 ![Feature Overview](_assets/atrocore-feature-overview.png)
 
+## Feature List
+
+- Configurable data model
+- Configurable actions
+- Fully customizable user interfaces
+- Logic-based automatic layout adjustments
+- Classifications for all entities
+- DAM / file management
+- Flexible attribute management
+- 20+ data types incl. nested attributes
+- Hierarchies and data inheritance
+- Unit management with auto-conversion
+- Content localization
+- Fine-grained access control
+- Change and action history
+- Advanced background job management
+- Multi-currency support
+- System and email notifications
+- Personalized dashboards and layouts
+- Advanced filtering and saved searches
+- Bulk data and relation editing
+- Bidirectional associations
+- Mobile-friendly User Interfaces
+- Mobile-optimized UI
+- Extensible with (custom) Modules
+- Customizable Record Previews Using HTML/CSS
+- Developer-friendly
+- Simple updating with smart dependency management
+- Complete REST API Coverage
+
 Please refer to [this page](https://www.atrocore.com/en/atrocore) to read the full feature description.
 
-Please note that you currently need to install the PIM module to use Attribute Management.
+
 
 ## For Whom Is AtroCore?
 
