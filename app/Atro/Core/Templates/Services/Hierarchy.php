@@ -229,6 +229,14 @@ class Hierarchy extends Base
         }
 
         if (!empty($treeBranches)) {
+            usort($treeBranches, function ($a, $b) use ($sortBy, $order) {
+                $aValue = $sortBy === 'name' ? $this->getLocalizedNameValue($a, $this->entityName) : $a->get($sortBy);
+                $bValue = $sortBy === 'name' ? $this->getLocalizedNameValue($b, $this->entityName) : $b->get($sortBy);
+                $cmp = $aValue <=> $bValue;
+
+                return $order === 'DESC' ? -$cmp : $cmp;
+            });
+
             foreach ($treeBranches as $entity) {
                 $this->prepareTreeNode($entity, $tree, $ids);
             }

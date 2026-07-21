@@ -200,6 +200,7 @@ class Daemon extends AbstractConsole
                         }
                     } else {
                         foreach ($jobs as $job) {
+//                            exec($this->getPhpBin() . " console.php job {$id}_{$job['id']} --run >> data/logs/job-worker.log 2>&1 &");
                             exec($this->getPhpBin() . " console.php job {$id}_{$job['id']} --run >/dev/null 2>&1 &");
                         }
                     }
