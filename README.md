@@ -5,9 +5,7 @@
 [![Built with PHP](https://img.shields.io/badge/PHP-8.4%2B-blue?logo=php)](https://www.php.net/)
 [![Documentation](https://img.shields.io/badge/Docs-Help%20Center-blueviolet)](https://help.atrocore.com/atrocore/what-is-atrocore)
 
-<p align="center" width="100%">
-<img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
-</p>
+<p align="center" width="100%"><img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48"></p>
 
 AtroCore is a powerful open-source data platform designed for [Master Data Management (MDM) and System Integration](https://www.atrocore.com/en). Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
 <!--
