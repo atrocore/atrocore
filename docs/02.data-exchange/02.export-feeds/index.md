@@ -100,7 +100,10 @@ When the exported XML, the system automatically extracts the schema URL, downloa
 - **Entity** – entity whose records will be exported.
 - **Sort Order (Field)** – field used to sort exported records.
 - **Sort Order (Direction)** – `ASC` (smallest first) or `DESC` (largest first).
-- **Locale** – determines the locale used for localized data export defines with [Locale](../../01.atrocore/03.administration/02.locales/index.md).
+For CSV and Excel formats, two language-related settings are available:
+
+- **Locale** – determines the language used for **column headers** (field and attribute names) and number/date formatting (decimal mark, thousand separator). All locales defined in the system are available for selection. Configured via [Locale](../../01.atrocore/03.administration/02.locales/index.md).
+- **Language** – determines the [language](../../01.atrocore/03.administration/03.languages/index.md) of the exported **cell values**. When set, multilingual field values and attribute values are exported in that language only.
 
 **CSV and Excel:**
 
@@ -128,10 +131,10 @@ Click `Save` to complete the creation.
 
 The `Configurator` panel defines which fields and attributes are included in the export and in what order. Use the panel menu to add items:
 
-- **Select Field(s)** – opens the `Entity Fields` window to select entity [fields](../../01.atrocore/03.administration/11.entity-management/03.fields-and-attributes/index.md).
-- **Select Attribute(s)** – opens the `Attributes` window to select entity [attributes](../../01.atrocore/03.administration/12.attribute-management/01.attributes/index.md) (available for entities that support attributes).
+- **Select Field(s)** – opens the `Entity Fields` window to select entity [fields](../../01.atrocore/03.administration/11.entity-management/03.fields-and-attributes/index.md). The window provides two confirmation buttons: **Select** adds only the main-language item, while **Select (All languages)** adds one configurator item per available language variant in addition to the main-language item.
+- **Select Attribute(s)** – opens the `Attributes` window to select entity [attributes](../../01.atrocore/03.administration/12.attribute-management/01.attributes/index.md) (available for entities that support attributes). The same two buttons apply: **Select** adds only the main-language item, **Select (All languages)** adds one item per language variant.
 - **Add All Attributes** – adds all attributes linked to the entity at once.
-- **Add Fixed Value** – adds a constant value column to the export.x`
+- **Add Fixed Value** – adds a constant value column to the export.
 - **Add Script** – adds a computed column using [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md).
 - **Remove All** – removes all items from the configurator.
 
@@ -329,9 +332,11 @@ To export them, after selecting, press `Actions` dropdown and select `Export`. T
 
 You can select an existing Export Feed associated with the current entity and click `Export`.
 
-![export From Entity With Feeds](_assets/export-from-entity-feed.png){.medium}
+![Export From Entity With Feeds](_assets/export-from-entity-feeds.png){.medium}
 
 > For the purposes of this execution all the configuration will be taken from selected `Export feed` except filters. Only the records explicitly selected in the view will be exported.
+
+When using an existing export feed, you can also override the feed's `Content Language` and `Locale` for this run only. This is useful when the feed is configured with language-specific columns ("All languages" items) and you want to export content in a single specific language without modifying the feed itself.
 
 Also, you can configure a one-time export directly in the same popup menu. This option supports only CSV and XLSX (Excel) formats and allows you to manually select the entity fields and attributes to be included in the export
 

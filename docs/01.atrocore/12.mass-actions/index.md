@@ -10,7 +10,7 @@ To select all entity records, click the checkbox to the left of the 'Name' colum
 
 The following mass actions are available by default in the AtroCore system:
 
-![Mass Actions](./_assets/mass-actions.png){.small}
+![Mass Actions](./_assets/mass-actions_n.png){.large}
 
 - **[Remove](#remove)** – to remove the selected entity records.
 - **[Compare](#compare)** – to compare the selected entity records.
@@ -21,6 +21,7 @@ The following mass actions are available by default in the AtroCore system:
 - **[Add relation](#add-relation)** – to relate the selected entity records with other entities (or entity).
 - **[Remove relation](#remove-relation)** – to remove the relations that have been added to the selected entity records.
 - **[Delete attribute](#delete-attribute)** – to remove attributes from records of entities that have attributes enabled.
+- **[Inherit all from parent](#inherit-all-from-parent)** – to overwrite inheritable field values in the selected records with values from their parent records. Available on [hierarchy](../03.administration/11.entity-management/01.entity-types/index.md#hierarchy) entities only such as a [Product](../../05.pim/03.products/index.md).
 
 Additional options may be added by additional modules, such as **Translate** option added by [Translations](https://store.atrocore.com/en/translations/20191) module. You can also [create](#custom-mass-actions) your own mass actions.
 
@@ -133,6 +134,16 @@ Delete attribute is a tool used to quickly remove attributes that are the same f
 ![Delete attribute](./_assets/delete-attribute.png){.large}
 
 > Delete Attribute function is only visible on entities that have enabled attributes. For more information on attribute management, please refer to the [Attribute Management](../../01.atrocore/03.administration/12.attribute-management/) documentation..
+
+## Inherit all from parent
+
+Inherit all from parent is a mass action available on [Hierarchy](../03.administration/11.entity-management/01.entity-types/index.md#hierarchy). It overwrites all inheritable field values in each selected record with values from its parent record.
+
+To use this action, select the child records you want to update and choose `Actions / Inherit all from parent`. The operation runs as a background job — a notification is shown when it completes.
+
+> This action overwrites existing field values. Unlike automatic inheritance, which only fills empty fields, this action replaces any inheritable value regardless of whether the field already has a value.
+
+For more information on how inheritance works, see [Hierarchies and Inheritance](../03.administration/11.entity-management/04.hierarchies-and-inheritance/index.md).
 
 ## Custom mass actions
 
