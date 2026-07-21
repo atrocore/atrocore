@@ -25,9 +25,7 @@
     "module": {
       "type": "varchar",
       "default": "custom",
-      "readOnly": true,
-      "required": true,
-      "view": "views/translation/fields/module"
+      "protected": true
     },
     "isCustomized": {
       "type": "bool",
