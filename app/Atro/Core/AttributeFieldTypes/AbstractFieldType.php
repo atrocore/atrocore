@@ -32,8 +32,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     protected Language $language;
     protected mixed $selectManagerFactory;
 
-    private bool $localeResolved = false;
-    private ?IEntity $cachedCurrentLocale = null;
+    private array $cachedLocales = [];
 
     public function __construct(Container $container)
     {
@@ -151,15 +150,14 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
 
     protected function getCachedCurrentLocale(): ?IEntity
     {
-        if (!$this->localeResolved) {
-            $this->localeResolved = true;
-            $localeId = Language::detectLocale($this->config, $this->user);
-            if ($localeId) {
-                $this->cachedCurrentLocale = $this->em->getEntity('Locale', $localeId);
-            }
+        $localeId = Language::detectLocale($this->config, $this->user) ?? '';
+        if (!array_key_exists($localeId, $this->cachedLocales)) {
+            $this->cachedLocales[$localeId] = $localeId
+                ? $this->em->getEntity('Locale', $localeId)
+                : null;
         }
 
-        return $this->cachedCurrentLocale;
+        return $this->cachedLocales[$localeId];
     }
 
     protected function prepareKey(string $nameKey, array $row): string
