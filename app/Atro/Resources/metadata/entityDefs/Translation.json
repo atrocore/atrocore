@@ -407,6 +407,10 @@
       "type": "text",
       "isValue": true
     },
+    "noNo": {
+      "type": "text",
+      "isValue": true
+    },
     "faIr": {
       "type": "text",
       "isValue": true
@@ -440,6 +444,10 @@
       "isValue": true
     },
     "srCs": {
+      "type": "text",
+      "isValue": true
+    },
+    "srRs": {
       "type": "text",
       "isValue": true
     },
