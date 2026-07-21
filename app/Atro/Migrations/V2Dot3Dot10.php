@@ -35,6 +35,7 @@ class V2Dot3Dot10 extends Base
         $this->migrateDataPipelines();
         $this->migrateProductGroup();
         $this->migrateLocaleDisableForUi();
+        $this->addMissingTranslationColumns();
     }
 
     public function migrateLocaleDisableForUi(): void
@@ -459,6 +460,17 @@ class V2Dot3Dot10 extends Base
         }
 
         return $this->metadata;
+    }
+
+    private function addMissingTranslationColumns(): void
+    {
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE translation ADD no_no TEXT DEFAULT NULL");
+            $this->exec("ALTER TABLE translation ADD sr_rs TEXT DEFAULT NULL");
+        } else {
+            $this->exec("ALTER TABLE translation ADD no_no LONGTEXT DEFAULT NULL");
+            $this->exec("ALTER TABLE translation ADD sr_rs LONGTEXT DEFAULT NULL");
+        }
     }
 
     private function exec(string $sql): void
