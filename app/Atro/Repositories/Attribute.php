@@ -645,12 +645,13 @@ class Attribute extends Base
                 $fetchedData = isset($fetchedData['field']) && is_array($fetchedData['field']) ? $fetchedData['field'] : [];
                 $fetchedOptions = isset($fetchedData['options']) && is_array($fetchedData['options']) ? $fetchedData['options'] : [];
 
+                $tableName = Util::toUnderScore($entity->get('entityId')) . '_attribute_value';
                 foreach (array_diff($fetchedOptions, $entity->get('options') ?? []) as $option) {
                     $used = $this
                         ->getDbal()
                         ->createQueryBuilder()
                         ->select('COUNT(*)')
-                        ->from('product_attribute_value')
+                        ->from($tableName)
                         ->where('attribute_id=:attributeId')
                         ->andWhere('varchar_value = :option OR json_value LIKE :optionExpr')
                         ->setParameter('attributeId', $entity->get('id'))
