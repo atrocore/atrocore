@@ -1234,7 +1234,7 @@
     "itselfAssociation": "Rekord nie może być powiązany z samym sobą.",
     "recordAssociationAlreadyExists": "Takie powiązanie rekordów już istnieje.",
     "notAllowedOption": "Opcja '%s' nie jest dozwolona dla '%s'.",
-    "listOptionCannotBeDeleted": "Tej opcji listy \"%s\" nie można usunąć, ponieważ jest obecnie używana przez jeden lub więcej rekordów.",
+    "listOptionCannotBeDeleted": "Nie można usunąć wybranej opcji listy, ponieważ jest już używana w jednym lub więcej rekordach.",
     "suchItemNameCannotBeUsedHere": "Folder/plik o takiej nazwie już istnieje w folderze docelowym. Proszę wybrać inny folder lub zmienić nazwę i spróbować ponownie.",
     "notUniqueCreatedValue": "Takie relacje już istnieją i dlatego nie można ich dodać.",
     "someCouldNotDuplicatedAndLinked": "Niektóre rekordy nie mogły zostać zduplikowane i połączone",

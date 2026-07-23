@@ -1224,7 +1224,7 @@
     "itselfAssociation": "Record cannot be associated with itself.",
     "recordAssociationAlreadyExists": "Such record association exists already.",
     "notAllowedOption": "Option '%s' is not allowed for '%s'.",
-    "listOptionCannotBeDeleted": "This list option \"%s\" cannot be deleted because it is currently used by one or more records.",
+    "listOptionCannotBeDeleted": "The selected option(s) cannot be deleted because they are already used in one or more records.",
     "suchItemNameCannotBeUsedHere": "A folder/file with such a name already exists in the destination folder. Please choose another folder or change the name and try again.",
     "colorDepthValidationFailed": "Color depth of this file is not allowed.",
     "colorSpaceValidationFailed": "Color space of this file is not allowed.",

@@ -1304,7 +1304,7 @@
     "itselfAssociation": "Il record non può essere associato a se stesso.",
     "recordAssociationAlreadyExists": "Tale associazione di record esiste già.",
     "notAllowedOption": "L'opzione '%s' non è consentita per '%s'.",
-    "listOptionCannotBeDeleted": "Questa opzione dell'elenco \"%s\" non può essere eliminata perché è attualmente utilizzata da uno o più record.",
+    "listOptionCannotBeDeleted": "Impossibile eliminare l'opzione(i) selezionata perché già utilizzata in uno o più record.",
     "suchItemNameCannotBeUsedHere": "Una cartella/file con tale nome esiste già nella cartella di destinazione. Scelga un'altra cartella o cambi il nome e riprovi.",
     "colorDepthValidationFailed": "La profondità di colore di questo file non è consentita.",
     "colorSpaceValidationFailed": "Lo spazio colore di questo file non è consentito.",

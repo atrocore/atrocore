@@ -21,6 +21,7 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity as OrmEntity;
 
@@ -442,7 +443,7 @@ class EntityField extends ReferenceData
 
         if (!$entity->isNew() && $entity->isAttributeChanged('options')) {
             $newOptions     = $entity->get('options') ?? [];
-            $deletedOptions = array_diff($entity->getFetched('options') ?? [], $newOptions);
+            $deletedOptions = array_values(array_diff($entity->getFetched('options') ?? [], $newOptions));
 
             foreach ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.conditionalProperties.disableOptions") ?? [] as $row) {
                 if (empty($row['options']) || !is_array($row['options'])) {
@@ -459,28 +460,31 @@ class EntityField extends ReferenceData
                 }
             }
 
-            foreach ($deletedOptions as $deletedOption) {
+            if (!empty($deletedOptions)) {
                 $tableName = $this->getEntityManager()->getMapper()->toDb($entity->get('entityId'));
-                $column    = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
+                $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
 
-                $used = $this
+                $query = $this
                     ->getEntityManager()
                     ->getDbal()
                     ->createQueryBuilder()
-                    ->select('COUNT(*)')
+                    ->select('id')
                     ->from($tableName)
-                    ->andWhere("$column = :option OR $column LIKE :optionExpr")
-                    ->setParameter('option', $deletedOption)
-                    ->setParameter('optionExpr', "%\"$deletedOption\"%")
-                    ->fetchOne();
+                    ->where('deleted = :false')
+                    ->setParameter('false', false, ParameterType::BOOLEAN);
 
-                if (!empty($used)) {
-                    throw new BadRequest(
-                        sprintf(
-                            $this->getInjection('language')->translate('listOptionCannotBeDeleted', 'exceptions', 'Global'),
-                            $this->getInjection('language')->translateOption($deletedOption, $entity->get('code'), $entity->get('entityId'))
-                        )
-                    );
+                $conditions = [$query->expr()->in($column, ':options')];
+                $query->setParameter('options', $deletedOptions, Mapper::getParameterType($deletedOptions));
+
+                foreach ($deletedOptions as $i => $deletedOption) {
+                    $conditions[] = $query->expr()->like($column, ":option$i");
+                    $query->setParameter("option$i", "%\"$deletedOption\"%");
+                }
+
+                $query->andWhere($query->expr()->or(...$conditions));
+
+                if (!empty($query->fetchOne())) {
+                    throw new BadRequest($this->getLanguage()->translate('listOptionCannotBeDeleted', 'exceptions'));
                 }
             }
         }
