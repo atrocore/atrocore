@@ -24,9 +24,12 @@ class Delete extends AbstractAction
 
     public function executeNow(Entity $action, \stdClass $input): bool
     {
+        $deletePermanently = $action->get('deletePermanently') ?? false;
+
         if (property_exists($input, 'where')) {
             $res = $this->getServiceFactory()->create($action->get('searchEntity'))->massRemove([
-                'where' => json_decode(json_encode($input->where), true)
+                'where'       => json_decode(json_encode($input->where), true),
+                'permanently' => $deletePermanently
             ]);
             return !empty($res);
         }
@@ -48,7 +51,7 @@ class Delete extends AbstractAction
 
             if (!empty($input->triggeredEntity)) {
                 $templateData['entity'] = $input->triggeredEntity;
-            } else if (property_exists($input, 'triggeredEntityType') && property_exists($input, 'triggeredEntityId')) {
+            } elseif (property_exists($input, 'triggeredEntityType') && property_exists($input, 'triggeredEntityId')) {
                 $templateData['entity'] = $this->getEntityManager()->getRepository($input->triggeredEntityType)->get($input->triggeredEntityId);
             }
 
@@ -56,7 +59,8 @@ class Delete extends AbstractAction
             $where = @json_decode($whereJson, true);
 
             $res = $this->getServiceFactory()->create($action->get('searchEntity'))->massRemove([
-                'where' => $where
+                'where'       => $where,
+                'permanently' => $deletePermanently
             ]);
 
             return !empty($res);
@@ -64,6 +68,10 @@ class Delete extends AbstractAction
             if (!property_exists($input, 'entityId') || empty($sourceEntity)) {
                 throw new BadRequest('Action can be executed only from Source Entity.');
             }
+        }
+
+        if ($deletePermanently) {
+            return $this->getServiceFactory()->create($sourceEntity->getEntityType())->deleteEntityPermanently($sourceEntity->get('id'));
         }
 
         return $this->getServiceFactory()->create($sourceEntity->getEntityType())->deleteEntity($sourceEntity->get('id'));

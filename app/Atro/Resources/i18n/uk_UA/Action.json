@@ -28,7 +28,8 @@
     "updateScript": "Скрипт",
     "updateFields": "Оновити поля",
     "searchEntity": "Сутність пошуку",
-    "executions": "Виконання"
+    "executions": "Виконання",
+    "deletePermanently": "Видалити назавжди"
   },
   "labels": {
     "execute": "Виконати",
