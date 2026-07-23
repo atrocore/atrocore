@@ -648,6 +648,54 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
         },
         massActionUsingDefs: function (name) {
+            var selectScope = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'selectScope']);
+            if (selectScope) {
+                var url = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'url']) || name;
+                var selectedParam = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'selectedParam']) || 'selectedIds';
+                var extraFields = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'extraFields']) || null;
+                var whereAdditional = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'whereAdditional']) || [];
+                var selectLabel = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'selectLabel']) || null;
+                this.notify('Loading...');
+                this.createView('dialog', 'views/modals/select-records', {
+                    scope: selectScope,
+                    multiple: true,
+                    createButton: false,
+                    massRelateEnabled: false,
+                    allowSelectAllResult: true,
+                    extraFields: extraFields,
+                    whereAdditional: whereAdditional,
+                    selectLabel: selectLabel,
+                }, dialog => {
+                    dialog.render();
+                    this.notify(false);
+                    dialog.once('select', models => {
+                        this.notify(this.translate('pleaseWait', 'messages'));
+                        var data = {entityName: this.scope};
+                        if (Array.isArray(models)) {
+                            data[selectedParam] = {idList: models.map(m => m.id)};
+                        } else {
+                            data[selectedParam] = {where: (models.where ?? []).concat(whereAdditional), byWhere: true};
+                        }
+                        if (dialog.extraFieldsModel) {
+                            Object.assign(data, dialog.extraFieldsModel.attributes);
+                        }
+                        if (this.allResultIsChecked) {
+                            data.where = this.collection.getWhereForCheckedRecords();
+                            data.selectData = this.collection.data || {};
+                            data.byWhere = true;
+                        } else {
+                            data.idList = [...this.checkedList];
+                        }
+                        this.ajaxPostRequest(url, data).then(() => {
+                            this.notify('Done', 'success');
+                        }).fail(() => {
+                            this.notify('Error occurred', 'error');
+                        });
+                    });
+                });
+                return;
+            }
+
             var bypassConfirmation = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'bypassConfirmation']);
             var confirmationMsg = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'confirmationMessage']) || 'confirmation';
 

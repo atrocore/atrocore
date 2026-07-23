@@ -169,6 +169,7 @@ class EntityField extends ReferenceData
         $allowHidden              = !empty($params['skipEmHidden']);
         $filterExportDisabled     = false;
         $filterMassUpdateDisabled = false;
+        $filterIsMultilang        = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['entityId='])) {
                 $entityName = $item['entityId='];
@@ -180,6 +181,9 @@ class EntityField extends ReferenceData
             }
             if (isset($item['massUpdateDisabled!='])) {
                 $filterMassUpdateDisabled = true;
+            }
+            if (!empty($item['isMultilang=']) || !empty($item['isMultilang'])) {
+                $filterIsMultilang = true;
             }
         }
 
@@ -219,6 +223,10 @@ class EntityField extends ReferenceData
                 }
 
                 if (!empty($fieldDefs['multilangField'])) {
+                    continue;
+                }
+
+                if ($filterIsMultilang && empty($fieldDefs['isMultilang'])) {
                     continue;
                 }
 
