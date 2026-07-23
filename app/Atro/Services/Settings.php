@@ -94,7 +94,10 @@ class Settings extends AbstractService
             throw new Error('Cannot save settings');
         }
 
-        if (isset($data->inputLanguageList)) {
+        $afterUpdateEvent = new Event(['data' => $data, 'shouldRebuild' => false]);
+        $this->getInjection('eventManager')->dispatch('SettingsService', 'afterUpdate', $afterUpdateEvent);
+
+        if (isset($data->inputLanguageList) || $afterUpdateEvent->getArgument('shouldRebuild')) {
             $this->getDataManager()->rebuild();
         }
 

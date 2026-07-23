@@ -159,6 +159,8 @@ class DataManager
     {
         $result = $this->clearCache();
 
+        $this->container->get('eventManager')->reload();
+
         $result &= $this->rebuildMetadata();
 
         $result &= $this->rebuildDatabase();

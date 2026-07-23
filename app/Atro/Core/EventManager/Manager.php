@@ -58,6 +58,13 @@ class Manager
         $this->getEventDispatcher()->addListener($eventName, $listener);
     }
 
+    public function reload(): void
+    {
+        $this->isLoaded = false;
+        $this->eventDispatcher = new EventDispatcher();
+        $this->loadListeners();
+    }
+
     /**
      * Load all listeners
      */
