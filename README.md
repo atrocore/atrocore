@@ -199,7 +199,7 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
   - 80 GB SSD Storage
 - **Software**:
   - Apache Web Server or Nginx
-  - PHP 8.1 - 8.4.
+  - PHP 8.4 - 8.5.
   - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ or MariaDB 5.5+.
 
 > Please note that AtroCore/AtroPIM will not run on standard shared hosting environments due to its technical requirements and resource needs. Managed server hosting can be suitable, but each provider and configuration should be evaluated individually. In most cases it will work.
