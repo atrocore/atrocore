@@ -28,7 +28,8 @@
     "updateFields": "Campi di aggiornamento",
     "updateScript": "Scrittura",
     "searchEntity": "Entità di ricerca",
-    "executions": "Esecuzioni"
+    "executions": "Esecuzioni",
+    "deletePermanently": "Cancellare in modo permanente"
   },
   "labels": {
     "execute": "Eseguire",

@@ -28,7 +28,8 @@
     "updateScript": "Script",
     "updateFields": "Mise à jour des champs",
     "searchEntity": "Entité de recherche",
-    "executions": "Exécutions"
+    "executions": "Exécutions",
+    "deletePermanently": "Supprimer définitivement"
   },
   "labels": {
     "execute": "Exécuter",
