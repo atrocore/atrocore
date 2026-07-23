@@ -105,7 +105,7 @@ Please refer to [this page](https://www.atrocore.com/en/atrocore) to read the fu
 
 ### Product Development Roadmap
 
-Check out our [roadmap](https://community.atrocore.com/t/product-roadmap/237).
+- Check out our [roadmap](https://community.atrocore.com/t/product-roadmap/237).
 
 ## For Whom Is AtroCore?
 
