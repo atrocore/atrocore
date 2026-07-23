@@ -638,6 +638,38 @@ class Attribute extends Base
             }
         }
 
+        if (!$entity->isNew() && in_array($entity->get('type'), ['enum', 'multiEnum']) && $entity->isAttributeChanged('options')) {
+            $fetchedData = !empty($entity->getFetched('data')) ? json_decode(json_encode($entity->getFetched('data')), true) : [];
+
+            if (!empty($fetchedData)) {
+                $fetchedData = isset($fetchedData['field']) && is_array($fetchedData['field']) ? $fetchedData['field'] : [];
+                $fetchedOptions = isset($fetchedData['options']) && is_array($fetchedData['options']) ? $fetchedData['options'] : [];
+
+                foreach (array_diff($fetchedOptions, $entity->get('options') ?? []) as $option) {
+                    $used = $this
+                        ->getDbal()
+                        ->createQueryBuilder()
+                        ->select('COUNT(*)')
+                        ->from('product_attribute_value')
+                        ->where('attribute_id=:attributeId')
+                        ->andWhere('varchar_value = :option OR json_value LIKE :optionExpr')
+                        ->setParameter('attributeId', $entity->get('id'))
+                        ->setParameter('option', $option)
+                        ->setParameter('optionExpr', "%\"$option\"%")
+                        ->fetchOne();
+
+                    if (!empty($used)) {
+                        throw new BadRequest(
+                            sprintf(
+                                $this->getInjection('language')->translate('listOptionCannotBeDeleted', 'exceptions', 'Global'),
+                                $this->getInjection('language')->translateOption($option, $entity->get('systemName'), $entity->get('entityId'))
+                            )
+                        );
+                    }
+                }
+            }
+        }
+
         $attributePanel = $this->getEntityManager()->getEntity('AttributePanel', $entity->get('attributePanelId'));
         if (empty($attributePanel)) {
             throw new BadRequest("Attribute panel '{$entity->get('attributePanelId')}' does not exist.");

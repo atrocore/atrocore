@@ -1202,6 +1202,7 @@
     "singleClassificationAllowed": "Une seule classification est autorisée",
     "moreThanOneClassification": "Certains enregistrements ont plus d'une classification.",
     "notAllowedOption": "L'option \"%s\" n'est pas autorisée pour \"%s\".",
+    "listOptionCannotBeDeleted": "Cette option de liste \"%s\" ne peut pas être supprimée car elle est actuellement utilisée par un ou plusieurs enregistrements.",
     "dateIsInvalid": "La date du champ '%s' n'est pas valide.",
     "datetimeIsInvalid": "La date et l'heure du champ \"%s\" ne sont pas valides.",
     "notUniqueRecordField": "L'enregistrement ne peut pas être sauvegardé, l'enregistrement avec un tel \"%s\" existe déjà.",

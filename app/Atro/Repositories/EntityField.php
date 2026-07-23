@@ -458,6 +458,31 @@ class EntityField extends ReferenceData
                     }
                 }
             }
+
+            foreach ($deletedOptions as $deletedOption) {
+                $tableName = $this->getEntityManager()->getMapper()->toDb($entity->get('entityId'));
+                $column    = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
+
+                $used = $this
+                    ->getEntityManager()
+                    ->getDbal()
+                    ->createQueryBuilder()
+                    ->select('COUNT(*)')
+                    ->from($tableName)
+                    ->andWhere("$column = :option OR $column LIKE :optionExpr")
+                    ->setParameter('option', $deletedOption)
+                    ->setParameter('optionExpr', "%\"$deletedOption\"%")
+                    ->fetchOne();
+
+                if (!empty($used)) {
+                    throw new BadRequest(
+                        sprintf(
+                            $this->getInjection('language')->translate('listOptionCannotBeDeleted', 'exceptions', 'Global'),
+                            $this->getInjection('language')->translateOption($deletedOption, $entity->get('code'), $entity->get('entityId'))
+                        )
+                    );
+                }
+            }
         }
     }
 
