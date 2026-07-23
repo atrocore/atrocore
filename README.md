@@ -28,8 +28,6 @@ Active development of our software began in 2018, driven by a clear mission: to 
 
 Today, our software has evolved into a robust, comprehensive ecosystem built on a highly flexible, modular architecture. This adaptable framework allows us to confidently assure our clients that their requirements – extending far beyond standard PIM functions – can be fully accommodated without compromise. By offering a versatile technical toolbox, we enable organizations to seamlessly scale, integrate, and customize their data models to meet complex, ever-changing business demands.
 
-### Our future: [Check out our roadmap](https://community.atrocore.com/t/product-roadmap/237)
-
 
 ## Our Customers
 
@@ -105,7 +103,9 @@ For teams that prefer a managed cloud environment, we offer hosted SaaS plans.
 
 Please refer to [this page](https://www.atrocore.com/en/atrocore) to read the full feature description.
 
+### Product Development Roadmap
 
+Check out our [roadmap](https://community.atrocore.com/t/product-roadmap/237).
 
 ## For Whom Is AtroCore?
 
