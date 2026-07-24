@@ -679,6 +679,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         if (dialog.extraFieldsModel) {
                             Object.assign(data, dialog.extraFieldsModel.attributes);
                         }
+                        var threshold = this.getConfig().get('massUpdateMaxCountWithoutJob') || 200;
+                        var isAsync = this.allResultIsChecked || !this.checkedList || this.checkedList.length > threshold;
+                        var finalUrl = isAsync ? url + 'Async' : url;
                         if (this.allResultIsChecked) {
                             data.where = this.collection.getWhereForCheckedRecords();
                             data.selectData = this.collection.data || {};
@@ -686,8 +689,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         } else {
                             data.idList = [...this.checkedList];
                         }
-                        this.ajaxPostRequest(url, data).then(() => {
-                            this.notify('Done', 'success');
+                        this.ajaxPostRequest(finalUrl, data).then(result => {
+                            result.sync = !isAsync;
+                            this.processMassActionResult(result);
+                            this.collection.fetch();
                         }).fail(() => {
                             this.notify('Error occurred', 'error');
                         });
