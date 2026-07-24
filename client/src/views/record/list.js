@@ -683,7 +683,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         var isAsync = this.allResultIsChecked || !this.checkedList || this.checkedList.length > threshold;
                         var finalUrl = isAsync ? url + 'Async' : url;
                         if (isAsync) {
-                            data.where = this.collection.getWhereForCheckedRecords();
+                            data.where = this.allResultIsChecked
+                                ? this.collection.getWhereForCheckedRecords()
+                                : [{attribute: 'id', type: 'in', value: [...this.checkedList]}];
                         } else {
                             data.idList = [...this.checkedList];
                         }
