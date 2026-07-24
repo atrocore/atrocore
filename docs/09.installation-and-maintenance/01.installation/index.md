@@ -5,6 +5,8 @@ title: Installation
 This Installation Guide is prepared for **Ubuntu** Operating System. Of course, you can use any UNIX-based system, but in this case you need to adopt this manual by yourself.
 A **dedicated (virtual) server with root permissions** is recommended. However, the installation on a shared or managed hosting is also possible, as long as the environment is configured correctly — see [Installation on Shared / Managed Hosting](../01.installation/06.shared-hosting).
 
+> **Supported PHP versions: 8.4 and 8.5.** PHP 8.5 is the version shipped with Ubuntu 26.04 LTS and is recommended for new installations.
+
 ## 1. Linux Server Preparation
 This section contains links to the guides that describe how to prepare your server for the installation of the AtroCore Application.
 
@@ -203,7 +205,7 @@ Enable the extension:
 ```
 extension=xattr.so
 ```
-> **Note:** Depending on your setup, php.ini might be located in different places. Common locations include /etc/php/{PHP_VERSION}/apache2/php.ini for Apache or /etc/php/{PHP_VERSION}/cli/php.ini for command-line PHP. Replace {PHP_VERSION} with your PHP version (e.g., 7.4, 8.0, etc.).
+> **Note:** Depending on your setup, php.ini might be located in different places. Common locations include /etc/php/{PHP_VERSION}/apache2/php.ini for Apache or /etc/php/{PHP_VERSION}/cli/php.ini for command-line PHP. Replace {PHP_VERSION} with your PHP version (e.g., 8.4, 8.5).
 
 Restart PHP-FPM/Apache:
 ```
