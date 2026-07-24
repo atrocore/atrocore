@@ -406,6 +406,15 @@ class Record extends RecordService
                 }
             }
 
+            if (empty($foreignLink)) {
+                foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) ?? [] as $fieldName => $fieldData) {
+                    if ($fieldData['type'] === 'link' && !empty($fieldData['entity']) && $fieldData['entity'] === $scope) {
+                        $foreignLink = $fieldName;
+                        break;
+                    }
+                }
+            }
+
             if ($this->getMetadata()->get(['scopes', $this->entityName, 'type']) === 'ReferenceData') {
                 $field             = $link . 'Id';
                 $foreignRepository = $this->getEntityManager()->getRepository($scope);
