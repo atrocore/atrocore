@@ -155,8 +155,7 @@ AtroCore is built around **open standards**, not framework lock-in. We adopt com
 
 ## Integrations
 
-AtroPIM has a REST API and can be integrated with any third-party system, channel or marketplace. 
-You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
+With a REST API covering 100% of its functionality, AtroCore integrates effortlessly with any external system, sales channel, or marketplace.
 
 We offer the following native paid integrations:
 
