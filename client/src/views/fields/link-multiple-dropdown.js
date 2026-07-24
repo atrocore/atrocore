@@ -93,7 +93,7 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
         },
 
         getLabelText: function () {
-            Link.prototype.getLabelText.call(this);
+            return Link.prototype.getLabelText.call(this);
         },
 
         getWhereFilter() {

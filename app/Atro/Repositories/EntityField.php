@@ -170,6 +170,7 @@ class EntityField extends ReferenceData
         $allowHidden              = !empty($params['skipEmHidden']);
         $filterExportDisabled     = false;
         $filterMassUpdateDisabled = false;
+        $filterIsMultilang        = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['entityId='])) {
                 $entityName = $item['entityId='];
@@ -181,6 +182,9 @@ class EntityField extends ReferenceData
             }
             if (isset($item['massUpdateDisabled!='])) {
                 $filterMassUpdateDisabled = true;
+            }
+            if (!empty($item['isMultilang=']) || !empty($item['isMultilang'])) {
+                $filterIsMultilang = true;
             }
         }
 
@@ -204,22 +208,29 @@ class EntityField extends ReferenceData
 
         $items = [];
         foreach ($entities as $entityName) {
-            $items[] = [
-                'id'         => "{$entityName}_id",
-                'code'       => 'id',
-                'name'       => 'ID',
-                'type'       => 'varchar',
-                'required'   => false,
-                'readOnly'   => true,
-                'entityId'   => $entityName,
-                'entityName' => $this->translate($entityName, 'scopeNames')
-            ];
+            if (!$filterIsMultilang) {
+                $items[] = [
+                    'id'         => "{$entityName}_id",
+                    'code'       => 'id',
+                    'name'       => 'ID',
+                    'type'       => 'varchar',
+                    'required'   => false,
+                    'readOnly'   => true,
+                    'entityId'   => $entityName,
+                    'entityName' => $this->translate($entityName, 'scopeNames')
+                ];
+            }
+
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
                 if (is_array($types) && !in_array($fieldDefs['type'], $types)) {
                     continue;
                 }
 
                 if (!empty($fieldDefs['multilangField'])) {
+                    continue;
+                }
+
+                if ($filterIsMultilang && empty($fieldDefs['isMultilang'])) {
                     continue;
                 }
 
