@@ -28,7 +28,8 @@
     "applyToPreselectedRecords": "Aplicar a registros preseleccionados",
     "updateType": "Tipo de actualización",
     "searchEntity": "Entidad de búsqueda",
-    "executions": "Ejecuciones"
+    "executions": "Ejecuciones",
+    "deletePermanently": "Borrar permanentemente"
   },
   "labels": {
     "execute": "Ejecute",

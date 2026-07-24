@@ -7,14 +7,8 @@
           "name": "code"
         },
         {
-          "name": "module"
-        }
-      ],
-      [
-        {
           "name": "isCustomized"
-        },
-        false
+        }
       ]
     ]
   }

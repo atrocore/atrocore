@@ -5,9 +5,7 @@
 [![Built with PHP](https://img.shields.io/badge/PHP-8.4%2B-blue?logo=php)](https://www.php.net/)
 [![Documentation](https://img.shields.io/badge/Docs-Help%20Center-blueviolet)](https://help.atrocore.com/atrocore/what-is-atrocore)
 
-<p align="center" width="100%">
-<img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
-</p>
+<p align="center" width="100%"><br><br><img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48"><br><br></p>
 
 AtroCore is a powerful open-source data platform designed for [Master Data Management (MDM) and System Integration](https://www.atrocore.com/en). Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
 <!--
@@ -73,9 +71,41 @@ For teams that prefer a managed cloud environment, we offer hosted SaaS plans.
 
 ![Feature Overview](_assets/atrocore-feature-overview.png)
 
+## Feature List
+
+- Configurable data model
+- Configurable actions
+- Fully customizable user interfaces
+- Logic-based automatic layout adjustments
+- Classifications for all entities
+- DAM / file management
+- Flexible attribute management
+- 20+ data types incl. nested attributes
+- Hierarchies and data inheritance
+- Unit management with auto-conversion
+- Content localization
+- Fine-grained access control
+- Change and action history
+- Advanced background job management
+- Multi-currency support
+- System and email notifications
+- Personalized dashboards and layouts
+- Advanced filtering and saved searches
+- Bulk data and relation editing
+- Bidirectional associations
+- Mobile-friendly User Interfaces
+- Mobile-optimized UI
+- Extensible with (custom) Modules
+- Customizable Record Previews Using HTML/CSS
+- Developer-friendly
+- Simple updating with smart dependency management
+- Complete REST API Coverage
+
 Please refer to [this page](https://www.atrocore.com/en/atrocore) to read the full feature description.
 
-Please note that you currently need to install the PIM module to use Attribute Management.
+### Product Development Roadmap
+
+- Check out our [roadmap](https://community.atrocore.com/t/product-roadmap/237).
 
 ## For Whom Is AtroCore?
 
@@ -169,20 +199,19 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
   - 80 GB SSD Storage
 - **Software**:
   - Apache Web Server or Nginx
-  - PHP 8.1 - 8.4.
+  - PHP 8.4 - 8.5.
   - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ or MariaDB 5.5+.
 
 > Please note that AtroCore/AtroPIM will not run on standard shared hosting environments due to its technical requirements and resource needs. Managed server hosting can be suitable, but each provider and configuration should be evaluated individually. In most cases it will work.
 
 ## Installation (Getting Started)
 
-Installation Guide is [here](https://help.atrocore.com/installation-and-maintenance/installation).
+- Installation Guide is [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 ### Docker Installation
 
-Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
-
-Docker Image is [here](https://github.com/atrocore/docker).
+- Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
+- Docker Image is [here](https://github.com/atrocore/docker).
 
 If you want to test AtroCore without PIM, simply uninstall the PIM module after installing the Docker Image.
 
@@ -220,13 +249,14 @@ Would you like to help us translate UIs into your language, or improve existing 
 ## Documentation
 
 - Please visit our Help Center (Documentation) - https://help.atrocore.com/
+- Developer Documentation: https://help.atrocore.com/latest/developer-guide
 
 
 ## Other Resources
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
 - Read our Release Notes - https://help.atrocore.com/release-notes/core
-- Please visit our Community - https://community.atrocore.com
+- Please visit our Community - https://community.atrocore.com (use github account to login)
 - Сontact us - https://www.atrocore.com/contact
 
 

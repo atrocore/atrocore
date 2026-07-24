@@ -609,7 +609,7 @@ class Attribute extends Base
         if (!empty($entity->get('pattern')) && ($entity->isNew() || $entity->isAttributeChanged('pattern'))) {
             if (!RegexUtil::validate($entity->get('pattern'))) {
                 throw new BadRequest(
-                    sprintf($this->getInjection('language')->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'pattern')
+                    sprintf($this->getLanguage()->translate('regexSyntaxError', 'exceptions', 'FieldManager'), 'pattern')
                 );
             }
         }
@@ -635,6 +635,45 @@ class Attribute extends Base
                 || $this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")
             ) {
                 throw new BadRequest($this->exception('entityNotAllowToChoose'));
+            }
+        }
+
+        if (!$entity->isNew() && in_array($entity->get('type'), ['enum', 'multiEnum']) && $entity->isAttributeChanged('options')) {
+            $fetchedData = !empty($entity->getFetched('data')) ? json_decode(json_encode($entity->getFetched('data')), true) : [];
+
+            if (!empty($fetchedData)) {
+                $fetchedData = isset($fetchedData['field']) && is_array($fetchedData['field']) ? $fetchedData['field'] : [];
+                $fetchedOptions = isset($fetchedData['options']) && is_array($fetchedData['options']) ? $fetchedData['options'] : [];
+
+                $tableName = Util::toUnderScore($entity->get('entityId')) . '_attribute_value';
+
+                $deletedOptions = array_values(array_diff($fetchedOptions, $entity->get('options') ?? []));
+
+                if (!empty($deletedOptions)) {
+                    $query = $this
+                        ->getDbal()
+                        ->createQueryBuilder()
+                        ->select('id')
+                        ->from($tableName)
+                        ->where('attribute_id=:attributeId')
+                        ->andWhere('deleted=:false')
+                        ->setParameter('attributeId', $entity->get('id'))
+                        ->setParameter('false', false, ParameterType::BOOLEAN);
+
+                    $conditions = [$query->expr()->in('varchar_value', ':options')];
+                    $query->setParameter('options', $deletedOptions, Mapper::getParameterType($deletedOptions));
+
+                    foreach ($deletedOptions as $i => $option) {
+                        $conditions[] = $query->expr()->like('json_value', ":option$i");
+                        $query->setParameter("option$i", "%\"$option\"%");
+                    }
+
+                    $query->andWhere($query->expr()->or(...$conditions));
+
+                    if (!empty($query->fetchOne())) {
+                        throw new BadRequest($this->getLanguage()->translate('listOptionCannotBeDeleted', 'exceptions'));
+                    }
+                }
             }
         }
 
@@ -711,7 +750,7 @@ class Attribute extends Base
             && $entity->get('max') !== null
             && $entity->get('max') < $entity->get('min')
         ) {
-            throw new BadRequest($this->getInjection('language')->translate('maxLessThanMin', 'exceptions',
+            throw new BadRequest($this->getLanguage()->translate('maxLessThanMin', 'exceptions',
                 'Attribute'));
         }
     }
@@ -820,7 +859,7 @@ class Attribute extends Base
      */
     protected function exception(string $key): string
     {
-        return $this->getInjection('language')->translate($key, "exceptions", "Attribute");
+        return $this->getLanguage()->translate($key, "exceptions", "Attribute");
     }
 
     protected function getEventManager(): Manager

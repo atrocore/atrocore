@@ -124,6 +124,24 @@
         }
       }
     },
+    "deletePermanently": {
+      "type": "bool",
+      "notStorable": true,
+      "virtualField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "delete"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "searchEntity": {
       "type": "varchar",
       "view": "views/action/fields/search-entity",

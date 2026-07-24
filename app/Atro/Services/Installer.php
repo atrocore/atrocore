@@ -407,7 +407,7 @@ class Installer extends HasContainer
     {
         return [
             'requirements' => [
-                'phpVersion'  => '8.1',
+                'phpVersion'  => '8.4',
                 'phpRequires' => [
                     'json',
                     'openssl',

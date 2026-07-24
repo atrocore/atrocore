@@ -21,6 +21,7 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity as OrmEntity;
 
@@ -169,6 +170,7 @@ class EntityField extends ReferenceData
         $allowHidden              = !empty($params['skipEmHidden']);
         $filterExportDisabled     = false;
         $filterMassUpdateDisabled = false;
+        $filterIsMultilang        = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['entityId='])) {
                 $entityName = $item['entityId='];
@@ -180,6 +182,9 @@ class EntityField extends ReferenceData
             }
             if (isset($item['massUpdateDisabled!='])) {
                 $filterMassUpdateDisabled = true;
+            }
+            if (!empty($item['isMultilang=']) || !empty($item['isMultilang'])) {
+                $filterIsMultilang = true;
             }
         }
 
@@ -203,22 +208,29 @@ class EntityField extends ReferenceData
 
         $items = [];
         foreach ($entities as $entityName) {
-            $items[] = [
-                'id'         => "{$entityName}_id",
-                'code'       => 'id',
-                'name'       => 'ID',
-                'type'       => 'varchar',
-                'required'   => false,
-                'readOnly'   => true,
-                'entityId'   => $entityName,
-                'entityName' => $this->translate($entityName, 'scopeNames')
-            ];
+            if (!$filterIsMultilang) {
+                $items[] = [
+                    'id'         => "{$entityName}_id",
+                    'code'       => 'id',
+                    'name'       => 'ID',
+                    'type'       => 'varchar',
+                    'required'   => false,
+                    'readOnly'   => true,
+                    'entityId'   => $entityName,
+                    'entityName' => $this->translate($entityName, 'scopeNames')
+                ];
+            }
+
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
                 if (is_array($types) && !in_array($fieldDefs['type'], $types)) {
                     continue;
                 }
 
                 if (!empty($fieldDefs['multilangField'])) {
+                    continue;
+                }
+
+                if ($filterIsMultilang && empty($fieldDefs['isMultilang'])) {
                     continue;
                 }
 
@@ -442,7 +454,7 @@ class EntityField extends ReferenceData
 
         if (!$entity->isNew() && $entity->isAttributeChanged('options')) {
             $newOptions     = $entity->get('options') ?? [];
-            $deletedOptions = array_diff($entity->getFetched('options') ?? [], $newOptions);
+            $deletedOptions = array_values(array_diff($entity->getFetched('options') ?? [], $newOptions));
 
             foreach ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.conditionalProperties.disableOptions") ?? [] as $row) {
                 if (empty($row['options']) || !is_array($row['options'])) {
@@ -456,6 +468,34 @@ class EntityField extends ReferenceData
                             $deletedOption
                         ));
                     }
+                }
+            }
+
+            if (!empty($deletedOptions)) {
+                $tableName = $this->getEntityManager()->getMapper()->toDb($entity->get('entityId'));
+                $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
+
+                $query = $this
+                    ->getEntityManager()
+                    ->getDbal()
+                    ->createQueryBuilder()
+                    ->select('id')
+                    ->from($tableName)
+                    ->where('deleted = :false')
+                    ->setParameter('false', false, ParameterType::BOOLEAN);
+
+                $conditions = [$query->expr()->in($column, ':options')];
+                $query->setParameter('options', $deletedOptions, Mapper::getParameterType($deletedOptions));
+
+                foreach ($deletedOptions as $i => $deletedOption) {
+                    $conditions[] = $query->expr()->like($column, ":option$i");
+                    $query->setParameter("option$i", "%\"$deletedOption\"%");
+                }
+
+                $query->andWhere($query->expr()->or(...$conditions));
+
+                if (!empty($query->fetchOne())) {
+                    throw new BadRequest($this->getLanguage()->translate('listOptionCannotBeDeleted', 'exceptions'));
                 }
             }
         }

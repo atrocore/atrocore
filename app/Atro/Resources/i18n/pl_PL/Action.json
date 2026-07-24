@@ -28,7 +28,8 @@
     "applyToPreselectedRecords": "Zastosowanie do wstępnie wybranych rekordów",
     "updateScript": "Skrypt",
     "executions": "Egzekucje",
-    "searchEntity": "Podmiot wyszukujący"
+    "searchEntity": "Podmiot wyszukujący",
+    "deletePermanently": "Usuń trwale"
   },
   "labels": {
     "execute": "Wykonaj",
