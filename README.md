@@ -164,11 +164,8 @@ We offer the following native paid integrations:
 - **E-Commerce Platforms**: Adobe Commerce (Magento 2), Bigcommerce, Saleor, Commercetools, Sap Commerce Cloud, Salesforce Commerce Cloud, Shopware, Prestashop, WooCommerce, Shopify, Sylius, Vendure,  and others
 - **Marketplaces**: Amazon, Otto
 - **DAM**: Cloudinary, Bynder, Canto, CELUM, and others
-- **CMSs / DXPs**: Contentful, TYPO3, Strapi, Adobe Experience Manager, Drupal, Acquia, Optimizely, Sitecore, Sanity, Bloomreach, Storyblok, and others
-- **PLM / PDM** Autodesk Fusion Manage, Aras Innovator, SOLIDWORKS PDM, OpenBOM, Propel, Autodesk Vault, Teamcenter, Windchill, and others
-
-- 
-Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
+- **CMSs/DXPs**: Contentful, TYPO3, Strapi, Adobe Experience Manager, Drupal, Acquia, Optimizely, Sitecore, Sanity, Bloomreach, Storyblok, and others
+- **PLM/PDM**: Autodesk Fusion Manage, Aras Innovator, SOLIDWORKS PDM, OpenBOM, Propel, Autodesk Vault, Teamcenter, Windchill, and others.
 
 You can **build your own fully automated integration** with any third-party system via its REST / GraphQL API using our free modules: 
 - Import: HTTP Requests and/or 
