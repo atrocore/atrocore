@@ -682,10 +682,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         var threshold = this.getConfig().get('massUpdateMaxCountWithoutJob') || 200;
                         var isAsync = this.allResultIsChecked || !this.checkedList || this.checkedList.length > threshold;
                         var finalUrl = isAsync ? url + 'Async' : url;
-                        if (this.allResultIsChecked) {
+                        if (isAsync) {
                             data.where = this.collection.getWhereForCheckedRecords();
-                            data.selectData = this.collection.data || {};
-                            data.byWhere = true;
                         } else {
                             data.idList = [...this.checkedList];
                         }
