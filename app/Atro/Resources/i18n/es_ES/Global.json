@@ -1212,6 +1212,7 @@
     "itselfAssociation": "El registro no puede asociarse a sí mismo.",
     "recordAssociationAlreadyExists": "Dicha asociación de registros ya existe.",
     "notAllowedOption": "La opción '%s' no está permitida para '%s'.",
+    "listOptionCannotBeDeleted": "No es posible eliminar la opción(es) seleccionada porque ya está siendo utilizada en uno o más registros.",
     "suchItemNameCannotBeUsedHere": "Ya existe una carpeta/archivo con ese nombre en la carpeta de destino. Por favor, elija otra carpeta o cambie el nombre e inténtelo de nuevo.",
     "colorDepthValidationFailed": "La profundidad de color de este archivo no está permitida.",
     "colorSpaceValidationFailed": "El espacio de color de este archivo no está permitido.",

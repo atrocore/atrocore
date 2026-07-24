@@ -1141,6 +1141,7 @@
     "itselfAssociation": "Záznam nelze přiřadit k sobě samému.",
     "recordAssociationAlreadyExists": "Takové sdružení záznamů již existuje.",
     "notAllowedOption": "Možnost '%s' není povolena pro '%s'.",
+    "listOptionCannotBeDeleted": "Vybranou možnost(i) nelze odstranit, protože je již používána v jednom nebo více záznamech.",
     "suchItemNameCannotBeUsedHere": "Složka/soubor s takovým názvem již v cílové složce existuje. Vyberte jinou složku nebo změňte název a zkuste to znovu.",
     "colorDepthValidationFailed": "Barevná hloubka tohoto souboru není povolena.",
     "colorSpaceValidationFailed": "Barevný prostor tohoto souboru není povolen.",
