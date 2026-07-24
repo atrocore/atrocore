@@ -68,70 +68,53 @@ git clone https://github.com/atrocore/docker.git <my-atrocore-project>
 Or, you can download a zip archive from repository and unpack it into a suitable directory if you don't want to use
 `git`.
 
-### Configuring Traefik reverse proxy
+### Selecting a deployment mode
 
-Our Docker Compose stack comes with preconfigured Traefik and enabled by default Let's Encrypt SSL certificate provider.
-If you already have Traefik on your server, delete `services` section from the `docker-compose.override.yaml` file.
+The deployment mode is selected by the `COMPOSE_FILE` variable in `.env`. It layers one override file on top of the
+base `docker-compose.yaml`:
 
-If you need to disable SSL, you should perform the following steps:
+| Mode | Override file | Description |
+|------|---------------|-------------|
+| Local | `docker-compose.local.yaml` | `web` is published directly on `LOCAL_PORT`, no reverse proxy |
+| Traefik | `docker-compose.traefik.yaml` | Traefik reverse proxy, HTTP only |
+| Traefik SSL | `docker-compose.traefik-ssl.yaml` | Traefik with HTTPS, Let's Encrypt and automatic HTTP to HTTPS redirect |
 
-1. Remove these SSL labels from `web` service in `docker-compose-override.yaml`:
+For example, to run behind Traefik with SSL, set:
+
 ```
-  # Enable SSL for main AtroPIM instance
-  - "traefik.http.routers.${PROXY_PRODUCTION_ROUTER}.tls=true"
-  - "traefik.http.routers.${PROXY_PRODUCTION_ROUTER}.tls.certresolver=letencrypt"
-
-    ....
-
-  # Enable SSL for testing AtroPIM instance
-  - "traefik.http.routers.${PROXY_TESTING_ROUTER}.tls=true"
-  - "traefik.http.routers.${PROXY_TESTING_ROUTER}.tls.certresolver=letencrypt"
+COMPOSE_FILE=docker-compose.yaml:docker-compose.traefik-ssl.yaml
 ```
 
-2. Replace `websecure` with `web` in labels of `web` service in `docker-compose-override.yaml`:
-```
-  - "traefik.http.routers.${PROXY_PRODUCTION_ROUTER}.entrypoints=websecure" # Replace 'websecure' with 'web' if you don't need SSL
+Use exactly one mode file at a time.
 
-    ....
+#### Required settings for Traefik SSL
 
-  - "traefik.http.routers.${PROXY_TESTING_ROUTER}.entrypoints=websecure" # Replace 'websecure' with 'web' if you don't need SSL
+The default `COMPOSE_FILE` uses the "Traefik SSL" mode. Before the first start, configure the following in `.env`,
+otherwise Let's Encrypt cannot issue a certificate and the site stays unreachable:
+
+- `PRODUCTION_DOMAIN` – a public domain, not `localhost`, with a DNS record pointing to this server
+- `LETS_ENCRYPT_EMAIL` – a valid email address required by Let's Encrypt
+- `PROXY_PRODUCTION_ROUTER` – a unique router name, without dots
+
+Ports 80 and 443 must be reachable from the internet, since Let's Encrypt validates the domain over port 80.
+
+!! A `localhost` domain does not work in this mode, because Let's Encrypt cannot issue a certificate for it. For local testing switch `COMPOSE_FILE` to `docker-compose.yaml:docker-compose.local.yaml`.
+
+#### Running without SSL
+
+To run behind Traefik without SSL, select `docker-compose.traefik.yaml` instead of `docker-compose.traefik-ssl.yaml`:
+
+```
+COMPOSE_FILE=docker-compose.yaml:docker-compose.traefik.yaml
 ```
 
-3. Remove Let's Encrypt init command from `reverse-proxy` service in `docker-compose-override.yaml`:
-```
-    # Remove if you don't need SSL from Lets Encrypt
-    command:
-      - --certificatesResolvers.letencrypt.acme.email=${LETS_ENCRYPT_EMAIL}
-```
+This mode exposes only port 80 and uses `traefik.local.yml`, which has no HTTP to HTTPS redirect and no Let's Encrypt
+resolver. No manual editing of labels or Traefik configuration is required.
 
-4. Remove 443 port exposure from `reverse-proxy` service in `docker-compose-override.yaml`:
-```
-    ports:
-      - "80:80"
-     # Remove if you don't need SSL
-      - "443:443"
-```
+#### Using an existing Traefik
 
-5. Remove http to https redirect and Let's Encrypt certificate resolver from `traefik.yml`:
-```
-    # Comment section below if you don't need an SSL or you want to disable automatic redirect to HTTPS
-    http:
-      redirections:
-        entryPoint:
-          to: websecure
-          scheme: https
-
-    .....
-
-    # Remove if you don't need Lets Encrypt SSL
-    certificatesResolvers:
-      letencrypt:
-        acme:
-          storage: /certs/acme.json
-          caServer: https://acme-v02.api.letsencrypt.org/directory
-          httpChallenge:
-            entryPoint: web
-```
+If you already run Traefik on your server, select the Traefik mode and remove the bundled `reverse_proxy` service from
+the chosen override file, so only the `web` labels are applied and your own Traefik handles routing.
 
 ### Configuring environment variables
 
@@ -139,6 +122,16 @@ Create your own environment configuration from example:
 
 ```bash
 cp .env.example .env
+```
+
+To create the `.env` file and generate secure database passwords in one step, run the following command instead. It fills only the empty password fields, so existing values are kept:
+
+```bash
+cp .env.example .env && sed -i \
+  -e "s|^POSTGRES_PASSWORD=$|POSTGRES_PASSWORD=$(openssl rand -hex 24)|" \
+  -e "s|^POSTGRES_PIM_USER=$|POSTGRES_PIM_USER=atrocore|" \
+  -e "s|^POSTGRES_PIM_PASSWORD=$|POSTGRES_PIM_PASSWORD=$(openssl rand -hex 24)|" \
+  .env
 ```
 
 The following variables in `.env` file are required to have a working AtroPIM instance:
@@ -189,6 +182,65 @@ You will need to wait until build process for `web` container is finished. When 
 your AtroCore in a browser and finish the WEB installation. Make sure that you've selected PostgreSQL database
 on `Database configuration` step.
 
+### Storing data on the host
+
+By default, AtroCore and database files are kept in Docker-managed volumes. If you prefer to store them in the `data/`
+directory next to your Docker Compose files, create a `docker-compose.host-bind.yaml` file with the following content:
+
+```yaml
+volumes:
+  web-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/web/
+  db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/db/
+```
+
+Then append it to `COMPOSE_FILE` in `.env`:
+
+```
+COMPOSE_FILE=docker-compose.yaml:docker-compose.local.yaml:docker-compose.host-bind.yaml
+```
+
+Create the target directories before starting the containers:
+
+```bash
+mkdir -p data/web data/db
+```
+
+### Adding a testing instance
+
+The `web` image is built with a second, testing instance when `TESTING_DOMAIN` is defined (see [Configuring environment variables](#configuring-environment-variables)).
+To expose it through Traefik alongside the production instance, create a `docker-compose.testing.yaml` file with the
+following content:
+
+```yaml
+services:
+  web:
+    labels:
+      - "traefik.http.services.${PROXY_TESTING_ROUTER}.loadbalancer.server.port=80"
+      - "traefik.http.routers.${PROXY_TESTING_ROUTER}.rule=Host(`${TESTING_DOMAIN}`)"
+      - "traefik.http.routers.${PROXY_TESTING_ROUTER}.entrypoints=websecure"
+      - "traefik.http.routers.${PROXY_TESTING_ROUTER}.tls=true"
+      - "traefik.http.routers.${PROXY_TESTING_ROUTER}.tls.certresolver=letencrypt"
+```
+
+Then append it to `COMPOSE_FILE` in `.env`:
+
+```
+COMPOSE_FILE=docker-compose.yaml:docker-compose.traefik-ssl.yaml:docker-compose.testing.yaml
+```
+
+Set `TESTING_DOMAIN` and `PROXY_TESTING_ROUTER` in `.env`. For an HTTP-only testing instance, change the `entrypoints`
+label to `web` and remove the two `tls` labels.
+
 ### Additional Tips
 
 1. For local installation with custom domains remember to add them to the `hosts` file (`/etc/hosts` for Linux,
@@ -204,29 +256,22 @@ on `Database configuration` step.
    for instructions to back up your data inside volumes.
 4. If you need to run additional scripts to configure a database, copy your scripts to the `.docker/postgres/scripts`
    directory. Find more information in the [postgres docs](https://github.com/docker-library/docs/blob/master/postgres/README.md#initialization-scripts) in the `Initialization scripts` section.
-5. After every change in `.env` file you need to rebuild your `web` container: `docker compose build web --no-cache`.
-   Then you should delete your containers (`docker compose down`) and recreate them with a new version of image (
-   `docker compose up -d`).
+5. Variables baked into the `web` image at build time – `SKELETON_VARIANT`, `PRODUCTION_DOMAIN`, `PRODUCTION_STABILITY`,
+   `TESTING_DOMAIN`, `TESTING_STABILITY`, `BUILD_VARIANT` and the database credentials – take effect only after
+   rebuilding the image:
+```bash
+docker compose build web --no-cache
+docker compose down
+docker compose up -d
+```
+   The remaining variables, such as `COMPOSE_FILE`, `LOCAL_PORT`, `LETS_ENCRYPT_EMAIL` and the proxy router names, are
+   applied by recreating the containers, without a rebuild:
+```bash
+docker compose up -d
+```
 6. By default, HTTP requests are automatically redirected by Traefik to HTTPS. You can disable this behaviour by deleting
    `entryPoints.web.http.redirections` configuration in `traefik.yml` file. Remember to restart the Traefik container.
-7. If you need to store all files on the host directory, not inside the volume, please uncomment marked lines in
-   `docker-compose-override.yaml` file inside `volumes:` section:
-```
-# Uncomment if you want to store AtroCore and DB files in data/ folder
-    volumes:
-      web-data:
-        driver: local
-        driver_opts:
-          type: none
-          o: bind
-          device: ./data/web/
-      db-data:
-        driver: local
-        driver_opts:
-          type: none
-          o: bind
-          device: ./data/db/
-```
+7. To store all files on the host directory instead of a volume, see [Storing data on the host](#storing-data-on-the-host).
 
 8. After the update to AtroCore 2.0, container configuration needs to be changed. Inside a directory with docker-compose
    run `git pull` to download the new migration script (or [download it manually](https://github.com/atrocore/docker/-/blob/master/migrate-config.sh?ref_type=heads)
