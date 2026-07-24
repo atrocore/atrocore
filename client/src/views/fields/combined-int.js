@@ -41,8 +41,15 @@ Espo.define('views/fields/combined-int', ['views/fields/base', 'views/fields/com
             return Varchar.prototype.getAttributeList.call(this);
         },
 
-        validateRequired() {
-            return Varchar.prototype.validateRequired.call(this);
+        validateRequired: function () {
+            if (this.isRequired()) {
+                let value = this.model.get(this.originalName);
+                if (value === null || value === false || (this.measureId && !this.model.get(this.originalName + 'UnitId'))) {
+                    let msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    this.showValidationMessage(msg);
+                    return true;
+                }
+            }
         },
 
         isInheritedField() {
