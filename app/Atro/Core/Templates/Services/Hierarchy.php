@@ -223,32 +223,43 @@ class Hierarchy extends Base
         $tree = [];
         $treeBranches = [];
 
-        foreach ($this->getRepository()->where(['id' => $ids])->order($sortBy, $order)
-                     ->select($this->getSelectForTree())->find() as $entity) {
-            $this->createTreeBranches($entity, $treeBranches);
+        foreach ($this->getRepository()->where(['id' => $ids])->select($this->getSelectForTree([$sortBy]))->find() as $entity) {
+            $this->createTreeBranches($entity, $treeBranches, [$sortBy]);
         }
 
         if (!empty($treeBranches)) {
             foreach ($treeBranches as $entity) {
-                $this->prepareTreeNode($entity, $tree, $ids);
+                $this->prepareTreeNode($entity, $tree, $ids, $sortBy);
             }
-            $this->prepareTreeData($tree);
+            $this->prepareTreeData($tree, $order);
         }
 
         return ['total' => count($ids), 'tree' => $tree];
     }
 
-    protected function prepareTreeData(array &$tree): void
+    protected function sortTreeData(array &$tree, string $order = 'ASC'): void
     {
+        usort($tree, function ($a, $b) use ($order) {
+            $cmp = ($a['sortValue'] ?? null) <=> ($b['sortValue'] ?? null);
+
+            return $order === 'DESC' ? -$cmp : $cmp;
+        });
+    }
+
+    protected function prepareTreeData(array &$tree, string $order = 'ASC'): void
+    {
+        $this->sortTreeData($tree, $order);
+
         $tree = array_values($tree);
         foreach ($tree as &$v) {
             if (!empty($v['children'])) {
-                $this->prepareTreeData($v['children']);
+                $this->prepareTreeData($v['children'], $order);
             }
+            unset($v['sortValue']);
         }
     }
 
-    protected function createTreeBranches(HierarchyEntity $entity, array &$treeBranches): void
+    protected function createTreeBranches(HierarchyEntity $entity, array &$treeBranches, array $additionalFields = []): void
     {
         $parentsIds = [];
         foreach ($entity->getRoutes() as $route) {
@@ -269,7 +280,7 @@ class Hierarchy extends Base
             }
 
             if (!empty($parentIdsToLoad)) {
-                $records = $this->getRepository()->where(['id' => $parentIdsToLoad])->select($this->getSelectForTree())->find();
+                $records = $this->getRepository()->where(['id' => $parentIdsToLoad])->select($this->getSelectForTree($additionalFields))->find();
                 foreach ($records as $record) {
                     $parents[] = $record;
                     $this->parentsCache[$record->get('id')] = $record;
@@ -281,13 +292,13 @@ class Hierarchy extends Base
             } else {
                 foreach ($parents as $parent) {
                     $parent->child = $entity;
-                    $this->createTreeBranches($parent, $treeBranches);
+                    $this->createTreeBranches($parent, $treeBranches, $additionalFields);
                 }
             }
         }
     }
 
-    protected function prepareTreeNode($entity, array &$tree, array $ids): void
+    protected function prepareTreeNode($entity, array &$tree, array $ids, string $sortBy = 'id'): void
     {
         $value = $this->getLocalizedNameValue($entity, $this->entityName);
 
@@ -295,11 +306,12 @@ class Hierarchy extends Base
         $tree[$entity->get('id')]['name'] = $value;
         $tree[$entity->get('id')]['scope'] = $this->entityName;
         $tree[$entity->get('id')]['disabled'] = !in_array($entity->get('id'), $ids);
+        $tree[$entity->get('id')]['sortValue'] = $entity->get($sortBy);
         if (!empty($entity->child)) {
             if (empty($tree[$entity->get('id')]['children'])) {
                 $tree[$entity->get('id')]['children'] = [];
             }
-            $this->prepareTreeNode($entity->child, $tree[$entity->get('id')]['children'], $ids);
+            $this->prepareTreeNode($entity->child, $tree[$entity->get('id')]['children'], $ids, $sortBy);
         }
     }
 
@@ -1310,12 +1322,19 @@ class Hierarchy extends Base
     }
 
 
-    public function getSelectForTree(): array
+    public function getSelectForTree(array $additionalFields = []): array
     {
         $res = ['id', 'name', 'routes'];
         $field = $this->getLocalizedNameField($this->entityType);
         if (!empty($field)) {
             $res[] = $field;
+        }
+        if (!empty($additionalFields)) {
+            foreach ($additionalFields as $additionalField) {
+                if (!in_array($additionalField, $res)) {
+                    $res[] = $additionalField;
+                }
+            }
         }
 
         return $res;
