@@ -126,8 +126,6 @@ sudo apparmor_parser -r /etc/apparmor.d/gs
 
 > Replace `my-atrocore-project` with the actual project name.
 
-> The `data/.*-tmp` directory names are internal and can change between releases. Re-check these rules after a major system update.
-
 ### 6. Configure the crontab
    6.1. Open crontab for your webserver user, which is www-data in our case:
 ```
