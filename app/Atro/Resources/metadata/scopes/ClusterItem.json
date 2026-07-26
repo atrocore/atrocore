@@ -10,5 +10,6 @@
   "streamDisabled": true,
   "selectionDisabled": true,
   "bookmarkDisabled": true,
-  "valueLockDisabled": true
+  "valueLockDisabled": true,
+  "isSystem": true
 }

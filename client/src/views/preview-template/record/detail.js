@@ -11,26 +11,10 @@
 
 Espo.define('views/preview-template/record/detail', ['views/record/detail', 'views/search/search-filter-opener'],
     (Dep, SearchFilterOpener) => Dep.extend({
-        setupActionItems() {
-            Dep.prototype.setupActionItems.call(this);
-
-            let filterButton = {
-                tooltip: this.translate('openSearchFilter'),
-                action: 'openSearchFilter',
-                name: 'filterButton',
-                html: this.getFilterButtonHtml()
-            };
-
-            if(this.model.get('entityType')) {
-                this.additionalButtons.push(filterButton);
-            }
+        setup() {
+            Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'sync', () => {
-                filterButton.html = this.getFilterButtonHtml();
-                this.additionalButtons = this.additionalButtons.filter(b => b.name !== filterButton.name);
-                if(this.model.get('entityType')) {
-                    this.additionalButtons.push(filterButton);
-                }
                 this.reRender();
             });
 
@@ -50,6 +34,19 @@ Espo.define('views/preview-template/record/detail', ['views/record/detail', 'vie
                     this.model.set('data', data);
                 }
             });
+        },
+
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
+
+            if (this.model.get('entityType')) {
+                this.additionalButtons.push({
+                    tooltip: this.translate('openSearchFilter'),
+                    action: 'openSearchFilter',
+                    name: 'filterButton',
+                    html: this.getFilterButtonHtml()
+                });
+            }
         },
 
         getFilterButtonHtml() {

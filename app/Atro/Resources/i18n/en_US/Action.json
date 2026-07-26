@@ -28,7 +28,8 @@
     "updateType": "Update Type",
     "updateFields": "Update Fields",
     "updateScript": "Script",
-    "executions": "Executions"
+    "executions": "Executions",
+    "deletePermanently": "Delete Permanently"
   },
   "labels": {
     "execute": "Execute",

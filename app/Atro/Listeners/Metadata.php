@@ -89,17 +89,8 @@ class Metadata extends AbstractMetadataListener
 
         $this->prepareEntityFields($data);
 
-        foreach ($data['scopes'] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type'])
-                || !in_array(
-                    $scopeDefs['type'],
-                    ['Base', 'Hierarchy']
-                )) {
-                $data['scopes'][$scope]['attributesDisabled'] = true;
-            }
-        }
-
         $this->putCustomCodeActions($data);
+
         $this->putCustomCodeConditionTypes($data);
 
         $this->addAssociateToEntity($data);
@@ -127,6 +118,25 @@ class Metadata extends AbstractMetadataListener
 
         if (!empty($data['action']['types'])) {
             $data['entityDefs']['Action']['fields']['type']['options'] = array_keys($data['action']['types']);
+        }
+
+        foreach ($data['scopes'] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type'])
+                || !in_array(
+                    $scopeDefs['type'],
+                    ['Base', 'Hierarchy']
+                )) {
+                $data['scopes'][$scope]['attributesDisabled'] = true;
+            }
+
+            if (!empty($scopeDefs['isSystem'])) {
+                $systemDisabledKeys = ['attributesDisabled', 'matchingDisabled', 'mergeDisabled', 'selectionDisabled'];
+                foreach ($systemDisabledKeys as $key) {
+                    if (!isset($data['scopes'][$scope][$key])) {
+                        $data['scopes'][$scope][$key] = true;
+                    }
+                }
+            }
         }
 
         $event->setArgument('data', $data);

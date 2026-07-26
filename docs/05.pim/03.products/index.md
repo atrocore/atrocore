@@ -158,10 +158,4 @@ For more information about file management, see [File Operations](../../01.atroc
 
 ## Product Preview
 
-Product Preview lets you see how a product will appear in a destination such as a marketplace or export feed. It renders field values and attributes using a configurable template, and fields can be edited directly from the preview without opening the edit form.
-
-The default template is available at `Administration > Preview Templates > Product preview`. Additional templates can be created there; each one automatically generates a corresponding action on the product record.
-
-![Field preview](./_assets/field-preview.png){.large}
-
-For full details, see [Record Preview](../../01.atrocore/10.html-css-preview/index.md).
+Product Preview lets you see how a product will appear in a destination such as a marketplace or export feed, you can review exactly how it will look using the built-in product preview. See the [Product Preview](../../01.atrocore/10.html-css-preview/index.md#product-preview-predefined-template) section of the Record Preview article for details on accessing it, filtering by channel and language, editing data, and updating the product status.

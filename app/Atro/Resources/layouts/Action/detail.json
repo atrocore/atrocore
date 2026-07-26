@@ -59,6 +59,12 @@
       ],
       [
         {
+          "name": "deletePermanently"
+        },
+        false
+      ],
+      [
+        {
           "name": "description",
           "fullWidth": true
         }

@@ -12,5 +12,6 @@
   "hasTeam": true,
   "hideFieldTypeFilters": true,
   "hasActive": true,
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "isSystem": true
 }

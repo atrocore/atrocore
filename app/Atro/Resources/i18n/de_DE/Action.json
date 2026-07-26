@@ -28,7 +28,8 @@
     "updateFields": "Felder aktualisieren",
     "changeFields": "Felder",
     "searchEntity": "Suchentität",
-    "executions": "Läufe"
+    "executions": "Läufe",
+    "deletePermanently": "Dauerhaft löschen"
   },
   "labels": {
     "execute": "Ausführen",

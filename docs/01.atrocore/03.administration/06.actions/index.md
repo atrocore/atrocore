@@ -287,6 +287,7 @@ Removes records from the system based on specified criteria.
   - **Checked**: Action deletes only the specific record it was triggered from. Source Entity becomes locked to match Target Entity, and Filter Result panel is not available.
   - **Unchecked**: Action can target different entities and use filtering criteria. For example, Source Entity can be "Category" while the action deletes all "Products" filtered by that category.
 - **Filter Result**: Available only when "Apply to pre-selected records" is unchecked. Define which records should be deleted using query conditions - see [Search and Filtering](../../11.search-and-filtering) for details
+- **Delete Permanently**: When enabled, matching records are removed permanently and irreversibly, bypassing the recycle bin. Such records cannot be restored afterwards. When disabled, records are soft-deleted and can still be recovered.
 
 ### Data Exchange
 

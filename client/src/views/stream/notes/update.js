@@ -211,7 +211,8 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         },
                         mode: 'detail',
                         inlineEditDisabled: true,
-                        params: params
+                        params: params,
+                        disableToggleVisibility: true
                     }, function (view) {
                         view.render();
 
@@ -246,7 +247,8 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         },
                         mode: 'detail',
                         inlineEditDisabled: true,
-                        params: params
+                        params: params,
+                        disableToggleVisibility: true
                     }, function (view) {
                         view.render();
 

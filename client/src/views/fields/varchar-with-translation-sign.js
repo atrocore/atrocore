@@ -35,6 +35,10 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
         },
 
         initInlineLabelEdit() {
+            if (this.getAllUiLanguages().length < 2) {
+                return;
+            }
+
             let $cell = this.getCellElement();
 
             this.getInlineActionsContainer().find('.ph-globe').parent().remove();
@@ -51,20 +55,24 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
                 this.openEditLabelDialog();
             });
 
-            $cell.on('mouseenter', e => {
-                e.stopPropagation();
-                if (this.disabled || this.readOnly) {
-                    return;
-                }
-                if (this.mode === 'detail') {
+            if (this.mode === 'detail') {
+                $cell.on('mouseenter', e => {
+                    e.stopPropagation();
+                    if (this.disabled || this.readOnly) {
+                        return;
+                    }
+
                     $link.removeClass('hidden');
-                }
-            }).on('mouseleave', e => {
-                e.stopPropagation();
-                if (this.mode === 'detail') {
+                }).on('mouseleave', e => {
+                    e.stopPropagation();
+
                     $link.addClass('hidden');
-                }
-            });
+                });
+            }
+
+            if (this.mode === 'edit') {
+                $link.removeClass('hidden');
+            }
         },
 
         openEditLabelDialog() {
@@ -110,7 +118,22 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
             this.listenToOnce(view, 'after:save', () => {
                 this.model.fetch();
             });
-        }
+        },
 
+        getAllUiLanguages() {
+            let languages = [];
+
+            $.each((this.getConfig().get('referenceData')?.Locale || {}), (code) => {
+                languages.push(code);
+            });
+
+            $.each((this.getConfig().get('referenceData')?.Language || {}), (code) => {
+                if (!languages.includes(code)) {
+                    languages.push(code);
+                }
+            });
+
+            return languages;
+        }
     });
 });

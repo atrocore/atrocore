@@ -28,7 +28,8 @@
     "applyToPreselectedRecords": "Použít na předem vybrané záznamy",
     "updateType": "Typ aktualizace",
     "searchEntity": "Vyhledávání entit",
-    "executions": "Provedení"
+    "executions": "Provedení",
+    "deletePermanently": "Trvale odstranit"
   },
   "labels": {
     "execute": "Provést",

@@ -41,13 +41,11 @@ class FindMatchesForRecords extends AbstractJob implements JobInterface
             ])
             ->find();
 
-        if (empty($collection[0])) {
-            return;
-        }
-
-        $matching = $this->createMatchingEntity($matchingData);
-        foreach ($collection as $entity) {
-            $this->getMatchingManager()->findMatches($matching, $entity);
+        if (!empty($collection[0])) {
+            $matching = $this->createMatchingEntity($matchingData);
+            foreach ($collection as $entity) {
+                $this->getMatchingManager()->findMatches($matching, $entity);
+            }
         }
 
         $this->tryTriggerClusterCreation($matchingData, $job);

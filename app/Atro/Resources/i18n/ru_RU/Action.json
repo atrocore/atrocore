@@ -28,7 +28,8 @@
     "updateFields": "Обновление полей",
     "updateScript": "Скрипт",
     "searchEntity": "Объект поиска",
-    "executions": "Казни"
+    "executions": "Казни",
+    "deletePermanently": "Удалить навсегда"
   },
   "labels": {
     "execute": "Выполнить",

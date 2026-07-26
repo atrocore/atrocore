@@ -15,5 +15,6 @@
   ],
   "selectionDisabled": true,
   "nameField": "number",
-  "valueLockDisabled": true
+  "valueLockDisabled": true,
+  "isSystem": true
 }

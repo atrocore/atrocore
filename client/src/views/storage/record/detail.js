@@ -12,15 +12,13 @@ Espo.define('views/storage/record/detail', 'views/record/detail', Dep => {
 
     return Dep.extend({
 
-        setup() {
-            Dep.prototype.setup.call(this);
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
 
-            this.additionalButtons = [
-                {
-                    "action": "scan",
-                    "label": this.translate('scan', 'labels', 'Storage')
-                }
-            ];
+            this.additionalButtons.push({
+                "action": "scan",
+                "label": this.translate('scan', 'labels', 'Storage')
+            });
         },
 
         actionScan() {

@@ -23,26 +23,24 @@ Espo.define('views/layout-profile/record/detail', 'views/record/detail', functio
         },
 
         setupActionItems() {
-            if (this.getUser().isAdmin()) {
-                if (!this.additionalButtons.find(b => b.name === 'menu')) {
-                    this.additionalButtons.push({
-                        name: "menu",
-                        label: this.translate("Menu", "labels", "LayoutProfile"),
-                        action: "editNavigation",
-                    })
-                }
+            Dep.prototype.setupActionItems.call(this);
 
-                if (!this.additionalButtons.find(b => b.name === 'dashboard')) {
-                    this.additionalButtons.push({
-                        name: "dashboard",
-                        label: this.translate("Dashboards", "labels", "LayoutProfile"),
-                        action: "editDashboard",
-                        cssStyle: "margin-left: 10px"
-                    });
-                }
+            if (this.getUser().isAdmin()) {
+                this.additionalButtons.push({
+                    name: "menu",
+                    label: this.translate("Menu", "labels", "LayoutProfile"),
+                    action: "editNavigation",
+                });
+
+                this.additionalButtons.push({
+                    name: "dashboard",
+                    label: this.translate("Dashboards", "labels", "LayoutProfile"),
+                    action: "editDashboard",
+                    cssStyle: "margin-left: 10px"
+                });
             }
 
-            if (this.getAcl().check(this.scope, 'edit') && !this.additionalButtons.find(b => b.name === 'favorites')) {
+            if (this.getAcl().check(this.scope, 'edit')) {
                 this.additionalButtons.push({
                     name: 'favorites',
                     label: this.translate('Favorites', 'labels', 'LayoutProfile'),
@@ -50,8 +48,6 @@ Espo.define('views/layout-profile/record/detail', 'views/record/detail', functio
                     cssStyle: "margin-left: 10px"
                 });
             }
-
-            Dep.prototype.setupActionItems.call(this);
         },
 
         actionEditNavigation: function () {

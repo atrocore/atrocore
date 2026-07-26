@@ -23,5 +23,6 @@
   "matchingDisabled": true,
   "mergeDisabled": true,
   "selectionDisabled": true,
-  "valueLockDisabled": true
+  "valueLockDisabled": true,
+  "isSystem": true
 }

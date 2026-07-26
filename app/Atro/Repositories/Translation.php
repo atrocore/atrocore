@@ -124,6 +124,10 @@ class Translation extends Base
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if (empty($entity->get('module'))) {
+            $entity->set('module', 'custom');
+        }
+
         if ($entity->get('module') === 'custom' && !$entity->isNew() && !$entity->get('isCustomized')) {
             $entity->set('isCustomized', true);
         }

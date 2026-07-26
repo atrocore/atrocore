@@ -145,7 +145,9 @@
     },
     "customizable": {
       "type": "bool",
-      "readOnly": true
+      "notStorable": true,
+      "readOnly": true,
+      "default": true
     },
     "kanbanStatusIgnoreList": {
       "type": "multiEnum",
@@ -364,6 +366,10 @@
         "visible": {
           "conditionGroup": [
             {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
               "type": "notIn",
               "attribute": "type",
               "value": [
@@ -465,6 +471,10 @@
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
             {
               "type": "in",
               "attribute": "type",
@@ -612,6 +622,10 @@
         "visible": {
           "conditionGroup": [
             {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
               "type": "in",
               "attribute": "type",
               "value": [
@@ -626,6 +640,10 @@
           ]
         }
       }
+    },
+    "isSystem": {
+      "type": "bool",
+      "notStorable": true
     },
     "isCustom": {
       "type": "bool",
@@ -694,6 +712,10 @@
         "visible": {
           "conditionGroup": [
             {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
               "type": "notIn",
               "attribute": "type",
               "value": [
@@ -720,6 +742,10 @@
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
             {
               "type": "notIn",
               "attribute": "type",
@@ -769,11 +795,19 @@
         }
       }
     },
+    "attributesDisabled": {
+      "type": "bool",
+      "notStorable": true
+    },
     "hasAssociate": {
       "type": "bool",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isSystem"
+            },
             {
               "type": "in",
               "attribute": "type",
@@ -788,12 +822,37 @@
             }
           ]
         }
-      },
-      "view": "views/entity/fields/has-associate"
+      }
     },
     "hasAttribute": {
       "type": "bool",
-      "view": "views/entity/fields/has-attribute"
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "attributesDisabled"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "notEquals",
+              "attribute": "code",
+              "value": "Listing"
+            }
+          ]
+        }
+      }
     },
     "hasClassification": {
       "type": "bool",
@@ -836,7 +895,10 @@
             {
               "type": "in",
               "attribute": "type",
-              "value": ["Base", "Hierarchy"]
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             },
             {
               "type": "isEmpty",

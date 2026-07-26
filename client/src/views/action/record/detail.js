@@ -11,39 +11,26 @@
 Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/panels/entity-filter-result'],
     (Dep, EntityFilter) => Dep.extend({
 
-        setup() {
-            Dep.prototype.setup.call(this);
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
 
-            this.additionalButtons = [{
+            this.additionalButtons.push({
                 "action": "execute",
-                "label": this.translate('execute', 'labels', 'Action')
-            }];
-
-            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
-                this.handleButtonsDisability();
+                "label": this.translate('execute', 'labels', 'Action'),
+                "disabled": !this.canExecute()
             });
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            this.handleButtonsDisability();
-        },
-
-        isButtonsDisabled() {
-            return this.model.get('type') === 'suggestValueByAi' || this.model.get('type') === 'suggestValue' || this.model.get('type') === 'error' || !this.model.get('isActive');
-        },
-
-        handleButtonsDisability() {
-            const disabled = this.isButtonsDisabled();
-            this.additionalButtons = this.additionalButtons.map(b => ({...b, disabled}));
-            if (this.isRendered()) {
-                window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
-            }
+        canExecute() {
+            const type = this.model.get('type');
+            return this.model.get('isActive')
+                && type !== 'suggestValueByAi'
+                && type !== 'suggestValue'
+                && type !== 'error';
         },
 
         actionExecute() {
-            if (this.isButtonsDisabled()) {
+            if (!this.canExecute()) {
                 return;
             }
 

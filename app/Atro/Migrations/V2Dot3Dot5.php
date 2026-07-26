@@ -1467,6 +1467,7 @@ class V2Dot3Dot5 extends Base
 
                         $oldCode = $sn !== '' ? $sn : $row['id'];
                         $this->fixExportConfiguratorItems($row['id'], $oldCode, $candidate);
+                        $this->fixImportConfiguratorItems($row['id'], $oldCode, $candidate);
 
                         foreach ($checkRules as $k => $checkRule) {
                             if (empty($checkRule['attributeId']) || $checkRule['attributeId'] !== $row['id']) {
@@ -1543,6 +1544,39 @@ class V2Dot3Dot5 extends Base
 
                 $this->getDbal()->createQueryBuilder()
                     ->update('export_configurator_item')
+                    ->set('name', ':name')
+                    ->where('id = :id')
+                    ->setParameter('name', $newPrefix . substr($item['name'], strlen($oldPrefix)))
+                    ->setParameter('id', $item['id'])
+                    ->executeStatement();
+            }
+        } catch (\Throwable $e) {
+        }
+    }
+
+    private function fixImportConfiguratorItems(string $attributeId, string $oldPrefix, string $newPrefix): void
+    {
+        if ($oldPrefix === $newPrefix) {
+            return;
+        }
+
+        try {
+            $items = $this->getDbal()->createQueryBuilder()
+                ->select('id', 'name')
+                ->from('import_configurator_item')
+                ->where('entity_attribute_id = :attributeId')
+                ->andWhere('deleted = :false')
+                ->setParameter('attributeId', $attributeId)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            foreach ($items as $item) {
+                if (!str_starts_with($item['name'], $oldPrefix)) {
+                    continue;
+                }
+
+                $this->getDbal()->createQueryBuilder()
+                    ->update('import_configurator_item')
                     ->set('name', ':name')
                     ->where('id = :id')
                     ->setParameter('name', $newPrefix . substr($item['name'], strlen($oldPrefix)))

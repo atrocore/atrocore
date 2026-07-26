@@ -1268,6 +1268,7 @@
     "entityCannotBeBookmarked": "Die Datensätze dieser Entität können nicht mit Lesezeichen versehen werden.",
     "integerValueValidationFailed": "Der ganzzahlige Wert für das Feld/Attribut \"%s\" muss zwischen %s und %s liegen.",
     "notAllowedOption": "Die Option '%s' ist für '%s' nicht erlaubt.",
+    "listOptionCannotBeDeleted": "Die ausgewählte(n) Option(en) kann nicht gelöscht werden, da sie bereits von einem oder mehreren Datensätzen verwendet wird.",
     "notUniqueRecordField": "Der Datensatz kann nicht gespeichert werden, ein Datensatz mit diesem '%s' existiert bereits."
   },
   "firstStepsDashlet": {

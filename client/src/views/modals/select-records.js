@@ -84,6 +84,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 hasTree: this.isHierarchical(),
                 hasTotalCount: this.getConfig().get('displayListViewRecordCount') && this.multiple,
                 totalCount: this.collection.total,
+                hasExtraFields: !!(this.extraFields && Object.keys(this.extraFields).length),
             };
         },
 
@@ -100,6 +101,13 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
         },
 
         setup: function () {
+            this.extraFields = this.options.extraFields || null;
+            this.extraFieldsModel = this.extraFields ? new Model() : null;
+            if (this.extraFieldsModel) {
+                this.extraFieldsModel.name = 'ExtraFields';
+                this.extraFieldsModel.defs.fields = this.extraFields
+            }
+
             this.boolFilterData = this.options.boolFilterData || this.boolFilterData;
             this.disableSavePreset = this.options.disableSavePreset || this.disableSavePreset;
             this.layoutName = this.options.layoutName || this.layoutName;
@@ -115,8 +123,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.selectAllByDefault = this.options.selectAllByDefault;
             this.additionalBoolFilterList = this.options.additionalBoolFilterList;
 
-            if('listInlineEditModeEnabled' in this.options)  {
-                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            if ('listInlineEditModeEnabled' in this.options) {
+                this.listInlineEditModeEnabled = this.options.listInlineEditModeEnabled;
             }
 
             if ('multiple' in this.options) {
@@ -172,7 +180,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 this.buttonList.unshift({
                     name: 'select',
                     style: 'primary',
-                    label: 'Select',
+                    label: this.options.selectLabel || 'Select',
                     disabled: true,
                     onClick: function (dialog) {
                         this.handleOnSelect();
@@ -235,7 +243,30 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
             this.listenTo(this, 'cancel, close', () => {
                 this.destroySveltePanels();
-            })
+            });
+
+            if (this.extraFields && this.multiple) {
+                var selectBtn = this.buttonList.find(b => b.name === 'select');
+                if (selectBtn) {
+                    var origOnClick = selectBtn.onClick;
+                    selectBtn.onClick = (dialog) => {
+                        var hasError = false;
+                        Object.keys(this.extraFields).forEach(fieldName => {
+                            var view = this.getView('extraField_' + fieldName);
+                            if (view) {
+                                view.fetchToModel();
+                                if (this.extraFields[fieldName].required && view.validate && view.validate()) {
+                                    hasError = true;
+                                }
+                            }
+                        });
+                        if (hasError) {
+                            return;
+                        }
+                        origOnClick(dialog);
+                    };
+                }
+            }
         },
 
         changeView(e) {
@@ -436,6 +467,33 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.dialog.$el.on('hidden.bs.modal', (e) => {
                 this.destroySveltePanels();
             });
+
+            if (this.extraFields) {
+                var container = this.$el.find('.extra-fields-container');
+                Object.keys(this.extraFields).forEach(fieldName => {
+                    var defs = this.extraFields[fieldName];
+                    var labelText = defs.labelText || fieldName;
+                    container.append(
+                        '<div class="cell form-group col-sm-6 col-xs-12" data-name="' + fieldName + '">' +
+                        '<label class="control-label">' + labelText + '</label>' +
+                        '<div class="field" data-name="' + fieldName + '"></div>' +
+                        '</div>'
+                    );
+                });
+                Object.keys(this.extraFields).forEach(fieldName => {
+                    var defs = this.extraFields[fieldName];
+                    var viewName = defs.view || ('views/fields/' + (defs.type || 'base'));
+                    this.createView('extraField_' + fieldName, viewName, {
+                        model: this.extraFieldsModel,
+                        name: fieldName,
+                        el: this.getSelector() + ' .extra-fields-container .field[data-name="' + fieldName + '"]',
+                        mode: 'edit',
+                        params: { required: !!defs.required },
+                        defs: defs,
+                        labelText: defs.labelText,
+                    }, view => view.render());
+                });
+            }
         },
 
         buildTreeButtons(html) {

@@ -90,6 +90,9 @@ class Language
         if (!isset($this->translateCache[$this->localeId][$scope][$category][$name])) {
             $translation = $this->getRepository()->getTranslation($scope, $category, $name);
             if ($translation === null) {
+                if ($scope !== 'Global') {
+                    return $this->translate($name, $category, 'Global');
+                }
                 return $name;
             }
 

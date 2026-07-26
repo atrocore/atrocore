@@ -11,5 +11,6 @@
   "hasAssignedUser": true,
   "hasTeam": true,
   "hideFieldTypeFilters": true,
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "isSystem": true
 }

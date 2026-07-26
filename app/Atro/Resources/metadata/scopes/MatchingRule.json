@@ -12,5 +12,6 @@
   "selectionDisabled": true,
   "actionDisabled": true,
   "bookmarkDisabled": true,
-  "nameField": "number"
+  "nameField": "number",
+  "isSystem": true
 }
