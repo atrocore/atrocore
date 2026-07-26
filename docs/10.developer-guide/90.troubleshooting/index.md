@@ -265,9 +265,12 @@ sudo aa-status --filter.profiles=gs
 If `gs` is listed, add the required path rules and reload the profile:
 
 ```bash
-sudo cat >> /etc/apparmor.d/local/gs << ‘EOF’
+sudo cat >> /etc/apparmor.d/local/gs << 'EOF'
 /var/www/<my-atrocore-project>/upload/files/** r,
 /var/www/<my-atrocore-project>/upload/files/.img-from-pdf/** rw,
+/var/www/<my-atrocore-project>/data/.pdf-thumbnail-tmp/** rw,
+/var/www/<my-atrocore-project>/data/.local-storage-tmp/** rw,
+/var/www/<my-atrocore-project>/data/.thumbnail-tmp/** r,
 EOF
 sudo apparmor_parser -r /etc/apparmor.d/gs
 ```
