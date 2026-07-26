@@ -168,17 +168,22 @@ Attributes can be added to the export in two ways:
 - **Select Attribute(s)** – opens the `Attributes` window to pick one or more specific attributes.
 - **Add All Attributes** – adds all attributes linked to the entity at once, which can then be filtered by [channel](../../05.pim/06.channels/index.md).
 
+![Item Configuration](_assets/items-configuration.png){.large}
+
 **Channel** – filters which attribute values are included based on channel assignment:
 
-  - *No channel selected* – exports only attribute values not assigned to any channel; channel-specific values are excluded.
-  - *Single channel selected* – exports values without a channel and values assigned to the selected channel.
-  - *Multiple channels selected* – exports values without a channel and values assigned to any of the selected channels.
+- *No channel selected* – exports only attribute values not assigned to any channel; channel-specific values are excluded.
+- *Single channel selected* – exports values without a channel and values assigned to the selected channel.
+- *Multiple channels selected* – exports values without a channel and values assigned to any of the selected channels.
 
-![Item Configuration](_assets/item-configuration.png){.medium}
+**Selected language only** – available only for the *Add All Attributes* type. Controls how multilingual attribute values are exported in relation to the feed's content language:
+
+- *Unchecked* (default) – all language variants of each attribute are exported, one column per language, regardless of the content language setting.
+- *Checked* – only the attribute values matching the selected content language are exported; all other language variants are omitted.
 
 ### Script Type in Configurator
 
-![Script in configurator](_assets/export-script-in-configurator.png){.large}
+![Script in configurator](_assets/export-script-configurator.png){.large}
 
 The Script type allows exporting computed values using [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md). Two variables are available inside the script:
 
@@ -300,9 +305,16 @@ The `Last Run` value can be adjusted manually to re-export a specific time range
 
 ## Running an Export Feed
 
-Click the `Export` button on the export feed detail view to start the export immediately.
+Two export buttons are available on the export feed detail view:
 
-![Run Export Option](_assets/export-button.png){.large}
+![Run Export Option](_assets/export-buttons.png){.large}
+
+- **Export** – starts the export immediately using the feed's saved settings.
+- **Dynamic Export** – opens a popup where you can override the **Content Language** and **Locale** for this single run without modifying the feed configuration.
+
+![Dynamic Export Popup](_assets/dynamic-export-popup.png){.large}
+
+The **Content Language** and **Locale** fields in the popup work the same way as the corresponding [feed settings](#feed-settings). Any values set here apply only to this execution and do not affect the saved feed.
 
 The job appears in the [Job Manager](../../01.atrocore/05.toolbar/03.job-manager/) with its current status. Errors, if any, are also displayed there.
 
