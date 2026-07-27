@@ -44,14 +44,14 @@ Each user has the following core properties:
 - **Active**: Controls whether the user can log into the system
 - **Global Administrator**: Grants full administrator privileges with maximum system access
 - **User Administrator**: Grants administrative privileges to create and manage users. This permission does not allow granting administrator privileges to other users
-- **Entity Administrator**: Grants administrative privileges for managing entities
-- **Role Administrator**: Grants administrative privileges for managing roles
+- **Entity Administrator**: Grants administrative privileges for managing entities and their fields
+- **Role Administrator**: Grants administrative privileges for managing access roles
 - **Teams**: Assigns user to specific [teams](../02.teams/) for collaborative access
 - **Roles**: Defines user permissions through [role](../03.roles/) assignments
 - **Default Team**: Sets the primary team for the user
 - **Disable Action Logging**: Prevents tracking of user actions in [Action History](../04.action-history/)
 
-> For users with a Global Administrator, User Administrator or Role Administrator level of access, the 'Administration' interface is not available. We recommend creating special [layot profiles](../../13.user-interface/02.layouts/index.md#layout-profiles) for such users, with links to the relevant entities for executing the relevant administrator functions.
+> Every administrator level opens the `Administration` panel, but each one sees only the items they are allowed to work with – see [Administration Panel Access](#administration-panel-access).
 
 **Security**:
 
@@ -128,13 +128,37 @@ Example configuration requires passwords with minimum 8 characters, uppercase le
 
 ### Administrator Privileges
 
-The **Is Admin** checkbox grants the user full system access with maximum permissions. Administrators can:
+The **Global Administrator** checkbox grants the user full system access with maximum permissions. Such a user can:
 - Access all system areas and functions
 - Manage other users, roles, and teams
 - Configure system settings and preferences
 - Override standard access controls
 
+Three limited levels exist for delegating a single administrative task without granting full access:
+
+| Level | Grants |
+|---|---|
+| Entity Administrator | Create, modify and delete entities and their fields |
+| Role Administrator | Create, modify and delete access roles |
+| User Administrator | Create, modify and delete users |
+
+Limited levels are shown only while **Global Administrator** is unchecked – a global administrator already holds all of them.
+
+Only a Global Administrator can change these four checkboxes. A User Administrator creates and edits users, but cannot grant any administrator level to anyone, including themselves, and cannot edit an existing Global Administrator.
+
 > Administrator status should be granted carefully as it provides complete system access.
+
+#### Administration Panel Access
+
+Every administrator has the `Administration` item in the user menu and can open the panel. The panel lists only the items available to the user:
+
+- A Global Administrator sees all items.
+- Any other administrator sees an item only if it refers to an entity they are allowed to read – Entity Manager for an Entity Administrator, Roles for a Role Administrator, Users for a User Administrator. Items covered by the assigned [roles](../03.roles/index.md), such as Jobs, Storages or Import Feeds, are shown as well.
+- Items that refer to no entity stay available to the Global Administrator only: System Settings, Authentication, User Interface, Layout Manager, Auth Tokens, API Request, Composer, module settings, Clear Cache and Rebuild Database.
+
+Groups without available items are hidden, so a limited administrator gets a short panel holding their own tasks only. The navigation tree on the left of the panel follows the same rule.
+
+Opening a page the user is not allowed to see – by a direct link, for example – results in an access denied message.
 
 ### Team Assignment
 

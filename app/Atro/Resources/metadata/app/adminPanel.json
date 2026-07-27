@@ -30,6 +30,7 @@
       },
       {
         "url": "#Locale",
+        "scope": "Locale",
         "label": "Locale",
         "description": "locale",
         "icon": "ph ph-globe",
@@ -44,6 +45,7 @@
       },
       {
         "url": "#Connection",
+        "scope": "Connection",
         "label": "Connection",
         "description": "connection",
         "icon": "ph ph-network",
@@ -51,6 +53,7 @@
       },
       {
         "url": "#Job",
+        "scope": "Job",
         "label": "Jobs",
         "description": "jobs",
         "icon": "ph ph-list-checks",
@@ -58,6 +61,7 @@
       },
       {
         "url": "#ScheduledJob",
+        "scope": "ScheduledJob",
         "label": "Scheduled Jobs",
         "description": "scheduledJob",
         "icon": "ph ph-clock",
@@ -65,6 +69,7 @@
       },
       {
         "url": "#Action",
+        "scope": "Action",
         "label": "Action",
         "description": "action",
         "icon": "ph ph-person-simple-run",
@@ -72,6 +77,7 @@
       },
       {
         "url": "#Measure",
+        "scope": "Measure",
         "label": "Measure",
         "description": "measure",
         "icon": "ph ph-ruler",
@@ -79,6 +85,7 @@
       },
       {
         "url": "#Prefix",
+        "scope": "Prefix",
         "label": "Prefixes",
         "description": "prefix",
         "icon": "ph ph-text-aa",
@@ -86,12 +93,14 @@
       },
       {
         "url": "#Measure/view/currency",
+        "scope": "Measure",
         "label": "Currency",
         "description": "currency",
         "icon": "ph ph-currency-eur"
       },
       {
         "url": "#NotificationProfile",
+        "scope": "NotificationProfile",
         "label": "notificationProfiles",
         "description": "notificationProfiles",
         "icon": "ph ph-bell-simple-ringing",
@@ -106,6 +115,7 @@
       },
       {
         "url": "#Language",
+        "scope": "Language",
         "label": "multiLanguages",
         "description": "multiLanguagesSettings",
         "icon": "ph ph-translate",
@@ -119,24 +129,28 @@
     "itemList": [
       {
         "url": "#Consolidation",
+        "scope": "Consolidation",
         "label": "consolidation",
         "description": "consolidation",
         "icon": "ph ph-crown"
       },
       {
         "url": "#Matching",
+        "scope": "Matching",
         "label": "matchings",
         "description": "matchings",
         "icon": "ph ph-shuffle"
       },
       {
         "url": "#Cluster",
+        "scope": "Cluster",
         "label": "clusters",
         "description": "clusters",
         "icon": "ph ph-copy"
       },
       {
         "url": "#DataPipeline",
+        "scope": "DataPipeline",
         "label": "dataPipeline",
         "description": "dataPipeline",
         "icon": "ph ph-line-segment"
@@ -148,6 +162,7 @@
     "itemList": [
       {
         "url": "#Storage",
+        "scope": "Storage",
         "label": "Storage",
         "description": "Storage",
         "icon": "ph ph-hard-drives",
@@ -155,6 +170,7 @@
       },
       {
         "url": "#FileType",
+        "scope": "FileType",
         "label": "FileTypes",
         "description": "listOfSupportedFilesTypes",
         "icon": "ph ph-files",
@@ -162,6 +178,7 @@
       },
       {
         "url": "#ThumbnailType",
+        "scope": "ThumbnailType",
         "label": "ThumbnailTypes",
         "description": "thumbnailTypes",
         "icon": "ph ph-images-square",
@@ -169,6 +186,7 @@
       },
       {
         "url": "#Folder",
+        "scope": "Folder",
         "label": "Folders",
         "description": "folders",
         "icon": "ph ph-folder",
@@ -181,6 +199,7 @@
     "itemList": [
       {
         "url": "#User",
+        "scope": "User",
         "label": "Users",
         "description": "users",
         "icon": "ph ph-user",
@@ -188,6 +207,7 @@
       },
       {
         "url": "#Team",
+        "scope": "Team",
         "label": "Teams",
         "description": "teams",
         "icon": "ph ph-users-three",
@@ -195,6 +215,7 @@
       },
       {
         "url": "#Role",
+        "scope": "Role",
         "label": "Roles",
         "description": "roles",
         "icon": "ph ph-user-gear",
@@ -202,12 +223,14 @@
       },
       {
         "url": "#Admin/authTokens",
+        "scope": "AuthToken",
         "label": "Auth Tokens",
         "description": "authTokens",
         "icon": "ph ph-key"
       },
       {
         "url": "#ActionHistoryRecord",
+        "scope": "ActionHistoryRecord",
         "label": "Action History",
         "description": "actionHistory",
         "icon": "ph ph-clock-counter-clockwise",
@@ -228,6 +251,7 @@
       },
       {
         "url": "#Admin/layouts",
+        "scope": "Layout",
         "label": "Layout Manager",
         "description": "layoutManager",
         "icon": "ph ph-layout",
@@ -235,12 +259,14 @@
       },
       {
         "url": "#LayoutProfile",
+        "scope": "LayoutProfile",
         "label": "layoutProfiles",
         "description": "layoutProfiles",
         "icon": "ph ph-blueprint"
       },
       {
         "url": "#Entity",
+        "scope": "Entity",
         "label": "Entity Manager",
         "description": "entityManager",
         "icon": "ph ph-cylinder",
@@ -248,6 +274,7 @@
       },
       {
         "url": "#Translation",
+        "scope": "Translation",
         "label": "Label Manager",
         "description": "labelManager",
         "icon": "ph ph-text-t",
@@ -255,6 +282,7 @@
       },
       {
         "url": "#Style",
+        "scope": "Style",
         "label": "style",
         "description": "style",
         "icon": "ph ph-paint-brush"
@@ -267,18 +295,21 @@
     "itemList": [
       {
         "url": "#Account",
+        "scope": "Account",
         "label": "Accounts",
         "description": "accounts",
         "icon": "ph ph-user-circle"
       },
       {
         "url": "#Contact",
+        "scope": "Contact",
         "label": "Contacts",
         "description": "contacts",
         "icon": "ph ph-address-book-tabs"
       },
       {
         "url": "#Address",
+        "scope": "Address",
         "label": "Addresses",
         "description": "addresses",
         "icon": "ph ph-map-pin-area"
@@ -291,6 +322,7 @@
     "itemList": [
       {
         "url": "#EmailTemplate",
+        "scope": "EmailTemplate",
         "label": "emailTemplates",
         "description": "emailTemplates",
         "icon": "ph ph-envelope-open",
@@ -298,6 +330,7 @@
       },
       {
         "url": "#PreviewTemplate",
+        "scope": "PreviewTemplate",
         "label": "previewTemplate",
         "description": "previewTemplate",
         "icon": "ph ph-code-simple",
@@ -305,6 +338,7 @@
       },
       {
         "url": "#NotificationTemplate",
+        "scope": "NotificationTemplate",
         "label": "notificationTemplates",
         "description": "notificationTemplates",
         "icon": "ph ph-notification",
@@ -324,6 +358,7 @@
       },
       {
         "url": "#IncomingWebhook",
+        "scope": "IncomingWebhook",
         "label": "incomingWebhook",
         "description": "incomingWebhook",
         "icon": "ph ph-webhooks-logo",
