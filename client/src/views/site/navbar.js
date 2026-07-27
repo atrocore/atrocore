@@ -397,7 +397,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 }
             ];
 
-            if (this.getUser().isAdmin()) {
+            if (this.getUser().hasAdminAccess()) {
                 list.push({
                     divider: true
                 });
@@ -407,7 +407,9 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                     label: this.getLanguage().translate('Administration'),
                     icon: '<i class="ph ph-gear"></i>'
                 });
+            }
 
+            if (this.getUser().isAdmin()) {
                 const systemCacheEntry = {
                     action: 'clearSystemCache',
                     label: this.getLanguage().translate('Clear Cache', 'labels', 'Admin'),
