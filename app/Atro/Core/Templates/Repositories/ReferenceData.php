@@ -423,13 +423,15 @@ class ReferenceData extends Repository implements Injectable
                         continue 2;
                     }
                     $field  = str_replace('*', '', (string)$k);
-                    $search = str_replace('%', '', $v);
+                    $search = is_string($v) ? str_replace('%', '', $v) : $v;
                     foreach ($items as $item) {
                         if (!isset($item[$field])) {
                             continue;
                         }
-                        if (!isset($filtered[$item['code']]) && is_string($item[$field]) && stripos($item[$field], $search) !== false) {
-                            $filtered[$item['code']] = $item;
+                        if (!isset($filtered[$item['code']])) {
+                            if ((is_string($item[$field]) && stripos($item[$field], $search) !== false) || $item[$field] === $search) {
+                                $filtered[$item['code']] = $item;
+                            }
                         }
                     }
                 }
