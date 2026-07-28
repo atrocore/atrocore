@@ -16,6 +16,7 @@ namespace Atro\Composer;
 use Atro\Core\Container;
 use Atro\Core\Application as App;
 use Atro\Jobs\MassDownload;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Espo\Core\Utils\Language;
 use Espo\ORM\EntityManager;
 
@@ -271,7 +272,7 @@ class PostUpdate
         }
 
         self::renderLine('Updating list of used modules');
-        file_put_contents('data/modules.json', json_encode(self::getModules()));
+        file_put_contents(ModuleManager::FILE_PATH, json_encode(self::getModules()));
     }
 
     /**
@@ -913,7 +914,7 @@ class PostUpdate
         }
 
         try {
-            $list = \Atro\Core\ModuleManager\Manager::getList();
+            $list = ModuleManager::getList();
             foreach ($list as $module) {
                 $className = "\\$module\\Module";
                 try {
