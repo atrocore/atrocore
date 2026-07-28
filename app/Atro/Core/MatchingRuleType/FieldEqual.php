@@ -39,7 +39,8 @@ class FieldEqual extends AbstractMatchingRule
             "text",
             "url",
             "varchar",
-            "wysiwyg"
+            "wysiwyg",
+            "email"
         ];
     }
 
