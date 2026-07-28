@@ -73,7 +73,10 @@
     },
     "number": {
       "type": "varchar",
-      "unique": true
+      "unique": true,
+      "required": true,
+      "notNull": true,
+      "trim": true
     },
     "accountGroup": {
       "type": "link"
