@@ -16257,6 +16257,10 @@ select {
     color: inherit;
 }
 
+.cell:not(.hidden-cell) .status-icons:empty {
+    display: none;
+}
+
 .status-icons > *,
 .status-icons > * > span {
     color: var(--label-color) !important;
