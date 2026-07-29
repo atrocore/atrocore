@@ -121,6 +121,16 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
             this.getStorage().set('list-view', this.scope, this.viewMode);
 
+            this.listenTo(Backbone, 'after:search', collection => {
+                if (this.collection.name === collection.name && window.navigationSidebar) {
+                    window.navigationSidebar.handleCollectionSearch(collection);
+                }
+            });
+
+            this.listenTo(this, 'record-list-rendered', recordView => {
+                this.listenTo(recordView, `bookmarked-${this.scope}`, () => this.reloadBookmarks());
+                this.listenTo(recordView, `unbookmarked-${this.scope}`, () => this.reloadBookmarks());
+            });
         },
 
         actionUniversalAction(data, e) {
@@ -390,18 +400,12 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
         },
 
         afterRender: function () {
-            this.createTreePanel();
-            this.setupHeader();
+            Dep.prototype.afterRender.call(this);
 
-            let treePanelView = this.getView('treePanel');
+            this.setupHeader();
 
             this.collection.isFetched = false;
             this.clearView('list');
-
-            if (treePanelView && this.getStorage().get('reSetupSearchManager', treePanelView.treeScope)) {
-                this.getStorage().clear('reSetupSearchManager', treePanelView.treeScope);
-                this.setupSearchManager();
-            }
 
             if (!this.hasView('list')) {
                 this.loadList();
@@ -586,83 +590,23 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
             return !this.getMetadata().get(['scopes', this.scope, 'leftSidebarDisabled'])
         },
 
-        createTreePanel(scope) {
-            if (!this.isTreeAllowed()) {
-                return;
-            }
-
-            window.treePanelComponent = new Svelte.TreePanel({
-                target: $(`${this.options.el} .content-wrapper`).get(0),
-                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
-                props: {
-                    scope: scope ? scope : this.scope,
-                    model: this.model,
-                    collection: this.collection,
-                    mode: 'list',
-                    callbacks: {
-                        selectNode: (data, force) => {
-                            this.selectNode(data, force);
-                        },
-                        treeWidthChanged: (width) => {
-                            this.onTreeResize(width)
-                        },
-                        treeReset: (treeScope) => {
-                            this.treeReset(treeScope)
-                        },
-                        addNodeToFilter: (data) => {
-                            this.addNodeToFilter(data)
-                        }
-                    },
-                    renderLayoutEditor: container => {
-                        if (this.getUser().isAdmin()) {
-                            this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
-                                scope: this.scope,
-                                viewType: 'navigation',
-                                layoutData: window.treePanelComponent.getLayoutData(),
-                                el: container,
-                            }, (view) => {
-                                view.on("refresh", () => {
-                                    window.treePanelComponent.refreshLayout()
-                                })
-                                view.render()
-                            })
-                        }
-                    }
+        getPageContext() {
+            return Object.assign(Dep.prototype.getPageContext.call(this), {
+                mode: 'list',
+                model: this.model,
+                collection: this.collection,
+                leftSidebar: {
+                    enabled: this.isTreeAllowed(),
+                    onNodeSelect: node => this.selectNode(node),
+                    onWidthChange: width => this.onTreeResize(width),
+                    renderLayoutEditor: container => this.renderTreeLayoutEditor(container)
                 }
-            });
-
-            this.listenTo(Backbone, 'after:search', collection => {
-                if (this.collection.name === collection.name) {
-                    if (window.treePanelComponent) {
-                        window.treePanelComponent.handleCollectionSearch(collection)
-                    }
-                }
-            });
-
-
-            this.listenTo(this, 'record-list-rendered', (recordView) => {
-                this.listenTo(recordView, `bookmarked-${this.scope}`, (_) => {
-                    this.reloadBookmarks();
-                });
-
-                this.listenTo(recordView, `unbookmarked-${this.scope}`, (_) => {
-                    this.reloadBookmarks();
-                });
             });
         },
 
         unSelectTreeNode(id) {
-            if (window.treePanelComponent) {
-                window.treePanelComponent.unSelectTreeNode(id);
-            }
-        },
-
-        treeReset(treeScope) {
-            this.notify('Please wait...');
-            if (![this.scope, 'Bookmark'].includes(treeScope)) {
-                this.notify('Please wait...');
-                this.collection.reset();
-                this.collection.fetch().then(() => this.notify(false));
+            if (window.navigationSidebar) {
+                window.navigationSidebar.unSelectTreeNode(id);
             }
         },
 
@@ -670,10 +614,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
             if (data.scope === this.scope && data.click) {
                 window.location.href = `/#${data.scope}/view/${data.id}`;
             }
-        },
-
-        addNodeToFilter(data) {
-            window.dispatchEvent(new CustomEvent('add-item-to-query-builder', { detail: data }));
         },
 
         parseRoute(routeStr) {
@@ -692,8 +632,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
         },
 
         reloadBookmarks() {
-            if (window.treePanelComponent) {
-                window.treePanelComponent.reloadBookmarks()
+            if (window.navigationSidebar) {
+                window.navigationSidebar.reloadIfShowing('Bookmark')
             }
         },
 

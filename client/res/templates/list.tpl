@@ -1,7 +1,4 @@
 <div class="content-wrapper">
-    {{#if isTreeAllowed}}
-        <aside class="tree-panel-anchor"></aside>
-    {{/if}}
     <main>
         <div class="page-header-container">
             <div class="page-header">{{{header}}}</div>

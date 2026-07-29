@@ -320,7 +320,7 @@ class Hierarchy extends Base
         $limit = $this->getConfig()->get('recordsPerPageSmall', 20);
 
         $position = $this->getRepository()->getEntityPosition($entity, $parentId, $sortParams);
-        $index = $position - 1;
+        $index = $position === null ? 0 : $position - 1;
 
         $offset = $index - $limit;
         if ($offset < 0) {

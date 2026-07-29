@@ -46,6 +46,13 @@ Espo.define('views/edit', 'views/main', function (Dep) {
 
         recordView: 'views/record/edit',
 
+        getPageContext: function () {
+            return Object.assign(Dep.prototype.getPageContext.call(this), {
+                mode: 'edit',
+                model: this.model
+            });
+        },
+
         rightSideView: 'views/record/right-side-view',
 
         setup: function () {

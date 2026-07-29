@@ -72,18 +72,16 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 }
             });
 
-            new Svelte.TreePanel({
-                target: $(`${this.options.el} .content-wrapper`).get(0),
-                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
-                props: {
-                    scope: 'Settings',
-                    model: this.model,
-                    mode: 'detail',
-                    isAdminPage: true,
-                    callbacks: {
+        },
 
-                    }
-                }
+        getPageContext() {
+            return Object.assign(Dep.prototype.getPageContext.call(this), {
+                scope: 'Settings',
+                mode: 'detail',
+                model: this.model,
+                collection: null,
+                isAdminPage: true,
+                leftSidebar: { enabled: true }
             });
         },
 

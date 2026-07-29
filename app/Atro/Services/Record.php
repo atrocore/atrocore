@@ -511,6 +511,19 @@ class Record extends RecordService
             $selectParams['distinct'] = true;
         }
 
+        if (!empty($params['selectedId']) && method_exists($repository, 'getRecordPosition')) {
+            $position = $repository->getRecordPosition((string) $params['selectedId'], $selectParams);
+            if ($position !== null) {
+                $limit  = $params['maxSize'];
+                $index  = $position - 1;
+                $offset = $index - $limit < 0 ? 0 : $index - $limit;
+
+                $params['offset']       = $offset;
+                $selectParams['offset'] = $offset;
+                $selectParams['limit']  = $index - $offset + $limit;
+            }
+        }
+
         $fields             = ['id', $this->getNameField($this->entityName)];
         $localizedNameField = $this->getLocalizedNameField($this->entityName);
         if (!empty($localizedNameField)) {

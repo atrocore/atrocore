@@ -60,8 +60,20 @@ Espo.define('views/admin/index', ['view', 'lib!JsTree'], function (Dep) {
             this.setPageTitle(this.getLanguage().translate('Administration'));
         },
 
+        getPageContext: function () {
+            return {
+                pageId: this.cid,
+                scope: 'Settings',
+                mode: 'detail',
+                isAdminPage: true,
+                leftSidebar: { enabled: true }
+            };
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
+            window.SveltePageContext.set(this.getPageContext());
 
             new Svelte.Administration({
                 target: $(`${this.options.el} .content-wrapper`).get(0),
