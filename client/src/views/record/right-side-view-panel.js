@@ -93,6 +93,10 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
             this.setupBeforeFinal();
         },
 
+        _applyWithRelationships() {
+
+        },
+
         getAccessManagementLayout() {
             const rows = []
             const scopeDefs = this.getMetadata().get(['scopes', this.model.name]);
@@ -193,15 +197,17 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
                 } else if (emptyLayout) {
                     this.getParentView().hidePanel('summary')
                 }
-            }else{
+            } else {
                 if (emptyLayout) {
                     this.getParentView().hidePanel('accessManagement')
                 }
             }
         },
 
-        enableButtons: function () {},
+        enableButtons: function () {
+        },
 
-        disableButtons: function () {},
+        disableButtons: function () {
+        },
     });
 });

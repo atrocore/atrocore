@@ -40,6 +40,15 @@ use Atro\Handlers\AbstractHandler;
                 'type' => 'string',
             ],
         ],
+        [
+            'name'        => 'withRelationships',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Comma-separated list of linkMultiple field names to include in the response',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
     ],
     requestBody: [
         'required' => true,
@@ -75,12 +84,13 @@ class CreateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $data    = $this->getRequestBody($request);
-        $service = $this->getRecordService($entityName);
+        $data              = $this->getRequestBody($request);
+        $withRelationships = $request->getQueryParams()['withRelationships'] ?? null;
+        $service           = $this->getRecordService($entityName);
 
         $id = $service->createEntity($data);
 
-        $entity = $service->prepareEntityById($id);
+        $entity = $service->prepareEntityById($id, withRelationships: $withRelationships);
         if (empty($entity)) {
             throw new Error();
         }

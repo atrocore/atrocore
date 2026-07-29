@@ -176,6 +176,45 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         prepareModelView: function (model, options) {
         },
 
+        _computeWithRelationships: function (layouts, entityName) {
+            var fieldDefs = this.getMetadata().get(['entityDefs', entityName, 'fields']) || {};
+            var seen = {}, fields = [];
+            layouts.forEach(function (layoutData) {
+                (layoutData.layout || []).forEach(function (panel) {
+                    (panel.rows || []).forEach(function (row) {
+                        row.forEach(function (cell) {
+                            if (!cell || !cell.name || seen[cell.name]) return;
+                            seen[cell.name] = true;
+                            var type = (fieldDefs[cell.name] || {}).type;
+                            if (type === 'linkMultiple' || type === 'attachmentMultiple') {
+                                fields.push(cell.name);
+                            }
+                        });
+                    });
+                });
+            });
+            return fields.length ? fields.join(',') : null;
+        },
+
+        _fetchWithLayout: function (model, entityName, fetchOpts) {
+            var lm = this.getLayoutManager();
+            if (!lm || !this.getMetadata().get(['scopes', entityName, 'layouts'])) {
+                model.fetch(fetchOpts);
+                return;
+            }
+            var self = this;
+            var layouts = [];
+            var pending = 2;
+            var done = function () {
+                if (--pending === 0) {
+                    model.withRelationships = self._computeWithRelationships(layouts, entityName);
+                    model.fetch(fetchOpts);
+                }
+            };
+            lm.get(entityName, 'detail', null, function (data) { layouts.push(data); done(); });
+            lm.get(entityName, 'summary', null, function (data) { layouts.push(data); done(); });
+        },
+
         view: function (options) {
             var id = options.id;
 
@@ -188,10 +227,8 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                 var model = options.model;
                 createView(model);
 
-                model.fetch({
-                    headers: {
-                        'Entity-History': sessionStorage.tabId || 'true'
-                    }
+                this._fetchWithLayout(model, this.name, {
+                    headers: { 'Entity-History': sessionStorage.tabId || 'true' }
                 });
 
                 this.listenToOnce(this.baseController, 'action', function () {
@@ -202,11 +239,9 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     model.id = id;
 
                     createView(model);
-                    model.fetch({
+                    this._fetchWithLayout(model, this.name, {
                         main: true,
-                        headers: {
-                            'Entity-History': sessionStorage.tabId || 'true'
-                        }
+                        headers: { 'Entity-History': sessionStorage.tabId || 'true' }
                     });
 
                     this.listenToOnce(this.baseController, 'action', function () {
@@ -305,7 +340,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
                     this.main(this.getViewName('edit'), o);
                 }, this);
-                model.fetch({ main: true });
+                this._fetchWithLayout(model, this.name, { main: true });
 
                 this.listenToOnce(this.baseController, 'action', function () {
                     model.abortLastFetch();

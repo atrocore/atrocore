@@ -1327,8 +1327,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 throw new Error('Model has not been injected into record view.');
             }
 
-            this.setupModelWithRelationships();
-
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
             this.once('remove', function () {
@@ -1628,27 +1626,42 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        setupModelWithRelationships: function () {
+        _applyWithRelationships: function () {
+            var self = this;
             var fieldDefs = (this.model.defs || {}).fields || {};
-            this.getGridLayout(function (gridLayout) {
-                var seen = {};
-                var relationshipFields = [];
-                (gridLayout.layout || []).forEach(function (panel) {
+            var seen = {}, allFields = [];
+            var relatedScope = this.options.layoutRelatedScope ?? null;
+            var pending = 2;
+
+            function collectFromRaw(rawLayout) {
+                (rawLayout || []).forEach(function (panel) {
                     (panel.rows || []).forEach(function (row) {
                         row.forEach(function (cell) {
-                            if (!cell || !cell.field || seen[cell.field]) return;
-                            seen[cell.field] = true;
-                            var defs = fieldDefs[cell.field] || {};
-                            if (defs.type === 'linkMultiple' || defs.type === 'attachmentMultiple') {
-                                relationshipFields.push(cell.field);
+                            if (!cell || !cell.name || seen[cell.name]) return;
+                            seen[cell.name] = true;
+                            var type = (fieldDefs[cell.name] || {}).type;
+                            if (type === 'linkMultiple' || type === 'attachmentMultiple') {
+                                allFields.push(cell.name);
                             }
                         });
                     });
                 });
-                if (relationshipFields.length) {
-                    this.model.withRelationships = relationshipFields.join(',');
+            }
+
+            function done() {
+                if (--pending === 0) {
+                    self.model.withRelationships = allFields.length ? allFields.join(',') : null;
                 }
-            }.bind(this));
+            }
+
+            this._helper.layoutManager.get(this.model.name, this.layoutName, relatedScope, function (data) {
+                collectFromRaw((data || {}).layout || []);
+                done();
+            });
+            this._helper.layoutManager.get(this.model.name, 'summary', relatedScope, function (data) {
+                collectFromRaw((data || {}).layout || []);
+                done();
+            });
         },
 
         setupBeforeFinal: function () {
@@ -1913,7 +1926,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             relatedScope: this.options.layoutRelatedScope,
                             el: this.getSelector() + '.panel-heading .layout-editor-container',
                         }, (view) => {
-                            view.on("refresh", () => this.refreshLayout(true))
+                            view.on("refresh", () => {
+                                this.detailLayout = null;
+                                this.gridLayout = null;
+                                this.getGridLayout(() => this.model.fetch());
+                            })
                             view.render()
                             this.layoutConfiguratorCreated = false
                         })
@@ -2472,6 +2489,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     type: gridLayoutType,
                     layout: this.convertDetailLayout(this.detailLayout)
                 };
+                this._applyWithRelationships();
                 callback(this.gridLayout);
                 return;
             }
@@ -2484,6 +2502,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     type: gridLayoutType,
                     layout: this.convertDetailLayout(data.layout)
                 };
+                this._applyWithRelationships();
                 callback(this.gridLayout);
             }.bind(this));
         },
