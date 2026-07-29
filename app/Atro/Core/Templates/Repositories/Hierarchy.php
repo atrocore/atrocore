@@ -15,7 +15,6 @@ namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
-use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -169,47 +168,21 @@ class Hierarchy extends Base
         $secondarySortBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy']);
         $secondarySortBy = Util::toUnderScore(!empty($secondarySortBy) ? $secondarySortBy : 'name');
 
-        if (Converter::isPgSQL($this->getConnection())) {
-            if (empty($parentId)) {
-                $query = "SELECT x.position
-                      FROM (SELECT t.id, row_number() over(ORDER BY t.$primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) AS position
+        if (empty($parentId)) {
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, ROW_NUMBER() OVER (ORDER BY t.$primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) AS position
                             FROM $quotedTableName t
                             WHERE t.deleted=:deleted AND t.routes= :emptyRoutes) x
                       WHERE x.id= :id";
-            } else {
-                $primarySortBy = $primarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : 't.' . $primarySortBy;
-                $query = "SELECT x.position
-                      FROM (SELECT t.id, row_number() over(ORDER BY $primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) AS position
+        } else {
+            $primarySortBy = $primarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : 't.' . $primarySortBy;
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, ROW_NUMBER() OVER (ORDER BY $primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) AS position
                             FROM $quotedHierarchyTableName h
                                 LEFT JOIN $quotedTableName t ON t.id=h.entity_id
                                 LEFT JOIN $quotedTableName t1 ON t1.id=h.parent_id
                             WHERE h.parent_id=:parentId AND h.deleted=:deleted AND t.deleted=:deleted AND t1.deleted=:deleted) x
                       WHERE x.id=:id";
-            }
-        } else {
-            if (empty($parentId)) {
-                $query = "SELECT x.position
-                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
-                            FROM $quotedTableName t
-                                JOIN (SELECT @rownum:=0) r
-                            WHERE t.deleted=:deleted and t.routes= :emptyRoutes
-                            ORDER BY t.$primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) x
-                      JOIN (select id from product where id=:id) y ON x.id = y.id";
-            } else {
-                $primarySortBy = $primarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : 't.' . $primarySortBy;
-                $query = "SELECT x.position
-                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
-                            FROM $quotedHierarchyTableName h
-                                JOIN (SELECT @rownum:=0) r
-                                LEFT JOIN $quotedTableName t ON t.id=h.entity_id
-                                LEFT JOIN $quotedTableName t1 ON t1.id=h.parent_id
-                            WHERE h.parent_id=:parentId
-                              AND h.deleted=:deleted
-                              AND t.deleted=:deleted
-                              AND t1.deleted=:deleted
-                            ORDER BY $primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) x
-                      JOIN (select id from product where id=:id) y ON x.id = y.id";
-            }
         }
 
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
@@ -226,7 +199,7 @@ class Hierarchy extends Base
 
         $position = $sth->fetch(\PDO::FETCH_COLUMN);
 
-        return (int)$position;
+        return empty($position) ? null : (int)$position;
     }
 
     public function clearDeletedRecords(): void
