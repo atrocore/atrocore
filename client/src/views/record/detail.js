@@ -1327,6 +1327,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 throw new Error('Model has not been injected into record view.');
             }
 
+            this.setupModelWithRelationships();
+
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
             this.once('remove', function () {
@@ -1624,6 +1626,29 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 });
             }
+        },
+
+        setupModelWithRelationships: function () {
+            var fieldDefs = (this.model.defs || {}).fields || {};
+            this.getGridLayout(function (gridLayout) {
+                var seen = {};
+                var relationshipFields = [];
+                (gridLayout.layout || []).forEach(function (panel) {
+                    (panel.rows || []).forEach(function (row) {
+                        row.forEach(function (cell) {
+                            if (!cell || !cell.field || seen[cell.field]) return;
+                            seen[cell.field] = true;
+                            var defs = fieldDefs[cell.field] || {};
+                            if (defs.type === 'linkMultiple' || defs.type === 'attachmentMultiple') {
+                                relationshipFields.push(cell.field);
+                            }
+                        });
+                    });
+                });
+                if (relationshipFields.length) {
+                    this.model.withRelationships = relationshipFields.join(',');
+                }
+            }.bind(this));
         },
 
         setupBeforeFinal: function () {

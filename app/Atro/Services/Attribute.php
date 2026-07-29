@@ -21,6 +21,7 @@ use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\ORM\Entity;
+use Espo\ORM\IEntity;
 
 class Attribute extends Base
 {
@@ -205,7 +206,7 @@ class Attribute extends Base
     /**
      * @inheritDoc
      */
-    public function getEntity($id = null)
+    public function getEntity(?string $id = null, ?string $withRelationships = null): ?IEntity
     {
         $id = $this
             ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))
