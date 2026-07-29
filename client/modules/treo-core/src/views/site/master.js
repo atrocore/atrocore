@@ -191,6 +191,17 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
             return colorConverter.solve().filter;
         },
 
+        setupNavigationSidebar: function () {
+            if (window.navigationSidebar) {
+                window.navigationSidebar.$destroy();
+            }
+
+            window.navigationSidebar = new Svelte.NavigationSidebar({
+                target: this.$el.find('#left-sidebar').get(0),
+                props: {}
+            });
+        },
+
         afterRender() {
             this.setupNavigationSidebar();
 
