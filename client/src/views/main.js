@@ -308,6 +308,51 @@ Espo.define('views/main', 'view', function (Dep) {
             return this.getView('record');
         },
 
+        /**
+         * Describes the current page for the shell components, which outlive it. Subclasses widen this through
+         * Object.assign; anything left out falls back to the empty context, so a page gets no left sidebar
+         * unless it asks for one.
+         *
+         * @return {Object} a partial PageContext, see svelte/src/lib/types/page/page-context.ts
+         */
+        getPageContext: function () {
+            return {
+                pageId: this.cid,
+                scope: this.scope,
+                mode: 'list'
+            };
+        },
+
+        refreshPageContext: function () {
+            if (this.isRemoved()) {
+                return;
+            }
+
+            window.SveltePageContext.set(this.getPageContext());
+        },
+
+        afterRender: function () {
+            this.refreshPageContext();
+        },
+
+        renderTreeLayoutEditor: function (container) {
+            if (!this.getUser().isAdmin()) {
+                return;
+            }
+
+            this.clearView('treeLayoutConfigurator');
+
+            this.createView('treeLayoutConfigurator', 'views/record/layout-configurator', {
+                scope: this.scope,
+                viewType: 'navigation',
+                layoutData: window.navigationSidebar.getLayoutData(),
+                el: container
+            }, view => {
+                view.on('refresh', () => window.navigationSidebar.refreshLayout());
+                view.render();
+            });
+        },
+
         shouldSetupRightSideView: function () {
             let recordView = this.getMainRecord();
             return recordView && recordView.sideView;

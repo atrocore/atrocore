@@ -192,6 +192,8 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         },
 
         afterRender() {
+            this.setupNavigationSidebar();
+
             this.updateNavButtons();
 
             let style = this.getThemeManager().getStyle();

@@ -59,7 +59,20 @@ Espo.define('views/site/master', 'view', function (Dep) {
             this.notify(false);
         },
 
+        setupNavigationSidebar: function () {
+            if (window.navigationSidebar) {
+                window.navigationSidebar.$destroy();
+            }
+
+            window.navigationSidebar = new Svelte.NavigationSidebar({
+                target: this.$el.find('#left-sidebar').get(0),
+                props: {}
+            });
+        },
+
         afterRender: function () {
+            this.setupNavigationSidebar();
+
             var footerView = this.getView('footer');
             if (footerView) {
                 var html = footerView.$el.html() || '';
