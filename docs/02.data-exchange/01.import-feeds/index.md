@@ -53,6 +53,7 @@ Define main feed parameters:
     - *Create and Delete* – creates new and deletes absent records
     - *Update and Delete* – updates existing and deletes absent records
     - *Create, Update and Delete* – full synchronization
+> Actions that delete records absent from import data behave differently when an execution is [recreated](#import-executions).
 - **Description** – usage notes and reminders
 - **Execute As** – user context for import execution:
     - *System* – runs with system-level permissions
@@ -302,6 +303,22 @@ Execution details include:
 Use [single record actions](../../01.atrocore/04.understanding-ui/index.md#single-record-actions) to recreate executions or remove them.
 
 The **Recreate** action starts a new import using the same file from the selected execution. This is helpful if you imported a large file that created multiple executions and need to rerun only those that encountered errors.
+
+A recreated execution is always listed as a separate execution – it is never added to the original one.
+
+When a large file is split into several executions, each of them holds only a part of the import data. Recreating such an execution therefore never deletes records: everything missing from that part would otherwise be treated as absent and removed. The **Action** is downgraded for the recreated execution only:
+
+| Import feed action | Action used for the recreated execution |
+|--------------------|-----------------------------------------|
+| "Create and Delete" | "Create Only" |
+| "Update and Delete" | "Update Only" |
+| "Create, Update and Delete" | "Create and Update" |
+
+The import feed itself keeps its configured action.
+
+Executions of a feed with the action "Delete Only (for not found records)" cannot be recreated – once deletion is excluded, such an execution has nothing left to do.
+
+!! Recreating an execution that covers the whole import data runs the import exactly as configured, deletion included. Deletion is skipped only for executions that hold a part of the data.
 
 ### Import Execution Details
 
