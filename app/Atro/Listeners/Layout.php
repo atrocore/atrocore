@@ -133,6 +133,9 @@ class Layout extends AbstractListener
     {
         foreach ($this->getMetadata()->get(['app', 'adminPanel']) as $panel) {
             foreach ($panel['itemList'] as $item) {
+                if (!empty($item['scope']) && $item['scope'] === $scope) {
+                    return true;
+                }
                 if (!empty($item['url']) && (str_starts_with($item['url'], "#$scope/") || $item['url'] === "#$scope")) {
                     return true;
                 }
