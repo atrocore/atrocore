@@ -1640,7 +1640,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             if (!cell || !cell.name || seen[cell.name]) return;
                             seen[cell.name] = true;
                             var type = (fieldDefs[cell.name] || {}).type;
-                            if (type === 'linkMultiple' || type === 'attachmentMultiple') {
+                            if (type === 'linkMultiple') {
                                 allFields.push(cell.name);
                             }
                         });

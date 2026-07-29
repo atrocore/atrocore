@@ -3052,7 +3052,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                                     if (!cell || !cell.name || seen[cell.name]) return;
                                     seen[cell.name] = true;
                                     var type = (fieldDefs[cell.name] || {}).type;
-                                    if (type === 'linkMultiple' || type === 'attachmentMultiple') {
+                                    if (type === 'linkMultiple') {
                                         fields.push(cell.name);
                                     }
                                 });
