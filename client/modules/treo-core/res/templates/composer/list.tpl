@@ -1,5 +1,4 @@
 <div class="content-wrapper">
-    <aside class="tree-panel-anchor"></aside>
     <main class="composer">
         <div class="page-header-container">
             <div class="page-header">{{{header}}}</div>

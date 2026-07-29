@@ -61,6 +61,38 @@ class Base extends RDB
         return $res;
     }
 
+    public function getRecordPosition(string $id, array $selectParams): ?int
+    {
+        $selectParams['select'] = ['id'];
+        unset($selectParams['offset'], $selectParams['limit']);
+
+        $mapper = $this->getMapper();
+        $qb     = $mapper->createSelectQueryBuilder($this->get(), $selectParams);
+
+        $order = $qb->getQueryPart('orderBy');
+        if (empty($order)) {
+            return null;
+        }
+
+        $qb->addSelect('ROW_NUMBER() OVER (ORDER BY ' . implode(', ', $order) . ') AS atro_position');
+        $qb->resetQueryPart('orderBy');
+
+        $params                 = $qb->getParameters();
+        $types                  = $qb->getParameterTypes();
+        $params['atroRecordId'] = $id;
+        $types['atroRecordId']  = ParameterType::STRING;
+
+        $idAlias = $mapper->getQueryConverter()->fieldToAlias('id');
+
+        $position = $this->getDbal()->fetchOne(
+            "SELECT numbered.atro_position FROM ({$qb->getSQL()}) numbered WHERE numbered.$idAlias = :atroRecordId",
+            $params,
+            $types
+        );
+
+        return empty($position) ? null : (int) $position;
+    }
+
     public function prepareAttributesForOutput(EntityCollection $collection, array $params): void
     {
         if (empty($params['attributesIds']) && empty($params['allAttributes'])) {

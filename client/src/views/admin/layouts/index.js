@@ -179,21 +179,21 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
             this.setPageTitle(this.getLanguage().translate('Layout Manager', 'labels', 'Admin'));
         },
 
+        getPageContext: function () {
+            return {
+                pageId: this.cid,
+                scope: 'Settings',
+                mode: 'detail',
+                model: this.model,
+                isAdminPage: true,
+                leftSidebar: { enabled: true }
+            };
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            new Svelte.TreePanel({
-                target: $(`${this.options.el} .content-wrapper`).get(0),
-                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
-                props: {
-                    scope: this.scope,
-                    model: this.model,
-                    mode: 'detail',
-                    isAdminPage: true,
-                    callbacks: {
 
-                    }
-                }
-            });
+            window.SveltePageContext.set(this.getPageContext());
         }
     });
 });

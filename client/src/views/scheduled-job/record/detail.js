@@ -12,43 +12,18 @@ Espo.define('views/scheduled-job/record/detail', 'views/record/detail', Dep => {
 
     return Dep.extend({
 
-        setup() {
-            Dep.prototype.setup.call(this);
-            this.additionalButtons = [
-                {
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
+
+            if (this.model.id && this.model.get('isActive')){
+                this.additionalButtons.push({
                     action: 'executeNow',
                     label: this.translate('executeNow', 'labels', 'ScheduledJob')
-                }
-            ];
-
-            this.listenTo(this.model, 'after:save', () => {
-                this.handleExecuteNowButtonDisability()
-            })
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            this.handleExecuteNowButtonDisability();
-        },
-
-        handleExecuteNowButtonDisability() {
-            const $buttons = $('.additional-button[data-action="executeNow"]');
-            if (this.hasExecuteNow()) {
-                $buttons.removeClass('disabled');
-            } else {
-                $buttons.addClass('disabled');
+                })
             }
-        },
-
-        hasExecuteNow() {
-            return this.model.get('isActive');
         },
 
         actionExecuteNow() {
-            if (!this.hasExecuteNow() || !this.model.id) {
-                return;
-            }
             this.ajaxPostRequest(`ScheduledJob/${this.model.id}/executeNow`).then(response => {
                 this.notify(this.translate(response ? 'jobLaunched' : 'jobAlreadyExist', 'messages', 'ScheduledJob'), response ? 'success' : 'danger');
                 $('button.action[data-action="refresh"][data-panel="jobs"]').click();

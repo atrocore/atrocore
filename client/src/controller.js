@@ -303,6 +303,14 @@ Espo.define('controller', [], function () {
                         }
                     }
                     master.currentViewKey = storedKey;
+
+                    if (window.SveltePageContext) {
+                        window.SveltePageContext.claim(main.cid);
+                        if (main.getPageContext) {
+                            window.SveltePageContext.set(main.getPageContext());
+                        }
+                    }
+
                     master.setView('main', main);
 
                     main.once('after:render', function () {

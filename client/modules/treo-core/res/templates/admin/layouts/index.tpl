@@ -1,5 +1,4 @@
 <div class="content-wrapper">
-    <aside class="tree-panel-anchor"></aside>
     <main style="padding: 0 20px;">
         <div class="page-header">
             <div id="layout-header"></div>

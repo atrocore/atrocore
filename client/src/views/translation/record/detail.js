@@ -20,15 +20,11 @@ Espo.define('views/translation/record/detail', 'views/record/detail', Dep => {
                     label: this.translate('reset', 'labels', 'Translation'),
                     name: 'resetToDefault'
                 });
-            } else {
-                this.dropdownItemList = this.dropdownItemList.filter(item => item.name !== 'resetToDefault');
             }
         },
 
         afterSave: function () {
             Dep.prototype.afterSave.call(this);
-
-            this.model.trigger('sync')
         },
 
         actionResetToDefault() {

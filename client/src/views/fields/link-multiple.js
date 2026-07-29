@@ -179,6 +179,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return res;
         },
 
+        listInlineEditModeEnabled() {
+            if (!this.model.has(this.idsName)) {
+                return false;
+            }
+
+            return Dep.prototype.listInlineEditModeEnabled.call(this);
+        },
+
         getOptionsData() {
             return [];
         },

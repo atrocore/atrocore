@@ -1,5 +1,4 @@
 <div class="content-wrapper">
-    <aside class="tree-panel-anchor"></aside>
     <div id="admin-page-content"></div>
 </div>
 

@@ -83,6 +83,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             this.model._disableRefreshNotification = true;
             this.onModelReady(() => this.notify(false));
 
+            this.listenTo(this.model, 'sync', () => this.refreshPageContext());
+
             this.recordView = this.options.recordView || this.recordView;
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
 
@@ -260,50 +262,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             this.setupHeader();
 
-            const view = this.getView('record');
             if (this.treeAllowed) {
-                window.treePanelComponent = new Svelte.TreePanel({
-                    target: $(`${this.options.el} .content-wrapper`).get(0),
-                    anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
-                    props: {
-                        scope: this.scope,
-                        model: this.model,
-                        mode: 'detail',
-                        callbacks: {
-                            selectNode: data => {
-                                view.selectNode(data);
-                            },
-                            treeLoad: (treeScope, treeData) => {
-                                if (view.treeLoad) {
-                                    view.treeLoad(treeScope, treeData);
-                                }
-                            },
-                            treeReset: () => {
-                                view.treeReset()
-                            },
-                            treeWidthChanged: (width) => {
-                                view.onTreeResize(width)
-                            }
-                        },
-                        renderLayoutEditor: (container) => {
-                            if (this.getUser().isAdmin()) {
-                                this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
-                                    scope: this.scope,
-                                    viewType: 'navigation',
-                                    layoutData: window.treePanelComponent.getLayoutData(),
-                                    el: container,
-                                }, (view) => {
-                                    view.on("refresh", () => {
-                                        window.treePanelComponent.refreshLayout()
-                                    })
-                                    view.render()
-                                })
-                            }
-                        }
-                    }
-                });
-
-                view.onTreePanelRendered();
+                this.getView('record').onTreePanelRendered();
             }
 
             this.setupRightSideView();
@@ -742,6 +702,19 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         isTreeAllowed() {
             return !this.getMetadata().get(['scopes', this.scope, 'leftSidebarDisabled'])
+        },
+
+        getPageContext() {
+            return Object.assign(Dep.prototype.getPageContext.call(this), {
+                mode: 'detail',
+                model: this.model,
+                leftSidebar: {
+                    enabled: this.treeAllowed,
+                    onNodeSelect: node => this.getView('record')?.selectNode(node),
+                    onWidthChange: width => this.getView('record')?.onTreeResize(width),
+                    renderLayoutEditor: container => this.renderTreeLayoutEditor(container)
+                }
+            });
         },
 
         setupRecord: function () {

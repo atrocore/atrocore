@@ -20,5 +20,6 @@
 </div>
 <header id="header">{{{header}}}</header>
 <div id="content" class="container content">
+    <div id="left-sidebar"></div>
     <div id="main">{{{main}}}</div>
 </div>

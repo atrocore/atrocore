@@ -1,7 +1,6 @@
 <div class="page-header"></div>
 
 <div class="content-wrapper">
-	<aside class="tree-panel-anchor"></aside>
 	<div class="admin-content">
 		<div class="row">
 			<div class="col-md-7">

@@ -3092,14 +3092,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         onTreePanelRendered(view) {
             this.listenTo(this.model, 'after:save', () => {
-                if (window.treePanelComponent) {
-                    window.treePanelComponent.rebuildTree();
+                if (window.navigationSidebar) {
+                    window.navigationSidebar.rebuildTree();
                 }
             });
             this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                 if (['parents', 'children'].includes(link)) {
-                    if (window.treePanelComponent) {
-                        window.treePanelComponent.rebuildTree();
+                    if (window.navigationSidebar) {
+                        window.navigationSidebar.rebuildTree();
                     }
                 }
             });

@@ -1,5 +1,4 @@
 <div class="content-wrapper">
-    <aside class="tree-panel-anchor"></aside>
     <div class="layout-content">
         <div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a>
                 &raquo {{translate 'Layout Manager' scope='Admin'}}</h3></div>
