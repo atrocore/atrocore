@@ -20,7 +20,7 @@ class Exception extends \Exception
     /**
      * @inheritDoc
      */
-    public function __construct($message = "", $code = 0, \Throwable $previous = null)
+    public function __construct($message = "", $code = 0, ?\Throwable $previous = null)
     {
         // decode message to utf8
         $message = mb_convert_encoding($message, 'utf-8', mb_detect_encoding($message));

@@ -79,13 +79,13 @@ To delete a module from the system:
 If the update can not be completed due to some error, you need to restore the system. Please run this command:
 
 ```
-php composer.phar restore
+php atrocore-installer.phar restore
 ```
 
 You can force the restoration if the previous command does not help:
 
 ```
-php composer.phar restore --force
+php atrocore-installer.phar restore --force
 ```
 
 You need to run the restore command as the webserver user, eg www-data, otherwise don't forget to change the ownership of the restored files.

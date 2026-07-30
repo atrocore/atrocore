@@ -38,34 +38,32 @@ cd /var/www/my-atrocore-project
 
 > Git may be used for this step, so make sure that [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) is installed. Please note, it is still possible to install the application without having `git` (see 3.6).
 
-> It is essential, that you use the composer version, which is embedded in our software, because this version contains some of our modifications needed for backup and restoring of the system files and the database. That is why `php composer.phar update` is used. Please **DO NOT** use composer, which is installed on your server as it does not contain the required modifications.
-
 #### If you want to install AtroPIM with demo data
 > Demo data can be installed only for MySQL database system.
 
 run
 ```
-sudo git clone https://github.com/atrocore/skeleton-pim.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-pim.git . && sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 #### If want to install the AtroPIM without demo data
 
 run
 ```
-sudo git clone https://github.com/atrocore/skeleton-pim-no-demo.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-pim-no-demo.git . && sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 #### If you want to install AtroCore with demo data
 run
 ```
-sudo git clone https://github.com/atrocore/skeleton-atrocore.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-atrocore.git . && sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 #### If want to install the AtroCore without demo data
 
 run
 ```
-sudo git clone https://github.com/atrocore/skeleton-atrocore-no-demo.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-atrocore-no-demo.git . && sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 #### Installation without `git`
@@ -79,7 +77,7 @@ You can download the files from one of these repositories:
 
 Then upload the files to your project folder and run
 ```
-sudo php composer.phar self-update && sudo php composer.phar update
+sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 ### 4. Change recursively the user and group ownership for your project files

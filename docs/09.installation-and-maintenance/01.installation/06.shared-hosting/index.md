@@ -66,7 +66,7 @@ The installation itself follows the [main installation guide](../../01.installat
 * Skip the `chown` step — the files already belong to your account user.
 * Upload the project files into your web directory via git, SSH or SFTP, then run over SSH:
   ```
-  php composer.phar self-update && php composer.phar update
+  php atrocore-installer.phar self-update && php atrocore-installer.phar update
   ```
 * Set the permissions to directories `755` and files `644`:
   ```
