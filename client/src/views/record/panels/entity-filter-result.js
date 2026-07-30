@@ -34,6 +34,10 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                 this.defs.unlinkAll = false;
                 this.defs.hasLayoutEditor = false;
 
+                if (!this.getAcl().check(this.scope, 'read')) {
+                    return;
+                }
+
                 Dep.prototype.setup.call(this);
 
                 if (!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
@@ -180,13 +184,38 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            if (this.getAcl().check(this.scope, 'read')) {
+                $('.panel-entityFilterResult button[data-action="openSearchFilter"]').html(this.getFilterButtonHtml());
+            }
+
             if (this.panelVisible()) {
                 this.$el.parent().show();
             } else {
                 this.$el.parent().hide();
             }
+        },
 
-            $('.panel-entityFilterResult button[data-action="openSearchFilter"]').html(this.getFilterButtonHtml());
+        getNoAccessHtml() {
+            const message = this.translate('noAccessToScope', 'exceptions', 'Global')
+                .replace('%s', this.translate(this.scope, 'scopeNames'));
+
+            return `
+                <div class="list-container">
+                    <div class="no-data-container">
+                        <span class="ph ph-lock"></span>
+                        <span>${message}</span>
+                    </div>
+                </div>
+            `;
+        },
+
+        _getHtml(callback) {
+            if (!this.getAcl().check(this.scope, 'read')) {
+                callback(this.getNoAccessHtml());
+                return;
+            }
+
+            Dep.prototype._getHtml.call(this, callback);
         },
 
         panelVisible() {

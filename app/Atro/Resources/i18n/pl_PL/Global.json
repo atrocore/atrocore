@@ -1249,7 +1249,8 @@
     "integerValueValidationFailed": "Wartość całkowita dla pola/atrybutu \"%s\" musi zawierać się w przedziale od %s do %s.",
     "singleClassificationAllowed": "Dozwolona jest tylko jedna klasyfikacja",
     "dateIsInvalid": "Data dla pola '%s' jest nieprawidłowa.",
-    "datetimeIsInvalid": "Data-czas dla pola \"%s\" jest nieprawidłowa."
+    "datetimeIsInvalid": "Data-czas dla pola \"%s\" jest nieprawidłowa.",
+    "noAccessToScope": "Nie masz dostępu do %s."
   },
   "queryBuilderFilter": {
     "add_rule": "Dodaj regułę",

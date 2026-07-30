@@ -1353,7 +1353,8 @@
     "massDeleteSomeRecordNotProceed": "Non è stato possibile rimuovere con successo alcuni record.",
     "massRestoreSomeRecordNotProceed": "Non è stato possibile ripristinare alcuni record.",
     "entityCannotBeBookmarked": "I record di questa entità non possono essere inseriti nei segnalibri.",
-    "integerValueValidationFailed": "Il valore intero per il campo/attributo '%s' deve essere compreso tra %s e %s."
+    "integerValueValidationFailed": "Il valore intero per il campo/attributo '%s' deve essere compreso tra %s e %s.",
+    "noAccessToScope": "Non hai accesso a %s."
   },
   "firstStepsDashlet": {
     "title": {
