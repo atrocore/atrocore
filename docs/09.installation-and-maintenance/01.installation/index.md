@@ -77,7 +77,7 @@ You can download the files from one of these repositories:
 
 Then upload the files to your project folder and run
 ```
-sudo php atrocore-installer.phar self-update && sudo php catrocore-installer.phar update
+sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 ### 4. Change recursively the user and group ownership for your project files
