@@ -22,11 +22,6 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
             this.defs.select = false;
             this.defs.unlinkAll = false;
 
-            this.listenTo(this.model, `change:${this.scope}`, () => {
-                debugger
-                this.trigger('panel:rebuild');
-            })
-
             if (!this.getAcl().check(this.scope, 'read')) {
                 return;
             }
