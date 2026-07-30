@@ -112,7 +112,7 @@ class PostUpdate
             self::renderLine($message);
 
             self::renderLine('Restoring database');
-            exec(self::getPhpBin() . " atrocore-installer.phar restore --force --auto 2>/dev/null");
+            proc_close(proc_open([self::getPhpBin(), 'atrocore-installer.phar', 'restore', '--force', '--auto'], [['null'], ['null'], ['null']], $pipes));
             self::renderLine('Done!');
 
             exit(1);
@@ -622,7 +622,7 @@ class PostUpdate
         }
 
         self::renderLine('Regenerating measures');
-        exec(self::getPhpBin() . " console.php regenerate measures >/dev/null");
+        proc_close(proc_open([self::getPhpBin(), 'console.php', 'regenerate', 'measures'], [['null'], ['null'], ['null']], $pipes));
     }
 
 
@@ -637,7 +637,7 @@ class PostUpdate
         }
 
         self::renderLine('Refreshing translations');
-        exec(self::getPhpBin() . " console.php refresh translations >/dev/null");
+        proc_close(proc_open([self::getPhpBin(), 'console.php', 'refresh', 'translations'], [['null'], ['null'], ['null']], $pipes));
     }
 
     /**
