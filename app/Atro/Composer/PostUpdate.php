@@ -824,7 +824,7 @@ class PostUpdate
         $path = __FILE__;
         while (empty($rootPath)) {
             $path = dirname($path);
-            if (file_exists($path . "/atrocore-installer.phar") || file_exists($path . "/composer.phar")) {
+            if (file_exists($path . "/atrocore-installer.phar")) {
                 $rootPath = $path;
             }
 
