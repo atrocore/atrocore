@@ -63,4 +63,4 @@ Examples include:
 
 Users cannot create or modify Archive-type entities, they can configure the Auto-delete period. This specifies how long archive records should be retained before they are removed automatically by the system. This setting helps to manage database size and ensure compliance with data retention policies. If the auto-delete period is not set, archive data will be retained indefinitely.
 
-Users can choose to avoid losing data in archive-type entities and keep server storage low. This can be achieved via the [ClickHouse Integration](https://store.atrocore.com/en/clickhouse-integration/20246) module.
+Users can choose to avoid losing data in archive-type entities and keep server storage low. This can be achieved via the [ClickHouse](https://store.atrocore.com/en/clickhouse-integration/20246) module.
