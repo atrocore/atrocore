@@ -498,8 +498,9 @@ class QueryConverter
                  */
                 if (!empty($fieldDefs['isLinkEntityName']) && !empty($fieldDefs['originalName']) && $fieldDefs['foreign'] === 'name') {
                     $last = array_pop($arr);
-                    if (str_ends_with($last, '_id')) {
-                        $arr[] = str_replace('.name', '.id', $fieldPath) . " AS {$this->fieldToAlias("{$fieldDefs['originalName']}Id")}";
+                    if (str_ends_with($last, '_id') && !empty($fieldDefs['relation'])) {
+                        $idPath = $this->getRelationAlias($entity, $fieldDefs['relation']) . '.' . $this->toDb('id');
+                        $arr[]  = "{$idPath} AS {$this->fieldToAlias("{$fieldDefs['originalName']}Id")}";
                     }
                 }
             }
