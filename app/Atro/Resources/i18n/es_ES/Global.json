@@ -1249,7 +1249,8 @@
     "integerValueValidationFailed": "El valor entero para el campo/atributo '%s' debe estar entre %s y %s.",
     "imageSizeValidationFailed": "El tamaño del archivo debe estar entre %skb y %skb.",
     "notUniqueRecordField": "El registro no puede guardarse, el registro con tal '%s' ya existe.",
-    "notUniqueValue": "El registro no puede crearse/actualizarse debido a restricciones de la base de datos."
+    "notUniqueValue": "El registro no puede crearse/actualizarse debido a restricciones de la base de datos.",
+    "noAccessToScope": "No tienes acceso a %s."
   },
   "queryBuilderFilter": {
     "add_rule": "Añadir regla",
