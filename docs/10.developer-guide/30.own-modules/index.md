@@ -257,4 +257,4 @@ If you open Module Manager (`Administration > System > Update & Modules`) you wi
 
 ![Prepare for install](./_assets/module-manager-dependency.png){.large}
 
-Click on Install and Update button or run `php composer.phar update` command from terminal to initiate the process. Your module will be installed and the system will be updated. If some error occurs during installation please check the logs in the folder `data/logs` for more detailed information.
+Click on Install and Update button or run `php atrocore-installer.phar update` command from terminal to initiate the process. Your module will be installed and the system will be updated. If some error occurs during installation please check the logs in the folder `data/logs` for more detailed information.

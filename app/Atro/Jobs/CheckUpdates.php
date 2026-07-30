@@ -30,7 +30,7 @@ class CheckUpdates extends AbstractJob implements JobInterface
             unlink($log);
         }
 
-        exec("$php composer.phar update --dry-run >> $log 2>&1");
+        exec("$php atrocore-installer.phar update --dry-run >> $log 2>&1");
 
         DataManager::pushPublicData('isNeedToUpdate', self::isUpdatesAvailable());
     }
