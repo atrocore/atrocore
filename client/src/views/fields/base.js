@@ -932,7 +932,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     $.ajax({
                         url: `${this.model.name}/${this.model.get('id')}/attributeValues`,
                         type: 'DELETE',
-                        data: JSON.stringify({attributeIds: [attributeId]}),
+                        data: JSON.stringify({ attributeIds: [attributeId] }),
                         contentType: 'application/json',
                         success: () => {
                             if (['list', 'listLink'].includes(this.mode)) {
@@ -1604,7 +1604,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         showValidationMessage: function (message, target) {
             var $el;
 
-            if(this.$el.find('.selectize-control').size()) {
+            if (this.$el.find('.selectize-control').size()) {
                 target = target || '.selectize-control .main-element'
             }
 
@@ -1752,7 +1752,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             let hash = this.simpleHash(JSON.stringify(customOptions.where ?? []))
             let key = 'link_' + scope + hash;
-            if(clearCache && Espo[key]) {
+            if (clearCache && Espo[key]) {
                 Espo[key] = null;
             }
             if (!Espo[key]) {
@@ -1766,7 +1766,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     options = { ...options, ...customOptions }
                 }
 
-                this.ajaxGetRequest(scope, options, { async: false }).then(res => {
+                var isEdit = this.mode === 'edit';
+                this.ajaxGetRequest(scope, options, {
+                    async: false,
+                    error: function (xhr) {
+                        if (!isEdit && xhr.status === 403) {
+                            xhr.errorIsHandled = true;
+                            console.error('User is not allowed to access entity: ' + scope);
+                        }
+                    }
+                }).then(res => {
                     if (res.list) {
                         Espo[key] = res.list;
                     }
