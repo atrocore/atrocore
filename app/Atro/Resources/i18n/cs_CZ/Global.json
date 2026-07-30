@@ -1189,7 +1189,8 @@
     "massDeleteSomeRecordNotProceed": "Některé záznamy se nepodařilo úspěšně odstranit.",
     "massRestoreSomeRecordNotProceed": "Některé záznamy se nepodařilo úspěšně obnovit.",
     "entityCannotBeBookmarked": "Záznamy této entity nelze záložkovat.",
-    "fileIsInvalid": "Soubor pro pole '%s' není platný."
+    "fileIsInvalid": "Soubor pro pole '%s' není platný.",
+    "noAccessToScope": "Nemáte přístup k %s."
   },
   "queryBuilderFilter": {
     "operators": {
