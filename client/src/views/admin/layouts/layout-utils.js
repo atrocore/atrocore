@@ -122,6 +122,9 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                                     }, {async: false}).success(res => {
                                         let fields = [];
                                         $.each(res, (field, fieldDefs) => {
+                                            if (fieldDefs['layoutListDisabled']) {
+                                                return;
+                                            }
                                             this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
                                             this.getLanguage().data[entity].fields[field] = fieldDefs.label;
 
