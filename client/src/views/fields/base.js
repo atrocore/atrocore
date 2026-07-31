@@ -2064,7 +2064,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             return this.getMetadata().get(['scopes', this.model.urlRoot, 'enableFieldValueLock']) &&
-                !this.getMetadata().get(['entityDefs', this.model.urlRoot, this.getLockedFieldName(), 'disableFieldValueLock']) &&
+                !this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.getLockedFieldName(), 'disableFieldValueLock']) &&
                 this.model.get('_meta')?.locked?._loaded && !this.model.get('attributesDefs')?.[this.getLockedFieldName()]?.disableFieldValueLock;
         },
 
