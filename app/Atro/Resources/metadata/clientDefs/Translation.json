@@ -1,9 +1,6 @@
 {
   "controller": "controllers/record",
   "iconClass": "translate",
-  "recordViews": {
-    "detail": "views/translation/record/detail"
-  },
   "menu": {
     "list": {
       "buttons": [

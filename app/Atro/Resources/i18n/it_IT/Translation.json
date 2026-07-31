@@ -1,7 +1,6 @@
 {
   "fields": {
     "module": "Modulo",
-    "isCustomized": "Personalizzato",
     "afZa": "af_ZA",
     "sqAl": "sq_AL",
     "arDz": "ar_DZ",
@@ -137,14 +136,11 @@
     "viVn": "vi_VN",
     "cyGb": "cy_GB",
     "xhZa": "xh_ZA",
-    "zuZa": "zu_ZA"
+    "zuZa": "zu_ZA",
+    "customizedLanguages": "Lingue personalizzate"
   },
   "labels": {
-    "reset": "Ripristino delle impostazioni predefinite",
     "push": "Inviare per la revisione"
   },
-  "messages": {
-    "resetConfirm": "È sicuro di voler riportare le etichette ai valori predefiniti?",
-    "resetSuccessfully": "Le etichette sono state resettate con successo."
-  }
+  "messages": {}
 }

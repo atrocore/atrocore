@@ -553,9 +553,9 @@ class EntityField extends ReferenceData
                 $newLabel->id = $id;
             }
 
-            $newLabel->set(['module' => 'custom', 'isCustomized' => true, 'code' => "$scope.options.$field.$newValue"]);
+            $newLabel->set(['module' => 'custom', 'code' => "$scope.options.$field.$newValue"]);
 
-            if ($label->get('module') === 'custom' && !empty($label->get('isCustomized'))) {
+            if ($label->get('module') === 'custom') {
                 $this->getEntityManager()->removeEntity($label);
             }
 

@@ -1,7 +1,6 @@
 {
   "fields": {
     "module": "Modul",
-    "isCustomized": "Přizpůsobené",
     "afZa": "af_ZA",
     "sqAl": "sq_AL",
     "arDz": "ar_DZ",
@@ -137,14 +136,11 @@
     "viVn": "vi_VN",
     "cyGb": "cy_GB",
     "xhZa": "xh_ZA",
-    "zuZa": "zu_ZA"
+    "zuZa": "zu_ZA",
+    "customizedLanguages": "Přizpůsobené jazyky"
   },
   "labels": {
-    "reset": "Obnovení výchozího nastavení",
     "push": "Odeslat k přezkoumání"
   },
-  "messages": {
-    "resetConfirm": "Jste si jisti, že chcete obnovit výchozí nastavení štítků?",
-    "resetSuccessfully": "Štítky byly úspěšně resetovány."
-  }
+  "messages": {}
 }
