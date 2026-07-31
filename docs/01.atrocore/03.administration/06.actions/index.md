@@ -24,24 +24,28 @@ Navigate to `Administration > Actions` to manage all configured actions in your 
 
 All actions share these common configuration fields:
 
-![Default Action Form](_assets/action-create-form-default.png){.medium}
+![Default Action Details Creation](_assets/action-create-form-details.png){.large}
 
 - **Name**: Descriptive name for the action
 - **Type**: The specific action type (see Action Types section below)
-- **Usage**: Defines the action scope. Some usage types are applicable only to specific action types:
-  - **Entity action button**: Applies to entire entity types
-  - **Record action button**: Applies to individual records
-  - **Field action button**: Applies to specific entity fields
-  - **On record load**: Applies to individual records when the page loads
-- **Conditions Type**: How conditions are evaluated:
-  - **Basic**: Simple condition builder
-  - **Script**: Custom script conditions following [Twig syntax](../../../10.developer-guide/80.twig-tutorial/index.md)
 - **Active**: Whether the action is enabled
 - **Execute As**: Specifies the user context in which the action is executed:
   - **System**: Runs with system-level permissions.
   - **Same User**: Runs with current user [permissions](../14.access-management/01.users/index.md#role-based-permissions). When selected, the corresponding user appears as a link following System in the **Modified** field for changed records and in the **Created** field for newly created records in the [Summary](../../04.understanding-ui/index.md#insights-tab) panel of the Side View for changed records.
-  
-  ![Executed by User](_assets/executed-as-user.png){.medium}
+- **Execute in Background**: When enabled, the action runs as a background job with no direct success or error message returned to the user. Use this when execution is expected to take more than 30 seconds. Available for all action types except UI-only types (Suggest Value, etc.).
+
+![Executed by User](_assets/executed-as-user.png){.medium}
+
+- **Conditions Type**: How conditions are evaluated:
+  - **Basic**: Simple condition builder
+  - **Script**: Custom script conditions following [Twig syntax](../../../10.developer-guide/80.twig-tutorial/index.md)
+
+![Default Action Details Creation](_assets/action-create-usage.png){.large}
+
+- **Usage**: Defines the action scope. Some usage types are applicable only to specific action types:
+  - **Entity action button**: Applies to entire entity types
+  - **Record action button**: Applies to individual records
+  - **Field action button**: Applies to specific entity fields
 
 When **Usage** is selected (any non-empty option), an additional **Source Entity** field appears to specify which entity the action targets.
 
@@ -86,6 +90,20 @@ When enabled, actions appear in the mass actions menu for selected records. Read
 ![Field Level Configuration](_assets/field-level.png){.medium}
 
 Field action buttons appear as buttons next to specific fields on detail pages and are shown when you hover over the field.
+
+**On field focus:**
+
+- **Source Entity**: Entity that contains the field.
+- **Field**: The specific field whose focus event triggers the action.
+
+**On field change:**
+
+- **Source Entity**: Entity that contains the field(s).
+- **Fields**: One or more fields whose value change triggers the action. The action fires whenever any of the listed fields is modified and saved.
+
+**On record create / update:**
+
+- **Source Entity**: Entity whose records trigger the action on creation or every update. No additional fields are required beyond Source Entity.
 
 ### Action Icons
 
@@ -313,7 +331,6 @@ Imports data from external sources using configured import feeds.
 
 **Configuration:**
 
-- **Execute in Background**: Option to run import as background process
 - **Import Feed**: Selection of configured import feed
 <!-- TODO: enhance with real payload example -->
 - **Payload**: Custom data payload for the import with [Twig](../../../10.developer-guide/80.twig-tutorial/) templating syntax
@@ -375,6 +392,7 @@ Can be used to notify users about events related to the selected entity in respo
 - **Email Template**: Email template for content and formatting (required) - links to Email Templates, you can choose existing template or create your own
 - **Email To**: Primary email recipients (supports multiple addresses)
 - **Email CC**: Carbon copy recipients (optional)
+- **Email BCC**: Blind carbon copy recipients (optional)
 
 **Script Mode:**
 
