@@ -100,7 +100,10 @@ When the exported XML, the system automatically extracts the schema URL, downloa
 - **Entity** – entity whose records will be exported.
 - **Sort Order (Field)** – field used to sort exported records.
 - **Sort Order (Direction)** – `ASC` (smallest first) or `DESC` (largest first).
-- **Locale** – determines the locale used for localized data export defines with [Locale](../../01.atrocore/03.administration/02.locales/index.md).
+For CSV and Excel formats, two language-related settings are available:
+
+- **Locale** – determines the language used for **column headers** (field and attribute names) and number/date formatting (decimal mark, thousand separator). All locales defined in the system are available for selection. Configured via [Locale](../../01.atrocore/03.administration/02.locales/index.md).
+- **Language** – determines the [language](../../01.atrocore/03.administration/03.languages/index.md) of the exported **cell values**. When set, multilingual field values and attribute values are exported in that language only.
 
 **CSV and Excel:**
 
@@ -128,10 +131,10 @@ Click `Save` to complete the creation.
 
 The `Configurator` panel defines which fields and attributes are included in the export and in what order. Use the panel menu to add items:
 
-- **Select Field(s)** – opens the `Entity Fields` window to select entity [fields](../../01.atrocore/03.administration/11.entity-management/03.fields-and-attributes/index.md).
-- **Select Attribute(s)** – opens the `Attributes` window to select entity [attributes](../../01.atrocore/03.administration/12.attribute-management/01.attributes/index.md) (available for entities that support attributes).
+- **Select Field(s)** – opens the `Entity Fields` window to select entity [fields](../../01.atrocore/03.administration/11.entity-management/03.fields-and-attributes/index.md). The window provides two confirmation buttons: **Select** adds only the main-language item, while **Select (All languages)** adds one configurator item per available language variant in addition to the main-language item.
+- **Select Attribute(s)** – opens the `Attributes` window to select entity [attributes](../../01.atrocore/03.administration/12.attribute-management/01.attributes/index.md) (available for entities that support attributes). The same two buttons apply: **Select** adds only the main-language item, **Select (All languages)** adds one item per language variant.
 - **Add All Attributes** – adds all attributes linked to the entity at once.
-- **Add Fixed Value** – adds a constant value column to the export.x`
+- **Add Fixed Value** – adds a constant value column to the export.
 - **Add Script** – adds a computed column using [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md).
 - **Remove All** – removes all items from the configurator.
 
@@ -165,17 +168,22 @@ Attributes can be added to the export in two ways:
 - **Select Attribute(s)** – opens the `Attributes` window to pick one or more specific attributes.
 - **Add All Attributes** – adds all attributes linked to the entity at once, which can then be filtered by [channel](../../05.pim/06.channels/index.md).
 
+![Item Configuration](_assets/items-configuration.png){.large}
+
 **Channel** – filters which attribute values are included based on channel assignment:
 
-  - *No channel selected* – exports only attribute values not assigned to any channel; channel-specific values are excluded.
-  - *Single channel selected* – exports values without a channel and values assigned to the selected channel.
-  - *Multiple channels selected* – exports values without a channel and values assigned to any of the selected channels.
+- *No channel selected* – exports only attribute values not assigned to any channel; channel-specific values are excluded.
+- *Single channel selected* – exports values without a channel and values assigned to the selected channel.
+- *Multiple channels selected* – exports values without a channel and values assigned to any of the selected channels.
 
-![Item Configuration](_assets/item-configuration.png){.medium}
+**Selected language only** – available only for the *Add All Attributes* type. Controls how multilingual attribute values are exported in relation to the feed's content language:
+
+- *Unchecked* (default) – all language variants of each attribute are exported, one column per language, regardless of the content language setting.
+- *Checked* – only the attribute values matching the selected content language are exported; all other language variants are omitted.
 
 ### Script Type in Configurator
 
-![Script in configurator](_assets/export-script-in-configurator.png){.large}
+![Script in configurator](_assets/export-script-configurator.png){.large}
 
 The Script type allows exporting computed values using [Twig syntax](../../10.developer-guide/80.twig-tutorial/index.md). Two variables are available inside the script:
 
@@ -297,9 +305,16 @@ The `Last Run` value can be adjusted manually to re-export a specific time range
 
 ## Running an Export Feed
 
-Click the `Export` button on the export feed detail view to start the export immediately.
+Two export buttons are available on the export feed detail view:
 
-![Run Export Option](_assets/export-button.png){.large}
+![Run Export Option](_assets/export-buttons.png){.large}
+
+- **Export** – starts the export immediately using the feed's saved settings.
+- **Dynamic Export** – opens a popup where you can override the **Content Language** and **Locale** for this single run without modifying the feed configuration.
+
+![Dynamic Export Popup](_assets/dynamic-export-popup.png){.large}
+
+The **Content Language** and **Locale** fields in the popup work the same way as the corresponding [feed settings](#feed-settings). Any values set here apply only to this execution and do not affect the saved feed.
 
 The job appears in the [Job Manager](../../01.atrocore/05.toolbar/03.job-manager/) with its current status. Errors, if any, are also displayed there.
 
@@ -329,9 +344,11 @@ To export them, after selecting, press `Actions` dropdown and select `Export`. T
 
 You can select an existing Export Feed associated with the current entity and click `Export`.
 
-![export From Entity With Feeds](_assets/export-from-entity-feed.png){.medium}
+![Export From Entity With Feeds](_assets/export-from-entity-feeds.png){.medium}
 
 > For the purposes of this execution all the configuration will be taken from selected `Export feed` except filters. Only the records explicitly selected in the view will be exported.
+
+When using an existing export feed, you can also override the feed's Content Language and Locale for this run only. This is useful when the feed is configured with a main language (not language-specific columns) and you want to export content in a different specific language for this run, without modifying the feed itself.
 
 Also, you can configure a one-time export directly in the same popup menu. This option supports only CSV and XLSX (Excel) formats and allows you to manually select the entity fields and attributes to be included in the export
 
