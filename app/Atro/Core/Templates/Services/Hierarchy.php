@@ -25,6 +25,7 @@ use Atro\Core\Templates\Entities\Hierarchy as HierarchyEntity;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\IEntity;
 use Espo\ORM\EntityCollection;
 
 class Hierarchy extends Base
@@ -629,9 +630,9 @@ class Hierarchy extends Base
         ];
     }
 
-    public function getEntity($id = null)
+    public function getEntity(?string $id = null, ?string $withRelationships = null): ?IEntity
     {
-        $entity = parent::getEntity($id);
+        $entity = parent::getEntity($id, $withRelationships);
 
         if ($this->isHierarchy()) {
             if (!empty($entity)) {

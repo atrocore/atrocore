@@ -346,6 +346,7 @@ Espo.define(
                     storage: this.storage,
                     metadata: this.metadata,
                     dateTime: this.dateTime,
+                    layoutManager: this.viewHelper.layoutManager,
                 };
             },
 

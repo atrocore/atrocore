@@ -55,6 +55,7 @@ Espo.define('layout-manager', [], function () {
         this.metadata = options.metadata || null;
         this.applicationId = options.applicationId || 'default-id';
         this.data = {};
+        this.pending = {};
         this.ajax = $.ajax;
         this.userId = userId;
     }
@@ -145,18 +146,26 @@ Espo.define('layout-manager', [], function () {
                 }
             }
 
+            if (key in this.pending) {
+                if (typeof callback === 'function') {
+                    this.pending[key].push(callback);
+                }
+                return;
+            }
+
+            this.pending[key] = typeof callback === 'function' ? [callback] : [];
             this.ajax({
                 url: this.getUrl(scope, type, relatedScope, layoutProfileId, isAdminPage),
                 type: 'GET',
                 dataType: 'json',
                 success: function (layout) {
-                    if (typeof callback === 'function') {
-                        callback(layout);
-                    }
                     this.data[key] = layout;
                     if (this.cache) {
                         this.cache.set('app-layout', key, layout);
                     }
+                    var callbacks = this.pending[key] || [];
+                    delete this.pending[key];
+                    callbacks.forEach(function (cb) { cb(layout); });
                 }.bind(this)
             });
         },
