@@ -1,12 +1,8 @@
 {
   "labels": {
-    "reset": "Auf Standardwert zurücksetzen",
     "push": "Zur Überprüfung senden"
   },
-  "messages": {
-    "resetConfirm": "Möchten Sie die Labels wirklich auf die Standardwerte zurücksetzen?",
-    "resetSuccessfully": "Labels wurden erfolgreich zurückgesetzt."
-  },
+  "messages": {},
   "fields": {
     "hyAm": "hy_AM",
     "azAz": "az_AZ",
@@ -123,7 +119,6 @@
     "arLb": "ar_LB",
     "arLy": "ar_LY",
     "module": "Modul",
-    "isCustomized": "Angepasst",
     "arMa": "ar_MA",
     "arOm": "ar_OM",
     "arQa": "ar_QA",
@@ -145,6 +140,7 @@
     "syrSy": "syr_SY",
     "taIn": "ta_IN",
     "teIn": "te_IN",
-    "thTh": "th_TH"
+    "thTh": "th_TH",
+    "customizedLanguages": "Angepasste Sprachen"
   }
 }

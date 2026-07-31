@@ -23,6 +23,7 @@ use Espo\ORM\Entity;
 class Translation extends Base
 {
     private array $cachedCodes = [];
+    private ?array $fieldToLanguageCode = null;
 
     public static function languageToField(string $language): string
     {
@@ -128,11 +129,52 @@ class Translation extends Base
             $entity->set('module', 'custom');
         }
 
-        if ($entity->get('module') === 'custom' && !$entity->isNew() && !$entity->get('isCustomized')) {
-            $entity->set('isCustomized', true);
-        }
+        $this->markEditedLanguagesAsCustomized($entity);
 
         parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * When a user directly edits a language's value, that language is automatically protected from being
+     * overwritten by the module's default (refreshTranslations()) or by automatic translation going forward.
+     */
+    private function markEditedLanguagesAsCustomized(Entity $entity): void
+    {
+        $customizedLanguages = (array)$entity->get('customizedLanguages');
+        $changed = false;
+
+        foreach ($entity->entityDefs['fields'] as $field => $defs) {
+            if (empty($defs['isValue'])) {
+                continue;
+            }
+
+            $languageCode = $this->getLanguageCodeForField($field);
+            if ($languageCode === null || in_array($languageCode, $customizedLanguages, true)) {
+                continue;
+            }
+
+            if ($entity->isAttributeChanged($field) && !empty($entity->get($field))) {
+                $customizedLanguages[] = $languageCode;
+                $changed = true;
+            }
+        }
+
+        if ($changed) {
+            $entity->set('customizedLanguages', array_values($customizedLanguages));
+        }
+    }
+
+    private function getLanguageCodeForField(string $field): ?string
+    {
+        if ($this->fieldToLanguageCode === null) {
+            $this->fieldToLanguageCode = [];
+            // same source as the customizedLanguages field's own options (Locale.languageCode values, see Listeners/Metadata.php)
+            foreach ($this->getMetadata()->get(['entityDefs', 'Translation', 'fields', 'customizedLanguages', 'options'], []) as $code) {
+                $this->fieldToLanguageCode[self::languageToField($code)] = $code;
+            }
+        }
+
+        return $this->fieldToLanguageCode[$field] ?? null;
     }
 
     /**
@@ -167,7 +209,7 @@ class Translation extends Base
     public function fetchExistingCodeMap(): array
     {
         $rows = $this->getDbal()->createQueryBuilder()
-            ->select('code', 'id', 'is_customized')
+            ->select('*')
             ->from($this->getDbal()->quoteIdentifier('translation'))
             ->where('deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -175,9 +217,18 @@ class Translation extends Base
 
         $map = [];
         foreach ($rows as $row) {
+            $values = [];
+            foreach ($row as $column => $value) {
+                $values[Util::toCamelCase($column)] = $value;
+            }
+
+            $customizedLanguages = !empty($values['customizedLanguages']) ? (json_decode((string)$values['customizedLanguages'], true) ?? []) : [];
+
             $map[$row['code']] = [
-                'id'           => $row['id'],
-                'isCustomized' => (bool)$row['is_customized'],
+                'id'                  => $row['id'],
+                'module'              => $row['module'],
+                'customizedLanguages' => $customizedLanguages,
+                'values'              => $values,
             ];
         }
 

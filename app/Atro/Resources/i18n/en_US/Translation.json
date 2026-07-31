@@ -1,7 +1,6 @@
 {
   "fields": {
     "module": "Module",
-    "isCustomized": "Customized",
     "afZa": "af_ZA",
     "sqAl": "sq_AL",
     "arDz": "ar_DZ",
@@ -137,15 +136,12 @@
     "viVn": "vi_VN",
     "cyGb": "cy_GB",
     "xhZa": "xh_ZA",
-    "zuZa": "zu_ZA"
+    "zuZa": "zu_ZA",
+    "customizedLanguages": "Customized Languages"
   },
   "labels": {
     "refresh": "Refresh",
-    "reset": "Reset to Default",
     "push": "Send for Review"
   },
-  "messages": {
-    "resetConfirm": "Are you sure you want to reset labels to default?",
-    "resetSuccessfully": "Labels have been successfully reset."
-  }
+  "messages": {}
 }

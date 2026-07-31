@@ -32,6 +32,7 @@ class Language
     protected ?string $language = null;
 
     private array $translateCache = [];
+    private ?array $fieldToLanguageCode = null;
 
     public function __construct(Container $container, ?string $localeId = null)
     {
@@ -129,15 +130,44 @@ class Language
         foreach ($records as $key => $row) {
             if (!isset($existingMap[$key])) {
                 $row['id'] = IdGenerator::uuid();
+                $row['customizedLanguages'] = json_encode([]);
                 $toInsert[] = $row;
-            } elseif (!$existingMap[$key]['isCustomized']) {
-                $row['id'] = $existingMap[$key]['id'];
-                $toUpdate[] = $row;
+                continue;
+            }
+
+            $existing = $existingMap[$key];
+            $customizedLanguages = $existing['customizedLanguages'];
+
+            $updateRow = ['id' => $existing['id'], 'code' => $key, 'module' => $row['module']];
+            $hasChanges = ($row['module'] !== $existing['module']);
+
+            foreach ($row as $field => $value) {
+                if (in_array($field, ['code', 'module', 'createdAt'], true)) {
+                    continue;
+                }
+
+                $languageCode = $this->getLanguageCodeForField($field);
+                if ($languageCode !== null && in_array($languageCode, $customizedLanguages, true)) {
+                    continue;
+                }
+
+                $currentValue = $existing['values'][$field] ?? null;
+                if ((string)$currentValue !== (string)$value) {
+                    $updateRow[$field] = $value;
+                    $hasChanges = true;
+                }
+            }
+
+            if ($hasChanges) {
+                $toUpdate[] = $updateRow;
             }
         }
 
         foreach ($existingMap as $code => $entry) {
-            if (!$entry['isCustomized'] && !isset($records[$code])) {
+            if ($entry['module'] === 'custom' || !empty($entry['customizedLanguages'])) {
+                continue;
+            }
+            if (!isset($records[$code])) {
                 $orphanedIds[] = $entry['id'];
             }
         }
@@ -155,6 +185,19 @@ class Language
         }
 
         $this->getRepository()->refreshTimestamp([]);
+    }
+
+    private function getLanguageCodeForField(string $field): ?string
+    {
+        if ($this->fieldToLanguageCode === null) {
+            $this->fieldToLanguageCode = [];
+            // same source as the customizedLanguages field's own options (Locale.languageCode values, see Listeners/Metadata.php)
+            foreach ($this->getMetadata()->get(['entityDefs', 'Translation', 'fields', 'customizedLanguages', 'options'], []) as $code) {
+                $this->fieldToLanguageCode[Util::toCamelCase(strtolower($code))] = $code;
+            }
+        }
+
+        return $this->fieldToLanguageCode[$field] ?? null;
     }
 
     public function getAll(): array
@@ -391,7 +434,7 @@ class Language
         }
     }
 
-    private function getSimplifiedTranslates(array $data): array
+    public function getSimplifiedTranslates(array $data): array
     {
         $records = [];
         foreach ($data as $module => $moduleData) {
@@ -401,7 +444,6 @@ class Language
                 foreach ($preparedLocaleData as $key => $value) {
                     $records[$key]['code'] = $key;
                     $records[$key]['module'] = $module;
-                    $records[$key]['isCustomized'] = $module === 'custom';
                     $records[$key]['createdAt'] = date('Y-m-d H:i:s');
                     $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
                 }
@@ -427,7 +469,7 @@ class Language
         }
     }
 
-    private function getModulesData(): array
+    public function getModulesData(): array
     {
         $data = [];
 

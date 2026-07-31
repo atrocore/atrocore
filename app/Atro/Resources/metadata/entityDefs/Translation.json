@@ -27,21 +27,9 @@
       "default": "custom",
       "protected": true
     },
-    "isCustomized": {
-      "type": "bool",
-      "readOnly": true,
-      "default": true,
-      "conditionalProperties": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "module",
-              "value": "custom"
-            }
-          ]
-        }
-      }
+    "customizedLanguages": {
+      "type": "multiEnum",
+      "options": []
     },
     "afZa": {
       "type": "text",

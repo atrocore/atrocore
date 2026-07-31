@@ -1,12 +1,8 @@
 {
   "labels": {
-    "reset": "Відновити",
     "push": "Відправити на рев'ю"
   },
-  "messages": {
-    "resetConfirm": "Ви впевнені, що хочете відновити значення написів за замовчуванням?",
-    "resetSuccessfully": "Написи відновлені."
-  },
+  "messages": {},
   "fields": {
     "arAe": "ar_AE",
     "arYe": "ar_YE",
@@ -84,7 +80,6 @@
     "mnMn": "mn_MN",
     "seNo": "se_NO",
     "module": "Модулі",
-    "isCustomized": "На замовлення",
     "afZa": "af_ZA",
     "sqAl": "sq_AL",
     "arDz": "ar_DZ",
@@ -145,6 +140,7 @@
     "ukUa": "uk_UA",
     "uzUz": "uz_UZ",
     "viVn": "vi_VN",
-    "cyGb": "cy_GB"
+    "cyGb": "cy_GB",
+    "customizedLanguages": "Налаштовані мови"
   }
 }

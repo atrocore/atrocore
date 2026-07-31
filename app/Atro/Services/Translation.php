@@ -23,15 +23,6 @@ class Translation extends Base
         $entity->set('name', $entity->get('code'));
     }
 
-    protected function handleInput(\stdClass $data, ?string $id = null): void
-    {
-        parent::handleInput($data, $id);
-
-        if (!property_exists($data, 'isCustomized')) {
-            $data->isCustomized = true;
-        }
-    }
-
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         return [];

@@ -1,7 +1,6 @@
 {
   "fields": {
     "module": "Module",
-    "isCustomized": "Personnalisé",
     "koKr": "ko_KR",
     "esAr": "es_AR",
     "fiFi": "fi_FI",
@@ -137,14 +136,11 @@
     "jaJp": "ja_JP",
     "knIn": "kn_IN",
     "kkKz": "kk_KZ",
-    "kokIn": "kok_IN"
+    "kokIn": "kok_IN",
+    "customizedLanguages": "Langues personnalisées"
   },
-  "messages": {
-    "resetConfirm": "Êtes-vous sûr de vouloir rétablir les libellés par défaut ?",
-    "resetSuccessfully": "Les libellés ont été réinitialisées avec succès."
-  },
+  "messages": {},
   "labels": {
-    "reset": "Réinitialiser par défaut",
     "push": "Envoyer pour examen"
   }
 }
