@@ -348,7 +348,7 @@ You can select an existing Export Feed associated with the current entity and cl
 
 > For the purposes of this execution all the configuration will be taken from selected `Export feed` except filters. Only the records explicitly selected in the view will be exported.
 
-When using an existing export feed, you can also override the feed's `Content Language` and `Locale` for this run only. This is useful when the feed is configured with language-specific columns ("All languages" items) and you want to export content in a single specific language without modifying the feed itself.
+When using an existing export feed, you can also override the feed's Content Language and Locale for this run only. This is useful when the feed is configured with a main language (not language-specific columns) and you want to export content in a different specific language for this run, without modifying the feed itself.
 
 Also, you can configure a one-time export directly in the same popup menu. This option supports only CSV and XLSX (Excel) formats and allows you to manually select the entity fields and attributes to be included in the export
 
