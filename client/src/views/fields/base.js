@@ -2004,9 +2004,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
-            if (this.mode === 'detail' && this.isLocked()) {
-                this.getStatusIconsContainer().append(`<i class="ph ph-lock value-locked" title="${this.translate('fieldValueLocked', 'tooltips')}"></i>`);
-                this.$el.addClass('is-value-locked');
+            if (this.isLocked()) {
+                if (this.mode === 'detail' || (this.mode === 'edit' && !this.isListView())) {
+                    this.getStatusIconsContainer().append(`<i class="ph ph-lock value-locked" title="${this.translate('fieldValueLocked', 'tooltips')}"></i>`);
+                    this.$el.addClass('is-value-locked');
+                }
             }
 
             if (this.isListView() && this.isLocked()) {
