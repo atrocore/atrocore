@@ -19,7 +19,7 @@ use Atro\ORM\DB\MapperInterface;
 
 class Archive extends Base
 {
-    protected const MAPPER_CLASS = '\ClickHouseIntegration\ORM\DB\ClickHouse\Mapper';
+    protected const MAPPER_CLASS = '\ClickHouse\ORM\DB\ClickHouse\Mapper';
 
     public function hasClickHouse(): bool
     {
@@ -44,7 +44,7 @@ class Archive extends Base
         if ($this->hasClickHouse()) {
             $this
                 ->getInjection('container')
-                ->get('\ClickHouseIntegration\Console\ClearEntity')
+                ->get('\ClickHouse\Console\ClearEntity')
                 ->clearData($this->entityName);
 
             return;

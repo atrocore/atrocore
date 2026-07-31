@@ -32,18 +32,29 @@ use Atro\Handlers\AbstractHandler;
     tag: '{entityName}',
     parameters: [
         [
-            'name'     => 'entityName',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'entityName',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Entity type name (e.g. "Product")',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
         [
-            'name'     => 'id',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Record ID',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'        => 'withRelationships',
+            'in'          => 'query',
+            'required'    => false,
+            'description' => 'Comma-separated list of linkMultiple field names to load even if they have noLoad=true (e.g. "products,categories")',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
@@ -68,8 +79,9 @@ class ReadHandler extends AbstractHandler
     {
         $entityName = $this->getEntityName($request);
         $id = (string) $request->getAttribute('id');
+        $withRelationships = $request->getQueryParams()['withRelationships'] ?? null;
 
-        $entity = $this->getRecordService($entityName)->readEntity($id);
+        $entity = $this->getRecordService($entityName)->readEntity($id, $withRelationships);
 
         if (empty($entity)) {
             throw new NotFound();

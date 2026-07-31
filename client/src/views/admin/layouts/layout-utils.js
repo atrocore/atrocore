@@ -11,15 +11,25 @@
 Espo.define('views/admin/layouts/layout-utils', [], function () {
     return {
         renderComponent(params) {
-            if (window.layoutSvelteComponent) {
+            const target = this.$el.find('#layout-content').get(0) || $('#layout-content').get(0);
+
+            if (this.layoutSvelteComponent) {
                 try {
-                    window.layoutSvelteComponent.$destroy()
+                    this.layoutSvelteComponent.$destroy()
                 } catch (e) {
                 }
             }
 
-            window.layoutSvelteComponent = new Svelte.LayoutComponent({
-                target: $('#layout-content').get(0),
+            this.once('remove', () => {
+                try {
+                    this.layoutSvelteComponent?.$destroy()
+                } catch (e) {
+                }
+                this.layoutSvelteComponent = null;
+            });
+
+            this.layoutSvelteComponent = new Svelte.LayoutComponent({
+                target: target,
                 props: {
                     params: {
                         ...params,
@@ -112,6 +122,9 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                                     }, {async: false}).success(res => {
                                         let fields = [];
                                         $.each(res, (field, fieldDefs) => {
+                                            if (fieldDefs['layoutListDisabled']) {
+                                                return;
+                                            }
                                             this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
                                             this.getLanguage().data[entity].fields[field] = fieldDefs.label;
 

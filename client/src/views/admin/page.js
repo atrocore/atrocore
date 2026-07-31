@@ -16,25 +16,25 @@ Espo.define('views/admin/page', ['view'], function (Dep) {
 
         setup() {
             this.once('after:render', () => {
+                window.SveltePageContext.set(this.getPageContext());
                 this.renderSvelteComponent();
-
-                new Svelte.TreePanel({
-                    target: $(`${this.options.el} .content-wrapper`).get(0),
-                    anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
-                    props: {
-                        scope: 'Settings',
-                        model: this.model,
-                        mode: 'detail',
-                        isAdminPage: true,
-                        callbacks: {}
-                    }
-                });
 
                 const page = this.options.page;
                 if (page) {
                     this.logToNavigationHistory(page);
                 }
             });
+        },
+
+        getPageContext() {
+            return {
+                pageId: this.cid,
+                scope: 'Settings',
+                mode: 'detail',
+                model: this.model,
+                isAdminPage: true,
+                leftSidebar: { enabled: true }
+            };
         },
 
         renderSvelteComponent() {

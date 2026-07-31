@@ -18,6 +18,7 @@ use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Entities\File;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
@@ -83,6 +84,8 @@ class Metadata extends AbstractMetadataListener
         $this->addNotificationRulesToCache($data);
 
         $data['multilang']['languageList'] = $data['entityDefs']['Language']['fields']['code']['options'];
+
+        $data['entityDefs']['Translation']['fields']['customizedLanguages']['options'] = $this->getLocaleLanguageCodes();
 
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
@@ -2777,5 +2780,30 @@ class Metadata extends AbstractMetadataListener
     protected function isSystemUpdating(): bool
     {
         return \Atro\Core\Application::isSystemUpdating();
+    }
+
+    private function getLocaleLanguageCodes(): array
+    {
+        $codes = [];
+
+        $localePath = ReferenceData::DIR_PATH . '/Locale.json';
+        if (file_exists($localePath)) {
+            foreach ((json_decode(file_get_contents($localePath), true) ?? []) as $locale) {
+                if (!empty($locale['languageCode'])) {
+                    $codes[$locale['languageCode']] = true;
+                }
+            }
+        }
+
+        $languagePath = ReferenceData::DIR_PATH . '/Language.json';
+        if (file_exists($languagePath)) {
+            foreach ((json_decode(file_get_contents($languagePath), true) ?? []) as $language) {
+                if (!empty($language['code'])) {
+                    $codes[$language['code']] = true;
+                }
+            }
+        }
+
+        return array_keys($codes);
     }
 }

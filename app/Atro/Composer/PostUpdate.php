@@ -16,6 +16,7 @@ namespace Atro\Composer;
 use Atro\Core\Container;
 use Atro\Core\Application as App;
 use Atro\Jobs\MassDownload;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Espo\Core\Utils\Language;
 use Espo\ORM\EntityManager;
 
@@ -111,7 +112,7 @@ class PostUpdate
             self::renderLine($message);
 
             self::renderLine('Restoring database');
-            exec(self::getPhpBin() . " composer.phar restore --force --auto 2>/dev/null");
+            exec(self::getPhpBin() . " atrocore-installer.phar restore --force --auto 2>/dev/null");
             self::renderLine('Done!');
 
             exit(1);
@@ -271,7 +272,7 @@ class PostUpdate
         }
 
         self::renderLine('Updating list of used modules');
-        file_put_contents('data/modules.json', json_encode(self::getModules()));
+        file_put_contents(ModuleManager::FILE_PATH, json_encode(self::getModules()));
     }
 
     /**
@@ -823,7 +824,7 @@ class PostUpdate
         $path = __FILE__;
         while (empty($rootPath)) {
             $path = dirname($path);
-            if (file_exists($path . "/composer.phar")) {
+            if (file_exists($path . "/atrocore-installer.phar")) {
                 $rootPath = $path;
             }
 
@@ -913,7 +914,7 @@ class PostUpdate
         }
 
         try {
-            $list = \Atro\Core\ModuleManager\Manager::getList();
+            $list = ModuleManager::getList();
             foreach ($list as $module) {
                 $className = "\\$module\\Module";
                 try {

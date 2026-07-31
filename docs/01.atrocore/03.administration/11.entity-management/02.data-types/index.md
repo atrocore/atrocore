@@ -421,8 +421,6 @@ Single currency selection from predefined options.
 
 ### List
 
-> **Field only** - Not available for attributes
-
 A List is a single-select field type that allows users to choose exactly one value from a predefined set of options. All options are defined directly within the field configuration. These options are referenced by code, do not have IDs, and cannot be reused in other fields.
 
 **Configuration options:**
@@ -433,8 +431,6 @@ A List is a single-select field type that allows users to choose exactly one val
 List options can have color.
 
 ### Multi-value List
-
-> **Field only** - Not available for attributes
 
 A Multi-value List is a multi-select field type that allows users to select one or more values from a predefined list. As with the List, options are field-specific, code-based, and do not have IDs.
 

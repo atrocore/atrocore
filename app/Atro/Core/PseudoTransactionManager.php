@@ -44,7 +44,7 @@ class PseudoTransactionManager
         return file_exists(self::FILE_PATH);
     }
 
-    public function pushCreateEntityJob(string $entityType, $data, string $parentId = null): string
+    public function pushCreateEntityJob(string $entityType, $data, ?string $parentId = null): string
     {
         return $this->push($entityType, '', 'createEntity', $this->prepareInputData($data), $parentId);
     }

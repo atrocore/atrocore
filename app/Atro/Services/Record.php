@@ -406,6 +406,15 @@ class Record extends RecordService
                 }
             }
 
+            if (empty($foreignLink)) {
+                foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) ?? [] as $fieldName => $fieldData) {
+                    if ($fieldData['type'] === 'link' && !empty($fieldData['entity']) && $fieldData['entity'] === $scope) {
+                        $foreignLink = $fieldName;
+                        break;
+                    }
+                }
+            }
+
             if ($this->getMetadata()->get(['scopes', $this->entityName, 'type']) === 'ReferenceData') {
                 $field             = $link . 'Id';
                 $foreignRepository = $this->getEntityManager()->getRepository($scope);
@@ -500,6 +509,19 @@ class Record extends RecordService
         $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
         if (!empty($params['distinct'])) {
             $selectParams['distinct'] = true;
+        }
+
+        if (!empty($params['selectedId']) && method_exists($repository, 'getRecordPosition')) {
+            $position = $repository->getRecordPosition((string) $params['selectedId'], $selectParams);
+            if ($position !== null) {
+                $limit  = $params['maxSize'];
+                $index  = $position - 1;
+                $offset = $index - $limit < 0 ? 0 : $index - $limit;
+
+                $params['offset']       = $offset;
+                $selectParams['offset'] = $offset;
+                $selectParams['limit']  = $index - $offset + $limit;
+            }
         }
 
         $fields             = ['id', $this->getNameField($this->entityName)];

@@ -308,6 +308,10 @@ class EntityTreeHandler extends AbstractHandler
                 : $this->getConfig()->get('recordsPerPageSmall', 20),
         ];
 
+        if (empty($qp['offset']) && !empty($qp['selectedId'])) {
+            $params['selectedId'] = (string) $qp['selectedId'];
+        }
+
         return new JsonResponse($service->getTreeItems(
             (string) ($qp['link'] ?? ''),
             (string) ($qp['scope'] ?? ''),

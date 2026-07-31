@@ -35,8 +35,17 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
     return Dep.extend({
 
         checkAccessGlobal: function () {
-            return !!this.getUser().isAdmin();
+            return this.getUser().hasAdminAccess();
+        },
 
+        doAction: function (action, options) {
+            action = action || this.defaultAction;
+
+            if (action !== 'index' && !this.getUser().isAdmin()) {
+                throw new Espo.Exceptions.AccessDenied();
+            }
+
+            Dep.prototype.doAction.call(this, action, options);
         },
 
         index: function () {

@@ -9,22 +9,19 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Services;
+namespace Atro\Acl;
 
-use Atro\Core\Templates\Services\Base;
+use Espo\Core\Acl\Base;
+use Atro\Entities\User;
 use Espo\ORM\Entity;
 
-class Translation extends Base
+class Team extends Base
 {
-    public function prepareEntityForOutput(Entity $entity)
+    public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
     {
-        parent::prepareEntityForOutput($entity);
-
-        $entity->set('name', $entity->get('code'));
-    }
-
-    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
-    {
-        return [];
+        if ($action === 'read' && $user->isUserAdmin()) {
+            return true;
+        }
+        return parent::checkScope($user, $data, $action, $entity, $entityAccessData);
     }
 }

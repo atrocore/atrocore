@@ -20,6 +20,7 @@ use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\RegexUtil;
 use Espo\ORM\Entity;
+use Espo\ORM\IEntity;
 
 class User extends Record
 {
@@ -59,13 +60,13 @@ class User extends Record
         }
     }
 
-    public function getEntity($id = null)
+    public function getEntity(?string $id = null, ?string $withRelationships = null): ?IEntity
     {
         if ($id !== null) {
             $this->getUserById($id);
         }
 
-        return parent::getEntity($id);
+        return parent::getEntity($id, $withRelationships);
     }
 
     public function findEntities($params)
@@ -472,9 +473,9 @@ class User extends Record
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
     }
 
-    public function loadAdditionalFields(Entity $entity)
+    public function loadAdditionalFields(Entity $entity, bool $skipLinkMultiple = false)
     {
-        parent::loadAdditionalFields($entity);
+        parent::loadAdditionalFields($entity, $skipLinkMultiple);
 
         $this->loadLastAccessField($entity);
     }

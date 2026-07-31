@@ -1626,6 +1626,44 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        _applyWithRelationships: function () {
+            var self = this;
+            var fieldDefs = (this.model.defs || {}).fields || {};
+            var seen = {}, allFields = [];
+            var relatedScope = this.options.layoutRelatedScope ?? null;
+            var pending = 2;
+
+            function collectFromRaw(rawLayout) {
+                (rawLayout || []).forEach(function (panel) {
+                    (panel.rows || []).forEach(function (row) {
+                        row.forEach(function (cell) {
+                            if (!cell || !cell.name || seen[cell.name]) return;
+                            seen[cell.name] = true;
+                            var type = (fieldDefs[cell.name] || {}).type;
+                            if (type === 'linkMultiple') {
+                                allFields.push(cell.name);
+                            }
+                        });
+                    });
+                });
+            }
+
+            function done() {
+                if (--pending === 0) {
+                    self.model.withRelationships = allFields.length ? allFields.join(',') : null;
+                }
+            }
+
+            this._helper.layoutManager.get(this.model.name, this.layoutName, relatedScope, function (data) {
+                collectFromRaw((data || {}).layout || []);
+                done();
+            });
+            this._helper.layoutManager.get(this.model.name, 'summary', relatedScope, function (data) {
+                collectFromRaw((data || {}).layout || []);
+                done();
+            });
+        },
+
         setupBeforeFinal: function () {
             this.listenToOnce(this.model, 'sync', function () {
                 this.manageAccess();
@@ -1888,7 +1926,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             relatedScope: this.options.layoutRelatedScope,
                             el: this.getSelector() + '.panel-heading .layout-editor-container',
                         }, (view) => {
-                            view.on("refresh", () => this.refreshLayout(true))
+                            view.on("refresh", () => {
+                                this.detailLayout = null;
+                                this.gridLayout = null;
+                                this.getGridLayout(() => this.model.fetch());
+                            })
                             view.render()
                             this.layoutConfiguratorCreated = false
                         })
@@ -2447,6 +2489,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     type: gridLayoutType,
                     layout: this.convertDetailLayout(this.detailLayout)
                 };
+                this._applyWithRelationships();
                 callback(this.gridLayout);
                 return;
             }
@@ -2459,6 +2502,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     type: gridLayoutType,
                     layout: this.convertDetailLayout(data.layout)
                 };
+                this._applyWithRelationships();
                 callback(this.gridLayout);
             }.bind(this));
         },
@@ -3048,14 +3092,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         onTreePanelRendered(view) {
             this.listenTo(this.model, 'after:save', () => {
-                if (window.treePanelComponent) {
-                    window.treePanelComponent.rebuildTree();
+                if (window.navigationSidebar) {
+                    window.navigationSidebar.rebuildTree();
                 }
             });
             this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                 if (['parents', 'children'].includes(link)) {
-                    if (window.treePanelComponent) {
-                        window.treePanelComponent.rebuildTree();
+                    if (window.navigationSidebar) {
+                        window.navigationSidebar.rebuildTree();
                     }
                 }
             });

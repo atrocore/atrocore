@@ -250,19 +250,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 if (selectBtn) {
                     var origOnClick = selectBtn.onClick;
                     selectBtn.onClick = (dialog) => {
-                        var hasError = false;
-                        Object.keys(this.extraFields).forEach(fieldName => {
-                            var view = this.getView('extraField_' + fieldName);
-                            if (view) {
-                                view.fetchToModel();
-                                if (this.extraFields[fieldName].required && view.validate && view.validate()) {
-                                    hasError = true;
-                                }
-                            }
-                        });
-                        if (hasError) {
-                            return;
-                        }
+                        if (this.validateExtraFields()) return;
                         origOnClick(dialog);
                     };
                 }
@@ -347,6 +335,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 }
 
                 this.listenTo(view, 'select', function (model) {
+                    if (this.extraFields && this.validateExtraFields()) return;
                     this.trigger('select', model);
                     this.close();
                 }.bind(this));
@@ -892,6 +881,20 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
                 }.bind(this));
             });
+        },
+
+        validateExtraFields() {
+            var hasError = false;
+            Object.keys(this.extraFields).forEach(fieldName => {
+                var view = this.getView('extraField_' + fieldName);
+                if (view) {
+                    view.fetchToModel();
+                    if (this.extraFields[fieldName].required && view.validate && view.validate()) {
+                        hasError = true;
+                    }
+                }
+            });
+            return hasError;
         },
 
         handleOnSelect(duplicate = false) {

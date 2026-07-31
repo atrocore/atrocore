@@ -585,7 +585,6 @@ class Entity extends ReferenceData
             if (
                 str_starts_with($label->get('code'), "{$entity->get('code')}.")
                 && $label->get('module') === 'custom'
-                && $label->get('isCustomized')
             ) {
                 $this->getEntityManager()->removeEntity($label);
             }

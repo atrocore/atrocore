@@ -13681,9 +13681,26 @@ body > .content {
     position: relative;
     width: 100%;
     overflow: hidden;
+    display: flex;
+}
+
+body > .content:before,
+body > .content:after {
+    content: none;
+}
+
+#content > #left-sidebar {
+    flex-shrink: 0;
+    display: flex;
+}
+
+#content > #left-sidebar:has(> .sidebar:not(.pinned):not(.collapsed)) ~ #main {
+    margin-left: 26px;
 }
 
 #main {
+    flex: 1;
+    min-width: 0;
     height: 100%;
     max-height: 100%;
     overflow-y: auto;
@@ -15051,11 +15068,7 @@ ul.jqtree-tree .jqtree-element:not(.btn) {
 }
 
 ul.jqtree-tree .sub-tree-container .jqtree-element:not(.btn) {
-    color: #00166d;
-}
-
-ul.jqtree-tree .sub-tree-container .jqtree-element.jqtree-selected:not(.btn) {
-    color: #06c;
+    color: #001050;
 }
 
 ul.jqtree-tree .sub-tree-container > .jqtree-element:not(.btn) {
@@ -15129,7 +15142,7 @@ ul.jqtree-tree li.jqtree-folder.jqtree-closed {
 }
 
 ul.jqtree-tree .jqtree_common.disabled > div > span {
-    color: #bbb;
+    color: #777;
 }
 
 ul.jqtree-tree .jqtree_common.disabled > div > span:hover {
@@ -15189,9 +15202,13 @@ ul.jqtree-tree span.jqtree-border {
 
 ul.jqtree-tree li.jqtree-selected > .jqtree-element,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
-    color: #2895ea !important;
     background-color: transparent;
     border-color: transparent;
+}
+
+ul.jqtree-tree li.jqtree-selected:not(.current-record) > .jqtree-element .jqtree-title,
+ul.jqtree-tree li.current-record > .jqtree-element .jqtree-title {
+    font-weight: 700;
 }
 
 ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
@@ -16255,6 +16272,10 @@ select {
 
 .cell:not(.hidden-cell) .status-icons {
     color: inherit;
+}
+
+.cell:not(.hidden-cell) .status-icons:empty {
+    display: none;
 }
 
 .status-icons > *,
@@ -18083,7 +18104,8 @@ span[data-img-src]::after {
         opacity: 1;
     }
 
-    .sidebar .panel-group:hover .layout-editor-container {
+    .sidebar .panel-group:hover .layout-editor-container,
+    .sidebar .tab-strip:hover .layout-editor-container {
         opacity: 1;
         z-index: auto;
     }

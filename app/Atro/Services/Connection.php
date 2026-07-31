@@ -83,13 +83,13 @@ class Connection extends Base
         return $connection;
     }
 
-    public function readEntity(string $id): ?IEntity
+    public function readEntity(string $id, ?string $withRelationships = null): ?IEntity
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
-        return parent::readEntity($id);
+        return parent::readEntity($id, $withRelationships);
     }
 
     public function findEntities($params)

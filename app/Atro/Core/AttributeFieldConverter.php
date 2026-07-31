@@ -237,15 +237,24 @@ class AttributeFieldConverter
             'a.modified_extended_disabled as modified_extended_disabled'
         ];
 
-        if (class_exists("\\Pim\\Module")) {
-            $select[] = 'c.name as channel_name';
+        $locales = [];
+        if (!empty($this->config->get('isMultilangActive'))) {
+            array_map(function ($code) use (&$locales) {
+                $locales[] = strtolower($code);
+            }, $this->config->get('inputLanguageList', []));
         }
 
-        if (!empty($this->config->get('isMultilangActive'))) {
-            foreach ($this->config->get('inputLanguageList', []) as $code) {
-                $select[] = 'av.varchar_value_' . strtolower($code);
-                $select[] = 'av.text_value_' . strtolower($code);
+        if (class_exists("\\Pim\\Module")) {
+            $select[] = 'c.name as channel_name';
+
+            foreach ($locales as $locale) {
+                $select[] = 'c.name_' . $locale . ' as channel_name_' . $locale;
             }
+        }
+
+        foreach ($locales as $locale) {
+            $select[] = 'av.varchar_value_' . $locale;
+            $select[] = 'av.text_value_' . $locale;
         }
 
         $qb = $this->conn->createQueryBuilder()
@@ -271,6 +280,13 @@ class AttributeFieldConverter
         foreach ($res as $k => $attribute) {
             if (!empty($attribute['channel_name'])) {
                 $res[$k]['name'] = $attribute['name'] . ' / ' . $attribute['channel_name'];
+
+                foreach ($locales as $locale) {
+                    $attributeLabel = $attribute['name_' . $locale] ?? $attribute['name'];
+                    $channelLabel  = $attribute['channel_name_' . $locale] ?? $attribute['channel_name'];
+
+                    $res[$k]['name_' . $locale] = $attributeLabel . ' / ' . $channelLabel;
+                }
             }
         }
 

@@ -1,12 +1,8 @@
 {
   "labels": {
-    "reset": "Восстановить",
     "push": "Отправить на ревью"
   },
-  "messages": {
-    "resetConfirm": "Вы уверены, что хотите восстановить значение надписей по умолчанию?",
-    "resetSuccessfully": "Надписи восстановлены."
-  },
+  "messages": {},
   "fields": {
     "zhTw": "zh_TW",
     "esAr": "es_AR",
@@ -124,7 +120,6 @@
     "xhZa": "xh_ZA",
     "zuZa": "zu_ZA",
     "module": "Модули",
-    "isCustomized": "Под заказ",
     "afZa": "af_ZA",
     "sqAl": "sq_AL",
     "arDz": "ar_DZ",
@@ -145,6 +140,7 @@
     "svFi": "sv_FI",
     "svSe": "sv_SE",
     "syrSy": "syr_SY",
-    "taIn": "ta_IN"
+    "taIn": "ta_IN",
+    "customizedLanguages": "Настроенные языки"
   }
 }

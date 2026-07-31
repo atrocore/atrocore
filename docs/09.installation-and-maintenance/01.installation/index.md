@@ -38,34 +38,32 @@ cd /var/www/my-atrocore-project
 
 > Git may be used for this step, so make sure that [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) is installed. Please note, it is still possible to install the application without having `git` (see 3.6).
 
-> It is essential, that you use the composer version, which is embedded in our software, because this version contains some of our modifications needed for backup and restoring of the system files and the database. That is why `php composer.phar update` is used. Please **DO NOT** use composer, which is installed on your server as it does not contain the required modifications.
-
 #### If you want to install AtroPIM with demo data
 > Demo data can be installed only for MySQL database system.
 
 run
 ```
-sudo git clone https://github.com/atrocore/skeleton-pim.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-pim.git . && sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 #### If want to install the AtroPIM without demo data
 
 run
 ```
-sudo git clone https://github.com/atrocore/skeleton-pim-no-demo.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-pim-no-demo.git . && sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 #### If you want to install AtroCore with demo data
 run
 ```
-sudo git clone https://github.com/atrocore/skeleton-atrocore.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-atrocore.git . && sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 #### If want to install the AtroCore without demo data
 
 run
 ```
-sudo git clone https://github.com/atrocore/skeleton-atrocore-no-demo.git . && sudo php composer.phar self-update && sudo php composer.phar update
+sudo git clone https://github.com/atrocore/skeleton-atrocore-no-demo.git . && sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 #### Installation without `git`
@@ -79,7 +77,7 @@ You can download the files from one of these repositories:
 
 Then upload the files to your project folder and run
 ```
-sudo php composer.phar self-update && sudo php composer.phar update
+sudo php atrocore-installer.phar self-update && sudo php atrocore-installer.phar update
 ```
 
 ### 4. Change recursively the user and group ownership for your project files
@@ -96,7 +94,7 @@ sudo find . -type d -exec chmod 755 {} + && sudo find . -type f -exec chmod 644 
 sudo find data upload public -type d -exec chmod 775 {} + && sudo find data upload public -type f -exec chmod 664 {} +
 ```
 
-**AppArmor (Ubuntu 26.04+):** AppArmor is enabled by default and restricts what directories Ghostscript (`gs`) can access. If the `gs` profile is active, it must be granted read access to uploaded files and write access to the thumbnail directory. Check whether the profile is loaded:
+**AppArmor (Ubuntu 26.04+):** AppArmor is enabled by default and restricts what directories Ghostscript (`gs`) can access. If the `gs` profile is active, it must be granted read access to the uploaded files and read/write access to the temporary directories used while a PDF page is rendered. Check whether the profile is loaded:
 
 ```bash
 sudo aa-status --filter.profiles=gs
@@ -117,6 +115,9 @@ If `gs` is in the enforced mode, add the required path rules and reload the prof
 sudo cat >> /etc/apparmor.d/local/gs << 'EOF'
 /var/www/<my-atrocore-project>/upload/files/** r,
 /var/www/<my-atrocore-project>/upload/files/.img-from-pdf/** rw,
+/var/www/<my-atrocore-project>/data/.pdf-thumbnail-tmp/** rw,
+/var/www/<my-atrocore-project>/data/.local-storage-tmp/** rw,
+/var/www/<my-atrocore-project>/data/.thumbnail-tmp/** r,
 EOF
 sudo apparmor_parser -r /etc/apparmor.d/gs
 ```

@@ -91,9 +91,9 @@ class Daemon extends AbstractConsole
                 // cleanup
                 file_put_contents($log, '');
 
-                exec($this->getPhpBin() . " composer.phar self-update 2>/dev/null", $output, $exitCode);
+                exec($this->getPhpBin() . " atrocore-installer.phar self-update 2>/dev/null", $output, $exitCode);
                 if (empty($exitCode)) {
-                    exec($this->getPhpBin() . " composer.phar update >> $log 2>&1", $output, $exitCode);
+                    exec($this->getPhpBin() . " atrocore-installer.phar update >> $log 2>&1", $output, $exitCode);
                 } else {
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }

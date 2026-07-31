@@ -1,7 +1,6 @@
 {
   "fields": {
     "module": "Moduł",
-    "isCustomized": "Dostosowany",
     "arAe": "ar_AE",
     "arYe": "ar_YE",
     "hyAm": "hy_AM",
@@ -137,14 +136,11 @@
     "viVn": "vi_VN",
     "cyGb": "cy_GB",
     "xhZa": "xh_ZA",
-    "zuZa": "zu_ZA"
+    "zuZa": "zu_ZA",
+    "customizedLanguages": "Dostosowane języki"
   },
   "labels": {
-    "reset": "Przywróć domyślne",
     "push": "Wyślij do przeglądu"
   },
-  "messages": {
-    "resetConfirm": "Czy na pewno chcesz przywrócić etykiety do domyślnych?",
-    "resetSuccessfully": "Etykiety zostały pomyślnie przywrócone."
-  }
+  "messages": {}
 }

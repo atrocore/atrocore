@@ -156,6 +156,10 @@ Espo.define('search-manager', [], function () {
                 where.push(o);
             }
 
+            if (this.data.queryBuilder === null) {
+                this.data.queryBuilder = [];
+            }
+
             if (this.data.queryBuilder.condition && this.isQueryBuilderApplied()) {
                 where.push(Espo.Utils.clone(this.data.queryBuilder));
             }

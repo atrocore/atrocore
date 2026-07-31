@@ -142,7 +142,7 @@ The `Configurator` panel defines which fields and attributes are included in the
 
 Each configurator item has a **Column** setting, which defines the column header name in the output file. Additional settings depend on the field type.
 
-Added items are displayed as a list with `Field`, `Column Name`, and `Remove` columns. Use the single record actions menu on each item to edit its configuration.
+Added items are displayed as a list with `Field` and `Column Name` columns. Use the single record actions menu on each item to edit its configuration or remove it.
 
 > Fields order in the export file is controlled via drag-and-drop in `Configurator`.
 

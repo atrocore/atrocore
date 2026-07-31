@@ -61,6 +61,11 @@ Espo.define('model', [], function () {
 
         sync: function (method, model, options) {
             if (method === 'update') options.type = 'PATCH';
+            if ((method === 'update' || method === 'create') && model.withRelationships) {
+                var baseUrl = options.url || _.result(model, 'url');
+                var sep = baseUrl.indexOf('?') === -1 ? '?' : '&';
+                options.url = baseUrl + sep + 'withRelationships=' + encodeURIComponent(model.withRelationships);
+            }
             return Dep.prototype.sync.call(this, method, model, options);
         },
 
@@ -317,6 +322,10 @@ Espo.define('model', [], function () {
         },
 
         fetch: function (options) {
+            if (this.withRelationships) {
+                options = _.extend({}, options || {});
+                options.data = _.extend({ withRelationships: this.withRelationships }, options.data || {});
+            }
             this.lastXhr = Dep.prototype.fetch.call(this, options);
             return this.lastXhr;
         },

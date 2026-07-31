@@ -425,7 +425,7 @@ class QueryConverter
             }
         }
 
-        foreach ($attributeList as $attribute) {
+        foreach ($attributeList as $k => $attribute) {
             $attributeType = null;
             if (is_string($attribute)) {
                 $attributeType = $entity->getAttributeType($attribute);
@@ -485,6 +485,24 @@ class QueryConverter
                     continue;
                 }
                 $fieldPath = $this->getFieldPath($entity, $attribute);
+
+                /**
+                 * For a `<link>Name` field the corresponding `<link>Id` has already been added to the select list
+                 * one iteration earlier — taken from the foreign key column of the current table.
+                 *
+                 * Here we drop that entry and re-add the id from the joined table instead
+                 * (`join_alias.name` -> `join_alias.id`), so that both `<link>Id` and `<link>Name`
+                 * are always read from the same row of the related entity. Otherwise the id could point
+                 * to a record that the join does not return (e.g. a deleted one), and we would get
+                 * a non-empty id together with an empty name.
+                 */
+                if (!empty($fieldDefs['isLinkEntityName']) && !empty($fieldDefs['originalName']) && $fieldDefs['foreign'] === 'name') {
+                    $last = array_pop($arr);
+                    if (str_ends_with($last, '_id') && !empty($fieldDefs['relation'])) {
+                        $idPath = $this->getRelationAlias($entity, $fieldDefs['relation']) . '.' . $this->toDb('id');
+                        $arr[]  = "{$idPath} AS {$this->fieldToAlias("{$fieldDefs['originalName']}Id")}";
+                    }
+                }
             }
 
             $arr[] = "{$fieldPath} AS {$this->fieldToAlias($attribute)}";
@@ -737,6 +755,27 @@ class QueryConverter
             $fieldPath = '';
 
             switch ($f['type']) {
+//                case 'foreignId':
+//                    if (isset($f['originalName']) && !empty($entity->relations[$f['originalName']]['entity'])) {
+//                        $relationName = $f['originalName'];
+//                        $foreign = 'id';
+//                        $foreignEntity = $entity->relations[$relationName]['entity'] ?? null;
+//                        if (is_array($foreign)) {
+//                            foreach ($foreign as $i => $value) {
+//                                if ($value == ' ') {
+//                                    $foreign[$i] = '\' \'';
+//                                } else {
+//                                    $foreign[$i] = $this->getLocalizedFieldPath($entity, $relationName, $foreignEntity, $value);
+//                                }
+//                            }
+//                            $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreign) . '))';
+//                        } else {
+//                            $fieldPath = $this->getLocalizedFieldPath($entity, $relationName, $foreignEntity, $foreign);
+//                        }
+//                    } else {
+//                        $fieldPath = self::TABLE_ALIAS . '.' . $this->toDb($this->sanitize($field));
+//                    }
+//                    break;
                 case 'foreign':
                     if (isset($f['relation'])) {
                         $relationName  = $f['relation'];

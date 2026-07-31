@@ -121,6 +121,12 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
                     this.params.optionColors[option.id] = option.color || null;
                 }
             })
+
+            // if link options failed to load
+            if (this.params.options.length === 0 && this.model.get(this.idName)) {
+                this.params.options.push(this.model.get(this.idName))
+                this.translatedOptions[this.model.get(this.idName)] = this.model.get(this.nameName) || this.model.get(this.idName);
+            }
         },
 
         getValueForDisplay: function () {

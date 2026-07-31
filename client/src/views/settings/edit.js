@@ -46,28 +46,12 @@ Espo.define('views/settings/edit', ['views/edit', 'lib!JsTree'], function (Dep) 
             ];
         },
 
-        data: function () {
-          return {
-              treeAllowed: true
-          }
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            new Svelte.TreePanel({
-                target: $(`${this.options.el} .content-wrapper`).get(0),
-                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
-                props: {
-                    scope: this.scope,
-                    model: this.model,
-                    noLayout: true,
-                    mode: 'detail',
-                    isAdminPage: true,
-                    callbacks: {
-
-                    }
-                }
+        getPageContext: function () {
+            return Object.assign(Dep.prototype.getPageContext.call(this), {
+                mode: 'detail',
+                model: this.model,
+                isAdminPage: true,
+                leftSidebar: { enabled: true }
             });
         }
     });

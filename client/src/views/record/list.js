@@ -3007,9 +3007,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             if (!this.quickDetailDisabled) {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
 
+                var layoutRelatedScope = this.options.layoutRelatedScope;
                 var options = {
                     scope: scope,
-                    layoutRelatedScope: this.options.layoutRelatedScope,
+                    layoutRelatedScope: layoutRelatedScope,
                     model: model,
                     id: id,
                     htmlStatusIcons: this.getStatusIcons(model) || []
@@ -3017,24 +3018,60 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
-                this.createView('modal', viewName, options, function (view) {
-                    this.listenToOnce(view, 'after:render', function () {
-                        Espo.Ui.notify(false);
-                    });
-                    view.render();
 
-                    this.listenToOnce(view, 'remove', function () {
-                        this.clearView('modal');
-                    }, this);
+                var openModal = function () {
+                    this.createView('modal', viewName, options, function (view) {
+                        this.listenToOnce(view, 'after:render', function () {
+                            Espo.Ui.notify(false);
+                        });
+                        view.render();
 
-                    this.listenToOnce(view, 'after:edit-cancel', function () {
-                        this.actionQuickView({ id: view.model.id, scope: view.model.name });
-                    }, this);
+                        this.listenToOnce(view, 'remove', function () {
+                            this.clearView('modal');
+                        }, this);
 
-                    this.listenToOnce(view, 'after:save', function (model) {
-                        this.trigger('after:save', model);
+                        this.listenToOnce(view, 'after:edit-cancel', function () {
+                            this.actionQuickView({ id: view.model.id, scope: view.model.name });
+                        }, this);
+
+                        this.listenToOnce(view, 'after:save', function (model) {
+                            this.trigger('after:save', model);
+                        }, this);
                     }, this);
-                }, this);
+                }.bind(this);
+
+                var lm = this._helper.layoutManager;
+                if (lm && layoutRelatedScope && this.getMetadata().get(['scopes', scope, 'layouts'])) {
+                    var fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+                    var seen = {}, fields = [], pending = 2;
+
+                    function collectFromRaw(rawLayout) {
+                        (rawLayout || []).forEach(function (panel) {
+                            (panel.rows || []).forEach(function (row) {
+                                row.forEach(function (cell) {
+                                    if (!cell || !cell.name || seen[cell.name]) return;
+                                    seen[cell.name] = true;
+                                    var type = (fieldDefs[cell.name] || {}).type;
+                                    if (type === 'linkMultiple') {
+                                        fields.push(cell.name);
+                                    }
+                                });
+                            });
+                        });
+                    }
+
+                    function doneLayouts() {
+                        if (--pending === 0) {
+                            model.withRelationships = fields.length ? fields.join(',') : null;
+                            openModal();
+                        }
+                    }
+
+                    lm.get(scope, 'detail', layoutRelatedScope, function (data) { collectFromRaw((data || {}).layout || []); doneLayouts(); });
+                    lm.get(scope, 'summary', layoutRelatedScope, function (data) { collectFromRaw((data || {}).layout || []); doneLayouts(); });
+                } else {
+                    openModal();
+                }
             } else {
                 this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: true });
             }

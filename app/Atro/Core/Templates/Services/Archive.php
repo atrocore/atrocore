@@ -55,7 +55,7 @@ class Archive extends Record
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
 
-        if ($this->hasClickHouseIntegration()) {
+        if ($this->hasClickHouse()) {
             $links = $this->getMetadata()->get("entityDefs.{$collection->getEntityName()}.links") ?? [];
             foreach ($links as $link => $defs) {
                 if (!empty($defs['type']) && !empty($defs['entity']) && $defs['type'] === 'belongsTo') {
@@ -84,7 +84,7 @@ class Archive extends Record
     {
         parent::prepareEntityForOutput($entity);
 
-        if ($this->hasClickHouseIntegration() && empty($entity->_collectionPrepared)) {
+        if ($this->hasClickHouse() && empty($entity->_collectionPrepared)) {
             foreach ($this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.links") ?? [] as $field => $defs) {
                 if (!empty($defs['type']) && !empty($defs['entity']) && $defs['type'] === 'belongsTo' && !empty($entity->get($field . 'Id'))) {
                     $foreign = $this->getEntityManager()->getRepository($defs['entity'])->get($entity->get($field . 'Id'));
@@ -96,8 +96,8 @@ class Archive extends Record
         }
     }
 
-    protected function hasClickHouseIntegration(): bool
+    protected function hasClickHouse(): bool
     {
-        return !empty($this->getConfig()->get('clickhouse')['active']) && class_exists('\ClickHouseIntegration\ORM\DB\ClickHouse\Query\QueryConverter');
+        return !empty($this->getConfig()->get('clickhouse')['active']) && class_exists('\ClickHouse\ORM\DB\ClickHouse\Query\QueryConverter');
     }
 }

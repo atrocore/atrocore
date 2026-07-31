@@ -52,6 +52,7 @@ Espo.define('controller', [], function () {
         this._storage = injections.storage || null;
         this._metadata = injections.metadata || null;
         this._dateTime = injections.dateTime || null;
+        this._layoutManager = injections.layoutManager || null;
 
         this.set('masterRendered', false);
     };
@@ -110,6 +111,10 @@ Espo.define('controller', [], function () {
 
         getDateTime: function () {
             return this._dateTime;
+        },
+
+        getLayoutManager: function () {
+            return this._layoutManager;
         },/**
          * Get parameter of all controllers.
          * @param key
@@ -298,6 +303,14 @@ Espo.define('controller', [], function () {
                         }
                     }
                     master.currentViewKey = storedKey;
+
+                    if (window.SveltePageContext) {
+                        window.SveltePageContext.claim(main.cid);
+                        if (main.getPageContext) {
+                            window.SveltePageContext.set(main.getPageContext());
+                        }
+                    }
+
                     master.setView('main', main);
 
                     main.once('after:render', function () {
