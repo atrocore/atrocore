@@ -210,6 +210,8 @@ Configure relations by selecting the relation name as the "Field". Choose search
 
 ![Configurator relations](_assets/import-feeds-configurator-relations.png){.medium}
 
+If the target field or attribute has a filter configured via **Open search filter**, only related records matching that filter are considered during the search. A related record existing outside the filter's scope is treated as not found, same as if no matching record existed at all.
+
 To create missing related records, enable "Create related data record" and configure "Fields mapping for insert":
 
 ![Configurator create related](./_assets/create-related-data-record.png){.medium}
