@@ -82,7 +82,7 @@ class SoftwarePackage extends ReferenceData
 
         $items = [];
 
-        $loadOrder = 0;
+        $loadOrder = 1;
         foreach (array_merge(['Atro'], ModuleManager::getList()) as $moduleId) {
             $package = $this->getPackage($moduleId);
             if (empty($package['name'])) {
@@ -115,16 +115,43 @@ class SoftwarePackage extends ReferenceData
     {
         $remotePackages = $this->getRemotePackages();
 
+        // current version can contain a pre-release suffix (2.2.23-RC1, 1.5.0-beta2), so only its numeric part matters
+        $currentVersion = $this->prepareVersionForComparison($package['version'] ?? null);
+
         $result = [];
         foreach ($remotePackages[$code]['versions'] ?? [] as $version) {
             if (empty($version['version'])) {
                 continue;
             }
 
+            if ($currentVersion !== null) {
+                $targetVersion = $this->prepareVersionForComparison($version['version']);
+                // versions older than the installed one cannot be a target
+                if ($targetVersion !== null && version_compare($targetVersion, $currentVersion, '<')) {
+                    continue;
+                }
+            }
+
             $result[] = $version['version'];
         }
 
         return $result;
+    }
+
+    private function prepareVersionForComparison(?string $version): ?string
+    {
+        if (empty($version)) {
+            return null;
+        }
+
+        $version = ltrim(trim($version), 'vV');
+
+        // cut off any pre-release / build suffix: -RC1, -beta2, -alpha, +build.7 etc.
+        if (!preg_match('/^\d+(\.\d+)*/', $version, $matches)) {
+            return null;
+        }
+
+        return $matches[0];
     }
 
     private function getPackage(string $id): array

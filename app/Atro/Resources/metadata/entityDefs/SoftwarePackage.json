@@ -32,10 +32,6 @@
       "type": "array",
       "protected": true
     },
-    "versions": {
-      "type": "jsonObject",
-      "protected": true
-    },
     "usage": {
       "type": "enum",
       "options": [
