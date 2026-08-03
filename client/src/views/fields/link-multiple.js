@@ -1134,6 +1134,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 operators = operators.concat(['is_not_linked', 'is_linked']);
             }
 
+            let customFilters = this.model.getFieldParam(this.name, 'customFilters') || [];
+            operators = operators.concat(customFilters);
+
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
