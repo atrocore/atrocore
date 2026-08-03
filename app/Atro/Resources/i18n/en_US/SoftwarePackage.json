@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "loadOrder": "Load Order",
+    "currentVersion": "Current Version",
+    "latestVersion": "Latest Version",
+    "targetVersion": "Target Version",
+    "versions": "Versions"
+  },
+  "options": {
+    "targetVersion": {
+      "*": "latest"
+    }
+  }
+}

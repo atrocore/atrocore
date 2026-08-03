@@ -1,0 +1,24 @@
+[
+  {
+    "name": "name",
+    "link": true,
+    "width": 20,
+    "notSortable": true
+  },
+  {
+    "name": "description",
+    "notSortable": true
+  },
+  {
+    "name": "targetVersion",
+    "notSortable": true
+  },
+  {
+    "name": "currentVersion",
+    "notSortable": true
+  },
+  {
+    "name": "latestVersion",
+    "notSortable": true
+  }
+]

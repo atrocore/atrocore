@@ -11,10 +11,45 @@
     "description": {
       "type": "text",
       "protected": true
+    },
+    "loadOrder": {
+      "type": "int",
+      "protected": true
+    },
+    "currentVersion": {
+      "type": "varchar",
+      "protected": true
+    },
+    "latestVersion": {
+      "type": "varchar",
+      "protected": true
+    },
+    "targetVersion": {
+      "type": "enum",
+      "options": [
+        "*"
+      ]
+    },
+    "versions": {
+      "type": "jsonObject",
+      "protected": true
+    },
+    "usage": {
+      "type": "enum",
+      "options": [
+        "Public",
+        "Rent",
+        "Purchase"
+      ],
+      "protected": true
+    },
+    "expirationDate": {
+      "type": "date",
+      "protected": true
     }
   },
   "collection": {
-    "sortBy": "name",
+    "sortBy": "loadOrder",
     "asc": true
   }
 }
