@@ -25,10 +25,12 @@
       "protected": true
     },
     "targetVersion": {
-      "type": "enum",
-      "options": [
-        "*"
-      ]
+      "type": "varchar",
+      "view": "views/software-package/fields/target-version"
+    },
+    "targetVersions": {
+      "type": "array",
+      "protected": true
     },
     "versions": {
       "type": "jsonObject",

@@ -98,6 +98,7 @@ class SoftwarePackage extends ReferenceData
                 'description'    => $package['extra']['description']['default'] ?? $package['extra']['description'] ?? $moduleId,
                 'loadOrder'      => $loadOrder,
                 'targetVersion'  => $composerData['require'][$code] ?? null,
+                'targetVersions' => $this->prepareTargetVersions($code, $package),
                 'currentVersion' => $package['version'] ?? null,
                 'latestVersion'  => $remotePackages[$code]['versions'][0]['version'] ?? null,
                 'expirationDate' => $remotePackages[$code]['expirationDate'] ?? null,
@@ -108,6 +109,22 @@ class SoftwarePackage extends ReferenceData
         }
 
         return $items;
+    }
+
+    private function prepareTargetVersions(string $code, array $package): array
+    {
+        $remotePackages = $this->getRemotePackages();
+
+        $result = [];
+        foreach ($remotePackages[$code]['versions'] ?? [] as $version) {
+            if (empty($version['version'])) {
+                continue;
+            }
+
+            $result[] = $version['version'];
+        }
+
+        return $result;
     }
 
     private function getPackage(string $id): array
