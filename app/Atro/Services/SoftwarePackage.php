@@ -22,7 +22,11 @@ class SoftwarePackage extends ReferenceData
     {
         parent::putAclMeta($entity);
 
-        if ($entity->get('id') === 'Atro') {
+        if (empty($entity->get('currentVersion'))) {
+            $entity->setMetaPermission('edit', false);
+        }
+
+        if ($entity->get('id') === 'Atro' || empty($entity->get('currentVersion'))) {
             $entity->setMetaPermission('delete', false);
         }
     }

@@ -98,7 +98,7 @@ class SoftwarePackage extends ReferenceData
                 'description'    => $package['extra']['description']['default'] ?? $package['extra']['description'] ?? $moduleId,
                 'loadOrder'      => $loadOrder,
                 'targetVersion'  => $composerData['require'][$code] ?? null,
-                'targetVersions' => $this->prepareTargetVersions($code, $package),
+                'targetVersions' => !empty($package['version']) ? $this->prepareTargetVersions($code, $package) : [],
                 'currentVersion' => $package['version'] ?? null,
                 'latestVersion'  => $remotePackages[$code]['versions'][0]['version'] ?? null,
                 'expirationDate' => $remotePackages[$code]['expirationDate'] ?? null,
