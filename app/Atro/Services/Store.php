@@ -19,6 +19,15 @@ use Espo\ORM\Entity;
 
 class Store extends ReferenceData
 {
+    public function putAclMeta(Entity $entity): void
+    {
+        parent::putAclMeta($entity);
+
+        $entity->setMetaPermission('edit', false);
+        $entity->setMetaPermission('delete', false);
+        $entity->setMetaPermission('stream', false);
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
