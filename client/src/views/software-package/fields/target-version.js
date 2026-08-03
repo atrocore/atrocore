@@ -17,13 +17,23 @@ Espo.define('views/software-package/fields/target-version', 'views/fields/enum',
         },
 
         prepareOptionsList() {
-            this.params.options = ['*'];
-            this.translatedOptions = {'*': this.getLanguage().translateOption('*', 'targetVersion', 'SoftwarePackage')};
+            let value = this.model.get(this.name);
 
-            this.model.get('targetVersions').forEach(version => {
+            // a constraint like '>=2.1.3-rc8 <=2.1.6' is set by us to keep the system working, so it has to be
+            // kept as a value, but for the user it means exactly the same as '*'
+            let latestValue = value && !this.isExactVersion(value) ? value : '*';
+
+            this.params.options = [latestValue];
+            this.translatedOptions = {[latestValue]: this.translate('latest', 'labels', 'SoftwarePackage')};
+
+            (this.model.get('targetVersions') || []).forEach(version => {
                 this.params.options.push(version);
                 this.translatedOptions[version] = version;
             });
+        },
+
+        isExactVersion(version) {
+            return !/[*^~<>=|,\s]/.test(version);
         },
 
     })

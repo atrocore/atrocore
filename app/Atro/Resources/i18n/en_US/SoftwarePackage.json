@@ -9,9 +9,7 @@
     "usage": "Usage",
     "expirationDate": "Expiration Date"
   },
-  "options": {
-    "targetVersion": {
-      "*": "latest"
-    }
+  "labels": {
+    "latest": "latest"
   }
 }
