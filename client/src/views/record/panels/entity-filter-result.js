@@ -35,6 +35,7 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
                 this.defs.hasLayoutEditor = false;
 
                 if (!this.getAcl().check(this.scope, 'read')) {
+                    this.wait(false)
                     return;
                 }
 
