@@ -102,6 +102,7 @@ class SoftwarePackage extends ReferenceData
                 'latestVersion'  => $remotePackages[$code]['versions'][0]['version'] ?? null,
                 'expirationDate' => $remotePackages[$code]['expirationDate'] ?? null,
                 'usage'          => $remotePackages[$code]['usage'] ?? null,
+                'hasDocs'        => true
             ];
             $loadOrder += 1;
         }

@@ -46,6 +46,10 @@
     "expirationDate": {
       "type": "date",
       "protected": true
+    },
+    "hasDocs": {
+      "type": "bool",
+      "protected": true
     }
   },
   "collection": {

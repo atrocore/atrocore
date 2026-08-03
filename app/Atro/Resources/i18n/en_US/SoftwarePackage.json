@@ -4,7 +4,10 @@
     "currentVersion": "Current Version",
     "latestVersion": "Latest Version",
     "targetVersion": "Target Version",
-    "versions": "Versions"
+    "versions": "Versions",
+    "hasDocs": "Has documentation",
+    "usage": "Usage",
+    "expirationDate": "Expiration Date"
   },
   "options": {
     "targetVersion": {
