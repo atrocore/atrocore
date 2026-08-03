@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Pacchetto software",
     "User": "Utente",
     "Admin": "Admin",
     "MatchedRecord": "Record abbinato",
@@ -873,6 +874,7 @@
     "small": "Piccolo"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Pacchetti software",
     "MatchedRecord": "Record abbinati",
     "Matching": "Abbinamenti",
     "ThumbnailType": "Tipi di miniature",

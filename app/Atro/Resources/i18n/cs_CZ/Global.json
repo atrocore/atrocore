@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Softwarový balíček",
     "Matching": "Odpovídající",
     "IncomingWebhook": "Příchozí Webhook",
     "RoleScopeAttribute": "Atribut",
@@ -87,6 +88,7 @@
     "ClusterItem": "Položka klastru párování"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Softwarové balíčky",
     "MatchedRecord": "Shodné záznamy",
     "Matching": "Párování",
     "IncomingWebhook": "Příchozí Webhooks",

@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Software Package",
     "Cluster": "Matching Cluster",
     "ClusterItem": "Matching Cluster Item",
     "Consolidation": "Consolidation",
@@ -88,6 +89,7 @@
     "Layout": "Layout"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Software Packages",
     "Cluster": "Matching Clusters",
     "ClusterItem": "Matching Cluster Items",
     "Consolidation": "Consolidations",

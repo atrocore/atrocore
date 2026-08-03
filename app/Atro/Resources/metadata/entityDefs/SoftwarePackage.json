@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "protected": true
+    },
+    "code": {
+      "type": "varchar",
+      "protected": true
+    },
+    "description": {
+      "type": "text",
+      "protected": true
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  }
+}

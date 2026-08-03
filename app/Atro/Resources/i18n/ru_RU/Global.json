@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Программный пакет",
     "Consolidation": "Консолидация",
     "Attribute": "Атрибут",
     "AttributeGroup": "Группа атрибута",
@@ -87,6 +88,7 @@
     "ClusterItem": "Элемент кластера соответствий"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Программные пакеты",
     "Consolidation": "Консолидации",
     "Attribute": "Атрибуты",
     "AttributeGroup": "Группы атрибутов",

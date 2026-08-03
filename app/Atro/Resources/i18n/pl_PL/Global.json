@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Pakiet oprogramowania",
     "EmailTemplate": "Szablon e-maila",
     "Storage": "Przechowywanie plików",
     "Folder": "Folder",
@@ -87,6 +88,7 @@
     "ClusterItem": "Pozycja klastra dopasowań"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Pakiety oprogramowania",
     "EmailTemplate": "Szablony wiadomości",
     "Storage": "Przechowywanie plików",
     "Folder": "Foldery",

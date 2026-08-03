@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Програмний пакет",
     "Consolidation": "Консолідація",
     "DataPipeline": "Пайплайн даних",
     "Classification": "Класифікація",
@@ -88,6 +89,7 @@
     "ClusterItem": "Елемент кластера зіставлення"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Програмні пакети",
     "Consolidation": "Консолідації",
     "DataPipeline": "Пайплайни даних",
     "Classification": "Класифікації",

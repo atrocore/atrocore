@@ -113,6 +113,7 @@
     "masterRecord": "Enregistrement de référence"
   },
   "scopeNames": {
+    "SoftwarePackage": "Paquet logiciel",
     "Classification": "Classification",
     "ClassificationAttribute": "Attribut de classification",
     "Attribute": "Attribut",
@@ -693,6 +694,7 @@
     "notPossibleToOpenDetailView": "Il n'est pas possible d'ouvrir la vue détaillée."
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Paquets logiciels",
     "Classification": "Classifications",
     "ClassificationAttribute": "Attribut-classifications",
     "Attribute": "Attributs",

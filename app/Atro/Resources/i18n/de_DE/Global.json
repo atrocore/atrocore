@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Softwarepaket",
     "Consolidation": "Konsolidierung",
     "DataPipeline": "Daten-Pipeline",
     "IncomingWebhook": "Eingehender Webhook",
@@ -88,6 +89,7 @@
     "ClusterItem": "Übereinstimmungs-Cluster-Artikel"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Softwarepakete",
     "Consolidation": "Konsolidierungen",
     "DataPipeline": "Daten-Pipelines",
     "IncomingWebhook": "Eingehende Webhooks",

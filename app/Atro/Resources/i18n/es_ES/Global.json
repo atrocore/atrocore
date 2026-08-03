@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Paquete de software",
     "EmailTemplate": "Plantilla de correo electrónico",
     "User": "Usuario",
     "Team": "Equipo",
@@ -87,6 +88,7 @@
     "Cluster": "Clúster de coincidencias"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Paquetes de software",
     "EmailTemplate": "Plantillas de correo electrónico",
     "User": "Usuarios",
     "Team": "Equipos",
