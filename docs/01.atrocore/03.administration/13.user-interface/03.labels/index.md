@@ -44,6 +44,8 @@ Labels are displayed in the corresponding content language, improving readabilit
 
 ![Display Labels in Content Language](./_assets/Display_Labels_in_Content_Language.png){.medium}
 
+Like multilingual fields, labels can be translated using automatic translation based on machine translation engines, provided by the [Translations](https://store.atrocore.com/en/translations/20191) module.
+
 ## Label Fields
 
 - **Code**: Unique identifier for the label (e.g., `Action.fields.actions`, `Action.messages.executeNow`). Do not change it, as this field must match internal system keys for the label to be used by the application.
