@@ -14418,14 +14418,14 @@ button.category:focus {
 }
 
 .composer .panel-default > .panel-heading > .btn-group:not(.note-btn-group),
-.detail .middle .panel-default > .panel-heading:not(.note-toolbar),
-.detail .bottom .panel-default > .panel-heading:not(.note-toolbar) {
+.middle .panel-default > .panel-heading:not(.note-toolbar),
+.bottom .panel-default > .panel-heading:not(.note-toolbar) {
     position: relative
 }
 
 .composer .panel-default > .panel-heading > .btn-group:not(.note-btn-group),
-.detail .middle .panel-default > .panel-heading > .btn-group:not(.note-btn-group),
-.detail .bottom .panel-default > .panel-heading > .btn-group:not(.note-btn-group) {
+.middle .panel-default > .panel-heading > .btn-group:not(.note-btn-group),
+.bottom .panel-default > .panel-heading > .btn-group:not(.note-btn-group) {
     top: 0;
     right: 1px;
     position: absolute;
@@ -14433,7 +14433,7 @@ button.category:focus {
 }
 
 .detail .middle .panel-default > .panel-heading > .btn-group:not(.note-btn-group) {
-    right: 10px;
+    right: 5px;
 }
 
 #header .menu {
