@@ -3,7 +3,7 @@
 {{else}}
 {{#if nameValue}}
 {{#if idValue}}
-<a href="#{{foreignScope}}/view/{{idValue}}" title="{{nameValue}}">{{nameValue}}</a>
+<a href="#{{foreignScope}}/view/{{idValue}}" title="{{nameValue}}" class="url-field-link">{{nameValue}}</a>
 {{else}}
 {{nameValue}}
 {{/if}}
