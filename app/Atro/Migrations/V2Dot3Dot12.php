@@ -27,6 +27,26 @@ class V2Dot3Dot12 extends Base
     public function up(): void
     {
         $this->downloadInstaller();
+        $this->makeAccountNumberNotRequired();
+    }
+
+    protected function makeAccountNumberNotRequired(): void
+    {
+        $file = 'data/metadata/entityDefs/Account.json';
+        $data = file_exists($file) ? (json_decode(file_get_contents($file), true) ?? []) : [];
+
+        if (isset($data['fields']['number']['required']) || isset($data['fields']['number']['notNull'])) {
+            return;
+        }
+
+        $data['fields']['number']['required'] = false;
+        $data['fields']['number']['notNull'] = false;
+
+        if (!is_dir(dirname($file))) {
+            mkdir(dirname($file), 0755, true);
+        }
+
+        file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 
     /**
