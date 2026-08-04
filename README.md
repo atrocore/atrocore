@@ -125,6 +125,8 @@ AtroCore is the best fit **for businesses**, who want to:
 * Enable cross departmental collaboration and transparency
 * Deliver added value and an optimal experience for employees, customers, partners, and end users.
 
+AtroCore handles very large datasets without loss of performance. In this [demo video](https://vimeo.com/1215540661) we demonstrate an instance with 50+ million products and 1+ billion attribute values (20 attributes per product).
+
 
 ## Software which extends AtroCore
 
