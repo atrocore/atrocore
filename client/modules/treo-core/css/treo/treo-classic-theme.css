@@ -1882,20 +1882,6 @@ pre code {
     overflow-y: scroll
 }
 
-.container {
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.container:before, .container:after {
-    content: " ";
-    display: table
-}
-
-.container:after {
-    clear: both
-}
-
 .container:before, .container:after {
     content: " ";
     display: table
@@ -9884,7 +9870,9 @@ body > #header .navbar-brand span.home-icon {
 
 @media (min-width: 1200px) {
     .container {
-        max-width: 1800px
+        max-width: 1800px;
+        margin-right: auto;
+        margin-left: auto;
     }
 }
 
