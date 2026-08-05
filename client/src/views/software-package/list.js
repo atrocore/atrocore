@@ -13,13 +13,60 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
     return Dep.extend({
 
         actionInstallAction(data) {
-            alert('install action');
-            // "url": "SoftwarePackage/install",
+            this.notify('Loading...');
+
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'SoftwarePackage',
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: false,
+                allowSelectAllResult: false,
+                whereAdditional: [
+                    {
+                        type: 'isFalse',
+                        attribute: 'installed'
+                    }
+                ]
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+
+                dialog.once('select', models => {
+                    const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
+
+                    // "url": "SoftwarePackage/install",
+                    console.log('SoftwarePackage install, selected ids:', ids);
+                });
+            });
         },
 
         actionUninstallAction(data) {
-            alert('uninstall action');
-            // "url": "SoftwarePackage/uninstall",
+            this.notify('Loading...');
+
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'SoftwarePackage',
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: false,
+                allowSelectAllResult: false,
+                boolFilterList: ['onlyUninstallable'],
+                whereAdditional: [
+                    {
+                        type: 'isTrue',
+                        attribute: 'installed'
+                    }
+                ]
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+
+                dialog.once('select', models => {
+                    const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
+
+                    // "url": "SoftwarePackage/uninstall",
+                    console.log('SoftwarePackage uninstall, selected ids:', ids);
+                });
+            });
         },
 
     })
