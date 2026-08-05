@@ -2039,13 +2039,16 @@ class Base
                         $relationName = $seed->getRelationParam($attribute, 'relationName');
                         $relTable     = Util::toUnderScore($relationName);
                         $nearKey      = Util::toUnderScore($midKeys[0]);
+                        $distantKey   = Util::toUnderScore($midKeys[1]);
+                        $foreignTable = Util::toUnderScore($seed->getRelationParam($attribute, 'entity'));
                         $uid          = IdGenerator::unsortableId();
                         $exAlias      = 'inl_' . $uid;
+                        $foreignAlias = 'inlf_' . $uid;
                         $falseParam   = 'inl_del_' . $uid;
                         $ta           = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
 
                         $part['innerSql'] = [
-                            'sql'        => "NOT EXISTS (SELECT 1 FROM {$relTable} {$exAlias} WHERE {$exAlias}.{$nearKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
+                            'sql'        => "NOT EXISTS (SELECT 1 FROM {$relTable} {$exAlias} JOIN {$foreignTable} {$foreignAlias} ON {$foreignAlias}.id = {$exAlias}.{$distantKey} AND {$foreignAlias}.deleted = :{$falseParam} WHERE {$exAlias}.{$nearKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
                             'parameters' => [$falseParam => false],
                         ];
                     } elseif (in_array($relationType, ['hasMany', 'hasOne'])) {
@@ -2084,10 +2087,13 @@ class Base
                         $relationName = $seed->getRelationParam($attribute, 'relationName');
                         $relTable     = Util::toUnderScore($relationName);
                         $nearKey      = Util::toUnderScore($midKeys[0]);
+                        $distantKey   = Util::toUnderScore($midKeys[1]);
+                        $foreignTable = Util::toUnderScore($seed->getRelationParam($attribute, 'entity'));
                         $exAlias      = 'il_' . $uid;
+                        $foreignAlias = 'ilf_' . $uid;
 
                         $part['innerSql'] = [
-                            'sql'        => "EXISTS (SELECT 1 FROM {$relTable} {$exAlias} WHERE {$exAlias}.{$nearKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
+                            'sql'        => "EXISTS (SELECT 1 FROM {$relTable} {$exAlias} JOIN {$foreignTable} {$foreignAlias} ON {$foreignAlias}.id = {$exAlias}.{$distantKey} AND {$foreignAlias}.deleted = :{$falseParam} WHERE {$exAlias}.{$nearKey} = {$ta}.id AND {$exAlias}.deleted = :{$falseParam})",
                             'parameters' => [$falseParam => false],
                         ];
                     } elseif (in_array($relationType, ['hasMany', 'hasOne'])) {
