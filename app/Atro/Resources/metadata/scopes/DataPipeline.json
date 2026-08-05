@@ -10,5 +10,6 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "stream": false,
-  "actionDisabled": true
+  "actionDisabled": true,
+  "nameField": "number"
 }
