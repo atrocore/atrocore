@@ -99,13 +99,13 @@ class Manager
         return $this->modules;
     }
 
-    public function getModule(string $id): AbstractModule
+    public function getModule(string $id): ?AbstractModule
     {
         if (!isset($this->modules[$id])) {
             $this->loadModule($id);
         }
 
-        return $this->modules[$id];
+        return $this->modules[$id] ?? null;
     }
 
     /**

@@ -20,5 +20,13 @@
   {
     "name": "latestVersion",
     "notSortable": true
+  },
+  {
+    "name": "usage",
+    "notSortable": true
+  },
+  {
+    "name": "expirationDate",
+    "notSortable": true
   }
 ]

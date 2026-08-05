@@ -12,5 +12,12 @@
   },
   "labels": {
     "latest": "latest"
+  },
+  "options": {
+    "usage": {
+      "Public": "Free",
+      "Rent": "Rented",
+      "Purchase": "Purchased"
+    }
   }
 }
