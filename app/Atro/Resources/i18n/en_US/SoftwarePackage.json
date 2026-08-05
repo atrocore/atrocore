@@ -11,7 +11,11 @@
     "installed": "Installed"
   },
   "labels": {
-    "latest": "latest"
+    "latest": "latest",
+    "update": "Update"
+  },
+  "massActionConfirmMessages": {
+    "update": "After the update, all users will be logged out of the system. Are you sure you want to update the system?"
   },
   "options": {
     "usage": {

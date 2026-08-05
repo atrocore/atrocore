@@ -171,6 +171,8 @@
   },
   "labels": {
     "purgeAll": "Purge all clusters",
+    "install": "Install",
+    "uninstall": "Uninstall",
     "entityFilterResult": "Filter Result",
     "availablePrefixes": "Available Prefixes",
     "System": "System",

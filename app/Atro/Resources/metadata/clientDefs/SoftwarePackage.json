@@ -1,5 +1,34 @@
 {
   "createDisabled": true,
   "controller": "controllers/record",
-  "iconClass": "puzzle-piece"
+  "iconClass": "puzzle-piece",
+  "views": {
+    "list": "views/software-package/list"
+  },
+  "menu": {
+    "list": {
+      "buttons": [
+        {
+          "name": "update",
+          "action": "universalAction",
+          "style": "btn-primary",
+          "url": "SoftwarePackage/update",
+          "method": "POST",
+          "confirm": true
+        }
+      ],
+      "dropdownButtons": [
+        {
+          "name": "install",
+          "action": "installAction",
+          "label": "install"
+        },
+        {
+          "name": "uninstall",
+          "action": "uninstallAction",
+          "label": "uninstall"
+        }
+      ]
+    }
+  }
 }
