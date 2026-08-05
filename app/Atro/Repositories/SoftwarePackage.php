@@ -165,62 +165,21 @@ class SoftwarePackage extends ReferenceData
 
     protected function getAllItems(array $params = []): array
     {
-        $remotePackages = $this->getRemotePackages();
-
-        $composerData = self::getComposerData();
-
         $items = [];
 
-        $installed = [];
+        // push the Core
+        $this->pushInstalledItem('Atro', $items);
 
-        $sortOrder = 1;
-        foreach (array_merge(['Atro' => 'Atro'], $this->getModuleManager()->getModules()) as $moduleId => $module) {
-            $package = $this->getPackage($moduleId);
-            if (empty($package['name'])) {
-                continue;
-            }
-
-            $code = $package['name'];
-
-            $items[] = [
-                'id'             => $moduleId,
-                'code'           => $code,
-                'name'           => $package['extra']['name']['default'] ?? $package['extra']['name'] ?? $moduleId,
-                'description'    => $package['extra']['description']['default'] ?? $package['extra']['description'] ?? $moduleId,
-                'sortOrder'      => $sortOrder,
-                'targetVersion'  => $composerData['require'][$code] ?? null,
-                'targetVersions' => !empty($package['version']) ? $this->prepareTargetVersions($code, $package) : [],
-                'currentVersion' => $package['version'] ?? null,
-                'latestVersion'  => $remotePackages[$code]['versions'][0]['version'] ?? null,
-                'expirationDate' => $remotePackages[$code]['expirationDate'] ?? null,
-                'usage'          => $remotePackages[$code]['usage'] ?? null,
-                'hasDocs'        => $moduleId === 'Atro' ? true : $module->hasDocs(),
-                'installed'      => true
-            ];
-            $sortOrder += 1;
-
-            $installed[] = $code;
+        // push installed modules
+        foreach (ModuleManager::getList() as $moduleId) {
+            $this->pushInstalledItem($moduleId, $items);
         }
 
-        // available to install
-        foreach ($remotePackages as $code => $package) {
+        // push available to install modules
+        $installed = array_column($items, 'code');
+        foreach ($this->getRemotePackages() as $code => $package) {
             if (!in_array($code, $installed) && !empty($package['expirationDate']) && $package['expirationDate'] >= date('Y-m-d')) {
-                $items[] = [
-                    'id'             => $package['id'],
-                    'code'           => $package['code'],
-                    'name'           => $package['name'],
-                    'description'    => $package['description'],
-                    'sortOrder'      => $sortOrder,
-                    'targetVersion'  => null,
-                    'targetVersions' => $this->prepareTargetVersions($code, $package),
-                    'currentVersion' => null,
-                    'latestVersion'  => $package['versions'][0]['version'] ?? null,
-                    'expirationDate' => $package['expirationDate'],
-                    'usage'          => $package['usage'] ?? null,
-                    'hasDocs'        => false,
-                    'installed'      => false
-                ];
-                $sortOrder += 1;
+                $this->pushNotInstalledItem($package, $items);
             }
         }
 
@@ -252,6 +211,54 @@ class SoftwarePackage extends ReferenceData
         }
 
         return $result;
+    }
+
+    private function pushInstalledItem(string $moduleId, array &$items): void
+    {
+        $package = $this->getPackage($moduleId);
+        if (empty($package['name'])) {
+            return;
+        }
+
+        $composerData = self::getComposerData();
+        $remotePackages = $this->getRemotePackages();
+
+        $code = $package['name'];
+
+        $items[] = [
+            'id'             => $moduleId,
+            'code'           => $code,
+            'name'           => $package['extra']['name']['default'] ?? $package['extra']['name'] ?? $moduleId,
+            'description'    => $package['extra']['description']['default'] ?? $package['extra']['description'] ?? $moduleId,
+            'sortOrder'      => count($items) + 1,
+            'targetVersion'  => $composerData['require'][$code] ?? null,
+            'targetVersions' => !empty($package['version']) ? $this->prepareTargetVersions($code, $package) : [],
+            'currentVersion' => $package['version'] ?? null,
+            'latestVersion'  => $remotePackages[$code]['versions'][0]['version'] ?? null,
+            'expirationDate' => $remotePackages[$code]['expirationDate'] ?? null,
+            'usage'          => $remotePackages[$code]['usage'] ?? null,
+            'hasDocs'        => $moduleId === 'Atro' || $this->getModuleManager()->getModule($moduleId)->hasDocs(),
+            'installed'      => true
+        ];
+    }
+
+    private function pushNotInstalledItem(array $package, array &$items): void
+    {
+        $items[] = [
+            'id'             => $package['id'],
+            'code'           => $package['code'],
+            'name'           => $package['name'],
+            'description'    => $package['description'],
+            'sortOrder'      => count($items) + 1,
+            'targetVersion'  => null,
+            'targetVersions' => $this->prepareTargetVersions($package['code'], $package),
+            'currentVersion' => null,
+            'latestVersion'  => $package['versions'][0]['version'] ?? null,
+            'expirationDate' => $package['expirationDate'],
+            'usage'          => $package['usage'] ?? null,
+            'hasDocs'        => false,
+            'installed'      => false
+        ];
     }
 
     private function prepareVersionForComparison(?string $version): ?string
