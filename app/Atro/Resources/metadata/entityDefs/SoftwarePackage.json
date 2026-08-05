@@ -12,7 +12,7 @@
       "type": "text",
       "protected": true
     },
-    "loadOrder": {
+    "sortOrder": {
       "type": "int",
       "protected": true
     },
@@ -48,10 +48,14 @@
     "hasDocs": {
       "type": "bool",
       "protected": true
+    },
+    "installed": {
+      "type": "bool",
+      "protected": true
     }
   },
   "collection": {
-    "sortBy": "loadOrder",
+    "sortBy": "sortOrder",
     "asc": true
   }
 }

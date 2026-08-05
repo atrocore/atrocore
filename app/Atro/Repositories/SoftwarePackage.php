@@ -171,8 +171,10 @@ class SoftwarePackage extends ReferenceData
 
         $items = [];
 
-        $loadOrder = 1;
-        foreach (array_merge(['Atro'], ModuleManager::getList()) as $moduleId) {
+        $installed = [];
+
+        $sortOrder = 1;
+        foreach (array_merge(['Atro' => 'Atro'], $this->getModuleManager()->getModules()) as $moduleId => $module) {
             $package = $this->getPackage($moduleId);
             if (empty($package['name'])) {
                 continue;
@@ -185,16 +187,41 @@ class SoftwarePackage extends ReferenceData
                 'code'           => $code,
                 'name'           => $package['extra']['name']['default'] ?? $package['extra']['name'] ?? $moduleId,
                 'description'    => $package['extra']['description']['default'] ?? $package['extra']['description'] ?? $moduleId,
-                'loadOrder'      => $loadOrder,
+                'sortOrder'      => $sortOrder,
                 'targetVersion'  => $composerData['require'][$code] ?? null,
                 'targetVersions' => !empty($package['version']) ? $this->prepareTargetVersions($code, $package) : [],
                 'currentVersion' => $package['version'] ?? null,
                 'latestVersion'  => $remotePackages[$code]['versions'][0]['version'] ?? null,
                 'expirationDate' => $remotePackages[$code]['expirationDate'] ?? null,
                 'usage'          => $remotePackages[$code]['usage'] ?? null,
-                'hasDocs'        => true
+                'hasDocs'        => $moduleId === 'Atro' ? true : $module->hasDocs(),
+                'installed'      => true
             ];
-            $loadOrder += 1;
+            $sortOrder += 1;
+
+            $installed[] = $code;
+        }
+
+        // available to install
+        foreach ($remotePackages as $code => $package) {
+            if (!in_array($code, $installed) && !empty($package['expirationDate']) && $package['expirationDate'] >= date('Y-m-d')) {
+                $items[] = [
+                    'id'             => $package['id'],
+                    'code'           => $package['code'],
+                    'name'           => $package['name'],
+                    'description'    => $package['description'],
+                    'sortOrder'      => $sortOrder,
+                    'targetVersion'  => null,
+                    'targetVersions' => $this->prepareTargetVersions($code, $package),
+                    'currentVersion' => null,
+                    'latestVersion'  => $package['versions'][0]['version'] ?? null,
+                    'expirationDate' => $package['expirationDate'],
+                    'usage'          => $package['usage'] ?? null,
+                    'hasDocs'        => false,
+                    'installed'      => false
+                ];
+                $sortOrder += 1;
+            }
         }
 
         return $items;
@@ -266,5 +293,17 @@ class SoftwarePackage extends ReferenceData
         }
 
         return [];
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('moduleManager');
+    }
+
+    protected function getModuleManager(): ModuleManager
+    {
+        return $this->getInjection('moduleManager');
     }
 }

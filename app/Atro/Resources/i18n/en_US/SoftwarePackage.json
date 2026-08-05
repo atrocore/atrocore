@@ -1,13 +1,14 @@
 {
   "fields": {
-    "loadOrder": "Load Order",
+    "sortOrder": "Sort Order",
     "currentVersion": "Current Version",
     "latestVersion": "Latest Version",
     "targetVersion": "Target Version",
     "targetVersions": "Target Versions",
     "hasDocs": "Has documentation",
     "usage": "Usage",
-    "expirationDate": "Expiration Date"
+    "expirationDate": "Expiration Date",
+    "installed": "Installed"
   },
   "labels": {
     "latest": "latest"
