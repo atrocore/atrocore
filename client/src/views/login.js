@@ -34,34 +34,15 @@ Espo.define('views/login', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'login',
+        _template: '',
 
-        localeId: 'default',
-
-        theme: 'default',
-
-        views: {
-            footer: {
-                el: 'body > footer',
-                view: 'views/site/footer'
-            },
-        },
-
-        setup() {
+        setup: function () {
             Dep.prototype.setup.call(this);
-
-            let localeId = 'default';
-            if (localeId && (this.getConfig().get('locales')[localeId] || localeId === 'default')) {
-                this.localeId = localeId;
-                this.ajaxGetRequest('i18n', {locale: localStorage.getItem('localeId') || 'default'}, {async: false}).then(data => {
-                    this.getLanguage().data = data;
-                });
-            } else {
-                this.localeId = this.getConfig().get('localeId');
-            }
 
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('token') && urlParams.has('username')) {
+                // do not render login form
+                this.wait(true);
                 this.getStorage().set('user', 'auth', Base64.encode(urlParams.get('username') + ':' + urlParams.get('token')));
                 this.trigger('login', {
                     auth: {
@@ -71,187 +52,29 @@ Espo.define('views/login', 'view', function (Dep) {
                 });
                 window.location.href = '/';
             }
-
-            this.ssoError = urlParams.get('ssoError') || null;
-            if (this.ssoError) {
-                history.replaceState(null, '', '/');
-            }
-
-            if (this.getConfig().get('hasOidcLogin')) {
-                this.ajaxGetRequest('oidcLoginUrl', {}, {async: false}).then(data => {
-                    this.oidcLoginUrl = data.url || '';
-                });
-            }
         },
 
         afterRender: function () {
-            let demo = this.getConfig().get('demo') || {"username": "", "password": ""};
+            Dep.prototype.afterRender.call(this);
 
-            if (demo.username) {
-                $('#field-userName').val(demo.username);
-                $('#field-password').val(demo.password);
-            } else {
-                const rememberUsername = localStorage.getItem('rememberUserName') || false,
-                    lastAuthUsername = localStorage.getItem('lastAuthUserName');
-
-                $('#field-rememberUsername').prop("checked", rememberUsername);
-                if (lastAuthUsername) {
-                    $('#field-userName').val(lastAuthUsername);
-                }
-            }
-
-            // setup background image
-            this.setupBackgroundImage();
-        },
-
-        setupBackgroundImage: function () {
-            $.ajax({
-                url: 'background?silent=true',
-                type: 'GET',
-                success: data => {
-                    const $body = $('body');
-                    $body.children('.content').css({'height': 'calc(100% - 28px)'});
-                    if (data.authorName) {
-                        $body.append('<span class="photo-link">Image by <a href="' + data.authorLink + '" target="_blank">' + data.authorName + '</a></span>');
-                    }
+            new Svelte.Login({
+                target: this.el,
+                props: {
+                    onLogin: (data) => this.trigger('login', data),
+                    onForgotPassword: () => this.showPasswordChangeRequest()
                 }
             });
-        },
-
-        events: {
-            'submit #login-form': function (e) {
-                this.login();
-                return false;
-            },
-            'click a[data-action="passwordChangeRequest"]': function (e) {
-                this.showPasswordChangeRequest();
-            },
-            'change select[name="locale"]': function (event) {
-                this.localeId = $(event.currentTarget).val();
-                if (this.localeId) {
-                    this.ajaxGetRequest('i18n', {locale: this.localeId}).then(data => {
-                        this.getLanguage().data = data;
-                        this.reRender();
-                        localStorage.setItem('localeId', this.localeId);
-                    });
-                }
-            },
-            'change select[name="theme"]': function (event) {
-                this.theme = $(event.currentTarget).val();
-            }
-        },
-
-        data: function () {
-            return {
-                logoSrc: this.getLogoSrc(),
-                oidcEnabled: !!this.oidcLoginUrl,
-                oidcLoginUrl: this.oidcLoginUrl || '',
-                ssoError: this.ssoError || ''
-            };
-        },
-
-        getLogoSrc: function () {
-            const companyLogoId = this.getConfig().get('companyLogoId');
-            if (!companyLogoId) {
-                return this.getBasePath() + 'client/modules/treo-core/img/core_logo_dark.svg';
-            }
-            return this.getBasePath() + '?entryPoint=LogoImage&id=' + companyLogoId + '&t=' + companyLogoId;
-        },
-
-        login: function () {
-            let userName = $('#field-userName').val(),
-                trimmedUserName = userName.trim(),
-                rememberUsername = $('#field-rememberUsername').is(':checked') || false;
-
-            if (trimmedUserName !== userName) {
-                $('#field-userName').val(trimmedUserName);
-                userName = trimmedUserName;
-            }
-
-            let password = $('#field-password').val(),
-                $submit = this.$el.find('#btn-login');
-
-            if (userName == '') {
-                let $el = $("#field-userName"),
-                    message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
-
-                $el.popover({
-                    placement: 'bottom',
-                    content: message,
-                    trigger: 'manual',
-                }).popover('show');
-
-                let $cell = $el.closest('.form-group');
-                $cell.addClass('has-error');
-                this.$el.one('mousedown click', function () {
-                    $cell.removeClass('has-error');
-                    $el.popover('hide');
-                });
-                return;
-            }
-
-            $submit.addClass('disabled').attr('disabled', 'disabled');
-
-            this.notify('Please wait...');
-
-            $.ajax({
-                url: 'userSession',
-                headers: {
-                    'Authorization': 'Basic ' + Base64.encode(userName + ':' + password)
-                },
-                success: function (data) {
-                    this.notify(false);
-                    window.SvelteUserData.set(data);
-                    window.SvelteNotifier.setNotifier(Espo.Ui);
-
-                    this.trigger('login', {
-                        auth: {
-                            userName: userName,
-                            token: data.token
-                        },
-                        user: data.user,
-                        preferences: data.preferences,
-                        acl: data.acl,
-                        settings: data.settings,
-                        appParams: data.appParams
-                    });
-
-                    if (rememberUsername) {
-                        localStorage.setItem('rememberUserName', rememberUsername);
-                        localStorage.setItem('lastAuthUserName', userName);
-                    } else {
-                        localStorage.removeItem('rememberUserName');
-                        localStorage.removeItem('lastAuthUserName');
-                    }
-                }.bind(this),
-                error: function (xhr) {
-                    $submit.removeClass('disabled').removeAttr('disabled');
-                    if (xhr.status == 401) {
-                        this.onWrong();
-                    }
-                }.bind(this),
-                login: true,
-            });
-        },
-
-        onWrong: function () {
-            var cell = $('#login .form-group');
-            cell.addClass('has-error');
-            this.$el.one('mousedown click', function () {
-                cell.removeClass('has-error');
-            });
-            Espo.Ui.error(this.translate('wrongUsernamePasword', 'messages', 'User'));
         },
 
         showPasswordChangeRequest: function () {
-            this.notify('Please wait...');
             this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
-                url: window.location.href
+                url: window.location.href,
+                fullHeight: false
             }, function (view) {
                 view.render();
-                view.notify(false);
             });
         }
+
     });
 
 });
