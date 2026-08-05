@@ -101,6 +101,9 @@ class ActionManager
         $execution->set('action', $action);
 
         $input->actionUser = $currentUser;
+        if (empty($input->actionUserId)) {
+            $input->actionUserId = $currentUser->get('id');
+        }
 
         if (!empty($input->executedViaWorkflow)) {
             $execution->set('type', 'workflow');

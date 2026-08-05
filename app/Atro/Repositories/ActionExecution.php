@@ -42,16 +42,30 @@ class ActionExecution extends Base
         parent::afterSave($entity, $options);
 
         if (in_array($entity->get('status'), ['done', 'failed']) && $entity->get('type') === 'manual') {
-            $notification = $this->getEntityManager()->getEntity('Notification');
-            $notification->set('type', 'Message');
-            $notification->set('message', sprintf($this->getLanguage()->translate('actionExecutionFinished', 'notifications', 'ActionExecution'), $entity->get('name'), $entity->id));
+            $delegatorUserId = $entity->get('createdBy')->get('delegatorId');
 
-            $notification->set('relatedType', $entity->getEntityName());
-            $notification->set('relatedId', $entity->get('id'));
-            $notification->set('userId', $entity->get('createdBy')->get('delegatorId'));
+            if (!empty($delegatorUserId)) {
+                $this->createNotification($entity, $delegatorUserId);
 
-            $this->getEntityManager()->saveEntity($notification);
+                $payload = @json_decode(json_encode($entity->get('payload')), true);
+                if (!empty($payload['actionUserId']) && $payload['actionUserId'] !== $delegatorUserId) {
+                    $this->createNotification($entity, $payload['actionUserId']);
+                }
+            }
         }
+    }
+
+    protected function createNotification(Entity $entity, string $userId): void
+    {
+        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification->set('type', 'Message');
+        $notification->set('message', sprintf($this->getLanguage()->translate('actionExecutionFinished', 'notifications', 'ActionExecution'), $entity->get('name'), $entity->id));
+
+        $notification->set('relatedType', $entity->getEntityName());
+        $notification->set('relatedId', $entity->get('id'));
+        $notification->set('userId', $userId);
+
+        $this->getEntityManager()->saveEntity($notification);
     }
 
     public function prepareCount(ActionExecutionEntity $execution, string $field): void
