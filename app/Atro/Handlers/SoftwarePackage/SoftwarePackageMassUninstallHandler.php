@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\SoftwarePackage;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
@@ -22,27 +23,38 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SoftwarePackage/{id}/install',
+    path: '/SoftwarePackage/uninstall',
     methods: [
-        'POST',
+        'DELETE',
     ],
-    summary: 'Install a software package',
-    description: 'Queues the specified not installed software package for installation. Accessible by administrators only.',
+    summary: 'Uninstall software packages',
+    description: 'Queues the selected installed software packages for uninstallation. Accessible by administrators only.',
     tag: 'SoftwarePackage',
-    parameters: [
-        [
-            'name'        => 'id',
-            'in'          => 'path',
-            'required'    => true,
-            'description' => 'ID of the software package to install.',
-            'schema'      => [
-                'type' => 'string',
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'ids',
+                    ],
+                    'properties' => [
+                        'ids' => [
+                            'type'        => 'array',
+                            'description' => 'IDs of the software packages to uninstall.',
+                            'items'       => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'true if the software package was queued for installation.',
+            'description' => 'Success',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -51,15 +63,15 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'ids is required.',
+        ],
         403 => [
             'description' => 'Current user is not an administrator.',
         ],
-        404 => [
-            'description' => 'Software package not found.',
-        ],
     ],
 )]
-class SoftwarePackageInstallHandler extends AbstractHandler
+class SoftwarePackageMassUninstallHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -67,10 +79,10 @@ class SoftwarePackageInstallHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $id = (string)$request->getAttribute('id');
+        $data = $this->getRequestBody($request);
 
         echo '<pre>';
-        print_r($id);
+        print_r($data->ids);
         die();
 
         return new BoolResponse(true);
