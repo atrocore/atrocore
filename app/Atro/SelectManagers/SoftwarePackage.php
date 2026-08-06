@@ -19,9 +19,8 @@ class SoftwarePackage extends Base
 {
     protected function boolFilterOnlyUninstallable(array &$result): void
     {
-        // TODO: leave only the installed packages that are allowed to be uninstalled
         $result['whereClause'][] = [
-            'id' => []
+            'onlyUninstallable' => true
         ];
     }
 }

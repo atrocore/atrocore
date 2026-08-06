@@ -167,12 +167,19 @@ class SoftwarePackage extends ReferenceData
     {
         $items = [];
 
+        $onlyUninstallable = false;
+        foreach ($params['whereClause'] ?? [] as $item) {
+            if (!empty($item['onlyUninstallable'])) {
+                $onlyUninstallable = true;
+            }
+        }
+
         // push the Core
-        $this->pushInstalledItem('Atro', $items);
+        $this->pushInstalledItem('Atro', $items, $onlyUninstallable);
 
         // push installed modules
         foreach (ModuleManager::getList() as $moduleId) {
-            $this->pushInstalledItem($moduleId, $items);
+            $this->pushInstalledItem($moduleId, $items, $onlyUninstallable);
         }
 
         // push available to install modules
@@ -213,7 +220,7 @@ class SoftwarePackage extends ReferenceData
         return $result;
     }
 
-    private function pushInstalledItem(string $moduleId, array &$items): void
+    private function pushInstalledItem(string $moduleId, array &$items, bool $onlyUninstallable): void
     {
         $package = $this->getPackage($moduleId);
         if (empty($package['name'])) {
@@ -224,6 +231,12 @@ class SoftwarePackage extends ReferenceData
         $remotePackages = $this->getRemotePackages();
 
         $code = $package['name'];
+
+        if ($onlyUninstallable) {
+            if ($moduleId === 'Atro' || empty($package['version'])) {
+                return;
+            }
+        }
 
         $items[] = [
             'id'             => $moduleId,
