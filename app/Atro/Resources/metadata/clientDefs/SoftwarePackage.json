@@ -35,6 +35,13 @@
     }
   },
   "listActions": {
+    "showReleaseNotes": {
+      "name": "showReleaseNotes",
+      "action": "showReleaseNotes",
+      "iconClass": "ph ph-file-text",
+      "acl": "showReleaseNotes",
+      "sortOrder": 145
+    },
     "install": {
       "name": "install",
       "url": "SoftwarePackage/{{id}}/install",

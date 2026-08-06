@@ -13,8 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\ReferenceData;
-use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 use Espo\ORM\Entity;
 
 class SoftwarePackage extends ReferenceData
@@ -37,19 +38,6 @@ class SoftwarePackage extends ReferenceData
         return '-';
     }
 
-    public static function setMinimumStability(string $value): void
-    {
-        $data = SoftwarePackageRepository::getComposerData();
-        $data['minimum-stability'] = $value;
-
-        SoftwarePackageRepository::setComposerData($data);
-    }
-
-    public static function getMinimumStability(): string
-    {
-        return SoftwarePackageRepository::getComposerData()['minimum-stability'] ?? 'stable';
-    }
-
     public function putAclMeta(Entity $entity): void
     {
         parent::putAclMeta($entity);
@@ -59,6 +47,7 @@ class SoftwarePackage extends ReferenceData
         }
         $entity->setMetaPermission('delete', false);
 
+        $entity->setMetaPermission('showReleaseNotes', true);
         $entity->setMetaPermission('install', !$entity->get('installed'));
         $entity->setMetaPermission(
             'uninstall', $entity->get('installed') && $entity->get('id') !== 'Atro' && !empty($entity->get('currentVersion')) && !empty($entity->get('targetVersion'))
@@ -80,130 +69,77 @@ class SoftwarePackage extends ReferenceData
         return true;
     }
 
+    public function getReleaseNotes(string $id): string
+    {
+        $softwarePackage = $this->getRepository()->get($id);
+        if (empty($softwarePackage)) {
+            throw new NotFound();
+        }
+        $parts = explode('/', $softwarePackage->get('code') ?? '');
+        if (empty($parts[1])) {
+            throw new BadRequest();
+        }
 
-    //
-    //    /**
-    //     * @var string
-    //     */
-    //    public static $composer = 'composer.json';
-    //
-    //    /**
-    //     * @var string
-    //     */
-    //    public static $composerLock = 'composer.lock';
-    //
-    //    /**
-    //     * @var string
-    //     */
-    //    public static $stableComposer = 'data/stable-composer.json';
-    //
-    //    /**
-    //     * Get composer.json
-    //     *
-    //     * @return array
-    //     */
-    //    public static function getComposerJson(): array
-    //    {
-    //        return Json::decode(file_get_contents(self::$composer), true);
-    //    }
-    //
-    //    public static function getSettingVersion(array $composerData, string $name): string
-    //    {
-    //        if (isset($composerData['require'][$name])) {
-    //            return ModuleManager::prepareVersion($composerData['require'][$name]);
-    //        }
-    //
-    //        return '';
-    //    }
-    //
-    //    /**
-    //     * Get stable-composer.json
-    //     *
-    //     * @return array
-    //     */
-    //    public static function getStableComposerJson(): array
-    //    {
-    //        if (!file_exists(self::$stableComposer)) {
-    //            return self::getComposerJson();
-    //        }
-    //
-    //        return Json::decode(file_get_contents(self::$stableComposer), true);
-    //    }
-    //
+        $url = "https://help.atrocore.com/release-notes/" . $parts[1];
 
+        // fetch html
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
+        $output = curl_exec($ch);
+        if ($output === false) {
+            throw new BadRequest('Curl error: ' . curl_error($ch));
+        }
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
+        if ($httpCode != 200) {
+            throw new BadRequest("Invalid server response code: " . $httpCode);
+        }
 
+        $result = '';
+        $parts = explode('<div class="page-content">', $output);
+        if (isset($parts[1])) {
+            $parts = explode('</div>', $parts[1]);
+            $result = $parts[0] ?? '';
+        }
 
+        if (empty($result)) {
+            $result = "<p>You can find the release notes here: <br /><a href=\"$url\" target=\"_blank\">$url</a></p>";
+        }
 
-    //
-    //    public function getReleaseNotes(string $id): string
-    //    {
-    //        $parts = explode('/', $this->getComposerName($id) ?? '');
-    //        if (empty($parts[1])) {
-    //            throw new BadRequest();
-    //        }
-    //
-    //        $url = "https://help.atrocore.com/release-notes/" . $parts[1];
-    //
-    //        // fetch html
-    //        $ch = curl_init($url);
-    //        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    //        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-    //        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-    //
-    //        $output = curl_exec($ch);
-    //        if ($output === false) {
-    //            throw new BadRequest('Curl error: ' . curl_error($ch));
-    //        }
-    //        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    //        curl_close($ch);
-    //
-    //        if ($httpCode != 200) {
-    //            throw new BadRequest("Invalid server response code: " . $httpCode);
-    //        }
-    //
-    //        $result = '';
-    //        $parts = explode('<div class="page-content">', $output);
-    //        if (isset($parts[1])) {
-    //            $parts = explode('</div>', $parts[1]);
-    //            $result = $parts[0] ?? '';
-    //        }
-    //
-    //        if (empty($result)) {
-    //            $result = "<p>You can find the release notes here: <br /><a href=\"$url\" target=\"_blank\">$url</a></p>";
-    //        }
-    //
-    //        return $result;
-    //    }
-    //
-    //    public function checkUpdate(): array
-    //    {
-    //        /**
-    //         * Is daemon enabled ?
-    //         */
-    //        file_put_contents(self::CHECK_UP_FILE, '1');
-    //        sleep(2);
-    //        if (file_exists(self::CHECK_UP_FILE)) {
-    //            return [
-    //                'status'  => false,
-    //                'message' => $this->translate('daemonDisabled', 'labels', 'Composer')
-    //            ];
-    //        }
-    //
-    //        if ($this->jobManagerRunning()) {
-    //            return [
-    //                'status'  => false,
-    //                'message' => $this->translate('jobManagerRunning', 'labels', 'Composer')
-    //            ];
-    //        }
-    //
-    //        return [
-    //            'status'  => true,
-    //            'message' => ''
-    //        ];
-    //    }
-    //
+        return $result;
+    }
+
+//        public function checkUpdate(): array
+//        {
+//            /**
+//             * Is daemon enabled ?
+//             */
+//            file_put_contents(self::CHECK_UP_FILE, '1');
+//            sleep(2);
+//            if (file_exists(self::CHECK_UP_FILE)) {
+//                return [
+//                    'status'  => false,
+//                    'message' => $this->translate('daemonDisabled', 'labels', 'Composer')
+//                ];
+//            }
+//
+//            if ($this->jobManagerRunning()) {
+//                return [
+//                    'status'  => false,
+//                    'message' => $this->translate('jobManagerRunning', 'labels', 'Composer')
+//                ];
+//            }
+//
+//            return [
+//                'status'  => true,
+//                'message' => ''
+//            ];
+//        }
+
     //    public function jobManagerRunning(): bool
     //    {
     //        $job = $this
@@ -226,440 +162,5 @@ class SoftwarePackage extends ReferenceData
     //
     //        return true;
     //    }
-    //
-    //    /**
-    //     * Cancel changes
-    //     */
-    //    public function cancelChanges(): void
-    //    {
-    //        if (file_exists(self::$stableComposer)) {
-    //            file_put_contents(self::$composer, file_get_contents(self::$stableComposer));
-    //        }
-    //    }
-    //
-    //    /**
-    //     * Update composer
-    //     *
-    //     * @param string $package
-    //     * @param string $version
-    //     *
-    //     * @throws Error
-    //     */
-    //    public function update(string $package, string $version): void
-    //    {
-    //        // get composer.json data
-    //        $data = self::getComposerJson();
-    //
-    //        // prepare data
-    //        $data['require'] = array_merge($data['require'], [$package => $version]);
-    //
-    //        // set composer.json data
-    //        self::setComposerJson($data);
-    //    }
-    //
-    //    protected function validateSettingVersion(string $package, string $version): void
-    //    {
-    //        if (
-    //            preg_match('/^\d+\.\d+\.\d+$/', $version) !== 1
-    //            && preg_match('/^~\d+\.\d+\.\d+$/', $version) !== 1
-    //            && preg_match('/^\^\d+\.\d+\.\d+$/', $version) !== 1
-    //            && preg_match('/^>\d+\.\d+\.\d+$/', $version) !== 1
-    //            && preg_match('/^>=\d+\.\d+\.\d+$/', $version) !== 1
-    //        ) {
-    //            throw new BadRequest($this->translate('invalidVersion', 'exceptions', 'Composer'));
-    //        }
-    //
-    //        preg_match_all('/^(.*)(\d+)\.(\d+)\.(\d+)$/', $version, $matches);
-    //        $res = ["{$matches[2][0]}.{$matches[3][0]}.{$matches[4][0]}"];
-    //
-    //        $currentVersion = null;
-    //        if ($package === 'atrocore/core') {
-    //            $currentVersion = Composer::getCoreVersion();
-    //        } else {
-    //            foreach ($this->getModuleManager()->getModules() as $module) {
-    //                if ($module->getComposerName() === $package) {
-    //                    $currentVersion = $module->getVersion();
-    //                }
-    //            }
-    //        }
-    //
-    //        if (!empty($currentVersion)) {
-    //            preg_match_all('/^(.*)(\d+)\.(\d+)\.(\d+)(.*)$/', $currentVersion, $matches);
-    //            $res[] = "{$matches[2][0]}.{$matches[3][0]}.{$matches[4][0]}";
-    //        }
-    //
-    //        $copy = $res;
-    //
-    //        natsort($res);
-    //
-    //        if ($res[0] !== $res[1] && $res === $copy) {
-    //            throw new BadRequest($this->translate('downgradeProhibited', 'exceptions', 'Composer'));
-    //        }
-    //    }
-    //
-    //    /**
-    //     * Delete composer
-    //     *
-    //     * @param string $package
-    //     *
-    //     * @throws Error
-    //     */
-    //    public function delete(string $package): void
-    //    {
-    //        // get composer.json data
-    //        $data = self::getComposerJson();
-    //
-    //        if (isset($data['require'][$package])) {
-    //            unset($data['require'][$package]);
-    //        }
-    //
-    //        // set composer.json data
-    //        self::setComposerJson($data);
-    //    }
-    //
-    //    /**
-    //     * Get composer diff
-    //     *
-    //     * @return array
-    //     */
-    //    public function getComposerDiff(): array
-    //    {
-    //        return $this->compareComposerSchemas();
-    //    }
-    //
-    //    public function getList(): array
-    //    {
-    //        /** @var Store $storeService */
-    //        $storeService = $this->getContainer()->get('serviceFactory')->create('Store');
-    //
-    //        $list = $storeService->findEntities([
-    //            'maxSize'        => 999,
-    //            'collectionOnly' => true,
-    //            'where'          => [
-    //                [
-    //                    'field' => 'status',
-    //                    'type'  => 'in',
-    //                    'value' => ['installed'],
-    //                ]
-    //            ]
-    //        ])['collection']->toArray();
-    //
-    //        // prepare composer data
-    //        $composerData = self::getComposerJson();
-    //
-    //        // push custom modules
-    //        foreach ($this->getModuleManager()->getModules() as $module) {
-    //            if (!in_array($module->getId(), array_column($list, 'id'))) {
-    //                $moduleComposerJson = $module->getPath() . '/composer.json';
-    //                if (file_exists($moduleComposerJson)) {
-    //                    $moduleData = @json_decode(file_get_contents($moduleComposerJson), true);
-    //                    if (is_array($moduleData)) {
-    //                        $list[$module->getId()] = [
-    //                            'id'             => $module->getId(),
-    //                            'name'           => $moduleData['extra']['name']['default'] ?? $moduleData['name'],
-    //                            'description'    => $moduleData['extra']['description']['default'] ?? '',
-    //                            'currentVersion' => $module->getVersion(),
-    //                            'latestVersion'  => '-',
-    //                            'isSystem'       => false,
-    //                            'isComposer'     => false,
-    //                            'status'         => '',
-    //                            'settingVersion' => self::getSettingVersion($composerData, $moduleData['name']),
-    //                        ];
-    //                    }
-    //                }
-    //            }
-    //        }
-    //
-    //        // get diff
-    //        $composerDiff = $this->getComposerDiff();
-    //
-    //        // prepare status for items
-    //        foreach ($list as $k => $v) {
-    //            $list[$k]['status'] = $this->getModuleStatus($composerDiff, $v['id']);
-    //        }
-    //
-    //        // for not installed modules
-    //        foreach ($composerDiff['install'] as $row) {
-    //            $item = [
-    //                'id'             => $row['id'],
-    //                'name'           => $row['id'],
-    //                'description'    => '',
-    //                'currentVersion' => '',
-    //                'latestVersion'  => '',
-    //                'isSystem'       => false,
-    //                'isComposer'     => true,
-    //                'status'         => 'install',
-    //                'settingVersion' => self::getSettingVersion($composerData, $this->getComposerName($row['id']))
-    //            ];
-    //
-    //            // get package
-    //            if (!empty($package = $this->getPackage($row['id']))) {
-    //                $item['name'] = $package->get('name');
-    //                $item['description'] = $package->get('description');
-    //            }
-    //
-    //            $list[$row['id']] = $item;
-    //        }
-    //
-    //        usort($list, function ($a, $b) {
-    //            return strcmp($a['name'], $b['name']);
-    //        });
-    //
-    //        return [
-    //            'total' => count($list),
-    //            'list'  => array_values($list)
-    //        ];
-    //    }
-    //
-    //    public function installModule(string $id, string $version = null): bool
-    //    {
-    //        if (empty($version)) {
-    //            $version = '*';
-    //        }
-    //
-    //        $name = $this->getComposerName($id);
-    //
-    //        if (!$this->isVersionValid($version)) {
-    //            throw new Exceptions\Error($this->translateError('versionIsInvalid'));
-    //        }
-    //
-    //        $this->update($name, $version);
-    //
-    //        return true;
-    //    }
-    //
-    //    public function updateModule(string $id, ?string $version): bool
-    //    {
-    //        $name = $this->getComposerName($id);
-    //
-    //        if (!$this->isVersionValid($version)) {
-    //            throw new Exceptions\Error($this->translateError('versionIsInvalid'));
-    //        }
-    //
-    //        $this->validateSettingVersion($name, $version);
-    //        $this->update($name, $version);
-    //
-    //        return true;
-    //    }
-    //
-    //    public function deleteModule(string $id): bool
-    //    {
-    //        $name = $this->getComposerName($id);
-    //
-    //        if ($name !== 'atrocore/core' && !empty($this->getInstalledModule($id))) {
-    //            $this->delete($name);
-    //        }
-    //
-    //        return true;
-    //    }
-    //
-    //    public function cancel(string $id): bool
-    //    {
-    //        $name = $this->getComposerName($id);
-    //
-    //        $composerData = self::getComposerJson();
-    //
-    //        if (!empty($value = self::getStableComposerJson()['require'][$name])) {
-    //            $composerData['require'][$name] = $value;
-    //        } elseif (isset($composerData['require'][$name])) {
-    //            unset($composerData['require'][$name]);
-    //        }
-    //
-    //        self::setComposerJson($composerData);
-    //
-    //        return true;
-    //    }
-    //
-    //    protected function getComposerName(string $id): string
-    //    {
-    //        $package = $this->getPackage($id);
-    //        if (empty($package)) {
-    //            return $id;
-    //        }
-    //
-    //        $installed = self::getComposerJson()['require'] ?? [];
-    //        foreach ($package->get('abandoned') ?? [] as $oldName) {
-    //            if (isset($installed[$oldName])) {
-    //                return $oldName;
-    //            }
-    //        }
-    //
-    //        return $package->get('code');
-    //    }
-    //
-    //    protected function getModuleStatus(array $diff, string $id): ?string
-    //    {
-    //        foreach ($diff as $status => $row) {
-    //            foreach ($row as $item) {
-    //                if ($item['id'] == $id) {
-    //                    return $status;
-    //                }
-    //            }
-    //        }
-    //
-    //        return null;
-    //    }
-    //
-    //    protected function compareComposerSchemas(): array
-    //    {
-    //        // prepare result
-    //        $result = [
-    //            'install' => [],
-    //            'update'  => [],
-    //            'delete'  => [],
-    //        ];
-    //
-    //        if (!file_exists(self::$stableComposer)) {
-    //            // prepare data
-    //            $data = Json::encode(['require' => []], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-    //            file_put_contents(self::$stableComposer, $data);
-    //        }
-    //
-    //        // prepare data
-    //        $composerData = self::getComposerJson();
-    //        $composerStableData = Json::decode(file_get_contents(self::$stableComposer), true);
-    //        foreach ($composerData['require'] as $package => $version) {
-    //            if (!isset($composerStableData['require'][$package])) {
-    //                $result['install'][] = [
-    //                    'id'      => $this->getModuleId($package),
-    //                    'package' => $package
-    //                ];
-    //            } elseif ($version != $composerStableData['require'][$package]) {
-    //                // prepare id
-    //                $id = $this->getStoredModuleId($package);
-    //
-    //                if ($id === 'Atro') {
-    //                    $result['update'][] = [
-    //                        'id'      => $id,
-    //                        'package' => $package,
-    //                        'from'    => self::getCoreVersion()
-    //                    ];
-    //                } else {
-    //                    if (!empty($module = $this->getModuleManager()->getModule($id))) {
-    //                        $result['update'][] = [
-    //                            'id'      => $id,
-    //                            'package' => $package,
-    //                            'from'    => $module->getVersion()
-    //                        ];
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        foreach ($composerStableData['require'] as $package => $version) {
-    //            if (!isset($composerData['require'][$package])) {
-    //                $result['delete'][] = [
-    //                    'id'      => $this->getStoredModuleId($package),
-    //                    'package' => $package
-    //                ];
-    //            }
-    //        }
-    //
-    //        return $result;
-    //    }
-    //
-    //    /**
-    //     * Get module ID
-    //     *
-    //     * @param string $packageId
-    //     *
-    //     * @return string
-    //     */
-    //    protected function getModuleId(string $packageId): string
-    //    {
-    //        $package = $this->getEntityManager()->getRepository('Store')->getEntityByCode($packageId);
-    //
-    //        return !empty($package) ? $package->get('id') : $packageId;
-    //    }
-    //
-    //    /**
-    //     * Get module ID (by composer.lock)
-    //     *
-    //     * @param string $packageId
-    //     *
-    //     * @return string
-    //     */
-    //    protected function getStoredModuleId(string $packageId): string
-    //    {
-    //        // parse composer.lock
-    //        if (file_exists('composer.lock')) {
-    //            $composer = json_decode(file_get_contents('composer.lock'), true);
-    //            if (!empty($composer['packages'])) {
-    //                foreach ($composer['packages'] as $v) {
-    //                    if ($v['name'] == $packageId && !empty($v['extra']['atroId'])) {
-    //                        return $v['extra']['atroId'];
-    //                    } elseif ($v['name'] == $packageId && !empty($v['extra']['treoId'])) {
-    //                        return $v['extra']['treoId'];
-    //                    }
-    //                }
-    //            }
-    //        }
-    //
-    //        return $packageId;
-    //    }
-    //
-    //    /**
-    //     * Translate error
-    //     *
-    //     * @param string $key
-    //     *
-    //     * @return string
-    //     */
-    //    protected function translateError(string $key): string
-    //    {
-    //        return $this->translate($key, 'exceptions', 'Composer');
-    //    }
-    //
-    //    /**
-    //     * Is version valid?
-    //     *
-    //     * @param string $version
-    //     *
-    //     * @return bool
-    //     */
-    //    protected function isVersionValid(?string $version): bool
-    //    {
-    //        // prepare result
-    //        $result = true;
-    //
-    //        // create version parser
-    //        $versionParser = new \Composer\Semver\VersionParser();
-    //
-    //        try {
-    //            $versionParser->parseConstraints($version)->getPrettyString();
-    //            if (preg_match("/^(.*)\-$/", $version)) {
-    //                $result = false;
-    //            }
-    //        } catch (\Exception $e) {
-    //            $result = false;
-    //        }
-    //
-    //        return $result;
-    //    }
-    //
-    //    /**
-    //     * @return ModuleManager
-    //     */
-    //    private function getModuleManager(): ModuleManager
-    //    {
-    //        return $this->getContainer()->get('moduleManager');
-    //    }
-    //
-    //    /**
-    //     * @return mixed
-    //     */
-    //    private function getInstalledModule(string $id)
-    //    {
-    //        return $this->getModuleManager()->getModule($id);
-    //    }
-    //
-    //    /**
-    //     * @param string $id
-    //     *
-    //     * @return mixed
-    //     * @throws Exceptions\Error
-    //     */
-    //    private function getPackage(string $id)
-    //    {
-    //        return $this->getEntityManager()->getEntity('Store', $id);
-    //    }
+
 }

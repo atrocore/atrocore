@@ -43,9 +43,10 @@ class SoftwarePackage extends ReferenceData
         return self::$composerData;
     }
 
-    public static function setComposerData(array $data): void
+    public static function setComposerData(string $key, $value): void
     {
-        self::$composerData = $data;
+        self::getComposerData();
+        self::$composerData[$key] = $value;
 
         file_put_contents('composer.json', json_encode(self::$composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }

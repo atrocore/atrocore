@@ -172,6 +172,7 @@
     "purgeAll": "Purge all clusters",
     "install": "Install",
     "uninstall": "Uninstall",
+    "showReleaseNotes": "Release Notes",
     "entityFilterResult": "Filter Result",
     "availablePrefixes": "Available Prefixes",
     "System": "System",

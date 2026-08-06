@@ -35,7 +35,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                     const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
 
                     this.notify(this.translate('Loading...'));
-                    this.ajaxPostRequest('SoftwarePackage/install', { ids }).then(() => {
+                    this.ajaxPostRequest('SoftwarePackage/install', {ids}).then(() => {
                         this.notify(this.translate('Done'), 'success');
                     });
                 });
@@ -66,11 +66,29 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                     const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
 
                     this.notify(this.translate('Loading...'));
-                    this.ajaxRequest('SoftwarePackage/uninstall', 'DELETE', JSON.stringify({ ids })).then(() => {
+                    this.ajaxRequest('SoftwarePackage/uninstall', 'DELETE', JSON.stringify({ids})).then(() => {
                         this.notify(this.translate('Done'), 'success');
                     });
                 });
             });
+        },
+
+        actionShowReleaseNotes(data) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest(`SoftwarePackage/${data.id}/releaseNotes`).success(response => {
+                this.notify(false);
+
+                if (!response.html) {
+                    this.notify("Invalid response from server", "error")
+                    return;
+                }
+                
+                this.createView('dialog', 'views/software-package/modals/release-notes', {
+                    scope: this.options.scope,
+                    el: '[data-view="dialog"]',
+                    notes: response.html,
+                }, view => view.render());
+            })
         },
 
     })
