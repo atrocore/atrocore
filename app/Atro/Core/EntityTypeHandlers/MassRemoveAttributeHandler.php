@@ -73,11 +73,17 @@ use Atro\Handlers\AbstractHandler;
     ],
     responses: [
         200 => [
-            'description' => 'ID of the created background job',
+            'description' => 'Reference to the created background job',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'string',
+                        'type'       => 'object',
+                        'properties' => [
+                            'jobId' => [
+                                'type'        => 'string',
+                                'description' => 'ID of the created background job',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -108,6 +114,6 @@ class MassRemoveAttributeHandler extends AbstractHandler
 
         $result = $this->getRecordService($entityName)->massRemoveAttribute($attributes, $params);
 
-        return new JsonResponse($result['jobId']);
+        return new JsonResponse(['jobId' => $result['jobId']]);
     }
 }
