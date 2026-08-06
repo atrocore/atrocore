@@ -84,7 +84,7 @@ class Config extends \Espo\Core\Utils\Config
         // put reference data into config
         $this->putReferenceDataIntoConfig();
 
-        $this->data['onlyStableReleases'] = \Atro\Services\Composer::getMinimumStability() === 'stable';
+        $this->data['onlyStableReleases'] = \Atro\Services\SoftwarePackage::getMinimumStability() === 'stable';
 
         return $this->data;
     }

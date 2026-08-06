@@ -16,8 +16,8 @@ namespace Atro\Core;
 use Atro\Core\Routing\Route as RouteAttribute;
 use Atro\Core\Routing\RouteCompiler;
 use Atro\Core\Utils\Metadata;
-use Atro\Services\Composer;
 use Atro\Core\Utils\Util;
+use Atro\Services\SoftwarePackage;
 
 class OpenApiGenerator
 {
@@ -508,7 +508,7 @@ class OpenApiGenerator
         return [
             'openapi'    => '3.0.0',
             'info'       => [
-                'version'     => Composer::getCoreVersion(),
+                'version'     => SoftwarePackage::getCoreVersion(),
                 'title'       => 'AtroCore REST API documentation',
                 'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).\n\nFor detailed information about authentication, request/response formats, pagination, filtering, and other important concepts, please refer to our [REST API Developer Guide](https://help.atrocore.com/latest/developer-guide/rest-api).",
                 'license'     => [

@@ -20,15 +20,15 @@ use Espo\ORM\Entity;
 
 class SoftwarePackage extends ReferenceData
 {
-    private const STORE_URL = 'https://packagist.atrocore.com/store.json';
+    private const string STORE_URL = 'https://packagist.atrocore.com/store.json';
 
     // the file name is bound to a time interval, so the existence of the file means the cache is still actual
-    private const CACHE_FILE_MASK = 'data/cache/store-cache-%s.json';
-    private const FAILURE_FILE_MASK = 'data/cache/store-failure-%s.json';
+    private const string CACHE_FILE_MASK = 'data/cache/store-cache-%s.json';
+    private const string FAILURE_FILE_MASK = 'data/cache/store-failure-%s.json';
 
-    private const CACHE_TTL = 3600;           // how long a cache file is considered actual
-    private const FAILURE_RETRY_DELAY = 300;  // do not hammer the unreachable remote on every request
-    private const REQUEST_TIMEOUT = 5;        // instead of the default_socket_timeout of 60 seconds
+    private const int CACHE_TTL = 3600;           // how long a cache file is considered actual
+    private const int FAILURE_RETRY_DELAY = 300;  // do not hammer the unreachable remote on every request
+    private const int REQUEST_TIMEOUT = 5;        // instead of the default_socket_timeout of 60 seconds
 
     private static ?array $composerData = null;
 
@@ -41,6 +41,13 @@ class SoftwarePackage extends ReferenceData
         }
 
         return self::$composerData;
+    }
+
+    public static function setComposerData(array $data): void
+    {
+        self::$composerData = $data;
+
+        file_put_contents('composer.json', json_encode(self::$composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 
     public function getRemotePackages(): array

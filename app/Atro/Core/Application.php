@@ -17,12 +17,12 @@ use Atro\Core\Container\AbstractFactory as ContainerAbstractFactory;
 use Atro\Core\Container\ServiceManagerConfig;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Services\Installer;
+use Atro\Services\SoftwarePackage;
 use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Auth;
 use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
-use Atro\Services\Composer;
 use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Atro\Core\Factories\HttpPipeline;
@@ -233,7 +233,7 @@ final class Application
         }
 
         if (self::isSystemUpdating()) {
-            $this->display('public/client/html/updating.html', ['year' => date('Y'), 'logFile' => 'data/composer.log', 'version' => Composer::getCoreVersion()]);
+            $this->display('public/client/html/updating.html', ['year' => date('Y'), 'logFile' => 'data/composer.log', 'version' => SoftwarePackage::getCoreVersion()]);
         }
 
         // for entryPoint
@@ -335,7 +335,7 @@ final class Application
             'message'         => $result['message'],
             'classReplaceMap' => json_encode($this->getMetadata()->get(['app', 'clientClassReplaceMap'], [])),
             'year'            => date('Y'),
-            'version'         => Composer::getCoreVersion()
+            'version'         => SoftwarePackage::getCoreVersion()
         ];
 
         $this->display('public/client/html/installation.html', $vars);

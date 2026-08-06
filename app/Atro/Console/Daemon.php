@@ -17,10 +17,10 @@ use Atro\Core\Application;
 use Atro\Core\JobManager;
 use Atro\Core\PseudoTransactionManager;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Services\SoftwarePackage;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\EntityManager;
-use Atro\Services\Composer;
 
 /**
  * Class Daemon
@@ -62,8 +62,8 @@ class Daemon extends AbstractConsole
             $log = Application::COMPOSER_LOG_FILE;
 
             // delete check-up file
-            if (file_exists(Composer::CHECK_UP_FILE)) {
-                unlink(Composer::CHECK_UP_FILE);
+            if (file_exists(SoftwarePackage::CHECK_UP_FILE)) {
+                unlink(SoftwarePackage::CHECK_UP_FILE);
             }
 
             if (file_exists($log)) {
