@@ -26,5 +26,8 @@
       "Rent": "Noleggiato",
       "Purchase": "Acquistato"
     }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Il sistema non può essere aggiornato perché ci sono lavori in esecuzione nel Job Manager. Riprova più tardi."
   }
 }

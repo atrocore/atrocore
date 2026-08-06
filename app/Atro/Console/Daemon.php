@@ -67,6 +67,19 @@ class Daemon extends AbstractConsole
             }
 
             if (file_exists($log)) {
+                $logFileContents = file_get_contents($log);
+                $fileData = explode(" || ", $logFileContents);
+
+                if (!isset($fileData[0]) || !isset($fileData[1])) {
+                    $GLOBALS['log']->error('Composer update log failed: wrong log file data' . $logFileContents);
+                    // remove log file
+                    unlink($log);
+                    continue;
+                }
+
+                $command = $fileData[0];
+                $userId = $fileData[1];
+
                 $conn = $this->getConnection();
 
                 $userData = null;
@@ -75,7 +88,7 @@ class Daemon extends AbstractConsole
                         ->select('id')
                         ->from($conn->quoteIdentifier('user'))
                         ->where('id=:id')
-                        ->setParameter('id', file_get_contents($log))
+                        ->setParameter('id', $userId)
                         ->fetchAssociative();
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error('Composer update log failed: ' . $e->getMessage());
@@ -93,7 +106,7 @@ class Daemon extends AbstractConsole
 
                 exec($this->getPhpBin() . " atrocore-installer.phar self-update 2>/dev/null", $output, $exitCode);
                 if (empty($exitCode)) {
-                    exec($this->getPhpBin() . " atrocore-installer.phar update >> $log 2>&1", $output, $exitCode);
+                    exec($this->getPhpBin() . " atrocore-installer.phar $command >> $log 2>&1", $output, $exitCode);
                 } else {
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }

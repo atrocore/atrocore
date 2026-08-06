@@ -26,5 +26,8 @@
       "Rent": "Wynajęty",
       "Purchase": "Zakupiony"
     }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Nie można zaktualizować systemu, ponieważ w Job Manager są uruchomione zadania. Spróbuj ponownie później."
   }
 }

@@ -26,5 +26,8 @@
       "Rent": "Zapůjčeno",
       "Purchase": "Zakoupeno"
     }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Systém nelze aktualizovat, protože ve Správci úloh jsou spuštěné úlohy. Zkuste to prosím později."
   }
 }

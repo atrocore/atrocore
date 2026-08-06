@@ -26,5 +26,8 @@
       "Rent": "Gemietet",
       "Purchase": "Gekauft"
     }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Das System kann nicht aktualisiert werden, weil im Auftrags-Manager Aufträge ausgeführt werden. Bitte versuchen Sie es später erneut."
   }
 }

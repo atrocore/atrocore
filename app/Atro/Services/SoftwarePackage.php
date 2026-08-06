@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Application;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ModuleManager\Manager;
 use Atro\Core\Templates\Services\ReferenceData;
+use Atro\Core\Utils\Language;
 use Espo\ORM\Entity;
 
 class SoftwarePackage extends ReferenceData
@@ -59,6 +61,12 @@ class SoftwarePackage extends ReferenceData
 
     public function updateSystem(): bool
     {
+        if ($this->jobManagerRunning()) {
+            throw new BadRequest($this->getLanguage()->translate('jobManagerRunning', 'exceptions', 'SoftwarePackage'));
+        }
+
+        file_put_contents(Application::COMPOSER_LOG_FILE, 'update || ' . $this->getUser()->get('id'));
+
         return true;
     }
 
@@ -121,6 +129,7 @@ class SoftwarePackage extends ReferenceData
         parent::init();
 
         $this->addDependency('moduleManager');
+        $this->addDependency('language');
     }
 
     protected function getModuleManager(): Manager
@@ -128,54 +137,47 @@ class SoftwarePackage extends ReferenceData
         return $this->getInjection('moduleManager');
     }
 
-//        public function checkUpdate(): array
-//        {
-//            /**
-//             * Is daemon enabled ?
-//             */
-//            file_put_contents(self::CHECK_UP_FILE, '1');
-//            sleep(2);
-//            if (file_exists(self::CHECK_UP_FILE)) {
-//                return [
-//                    'status'  => false,
-//                    'message' => $this->translate('daemonDisabled', 'labels', 'Composer')
-//                ];
-//            }
-//
-//            if ($this->jobManagerRunning()) {
-//                return [
-//                    'status'  => false,
-//                    'message' => $this->translate('jobManagerRunning', 'labels', 'Composer')
-//                ];
-//            }
-//
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('language');
+    }
+
+//    public function checkUpdate(): array
+//    {
+//        /**
+//         * Is daemon enabled ?
+//         */
+//        file_put_contents(self::CHECK_UP_FILE, '1');
+//        sleep(2);
+//        if (file_exists(self::CHECK_UP_FILE)) {
 //            return [
-//                'status'  => true,
-//                'message' => ''
+//                'status'  => false,
+//                'message' => $this->translate('daemonDisabled', 'labels', 'Composer')
 //            ];
 //        }
+//
+//        if ($this->jobManagerRunning()) {
+//            return [
+//                'status'  => false,
+//                'message' => $this->translate('jobManagerRunning', 'labels', 'Composer')
+//            ];
+//        }
+//
+//        return [
+//            'status'  => true,
+//            'message' => ''
+//        ];
+//    }
 
-    //    public function jobManagerRunning(): bool
-    //    {
-    //        $job = $this
-    //            ->getEntityManager()
-    //            ->getRepository('Job')
-    //            ->select(['id'])
-    //            ->where(['status' => 'Running', 'type!=' => 'ComposerAutoUpdate'])
-    //            ->findOne();
-    //
-    //        return !empty($job);
-    //    }
-    //
-    //    public function runUpdate(): bool
-    //    {
-    //        if ($this->jobManagerRunning()) {
-    //            throw new BadRequest($this->translate('jobManagerRunning', 'labels', 'Composer'));
-    //        }
-    //
-    //        file_put_contents(Application::COMPOSER_LOG_FILE, $this->getUser()->get('id'));
-    //
-    //        return true;
-    //    }
+    private function jobManagerRunning(): bool
+    {
+        $job = $this
+            ->getEntityManager()
+            ->getRepository('Job')
+            ->select(['id'])
+            ->where(['status' => 'Running', 'type!=' => 'ComposerAutoUpdate'])
+            ->findOne();
 
+        return !empty($job);
+    }
 }

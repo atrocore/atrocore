@@ -26,5 +26,8 @@
       "Rent": "Loué",
       "Purchase": "Acheté"
     }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Le système ne peut pas être mis à jour car des tâches sont en cours d'exécution dans le Gestionnaire des tâches. Veuillez réessayer plus tard."
   }
 }
