@@ -36,5 +36,16 @@ Espo.define('views/software-package/fields/target-version', 'views/fields/enum',
             return !/[*^~<>=|,\s]/.test(version);
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.model.get(this.name) === null && ['list', 'detail'].includes(this.mode)) {
+                const $span = this.$el.find('span');
+
+                $span.removeClass('text-gray');
+                $span.html('&mdash;');
+            }
+        },
+
     })
 );

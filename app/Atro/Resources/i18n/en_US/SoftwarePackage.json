@@ -17,6 +17,10 @@
   "massActionConfirmMessages": {
     "update": "After the update, all users will be logged out of the system. Are you sure you want to update the system?"
   },
+  "actionConfirms": {
+    "install": "Are you sure you want to install this module? The system will be unavailable while the installation is in progress.",
+    "uninstall": "Are you sure you want to uninstall this module? All data related to the module will be lost. This action cannot be undone."
+  },
   "options": {
     "usage": {
       "Public": "Free",

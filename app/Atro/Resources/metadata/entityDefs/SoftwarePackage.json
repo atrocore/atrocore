@@ -18,7 +18,8 @@
     },
     "currentVersion": {
       "type": "varchar",
-      "protected": true
+      "protected": true,
+      "view": "views/software-package/fields/current-version"
     },
     "latestVersion": {
       "type": "varchar",
@@ -26,6 +27,7 @@
     },
     "targetVersion": {
       "type": "varchar",
+      "required": true,
       "view": "views/software-package/fields/target-version"
     },
     "targetVersions": {
@@ -39,11 +41,17 @@
         "Rent",
         "Purchase"
       ],
+      "optionColors": [
+        "#5FE0A0",
+        "#FFBB3D",
+        "#6FB8FF"
+      ],
       "protected": true
     },
     "expirationDate": {
       "type": "date",
-      "protected": true
+      "protected": true,
+      "view": "views/software-package/fields/expiration-date"
     },
     "hasDocs": {
       "type": "bool",
