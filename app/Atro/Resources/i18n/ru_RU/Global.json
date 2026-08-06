@@ -533,6 +533,10 @@
     "openPrimaryEntity": "Открытая главная сущность",
     "currentSelection": "Текущий выбор",
     "System": "Система",
+    "install": "Установить",
+    "uninstall": "Удалить",
+    "showReleaseNotes": "Примечания к выпуску",
+    "readDocs": "Документация",
     "entityFilterResult": "Результат фильтрации"
   },
   "messages": {

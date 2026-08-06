@@ -459,6 +459,10 @@
     "openPrimaryEntity": "Entità master aperta",
     "currentSelection": "Selezione attuale",
     "System": "Sistema",
+    "install": "Installa",
+    "uninstall": "Disinstalla",
+    "showReleaseNotes": "Note di rilascio",
+    "readDocs": "Documentazione",
     "entityFilterResult": "Risultato del filtro"
   },
   "messages": {

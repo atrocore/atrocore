@@ -543,6 +543,10 @@
     "currentSelection": "Поточний вибір",
     "rejectItem": "Відхилити",
     "isLinked": "Пов'язано",
+    "install": "Встановити",
+    "uninstall": "Видалити",
+    "showReleaseNotes": "Примітки до випуску",
+    "readDocs": "Документація",
     "entityFilterResult": "Результат фільтрації"
   },
   "insightsPanels": {

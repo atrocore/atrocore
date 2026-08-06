@@ -532,6 +532,10 @@
     "currentSelection": "Selección actual",
     "rejectItem": "Rechace",
     "openContributorEntity": "Abrir entidad contributor",
+    "install": "Instalar",
+    "uninstall": "Desinstalar",
+    "showReleaseNotes": "Notas de la versión",
+    "readDocs": "Documentación",
     "entityFilterResult": "Resultado del filtrado",
     "System": "Sistema"
   },

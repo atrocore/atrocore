@@ -577,6 +577,10 @@
     "openContributorEntity": "Ouvrir l'entité contributor",
     "openPrimaryEntity": "Entité maître ouverte",
     "isLinked": "Est lié",
+    "install": "Installer",
+    "uninstall": "Désinstaller",
+    "showReleaseNotes": "Notes de version",
+    "readDocs": "Documentation",
     "entityFilterResult": "Résultat du filtre",
     "System": "Système"
   },

@@ -532,6 +532,10 @@
     "rejectItem": "Proszę odrzucić",
     "openContributorEntity": "Otwórz encję contributor",
     "openPrimaryEntity": "Otwarty podmiot główny",
+    "install": "Instaluj",
+    "uninstall": "Odinstaluj",
+    "showReleaseNotes": "Informacje o wydaniu",
+    "readDocs": "Dokumentacja",
     "entityFilterResult": "Wynik filtra",
     "System": "System"
   },

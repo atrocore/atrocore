@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "sortOrder": "Pořadí řazení",
+    "currentVersion": "Aktuální verze",
+    "latestVersion": "Nejnovější verze",
+    "targetVersion": "Cílová verze",
+    "targetVersions": "Cílové verze",
+    "usage": "Použití",
+    "expirationDate": "Datum vypršení",
+    "installed": "Nainstalováno"
+  },
+  "labels": {
+    "latest": "nejnovější",
+    "update": "Aktualizovat"
+  },
+  "massActionConfirmMessages": {
+    "update": "Po aktualizaci budou všichni uživatelé odhlášeni ze systému. Jste si jisti, že chcete systém aktualizovat?"
+  },
+  "actionConfirms": {
+    "install": "Jste si jisti, že chcete tento modul nainstalovat? Systém bude během instalace nedostupný.",
+    "uninstall": "Jste si jisti, že chcete tento modul odinstalovat? Všechna data související s modulem budou ztracena. Tuto akci nelze vrátit zpět."
+  },
+  "options": {
+    "usage": {
+      "Public": "Zdarma",
+      "Rent": "Zapůjčeno",
+      "Purchase": "Zakoupeno"
+    }
+  }
+}

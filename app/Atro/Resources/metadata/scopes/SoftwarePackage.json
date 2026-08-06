@@ -16,5 +16,6 @@
   "hasTeam": false,
   "bookmarkDisabled": true,
   "emHidden": true,
+  "actionDisabled": true,
   "openApiHidden": true
 }

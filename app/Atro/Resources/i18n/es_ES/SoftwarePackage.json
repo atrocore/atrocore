@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "sortOrder": "Orden de clasificación",
+    "currentVersion": "Versión actual",
+    "latestVersion": "Última versión",
+    "targetVersion": "Versión de destino",
+    "targetVersions": "Versiones de destino",
+    "usage": "Utilización",
+    "expirationDate": "Fecha de vencimiento",
+    "installed": "Instalado"
+  },
+  "labels": {
+    "latest": "última",
+    "update": "Actualizar"
+  },
+  "massActionConfirmMessages": {
+    "update": "Después de la actualización, todos los usuarios serán desconectados del sistema. ¿Está seguro de que desea actualizar el sistema?"
+  },
+  "actionConfirms": {
+    "install": "¿Está seguro de que desea instalar este módulo? El sistema no estará disponible mientras se realiza la instalación.",
+    "uninstall": "¿Está seguro de que desea desinstalar este módulo? Se perderán todos los datos relacionados con el módulo. Esta acción no se puede deshacer."
+  },
+  "options": {
+    "usage": {
+      "Public": "Gratis",
+      "Rent": "Alquilado",
+      "Purchase": "Comprado"
+    }
+  }
+}
