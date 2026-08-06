@@ -15,7 +15,7 @@
           "name": "update",
           "action": "universalAction",
           "style": "btn-primary",
-          "url": "SoftwarePackage/update",
+          "url": "SoftwarePackage/updateSystem",
           "method": "POST",
           "confirm": true
         }

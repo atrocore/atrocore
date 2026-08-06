@@ -33,6 +33,11 @@ class SoftwarePackage extends ReferenceData
         );
     }
 
+    public function updateSystem(): bool
+    {
+        return true;
+    }
+
     public function install(array $ids): bool
     {
         return true;
