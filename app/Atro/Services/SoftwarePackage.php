@@ -61,6 +61,10 @@ class SoftwarePackage extends ReferenceData
 
     public function updateSystem(): bool
     {
+        if (!$this->isDaemonAlive()){
+            throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
+        }
+
         if ($this->jobManagerRunning()) {
             throw new BadRequest($this->getLanguage()->translate('jobManagerRunning', 'exceptions', 'SoftwarePackage'));
         }
@@ -72,11 +76,30 @@ class SoftwarePackage extends ReferenceData
 
     public function install(array $ids): bool
     {
+        if (!$this->isDaemonAlive()){
+            throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
+        }
+
         return true;
     }
 
     public function uninstall(array $ids): bool
     {
+        if (!$this->isDaemonAlive()){
+            throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
+        }
+
+        return true;
+    }
+
+    public function isDaemonAlive(): bool
+    {
+        file_put_contents(self::CHECK_UP_FILE, '1');
+        sleep(2);
+        if (file_exists(self::CHECK_UP_FILE)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -141,33 +164,6 @@ class SoftwarePackage extends ReferenceData
     {
         return $this->getInjection('language');
     }
-
-//    public function checkUpdate(): array
-//    {
-//        /**
-//         * Is daemon enabled ?
-//         */
-//        file_put_contents(self::CHECK_UP_FILE, '1');
-//        sleep(2);
-//        if (file_exists(self::CHECK_UP_FILE)) {
-//            return [
-//                'status'  => false,
-//                'message' => $this->translate('daemonDisabled', 'labels', 'Composer')
-//            ];
-//        }
-//
-//        if ($this->jobManagerRunning()) {
-//            return [
-//                'status'  => false,
-//                'message' => $this->translate('jobManagerRunning', 'labels', 'Composer')
-//            ];
-//        }
-//
-//        return [
-//            'status'  => true,
-//            'message' => ''
-//        ];
-//    }
 
     private function jobManagerRunning(): bool
     {

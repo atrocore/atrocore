@@ -28,6 +28,7 @@
     }
   },
   "exceptions": {
-    "jobManagerRunning": "Nie można zaktualizować systemu, ponieważ w Job Manager są uruchomione zadania. Spróbuj ponownie później."
+    "jobManagerRunning": "Nie można zaktualizować systemu, ponieważ w Job Manager są uruchomione zadania. Spróbuj ponownie później.",
+    "daemonNotAlive": "Nie można wykonać tej akcji, ponieważ zaplanowane zadania nie są uruchamiane. Najprawdopodobniej crontab nie jest poprawnie skonfigurowany lub wystąpił problem na serwerze. Zapoznaj się z przewodnikiem instalacji, aby poprawnie skonfigurować serwer."
   }
 }

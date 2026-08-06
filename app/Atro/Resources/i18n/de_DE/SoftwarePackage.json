@@ -28,6 +28,7 @@
     }
   },
   "exceptions": {
-    "jobManagerRunning": "Das System kann nicht aktualisiert werden, weil im Auftrags-Manager Aufträge ausgeführt werden. Bitte versuchen Sie es später erneut."
+    "jobManagerRunning": "Das System kann nicht aktualisiert werden, weil im Auftrags-Manager Aufträge ausgeführt werden. Bitte versuchen Sie es später erneut.",
+    "daemonNotAlive": "Die Aktion kann nicht ausgeführt werden, weil geplante Aufgaben nicht gestartet werden. Höchstwahrscheinlich ist die Crontab nicht korrekt konfiguriert oder es liegt ein Problem auf dem Server vor. Bitte lesen Sie die Installationsanleitung, um den Server korrekt zu konfigurieren."
   }
 }

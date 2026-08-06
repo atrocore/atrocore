@@ -28,6 +28,7 @@
     }
   },
   "exceptions": {
-    "jobManagerRunning": "Le système ne peut pas être mis à jour car des tâches sont en cours d'exécution dans le Gestionnaire des tâches. Veuillez réessayer plus tard."
+    "jobManagerRunning": "Le système ne peut pas être mis à jour car des tâches sont en cours d'exécution dans le Gestionnaire des tâches. Veuillez réessayer plus tard.",
+    "daemonNotAlive": "L'action ne peut pas être effectuée car les tâches planifiées ne sont pas exécutées. Il est probable que la crontab ne soit pas configurée correctement ou qu'il y ait un problème sur le serveur. Veuillez consulter le guide d'installation pour configurer correctement le serveur."
   }
 }

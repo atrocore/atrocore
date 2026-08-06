@@ -28,6 +28,7 @@
     }
   },
   "exceptions": {
-    "jobManagerRunning": "Il sistema non può essere aggiornato perché ci sono lavori in esecuzione nel Job Manager. Riprova più tardi."
+    "jobManagerRunning": "Il sistema non può essere aggiornato perché ci sono lavori in esecuzione nel Job Manager. Riprova più tardi.",
+    "daemonNotAlive": "L'azione non può essere eseguita perché le attività pianificate non sono in esecuzione. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione per configurare correttamente il server."
   }
 }
