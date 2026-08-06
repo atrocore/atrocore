@@ -269,6 +269,8 @@
     "RememberUsername": "Запам'ятати ім'я користувача",
     "Password": "Пароль",
     "Login": "Увійти",
+    "ContinueWithSso": "Продовжити через SSO",
+    "OrContinueWithUsername": "Або продовжити через ім'я користувача",
     "Log Out": "Вийти",
     "State": "Стан",
     "Street": "Вулиця",

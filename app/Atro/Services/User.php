@@ -71,16 +71,31 @@ class User extends Record
 
     public function findEntities($params)
     {
+        $this->modifyParamsForNonSystemUsers($params);
+
+        return parent::findEntities($params);
+    }
+
+    public function getParamsForTree(string $link, string $scope, array $params): array
+    {
+        $result = parent::getParamsForTree($link, $scope, $params);
+
+        $this->modifyParamsForNonSystemUsers($result);
+
+        return $result;
+    }
+
+    protected function modifyParamsForNonSystemUsers(array &$params): void
+    {
         if (empty($params['where'])) {
             $params['where'] = [];
         }
+
         $params['where'][] = [
             'type'  => 'notEquals',
             'field' => 'type',
             'value' => 'System'
         ];
-
-        return parent::findEntities($params);
     }
 
     private function isValidPassword(string $password): bool

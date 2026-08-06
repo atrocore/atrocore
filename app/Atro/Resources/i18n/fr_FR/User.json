@@ -83,6 +83,7 @@
     "emailAddressCantBeEmpty": "L'adresse électronique ne peut pas être vide",
     "setupSmtpBefore": "Vous devez configurer <a href=\"{url}\">SMTP settings</a> pour que le système puisse envoyer le mot de passe par courrier électronique.",
     "userCantBeEmpty": "Le nom d'utilisateur ne peut pas être laissé vide.",
+    "usernameOrPasswordCantBeEmpty": "Le nom d'utilisateur ou le mot de passe ne peut pas être vide.",
     "wrongUsernamePasword": "Nom d'utilisateur/mot de passe erroné",
     "userNameEmailAddressNotFound": "Nom d'utilisateur/Adresse électronique introuvable",
     "forbidden": "Interdit, veuillez réessayer plus tard",

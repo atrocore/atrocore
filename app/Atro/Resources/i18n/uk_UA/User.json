@@ -76,6 +76,7 @@
     "passwordExpiredForm": "Строк дії вашого пароля завершився. Будь ласка, оновіть його у формі нижче.",
     "passwordChanged": "Пароль був змінений",
     "userCantBeEmpty": "Ім'я користувача не може бути порожнім.",
+    "usernameOrPasswordCantBeEmpty": "Ім'я користувача або пароль не можуть бути порожніми.",
     "wrongUsernamePasword": "Неправильне ім'я користувача/пароль",
     "emailAddressCantBeEmpty": "Адреса електронної пошти не може бути порожньою",
     "userNameEmailAddressNotFound": "Ім'я користувача/Адреса електронної пошти не знайдено",
