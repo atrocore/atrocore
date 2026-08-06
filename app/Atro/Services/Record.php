@@ -31,6 +31,57 @@ use Espo\Services\RecordService;
 
 class Record extends RecordService
 {
+    public function getEntity(?string $id = null, ?string $withRelationships = null): ?IEntity
+    {
+        $entity = parent::getEntity($id, $withRelationships);
+
+        if ($entity === null && !empty($id)) {
+            $resolvedId = $this->resolveIdByCode($id);
+            if ($resolvedId !== null) {
+                $entity = parent::getEntity($resolvedId, $withRelationships);
+            }
+        }
+
+        return $entity;
+    }
+
+    public function findLinkedEntities($id, $link, $params)
+    {
+        if (!empty($id) && empty($this->getRepository()->get($id))) {
+            $resolvedId = $this->resolveIdByCode($id);
+            if ($resolvedId !== null) {
+                $id = $resolvedId;
+            }
+        }
+
+        return parent::findLinkedEntities($id, $link, $params);
+    }
+
+    protected function resolveIdByCode(string $id): ?string
+    {
+        $codeField = $this->getCodeField();
+        if ($codeField === null) {
+            return null;
+        }
+
+        $record = $this->getEntityManager()->getRepository($this->getEntityType())
+            ->where([$codeField => $id])
+            ->findOne();
+
+        return !empty($record) ? $record->get('id') : null;
+    }
+
+    protected function getCodeField(): ?string
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $field => $defs) {
+            if (!empty($defs['isCode'])) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);

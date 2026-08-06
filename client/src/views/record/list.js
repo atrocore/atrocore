@@ -115,7 +115,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
 
-                this.getRouter().navigate('#' + scope + '/view/' + id);
+                this.getRouter().navigate('#' + scope + '/view/' + this.getUrlId(id, model, scope));
                 this.getRouter().dispatch(scope, 'view', options);
             },
             'click [data-action="showMore"]': function () {
@@ -508,6 +508,28 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         getModelScope: function (id) {
             return this.scope;
+        },
+
+        /**
+         * Returns the value to use in a record URL: the entity's code field value if one is
+         * configured and set on the model, otherwise falls back to the given id.
+         */
+        getUrlId: function (id, model, scope) {
+            if (!model) {
+                return id;
+            }
+
+            scope = scope || model.name || this.scope;
+
+            var fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+            for (var field in fields) {
+                if (fields[field].isCode) {
+                    var value = model.get(field);
+                    return (value !== null && value !== undefined && value !== '') ? value : id;
+                }
+            }
+
+            return id;
         },
 
         selectAllResult: function () {
@@ -3000,7 +3022,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'views/modals/detail';
 
             if (this.options.openInTab) {
-                window.open(`/#${scope}/view/${id}`, "_blank");
+                window.open(`/#${scope}/view/${this.getUrlId(id, model, scope)}`, "_blank");
                 return
             }
 
@@ -3073,7 +3095,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     openModal();
                 }
             } else {
-                this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: true });
+                this.getRouter().navigate('#' + scope + '/view/' + this.getUrlId(id, model, scope), { trigger: true });
             }
         },
 

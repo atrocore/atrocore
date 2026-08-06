@@ -207,7 +207,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         updateUrl(mode = null, trigger = false, replace = false) {
             mode = mode ?? this.selectionViewMode;
-            const link = '#' + this.scope + '/view/' + this.model.id + '/selectionViewMode=' + mode;
+            const link = '#' + this.scope + '/view/' + this.getUrlId(this.model.id) + '/selectionViewMode=' + mode;
             this.getRouter().navigate(link, { trigger: trigger, replace: replace });
         },
 
