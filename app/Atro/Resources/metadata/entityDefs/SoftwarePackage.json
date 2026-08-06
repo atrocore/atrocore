@@ -53,10 +53,6 @@
       "protected": true,
       "view": "views/software-package/fields/expiration-date"
     },
-    "hasDocs": {
-      "type": "bool",
-      "protected": true
-    },
     "installed": {
       "type": "bool",
       "protected": true

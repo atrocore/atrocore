@@ -82,13 +82,17 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                     this.notify("Invalid response from server", "error")
                     return;
                 }
-                
+
                 this.createView('dialog', 'views/software-package/modals/release-notes', {
                     scope: this.options.scope,
                     el: '[data-view="dialog"]',
                     notes: response.html,
                 }, view => view.render());
             })
+        },
+
+        actionReadDocs(data) {
+            window.open('/docs/#/' + data.id + '/', '_blank');
         },
 
     })

@@ -15,6 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\ModuleManager\Manager;
 use Atro\Core\Templates\Services\ReferenceData;
 use Espo\ORM\Entity;
 
@@ -48,6 +49,8 @@ class SoftwarePackage extends ReferenceData
         $entity->setMetaPermission('delete', false);
 
         $entity->setMetaPermission('showReleaseNotes', true);
+        $entity->setMetaPermission('readDocs', $entity->get('installed') && ($entity->get('id') === 'Atro' || $this->getModuleManager()->getModule($entity->get('id'))->hasDocs()));
+
         $entity->setMetaPermission('install', !$entity->get('installed'));
         $entity->setMetaPermission(
             'uninstall', $entity->get('installed') && $entity->get('id') !== 'Atro' && !empty($entity->get('currentVersion')) && !empty($entity->get('targetVersion'))
@@ -111,6 +114,18 @@ class SoftwarePackage extends ReferenceData
         }
 
         return $result;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('moduleManager');
+    }
+
+    protected function getModuleManager(): Manager
+    {
+        return $this->getInjection('moduleManager');
     }
 
 //        public function checkUpdate(): array

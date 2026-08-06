@@ -258,7 +258,6 @@ class SoftwarePackage extends ReferenceData
             'latestVersion'  => $remotePackages[$code]['versions'][0]['version'] ?? null,
             'expirationDate' => $remotePackages[$code]['expirationDate'] ?? null,
             'usage'          => $remotePackages[$code]['usage'] ?? null,
-            'hasDocs'        => $moduleId === 'Atro' || $this->getModuleManager()->getModule($moduleId)->hasDocs(),
             'installed'      => true
         ];
     }
@@ -277,7 +276,6 @@ class SoftwarePackage extends ReferenceData
             'latestVersion'  => $package['versions'][0]['version'] ?? null,
             'expirationDate' => $package['expirationDate'],
             'usage'          => $package['usage'] ?? null,
-            'hasDocs'        => false,
             'installed'      => false
         ];
     }

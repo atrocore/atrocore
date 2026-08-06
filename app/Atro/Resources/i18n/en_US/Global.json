@@ -173,6 +173,7 @@
     "install": "Install",
     "uninstall": "Uninstall",
     "showReleaseNotes": "Release Notes",
+    "readDocs": "Docs",
     "entityFilterResult": "Filter Result",
     "availablePrefixes": "Available Prefixes",
     "System": "System",

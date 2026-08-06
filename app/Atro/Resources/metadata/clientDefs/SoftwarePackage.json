@@ -40,6 +40,13 @@
       "action": "showReleaseNotes",
       "iconClass": "ph ph-file-text",
       "acl": "showReleaseNotes",
+      "sortOrder": 140
+    },
+    "readDocs": {
+      "name": "readDocs",
+      "action": "readDocs",
+      "iconClass": "ph ph-book-open",
+      "acl": "readDocs",
       "sortOrder": 145
     },
     "install": {
