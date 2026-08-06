@@ -233,7 +233,7 @@ class SoftwarePackage extends ReferenceData
         $code = $package['name'];
 
         if ($onlyUninstallable) {
-            if ($moduleId === 'Atro' || empty($package['version'])) {
+            if ($moduleId === 'Atro' || empty($package['version']) || empty($composerData['require'][$code])) {
                 return;
             }
         }
