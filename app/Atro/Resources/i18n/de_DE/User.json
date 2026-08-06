@@ -79,6 +79,7 @@
     "passwordExpiredForm": "Ihr Passwort ist abgelaufen. Bitte aktualisieren Sie es mit dem untenstehenden Formular.",
     "passwordChanged": "Das Passwort wurde geändert",
     "userCantBeEmpty": "Der Benutzername darf nicht leer gelassen werden.",
+    "usernameOrPasswordCantBeEmpty": "Benutzername oder Passwort dürfen nicht leer sein.",
     "wrongUsernamePasword": "Falscher Benutzername/Passwort",
     "emailAddressCantBeEmpty": "E-Mail Adresse darf nicht leer sein",
     "userNameEmailAddressNotFound": "Benutzername oder E-Mail Adresse nicht gefunden",

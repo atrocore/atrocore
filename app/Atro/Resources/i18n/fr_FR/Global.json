@@ -288,6 +288,8 @@
     "Username": "Nom d'utilisateur",
     "Password": "Mot de passe",
     "Login": "Connexion",
+    "ContinueWithSso": "Continuer avec SSO",
+    "OrContinueWithUsername": "Ou continuer avec le nom d'utilisateur",
     "Log Out": "Déconnexion",
     "State": "État",
     "Street": "Rue",
