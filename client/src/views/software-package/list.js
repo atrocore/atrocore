@@ -34,8 +34,10 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                 dialog.once('select', models => {
                     const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
 
-                    // "url": "SoftwarePackage/install",
-                    console.log('SoftwarePackage install, selected ids:', ids);
+                    this.notify(this.translate('Loading...'));
+                    this.ajaxPostRequest('SoftwarePackage/install', { ids }).then(() => {
+                        this.notify(this.translate('Done'), 'success');
+                    });
                 });
             });
         },
@@ -63,8 +65,10 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                 dialog.once('select', models => {
                     const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
 
-                    // "url": "SoftwarePackage/uninstall",
-                    console.log('SoftwarePackage uninstall, selected ids:', ids);
+                    this.notify(this.translate('Loading...'));
+                    this.ajaxRequest('SoftwarePackage/uninstall', 'DELETE', JSON.stringify({ ids })).then(() => {
+                        this.notify(this.translate('Done'), 'success');
+                    });
                 });
             });
         },
