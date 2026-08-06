@@ -36,7 +36,7 @@ class Layout extends AbstractListener
                     $event->setArgument('result', $result);
                 }
                 // add admin navigation
-                if ($this->isAdminView($scope) && $this->getUser()->isAdmin()) {
+                if ($this->isAdminView($scope) && $this->getUser()->hasAdminAccess()) {
                     $result[] = ['name' => '_admin'];
                     $event->setArgument('result', $result);
                 }
