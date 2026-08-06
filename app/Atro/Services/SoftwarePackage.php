@@ -28,6 +28,18 @@ class SoftwarePackage extends ReferenceData
         $entity->setMetaPermission('delete', false);
 
         $entity->setMetaPermission('install', !$entity->get('installed'));
-        $entity->setMetaPermission('uninstall', $entity->get('installed') && $entity->get('id') !== 'Atro' && !empty($entity->get('currentVersion')) && !empty($entity->get('targetVersion')));
+        $entity->setMetaPermission(
+            'uninstall', $entity->get('installed') && $entity->get('id') !== 'Atro' && !empty($entity->get('currentVersion')) && !empty($entity->get('targetVersion'))
+        );
+    }
+
+    public function install(array $ids): bool
+    {
+        return true;
+    }
+
+    public function uninstall(array $ids): bool
+    {
+        return true;
     }
 }

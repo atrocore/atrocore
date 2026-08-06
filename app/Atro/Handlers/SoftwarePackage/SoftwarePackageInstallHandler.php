@@ -67,12 +67,6 @@ class SoftwarePackageInstallHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $id = (string)$request->getAttribute('id');
-
-        echo '<pre>';
-        print_r($id);
-        die();
-
-        return new BoolResponse(true);
+        return new BoolResponse($this->getRecordService('SoftwarePackage')->install([(string)$request->getAttribute('id')]));
     }
 }

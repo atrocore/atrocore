@@ -81,10 +81,6 @@ class SoftwarePackageMassInstallHandler extends AbstractHandler
 
         $data = $this->getRequestBody($request);
 
-        echo '<pre>';
-        print_r($data->ids);
-        die();
-
-        return new BoolResponse(true);
+        return new BoolResponse($this->getRecordService('SoftwarePackage')->install($data->ids));
     }
 }
