@@ -3602,6 +3602,11 @@ a[role=button].disabled, a.btn.disabled, fieldset[disabled] a.btn {
     pointer-events: none
 }
 
+button > i,
+a[role=button] > i {
+    display: inline-block;
+}
+
 button > i:first-child:not(:last-child),
 a[role=button] > i:first-child:not(:last-child) {
     margin-inline-end: 5px;
