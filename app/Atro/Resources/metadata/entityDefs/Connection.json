@@ -237,7 +237,23 @@
                 "cookie",
                 "pdoSql",
                 "vertica",
-                "tokenAuthApi"
+                "tokenAuthApi",
+                "oauth2"
+              ]
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "notEquals",
+                  "attribute": "type",
+                  "value": "oauth2"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "oauthGrantType",
+                  "value": "password"
+                }
               ]
             }
           ]
@@ -265,7 +281,23 @@
                 "cookie",
                 "pdoSql",
                 "vertica",
-                "tokenAuthApi"
+                "tokenAuthApi",
+                "oauth2"
+              ]
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "notEquals",
+                  "attribute": "type",
+                  "value": "oauth2"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "oauthGrantType",
+                  "value": "password"
+                }
               ]
             }
           ]
@@ -296,7 +328,8 @@
       "dataField": true,
       "required": false,
       "options": [
-        "client_credentials"
+        "client_credentials",
+        "password"
       ],
       "default": "client_credentials",
       "conditionalProperties": {
@@ -368,7 +401,8 @@
               "type": "in",
               "attribute": "oauthGrantType",
               "value": [
-                "client_credentials"
+                "client_credentials",
+                "password"
               ]
             }
           ]
@@ -396,7 +430,8 @@
               "type": "in",
               "attribute": "oauthGrantType",
               "value": [
-                "client_credentials"
+                "client_credentials",
+                "password"
               ]
             }
           ]

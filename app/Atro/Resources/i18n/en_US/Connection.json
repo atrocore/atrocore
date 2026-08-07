@@ -61,6 +61,7 @@
     "otto": "Otto oauth",
     "cookie": "Cookie Session",
     "client_credentials": "Client Credentials",
+    "password": "Password",
     "orders": "Orders",
     "shipments": "Shipments",
     "quantities": "Quantities",
