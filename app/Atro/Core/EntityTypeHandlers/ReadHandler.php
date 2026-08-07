@@ -28,14 +28,14 @@ use Atro\Handlers\AbstractHandler;
         'GET',
     ],
     summary: 'Returns a record',
-    description: 'Returns a single record by ID.',
+    description: 'Returns a single record by ID. If the entity has a field marked as code, its value can be passed instead of the ID.',
     tag: '{entityName}',
     parameters: [
         [
             'name'        => 'entityName',
             'in'          => 'path',
             'required'    => true,
-            'description' => 'Entity type name (e.g. "Product")',
+            'description' => 'Entity name (e.g. "Product")',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -44,7 +44,7 @@ use Atro\Handlers\AbstractHandler;
             'name'        => 'id',
             'in'          => 'path',
             'required'    => true,
-            'description' => 'Record ID',
+            'description' => 'Record ID, or the value of the entity\'s code field if one is configured',
             'schema'      => [
                 'type' => 'string',
             ],

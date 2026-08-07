@@ -52,6 +52,11 @@
       "type": "bool"
     },
     {
+      "name": "isCode",
+      "type": "bool",
+      "tooltip": true
+    },
+    {
       "name": "index",
       "type": "bool"
     },

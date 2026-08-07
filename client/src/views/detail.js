@@ -209,12 +209,35 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 mode = 'edit';
             }
 
-            this.getRouter().navigate('#' + scope + '/' + mode + '/' + id, {trigger: false});
+            this.getRouter().navigate('#' + scope + '/' + mode + '/' + this.getUrlId(id, model, scope), {trigger: false});
             this.getRouter().dispatch(scope, mode, {
                 id: id,
                 model: model,
                 indexOfRecord: indexOfRecord
             });
+        },
+
+        /**
+         * Returns the value to use in a record URL: the entity's code field value if one is
+         * configured and set on the model, otherwise falls back to the given id.
+         */
+        getUrlId: function (id, model, scope) {
+            model = model || this.model;
+            if (!model) {
+                return id;
+            }
+
+            scope = scope || model.name || this.scope;
+
+            var fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+            for (var field in fields) {
+                if (fields[field].isCode) {
+                    var value = model.get(field);
+                    return (value !== null && value !== undefined && value !== '') ? value : id;
+                }
+            }
+
+            return id;
         },
 
         actionPrevious: function () {
@@ -266,7 +289,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 this.getView('record').onTreePanelRendered();
             }
 
-            this.setupRightSideView();
+            this.onModelReady(()=> {
+                this.setupRightSideView();
+            })
 
             let isScrolled = false;
 

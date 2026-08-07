@@ -4,7 +4,8 @@
       "type": "text"
     },
     "number": {
-      "type": "autoincrement"
+      "type": "autoincrement",
+      "isCode": true
     },
     "masterEntity": {
       "type": "varchar",
