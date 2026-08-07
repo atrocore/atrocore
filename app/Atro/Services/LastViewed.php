@@ -38,6 +38,10 @@ class LastViewed extends AbstractService
             'targetTypeList' => [$scope]
         ];
 
+        if ($this->canJoinScope($scope)) {
+            $params['joinScope'] = $scope;
+        }
+
         $data = $this->get($params);
 
         $result = [];
@@ -54,6 +58,7 @@ class LastViewed extends AbstractService
             ];
             $i++;
         }
+
         return [
             'total' => $data['total'],
             'list'  => $result
@@ -204,6 +209,11 @@ class LastViewed extends AbstractService
         }
 
 
+        $callbacks = [];
+        if (!empty($params['joinScope'])) {
+            $callbacks[] = $this->buildTargetExistsJoinCallback($params['joinScope']);
+        }
+
         $collection = $this->getEntityManager()->getRepository('ActionHistoryRecord')->where(array(
             'userId'         => $this->getUser()->id,
             'action'         => 'GET',
@@ -214,7 +224,7 @@ class LastViewed extends AbstractService
             ->limit($offset, $maxSize)
             ->select(['targetId', 'controllerName', 'max:createdAt'])
             ->groupBy(['targetId', 'controllerName'])
-            ->find();
+            ->find(['callbacks' => $callbacks]);
 
         $count = $this->getEntityManager()->getRepository('ActionHistoryRecord')->where(array(
             'userId'         => $this->getUser()->id,
@@ -225,7 +235,7 @@ class LastViewed extends AbstractService
             'targetId', 'controllerName'
         ])->groupBy([
             'targetId', 'controllerName'
-        ])->find()->count();
+        ])->find(['callbacks' => $callbacks])->count();
 
         $language = Language::detectLanguage($this->getConfig(), $this->getUser());
         $languageCode = Util::toCamelCase(strtolower($language), '_', true);
@@ -257,14 +267,41 @@ class LastViewed extends AbstractService
                     }
                 }
             }
-
-            $entity->id = $offset + $i;
         }
 
         return array(
             'total'      => $count,
             'collection' => $collection
         );
+    }
+
+    private function canJoinScope(string $scope): bool
+    {
+        if (!$this->getEntityManager()->hasRepository($scope)) {
+            return false;
+        }
+
+        $repository = $this->getEntityManager()->getRepository($scope);
+        if ($repository instanceof ReferenceData || $repository instanceof UserProfile) {
+            return false;
+        }
+
+        return !empty($this->getMetadata()->get(['scopes', $scope, 'entity']));
+    }
+
+    private function buildTargetExistsJoinCallback(string $scope): \Closure
+    {
+        $table = Util::toUnderScore($scope);
+
+        return function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($table) {
+            $alias = $mapper->getQueryConverter()->getMainTableAlias();
+            $qb->innerJoin(
+                $alias,
+                $qb->getConnection()->quoteIdentifier($table),
+                'existing_target',
+                "existing_target.id = $alias.target_id AND existing_target.deleted = :false"
+            )->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN);
+        };
     }
 
     protected function getMetadata(): Metadata
