@@ -131,7 +131,7 @@ class Daemon extends AbstractConsole
                         ->setValue('modified_at', ':date')
                         ->setParameter('id', IdGenerator::uuid())
                         ->setParameter('type', 'composerUpdate')
-                        ->setParameter('parentType', 'ModuleManager')
+                        ->setParameter('parentType', 'SoftwarePackage')
                         ->setParameter('data', json_encode([
                             'status' => ($exitCode == 0) ? 0 : 1,
                             'output' => $contents
