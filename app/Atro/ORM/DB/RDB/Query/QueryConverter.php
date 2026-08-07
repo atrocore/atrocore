@@ -500,7 +500,9 @@ class QueryConverter
                     $last = array_pop($arr);
                     if (str_ends_with($last, '_id') && !empty($fieldDefs['relation'])) {
                         $idPath = $this->getRelationAlias($entity, $fieldDefs['relation']) . '.' . $this->toDb('id');
-                        $arr[]  = "{$idPath} AS {$this->fieldToAlias("{$fieldDefs['originalName']}Id")}";
+                        $arr[] = "{$idPath} AS {$this->fieldToAlias("{$fieldDefs['originalName']}Id")}";
+                    } else {
+                        $arr[] = $last;
                     }
                 }
             }
