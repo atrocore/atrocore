@@ -829,7 +829,6 @@
     "createAssociationRecordThis": "{user} a associé {mainRecord} à {relatedRecord}",
     "deleteAssociationRecordThis": "{user} a supprimé l'association de {mainRecord} avec {relatedRecord}",
     "deleteRecordAssociationThis": "{utilisateur} a supprimé l'association à {relatedRecord} en tant que {association}",
-    "composerUpdateThis": "{user}",
     "post": "{user} a publié sur {entityType} {entity}",
     "attach": "{user} attaché à {entityType} {entity}",
     "update": "{user} a mis à jour {entityType} {entity}",
@@ -904,11 +903,9 @@
     "all": "Tous"
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} a publié à {target} et à lui-même"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} a posté à {target} et à elle-même"
   },
   "monthNames": {

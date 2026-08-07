@@ -812,7 +812,6 @@
   },
   "streamMessages": {
     "composerUpdate": "{user} zmienił zainstalowane pakiety oprogramowania",
-    "composerUpdateThis": "{user}",
     "post": "{user} posted on {entityType} {entity}",
     "postInList": "{user} posted on {entityType}",
     "attach": "{user} attached on {entityType} {entity}",
@@ -888,11 +887,9 @@
     "to": "do"
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{użytkownik}",
     "postTargetSelfAndOthers": "{użytkownik} opublikował na {cel} i sobie"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{użytkownik}",
     "postTargetSelfAndOthers": "{użytkownik} opublikowała na {cel} i sobie"
   },
   "monthNames": {

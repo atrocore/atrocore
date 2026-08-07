@@ -1131,7 +1131,6 @@
     "deleteRecordAssociationThis": "{user} ha rimosso l'associazione a {relatedRecord} come {associazione}.",
     "createAssociationRecordThis": "{utente} ha associato {principaleRecord} a {relativoRecord}.",
     "deleteAssociationRecordThis": "{user} ha rimosso l'associazione di {mainRecord} con {relatedRecord}.",
-    "composerUpdateThis": "{utente}",
     "post": "{utente} ha pubblicato su {entityType} {entità}",
     "postInList": "{utente} ha pubblicato su {entityType}",
     "attach": "{utente} collegato su {entitàTipo} {entità}",
@@ -1203,11 +1202,9 @@
     "become": "diventare"
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{utente}",
     "postTargetSelfAndOthers": "{user} ha inviato a {target} e a se stesso"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{utente}",
     "postTargetSelfAndOthers": "{user} ha inviato a {target} e a se stessa"
   },
   "monthNames": {

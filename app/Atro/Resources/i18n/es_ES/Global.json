@@ -853,7 +853,6 @@
     "emailSentThis": "{user} correo electrónico enviado exitosamente con el asunto '{subject}' para '{emailTo}' en '{createdAt}'",
     "postTargetSelf": "{user} se ha enviado un mensaje a sí mismo",
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí mismo",
-    "composerUpdateThis": "{user}",
     "updateFromToThis": "{usuario} en este {entidadTipo} actualizado",
     "createRecordAssociationThis": "{user} associated {relatedRecord} as {association}",
     "deleteRecordAssociationThis": "{user} eliminó la asociación a {relatedRecord} como {association}",
@@ -888,11 +887,9 @@
     "assignSelf": "{user} autoasignado {entityType} {entity}."
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí mismo"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí misma"
   },
   "monthNames": {

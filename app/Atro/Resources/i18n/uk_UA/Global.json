@@ -873,7 +873,6 @@
     "emailSentThis": "{user} успішно надіслав листа з темою '{subject}' на адресу '{emailTo}' в '{createdAt}'",
     "postTargetSelf": "{user} залишив повідомлення у себе на стрічці",
     "postTargetSelfAndOthers": "{user} залишив повідомлення для {target} і для себе",
-    "composerUpdateThis": "{user}",
     "unrelate": "{user} відв'язав {relatedEntityType} {relatedEntity} від {entityType} {entity}",
     "unrelateThis": "{user} від'єднав {relatedEntityType} {relatedEntity} від цього {entityType}.",
     "updateOneThis": "{user} оновив {entityType} {entity}",
@@ -907,11 +906,9 @@
     "assignSelf": "{user} призначив {entityType} {entity} собі самому."
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} залишив повідомлення для {target} і для себе"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} залишила повідомлення для {target} і для себе"
   },
   "monthNames": {

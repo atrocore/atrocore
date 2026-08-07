@@ -840,7 +840,6 @@
     "createAssociationRecordThis": "{user} associated {mainRecord} with {relatedRecord}",
     "deleteAssociationRecordThis": "{user} removed association of {mainRecord} with {relatedRecord}",
     "composerUpdate": "{user} changed the installed software packages",
-    "composerUpdateThis": "{user}",
     "post": "{user} posted on {entityType} {entity}",
     "postInList": "{user} posted on {entityType}",
     "attach": "{user} attached on {entityType} {entity}",
@@ -912,11 +911,9 @@
     "become": "become"
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} posted to {target} and himself"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} posted to {target} and herself"
   },
   "monthNames": {

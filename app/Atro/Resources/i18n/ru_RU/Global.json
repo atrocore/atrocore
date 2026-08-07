@@ -852,7 +852,6 @@
     "emailSentThis": "{user} успешно отправил письмо с темой '{subject}' на '{emailTo}' на '{createdAt}'.",
     "postTargetSelf": "{user} оставил сообщение у себя на ленте",
     "postTargetSelfAndOthers": "{user} оставил сообщение для {target} и для себя",
-    "composerUpdateThis": "{user}",
     "unrelate": "{user} отвязал {relatedEntityType} {relatedEntity} от {entityType} {entity}",
     "unrelateThis": "{user} отсоединил {relatedEntityType} {relatedEntity} из этого {entityType}.",
     "updateOneThis": "{user} обновил {entityType} {entity}",
@@ -887,11 +886,9 @@
     "changed": "был изменен"
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} оставил сообщение для {target} и для себя"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} оставила сообщение для {target} и для себя"
   },
   "monthNames": {

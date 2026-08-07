@@ -879,7 +879,6 @@
     "deleteRecordAssociationThis": "{user} hat die Assoziation zu {relatedRecord} als {association} entfernt",
     "createAssociationRecordThis": "{user} hat {mainRecord} mit {relatedRecord} assoziiert",
     "deleteAssociationRecordThis": "{user} hat die Assoziation von {mainRecord} mit {relatedRecord} entfernt",
-    "composerUpdateThis": "{user}",
     "post": "{user} notierte zu {entityType} {entity}",
     "postInList": "{user} notierte zu {entityType}",
     "attach": "{user} fügte zu {entityType} {entity} hinzu",
@@ -1200,11 +1199,9 @@
     }
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
   },
   "durationUnits": {
