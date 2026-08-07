@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Atro\Services\Composer;
+use Atro\Services\SoftwarePackage;
 
 class DocsManager
 {
@@ -128,7 +128,7 @@ class DocsManager
         }
 
         $map     = $this->getModuleMap();
-        $version = Composer::getCoreVersion();
+        $version = SoftwarePackage::getCoreVersion();
         $lines   = ['- [**Help Center**](https://help.atrocore.com/v' . $version . ')', '---'];
 
         foreach ($this->buildModuleItems() as [$label, $id]) {

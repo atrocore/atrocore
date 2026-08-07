@@ -15,6 +15,13 @@
         "description": "rebuildDb",
         "icon": "ph ph-wrench",
         "listDisabled": true
+      },
+      {
+        "url": "#SoftwarePackage",
+        "label": "UpdatesAndModules",
+        "description": "updatesAndModules",
+        "icon": "ph ph-puzzle-piece",
+        "docsUrl": "https://help.atrocore.com/installation-and-maintenance/modules-and-updates"
       }
     ]
   },
@@ -105,13 +112,6 @@
         "description": "notificationProfiles",
         "icon": "ph ph-bell-simple-ringing",
         "docsUrl": "https://help.atrocore.com/atrocore/administration/notifications"
-      },
-      {
-        "url": "#Composer/list",
-        "label": "Composer",
-        "description": "composer",
-        "icon": "ph ph-puzzle-piece",
-        "docsUrl": "https://help.atrocore.com/installation-and-maintenance/modules-and-updates"
       },
       {
         "url": "#Language",

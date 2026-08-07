@@ -17,7 +17,7 @@ namespace Atro\Jobs;
 use Atro\Core\Monolog\Handler\ReportingHandler;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Job;
-use Atro\Services\Composer;
+use Atro\Services\SoftwarePackage;
 
 class SendReports extends AbstractJob implements JobInterface
 {
@@ -76,7 +76,7 @@ class SendReports extends AbstractJob implements JobInterface
                                         'phpVersion'     => phpversion(),
                                         'databaseDriver' => $this->getConfig()->get('database.driver'),
                                         'modules'        => [
-                                            'Core' => Composer::getCoreVersion()
+                                            'Core' => SoftwarePackage::getCoreVersion()
                                         ],
                                         'composerConfig' => file_exists('composer.json') ? json_decode(file_get_contents('composer.json'), true) : null
                                     ],

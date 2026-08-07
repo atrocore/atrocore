@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "sortOrder": "Pořadí řazení",
+    "currentVersion": "Aktuální verze",
+    "latestVersion": "Nejnovější verze",
+    "targetVersion": "Cílová verze",
+    "targetVersions": "Cílové verze",
+    "usage": "Použití",
+    "expirationDate": "Datum vypršení",
+    "installed": "Nainstalováno"
+  },
+  "labels": {
+    "latest": "nejnovější",
+    "update": "Aktualizovat"
+  },
+  "massActionConfirmMessages": {
+    "update": "Po aktualizaci budou všichni uživatelé odhlášeni ze systému. Jste si jisti, že chcete systém aktualizovat?"
+  },
+  "actionConfirms": {
+    "install": "Jste si jisti, že chcete tento modul nainstalovat? Systém bude během instalace nedostupný.",
+    "uninstall": "Jste si jisti, že chcete tento modul odinstalovat? Všechna data související s modulem budou ztracena. Tuto akci nelze vrátit zpět."
+  },
+  "options": {
+    "usage": {
+      "Public": "Zdarma",
+      "Rent": "Zapůjčeno",
+      "Purchase": "Zakoupeno"
+    }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Systém nelze aktualizovat, protože ve Správci úloh jsou spuštěné úlohy. Zkuste to prosím později.",
+    "daemonNotAlive": "Akci nelze provést, protože naplánované úlohy neběží. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku, jak server správně nastavit."
+  }
+}

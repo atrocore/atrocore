@@ -21,7 +21,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Metadata;
-use Atro\Services\Composer as ComposerService;
+use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 
 class Settings extends AbstractService
 {
@@ -43,7 +43,7 @@ class Settings extends AbstractService
 
         $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
         $data['themes'] = $this->getMetadata()->get('themes');
-        $data['coreVersion'] = ComposerService::getCoreVersion();
+        $data['coreVersion'] = SoftwarePackage::getCoreVersion();
 
         $data['matchingRules'] = $this->getEntityManager()->getRepository('MatchingRule')
             ->select(['id', 'name', 'type', 'matchingRuleSetId', 'matchingId'])
@@ -76,7 +76,7 @@ class Settings extends AbstractService
 
         if (property_exists($data, 'onlyStableReleases')) {
             if ($data->onlyStableReleases !== $this->getConfig()->get('onlyStableReleases')) {
-                Composer::setMinimumStability($data->onlyStableReleases ? 'stable' : 'RC');
+                SoftwarePackageRepository::setComposerData('minimum-stability', $data->onlyStableReleases ? 'stable' : 'RC');
             }
             unset($data->onlyStableReleases);
         }

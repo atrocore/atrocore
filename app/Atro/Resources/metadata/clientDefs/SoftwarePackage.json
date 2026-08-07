@@ -1,0 +1,73 @@
+{
+  "createDisabled": true,
+  "controller": "controllers/record",
+  "iconClass": "puzzle-piece",
+  "quickActions": [
+    "install"
+  ],
+  "views": {
+    "list": "views/software-package/list"
+  },
+  "menu": {
+    "list": {
+      "buttons": [
+        {
+          "name": "update",
+          "action": "universalAction",
+          "style": "btn-primary",
+          "url": "SoftwarePackage/updateSystem",
+          "method": "POST",
+          "confirm": true
+        }
+      ],
+      "dropdownButtons": [
+        {
+          "name": "install",
+          "action": "installAction",
+          "label": "install"
+        },
+        {
+          "name": "uninstall",
+          "action": "uninstallAction",
+          "label": "uninstall"
+        }
+      ]
+    }
+  },
+  "listActions": {
+    "showReleaseNotes": {
+      "name": "showReleaseNotes",
+      "action": "showReleaseNotes",
+      "iconClass": "ph ph-file-text",
+      "acl": "showReleaseNotes",
+      "sortOrder": 140
+    },
+    "readDocs": {
+      "name": "readDocs",
+      "action": "readDocs",
+      "iconClass": "ph ph-book-open",
+      "acl": "readDocs",
+      "sortOrder": 145
+    },
+    "install": {
+      "name": "install",
+      "url": "SoftwarePackage/{{id}}/install",
+      "method": "POST",
+      "confirm": true,
+      "refresh": true,
+      "iconClass": "ph ph-download-simple",
+      "acl": "install",
+      "sortOrder": 150
+    },
+    "uninstall": {
+      "name": "uninstall",
+      "url": "SoftwarePackage/{{id}}/uninstall",
+      "method": "DELETE",
+      "confirm": true,
+      "refresh": true,
+      "iconClass": "ph ph-trash",
+      "acl": "uninstall",
+      "sortOrder": 155
+    }
+  }
+}

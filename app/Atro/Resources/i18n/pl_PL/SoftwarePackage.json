@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "sortOrder": "Kolejność sortowania",
+    "currentVersion": "Aktualna wersja",
+    "latestVersion": "Najnowsza wersja",
+    "targetVersion": "Wersja docelowa",
+    "targetVersions": "Wersje docelowe",
+    "usage": "Wykorzystanie",
+    "expirationDate": "Data wygaśnięcia",
+    "installed": "Zainstalowano"
+  },
+  "labels": {
+    "latest": "najnowsza",
+    "update": "Aktualizuj"
+  },
+  "massActionConfirmMessages": {
+    "update": "Po aktualizacji wszyscy użytkownicy zostaną wylogowani z systemu. Czy na pewno chcesz zaktualizować system?"
+  },
+  "actionConfirms": {
+    "install": "Czy na pewno chcesz zainstalować ten moduł? System będzie niedostępny podczas instalacji.",
+    "uninstall": "Czy na pewno chcesz odinstalować ten moduł? Wszystkie dane powiązane z modułem zostaną utracone. Tej operacji nie można cofnąć."
+  },
+  "options": {
+    "usage": {
+      "Public": "Bezpłatny",
+      "Rent": "Wynajęty",
+      "Purchase": "Zakupiony"
+    }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Nie można zaktualizować systemu, ponieważ w Job Manager są uruchomione zadania. Spróbuj ponownie później.",
+    "daemonNotAlive": "Nie można wykonać tej akcji, ponieważ zaplanowane zadania nie są uruchamiane. Najprawdopodobniej crontab nie jest poprawnie skonfigurowany lub wystąpił problem na serwerze. Zapoznaj się z przewodnikiem instalacji, aby poprawnie skonfigurować serwer."
+  }
+}

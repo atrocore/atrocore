@@ -1,0 +1,19 @@
+{
+  "type": "ReferenceData",
+  "object": true,
+  "entity": true,
+  "notificationDisabled": true,
+  "layouts": false,
+  "tab": false,
+  "acl": false,
+  "customizable": false,
+  "selectionDisabled": true,
+  "importable": false,
+  "notifications": false,
+  "hasOwner": false,
+  "hasAssignedUser": false,
+  "hasTeam": false,
+  "bookmarkDisabled": true,
+  "emHidden": true,
+  "actionDisabled": true
+}

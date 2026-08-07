@@ -1,0 +1,65 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "protected": true
+    },
+    "code": {
+      "type": "varchar",
+      "protected": true
+    },
+    "description": {
+      "type": "text",
+      "protected": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "protected": true
+    },
+    "currentVersion": {
+      "type": "varchar",
+      "protected": true,
+      "view": "views/software-package/fields/current-version"
+    },
+    "latestVersion": {
+      "type": "varchar",
+      "protected": true
+    },
+    "targetVersion": {
+      "type": "varchar",
+      "required": true,
+      "view": "views/software-package/fields/target-version"
+    },
+    "targetVersions": {
+      "type": "array",
+      "protected": true
+    },
+    "usage": {
+      "type": "enum",
+      "options": [
+        "Public",
+        "Rent",
+        "Purchase"
+      ],
+      "optionColors": [
+        "#5FE0A0",
+        "#FFBB3D",
+        "#6FB8FF"
+      ],
+      "protected": true
+    },
+    "expirationDate": {
+      "type": "date",
+      "protected": true,
+      "view": "views/software-package/fields/expiration-date"
+    },
+    "installed": {
+      "type": "bool",
+      "protected": true
+    }
+  },
+  "collection": {
+    "sortBy": "sortOrder",
+    "asc": true
+  }
+}
