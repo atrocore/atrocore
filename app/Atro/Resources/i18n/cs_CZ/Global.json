@@ -814,6 +814,7 @@
     "own": "Byl jste nastaven jako vlastník pro {entityType} {entity}."
   },
   "streamMessages": {
+    "composerUpdate": "{user} změnil nainstalované softwarové balíčky",
     "createRecordAssociationThis": "{user} přidružený {relatedRecord} jako {association}",
     "composerUpdateThis": "{uživatel}",
     "post": "{user} zveřejnil na {entityType} {entity}",

@@ -824,6 +824,7 @@
     "assign": "{entityType} {entity} vous a été attribué."
   },
   "streamMessages": {
+    "composerUpdate": "{user} a modifié les paquets logiciels installés",
     "createRecordAssociationThis": "{utilisateur} a associé {relatedRecord} en tant que {association}",
     "createAssociationRecordThis": "{user} a associé {mainRecord} à {relatedRecord}",
     "deleteAssociationRecordThis": "{user} a supprimé l'association de {mainRecord} avec {relatedRecord}",

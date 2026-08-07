@@ -830,6 +830,7 @@
     "own": "Вас було призначено власником для {entityType} {entity}."
   },
   "streamMessages": {
+    "composerUpdate": "{user} змінив встановлені програмні пакети",
     "post": "{user} залишив примітку до {entityType} {entity}",
     "postInList": "{user} залишив примітку до {entityType}",
     "attach": "{user} прикріпив до {entityType} {entity}",

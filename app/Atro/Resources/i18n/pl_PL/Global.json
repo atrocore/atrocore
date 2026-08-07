@@ -811,6 +811,7 @@
     "entityRemoved": "{user} deleted {entityType} {entity}"
   },
   "streamMessages": {
+    "composerUpdate": "{user} zmienił zainstalowane pakiety oprogramowania",
     "composerUpdateThis": "{user}",
     "post": "{user} posted on {entityType} {entity}",
     "postInList": "{user} posted on {entityType}",

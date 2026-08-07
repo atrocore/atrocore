@@ -839,6 +839,7 @@
     "deleteRecordAssociationThis": "{user} removed association to {relatedRecord} as {association}",
     "createAssociationRecordThis": "{user} associated {mainRecord} with {relatedRecord}",
     "deleteAssociationRecordThis": "{user} removed association of {mainRecord} with {relatedRecord}",
+    "composerUpdate": "{user} changed the installed software packages",
     "composerUpdateThis": "{user}",
     "post": "{user} posted on {entityType} {entity}",
     "postInList": "{user} posted on {entityType}",

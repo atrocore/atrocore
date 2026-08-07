@@ -810,6 +810,7 @@
     "own": "Вы были назначены владельцем для {entityType} {entity}."
   },
   "streamMessages": {
+    "composerUpdate": "{user} изменил установленные программные пакеты",
     "post": "{user} оставил примечание к {entityType} {entity}",
     "attach": "{user} прикрепил к {entityType} {entity}",
     "status": "{user} обновил {field} (чего) {entityType} {entity}",

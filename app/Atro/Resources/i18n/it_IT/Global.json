@@ -1126,6 +1126,7 @@
     "entityRemoved": "{utente} ha cancellato {entityType} {entità}"
   },
   "streamMessages": {
+    "composerUpdate": "{user} ha modificato i pacchetti software installati",
     "createRecordAssociationThis": "{utente} ha associato {record correlato} come {associazione}.",
     "deleteRecordAssociationThis": "{user} ha rimosso l'associazione a {relatedRecord} come {associazione}.",
     "createAssociationRecordThis": "{utente} ha associato {principaleRecord} a {relativoRecord}.",

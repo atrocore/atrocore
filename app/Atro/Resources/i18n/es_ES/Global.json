@@ -811,6 +811,7 @@
     "own": "You were set as Owner for {entityType} {entity}."
   },
   "streamMessages": {
+    "composerUpdate": "{user} ha cambiado los paquetes de software instalados",
     "post": "{user} ha publicado en: {entityType} {entity}",
     "attach": "{user} ha añadido un archivo adjunto en: {entityType} {entity}",
     "status": "{user} ha actualizado el campo {field} en: {entityType} {entity}",
