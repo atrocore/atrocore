@@ -320,6 +320,8 @@
     "RememberUsername": "Remember username",
     "Password": "Password",
     "Login": "Login",
+    "ContinueWithSso": "Continue with SSO",
+    "OrContinueWithUsername": "Or continue with username",
     "Log Out": "Log Out",
     "State": "State",
     "Street": "Street",

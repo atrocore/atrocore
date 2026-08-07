@@ -80,6 +80,7 @@
     "passwordExpiredForm": "Your password has been expired. Please update it using the form below.",
     "passwordChanged": "Password has been changed",
     "userCantBeEmpty": "The username cannot be left blank.",
+    "usernameOrPasswordCantBeEmpty": "Username or password cannot be empty.",
     "wrongUsernamePasword": "Wrong username/password",
     "emailAddressCantBeEmpty": "Email Address can not be empty",
     "userNameEmailAddressNotFound": "Username/Email Address not found",

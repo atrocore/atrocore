@@ -2091,9 +2091,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         url: this.scope + '/massRemoveAttributeAsync',
                         type: 'POST',
                         data: JSON.stringify({ attributeWhere, recordWhere }),
-                        success: (jobId) => {
+                        success: (result) => {
                             this.notify('A job is created to remove attributes', 'success');
-                            this.checkMassActionJob(jobId);
+                            this.checkMassActionJob(result.jobId);
                         },
                         error: () => {
                             this.notify('Error occurred', 'error');

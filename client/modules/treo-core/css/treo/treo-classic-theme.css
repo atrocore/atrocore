@@ -1882,20 +1882,6 @@ pre code {
     overflow-y: scroll
 }
 
-.container {
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.container:before, .container:after {
-    content: " ";
-    display: table
-}
-
-.container:after {
-    clear: both
-}
-
 .container:before, .container:after {
     content: " ";
     display: table
@@ -3614,6 +3600,11 @@ button:active,
 
 a[role=button].disabled, a.btn.disabled, fieldset[disabled] a.btn {
     pointer-events: none
+}
+
+button > i,
+a[role=button] > i {
+    display: inline-block;
 }
 
 button > i:first-child:not(:last-child),
@@ -9884,7 +9875,9 @@ body > #header .navbar-brand span.home-icon {
 
 @media (min-width: 1200px) {
     .container {
-        max-width: 1800px
+        max-width: 1800px;
+        margin-right: auto;
+        margin-left: auto;
     }
 }
 
@@ -10554,20 +10547,6 @@ table.table[data-resizable=true] > thead th .resizer {
     flex: 0;
 }
 
-#login.panel .panel-heading {
-    border-bottom-width: 0
-}
-
-#login .logo-container {
-    width: 181px;
-    height: 43px
-}
-
-#login .logo-container img.logo {
-    max-height: 100%;
-    max-width: 100%
-}
-
 #global-search-input {
     width: 145px;
     margin-top: 1px;
@@ -10945,12 +10924,6 @@ ul.dropdown-menu > li > a > .check-icon + div {
 
 .detail-field-container {
     padding: 7px 0
-}
-
-#login.panel > .panel-heading {
-    background-color: #546e7a;
-    padding: 0;
-    margin: -2px
 }
 
 @media screen and (max-width: 767px) {
@@ -13157,10 +13130,6 @@ table.table {
     border: 1px solid #e8eced
 }
 
-#login.panel > .panel-heading {
-    margin: 0 !important
-}
-
 #notifications-panel > .panel, #global-search-panel > .panel {
     border-width: 1px
 }
@@ -13779,80 +13748,6 @@ ul.dropdown-menu > li.checkbox {
 .page-header {
     padding-bottom: 0;
     flex-shrink: 0;
-}
-
-#login {
-    background: #fff;
-    color: #424242;
-    margin-top: 50px;
-    border-radius: 10px;
-}
-
-#login.panel-updating label {
-    font-weight: normal;
-}
-
-#login.panel > .panel-heading {
-    text-align: center;
-    padding: 6px;
-    background-color: #f5f5f5;
-    border: 1px solid #c0c0c0;
-    border-bottom: 0;
-    -webkit-box-shadow: 0 -8px 10px -10px;
-    box-shadow: 0 -8px 10px -10px;
-    border-radius: 10px 10px 0 0;
-}
-
-#login.panel > .panel-body {
-    border: 1px solid #c0c0c0;
-    border-radius: 0 0 10px 10px;
-}
-
-#login .logo-container {
-    display: inline-block
-}
-
-#login input.form-control {
-    padding: 6px 10px 6px 30px;
-}
-
-#login select.form-control {
-    padding: 6px 10px 6px 3px;
-}
-
-#login label[for='field-username'],
-#login label[for='login'] {
-    position: relative;
-}
-
-#login label[for='field-username']::before,
-#login label[for='login']::before {
-    position: absolute;
-    top: 31px;
-    left: 10px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-#login label[for='field-username']::before {
-    content: "\e008";
-}
-
-#login label[for='login']::before {
-    content: "\e033";
-}
-
-#login .btn-link {
-    color: #000
-}
-
-#login input:focus {
-    border-color: #424242;
 }
 
 #header .navbar-inverse.navbar[data-orientation="vertical"] .navbar-nav .active > a {
@@ -15344,11 +15239,6 @@ a.collapsing-button:hover {
 a.collapsing-button > span {
     margin: 0 3px;
     font-size: 12px;
-}
-
-#login .logo-container img.logo {
-    height: 25px;
-    margin-top: 9px;
 }
 
 .additional-action-icon {

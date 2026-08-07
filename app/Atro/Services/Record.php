@@ -33,21 +33,19 @@ class Record extends RecordService
 {
     public function getEntity(?string $id = null, ?string $withRelationships = null): ?IEntity
     {
-        $entity = parent::getEntity($id, $withRelationships);
-
-        if ($entity === null && !empty($id)) {
+        if (!empty($id)) {
             $resolvedId = $this->resolveIdByCode($id);
             if ($resolvedId !== null) {
-                $entity = parent::getEntity($resolvedId, $withRelationships);
+                $id = $resolvedId;
             }
         }
 
-        return $entity;
+        return parent::getEntity($id, $withRelationships);
     }
 
     public function findLinkedEntities($id, $link, $params)
     {
-        if (!empty($id) && empty($this->getRepository()->get($id))) {
+        if (!empty($id)) {
             $resolvedId = $this->resolveIdByCode($id);
             if ($resolvedId !== null) {
                 $id = $resolvedId;
@@ -57,6 +55,11 @@ class Record extends RecordService
         return parent::findLinkedEntities($id, $link, $params);
     }
 
+    /**
+     * Resolves $id to the entity's real id in a single query, allowing it to also be looked up by its `isCode`
+     * field (when the entity type has one). Returns null (leaving $id untouched) when there's no code field to
+     * fall back on, so the caller's normal id-only lookup path is used as-is.
+     */
     protected function resolveIdByCode(string $id): ?string
     {
         $codeField = $this->getCodeField();
@@ -64,9 +67,13 @@ class Record extends RecordService
             return null;
         }
 
-        $record = $this->getEntityManager()->getRepository($this->getEntityType())
-            ->where([$codeField => $id])
+        $record = $this->getRepository()
+            ->where(['OR' => ['id' => $id, $codeField => $id]])
             ->findOne();
+
+        if (!empty($record)) {
+            $this->getRepository()->putToCache($record->get('id'), $record);
+        }
 
         return !empty($record) ? $record->get('id') : null;
     }
@@ -563,7 +570,7 @@ class Record extends RecordService
         }
 
         if (!empty($params['selectedId']) && method_exists($repository, 'getRecordPosition')) {
-            $position = $repository->getRecordPosition((string) $params['selectedId'], $selectParams);
+            $position = $repository->getRecordPosition((string)$params['selectedId'], $selectParams);
             if ($position !== null) {
                 $limit  = $params['maxSize'];
                 $index  = $position - 1;

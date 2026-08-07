@@ -305,6 +305,8 @@
     "RememberUsername": "Benutzernamen merken",
     "Password": "Passwort",
     "Login": "Anmelden",
+    "ContinueWithSso": "Weiter mit SSO",
+    "OrContinueWithUsername": "Oder weiter mit Benutzername",
     "Log Out": "Abmelden",
     "State": "Bundesland/Kanton",
     "Street": "Straße",
