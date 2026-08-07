@@ -8,10 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/stream/notes/composer-update', 'views/stream/note',
-    Dep =>  Dep.extend({
+Espo.define('views/stream/notes/composer-update', 'views/stream/note',
+    Dep => Dep.extend({
 
-        template: 'treo-core:stream/notes/composer-update',
+        template: 'stream/notes/composer-update',
 
         isEditable: false,
 
@@ -37,7 +37,7 @@ Espo.define('treo-core:views/stream/notes/composer-update', 'views/stream/note',
         },
 
         actionShowUpdateDetails() {
-            this.createView('updateDetailsModal', 'treo-core:views/composer/modals/update-details', {
+            this.createView('updateDetailsModal', 'views/software-package/modals/update-details', {
                 output: (this.model.get('data') || {}).output
             }, view => {
                 view.render();
