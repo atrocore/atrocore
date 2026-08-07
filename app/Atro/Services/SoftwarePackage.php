@@ -61,7 +61,7 @@ class SoftwarePackage extends ReferenceData
 
     public function updateSystem(): bool
     {
-        if (!$this->isDaemonAlive()){
+        if (!$this->isDaemonAlive()) {
             throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
         }
 
@@ -76,18 +76,58 @@ class SoftwarePackage extends ReferenceData
 
     public function install(array $ids): bool
     {
-        if (!$this->isDaemonAlive()){
+        if (!$this->isDaemonAlive()) {
             throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
         }
+
+        if ($this->jobManagerRunning()) {
+            throw new BadRequest($this->getLanguage()->translate('jobManagerRunning', 'exceptions', 'SoftwarePackage'));
+        }
+
+        $packages = [];
+        foreach ($ids as $id) {
+            $softwarePackage = $this->getRepository()->get($id);
+            if (!empty($softwarePackage)) {
+                $packages[] = $softwarePackage->get('code');
+            }
+        }
+
+        if (empty($packages)) {
+            throw new NotFound();
+        }
+
+        $command = 'require ' . implode(' ', $packages);
+
+        file_put_contents(Application::COMPOSER_LOG_FILE, $command . ' || ' . $this->getUser()->get('id'));
 
         return true;
     }
 
     public function uninstall(array $ids): bool
     {
-        if (!$this->isDaemonAlive()){
+        if (!$this->isDaemonAlive()) {
             throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
         }
+
+        if ($this->jobManagerRunning()) {
+            throw new BadRequest($this->getLanguage()->translate('jobManagerRunning', 'exceptions', 'SoftwarePackage'));
+        }
+
+        $packages = [];
+        foreach ($ids as $id) {
+            $softwarePackage = $this->getRepository()->get($id);
+            if (!empty($softwarePackage)) {
+                $packages[] = $softwarePackage->get('code');
+            }
+        }
+
+        if (empty($packages)) {
+            throw new NotFound();
+        }
+
+        $command = 'remove ' . implode(' ', $packages);
+
+        file_put_contents(Application::COMPOSER_LOG_FILE, $command . ' || ' . $this->getUser()->get('id'));
 
         return true;
     }
