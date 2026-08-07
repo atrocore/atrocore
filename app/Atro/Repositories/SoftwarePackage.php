@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\DataManager;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity;
@@ -158,17 +159,25 @@ class SoftwarePackage extends ReferenceData
 
     public function insertEntity(Entity $entity): bool
     {
-        return false;
+        throw new Error('Not implemented.');
     }
 
     public function updateEntity(Entity $entity): bool
     {
+        if ($entity->isAttributeChanged('targetVersion')) {
+            $composerData = self::getComposerData();
+            $composerData['require'][$entity->get('code')] = $entity->get('targetVersion');
+            self::setComposerData('require', $composerData['require']);
+
+            return true;
+        }
+
         return false;
     }
 
     public function deleteEntity(Entity $entity): bool
     {
-        return false;
+        throw new Error('Not implemented.');
     }
 
     protected function getAllItems(array $params = []): array
