@@ -12,7 +12,9 @@
   "labels": {
     "latest": "najnowsza",
     "update": "Aktualizuj system",
-    "toStore": "AtroCore Store"
+    "toStore": "AtroCore Store",
+    "installModules": "Zainstaluj moduł(y)",
+    "uninstallModules": "Odinstaluj moduł(y)"
   },
   "massActionConfirmMessages": {
     "update": "Po aktualizacji wszyscy użytkownicy zostaną wylogowani z systemu. Czy na pewno chcesz zaktualizować system?"

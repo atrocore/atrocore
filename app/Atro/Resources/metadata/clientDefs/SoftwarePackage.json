@@ -29,12 +29,14 @@
         {
           "name": "install",
           "action": "installAction",
-          "label": "install"
+          "label": "installModules",
+          "iconClass": "ph ph-download-simple"
         },
         {
           "name": "uninstall",
           "action": "uninstallAction",
-          "label": "uninstall"
+          "label": "uninstallModules",
+          "iconClass": "ph ph-trash"
         }
       ]
     }

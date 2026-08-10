@@ -12,7 +12,9 @@
   "labels": {
     "latest": "latest",
     "update": "Update System",
-    "toStore": "AtroCore Store"
+    "toStore": "AtroCore Store",
+    "installModules": "Install Module(s)",
+    "uninstallModules": "Uninstall Module(s)"
   },
   "massActionConfirmMessages": {
     "update": "After the update, all users will be logged out of the system. Are you sure you want to update the system?"
