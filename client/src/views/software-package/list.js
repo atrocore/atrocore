@@ -36,7 +36,8 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
 
                     this.notify(this.translate('Loading...'));
                     this.ajaxPostRequest('SoftwarePackage/install', {ids}).then(() => {
-                        this.notify(this.translate('Done'), 'success');
+                        this.notify(false);
+                        location.reload();
                     });
                 });
             });
@@ -67,8 +68,19 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
 
                     this.notify(this.translate('Loading...'));
                     this.ajaxRequest('SoftwarePackage/uninstall', 'DELETE', JSON.stringify({ids})).then(() => {
-                        this.notify(this.translate('Done'), 'success');
+                        this.notify(false);
+                        location.reload();
                     });
+                });
+            });
+        },
+
+        actionUpdateSystemAction(data) {
+            this.confirm(this.translate('update', 'massActionConfirmMessages', 'SoftwarePackage'), () => {
+                this.notify('Loading...');
+                this.ajaxPostRequest('SoftwarePackage/updateSystem').success(() => {
+                    this.notify(false);
+                    location.reload();
                 });
             });
         },

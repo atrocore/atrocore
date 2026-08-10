@@ -13,11 +13,8 @@
       "buttons": [
         {
           "name": "update",
-          "action": "universalAction",
-          "style": "btn-primary",
-          "url": "SoftwarePackage/updateSystem",
-          "method": "POST",
-          "confirm": true
+          "action": "updateSystemAction",
+          "style": "btn-primary"
         }
       ],
       "dropdownButtons": [
