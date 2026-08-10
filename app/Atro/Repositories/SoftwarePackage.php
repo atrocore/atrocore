@@ -247,7 +247,7 @@ class SoftwarePackage extends ReferenceData
         $composerData = self::getComposerData();
         $remotePackages = $this->getRemotePackages();
 
-        $code = $package['name'];
+        $code = $package['abandoned'] ?? $package['name'];
 
         if ($onlyUninstallable) {
             if ($moduleId === 'Atro' || empty($package['version']) || empty($composerData['require'][$code])) {
