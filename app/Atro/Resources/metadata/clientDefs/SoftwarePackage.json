@@ -2,6 +2,7 @@
   "createDisabled": true,
   "controller": "controllers/record",
   "iconClass": "puzzle-piece",
+  "limit": 500,
   "quickActions": [
     "install"
   ],
