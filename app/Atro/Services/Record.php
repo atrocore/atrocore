@@ -31,40 +31,24 @@ use Espo\Services\RecordService;
 
 class Record extends RecordService
 {
-    public function getEntity(?string $id = null, ?string $withRelationships = null): ?IEntity
-    {
-        if (!empty($id)) {
-            $resolvedId = $this->resolveIdByCode($id);
-            if ($resolvedId !== null) {
-                $id = $resolvedId;
-            }
-        }
-
-        return parent::getEntity($id, $withRelationships);
-    }
-
-    public function findLinkedEntities($id, $link, $params)
-    {
-        if (!empty($id)) {
-            $resolvedId = $this->resolveIdByCode($id);
-            if ($resolvedId !== null) {
-                $id = $resolvedId;
-            }
-        }
-
-        return parent::findLinkedEntities($id, $link, $params);
-    }
-
     /**
      * Resolves $id to the entity's real id in a single query, allowing it to also be looked up by its `isCode`
      * field (when the entity type has one). Returns null (leaving $id untouched) when there's no code field to
      * fall back on, so the caller's normal id-only lookup path is used as-is.
      */
-    protected function resolveIdByCode(string $id): ?string
+    public function resolveIdByCode(string $id): ?string
     {
         $codeField = $this->getCodeField();
         if ($codeField === null) {
             return null;
+        }
+
+        if (in_array($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $codeField, 'type']), ['int', 'autoincrement'])) {
+            if (is_numeric($id)) {
+                $id = (int)$id;
+            } else {
+                return null;
+            }
         }
 
         $record = $this->getRepository()

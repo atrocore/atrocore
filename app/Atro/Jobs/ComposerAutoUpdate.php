@@ -14,23 +14,17 @@ declare(strict_types=1);
 namespace Atro\Jobs;
 
 use Atro\Entities\Job;
-use Atro\Services\Composer;
+use Atro\Services\SoftwarePackage;
 
 class ComposerAutoUpdate extends AbstractJob implements JobInterface
 {
     public function run(Job $job): void
     {
-        // cancel changes
-        $this->getComposerService()->cancelChanges();
-
-        $this->getComposerService()->runUpdate();
+        $this->getSoftwarePackageService()->updateSystem();
     }
 
-    /**
-     * @return Composer
-     */
-    protected function getComposerService(): Composer
+    protected function getSoftwarePackageService(): SoftwarePackage
     {
-        return $this->getServiceFactory()->create('Composer');
+        return $this->getServiceFactory()->create('SoftwarePackage');
     }
 }

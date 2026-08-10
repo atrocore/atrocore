@@ -16,6 +16,7 @@ namespace Atro\Core\EntityTypeHandlers;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
+use Atro\Services\Record;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -77,16 +78,21 @@ class ReadHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $entityName = $this->getEntityName($request);
-        $id = (string) $request->getAttribute('id');
+        $entityName        = $this->getEntityName($request);
+        $id                = (string)$request->getAttribute('id');
         $withRelationships = $request->getQueryParams()['withRelationships'] ?? null;
 
-        $entity = $this->getRecordService($entityName)->readEntity($id, $withRelationships);
+        /** @var Record $service */
+        $service = $this->getRecordService($entityName);
+
+        $id = $service->resolveIdByCode($id) ?? $id;
+
+        $entity = $service->readEntity($id, $withRelationships);
 
         if (empty($entity)) {
             throw new NotFound();
         }
 
-        return new JsonResponse((array) $entity->getValueMap());
+        return new JsonResponse((array)$entity->getValueMap());
     }
 }

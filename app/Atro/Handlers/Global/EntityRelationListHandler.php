@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
+use Atro\Services\Record;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -154,18 +155,23 @@ class EntityRelationListHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $qp         = $request->getQueryParams();
-        $entityName = (string) ($qp['entityName'] ?? '');
-        $id         = (string) ($qp['id'] ?? '');
-        $link       = (string) ($qp['link'] ?? '');
+        $entityName = (string)($qp['entityName'] ?? '');
+        $id         = (string)($qp['id'] ?? '');
+        $link       = (string)($qp['link'] ?? '');
 
         if ($entityName === '' || $id === '' || $link === '') {
             throw new NotFound();
         }
 
+        /** @var Record $service */
+        $service = $this->getRecordService($entityName);
+
         $params                  = $this->buildListParams($request);
         $params['whereRelation'] = $this->prepareWhereQuery($qp['whereRelation'] ?? null);
 
-        $result = $this->getRecordService($entityName)->findLinkedEntities($id, $link, $params);
+        $id = $service->resolveIdByCode($id) ?? $id;
+
+        $result = $service->findLinkedEntities($id, $link, $params);
 
         return new JsonResponse($this->buildListResult($result, $params));
     }

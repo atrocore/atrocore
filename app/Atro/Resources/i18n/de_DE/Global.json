@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Softwarepaket",
     "Consolidation": "Konsolidierung",
     "DataPipeline": "Daten-Pipeline",
     "IncomingWebhook": "Eingehender Webhook",
@@ -70,7 +71,6 @@
     "ThumbnailType": "Vorschaubild-Typ",
     "ProductHierarchy": "Produkt-Hierarchie",
     "Account": "Konto",
-    "Store": "Onlineshop",
     "Dashboard": "Dashboard",
     "LayoutProfile": "Layout-Profil",
     "Background": "Hintergrund",
@@ -88,6 +88,7 @@
     "ClusterItem": "Übereinstimmungs-Cluster-Artikel"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Softwarepakete",
     "Consolidation": "Konsolidierungen",
     "DataPipeline": "Daten-Pipelines",
     "IncomingWebhook": "Eingehende Webhooks",
@@ -165,6 +166,10 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "install": "Installieren",
+    "uninstall": "Deinstallieren",
+    "showReleaseNotes": "Versionshinweise",
+    "readDocs": "Dokumentation",
     "entityFilterResult": "Ergebnis filtern",
     "System": "System",
     "matchings": "Übereinstimmungen",
@@ -871,11 +876,11 @@
     "entityRemoved": "{user} hat {entityType} {entity} gelöscht"
   },
   "streamMessages": {
+    "composerUpdate": "{user} hat die installierten Softwarepakete geändert",
     "createRecordAssociationThis": "{user} hat {relatedRecord} als {association} assoziiert",
     "deleteRecordAssociationThis": "{user} hat die Assoziation zu {relatedRecord} als {association} entfernt",
     "createAssociationRecordThis": "{user} hat {mainRecord} mit {relatedRecord} assoziiert",
     "deleteAssociationRecordThis": "{user} hat die Assoziation von {mainRecord} mit {relatedRecord} entfernt",
-    "composerUpdateThis": "{user}",
     "post": "{user} notierte zu {entityType} {entity}",
     "postInList": "{user} notierte zu {entityType}",
     "attach": "{user} fügte zu {entityType} {entity} hinzu",
@@ -1196,11 +1201,9 @@
     }
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
   },
   "durationUnits": {

@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "sortOrder": "Sortierreihenfolge",
+    "currentVersion": "Aktuelle Version",
+    "latestVersion": "Neueste Version",
+    "targetVersion": "Zielversion",
+    "targetVersions": "Zielversionen",
+    "usage": "Verwendung",
+    "expirationDate": "Ablaufdatum",
+    "installed": "Installiert"
+  },
+  "labels": {
+    "latest": "neueste",
+    "update": "Aktualisieren"
+  },
+  "massActionConfirmMessages": {
+    "update": "Nach der Aktualisierung werden alle Benutzer vom System abgemeldet. Sind Sie sicher, dass Sie das System aktualisieren möchten?"
+  },
+  "actionConfirms": {
+    "install": "Sind Sie sicher, dass Sie dieses Modul installieren möchten? Während der Installation ist das System nicht verfügbar.",
+    "uninstall": "Sind Sie sicher, dass Sie dieses Modul deinstallieren möchten? Alle mit dem Modul verbundenen Daten gehen verloren. Diese Aktion kann nicht rückgängig gemacht werden."
+  },
+  "options": {
+    "usage": {
+      "Public": "Kostenlos",
+      "Rent": "Gemietet",
+      "Purchase": "Gekauft"
+    }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Das System kann nicht aktualisiert werden, weil im Auftrags-Manager Aufträge ausgeführt werden. Bitte versuchen Sie es später erneut.",
+    "daemonNotAlive": "Die Aktion kann nicht ausgeführt werden, weil geplante Aufgaben nicht gestartet werden. Höchstwahrscheinlich ist die Crontab nicht korrekt konfiguriert oder es liegt ein Problem auf dem Server vor. Bitte lesen Sie die Installationsanleitung, um den Server korrekt zu konfigurieren."
+  }
+}

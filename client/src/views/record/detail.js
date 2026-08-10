@@ -3147,6 +3147,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed
         },
 
+        shouldShowInsights: function () {
+            // ReferenceData entities have neither audit nor access management fields, so there is nothing to show
+            if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
+                return false;
+            }
+
+            return ['edit', 'detail'].includes(this.mode);
+        },
+
         getSvelteSideViewProps(parentView) {
             const loadInsights = () => {
                 parentView.createView('rightSideView', parentView.rightSideView, {
@@ -3193,7 +3202,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 id: this.model.id,
                 mode: this.mode,
                 hasStream: this.canLoadActivities() && !!this.model.id,
-                showInsights: ['edit', 'detail'].includes(this.mode),
+                showInsights: this.shouldShowInsights(),
                 createView: parentView.createView.bind(this),
                 isCollapsed: !['edit', 'detail'].includes(this.mode),
                 loadInsights: loadInsights,
