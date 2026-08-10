@@ -3227,7 +3227,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             };
 
-            if (!this.model.isNew() && this.getMetadata().get(['entityDefs', this.scope, 'fields', 'cluster'])) {
+            if (!this.model.isNew() && this.getMetadata().get(['entityDefs', this.scope, 'fields', 'cluster']) &&
+                this.getAcl().checkScope('Cluster', 'read') && this.getAcl().checkScope('ClusterItem', 'read')) {
                 props.showCluster = true;
                 props.clusterId = this.model.get('clusterId') || '';
                 props.loadClusterDetail = (element, attributes) => {
@@ -3254,7 +3255,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.listenTo(this.model, 'sync', () => {
                     if (window.SvelteEntityContextPanel?.$set) {
-                        window.SvelteEntityContextPanel.$set({'clusterId': this.model.get('clusterId')});
+                        window.SvelteEntityContextPanel.$set({ 'clusterId': this.model.get('clusterId') });
                     }
                 });
             }
