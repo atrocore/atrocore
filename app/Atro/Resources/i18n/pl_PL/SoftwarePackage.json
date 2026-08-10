@@ -14,7 +14,12 @@
     "update": "Aktualizuj system",
     "toStore": "AtroCore Store",
     "installModules": "Zainstaluj moduł(y)",
-    "uninstallModules": "Odinstaluj moduł(y)"
+    "uninstallModules": "Odinstaluj moduł(y)",
+    "lastUpdate": "Ostatnia aktualizacja"
+  },
+  "lastUpdateStatuses": {
+    "Success": "Sukces",
+    "Failed": "Niepowodzenie"
   },
   "massActionConfirmMessages": {
     "update": "Po aktualizacji wszyscy użytkownicy zostaną wylogowani z systemu. Czy na pewno chcesz zaktualizować system?"

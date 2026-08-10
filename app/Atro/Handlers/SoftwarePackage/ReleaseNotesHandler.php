@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\SoftwarePackage;
 
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -22,19 +22,19 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SoftwarePackage/{id}/uninstall',
+    path: '/SoftwarePackage/{id}/releaseNotes',
     methods: [
-        'DELETE',
+        'POST',
     ],
-    summary: 'Uninstall a software package',
-    description: 'Queues the specified installed software package for uninstallation. Accessible by administrators only.',
+    summary: 'Get release notes of a software package',
+    description: 'Returns the release notes of the specified software package. Accessible by administrators only.',
     tag: 'SoftwarePackage',
     parameters: [
         [
             'name'        => 'id',
             'in'          => 'path',
             'required'    => true,
-            'description' => 'ID of the software package to uninstall.',
+            'description' => 'ID of the software package to get the release notes of.',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -42,11 +42,16 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'true if the software package was queued for uninstallation.',
+            'description' => 'Release notes of the software package.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        'type'       => 'object',
+                        'properties' => [
+                            'html' => [
+                                'type' => 'string',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -59,7 +64,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class SoftwarePackageUninstallHandler extends AbstractHandler
+class ReleaseNotesHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -67,6 +72,8 @@ class SoftwarePackageUninstallHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new BoolResponse($this->getRecordService('SoftwarePackage')->uninstall([(string)$request->getAttribute('id')]));
+        return new JsonResponse([
+            'html' => $this->getRecordService('SoftwarePackage')->getReleaseNotes((string)$request->getAttribute('id'))
+        ]);
     }
 }

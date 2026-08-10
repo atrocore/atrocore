@@ -22,27 +22,16 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SoftwarePackage/{id}/install',
+    path: '/SoftwarePackage/updateSystem',
     methods: [
         'POST',
     ],
-    summary: 'Install a software package',
-    description: 'Queues the specified not installed software package for installation. Accessible by administrators only.',
+    summary: 'Update the system',
+    description: 'Updates the installed software packages to their target versions. All users are logged out of the system when the update is applied. Accessible by administrators only.',
     tag: 'SoftwarePackage',
-    parameters: [
-        [
-            'name'        => 'id',
-            'in'          => 'path',
-            'required'    => true,
-            'description' => 'ID of the software package to install.',
-            'schema'      => [
-                'type' => 'string',
-            ],
-        ],
-    ],
     responses: [
         200 => [
-            'description' => 'true if the software package was queued for installation.',
+            'description' => 'true if the system update was started.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -54,12 +43,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => [
             'description' => 'Current user is not an administrator.',
         ],
-        404 => [
-            'description' => 'Software package not found.',
-        ],
     ],
 )]
-class SoftwarePackageInstallHandler extends AbstractHandler
+class UpdateSystemHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -67,6 +53,6 @@ class SoftwarePackageInstallHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new BoolResponse($this->getRecordService('SoftwarePackage')->install([(string)$request->getAttribute('id')]));
+        return new BoolResponse($this->getRecordService('SoftwarePackage')->updateSystem());
     }
 }

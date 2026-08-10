@@ -14,7 +14,12 @@
     "update": "Mettre à jour le système",
     "toStore": "AtroCore Store",
     "installModules": "Installer le(s) module(s)",
-    "uninstallModules": "Désinstaller le(s) module(s)"
+    "uninstallModules": "Désinstaller le(s) module(s)",
+    "lastUpdate": "Dernière mise à jour"
+  },
+  "lastUpdateStatuses": {
+    "Success": "Succès",
+    "Failed": "Échec"
   },
   "massActionConfirmMessages": {
     "update": "Après la mise à jour, tous les utilisateurs seront déconnectés du système. Êtes-vous sûr de vouloir mettre à jour le système ?"

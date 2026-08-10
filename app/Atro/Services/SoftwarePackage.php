@@ -59,6 +59,46 @@ class SoftwarePackage extends ReferenceData
         );
     }
 
+    public function getLastUpdateStatus(): ?array
+    {
+        $note = $this->getEntityManager()->getRepository('Note')
+            ->where([
+                'parentType' => [
+                    'SoftwarePackage',
+                    'ModuleManager'
+                ],
+                'type'       => 'composerUpdate'
+            ])
+            ->order('created_at', 'DESC')
+            ->findOne();
+
+        $label = $this->getLanguage()->translate('lastUpdate', 'labels', 'SoftwarePackage');
+
+        if (!empty($note->get('data'))) {
+            if ($note->get('data')?->status === 0) {
+                return [
+                    'label' => $label,
+                    'value' => $this->getLanguage()->translate('Success', 'lastUpdateStatuses', 'SoftwarePackage'),
+                    'style' => 'success'
+                ];
+            }
+
+            if ($note->get('data')?->status === 1) {
+                return [
+                    'label' => $label,
+                    'value' => $this->getLanguage()->translate('Failed', 'lastUpdateStatuses', 'SoftwarePackage'),
+                    'style' => 'danger'
+                ];
+            }
+        }
+
+        return [
+            'label' => $label,
+            'value' => null,
+            'style' => 'info'
+        ];
+    }
+
     public function updateSystem(): bool
     {
         if (!$this->isDaemonAlive()) {

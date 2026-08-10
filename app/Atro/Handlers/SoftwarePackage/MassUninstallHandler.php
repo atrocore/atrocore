@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\SoftwarePackage;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
@@ -22,16 +23,38 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SoftwarePackage/updateSystem',
+    path: '/SoftwarePackage/uninstall',
     methods: [
-        'POST',
+        'DELETE',
     ],
-    summary: 'Update the system',
-    description: 'Updates the installed software packages to their target versions. All users are logged out of the system when the update is applied. Accessible by administrators only.',
+    summary: 'Uninstall software packages',
+    description: 'Queues the selected installed software packages for uninstallation. Accessible by administrators only.',
     tag: 'SoftwarePackage',
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'ids',
+                    ],
+                    'properties' => [
+                        'ids' => [
+                            'type'        => 'array',
+                            'description' => 'IDs of the software packages to uninstall.',
+                            'items'       => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
         200 => [
-            'description' => 'true if the system update was started.',
+            'description' => 'Success',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -40,12 +63,15 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'ids is required.',
+        ],
         403 => [
             'description' => 'Current user is not an administrator.',
         ],
     ],
 )]
-class SoftwarePackageUpdateSystemHandler extends AbstractHandler
+class MassUninstallHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -53,6 +79,8 @@ class SoftwarePackageUpdateSystemHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new BoolResponse($this->getRecordService('SoftwarePackage')->updateSystem());
+        $data = $this->getRequestBody($request);
+
+        return new BoolResponse($this->getRecordService('SoftwarePackage')->uninstall($data->ids));
     }
 }

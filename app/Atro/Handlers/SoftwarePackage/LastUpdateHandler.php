@@ -22,35 +22,40 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SoftwarePackage/{id}/releaseNotes',
+    path: '/SoftwarePackage/lastUpdate',
     methods: [
-        'POST',
+        'GET',
     ],
-    summary: 'Get release notes of a software package',
-    description: 'Returns the release notes of the specified software package. Accessible by administrators only.',
+    summary: 'Get the status of the last system update',
+    description: 'Returns the status of the last system update ready to be displayed in the list view. Accessible by administrators only.',
     tag: 'SoftwarePackage',
-    parameters: [
-        [
-            'name'        => 'id',
-            'in'          => 'path',
-            'required'    => true,
-            'description' => 'ID of the software package to get the release notes of.',
-            'schema'      => [
-                'type' => 'string',
-            ],
-        ],
-    ],
     responses: [
         200 => [
-            'description' => 'Release notes of the software package.',
+            'description' => 'Status of the last system update.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'html' => [
-                                'type' => 'string',
+                            'label' => [
+                                'type'    => 'string',
+                                'example' => 'Last Update',
                             ],
+                            'value' => [
+                                'type'        => 'string',
+                                'nullable'    => true,
+                                'description' => 'Null means there is nothing to display, the status is skipped.',
+                                'example'     => 'Success',
+                            ],
+                            'style' => [
+                                'type' => 'string',
+                                'enum' => [
+                                    'success',
+                                    'danger',
+                                    'warning',
+                                    'info'
+                                ],
+                            ]
                         ],
                     ],
                 ],
@@ -59,12 +64,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => [
             'description' => 'Current user is not an administrator.',
         ],
-        404 => [
-            'description' => 'Software package not found.',
-        ],
     ],
 )]
-class SoftwarePackageReleaseNotesHandler extends AbstractHandler
+class LastUpdateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -72,8 +74,6 @@ class SoftwarePackageReleaseNotesHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new JsonResponse([
-            'html' => $this->getRecordService('SoftwarePackage')->getReleaseNotes((string)$request->getAttribute('id'))
-        ]);
+        return new JsonResponse(($this->getRecordService('SoftwarePackage')->getLastUpdateStatus()));
     }
 }
