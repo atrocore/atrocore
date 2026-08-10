@@ -166,6 +166,7 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Die Hintergrundverarbeitung funktioniert nicht. Höchstwahrscheinlich ist die Crontab nicht korrekt konfiguriert oder es liegt ein Problem auf dem Server vor. Bitte lesen Sie die Installationsanleitung.",
     "install": "Installieren",
     "uninstall": "Deinstallieren",
     "showReleaseNotes": "Versionshinweise",

@@ -161,6 +161,7 @@
     "ClusterItem": "Elementy klastra dopasowań"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Przetwarzanie w tle nie działa. Najprawdopodobniej crontab nie jest poprawnie skonfigurowany lub wystąpił problem na serwerze. Zapoznaj się z przewodnikiem instalacji.",
     "selectAll": "Wybierz wszystko",
     "contentLanguages": "Języki treści",
     "customizeLayout": "Dostosuj układ",

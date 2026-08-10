@@ -161,6 +161,7 @@
     "ClusterItem": "Elementos del clúster de coincidencias"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "El procesamiento en segundo plano no funciona. Lo más probable es que crontab no esté configurado correctamente o que haya un problema en el servidor. Consulte la guía de instalación.",
     "selectAll": "Seleccionar todo",
     "contentLanguages": "Lenguas de contenido",
     "customizeLayout": "Personalizar diseño",

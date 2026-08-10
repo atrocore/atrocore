@@ -201,6 +201,7 @@
     "ClusterItem": "Élément de la grappe d'appariement"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Le traitement en arrière-plan ne fonctionne pas. Il est probable que la crontab ne soit pas configurée correctement ou qu'il y ait un problème sur le serveur. Veuillez consulter le guide d'installation.",
     "selectAll": "Sélectionner tout",
     "contentLanguages": "Langues du contenu",
     "Access": "Accès",

@@ -169,6 +169,7 @@
     "updateMasterRecord": "Update Master Record"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Background processing is not working. Most likely the crontab is not configured correctly or there is a problem on the server. Please refer to the installation guide.",
     "purgeAll": "Purge all clusters",
     "install": "Install",
     "uninstall": "Uninstall",

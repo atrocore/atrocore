@@ -161,6 +161,7 @@
     "ClusterItem": "Položky klastru párování"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Zpracování na pozadí nefunguje. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku.",
     "basic": "Basic",
     "script": "Skript",
     "phpCode": "Kód PHP",

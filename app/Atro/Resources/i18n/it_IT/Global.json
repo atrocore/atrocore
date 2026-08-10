@@ -87,6 +87,7 @@
     "ClusterItem": "Articolo del cluster di abbinamento"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "L'elaborazione in background non funziona. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione.",
     "inherited": "Ereditato",
     "Saved": "Salvato",
     "Removed": "Eliminato",

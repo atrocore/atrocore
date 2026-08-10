@@ -11677,6 +11677,13 @@ label.attach-file-label > input.file {
     color: #fff
 }
 
+.background-processing-badge-container .background-processing-badge-btn,
+.background-processing-badge-container .background-processing-badge-btn:hover,
+.background-processing-badge-container .background-processing-badge-btn:focus,
+.background-processing-badge-container .background-processing-badge-btn > i {
+    color: #dc3545 !important
+}
+
 .badge-circle {
     width: 8px;
     height: 8px;

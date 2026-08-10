@@ -59,6 +59,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 hasLocaleSwitcher: this.hasLocaleSwitcher(),
                 hasLogo: !this.getConfig().get('disableToolbarLogo'),
                 showCurrentSelection: true,
+                isAdmin: this.getUser().isAdmin(),
             }, Dep.prototype.data.call(this));
         },
 
@@ -331,7 +332,20 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.listenToOnce(this, 'after:render', () => {
                 this.initProgressBadge();
-                this.initLocaleSwitcher()
+                this.initLocaleSwitcher();
+                this.checkBackgroundProcessing();
+            });
+        },
+
+        checkBackgroundProcessing() {
+            if (!this.getUser().isAdmin()) {
+                return;
+            }
+
+            this.ajaxGetRequest('checkBackgroundProcessing').success(response => {
+                if (response === false) {
+                    this.$el.find('.background-processing-badge-container').removeClass('hidden');
+                }
             });
         },
 
