@@ -165,8 +165,12 @@ class SoftwarePackage extends ReferenceData
     public function updateEntity(Entity $entity): bool
     {
         if ($entity->isAttributeChanged('targetVersion')) {
+            $package = $this->getPackage($entity->get('id'));
+
+            $code = $package['abandoned'] ?? $package['name'];
+
             $composerData = self::getComposerData();
-            $composerData['require'][$entity->get('code')] = $entity->get('targetVersion');
+            $composerData['require'][$code] = $entity->get('targetVersion');
             self::setComposerData('require', $composerData['require']);
 
             return true;
