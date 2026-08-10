@@ -323,6 +323,51 @@
         }
       }
     },
+    "isCode": {
+      "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "equals",
+                  "attribute": "type",
+                  "value": "autoincrement"
+                },
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "isTrue",
+                      "attribute": "unique"
+                    },
+                    {
+                      "type": "in",
+                      "attribute": "type",
+                      "value": [
+                        "varchar",
+                        "int"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
     "index": {
       "type": "bool",
       "conditionalProperties": {

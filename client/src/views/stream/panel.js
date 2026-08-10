@@ -160,20 +160,22 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         createCollection: function (callback, context) {
-            this.getCollectionFactory().create('Note', function (collection) {
-                this.collection = collection;
-                if (this.mode === 'detail') {
-                    collection.url = 'entityStream?entityName=' + this.model.name + '&id=' + this.model.id;
-                } else {
-                    collection.url = 'Stream' + '/' + this.scope
-                }
+            this.onModelReady(() => {
+                this.getCollectionFactory().create('Note', function (collection) {
+                    this.collection = collection;
+                    if (this.mode === 'detail') {
+                        collection.url = 'entityStream?entityName=' + this.model.name + '&id=' + this.model.id;
+                    } else {
+                        collection.url = 'Stream' + '/' + this.scope
+                    }
 
-                collection.asc = false;
-                collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
-                this.setFilter(this.filter);
+                    collection.asc = false;
+                    collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                    this.setFilter(this.filter);
 
-                callback.call(context);
-            }, this);
+                    callback.call(context);
+                }, this);
+            })
         },
 
         afterRender: function () {

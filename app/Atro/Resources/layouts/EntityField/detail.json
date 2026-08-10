@@ -44,7 +44,9 @@
         {
           "name": "readOnly"
         },
-        false
+        {
+          "name": "isCode"
+        }
       ],
       [
         {

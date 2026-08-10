@@ -1,7 +1,8 @@
 {
   "fields": {
     "number": {
-      "type": "autoincrement"
+      "type": "autoincrement",
+      "isCode": true
     },
     "entity": {
       "type": "enum",
