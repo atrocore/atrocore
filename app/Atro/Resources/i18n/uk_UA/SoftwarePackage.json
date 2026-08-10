@@ -14,7 +14,12 @@
     "update": "Оновити систему",
     "toStore": "AtroCore Store",
     "installModules": "Встановити модуль(і)",
-    "uninstallModules": "Видалити модуль(і)"
+    "uninstallModules": "Видалити модуль(і)",
+    "lastUpdate": "Останнє оновлення"
+  },
+  "lastUpdateStatuses": {
+    "Success": "Успішно",
+    "Failed": "Помилка"
   },
   "massActionConfirmMessages": {
     "update": "Після оновлення всіх користувачів буде вилогінено з системи. Ви впевнені, що хочете оновити систему?"
