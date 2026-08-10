@@ -325,6 +325,10 @@ class SoftwarePackage extends ReferenceData
                     if (!empty($package['extra']['atroId']) && $package['extra']['atroId'] == $id) {
                         return $package;
                     }
+                    // for backward compactibility
+                    if (!empty($package['extra']['treoId']) && $package['extra']['treoId'] == $id) {
+                        return $package;
+                    }
                 }
             }
         }
