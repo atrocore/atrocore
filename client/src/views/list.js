@@ -300,9 +300,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                     action: 'quickCreate',
                     label: this.translate('Create', 'labels', this.scope),
                     style: 'primary',
+                    iconClass: 'ph ph-plus-circle',
                     acl: 'create',
-                    aclScope: this.entityType || this.scope,
-                    cssStyle: "margin-left: 15px",
+                    aclScope: this.entityType || this.scope
                 });
             } else {
                 this.menu.buttons.unshift({
@@ -310,9 +310,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                     action: 'create',
                     label: this.translate('Create', 'labels', this.scope),
                     style: 'primary',
+                    iconClass: 'ph ph-plus-circle',
                     acl: 'create',
-                    aclScope: this.entityType || this.scope,
-                    cssStyle: "margin-left: 15px"
+                    aclScope: this.entityType || this.scope
                 });
             }
         },
