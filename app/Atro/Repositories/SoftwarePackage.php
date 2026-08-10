@@ -200,9 +200,9 @@ class SoftwarePackage extends ReferenceData
         }
 
         // push available to install modules
-        $installed = array_column($items, 'code');
+        $installed = array_column($items, 'id');
         foreach ($this->getRemotePackages() as $code => $package) {
-            if (!in_array($code, $installed) && !empty($package['expirationDate']) && $package['expirationDate'] >= date('Y-m-d')) {
+            if (!in_array($package['id'], $installed) && !empty($package['expirationDate']) && $package['expirationDate'] >= date('Y-m-d')) {
                 $this->pushNotInstalledItem($package, $items);
             }
         }
@@ -255,13 +255,20 @@ class SoftwarePackage extends ReferenceData
             }
         }
 
+        $targetVersion = $composerData['require'][$code] ?? null;
+        foreach ($remotePackages[$code]['abandoned'] ?? [] as $abandoned) {
+            if (isset($composerData['require'][$abandoned])) {
+                $targetVersion = $composerData['require'][$abandoned];
+            }
+        }
+
         $items[] = [
             'id'             => $moduleId,
             'code'           => $code,
             'name'           => $package['extra']['name']['default'] ?? $package['extra']['name'] ?? $moduleId,
             'description'    => $package['extra']['description']['default'] ?? $package['extra']['description'] ?? $moduleId,
             'sortOrder'      => count($items) + 1,
-            'targetVersion'  => $composerData['require'][$code] ?? null,
+            'targetVersion'  => $targetVersion,
             'targetVersions' => !empty($package['version']) ? $this->prepareTargetVersions($code, $package) : [],
             'currentVersion' => $package['version'] ?? null,
             'latestVersion'  => $remotePackages[$code]['versions'][0]['version'] ?? null,
