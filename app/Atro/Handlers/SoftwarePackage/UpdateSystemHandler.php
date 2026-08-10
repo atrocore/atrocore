@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\SoftwarePackage;
 
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -22,36 +22,20 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SoftwarePackage/{id}/releaseNotes',
+    path: '/SoftwarePackage/updateSystem',
     methods: [
         'POST',
     ],
-    summary: 'Get release notes of a software package',
-    description: 'Returns the release notes of the specified software package. Accessible by administrators only.',
+    summary: 'Update the system',
+    description: 'Updates the installed software packages to their target versions. All users are logged out of the system when the update is applied. Accessible by administrators only.',
     tag: 'SoftwarePackage',
-    parameters: [
-        [
-            'name'        => 'id',
-            'in'          => 'path',
-            'required'    => true,
-            'description' => 'ID of the software package to get the release notes of.',
-            'schema'      => [
-                'type' => 'string',
-            ],
-        ],
-    ],
     responses: [
         200 => [
-            'description' => 'Release notes of the software package.',
+            'description' => 'true if the system update was started.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'html' => [
-                                'type' => 'string',
-                            ],
-                        ],
+                        'type' => 'boolean',
                     ],
                 ],
             ],
@@ -59,12 +43,9 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => [
             'description' => 'Current user is not an administrator.',
         ],
-        404 => [
-            'description' => 'Software package not found.',
-        ],
     ],
 )]
-class SoftwarePackageReleaseNotesHandler extends AbstractHandler
+class UpdateSystemHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -72,8 +53,6 @@ class SoftwarePackageReleaseNotesHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new JsonResponse([
-            'html' => $this->getRecordService('SoftwarePackage')->getReleaseNotes((string)$request->getAttribute('id'))
-        ]);
+        return new BoolResponse($this->getRecordService('SoftwarePackage')->updateSystem());
     }
 }

@@ -23,12 +23,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SoftwarePackage/uninstall',
+    path: '/SoftwarePackage/install',
     methods: [
-        'DELETE',
+        'POST',
     ],
-    summary: 'Uninstall software packages',
-    description: 'Queues the selected installed software packages for uninstallation. Accessible by administrators only.',
+    summary: 'Install software packages',
+    description: 'Queues the selected not installed software packages for installation. Accessible by administrators only.',
     tag: 'SoftwarePackage',
     requestBody: [
         'required' => true,
@@ -42,7 +42,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'properties' => [
                         'ids' => [
                             'type'        => 'array',
-                            'description' => 'IDs of the software packages to uninstall.',
+                            'description' => 'IDs of the software packages to install.',
                             'items'       => [
                                 'type' => 'string',
                             ],
@@ -71,7 +71,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class SoftwarePackageMassUninstallHandler extends AbstractHandler
+class MassInstallHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -81,6 +81,6 @@ class SoftwarePackageMassUninstallHandler extends AbstractHandler
 
         $data = $this->getRequestBody($request);
 
-        return new BoolResponse($this->getRecordService('SoftwarePackage')->uninstall($data->ids));
+        return new BoolResponse($this->getRecordService('SoftwarePackage')->install($data->ids));
     }
 }

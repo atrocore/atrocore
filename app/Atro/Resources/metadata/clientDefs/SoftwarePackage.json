@@ -9,6 +9,9 @@
   "views": {
     "list": "views/software-package/list"
   },
+  "listStatus": {
+    "url": "SoftwarePackage/lastUpdate"
+  },
   "menu": {
     "list": {
       "buttons": [

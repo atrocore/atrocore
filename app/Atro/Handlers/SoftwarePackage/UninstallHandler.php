@@ -22,19 +22,19 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SoftwarePackage/{id}/install',
+    path: '/SoftwarePackage/{id}/uninstall',
     methods: [
-        'POST',
+        'DELETE',
     ],
-    summary: 'Install a software package',
-    description: 'Queues the specified not installed software package for installation. Accessible by administrators only.',
+    summary: 'Uninstall a software package',
+    description: 'Queues the specified installed software package for uninstallation. Accessible by administrators only.',
     tag: 'SoftwarePackage',
     parameters: [
         [
             'name'        => 'id',
             'in'          => 'path',
             'required'    => true,
-            'description' => 'ID of the software package to install.',
+            'description' => 'ID of the software package to uninstall.',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -42,7 +42,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'true if the software package was queued for installation.',
+            'description' => 'true if the software package was queued for uninstallation.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -59,7 +59,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class SoftwarePackageInstallHandler extends AbstractHandler
+class UninstallHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -67,6 +67,6 @@ class SoftwarePackageInstallHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new BoolResponse($this->getRecordService('SoftwarePackage')->install([(string)$request->getAttribute('id')]));
+        return new BoolResponse($this->getRecordService('SoftwarePackage')->uninstall([(string)$request->getAttribute('id')]));
     }
 }
