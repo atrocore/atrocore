@@ -37,27 +37,25 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'label'   => [
+                            'label' => [
                                 'type'    => 'string',
                                 'example' => 'Last Update',
                             ],
-                            'value'   => [
-                                'type'    => 'string',
-                                'example' => 'Success',
+                            'value' => [
+                                'type'        => 'string',
+                                'nullable'    => true,
+                                'description' => 'Null means there is nothing to display, the status is skipped.',
+                                'example'     => 'Success',
                             ],
-                            'style'   => [
+                            'style' => [
                                 'type' => 'string',
                                 'enum' => [
                                     'success',
                                     'danger',
                                     'warning',
-                                    'info',
+                                    'info'
                                 ],
-                            ],
-                            'details' => [
-                                'type'     => 'string',
-                                'nullable' => true,
-                            ],
+                            ]
                         ],
                     ],
                 ],
@@ -76,14 +74,6 @@ class LastUpdateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        // @todo replace the stub with the real status of the last system update.
-        //       Possible sources: SoftwarePackage::CHECK_UP_FILE (data/composer-check-up.log),
-        //       data/composer.log, Atro\Jobs\ComposerAutoUpdate.
-        return new JsonResponse([
-            'label'   => $this->getLanguage()->translate('lastUpdate', 'labels', 'SoftwarePackage'),
-            'value'   => $this->getLanguage()->translate('Success', 'lastUpdateStatuses', 'SoftwarePackage'),
-            'style'   => 'success',
-            'details' => 'Some text',
-        ]);
+        return new JsonResponse(($this->getRecordService('SoftwarePackage')->getLastUpdateStatus()));
     }
 }
