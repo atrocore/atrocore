@@ -30,5 +30,13 @@
   "exceptions": {
     "jobManagerRunning": "Das System kann nicht aktualisiert werden, weil im Auftrags-Manager Aufträge ausgeführt werden. Bitte versuchen Sie es später erneut.",
     "daemonNotAlive": "Die Aktion kann nicht ausgeführt werden, weil geplante Aufgaben nicht gestartet werden. Höchstwahrscheinlich ist die Crontab nicht korrekt konfiguriert oder es liegt ein Problem auf dem Server vor. Bitte lesen Sie die Installationsanleitung, um den Server korrekt zu konfigurieren."
+  },
+  "notifications": {
+    "Module update": "Modul {module} wurde aktualisiert. Von Version {from} auf {to}.",
+    "System update": "Das System wurde aktualisiert. Von Version {from} auf {to}.",
+    "Module install": "Modul {module} v.{version} wurde installiert.",
+    "Module delete": "Modul {module} wurde entfernt.",
+    "Module downgrade": "Modul {module} wurde herabgestuft. Von Version {from} auf {to}.",
+    "System downgrade": "Das System wurde herabgestuft. Von Version {from} auf {to}."
   }
 }

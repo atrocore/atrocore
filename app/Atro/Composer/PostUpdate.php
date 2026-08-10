@@ -701,12 +701,12 @@ class PostUpdate
                 $keyLang = $nameModule == 'System' ? 'System downgrade' : 'Module downgrade';
             }
 
-            $message = $language->translate($keyLang, 'notifications', 'Composer');
+            $message = $language->translate($keyLang, 'notifications', 'SoftwarePackage');
             $message = str_replace('{module}', $nameModule, $message);
             $message = str_replace('{from}', $module['from'], $message);
             $message = str_replace('{to}', $module['to'], $message);
         } else {
-            $message = $language->translate("Module {$status}", 'notifications', 'Composer');
+            $message = $language->translate("Module {$status}", 'notifications', 'SoftwarePackage');
             $message = str_replace('{module}', $nameModule, $message);
             if (isset($module["package"]["version"])) {
                 $message = str_replace('{version}', $module["package"]["version"], $message);

@@ -30,5 +30,13 @@
   "exceptions": {
     "jobManagerRunning": "Le système ne peut pas être mis à jour car des tâches sont en cours d'exécution dans le Gestionnaire des tâches. Veuillez réessayer plus tard.",
     "daemonNotAlive": "L'action ne peut pas être effectuée car les tâches planifiées ne sont pas exécutées. Il est probable que la crontab ne soit pas configurée correctement ou qu'il y ait un problème sur le serveur. Veuillez consulter le guide d'installation pour configurer correctement le serveur."
+  },
+  "notifications": {
+    "Module update": "Le module {module} a été mis à jour. De la version {from} vers {to}.",
+    "System update": "Le système a été mis à jour. De la version {from} vers {to}.",
+    "Module install": "Le module {module} v.{version} a été installé.",
+    "Module delete": "Le module {module} a été supprimé.",
+    "Module downgrade": "Le module {module} a été rétrogradé. De la version {from} vers {to}.",
+    "System downgrade": "Le système a été rétrogradé. De la version {from} vers {to}."
   }
 }

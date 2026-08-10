@@ -30,5 +30,13 @@
   "exceptions": {
     "jobManagerRunning": "El sistema no se puede actualizar porque hay trabajos en ejecución en Job Manager. Vuelva a intentarlo más tarde.",
     "daemonNotAlive": "La acción no se puede realizar porque las tareas programadas no se están ejecutando. Lo más probable es que crontab no esté configurado correctamente o que haya un problema en el servidor. Consulte la guía de instalación para configurar el servidor correctamente."
+  },
+  "notifications": {
+    "Module update": "El módulo {module} se ha actualizado. De la versión {from} a {to}.",
+    "System update": "El sistema se ha actualizado. De la versión {from} a {to}.",
+    "Module install": "El módulo {module} v.{version} se ha instalado.",
+    "Module delete": "El módulo {module} se ha eliminado.",
+    "Module downgrade": "El módulo {module} se ha degradado. De la versión {from} a {to}.",
+    "System downgrade": "El sistema se ha degradado. De la versión {from} a {to}."
   }
 }

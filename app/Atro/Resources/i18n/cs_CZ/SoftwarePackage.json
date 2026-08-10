@@ -30,5 +30,13 @@
   "exceptions": {
     "jobManagerRunning": "Systém nelze aktualizovat, protože ve Správci úloh jsou spuštěné úlohy. Zkuste to prosím později.",
     "daemonNotAlive": "Akci nelze provést, protože naplánované úlohy neběží. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku, jak server správně nastavit."
+  },
+  "notifications": {
+    "Module update": "Modul {module} byl aktualizován. Z verze {from} na {to}.",
+    "System update": "Systém byl aktualizován. Z verze {from} na {to}.",
+    "Module install": "Modul {module} v.{version} byl nainstalován.",
+    "Module delete": "Modul {module} byl odstraněn.",
+    "Module downgrade": "Modul {module} byl přeinstalován na nižší verzi. Z verze {from} na {to}.",
+    "System downgrade": "Systém byl přeinstalován na nižší verzi. Z verze {from} na {to}."
   }
 }

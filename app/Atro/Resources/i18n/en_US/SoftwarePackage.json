@@ -30,5 +30,13 @@
   "exceptions": {
     "jobManagerRunning": "The system cannot be updated because there are running jobs in Job Manager. Please try again later.",
     "daemonNotAlive": "The action cannot be performed because scheduled tasks are not running. Most likely the crontab is not configured correctly or there is a problem on the server. Please refer to the installation guide for how to configure the server correctly."
+  },
+  "notifications": {
+    "Module update": "Module {module} has been updated. From version {from} to {to}.",
+    "System update": "System has been updated. From version {from} to {to}.",
+    "Module install": "Module {module} v.{version} has been installed.",
+    "Module delete": "Module {module} has been removed.",
+    "Module downgrade": "Module {module} has been downgraded. From version {from} to {to}.",
+    "System downgrade": "System has been downgraded. From version {from} to {to}."
   }
 }

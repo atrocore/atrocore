@@ -30,5 +30,13 @@
   "exceptions": {
     "jobManagerRunning": "Nie można zaktualizować systemu, ponieważ w Job Manager są uruchomione zadania. Spróbuj ponownie później.",
     "daemonNotAlive": "Nie można wykonać tej akcji, ponieważ zaplanowane zadania nie są uruchamiane. Najprawdopodobniej crontab nie jest poprawnie skonfigurowany lub wystąpił problem na serwerze. Zapoznaj się z przewodnikiem instalacji, aby poprawnie skonfigurować serwer."
+  },
+  "notifications": {
+    "Module update": "Moduł {module} został zaktualizowany. Z wersji {from} do {to}.",
+    "System update": "System został zaktualizowany. Z wersji {from} do {to}.",
+    "Module install": "Moduł {module} v.{version} został zainstalowany.",
+    "Module delete": "Moduł {module} został usunięty.",
+    "Module downgrade": "Moduł {module} został przywrócony do niższej wersji. Z wersji {from} do {to}.",
+    "System downgrade": "System został przywrócony do niższej wersji. Z wersji {from} do {to}."
   }
 }
