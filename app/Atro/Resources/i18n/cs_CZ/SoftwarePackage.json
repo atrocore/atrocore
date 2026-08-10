@@ -11,7 +11,8 @@
   },
   "labels": {
     "latest": "nejnovější",
-    "update": "Aktualizovat"
+    "update": "Aktualizovat systém",
+    "toStore": "AtroCore Store"
   },
   "massActionConfirmMessages": {
     "update": "Po aktualizaci budou všichni uživatelé odhlášeni ze systému. Jste si jisti, že chcete systém aktualizovat?"

@@ -85,6 +85,10 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
             });
         },
 
+        actionToStoreAction(data) {
+            window.open('https://store.atrocore.com/', '_blank', 'noopener');
+        },
+
         actionShowReleaseNotes(data) {
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest(`SoftwarePackage/${data.id}/releaseNotes`).success(response => {

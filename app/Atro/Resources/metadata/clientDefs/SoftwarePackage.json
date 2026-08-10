@@ -15,7 +15,14 @@
         {
           "name": "update",
           "action": "updateSystemAction",
-          "style": "btn-primary"
+          "style": "btn-primary",
+          "iconClass": "ph ph-arrow-circle-up"
+        },
+        {
+          "name": "toStore",
+          "action": "toStoreAction",
+          "style": "btn-success",
+          "iconClass": "ph ph-basket"
         }
       ],
       "dropdownButtons": [

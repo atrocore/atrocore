@@ -11,7 +11,8 @@
   },
   "labels": {
     "latest": "najnowsza",
-    "update": "Aktualizuj"
+    "update": "Aktualizuj system",
+    "toStore": "AtroCore Store"
   },
   "massActionConfirmMessages": {
     "update": "Po aktualizacji wszyscy użytkownicy zostaną wylogowani z systemu. Czy na pewno chcesz zaktualizować system?"

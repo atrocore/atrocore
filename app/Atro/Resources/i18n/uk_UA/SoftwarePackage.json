@@ -11,7 +11,8 @@
   },
   "labels": {
     "latest": "остання",
-    "update": "Оновити"
+    "update": "Оновити систему",
+    "toStore": "AtroCore Store"
   },
   "massActionConfirmMessages": {
     "update": "Після оновлення всіх користувачів буде вилогінено з системи. Ви впевнені, що хочете оновити систему?"
