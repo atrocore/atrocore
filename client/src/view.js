@@ -403,14 +403,18 @@ Espo.define('view', [], function () {
         },
 
         onModelReady(callback) {
-            const modelIsSynced = !!this.model.attributes?.id;
-
-            if (this.model.isNew() || !this.model.hasField('id') || modelIsSynced) {
+            if (!this.model) {
                 callback();
             } else {
-                this.listenToOnce(this.model, 'sync', () => {
-                    callback(true);
-                });
+                const modelIsSynced = !!this.model.attributes?.id;
+
+                if (this.model.isNew() || !this.model.hasField('id') || modelIsSynced) {
+                    callback();
+                } else {
+                    this.listenToOnce(this.model, 'sync', () => {
+                        callback(true);
+                    });
+                }
             }
         },
 
