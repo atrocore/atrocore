@@ -86,7 +86,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     }
                 }
             },
-            'click span.collapser[data-action="collapsePanel"]': function (e) {
+            'click span.panel-title-text[data-action="collapsePanel"]': function (e) {
                 this.collapseBottomPanel($(e.currentTarget).data('panel'));
             },
             'show.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
@@ -649,7 +649,9 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             const name = target.data('name');
             this.savePanelStateToStorage(name, hide);
 
-            this.$el.find(`.panel[data-name="${name}"] > .panel-heading .collapser`).html(`<i class="ph ph-caret-${hide ? 'right' : 'down'}"></i>`);
+            this.$el.find(`.panel[data-name="${name}"] > .panel-heading .panel-title-text > i.collapser`)
+                .removeClass('ph-caret-down ph-caret-right')
+                .addClass(hide ? 'ph-caret-right' : 'ph-caret-down');
         },
 
         savePanelStateToStorage(panelName, hide) {

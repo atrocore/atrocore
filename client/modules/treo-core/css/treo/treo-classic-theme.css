@@ -13359,12 +13359,27 @@ a:hover, a:focus {
 }
 
 .panel-title .panel-title-text {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     padding: 5px 10px;
     background: #e8eced;
     text-transform: none;
     letter-spacing: 0.03em;
     color: #333;
+}
+
+.panel-title .panel-title-text[data-action="collapsePanel"] {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s ease;
+}
+
+.panel-title .panel-title-text[data-action="collapsePanel"]:hover {
+    background: #e0e5e7;
+}
+
+.panel-title .panel-title-text[data-action="collapsePanel"]:active {
+    background: #d8dee1;
 }
 
 .panel-title .panel-title-text:empty {
@@ -14470,8 +14485,7 @@ button.category:focus {
         flex: 1;
     }
 
-    .bottom .panel .panel-title > .action {
-        display: inline-block;
+    .bottom .panel .panel-title > .panel-title-text {
         max-width: calc(100% - 40px);
         overflow-x: clip;
         text-overflow: ellipsis;
@@ -15586,19 +15600,17 @@ td[data-name="draggableIcon"] {
     color: #3c763d;
 }
 
-.panel-heading > .panel-title > .collapser {
-    cursor: pointer;
-    margin-right: 8px;
-    margin-left: -4px;
+.panel-heading .panel-title .panel-title-text > .collapser {
     color: var(--panel-title-color);
     font-size: 12px;
     vertical-align: top;
     line-height: 0;
-    user-select: none;
     display: inline-block;
+    margin-inline-start: -2px;
+    margin-inline-end: 8px;
 }
 
-.panel-heading > .panel-title > .collapser > svg {
+.panel-heading .panel-title .panel-title-text > .collapser > svg {
     width: 16px;
 }
 
