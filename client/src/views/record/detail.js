@@ -1947,7 +1947,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.$el.find('.panel-heading').each((k, el) => {
                     let $el = $(el);
-                    let $panelBody = $el.parent().find('.panel-body')
                     let panelName = $el.parent().data('name');
                     let isAttributeValuePanel = attributePanels.includes(panelName);
 
@@ -1975,39 +1974,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 });
                             });
                         }
-
-                        $panelBody.on('show.bs.collapse', (event) => {
-                            if ($panelBody.is(event.target)) {
-                                let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
-                                if (collapsedPanels.includes(panelName)) {
-                                    collapsedPanels = collapsedPanels.filter(item => item !== panelName)
-                                    this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
-                                    $el.find('.collapser').html('<i class="ph ph-caret-down"></i>');
-                                }
-                            }
-                        })
-
-                        $panelBody.on('hide.bs.collapse', (event) => {
-                            if ($panelBody.is(event.target)) {
-                                let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
-                                if (!collapsedPanels.includes(panelName)) {
-                                    collapsedPanels.push(panelName)
-                                    this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
-                                    $el.find('.collapser').html('<i class="ph ph-caret-right"></i>')
-                                }
-                            }
-                        })
-
-
-                        // apply collapse state
-                        let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
-                        $panelBody.addClass(collapsedPanels.includes(panelName) ? 'collapse' : 'collapse in');
-
-                        $el.find('.panel-title').prepend(`<span class="collapser"><i class="ph ph-caret-${collapsedPanels.includes(panelName) ? 'right' : 'down'}"></i></span>`)
-
-                        $el.find('.collapser').click(() => {
-                            $panelBody.collapse('toggle')
-                        })
 
                         this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(this.getView('bottom')?.panelList || []) });
                     }

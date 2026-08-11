@@ -5928,7 +5928,6 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 }
 
 .panel {
-    margin-bottom: 30px;
     background-color: #fff;
     border: 1px solid transparent;
     border-radius: 0;
@@ -11872,13 +11871,8 @@ h4.panel-title span.color-icon {
     border-top-width: 1px;
 }
 
-.record .middle {
-    margin-bottom: 30px;
-}
-
 .record .middle > .panel {
     border-top-width: 0;
-    margin-bottom: 10px;
 }
 
 .record .middle > .panel > .panel-heading .btn-group .btn {
@@ -13519,7 +13513,19 @@ input#sn-checkbox-open-in-new-window {
     height: 40px;
     border-top-width: 2px;
     border-bottom: 0;
+}
+
+.dashlets .panel-default > .panel-heading,
+.composer .panel-default > .panel-heading,
+.modal-body > .panel-default > .panel-heading {
     margin-bottom: 5px;
+}
+
+.middle > .panel-default > .panel-body.in,
+.middle > .panel-default > .panel-body.collapsing,
+.bottom > .panel-default > .panel-body.in,
+.bottom > .panel-default > .panel-body.collapsing {
+    margin-bottom: 10px;
 }
 
 .dashlets .panel-default > .panel-heading {
