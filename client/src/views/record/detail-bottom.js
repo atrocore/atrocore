@@ -624,6 +624,11 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             let panelIndex = this.panelList.findIndex(panel => panel.name === name);
             let panel = this.panelList[panelIndex];
 
+            if (!panel) {
+                panelBody.collapse(type ? type : 'toggle');
+                return;
+            }
+
             if (!panel.alreadyLoaded && panel.avoidLoadingOnCollapse && !panelBody.hasClass('in')) {
                 panelBody.html('<img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg">');
                 panel.alreadyLoaded = true;
