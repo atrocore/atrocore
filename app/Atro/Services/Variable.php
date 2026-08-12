@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Services\Base;
 
@@ -68,7 +69,7 @@ class Variable extends Base
         if (!preg_match('/^[a-z][a-zA-Z0-9]*$/', $key)) {
             throw new BadRequest($this->getInjection('language')->translate('variableKeyInvalid', 'exceptions', 'Settings'));
         }
-        if ($key === 'variables' || $this->getConfig()->has($key)) {
+        if ($key === 'variables' || in_array($key, $this->getRestrictedKeys()) || $this->getConfig()->has($key)) {
             throw new BadRequest(sprintf($this->getInjection('language')->translate('variableKeyIsExist', 'exceptions', 'Settings'), $key));
         }
 
@@ -103,6 +104,11 @@ class Variable extends Base
         $variables = $this->getConfig()->get('variables', []);
         if (!in_array($id, $variables)) {
             throw new NotFound();
+        }
+
+        // such a variable could only be created before the restriction was introduced, so it can be deleted but not changed
+        if (in_array($id, $this->getRestrictedKeys())) {
+            throw new Forbidden();
         }
 
         if (property_exists($data, 'value')) {
@@ -149,5 +155,18 @@ class Variable extends Base
         $this->getConfig()->save();
 
         return true;
+    }
+
+    /**
+     * A variable must never shadow a protected config parameter, because Config::set() bypasses
+     * the systemItems/adminItems restrictions that Settings::update() relies on
+     */
+    protected function getRestrictedKeys(): array
+    {
+        return array_merge(
+            $this->getConfig()->get('systemItems', []),
+            $this->getConfig()->get('adminItems', []),
+            $this->getConfig()->get('userItems', [])
+        );
     }
 }

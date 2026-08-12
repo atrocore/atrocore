@@ -62,16 +62,21 @@ abstract class AbstractConsole
 
     public static function getPhpBinPath(Config $config): string
     {
-        if ($config->get('phpBinPath')) {
-            return $config->get('phpBinPath');
-        }
+        $candidates = [
+            $config->get('phpBinPath'),
+            $_SERVER['PHP_PATH'] ?? null,
+            $_SERVER['_'] ?? null,
+        ];
 
-        if (isset($_SERVER['PHP_PATH']) && !empty($_SERVER['PHP_PATH'])) {
-            return $_SERVER['PHP_PATH'];
-        }
+        foreach ($candidates as $candidate) {
+            // the value ends up in a shell command, so only an existing executable file is accepted
+            if (!empty($candidate) && is_file($candidate) && is_executable($candidate)) {
+                return $candidate;
+            }
 
-        if (!empty($_SERVER['_'])) {
-            return $_SERVER['_'];
+            if (!empty($candidate) && isset($GLOBALS['log'])) {
+                $GLOBALS['log']->warning("PHP binary '$candidate' is not an executable file, so it was ignored.");
+            }
         }
 
         return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Composer;
 
+use Atro\Console\AbstractConsole;
 use Atro\Core\Container;
 use Atro\Core\Application as App;
 use Atro\Jobs\MassDownload;
@@ -938,19 +939,7 @@ class PostUpdate
 
     private static function getPhpBin(): string
     {
-        if (self::$container->get('config')->get('phpBinPath')) {
-            return self::$container->get('config')->get('phpBinPath');
-        }
-
-        if (isset($_SERVER['PHP_PATH']) && !empty($_SERVER['PHP_PATH'])) {
-            return $_SERVER['PHP_PATH'];
-        }
-
-        if (!empty($_SERVER['_'])) {
-            return $_SERVER['_'];
-        }
-
-        return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
+        return AbstractConsole::getPhpBinPath(self::$container->get('config'));
     }
 
     private static function isInstalled(): bool
