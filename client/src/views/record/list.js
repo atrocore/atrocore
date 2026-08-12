@@ -1354,6 +1354,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             if (
                 !this.massFollowDisabled &&
                 this.getMetadata().get(['scopes', this.entityType, 'stream']) &&
+                !this.getMetadata().get(['scopes', this.entityType, 'followDisabled']) &&
                 this.getAcl().check(this.entityType, 'stream')
             ) {
                 this.addMassAction('follow', true);

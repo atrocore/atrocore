@@ -104,7 +104,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             });
 
 
-            if (!this.getMetadata().get('scopes.' + this.scope + '.streamDisabled')) {
+            if (!this.getMetadata().get('scopes.' + this.scope + '.streamDisabled')
+                && !this.getMetadata().get('scopes.' + this.scope + '.followDisabled')) {
                 this.handleFollowButton(!this.model.has('isFollowed'));
 
                 this.listenTo(this.model, 'change:isFollowed', function () {

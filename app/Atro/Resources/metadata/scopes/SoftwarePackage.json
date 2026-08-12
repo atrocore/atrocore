@@ -14,6 +14,7 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "bookmarkDisabled": true,
+  "followDisabled": true,
   "emHidden": true,
   "actionDisabled": true
 }

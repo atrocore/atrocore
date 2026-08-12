@@ -99,6 +99,10 @@ class UnfollowHandler extends AbstractHandler
 
         $entityName = (string) $data->entityName;
 
+        if ($this->getMetadata()->get(['scopes', $entityName, 'followDisabled'])) {
+            throw new Forbidden();
+        }
+
         if (!$this->getAcl()->check($entityName, 'stream')) {
             throw new Forbidden();
         }
