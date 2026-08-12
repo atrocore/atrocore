@@ -42,8 +42,52 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
         data: function () {
             return {
                 hiddenPanels: this.recordHelper.getHiddenPanels(),
-                hiddenFields: this.recordHelper.getHiddenFields()
+                hiddenFields: this.recordHelper.getHiddenFields(),
+                collapsedPanels: this.getCollapsedPanelsMap()
             };
+        },
+
+        events: {
+            'click span.panel-title-text[data-action="collapsePanel"]': function (e) {
+                var name = $(e.currentTarget).data('panel');
+                this.$el.find('.panel-body[data-name="' + name + '"]').collapse('toggle');
+            },
+            'show.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
+                this.afterPanelCollapsed($(e.currentTarget));
+            },
+            'hide.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
+                this.afterPanelCollapsed($(e.currentTarget), true);
+            }
+        },
+
+        afterPanelCollapsed: function (target, hide) {
+            var name = target.data('name');
+            this.savePanelCollapseState(name, hide);
+
+            this.$el.find('.panel[data-name="' + name + '"] > .panel-heading .panel-title-text > i.collapser')
+                .removeClass('ph-caret-down ph-caret-right')
+                .addClass(hide ? 'ph-caret-right' : 'ph-caret-down');
+        },
+
+        savePanelCollapseState: function (name, hide) {
+            var states = this.getStorage().get('collapsed-middle-panels', this.scope) || [];
+            if (!hide && states.includes(name)) {
+                states.splice(states.indexOf(name), 1);
+            } else if (hide && !states.includes(name)) {
+                states.push(name);
+            } else {
+                return;
+            }
+            this.getStorage().set('collapsed-middle-panels', this.scope, states);
+        },
+
+        getCollapsedPanelsMap: function () {
+            var states = this.getStorage().get('collapsed-middle-panels', this.scope) || [];
+            var map = {};
+            states.forEach(function (name) {
+                map[name] = true;
+            });
+            return map;
         },
 
         showPanel: function (name) {
