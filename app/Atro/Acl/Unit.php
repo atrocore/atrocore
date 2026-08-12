@@ -24,4 +24,9 @@ class Unit extends Base
         }
         return parent::checkScope($user, $data, $action, $entity, $entityAccessData);
     }
+
+    public function checkReadNo(User $user, $data)
+    {
+        return false;
+    }
 }
