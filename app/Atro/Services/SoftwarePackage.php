@@ -111,6 +111,8 @@ class SoftwarePackage extends ReferenceData
 
         file_put_contents(Application::COMPOSER_LOG_FILE, 'update || ' . $this->getUser()->get('id'));
 
+        sleep(1);
+
         return true;
     }
 
@@ -140,6 +142,8 @@ class SoftwarePackage extends ReferenceData
 
         file_put_contents(Application::COMPOSER_LOG_FILE, $command . ' || ' . $this->getUser()->get('id'));
 
+        sleep(1);
+
         return true;
     }
 
@@ -168,6 +172,8 @@ class SoftwarePackage extends ReferenceData
         $command = 'remove ' . implode(' ', $packages);
 
         file_put_contents(Application::COMPOSER_LOG_FILE, $command . ' || ' . $this->getUser()->get('id'));
+
+        sleep(1);
 
         return true;
     }
