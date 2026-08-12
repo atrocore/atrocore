@@ -41,6 +41,7 @@ class Config extends \Espo\Core\Utils\Config
             'userLimit',
             'stylesheet',
             'userItems',
+            'phpBinPath',
         ],
         'adminItems'                => [
             'devMode',
