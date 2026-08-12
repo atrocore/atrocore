@@ -167,13 +167,15 @@ class SoftwarePackage extends ReferenceData
         if ($entity->isAttributeChanged('targetVersion')) {
             $package = $this->getPackage($entity->get('id'));
 
-            $code = $package['abandoned'] ?? $package['name'];
+            $code = $package['abandoned'] ?? $package['name'] ?? null;
 
-            $composerData = self::getComposerData();
-            $composerData['require'][$code] = $entity->get('targetVersion');
-            self::setComposerData('require', $composerData['require']);
+            if (!empty($code)) {
+                $composerData = self::getComposerData();
+                $composerData['require'][$code] = $entity->get('targetVersion');
+                self::setComposerData('require', $composerData['require']);
 
-            return true;
+                return true;
+            }
         }
 
         return false;
