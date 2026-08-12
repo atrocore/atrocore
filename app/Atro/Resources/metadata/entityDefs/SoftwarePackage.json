@@ -28,7 +28,17 @@
     "targetVersion": {
       "type": "varchar",
       "required": true,
-      "view": "views/software-package/fields/target-version"
+      "view": "views/software-package/fields/target-version",
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "installed"
+            }
+          ]
+        }
+      }
     },
     "targetVersions": {
       "type": "array",
