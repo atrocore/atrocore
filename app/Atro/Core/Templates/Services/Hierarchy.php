@@ -630,7 +630,7 @@ class Hierarchy extends Base
         ];
     }
 
-    public function getEntity(?string $id = null, ?string $withRelationships = null): ?IEntity
+    public function getEntity(string $id, ?string $withRelationships = null): ?IEntity
     {
         $entity = parent::getEntity($id, $withRelationships);
 

@@ -1947,7 +1947,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.$el.find('.panel-heading').each((k, el) => {
                     let $el = $(el);
-                    let $panelBody = $el.parent().find('.panel-body')
                     let panelName = $el.parent().data('name');
                     let isAttributeValuePanel = attributePanels.includes(panelName);
 
@@ -1975,39 +1974,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 });
                             });
                         }
-
-                        $panelBody.on('show.bs.collapse', (event) => {
-                            if ($panelBody.is(event.target)) {
-                                let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
-                                if (collapsedPanels.includes(panelName)) {
-                                    collapsedPanels = collapsedPanels.filter(item => item !== panelName)
-                                    this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
-                                    $el.find('.collapser').html('<i class="ph ph-caret-down"></i>');
-                                }
-                            }
-                        })
-
-                        $panelBody.on('hide.bs.collapse', (event) => {
-                            if ($panelBody.is(event.target)) {
-                                let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
-                                if (!collapsedPanels.includes(panelName)) {
-                                    collapsedPanels.push(panelName)
-                                    this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
-                                    $el.find('.collapser').html('<i class="ph ph-caret-right"></i>')
-                                }
-                            }
-                        })
-
-
-                        // apply collapse state
-                        let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
-                        $panelBody.addClass(collapsedPanels.includes(panelName) ? 'collapse' : 'collapse in');
-
-                        $el.find('.panel-title').prepend(`<span class="collapser"><i class="ph ph-caret-${collapsedPanels.includes(panelName) ? 'right' : 'down'}"></i></span>`)
-
-                        $el.find('.collapser').click(() => {
-                            $panelBody.collapse('toggle')
-                        })
 
                         this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(this.getView('bottom')?.panelList || []) });
                     }
@@ -3147,6 +3113,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed
         },
 
+        shouldShowInsights: function () {
+            // ReferenceData entities have neither audit nor access management fields, so there is nothing to show
+            if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
+                return false;
+            }
+
+            return ['edit', 'detail'].includes(this.mode);
+        },
+
         getSvelteSideViewProps(parentView) {
             const loadInsights = () => {
                 parentView.createView('rightSideView', parentView.rightSideView, {
@@ -3193,7 +3168,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 id: this.model.id,
                 mode: this.mode,
                 hasStream: this.canLoadActivities() && !!this.model.id,
-                showInsights: ['edit', 'detail'].includes(this.mode),
+                showInsights: this.shouldShowInsights(),
                 createView: parentView.createView.bind(this),
                 isCollapsed: !['edit', 'detail'].includes(this.mode),
                 loadInsights: loadInsights,
@@ -3218,7 +3193,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             };
 
-            if (!this.model.isNew() && this.getMetadata().get(['entityDefs', this.scope, 'fields', 'cluster'])) {
+            if (!this.model.isNew() && this.getMetadata().get(['entityDefs', this.scope, 'fields', 'cluster']) &&
+                this.getAcl().checkScope('Cluster', 'read') && this.getAcl().checkScope('ClusterItem', 'read')) {
                 props.showCluster = true;
                 props.clusterId = this.model.get('clusterId') || '';
                 props.loadClusterDetail = (element, attributes) => {
@@ -3245,7 +3221,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.listenTo(this.model, 'sync', () => {
                     if (window.SvelteEntityContextPanel?.$set) {
-                        window.SvelteEntityContextPanel.$set({'clusterId': this.model.get('clusterId')});
+                        window.SvelteEntityContextPanel.$set({ 'clusterId': this.model.get('clusterId') });
                     }
                 });
             }

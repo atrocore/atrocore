@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Pacchetto software",
     "User": "Utente",
     "Admin": "Admin",
     "MatchedRecord": "Record abbinato",
@@ -44,7 +45,6 @@
     "Measure": "Misura",
     "Prefix": "Prefisso",
     "Unit": "Unità",
-    "Store": "Negozio",
     "Team": "Il team",
     "Role": "Ruolo",
     "OutboundEmail": "Email in uscita",
@@ -87,6 +87,7 @@
     "ClusterItem": "Articolo del cluster di abbinamento"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "L'elaborazione in background non funziona. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione.",
     "inherited": "Ereditato",
     "Saved": "Salvato",
     "Removed": "Eliminato",
@@ -459,6 +460,10 @@
     "openPrimaryEntity": "Entità master aperta",
     "currentSelection": "Selezione attuale",
     "System": "Sistema",
+    "install": "Installa",
+    "uninstall": "Disinstalla",
+    "showReleaseNotes": "Note di rilascio",
+    "readDocs": "Documentazione",
     "entityFilterResult": "Risultato del filtro"
   },
   "messages": {
@@ -873,6 +878,7 @@
     "small": "Piccolo"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Pacchetti software",
     "MatchedRecord": "Record abbinati",
     "Matching": "Abbinamenti",
     "ThumbnailType": "Tipi di miniature",
@@ -1121,11 +1127,11 @@
     "entityRemoved": "{utente} ha cancellato {entityType} {entità}"
   },
   "streamMessages": {
+    "composerUpdate": "{user} ha modificato i pacchetti software installati",
     "createRecordAssociationThis": "{utente} ha associato {record correlato} come {associazione}.",
     "deleteRecordAssociationThis": "{user} ha rimosso l'associazione a {relatedRecord} come {associazione}.",
     "createAssociationRecordThis": "{utente} ha associato {principaleRecord} a {relativoRecord}.",
     "deleteAssociationRecordThis": "{user} ha rimosso l'associazione di {mainRecord} con {relatedRecord}.",
-    "composerUpdateThis": "{utente}",
     "post": "{utente} ha pubblicato su {entityType} {entità}",
     "postInList": "{utente} ha pubblicato su {entityType}",
     "attach": "{utente} collegato su {entitàTipo} {entità}",
@@ -1197,11 +1203,9 @@
     "become": "diventare"
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{utente}",
     "postTargetSelfAndOthers": "{user} ha inviato a {target} e a se stesso"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{utente}",
     "postTargetSelfAndOthers": "{user} ha inviato a {target} e a se stessa"
   },
   "monthNames": {

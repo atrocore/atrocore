@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Composer;
 
+use Atro\Console\AbstractConsole;
 use Atro\Core\Container;
 use Atro\Core\Application as App;
 use Atro\Jobs\MassDownload;
@@ -701,12 +702,12 @@ class PostUpdate
                 $keyLang = $nameModule == 'System' ? 'System downgrade' : 'Module downgrade';
             }
 
-            $message = $language->translate($keyLang, 'notifications', 'Composer');
+            $message = $language->translate($keyLang, 'notifications', 'SoftwarePackage');
             $message = str_replace('{module}', $nameModule, $message);
             $message = str_replace('{from}', $module['from'], $message);
             $message = str_replace('{to}', $module['to'], $message);
         } else {
-            $message = $language->translate("Module {$status}", 'notifications', 'Composer');
+            $message = $language->translate("Module {$status}", 'notifications', 'SoftwarePackage');
             $message = str_replace('{module}', $nameModule, $message);
             if (isset($module["package"]["version"])) {
                 $message = str_replace('{version}', $module["package"]["version"], $message);
@@ -938,19 +939,7 @@ class PostUpdate
 
     private static function getPhpBin(): string
     {
-        if (self::$container->get('config')->get('phpBinPath')) {
-            return self::$container->get('config')->get('phpBinPath');
-        }
-
-        if (isset($_SERVER['PHP_PATH']) && !empty($_SERVER['PHP_PATH'])) {
-            return $_SERVER['PHP_PATH'];
-        }
-
-        if (!empty($_SERVER['_'])) {
-            return $_SERVER['_'];
-        }
-
-        return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
+        return AbstractConsole::getPhpBinPath(self::$container->get('config'));
     }
 
     private static function isInstalled(): bool

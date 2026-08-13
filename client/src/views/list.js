@@ -141,7 +141,10 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
             const scope = this.scope;
 
-            const actionDefs = this.getMenu().buttons.find(item => item.name === name) || this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
+            const menu = this.getMenu();
+            const menuItems = [...(menu.buttons || []), ...(menu.dropdownButtons || [])];
+
+            const actionDefs = menuItems.find(item => item.name === name) || this.getMetadata().get(['clientDefs', scope, 'listActions', name]) || {};
             if (!actionDefs.url) return;
 
             const runAction = () => {
@@ -297,9 +300,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                     action: 'quickCreate',
                     label: this.translate('Create', 'labels', this.scope),
                     style: 'primary',
+                    iconClass: 'ph ph-plus-circle',
                     acl: 'create',
-                    aclScope: this.entityType || this.scope,
-                    cssStyle: "margin-left: 15px",
+                    aclScope: this.entityType || this.scope
                 });
             } else {
                 this.menu.buttons.unshift({
@@ -307,9 +310,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                     action: 'create',
                     label: this.translate('Create', 'labels', this.scope),
                     style: 'primary',
+                    iconClass: 'ph ph-plus-circle',
                     acl: 'create',
-                    aclScope: this.entityType || this.scope,
-                    cssStyle: "margin-left: 15px"
+                    aclScope: this.entityType || this.scope
                 });
             }
         },

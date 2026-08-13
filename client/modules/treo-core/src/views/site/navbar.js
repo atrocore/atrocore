@@ -59,6 +59,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 hasLocaleSwitcher: this.hasLocaleSwitcher(),
                 hasLogo: !this.getConfig().get('disableToolbarLogo'),
                 showCurrentSelection: true,
+                isAdmin: this.getUser().isAdmin(),
             }, Dep.prototype.data.call(this));
         },
 
@@ -331,7 +332,45 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.listenToOnce(this, 'after:render', () => {
                 this.initProgressBadge();
-                this.initLocaleSwitcher()
+                this.initLocaleSwitcher();
+                this.checkBackgroundProcessing();
+            });
+
+            this.listenToOnce(this, 'remove', () => {
+                if (this.bgProcessingTimeout) {
+                    window.clearTimeout(this.bgProcessingTimeout);
+                    this.bgProcessingTimeout = null;
+                }
+            });
+        },
+
+        checkBackgroundProcessing() {
+            if (!this.getUser().isAdmin()) {
+                return;
+            }
+
+            if (this.bgProcessingTimeout) {
+                window.clearTimeout(this.bgProcessingTimeout);
+                this.bgProcessingTimeout = null;
+            }
+
+            this.ajaxGetRequest('checkBackgroundProcessing').success(response => {
+                if (this._isRemoved) {
+                    return;
+                }
+
+                const $badge = this.$el.find('.background-processing-badge-container');
+
+                if (response === true) {
+                    $badge.addClass('hidden');
+                    return;
+                }
+
+                $badge.removeClass('hidden');
+
+                this.bgProcessingTimeout = window.setTimeout(() => {
+                    this.checkBackgroundProcessing();
+                }, 5000);
             });
         },
 

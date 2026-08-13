@@ -1,5 +1,6 @@
 {
     "controller": "controllers/last-viewed",
+    "iconClass": "clock-counter-clockwise",
     "views": {
         "list": "views/last-viewed/list"
     },

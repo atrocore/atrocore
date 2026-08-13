@@ -308,7 +308,7 @@ class Metadata extends AbstractMetadataListener
                 $data['scopes'][$scope]['streamDisabled'] = $scopeDefs['streamDisabled'] = empty($scopeDefs['stream']);
             }
 
-            if (!empty($scopeDefs['streamDisabled']) || !empty($scopeDefs['notStorable'])) {
+            if (!empty($scopeDefs['streamDisabled']) || !empty($scopeDefs['followDisabled']) || !empty($scopeDefs['notStorable'])) {
                 continue;
             }
 

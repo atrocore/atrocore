@@ -1,0 +1,31 @@
+[
+  {
+    "name": "name",
+    "link": true,
+    "notSortable": true
+  },
+  {
+    "name": "description",
+    "notSortable": true
+  },
+  {
+    "name": "targetVersion",
+    "notSortable": true
+  },
+  {
+    "name": "currentVersion",
+    "notSortable": true
+  },
+  {
+    "name": "latestVersion",
+    "notSortable": true
+  },
+  {
+    "name": "usage",
+    "notSortable": true
+  },
+  {
+    "name": "expirationDate",
+    "notSortable": true
+  }
+]

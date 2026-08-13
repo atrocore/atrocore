@@ -179,7 +179,13 @@
                     </div>
                 </div>
             </li>
+            {{#if isAdmin}}
+            <li class="dropdown hidden-xs hidden background-processing-badge-container">
+                <a href="javascript:" type="button" class="notifications-button background-processing-badge-btn" title="{{translate 'backgroundProcessingNotWorking'}}">
+                    <i class="ph-fill ph-warning"></i>
+                </a>
+            </li>
+            {{/if}}
         </ul>
-
     </div>
 </div>

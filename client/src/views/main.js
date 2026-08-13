@@ -69,7 +69,7 @@ Espo.define('views/main', 'view', function (Dep) {
 
             this.menu = Espo.Utils.cloneDeep(this.menu);
 
-            ['buttons', 'actions', 'dropdown'].forEach(function (type) {
+            ['buttons', 'dropdownButtons', 'actions', 'dropdown'].forEach(function (type) {
                 this.menu[type] = this.menu[type] || [];
             }, this);
 
@@ -96,7 +96,7 @@ Espo.define('views/main', 'view', function (Dep) {
             var menu = {};
 
             if (this.menu) {
-                ['buttons', 'actions', 'dropdown'].forEach(function (type) {
+                ['buttons', 'dropdownButtons', 'actions', 'dropdown'].forEach(function (type) {
                     (this.menu[type] || []).forEach(function (item) {
                         menu[type] = menu[type] || [];
                         if (Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
@@ -232,7 +232,7 @@ Espo.define('views/main', 'view', function (Dep) {
             var index = -1;
             var type = false;
 
-            ['actions', 'dropdown', 'buttons'].forEach(function (t) {
+            ['actions', 'dropdown', 'buttons', 'dropdownButtons'].forEach(function (t) {
                 this.menu[t].forEach(function (item, i) {
                     if (item.name == name) {
                         index = i;
@@ -268,7 +268,7 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         hideHeaderActionItem: function (name) {
-            ['actions', 'dropdown', 'buttons'].forEach(function (t) {
+            ['actions', 'dropdown', 'buttons', 'dropdownButtons'].forEach(function (t) {
                 this.menu[t].forEach(function (item, i) {
                     if (item.name == name) {
                         item.hidden = true;
@@ -281,7 +281,7 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         showHeaderActionItem: function (name) {
-            ['actions', 'dropdown', 'buttons'].forEach(function (t) {
+            ['actions', 'dropdown', 'buttons', 'dropdownButtons'].forEach(function (t) {
                 this.menu[t].forEach(function (item, i) {
                     if (item.name == name) {
                         item.hidden = false;

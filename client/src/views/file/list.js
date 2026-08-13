@@ -20,6 +20,7 @@ Espo.define('views/file/list', 'views/list-tree',
                 action: 'upload',
                 label: this.translate('Upload', 'labels', 'File'),
                 style: 'primary',
+                iconClass: 'ph ph-upload-simple',
                 acl: 'create',
                 aclScope: 'File'
             });

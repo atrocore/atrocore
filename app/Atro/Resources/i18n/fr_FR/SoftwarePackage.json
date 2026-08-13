@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "sortOrder": "Ordre de tri",
+    "currentVersion": "Version actuelle",
+    "latestVersion": "Dernière version",
+    "targetVersion": "Version cible",
+    "targetVersions": "Versions cibles",
+    "usage": "Utilisation",
+    "expirationDate": "Date d'expiration",
+    "installed": "Installé"
+  },
+  "labels": {
+    "latest": "dernière",
+    "update": "Mettre à jour le système",
+    "toStore": "AtroCore Store",
+    "installModules": "Installer le(s) module(s)",
+    "uninstallModules": "Désinstaller le(s) module(s)",
+    "lastUpdate": "Dernière mise à jour"
+  },
+  "lastUpdateStatuses": {
+    "Success": "Succès",
+    "Failed": "Échec"
+  },
+  "massActionConfirmMessages": {
+    "update": "Après la mise à jour, tous les utilisateurs seront déconnectés du système. Êtes-vous sûr de vouloir mettre à jour le système ?"
+  },
+  "actionConfirms": {
+    "install": "Êtes-vous sûr de vouloir installer ce module ? Le système sera indisponible pendant l'installation.",
+    "uninstall": "Êtes-vous sûr de vouloir désinstaller ce module ? Toutes les données liées au module seront perdues. Cette action est irréversible."
+  },
+  "options": {
+    "usage": {
+      "Public": "Gratuit",
+      "Rent": "Loué",
+      "Purchase": "Acheté"
+    }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Le système ne peut pas être mis à jour car des tâches sont en cours d'exécution dans le Gestionnaire des tâches. Veuillez réessayer plus tard.",
+    "daemonNotAlive": "L'action ne peut pas être effectuée car les tâches planifiées ne sont pas exécutées. Il est probable que la crontab ne soit pas configurée correctement ou qu'il y ait un problème sur le serveur. Veuillez consulter le guide d'installation pour configurer correctement le serveur."
+  },
+  "notifications": {
+    "Module update": "Le module {module} a été mis à jour. De la version {from} vers {to}.",
+    "System update": "Le système a été mis à jour. De la version {from} vers {to}.",
+    "Module install": "Le module {module} v.{version} a été installé.",
+    "Module delete": "Le module {module} a été supprimé.",
+    "Module downgrade": "Le module {module} a été rétrogradé. De la version {from} vers {to}.",
+    "System downgrade": "Le système a été rétrogradé. De la version {from} vers {to}."
+  }
+}

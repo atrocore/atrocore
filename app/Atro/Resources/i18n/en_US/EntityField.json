@@ -9,6 +9,7 @@
     "readOnly": "Read-only",
     "protected": "Protected",
     "unique": "Unique",
+    "isCode": "Is Code",
     "index": "Database Index",
     "measure": "Measure",
     "prefixEnabled": "Enable Prefix",
@@ -78,6 +79,7 @@
     "relationName": "This code is used to set the system name for the entity of type \"Relation\" that is automatically created.",
     "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
     "required": "Field will be mandatory. Can't be left empty.",
+    "isCode": "The record can be looked up by this field's value instead of its ID (e.g. in the URL). Only one field per entity can be marked as code, and it must be unique.",
     "readOnly": "The field value cannot be specified by the user. It is still possible to change it via the API.",
     "protected": "The field value cannot be specified by the user. Neither via the front end nor via the API.",
     "maxLength": "Max acceptable length of text.",
@@ -133,6 +135,10 @@
     "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value",
     "relationAlreadyUsed": "The Middle Table Name %s is already used, choose another.",
     "optionCodeUsedInDisabledOptionsRules": "Option '%s' is used in Disabled Options rules and cannot be changed.",
-    "optionCodeUsedInDisabledOptionsRulesDelete": "Option '%s' is used in Disabled Options rules and cannot be deleted."
+    "optionCodeUsedInDisabledOptionsRulesDelete": "Option '%s' is used in Disabled Options rules and cannot be deleted.",
+    "onlyOneCodeFieldAllowed": "Only one field can be marked as code for this entity. Field '%s' is already marked as code.",
+    "codeFieldMustBeUnique": "Field must be unique to be used as code.",
+    "cannotDisableUniqueForCodeField": "Cannot disable uniqueness while this field is used as code.",
+    "invalidCodeFieldType": "Only varchar, int or autoincrement fields can be marked as code."
   }
 }

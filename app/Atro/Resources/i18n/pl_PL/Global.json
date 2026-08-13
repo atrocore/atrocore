@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Pakiet oprogramowania",
     "EmailTemplate": "Szablon e-maila",
     "Storage": "Przechowywanie plików",
     "Folder": "Folder",
@@ -23,7 +24,6 @@
     "Measure": "Pomiar",
     "Prefix": "Prefiks",
     "Unit": "Jednostka",
-    "Store": "Sklep",
     "User": "Użytkownik",
     "Team": "Zespół",
     "Role": "Rola",
@@ -87,6 +87,7 @@
     "ClusterItem": "Pozycja klastra dopasowań"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Pakiety oprogramowania",
     "EmailTemplate": "Szablony wiadomości",
     "Storage": "Przechowywanie plików",
     "Folder": "Foldery",
@@ -160,6 +161,7 @@
     "ClusterItem": "Elementy klastra dopasowań"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Przetwarzanie w tle nie działa. Najprawdopodobniej crontab nie jest poprawnie skonfigurowany lub wystąpił problem na serwerze. Zapoznaj się z przewodnikiem instalacji.",
     "selectAll": "Wybierz wszystko",
     "contentLanguages": "Języki treści",
     "customizeLayout": "Dostosuj układ",
@@ -531,6 +533,10 @@
     "rejectItem": "Proszę odrzucić",
     "openContributorEntity": "Otwórz encję contributor",
     "openPrimaryEntity": "Otwarty podmiot główny",
+    "install": "Instaluj",
+    "uninstall": "Odinstaluj",
+    "showReleaseNotes": "Informacje o wydaniu",
+    "readDocs": "Dokumentacja",
     "entityFilterResult": "Wynik filtra",
     "System": "System"
   },
@@ -806,7 +812,7 @@
     "entityRemoved": "{user} deleted {entityType} {entity}"
   },
   "streamMessages": {
-    "composerUpdateThis": "{user}",
+    "composerUpdate": "{user} zmienił zainstalowane pakiety oprogramowania",
     "post": "{user} posted on {entityType} {entity}",
     "postInList": "{user} posted on {entityType}",
     "attach": "{user} attached on {entityType} {entity}",
@@ -882,11 +888,9 @@
     "to": "do"
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{użytkownik}",
     "postTargetSelfAndOthers": "{użytkownik} opublikował na {cel} i sobie"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{użytkownik}",
     "postTargetSelfAndOthers": "{użytkownik} opublikowała na {cel} i sobie"
   },
   "monthNames": {

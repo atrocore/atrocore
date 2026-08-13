@@ -347,6 +347,10 @@ class NotificationManager
             return $this->subscribers[$key];
         }
 
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'followDisabled'])) {
+            return $this->subscribers[$key] = [];
+        }
+
         $followers = $entity->get('followers');
 
         return $this->subscribers[$key] = empty($followers) ? [] : array_column($followers->toArray(), 'id');

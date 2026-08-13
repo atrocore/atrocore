@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\ModuleManager;
 
 use Atro\Core\Container;
-use Atro\Services\Composer;
 use Laminas\ServiceManager\ServiceManager;
 
 /**
@@ -99,22 +98,13 @@ class Manager
         return $this->modules;
     }
 
-    /**
-     * Get module
-     *
-     * @param string $id
-     *
-     * @return AbstractModule|null
-     */
     public function getModule(string $id): ?AbstractModule
     {
-        foreach ($this->getModules() as $name => $module) {
-            if ($name == $id) {
-                return $module;
-            }
+        if (!isset($this->modules[$id])) {
+            $this->loadModule($id);
         }
 
-        return null;
+        return $this->modules[$id] ?? null;
     }
 
     /**
@@ -164,17 +154,10 @@ class Manager
         }
     }
 
-    /**
-     * Get composer package
-     *
-     * @param string $id
-     *
-     * @return array
-     */
     private function getPackage(string $id): array
     {
-        if (file_exists(Composer::$composerLock)) {
-            $data = json_decode(file_get_contents(Composer::$composerLock), true);
+        if (file_exists('composer.lock')) {
+            $data = json_decode(file_get_contents('composer.lock'), true);
             if (!empty($data['packages'])) {
                 foreach ($data['packages'] as $package) {
                     if (!empty($package['extra']['atroId']) && $package['extra']['atroId'] == $id) {

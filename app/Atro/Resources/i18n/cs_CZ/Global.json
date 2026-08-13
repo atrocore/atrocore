@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Softwarový balíček",
     "Matching": "Odpovídající",
     "IncomingWebhook": "Příchozí Webhook",
     "RoleScopeAttribute": "Atribut",
@@ -37,7 +38,6 @@
     "Measure": "Míra",
     "Prefix": "Předpona",
     "Unit": "Jednotka",
-    "Store": "Obchod",
     "User": "Uživatel",
     "Team": "Tým",
     "Role": "Role",
@@ -87,6 +87,7 @@
     "ClusterItem": "Položka klastru párování"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Softwarové balíčky",
     "MatchedRecord": "Shodné záznamy",
     "Matching": "Párování",
     "IncomingWebhook": "Příchozí Webhooks",
@@ -160,6 +161,7 @@
     "ClusterItem": "Položky klastru párování"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Zpracování na pozadí nefunguje. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku.",
     "basic": "Basic",
     "script": "Skript",
     "phpCode": "Kód PHP",
@@ -531,6 +533,10 @@
     "openPrimaryEntity": "Otevřený hlavní subjekt",
     "currentSelection": "Aktuální výběr",
     "rejectItem": "Odmítnout",
+    "install": "Instalovat",
+    "uninstall": "Odinstalovat",
+    "showReleaseNotes": "Poznámky k vydání",
+    "readDocs": "Dokumentace",
     "entityFilterResult": "Výsledek filtru",
     "System": "Systém"
   },
@@ -809,8 +815,8 @@
     "own": "Byl jste nastaven jako vlastník pro {entityType} {entity}."
   },
   "streamMessages": {
+    "composerUpdate": "{user} změnil nainstalované softwarové balíčky",
     "createRecordAssociationThis": "{user} přidružený {relatedRecord} jako {association}",
-    "composerUpdateThis": "{uživatel}",
     "post": "{user} zveřejnil na {entityType} {entity}",
     "postInList": "{user} zveřejnil na {entityType}",
     "attach": "{user} připojen na {entityType} {entity}",
@@ -1281,8 +1287,7 @@
     "delete_group": "Odstranit"
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
-    "composerUpdateThis": "{uživatel}"
+    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe"
   },
   "twig": {
     "functions": {
@@ -1320,8 +1325,7 @@
     }
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
-    "composerUpdateThis": "{uživatel}"
+    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe"
   },
   "listViewModes": {
     "kanban": "Kanban",

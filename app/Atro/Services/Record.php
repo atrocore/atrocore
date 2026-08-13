@@ -31,6 +31,48 @@ use Espo\Services\RecordService;
 
 class Record extends RecordService
 {
+    /**
+     * Resolves $id to the entity's real id in a single query, allowing it to also be looked up by its `isCode`
+     * field (when the entity type has one). Returns null (leaving $id untouched) when there's no code field to
+     * fall back on, so the caller's normal id-only lookup path is used as-is.
+     */
+    public function resolveIdByCode(string $id): ?string
+    {
+        $codeField = $this->getCodeField();
+        if ($codeField === null) {
+            return null;
+        }
+
+        if (in_array($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $codeField, 'type']), ['int', 'autoincrement'])) {
+            if (is_numeric($id)) {
+                $id = (int)$id;
+            } else {
+                return null;
+            }
+        }
+
+        $record = $this->getRepository()
+            ->where(['OR' => ['id' => $id, $codeField => $id]])
+            ->findOne();
+
+        if (!empty($record)) {
+            $this->getRepository()->putToCache($record->get('id'), $record);
+        }
+
+        return !empty($record) ? $record->get('id') : null;
+    }
+
+    protected function getCodeField(): ?string
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $field => $defs) {
+            if (!empty($defs['isCode'])) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -512,7 +554,7 @@ class Record extends RecordService
         }
 
         if (!empty($params['selectedId']) && method_exists($repository, 'getRecordPosition')) {
-            $position = $repository->getRecordPosition((string) $params['selectedId'], $selectParams);
+            $position = $repository->getRecordPosition((string)$params['selectedId'], $selectParams);
             if ($position !== null) {
                 $limit  = $params['maxSize'];
                 $index  = $position - 1;

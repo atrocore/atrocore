@@ -378,6 +378,34 @@ class EntityField extends ReferenceData
             }
         }
 
+        if (!empty($entity->get('isCode')) && ($entity->isNew() || $entity->isAttributeChanged('isCode'))) {
+            $entityName = $entity->get('entityId');
+
+            if (!in_array($entity->get('type'), ['varchar', 'int', 'autoincrement'])) {
+                throw new BadRequest($this->getLanguage()->translate('invalidCodeFieldType', 'exceptions', 'EntityField'));
+            }
+
+            if (empty($entity->get('unique')) && $entity->get('type') !== 'autoincrement') {
+                throw new BadRequest($this->getLanguage()->translate('codeFieldMustBeUnique', 'exceptions', 'EntityField'));
+            }
+
+            foreach ($this->getMetadata()->get("entityDefs.$entityName.fields", []) as $fieldCode => $fieldDefs) {
+                if ($fieldCode !== $entity->get('code') && !empty($fieldDefs['isCode'])) {
+                    throw new BadRequest(sprintf(
+                        $this->getLanguage()->translate('onlyOneCodeFieldAllowed', 'exceptions', 'EntityField'),
+                        $fieldCode
+                    ));
+                }
+            }
+        }
+
+        if (
+            !$entity->isNew() && !empty($entity->get('isCode')) && $entity->get('type') !== 'autoincrement'
+            && $entity->isAttributeChanged('unique') && empty($entity->get('unique'))
+        ) {
+            throw new BadRequest($this->getLanguage()->translate('cannotDisableUniqueForCodeField', 'exceptions', 'EntityField'));
+        }
+
         if (!empty($entity->get('required') && $entity->isAttributeChanged('required'))) {
             $entityName = $entity->get('entityId');
             $type       = $this->getMetadata()->get("scopes.{$entityName}.type");

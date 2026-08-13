@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "sortOrder": "Ordinamento",
+    "currentVersion": "Versione attuale",
+    "latestVersion": "Ultima versione",
+    "targetVersion": "Versione di destinazione",
+    "targetVersions": "Versioni di destinazione",
+    "usage": "Utilizzo",
+    "expirationDate": "Data di scadenza",
+    "installed": "Installato"
+  },
+  "labels": {
+    "latest": "ultima",
+    "update": "Aggiorna sistema",
+    "toStore": "AtroCore Store",
+    "installModules": "Installa modulo/i",
+    "uninstallModules": "Disinstalla modulo/i",
+    "lastUpdate": "Ultimo aggiornamento"
+  },
+  "lastUpdateStatuses": {
+    "Success": "Successo",
+    "Failed": "Fallito"
+  },
+  "massActionConfirmMessages": {
+    "update": "Dopo l'aggiornamento, tutti gli utenti verranno disconnessi dal sistema. Sei sicuro di voler aggiornare il sistema?"
+  },
+  "actionConfirms": {
+    "install": "Sei sicuro di voler installare questo modulo? Il sistema non sarà disponibile durante l'installazione.",
+    "uninstall": "Sei sicuro di voler disinstallare questo modulo? Tutti i dati relativi al modulo andranno perduti. Questa azione non può essere annullata."
+  },
+  "options": {
+    "usage": {
+      "Public": "Gratuito",
+      "Rent": "Noleggiato",
+      "Purchase": "Acquistato"
+    }
+  },
+  "exceptions": {
+    "jobManagerRunning": "Il sistema non può essere aggiornato perché ci sono lavori in esecuzione nel Job Manager. Riprova più tardi.",
+    "daemonNotAlive": "L'azione non può essere eseguita perché le attività pianificate non sono in esecuzione. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione per configurare correttamente il server."
+  },
+  "notifications": {
+    "Module update": "Il modulo {module} è stato aggiornato. Dalla versione {from} alla {to}.",
+    "System update": "Il sistema è stato aggiornato. Dalla versione {from} alla {to}.",
+    "Module install": "Il modulo {module} v.{version} è stato installato.",
+    "Module delete": "Il modulo {module} è stato rimosso.",
+    "Module downgrade": "Il modulo {module} è stato riportato a una versione precedente. Dalla versione {from} alla {to}.",
+    "System downgrade": "Il sistema è stato riportato a una versione precedente. Dalla versione {from} alla {to}."
+  }
+}

@@ -12,8 +12,8 @@
                 }
             }
         %>
-        <div class="panel-heading"><h4 class="panel-title"><span class="panel-title-text"><%= panelLabelString %></span></h4></div>
-        <div class="panel-body panel-body-form">
+        <div class="panel-heading"><h4 class="panel-title"><% if (panelLabelString) { %><span class="panel-title-text" data-action="collapsePanel" data-panel="<%= panel.name %>"><i class="ph ph-caret-{{#if collapsedPanels.<%= panel.name %>}}right{{else}}down{{/if}} collapser"></i><%= panelLabelString %></span><% } else { %><span class="panel-title-text"></span><% } %></h4></div>
+        <div class="panel-body panel-body-form<% if (panelLabelString) { %> panel-collapse collapse{{#unless collapsedPanels.<%= panel.name %>}} in{{/unless}}<% } %>" data-name="<%= panel.name %>">
         <% _.each(panel.rows, function (row, rowNumber) { %>
             <div class="row">
             <% _.each(row, function (cell, cellNumber) { %>

@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Програмний пакет",
     "Consolidation": "Консолідація",
     "DataPipeline": "Пайплайн даних",
     "Classification": "Класифікація",
@@ -53,7 +54,6 @@
     "Measure": "Міра",
     "Prefix": "Префікс",
     "Unit": "Одиниця виміру",
-    "Store": "Магазин",
     "PreviewTemplate": "Шаблон перегляду",
     "NotificationTemplate": "Шаблон сповіщення",
     "NotificationProfile": "Профіль сповіщень",
@@ -88,6 +88,7 @@
     "ClusterItem": "Елемент кластера зіставлення"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Програмні пакети",
     "Consolidation": "Консолідації",
     "DataPipeline": "Пайплайни даних",
     "Classification": "Класифікації",
@@ -165,6 +166,7 @@
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Фонова обробка не працює. Найімовірніше, crontab налаштований неправильно або є проблема на сервері. Будь ласка, зверніться до інструкції зі встановлення.",
     "System": "Система",
     "matchings": "Зіставлення",
     "sourceEntities": "Джерела",
@@ -544,6 +546,10 @@
     "currentSelection": "Поточний вибір",
     "rejectItem": "Відхилити",
     "isLinked": "Пов'язано",
+    "install": "Встановити",
+    "uninstall": "Видалити",
+    "showReleaseNotes": "Примітки до випуску",
+    "readDocs": "Документація",
     "entityFilterResult": "Результат фільтрації"
   },
   "insightsPanels": {
@@ -827,6 +833,7 @@
     "own": "Вас було призначено власником для {entityType} {entity}."
   },
   "streamMessages": {
+    "composerUpdate": "{user} змінив встановлені програмні пакети",
     "post": "{user} залишив примітку до {entityType} {entity}",
     "postInList": "{user} залишив примітку до {entityType}",
     "attach": "{user} прикріпив до {entityType} {entity}",
@@ -869,7 +876,6 @@
     "emailSentThis": "{user} успішно надіслав листа з темою '{subject}' на адресу '{emailTo}' в '{createdAt}'",
     "postTargetSelf": "{user} залишив повідомлення у себе на стрічці",
     "postTargetSelfAndOthers": "{user} залишив повідомлення для {target} і для себе",
-    "composerUpdateThis": "{user}",
     "unrelate": "{user} відв'язав {relatedEntityType} {relatedEntity} від {entityType} {entity}",
     "unrelateThis": "{user} від'єднав {relatedEntityType} {relatedEntity} від цього {entityType}.",
     "updateOneThis": "{user} оновив {entityType} {entity}",
@@ -903,11 +909,9 @@
     "assignSelf": "{user} призначив {entityType} {entity} собі самому."
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} залишив повідомлення для {target} і для себе"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} залишила повідомлення для {target} і для себе"
   },
   "monthNames": {

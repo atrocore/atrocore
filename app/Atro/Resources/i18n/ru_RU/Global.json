@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Программный пакет",
     "Consolidation": "Консолидация",
     "Attribute": "Атрибут",
     "AttributeGroup": "Группа атрибута",
@@ -47,7 +48,6 @@
     "Measure": "Мера",
     "Prefix": "Префикс",
     "Unit": "Единица измерения",
-    "Store": "Магазин",
     "EmailTemplate": "Шаблон электронной почты",
     "Background": "Фон",
     "EntityField": "Поле сущности",
@@ -87,6 +87,7 @@
     "ClusterItem": "Элемент кластера соответствий"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Программные пакеты",
     "Consolidation": "Консолидации",
     "Attribute": "Атрибуты",
     "AttributeGroup": "Группы атрибутов",
@@ -160,6 +161,7 @@
     "ClusterItem": "Элементы кластера соответствий"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Фоновая обработка не работает. Скорее всего, crontab настроен неправильно или есть проблема на сервере. Пожалуйста, обратитесь к инструкции по установке.",
     "matchings": "Соответствия",
     "addFields": "Добавить поля",
     "addAttributes": "Добавить атрибуты",
@@ -532,6 +534,10 @@
     "openPrimaryEntity": "Открытая главная сущность",
     "currentSelection": "Текущий выбор",
     "System": "Система",
+    "install": "Установить",
+    "uninstall": "Удалить",
+    "showReleaseNotes": "Примечания к выпуску",
+    "readDocs": "Документация",
     "entityFilterResult": "Результат фильтрации"
   },
   "messages": {
@@ -805,6 +811,7 @@
     "own": "Вы были назначены владельцем для {entityType} {entity}."
   },
   "streamMessages": {
+    "composerUpdate": "{user} изменил установленные программные пакеты",
     "post": "{user} оставил примечание к {entityType} {entity}",
     "attach": "{user} прикрепил к {entityType} {entity}",
     "status": "{user} обновил {field} (чего) {entityType} {entity}",
@@ -846,7 +853,6 @@
     "emailSentThis": "{user} успешно отправил письмо с темой '{subject}' на '{emailTo}' на '{createdAt}'.",
     "postTargetSelf": "{user} оставил сообщение у себя на ленте",
     "postTargetSelfAndOthers": "{user} оставил сообщение для {target} и для себя",
-    "composerUpdateThis": "{user}",
     "unrelate": "{user} отвязал {relatedEntityType} {relatedEntity} от {entityType} {entity}",
     "unrelateThis": "{user} отсоединил {relatedEntityType} {relatedEntity} из этого {entityType}.",
     "updateOneThis": "{user} обновил {entityType} {entity}",
@@ -881,11 +887,9 @@
     "changed": "был изменен"
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} оставил сообщение для {target} и для себя"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} оставила сообщение для {target} и для себя"
   },
   "monthNames": {

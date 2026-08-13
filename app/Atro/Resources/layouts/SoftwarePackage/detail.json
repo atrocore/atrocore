@@ -1,0 +1,46 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "description"
+        },
+        false
+      ],
+      [
+        {
+          "name": "loadOrder"
+        },
+        {
+          "name": "currentVersion"
+        }
+      ],
+      [
+        {
+          "name": "latestVersion"
+        },
+        {
+          "name": "targetVersion"
+        }
+      ],
+      [
+        {
+          "name": "usage"
+        },
+        {
+          "name": "expirationDate"
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Details"
+  }
+]

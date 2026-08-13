@@ -60,7 +60,7 @@ class User extends Record
         }
     }
 
-    public function getEntity(?string $id = null, ?string $withRelationships = null): ?IEntity
+    public function getEntity(string $id, ?string $withRelationships = null): ?IEntity
     {
         if ($id !== null) {
             $this->getUserById($id);

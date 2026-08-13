@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "SoftwarePackage": "Software Package",
     "Cluster": "Matching Cluster",
     "ClusterItem": "Matching Cluster Item",
     "Consolidation": "Consolidation",
@@ -48,7 +49,6 @@
     "Measure": "Measure",
     "Prefix": "Prefix",
     "Unit": "Unit",
-    "Store": "Store",
     "User": "User",
     "Team": "Team",
     "Role": "Role",
@@ -88,6 +88,7 @@
     "Layout": "Layout"
   },
   "scopeNamesPlural": {
+    "SoftwarePackage": "Software Packages",
     "Cluster": "Matching Clusters",
     "ClusterItem": "Matching Cluster Items",
     "Consolidation": "Consolidations",
@@ -168,7 +169,12 @@
     "updateMasterRecord": "Update Master Record"
   },
   "labels": {
+    "backgroundProcessingNotWorking": "Background processing is not working. Most likely the crontab is not configured correctly or there is a problem on the server. Please refer to the installation guide.",
     "purgeAll": "Purge all clusters",
+    "install": "Install",
+    "uninstall": "Uninstall",
+    "showReleaseNotes": "Release Notes",
+    "readDocs": "Docs",
     "entityFilterResult": "Filter Result",
     "availablePrefixes": "Available Prefixes",
     "System": "System",
@@ -836,7 +842,7 @@
     "deleteRecordAssociationThis": "{user} removed association to {relatedRecord} as {association}",
     "createAssociationRecordThis": "{user} associated {mainRecord} with {relatedRecord}",
     "deleteAssociationRecordThis": "{user} removed association of {mainRecord} with {relatedRecord}",
-    "composerUpdateThis": "{user}",
+    "composerUpdate": "{user} changed the installed software packages",
     "post": "{user} posted on {entityType} {entity}",
     "postInList": "{user} posted on {entityType}",
     "attach": "{user} attached on {entityType} {entity}",
@@ -908,11 +914,9 @@
     "become": "become"
   },
   "streamMessagesMale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} posted to {target} and himself"
   },
   "streamMessagesFemale": {
-    "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} posted to {target} and herself"
   },
   "monthNames": {

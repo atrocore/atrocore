@@ -12,6 +12,7 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 use Espo\Core\Utils\Util;
 
 class Config extends \Espo\Core\Utils\Config
@@ -40,6 +41,7 @@ class Config extends \Espo\Core\Utils\Config
             'userLimit',
             'stylesheet',
             'userItems',
+            'phpBinPath',
         ],
         'adminItems'                => [
             'devMode',
@@ -84,7 +86,9 @@ class Config extends \Espo\Core\Utils\Config
         // put reference data into config
         $this->putReferenceDataIntoConfig();
 
-        $this->data['onlyStableReleases'] = \Atro\Services\Composer::getMinimumStability() === 'stable';
+        $minimumStability = SoftwarePackageRepository::getComposerData()['minimum-stability'] ?? 'stable';
+
+        $this->data['onlyStableReleases'] = $minimumStability === 'stable';
 
         return $this->data;
     }

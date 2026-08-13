@@ -206,7 +206,7 @@ class Attribute extends Base
     /**
      * @inheritDoc
      */
-    public function getEntity(?string $id = null, ?string $withRelationships = null): ?IEntity
+    public function getEntity(string $id, ?string $withRelationships = null): ?IEntity
     {
         $id = $this
             ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))

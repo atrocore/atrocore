@@ -103,6 +103,10 @@ class FollowHandler extends AbstractHandler
             throw new Forbidden();
         }
 
+        if ($this->getMetadata()->get(['scopes', $entityName, 'followDisabled'])) {
+            throw new Forbidden();
+        }
+
         if (!$this->getAcl()->check($entityName, 'stream')) {
             throw new Forbidden();
         }

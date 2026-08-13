@@ -325,18 +325,20 @@ class Note
                     ]
                 ));
 
-            $relatedId2 = $entity->get($this->relationEntityData[$entity->getEntityName()]['field1']);
-            $relatedType2 = $this->relationEntityData[$entity->getEntityName()]['entity1'];
-            $relatedName2 = $this->getEntityDisplayName($relatedType2, $relatedId2);
-            $this->createNote('Update', $this->relationEntityData[$entity->getEntityName()]['entity2'],
-                $entity->get($this->relationEntityData[$entity->getEntityName()]['field2']), array_merge($data, [
-                        'entityId'    => $entity->id,
-                        'entityType'  => $entity->getEntityName(),
-                        'relatedId'   => $relatedId2,
-                        'relatedType' => $relatedType2,
-                        'relatedName' => $relatedName2,
-                    ]
-                ));
+            if (!is_null($entity->get($this->relationEntityData[$entity->getEntityName()]['field2']))) {
+                $relatedId2 = $entity->get($this->relationEntityData[$entity->getEntityName()]['field1']);
+                $relatedType2 = $this->relationEntityData[$entity->getEntityName()]['entity1'];
+                $relatedName2 = $this->getEntityDisplayName($relatedType2, $relatedId2);
+                $this->createNote('Update', $this->relationEntityData[$entity->getEntityName()]['entity2'],
+                    $entity->get($this->relationEntityData[$entity->getEntityName()]['field2']), array_merge($data, [
+                            'entityId'    => $entity->id,
+                            'entityType'  => $entity->getEntityName(),
+                            'relatedId'   => $relatedId2,
+                            'relatedType' => $relatedType2,
+                            'relatedName' => $relatedName2,
+                        ]
+                    ));
+            }
         }
     }
 
@@ -499,6 +501,7 @@ class Note
             $this->streamEnabled($this->relationEntityData[$entity->getEntityName()]['entity1'])
             && (!empty($fieldDefs['auditableEnabled'])
                 || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityName()]['entity2'], $defaultRelationScopeAudited)))
+            && !is_null($entity->get($this->relationEntityData[$entity->getEntityName()]['field1']))
         ) {
             $relatedId = $entity->get($this->relationEntityData[$entity->getEntityName()]['field2']);
             $relatedType = $this->relationEntityData[$entity->getEntityName()]['entity2'];
@@ -524,6 +527,7 @@ class Note
             $this->streamEnabled($this->relationEntityData[$entity->getEntityName()]['entity2'])
             && (!empty($fieldDefs['auditableEnabled'])
                 || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityName()]['entity1'], $defaultRelationScopeAudited)))
+            && !is_null($entity->get($this->relationEntityData[$entity->getEntityName()]['field2']))
         ) {
             $relatedId = $entity->get($this->relationEntityData[$entity->getEntityName()]['field1']);
             $relatedType = $this->relationEntityData[$entity->getEntityName()]['entity1'];

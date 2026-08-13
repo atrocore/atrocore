@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "sortOrder": "Sort Order",
+    "currentVersion": "Current Version",
+    "latestVersion": "Latest Version",
+    "targetVersion": "Target Version",
+    "targetVersions": "Target Versions",
+    "usage": "Usage",
+    "expirationDate": "Expiration Date",
+    "installed": "Installed"
+  },
+  "labels": {
+    "latest": "latest",
+    "update": "Update System",
+    "toStore": "AtroCore Store",
+    "installModules": "Install Module(s)",
+    "uninstallModules": "Uninstall Module(s)",
+    "lastUpdate": "Last Update"
+  },
+  "lastUpdateStatuses": {
+    "Success": "Success",
+    "Failed": "Failed"
+  },
+  "massActionConfirmMessages": {
+    "update": "After the update, all users will be logged out of the system. Are you sure you want to update the system?"
+  },
+  "actionConfirms": {
+    "install": "Are you sure you want to install this module? The system will be unavailable while the installation is in progress.",
+    "uninstall": "Are you sure you want to uninstall this module? All data related to the module will be lost. This action cannot be undone."
+  },
+  "options": {
+    "usage": {
+      "Public": "Free",
+      "Rent": "Rented",
+      "Purchase": "Purchased"
+    }
+  },
+  "exceptions": {
+    "jobManagerRunning": "The system cannot be updated because there are running jobs in Job Manager. Please try again later.",
+    "daemonNotAlive": "The action cannot be performed because scheduled tasks are not running. Most likely the crontab is not configured correctly or there is a problem on the server. Please refer to the installation guide for how to configure the server correctly."
+  },
+  "notifications": {
+    "Module update": "Module {module} has been updated. From version {from} to {to}.",
+    "System update": "System has been updated. From version {from} to {to}.",
+    "Module install": "Module {module} v.{version} has been installed.",
+    "Module delete": "Module {module} has been removed.",
+    "Module downgrade": "Module {module} has been downgraded. From version {from} to {to}.",
+    "System downgrade": "System has been downgraded. From version {from} to {to}."
+  }
+}

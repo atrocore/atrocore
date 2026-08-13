@@ -17,10 +17,10 @@ use Atro\Core\Application;
 use Atro\Core\JobManager;
 use Atro\Core\PseudoTransactionManager;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Services\SoftwarePackage;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\EntityManager;
-use Atro\Services\Composer;
 
 /**
  * Class Daemon
@@ -62,11 +62,24 @@ class Daemon extends AbstractConsole
             $log = Application::COMPOSER_LOG_FILE;
 
             // delete check-up file
-            if (file_exists(Composer::CHECK_UP_FILE)) {
-                unlink(Composer::CHECK_UP_FILE);
+            if (file_exists(SoftwarePackage::CHECK_UP_FILE)) {
+                unlink(SoftwarePackage::CHECK_UP_FILE);
             }
 
             if (file_exists($log)) {
+                $logFileContents = file_get_contents($log);
+                $fileData = explode(" || ", $logFileContents);
+
+                if (!isset($fileData[0]) || !isset($fileData[1])) {
+                    $GLOBALS['log']->error('Composer update log failed: wrong log file data' . $logFileContents);
+                    // remove log file
+                    unlink($log);
+                    continue;
+                }
+
+                $command = $fileData[0];
+                $userId = $fileData[1];
+
                 $conn = $this->getConnection();
 
                 $userData = null;
@@ -75,7 +88,7 @@ class Daemon extends AbstractConsole
                         ->select('id')
                         ->from($conn->quoteIdentifier('user'))
                         ->where('id=:id')
-                        ->setParameter('id', file_get_contents($log))
+                        ->setParameter('id', $userId)
                         ->fetchAssociative();
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error('Composer update log failed: ' . $e->getMessage());
@@ -93,7 +106,7 @@ class Daemon extends AbstractConsole
 
                 exec($this->getPhpBin() . " atrocore-installer.phar self-update 2>/dev/null", $output, $exitCode);
                 if (empty($exitCode)) {
-                    exec($this->getPhpBin() . " atrocore-installer.phar update >> $log 2>&1", $output, $exitCode);
+                    exec($this->getPhpBin() . " atrocore-installer.phar $command >> $log 2>&1", $output, $exitCode);
                 } else {
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }
@@ -118,7 +131,7 @@ class Daemon extends AbstractConsole
                         ->setValue('modified_at', ':date')
                         ->setParameter('id', IdGenerator::uuid())
                         ->setParameter('type', 'composerUpdate')
-                        ->setParameter('parentType', 'ModuleManager')
+                        ->setParameter('parentType', 'SoftwarePackage')
                         ->setParameter('data', json_encode([
                             'status' => ($exitCode == 0) ? 0 : 1,
                             'output' => $contents
