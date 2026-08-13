@@ -2041,7 +2041,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
                 this.getInlineActionsContainer().prepend(action);
 
-                if (!this.model.isNew()) {
+                if (this.mode !== 'edit') {
                     action.addClass('hidden');
 
                     this.getCellElement().on('mouseover.value-lock-' + this.name, () => {
@@ -2056,15 +2056,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         isLockedControlsEnabled() {
-            if (this.mode === 'detail') {
+            if (['detail', 'edit'].includes(this.mode)) {
                 return true;
             }
 
-            if (this.isListView() && this.listInlineEditModeEnabled()) {
-                return true;
-            }
-
-            return !!(this.mode === 'edit' && this.model.isNew());
+            return !!(this.isListView() && this.listInlineEditModeEnabled());
         },
 
         lockedControlAction() {
