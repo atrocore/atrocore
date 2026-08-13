@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\DataManager;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity;
@@ -164,6 +165,10 @@ class SoftwarePackage extends ReferenceData
 
     public function updateEntity(Entity $entity): bool
     {
+        if (empty($entity->get('id'))) {
+            throw new NotFound();
+        }
+
         if ($entity->isAttributeChanged('targetVersion')) {
             $package = $this->getPackage($entity->get('id'));
 
