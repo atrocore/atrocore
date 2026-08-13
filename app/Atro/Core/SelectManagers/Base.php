@@ -1634,6 +1634,38 @@ class Base
         }
     }
 
+    protected function getLinkEntityForAttribute(?string $attribute): ?string
+    {
+        if (empty($attribute) || !str_ends_with($attribute, 'Id')) {
+            return null;
+        }
+
+        $entity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', substr($attribute, 0, -2), 'entity']);
+
+        return !empty($entity) ? $entity : null;
+    }
+
+    protected function buildForeignDeletedNullCheck(string $foreignEntity, string $attribute, bool $isNotNull): array
+    {
+        $mainAlias    = QueryConverter::TABLE_ALIAS;
+        $column       = Util::toUnderScore($attribute);
+        $foreignTable = Util::toUnderScore($foreignEntity);
+        $uid          = IdGenerator::unsortableId();
+        $alias        = 'lnkdel_' . $uid;
+        $deletedParam = 'lnkdel_p_' . $uid;
+
+        $existsDeleted = "EXISTS (SELECT 1 FROM $foreignTable $alias WHERE $alias.id = $mainAlias.$column AND $alias.deleted = :$deletedParam)";
+
+        $sql = $isNotNull
+            ? "($mainAlias.$column IS NOT NULL AND NOT $existsDeleted)"
+            : "($mainAlias.$column IS NULL OR $existsDeleted)";
+
+        return [
+            'sql'        => $sql,
+            'parameters' => [$deletedParam => true]
+        ];
+    }
+
     protected function getWherePart($item, &$result = null)
     {
         $part = [];
@@ -1871,10 +1903,23 @@ class Base
                     break;
 
                 case 'isNull':
-                    $part[$attribute . '='] = null;
+                    $foreignEntity = $this->getLinkEntityForAttribute($attribute);
+                    if ($foreignEntity !== null) {
+                        $part['innerSql'] = $this->buildForeignDeletedNullCheck($foreignEntity, $attribute, false);
+                    } else {
+                        $part[$attribute . '='] = null;
+                    }
                     break;
 
                 case 'isNotNull':
+                    $foreignEntity = $this->getLinkEntityForAttribute($attribute);
+                    if ($foreignEntity !== null) {
+                        $part['innerSql'] = $this->buildForeignDeletedNullCheck($foreignEntity, $attribute, true);
+                    } else {
+                        $part[$attribute . '!='] = null;
+                    }
+                    break;
+
                 case 'ever':
                     $part[$attribute . '!='] = null;
                     break;
