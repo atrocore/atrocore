@@ -1634,9 +1634,9 @@ class Base
         }
     }
 
-    protected function getLinkEntityForAttribute(?string $attribute): ?string
+    protected function getLinkEntityForAttribute(string $attribute): ?string
     {
-        if (empty($attribute) || !str_ends_with($attribute, 'Id')) {
+        if (!str_ends_with($attribute, 'Id')) {
             return null;
         }
 
