@@ -212,13 +212,27 @@ class SoftwarePackage extends ReferenceData
 
         // push available to install modules
         $installed = array_column($items, 'id');
-        foreach ($this->getRemotePackages() as $code => $package) {
-            if (!in_array($package['id'], $installed) && !empty($package['expirationDate']) && $package['expirationDate'] >= date('Y-m-d')) {
+        foreach ($this->getRemotePackages() as $package) {
+            if (!in_array($package['id'], $installed) && $this->isAvailableForInstallation($package)) {
                 $this->pushNotInstalledItem($package, $items);
             }
         }
 
         return $items;
+    }
+
+    /**
+     * A free module and a purchased one can always be installed: the latter stays the property of the customer even
+     * when the right to new versions is over. A rented module is not owned by the customer, so it is available only
+     * until the rental period is over.
+     */
+    private function isAvailableForInstallation(array $package): bool
+    {
+        if (($package['usage'] ?? null) !== 'Rent') {
+            return true;
+        }
+
+        return !empty($package['expirationDate']) && $package['expirationDate'] >= date('Y-m-d');
     }
 
     private function prepareTargetVersions(string $code, array $package): array

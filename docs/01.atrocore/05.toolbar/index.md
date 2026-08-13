@@ -93,7 +93,7 @@ The menu includes the following options:
 - **Administration**: Access to [administrative functions](../03.administration/) (admin users only)
 - **Clear System cache**: Clear metadata cache and other system cache. Use this option if you have errors while working with the system (admin users only)
 - **Rebuild Database**: [Updates the database structure](../../09.installation-and-maintenance/05.maintenance/index.md#database-rebuild) to match the current metadata configuration (admin users only).
-- **Update**: [System update](../../09.installation-and-maintenance/04.modules-and-updates/index.md#module-update) functionality (admin users only)
+- **Update**: [System update](../../09.installation-and-maintenance/04.modules-and-updates/index.md#system-update) functionality (admin users only)
 - **Provide Feedback**: Submit feedback about the system
 - **Report a bug**: Report system issues
 - **Visit Community**: Access community resources

@@ -196,7 +196,7 @@ Composer file in the module root directory creates configuration for composer wh
     }
 ```
 
-`atroId` contains the unique name of the module for its identification in the system. `name` and `description` are used to show the module in the section `Administration > System > Update & Modules`.
+`atroId` contains the unique name of the module for its identification in the system. `name` and `description` are used to show the module on the `Administration > Maintenance > Updates & Modules` page.
 
 ### Module documentation
 
@@ -206,7 +206,7 @@ The docs portal is powered by [Docsify](https://docsify.js.org) and serves all M
 
 ## Module Installation
 
-Modules installation is carried out from the Module Manager located at `Administration > System > Update & Modules` page. To mark your module to be installed, you need to perform certain actions, which will be described below.
+Modules installation is carried out on the `Administration > Maintenance > Updates & Modules` page. To mark your module to be installed, you need to perform certain actions, which will be described below.
 
 > Module installation in AtroCore is based on Composer. You can get detailed information about Composer by the following link https://getcomposer.org.
 
@@ -253,8 +253,8 @@ Now in the project `composer.json` file in `require` section add your module pac
 
 ![Adding depandency](./_assets/adding-dependency-on-module.png){.large}
 
-If you open Module Manager (`Administration > System > Update & Modules`) you will see that your module is prepared to be installed.
+If you open the `Administration > Maintenance > Updates & Modules` page you will see that your module is prepared to be installed.
 
 ![Prepare for install](./_assets/module-manager-dependency.png){.large}
 
-Click on Install and Update button or run `php atrocore-installer.phar update` command from terminal to initiate the process. Your module will be installed and the system will be updated. If some error occurs during installation please check the logs in the folder `data/logs` for more detailed information.
+Click on the Update System button or run `php atrocore-installer.phar update` command from terminal to initiate the process. Your module will be installed and the system will be updated. If some error occurs during installation please check the logs in the folder `data/logs` for more detailed information.

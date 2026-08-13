@@ -42,7 +42,7 @@ To allow the upgrade process to continue, you can temporarily disable blocking o
 }
 ```
 
-After modifying the file, run update from the `Administration / Modules` page again.
+After modifying the file, run update from the `Administration > Maintenance > Updates & Modules` page again.
 
 !!! This configuration is intended only as a temporary workaround for upgrading from old system versions.
 

@@ -1,82 +1,115 @@
 ---
-title: Module Installation
+title: Updates and Modules
 ---
 
-In AtroCore system you can install, update, and remove modules directly from the admin area.
+The AtroCore core and all its modules are distributed as software packages. Everything related to them – updating the system, installing and uninstalling modules, choosing the version to update to and reviewing what has been changed – is done on the "Administration > Maintenance > Updates & Modules" page.
 
-To do it you need to go to "Administration > Module Manager" page.
+The page is available to **administrators only**. It is not a regular entity: records cannot be created, deleted or renamed here, and the only value you can edit is the target version of a package.
 
-![modules_manager](./_assets/module_manager_en.png){.large}
+## Requirements
 
-As you can see, this page consists of three panels:
+Installations, uninstallations and updates are not executed by the web request itself. The web interface only puts the command into a queue, which is then processed by the background daemons started by the system cron job. Therefore:
 
-* **Installed** – a list of modules installed in the system is displayed here along with the following data given in the corresponding columns: module name and description, setting version (* means the latest version), current version of AtroCore and required dependencies. You can manage versions of modules by selecting a set version (use * and a version of module to select the specified version of a module or ^ and a version of module to select a version of a module not lover than specified). The row action menu for each module may include a **Docs** option – if the module provides built-in documentation, clicking it opens the documentation portal in a new tab.
+* the crontab must be [configured correctly](../01.installation/index.md) and the background daemons must be running, otherwise every action on this page is rejected with a corresponding error message;
+* no job may be running in the Job Manager at the moment the action is triggered – the system refuses to start an update while other jobs are being processed;
+* the PHP functions `exec()` must be allowed and `allow_url_fopen` must be enabled, otherwise the system can neither run the installer nor read the package list from the AtroCore store (see [Shared Hosting](../01.installation/06.shared-hosting/index.md)).
 
-  ![installed_panel](./_assets/module_manager_installed_en.png)
+## The Package List
 
-* **Store** – a list of all modules for AtroCore software platform is displayed here along with the description, tags, and status of each module. Tags identify modules by their main features to simplify your search for this or that module. For example: possibility to export or restore data, manage prices, etc. Management options are given in the "Status" column for each module separately.
+The page shows one table with all software packages that are relevant for your instance:
 
-  ![store_panel](./_assets/module_manager_store_en.png)
+* the **AtroCore core** itself, always in the first row;
+* all **installed modules**;
+* all **modules available for installation** – that is, modules that are free or for which your instance has an active licence. Modules with an expired licence are not offered for installation any more.
 
-* **Logs** – the history of all updates and upgrades performed by each system user is displayed here.
+The information about the available packages is fetched from the AtroCore store and cached for one hour.
 
-  ![logs_panel](./_assets/module_manager_logs_en.png)
+An expired licence never removes an already installed module: it stays installed and keeps working for as long as you do not uninstall it yourself. What you lose is the right to newer releases – no version published after the end of your licence period is offered as a target version any more.
 
-  To view detailed information about any operation, click "View Details"  for the desired operation:
+The two paid licence models differ in what happens to a module that is *not* installed:
 
-  ![logs_detailed](./_assets/module_manager_logs_detailed_en.png)
+* a **rented** module disappears from the table as soon as the rental period is over. From that moment on there is no way to install it at all – to get it back you have to prolong the rental;
+* a **purchased** module stays in the table forever, but only the versions that are covered by your purchase can be installed. Whether such an installation is still possible depends on the version of your core: every module version declares which core version it works with, and the system never downgrades itself just to make an older module fit. So if your instance has meanwhile been updated beyond that point, the module can no longer be added, even though it remains your property.
 
-Prior to installation, make sure that the module has the **available** status.
+> Keep in mind that a module frozen this way can hold back the whole installation. Every package declares which core and module versions it is compatible with, so the newest version you are still entitled to may prevent the core and the other modules from being updated further. If the system stops offering new versions, check whether one of your licences has expired.
 
-To install a module:
+The following columns are displayed:
 
-1. Go to "Administration > Module Manager".
+* **Name** and **Description** – the name and the short description of the package.
+* **Target Version** – the version the package will be updated to during the next system update; see [Target Version](#target-version) below.
+* **Current Version** – the version that is currently installed. A dash (&mdash;) means the package is not installed.
+* **Latest Version** – the newest version offered by the store for your instance.
+* **Usage** – how the package is licensed for your instance:
+  * **Free** – the package is part of the open-source platform and is available to everyone;
+  * **Purchased** – the module is your property. It never disappears from the table, but only the versions that are covered by your purchase can be installed, and only as long as they are still compatible with your core;
+  * **Rented** – the module is at your disposal only while the rental period lasts. It does not become your property, so once the rental ends it is no longer offered for installation.
+* **Expiration Date** – the date until which the package is still offered for installation. For rented modules this is the end of the rental period; purchased modules show a date far in the future, because they remain yours. The infinity sign (&infin;) means there is no limit at all, which is the case for the free packages.
 
-2. Open the drop-down menu of the module to be installed:
+Above the table the status of the last system update is displayed – **Success** (green) or **Failed** (red). Nothing is displayed if the system has never been updated.
 
-   ![call_dropdown](./_assets/module_manager_drondown_en.png)
+## Target Version
 
-3. Click the "Install" button.
+The `Target Version` column defines to which version each installed package will be updated. It is a drop-down list containing:
 
-   ![install_module](./_assets/module_manager_install_en.png)
+* **latest** – the highest version that is compatible with the rest of your packages. This is the default;
+* an **explicit version number** – the update will stop exactly at this version.
 
-   Having clicked "Install", AtroCore generates a schema with chosen module(s) and their dependencies for further installation.
+Only versions that are equal to or newer than the currently installed one are offered: downgrading to a previous version through the interface is not possible.
 
-4. To start the module(s) installation process, click on the button "Update" and confirm the action:
+The target version can only be changed for installed packages; for packages that are not installed yet the column is read-only, because their version is determined at installation time.
 
-   ![confirm_install](./_assets/module_manager_confirm_en.png)
+> Whether release candidates are offered as target versions depends on the "Use Only Stable Releases" option on the [Administration > Settings](../../01.atrocore/03.administration/01.system-settings/index.md) page. As long as it is enabled, only stable releases are taken into account.
 
-   During the update, you will see realtime logs to get actual information about the process.
+## System Update
 
-## Module Update
+To bring the system and all installed modules to their target versions, click the **Update System** button and confirm the action.
 
-The system is updated in the Module Manager. In the `Setting Version` column, you can manage the versions of the modules you want to update to. By default, the system will be updated to the highest possible version.
-Here you can use the following operators:
-- **>=1.0.4** or **^1.0.4** - the module will be upgraded to the highest possible version. The minimum possible version is 1.0.4.
-- **1.0.4** - the module will be upgraded to version 1.0.4
-- **>=1.0.0 <2.1** - the module will be updated to the highest possible version between 1.1.0 and 1.2
-- **~1.0.4** - the module will be updated to a version that is greater than or equal to the specified version, but not greater than the current minor version. In this case, the module will not be able to upgrade to version 1.1.
+Please note:
 
-> Please note, that you can only upgrade to a version that is greater than or equal to the current version of the module. Downgrade to previous versions is prohibited.
+* all users are logged out of the system as soon as the update is applied;
+* while the update is running, the application is unavailable and every visitor sees a page with the live log of the running update;
+* before the changes are applied, a backup of the system and of the database is created, so the previous state can be restored if something goes wrong. If the update fails, the database is restored automatically;
+* the backup does **not** include your assets, i.e. the files stored in the system.
 
-To update modules click on the button "Update". All the modules will be automatically updated. Before update is done the system makes a backup of itself and the database, to be able to be restored in case of unexpected problems.
+The update can also be performed unattended: create a scheduled job of the type "Update system automatically" on the [Scheduled Jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/index.md) page.
 
-> Please note, backup of your assets (files, which are stored in the system) is not done.
+If the update fails because of an audit error in Composer, refer to [System Update Failures](../05.maintenance/index.md#system-update-failures).
 
-In order to avoid problems with migrations that may arise when upgrading to many minor versions at once, we introduced breakpoints - restrictions on the maximum possible upgrade version. Therefore, if you haven't updated your system for a long time, you will need to do it in a few steps. Currently, these breakpoints are Core versions "1.10.0","1.11.0", "1.12.1" and "1.13.5".
+## Module Installation
 
-## Module Deletion
+Modules can be installed without updating the rest of the system: only the selected packages and the packages they depend on are touched.
 
-To delete a module from the system:
+There are two ways to install a module:
 
-1. Go to "Administration > Module Manager".
-2. Open the drop-down menu of the desired module from the "Installed" panel.
-3. Click the "Delete" button.
-4. Click on the button "Update".
+* click the **Install** action in the row of the desired package. This installs a single module;
+* open the drop-down menu next to the "Update System" button and choose **Install Module(s)**. A dialog with all packages that are not installed yet opens, where several modules can be selected at once.
+
+In both cases the action must be confirmed – the system is unavailable while the installation is in progress.
+
+## Module Uninstallation
+
+As with the installation, a single module can be removed via the **Uninstall** action in its row, or several modules at once via **Uninstall Module(s)** in the drop-down menu next to the "Update System" button.
+
+Only modules that were installed explicitly can be uninstalled. The AtroCore core and modules that are present only as a dependency of another module are not offered for uninstallation – remove the module that requires them instead.
+
+> Uninstalling a module deletes all data belonging to it. The action cannot be undone.
+
+## Release Notes and Module Documentation
+
+Two more actions are available in the row of each package:
+
+* **Release Notes** – opens a dialog with the release notes of the package, loaded from the AtroCore help center.
+* **Docs** – opens the built-in documentation portal on the section of this module in a new tab. The action is shown only for installed packages that ship their own documentation.
+
+## Update Log
+
+The history of all installations, uninstallations and updates is displayed in the panel on the right side of the page. Each entry states who triggered the operation and when, and whether it finished successfully or failed.
+
+Click **View Details** in an entry to see the complete raw output of the operation. This output is the first thing to look at when an update did not succeed.
 
 ## Restore a System
 
-If the update can not be completed due to some error, you need to restore the system. Please run this command:
+If an update cannot be completed and the system does not recover by itself, restore it manually. Run in the root directory of your installation:
 
 ```
 php atrocore-installer.phar restore
@@ -88,28 +121,24 @@ You can force the restoration if the previous command does not help:
 php atrocore-installer.phar restore --force
 ```
 
-You need to run the restore command as the webserver user, eg www-data, otherwise don't forget to change the ownership of the restored files.
+Run the restore command as the webserver user, e.g. `www-data`; otherwise do not forget to change the ownership of the restored files afterwards.
 
 ## Consideration of the Dependencies
 
-During the update process the system installs the latest available module versions. It is possible, that some modules will not be updated to the latest available version. The reason for it is the incompatibility of some of your modules with the newest version of the module you try to install.
+During the update the system installs the newest package versions that are compatible with each other. It is therefore possible that some modules are not updated to their latest available version: their newest release may require a core or another module version that conflicts with the rest of your installation. In this case the highest version that keeps the whole installation consistent is chosen.
 
 ## Module Purchase
 
-You can see the whole list of AtroCore modules on our website: [English version](https://store.atrocore.com/en/), [German version](https://store.atrocore.com/de/).
+The complete list of AtroCore modules is available in our store: [English version](https://store.atrocore.com/en/), [German version](https://store.atrocore.com/de/). The store can be opened directly from the page with the **AtroCore Store** button.
 
-Following status options are available for each module:
+Free modules can be installed right away. A module that has to be purchased or rented appears in the table only after it has been activated for your instance. After the purchase, contact our support and provide your system IDs, which can be found on the "Administration > Settings" page – we need them to activate the module for your software instance. You can provide the IDs of your production, stage and testing environments.
 
-* **available** – module is available for installation
-* **buyable** – module should be purchased, to be able to install it
-
-The status is changed automatically from **buyable** to **available** after the module activation.
-After you have purchased a module contact our support and provide your system IDs, which can be found on the "Administration > Settings" page. We need this ID to activate the module for your software instance. You can provide the IDs for your production, stage and testing environments.
-
-In case of successful activation, the needed module will be switched to "available" within a few several minutes.
-
-![settings_page](./_assets/module_manager_settings_en.png){.large}
+After a successful activation the module shows up in the table within a few minutes, and its licence period is shown in the `Expiration Date` column.
 
 ### Purchase Conditions
+
 The price stated on the website does not include VAT. For the price stated you will get the module including updates and upgrades for one year. After that, you may still use your last version of the module, or purchase the module again with a 50% discount, which gives you a right to updates and upgrades for an additional year. Furthermore, our [EULA](https://atropim.com/eula) (End-User License Agreement) will apply.
 
+### Rental Conditions
+
+A rented module is licensed for the duration of the rental period and includes all updates and upgrades released within it. In contrast to a purchase, the module does not become your property: once the rental period is over and is not prolonged, the module is no longer offered for installation and an already installed instance of it does not receive new versions any more.

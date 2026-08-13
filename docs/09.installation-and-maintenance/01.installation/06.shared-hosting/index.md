@@ -27,8 +27,8 @@ On most shared/managed hostings this is already the case: PHP is executed via Fa
 Make sure the PHP configuration (for **both** the web server and CLI) meets the following requirements:
 
 * A supported PHP version with the required extensions (see the main guide).
-* `allow_url_fopen = On`. On usual dedicated servers this is the default, but many shared hostings have it **turned off**. With `allow_url_fopen = Off` the installation and the Module Manager fail, because the application cannot fetch data from the AtroCore store. Enable it in the hoster's PHP configuration panel.
-* The `exec()` function must **not** be listed in `disable_functions`. The system uses `exec()` to run console commands (e.g. by the installer and the Module Manager). Some hostings disable it for the web PHP — in this case ask the hoster's support to enable it.
+* `allow_url_fopen = On`. On usual dedicated servers this is the default, but many shared hostings have it **turned off**. With `allow_url_fopen = Off` the installation and the "Updates & Modules" page fail, because the application cannot fetch data from the AtroCore store. Enable it in the hoster's PHP configuration panel.
+* The `exec()` function must **not** be listed in `disable_functions`. The system uses `exec()` to run console commands (e.g. by the installer and by the software package management). Some hostings disable it for the web PHP — in this case ask the hoster's support to enable it.
 * Resource limits as described in the main guide: `post_max_size`, `upload_max_filesize`, `max_execution_time`, `max_input_time`, `memory_limit`.
 
 > Keep in mind that CLI and web PHP usually have separate configuration files — check both, e.g. via `php -i` on the console and via a temporary script with `phpinfo()` in the browser.
