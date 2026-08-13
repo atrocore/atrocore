@@ -25,7 +25,7 @@ use Espo\ORM\EntityManager;
 
 class PseudoTransactionManager
 {
-    private const FILE_PATH = 'data/has-transactions-jobs.log';
+    private const string FILE_PATH = 'data/has-transactions-jobs.log';
 
     private array $canceledJobs = [];
 
@@ -49,32 +49,32 @@ class PseudoTransactionManager
         return $this->push($entityType, '', 'createEntity', $this->prepareInputData($data), $parentId);
     }
 
-    public function pushUpdateEntityJob(string $entityType, string $entityId, $data, string $parentId = null): string
+    public function pushUpdateEntityJob(string $entityType, string $entityId, $data, ?string $parentId = null): string
     {
         return $this->push($entityType, $entityId, 'updateEntity', $this->prepareInputData($data), $parentId);
     }
 
-    public function pushMassUpdateEntityJob(string $entityType, $data, $params, string $parentId = null): string
+    public function pushMassUpdateEntityJob(string $entityType, $data, $params, ?string $parentId = null): string
     {
         return $this->push($entityType, '', 'massUpdate', $this->prepareInputData(['data' => $data, 'params' => $params]), $parentId);
     }
 
-    public function pushDeleteEntityJob(string $entityType, string $entityId, string $parentId = null): string
+    public function pushDeleteEntityJob(string $entityType, string $entityId, ?string $parentId = null): string
     {
         return $this->push($entityType, $entityId, 'deleteEntity', '', $parentId);
     }
 
-    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null, bool $duplicateForeign = false): string
+    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, ?string $parentId = null, bool $duplicateForeign = false): string
     {
         return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId, 'duplicateForeign' => $duplicateForeign], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
-    public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
+    public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, ?string $parentId = null): string
     {
         return $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
-    public function pushCustomJob(string $entityType, string $action, $data, string $parentId = null): string
+    public function pushCustomJob(string $entityType, string $action, $data, ?string $parentId = null): string
     {
         return $this->push($entityType, '', $action, $this->prepareInputData($data), $parentId);
     }
@@ -199,7 +199,7 @@ class PseudoTransactionManager
         return $job;
     }
 
-    protected function push(string $entityType, string $entityId, string $action, string $input, string $parentId = null): string
+    protected function push(string $entityType, string $entityId, string $action, string $input, ?string $parentId = null): string
     {
         $id = IdGenerator::uuid();
         $parentId = empty($parentId) ? null : $parentId;
