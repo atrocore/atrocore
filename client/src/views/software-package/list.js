@@ -21,6 +21,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                 createButton: false,
                 massRelateEnabled: false,
                 allowSelectAllResult: false,
+                layoutName: 'listModulesToSelect',
                 whereAdditional: [
                     {
                         type: 'isFalse',
@@ -52,6 +53,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                 createButton: false,
                 massRelateEnabled: false,
                 allowSelectAllResult: false,
+                layoutName: 'listModulesToSelect',
                 boolFilterList: ['onlyUninstallable'],
                 whereAdditional: [
                     {

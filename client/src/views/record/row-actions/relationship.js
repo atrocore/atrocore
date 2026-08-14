@@ -176,7 +176,8 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     let actionData = this.getMetadata().get(['clientDefs', parentModelName, 'relationshipPanels', relationName, 'actions', actionName]);
                     if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
                         list.push({
-                            action: actionData.action || 'universalAction',
+                            action: actionName,
+                            dataAction: actionData.action || 'universalAction',
                             iconClass: actionData.iconClass,
                             label: this.translate(actionName, 'actions', parentModelName),
                             data: {

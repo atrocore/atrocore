@@ -15,7 +15,8 @@
     "toStore": "AtroCore Store",
     "installModules": "Installer le(s) module(s)",
     "uninstallModules": "Désinstaller le(s) module(s)",
-    "lastUpdate": "Dernière mise à jour"
+    "lastUpdate": "Dernière mise à jour",
+    "notInstalled": "Non installé"
   },
   "lastUpdateStatuses": {
     "Success": "Succès",

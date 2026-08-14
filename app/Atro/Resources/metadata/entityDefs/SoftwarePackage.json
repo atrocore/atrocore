@@ -65,7 +65,8 @@
     },
     "installed": {
       "type": "bool",
-      "protected": true
+      "protected": true,
+      "view": "views/software-package/fields/installed"
     }
   },
   "collection": {

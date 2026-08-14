@@ -2815,7 +2815,7 @@ th {
     vertical-align: top;
 }
 
-.table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]) {
+.table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]):not([data-name="installed"]) {
     max-width: 22em;
     min-width: 12em;
 }
@@ -19643,8 +19643,8 @@ body > .error-container .error-links a {
     border-bottom-left-radius: 0;
 }
 
-.dashlet-body .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]),
-.list-container.sharing-panel .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]) {
+.dashlet-body .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]):not([data-name="installed"]),
+.list-container.sharing-panel .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]):not([data-name="installed"]) {
     min-width: auto;
 }
 
