@@ -60,6 +60,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
             const actions = this.getActionList().map(a => ({
                 name: a.action,
+                dataAction: a.dataAction || undefined,
                 label: a.label,
                 iconClass: a.iconClass || undefined,
                 iconUrl: a.iconUrl || undefined,
@@ -223,7 +224,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     let actionData = this.getMetadata().get(['clientDefs', scope, 'listActions', actionName]);
                     if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
                         list.push({
-                            action: actionData.action || 'universalAction',
+                            action: actionName,
+                            dataAction: actionData.action || 'universalAction',
                             iconClass: actionData.iconClass || undefined,
                             iconUrl: actionData.iconUrl || undefined,
                             label: this.translate(actionName, 'actions', scope),
