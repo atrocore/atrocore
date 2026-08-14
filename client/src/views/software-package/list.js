@@ -44,6 +44,26 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
             });
         },
 
+        actionInstallSingleAction(data) {
+            this.confirm(this.translate('install', 'actionConfirms', 'SoftwarePackage'), () => {
+                this.notify('Loading...');
+                this.ajaxPostRequest(`SoftwarePackage/${data.id}/install`).success(() => {
+                    this.notify(false);
+                    location.reload();
+                });
+            });
+        },
+
+        actionUninstallSingleAction(data) {
+            this.confirm(this.translate('uninstall', 'actionConfirms', 'SoftwarePackage'), () => {
+                this.notify('Loading...');
+                this.ajaxRequest(`SoftwarePackage/${data.id}/uninstall`, 'DELETE').then(() => {
+                    this.notify(false);
+                    location.reload();
+                });
+            });
+        },
+
         actionUninstallAction(data) {
             this.notify('Loading...');
 

@@ -60,20 +60,14 @@
     },
     "install": {
       "name": "install",
-      "url": "SoftwarePackage/{{id}}/install",
-      "method": "POST",
-      "confirm": true,
-      "refresh": true,
+      "action": "installSingleAction",
       "iconClass": "ph ph-download-simple",
       "acl": "install",
       "sortOrder": 150
     },
     "uninstall": {
       "name": "uninstall",
-      "url": "SoftwarePackage/{{id}}/uninstall",
-      "method": "DELETE",
-      "confirm": true,
-      "refresh": true,
+      "action": "installSingleAction",
       "iconClass": "ph ph-trash",
       "acl": "uninstall",
       "sortOrder": 155
