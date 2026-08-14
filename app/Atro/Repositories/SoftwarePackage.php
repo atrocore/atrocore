@@ -228,15 +228,19 @@ class SoftwarePackage extends ReferenceData
      */
     private function isAvailableForInstallation(array $package): bool
     {
-        if (empty($package['usage'])) {
-            return false;
+        if (!empty($package['usage'])) {
+            if (in_array($package['usage'], ['Purchase', 'Public'])) {
+                return true;
+            }
+
+            if ($package['usage'] === 'Rent') {
+                if (!empty($package['expirationDate']) && $package['expirationDate'] >= date('Y-m-d')) {
+                    return true;
+                }
+            }
         }
 
-        if ($package['usage'] === 'Purchase') {
-            return true;
-        }
-
-        return $package['usage'] === 'Rent' && !empty($package['expirationDate']) && $package['expirationDate'] >= date('Y-m-d');
+        return false;
     }
 
     private function prepareTargetVersions(string $code, array $package): array
