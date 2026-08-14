@@ -74,7 +74,7 @@ class SoftwarePackage extends ReferenceData
 
         $label = $this->getLanguage()->translate('lastUpdate', 'labels', 'SoftwarePackage');
 
-        if (!empty($note->get('data'))) {
+        if (!empty($note?->get('data'))) {
             if ($note->get('data')?->status === 0) {
                 return [
                     'label' => $label,
