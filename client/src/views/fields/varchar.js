@@ -96,6 +96,12 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }
         },
 
+        setDefaultValue() {
+            if (this.model.isNew() && !this.model.get('_duplicatingEntityId')) {
+                this.applyDefaultValue();
+            }
+        },
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -111,7 +117,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             this.validationPatternString = patternString;
 
             this.setScriptDefaultValue();
-            this.applyDefaultValue();
+            this.setDefaultValue();
 
             if (this.mode === 'listLink' && this.model.id) {
                 this.events[`click a[data-id="${this.model.id}"]`] = function (e) {
