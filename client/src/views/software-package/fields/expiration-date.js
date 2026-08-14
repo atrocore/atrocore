@@ -13,11 +13,23 @@ Espo.define('views/software-package/fields/expiration-date', 'views/fields/date'
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get(this.name) === null && ['list', 'detail'].includes(this.mode)) {
+            if (!['list', 'detail'].includes(this.mode)) {
+                return;
+            }
+
+            const value = this.model.get(this.name);
+
+            if (value === null) {
                 const $span = this.$el.find('span');
 
                 $span.removeClass('text-gray');
                 $span.html('&infin;');
+
+                return;
+            }
+
+            if (value < this.getDateTime().getToday()) {
+                this.$el.find('span').css('color', 'red');
             }
         },
 
