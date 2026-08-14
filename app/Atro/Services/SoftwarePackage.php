@@ -69,7 +69,7 @@ class SoftwarePackage extends ReferenceData
                 ],
                 'type'       => 'composerUpdate'
             ])
-            ->order('created_at', 'DESC')
+            ->order('createdAt', 'DESC')
             ->findOne();
 
         $label = $this->getLanguage()->translate('lastUpdate', 'labels', 'SoftwarePackage');
