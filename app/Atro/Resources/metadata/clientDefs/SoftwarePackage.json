@@ -67,7 +67,7 @@
     },
     "uninstall": {
       "name": "uninstall",
-      "action": "installSingleAction",
+      "action": "uninstallSingleAction",
       "iconClass": "ph ph-trash",
       "acl": "uninstall",
       "sortOrder": 155
