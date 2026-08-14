@@ -1,5 +1,12 @@
 [
   {
+    "name": "installed",
+    "customLabel": "",
+    "align": "center",
+    "notSortable": true,
+    "widthPx": "40"
+  },
+  {
     "name": "name",
     "link": true,
     "notSortable": true

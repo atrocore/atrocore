@@ -15,7 +15,8 @@
     "toStore": "AtroCore Store",
     "installModules": "Встановити модуль(і)",
     "uninstallModules": "Видалити модуль(і)",
-    "lastUpdate": "Останнє оновлення"
+    "lastUpdate": "Останнє оновлення",
+    "notInstalled": "Не встановлено"
   },
   "lastUpdateStatuses": {
     "Success": "Успішно",
