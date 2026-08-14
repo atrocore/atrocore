@@ -69,7 +69,7 @@ grep -E "CONFIG_FANOTIFY(_ACCESS_PERMISSIONS)?=" /boot/config-$(uname -r)
 systemctl list-units --state=running | grep -iE "clam|falco|wazuh|ossec"
 ```
 
-The agent requires roughly 1 GB of RAM and 2 GB of free disk space under `/opt`.
+Plan for around 440 MB of disk under `/opt` and 1 GB of RAM for the agent. In real-time mode it uses roughly 270 MB of RSS across two processes, with CPU near idle at rest.
 
 ## Installation ##
 
@@ -131,7 +131,7 @@ The following list applies to an AtroCore installation located at `/var/www/atro
 
 | Path to exclude | Why it is safe |
 | --- | --- |
-| `vendor/` | Changes only during `composer update`, but is read on every request and by every background worker. Highest cost, lowest yield. Covered by scheduled scans instead. |
+| `vendor/` | Changes only during dependency updates, but is read on every request and by every background worker. Highest cost, lowest yield for real-time interception. Covered by the daily scheduled scan instead. |
 | `data/cache/` | Generated PHP metadata. Clearing the cache writes thousands of small files in one burst, which is the worst case for `fanotify`. |
 | `data/logs/` | Append-only, high frequency, no detection value. |
 | `data/migrations/`, `data/module-manager-events/`, `data/reference-data/` | Framework-managed, rewritten during updates, not reachable by user input. |
@@ -146,7 +146,7 @@ Two categories must remain outside the exclusion list:
 
 **The document root.** `public/` should contain exactly one PHP file, `index.php`. Anything else appearing there warrants blocking, and the subdirectories listed above are excluded individually rather than by excluding `public/` as a whole.
 
-In a typical deployment the entire tree is owned by `www-data`, because the module manager updates code and rebuilds frontend assets. That makes `public/client/` both writable by the web process and excluded from antivirus, which is the one genuine gap in this configuration. The gap is narrow, since writes there come through the module manager rather than user input. Close it by restricting permissions outside deployment windows, or by the custom detection rule described below.
+In a typical deployment the entire tree is owned by `www-data`, because the module manager updates code and rebuilds frontend assets. That makes `public/client/` both writable by the web process and excluded from real-time protection. The exposure is limited: writes there come through the module manager rather than user input, EDR telemetry still covers the directory, and the daily scheduled scan inspects it. Restrict permissions outside deployment windows if you want to close it entirely.
 
 ### Antivirus Exclusions Do Not Blind EDR ###
 
@@ -284,28 +284,33 @@ If `exclusion list` returns `No exclusions` while the file is present, the schem
 
 ## Scheduled Scans ##
 
-Scheduled scanning is often treated as optional. With the exclusion list above it is closer to mandatory, because `vendor/` is excluded from real-time protection and a compromised Composer package is therefore no longer intercepted on access. A periodic scan is the only remaining control covering supply chain risk.
+Scheduled scanning completes the configuration. Real-time protection covers everything outside the exclusion list; scheduled scans cover the excluded directories as well, so nothing on the server is left permanently unexamined. Excluding a directory then becomes a decision about *when* it is inspected rather than *whether* it is inspected at all.
 
 There is also a platform difference that surprises administrators coming from Windows: **Defender on Linux ships no scan scheduler**. Nothing runs periodically unless you arrange it, so a freshly onboarded Linux server is never scanned on a schedule until cron is configured.
 
 Detections are reported to the portal regardless of what triggers a scan, so cron is sufficient and no integration work is required for alerting.
+
+> **Exclusions apply to scans as well.** By default `mdatp scan` skips every excluded path — a scan of an excluded directory reports `0 file(s) scanned`. The `--ignore-exclusions` flag overrides this and is what makes the excluded directories reachable by scheduled scanning. Without it, an excluded path is never inspected by any mechanism.
 
 Create `/etc/cron.d/mdatp-scan`:
 
 ```
 # Microsoft Defender for Endpoint - scheduled scans
 # MDE on Linux has no built-in scan scheduler, so scans are driven by cron.
+# --ignore-exclusions is required: without it a scan skips every excluded path.
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-# Daily 04:00 - scan the application directory
-0 4 * * * root /usr/bin/mdatp scan custom --path /var/www/atrocore >> /var/log/mdatp-scan.log 2>&1
+# Daily 04:00 - application directory, including paths excluded from real-time protection
+0 4 * * * root /usr/bin/mdatp scan custom --path /var/www/atrocore --ignore-exclusions >> /var/log/mdatp-scan.log 2>&1
 
 # Weekly, Sunday 03:00 - full system scan
 0 3 * * 0 root /usr/bin/mdatp scan full >> /var/log/mdatp-scan.log 2>&1
 ```
 
-The two tiers answer different questions. The daily project scan covers freshly imported content and recently updated dependencies, while the weekly full scan covers everything the exclusion list omits, such as temporary directories, home directories and anything dropped outside the application tree.
+The two tiers answer different questions. The daily scan covers the application tree in full, including `vendor/`, `backups/` and every other excluded directory inside it, which is what closes the supply chain gap created by excluding dependencies from real-time protection. The weekly full scan covers the rest of the host — temporary directories, home directories and anything dropped outside the application tree.
+
+Note that `mdatp scan full` does not accept `--ignore-exclusions`; it ignores unrecognised arguments and starts scanning regardless. The weekly scan therefore honours exclusions, and coverage of excluded paths comes from the daily `scan custom` run. If an excluded path lies outside the application tree, add a separate cron entry for it. Database storage is the deliberate exception: scanning live database files is not advisable, so `/var/lib/postgresql` stays excluded from both mechanisms.
 
 Add log rotation, because the log grows indefinitely otherwise. Create `/etc/logrotate.d/mdatp-scan`:
 
@@ -318,79 +323,3 @@ Add log rotation, because the log grows indefinitely otherwise. Create `/etc/log
     notifempty
 }
 ```
-
-Note that `/etc/cron.d/` and `crontab -e` are two different mechanisms. Entries placed in `/etc/cron.d/` are not shown by `crontab -l`, so verify them with `cat /etc/cron.d/mdatp-scan` instead. Files under `/etc/cron.d/` also require an additional field naming the user after the schedule; moving a line between the two formats without adjusting that field results in a job that cron silently ignores.
-
-## Verifying Protection ##
-
-A healthy agent proves that the configuration was accepted, not that blocking works. Test with EICAR, a harmless standard test string, written into a storage directory — never excluded, and therefore the right place to confirm interception:
-
-```
-printf 'X5O!P%%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' \
-  > /var/www/atrocore/upload/eicar_test.txt
-
-mdatp threat list
-mdatp threat quarantine list
-```
-
-With `enforcementLevel: real_time` the write is intercepted and the file quarantined, an alert appears in the portal, and an email arrives if notifications are configured. If nothing is detected, real-time protection is not intercepting writes, which is a more serious problem than any tuning described here.
-
-Repeat the same test in each configured storage location. This verifies that no storage path has been placed inside an excluded directory — the most likely configuration error, and one that produces no visible symptom until it matters. Running the test inside an excluded directory instead shows exactly how much coverage that exclusion costs.
-
-### Email Notifications ###
-
-An agent can run correctly for months, generate alerts and have nobody read them. This is the most common operational failure, so configure notifications explicitly.
-
-There are two separate places in the portal with different granularity: endpoint alert notifications under *Settings → Endpoints*, and XDR incident notifications under *Settings → Microsoft Defender XDR*. Prefer incident notifications as the primary channel, because one attack then produces a single email rather than fifteen. Exclude the Informational severity, enable notification on the first update only, and note that the recipient address requires an explicit *Add* before saving — a rule with no recipients looks identical to a working one.
-
-### Detecting Unexpected PHP Files ###
-
-Since `public/` should contain exactly one PHP file, anything else appearing there is worth an alert. This cannot be expressed as an antivirus rule, but it works as a custom detection rule built on an Advanced Hunting query. Because it runs on EDR telemetry, it fires even for directories excluded from antivirus:
-
-```
-DeviceFileEvents
-| where FolderPath startswith "/var/www/atrocore/public/"
-| where FileName endswith ".php"
-| where FileName != "index.php"
-| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
-| project Timestamp, DeviceName, FolderPath, FileName,
-          InitiatingProcessFileName, InitiatingProcessAccountName, SHA256
-```
-
-Combine it with an Apache level control that makes such a file inert in the first place, by disabling PHP execution across the document root and re-enabling it only for the single entry point:
-
-```
-<Directory /var/www/atrocore/public>
-    AllowOverride All
-    Require all granted
-
-    php_admin_flag engine Off
-    <FilesMatch "\.php$">
-        Require all denied
-    </FilesMatch>
-
-    <Files "index.php">
-        php_admin_flag engine On
-        Require all granted
-    </Files>
-</Directory>
-```
-
-`php_admin_flag` is a `mod_php` directive. Under PHP-FPM it has no effect and must be replaced with a `SetHandler` based construct, which is a routine trap when migrating between the two.
-
-## Differences from Windows Defender ##
-
-|  | Windows | Linux |
-| --- | --- | --- |
-| Interface | Windows Security UI, tray, notifications | Command line only, via `mdatp` |
-| Integration | Part of the operating system | Separate package, updated through `apt` |
-| Interception | Kernel mini-filter driver | `fanotify`, with a heavier I/O impact |
-| Policy | Group Policy or Intune, hundreds of settings | Managed JSON, far fewer settings |
-| Scheduled scans | Built in | Must be configured through cron |
-| Updates | Windows Update | `apt upgrade mdatp`, which must be planned |
-
-Features with no Linux equivalent include Attack Surface Reduction rules (only a small subset is available), Controlled Folder Access, Exploit Guard and firewall management from the portal. Windows-specific detections such as LSASS dumping are replaced by Linux-relevant ones covering web shells, cron persistence and suspicious activity originating from a web process.
-
-A more accurate mental model than "Windows Defender for Linux" is an EDR agent that shares the same cloud backend, with a narrower feature set and a requirement for manual tuning.
-
-In real-time mode with the exclusions above, the agent uses roughly 270 MB of RSS across two processes and around 440 MB of disk under `/opt/microsoft/mdatp`, with CPU near idle at rest. The EDR subsystem selects `eBPF` rather than `auditd`, which is lighter and lets `auditd` remain disabled.
