@@ -21,18 +21,9 @@ The most common misconception is that Defender overlaps with a WAF. It does not.
 
 ### The PIM-Specific Reason ###
 
-On a general purpose web server the argument for antivirus is protecting the host. On a PIM the stronger argument is different.
+A PIM distributes files rather than consuming them. Images, catalogues and price lists leave the system through channel exports, the API and partner downloads.
 
-**A PIM exists to distribute files.** Product images, PDF catalogues and XLSX price lists are imported, then exported to channels, handed to partners through the API and downloaded by clients. Storage directories are located outside the document root, so a web shell placed there cannot be executed over HTTP. The host is not the target — the recipients are:
-
-```
-infected XLSX enters a storage directory
-  -> the Linux server never executes it        # host unaffected
-  -> the PIM exports it to a channel
-  -> a partner opens it on Windows             # the macro fires here
-```
-
-Scanning storage content is therefore not a question of server integrity. It is a question of not becoming a distribution vector for your own customers, which is a contractual and reputational exposure long before it is a technical one.
+An infected file in a storage directory is consequently low risk to the host — storage sits outside the document root, and the server does not execute the document formats a PIM handles — but it reaches every recipient downstream. The exposure is contractual and reputational rather than operational, which is why storage content is scanned even though the host itself is not endangered by it.
 
 ### Files Do Not Only Arrive Through the Application ###
 
@@ -55,64 +46,24 @@ Antivirus is the third line of defence, not the first. If a directory does not n
 3. **Defender real-time protection** — the file would have run, but the signature was recognised.
 4. **Defender EDR** — nothing was stopped, but you know about it and can respond.
 
-## Prerequisites ##
+## Before You Configure ##
 
-Real-time protection on Linux relies on `fanotify`. Both kernel options must be present, otherwise the agent can only log events instead of blocking them:
+Install and onboard the agent as described in the [Microsoft Defender for Endpoint on Linux documentation](https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-linux). System requirements, supported distributions and the onboarding procedure are covered there and require nothing specific to AtroCore.
 
-```
-grep -E "CONFIG_FANOTIFY(_ACCESS_PERMISSIONS)?=" /boot/config-$(uname -r)
-```
-
-`fanotify` is a limited resource, so competing agents degrade each other. Verify that no other antivirus, EDR or file integrity monitoring service is running:
+The rest of this article assumes an onboarded agent in its default state:
 
 ```
-systemctl list-units --state=running | grep -iE "clam|falco|wazuh|ossec"
+mdatp health --field healthy    # true
+mdatp health --field licensed   # true
 ```
 
-Plan for around 440 MB of disk under `/opt` and 1 GB of RAM for the agent. In real-time mode it uses roughly 270 MB of RSS across two processes, with CPU near idle at rest.
-
-## Installation ##
-
-The `mdatp` package is only available from the Microsoft repository:
-
-```
-curl -sSL https://packages.microsoft.com/keys/microsoft.asc \
-  | gpg --dearmor | sudo tee /usr/share/keyrings/microsoft-prod.gpg > /dev/null
-
-curl -sSL https://packages.microsoft.com/config/ubuntu/24.04/prod.list \
-  | sudo tee /etc/apt/sources.list.d/microsoft-prod.list
-
-sudo apt update
-sudo apt install -y mdatp
-```
-
-Onboarding requires a package downloaded from the Defender portal under *Settings → Endpoints → Device management → Onboarding*, selecting `Linux Server` as the operating system, `Streamlined` connectivity and `Local script` as the deployment method. The archive contains a Python script that generates the tenant configuration:
-
-```
-unzip WindowsDefenderATPOnboardingPackage.zip
-sudo python3 MicrosoftDefenderATPOnboardingLinuxServer.py
-```
-
-There is no licence key to enter. The onboarding package carries a tenant certificate, and entitlement is verified cloud-side on every connection. A licence is consumed automatically when a device onboards and is returned only through offboarding — removing the package is not sufficient.
-
-Confirm the result:
-
-```
-mdatp health --field healthy       # true
-mdatp health --field licensed      # true
-mdatp health --field health_issues # []
-mdatp connectivity test            # all endpoints must report [OK]
-```
-
-Note that `mdatp connectivity test` cannot be reproduced before onboarding, because the endpoint host names are derived from the tenant. Attempts to pre-flight them with `curl` produce misleading failures.
+A newly onboarded agent runs in passive mode, which means alerts are generated but file operations are not intercepted. Keep it that way until the exclusions below are in place.
 
 ## Recommended Configuration ##
 
-Configure exclusions **before** enabling real-time protection. A freshly onboarded agent defaults to `passive_mode_enabled = true`, meaning EDR telemetry flows and alerts are generated, but file operations are not intercepted. That default is deliberate and useful: it lets you onboard a production server without any performance impact, and gives you time to apply the configuration below before scanning becomes active.
+Apply the exclusions first and switch the enforcement level afterwards. Enabling real-time protection on an unconfigured agent is what produces the familiar complaint that installing an antivirus made the application slow.
 
-Enabling real-time protection first, on an unconfigured agent, is what produces the familiar complaint that installing an antivirus made the application slow.
-
-Run one on-demand scan of the application directory before switching to real-time mode. AtroCore application code and its Composer dependencies do not trigger antivirus signatures, so no false-positive exclusions are needed for code directories — but confirming this on your own installation takes a single command, and any third-party module you have installed is worth checking before scanning becomes enforcing.
+Run one on-demand scan of the application directory before switching. AtroCore application code and its Composer dependencies do not trigger antivirus signatures, so no false-positive exclusions are needed for code directories — but any third-party module you have installed is worth checking before scanning becomes enforcing.
 
 ```
 mdatp scan custom --path /var/www/atrocore
