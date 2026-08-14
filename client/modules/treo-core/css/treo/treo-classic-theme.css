@@ -16906,7 +16906,7 @@ div.list-kanban > div > table .item .panel .form-group {
     align-items: center;
 }
 
-.text-gray {
+.tr-text-gray a, .tr-text-gray span, .text-gray {
     color: #999;
 }
 
