@@ -2882,7 +2882,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.model.id) {
                 var url = '#' + this.scope + '/view/' + this.model.id;
 
-                this.getRouter().navigate(url, { trigger: false });
+                this.getRouter().navigate(url, { trigger: false, replace: true });
                 this.getRouter().dispatch(this.scope, 'view', {
                     id: this.model.id,
                     rootUrl: this.options.rootUrl
