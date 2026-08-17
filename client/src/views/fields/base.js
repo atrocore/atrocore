@@ -1499,7 +1499,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.getCellElement().css('width', '');
             this.getCellElement().css('min-width', '');
             this.getCellElement().css('max-width', '');
-            $(window).off('keydown.escape' + this.cid);
+            if (this.inlineEditEscapeCaptureHandler) {
+                window.removeEventListener('keydown', this.inlineEditEscapeCaptureHandler, true);
+                this.inlineEditEscapeCaptureHandler = null;
+            }
             $(window).off('keydown.enter' + this.cid);
             this.inlineEditModeIsOn = false;
             this.setMode(this.initialMode);
@@ -1546,11 +1549,13 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.addInlineEditLinks();
                 this.initSaveAfterOutsideClick();
 
-                $(window).on('keydown.escape' + this.cid, e => {
+                this.inlineEditEscapeCaptureHandler = e => {
                     if (e.key === "Escape") {
+                        e.stopPropagation();
                         this.inlineEditClose();
                     }
-                });
+                };
+                window.addEventListener('keydown', this.inlineEditEscapeCaptureHandler, true);
 
                 $(window).on('keydown.enter' + this.cid, e => {
                     if (!$.contains(this.el, e.target)) {
