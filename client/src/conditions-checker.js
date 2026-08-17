@@ -171,20 +171,17 @@ Espo.define('conditions-checker', [], function () {
             const key = 'user-team-' + JSON.stringify(value)
 
             if (Espo[key] == null) {
-                const res = Espo.ajax.getRequest('TeamUser', {
-                    collectionOnly: true,
-                    where: [{
-                        type: 'in',
-                        attribute: 'teamId',
-                        value: value
-                    }],
-                    maxSize: 500
+                const res = Espo.ajax.getRequest('Team/userIds', {
+                    teamIds: value
                 }, { async: false })
 
-                Espo[key] = (res.responseJSON?.list || []).map(d => d.userId)
+                // only cache on success, so a transient failure isn't mistaken for "no users in these teams"
+                if (res.status === 200) {
+                    Espo[key] = res.responseJSON?.userIds || []
+                }
             }
 
-            const usersIds = Espo[key]
+            const usersIds = Espo[key] || []
 
             return this.checkIn(usersIds, setValue)
         },
