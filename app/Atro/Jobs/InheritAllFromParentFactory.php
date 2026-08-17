@@ -28,6 +28,7 @@ class InheritAllFromParentFactory extends AbstractJob implements JobInterface
         $exist = $this
             ->getEntityManager()
             ->getRepository('Job')
+            ->select(['id'])
             ->where([
                 'id!='   => $job->get('id'),
                 'type'   => 'InheritAllFromParent',
@@ -42,6 +43,7 @@ class InheritAllFromParentFactory extends AbstractJob implements JobInterface
         $exist = $this
             ->getEntityManager()
             ->getRepository('Job')
+            ->select(['id'])
             ->where([
                 'type'   => ['InheritAllFromParentChunk'],
                 'status' => ['Pending', 'Running']
