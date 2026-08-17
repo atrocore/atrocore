@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\AuthToken;
+namespace Atro\Handlers\Bookmark;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,36 +23,38 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/AuthToken/{id}',
+    path: '/Bookmark',
     methods: [
-        'PATCH',
+        'POST',
     ],
-    summary: 'Updates an auth token record',
-    description: 'Updates an authentication token record by ID. Accessible by administrators only.',
-    tag: 'AuthToken',
-    parameters: [
-        [
-            'name'     => 'id',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
-                'type' => 'string',
-            ],
-        ],
-    ],
+    summary: 'Creates a bookmark',
+    description: 'Creates a new bookmark record.',
+    tag: 'Bookmark',
     requestBody: [
         'required' => true,
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    'type' => 'object',
+                    'type'       => 'object',
+                    'required'   => [
+                        'entityId',
+                        'entityType',
+                    ],
+                    'properties' => [
+                        'entityId'   => [
+                            'type' => 'string',
+                        ],
+                        'entityType' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Updated auth token record',
+            'description' => 'Created bookmark record',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -63,19 +65,19 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class AuthTokenUpdateHandler extends AbstractHandler
+class CreateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
+        $data = $this->getRequestBody($request);
+
+        if (empty($data->entityId) || empty($data->entityType)) {
+            throw new BadRequest();
         }
 
-        $id      = (string) $request->getAttribute('id');
-        $data    = $this->getRequestBody($request);
-        $service = $this->getRecordService('AuthToken');
+        $service = $this->getRecordService('Bookmark');
 
-        $service->updateEntity($id, $data);
+        $id = $service->createEntity($data);
 
         $entity = $service->prepareEntityById($id);
         if (empty($entity)) {

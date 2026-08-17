@@ -11,11 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Cluster;
+namespace Atro\Handlers\AuthToken;
 
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,51 +23,51 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Cluster/{id}/purge',
+    path: '/AuthToken/{id}',
     methods: [
-        'DELETE',
+        'GET',
     ],
-    summary: 'Purge a single cluster',
-    description: 'Deletes all ClusterItems and RejectedClusterItems belonging to the specified cluster, then deletes the cluster itself.',
-    tag: 'Cluster',
+    summary: 'Returns an auth token record',
+    description: 'Returns a single authentication token by ID. Accessible by administrators only.',
+    tag: 'AuthToken',
     parameters: [
         [
-            'name'        => 'id',
-            'in'          => 'path',
-            'required'    => true,
-            'description' => 'ID of the Cluster to purge.',
-            'schema'      => [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
                 'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'true if the cluster was purged successfully.',
+            'description' => 'Auth token record',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        'type' => 'object',
                     ],
                 ],
             ],
         ],
-        403 => [
-            'description' => 'Current user does not have delete access on Cluster.',
-        ],
-        404 => [
-            'description' => 'Cluster not found.',
-        ],
     ],
 )]
-class ClusterPurgeHandler extends AbstractHandler
+class ReadHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $id = (string)$request->getAttribute('id');
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
-        $this->getRecordService('Cluster')->purgeCluster($id);
+        $id     = (string) $request->getAttribute('id');
+        $entity = $this->getRecordService('AuthToken')->readEntity($id);
 
-        return new BoolResponse(true);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        return new JsonResponse((array) $entity->getValueMap());
     }
 }

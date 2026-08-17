@@ -11,8 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\ClassificationAttribute;
+namespace Atro\Handlers\AuthToken;
 
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -21,13 +23,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClassificationAttribute/{id}',
+    path: '/AuthToken/{id}',
     methods: [
         'DELETE',
     ],
-    summary: 'Deletes a ClassificationAttribute record',
-    description: 'Deletes a ClassificationAttribute record by ID. Optionally also deletes all attribute values linked to this classification attribute.',
-    tag: 'ClassificationAttribute',
+    summary: 'Deletes an auth token record',
+    description: 'Deletes an authentication token by ID. Accessible by administrators only.',
+    tag: 'AuthToken',
     parameters: [
         [
             'name'     => 'id',
@@ -35,23 +37,6 @@ use Psr\Http\Server\RequestHandlerInterface;
             'required' => true,
             'schema'   => [
                 'type' => 'string',
-            ],
-        ],
-    ],
-    requestBody: [
-        'required' => false,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'properties' => [
-                        'withAttributeValues' => [
-                            'type'        => 'boolean',
-                            'default'     => false,
-                            'description' => 'When true, all attribute values linked to this classification attribute are also deleted.',
-                        ],
-                    ],
-                ],
             ],
         ],
     ],
@@ -68,18 +53,19 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ClassificationAttributeDeleteHandler extends AbstractHandler
+class DeleteHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $id      = (string) $request->getAttribute('id');
-        $data    = $this->getRequestBody($request);
-        $service = $this->getRecordService('ClassificationAttribute');
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
-        if (!empty($data->withAttributeValues)) {
-            $service->deleteEntityWithThemAttributeValues($id);
-        } else {
-            $service->deleteEntity($id);
+        $id      = (string) $request->getAttribute('id');
+        $service = $this->getRecordService('AuthToken');
+
+        if (!$service->deleteEntity($id)) {
+            throw new Error();
         }
 
         return new BoolResponse(true);

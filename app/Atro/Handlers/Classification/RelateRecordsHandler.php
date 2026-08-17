@@ -77,7 +77,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ClassificationRelateRecordsHandler extends AbstractHandler
+class RelateRecordsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

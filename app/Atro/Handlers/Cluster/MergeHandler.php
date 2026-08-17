@@ -80,7 +80,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ClusterMergeHandler extends AbstractHandler
+class MergeHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

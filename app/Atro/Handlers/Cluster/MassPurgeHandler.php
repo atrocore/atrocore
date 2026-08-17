@@ -99,7 +99,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ClusterMassPurgeHandler extends AbstractHandler
+class MassPurgeHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

@@ -107,7 +107,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class AuthTokenListHandler extends AbstractHandler
+class ListHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

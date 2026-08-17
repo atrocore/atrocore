@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Atro\Handlers\Bookmark;
+namespace Atro\Handlers\AuthToken;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,38 +23,26 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Bookmark',
+    path: '/AuthToken',
     methods: [
         'POST',
     ],
-    summary: 'Creates a bookmark',
-    description: 'Creates a new bookmark record.',
-    tag: 'Bookmark',
+    summary: 'Creates an auth token record',
+    description: 'Creates a new authentication token record. Accessible by administrators only.',
+    tag: 'AuthToken',
     requestBody: [
         'required' => true,
         'content'  => [
             'application/json' => [
                 'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'entityId',
-                        'entityType',
-                    ],
-                    'properties' => [
-                        'entityId'   => [
-                            'type' => 'string',
-                        ],
-                        'entityType' => [
-                            'type' => 'string',
-                        ],
-                    ],
+                    'type' => 'object',
                 ],
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Created bookmark record',
+            'description' => 'Created auth token record',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -65,17 +53,16 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class BookmarkCreateHandler extends AbstractHandler
+class CreateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
-
-        if (empty($data->entityId) || empty($data->entityType)) {
-            throw new BadRequest();
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
         }
 
-        $service = $this->getRecordService('Bookmark');
+        $data    = $this->getRequestBody($request);
+        $service = $this->getRecordService('AuthToken');
 
         $id = $service->createEntity($data);
 

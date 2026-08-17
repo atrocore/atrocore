@@ -52,7 +52,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class BookmarkListHandler extends AbstractHandler
+class ListHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

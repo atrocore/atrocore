@@ -23,13 +23,23 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/AuthToken',
+    path: '/AuthToken/{id}',
     methods: [
-        'POST',
+        'PATCH',
     ],
-    summary: 'Creates an auth token record',
-    description: 'Creates a new authentication token record. Accessible by administrators only.',
+    summary: 'Updates an auth token record',
+    description: 'Updates an authentication token record by ID. Accessible by administrators only.',
     tag: 'AuthToken',
+    parameters: [
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
         'required' => true,
         'content'  => [
@@ -42,7 +52,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Created auth token record',
+            'description' => 'Updated auth token record',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -53,7 +63,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class AuthTokenCreateHandler extends AbstractHandler
+class UpdateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -61,10 +71,11 @@ class AuthTokenCreateHandler extends AbstractHandler
             throw new Forbidden();
         }
 
+        $id      = (string) $request->getAttribute('id');
         $data    = $this->getRequestBody($request);
         $service = $this->getRecordService('AuthToken');
 
-        $id = $service->createEntity($data);
+        $service->updateEntity($id, $data);
 
         $entity = $service->prepareEntityById($id);
         if (empty($entity)) {
