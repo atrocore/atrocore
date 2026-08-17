@@ -140,7 +140,7 @@ class NotificationManager
 
     public function sendNotifications(string $occurrence, Entity $entity, array $params = []): void
     {
-        $actionUser = $this->container->get('user')->get('delegator');
+        $actionUser = $this->container->get('user')?->get('delegator');
 
         if (empty($actionUser)) {
             return;
