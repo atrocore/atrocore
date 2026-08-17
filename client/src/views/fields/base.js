@@ -2028,33 +2028,65 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
-            if (this.mode === 'detail' || (this.isListView() && this.listInlineEditModeEnabled())) {
-                const action = $(`<a href="javascript:" class="value-lock hidden"><i class="ph ${this.isLocked() ? 'ph-lock-open' : 'ph-lock'}" title="${this.translate(this.isLocked() ? 'unlockFieldValue' : 'lockFieldValue', 'tooltips')}"></i></a>`);
+            if (this.isLockedControlsEnabled()) {
+                const action = $(`<a href="javascript:" class="value-lock"><i class="ph ${this.isLocked() ? 'ph-lock-open' : 'ph-lock'}" title="${this.translate(this.isLocked() ? 'unlockFieldValue' : 'lockFieldValue', 'tooltips')}"></i></a>`);
 
                 action.on('click', (e) => {
                     e.preventDefault();
 
                     this.notify('Saving...');
 
-                    const actionName = this.isLocked() ? 'unlockEntityField' : 'lockEntityField';
-
-                    this.ajaxPostRequest(actionName, {
-                        entityName: this.model.urlRoot,
-                        entityId: this.model.id,
-                        field: this.getLockedFieldName(),
-                    }).then(() => {
-                        Espo.Ui.success('Success');
-                        this.model.fetch();
-                    });
+                    this.lockedControlAction();
                 });
 
                 this.getInlineActionsContainer().prepend(action);
-                this.getCellElement().on('mouseover.value-lock-' + this.name, () => {
-                    this.getInlineActionsContainer().find('.value-lock').removeClass('hidden');
-                });
 
-                this.getCellElement().on('mouseleave.value-lock-' + this.name, () => {
-                    this.getInlineActionsContainer().find('.value-lock').addClass('hidden');
+                if (this.mode !== 'edit') {
+                    action.addClass('hidden');
+
+                    this.getCellElement().on('mouseover.value-lock-' + this.name, () => {
+                        this.getInlineActionsContainer().find('.value-lock').removeClass('hidden');
+                    });
+
+                    this.getCellElement().on('mouseleave.value-lock-' + this.name, () => {
+                        this.getInlineActionsContainer().find('.value-lock').addClass('hidden');
+                    });
+                }
+            }
+        },
+
+        isLockedControlsEnabled() {
+            if (['detail', 'edit'].includes(this.mode)) {
+                return true;
+            }
+
+            return !!(this.isListView() && this.listInlineEditModeEnabled());
+        },
+
+        lockedControlAction() {
+            if (this.model.isNew()) {
+                const field = this.getLockedFieldName();
+                const lockedFields = this.model.get('_lockedFields') || [];
+
+                if (this.isLocked()) {
+                    this.model.set('_lockedFields', lockedFields.filter(item => item !== field));
+                } else {
+                    this.model.set('_lockedFields', [...lockedFields, field]);
+                }
+
+                this.model.setMeta('locked', field, !this.isLocked());
+
+                this.setLockedControls();
+
+                Espo.Ui.success('Success');
+            } else {
+                this.ajaxPostRequest((this.isLocked() ? 'unlockEntityField' : 'lockEntityField'), {
+                    entityName: this.model.urlRoot,
+                    entityId: this.model.id,
+                    field: this.getLockedFieldName(),
+                }).then(() => {
+                    Espo.Ui.success('Success');
+                    this.model.fetch();
                 });
             }
         },
@@ -2074,7 +2106,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             return this.getMetadata().get(['scopes', this.model.urlRoot, 'enableFieldValueLock']) &&
                 !this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.getLockedFieldName(), 'disableFieldValueLock']) &&
-                this.model.get('_meta')?.locked?._loaded && !this.model.get('attributesDefs')?.[this.getLockedFieldName()]?.disableFieldValueLock;
+                (this.model.get('_meta')?.locked?._loaded || this.model.isNew()) &&
+                !this.model.get('attributesDefs')?.[this.getLockedFieldName()]?.disableFieldValueLock;
         },
 
         getAttributeFieldName() {
