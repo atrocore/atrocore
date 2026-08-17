@@ -382,6 +382,7 @@
     "jobManager": "Director de trabajo",
     "massActionDelegatedToJm": "Su acción ha sido delegada con éxito en el Jefe de Trabajo.",
     "massActionJobName": "%s en la entidad '%s' (%s fuera de %s)",
+    "inheritAllFromParentJobName": "Heredar todo del padre para %s (%s)",
     "deletePermanently": "Borrar permanentemente",
     "Reupload": "Vuelva a cargar",
     "attachFiles": "Adjuntar archivos",
