@@ -73,6 +73,14 @@ Espo.define('views/fields/markdown', ['views/fields/base', 'lib!EasyMDE'], funct
             return this.getSearchParamsData().type || this.searchParams?.typeFront || this.searchParams?.type;
         },
 
+        handleInlineEditEnterKeydown: function (e) {
+            if (e.key !== 'Enter' || !(e.ctrlKey || e.metaKey)) {
+                return;
+            }
+            e.preventDefault();
+            this.inlineEditSave();
+        },
+
         createQueryBuilderFilter() {
             return {
                 id: this.name,
