@@ -186,7 +186,7 @@ Register a handler for the action URL. See the [Handlers guide](../12.handlers/i
 The `{{id}}` in the URL is resolved to the record ID before the request is sent. The path parameter `{id}` is available via `$request->getAttribute('id')`.
 
 ```php
-// app/Atro/Handlers/MyEntity/MyEntityPublishHandler.php
+// app/Atro/Handlers/MyEntity/PublishHandler.php
 
 #[Route(
     path: '/MyEntity/{id}/publish',
@@ -211,7 +211,7 @@ The `{{id}}` in the URL is resolved to the record ID before the request is sent.
         404 => ['description' => 'Record not found.'],
     ],
 )]
-class MyEntityPublishHandler extends AbstractHandler
+class PublishHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

@@ -98,17 +98,19 @@ A direct handler is a PHP class that implements `Psr\Http\Server\MiddlewareInter
 src/<module>/app/
 └── Handlers/
     └── <EntityName>/
-        └── <EntityName><Action>Handler.php
+        └── <Action>Handler.php
 ```
 
 The `Handlers/` directory is scanned automatically by `HandlerRegistry`. All classes found there are registered as routes — no additional configuration is needed.
 
+The class name **must not repeat the entity name** — it is already the namespace segment. Name the class after the action only.
+
 **Example:**
 ```
-src/mymodule/app/Handlers/Product/ProductReadHandler.php
-src/mymodule/app/Handlers/Product/ProductCreateHandler.php
+src/mymodule/app/Handlers/Product/ReadHandler.php
+src/mymodule/app/Handlers/Product/CreateHandler.php
 ```
-Namespace: `MyModule\Handlers\Product\ProductReadHandler`
+Namespace: `MyModule\Handlers\Product\ReadHandler`
 
 ---
 
@@ -625,7 +627,7 @@ This method returns a map of **handler FQCN → list of entity names** to exclud
 To replace a core EntityType handler for a **specific entity** (e.g. only for `Product`), create a direct handler in your module's `Handlers/` directory with a concrete path. Direct handlers have higher priority than EntityType handlers and always win:
 
 ```php
-// src/mymodule/app/Handlers/Product/ProductListHandler.php
+// src/mymodule/app/Handlers/Product/ListHandler.php
 
 #[Route(
     path: '/Product',
@@ -639,7 +641,7 @@ To replace a core EntityType handler for a **specific entity** (e.g. only for `P
         200 => [...],
     ],
 )]
-class ProductListHandler implements MiddlewareInterface
+class ListHandler implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
