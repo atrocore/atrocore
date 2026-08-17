@@ -566,7 +566,9 @@ class Hierarchy extends Base
             ->select('id')
             ->from($this->tableName)
             ->where('routes LIKE :like')
+            ->andWhere('deleted = :false')
             ->setParameter('like', "%|$id|%")
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchOne();
 
         return !empty($res);
