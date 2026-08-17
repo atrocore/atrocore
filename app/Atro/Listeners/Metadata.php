@@ -2555,8 +2555,10 @@ class Metadata extends AbstractMetadataListener
                                 ]);
 
                                 if (!empty($linkDefs['foreign'])) {
-                                    $foreign                                                                          = lcfirst($scope) . 'sDerivatives';
-                                    $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign]                      = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                                    $foreign = lcfirst($scope) . 'sDerivatives';
+                                    if (isset($data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']])) {
+                                        $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                                    }
                                     $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]                       = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
                                     $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity']             = $scope;
                                     $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['relationName']       = $relationName;
