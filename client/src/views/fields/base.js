@@ -1500,6 +1500,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.getCellElement().css('min-width', '');
             this.getCellElement().css('max-width', '');
             $(window).off('keydown.escape' + this.cid);
+            $(window).off('keydown.enter' + this.cid);
             this.inlineEditModeIsOn = false;
             this.setMode(this.initialMode);
             this.once('after:render', function () {
@@ -1551,12 +1552,37 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     }
                 });
 
+                $(window).on('keydown.enter' + this.cid, e => {
+                    if (!$.contains(this.el, e.target)) {
+                        return;
+                    }
+                    this.handleInlineEditEnterKeydown(e);
+                });
+
                 this.validate();
             }, this);
 
             this.inlineEditModeIsOn = true;
             this.reRender(true);
             this.trigger('inline-edit-on');
+        },
+
+        handleInlineEditEnterKeydown: function (e) {
+            if (e.key !== 'Enter' || e.ctrlKey || e.metaKey) {
+                return;
+            }
+            if (e.isDefaultPrevented() || this.isInlineEditDropdownOpen()) {
+                return;
+            }
+            e.preventDefault();
+            this.inlineEditSave();
+        },
+
+        isInlineEditDropdownOpen: function () {
+            if (this.$el.find('.selectize-control.dropdown-active').length > 0) {
+                return true;
+            }
+            return this.$el.find('input').toArray().some(el => $(el).data('autocomplete')?.visible);
         },
 
         killAfterOutsideClickListener() {
