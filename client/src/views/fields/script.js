@@ -57,6 +57,8 @@ Espo.define('views/fields/script', 'views/fields/base', Dep => {
             });
         },
 
+        handleInlineEditEnterKeydown: function (e) {},
+
         removeSvelteComponent() {
             if (this.svelteComponent) {
                 try {
