@@ -128,6 +128,14 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             });
         },
 
+        handleInlineEditEnterKeydown: function (e) {
+            if (e.key !== 'Enter' || !(e.ctrlKey || e.metaKey)) {
+                return;
+            }
+            e.preventDefault();
+            this.inlineEditSave();
+        },
+
         createQueryBuilderFilter() {
             let operators = [
                 'contains',

@@ -124,12 +124,20 @@ For quick field updates without entering full edit mode, you can use in-line edi
     - Click on an editable field, or
     - Hover over it and click the pencil icon.
 3. Make your changes directly in the field.
-4. To save: click Update (for detail view), press Ctrl+S, or click outside the field.
-5. To discard: click Cancel or press Esc.
+4. To save: click **Update** (for detail view), press Enter, press Ctrl+S, or click outside the field.
+5. To discard: click **Cancel** or press Esc.
 
 When you click on a field, it enters edit mode, the browser focuses on the field, and the cursor is placed at the end.
 
-In-line editing allows you to modify individual fields without putting the entire record in edit mode. In the list view, fields across multiple records can be edited simultaneously — clicking outside the list saves all changed records at once.
+#### Saving with Enter
+
+For most field types, pressing Enter saves the field immediately, the same as clicking **Update**. Some field types treat Enter differently, so Ctrl+Enter (Cmd+Enter on macOS) is used to save instead:
+
+- **Multi-line fields** (Text, WYSIWYG, Markdown) — Enter starts a new line, so Ctrl+Enter saves the field.
+- **Fields with a selection dropdown** (Enum, Multiple Enum, Array, Link, Multiple Link, and numeric or Range fields with a unit or prefix selector) — while the dropdown is open, Enter picks the highlighted option instead of saving. Once the dropdown is closed, a plain Enter saves the field; Ctrl+Enter saves it regardless of the dropdown state.
+- **Script fields** — Enter and Ctrl+Enter are reserved for the code editor and never trigger a save. Use **Update**, click outside the field, or press Ctrl+S instead.
+
+In-line editing allows you to modify individual fields without putting the entire record in edit mode. In the list view, fields across multiple records can be edited simultaneously — clicking outside the list, or pressing Enter/Ctrl+Enter in any one of the open fields, saves all changed records at once.
 
 Inline editing is also available in the record [comparison functionality](../09.comparison-and-merge/index.md#compare-records). You can edit field and attribute values directly in the comparison table.
 
