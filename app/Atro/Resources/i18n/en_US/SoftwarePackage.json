@@ -10,6 +10,7 @@
     "installed": "Installed"
   },
   "labels": {
+    "saveAndUpdate": "Save & Update",
     "latest": "latest",
     "update": "Update System",
     "toStore": "AtroCore Store",

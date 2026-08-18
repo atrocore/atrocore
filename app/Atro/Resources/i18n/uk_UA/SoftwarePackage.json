@@ -10,6 +10,7 @@
     "installed": "Встановлено"
   },
   "labels": {
+    "saveAndUpdate": "Зберегти й оновити",
     "latest": "остання",
     "update": "Оновити систему",
     "toStore": "AtroCore Store",

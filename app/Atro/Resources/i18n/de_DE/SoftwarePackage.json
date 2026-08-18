@@ -10,6 +10,7 @@
     "installed": "Installiert"
   },
   "labels": {
+    "saveAndUpdate": "Speichern & aktualisieren",
     "latest": "neueste",
     "update": "System aktualisieren",
     "toStore": "AtroCore Store",

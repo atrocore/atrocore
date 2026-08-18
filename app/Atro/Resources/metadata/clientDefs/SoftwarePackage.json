@@ -9,6 +9,9 @@
   "views": {
     "list": "views/software-package/list"
   },
+  "modalViews": {
+    "edit": "views/software-package/modals/edit"
+  },
   "listStatus": {
     "url": "SoftwarePackage/lastUpdate"
   },
