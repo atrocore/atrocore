@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/SoftwarePackage/{id}/install',
+    path: '/SoftwarePackage/{id}/installPackage',
     methods: [
         'POST',
     ],
@@ -59,7 +59,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class InstallHandler extends AbstractHandler
+class InstallPackageHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -67,6 +67,6 @@ class InstallHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        return new BoolResponse($this->getRecordService('SoftwarePackage')->install([(string)$request->getAttribute('id')]));
+        return new BoolResponse($this->getRecordService('SoftwarePackage')->installPackage([(string)$request->getAttribute('id')]));
     }
 }

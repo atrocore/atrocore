@@ -10,6 +10,7 @@
     "installed": "Zainstalowano"
   },
   "labels": {
+    "saveAndUpdate": "Zapisz i zaktualizuj",
     "latest": "najnowsza",
     "update": "Aktualizuj system",
     "toStore": "AtroCore Store",
@@ -24,9 +25,17 @@
   "massActionConfirmMessages": {
     "update": "Po aktualizacji wszyscy użytkownicy zostaną wylogowani z systemu. Czy na pewno chcesz zaktualizować system?"
   },
+  "actions": {
+    "showReleaseNotes": "Informacje o wydaniu",
+    "readDocs": "Dokumentacja",
+    "updatePackage": "Aktualizuj",
+    "installPackage": "Zainstaluj",
+    "uninstallPackage": "Odinstaluj"
+  },
   "actionConfirms": {
-    "install": "Czy na pewno chcesz zainstalować ten moduł? System będzie niedostępny podczas instalacji.",
-    "uninstall": "Czy na pewno chcesz odinstalować ten moduł? Wszystkie dane powiązane z modułem zostaną utracone. Tej operacji nie można cofnąć."
+    "updatePackage": "Czy na pewno chcesz zaktualizować ten moduł? System będzie niedostępny podczas aktualizacji.",
+    "installPackage": "Czy na pewno chcesz zainstalować ten moduł? System będzie niedostępny podczas instalacji.",
+    "uninstallPackage": "Czy na pewno chcesz odinstalować ten moduł? Wszystkie dane powiązane z modułem zostaną utracone. Tej operacji nie można cofnąć."
   },
   "options": {
     "usage": {

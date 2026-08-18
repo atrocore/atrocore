@@ -10,6 +10,7 @@
     "installed": "Installed"
   },
   "labels": {
+    "saveAndUpdate": "Save & Update",
     "latest": "latest",
     "update": "Update System",
     "toStore": "AtroCore Store",
@@ -25,9 +26,17 @@
   "massActionConfirmMessages": {
     "update": "After the update, all users will be logged out of the system. Are you sure you want to update the system?"
   },
+  "actions": {
+    "showReleaseNotes": "Release Notes",
+    "readDocs": "Docs",
+    "updatePackage": "Update",
+    "installPackage": "Install",
+    "uninstallPackage": "Uninstall"
+  },
   "actionConfirms": {
-    "install": "Are you sure you want to install this module? The system will be unavailable while the installation is in progress.",
-    "uninstall": "Are you sure you want to uninstall this module? All data related to the module will be lost. This action cannot be undone."
+    "updatePackage": "Are you sure you want to update this module? The system will be unavailable while the update is in progress.",
+    "installPackage": "Are you sure you want to install this module? The system will be unavailable while the installation is in progress.",
+    "uninstallPackage": "Are you sure you want to uninstall this module? All data related to the module will be lost. This action cannot be undone."
   },
   "options": {
     "usage": {

@@ -10,6 +10,7 @@
     "installed": "Instalado"
   },
   "labels": {
+    "saveAndUpdate": "Guardar y actualizar",
     "latest": "última",
     "update": "Actualizar sistema",
     "toStore": "AtroCore Store",
@@ -24,9 +25,17 @@
   "massActionConfirmMessages": {
     "update": "Después de la actualización, todos los usuarios serán desconectados del sistema. ¿Está seguro de que desea actualizar el sistema?"
   },
+  "actions": {
+    "showReleaseNotes": "Notas de la versión",
+    "readDocs": "Documentación",
+    "updatePackage": "Actualizar",
+    "installPackage": "Instalar",
+    "uninstallPackage": "Desinstalar"
+  },
   "actionConfirms": {
-    "install": "¿Está seguro de que desea instalar este módulo? El sistema no estará disponible mientras se realiza la instalación.",
-    "uninstall": "¿Está seguro de que desea desinstalar este módulo? Se perderán todos los datos relacionados con el módulo. Esta acción no se puede deshacer."
+    "updatePackage": "¿Está seguro de que desea actualizar este módulo? El sistema no estará disponible mientras la actualización esté en curso.",
+    "installPackage": "¿Está seguro de que desea instalar este módulo? El sistema no estará disponible mientras se realiza la instalación.",
+    "uninstallPackage": "¿Está seguro de que desea desinstalar este módulo? Se perderán todos los datos relacionados con el módulo. Esta acción no se puede deshacer."
   },
   "options": {
     "usage": {

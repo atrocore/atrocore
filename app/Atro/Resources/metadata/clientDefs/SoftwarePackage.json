@@ -4,10 +4,13 @@
   "iconClass": "puzzle-piece",
   "limit": 500,
   "quickActions": [
-    "install"
+    "installPackage"
   ],
   "views": {
     "list": "views/software-package/list"
+  },
+  "modalViews": {
+    "edit": "views/software-package/modals/edit"
   },
   "listStatus": {
     "url": "SoftwarePackage/lastUpdate"
@@ -29,14 +32,14 @@
       ],
       "dropdownButtons": [
         {
-          "name": "install",
-          "action": "installAction",
+          "name": "installPackage",
+          "action": "installPackageAction",
           "label": "installModules",
           "iconClass": "ph ph-download-simple"
         },
         {
-          "name": "uninstall",
-          "action": "uninstallAction",
+          "name": "uninstallPackage",
+          "action": "uninstallPackageAction",
           "label": "uninstallModules",
           "iconClass": "ph ph-trash"
         }
@@ -58,18 +61,25 @@
       "acl": "readDocs",
       "sortOrder": 145
     },
-    "install": {
-      "name": "install",
-      "action": "installSingleAction",
+    "updatePackage": {
+      "name": "updatePackage",
+      "action": "updatePackageSingleAction",
+      "iconClass": "ph ph-arrow-circle-up",
+      "acl": "updatePackage",
+      "sortOrder": 148
+    },
+    "installPackage": {
+      "name": "installPackage",
+      "action": "installPackageSingleAction",
       "iconClass": "ph ph-download-simple",
-      "acl": "install",
+      "acl": "installPackage",
       "sortOrder": 150
     },
-    "uninstall": {
-      "name": "uninstall",
-      "action": "uninstallSingleAction",
+    "uninstallPackage": {
+      "name": "uninstallPackage",
+      "action": "uninstallPackageSingleAction",
       "iconClass": "ph ph-trash",
-      "acl": "uninstall",
+      "acl": "uninstallPackage",
       "sortOrder": 155
     }
   }

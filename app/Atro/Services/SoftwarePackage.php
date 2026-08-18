@@ -53,10 +53,11 @@ class SoftwarePackage extends ReferenceData
         $entity->setMetaPermission('showReleaseNotes', true);
         $entity->setMetaPermission('readDocs', $entity->get('installed') && ($entity->get('id') === 'Atro' || $this->getModuleManager()->getModule($entity->get('id'))->hasDocs()));
 
-        $entity->setMetaPermission('install', !$entity->get('installed'));
+        $entity->setMetaPermission('installPackage', !$entity->get('installed'));
         $entity->setMetaPermission(
-            'uninstall', $entity->get('installed') && $entity->get('id') !== 'Atro' && !empty($entity->get('currentVersion')) && !empty($entity->get('targetVersion'))
+            'uninstallPackage', $entity->get('installed') && $entity->get('id') !== 'Atro' && !empty($entity->get('currentVersion')) && !empty($entity->get('targetVersion'))
         );
+        $entity->setMetaPermission('updatePackage', $this->isUpdatable($entity));
     }
 
     public function getLastUpdateStatus(): ?array
@@ -101,30 +102,14 @@ class SoftwarePackage extends ReferenceData
 
     public function updateSystem(): bool
     {
-        if (!$this->isDaemonAlive()) {
-            throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
-        }
+        $this->assertInstallerAvailable();
 
-        if ($this->jobManagerRunning()) {
-            throw new BadRequest($this->getLanguage()->translate('jobManagerRunning', 'exceptions', 'SoftwarePackage'));
-        }
-
-        file_put_contents(Application::COMPOSER_LOG_FILE, 'update || ' . $this->getUser()->get('id'));
-
-        sleep(1);
-
-        return true;
+        return $this->runInstallerCommand('update');
     }
 
-    public function install(array $ids): bool
+    public function installPackage(array $ids): bool
     {
-        if (!$this->isDaemonAlive()) {
-            throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
-        }
-
-        if ($this->jobManagerRunning()) {
-            throw new BadRequest($this->getLanguage()->translate('jobManagerRunning', 'exceptions', 'SoftwarePackage'));
-        }
+        $this->assertInstallerAvailable();
 
         $packages = [];
         foreach ($ids as $id) {
@@ -138,24 +123,12 @@ class SoftwarePackage extends ReferenceData
             throw new NotFound();
         }
 
-        $command = 'require ' . implode(' ', $packages);
-
-        file_put_contents(Application::COMPOSER_LOG_FILE, $command . ' || ' . $this->getUser()->get('id'));
-
-        sleep(1);
-
-        return true;
+        return $this->runInstallerCommand('require ' . implode(' ', $packages));
     }
 
-    public function uninstall(array $ids): bool
+    public function uninstallPackage(array $ids): bool
     {
-        if (!$this->isDaemonAlive()) {
-            throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
-        }
-
-        if ($this->jobManagerRunning()) {
-            throw new BadRequest($this->getLanguage()->translate('jobManagerRunning', 'exceptions', 'SoftwarePackage'));
-        }
+        $this->assertInstallerAvailable();
 
         $packages = [];
         foreach ($ids as $id) {
@@ -169,13 +142,30 @@ class SoftwarePackage extends ReferenceData
             throw new NotFound();
         }
 
-        $command = 'remove ' . implode(' ', $packages);
+        return $this->runInstallerCommand('remove ' . implode(' ', $packages));
+    }
 
-        file_put_contents(Application::COMPOSER_LOG_FILE, $command . ' || ' . $this->getUser()->get('id'));
+    /**
+     * Updates the given packages to their target versions without touching the rest of the system.
+     */
+    public function updatePackage(array $ids): bool
+    {
+        $this->assertInstallerAvailable();
 
-        sleep(1);
+        $packages = [];
+        foreach ($ids as $id) {
+            $softwarePackage = $this->getRepository()->get($id);
+            if (!empty($softwarePackage) && $this->isUpdatable($softwarePackage)) {
+                // the version constraint can contain characters the shell would interpret, e.g. `>=2.1.3 <=2.1.6`
+                $packages[] = escapeshellarg($softwarePackage->get('code') . ':' . $softwarePackage->get('targetVersion'));
+            }
+        }
 
-        return true;
+        if (empty($packages)) {
+            throw new NotFound();
+        }
+
+        return $this->runInstallerCommand('require ' . implode(' ', $packages));
     }
 
     public function isDaemonAlive(): bool
@@ -249,6 +239,42 @@ class SoftwarePackage extends ReferenceData
     protected function getLanguage(): Language
     {
         return $this->getInjection('language');
+    }
+
+    private function assertInstallerAvailable(): void
+    {
+        if (!$this->isDaemonAlive()) {
+            throw new BadRequest($this->getLanguage()->translate('daemonNotAlive', 'exceptions', 'SoftwarePackage'));
+        }
+
+        if ($this->jobManagerRunning()) {
+            throw new BadRequest($this->getLanguage()->translate('jobManagerRunning', 'exceptions', 'SoftwarePackage'));
+        }
+    }
+
+    private function runInstallerCommand(string $command): bool
+    {
+        file_put_contents(Application::COMPOSER_LOG_FILE, $command . ' || ' . $this->getUser()->get('id'));
+
+        sleep(1);
+
+        return true;
+    }
+
+    /**
+     * A package can be updated separately only when it is installed and its target version is explicitly set in the
+     * composer.json. The core is excluded: it is updated together with the modules via the system update.
+     */
+    private function isUpdatable(Entity $entity): bool
+    {
+        $targetVersion = (string)$entity->get('targetVersion');
+
+        return !empty($entity->get('installed'))
+            && $entity->get('id') !== 'Atro'
+            && !empty($entity->get('currentVersion'))
+            && $targetVersion !== ''
+            // the command is passed to the daemon via a ` || ` separated file, so an OR constraint would break it
+            && !str_contains($targetVersion, '|');
     }
 
     private function jobManagerRunning(): bool
