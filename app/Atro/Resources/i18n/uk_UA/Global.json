@@ -512,6 +512,7 @@
     "confirmRemoveAttributeValue": "Ви впевнені, що хочете видалити атрибут?",
     "massActionDelegatedToJm": "Вашу дію успішно делеговано менеджеру завдань.",
     "massActionJobName": "%s на об'єкті \"%s\" (%s з %s)",
+    "inheritAllFromParentJobName": "Успадкувати все від батьківського елементу для %s (%s)",
     "customDownload": "Спеціальне завантаження",
     "notInheritedFromParent": "Не успадковується від батьків",
     "Added": "Додано",
