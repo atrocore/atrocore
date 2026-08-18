@@ -11945,6 +11945,14 @@ span.became > .value-container > .label.colored-multi-enum,
     margin-inline-start: 0;
 }
 
+.input-group.link > .label.colored-enum {
+    position: relative;
+    margin-left: 0;
+    padding-left: 10px;
+    margin-right: -5px;
+    z-index: 5;
+}
+
 span.was > .value-container,
 span.became > .value-container {
     display: inline-block;
