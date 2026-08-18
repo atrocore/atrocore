@@ -1622,10 +1622,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        inlineEditFocusing() {
+        inlineEditFocusing(preventScroll) {
             const $input = this.$el.find('input').first();
 
-            $input.focus();
+            if ($input[0]) {
+                $input[0].focus({preventScroll: !!preventScroll});
+            }
             if ($input[0] && $input[0].type === 'text') {
                 const val = $input.val();
                 $input[0].setSelectionRange(val.length, val.length);
