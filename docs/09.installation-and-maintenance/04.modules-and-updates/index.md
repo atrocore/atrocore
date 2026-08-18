@@ -36,7 +36,7 @@ The two paid licence models differ in what happens to a module that is *not* ins
 The following columns are displayed:
 
 * **Name** and **Description** – the name and the short description of the package.
-* **Target Version** – the version the package will be updated to during the next system update; see [Target Version](#target-version) below.
+* **Target Version** – the version the package will be updated to during the next system update or during the update of this single package; see [Target Version](#target-version) below.
 * **Current Version** – the version that is currently installed. A dash (&mdash;) means the package is not installed.
 * **Latest Version** – the newest version offered by the store for your instance.
 * **Usage** – how the package is licensed for your instance:
@@ -58,6 +58,8 @@ Only versions that are equal to or newer than the currently installed one are of
 
 The target version can only be changed for installed packages; for packages that are not installed yet the column is read-only, because their version is determined at installation time.
 
+Choosing the target version and starting the update are not necessarily two separate steps. The edit dialog of a package offers a **Save & Update** button next to **Save**: it stores the new target version and immediately starts the update of this package. See [Module Update](#module-update).
+
 > Whether release candidates are offered as target versions depends on the "Use Only Stable Releases" option on the [Administration > Settings](../../01.atrocore/03.administration/01.system-settings/index.md) page. As long as it is enabled, only stable releases are taken into account.
 
 ## System Update
@@ -74,6 +76,18 @@ Please note:
 The update can also be performed unattended: create a scheduled job of the type "Update system automatically" on the [Scheduled Jobs](../../01.atrocore/03.administration/05.system-jobs/01.scheduled-jobs/index.md) page.
 
 If the update fails because of an audit error in Composer, refer to [System Update Failures](../05.maintenance/index.md#system-update-failures).
+
+## Module Update
+
+An installed module can be brought to its target version on its own, without updating the core and the other modules. Click the **Update** action in the row of the package and confirm it.
+
+The action is offered for installed modules whose target version is set. It is not offered for the AtroCore core: the core is updated together with the whole installation via **Update System**.
+
+To change the target version and start the update in one step, open the package for editing, choose the new target version and click **Save & Update** instead of **Save**.
+
+As with every other operation on this page, the application is unavailable while the update is running, and the result is recorded in the [update log](#update-log).
+
+> Only the module itself and the packages it depends on are updated. The core and the other packages that the system requires explicitly keep their versions. Therefore the module is updated only as far as those versions allow: if its new version needs a newer core, the operation fails and the log states which core version was expected and which one was found. Use **Update System** in that case.
 
 ## Module Installation
 
@@ -126,6 +140,8 @@ Run the restore command as the webserver user, e.g. `www-data`; otherwise do not
 ## Consideration of the Dependencies
 
 During the update the system installs the newest package versions that are compatible with each other. It is therefore possible that some modules are not updated to their latest available version: their newest release may require a core or another module version that conflicts with the rest of your installation. In this case the highest version that keeps the whole installation consistent is chosen.
+
+The update of a [single module](#module-update) resolves the versions within a narrower scope: the core and the other explicitly required packages keep their versions, and only the module and its own dependencies are allowed to move. A module whose new version demands a newer core is thus updated by **Update System** only.
 
 ## Module Purchase
 
