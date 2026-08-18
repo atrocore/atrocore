@@ -124,7 +124,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 createDisabled: this.createDisabled,
             }, Dep.prototype.data.call(this));
 
-            if (['list', 'detail'].includes(this.mode) && this.idName !== this.name) {
+            if (['list', 'detail', 'edit'].includes(this.mode) && this.idName !== this.name) {
                 const optionData = this.model.getMeta('options', this.name) || this.getOptionsData();
                 if (optionData.color) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
@@ -367,6 +367,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             this.$elementName.attr('value', nameValue);
             this.$elementName.val(nameValue || this.translate('None'));
             this.$elementId.val(model.get('id'));
+            this.updateColorLabel(model.has('color') ? model.get('color') : null);
             if (this.mode === 'search') {
                 this.searchData.idValue = model.get('id');
                 this.searchData.nameValue = this.getModelTitle(model);
@@ -426,7 +427,28 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 this.$elementName.val('');
                 this.$elementId.val('');
             }
+            this.updateColorLabel(null);
             this.trigger('change');
+        },
+
+        updateColorLabel: function (color) {
+            if (this.mode !== 'edit' || !this.$el) {
+                return;
+            }
+
+            let $indicator = this.$el.find('.input-group.link > .label.colored-enum');
+
+            if (!color) {
+                $indicator.remove();
+                return;
+            }
+
+            if ($indicator.length === 0) {
+                $indicator = $('<span class="label colored-enum"><i></i></span>');
+                this.$el.find('.input-group.link').prepend($indicator);
+            }
+
+            $indicator.find('i').css('background-color', color);
         },
 
         setupSearch: function () {
