@@ -35,7 +35,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                 dialog.once('select', models => {
                     const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
 
-                    this.notify(this.translate('Loading...'));
+                    this.notify(this.translate('Processing...'));
                     this.ajaxPostRequest('SoftwarePackage/installPackage', {ids}).then(() => {
                         this.notify(false);
                         location.reload();
@@ -46,7 +46,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
 
         actionInstallPackageSingleAction(data) {
             this.confirm(this.translate('installPackage', 'actionConfirms', 'SoftwarePackage'), () => {
-                this.notify('Loading...');
+                this.notify('Processing...');
                 this.ajaxPostRequest(`SoftwarePackage/${data.id}/installPackage`).success(() => {
                     this.notify(false);
                     location.reload();
@@ -56,7 +56,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
 
         actionUpdatePackageSingleAction(data) {
             this.confirm(this.translate('updatePackage', 'actionConfirms', 'SoftwarePackage'), () => {
-                this.notify('Loading...');
+                this.notify('Processing...');
                 this.ajaxPostRequest(`SoftwarePackage/${data.id}/updatePackage`).success(() => {
                     this.notify(false);
                     location.reload();
@@ -66,7 +66,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
 
         actionUninstallPackageSingleAction(data) {
             this.confirm(this.translate('uninstallPackage', 'actionConfirms', 'SoftwarePackage'), () => {
-                this.notify('Loading...');
+                this.notify('Processing...');
                 this.ajaxRequest(`SoftwarePackage/${data.id}/uninstallPackage`, 'DELETE').then(() => {
                     this.notify(false);
                     location.reload();
@@ -98,7 +98,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                 dialog.once('select', models => {
                     const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
 
-                    this.notify(this.translate('Loading...'));
+                    this.notify(this.translate('Processing...'));
                     this.ajaxRequest('SoftwarePackage/uninstallPackage', 'DELETE', JSON.stringify({ids})).then(() => {
                         this.notify(false);
                         location.reload();
@@ -109,7 +109,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
 
         actionUpdateSystemAction(data) {
             this.confirm(this.translate('update', 'massActionConfirmMessages', 'SoftwarePackage'), () => {
-                this.notify('Loading...');
+                this.notify('Processing...');
                 this.ajaxPostRequest('SoftwarePackage/updateSystem').success(() => {
                     this.notify(false);
                     location.reload();

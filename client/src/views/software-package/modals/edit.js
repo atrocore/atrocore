@@ -53,9 +53,10 @@ Espo.define('views/software-package/modals/edit', 'views/modals/edit', Dep => {
             recordView.once('cancel:save', unlockButtons);
 
             recordView.once('after:save', () => {
+                this.notify(false);
                 this.trigger('after:save', this.model);
 
-                this.notify('Loading...');
+                this.notify('Processing...');
                 this.ajaxPostRequest(`SoftwarePackage/${id}/updatePackage`).success(() => {
                     this.notify(false);
                     location.reload();
@@ -65,6 +66,7 @@ Espo.define('views/software-package/modals/edit', 'views/modals/edit', Dep => {
                 });
             }, this);
 
+            this.notify('Saving...');
             recordView.save();
         },
     });

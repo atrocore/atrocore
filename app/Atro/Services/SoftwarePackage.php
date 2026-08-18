@@ -100,6 +100,13 @@ class SoftwarePackage extends ReferenceData
         ];
     }
 
+    protected function beforeUpdateEntity(Entity $entity, $data)
+    {
+        parent::beforeUpdateEntity($entity, $data);
+
+        $this->assertInstallerAvailable();
+    }
+
     public function updateSystem(): bool
     {
         $this->assertInstallerAvailable();

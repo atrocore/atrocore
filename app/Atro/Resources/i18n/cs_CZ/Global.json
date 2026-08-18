@@ -278,6 +278,7 @@
     "Please wait...": "Počkejte prosím...",
     "Record has been removed": "Záznam byl vymazán",
     "Saving...": "E-mail přijatý",
+    "Processing...": "Zpracování...",
     "Modified": "E-mail přijatý, tato {entityType} vytvořena",
     "Created": "E-mail přijatý od {from}, týkající se {entityType} {entity}",
     "Create": "E-mail přijatý od {from}, {entityType} {entity} vytvořen(a)",
