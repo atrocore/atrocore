@@ -24,9 +24,17 @@
   "massActionConfirmMessages": {
     "update": "Po aktualizaci budou všichni uživatelé odhlášeni ze systému. Jste si jisti, že chcete systém aktualizovat?"
   },
+  "actions": {
+    "showReleaseNotes": "Poznámky k vydání",
+    "readDocs": "Dokumentace",
+    "updatePackage": "Aktualizovat",
+    "installPackage": "Nainstalovat",
+    "uninstallPackage": "Odinstalovat"
+  },
   "actionConfirms": {
-    "install": "Jste si jisti, že chcete tento modul nainstalovat? Systém bude během instalace nedostupný.",
-    "uninstall": "Jste si jisti, že chcete tento modul odinstalovat? Všechna data související s modulem budou ztracena. Tuto akci nelze vrátit zpět."
+    "updatePackage": "Jste si jisti, že chcete tento modul aktualizovat? Systém bude během aktualizace nedostupný.",
+    "installPackage": "Jste si jisti, že chcete tento modul nainstalovat? Systém bude během instalace nedostupný.",
+    "uninstallPackage": "Jste si jisti, že chcete tento modul odinstalovat? Všechna data související s modulem budou ztracena. Tuto akci nelze vrátit zpět."
   },
   "options": {
     "usage": {

@@ -25,9 +25,17 @@
   "massActionConfirmMessages": {
     "update": "Nach der Aktualisierung werden alle Benutzer vom System abgemeldet. Sind Sie sicher, dass Sie das System aktualisieren möchten?"
   },
+  "actions": {
+    "showReleaseNotes": "Versionshinweise",
+    "readDocs": "Dokumentation",
+    "updatePackage": "Aktualisieren",
+    "installPackage": "Installieren",
+    "uninstallPackage": "Deinstallieren"
+  },
   "actionConfirms": {
-    "install": "Sind Sie sicher, dass Sie dieses Modul installieren möchten? Während der Installation ist das System nicht verfügbar.",
-    "uninstall": "Sind Sie sicher, dass Sie dieses Modul deinstallieren möchten? Alle mit dem Modul verbundenen Daten gehen verloren. Diese Aktion kann nicht rückgängig gemacht werden."
+    "updatePackage": "Sind Sie sicher, dass Sie dieses Modul aktualisieren möchten? Während der Aktualisierung wird das System nicht verfügbar sein.",
+    "installPackage": "Sind Sie sicher, dass Sie dieses Modul installieren möchten? Während der Installation ist das System nicht verfügbar.",
+    "uninstallPackage": "Sind Sie sicher, dass Sie dieses Modul deinstallieren möchten? Alle mit dem Modul verbundenen Daten gehen verloren. Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "options": {
     "usage": {

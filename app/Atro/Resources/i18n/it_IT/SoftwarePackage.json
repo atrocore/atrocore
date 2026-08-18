@@ -24,9 +24,17 @@
   "massActionConfirmMessages": {
     "update": "Dopo l'aggiornamento, tutti gli utenti verranno disconnessi dal sistema. Sei sicuro di voler aggiornare il sistema?"
   },
+  "actions": {
+    "showReleaseNotes": "Note di rilascio",
+    "readDocs": "Documentazione",
+    "updatePackage": "Aggiorna",
+    "installPackage": "Installa",
+    "uninstallPackage": "Disinstalla"
+  },
   "actionConfirms": {
-    "install": "Sei sicuro di voler installare questo modulo? Il sistema non sarà disponibile durante l'installazione.",
-    "uninstall": "Sei sicuro di voler disinstallare questo modulo? Tutti i dati relativi al modulo andranno perduti. Questa azione non può essere annullata."
+    "updatePackage": "Sei sicuro di voler aggiornare questo modulo? Il sistema non sarà disponibile durante l'aggiornamento.",
+    "installPackage": "Sei sicuro di voler installare questo modulo? Il sistema non sarà disponibile durante l'installazione.",
+    "uninstallPackage": "Sei sicuro di voler disinstallare questo modulo? Tutti i dati relativi al modulo andranno perduti. Questa azione non può essere annullata."
   },
   "options": {
     "usage": {

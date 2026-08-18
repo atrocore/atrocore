@@ -25,9 +25,17 @@
   "massActionConfirmMessages": {
     "update": "Après la mise à jour, tous les utilisateurs seront déconnectés du système. Êtes-vous sûr de vouloir mettre à jour le système ?"
   },
+  "actions": {
+    "showReleaseNotes": "Notes de version",
+    "readDocs": "Documentation",
+    "updatePackage": "Mettre à jour",
+    "installPackage": "Installer",
+    "uninstallPackage": "Désinstaller"
+  },
   "actionConfirms": {
-    "install": "Êtes-vous sûr de vouloir installer ce module ? Le système sera indisponible pendant l'installation.",
-    "uninstall": "Êtes-vous sûr de vouloir désinstaller ce module ? Toutes les données liées au module seront perdues. Cette action est irréversible."
+    "updatePackage": "Êtes-vous sûr de vouloir mettre à jour ce module ? Le système sera indisponible pendant la mise à jour.",
+    "installPackage": "Êtes-vous sûr de vouloir installer ce module ? Le système sera indisponible pendant l'installation.",
+    "uninstallPackage": "Êtes-vous sûr de vouloir désinstaller ce module ? Toutes les données liées au module seront perdues. Cette action est irréversible."
   },
   "options": {
     "usage": {

@@ -12,7 +12,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
 
     return Dep.extend({
 
-        actionInstallAction(data) {
+        actionInstallPackageAction(data) {
             this.notify('Loading...');
 
             this.createView('dialog', 'views/modals/select-records', {
@@ -36,7 +36,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                     const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
 
                     this.notify(this.translate('Loading...'));
-                    this.ajaxPostRequest('SoftwarePackage/install', {ids}).then(() => {
+                    this.ajaxPostRequest('SoftwarePackage/installPackage', {ids}).then(() => {
                         this.notify(false);
                         location.reload();
                     });
@@ -44,27 +44,37 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
             });
         },
 
-        actionInstallSingleAction(data) {
-            this.confirm(this.translate('install', 'actionConfirms', 'SoftwarePackage'), () => {
+        actionInstallPackageSingleAction(data) {
+            this.confirm(this.translate('installPackage', 'actionConfirms', 'SoftwarePackage'), () => {
                 this.notify('Loading...');
-                this.ajaxPostRequest(`SoftwarePackage/${data.id}/install`).success(() => {
+                this.ajaxPostRequest(`SoftwarePackage/${data.id}/installPackage`).success(() => {
                     this.notify(false);
                     location.reload();
                 });
             });
         },
 
-        actionUninstallSingleAction(data) {
-            this.confirm(this.translate('uninstall', 'actionConfirms', 'SoftwarePackage'), () => {
+        actionUpdatePackageSingleAction(data) {
+            this.confirm(this.translate('updatePackage', 'actionConfirms', 'SoftwarePackage'), () => {
                 this.notify('Loading...');
-                this.ajaxRequest(`SoftwarePackage/${data.id}/uninstall`, 'DELETE').then(() => {
+                this.ajaxPostRequest(`SoftwarePackage/${data.id}/updatePackage`).success(() => {
                     this.notify(false);
                     location.reload();
                 });
             });
         },
 
-        actionUninstallAction(data) {
+        actionUninstallPackageSingleAction(data) {
+            this.confirm(this.translate('uninstallPackage', 'actionConfirms', 'SoftwarePackage'), () => {
+                this.notify('Loading...');
+                this.ajaxRequest(`SoftwarePackage/${data.id}/uninstallPackage`, 'DELETE').then(() => {
+                    this.notify(false);
+                    location.reload();
+                });
+            });
+        },
+
+        actionUninstallPackageAction(data) {
             this.notify('Loading...');
 
             this.createView('dialog', 'views/modals/select-records', {
@@ -89,7 +99,7 @@ Espo.define('views/software-package/list', 'views/list', Dep => {
                     const ids = (Array.isArray(models) ? models : [models]).map(model => model.id);
 
                     this.notify(this.translate('Loading...'));
-                    this.ajaxRequest('SoftwarePackage/uninstall', 'DELETE', JSON.stringify({ids})).then(() => {
+                    this.ajaxRequest('SoftwarePackage/uninstallPackage', 'DELETE', JSON.stringify({ids})).then(() => {
                         this.notify(false);
                         location.reload();
                     });
