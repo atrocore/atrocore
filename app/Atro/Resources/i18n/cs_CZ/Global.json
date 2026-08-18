@@ -174,6 +174,7 @@
     "Load data": "Načíst data",
     "jobManager": "Správce úloh",
     "massActionJobName": "%s na entitě \"%s\" (%s z %s)",
+    "inheritAllFromParentJobName": "Dědit vše od rodiče pro %s (%s)",
     "customizeLayout": "Přizpůsobení rozvržení",
     "deletePermanently": "Trvale odstranit",
     "Reupload": "Znovu nahrát",

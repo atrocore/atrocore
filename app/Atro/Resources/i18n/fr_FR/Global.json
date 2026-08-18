@@ -492,6 +492,7 @@
     "jobManager": "Gestionnaire des tâches",
     "massActionDelegatedToJm": "Votre action a été déléguée avec succès au gestionnaire des tâches.",
     "massActionJobName": "%s sur l'entité '%s' (%s sur %s)",
+    "inheritAllFromParentJobName": "Hériter tout du parent pour %s (%s)",
     "inheritedFromParent": "Héritée du parent",
     "notInheritedFromParent": "Non hérité du parent",
     "showKanban": "Voir le kanban",

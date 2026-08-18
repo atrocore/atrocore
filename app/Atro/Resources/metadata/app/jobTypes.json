@@ -151,6 +151,10 @@
   },
   "InheritAllFromParent": {
     "scheduledJob": false,
-    "handler": "\\Atro\\Jobs\\InheritAllFromParent"
+    "handler": "\\Atro\\Jobs\\InheritAllFromParentFactory"
+  },
+  "InheritAllFromParentChunk": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\InheritAllFromParentChunk"
   }
 }

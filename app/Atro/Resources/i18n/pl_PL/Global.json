@@ -436,6 +436,7 @@
     "jobManager": "Job Manager",
     "massActionDelegatedToJm": "Pana/Pani działanie zostało pomyślnie delegowane do menedżera zadań.",
     "massActionJobName": "%s w podmiocie '%s' (%s z %s)",
+    "inheritAllFromParentJobName": "Dziedziczy wszystko od rodzica dla %s (%s)",
     "deletePermanently": "Usuń trwale",
     "varcharPart": "(String)",
     "customDownload": "Pobieranie niestandardowe",

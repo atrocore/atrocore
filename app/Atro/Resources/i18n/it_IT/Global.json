@@ -111,6 +111,7 @@
     "jobManager": "Responsabile del lavoro",
     "massActionDelegatedToJm": "La sua azione è stata delegata con successo al Job Manager.",
     "massActionJobName": "%s sull'Entità '%s' (%s su %s)",
+    "inheritAllFromParentJobName": "Eredita tutto dal genitore per %s (%s)",
     "customizeLayout": "Personalizzare il layout",
     "deletePermanently": "Cancellare in modo permanente",
     "Reupload": "Reupload",

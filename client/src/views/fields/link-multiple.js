@@ -50,6 +50,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         nameHash: null,
 
+        colorHash: null,
+
         foreignScope: null,
 
         AUTOCOMPLETE_RESULT_MAX_COUNT: 7,
@@ -155,7 +157,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
             res.isNull = ids === null || ids === undefined;
 
-            if (['list', 'detail'].includes(this.mode) && this.idsName !== this.name) {
+            if (['list', 'detail', 'edit'].includes(this.mode) && this.idsName !== this.name) {
                 const options = this.model.get('_meta')?.options?.[this.name] || this.getOptionsData();
                 if (options && options.length > 0) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
@@ -189,6 +191,17 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         getOptionsData() {
             return [];
+        },
+
+        getColorHash() {
+            const options = this.model.get('_meta')?.options?.[this.name] || this.getOptionsData() || [];
+            const hash = {};
+            options.forEach(option => {
+                if (option && option.id) {
+                    hash[option.id] = option.color;
+                }
+            });
+            return hash;
         },
 
         onInlineEditSave(res, attrs, model) {
@@ -327,10 +340,13 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.nameHash._localeId = this.getUser().get('localeId')
             this.model.set(this.nameHashName, this.nameHash, { silent: true });
 
+            this.colorHash = this.getColorHash();
+
             this.listenTo(this.model, 'change:' + this.idsName, function () {
                 this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
                 this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
                 this.nameHash._localeId = this.getUser().get('localeId')
+                this.colorHash = Object.assign(this.getColorHash(), this.colorHash);
             }, this);
 
             this.sortable = this.sortable || this.params.sortable;
@@ -396,6 +412,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             if (typeof model.get !== "undefined") {
                                 let foreignName = self.getForeignName();
                                 selected[model.id] = self.getLocalizedFieldValue(model, foreignName);
+                                if (model.has('color')) {
+                                    self.colorHash[model.id] = model.get('color');
+                                }
                             } else if (model.name) {
                                 selected[model.id] = model.name;
                             } else {
@@ -448,6 +467,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                     this.listenToOnce(view, 'after:save', function (model) {
                         this.clearView('quickCreate');
+                        if (model.has('color')) {
+                            this.colorHash[model.id] = model.get('color');
+                        }
                         this.addLink(model.id, this.getModelTitle(model));
                     }.bind(this));
                 });
@@ -589,7 +611,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.ids.forEach(function (id) {
                     data.push({
                         id: id,
-                        name: this.nameHash[id] ?? id
+                        name: this.nameHash[id] ?? id,
+                        color: this.colorHash[id]
                     });
                 }, this);
 
@@ -613,6 +636,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     },
                     onItemAdd: (value, item) => {
                         if (item && item.size() > 0) {
+                            const selectize = this.$element[0].selectize;
+                            const color = selectize?.options?.[value]?.color;
+                            if (color !== undefined) {
+                                this.colorHash[value] = color;
+                            }
                             this.addLink(value, item.find('span').text());
                         }
                     },
@@ -630,7 +658,20 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     },
                     render: {
                         item: (data, escape) => {
-                            return `<div class="item" title="${escape(data.name)}"><span>${escape(data.name)}</span></div>`;
+                            let icon = '';
+                            if (data.color) {
+                                icon = `<i style="background-color: ${data.color};"></i>`;
+                            }
+
+                            return `<div class="item label colored-multi-enum" title="${escape(data.name)}">${icon}<span>${escape(data.name)}</span></div>`;
+                        },
+                        option: (data, escape) => {
+                            let icon = '';
+                            if (data.color) {
+                                icon = `<i style="background-color: ${data.color};"></i>`;
+                            }
+
+                            return `<div class="option"><span class="label colored-multi-enum">${icon}<span>${escape(data.name)}</span></span></div>`;
                         },
                     }
                 };
@@ -654,7 +695,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                         id: item.id,
                                         name: value ?? '',
                                         data: item.id,
-                                        value: value
+                                        value: value,
+                                        color: item.color
                                     });
                                 }, this);
 
@@ -714,6 +756,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.ids.splice(index, 1);
             }
             delete this.nameHash[id];
+            delete this.colorHash[id];
             this.afterDeleteLink(id);
             this.trigger('change');
         },
@@ -769,8 +812,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         addLinkHtml: function (id, name) {
             if (this.$element && this.$element.size() > 0) {
                 const selectize = this.$element[0].selectize;
+                const color = this.colorHash[id] ?? selectize.options[id]?.color;
                 selectize.registerOption({
-                    id, name
+                    id, name, color
                 });
 
                 let value = selectize.getValue();
@@ -793,6 +837,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.model.set(this.idsName, []);
             this.model.set(this.nameHashName, {});
             this.model.set(this.typeHashName, {});
+            this.colorHash = {};
         },
 
         getDetailLinkHtml: function (id) {

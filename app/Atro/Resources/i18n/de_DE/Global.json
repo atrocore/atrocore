@@ -181,6 +181,7 @@
     "authenticate": "Authentifizieren",
     "Load data": "Daten laden",
     "massActionJobName": "%s der Entität \"%s\" (%s von %s)",
+    "inheritAllFromParentJobName": "Vererben alles von Eltern für %s (%s)",
     "customizeLayout": "Layout anpassen",
     "deletePermanently": "Dauerhaft löschen",
     "Reupload": "Neu hochladen",

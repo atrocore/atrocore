@@ -528,6 +528,9 @@ class Hierarchy extends Base
             $input = new \stdClass();
 
             $fieldDefs = $parent->entityDefs['fields'][$field] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+            if (empty($fieldDefs['type'])) {
+                continue;
+            }
             switch ($fieldDefs['type']) {
                 case 'file':
                 case 'link':
