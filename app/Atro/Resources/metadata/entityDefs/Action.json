@@ -244,6 +244,17 @@
               ]
             }
           ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "conditionsType",
+              "value": [
+                "expression"
+              ]
+            }
+          ]
         }
       }
     },

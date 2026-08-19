@@ -13,12 +13,14 @@ namespace Atro\ActionTypes;
 
 use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Core\ActionManager;
+use Atro\Core\Compiled\ActionConditionContext;
+use Atro\Core\Compiled\CompiledActionCondition;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
 use Atro\Entities\ActionExecution;
-use Atro\Repositories\SavedSearch;
+use Atro\Repositories\Action as ActionRepository;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
 use Atro\Core\Utils\Config;
@@ -75,7 +77,24 @@ abstract class AbstractAction implements TypeInterface
                 return $this->container->get('condition')->check($sourceEntity, $conditions);
             }
             return true;
+        } elseif ($action->get('conditionsType') === 'expression') {
+            /** @var CompiledActionCondition $handler */
+            $handler = $this->container->get(ActionRepository::getCompiledExpressionFullClassName($action));
+
+            $context = new ActionConditionContext(
+                $this->getSourceEntity($action, $input),
+                $input->uiRecord ?? null,
+                $input->uiRecordFromName ?? null,
+                $input->uiRecordFrom ?? null
+            );
+
+            return $handler->eval($context);
         } elseif ($action->get('conditionsType') === 'script') {
+            /**
+             *
+             * @todo Deprecated! Kept for backward compatibility
+             *
+             */
             $template = (string)($action->get('conditionsScript') ?? '');
             $templateData = [
                 'entity'          => $this->getSourceEntity($action, $input),
