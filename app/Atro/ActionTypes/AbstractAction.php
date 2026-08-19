@@ -17,6 +17,7 @@ use Atro\Core\Compiled\ActionConditionContext;
 use Atro\Core\Compiled\CompiledActionCondition;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
 use Atro\Entities\ActionExecution;
@@ -78,8 +79,10 @@ abstract class AbstractAction implements TypeInterface
             }
             return true;
         } elseif ($action->get('conditionsType') === 'expression') {
-            /** @var CompiledActionCondition $handler */
-            $handler = $this->container->get(ActionRepository::getCompiledExpressionFullClassName($action));
+            $className = ActionRepository::getCompiledExpressionFullClassName($action);
+            if (!is_a($className, CompiledActionCondition::class, true)) {
+                throw new Error("'$className' must be an instance of " . CompiledActionCondition::class);
+            }
 
             $context = new ActionConditionContext(
                 $this->getSourceEntity($action, $input),
@@ -88,7 +91,7 @@ abstract class AbstractAction implements TypeInterface
                 $input->uiRecordFrom ?? null
             );
 
-            return $handler->eval($context);
+            return $this->container->get($className)->eval($context);
         } elseif ($action->get('conditionsType') === 'script') {
             /**
              *
