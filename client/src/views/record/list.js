@@ -2837,6 +2837,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         buildRows: function (callback) {
+            this.destroyInlineMultiToolbar();
+            this.currentInlineFieldView = null;
+
             this.rowList = [];
 
 
@@ -3657,22 +3660,35 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         save() {
-            if (!this.listInlineEditModeEnabled) return;
+            if (!this.listInlineEditModeEnabled) {
+                this.trigger('cancel:save');
+                return;
+            }
 
             const rowViews = this._getRowViewsWithEditFields();
-            if (!rowViews.length) return;
+            if (!rowViews.length) {
+                this.trigger('cancel:save');
+                return;
+            }
 
             const changedRows = this._collectChangedRows(rowViews, false),
                 changedRelationRows = this._collectChangedRows(rowViews, true),
                 allRows = [...changedRows, ...changedRelationRows]
 
-            if (!changedRows.length && !changedRelationRows.length) return;
+            if (!changedRows.length && !changedRelationRows.length) {
+                this.trigger('cancel:save');
+                return;
+            }
 
-            if (this._validateRows(changedRows) || this._validateRows(changedRelationRows)) return;
+            if (this._validateRows(changedRows) || this._validateRows(changedRelationRows)) {
+                this.trigger('cancel:save');
+                return;
+            }
 
             rowViews.filter(row => !allRows.map(r => r.rowView.cid).includes(row.cid)).forEach(row => this._closeRowInlineEdit(row));
 
             this.notify('Saving...');
+            this.setInlineToolbarSaving(true);
 
             const upsertPayload = allRows.map(({ model, initialAttrs, changedAttrs }) => {
                 const _prev = {};
@@ -3717,6 +3733,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
 
                     this.notify(anySuccess ? 'Saved' : false, anySuccess ? 'success' : undefined);
+                    this.setInlineToolbarSaving(false);
                 })
                 .error(xhr => {
                     xhr.errorIsHandled = true;
@@ -3725,6 +3742,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         `${this.translate('Error')} ${xhr.status}: ${statusReason}`,
                         'error', 1000 * 60 * 60 * 2, true
                     );
+                    this.setInlineToolbarSaving(false);
                 });
         },
 
@@ -3863,6 +3881,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         if (this.listInlineEditModeEnabled && this._inlineEditRowAttrs && !this._inlineEditRowAttrs[view.model.id]) {
                             this._inlineEditRowAttrs[view.model.id] = view.model.getClonedAttributes();
                         }
+                        this.setCurrentInlineField(fieldView);
                     }, this);
                     this.listenTo(fieldView, 'inline-edit-off', function () {
                         const stillHasEdit = (this.rowList || []).some(rowKey => {
@@ -3874,9 +3893,185 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                             this.inlineEditModeIsOn = false;
                             this.setIsNotChanged();
                         }
+                        if (this.currentInlineFieldView === fieldView) {
+                            this.currentInlineFieldView = null;
+                        }
+                        this.refreshInlineMultiToolbar(fieldView);
                     }, this);
+
+                    fieldView.$el.off('focusin.inlineEditMultiToolbar').on('focusin.inlineEditMultiToolbar', () => {
+                        if (fieldView.mode !== 'edit') {
+                            return;
+                        }
+                        this.setCurrentInlineField(fieldView);
+                    });
                 }
             })
+        },
+
+        getOpenInlineFieldViews: function (excludeFieldView) {
+            const fields = [];
+            (this.rowList || []).forEach(rowKey => {
+                const rowView = this.getView(rowKey);
+                if (!rowView || !rowView.nestedViews) {
+                    return;
+                }
+                Object.values(rowView.nestedViews).forEach(fv => {
+                    if (fv && fv !== excludeFieldView && fv.mode === 'edit') {
+                        fields.push(fv);
+                    }
+                });
+            });
+
+            fields.sort((a, b) => (a.$el.offset() ? a.$el.offset().top : 0) - (b.$el.offset() ? b.$el.offset().top : 0));
+
+            return fields;
+        },
+
+        setCurrentInlineField: function (fieldView) {
+            if (this.currentInlineFieldView === fieldView) {
+                return;
+            }
+            this.currentInlineFieldView = fieldView;
+            this.refreshInlineMultiToolbar();
+        },
+
+        refreshInlineMultiToolbar: function (excludeFieldView) {
+            const fields = this.getOpenInlineFieldViews(excludeFieldView);
+            const count = fields.length;
+
+            if (this.svelteInlineEditToolbar) {
+                this.svelteInlineEditToolbar.$destroy();
+                this.svelteInlineEditToolbar = null;
+            }
+
+            if (count < 1) {
+                this.currentInlineFieldView = null;
+                this.markFocusedInlineCell(null);
+                this.stopInlineToolbarLivenessCheck();
+                return;
+            }
+
+            if (!this.inlineToolbarContainer || !document.body.contains(this.inlineToolbarContainer)) {
+                this.inlineToolbarContainer = document.createElement('div');
+                document.body.appendChild(this.inlineToolbarContainer);
+            }
+
+            let currentIndex = fields.indexOf(this.currentInlineFieldView);
+            if (currentIndex === -1) {
+                currentIndex = 0;
+                this.currentInlineFieldView = fields[0];
+            }
+
+            this.markFocusedInlineCell(this.currentInlineFieldView);
+
+            this.svelteInlineEditToolbar = new Svelte.InlineEditMultiToolbar({
+                target: this.inlineToolbarContainer,
+                props: {
+                    current: currentIndex + 1,
+                    total: count,
+                    saving: !!this.inlineToolbarSaving,
+                    onPrev: this.navigateInlineField.bind(this, -1),
+                    onNext: this.navigateInlineField.bind(this, 1),
+                    onSaveAll: this.saveAllInlineFields.bind(this),
+                    onCancelAll: this.cancelAllInlineFields.bind(this)
+                }
+            });
+
+            this.startInlineToolbarLivenessCheck();
+        },
+
+        startInlineToolbarLivenessCheck: function () {
+            if (this.inlineToolbarLivenessInterval) {
+                return;
+            }
+            this.inlineToolbarLivenessInterval = setInterval(() => {
+                if (!this.el || !document.body.contains(this.el)) {
+                    this.destroyInlineMultiToolbar();
+                }
+            }, 1000);
+        },
+
+        stopInlineToolbarLivenessCheck: function () {
+            if (this.inlineToolbarLivenessInterval) {
+                clearInterval(this.inlineToolbarLivenessInterval);
+                this.inlineToolbarLivenessInterval = null;
+            }
+        },
+
+        navigateInlineField: function (delta) {
+            const fields = this.getOpenInlineFieldViews();
+            const count = fields.length;
+            if (!count) {
+                return;
+            }
+
+            let currentIndex = fields.indexOf(this.currentInlineFieldView);
+            if (currentIndex === -1) {
+                currentIndex = 0;
+            }
+            const nextIndex = ((currentIndex + delta) % count + count) % count;
+
+            this.currentInlineFieldView = fields[nextIndex];
+
+            const view = this.currentInlineFieldView;
+            if (typeof view.inlineEditFocusing === 'function') {
+                view.inlineEditFocusing(true);
+            }
+            if (view.$el[0]) {
+                view.$el[0].scrollIntoView({behavior: 'smooth', block: 'center'});
+            }
+
+            this.refreshInlineMultiToolbar();
+        },
+
+        saveAllInlineFields: function () {
+            this.save();
+        },
+
+        setInlineToolbarSaving: function (value) {
+            this.inlineToolbarSaving = value;
+            this.refreshInlineMultiToolbar();
+        },
+
+        cancelAllInlineFields: function () {
+            this.getOpenInlineFieldViews().forEach(function (view) {
+                view.inlineEditClose();
+            });
+        },
+
+        destroyInlineMultiToolbar: function () {
+            this.stopInlineToolbarLivenessCheck();
+            this.markFocusedInlineCell(null);
+            this.inlineToolbarSaving = false;
+            if (this.svelteInlineEditToolbar) {
+                this.svelteInlineEditToolbar.$destroy();
+                this.svelteInlineEditToolbar = null;
+            }
+            if (this.inlineToolbarContainer) {
+                this.inlineToolbarContainer.remove();
+                this.inlineToolbarContainer = null;
+            }
+        },
+
+        markFocusedInlineCell: function (fieldView) {
+            if (this._focusedInlineCellEl) {
+                $(this._focusedInlineCellEl).removeAttr('data-inline-focused');
+                this._focusedInlineCellEl = null;
+            }
+
+            if (fieldView && typeof fieldView.getCellElement === 'function') {
+                const $cell = fieldView.getCellElement();
+                if ($cell && $cell[0]) {
+                    $cell.attr('data-inline-focused', 'true');
+                    this._focusedInlineCellEl = $cell[0];
+                }
+            }
+        },
+
+        remove: function (dontEmpty) {
+            this.destroyInlineMultiToolbar();
+            return Dep.prototype.remove.call(this, dontEmpty);
         }
     });
 });

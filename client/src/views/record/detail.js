@@ -963,9 +963,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         initListenToInlineMode: function () {
             var fields = this.getFieldViews();
 
+            this.destroyInlineMultiToolbar();
+
+            this.openInlineFields = [];
+            this.currentInlineFieldView = null;
+
             var fieldInEditMode = null;
             for (var field in fields) {
-                var fieldView = fields[field];
+                let fieldView = fields[field];
                 this.listenTo(fieldView, 'edit', function (view) {
                     if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
                         // fieldInEditMode.inlineEditClose(); // if the value can't be saved the field shouldn't be closed.
@@ -975,12 +980,159 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.listenTo(fieldView, 'inline-edit-on', function () {
                     this.inlineEditModeIsOn = true;
+                    this.registerOpenInlineField(fieldView);
                 }, this);
                 this.listenTo(fieldView, 'inline-edit-off', function () {
                     this.inlineEditModeIsOn = false;
                     this.setIsNotChanged();
+                    this.unregisterOpenInlineField(fieldView);
                 }, this);
             }
+        },
+
+        registerOpenInlineField: function (fieldView) {
+            if (this.openInlineFields.indexOf(fieldView) === -1) {
+                this.openInlineFields.push(fieldView);
+                fieldView.$el.on('focusin.inlineEditMultiToolbar', () => {
+                    if (fieldView.mode !== 'edit') {
+                        return;
+                    }
+                    this.setCurrentInlineField(fieldView);
+                });
+            }
+            this.setCurrentInlineField(fieldView);
+        },
+
+        unregisterOpenInlineField: function (fieldView) {
+            fieldView.$el.off('focusin.inlineEditMultiToolbar');
+            this.openInlineFields = this.openInlineFields.filter(function (view) {
+                return view !== fieldView;
+            });
+            if (this.currentInlineFieldView === fieldView) {
+                this.currentInlineFieldView = null;
+            }
+            this.refreshInlineMultiToolbar();
+        },
+
+        setCurrentInlineField: function (fieldView) {
+            if (this.currentInlineFieldView === fieldView) {
+                return;
+            }
+            this.currentInlineFieldView = fieldView;
+            this.refreshInlineMultiToolbar();
+        },
+
+        sortOpenInlineFields: function () {
+            this.openInlineFields.sort(function (a, b) {
+                return (a.$el.offset() ? a.$el.offset().top : 0) - (b.$el.offset() ? b.$el.offset().top : 0);
+            });
+        },
+
+        refreshInlineMultiToolbar: function () {
+            this.sortOpenInlineFields();
+
+            var count = this.openInlineFields.length;
+
+            if (this.svelteInlineEditToolbar) {
+                this.svelteInlineEditToolbar.$destroy();
+                this.svelteInlineEditToolbar = null;
+            }
+
+            if (count < 1) {
+                this.currentInlineFieldView = null;
+                return;
+            }
+
+            if (!this.inlineToolbarContainer || !document.body.contains(this.inlineToolbarContainer)) {
+                this.inlineToolbarContainer = document.createElement('div');
+                document.body.appendChild(this.inlineToolbarContainer);
+            }
+
+            var currentIndex = this.openInlineFields.indexOf(this.currentInlineFieldView);
+            if (currentIndex === -1) {
+                currentIndex = 0;
+                this.currentInlineFieldView = this.openInlineFields[0];
+            }
+
+            this.svelteInlineEditToolbar = new Svelte.InlineEditMultiToolbar({
+                target: this.inlineToolbarContainer,
+                props: {
+                    current: currentIndex + 1,
+                    total: count,
+                    saving: !!this.inlineToolbarSaving,
+                    onPrev: this.navigateInlineField.bind(this, -1),
+                    onNext: this.navigateInlineField.bind(this, 1),
+                    onSaveAll: this.saveAllInlineFields.bind(this),
+                    onCancelAll: this.cancelAllInlineFields.bind(this)
+                }
+            });
+        },
+
+        navigateInlineField: function (delta) {
+            var count = this.openInlineFields.length;
+            if (!count) {
+                return;
+            }
+
+            var currentIndex = this.openInlineFields.indexOf(this.currentInlineFieldView);
+            if (currentIndex === -1) {
+                currentIndex = 0;
+            }
+            var nextIndex = ((currentIndex + delta) % count + count) % count;
+
+            this.currentInlineFieldView = this.openInlineFields[nextIndex];
+
+            var view = this.currentInlineFieldView;
+            if (typeof view.inlineEditFocusing === 'function') {
+                view.inlineEditFocusing(true);
+            }
+            if (view.$el[0]) {
+                view.$el[0].scrollIntoView({behavior: 'smooth', block: 'center'});
+            }
+
+            this.refreshInlineMultiToolbar();
+        },
+
+        saveAllInlineFields: function () {
+            this.setInlineToolbarSaving(true);
+
+            const stopSaving = () => this.setInlineToolbarSaving(false);
+            this.listenToOnce(this, 'cancel:save', stopSaving);
+
+            this.save(() => {
+                this.stopListening(this, 'cancel:save', stopSaving);
+                this.model.trigger('after:inlineEditSave');
+                this.trigger('after:inlineEditSave');
+                stopSaving();
+            }, true);
+        },
+
+        setInlineToolbarSaving: function (value) {
+            this.inlineToolbarSaving = value;
+            this.refreshInlineMultiToolbar();
+        },
+
+        cancelAllInlineFields: function () {
+            this.openInlineFields.slice().forEach(function (view) {
+                view.inlineEditClose();
+            });
+        },
+
+        destroyInlineMultiToolbar: function () {
+            this.inlineToolbarSaving = false;
+            if (this.svelteInlineEditToolbar) {
+                this.svelteInlineEditToolbar.$destroy();
+                this.svelteInlineEditToolbar = null;
+            }
+            if (this.inlineToolbarContainer) {
+                this.inlineToolbarContainer.remove();
+                this.inlineToolbarContainer = null;
+            }
+        },
+
+        remove: function (dontEmpty) {
+            this.destroyInlineMultiToolbar();
+            return Dep.prototype.remove.call(this, dontEmpty);
         },
 
         afterRender: function () {
@@ -1088,7 +1240,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (!fieldView.readOnly) {
                     if (fieldView.mode === 'edit') {
                         fieldView.fetchToModel();
-                        fieldView.removeInlineEditLinks();
+                        fieldView.hideInlineEditLink();
                         fieldView.inlineEditModeIsOn = false;
                         fieldView.killAfterOutsideClickListener()
                     }
@@ -1573,7 +1725,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (id && this.realtimeId === this.model.get('id')) {
                     if (this.mode !== 'edit') {
                         $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true }).done(data => {
-                            if (data.timestamp !== res.timestamp && $('.inline-cancel-link').length === 0) {
+                            if (data.timestamp !== res.timestamp && !(this.openInlineFields || []).length) {
                                 res.timestamp = data.timestamp;
                                 if (!this.model._updatedById || this.model._updatedById !== this.getUser().id) {
                                     this.model._disableRefreshNotification = true
