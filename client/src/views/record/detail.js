@@ -994,6 +994,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.openInlineFields.indexOf(fieldView) === -1) {
                 this.openInlineFields.push(fieldView);
                 fieldView.$el.on('focusin.inlineEditMultiToolbar', () => {
+                    if (fieldView.mode !== 'edit') {
+                        return;
+                    }
                     this.setCurrentInlineField(fieldView);
                 });
             }
@@ -1012,6 +1015,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setCurrentInlineField: function (fieldView) {
+            if (this.currentInlineFieldView === fieldView) {
+                return;
+            }
             this.currentInlineFieldView = fieldView;
             this.refreshInlineMultiToolbar();
         },
