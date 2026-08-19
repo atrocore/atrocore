@@ -42,9 +42,9 @@ When creating a new field, the following fields must be configured:
 ### Default value
 
 Default values can be configured for fields to automatically populate them when new records are created. To configure a default value:
+
 -  Select a Default Value Type.
 -  Specify the value in the Default Value field.
-
 The following default value types are available:
 -  Basic
 Uses a static value as the default. The specified value is automatically assigned to the field when a new record is created.
@@ -88,7 +88,7 @@ The following options are available for all or most field types:
 - **No recording as modification**: Changes to this field will not update the `Modified at` timestamp.
 - **Protected**: Field value is read-only from UI and from API.
 - **Disable Value Lock**: Prevents the field from being locked during modification via the UI when `Enable Value Lock` is activated for the entity (available only if the ["Advanced Data Management"](https://store.atrocore.com/en/advanced-data-management/20113) module is installed)
-- **Is Code**: Marks the field as the entity's code field. When enabled, records can be looked up by this field's value instead of their internal ID — for example, in URLs (`Product/111` instead of `Product/019c7a32-f6f4-72dc-82b1-13c47b8bf61c`). Only one field per entity can be marked as code. Available for:
+- **Is Code**: Marks the field as the entity's code field. When enabled, records can be looked up by this field's value instead of their internal ID — for example, in URLs (`Product/NB.X003` instead of `Product/019c7a32-f6f4-72dc-82b1-13c47b8bf61c`). Only one field per entity can be marked as code. Available for:
   - **Auto-increment** fields (always);
   - **Integer** and **String** fields only when the **Unique** option is also enabled.
 
