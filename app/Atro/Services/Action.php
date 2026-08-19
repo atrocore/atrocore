@@ -53,7 +53,7 @@ class Action extends Base
         }
 
         if ($entity->get('conditionsType') === 'expression') {
-            $className = 'Compiled\\Condition\\' . ucfirst(md5($entity->id));
+            $className = $this->getRepository()::getCompiledExpressionFullClassName($entity);
             if (class_exists($className) && is_a($className, CompiledExpression::class, true)) {
                 $entity->set('conditionsExpression', $className::expression());
             }

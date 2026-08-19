@@ -23,7 +23,19 @@ use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class Action extends Base
 {
-    public const array EXPRESSION_NAMES = ['entity', 'uiRecord', 'uiRecordFromName', 'uiRecordFrom'];
+    public const array CONDITIONS_EXPRESSION_NAMES = ['entity', 'uiRecord', 'uiRecordFromName', 'uiRecordFrom'];
+
+    public const string CONDITIONS_EXPRESSION_NAMESPACE = 'Compiled\\Condition';
+
+    public static function getCompiledExpressionClassName(ActionEntity $action): string
+    {
+        return ucfirst(md5($action->id));
+    }
+
+    public static function getCompiledExpressionFullClassName(ActionEntity $action): string
+    {
+        return self::CONDITIONS_EXPRESSION_NAMESPACE . '\\' . self::getCompiledExpressionClassName($action);
+    }
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -44,13 +56,13 @@ class Action extends Base
             $entity->set('updateType', 'script');
         }
 
-        $this->validateExpression($entity);
+        $this->validateConditionsExpression($entity);
     }
 
     protected function afterSave(Entity $entity, array $options = [])
     {
         $this->deleteCacheFile();
-        $this->saveExpression($entity);
+        $this->saveConditionsExpression($entity);
 
         parent::afterSave($entity, $options);
     }
@@ -77,7 +89,7 @@ class Action extends Base
         }
     }
 
-    protected function validateExpression(ActionEntity $action): void
+    protected function validateConditionsExpression(ActionEntity $action): void
     {
         if ($action->get('conditionsType') === 'expression' && $action->isAttributeChanged('conditionsExpression')) {
             if (empty($action->get('conditionsExpression'))) {
@@ -85,19 +97,68 @@ class Action extends Base
             }
 
             try {
-                $this->getExpressionLanguage()->lint($action->get('conditionsExpression'), self::EXPRESSION_NAMES);
+                $this->getExpressionLanguage()->lint($action->get('conditionsExpression'), self::CONDITIONS_EXPRESSION_NAMES);
             } catch (SyntaxError $e) {
                 throw new BadRequest($e->getMessage());
             }
         }
     }
 
-    protected function saveExpression(ActionEntity $action): void
+    protected function saveConditionsExpression(ActionEntity $action): void
     {
         if ($action->get('conditionsType') === 'expression' && $action->isAttributeChanged('conditionsExpression')) {
-            echo '<pre>';
-            print_r('123');
-            die();
+            $expression = $action->get('conditionsExpression');
+
+            $code = $this->getExpressionLanguage()->compile($action->get('conditionsExpression'), self::CONDITIONS_EXPRESSION_NAMES);
+            $namespace = 'Compiled\Condition';
+            $className = self::getCompiledExpressionClassName($action);
+
+            $literal = var_export($expression, true);
+
+            $prelude = [];
+            foreach (self::CONDITIONS_EXPRESSION_NAMES as $name) {
+                if (preg_match('/\$' . preg_quote($name, '/') . '\b/', $code) === 1) {
+                    $prelude[] = sprintf('        $%s = $context->%s;', $name, $name);
+                }
+            }
+            $prelude = implode("\n", $prelude);
+
+            $php = <<<PHP
+    <?php
+
+    namespace {$namespace};
+
+    /**
+     * GENERATED — do not edit. Regenerated from expression() below.
+     */
+    final class {$className} implements \\Atro\\Core\\Compiled\CompiledActionCondition
+    {
+        public static function expression(): string
+        {
+            return {$literal};
+        }
+
+        public function eval(\\Atro\\Core\\Compiled\\ActionConditionContext \$context): bool
+        {
+    {$prelude}
+
+            return (bool) ({$code});
+        }
+    }
+
+    PHP;
+
+            $dir = 'data/custom-code/' . str_replace('\\', '/', $namespace);
+
+            if (!is_dir($dir)) {
+                mkdir($dir, 0775, true);
+            }
+
+            $file = $dir . '/' . $className . '.php';
+            $tmp = $file . '.' . getmypid() . '.tmp';
+
+            file_put_contents($tmp, $php);
+            rename($tmp, $file);
         }
     }
 
