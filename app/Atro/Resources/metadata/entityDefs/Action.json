@@ -227,6 +227,26 @@
         }
       }
     },
+    "conditionsExpression": {
+      "type": "text",
+      "notStorable": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "conditionsType",
+              "value": [
+                "expression"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "conditionsScript": {
       "type": "text",
       "view": "views/fields/script",
@@ -254,7 +274,7 @@
         "readOnly": {
           "conditionGroup": [
             {
-              "type": "notIn",
+              "type": "in",
               "attribute": "conditionsType",
               "value": [
                 "script"

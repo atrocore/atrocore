@@ -87,6 +87,7 @@
     "executeAs": "Geben Sie an, welchen Benutzer das System zum Ausführen der Aktion verwenden soll"
   },
   "exceptions": {
+    "expressionCannotBeEmpty": "Der Ausdruck darf nicht leer sein.",
     "forEditModeOnly": "Die Aktion '%s' ist nur im Bearbeitungsmodus verfügbar und kann hier nicht verwendet werden."
   }
 }

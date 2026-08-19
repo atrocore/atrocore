@@ -83,6 +83,7 @@
     "executeAs": "Určete uživatele, kterého systém použije k provedení akce"
   },
   "exceptions": {
+    "expressionCannotBeEmpty": "Výraz nemůže být prázdný.",
     "forEditModeOnly": "Akce \"%s\" je k dispozici pouze v režimu úprav a nelze ji zde použít."
   }
 }

@@ -13,9 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\DataManager;
+use Atro\Entities\Action as ActionEntity;
 use Espo\ORM\Entity;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class Action extends Base
 {
@@ -37,11 +41,14 @@ class Action extends Base
         ) {
             $entity->set('updateType', 'script');
         }
+
+        $this->validateExpression($entity);
     }
 
     protected function afterSave(Entity $entity, array $options = [])
     {
         $this->deleteCacheFile();
+        $this->saveExpression($entity);
 
         parent::afterSave($entity, $options);
     }
@@ -66,5 +73,41 @@ class Action extends Base
 
             DataManager::pushPublicData('dataTimestamp', (new \DateTime())->getTimestamp());
         }
+    }
+
+    protected function validateExpression(ActionEntity $action): void
+    {
+        if ($action->get('conditionsType') === 'expression' && $action->isAttributeChanged('conditionsExpression')) {
+            if (empty($action->get('conditionsExpression'))) {
+                throw new BadRequest($this->translateException('expressionCannotBeEmpty'));
+            }
+
+            try {
+                $this->getExpressionLanguage()->lint($action->get('conditionsExpression'), ['entity', 'uiRecord', 'uiRecordFromName', 'uiRecordFrom']);
+            } catch (SyntaxError $e) {
+                throw new BadRequest($e->getMessage());
+            }
+        }
+    }
+
+    protected function saveExpression(ActionEntity $action): void
+    {
+        if ($action->get('conditionsType') === 'expression' && $action->isAttributeChanged('conditionsExpression')) {
+            echo '<pre>';
+            print_r('123');
+            die();
+        }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('expressionLanguage');
+    }
+
+    protected function getExpressionLanguage(): ExpressionLanguage
+    {
+        return $this->getInjection('expressionLanguage');
     }
 }

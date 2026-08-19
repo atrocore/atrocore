@@ -59,6 +59,7 @@ class ServiceManagerConfig
         'seederFactory'            => \Atro\Core\SeederFactory::class,
         'condition'                => \Atro\Core\ConditionChecker::class,
         'matchingManager'          => \Atro\Core\MatchingManager::class,
+        'expressionLanguage'       => \Atro\Core\Factories\ExpressionLanguage::class,
         'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
         'aclManager'               => \Espo\Core\AclManager::class,
         'entityManager'            => \Espo\Core\Factories\EntityManager::class,

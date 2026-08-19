@@ -83,6 +83,7 @@
     "executeAs": "Especifique qué usuario utilizará el sistema para realizar la acción"
   },
   "exceptions": {
+    "expressionCannotBeEmpty": "La expresión no puede estar vacía.",
     "forEditModeOnly": "La acción '%s' sólo está disponible en el modo de edición y no puede utilizarse aquí."
   }
 }
