@@ -1306,9 +1306,22 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             const recordView = this.getRecordView()
             if (recordView && !recordView.saveDisabled && typeof recordView.save === 'function') {
+                const toggleToolbarSaving = typeof recordView.setInlineToolbarSaving === 'function'
+                    ? recordView.setInlineToolbarSaving.bind(recordView)
+                    : null;
+
+                if (toggleToolbarSaving) {
+                    toggleToolbarSaving(true);
+                    this.listenToOnce(recordView, 'cancel:save', () => toggleToolbarSaving(false));
+                }
+
                 recordView.save(() => {
                     this.model.trigger('after:inlineEditSave');
                     this.trigger('after:inlineEditSave');
+                    if (toggleToolbarSaving) {
+                        this.stopListening(recordView, 'cancel:save');
+                        toggleToolbarSaving(false);
+                    }
                 });
 
                 return;

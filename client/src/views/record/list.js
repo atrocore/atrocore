@@ -3660,22 +3660,35 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         save() {
-            if (!this.listInlineEditModeEnabled) return;
+            if (!this.listInlineEditModeEnabled) {
+                this.trigger('cancel:save');
+                return;
+            }
 
             const rowViews = this._getRowViewsWithEditFields();
-            if (!rowViews.length) return;
+            if (!rowViews.length) {
+                this.trigger('cancel:save');
+                return;
+            }
 
             const changedRows = this._collectChangedRows(rowViews, false),
                 changedRelationRows = this._collectChangedRows(rowViews, true),
                 allRows = [...changedRows, ...changedRelationRows]
 
-            if (!changedRows.length && !changedRelationRows.length) return;
+            if (!changedRows.length && !changedRelationRows.length) {
+                this.trigger('cancel:save');
+                return;
+            }
 
-            if (this._validateRows(changedRows) || this._validateRows(changedRelationRows)) return;
+            if (this._validateRows(changedRows) || this._validateRows(changedRelationRows)) {
+                this.trigger('cancel:save');
+                return;
+            }
 
             rowViews.filter(row => !allRows.map(r => r.rowView.cid).includes(row.cid)).forEach(row => this._closeRowInlineEdit(row));
 
             this.notify('Saving...');
+            this.setInlineToolbarSaving(true);
 
             const upsertPayload = allRows.map(({ model, initialAttrs, changedAttrs }) => {
                 const _prev = {};
@@ -3720,6 +3733,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
 
                     this.notify(anySuccess ? 'Saved' : false, anySuccess ? 'success' : undefined);
+                    this.setInlineToolbarSaving(false);
                 })
                 .error(xhr => {
                     xhr.errorIsHandled = true;
@@ -3728,6 +3742,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         `${this.translate('Error')} ${xhr.status}: ${statusReason}`,
                         'error', 1000 * 60 * 60 * 2, true
                     );
+                    this.setInlineToolbarSaving(false);
                 });
         },
 
@@ -3955,6 +3970,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 props: {
                     current: currentIndex + 1,
                     total: count,
+                    saving: !!this.inlineToolbarSaving,
                     onPrev: this.navigateInlineField.bind(this, -1),
                     onNext: this.navigateInlineField.bind(this, 1),
                     onSaveAll: this.saveAllInlineFields.bind(this),
@@ -4013,6 +4029,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.save();
         },
 
+        setInlineToolbarSaving: function (value) {
+            this.inlineToolbarSaving = value;
+            this.refreshInlineMultiToolbar();
+        },
+
         cancelAllInlineFields: function () {
             this.getOpenInlineFieldViews().forEach(function (view) {
                 view.inlineEditClose();
@@ -4022,6 +4043,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         destroyInlineMultiToolbar: function () {
             this.stopInlineToolbarLivenessCheck();
             this.markFocusedInlineCell(null);
+            this.inlineToolbarSaving = false;
             if (this.svelteInlineEditToolbar) {
                 this.svelteInlineEditToolbar.$destroy();
                 this.svelteInlineEditToolbar = null;

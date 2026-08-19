@@ -1059,6 +1059,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 props: {
                     current: currentIndex + 1,
                     total: count,
+                    saving: !!this.inlineToolbarSaving,
                     onPrev: this.navigateInlineField.bind(this, -1),
                     onNext: this.navigateInlineField.bind(this, 1),
                     onSaveAll: this.saveAllInlineFields.bind(this),
@@ -1093,10 +1094,22 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         saveAllInlineFields: function () {
+            this.setInlineToolbarSaving(true);
+
+            const stopSaving = () => this.setInlineToolbarSaving(false);
+            this.listenToOnce(this, 'cancel:save', stopSaving);
+
             this.save(() => {
+                this.stopListening(this, 'cancel:save', stopSaving);
                 this.model.trigger('after:inlineEditSave');
                 this.trigger('after:inlineEditSave');
+                stopSaving();
             }, true);
+        },
+
+        setInlineToolbarSaving: function (value) {
+            this.inlineToolbarSaving = value;
+            this.refreshInlineMultiToolbar();
         },
 
         cancelAllInlineFields: function () {
@@ -1106,6 +1119,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         destroyInlineMultiToolbar: function () {
+            this.inlineToolbarSaving = false;
             if (this.svelteInlineEditToolbar) {
                 this.svelteInlineEditToolbar.$destroy();
                 this.svelteInlineEditToolbar = null;
