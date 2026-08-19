@@ -70,6 +70,7 @@ class Action extends Base
     protected function afterRemove(Entity $entity, array $options = [])
     {
         $this->deleteCacheFile();
+        $this->deleteConditionsExpression($entity);
 
         parent::afterRemove($entity, $options);
     }
@@ -110,7 +111,7 @@ class Action extends Base
             $expression = $action->get('conditionsExpression');
 
             $code = $this->getExpressionLanguage()->compile($action->get('conditionsExpression'), self::CONDITIONS_EXPRESSION_NAMES);
-            $namespace = 'Compiled\Condition';
+            $namespace = self::CONDITIONS_EXPRESSION_NAMESPACE;
             $className = self::getCompiledExpressionClassName($action);
 
             $literal = var_export($expression, true);
@@ -159,6 +160,14 @@ class Action extends Base
 
             file_put_contents($tmp, $php);
             rename($tmp, $file);
+        }
+    }
+
+    protected function deleteConditionsExpression(ActionEntity $action): void
+    {
+        $fileName = 'data/custom-code/' . str_replace('\\', '/', self::getCompiledExpressionFullClassName($action)) . '.php';
+        if (file_exists($fileName)) {
+            unlink($fileName);
         }
     }
 
