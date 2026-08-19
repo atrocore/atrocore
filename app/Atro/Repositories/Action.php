@@ -23,6 +23,8 @@ use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class Action extends Base
 {
+    public const array EXPRESSION_NAMES = ['entity', 'uiRecord', 'uiRecordFromName', 'uiRecordFrom'];
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
@@ -83,7 +85,7 @@ class Action extends Base
             }
 
             try {
-                $this->getExpressionLanguage()->lint($action->get('conditionsExpression'), ['entity', 'uiRecord', 'uiRecordFromName', 'uiRecordFrom']);
+                $this->getExpressionLanguage()->lint($action->get('conditionsExpression'), self::EXPRESSION_NAMES);
             } catch (SyntaxError $e) {
                 throw new BadRequest($e->getMessage());
             }

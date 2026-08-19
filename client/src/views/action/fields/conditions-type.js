@@ -35,7 +35,8 @@ Espo.define('views/action/fields/conditions-type', 'views/fields/enum',
                 this.translatedOptions = {
                     '': '',
                     'basic': this.translate('basic'),
-                    'expression': this.translate('expression')
+                    'expression': this.translate('expression'),
+                    'script': this.translate('script')
                 };
 
                 if (this.model.get(this.entityTypeField)) {
