@@ -1605,7 +1605,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         inlineEditFocusing(preventScroll) {
-            const $input = this.$el.find('input').first();
+            let $input = this.$el.find('input').filter(':visible').first();
+
+            if (!$input[0]) {
+                $input = this.$el.find('button, [tabindex]').filter(':visible').first();
+            }
 
             if ($input[0]) {
                 $input[0].focus({preventScroll: !!preventScroll});
