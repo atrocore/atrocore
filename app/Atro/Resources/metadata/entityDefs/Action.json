@@ -261,6 +261,7 @@
     "conditionsScript": {
       "type": "text",
       "view": "views/fields/script",
+      "readOnly": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,
@@ -272,17 +273,6 @@
       ],
       "conditionalProperties": {
         "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "conditionsType",
-              "value": [
-                "script"
-              ]
-            }
-          ]
-        },
-        "readOnly": {
           "conditionGroup": [
             {
               "type": "in",

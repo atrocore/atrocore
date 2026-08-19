@@ -29,7 +29,7 @@ class Action extends Base
 
     public static function getCompiledExpressionClassName(ActionEntity $action): string
     {
-        return ucfirst(md5($action->id));
+        return 'A' . md5($action->id);
     }
 
     public static function getCompiledExpressionFullClassName(ActionEntity $action): string
@@ -62,17 +62,19 @@ class Action extends Base
     protected function afterSave(Entity $entity, array $options = [])
     {
         $this->deleteCacheFile();
-        $this->saveConditionsExpression($entity);
 
         parent::afterSave($entity, $options);
+
+        $this->saveConditionsExpression($entity);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
         $this->deleteCacheFile();
-        $this->deleteConditionsExpression($entity);
 
         parent::afterRemove($entity, $options);
+
+        $this->deleteConditionsExpression($entity);
     }
 
     public function deleteCacheFile(): void
