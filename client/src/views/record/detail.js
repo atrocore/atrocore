@@ -1240,7 +1240,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (!fieldView.readOnly) {
                     if (fieldView.mode === 'edit') {
                         fieldView.fetchToModel();
-                        fieldView.removeInlineEditLinks();
+                        fieldView.hideInlineEditLink();
                         fieldView.inlineEditModeIsOn = false;
                         fieldView.killAfterOutsideClickListener()
                     }
@@ -1725,7 +1725,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (id && this.realtimeId === this.model.get('id')) {
                     if (this.mode !== 'edit') {
                         $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true }).done(data => {
-                            if (data.timestamp !== res.timestamp && $('.inline-cancel-link').length === 0) {
+                            if (data.timestamp !== res.timestamp && !(this.openInlineFields || []).length) {
                                 res.timestamp = data.timestamp;
                                 if (!this.model._updatedById || this.model._updatedById !== this.getUser().id) {
                                     this.model._disableRefreshNotification = true

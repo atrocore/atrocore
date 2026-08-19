@@ -1466,40 +1466,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        removeInlineEditLinks: function () {
+        hideInlineEditLink: function () {
             var $cell = this.getCellElement();
-            $cell.find('.inline-save-link').remove();
-            $cell.find('.inline-cancel-link').remove();
             $cell.find('.inline-edit-link').addClass('hidden');
-        },
-
-        addInlineEditLinks: function () {
-            this.removeInlineEditLinks();
-            if (this.isListView()) {
-                return;
-            }
-
-            const fieldActions = this.getInlineActionsContainer();
-            const $cell = this.getCellElement();
-            const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><i class="ph ph-check"></i></a>`);
-            const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><i class="ph ph-x"></i></a>`);
-
-            if (fieldActions.size()) {
-                fieldActions.append($saveLink);
-                fieldActions.append($cancelLink);
-            } else {
-                $cell.prepend($saveLink);
-                $cell.prepend($cancelLink);
-            }
-
-            $cell.find('.inline-edit-link').addClass('hidden');
-
-            $saveLink.click(function () {
-                this.inlineEditSave();
-            }.bind(this));
-            $cancelLink.click(function () {
-                this.inlineEditClose();
-            }.bind(this));
         },
 
         inlineEditClose: function (dontReset) {
@@ -1520,7 +1489,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.inlineEditModeIsOn = false;
             this.setMode(this.initialMode);
             this.once('after:render', function () {
-                this.removeInlineEditLinks();
+                this.hideInlineEditLink();
             }, this);
 
             if (!dontReset) {
@@ -1559,7 +1528,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
             this.once('after:render', function () {
                 this.inlineEditFocusing();
-                this.addInlineEditLinks();
+                this.hideInlineEditLink();
                 this.initSaveAfterOutsideClick();
 
                 this.inlineEditEscapeCaptureHandler = e => {
