@@ -45,6 +45,7 @@ Default values can be configured for fields to automatically populate them when 
 
 -  Select a Default Value Type.
 -  Specify the value in the Default Value field.
+
 The following default value types are available:
 -  Basic
 Uses a static value as the default. The specified value is automatically assigned to the field when a new record is created.
