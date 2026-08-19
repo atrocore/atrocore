@@ -3932,6 +3932,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             if (count < 1) {
                 this.currentInlineFieldView = null;
+                this.markFocusedInlineCell(null);
                 this.stopInlineToolbarLivenessCheck();
                 return;
             }
@@ -3946,6 +3947,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 currentIndex = 0;
                 this.currentInlineFieldView = fields[0];
             }
+
+            this.markFocusedInlineCell(this.currentInlineFieldView);
 
             this.svelteInlineEditToolbar = new Svelte.InlineEditMultiToolbar({
                 target: this.inlineToolbarContainer,
@@ -4018,6 +4021,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         destroyInlineMultiToolbar: function () {
             this.stopInlineToolbarLivenessCheck();
+            this.markFocusedInlineCell(null);
             if (this.svelteInlineEditToolbar) {
                 this.svelteInlineEditToolbar.$destroy();
                 this.svelteInlineEditToolbar = null;
@@ -4025,6 +4029,21 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             if (this.inlineToolbarContainer) {
                 this.inlineToolbarContainer.remove();
                 this.inlineToolbarContainer = null;
+            }
+        },
+
+        markFocusedInlineCell: function (fieldView) {
+            if (this._focusedInlineCellEl) {
+                $(this._focusedInlineCellEl).removeAttr('data-inline-focused');
+                this._focusedInlineCellEl = null;
+            }
+
+            if (fieldView && typeof fieldView.getCellElement === 'function') {
+                const $cell = fieldView.getCellElement();
+                if ($cell && $cell[0]) {
+                    $cell.attr('data-inline-focused', 'true');
+                    this._focusedInlineCellEl = $cell[0];
+                }
             }
         },
 
