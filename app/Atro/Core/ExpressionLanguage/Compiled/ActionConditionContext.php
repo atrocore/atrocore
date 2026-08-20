@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Compiled;
+namespace Atro\Core\ExpressionLanguage\Compiled;
 
 use Espo\ORM\Entity;
 

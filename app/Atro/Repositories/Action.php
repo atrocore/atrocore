@@ -134,14 +134,14 @@ class Action extends Base
     /**
      * GENERATED — do not edit. Regenerated from expression() below.
      */
-    final class {$className} implements \\Atro\\Core\\Compiled\CompiledActionCondition
+    final class {$className} implements \\Atro\\Core\\ExpressionLanguage\\Compiled\CompiledActionCondition
     {
         public static function expression(): string
         {
             return {$literal};
         }
 
-        public function eval(\\Atro\\Core\\Compiled\\ActionConditionContext \$context): bool
+        public function eval(\\Atro\\Core\\ExpressionLanguage\\Compiled\\ActionConditionContext \$context): bool
         {
     {$prelude}
 

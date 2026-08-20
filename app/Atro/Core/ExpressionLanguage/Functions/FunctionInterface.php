@@ -9,9 +9,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Compiled;
+declare(strict_types=1);
 
-interface CompiledExpression
+namespace Atro\Core\ExpressionLanguage\Functions;
+
+interface FunctionInterface
 {
-    public static function expression(): string;
+    public function compile(string ...$arguments): string;
+
+    public function evaluate(mixed ...$arguments): mixed;
 }

@@ -1,0 +1,11 @@
+{
+  "lowercase": {
+    "handler": "\\Atro\\Core\\ExpressionLanguage\\Functions\\Lowercase"
+  },
+  "uppercase": {
+    "handler": "\\Atro\\Core\\ExpressionLanguage\\Functions\\Uppercase"
+  },
+  "md5": {
+    "handler": "\\Atro\\Core\\ExpressionLanguage\\Functions\\Md5"
+  }
+}

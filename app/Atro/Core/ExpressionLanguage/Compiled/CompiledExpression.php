@@ -9,11 +9,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
+namespace Atro\Core\ExpressionLanguage\Compiled;
 
-namespace Atro\Core\Compiled;
-
-interface CompiledActionCondition extends CompiledExpression
+interface CompiledExpression
 {
-    public function eval(ActionConditionContext $context): bool;
+    public static function expression(): string;
 }
