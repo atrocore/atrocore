@@ -46,7 +46,7 @@ For complex implementations that require dynamic behavior, automated document ge
 
 
 * **Expression Language:**
-* Conditions of Actions and Workflows are written in the Expression Language, not in Twig. You should be able to express a rule as a single boolean expression, such as `entity.get('price') > 100`.
+* Conditions of Actions and Workflows are written in the Expression Language. You should be able to express a rule as a single boolean expression, such as `entity.get('price') > 100`.
 
 
 * **JSON Structure:**

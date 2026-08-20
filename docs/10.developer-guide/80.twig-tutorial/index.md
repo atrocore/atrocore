@@ -5,7 +5,7 @@ title: Twig Templating
 
 AtroCore integrates Twig templating throughout the platform, enabling developers to create dynamic content and implement business logic in script fields, workflow actions and export feeds.
 
-> Conditions of Actions and Workflows are **not** written in Twig. They use the [Expression Language](../85.expression-language/index.md), which is compiled instead of rendered.
+> Twig covers content generation. Rule evaluation — the conditions of Actions and Workflows — is handled by the [Expression Language](../85.expression-language/index.md), which is documented separately.
 
 ## How to Use Twig in AtroCore
 

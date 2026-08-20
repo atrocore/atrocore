@@ -29,7 +29,7 @@ entity.get('status') == 'completed' and entity.get('priority') > 2
 
 The result of the expression is cast to boolean. The expression is compiled into a PHP class when the Action is saved, so evaluating it at runtime costs a single method call — see [Expression Language](../85.expression-language/index.md) for the details and for the list of variables available in each context.
 
-> A third, deprecated type — `Script` — used the Twig templating language and required the expression to output a `proceed` variable. Existing records keep working, but the field is read-only and `Script` is no longer offered when configuring a new condition. There is no automatic conversion: Twig and the Expression Language are different languages, so such conditions have to be rewritten by hand.
+> A third, deprecated type — `Script` — defined the condition as a Twig template that output a `proceed` variable. Existing records keep working, but the field is read-only and `Script` is no longer offered when configuring a new condition. Twig and the Expression Language are separate languages, so such conditions are rewritten by hand rather than converted.
 
 ## Custom Condition Types
 
