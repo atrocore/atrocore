@@ -18,19 +18,22 @@ Examples:
 - Status is "Completed"
 - Quantity > 10
 
-### Script
+### Expression
 
-When the `Script` type is selected, users can write condition logic using the Twig templating language. This provides more flexibility and allows referencing complex expressions and conditions.
+When the `Expression` type is selected, users write the condition as a [Symfony Expression Language](../85.expression-language/index.md) expression. This provides more flexibility and allows referencing complex expressions and conditions.
 
 Example:
-```twig
-{% set proceed = entity.status == 'completed' and entity.priority > 2 %}
-{{ proceed }}
 ```
+entity.get('status') == 'completed' and entity.get('priority') > 2
+```
+
+The result of the expression is cast to boolean. The expression is compiled into a PHP class when the Action is saved, so evaluating it at runtime costs a single method call — see [Expression Language](../85.expression-language/index.md) for the details and for the list of variables available in each context.
+
+> A third, deprecated type — `Script` — used the Twig templating language and required the expression to output a `proceed` variable. Existing records keep working, but the field is read-only and `Script` is no longer offered when configuring a new condition. There is no automatic conversion: Twig and the Expression Language are different languages, so such conditions have to be rewritten by hand.
 
 ## Custom Condition Types
 
-For advanced use cases where neither `Basic` nor `Script` types are sufficient or performant — for example, when complex data relationships or multiple database lookups are required — the system provides support for **Custom Condition Types**.
+For advanced use cases where neither `Basic` nor `Expression` types are sufficient or performant — for example, when complex data relationships or multiple database lookups are required — the system provides support for **Custom Condition Types**.
 
 ## Use Cases for Custom Condition Types
 

@@ -9,7 +9,7 @@ Actions in AtroCore are automated operations that can be executed manually throu
 - **Flexible Execution**: Actions can be triggered manually, automatically via workflows, or through scheduled jobs
 - **Entity-Specific**: Actions can be configured to work with specific entities (Products, Files, etc.)
 - **User Context**: Actions can [execute as](#basic-configuration) the system user or maintain the same user context
-- **Conditional Logic**: Actions support both basic and script-based condition types
+- **Conditional Logic**: Actions support both basic and expression-based condition types
 - **Data Integration**: Seamless integration with [import feeds](../../../02.data-exchange/01.import-feeds/) and [export feeds](../../../02.data-exchange/02.export-feeds/)
 
 ## Creating and Configuring Actions
@@ -38,7 +38,9 @@ All actions share these common configuration fields:
 
 - **Conditions Type**: How conditions are evaluated:
   - **Basic**: Simple condition builder
-  - **Script**: Custom script conditions following [Twig syntax](../../../10.developer-guide/80.twig-tutorial/index.md)
+  - **Expression**: Custom conditions written in the [Expression Language](../../../10.developer-guide/85.expression-language/index.md), for example `entity.get('status') == 'completed' and entity.get('priority') > 2`. The result is cast to boolean; the action is executed when it is true.
+
+  Additional condition types provided by [custom condition types](../../../10.developer-guide/70.custom-condition-type/index.md) appear in this list as well.
 
 ![Default Action Details Creation](_assets/action-create-usage.png){.large}
 

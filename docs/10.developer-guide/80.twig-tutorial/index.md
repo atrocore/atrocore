@@ -3,7 +3,9 @@ title: Twig Templating
 ---
 ## Overview
 
-AtroCore integrates Twig templating throughout the platform, enabling developers to create dynamic content and implement business logic in script fields, workflows and export feeds.
+AtroCore integrates Twig templating throughout the platform, enabling developers to create dynamic content and implement business logic in script fields, workflow actions and export feeds.
+
+> Conditions of Actions and Workflows are **not** written in Twig. They use the [Expression Language](../85.expression-language/index.md), which is compiled instead of rendered.
 
 ## How to Use Twig in AtroCore
 
@@ -14,7 +16,6 @@ Twig is accessible in several contexts, each with specific variables and use cas
 | Context | Purpose | Available Variables |
 |---------|---------|-------------------|
 | Script Fields | Dynamic field content | `config`, `entity` |
-| Workflow Conditions | Business rule evaluation | `entity`, `user`, `importJobId` |
 | Workflow Actions | Data manipulation | `entity`, `triggeredEntity` |
 | Export Feed Templates | Data formatting | `entities`, `feed` |
 | Action Scripts | Bulk operations | `sourceEntities`, `triggeredEntity` |
@@ -61,12 +62,6 @@ AtroCore uses Monaco Editor (VS Code's editor) for enhanced development experien
 
 {# Use system config #}
 Generated on {{ config.siteUrl }}
-```
-
-### Workflow Conditions
-```twig
-{# Boolean expression for workflow triggers #}
-{{ entity.isActive and user.id != 'system' and importJobId is empty }}
 ```
 
 ### Export Feed Templates
@@ -293,3 +288,4 @@ When updating AtroCore:
 ## Resources
 
 - [Official Twig Documentation](https://twig.symfony.com/doc/)
+- [Expression Language](../85.expression-language/index.md) — the language used for Action and Workflow conditions
