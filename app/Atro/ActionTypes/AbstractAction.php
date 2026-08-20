@@ -78,7 +78,9 @@ abstract class AbstractAction implements TypeInterface
                 return $this->container->get('condition')->check($sourceEntity, $conditions);
             }
             return true;
-        } elseif ($action->get('conditionsType') === 'expression') {
+        }
+
+        if ($action->get('conditionsType') === 'expression') {
             $className = ActionRepository::getCompiledExpressionFullClassName($action);
             if (!is_a($className, CompiledActionCondition::class, true)) {
                 throw new Error("'$className' must be an instance of " . CompiledActionCondition::class);
@@ -92,12 +94,14 @@ abstract class AbstractAction implements TypeInterface
             );
 
             return $this->container->get($className)->eval($context);
-        } elseif ($action->get('conditionsType') === 'script') {
-            /**
-             *
-             * @todo Deprecated! Kept for backward compatibility
-             *
-             */
+        }
+
+        /**
+         *
+         * @todo Deprecated! Kept for backward compatibility
+         *
+         */
+        if ($action->get('conditionsType') === 'script') {
             $template = (string)($action->get('conditionsScript') ?? '');
             $templateData = [
                 'entity'          => $this->getSourceEntity($action, $input),
