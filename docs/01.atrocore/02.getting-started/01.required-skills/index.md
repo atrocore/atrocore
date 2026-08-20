@@ -42,7 +42,11 @@ For complex implementations that require dynamic behavior, automated document ge
 
 
 * **Basic Formula/Script Logic:**
-* The ability to write small logical expressions for calculated fields or workflow conditions (e.g., `IF price > 100 THEN ...`).
+* The ability to write small logical expressions for calculated fields (e.g., `IF price > 100 THEN ...`).
+
+
+* **Expression Language:**
+* Conditions of Actions and Workflows are written in the Expression Language, not in Twig. You should be able to express a rule as a single boolean expression, such as `entity.get('price') > 100`.
 
 
 * **JSON Structure:**
@@ -73,6 +77,6 @@ If you intend to create **custom modules**, develop entirely new features, or mo
 | Category | Primary Focus | Required Knowledge |
 | --- | --- | --- |
 | **General** | Data Modeling & Admin | Relational Database Logic, Drag-and-Drop UI, ACL/Permissions |
-| **Advanced** | Logic & Templating | **Twig Syntax**, Logical Expressions, Basic JSON |
+| **Advanced** | Logic & Templating | **Twig Syntax**, **Expression Language**, Logical Expressions, Basic JSON |
 | **Developer** | Custom Modules | PHP 8, Backbone.js, Svelte, Composer, SQL |
 
