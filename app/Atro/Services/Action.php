@@ -21,6 +21,7 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\ExpressionLanguage\Compiled\CompiledExpression;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Utils\Language;
 use Doctrine\DBAL\ParameterType;
@@ -37,7 +38,6 @@ class Action extends Base
 
     public function prepareEntityForOutput(Entity $entity)
     {
-
         parent::prepareEntityForOutput($entity);
 
         $fileName = CreateAction::DIR . '/' . str_replace('custom', '', $entity->get('type') ?? '') . '.php';
@@ -50,6 +50,13 @@ class Action extends Base
         $entity->set('conditionPhpCode', null);
         if (file_exists($fileName)) {
             $entity->set('conditionPhpCode', file_get_contents($fileName));
+        }
+
+        if ($entity->get('conditionsType') === 'expression') {
+            $className = $this->getRepository()::getCompiledExpressionFullClassName($entity);
+            if (class_exists($className) && is_a($className, CompiledExpression::class, true)) {
+                $entity->set('conditionsExpression', $className::expression());
+            }
         }
     }
 

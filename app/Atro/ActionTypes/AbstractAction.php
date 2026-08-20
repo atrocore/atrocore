@@ -15,14 +15,17 @@ use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Core\ActionManager;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\ExpressionLanguage\Compiled\ActionConditionContext;
+use Atro\Core\ExpressionLanguage\Compiled\CompiledActionCondition;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
-use Atro\Entities\ActionExecution;
-use Atro\Repositories\SavedSearch;
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\ServiceFactory;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
+use Atro\Entities\ActionExecution;
+use Atro\Repositories\Action as ActionRepository;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
 
 abstract class AbstractAction implements TypeInterface
@@ -75,7 +78,30 @@ abstract class AbstractAction implements TypeInterface
                 return $this->container->get('condition')->check($sourceEntity, $conditions);
             }
             return true;
-        } elseif ($action->get('conditionsType') === 'script') {
+        }
+
+        if ($action->get('conditionsType') === 'expression') {
+            $className = ActionRepository::getCompiledExpressionFullClassName($action);
+            if (!is_a($className, CompiledActionCondition::class, true)) {
+                throw new Error("'$className' must be an instance of " . CompiledActionCondition::class);
+            }
+
+            $context = new ActionConditionContext(
+                $this->getSourceEntity($action, $input),
+                $input->uiRecord ?? null,
+                $input->uiRecordFromName ?? null,
+                $input->uiRecordFrom ?? null
+            );
+
+            return $this->container->get($className)->eval($context);
+        }
+
+        /**
+         *
+         * @todo Deprecated! Kept for backward compatibility
+         *
+         */
+        if ($action->get('conditionsType') === 'script') {
             $template = (string)($action->get('conditionsScript') ?? '');
             $templateData = [
                 'entity'          => $this->getSourceEntity($action, $input),

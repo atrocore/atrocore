@@ -83,6 +83,7 @@
     "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania akcji."
   },
   "exceptions": {
+    "expressionCannotBeEmpty": "Wyrażenie nie może być puste.",
     "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być tutaj użyta."
   }
 }

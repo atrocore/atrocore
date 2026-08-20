@@ -31,10 +31,11 @@ Espo.define('views/action/fields/conditions-type', 'views/fields/enum',
             },
 
             prepareOptionsList() {
-                this.params.options = ['', 'basic', 'script'];
+                this.params.options = ['', 'basic', 'expression'];
                 this.translatedOptions = {
                     '': '',
                     'basic': this.translate('basic'),
+                    'expression': this.translate('expression'),
                     'script': this.translate('script')
                 };
 

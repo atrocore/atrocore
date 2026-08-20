@@ -163,6 +163,7 @@
   "labels": {
     "backgroundProcessingNotWorking": "Zpracování na pozadí nefunguje. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku.",
     "basic": "Basic",
+    "expression": "Výraz",
     "script": "Skript",
     "phpCode": "Kód PHP",
     "_addAttribute": "[Přidat atribut]",
@@ -567,6 +568,7 @@
     "conditionsType": "Typ podmínek",
     "conditions": "Podmínky",
     "conditionsScript": "Skript podmínek",
+    "conditionsExpression": "Výraz podmínek",
     "entity": "Entita",
     "allowedOptions": "Povolené možnosti",
     "disableActionHistory": "Vypnout protokolování akcí",

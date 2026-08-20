@@ -90,6 +90,12 @@
       ],
       [
         {
+          "name": "conditionsExpression",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
           "name": "conditionsScript",
           "fullWidth": true
         }

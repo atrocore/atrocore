@@ -87,6 +87,7 @@
     "executeAs": "Specify which user the system will use to perform the action"
   },
   "exceptions": {
+    "expressionCannotBeEmpty": "Expression cannot be empty.",
     "forEditModeOnly": "The action '%s' is only available in edit mode and cannot be used here."
   }
 }
