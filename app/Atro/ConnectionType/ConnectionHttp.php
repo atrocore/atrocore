@@ -15,6 +15,7 @@ namespace Atro\ConnectionType;
 
 use Atro\DTO\HttpResponseDTO;
 use Atro\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Config;
 
 class ConnectionHttp extends AbstractConnection implements HttpConnectionInterface
 {
@@ -25,6 +26,7 @@ class ConnectionHttp extends AbstractConnection implements HttpConnectionInterfa
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($ch, CURLOPT_TIMEOUT, (int)$this->getConfig()->get('httpRequestTimeout', 120));
         if ($method !== 'GET' && !empty($body)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         }
@@ -70,5 +72,10 @@ class ConnectionHttp extends AbstractConnection implements HttpConnectionInterfa
     protected function getHeaders(): array
     {
         return [];
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 }
