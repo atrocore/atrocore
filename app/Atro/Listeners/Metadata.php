@@ -213,7 +213,7 @@ class Metadata extends AbstractMetadataListener
 
     protected function prepareDataPipeline(array &$data): void
     {
-        if (!$this->getConfig()->get('isInstalled', false) || $this->isSystemUpdating()) {
+        if (!$this->getConfig()->get('isInstalled', false)) {
             return;
         }
 
@@ -2654,7 +2654,7 @@ class Metadata extends AbstractMetadataListener
 
     protected function prepareMetadataViaMatchings(array &$data): void
     {
-        if (!$this->getConfig()->get('isInstalled', false) || $this->isSystemUpdating()) {
+        if (!$this->getConfig()->get('isInstalled', false)) {
             return;
         }
 
