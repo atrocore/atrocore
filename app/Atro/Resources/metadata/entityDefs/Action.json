@@ -230,6 +230,7 @@
     "conditionsExpression": {
       "type": "text",
       "notStorable": true,
+      "view": "views/fields/script",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,
