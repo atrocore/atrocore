@@ -230,7 +230,6 @@
     "conditionsExpression": {
       "type": "text",
       "notStorable": true,
-      "view": "views/fields/script",
       "engine": "ExpressionLanguage",
       "variables": [
         "entity",
