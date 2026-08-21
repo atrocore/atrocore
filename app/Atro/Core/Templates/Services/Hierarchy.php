@@ -473,6 +473,10 @@ class Hierarchy extends Base
             $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
             $maxMassLinkCount = $this->getConfig()->get('maxMassLinkCount', 20);
             foreach ($parentsCollection as $k => $parentItem) {
+                if (empty($parentItem->get($keySet['distantKey']))) {
+                    continue;
+                }
+
                 $input = new \stdClass();
                 $input->{$keySet['nearKey']} = $id;
                 $input->{$keySet['distantKey']} = $parentItem->get($keySet['distantKey']);
