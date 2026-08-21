@@ -114,6 +114,11 @@
       "type": "bool",
       "tooltip": true
     },
+    "htmlSanitizerLegacyParser": {
+      "type": "bool",
+      "default": true,
+      "tooltip": true
+    },
     "lastViewedCount": {
       "type": "int",
       "min": 1,

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "htmlSanitizerLegacyParser": "Usa il parser HTML legacy (deprecato)",
     "maxConcurrentWorkers": "Numero massimo di lavoratori contemporanei",
     "fileNameRegexPattern": "Pattern Regex del nome del file",
     "variables": "Variabili",
@@ -46,6 +47,7 @@
     "disableNavigationPath": "Disattiva percorso di navigazione"
   },
   "tooltips": {
+    "htmlSanitizerLegacyParser": "Se selezionato, la sanificazione dell'HTML utilizza il parser HTML5 legacy Masterminds, deprecato e che sarà rimosso con Symfony 8. Deselezionalo per usare il parser HTML5 integrato in PHP; il markup sanificato può differire leggermente, per esempio le tabelle ricevono un elemento tbody.",
     "maxConcurrentWorkers": "Limite superiore del numero di attività o processi che possono essere eseguiti simultaneamente in background su un server.",
     "fileNameRegexPattern": "Per abilitare solo le lettere minuscole con una lunghezza massima di 24 simboli, utilizzi \"/^[a-z]{1,24}$/\".",
     "recordsPerPage": "Numero di record inizialmente visualizzati nelle viste elenco.",

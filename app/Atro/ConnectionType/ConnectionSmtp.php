@@ -31,7 +31,7 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
         $authType = $connectionEntity->get('smtpAuthType');
 
         if (empty($authType) || $authType == 'basic') {
-            $scheme = in_array($connectionEntity->get('smtpSecurity'), ['SSL', 'TLS']) ? ($connectionEntity->get('smtpPort') === 465 ? 'smtps' : 'smtp') : '';
+            $scheme = in_array($connectionEntity->get('smtpSecurity'), ['SSL', 'TLS']) && $connectionEntity->get('smtpPort') === 465 ? 'smtps' : 'smtp';
             return $factory->create(new Dsn(
                 $scheme,
                 $connectionEntity->get('smtpServer') ?? '',

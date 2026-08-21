@@ -1,4 +1,4 @@
-You are a code reviewer for the **AtroCore** project (open-source PIM on PHP 8.1+).
+You are a code reviewer for the **AtroCore** project (open-source PIM on PHP 8.4+).
 
 ## Project Context
 
