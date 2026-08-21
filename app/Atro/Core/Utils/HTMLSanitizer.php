@@ -13,11 +13,20 @@ namespace Atro\Core\Utils;
 
 use Symfony\Component\HtmlSanitizer\HtmlSanitizer as BaseHtmlSanitizer;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Symfony\Component\HtmlSanitizer\Parser\MastermindsParser;
+use Symfony\Component\HtmlSanitizer\Parser\NativeParser;
+use Symfony\Component\HtmlSanitizer\Parser\ParserInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 class HTMLSanitizer
 {
+    public const string LEGACY_PARSER_CONFIG_KEY = 'htmlSanitizerLegacyParser';
+
+    public function __construct(private readonly ?Config $config = null)
+    {
+    }
+
     public function sanitize(string $content, string $paramsString): string
     {
         if (empty($content) || empty($paramsString)) {
@@ -29,7 +38,7 @@ class HTMLSanitizer
             return $content;
         }
 
-        $sanitizer = new BaseHtmlSanitizer($this->getConfig($params));
+        $sanitizer = new BaseHtmlSanitizer($this->getConfig($params), $this->createParser());
 
         try {
             $sanitized = $sanitizer->sanitize($content);
@@ -71,6 +80,22 @@ class HTMLSanitizer
         }
 
         return $config;
+    }
+
+    public static function isParserConfigurable(): bool
+    {
+        return class_exists(MastermindsParser::class) && class_exists(NativeParser::class);
+    }
+
+    protected function createParser(): ?ParserInterface
+    {
+        if (!self::isParserConfigurable()) {
+            return null;
+        }
+
+        $useLegacyParser = $this->config === null || (bool)($this->config->get(self::LEGACY_PARSER_CONFIG_KEY) ?? true);
+
+        return $useLegacyParser ? new MastermindsParser() : new NativeParser();
     }
 
     protected function blockElements(HtmlSanitizerConfig $config, $params): HtmlSanitizerConfig

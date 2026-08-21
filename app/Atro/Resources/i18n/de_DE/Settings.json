@@ -1,5 +1,6 @@
 {
   "fields": {
+    "htmlSanitizerLegacyParser": "Legacy-HTML-Parser verwenden (veraltet)",
     "maxConcurrentWorkers": "Maximale Anzahl gleichzeitiger Hintergrundprozesse",
     "fileNameRegexPattern": "Dateiname Regex Pattern",
     "variables": "Variablen",
@@ -46,6 +47,7 @@
     "disableNavigationPath": "Navigationspfad deaktivieren"
   },
   "tooltips": {
+    "htmlSanitizerLegacyParser": "Wenn aktiviert, verwendet die HTML-Bereinigung den veralteten Masterminds-HTML5-Parser, der mit Symfony 8 entfernt wird. Deaktivieren Sie die Option, um stattdessen den in PHP integrierten HTML5-Parser zu verwenden; das bereinigte Markup kann leicht abweichen, zum Beispiel erhalten Tabellen ein tbody-Element.",
     "maxConcurrentWorkers": "Obergrenze für die Anzahl der Aufgaben oder Prozesse, die gleichzeitig im Hintergrund eines Servers laufen können.",
     "fileNameRegexPattern": "Um nur die Kleinbuchstaben mit max. Länge von 24 Symbolen zu erlauben, verwenden Sie \"/^[a-z]{1,24}$/\".",
     "recordsPerPage": "Anzahl der Datensätze, die zunächst in Listenansichten angezeigt werden.",

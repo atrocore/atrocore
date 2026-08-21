@@ -3,6 +3,7 @@
     "configuration": "Configuration"
   },
   "exceptions": {
+    "duplicateYamlKeys": "La configuration répète la ou les clés {keys} avec une valeur vide. YAML exige des clés uniques, donc une des valeurs est ignorée. Cela ne fonctionnera plus avec Symfony 8.",
     "notValidYaml": "La configuration n'est pas un YAML valide."
   }
 }

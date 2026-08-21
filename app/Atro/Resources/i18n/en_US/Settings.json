@@ -1,5 +1,6 @@
 {
   "fields": {
+    "htmlSanitizerLegacyParser": "Use legacy HTML parser (deprecated)",
     "maxConcurrentWorkers": "Maximum number of concurrent workers",
     "fileNameRegexPattern": "Filename Regex Pattern",
     "variables": "Variables",
@@ -46,6 +47,7 @@
     "disableNavigationPath": "Disable Navigation Path"
   },
   "tooltips": {
+    "htmlSanitizerLegacyParser": "If checked, HTML sanitizing uses the legacy Masterminds HTML5 parser, which is deprecated and will be removed with Symfony 8. Uncheck to use the HTML5 parser built into PHP instead; sanitized markup can differ slightly, for example tables get a tbody element.",
     "maxConcurrentWorkers": "Upper limit on the number of tasks or processes that can run simultaneously in the background of a server.",
     "fileNameRegexPattern": "To enable only small letters with max. 24-symbol length use \"/^[a-z]{1,24}$/\".",
     "recordsPerPage": "Number of records initially displayed in list views.",

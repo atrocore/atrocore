@@ -1,5 +1,6 @@
 {
   "fields": {
+    "htmlSanitizerLegacyParser": "Użyj starego parsera HTML (przestarzały)",
     "fileNameRegexPattern": "Wzorzec wyrażenia regularnego dla nazwy pliku",
     "variables": "Zmienne",
     "locale": "Lokalizacja domyślna",
@@ -46,6 +47,7 @@
     "disableNavigationPath": "Wyłącz ścieżkę nawigacyjną"
   },
   "tooltips": {
+    "htmlSanitizerLegacyParser": "Jeśli zaznaczone, czyszczenie HTML korzysta ze starego parsera HTML5 Masterminds, który jest przestarzały i zostanie usunięty wraz z Symfony 8. Odznacz, aby użyć wbudowanego w PHP parsera HTML5; oczyszczony kod może się nieznacznie różnić, na przykład tabele otrzymują element tbody.",
     "fileNameRegexPattern": "Aby włączyć tylko małe litery o maksymalnej długości 24 znaków, użyj \"/^[a-z]{1,24}$/\".",
     "recordsPerPage": "Liczba rekordów początkowo wyświetlanych w widokach listy.",
     "recordsPerPageSmall": "Liczba rekordów początkowo wyświetlanych w panelach relacji.",
