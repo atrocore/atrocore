@@ -136,7 +136,7 @@ The following full-fledged software products are already available on the AtroCo
 
 ## Technologies
 
-![Architecture and Technologies](_assets/architecture-and-technologies.png)
+![Architecture and Technologies](_assets/architecture-and-technologies_260822.png)
 
 - Backend: PHP, powered by enterprise-grade Symfony and Laminas components.
 - Frontend: JavaScript, migrating from legacy Backbone.js to a modern, reactive Svelte architecture.
