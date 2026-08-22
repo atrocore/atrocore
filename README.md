@@ -7,7 +7,7 @@
 
 <p align="center" width="100%"><br><br><img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48"><br><br></p>
 
-AtroCore is a powerful open-source data platform designed for [Master Data Management (MDM) and System Integration](https://www.atrocore.com/en). Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
+AtroCore is a powerful open-source **Business Application Platform for Complex Business Data**. Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile business application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
 
 <!--
 | Host            | URL                                             |
@@ -16,7 +16,7 @@ AtroCore is a powerful open-source data platform designed for [Master Data Manag
 | Mirror (GitHub) | https://github.com/atrocore/atrocore            | 
 -->
 
-AtroCore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Laminas / Mezzio, Symfony, it’s built on open PHP standards (PSR-7, PSR-11, PSR-15) and enhanced by carefully selected best-of-breed components to solve specific tasks – for example, we use Doctrine DBAL for database interaction and FastRoute for HTTP routing. The system primarily works with PostgreSQL, MySQL, or MariaDB as its main database engine.
+AtroCore is a powerful, multi-layered business application platform designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Laminas / Mezzio, Symfony, it’s built on open PHP standards (PSR-7, PSR-11, PSR-15) and enhanced by carefully selected best-of-breed components to solve specific tasks – for example, we use Doctrine DBAL for database interaction and FastRoute for HTTP routing. The system primarily works with PostgreSQL, MySQL, or MariaDB as its main database engine.
 
 To tackle complex and long-running tasks, AtroCore includes a robust Job Manager. This allows you to control the number of workers based on your server’s capacity, ensuring efficient processing without overload. Complementing this, the Scheduled Jobs feature provides a convenient way to configure recurring tasks. AtroCore offers dynamic actions, flexible workflows, and real-time UI customization.
 
