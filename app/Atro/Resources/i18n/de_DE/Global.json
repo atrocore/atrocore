@@ -485,6 +485,7 @@
     "associatedTitle": "Der aktuelle Artikel ist als :name verlinkt von:",
     "associatingTitle": "Mit aktuellem Element als :name verlinkt:",
     "itemsInRow": "Anzahl Elemente in der Reihe",
+    "pageSize": "Datensätze pro Seite",
     "sort": "Sortieren",
     "recalculateScript": "Skript neu berechnen",
     "setDefaultValue": "Standardwert setzen",

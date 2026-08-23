@@ -364,9 +364,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         hasLayoutEditor: false,
 
         data: function () {
-            var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
-            var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
-
             const fixedHeaderRow = this.isFixedListHeaderRow();
 
             return {
@@ -374,18 +371,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 header: this.header,
                 headerDefs: this._getHeaderDefs(),
                 paginationEnabled: this.pagination,
-                paginationTop: paginationTop,
-                paginationBottom: paginationBottom,
-                showMoreActive: this.collection.total > this.collection.length || this.collection.total == -1,
+                showMoreActive: this.collection.offset + this.collection.length < this.collection.total || this.collection.total == -1,
                 showMoreEnabled: this.showMore,
                 showCount: this.showCount && this.collection.total > 0,
-                moreCount: this.collection.total - this.collection.length,
+                moreCount: this.collection.total - (this.collection.offset + this.collection.length),
                 checkboxes: this.checkboxes,
                 allowSelectAllResult: this.isAllowedSelectAllResult(),
                 disableSelectAllResult: this.isSelectAllResultDisabled(),
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                bottomBar: paginationBottom,
                 buttonList: this.buttonList,
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
@@ -461,7 +455,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.showCount && this.collection.total > 0) {
                 let limit = this.collection.maxSize;
-                let add = this.collection.total - this.collection.length;
+                let add = this.collection.total - (this.collection.offset + this.collection.length);
 
                 if (limit < add) {
                     add = limit;
@@ -1449,6 +1443,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.checkedList = [];
                     this.allResultIsChecked = false;
                 }
+
                 this.buildRows(function () {
                     this.render();
                 }.bind(this));
@@ -1483,14 +1478,38 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.trigger('update-counters');
             });
             this.listenTo(this.collection, 'update-total', () => {
-                if (this.collection.total > this.collection.length || this.collection.total === -1) {
+                if (this.collection.offset + this.collection.length < this.collection.total || this.collection.total === -1) {
                     this.$el.find('.show-more').removeClass('hidden')
                     this.$el.find('.show-more .more-label').text(this.getShowMoreLabel())
                 } else {
                     this.$el.find('.show-more').addClass('hidden')
                 }
 
+                this.trigger('pagination-toolbar-update');
                 this.trigger('update-counters');
+            });
+
+            this.listenTo(this, 'pagination-toolbar-update', function (extraProps) {
+                if (!this.tableShowMorePlaceholder) {
+                    return;
+                }
+                var props = this.getPaginationToolbarProps();
+                this.tableShowMorePlaceholder.$set(Object.assign({
+                    visible: props.showMoreVisible,
+                    label: props.showMoreLabel,
+                    loading: false,
+                    onClick: props.onShowMore
+                }, extraProps && 'showMoreLoading' in extraProps ? {loading: extraProps.showMoreLoading} : {}));
+            }.bind(this));
+
+            this.listenToOnce(this, 'remove', () => {
+                if (this.tableShowMorePlaceholder) {
+                    try {
+                        this.tableShowMorePlaceholder.$destroy();
+                    } catch (e) {
+                    }
+                    this.tableShowMorePlaceholder = null;
+                }
             });
 
             $(window).on(`keydown.${this.cid} keyup.${this.cid}`, e => {
@@ -1660,6 +1679,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         afterRender: function () {
             this.createLayoutConfigurator();
+            this.renderTableShowMorePlaceholder();
+            this.trigger('pagination-toolbar-update');
 
             if (this.allResultIsChecked) {
                 this.selectAllResult();
@@ -1703,7 +1724,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                         parent.off('scroll');
                         parent.on('scroll', parent, function () {
-                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
+                            if (this.collection.offset + this.collection.length + this.collection.lengthCorrection < this.collection.total && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
                                 let type = 'list';
                                 if (this.isHierarchical()) {
                                     type = this.getStorage().get('list-small-view-type', this.scope) || 'tree'
@@ -1722,7 +1743,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                         content.off('scroll', this.$el);
                         content.on('scroll', this.$el, function () {
-                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && content.scrollTop() + content.height() >= content.get(0).scrollHeight - 50) {
+                            if (this.collection.offset + this.collection.length + this.collection.lengthCorrection < this.collection.total && content.scrollTop() + content.height() >= content.get(0).scrollHeight - 50) {
                                 this.loadMore(this.$el.find('a[data-action="showMore"]'));
                             }
                         }.bind(this));
@@ -2845,7 +2866,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.collection.length > 0) {
                 var i = 0;
-                var c = !this.pagination ? 1 : 2;
+                var c = 1;
                 var func = function () {
                     i++;
                     if (i == c) {
@@ -2890,19 +2911,178 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         }
                     }.bind(this));
                 }, this);
-
-
-                if (this.pagination) {
-                    this.createView('pagination', 'views/record/list-pagination', {
-                        collection: this.collection
-                    }, func);
-                }
             } else {
                 if (typeof callback == 'function') {
                     callback();
                     this.trigger('after:build-rows');
                 }
             }
+        },
+
+        hasPaginationToolbar: function () {
+            if (!this.pagination) {
+                return false;
+            }
+
+            var props = this.getPaginationToolbarProps();
+            return props.totalPages > 1 || props.showMoreVisible || props.controls.length > 0;
+        },
+
+        getSortFieldsList: function () {
+            var fields = [];
+            var fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields']);
+            for (var field in fieldDefs) {
+                if (!fieldDefs[field].disabled
+                    && !fieldDefs[field].layoutListDisabled
+                    && !this.getMetadata().get(['fields', fieldDefs[field].type, 'notSortable'])
+                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[field].type)
+                ) {
+                    fields.push(field);
+                }
+            }
+
+            fields.sort(function (v1, v2) {
+                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
+            }.bind(this));
+
+            return fields;
+        },
+
+        getSortToolbarControl: function () {
+            var fields = this.getSortFieldsList();
+            if (!fields.length) {
+                return null;
+            }
+
+            var options = fields.map(function (field) {
+                return {value: field, label: this.translate(field, 'fields', this.scope)};
+            }, this);
+
+            return {
+                key: 'sort',
+                iconClass: this.collection.asc ? 'ph ph-sort-descending' : 'ph ph-sort-ascending',
+                iconTitle: this.getLanguage().translateOption(this.collection.asc ? 'asc' : 'desc', 'sortDirection', 'Entity'),
+                iconClickable: true,
+                onIconClick: function () {
+                    this.toggleSort(this.collection.sortBy);
+                }.bind(this),
+                value: this.collection.sortBy,
+                options: options,
+                onSelect: function (field) {
+                    this.toggleSort(field);
+                }.bind(this)
+            };
+        },
+
+        pageSizeMultipliers: [0.5, 1, 2, 5],
+
+        getPageSizeOptions: function () {
+            var base = this.collection.defaultMaxSize || this.collection.maxSize;
+
+            var options = this.pageSizeMultipliers.map(function (multiplier) {
+                return Math.max(1, Math.round(base * multiplier));
+            });
+
+            return options.filter(function (value, index) {
+                return options.indexOf(value) === index;
+            });
+        },
+
+        getPageSizeToolbarControl: function () {
+            var options = this.getPageSizeOptions().map(function (size) {
+                return {value: size, label: String(size)};
+            });
+
+            return {
+                key: 'pageSize',
+                iconClass: 'ph ph-rows',
+                iconTitle: this.translate('pageSize', 'labels'),
+                value: this.collection.maxSize,
+                options: options,
+                onSelect: function (size) {
+                    this.setPageSize(parseInt(size, 10));
+                }.bind(this)
+            };
+        },
+
+        setPageSize: function (size) {
+            if (this.collection.maxSize === size) {
+                return;
+            }
+
+            this.notify('Please wait...');
+            this.collection.maxSize = size;
+            this.collection.offset = 0;
+            this.getStorage().set('listPageSize', this.scope, size);
+            this.collection.fetch({
+                maxSize: size,
+                success: function () {
+                    this.notify(false);
+                    this.trigger('pagination-toolbar-update');
+                }.bind(this)
+            });
+        },
+
+        getToolbarControls: function () {
+            var controls = [];
+            var sortControl = this.getSortToolbarControl();
+            if (sortControl) {
+                controls.push(sortControl);
+            }
+            controls.push(this.getPageSizeToolbarControl());
+            return controls;
+        },
+
+        getPaginationToolbarProps: function () {
+            var maxSize = this.collection.maxSize || 1;
+            var totalPages = Math.max(Math.ceil(this.collection.total / maxSize), 1);
+            var currentPage = Math.floor((this.collection.offset + Math.max(this.collection.length, 1) - 1) / maxSize) + 1;
+            var showMoreVisible = !!this.showMore && (
+                this.collection.offset + this.collection.length + this.collection.lengthCorrection < this.collection.total
+                || this.collection.total === -1
+            );
+
+            return {
+                currentPage: currentPage,
+                totalPages: totalPages,
+                onPageChange: function (page) {
+                    this.notify('Please wait...');
+                    this.collection.offset = (page - 1) * maxSize;
+                    this.collection.fetch({
+                        maxSize: maxSize,
+                        success: function () {
+                            this.notify(false);
+                            this.trigger('pagination-toolbar-update');
+                        }.bind(this)
+                    });
+                }.bind(this),
+                showMoreVisible: showMoreVisible,
+                showMoreLabel: this.getShowMoreLabel(),
+                showMoreLoading: false,
+                onShowMore: function () {
+                    this.showMoreRecords();
+                }.bind(this),
+                controls: this.getToolbarControls()
+            };
+        },
+
+        renderTableShowMorePlaceholder: function () {
+            var container = this.$el.find('.table-show-more-container')[0];
+            if (!container) {
+                this.tableShowMorePlaceholder = null;
+                return;
+            }
+
+            var props = this.getPaginationToolbarProps();
+            this.tableShowMorePlaceholder = new Svelte.ShowMoreButton({
+                target: container,
+                props: {
+                    visible: props.showMoreVisible,
+                    label: props.showMoreLabel,
+                    loading: false,
+                    onClick: props.onShowMore
+                }
+            });
         },
 
         afterRenderStatusIcons(icons, model) {
@@ -2916,18 +3096,21 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             $list = $list || this.$el.find(this.listContainerEl);
 
             $showMore.children('a').addClass('disabled');
+            this.trigger('pagination-toolbar-update', { showMoreLoading: true });
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
 
             var final = function () {
                 $showMore.parent().append($showMore);
                 if (
-                    (collection.total > collection.length + collection.lengthCorrection || collection.total == -1)
+                    (collection.offset + collection.length + collection.lengthCorrection < collection.total || collection.total == -1)
                 ) {
                     $showMore.find('span.more-label').text(this.getShowMoreLabel());
                     $showMore.removeClass('hidden');
                 }
                 $showMore.children('a').removeClass('disabled');
+
+                this.trigger('pagination-toolbar-update');
 
                 if (this.allResultIsChecked) {
                     this.$el.find('input.record-checkbox').attr('disabled', 'disabled').prop('checked', true);

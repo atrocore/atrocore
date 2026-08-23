@@ -85,7 +85,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
         },
 
         setup: function () {
-            this.collection.maxSize = this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPage') || this.collection.maxSize;
+            this.collection.defaultMaxSize = this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPage') || this.collection.maxSize;
+            this.collection.maxSize = this.getStorage().get('listPageSize', this.scope) || this.collection.defaultMaxSize;
 
             this.collectionUrl = this.collection.url;
             this.collectionMaxSize = this.collection.maxSize;
@@ -130,6 +131,10 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
             this.listenTo(this, 'record-list-rendered', recordView => {
                 this.listenTo(recordView, `bookmarked-${this.scope}`, () => this.reloadBookmarks());
                 this.listenTo(recordView, `unbookmarked-${this.scope}`, () => this.reloadBookmarks());
+            });
+
+            this.listenToOnce(this, 'remove', () => {
+                this.destroyPaginationToolbar();
             });
         },
 
@@ -461,7 +466,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 searchManager: this.searchManager,
                 showSearch: !!this.searchPanel,
                 showFilter: this.shouldShowFilter(),
-                listInlineEditModeEnabled: this.listInlineEditModeEnabled
+                listInlineEditModeEnabled: this.listInlineEditModeEnabled,
+                pagination: 'bottom'
             };
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];
@@ -478,6 +484,11 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 }
 
                 this.renderListRecordActions(view);
+
+                this.listenTo(view, 'pagination-toolbar-update', (extraProps) => {
+                    this.updatePaginationToolbar(view, extraProps);
+                });
+                this.updatePaginationToolbar(view);
 
                 this.listenToOnce(view, 'after:render', function () {
                     if (!this.hasParentView()) {
@@ -512,6 +523,45 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                     view.render();
                 }
             });
+        },
+
+        updatePaginationToolbar: function (view, extraProps) {
+            if (!view || typeof view.hasPaginationToolbar !== 'function' || !view.hasPaginationToolbar()) {
+                this.destroyPaginationToolbar();
+                return;
+            }
+
+            var $container = this.$el.find('.list-pagination-container');
+            var container = $container[0];
+            if (!container) {
+                return;
+            }
+
+            $container.removeClass('hidden');
+
+            var props = Object.assign(view.getPaginationToolbarProps(), extraProps || {});
+
+            if (!this.sveltePaginationToolbar) {
+                this.sveltePaginationToolbar = new Svelte.PaginationToolbar({
+                    target: container,
+                    props: props
+                });
+                return;
+            }
+
+            this.sveltePaginationToolbar.$set(props);
+        },
+
+        destroyPaginationToolbar: function () {
+            this.$el.find('.list-pagination-container').addClass('hidden');
+
+            if (this.sveltePaginationToolbar) {
+                try {
+                    this.sveltePaginationToolbar.$destroy();
+                } catch (e) {
+                }
+                this.sveltePaginationToolbar = null;
+            }
         },
 
         updatePageTitle: function () {

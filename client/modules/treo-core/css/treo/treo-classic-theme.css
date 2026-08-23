@@ -10088,8 +10088,6 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
 }
 
 div.list-kanban {
-    margin-left: -10px;
-    margin-right: -10px;
     overflow-x: auto;
     flex: 1;
     display: flex;
@@ -10304,8 +10302,6 @@ table.table > thead th > div > a {
 
 #main main > .list-container > .list {
     scrollbar-width: none;
-    margin-left: -10px;
-    margin-right: -10px;
     display: grid;
 }
 
@@ -10332,11 +10328,6 @@ table.table > thead th > div > a {
 }
 
 @media screen and (min-width: 768px) {
-    div.list-kanban,
-    #main main > .list-container > .list {
-        margin-left: -20px;
-        margin-right: -20px;
-    }
 
     #main main > .list-container > .list > .table thead th {
         vertical-align: middle;
@@ -13639,10 +13630,6 @@ input#sn-checkbox-open-in-new-window {
     left: 0;
 }
 
-.show-more {
-    margin: 15px
-}
-
 .show-more > .btn-block .text-muted {
     color: #fff;
     padding: 0 0 0 6px
@@ -13668,10 +13655,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 #main main > .list-container {
-    display: flex;
-    flex-direction: column;
     flex: 1;
-    padding: 0 20px;
 }
 
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .list-group-panel {

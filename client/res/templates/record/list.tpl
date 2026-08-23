@@ -61,13 +61,10 @@
     </div>
     {{/if}}
     {{/unless}}
+    {{#if paginationEnabled}}
+    <div class="table-show-more-container"></div>
+    {{/if}}
 </div>
-
-{{#if bottomBar}}
-<div>
-{{#if paginationBottom}} {{{pagination}}} {{/if}}
-</div>
-{{/if}}
 
 {{else}}
     <div class="no-data-container">{{translate 'No Data'}}</div>

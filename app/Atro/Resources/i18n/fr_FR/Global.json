@@ -445,6 +445,7 @@
     "fullscreen": "Plein écran",
     "sort": "Trier",
     "itemsInRow": "Éléments de la ligne",
+    "pageSize": "Enregistrements par page",
     "copiedToClipboard": "Copié dans le presse-papiers",
     "addAttribute": "Ajouter un attribut",
     "filterPlaceHolder": "Choisir un champ / attribut",
