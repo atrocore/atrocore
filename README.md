@@ -10,8 +10,9 @@
 
 <p align="center"><b>AtroCore is an open-source Business Application Platform for managing complex business data, integrating systems, automating processes, and building flexible business applications.</b></p>
 
-Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile business application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
+Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile business application development with no or minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
 
+<br>
 
 ## What AtroCore Does
 
@@ -33,8 +34,11 @@ Configurable actions, workflows, and scheduled jobs let you model business logic
 
 Data model, user interface, permissions, and automation are configured in the admin panel rather than coded. Layouts adjust based on logic you define, record previews are customizable with HTML and CSS, and dashboards are personalized per user. When configuration is not enough, the module system and the API let developers extend the platform without forking it.
 
+<br>
 
 ## Who AtroCore Is For
+
+From mid-market companies to global enterprises, organizations choose AtroCore when their needs go beyond the limitations of standard software solutions and when flexibility, scalability, and seamless integration with existing software landscapes are essential.
 
 AtroCore fits organizations that need to:
 
@@ -48,15 +52,11 @@ AtroCore fits organizations that need to:
 - Build tailored business applications for requirements that standard software does not cover
 - Create a scalable foundation for future digital initiatives
 - Enable cross-departmental collaboration and transparency
+- Handle very large datasets datasets without loss of performance.
 
-Organizations choose AtroCore when their requirements exceed the limits of standard software, and when flexibility, scalability, and integration with an existing software landscape are decisive.
+In this [demo video](https://vimeo.com/1215540661) we demonstrate an instance with 50+ million products and 1+ billion attribute values (20 attributes per product).
 
-AtroCore handles very large datasets without loss of performance. In this [demo video](https://vimeo.com/1215540661) we demonstrate an instance with 50+ million products and 1+ billion attribute values (20 attributes per product).
-
-### Our Customers
-
-From mid market companies to global enterprises, organizations choose AtroCore when their needs go beyond the limitations of standard software solutions and when flexibility, scalability, and seamless integration with existing software landscapes are essential.
-
+<br>
 
 ## Solutions
 
@@ -81,17 +81,15 @@ Because the API covers all functionality and the data model is yours to define, 
 - Compliance and regulatory data management
 - Low-code platform for custom business applications
 
+<br>
 
-## Free Core, Free Modules and Premium Modules
+## Feature Overview
+
+### Modularity – Free Core, Free Modules and Premium Modules
 
 Every business, from small startups to large enterprises, runs on the same powerful, open-source core: AtroCore. The free core modules provide a comprehensive set of features, making the free version more than sufficient for the vast majority of users.
 
 As your requirements grow, you can extend the platform with paid Premium Modules that add specialized and enterprise-grade capabilities.
-
-For teams that prefer a fully managed environment, we also offer hosted SaaS plans.
-
-
-## Feature Overview
 
 ![Feature Overview](_assets/atrocore-feature-overview.png)
 
@@ -137,16 +135,33 @@ For teams that prefer a fully managed environment, we also offer hosted SaaS pla
 
 The full feature description is available [here](https://www.atrocore.com/en/atrocore).
 
-## Product Development Roadmap
+### Product Development Roadmap
 
 - Check out our [roadmap](https://community.atrocore.com/t/product-roadmap/237).
 
+<br>
 
-## Applications Built on AtroCore
+## Integrations
 
-The following full-fledged software products are already available on the AtroCore basis:
-* [AtroPIM (Product Information Management)](https://github.com/atrocore/atropim)
+With a REST API covering 100% of its functionality, AtroCore connects to external systems, sales channels, and marketplaces.
 
+Native integrations are available as Premium Modules in the following categories:
+
+| Category | Examples |
+| --- | --- |
+| ERP | SAP S/4HANA, SAP Business One, Odoo, Oracle Fusion, Microsoft Dynamics 365 Business Central, Acumatica, Infor, Oracle NetSuite, Xentral, Epicor, work4all |
+| E-commerce | Adobe Commerce (Magento 2), Shopware, Shopify, BigCommerce, Saleor, commercetools, SAP Commerce Cloud, Salesforce Commerce Cloud, PrestaShop, WooCommerce, Sylius, Vendure |
+| Marketplaces | Amazon, OTTO |
+| Multichannel and feed tools | Channable, ChannelPilot, Lengow, Feedonomics, Productsup, ChannelEngine, ChannelAdvisor |
+| DAM | Cloudinary, Bynder, Canto, CELUM |
+| CMS and DXP | Contentful, TYPO3, Strapi, Adobe Experience Manager, Drupal, Acquia, Optimizely, Sitecore, Sanity, Storyblok |
+| PLM and PDM | Autodesk Fusion Manage, Aras Innovator, SOLIDWORKS PDM, OpenBOM, Propel PLM, Autodesk Vault, Teamcenter, Windchill |
+
+Beyond this list, you can build a fully automated integration with any system that exposes a REST or GraphQL API using the free **Import: HTTP Requests** and **Export: HTTP Requests** modules.
+
+[Contact us](https://www.atrocore.com/contact) to discuss a specific system.
+
+<br>
 
 ## Architecture and Standards
 
@@ -172,28 +187,20 @@ AtroCore is built on open PHP standards rather than framework lock-in. Component
 
 The [Developer Guide](https://help.atrocore.com/developer-guide) covers setup, debugging, API work, and extending the system.
 
+<br>
 
+## Deployment
 
-## Integrations
+Every deployment model runs the same open-source core. The choice affects who operates the infrastructure, not which features you get, and you can move between models later.
 
-With a REST API covering 100% of its functionality, AtroCore connects to external systems, sales channels, and marketplaces.
+| Option | You get | You manage |
+| --- | --- | --- |
+| On-premise | Full control over infrastructure, data location, update schedule, and custom code. Runs on your own server or in your own cloud account. | Server, database, backups, monitoring, updates |
+| Hosted SaaS | A managed environment with infrastructure, backups, monitoring, and updates handled for you. | Your data and configuration |
 
-Native integrations are available as Premium Modules in the following categories:
+[Contact us](https://www.atrocore.com/contact) to discuss which model fits your requirements.
 
-| Category | Examples |
-| --- | --- |
-| ERP | SAP S/4HANA, SAP Business One, Odoo, Oracle Fusion, Microsoft Dynamics 365 Business Central, Acumatica, Infor, Oracle NetSuite, Xentral, Epicor, work4all |
-| E-commerce | Adobe Commerce (Magento 2), Shopware, Shopify, BigCommerce, Saleor, commercetools, SAP Commerce Cloud, Salesforce Commerce Cloud, PrestaShop, WooCommerce, Sylius, Vendure |
-| Marketplaces | Amazon, OTTO |
-| Multichannel and feed tools | Channable, ChannelPilot, Lengow, Feedonomics, Productsup, ChannelEngine, ChannelAdvisor |
-| DAM | Cloudinary, Bynder, Canto, CELUM |
-| CMS and DXP | Contentful, TYPO3, Strapi, Adobe Experience Manager, Drupal, Acquia, Optimizely, Sitecore, Sanity, Storyblok |
-| PLM and PDM | Autodesk Fusion Manage, Aras Innovator, SOLIDWORKS PDM, OpenBOM, Propel PLM, Autodesk Vault, Teamcenter, Windchill |
-
-Beyond this list, you can build a fully automated integration with any system that exposes a REST or GraphQL API using the free **Import: HTTP Requests** and **Export: HTTP Requests** modules.
-
-[Contact us](https://www.atrocore.com/contact) to discuss a specific system.
-
+<br><br>
 
 ## Why Developers Choose AtroCore?
 
@@ -212,19 +219,7 @@ Beyond this list, you can build a fully automated integration with any system th
 * Suitable for building custom business applications, data management solutions, and integration platforms
 * Scalable architecture for projects ranging from small implementations to enterprise deployments
 
-## System Requirements
-
-- Linux-based **root or managed server** (recommended: Ubuntu LTS). 
-- **Minimum Ressources:**
-  - 2 vCPU
-  - 4 GB RAM
-  - 80 GB SSD Storage
-- **Software**:
-  - Apache Web Server or Nginx
-  - PHP 8.4 - 8.5.
-  - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ or MariaDB 5.5+.
-
-> AtroCore and AtroPIM do not run on standard shared hosting because of their technical requirements and resource needs. Managed server hosting can work, but each provider and configuration should be evaluated individually.
+<br>
 
 ## Installation (Getting Started)
 
@@ -239,6 +234,24 @@ If you want to test AtroCore without PIM, simply uninstall the PIM module after 
 
 > We recommend to use Docker Image to play with the system, and standard installation for production environment.
 
+<br>
+
+## System Requirements
+
+- Linux-based **root or managed server** (recommended: Ubuntu LTS). 
+- **Minimum Ressources:**
+  - 2 vCPU
+  - 4 GB RAM
+  - 80 GB SSD Storage
+- **Software**:
+  - Apache Web Server or Nginx
+  - PHP 8.4 - 8.5.
+  - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ or MariaDB 5.5+.
+
+> AtroCore and AtroPIM do not run on standard shared hosting because of their technical requirements and resource needs. Managed server hosting can work, but each provider and configuration should be evaluated individually.
+
+<br>
+
 ## Screenshots
 |                                                                                          |                                                                                          |
 | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -247,6 +260,7 @@ If you want to test AtroCore without PIM, simply uninstall the PIM module after 
 | [![Product Details 1](_assets/product-details1.png)](_assets/product-details1.png)       | [![Product Details 2](_assets/product-details2.png)](_assets/product-details2.png)       |
 | [![Layout Management 1](_assets/layout-management1.png)](_assets/layout-management1.png) | [![Layout Management 2](_assets/layout-management2.png)](_assets/layout-management2.png) |
 
+<br>
 
 ## Public Demo Instance
 
@@ -254,6 +268,7 @@ If you want to test AtroCore without PIM, simply uninstall the PIM module after 
 - Login: admin
 - Password: admin
 
+<br>
 
 ## Contributing
 
@@ -261,18 +276,21 @@ If you want to test AtroCore without PIM, simply uninstall the PIM module after 
 - **Fix bugs:** please create a pull request in the affected repository including a step by step description to reproduce the problem.
 - **Contribute features:** You are encouraged to create new features. Please contact us before you start.
 
+<br>
 
 ## Localization
 
 Would you like to help us translate UIs into your language, or improve existing translations?
 - https://translate.atrocore.com/
 
+<br>
 
 ## Documentation
 
 - Please visit our Help Center (Documentation) - https://help.atrocore.com/
 - Developer Documentation: https://help.atrocore.com/latest/developer-guide
 
+<br>
 
 ## Other Resources
 
@@ -281,6 +299,7 @@ Would you like to help us translate UIs into your language, or improve existing 
 - Please visit our Community - https://community.atrocore.com (use github account to login)
 - Сontact us - https://www.atrocore.com/contact
 
+<br>
 
 ## Help Us Grow
 
@@ -290,6 +309,7 @@ If you find AtroCore useful:
 - 🗣️ Share it with your network
 - 🛠️ Contribute to the project
 
+<br>
 
 ## License
 
