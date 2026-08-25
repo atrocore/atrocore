@@ -6485,7 +6485,7 @@ button.close {
     padding-bottom: 20px;
 }
 
-.modal-body > div:not(.record-container):not(.edit-container):not(.list-container) {
+.modal-body > div:not(.record-container):not(.edit-container):not(.list-container):not(.list-pagination-container) {
     padding: 0 20px;
 }
 
@@ -15300,6 +15300,22 @@ td[data-name="draggableIcon"] {
 
 .full-page-modal .modal-body {
     padding: 0;
+}
+
+.dialog-select-record .modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-select-record .modal-body > .list-container {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
+}
+
+.dialog-select-record .modal-body > .list-pagination-container {
+    flex-shrink: 0;
 }
 
 .full-page-modal .modal-content {
