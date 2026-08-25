@@ -51,20 +51,10 @@
             {{/if}}
         </tbody>
     </table>
-    {{#unless paginationEnabled}}
-    {{#if showMoreEnabled}}
-    <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
-        <a type="button" href="javascript:" class="btn btn-default btn-block" data-action="showMore" {{#if showCount}}title="{{translate 'Total'}}: {{collection.total}}"{{/if}}>
-            <span class="more-label">{{countLabel}}</span>
-        </a>
-        <img class="preloader" style="display:none;height:12px;margin-top: 5px" src="client/img/atro-loader.svg" />
-    </div>
-    {{/if}}
-    {{/unless}}
-    {{#if paginationEnabled}}
-    <div class="table-show-more-container"></div>
-    {{/if}}
 </div>
+{{#if showMoreEnabled}}
+<div class="table-show-more-container"></div>
+{{/if}}
 
 {{else}}
     <div class="no-data-container">{{translate 'No Data'}}</div>

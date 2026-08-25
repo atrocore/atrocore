@@ -10020,6 +10020,11 @@ label {
     padding: 0 20px;
 }
 
+.table-show-more-container {
+    position: sticky;
+    left: 0;
+}
+
 .page-header {
     margin: 10px 0;
     border-bottom: 0;
