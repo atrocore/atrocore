@@ -14,19 +14,9 @@ Espo.define('views/last-viewed/panel', 'view', function (Dep) {
 
         loadingGroups: false,
 
+        showMoreLoading: false,
+
         groups: [],
-
-        events: {
-            'click [data-action="showMore"]': function (e) {
-                $(e.currentTarget).addClass('disabled');
-                $(e.currentTarget).parent().find('img').css('display', 'block');
-
-                this.fetchCollectionGroups(() => {
-                    this.reRender()
-                }, this.collection.length)
-
-            }
-        },
 
         setup() {
             this.groups = [];
@@ -45,18 +35,27 @@ Espo.define('views/last-viewed/panel', 'view', function (Dep) {
                     })
                 })
             });
+
+            this.listenToOnce(this, 'remove', () => {
+                if (this.showMorePlaceholder) {
+                    try {
+                        this.showMorePlaceholder.$destroy();
+                    } catch (e) {
+                    }
+                    this.showMorePlaceholder = null;
+                }
+            });
         },
 
         data() {
             return {
                 groups: this.groups,
-                loadingGroups: this.loadingGroups,
-                showMoreActive: this.canLoadMore()
+                loadingGroups: this.loadingGroups
             };
         },
 
         canLoadMore() {
-            return this.collection.length && (this.collection.length < this.collection.total);
+            return !!this.collection && this.collection.length && (this.collection.length < this.collection.total);
         },
 
         fetchCollectionGroups(callback, offset = 0) {
@@ -127,6 +126,33 @@ Espo.define('views/last-viewed/panel', 'view', function (Dep) {
         afterRender() {
             Dep.prototype.afterRender.call(this);
             this.buildGroups();
+            this.renderShowMorePlaceholder();
+        },
+
+        renderShowMorePlaceholder() {
+            var container = this.$el.find('.table-show-more-container')[0];
+            if (!container) {
+                this.showMorePlaceholder = null;
+                return;
+            }
+
+            this.showMorePlaceholder = new Svelte.ShowMoreButton({
+                target: container,
+                props: {
+                    visible: this.canLoadMore(),
+                    label: this.getLanguage().translate('Show more'),
+                    loading: this.showMoreLoading,
+                    onClick: () => {
+                        this.showMoreLoading = true;
+                        this.showMorePlaceholder.$set({loading: true});
+
+                        this.fetchCollectionGroups(() => {
+                            this.showMoreLoading = false;
+                            this.reRender();
+                        }, this.collection.length);
+                    }
+                }
+            });
         },
 
         buildGroups() {
