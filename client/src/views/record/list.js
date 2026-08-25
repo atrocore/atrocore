@@ -1477,6 +1477,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.listenTo(this.collection, 'sync', () => {
                 this.trigger('update-counters');
             });
+            this.listenTo(this.collection, 'request', () => {
+                this.trigger('pagination-toolbar-update', {showMoreLoading: true});
+            });
+            this.listenTo(this.collection, 'sync error', () => {
+                this.trigger('pagination-toolbar-update', {showMoreLoading: false});
+            });
             this.listenTo(this.collection, 'update-total', () => {
                 if (this.collection.offset + this.collection.length < this.collection.total || this.collection.total === -1) {
                     this.$el.find('.show-more').removeClass('hidden')
@@ -3091,6 +3097,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         showMoreRecords: function (collection, $list, $showMore, callback) {
             collection = collection || this.collection;
+
+            if (collection.lastXhr && collection.lastXhr.readyState < 4) {
+                return;
+            }
 
             $showMore = $showMore || this.$el.find('.show-more');
             $list = $list || this.$el.find(this.listContainerEl);

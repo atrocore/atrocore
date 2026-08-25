@@ -394,6 +394,9 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }, view => {
                         view.render();
                         this.jmInterval = window.setInterval(() => {
+                            if (collection.lastXhr && collection.lastXhr.readyState < 4) {
+                                return;
+                            }
                             collection.fetch();
                         }, 2000)
                     });
