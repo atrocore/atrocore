@@ -523,6 +523,8 @@
     "itemsInRow": "Items in row",
     "pageSize": "Records per page",
     "sort": "Sort",
+    "toggleNavigationSidebar": "Toggle navigation sidebar",
+    "toggleContextSidebar": "Toggle context panel",
     "recalculateScript": "Recalculate Script",
     "setDefaultValue": "Set default value",
     "code": "Code",

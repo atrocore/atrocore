@@ -476,6 +476,8 @@
     "sort": "Сортування",
     "itemsInRow": "Елементів у ряд",
     "pageSize": "Записів на сторінку",
+    "toggleNavigationSidebar": "Перемкнути панель навігації",
+    "toggleContextSidebar": "Перемкнути контекстну панель",
     "recalculateScript": "Перерахувати скрипт",
     "setDefaultValue": "Встановити значення за замовчуванням",
     "code": "Код",

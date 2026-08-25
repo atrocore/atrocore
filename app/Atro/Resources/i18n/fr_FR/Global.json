@@ -446,6 +446,8 @@
     "sort": "Trier",
     "itemsInRow": "Éléments de la ligne",
     "pageSize": "Enregistrements par page",
+    "toggleNavigationSidebar": "Basculer le panneau de navigation",
+    "toggleContextSidebar": "Basculer le panneau contextuel",
     "copiedToClipboard": "Copié dans le presse-papiers",
     "addAttribute": "Ajouter un attribut",
     "filterPlaceHolder": "Choisir un champ / attribut",

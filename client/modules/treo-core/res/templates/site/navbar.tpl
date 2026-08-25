@@ -1,5 +1,8 @@
 <div class="navbar navbar-inverse" role="navigation" data-orientation="{{#if navbarIsVertical}}vertical{{else}}horizontal{{/if}}">
     <div class="navbar-header">
+        <button type="button" class="sidebar-toggle-btn visible-xs" data-action="toggleLeftSidebar" title="{{translate 'toggleNavigationSidebar'}}">
+            <i class="ph ph-caret-right"></i>
+        </button>
         <button type="button" class="navbar-toggle">
             <i class="ph ph-list"></i>
         </button>
@@ -36,6 +39,9 @@
                 </ul>
             </div>
         </div>
+        <button type="button" class="sidebar-toggle-btn visible-xs pull-left" data-action="toggleRightSidebar" title="{{translate 'toggleContextSidebar'}}">
+            <i class="ph ph-caret-left"></i>
+        </button>
     </div>
 
     <div class="menu not-collapsed">
