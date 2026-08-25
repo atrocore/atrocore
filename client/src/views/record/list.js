@@ -3053,9 +3053,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 ? currentPage
                 : Math.max(Math.ceil(total / maxSize), currentPage);
             var showMoreVisible = !!this.showMore && (
-                this.collection.total === null
-                || this.collection.offset + this.collection.length + this.collection.lengthCorrection < this.collection.total
-                || this.collection.total === -1
+                total == null
+                || this.collection.offset + this.collection.length + this.collection.lengthCorrection < total
+                || total === -1
             );
 
             return {
