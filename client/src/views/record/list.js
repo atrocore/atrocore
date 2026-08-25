@@ -3041,10 +3041,18 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         getPaginationToolbarProps: function () {
             var maxSize = this.collection.maxSize || 1;
-            var totalPages = Math.max(Math.ceil(this.collection.total / maxSize), 1);
             var currentPage = Math.floor((this.collection.offset + Math.max(this.collection.length, 1) - 1) / maxSize) + 1;
+
+            if (this.collection.total !== null) {
+                this.lastKnownTotal = this.collection.total;
+            }
+            var total = this.collection.total !== null ? this.collection.total : this.lastKnownTotal;
+            var totalPages = total == null
+                ? currentPage
+                : Math.max(Math.ceil(total / maxSize), currentPage);
             var showMoreVisible = !!this.showMore && (
-                this.collection.offset + this.collection.length + this.collection.lengthCorrection < this.collection.total
+                this.collection.total === null
+                || this.collection.offset + this.collection.length + this.collection.lengthCorrection < this.collection.total
                 || this.collection.total === -1
             );
 
