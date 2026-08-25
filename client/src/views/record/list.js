@@ -1630,38 +1630,40 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         getCounters: function () {
             const groups = [];
+            const counters = [];
+
+            if (this.checkedList?.length > 0) {
+                counters.push({
+                    name: 'selected',
+                    label: this.translate('Selected'),
+                    value: this.checkedList.length,
+                });
+            } else if (this.allResultIsChecked) {
+                counters.push({
+                    name: 'selected',
+                    label: this.translate('Selected'),
+                    value: this.collection.total,
+                });
+            }
 
             if (this.displayTotalCount) {
-                groups.push([
-                    {
+                if (this.collection.length > this.collection.maxSize) {
+                    counters.push({
                         name: 'shown',
                         label: this.translate('Shown'),
                         value: this.collection.length,
-                    },
-                    {
-                        name: 'total',
-                        label: this.translate('Total'),
-                        value: this.collection.total,
-                    }
-                ]);
+                    });
+                }
+
+                counters.push({
+                    name: 'total',
+                    label: this.translate('Total'),
+                    value: this.collection.total,
+                });
             }
 
-            if (this.checkedList?.length > 0) {
-                groups.unshift([
-                    {
-                        name: 'selected',
-                        label: this.translate('Selected'),
-                        value: this.checkedList.length,
-                    }
-                ]);
-            } else if (this.allResultIsChecked) {
-                groups.unshift([
-                    {
-                        name: 'selected',
-                        label: this.translate('Selected'),
-                        value: this.collection.total,
-                    }
-                ]);
+            if (counters.length) {
+                groups.push(counters);
             }
 
             return groups;
