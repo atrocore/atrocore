@@ -32,14 +32,15 @@ class Relation extends Base
 
         foreach ($this->getMetadata()->get("entityDefs.$this->entityName.fields") ?? [] as $field => $fieldDefs) {
             if (!empty($fieldDefs['relationField'])) {
-                $alias = IdGenerator::unsortableId();
-                $relEntity = $this->getMetadata()->get("entityDefs.$this->entityName.links.$field.entity");
-                $relTable = $this->getEntityManager()->getMapper()->toDb($relEntity);
+                $alias      = IdGenerator::unsortableId();
+                $relEntity  = $this->getMetadata()->get("entityDefs.$this->entityName.links.$field.entity");
+                $relTable   = $this->getEntityManager()->getMapper()->toDb($relEntity);
+                $columnName = $this->getMapper()->toDb($field . 'Id');
 
                 $res = $this->getDbal()->createQueryBuilder()
                     ->select('t.id')
                     ->from($this->getDbal()->quoteIdentifier($tableName), 't')
-                    ->leftJoin('t', $this->getDbal()->quoteIdentifier($relTable), $alias, "$alias.id=t.{$relTable}_id")
+                    ->leftJoin('t', $this->getDbal()->quoteIdentifier($relTable), $alias, "$alias.id=t.{$columnName}")
                     ->where("$alias.id IS NULL")
                     ->fetchOne();
 
@@ -58,15 +59,16 @@ class Relation extends Base
 
         foreach ($this->getMetadata()->get("entityDefs.$this->entityName.fields") ?? [] as $field => $fieldDefs) {
             if (!empty($fieldDefs['relationField'])) {
-                $alias = IdGenerator::unsortableId();
+                $alias     = IdGenerator::unsortableId();
                 $relEntity = $this->getMetadata()->get("entityDefs.$this->entityName.links.$field.entity");
-                $relTable = $this->getEntityManager()->getMapper()->toDb($relEntity);
+                $relTable  = $this->getEntityManager()->getMapper()->toDb($relEntity);
+                $columnName = $this->getMapper()->toDb($field . 'Id');
 
                 while (true) {
                     $ids = $this->getDbal()->createQueryBuilder()
                         ->select('t.id')
                         ->from($this->getDbal()->quoteIdentifier($tableName), 't')
-                        ->leftJoin('t', $this->getDbal()->quoteIdentifier($relTable), $alias, "$alias.id=t.{$relTable}_id")
+                        ->leftJoin('t', $this->getDbal()->quoteIdentifier($relTable), $alias, "$alias.id=t.{$columnName}")
                         ->where("$alias.id IS NULL")
                         ->setFirstResult(0)
                         ->setMaxResults(10000)
@@ -99,13 +101,13 @@ class Relation extends Base
 
     public function deleteAlreadyDeleted(Entity $entity): void
     {
-        $uniqueColumns = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes', 'unique_relation']);
+        $uniqueColumns = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityName(), 'uniqueIndexes', 'unique_relation']);
         if (empty($uniqueColumns)) {
             throw new \Error('No unique column found.');
         }
 
         $qb = $this->getEntityManager()->getDbal()->createQueryBuilder();
-        $qb->delete($this->getEntityManager()->getDbal()->quoteIdentifier($this->getMapper()->toDb($entity->getEntityType())));
+        $qb->delete($this->getEntityManager()->getDbal()->quoteIdentifier($this->getMapper()->toDb($entity->getEntityName())));
         $qb->where('deleted = :true');
         $qb->setParameter("true", true, ParameterType::BOOLEAN);
         foreach ($uniqueColumns as $column) {
@@ -297,7 +299,7 @@ class Relation extends Base
 
                 if ($entity->isAttributeChanged('hierarchySortOrder') && $entity->get('hierarchySortOrder') !== null) {
                     $hierarchicalEntity = $this->getHierarchicalEntity();
-                    $entityTableName = $this->getEntityManager()->getMapper()->toDb($hierarchicalEntity);
+                    $entityTableName    = $this->getEntityManager()->getMapper()->toDb($hierarchicalEntity);
                     $this->getDbal()->createQueryBuilder()
                         ->update($entityTableName)
                         ->set('sort_order', ':sortOrder')
@@ -553,7 +555,7 @@ class Relation extends Base
             return;
         }
 
-        $linkDefs = $linkDefs1['entity'] === 'File' ? $linkDefs2 : $linkDefs1;
+        $linkDefs  = $linkDefs1['entity'] === 'File' ? $linkDefs2 : $linkDefs1;
         $fileField = $linkDefs1['entity'] === 'File' ? $relationFields[0] : $relationFields[0];
 
         foreach ($this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'links']) as $link => $defs) {
