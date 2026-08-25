@@ -74,6 +74,8 @@ class File extends Base
                 if (!$this->getStorage($entity)->reupload($entity)) {
                     throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
                 }
+
+                $this->addDimensions($entity);
             } else {
                 if ($entity->isAttributeChanged('name') || $entity->isAttributeChanged('folderId')) {
                     $this->updateItem($entity);
