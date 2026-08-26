@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
+use Atro\ActionTypes\AbstractBulkAction;
 use Atro\Core\ActionManager;
 use Atro\Entities\Job;
 
@@ -37,6 +38,32 @@ class ActionHandler extends AbstractJob implements JobInterface
             return;
         }
 
+        // a chunk of a shared bulk execution (dispatched by an AbstractBulkAction) - reuse the
+        // one ActionExecution/its logs instead of creating a fresh execution per id
+        if (!empty($data['actionExecutionId'])) {
+            $execution = $this->getEntityManager()->getRepository('ActionExecution')->get($data['actionExecutionId']);
+            $actionType = $this->getActionType($action->get('type'));
+
+            if (!empty($execution) && $actionType instanceof AbstractBulkAction) {
+                $repository = $this->getEntityManager()->getRepository($data['entityType'] ?? $action->get('searchEntity'));
+
+                foreach ($data['ids'] as $id) {
+                    $entity = $repository->get($id);
+                    if (empty($entity)) {
+                        continue;
+                    }
+
+                    try {
+                        $actionType->runForEntity($entity, $execution);
+                    } catch (\Throwable $e) {
+                        $GLOBALS['log']->error("Mass {$action->get('type')} Action failed for '$id': " . $e->getMessage());
+                    }
+                }
+
+                return;
+            }
+        }
+
         foreach ($data['ids'] as $id) {
             $input = new \stdClass();
             $input->executedViaScheduledJob = true;
@@ -51,6 +78,13 @@ class ActionHandler extends AbstractJob implements JobInterface
                 $GLOBALS['log']->error("Mass $typeName Action failed: " . $e->getMessage());
             }
         }
+    }
+
+    protected function getActionType(string $type)
+    {
+        $className = $this->getMetadata()->get(['action', 'types', $type]);
+
+        return empty($className) ? null : $this->getContainer()->get($className);
     }
 
     protected function getActionManager(): ActionManager
