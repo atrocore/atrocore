@@ -279,7 +279,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.dragableSortField = dragDropDefs.sortField;
                     if (this.dragableSortField) {
                         this.collection.sortBy = this.dragableSortField;
+                        this.collection.defaultSortBy = this.dragableSortField;
                     }
+                    this.dragableSortAsc = 'asc' in dragDropDefs ? !!dragDropDefs.asc : this.collection.defaultAsc;
                     if (dragDropDefs.orderSaveUrl) {
                         this.listRowsOrderSaveUrl = this.listRowsOrderSaveUrl || dragDropDefs.orderSaveUrl;
                     }
@@ -296,6 +298,14 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             if (field === this.collection.sortBy && this.collection.asc) {
                 asc = false;
             }
+            this.applySort(field, asc);
+        },
+
+        resetSort: function () {
+            this.applySort(this.collection.defaultSortBy, this.collection.defaultAsc);
+        },
+
+        applySort: function (field, asc) {
             this.notify('Please wait...');
             this.collection.once('sync', function () {
                 this.notify(false);
@@ -1729,6 +1739,19 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
                 });
 
+                if (this.dragableSortField) {
+                    var currentSortInfo = this.getSortFieldInfo(this.collection.sortBy);
+                    var dragSortInfo = this.getSortFieldInfo(this.dragableSortField);
+                    if (
+                        !currentSortInfo || !dragSortInfo
+                        || currentSortInfo.scope !== dragSortInfo.scope
+                        || currentSortInfo.field !== dragSortInfo.field
+                        || !!this.collection.asc !== !!this.dragableSortAsc
+                    ) {
+                        allowed = false;
+                    }
+                }
+
                 if (!allowed) {
                     $("td[data-name='draggableIcon'] span").remove();
                 }
@@ -2963,7 +2986,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 if (!fieldDefs[field].disabled
                     && !fieldDefs[field].layoutListDisabled
                     && !this.getMetadata().get(['fields', fieldDefs[field].type, 'notSortable'])
-                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[field].type)
+                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime', 'bool'].includes(fieldDefs[field].type)
                 ) {
                     fields.push(field);
                 }
@@ -2976,14 +2999,109 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             return fields;
         },
 
-        getSortToolbarControl: function () {
-            var fields = this.getSortFieldsList();
-            if (!fields.length) {
+        getRelationSortFieldsList: function () {
+            if (!this.relationScope) {
+                return [];
+            }
+
+            var fields = [];
+            var fieldDefs = this.getMetadata().get(['entityDefs', this.relationScope, 'fields']);
+            for (var field in fieldDefs) {
+                if (field !== 'id'
+                    && !fieldDefs[field].disabled
+                    && !fieldDefs[field].relationField
+                    && !fieldDefs[field].layoutListDisabled
+                    && !this.getMetadata().get(['fields', fieldDefs[field].type, 'notSortable'])
+                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime', 'bool'].includes(fieldDefs[field].type)
+                ) {
+                    fields.push(field);
+                }
+            }
+
+            fields.sort(function (v1, v2) {
+                return this.translate(v1, 'fields', this.relationScope).localeCompare(this.translate(v2, 'fields', this.relationScope));
+            }.bind(this));
+
+            return fields;
+        },
+
+        getRelationSortAlias: function () {
+            if (!this.relationScope) {
                 return null;
             }
 
-            var options = fields.map(function (field) {
-                return {value: field, label: this.translate(field, 'fields', this.scope)};
+            return this.relationScope.replace(/(?!^)[A-Z]/g, '_$&').toLowerCase() + '_mm';
+        },
+
+        getSortFieldInfo: function (sortByValue) {
+            if (!sortByValue) {
+                return null;
+            }
+
+            var relationAlias = this.getRelationSortAlias();
+            if (relationAlias && sortByValue.indexOf(relationAlias + '.') === 0) {
+                return {scope: this.relationScope, field: sortByValue.slice(relationAlias.length + 1)};
+            }
+
+            if (this.isRelationField(sortByValue)) {
+                return {scope: this.relationScope, field: sortByValue.split('__')[1]};
+            }
+
+            if (
+                this.relationScope
+                && !this.getMetadata().get(['entityDefs', this.scope, 'fields', sortByValue])
+                && this.getMetadata().get(['entityDefs', this.relationScope, 'fields', sortByValue])
+            ) {
+                return {scope: this.relationScope, field: sortByValue};
+            }
+
+            return {scope: this.scope, field: sortByValue};
+        },
+
+        getSortToolbarControl: function () {
+            var fields = this.getSortFieldsList();
+            var relationFields = this.getRelationSortFieldsList();
+            if (!fields.length && !relationFields.length) {
+                return null;
+            }
+
+            var options = [];
+            var defaultFieldInfo = this.collection.defaultSortBy ? this.getSortFieldInfo(this.collection.defaultSortBy) : null;
+
+            if (defaultFieldInfo) {
+                var defaultFieldLabel = this.translate(defaultFieldInfo.field, 'fields', defaultFieldInfo.scope);
+                var defaultArrowIcon = this.collection.defaultAsc ? 'ph-arrow-up' : 'ph-arrow-down';
+                options.push({
+                    value: '__default__',
+                    group: this.getLanguage().translate('Default'),
+                    label: defaultFieldLabel + '<i class="ph ' + defaultArrowIcon + '" style="color: #777; margin-left: 6px; font-size: 14px;"></i>',
+                    disabled: this.collection.sortBy === this.collection.defaultSortBy && this.collection.asc === this.collection.defaultAsc,
+                    onClick: function () {
+                        this.resetSort();
+                    }.bind(this)
+                });
+            }
+
+            var fieldsGroupLabel = this.getLanguage().translate('Fields');
+            fields.forEach(function (field) {
+                options.push({
+                    value: field,
+                    label: this.translate(field, 'fields', this.scope),
+                    hidden: !!defaultFieldInfo && defaultFieldInfo.scope === this.scope && defaultFieldInfo.field === field,
+                    group: fieldsGroupLabel
+                });
+            }, this);
+
+            var relationAlias = this.getRelationSortAlias();
+            var relationFieldsGroupLabel = this.getLanguage().translate('Relation Fields');
+            relationFields.forEach(function (field) {
+                var value = relationAlias + '.' + field;
+                options.push({
+                    value: value,
+                    label: this.translate(field, 'fields', this.relationScope),
+                    hidden: !!defaultFieldInfo && defaultFieldInfo.scope === this.relationScope && defaultFieldInfo.field === field,
+                    group: relationFieldsGroupLabel
+                });
             }, this);
 
             return {
