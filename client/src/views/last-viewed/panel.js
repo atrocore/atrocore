@@ -140,7 +140,7 @@ Espo.define('views/last-viewed/panel', 'view', function (Dep) {
                 target: container,
                 props: {
                     visible: this.canLoadMore(),
-                    label: this.getLanguage().translate('Show more'),
+                    label: this.getLanguage().translate('Load next'),
                     loading: this.showMoreLoading,
                     onClick: () => {
                         this.showMoreLoading = true;

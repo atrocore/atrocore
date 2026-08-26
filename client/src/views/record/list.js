@@ -451,7 +451,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getShowMoreLabel() {
-            let label = this.getLanguage().translate('Show more');
+            let label = this.getLanguage().translate('Load next');
 
             if (this.showCount && this.collection.total > 0) {
                 let limit = this.collection.maxSize;
@@ -461,7 +461,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     add = limit;
                 }
 
-                label = this.getLanguage().translate('Show %s more').replace('%s', add);
+                label = this.getLanguage().translate('Load next %s').replace('%s', add);
             }
 
             return label;
