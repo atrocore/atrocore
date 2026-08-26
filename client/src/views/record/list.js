@@ -1679,6 +1679,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getMassActions: function () {
+            if (!this.checkboxes) {
+                return [];
+            }
+
             if (this.allResultIsChecked) {
                 return (this.massActionList || []).filter(item => ~this.checkAllResultMassActionList.indexOf(item));
             }
