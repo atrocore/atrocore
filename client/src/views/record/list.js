@@ -1483,6 +1483,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.listenTo(this.collection, 'sync error', () => {
                 this.trigger('pagination-toolbar-update', {showMoreLoading: false});
             });
+            this.listenTo(this, 'check select-all-results unselect-all-results mass-actions-updated', () => {
+                this.trigger('pagination-toolbar-update');
+            });
             this.listenTo(this.collection, 'update-total', () => {
                 if (this.collection.offset + this.collection.length < this.collection.total || this.collection.total === -1) {
                     this.$el.find('.show-more').removeClass('hidden')
@@ -3057,6 +3060,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 || this.collection.offset + this.collection.length + this.collection.lengthCorrection < total
                 || total === -1
             );
+            var showMoreCount = total == null ? maxSize : Math.max(total - (this.collection.offset + this.collection.length), 0);
+            if (maxSize < showMoreCount) {
+                showMoreCount = maxSize;
+            }
 
             return {
                 currentPage: currentPage,
@@ -3075,10 +3082,22 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 showMoreVisible: showMoreVisible,
                 showMoreLabel: this.getShowMoreLabel(),
                 showMoreLoading: false,
-                onShowMore: function () {
+                onShowMore: showMoreVisible ? function () {
                     this.showMoreRecords();
+                }.bind(this) : null,
+                showMoreCount: showMoreCount,
+                controls: this.getToolbarControls(),
+                scope: this.scope,
+                massActions: this.getMassActions(),
+                selected: this.allResultIsChecked ? true : this.checkedList,
+                hasSelectAllCheckbox: !!this.checkboxes && this.isAllowedSelectAllResult(),
+                isRelationship: !!this.options.panelView,
+                executeMassAction: function (action, data) {
+                    this.executeMassAction(action, data);
                 }.bind(this),
-                controls: this.getToolbarControls()
+                handleSelectAll: function (e) {
+                    this.handleSelectAll(e);
+                }.bind(this)
             };
         },
 

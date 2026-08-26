@@ -452,7 +452,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 return;
             }
 
-            const props = Object.assign(view.getPaginationToolbarProps(), extraProps || {});
+            const props = Object.assign(view.getPaginationToolbarProps(), extraProps || {}, {onShowMore: null});
             const key = 'SveltePaginationToolbar' + this.dialog.id;
 
             if (!window[key]) {

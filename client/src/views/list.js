@@ -539,7 +539,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
             $container.removeClass('hidden');
 
-            var props = Object.assign(view.getPaginationToolbarProps(), extraProps || {});
+            var props = Object.assign(view.getPaginationToolbarProps(), extraProps || {}, {onShowMore: null});
 
             if (!this.sveltePaginationToolbar) {
                 this.sveltePaginationToolbar = new Svelte.PaginationToolbar({
