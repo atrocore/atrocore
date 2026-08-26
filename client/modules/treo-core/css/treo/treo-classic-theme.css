@@ -9915,6 +9915,14 @@ body > #header .navbar-brand span.home-icon {
     overflow-x: auto;
 }
 
+.bottom > .panel > .panel-body:has(> .relationship-container) {
+    overflow-x: visible;
+}
+
+.bottom > .panel > .panel-body > .relationship-container {
+    overflow-x: auto;
+}
+
 .bottom > .panel:not(.panel-stream) > .panel-body {
     padding-left: 0;
     padding-right: 0;
