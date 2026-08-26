@@ -132,10 +132,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 this.listenTo(recordView, `bookmarked-${this.scope}`, () => this.reloadBookmarks());
                 this.listenTo(recordView, `unbookmarked-${this.scope}`, () => this.reloadBookmarks());
             });
-
-            this.listenToOnce(this, 'remove', () => {
-                this.destroyPaginationToolbar();
-            });
         },
 
         actionUniversalAction(data, e) {
@@ -485,10 +481,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
                 this.renderListRecordActions(view);
 
-                this.listenTo(view, 'pagination-toolbar-update', (extraProps) => {
-                    this.updatePaginationToolbar(view, extraProps);
-                });
-                this.updatePaginationToolbar(view);
+                view.mountPaginationToolbar(() => this.$el.find('.list-pagination-container')[0], {onShowMore: null});
 
                 this.listenToOnce(view, 'after:render', function () {
                     if (!this.hasParentView()) {
@@ -523,45 +516,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                     view.render();
                 }
             });
-        },
-
-        updatePaginationToolbar: function (view, extraProps) {
-            if (!view || typeof view.hasPaginationToolbar !== 'function' || !view.hasPaginationToolbar()) {
-                this.destroyPaginationToolbar();
-                return;
-            }
-
-            var $container = this.$el.find('.list-pagination-container');
-            var container = $container[0];
-            if (!container) {
-                return;
-            }
-
-            $container.removeClass('hidden');
-
-            var props = Object.assign(view.getPaginationToolbarProps(), extraProps || {}, {onShowMore: null});
-
-            if (!this.sveltePaginationToolbar) {
-                this.sveltePaginationToolbar = new Svelte.PaginationToolbar({
-                    target: container,
-                    props: props
-                });
-                return;
-            }
-
-            this.sveltePaginationToolbar.$set(props);
-        },
-
-        destroyPaginationToolbar: function () {
-            this.$el.find('.list-pagination-container').addClass('hidden');
-
-            if (this.sveltePaginationToolbar) {
-                try {
-                    this.sveltePaginationToolbar.$destroy();
-                } catch (e) {
-                }
-                this.sveltePaginationToolbar = null;
-            }
         },
 
         updatePageTitle: function () {

@@ -1504,16 +1504,17 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             });
 
             this.listenTo(this, 'pagination-toolbar-update', function (extraProps) {
-                if (!this.tableShowMorePlaceholder) {
-                    return;
+                if (this.tableShowMorePlaceholder) {
+                    var props = this.getPaginationToolbarProps();
+                    this.tableShowMorePlaceholder.$set(Object.assign({
+                        visible: props.showMoreVisible,
+                        label: props.showMoreLabel,
+                        loading: false,
+                        onClick: props.onShowMore
+                    }, extraProps && 'showMoreLoading' in extraProps ? {loading: extraProps.showMoreLoading} : {}));
                 }
-                var props = this.getPaginationToolbarProps();
-                this.tableShowMorePlaceholder.$set(Object.assign({
-                    visible: props.showMoreVisible,
-                    label: props.showMoreLabel,
-                    loading: false,
-                    onClick: props.onShowMore
-                }, extraProps && 'showMoreLoading' in extraProps ? {loading: extraProps.showMoreLoading} : {}));
+
+                this.updatePaginationToolbar(extraProps);
             }.bind(this));
 
             this.listenToOnce(this, 'remove', () => {
@@ -1524,6 +1525,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
                     this.tableShowMorePlaceholder = null;
                 }
+
+                this.destroyPaginationToolbar();
             });
 
             $(window).on(`keydown.${this.cid} keyup.${this.cid}`, e => {
@@ -3125,6 +3128,73 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     onClick: props.onShowMore
                 }
             });
+        },
+
+        mountPaginationToolbar: function (containerOrGetter, propsOverride) {
+            this.paginationToolbarContainerGetter = containerOrGetter;
+            this.paginationToolbarPropsOverride = propsOverride || {};
+            this.updatePaginationToolbar();
+        },
+
+        getPaginationToolbarContainer: function () {
+            if (!this.paginationToolbarContainerGetter) {
+                return null;
+            }
+
+            return typeof this.paginationToolbarContainerGetter === 'function'
+                ? this.paginationToolbarContainerGetter()
+                : this.paginationToolbarContainerGetter;
+        },
+
+        updatePaginationToolbar: function (extraProps) {
+            var container = this.getPaginationToolbarContainer();
+            if (!container) {
+                return;
+            }
+
+            if (!this.hasPaginationToolbar()) {
+                this.destroyPaginationToolbar();
+                return;
+            }
+
+            if (this.sveltePaginationToolbar && this.paginationToolbarMountedContainer !== container) {
+                try {
+                    this.sveltePaginationToolbar.$destroy();
+                } catch (e) {
+                }
+                this.sveltePaginationToolbar = null;
+            }
+
+            $(container).removeClass('hidden');
+
+            var props = Object.assign(this.getPaginationToolbarProps(), this.paginationToolbarPropsOverride, extraProps || {});
+
+            if (!this.sveltePaginationToolbar) {
+                this.sveltePaginationToolbar = new Svelte.PaginationToolbar({
+                    target: container,
+                    props: props
+                });
+                this.paginationToolbarMountedContainer = container;
+                return;
+            }
+
+            this.sveltePaginationToolbar.$set(props);
+        },
+
+        destroyPaginationToolbar: function () {
+            var container = this.getPaginationToolbarContainer();
+            if (container) {
+                $(container).addClass('hidden');
+            }
+
+            if (this.sveltePaginationToolbar) {
+                try {
+                    this.sveltePaginationToolbar.$destroy();
+                } catch (e) {
+                }
+                this.sveltePaginationToolbar = null;
+            }
+            this.paginationToolbarMountedContainer = null;
         },
 
         afterRenderStatusIcons(icons, model) {

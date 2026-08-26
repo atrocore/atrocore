@@ -335,10 +335,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     callback(view);
                 }
 
-                this.listenTo(view, 'pagination-toolbar-update', extraProps => {
-                    this.updatePaginationToolbar(view, extraProps);
-                });
-                this.updatePaginationToolbar(view);
+                view.mountPaginationToolbar(() => {
+                    return this.dialog
+                        ? document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-pagination-container')
+                        : null;
+                }, {onShowMore: null});
 
                 this.listenTo(view, 'select', function (model) {
                     if (this.extraFields && this.validateExtraFields()) return;
@@ -423,8 +424,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             [
                 'SvelteFilterSearchBar' + this.dialog.id,
                 'SvelteFilterSearchBar' + this.dialog.id + 'tree',
-                'SvelteEntityContextPanel' + this.dialog.id,
-                'SveltePaginationToolbar' + this.dialog.id
+                'SvelteEntityContextPanel' + this.dialog.id
             ]
                 .forEach(key => {
                     if (window[key]) {
@@ -435,50 +435,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         }
                     }
                 });
-        },
-
-        updatePaginationToolbar(view, extraProps) {
-            if (!this.dialog) {
-                return;
-            }
-
-            if (!view || typeof view.hasPaginationToolbar !== 'function' || !view.hasPaginationToolbar()) {
-                this.destroyPaginationToolbar();
-                return;
-            }
-
-            const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-pagination-container');
-            if (!container) {
-                return;
-            }
-
-            const props = Object.assign(view.getPaginationToolbarProps(), extraProps || {}, {onShowMore: null});
-            const key = 'SveltePaginationToolbar' + this.dialog.id;
-
-            if (!window[key]) {
-                window[key] = new Svelte.PaginationToolbar({
-                    target: container,
-                    props: props
-                });
-                return;
-            }
-
-            window[key].$set(props);
-        },
-
-        destroyPaginationToolbar() {
-            if (!this.dialog) {
-                return;
-            }
-
-            const key = 'SveltePaginationToolbar' + this.dialog.id;
-            if (window[key]) {
-                try {
-                    window[key].$destroy();
-                } catch (e) {
-                }
-                delete window[key];
-            }
         },
 
         afterRender() {

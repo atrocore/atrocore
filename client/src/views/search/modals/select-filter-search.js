@@ -87,10 +87,11 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
             }
 
             this.createView('list', viewName, options, function (view) {
-                this.listenTo(view, 'pagination-toolbar-update', extraProps => {
-                    this.updatePaginationToolbar(view, extraProps);
-                });
-                this.updatePaginationToolbar(view);
+                view.mountPaginationToolbar(() => {
+                    return this.dialog
+                        ? document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-pagination-container')
+                        : null;
+                }, {onShowMore: null});
 
                 this.listenTo(view, 'after:render', () => {
                     if (!this.dialog) {
