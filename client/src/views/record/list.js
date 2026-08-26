@@ -451,11 +451,16 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getShowMoreLabel() {
+            if (this.collection.total !== null) {
+                this.lastKnownTotal = this.collection.total;
+            }
+            let total = this.collection.total !== null ? this.collection.total : this.lastKnownTotal;
+
             let label = this.getLanguage().translate('Load next');
 
-            if (this.showCount && this.collection.total > 0) {
+            if (this.showCount && total > 0) {
                 let limit = this.collection.maxSize;
-                let add = this.collection.total - (this.collection.offset + this.collection.length);
+                let add = total - (this.collection.offset + this.collection.length + this.collection.lengthCorrection);
 
                 if (limit < add) {
                     add = limit;
@@ -1650,11 +1655,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.displayTotalCount) {
-                if (this.collection.length > this.collection.maxSize) {
+                var shownCount = this.collection.length + (this.collection.lengthCorrection || 0);
+                if (shownCount > this.collection.maxSize) {
                     counters.push({
                         name: 'shown',
                         label: this.translate('Shown'),
-                        value: this.collection.length,
+                        value: shownCount,
                     });
                 }
 
@@ -3046,7 +3052,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         getPaginationToolbarProps: function () {
             var maxSize = this.collection.maxSize || 1;
-            var currentPage = Math.floor((this.collection.offset + Math.max(this.collection.length, 1) - 1) / maxSize) + 1;
+            var currentPage = this.pendingPage != null
+                ? this.pendingPage
+                : Math.floor((this.collection.offset + Math.max(this.collection.length, 1) - 1) / maxSize) + 1;
 
             if (this.collection.total !== null) {
                 this.lastKnownTotal = this.collection.total;
@@ -3060,21 +3068,18 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 || this.collection.offset + this.collection.length + this.collection.lengthCorrection < total
                 || total === -1
             );
-            var showMoreCount = total == null ? maxSize : Math.max(total - (this.collection.offset + this.collection.length), 0);
-            if (maxSize < showMoreCount) {
-                showMoreCount = maxSize;
-            }
-
             return {
                 currentPage: currentPage,
                 totalPages: totalPages,
                 onPageChange: function (page) {
                     this.notify('Please wait...');
+                    this.pendingPage = page;
                     this.collection.offset = (page - 1) * maxSize;
                     this.collection.fetch({
                         maxSize: maxSize,
                         success: function () {
                             this.notify(false);
+                            this.pendingPage = null;
                             this.trigger('pagination-toolbar-update');
                         }.bind(this)
                     });
@@ -3085,13 +3090,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 onShowMore: showMoreVisible ? function () {
                     this.showMoreRecords();
                 }.bind(this) : null,
-                showMoreCount: showMoreCount,
                 controls: this.getToolbarControls(),
                 scope: this.scope,
                 massActions: this.getMassActions(),
                 selected: this.allResultIsChecked ? true : this.checkedList,
                 hasSelectAllCheckbox: !!this.checkboxes && this.isAllowedSelectAllResult(),
-                isRelationship: !!this.options.panelView,
                 executeMassAction: function (action, data) {
                     this.executeMassAction(action, data);
                 }.bind(this),
