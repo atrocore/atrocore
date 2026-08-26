@@ -3194,7 +3194,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             var totalPages = total == null
                 ? currentPage
                 : Math.max(Math.ceil(total / maxSize), currentPage);
-            var showMoreVisible = !!this.showMore && (
+            const showMoreVisible = this.pendingPage == null && !!this.showMore && (
                 total == null
                 || this.collection.offset + this.collection.length + this.collection.lengthCorrection < total
                 || total === -1
