@@ -132,6 +132,13 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 this.listenTo(recordView, `bookmarked-${this.scope}`, () => this.reloadBookmarks());
                 this.listenTo(recordView, `unbookmarked-${this.scope}`, () => this.reloadBookmarks());
             });
+
+            this.listenToOnce(this, 'remove', () => {
+                if (this.paginationToolbarResizeObserver) {
+                    this.paginationToolbarResizeObserver.disconnect();
+                    this.paginationToolbarResizeObserver = null;
+                }
+            });
         },
 
         actionUniversalAction(data, e) {
@@ -416,6 +423,25 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
             }
 
             this.setupRightSideView();
+            this.setupPaginationToolbarWidthObserver();
+        },
+
+        setupPaginationToolbarWidthObserver: function () {
+            var main = this.$el.find('main')[0];
+            if (!main) {
+                return;
+            }
+
+            var updateWidth = function () {
+                main.style.setProperty('--pagination-toolbar-visible-width', main.clientWidth + 'px');
+            };
+            updateWidth();
+
+            if (this.paginationToolbarResizeObserver) {
+                this.paginationToolbarResizeObserver.disconnect();
+            }
+            this.paginationToolbarResizeObserver = new ResizeObserver(updateWidth);
+            this.paginationToolbarResizeObserver.observe(main);
         },
 
         loadList: function () {
