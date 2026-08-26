@@ -336,6 +336,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
                 this.collection = collection;
 
+                this.listenTo(collection, 'request', () => {
+                    this.setRefreshButtonLoading(true);
+                });
+                this.listenTo(collection, 'sync error', () => {
+                    this.setRefreshButtonLoading(false);
+                });
+
                 this.model.trigger('init-collection:' + this.link, collection);
 
                 this.setFilter(this.filter);
@@ -682,6 +689,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         actionRefresh: function () {
             this.collection.fetch();
+        },
+
+        setRefreshButtonLoading: function (loading) {
+            var $button = this.$el.closest('.panel').find('[data-action="refresh"]');
+            $button.attr('disabled', loading);
+            $button.find('i').toggleClass('ph-spin', loading);
         },
 
         actionViewRelated: function (data, evt) {
