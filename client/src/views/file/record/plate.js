@@ -62,7 +62,7 @@ Espo.define('views/file/record/plate', 'views/record/list',
 
         getToolbarControls: function () {
             const controls = Dep.prototype.getToolbarControls.call(this);
-            controls.unshift(this.getItemsInRowToolbarControl());
+            controls.push(this.getItemsInRowToolbarControl());
 
             return controls;
         },
