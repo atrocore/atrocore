@@ -56,44 +56,46 @@ Espo.define('views/note/fields/post', ['views/fields/markdown', 'lib!TextComplet
                 return url;
             }.bind(this);
 
-            if (assignmentPermission !== 'no') {
-                const cmWrapper = new Lib.CodeMirrorEditor(this.editor.codemirror);
-                const textcomplete = new Lib.Textcomplete(cmWrapper, [{
-                    match: /(^|\s)@((\w|\.)*)$/,
-                    search: function (term, callback, match) {
-                        if (!match[2]) {
-                            callback([]);
-                            return;
+            this.once('editor:rendered', editor => {
+                if (assignmentPermission !== 'no') {
+                    const cmWrapper = new Lib.CodeMirrorEditor(editor.codemirror);
+                    const textcomplete = new Lib.Textcomplete(cmWrapper, [{
+                        match: /(^|\s)@((\w|\.)*)$/,
+                        search: function (term, callback, match) {
+                            if (!match[2]) {
+                                callback([]);
+                                return;
+                            }
+                            $.ajax({
+                                url: buildUserListUrl(match[2])
+                            }).done(function (data) {
+                                callback(data.list)
+                            });
+                        },
+                        template: function (mention) {
+                            return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
+                        },
+                        replace: function (o) {
+                            return '$1@' + o.userName + ' ';
                         }
-                        $.ajax({
-                            url: buildUserListUrl(match[2])
-                        }).done(function (data) {
-                            callback(data.list)
-                        });
-                    },
-                    template: function (mention) {
-                        return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
-                    },
-                    replace: function (o) {
-                        return '$1@' + o.userName + ' ';
-                    }
-                }], {
-                    dropdown: {
-                        className: "dropdown-menu textcomplete-dropdown",
-                        maxCount: 7,
-                        placement: "auto",
-                        style: {zIndex: 1100},
-                        item: {
-                            className: "textcomplete-item",
-                            activeClassName: "textcomplete-item active",
-                        }
-                    },
-                });
+                    }], {
+                        dropdown: {
+                            className: "dropdown-menu textcomplete-dropdown",
+                            maxCount: 7,
+                            placement: "auto",
+                            style: {zIndex: 1100},
+                            item: {
+                                className: "textcomplete-item",
+                                activeClassName: "textcomplete-item active",
+                            }
+                        },
+                    });
 
-                this.once('remove', function () {
-                    textcomplete?.destroy();
-                }, this);
-            }
+                    this.once('remove', function () {
+                        textcomplete?.destroy();
+                    }, this);
+                }
+            });
         },
 
         validateRequired: function () {
