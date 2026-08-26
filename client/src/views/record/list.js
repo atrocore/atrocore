@@ -372,7 +372,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 headerDefs: this._getHeaderDefs(),
                 paginationEnabled: this.pagination,
                 showMoreActive: this.collection.offset + this.collection.length < this.collection.total || this.collection.total == -1,
-                showMoreEnabled: this.showMore,
+                showMoreEnabled: this.showMore && !this.options.panelView,
                 showCount: this.showCount && this.collection.total > 0,
                 moreCount: this.collection.total - (this.collection.offset + this.collection.length),
                 checkboxes: this.checkboxes,
@@ -2948,6 +2948,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return false;
             }
 
+            if (this.options.panelView && !this.collection.length) {
+                return false;
+            }
+
             var props = this.getPaginationToolbarProps();
             return props.totalPages > 1 || props.showMoreVisible || props.controls.length > 0;
         },
@@ -3053,7 +3057,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             if (sortControl) {
                 controls.push(sortControl);
             }
-            controls.push(this.getPageSizeToolbarControl());
+            if (!this.options.panelView) {
+                controls.push(this.getPageSizeToolbarControl());
+            }
             return controls;
         },
 
