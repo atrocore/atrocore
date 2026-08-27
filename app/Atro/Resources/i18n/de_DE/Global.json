@@ -1222,6 +1222,11 @@
     "kanban": "Kanban"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Die Attributverknüpfung ist deaktiviert.",
+    "createAttributeValueForbidden": "Sie haben keine Berechtigung, Attributwerte zu erstellen.",
+    "attributeUnlinkingDisabled": "Die Aufhebung der Attributverknüpfung ist deaktiviert.",
+    "deleteAttributeValueForbidden": "Sie haben keine Berechtigung, Attributwerte zu löschen.",
+    "nestedAttributeRemovalForbidden": "Ein verschachteltes Attribut kann nicht entfernt werden, ohne dass auch das übergeordnete zusammengesetzte Attribut entfernt wird.",
     "singleClassificationAllowed": "Nur eine Klassifizierung ist zulässig",
     "moreThanOneClassification": "Einige Datensätze haben mehr als eine Klassifizierung.",
     "reverseAssociationError": "Rückwärtsassoziationsfehler: %s",

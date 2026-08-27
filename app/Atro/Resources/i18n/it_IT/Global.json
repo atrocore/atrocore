@@ -1305,6 +1305,11 @@
     "cd": "cd"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Il collegamento degli attributi è disabilitato.",
+    "createAttributeValueForbidden": "Non si dispone dell'autorizzazione per creare valori di attributo.",
+    "attributeUnlinkingDisabled": "Lo scollegamento degli attributi è disabilitato.",
+    "deleteAttributeValueForbidden": "Non si dispone dell'autorizzazione per eliminare valori di attributo.",
+    "nestedAttributeRemovalForbidden": "Un attributo annidato non può essere rimosso senza rimuovere anche il relativo attributo composito principale.",
     "singleClassificationAllowed": "È consentita solo una classificazione",
     "moreThanOneClassification": "Alcuni record hanno più di una classificazione.",
     "reverseAssociationError": "Errore di associazione a ritroso: %s",

@@ -1201,6 +1201,11 @@
     "cd": "cd"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "La vinculación de atributos está deshabilitada.",
+    "createAttributeValueForbidden": "No tiene permiso para crear valores de atributo.",
+    "attributeUnlinkingDisabled": "La desvinculación de atributos está deshabilitada.",
+    "deleteAttributeValueForbidden": "No tiene permiso para eliminar valores de atributo.",
+    "nestedAttributeRemovalForbidden": "No se puede eliminar un atributo anidado sin eliminar también su atributo compuesto principal.",
     "fieldIsRequired": "Validation failed. '%s' is required.",
     "urlIsInvalid": "URL is invalid",
     "maximumOfDigitsAfterCommaInvalid": "El máximo de dígitos después de la coma es %s",

@@ -1201,6 +1201,11 @@
     "cd": "cd"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Łączenie atrybutów jest wyłączone.",
+    "createAttributeValueForbidden": "Nie masz uprawnień do tworzenia wartości atrybutów.",
+    "attributeUnlinkingDisabled": "Rozłączanie atrybutów jest wyłączone.",
+    "deleteAttributeValueForbidden": "Nie masz uprawnień do usuwania wartości atrybutów.",
+    "nestedAttributeRemovalForbidden": "Nie można usunąć zagnieżdżonego atrybutu bez usunięcia jego nadrzędnego atrybutu złożonego.",
     "colorDepthValidationFailed": "Głębia koloru tego zasobu nie jest dozwolona.",
     "colorSpaceValidationFailed": "Przestrzeń kolorów tego zasobu nie jest dozwolona.",
     "fileExtensionValidationFailed": "Używaj tylko plików z następującymi rozszerzeniami: %s.",
