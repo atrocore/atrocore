@@ -37,8 +37,8 @@
       "tooltip": true
     },
     "consolidationScript": {
-      "type": "text",
-      "view": "views/fields/script",
+      "type": "code",
+      "engine": "Twig",
       "language": "json",
       "default": "{# { \"skipped\": false, \"masterRecordData\": { \"name\" : \"{{ contributorRecord.name }}\" } } #}",
       "editorActions": {
@@ -49,7 +49,7 @@
           "entityNameField": "name"
         }
       },
-      "twigVariables": [
+      "variables": [
         "contributorRecord",
         "contributorRecords",
         "masterRecord"
