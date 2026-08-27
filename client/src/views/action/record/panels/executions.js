@@ -98,6 +98,7 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
                 },
                 queryBuilderApplied: true
             });
+            this.getStorage().set('treeSelectedNodes', 'ActionExecutionLog', []);
 
             window.open(`#ActionExecutionLog`, '_blank');
         },

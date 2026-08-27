@@ -578,6 +578,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             };
 
             this.getStorage().set('listQueryBuilder', this.scope, params);
+            this.getStorage().set('treeSelectedNodes', this.scope, []);
             if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode']) && data.isKanban) {
                 window.open(`#${this.scope}/kanban`, '_blank');
                 return;
