@@ -39,13 +39,4 @@ class ActionLayout extends AbstractLayoutListener
             $event->setArgument('result', $result);
         }
     }
-
-    public function relationships(Event $event): void
-    {
-        $result = $event->getArgument('result');
-
-        $result[] = ['name' => 'actions'];
-
-        $event->setArgument('result', $result);
-    }
 }

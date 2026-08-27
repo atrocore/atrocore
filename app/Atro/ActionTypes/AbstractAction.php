@@ -148,25 +148,10 @@ abstract class AbstractAction implements TypeInterface
     {
         // for backward compatibility
         if (method_exists($this, 'executeNow')) {
-            $action = $execution->get('action');
-            try {
-                $res = $this->executeNow($action, $input);
-                $execution->set('status', 'done');
-            } catch (\Throwable $e) {
-                $res = false;
-                $execution->set('status', 'failed');
-                $execution->set('statusMessage', $e->getMessage());
+            $res = $this->executeNow($execution->get('action'), $input);
 
-                if ($e instanceof BadRequest && $action->get('type') === 'error') {
-                    $res = true;
-                    $execution->set('status', 'done');
-                }
-            }
+            $execution->set('status', 'done');
             $this->getEntityManager()->saveEntity($execution);
-
-            if (!empty($e) && empty($res)) {
-                throw $e;
-            }
 
             return $res;
         }
