@@ -221,6 +221,31 @@ class SoftwarePackage extends ReferenceData
         return $items;
     }
 
+    public function getExpiredRentedModules(): array
+    {
+        $result = [];
+
+        $remotePackages = $this->getRemotePackages();
+
+        foreach (ModuleManager::getList() as $moduleId) {
+            $package = $this->getPackage($moduleId);
+            if (empty($package['name'])) {
+                continue;
+            }
+
+            $code = $package['abandoned'] ?? $package['name'];
+
+            $usage = $remotePackages[$code]['usage'] ?? null;
+            $expirationDate = $remotePackages[$code]['expirationDate'] ?? null;
+
+            if ($usage === 'Rent' && !empty($expirationDate) && $expirationDate < date('Y-m-d')) {
+                $result[] = $package['extra']['name']['default'] ?? $package['extra']['name'] ?? $moduleId;
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * A free module and a purchased one can always be installed: the latter stays the property of the customer even
      * when the right to new versions is over. A rented module is not owned by the customer, so it is available only

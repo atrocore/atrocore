@@ -416,6 +416,7 @@
     "resetAllToDefault": "Tout réinitialiser par défaut",
     "pleaseReloadPage": "Veuillez rafraîchir la page pour mettre à jour les métadonnées.",
     "pleaseRebuildDatabase": "Veuillez reconstruire la base de données à partir de l'administration. Le schéma de la base de données est incohérent.",
+    "expiredRentedModulesMessage": "La période de location de {modules} a expiré. L'utilisation continue n'est pas autorisée — veuillez renouveler la location ou désinstaller le module (la désinstallation supprime toutes les données associées). Les mises à jour du système sont bloquées jusqu'à ce que ce problème soit résolu.",
     "youHaveNewNotification": "Vous avez une nouvelle notification !",
     "youHaveNewNotifications": "Vous avez de nouvelles notifications !",
     "fail": "Échec",

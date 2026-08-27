@@ -220,6 +220,7 @@
     "resetAllToDefault": "Alles auf Standardwerte zurücksetzen",
     "pleaseReloadPage": "Bitte laden Sie die Seite neu, um die Metadaten zu aktualisieren.",
     "pleaseRebuildDatabase": "Bitte aktualisieren Sie die Datenbankstruktur über die Administration. Das Datenbankschema ist inkonsistent.",
+    "expiredRentedModulesMessage": "Die Mietdauer für {modules} ist abgelaufen. Die weitere Nutzung ist nicht zulässig — bitte verlängern Sie die Miete oder deinstallieren Sie das Modul (durch die Deinstallation werden alle zugehörigen Daten gelöscht). Systemaktualisierungen sind gesperrt, bis dies behoben ist.",
     "youHaveNewNotification": "Sie haben eine neue Benachrichtigung!",
     "youHaveNewNotifications": "Sie haben neue Benachrichtigungen!",
     "Expand": "Einblenden",

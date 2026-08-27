@@ -240,6 +240,7 @@
     "resetAllToDefault": "Reset all to Default",
     "pleaseReloadPage": "Please refresh the page to update the metadata.",
     "pleaseRebuildDatabase": "Please rebuild the database from Administration. Database schema is inconsistent.",
+    "expiredRentedModulesMessage": "The rental period for {modules} has expired. Continued use is not permitted — please renew the rental or uninstall the module (uninstalling deletes all related data). System updates are blocked until this is resolved.",
     "youHaveNewNotification": "You have new notification!",
     "youHaveNewNotifications": "You have new notifications!",
     "status": "Status",
