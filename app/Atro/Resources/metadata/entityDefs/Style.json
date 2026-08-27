@@ -19,9 +19,8 @@
       "tooltip": true
     },
     "customStylesheet": {
-      "type": "text",
+      "type": "code",
       "notStorable": true,
-      "view": "views/fields/script",
       "language": "css"
     },
     "highlightingColorForRequired": {
@@ -108,9 +107,8 @@
       "type": "varchar"
     },
     "customHeadCode": {
-      "type": "text",
+      "type": "code",
       "language": "html",
-      "view": "views/fields/script",
       "tooltip": true,
       "notStorable": true
     },
