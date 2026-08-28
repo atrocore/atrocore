@@ -1073,15 +1073,23 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
             this.notify(this.translate('Loading'))
-            this.ajaxPostRequest('Selection/createWithItems', {
-                entityName: this.entityType,
-                entityIds: this.checkedList.map(id => String(id))
-            }).then(result => {
-                this.getModelFactory().create('Selection', (selectionModel) => {
-                    selectionModel.set(result);
-                    this.getRouter().navigate('#Selection/view/' + result.id, { trigger: false });
-                    this.getRouter().dispatch('Selection', 'view', { model: selectionModel })
-                });
+
+            const payload = {
+                    entityName: this.entityType,
+                    entityIds: this.checkedList.map(id => String(id))
+                },
+                currentSelectionId = this.getUser().get('currentSelectionId'),
+                url = currentSelectionId ? 'Selection/' + currentSelectionId + '/updateWithItems' : 'Selection/createWithItems';
+
+            this.ajaxPostRequest(url, payload).then(result => {
+                if (!currentSelectionId) {
+                    this.getUser().set('currentSelectionId', result.id);
+                    this.getUser().save();
+
+                }
+                window.dispatchEvent(new Event('selection:refresh'));
+
+                this.notify(this.translate('Success'), 'success');
             });
         },
 

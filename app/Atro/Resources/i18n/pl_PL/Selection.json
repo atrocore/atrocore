@@ -13,7 +13,8 @@
   "messages": {
     "cannotSetToSingle": "Nie można ustawić \"Jednolity",
     "youNeedAtLeastTwoItem": "Potrzebują Państwo co najmniej dwóch przedmiotów do porównania.",
-    "entityIsRequired": "Pole \"Podmiot\" jest wymagane."
+    "entityIsRequired": "Pole \"Podmiot\" jest wymagane.",
+    "entityTypeMismatch": "Ten wybór akceptuje tylko rekordy typu '%s'."
   },
   "labels": {
     "createSelection": "Utwórz wybór"

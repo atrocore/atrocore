@@ -512,6 +512,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 }
             });
+
+            window.addEventListener('selection:refresh', () => {
+                this.currentSelectionButton.handleSelectionChange()
+            });
         }
     });
 });
