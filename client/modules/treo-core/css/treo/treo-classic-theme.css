@@ -60,8 +60,8 @@ body {
     --highlighting-color-for-required: #f0f8ff;
     --highlighting-color-for-data-quality: #fff8B8;
     --highlighting-color-for-qc-failed: #ffe0e0;
-    --field-hover-color: #f8f8f8;
-    --field-inline-edit-color: #f2f2f2;
+    --field-hover-color: #f7f8fa;
+    --field-inline-edit-color: #f3f4f6;
     --toolbar-background-color: #f5f5f5;
     --toolbar-font-color: #000;
 }
@@ -3009,7 +3009,7 @@ input[type="search"] {
     box-sizing: border-box;
 }
 
-input[type="radio"], input[type="checkbox"] {
+input[type="radio"] {
     margin: 4px 0 0;
     line-height: normal
 }
@@ -3025,12 +3025,6 @@ input[type="range"] {
 
 select[multiple], select[size] {
     height: auto
-}
-
-input[type="file"]:focus, input[type="radio"]:focus, input[type="checkbox"]:focus {
-    outline: 5px auto -webkit-focus-ring-color;
-    outline: 0;
-    outline-offset: -2px
 }
 
 output {
@@ -3387,7 +3381,7 @@ textarea.input-lg, select[multiple].input-lg {
 .has-error .form-control,
 .has-error .input-group-btn > .btn,
 .has-error .input-group-btn > button {
-    border-bottom-color: #a94442 !important;
+    border-color: #a94442 !important;
 }
 
 .has-error .form-control:focus,
@@ -4245,6 +4239,11 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .input-group .form-control:first-child, .input-group-addon:first-child, .input-group-btn:first-child > .btn, .input-group-btn:first-child > .btn-group > .btn, .input-group-btn:first-child > .dropdown-toggle, .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle), .input-group-btn:last-child > .btn-group:not(:last-child) > .btn {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0
+}
+
+.cell .input-group.combined-group .form-control:first-child {
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 .input-group-addon:first-child {
@@ -10532,8 +10531,9 @@ table.table[data-resizable=true] > tbody td[data-name=table-spacer] > div {
 
 table.table[data-resizable=true] > thead th .resizer {
     position: absolute;
-    right: 0;
+    right: -4px;
     top: 50%;
+    z-index: 1;
     transform: translateY(-50%);
     width: 4px;
     height: 100%;
@@ -10553,7 +10553,7 @@ table.table[data-resizable=true] > thead th .resizer:hover {
 }
 
 .cell > label, .filter label {
-    margin-bottom: 2px
+    margin-bottom: 3px;
 }
 
 .filter .selectize-input {
@@ -10709,27 +10709,27 @@ main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]):n
     width: 100%;
 }
 
-.cell:not([data-readonly]):not([data-mode=edit]) > .field:hover {
+main:not([data-mode=edit]) .cell:not([data-readonly]):not([data-mode=edit]):hover > .field,
+main:not([data-mode=edit]) + .right-side-view .cell:not([data-readonly]):not([data-mode=edit]):hover > .field {
     background-color: var(--field-hover-color);
 }
 
-main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:hover {
-    background-color: transparent;
-}
-
 .cell > .field :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .part-select select),
-.cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 .cell > .field > input:not([type=radio]):not([type=checkbox]),
 td.cell :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .part-select select),
 td.cell:not(:first-child) > div:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 td.cell > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]),
-td.cell > div .selectize-control > .selectize-input {
+td.cell .selectize-control > .selectize-input {
     background-color: var(--field-inline-edit-color);
-    margin-top: -1px;
-    border-top: 1px solid transparent;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: transparent;
+    border: 1px solid #eaeaea;
+    border-radius: 3px;
+}
+
+.cell .field .input-group:not(.combined-group) > input,
+.cell .field .input-group:not(.combined-group) .selectize-input,
+td.cell .input-group:not(.combined-group) > input,
+td.cell.input-group:not(.combined-group) .selectize-input {
+    border: 0;
 }
 
 .cell.has-error > .field :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .part-select select),
@@ -10739,41 +10739,33 @@ td.cell.has-error > div:not(.input-group) > input:not([type=radio]):not([type=ch
     background-color: #f2e4e4;
 }
 
-.cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])) {
-    margin-top: 0;
+.cell.has-error > .field :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .part-select select) {
+    border-color: inherit;
 }
 
-.cell > .field > .selectize-control > .selectize-input.focus,
+.cell > .field  .selectize-control > .selectize-input.focus,
 .cell > .field .input-group:has(.selectize-input.focus),
 .cell > .field .input-group:has(> input:focus),
 .cell > .field > :where(.range-container, .combined-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
 .cell > .field > :where(.range-container, .combined-group) > .part-select select:focus,
 .cell > .field > input:not([type=radio]):not([type=checkbox]):focus,
-.cell > .field > .array-control-container .selectize-input.focus,
 .cell > .field > textarea:focus,
-td.cell > div:not(.input-group) > .selectize-control > .selectize-input.focus,
+td.cell .selectize-control > .selectize-input.focus,
 td.cell .input-group:has(.selectize-input.focus),
 td.cell .input-group:has(> input:focus),
-td.cell > div > :where(.range-container, .combined-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
-td.cell > div > :where(.range-container, .combined-group) > .part-select select:focus,
+td.cell :where(.range-container, .combined-group) > :where(input:not([type=radio]):not([type=checkbox]):focus, .part-select select:focus),
 td.cell > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]):focus,
-td.cell > div > .array-control-container .selectize-input.focus,
-td.cell > div > textarea:focus {
-    border-bottom-color: #06c;
+td.cell > input:not([type=radio]):not([type=checkbox]):focus,
+td.cell .array-control-container .selectize-input.focus,
+td.cell textarea:focus {
+    border-color: #06c;
 }
-
-
 
 .cell > .field > a,
 .cell > .field > span.pre-label,
 .cell > .field > span.complex-text p {
     white-space: pre-wrap;
     vertical-align: middle;
-}
-
-.cell > .field > input[type=checkbox],
-.cell > .field > input[type=radio] {
-    margin-top: 0;
 }
 
 .cell[data-mode=edit] > .field > input[type=checkbox]:not([disabled]),
@@ -10793,8 +10785,6 @@ td.cell[data-mode=edit]  .conditions-container {
 .cell > .field .selectize-input,
 td.cell  .form-control,
 td.cell  .selectize-input{
-    border-left: 0;
-    border-right: 0;
     margin-bottom: 0;
 }
 
@@ -10814,6 +10804,14 @@ td.cell .input-group > .input-group-btn button {
     background-color: transparent;
     border: 0;
     border-radius: 0;
+}
+
+.cell .field .input-group > .input-group-btn,
+.cell .input-group > .input-group-btn,
+.cell .field .input-group > .input-group-btn .form-control:last-child,
+.cell .input-group > .input-group-btn .form-control:last-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .cell > .field > .input-group > .input-group-btn button:hover,
@@ -11020,18 +11018,6 @@ table.table > tbody td > .list-row-buttons button {
 
 .list > ul {
     margin-bottom: 0
-}
-
-.list > table td input[type="checkbox"], .list > table th input[type="checkbox"] {
-    margin: 0;
-    position: relative;
-    top: 2px
-}
-
-.list > table th input[type="checkbox"] {
-    margin: 0;
-    position: relative;
-    top: 2px !important
 }
 
 .list > table th span.caret {
@@ -11328,12 +11314,6 @@ table.no-margin {
     z-index: 9;
 }
 
-.list > table th[data-name="r-checkbox"] .select-all-container {
-    line-height: 19px;
-    height: 19px;
-    float: left
-}
-
 .list .checkbox-dropdown {
     margin-left: 3px;
     top: -1px
@@ -11342,11 +11322,6 @@ table.no-margin {
 .list .checkbox-dropdown > a {
     padding: 0;
     line-height: 1
-}
-
-.list .record-checkbox-container {
-    height: 19px;
-    display: block
 }
 
 .list > table td > div.field {
@@ -12512,7 +12487,7 @@ h5 {
     margin-bottom: 0
 }
 
-.input-group-addon:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child), .input-group .form-control:not(:first-child):not(:last-child):not(.no-margin-shifting) {
+.input-group-addon:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child), .input-group .form-control:not(:first-child):not(:last-child):not(.no-margin-shifting):not(.selectize-control:first-of-type) {
     margin-left: -1px
 }
 
@@ -12530,85 +12505,6 @@ h5 {
 
 pre > code {
     font-style: normal
-}
-
-.table-admin-panel tr > td:first-child {
-    width: 200px
-}
-
-.table-admin-panel i.warning-icon {
-    color: red;
-    margin-inline-start: 3px;
-    font-size: 16px;
-}
-
-.admin-tables-container > div {
-    margin-bottom: 20px
-}
-
-.admin-tables-container > div .table-admin-panel {
-    margin-bottom: 0
-}
-
-.admin-tables-container > div > h4 {
-    margin-top: 0
-}
-
-.list-nested-categories {
-    margin-bottom: 10px
-}
-
-.list-nested-categories .category-item {
-    padding: 10px
-}
-
-.list-nested-categories .category-item .folder-icon {
-    margin-right: 3px;
-    position: relative;
-    top: -1px
-}
-
-.categories-container a.manage-categories-link {
-    margin-left: 8px
-}
-
-.categories-container a.category-expanded-toggle-link {
-    margin-left: 8px
-}
-
-.categories-container > .list > .list-group-tree > li {
-    padding-left: 0
-}
-
-.folders-container > .list-group-side > .list-group-item, .categories-container > .list-expanded, .categories-container .list-group-tree > .list-group-item > .cell {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden
-}
-
-.admin-panel-iframe-container {
-    height: 100%
-}
-
-.admin-panel-iframe-container > .section {
-    padding: 6px 10px;
-    margin-bottom: 6px
-}
-
-.admin-panel-iframe-container > .section:first-child > h4 {
-    margin-top: 0
-}
-
-.sections-container > .section {
-    margin-bottom: 30px
-}
-
-.sections-container > .section > h5 {
-    margin-top: 0
-}
-
-.sections-container > .section:last-child {
-    margin-bottom: 0
 }
 
 .note-editor .note-toolbar.sticked {
@@ -12654,20 +12550,6 @@ pre > code {
         to {
             opacity: 1;
         }
-    }
-
-    .admin-tables-container.fixed-bottom {
-        position: fixed;
-        bottom: 15px;
-    }
-
-    .admin-tables-container.scrolled {
-        position: relative;
-    }
-
-    .admin-tables-container.fixed-top {
-        position: fixed;
-        top: 66px;
     }
 
     .col-md-12.hidden-cell {
@@ -12778,16 +12660,6 @@ a.field-info > span.fa-info-circle {
     position: static
 }
 
-.btn-icon[data-action="selectLink"] > i {
-    color: inherit;
-}
-
-.btn-icon {
-    width: 36px;
-    padding-left: 0;
-    padding-right: 0
-}
-
 button .ph,
 button .ph-fill,
 .btn .ph,
@@ -12798,27 +12670,11 @@ button .ph-fill,
     line-height: inherit;
 }
 
-.btn-icon.btn-sm {
-    width: 34px;
-}
-
 button.small .ph,
 button.small .ph-fill,
 .btn.small .ph,
 .btn.small .ph-fill {
     font-size: 16px;
-}
-
-.btn.btn-icon-wide {
-    width: 54px;
-}
-
-.btn.btn-icon-x-wide {
-    width: 76px;
-}
-
-.btn-icon > .fa-chevron-left {
-    left: -1px
 }
 
 .grid-auto-fill-xs, .grid-auto-fill-sm, .grid-auto-fill-md {
@@ -13147,7 +13003,7 @@ table.table {
     flex-direction: row-reverse;
 }
 
-.list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .list-kanban > .kanban-head-container, .list-group-panel {
+.list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .list-kanban > .kanban-head-container, .list-group-panel {
     -webkit-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
     -moz-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13)
@@ -13196,14 +13052,6 @@ table.table {
 .record .button-container > .btn-group {
     margin-right: 20px;
     margin-bottom: 8px;
-}
-
-.list-nested-categories {
-    background-color: #fff
-}
-
-.admin-panel-iframe-container {
-    background-color: #fff
 }
 
 .panel-extensibleEnumOptions > .panel-heading, .panel-variables > .panel-heading, .panel-translationsRules > .panel-heading, .panel-ldapMappingFields > .panel-heading {
@@ -13449,12 +13297,13 @@ input#sn-checkbox-open-in-new-window {
 #main main[data-mode=detail] + .right-side-view .row .cell:not([data-mode=edit]) .field,
 .modal-body .record > .detail .cell:not([data-mode=edit]) .field {
     padding: 5px 10px;
-    border-bottom: 1px solid var(--secondary-border-color);
+    border: 1px solid transparent;
+    border-radius: 4px;
 }
 
 #main main[data-mode=detail] + .right-side-view .row .cell:not([data-mode=edit]) .field {
     padding: 0 10px 2px;
-    border-bottom: 1px solid var(--secondary-border-color);
+    border: 1px solid transparent;
 }
 
 .right-side-view .insights .panel-changeRequests>.panel-body{
@@ -13827,10 +13676,6 @@ ul.dropdown-menu > li.checkbox {
 
 .navbar-inverse .navbar-nav > .more.open > a, .navbar-inverse .navbar-nav > .more.open > a:hover, .navbar-inverse .navbar-nav > .more.open > a:focus {
     background-color: #616161;
-}
-
-.table-admin-panel tr > td:first-child {
-    width: 200px
 }
 
 #main .page-header > h3 > a {
@@ -14886,36 +14731,6 @@ button.category:focus {
 .dashlets .dashlet {
     border: 1px solid var(--primary-border-color);
     border-top: 0;
-}
-
-.list-nested-categories {
-    margin-bottom: 10px
-}
-
-.list-nested-categories .category-item {
-    padding: 10px
-}
-
-.list-nested-categories .category-item .folder-icon {
-    margin-right: 3px;
-    position: relative;
-    top: -1px
-}
-
-.categories-container a.manage-categories-link {
-    margin-left: 8px;
-}
-
-.categories-container a.category-expanded-toggle-link {
-    margin-left: 8px
-}
-
-.folders-container > .list-group-side > .list-group-item,
-.categories-container > .list-expanded,
-.categories-container .list-group-tree > .list-group-item > .cell {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden
 }
 
 .dashlets.grid-stack > .grid-stack-item > .ui-resizable-se, .dashlets.grid-stack > .grid-stack-item > .ui-resizable-sw {
@@ -19422,17 +19237,17 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):not(.list-row-buttons):hover,
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):not(.list-row-buttons):not([data-readonly]):hover,
 .compare-records .compare-panel table tr td.cell:not(:first-child):not([data-mode=edit]):hover,
 .compare-records .compare-panel table tr td.cell:not([data-readonly]):not([data-mode=edit]) > .field:hover,
 .compare-records .compare-panel table tr th:not(:first-child):hover,
 .compare-entities .compare-panel table tr th:hover,
 .compare-panel table tr th:has(.inline-actions.open) {
-    background-color: var(--field-inline-edit-color);
+    background-color: var(--field-hover-color);
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]) {
-    padding: 5px 10px;
+    padding: 6px 10px;
 }
 
 .list-container > .list[data-editable=true] > table tr th {
@@ -19499,10 +19314,6 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     min-width: 0;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell:not(:first-child) input[type="checkbox"] {
-    margin: 4px 0 0;
-}
-
 .list-container > .list[data-editable=true] > table tr td.cell:first-child:has(input[type="checkbox"]),
 .list-container > .list[data-editable=true] > table tr > td.cell {
     vertical-align: middle;
@@ -19512,8 +19323,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     line-height: initial !important;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):not([data-readonly=true]):not([data-visible=false]):not([data-readonly]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name=table-spacer]):not([data-name="draggableIcon"]):hover {
-    background-color: var(--field-inline-edit-color);
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):not([data-readonly=true]):not([data-visible=false]):not([data-readonly]):not(:has(> [data-readonly])):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name=table-spacer]):not([data-name="draggableIcon"]):hover {
+    background-color: var(--field-hover-color);
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell[data-visible=false] > * {
@@ -19527,18 +19338,13 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] {
-    border-color: #dedede;
+    background-color: #fbfbfb;
 }
 
 .compare-records:not([data-mode=merge]) .compare-panel table tr td.cell[data-mode=edit] {
     border-color: #06c;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit][data-inline-focused=true] {
-    border-color: #06c;
-}
-
-.list-container > .list[data-editable=true] > table tr td.cell.has-error[data-mode=edit],
 .compare-records:not([data-mode=merge]) .compare-panel table tr td.cell.has-error[data-mode=edit] {
     border-color: #a94442;
 }
@@ -19547,7 +19353,6 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     padding-left: 15px !important;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input),
 .compare-records .compare-panel table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input) {
     border-bottom: 0;
 }
