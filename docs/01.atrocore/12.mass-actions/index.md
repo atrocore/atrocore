@@ -8,6 +8,8 @@ To select all entity records, click the checkbox to the left of the 'Name' colum
 
 ![Select all option](./_assets/select-all-option.png){.medium}
 
+The same select-all checkbox and **Actions** button are also available in the [pagination toolbar](../04.understanding-ui/index.md#pagination-toolbar) below the records list.
+
 The following mass actions are available by default in the AtroCore system:
 
 ![Mass Actions](./_assets/mass-actions_n.png){.large}

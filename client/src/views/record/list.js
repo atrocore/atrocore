@@ -279,7 +279,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.dragableSortField = dragDropDefs.sortField;
                     if (this.dragableSortField) {
                         this.collection.sortBy = this.dragableSortField;
+                        this.collection.defaultSortBy = this.dragableSortField;
                     }
+                    this.dragableSortAsc = 'asc' in dragDropDefs ? !!dragDropDefs.asc : this.collection.defaultAsc;
                     if (dragDropDefs.orderSaveUrl) {
                         this.listRowsOrderSaveUrl = this.listRowsOrderSaveUrl || dragDropDefs.orderSaveUrl;
                     }
@@ -296,6 +298,14 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             if (field === this.collection.sortBy && this.collection.asc) {
                 asc = false;
             }
+            this.applySort(field, asc);
+        },
+
+        resetSort: function () {
+            this.applySort(this.collection.defaultSortBy, this.collection.defaultAsc);
+        },
+
+        applySort: function (field, asc) {
             this.notify('Please wait...');
             this.collection.once('sync', function () {
                 this.notify(false);
@@ -364,9 +374,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         hasLayoutEditor: false,
 
         data: function () {
-            var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
-            var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
-
             const fixedHeaderRow = this.isFixedListHeaderRow();
 
             return {
@@ -374,18 +381,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 header: this.header,
                 headerDefs: this._getHeaderDefs(),
                 paginationEnabled: this.pagination,
-                paginationTop: paginationTop,
-                paginationBottom: paginationBottom,
-                showMoreActive: this.collection.total > this.collection.length || this.collection.total == -1,
-                showMoreEnabled: this.showMore,
+                showMoreActive: this.collection.offset + this.collection.length < this.collection.total || this.collection.total == -1,
+                showMoreEnabled: this.showMore && !this.options.panelView,
                 showCount: this.showCount && this.collection.total > 0,
-                moreCount: this.collection.total - this.collection.length,
+                moreCount: this.collection.total - (this.collection.offset + this.collection.length),
                 checkboxes: this.checkboxes,
                 allowSelectAllResult: this.isAllowedSelectAllResult(),
                 disableSelectAllResult: this.isSelectAllResultDisabled(),
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                bottomBar: paginationBottom,
                 buttonList: this.buttonList,
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
@@ -457,17 +461,22 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getShowMoreLabel() {
-            let label = this.getLanguage().translate('Show more');
+            if (this.collection.total !== null) {
+                this.lastKnownTotal = this.collection.total;
+            }
+            let total = this.collection.total !== null ? this.collection.total : this.lastKnownTotal;
 
-            if (this.showCount && this.collection.total > 0) {
+            let label = this.getLanguage().translate('Load next');
+
+            if (this.showCount && total > 0) {
                 let limit = this.collection.maxSize;
-                let add = this.collection.total - this.collection.length;
+                let add = total - (this.collection.offset + this.collection.length + this.collection.lengthCorrection);
 
                 if (limit < add) {
                     add = limit;
                 }
 
-                label = this.getLanguage().translate('Show %s more').replace('%s', add);
+                label = this.getLanguage().translate('Load next %s').replace('%s', add);
             }
 
             return label;
@@ -1449,6 +1458,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.checkedList = [];
                     this.allResultIsChecked = false;
                 }
+
                 this.buildRows(function () {
                     this.render();
                 }.bind(this));
@@ -1482,15 +1492,51 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             this.listenTo(this.collection, 'sync', () => {
                 this.trigger('update-counters');
             });
+            this.listenTo(this.collection, 'request', () => {
+                this.trigger('pagination-toolbar-update', {showMoreLoading: true});
+            });
+            this.listenTo(this.collection, 'sync error', () => {
+                this.trigger('pagination-toolbar-update', {showMoreLoading: false});
+            });
+            this.listenTo(this, 'check select-all-results unselect-all-results mass-actions-updated', () => {
+                this.trigger('pagination-toolbar-update');
+            });
             this.listenTo(this.collection, 'update-total', () => {
-                if (this.collection.total > this.collection.length || this.collection.total === -1) {
+                if (this.collection.offset + this.collection.length < this.collection.total || this.collection.total === -1) {
                     this.$el.find('.show-more').removeClass('hidden')
                     this.$el.find('.show-more .more-label').text(this.getShowMoreLabel())
                 } else {
                     this.$el.find('.show-more').addClass('hidden')
                 }
 
+                this.trigger('pagination-toolbar-update');
                 this.trigger('update-counters');
+            });
+
+            this.listenTo(this, 'pagination-toolbar-update', function (extraProps) {
+                if (this.tableShowMorePlaceholder) {
+                    var props = this.getPaginationToolbarProps();
+                    this.tableShowMorePlaceholder.$set(Object.assign({
+                        visible: props.showMoreVisible,
+                        label: props.showMoreLabel,
+                        loading: false,
+                        onClick: props.onShowMore
+                    }, extraProps && 'showMoreLoading' in extraProps ? {loading: extraProps.showMoreLoading} : {}));
+                }
+
+                this.updatePaginationToolbar(extraProps);
+            }.bind(this));
+
+            this.listenToOnce(this, 'remove', () => {
+                if (this.tableShowMorePlaceholder) {
+                    try {
+                        this.tableShowMorePlaceholder.$destroy();
+                    } catch (e) {
+                    }
+                    this.tableShowMorePlaceholder = null;
+                }
+
+                this.destroyPaginationToolbar();
             });
 
             $(window).on(`keydown.${this.cid} keyup.${this.cid}`, e => {
@@ -1605,44 +1651,51 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         getCounters: function () {
             const groups = [];
-
-            if (this.displayTotalCount) {
-                groups.push([
-                    {
-                        name: 'shown',
-                        label: this.translate('Shown'),
-                        value: this.collection.length,
-                    },
-                    {
-                        name: 'total',
-                        label: this.translate('Total'),
-                        value: this.collection.total,
-                    }
-                ]);
-            }
+            const counters = [];
 
             if (this.checkedList?.length > 0) {
-                groups.unshift([
-                    {
-                        name: 'selected',
-                        label: this.translate('Selected'),
-                        value: this.checkedList.length,
-                    }
-                ]);
+                counters.push({
+                    name: 'selected',
+                    label: this.translate('Selected'),
+                    value: this.checkedList.length,
+                });
             } else if (this.allResultIsChecked) {
-                groups.unshift([
-                    {
-                        name: 'selected',
-                        label: this.translate('Selected'),
-                        value: this.collection.total,
-                    }
-                ]);
+                counters.push({
+                    name: 'selected',
+                    label: this.translate('Selected'),
+                    value: this.collection.total,
+                });
+            }
+
+            if (this.displayTotalCount) {
+                var shownCount = this.collection.length + (this.collection.lengthCorrection || 0);
+                if (shownCount > this.collection.maxSize) {
+                    counters.push({
+                        name: 'shown',
+                        label: this.translate('Shown'),
+                        value: shownCount,
+                    });
+                }
+
+                counters.push({
+                    name: 'total',
+                    label: this.translate('Total'),
+                    value: this.collection.total,
+                });
+            }
+
+            if (counters.length) {
+                groups.push(counters);
             }
 
             return groups;
         },
 
         getMassActions: function () {
+            if (!this.checkboxes) {
+                return [];
+            }
+
             if (this.allResultIsChecked) {
                 return (this.massActionList || []).filter(item => ~this.checkAllResultMassActionList.indexOf(item));
             }
@@ -1660,6 +1713,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         afterRender: function () {
             this.createLayoutConfigurator();
+            this.renderTableShowMorePlaceholder();
+            this.trigger('pagination-toolbar-update');
 
             if (this.allResultIsChecked) {
                 this.selectAllResult();
@@ -1684,6 +1739,19 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     }
                 });
 
+                if (this.dragableSortField) {
+                    var currentSortInfo = this.getSortFieldInfo(this.collection.sortBy);
+                    var dragSortInfo = this.getSortFieldInfo(this.dragableSortField);
+                    if (
+                        !currentSortInfo || !dragSortInfo
+                        || currentSortInfo.scope !== dragSortInfo.scope
+                        || currentSortInfo.field !== dragSortInfo.field
+                        || !!this.collection.asc !== !!this.dragableSortAsc
+                    ) {
+                        allowed = false;
+                    }
+                }
+
                 if (!allowed) {
                     $("td[data-name='draggableIcon'] span").remove();
                 }
@@ -1703,7 +1771,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                         parent.off('scroll');
                         parent.on('scroll', parent, function () {
-                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
+                            if (this.collection.offset + this.collection.length + this.collection.lengthCorrection < this.collection.total && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
                                 let type = 'list';
                                 if (this.isHierarchical()) {
                                     type = this.getStorage().get('list-small-view-type', this.scope) || 'tree'
@@ -1722,7 +1790,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                         content.off('scroll', this.$el);
                         content.on('scroll', this.$el, function () {
-                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && content.scrollTop() + content.height() >= content.get(0).scrollHeight - 50) {
+                            if (this.collection.offset + this.collection.length + this.collection.lengthCorrection < this.collection.total && content.scrollTop() + content.height() >= content.get(0).scrollHeight - 50) {
                                 this.loadMore(this.$el.find('a[data-action="showMore"]'));
                             }
                         }.bind(this));
@@ -2845,7 +2913,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.collection.length > 0) {
                 var i = 0;
-                var c = !this.pagination ? 1 : 2;
+                var c = 1;
                 var func = function () {
                     i++;
                     if (i == c) {
@@ -2890,19 +2958,367 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         }
                     }.bind(this));
                 }, this);
-
-
-                if (this.pagination) {
-                    this.createView('pagination', 'views/record/list-pagination', {
-                        collection: this.collection
-                    }, func);
-                }
             } else {
                 if (typeof callback == 'function') {
                     callback();
                     this.trigger('after:build-rows');
                 }
             }
+        },
+
+        hasPaginationToolbar: function () {
+            if (!this.pagination) {
+                return false;
+            }
+
+            if (this.options.panelView && !this.collection.length) {
+                return false;
+            }
+
+            var props = this.getPaginationToolbarProps();
+            return props.totalPages > 1 || props.showMoreVisible || props.controls.length > 0;
+        },
+
+        getSortFieldsList: function () {
+            var fields = [];
+            var fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields']);
+            for (var field in fieldDefs) {
+                if (!fieldDefs[field].disabled
+                    && !fieldDefs[field].layoutListDisabled
+                    && !this.getMetadata().get(['fields', fieldDefs[field].type, 'notSortable'])
+                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime', 'bool'].includes(fieldDefs[field].type)
+                ) {
+                    fields.push(field);
+                }
+            }
+
+            fields.sort(function (v1, v2) {
+                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
+            }.bind(this));
+
+            return fields;
+        },
+
+        getRelationSortFieldsList: function () {
+            if (!this.relationScope) {
+                return [];
+            }
+
+            var fields = [];
+            var fieldDefs = this.getMetadata().get(['entityDefs', this.relationScope, 'fields']);
+            for (var field in fieldDefs) {
+                if (field !== 'id'
+                    && !fieldDefs[field].disabled
+                    && !fieldDefs[field].relationField
+                    && !fieldDefs[field].layoutListDisabled
+                    && !this.getMetadata().get(['fields', fieldDefs[field].type, 'notSortable'])
+                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime', 'bool'].includes(fieldDefs[field].type)
+                ) {
+                    fields.push(field);
+                }
+            }
+
+            fields.sort(function (v1, v2) {
+                return this.translate(v1, 'fields', this.relationScope).localeCompare(this.translate(v2, 'fields', this.relationScope));
+            }.bind(this));
+
+            return fields;
+        },
+
+        getRelationSortAlias: function () {
+            if (!this.relationScope) {
+                return null;
+            }
+
+            return this.relationScope.replace(/(?!^)[A-Z]/g, '_$&').toLowerCase() + '_mm';
+        },
+
+        getSortFieldInfo: function (sortByValue) {
+            if (!sortByValue) {
+                return null;
+            }
+
+            var relationAlias = this.getRelationSortAlias();
+            if (relationAlias && sortByValue.indexOf(relationAlias + '.') === 0) {
+                return {scope: this.relationScope, field: sortByValue.slice(relationAlias.length + 1)};
+            }
+
+            if (this.isRelationField(sortByValue)) {
+                return {scope: this.relationScope, field: sortByValue.split('__')[1]};
+            }
+
+            if (
+                this.relationScope
+                && !this.getMetadata().get(['entityDefs', this.scope, 'fields', sortByValue])
+                && this.getMetadata().get(['entityDefs', this.relationScope, 'fields', sortByValue])
+            ) {
+                return {scope: this.relationScope, field: sortByValue};
+            }
+
+            return {scope: this.scope, field: sortByValue};
+        },
+
+        getSortToolbarControl: function () {
+            var fields = this.getSortFieldsList();
+            var relationFields = this.getRelationSortFieldsList();
+            if (!fields.length && !relationFields.length) {
+                return null;
+            }
+
+            var options = [];
+            var defaultFieldInfo = this.collection.defaultSortBy ? this.getSortFieldInfo(this.collection.defaultSortBy) : null;
+
+            if (defaultFieldInfo) {
+                var defaultFieldLabel = this.translate(defaultFieldInfo.field, 'fields', defaultFieldInfo.scope);
+                var defaultArrowIcon = this.collection.defaultAsc ? 'ph-arrow-up' : 'ph-arrow-down';
+                options.push({
+                    value: '__default__',
+                    group: this.getLanguage().translate('Default'),
+                    label: defaultFieldLabel + '<i class="ph ' + defaultArrowIcon + '" style="color: #777; margin-left: 6px; font-size: 14px;"></i>',
+                    disabled: this.collection.sortBy === this.collection.defaultSortBy && this.collection.asc === this.collection.defaultAsc,
+                    onClick: function () {
+                        this.resetSort();
+                    }.bind(this)
+                });
+            }
+
+            var fieldsGroupLabel = this.getLanguage().translate('Fields');
+            fields.forEach(function (field) {
+                options.push({
+                    value: field,
+                    label: this.translate(field, 'fields', this.scope),
+                    hidden: !!defaultFieldInfo && defaultFieldInfo.scope === this.scope && defaultFieldInfo.field === field,
+                    group: fieldsGroupLabel
+                });
+            }, this);
+
+            var relationAlias = this.getRelationSortAlias();
+            var relationFieldsGroupLabel = this.getLanguage().translate('Relation Fields');
+            relationFields.forEach(function (field) {
+                var value = relationAlias + '.' + field;
+                options.push({
+                    value: value,
+                    label: this.translate(field, 'fields', this.relationScope),
+                    hidden: !!defaultFieldInfo && defaultFieldInfo.scope === this.relationScope && defaultFieldInfo.field === field,
+                    group: relationFieldsGroupLabel
+                });
+            }, this);
+
+            return {
+                key: 'sort',
+                iconClass: this.collection.asc ? 'ph ph-sort-descending' : 'ph ph-sort-ascending',
+                iconTitle: this.getLanguage().translateOption(this.collection.asc ? 'asc' : 'desc', 'sortDirection', 'Entity'),
+                iconClickable: true,
+                onIconClick: function () {
+                    this.toggleSort(this.collection.sortBy);
+                }.bind(this),
+                value: this.collection.sortBy,
+                options: options,
+                onSelect: function (field) {
+                    this.toggleSort(field);
+                }.bind(this)
+            };
+        },
+
+        pageSizeMultipliers: [0.5, 1, 2, 5],
+
+        getPageSizeOptions: function () {
+            var base = this.collection.defaultMaxSize || this.collection.maxSize;
+
+            var options = this.pageSizeMultipliers.map(function (multiplier) {
+                return Math.max(1, Math.round(base * multiplier));
+            });
+
+            return options.filter(function (value, index) {
+                return options.indexOf(value) === index;
+            });
+        },
+
+        getPageSizeToolbarControl: function () {
+            var options = this.getPageSizeOptions().map(function (size) {
+                return {value: size, label: String(size)};
+            });
+
+            return {
+                key: 'pageSize',
+                iconClass: 'ph ph-rows',
+                iconTitle: this.translate('pageSize', 'labels'),
+                value: this.collection.maxSize,
+                options: options,
+                onSelect: function (size) {
+                    this.setPageSize(parseInt(size, 10));
+                }.bind(this)
+            };
+        },
+
+        setPageSize: function (size) {
+            if (this.collection.maxSize === size) {
+                return;
+            }
+
+            this.notify('Please wait...');
+            this.collection.maxSize = size;
+            this.collection.offset = 0;
+            this.getStorage().set('listPageSize', this.scope, size);
+            this.collection.fetch({
+                maxSize: size,
+                success: function () {
+                    this.notify(false);
+                    this.trigger('pagination-toolbar-update');
+                }.bind(this)
+            });
+        },
+
+        getToolbarControls: function () {
+            var controls = [];
+            var sortControl = this.getSortToolbarControl();
+            if (sortControl) {
+                controls.push(sortControl);
+            }
+            if (!this.options.panelView) {
+                controls.push(this.getPageSizeToolbarControl());
+            }
+            return controls;
+        },
+
+        getPaginationToolbarProps: function () {
+            var maxSize = this.collection.maxSize || 1;
+            var currentPage = this.pendingPage != null
+                ? this.pendingPage
+                : Math.floor((this.collection.offset + Math.max(this.collection.length, 1) - 1) / maxSize) + 1;
+
+            if (this.collection.total !== null) {
+                this.lastKnownTotal = this.collection.total;
+            }
+            var total = this.collection.total !== null ? this.collection.total : this.lastKnownTotal;
+            var totalPages = total == null
+                ? currentPage
+                : Math.max(Math.ceil(total / maxSize), currentPage);
+            const showMoreVisible = this.pendingPage == null && !!this.showMore && (
+                total == null
+                || this.collection.offset + this.collection.length + this.collection.lengthCorrection < total
+                || total === -1
+            );
+            return {
+                currentPage: currentPage,
+                totalPages: totalPages,
+                onPageChange: function (page) {
+                    this.notify('Please wait...');
+                    this.pendingPage = page;
+                    this.collection.offset = (page - 1) * maxSize;
+                    this.collection.fetch({
+                        maxSize: maxSize,
+                        success: function () {
+                            this.notify(false);
+                            this.pendingPage = null;
+                            this.trigger('pagination-toolbar-update');
+                        }.bind(this)
+                    });
+                }.bind(this),
+                showMoreVisible: showMoreVisible,
+                showMoreLabel: this.getShowMoreLabel(),
+                showMoreLoading: false,
+                onShowMore: showMoreVisible ? function () {
+                    this.showMoreRecords();
+                }.bind(this) : null,
+                controls: this.getToolbarControls(),
+                scope: this.scope,
+                massActions: this.getMassActions(),
+                selected: this.allResultIsChecked ? true : this.checkedList,
+                hasSelectAllCheckbox: !!this.checkboxes && this.isAllowedSelectAllResult(),
+                executeMassAction: function (action, data) {
+                    this.executeMassAction(action, data);
+                }.bind(this),
+                handleSelectAll: function (e) {
+                    this.handleSelectAll(e);
+                }.bind(this)
+            };
+        },
+
+        renderTableShowMorePlaceholder: function () {
+            var container = this.$el.find('.table-show-more-container')[0];
+            if (!container) {
+                this.tableShowMorePlaceholder = null;
+                return;
+            }
+
+            var props = this.getPaginationToolbarProps();
+            this.tableShowMorePlaceholder = new Svelte.ShowMoreButton({
+                target: container,
+                props: {
+                    visible: props.showMoreVisible,
+                    label: props.showMoreLabel,
+                    loading: false,
+                    onClick: props.onShowMore
+                }
+            });
+        },
+
+        mountPaginationToolbar: function (containerOrGetter, propsOverride) {
+            this.paginationToolbarContainerGetter = containerOrGetter;
+            this.paginationToolbarPropsOverride = propsOverride || {};
+            this.updatePaginationToolbar();
+        },
+
+        getPaginationToolbarContainer: function () {
+            if (!this.paginationToolbarContainerGetter) {
+                return null;
+            }
+
+            return typeof this.paginationToolbarContainerGetter === 'function'
+                ? this.paginationToolbarContainerGetter()
+                : this.paginationToolbarContainerGetter;
+        },
+
+        updatePaginationToolbar: function (extraProps) {
+            var container = this.getPaginationToolbarContainer();
+            if (!container) {
+                return;
+            }
+
+            if (!this.hasPaginationToolbar()) {
+                this.destroyPaginationToolbar();
+                return;
+            }
+
+            if (this.sveltePaginationToolbar && this.paginationToolbarMountedContainer !== container) {
+                try {
+                    this.sveltePaginationToolbar.$destroy();
+                } catch (e) {
+                }
+                this.sveltePaginationToolbar = null;
+            }
+
+            $(container).removeClass('hidden');
+
+            var props = Object.assign(this.getPaginationToolbarProps(), this.paginationToolbarPropsOverride, extraProps || {});
+
+            if (!this.sveltePaginationToolbar) {
+                this.sveltePaginationToolbar = new Svelte.PaginationToolbar({
+                    target: container,
+                    props: props
+                });
+                this.paginationToolbarMountedContainer = container;
+                return;
+            }
+
+            this.sveltePaginationToolbar.$set(props);
+        },
+
+        destroyPaginationToolbar: function () {
+            var container = this.getPaginationToolbarContainer();
+            if (container) {
+                $(container).addClass('hidden');
+            }
+
+            if (this.sveltePaginationToolbar) {
+                try {
+                    this.sveltePaginationToolbar.$destroy();
+                } catch (e) {
+                }
+                this.sveltePaginationToolbar = null;
+            }
+            this.paginationToolbarMountedContainer = null;
         },
 
         afterRenderStatusIcons(icons, model) {
@@ -2912,22 +3328,29 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         showMoreRecords: function (collection, $list, $showMore, callback) {
             collection = collection || this.collection;
 
+            if (collection.lastXhr && collection.lastXhr.readyState < 4) {
+                return;
+            }
+
             $showMore = $showMore || this.$el.find('.show-more');
             $list = $list || this.$el.find(this.listContainerEl);
 
             $showMore.children('a').addClass('disabled');
+            this.trigger('pagination-toolbar-update', { showMoreLoading: true });
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
 
             var final = function () {
                 $showMore.parent().append($showMore);
                 if (
-                    (collection.total > collection.length + collection.lengthCorrection || collection.total == -1)
+                    (collection.offset + collection.length + collection.lengthCorrection < collection.total || collection.total == -1)
                 ) {
                     $showMore.find('span.more-label').text(this.getShowMoreLabel());
                     $showMore.removeClass('hidden');
                 }
                 $showMore.children('a').removeClass('disabled');
+
+                this.trigger('pagination-toolbar-update');
 
                 if (this.allResultIsChecked) {
                     this.$el.find('input.record-checkbox').attr('disabled', 'disabled').prop('checked', true);
