@@ -98,6 +98,10 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         showMore: true,
 
+        hasPaginationToolbar: function () {
+            return false;
+        },
+
         quickDetailDisabled: false,
 
         quickEditDisabled: false,

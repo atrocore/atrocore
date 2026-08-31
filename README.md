@@ -8,7 +8,7 @@
 
 <p align="center" width="100%"><br><br><img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48"><br><br></p>
 
-<p align="center"><b>AtroCore is an open-source Business Application Platform for managing complex business data, integrating systems, automating processes, and building flexible business applications.</b></p>
+<p align="center"><b><a href="https://www.atrocore.com">AtroCore</a> is an open-source Business Application Platform for managing complex business data, integrating systems, automating processes, and building flexible business applications.</b></p>
 
 Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile business application development with no or minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
 

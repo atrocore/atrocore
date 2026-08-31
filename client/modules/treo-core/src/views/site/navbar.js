@@ -47,6 +47,14 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
                 'click #global-search-panel a': function () {
                     this.$el.find('.navbar-collapse ').toggleClass('open-search');
+                },
+
+                'click [data-action="toggleLeftSidebar"]': function () {
+                    window.dispatchEvent(new CustomEvent('atro:toggle-sidebar', {detail: {position: 'left'}}));
+                },
+
+                'click [data-action="toggleRightSidebar"]': function () {
+                    window.dispatchEvent(new CustomEvent('atro:toggle-sidebar', {detail: {position: 'right'}}));
                 }
             });
         },
@@ -342,6 +350,25 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     this.bgProcessingTimeout = null;
                 }
             });
+
+            this.onSidebarToggled = (e) => {
+                var position = e.detail && e.detail.position;
+                var isCollapsed = e.detail && e.detail.isCollapsed;
+                var action = position === 'left' ? 'toggleLeftSidebar' : 'toggleRightSidebar';
+                var $icon = this.$el.find('[data-action="' + action + '"] i');
+                if (!$icon.length) {
+                    return;
+                }
+
+                var showRight = position === 'left' ? isCollapsed : !isCollapsed;
+                $icon.toggleClass('ph-caret-right', showRight);
+                $icon.toggleClass('ph-caret-left', !showRight);
+            };
+            window.addEventListener('atro:sidebar-toggled', this.onSidebarToggled);
+
+            this.listenToOnce(this, 'remove', () => {
+                window.removeEventListener('atro:sidebar-toggled', this.onSidebarToggled);
+            });
         },
 
         checkBackgroundProcessing() {
@@ -394,6 +421,9 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }, view => {
                         view.render();
                         this.jmInterval = window.setInterval(() => {
+                            if (collection.lastXhr && collection.lastXhr.readyState < 4) {
+                                return;
+                            }
                             collection.fetch();
                         }, 2000)
                     });
@@ -511,6 +541,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         // Handle selection change if needed
                     }
                 }
+            });
+
+            window.addEventListener('selection:refresh', () => {
+                this.currentSelectionButton.handleSelectionChange()
             });
         }
     });

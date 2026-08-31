@@ -76,6 +76,10 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\ActionHandler"
   },
+  "Action": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\Action"
+  },
   "ExecuteAction": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\ExecuteAction"

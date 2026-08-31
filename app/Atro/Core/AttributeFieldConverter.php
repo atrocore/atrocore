@@ -19,6 +19,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
@@ -170,11 +171,31 @@ class AttributeFieldConverter
 
         if (!empty($entity->_originalInput->__attributes)) {
             if (!$entity->isNew() && !empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
-                throw new BadRequest('Attribute linking is disabled.');
+                throw new BadRequest($this->getLanguage()->translate('attributeLinkingDisabled', 'exceptions'));
             }
 
             if (!$this->container->get('acl')->check($entity, 'createAttributeValue')) {
-                throw new Forbidden();
+                // check if record has such attributes during mass update
+                if (!empty($entity->_originalInput->__massUpdate)) {
+                    $this->putAttributesToEntity($entity);
+
+                    foreach ($entity->_originalInput->__attributes as $attributeId) {
+                        $hasAttribute = false;
+
+                        foreach ($entity->entityDefs['fields'] as $defs) {
+                            if (($defs['attributeId'] ?? null) === $attributeId && !empty($defs['attributeValueId'])) {
+                                $hasAttribute = true;
+                                break;
+                            }
+                        }
+
+                        if (!$hasAttribute) {
+                            throw new Forbidden($this->getLanguage()->translate('createAttributeValueForbidden', 'exceptions'));
+                        }
+                    }
+                } else {
+                    throw new Forbidden($this->getLanguage()->translate('createAttributeValueForbidden', 'exceptions'));
+                }
             }
         }
 
@@ -183,11 +204,11 @@ class AttributeFieldConverter
         if (!empty($entity->_originalInput->__attributesToRemove)) {
             $toRemove = $attributeRepository->getAttributeIdsByIdOrCode($entity->getEntityName(), $entity->_originalInput->__attributesToRemove);
             if (!empty($this->metadata->get("scopes.{$entity->getEntityName()}.disableAttributeLinking"))) {
-                throw new BadRequest('Attribute unlinking is disabled.');
+                throw new BadRequest($this->getLanguage()->translate('attributeUnlinkingDisabled', 'exceptions'));
             }
 
             if (!$this->container->get('acl')->check($entity, 'deleteAttributeValue')) {
-                throw new Forbidden();
+                throw new Forbidden($this->getLanguage()->translate('deleteAttributeValueForbidden', 'exceptions'));
             }
 
             // Validate composite children: a child may not be removed without its composite parent also being removed.
@@ -195,7 +216,7 @@ class AttributeFieldConverter
 
             foreach ($children as $child) {
                 if (!in_array($child['composite_attribute_id'], $toRemove)) {
-                    throw new BadRequest('Nested attribute cannot be removed without its composite parent.');
+                    throw new BadRequest($this->getLanguage()->translate('nestedAttributeRemovalForbidden', 'exceptions'));
                 }
             }
 
@@ -247,8 +268,10 @@ class AttributeFieldConverter
         if (class_exists("\\Pim\\Module")) {
             $select[] = 'c.name as channel_name';
 
-            foreach ($locales as $locale) {
-                $select[] = 'c.name_' . $locale . ' as channel_name_' . $locale;
+            if (!empty($this->metadata->get(['entityDefs', 'Channel', 'fields', 'name', 'isMultilang'], false))) {
+                foreach ($locales as $locale) {
+                    $select[] = 'c.name_' . $locale . ' as channel_name_' . $locale;
+                }
             }
         }
 
@@ -283,7 +306,7 @@ class AttributeFieldConverter
 
                 foreach ($locales as $locale) {
                     $attributeLabel = $attribute['name_' . $locale] ?? $attribute['name'];
-                    $channelLabel  = $attribute['channel_name_' . $locale] ?? $attribute['channel_name'];
+                    $channelLabel   = $attribute['channel_name_' . $locale] ?? $attribute['channel_name'];
 
                     $res[$k]['name_' . $locale] = $attributeLabel . ' / ' . $channelLabel;
                 }
@@ -549,5 +572,10 @@ class AttributeFieldConverter
         }
 
         return $this->container->get($className);
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->container->get('language');
     }
 }

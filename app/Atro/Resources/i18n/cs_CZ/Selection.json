@@ -13,7 +13,8 @@
   "messages": {
     "cannotSetToSingle": "Nelze nastavit možnost 'Uniform'",
     "youNeedAtLeastTwoItem": "Pro srovnání potřebujete alespoň dvě položky.",
-    "entityIsRequired": "Pole \"Entita\" je povinné."
+    "entityIsRequired": "Pole \"Entita\" je povinné.",
+    "entityTypeMismatch": "Tento výběr přijímá pouze záznamy typu '%s'."
   },
   "labels": {
     "createSelection": "Vytvořit výběr"

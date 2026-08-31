@@ -75,6 +75,29 @@
         }
       }
     },
+    "action": {
+      "type": "link",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Action"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Action"
+            }
+          ]
+        }
+      }
+    },
     "jobs": {
       "type": "linkMultiple"
     }
@@ -96,6 +119,10 @@
     "storage": {
       "type": "belongsTo",
       "entity": "Storage"
+    },
+    "action": {
+      "type": "belongsTo",
+      "entity": "Action"
     }
   },
   "collection": {

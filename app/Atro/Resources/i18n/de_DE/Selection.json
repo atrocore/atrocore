@@ -16,7 +16,8 @@
   "messages": {
     "cannotSetToSingle": "Sie können 'Einheitlich' nicht auswählen.",
     "youNeedAtLeastTwoItem": "Sie benötigen mindestens zwei Artikel zum Vergleich.",
-    "entityIsRequired": "Das Feld 'Entität' ist erforderlich."
+    "entityIsRequired": "Das Feld 'Entität' ist erforderlich.",
+    "entityTypeMismatch": "Diese Auswahl akzeptiert nur Datensätze vom Typ '%s'."
   },
   "customActions": {
     "replaceItem": "Artikel austauschen"

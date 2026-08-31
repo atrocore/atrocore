@@ -12,6 +12,7 @@
 namespace Atro\Core;
 
 use Atro\ActionTypes\TypeInterface;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Utils\Metadata;
@@ -160,9 +161,12 @@ class ActionManager
             $res = $actionType->execute($execution, $input);
         } catch (\Throwable $e) {
             $res = false;
-            $execution->set('status', 'failed');
-            $execution->set('statusMessage', $e->getMessage());
-            $this->getEntityManager()->saveEntity($execution);
+
+            if (!($e instanceof BadRequest && $action->get('type') === 'error')) {
+                $execution->set('status', 'failed');
+                $execution->set('statusMessage', $e->getMessage());
+                $this->getEntityManager()->saveEntity($execution);
+            }
         }
 
         if ($userChanged) {

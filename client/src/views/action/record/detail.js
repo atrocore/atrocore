@@ -67,7 +67,9 @@ Espo.define('views/action/record/detail', ['views/record/detail', 'views/record/
         },
 
         getAllowedActionTypes() {
-            return ['update', 'delete', 'email'];
+            return ['update', 'delete', 'email'].concat(
+                Object.keys(this.getMetadata().get(['action', 'filterableTypes']) || {})
+            );
         }
     })
 );

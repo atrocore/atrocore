@@ -101,8 +101,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         isRequired() {
+            if (!this.isAttributeLinked()) {
+                return false;
+            }
+
             if (this.params.required) {
-                return true
+                return true;
             }
 
             return this.isRequiredViaConditions(this.name);
@@ -1074,6 +1078,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             } else {
                 this.hideRequiredSign();
             }
+        },
+
+        isAttributeLinked() {
+            const attributeName = this.originalName || this.name;
+            const attributesDefs = this.model.get('attributesDefs');
+            return !(attributesDefs && attributesDefs[attributeName] && !attributesDefs[attributeName]['attributeValueId']);
         },
 
         isRequiredViaConditions() {

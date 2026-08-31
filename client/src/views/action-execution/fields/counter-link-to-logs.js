@@ -44,6 +44,7 @@ Espo.define('views/action-execution/fields/counter-link-to-logs', 'views/fields/
         actionShowList() {
             const searchFilter = this.getSearchFilter();
             this.getStorage().set('listQueryBuilder', 'ActionExecutionLog', searchFilter);
+            this.getStorage().set('treeSelectedNodes', 'ActionExecutionLog', []);
             window.open(`#ActionExecutionLog`, '_blank');
         },
 

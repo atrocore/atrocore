@@ -46,7 +46,7 @@ body {
     --label-color: #777;
     --anchor-nav-background: #fafafa;
     --icon-color: #06c;
-    --primary-border-color: #dcdcdc;
+    --primary-border-color: #ccc;
     --secondary-border-color: #f5f5f5;
     --panel-title-color: #000;
     --header-title-color: #000;
@@ -3551,7 +3551,7 @@ button, a[role=button], .btn {
     cursor: pointer;
     touch-action: manipulation;
     white-space: nowrap;
-    padding: 7px 10px;
+    padding: 6px 10px;
     position: relative;
 }
 
@@ -3610,11 +3610,13 @@ a[role=button] > i {
 button > i:first-child:not(:last-child),
 a[role=button] > i:first-child:not(:last-child) {
     margin-inline-end: 5px;
+    margin-inline-start: -3px;
 }
 
 button > i:last-child:not(:first-child),
 a[role=button] > i:last-child:not(:first-child) {
     margin-inline-start: 5px;
+    margin-inline-end: -3px;
 }
 
 button.success,
@@ -3883,6 +3885,7 @@ tbody.collapse.in {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
     background-clip: padding-box;
     overflow: auto;
+    scrollbar-width: thin;
 }
 
 .dropdown-menu.pull-right {
@@ -3963,7 +3966,7 @@ tbody.collapse.in {
 
 .dropdown-header {
     display: block;
-    padding: 3px 20px;
+    padding: 10px 20px 3px;
     font-size: 12px;
     line-height: 1.36;
     color: #999;
@@ -4625,7 +4628,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     position: relative;
     float: right;
     padding: 0;
-    margin: auto 0 auto 10px;
+    margin: auto 0 auto 5px;
     background-color: transparent;
     background-image: none;
     border: 1px solid transparent;
@@ -4649,6 +4652,37 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .navbar-toggle .icon-bar + .icon-bar {
     margin-top: 4px
+}
+
+.sidebar-toggle-btn {
+    position: relative;
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 34px;
+    height: 34px;
+    margin: auto 8px;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid var(--primary-border-color, #dcdcdc);
+    border-radius: 4px;
+    color: var(--toolbar-font-color);
+    line-height: 1;
+    font-size: 20px;
+}
+
+@media (max-width: 767px) {
+    .sidebar-toggle-btn.visible-xs {
+        display: flex !important;
+    }
+}
+
+.sidebar-toggle-btn:hover,
+.sidebar-toggle-btn:focus {
+    color: var(--toolbar-font-color);
+    outline: 0;
 }
 
 .navbar-nav {
@@ -6485,7 +6519,7 @@ button.close {
     padding-bottom: 20px;
 }
 
-.modal-body > div:not(.record-container):not(.edit-container):not(.list-container) {
+.modal-body > div:not(.record-container):not(.edit-container):not(.list-container):not(.list-pagination-container) {
     padding: 0 20px;
 }
 
@@ -9721,7 +9755,6 @@ body > #header .navbar-brand span.home-icon {
 
 #header .navbar {
     position: relative;
-    z-index: 2000;
     margin-bottom: 0;
     display: flex;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -9884,9 +9917,18 @@ body > #header .navbar-brand span.home-icon {
     overflow-x: auto;
 }
 
+.bottom > .panel > .panel-body:has(> .relationship-container) {
+    overflow-x: visible;
+}
+
+.bottom > .panel > .panel-body > .relationship-container {
+    overflow-x: auto;
+}
+
 .bottom > .panel:not(.panel-stream) > .panel-body {
     padding-left: 0;
     padding-right: 0;
+    padding-top: 0;
 }
 
 .bottom > .panel.panel-stream .list-container {
@@ -10020,6 +10062,11 @@ label {
     padding: 0 20px;
 }
 
+.table-show-more-container {
+    position: sticky;
+    left: 0;
+}
+
 .page-header {
     margin: 10px 0;
     border-bottom: 0;
@@ -10088,8 +10135,6 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
 }
 
 div.list-kanban {
-    margin-left: -10px;
-    margin-right: -10px;
     overflow-x: auto;
     flex: 1;
     display: flex;
@@ -10304,8 +10349,6 @@ table.table > thead th > div > a {
 
 #main main > .list-container > .list {
     scrollbar-width: none;
-    margin-left: -10px;
-    margin-right: -10px;
     display: grid;
 }
 
@@ -10332,11 +10375,6 @@ table.table > thead th > div > a {
 }
 
 @media screen and (min-width: 768px) {
-    div.list-kanban,
-    #main main > .list-container > .list {
-        margin-left: -20px;
-        margin-right: -20px;
-    }
 
     #main main > .list-container > .list > .table thead th {
         vertical-align: middle;
@@ -10395,7 +10433,9 @@ table.table > thead th > div > a {
 }
 
 .list-container > .no-data-container {
-    padding: 0 20px 10px;
+    padding: 10px 20px 20px;
+    color: #888;
+    text-align: center;
 }
 
 .list-container > .list > .table:not(.fixed-header-table) {
@@ -10475,6 +10515,7 @@ table.table > thead th > div > a {
 table.table > thead th {
     color: var(--label-color);
     position: relative;
+    font-weight: 500;
 }
 
 table.table[data-resizable=true] > thead th.table-spacer,
@@ -10494,11 +10535,16 @@ table.table[data-resizable=true] > thead th .resizer {
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 2px;
-    height: 65%;
+    width: 4px;
+    height: 100%;
     cursor: col-resize;
     user-select: none;
-    background-color: rgba(0,0,0,0.1);
+    border-left: 1px solid #E6E6E6;
+    background-color: transparent;
+}
+
+table.table[data-resizable=true] > thead th .resizer:hover {
+    background-color: #e6e6e6;
 }
 
 .cell label, .filter label {
@@ -10596,7 +10642,7 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .dropdown-menu > li > a {
-    line-height: 19px
+    line-height: 18px;
 }
 
 ul.dropdown-menu > li > a.active {
@@ -13361,8 +13407,8 @@ a:hover, a:focus {
 .panel-title .panel-title-text {
     display: inline-flex;
     align-items: center;
-    padding: 5px 10px;
-    background: #e8eced;
+    padding: 6px 10px;
+    background: #e3e3e3;
     text-transform: none;
     letter-spacing: 0.03em;
     color: #333;
@@ -13375,11 +13421,11 @@ a:hover, a:focus {
 }
 
 .panel-title .panel-title-text[data-action="collapsePanel"]:hover {
-    background: #e0e5e7;
+    background: #dedede;
 }
 
 .panel-title .panel-title-text[data-action="collapsePanel"]:active {
-    background: #d8dee1;
+    background: #d1d1d1;
 }
 
 .panel-title .panel-title-text:empty {
@@ -13505,7 +13551,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading {
-    padding: 5px 20px 6px 20px;
+    padding: 15px 20px;
     color: rgba(0, 0, 0, 0.87);
     border-top: 1px solid var(--primary-border-color);
     border-bottom: 1px solid var(--primary-border-color);
@@ -13516,24 +13562,8 @@ input#sn-checkbox-open-in-new-window {
 .bottom > .panel-default > .panel-heading,
 .composer .panel-default > .panel-heading,
 .modal-body > .panel-default > .panel-heading {
-    height: 40px;
-    border-top-width: 2px;
     border-bottom: 0;
 }
-
-.dashlets .panel-default > .panel-heading,
-.composer .panel-default > .panel-heading,
-.modal-body > .panel-default > .panel-heading {
-    margin-bottom: 5px;
-}
-
-.middle > .panel-default > .panel-body.in,
-.middle > .panel-default > .panel-body.collapsing,
-.bottom > .panel-default > .panel-body.in,
-.bottom > .panel-default > .panel-body.collapsing {
-    margin-bottom: 10px;
-}
-
 .dashlets .panel-default > .panel-heading {
     border-top-width: 1px;
 }
@@ -13554,8 +13584,8 @@ input#sn-checkbox-open-in-new-window {
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total > span {
     border-radius: 0;
-    background-color: #e8eced;
-    padding: 3px 6px;
+    background-color: #e3e3e3;
+    padding: 6px 10px;
 }
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total:hover {
@@ -13622,7 +13652,6 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-body .list > table thead {
-    background-color: transparent;
     border-top: 0;
 }
 
@@ -13637,10 +13666,6 @@ input#sn-checkbox-open-in-new-window {
     width: auto;
     position: sticky;
     left: 0;
-}
-
-.show-more {
-    margin: 15px
 }
 
 .show-more > .btn-block .text-muted {
@@ -13668,10 +13693,13 @@ input#sn-checkbox-open-in-new-window {
 }
 
 #main main > .list-container {
-    display: flex;
-    flex-direction: column;
     flex: 1;
-    padding: 0 20px;
+    width: max-content;
+    min-width: 100%;
+}
+
+#main main > .list-container > .table-show-more-container {
+    width: var(--pagination-toolbar-visible-width, 100%);
 }
 
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .list-group-panel {
@@ -13730,7 +13758,7 @@ table.table > thead th > a {
 }
 
 .dropdown-menu > li > a {
-    padding: 10px 20px
+    padding: 8px 20px
 }
 
 ul.dropdown-menu > li.checkbox {
@@ -14069,6 +14097,24 @@ button.category:focus {
 #main > .content-wrapper > main {
     flex: 1;
     overflow-y: auto;
+}
+
+#main > .content-wrapper > .list-page-body {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#main > .content-wrapper > .list-page-body > main {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+#main > .content-wrapper > .list-page-body > .list-pagination-container {
+    flex-shrink: 0;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1199px) {
@@ -14425,10 +14471,6 @@ button.category:focus {
         min-height: calc(100vh - 28px);
     }
 
-    #main main > .list-container {
-        padding: 0 10px;
-    }
-
     .bottom > .panel.panel-stream .list-container {
         margin-left: -10px;
         margin-right: -10px;
@@ -14618,10 +14660,6 @@ button.category:focus {
     .navbar-toggle {
         float: left;
         border: 0;
-    }
-
-    .navbar-header-inner {
-        margin-right: 10px;
     }
 
     #header .navbar ul.nav > li.global-search-container {
@@ -15293,6 +15331,22 @@ td[data-name="draggableIcon"] {
 
 .full-page-modal .modal-body {
     padding: 0;
+}
+
+.dialog-select-record .modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-select-record .modal-body > .list-container {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
+}
+
+.dialog-select-record .modal-body > .list-pagination-container {
+    flex-shrink: 0;
 }
 
 .full-page-modal .modal-content {
@@ -16913,7 +16967,7 @@ div.list-kanban > div > table .item .panel .form-group {
 }
 
 .tr-text-gray a, .tr-text-gray span, .text-gray {
-    color: #999;
+    color: #888;
 }
 
 .feedbackContainer {
@@ -19361,6 +19415,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .list-container table {
     border-collapse: separate;
+    border-top: 1px solid #e8eced;
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell:not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {

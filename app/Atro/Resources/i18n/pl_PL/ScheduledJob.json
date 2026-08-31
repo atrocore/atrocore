@@ -2,7 +2,11 @@
   "fields": {
     "name": "Nazwa",
     "scheduling": "Harmonogram",
-    "jobs": "Zadania"
+    "jobs": "Zadania",
+    "action": "Akcja"
+  },
+  "links": {
+    "action": "Akcja"
   },
   "labels": {
     "executeNow": "Wykonaj teraz"
@@ -25,7 +29,8 @@
       "FindMatches": "Proszę znaleźć dopasowania",
       "CalculateScriptFieldsForEntities": "Obliczanie pól skryptu",
       "SendReports": "Wysyłanie anonimowych raportów o błędach",
-      "CreateClusters": "Tworzenie klastrów"
+      "CreateClusters": "Tworzenie klastrów",
+      "Action": "Akcja"
     }
   },
   "tooltips": {

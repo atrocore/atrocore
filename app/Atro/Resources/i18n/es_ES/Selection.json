@@ -13,7 +13,8 @@
   "messages": {
     "cannotSetToSingle": "No puede establecer 'Uniforme'",
     "youNeedAtLeastTwoItem": "Necesita al menos dos artículos para comparar.",
-    "entityIsRequired": "El campo \"Entidad\" es obligatorio."
+    "entityIsRequired": "El campo \"Entidad\" es obligatorio.",
+    "entityTypeMismatch": "Esta selección solo acepta registros de tipo '%s'."
   },
   "labels": {
     "createSelection": "Crear selección"

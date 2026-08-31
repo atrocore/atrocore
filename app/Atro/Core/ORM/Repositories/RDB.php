@@ -327,8 +327,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $value = $entity->get($fieldName);
 
         if (is_int($value)) {
-            $min = $fieldData['min'] ?? -2147483648;
-            $max = $fieldData['max'] ?? 2147483647;
+            if (($fieldData['dbType'] ?? null) === 'bigint') {
+                $min = $fieldData['min'] ?? PHP_INT_MIN;
+                $max = $fieldData['max'] ?? PHP_INT_MAX;
+            } else {
+                $min = $fieldData['min'] ?? -2147483648;
+                $max = $fieldData['max'] ?? 2147483647;
+            }
 
             if ($value < $min || $value > $max) {
                 $label = $fieldData['detailViewLabel'] ?? $fieldData['label'] ?? $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType());
@@ -1201,10 +1206,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
     }
 
-    public function createVersionForEntity(Entity $entity, string $versionName, array $data)
+    public function createVersionForEntity(Entity $entity, string $versionName, array $data, ?string $id = null)
     {
-        $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->insert(Util::toUnderScore(lcfirst("{$entity->getEntityType()}Version")))
+        $this->getEntityManager()->getDbal()->createQueryBuilder()
+            ->insert(Util::toUnderScore(lcfirst("{$entity->getEntityName()}Version")))
             ->values([
                 'id'                                                          => ':id',
                 'name'                                                        => ':name',
@@ -1216,7 +1221,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 'created_by_id'                                               => ':userId',
                 'modified_by_id'                                              => ':userId',
             ])
-            ->setParameter('id', IdGenerator::uuid())
+            ->setParameter('id', $id ?? IdGenerator::uuid())
             ->setParameter('name', $versionName)
             ->setParameter('entityId', $entity->get('id'))
             ->setParameter('now', date('Y-m-d H:i:s'))

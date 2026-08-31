@@ -211,7 +211,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.waitForView('list');
 
             this.getCollectionFactory().create(this.scope, function (collection) {
-                collection.maxSize = this.options.selectPageSize || this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
+                collection.maxSize = this.options.selectPageSize || this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPage') || 5;
                 this.collection = collection;
 
                 if (this.options.sortBy) {
@@ -322,7 +322,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 searchManager: this.searchManager,
                 buttonsDisabled: true,
                 skipBuildRows: true,
-                listInlineEditModeEnabled: this.listInlineEditModeEnabled
+                listInlineEditModeEnabled: this.listInlineEditModeEnabled,
+                pagination: 'bottom'
             }
 
             if (typeof this.options.allowSelectAllResult === 'boolean') {
@@ -333,6 +334,12 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 if (callback) {
                     callback(view);
                 }
+
+                view.mountPaginationToolbar(() => {
+                    return this.dialog
+                        ? document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-pagination-container')
+                        : null;
+                }, {onShowMore: null});
 
                 this.listenTo(view, 'select', function (model) {
                     if (this.extraFields && this.validateExtraFields()) return;

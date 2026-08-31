@@ -174,11 +174,13 @@ Espo.define('views/record/panels/entity-filter-result', ['views/record/panels/re
             let whereData = this.model.get('data').whereData || {}
             const scope   = this.resolveScope();
             this.getStorage().set('listQueryBuilder', scope, whereData);
+            this.getStorage().set('treeSelectedNodes', scope, []);
             window.open(`#${scope}`, '_blank');
         },
 
         actionShowKanban(data) {
             this.getStorage().set('listQueryBuilder', this.scope, this.model.get('data').whereData || {});
+            this.getStorage().set('treeSelectedNodes', this.scope, []);
             window.open(`#${this.scope}/kanban`, '_blank');
         },
 

@@ -16,7 +16,8 @@
   "messages": {
     "cannotSetToSingle": "You cannot set 'Uniform'",
     "youNeedAtLeastTwoItem": "You need at least two items for comparison.",
-    "entityIsRequired": "Field 'Entity' is required."
+    "entityIsRequired": "Field 'Entity' is required.",
+    "entityTypeMismatch": "This selection only accepts records of type '%s'."
   },
   "customActions": {
     "replaceItem": "Replace Item"

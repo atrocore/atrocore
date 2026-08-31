@@ -2,7 +2,11 @@
   "fields": {
     "name": "Назва",
     "scheduling": "Планування",
-    "jobs": "Завдання"
+    "jobs": "Завдання",
+    "action": "Дія"
+  },
+  "links": {
+    "action": "Дія"
   },
   "labels": {
     "executeNow": "Виконати зараз"
@@ -21,7 +25,8 @@
       "FindMatches": "Знайти збіги",
       "CalculateScriptFieldsForEntities": "Обчислити поля скриптів",
       "SendReports": "Надсилати анонімні повідомлення про помилки",
-      "CreateClusters": "Створити кластери"
+      "CreateClusters": "Створити кластери",
+      "Action": "Дія"
     }
   },
   "tooltips": {

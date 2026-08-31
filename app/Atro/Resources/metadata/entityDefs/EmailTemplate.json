@@ -13,17 +13,17 @@
       "customizable": false
     },
     "subject": {
-      "type": "text",
+      "type": "code",
       "required": true,
-      "view": "views/fields/script"
+      "engine": "Twig"
     },
     "isHtml": {
       "type": "bool"
     },
     "body": {
-      "type": "text",
+      "type": "code",
       "required": true,
-      "view": "views/fields/script"
+      "engine": "Twig"
     },
     "createdAt": {
       "type": "datetime",

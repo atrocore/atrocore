@@ -39,6 +39,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     public const CHUNKS_DIR = '.chunks';
     public const TRASH_DIR = '.trash';
     public const PDF_IMAGE_DIR = '.img-from-pdf';
+    public const VERSION_DIR = 'version';
 
     protected Container $container;
 
@@ -403,6 +404,44 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     public function getContents(File $file): string
     {
         return file_get_contents($this->getLocalPath($file));
+    }
+
+    public function createFileVersion(File $file, string $versionId): bool
+    {
+        $versionDir = $this->getFileVersionDir($file, $versionId);
+        $this->getFileManager()->mkdir($versionDir, 0777, true);
+
+        // use fetched (currently-persisted) values — when called from a beforeSave hook, $file's
+        // current attributes may already hold pending, not-yet-applied values (e.g. a new name),
+        // while the bytes on disk are still stored under the old one
+        return copy($this->getLocalPath($file, true), $versionDir . DIRECTORY_SEPARATOR . $file->getFetched('name'));
+    }
+
+    public function getFileVersionContents(File $version): string
+    {
+        $versionId = $version->_versionId ?? null;
+        if (empty($versionId)) {
+            throw new Error('Missing version id on the versioned File entity.');
+        }
+
+        return file_get_contents($this->getFileVersionLocalPath($version, $versionId));
+    }
+
+    public function deleteFileVersion(File $file, string $versionId): bool
+    {
+        $this->getFileManager()->removeAllInDir($this->getFileVersionDir($file, $versionId));
+
+        return true;
+    }
+
+    public function getFileVersionLocalPath(File $file, string $versionId): string
+    {
+        return $this->getFileVersionDir($file, $versionId) . DIRECTORY_SEPARATOR . $file->get('name');
+    }
+
+    protected function getFileVersionDir(File $file, string $versionId): string
+    {
+        return trim($file->getStorage()->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'version' . DIRECTORY_SEPARATOR . $versionId;
     }
 
     public function getLocalPath(File $file, bool $fetched = false): string
@@ -803,7 +842,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
                 if (is_file($path)) {
                     $results[] = $path;
                 } elseif (is_dir($path)) {
-                    if (!in_array($value, [self::CHUNKS_DIR, self::TMP_DIR, self::TRASH_DIR])) {
+                    if (!in_array($value, [self::CHUNKS_DIR, self::TMP_DIR, self::TRASH_DIR, self::VERSION_DIR])) {
                         $this->getStorageFiles($path, $results);
                     }
                 }
@@ -823,7 +862,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
                 $path = $dir . DIRECTORY_SEPARATOR . $value;
 
-                if (in_array($value, [self::CHUNKS_DIR, self::TMP_DIR, self::TRASH_DIR])) {
+                if (in_array($value, [self::CHUNKS_DIR, self::TMP_DIR, self::TRASH_DIR, self::VERSION_DIR])) {
                     continue;
                 }
 

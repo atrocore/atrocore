@@ -32,10 +32,5 @@
         {{/if}}
         {{/if}}
     </div>
-    <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
-        <a type="button" href="javascript:" class="btn btn-default btn-block" data-action="showMore">
-            <span class="more-label">Show more</span>
-        </a>
-        <img class="preloader" style="display:none;height:12px;margin-top: 5px" src="client/img/atro-loader.svg">
-    </div>
+    <div class="table-show-more-container"></div>
 </div>

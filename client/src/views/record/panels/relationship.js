@@ -314,9 +314,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 collection.url = collection.urlRoot = url;
                 if (sortBy) {
                     collection.sortBy = sortBy;
+                    collection.defaultSortBy = sortBy;
                 }
                 if (asc !== null) {
                     collection.asc = asc;
+                    collection.defaultAsc = asc;
                 }
 
                 collection.isRelation = true;
@@ -333,6 +335,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
 
                 this.collection = collection;
+
+                this.listenTo(collection, 'request', () => {
+                    this.setRefreshButtonLoading(true);
+                });
+                this.listenTo(collection, 'sync error', () => {
+                    this.setRefreshButtonLoading(false);
+                });
 
                 this.model.trigger('init-collection:' + this.link, collection);
 
@@ -372,7 +381,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         openInTab: !!this.defs.isInSmallView,
                         canUnlink: canUnlink,
                         hasLayoutEditor: this.defs.hasLayoutEditor ?? true,
-                        listInlineEditModeEnabled: this.listInlineEditModeEnabled
+                        listInlineEditModeEnabled: this.listInlineEditModeEnabled,
+                        pagination: 'bottom'
                     }, (view) => {
                         view.getSelectAttributeList(function (selectAttributeList) {
                             if (selectAttributeList) {
@@ -381,9 +391,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                             collection.fetch();
                         }.bind(this));
 
-                        this.listenTo(view, 'after:render', () => {
-                            this.renderListRecordActions(view);
-                        })
+                        view.mountPaginationToolbar(() => this.$el.find('.list-pagination-container')[0], {showPagination: false});
                     });
                     this.setupTotal.call(this);
                 }, this);
@@ -416,27 +424,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             this.listenTo(this.model, 'after:change-mode', (mode) => this.mode = mode)
-        },
-
-        renderListRecordActions: function (listView) {
-            if (!listView) {
-                return;
-            }
-
-            if (this.svelteListActions) {
-                try {
-                    this.svelteListActions.$destroy();
-                } catch (e) {
-                }
-            }
-
-            const $container = $(this.$el).closest('.panel').find('>.panel-heading>.panel-title');
-            if ($container.get(0)) {
-                if ($container.find('.list-actions-container').length === 0) {
-                    $container.append('<div class="list-actions-container"></div>');
-                }
-                this.svelteListActions = listView.renderActionsContainer($container.find('.list-actions-container').get(0));
-            }
         },
 
         getLayoutRelatedScope() {
@@ -578,6 +565,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             };
 
             this.getStorage().set('listQueryBuilder', this.scope, params);
+            this.getStorage().set('treeSelectedNodes', this.scope, []);
             if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode']) && data.isKanban) {
                 window.open(`#${this.scope}/kanban`, '_blank');
                 return;
@@ -702,6 +690,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         actionRefresh: function () {
             this.collection.fetch();
+        },
+
+        setRefreshButtonLoading: function (loading) {
+            var $button = this.$el.closest('.panel').find('[data-action="refresh"]');
+            $button.attr('disabled', loading);
+            $button.find('i').toggleClass('ph-spin', loading);
         },
 
         actionViewRelated: function (data, evt) {

@@ -416,6 +416,7 @@
     "notInherited": "No heredado",
     "inheritedFromParent": "Heredado del padre",
     "pleaseRebuildDatabase": "Por favor <a href=\"javascript:\" data-action=\"rebuild-notification\">reconstruya la base de datos</a> desde Administración. El esquema de la base de datos es inconsistente.",
+    "expiredRentedModulesMessage": "El período de alquiler de {modules} ha caducado. No se permite el uso continuado — renueve el alquiler o desinstale el módulo (al desinstalarlo se eliminarán todos los datos relacionados). Las actualizaciones del sistema están bloqueadas hasta que esto se resuelva.",
     "Pending": "Pendiente",
     "Added": "Añadido",
     "RememberUsername": "Recordar nombre de usuario",
@@ -445,7 +446,7 @@
     "goForward": "Seguir adelante",
     "reloadPage": "Recargar página",
     "Compare": "Comparar",
-    "Standard": "Estándar",
+    "Standard": "Vista",
     "Action Forbidden": "Acción prohibida",
     "thereAreTooManyRecord": "Hay demasiados registros. No es posible realizar comparaciones",
     "Unbookmarking": "Desmarcar",
@@ -1201,6 +1202,11 @@
     "cd": "cd"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "La vinculación de atributos está deshabilitada.",
+    "createAttributeValueForbidden": "No tiene permiso para crear valores de atributo.",
+    "attributeUnlinkingDisabled": "La desvinculación de atributos está deshabilitada.",
+    "deleteAttributeValueForbidden": "No tiene permiso para eliminar valores de atributo.",
+    "nestedAttributeRemovalForbidden": "No se puede eliminar un atributo anidado sin eliminar también su atributo compuesto principal.",
     "fieldIsRequired": "Validation failed. '%s' is required.",
     "urlIsInvalid": "URL is invalid",
     "maximumOfDigitsAfterCommaInvalid": "El máximo de dígitos después de la coma es %s",

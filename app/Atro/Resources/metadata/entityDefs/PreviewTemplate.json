@@ -6,12 +6,18 @@
       "trim": true
     },
     "template": {
-      "type": "text",
+      "type": "code",
       "layoutListDisabled": true,
       "useDisabledTextareaInViewMode": true,
       "rows": 20,
-      "view": "views/fields/script",
-      "default": "{% set product = entities[0] %}\n<!DOCTYPE html>\n<html>\n<head>\n    <style>\n </style>\n</head>\n<body>\n    {% for component in product.components %}\n     {% set component= component|prepareHtmlField %}\n     {{ component.html |raw}}\n    {% endfor %} \n</body>\n</html>"
+      "engine": "Twig",
+      "language": "html",
+      "default": "{% set product = entities[0] %}\n<!DOCTYPE html>\n<html>\n<head>\n    <style>\n </style>\n</head>\n<body>\n    {% for component in product.components %}\n     {% set component= component|prepareHtmlField %}\n     {{ component.html |raw}}\n    {% endfor %} \n</body>\n</html>",
+      "variables": [
+        "entities",
+        "language",
+        "mainLanguage"
+      ]
     },
     "entityType": {
       "type": "enum",
