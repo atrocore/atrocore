@@ -26,10 +26,38 @@ use Espo\ORM\EntityCollection;
 
 class Base extends RDB
 {
+    protected function getNewEntity()
+    {
+        $entity = parent::getNewEntity();
+
+        $this->afterEntityPopulated($entity);
+
+        return $entity;
+    }
+
+    protected function getEntityById($id)
+    {
+        $entity = parent::getEntityById($id);
+
+        if ($entity !== null) {
+            $this->afterEntityPopulated($entity);
+        }
+
+        return $entity;
+    }
+
+    protected function afterEntityPopulated(Entity $entity): void
+    {
+    }
+
     public function find(array $params = [])
     {
         /** @var EntityCollection $collection */
         $collection = parent::find($params);
+
+        foreach ($collection as $entity) {
+            $this->afterEntityPopulated($entity);
+        }
 
         $firstEntity = $collection[0] ?? null;
         if (!empty($firstEntity) && $this->getMetadata()->get("scopes.{$firstEntity->getEntityName()}.hasAttribute")) {

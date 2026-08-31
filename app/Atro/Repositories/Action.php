@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\ExpressionLanguage\Compiled\CompiledExpression;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\DataManager;
 use Atro\Entities\Action as ActionEntity;
@@ -170,6 +171,21 @@ class Action extends Base
         $fileName = 'data/custom-code/' . str_replace('\\', '/', self::getCompiledExpressionFullClassName($action)) . '.php';
         if (file_exists($fileName)) {
             unlink($fileName);
+        }
+    }
+
+    /**
+     * @param ActionEntity $entity
+     *
+     * @return void
+     */
+    protected function afterEntityPopulated(Entity $entity): void
+    {
+        if (!$entity->isNew() && $entity->get('conditionsType') === 'expression') {
+            $className = self::getCompiledExpressionFullClassName($entity);
+            if (class_exists($className) && is_a($className, CompiledExpression::class, true)) {
+                $entity->set('conditionsExpression', $className::expression());
+            }
         }
     }
 

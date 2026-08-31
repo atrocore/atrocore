@@ -290,6 +290,8 @@ class ReferenceData extends Repository implements Injectable
         $entity->setIsNew(true);
         $entity->populateDefaults();
 
+        $this->afterEntityPopulated($entity);
+
         return $entity;
     }
 
@@ -316,11 +318,17 @@ class ReferenceData extends Repository implements Injectable
                 $entity->set($item);
                 $entity->setAsFetched();
 
+                $this->afterEntityPopulated($entity);
+
                 return $entity;
             }
         }
 
         return null;
+    }
+
+    protected function afterEntityPopulated(Entity $entity): void
+    {
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -473,6 +481,10 @@ class ReferenceData extends Repository implements Injectable
 
         $this->whereClause = [];
         $this->listParams  = [];
+
+        foreach ($collection as $entity) {
+            $this->afterEntityPopulated($entity);
+        }
 
         return $collection;
     }
