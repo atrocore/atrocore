@@ -60,5 +60,15 @@ interface FileStorageInterface
 
     public function getContents(File $file): string;
 
+    public function createFileVersion(File $file, string $versionId): bool;
+
+    /**
+     * @param File $version the versioned File entity — never the live entity,
+     *                      whose current field values may no longer match what was archived.
+     */
+    public function getFileVersionContents(File $version): string;
+
+    public function deleteFileVersion(File $file, string $versionId): bool;
+
     public function isAvailable(Storage $storage): bool;
 }
