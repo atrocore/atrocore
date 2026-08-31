@@ -33,7 +33,7 @@ In both cases the condition is activated by setting `Conditions Type` to `Expres
 
 | Variable | Type | Description |
 |---|---|---|
-| `entity` | `Entity` | The source entity of the action |
+| `entity` | `Entity` | The source entity of the action. See [Working with the entity object](#working-with-the-entity-object) |
 | `uiRecord` | `array\|null` | The record as it currently looks in the edit form, including unsaved changes. Filled only when the action is invoked from the user interface |
 | `uiRecordFromName` | `string\|null` | The entity type the user navigated from, when the form was opened in the context of another record |
 | `uiRecordFrom` | `array\|null` | The record the user navigated from |
@@ -44,8 +44,8 @@ The three `uiRecord*` variables are `null` for actions executed from a workflow,
 
 | Variable | Type | Description |
 |---|---|---|
-| `entity` | `Entity` | The record that triggered the workflow |
-| `user` | `Entity` | The current user |
+| `entity` | `Entity` | The record that triggered the workflow. See [Working with the entity object](#working-with-the-entity-object) |
+| `user` | `Entity` | The current user; the same kind of object as `entity` |
 | `importJobId` | `string\|null` | The ID of the import job, when the change comes from an import; `null` otherwise |
 
 Examples:
@@ -63,6 +63,59 @@ lowercase(entity.get('name')) matches '/^atro/' and entity.get('isActive')
 ```
 
 The result of the expression is cast to `bool`. There is no variable to assign and nothing to output — the expression *is* the result.
+
+## Working with the entity object
+
+`entity` — and `user` in a workflow condition — is an ORM entity object, not an array. A dot in the Expression Language compiles to a method call, so `entity.get('sku')` becomes `$entity->get('sku')` in the generated class. Every public method of the entity is therefore reachable, but a condition needs four of them:
+
+| Expression | Returns | Description |
+|---|---|---|
+| `entity.get('field')` | mixed | The value of an attribute or field |
+| `entity.has('field')` | bool | Whether the attribute is set on the record |
+| `entity.isAttributeChanged('field')` | bool | Whether the value differs from the one loaded from the database |
+| `entity.isNew()` | bool | Whether the record is being created |
+
+`entity.get('id')` is a special case, answered before anything else, so it works on every record.
+
+### Related records
+
+`entity.get('brand')` does not return an id — it returns the related **record object**, and it fetches that record from the database on the spot. Two things follow from this.
+
+**Every relation costs a query.** The related record is loaded the first time the relation is read and kept on the entity for the rest of the request. A workflow condition, however, runs on every create, update and delete of its trigger entity, so reading a relation in a condition means an extra query on every one of those operations.
+
+**A chain breaks on an empty relation.** The expression is compiled into plain PHP, so
+
+```
+entity.get('brand').get('name') == 'Atro'
+```
+
+becomes `$entity->get("brand")->get("name") == 'Atro'`. On a record without a brand that is a fatal `Call to a member function get() on null` — the operation fails instead of the condition returning `false`.
+
+Prefer the flat field. A `belongsTo` link keeps its id in a regular column, so comparing identity needs neither a query nor a guard:
+
+```
+entity.get('brandId') == '019e727f-12ed-72a6-952f-7d089df22710'
+```
+
+When you genuinely need a field of the related record, guard the chain. `and` compiles to PHP `&&` and short-circuits, so the right-hand side is never reached for a record without a brand:
+
+```
+entity.get('brandId') and entity.get('brand').get('name') == 'Atro'
+```
+
+### entity and uiRecord are different states
+
+`entity` is the record as it is stored in the database. It does **not** contain the values the user has just typed into the form.
+
+This is worth spelling out, because the two condition types differ here. `Atro\ActionTypes\AbstractAction::canExecute()` applies the form data to the entity in the `basic` branch — `$sourceEntity->set($input->uiRecord)` — before the conditions are checked. The `expression` branch does not: its context is built straight from the stored record, and the form data stays in `uiRecord`.
+
+A condition that has to react to what the user is editing right now therefore reads `uiRecord`, not `entity`:
+
+```
+uiRecord and uiRecord['status'] == 'draft'
+```
+
+Note the square brackets. `uiRecord` and `uiRecordFrom` are arrays, not entity objects — `uiRecord['status']`, never `uiRecord.status`. The leading `uiRecord and` guards against them being `null` outside the user interface.
 
 ## Validation
 
