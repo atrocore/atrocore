@@ -16,7 +16,8 @@
   "messages": {
     "cannotSetToSingle": "Ви не можете встановити 'Одинарну сутність'.",
     "youNeedAtLeastTwoItem": "Вам потрібно щонайменше два елементи для порівняння.",
-    "entityIsRequired": "Поле 'Сутність' обов'язкове."
+    "entityIsRequired": "Поле 'Сутність' обов'язкове.",
+    "entityTypeMismatch": "Цей вибір приймає лише записи типу '%s'."
   },
   "customActions": {
     "replaceItem": "Замінити елемент"
