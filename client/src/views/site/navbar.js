@@ -430,8 +430,8 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 });
 
                 list.push({
-                    action: 'composerUpdate',
-                    label: this.getLanguage().translate('Run Update', 'labels', 'Composer'),
+                    action: 'updateSystem',
+                    label: this.getLanguage().translate('update', 'labels', 'SoftwarePackage'),
                     icon: '<i class="ph ph-cloud-arrow-down"></i>'
                 });
             }
@@ -550,20 +550,18 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             }, this);
         },
 
-        actionComposerUpdate(data, el) {
+        actionUpdateSystem(data, el) {
             if ($(el.currentTarget).parent().hasClass('disabled')) {
                 return false;
             }
 
             this.confirm({
-                message: this.translate('confirmRun', 'labels', 'Composer'),
-                confirmText: this.translate('Run Update', 'labels', 'Composer')
+                message: this.translate('update', 'massActionConfirmMessages', 'SoftwarePackage'),
+                confirmText: this.translate('update', 'labels', 'SoftwarePackage')
             }, () => {
-                this.notify(this.translate('updating', 'labels', 'Composer'));
-                this.ajaxPostRequest('Composer/runUpdate', {}, {timeout: 180000}).then(response => {
-                    this.notify(this.translate('updateStarted', 'labels', 'Composer'), 'success');
-                    location.reload();
-                }, error => {
+                this.notify('Processing...');
+                this.ajaxPostRequest('SoftwarePackage/updateSystem').success(() => {
+                    this.notify(false);
                     location.reload();
                 });
             });
