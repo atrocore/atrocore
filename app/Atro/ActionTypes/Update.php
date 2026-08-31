@@ -231,6 +231,14 @@ class Update extends AbstractAction
 
     public function useMassActions(Entity $action, \stdClass $input): bool
     {
-        return false;
+        $where = $this->getWhere($action);
+        if (empty($where)) {
+            return false;
+        }
+
+        // if the where clause references the triggering entity (e.g. {{ entity.id }}), it's computed
+        // differently for every selected source record, so each one must be processed individually
+        // rather than resolving target records via a single combined query
+        return (bool)preg_match('/\{\{\s*entity\b/', json_encode($where));
     }
 }

@@ -2,7 +2,11 @@
   "fields": {
     "name": "Jméno",
     "scheduling": "Plánování",
-    "jobs": "Úlohy"
+    "jobs": "Úlohy",
+    "action": "Akce"
+  },
+  "links": {
+    "action": "Akce"
   },
   "labels": {
     "executeNow": "Provést nyní"
@@ -25,7 +29,8 @@
       "FindMatches": "Vyhledávání shod",
       "CalculateScriptFieldsForEntities": "Výpočet polí skriptu",
       "SendReports": "Odesílání anonymních chybových hlášení",
-      "CreateClusters": "Vytváření klastrů"
+      "CreateClusters": "Vytváření klastrů",
+      "Action": "Akce"
     }
   },
   "tooltips": {

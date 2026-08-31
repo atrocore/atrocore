@@ -137,7 +137,7 @@ Espo.define('collection', [], function () {
 
             if (!options?.more) {
                 if (response.list.length < this.maxSize) {
-                    this.total = response.list.length
+                    this.total = this.offset + response.list.length
                 } else {
                     this.fetchTotal()
                 }
@@ -155,6 +155,7 @@ Espo.define('collection', [], function () {
         fetch: function (options) {
             if (!options || !options.more) {
                 this.total = null
+                this.lengthCorrection = 0
             }
             this.lastXhr = Backbone.Collection.prototype.fetch.call(this, this.getRequestOptions(options));
             return this.lastXhr;
@@ -193,7 +194,7 @@ Espo.define('collection', [], function () {
                 options.data.maxSize = options.maxSize;
             }
 
-            options.data.offset = options.more ? this.length + this.lengthCorrection : this.offset;
+            options.data.offset = options.more ? this.offset + this.length + this.lengthCorrection : this.offset;
             options.data.sortBy = this.sortBy;
             options.data.asc = this.asc;
             options.data.where = this.getWhere();

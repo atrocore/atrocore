@@ -40,6 +40,7 @@ The list view provides several key features for record management:
 -   **Record selection** - Use checkboxes to select individual records or all records
 -   **Mass actions** - Perform operations on multiple selected records
 -   **Single record actions** - Actions available for individual records
+-   **Pagination toolbar** – Sort, change page size, load more records, and navigate between pages; see [Pagination Toolbar](../04.understanding-ui/index.md#pagination-toolbar)
 
 For detailed information about list view interface and navigation, see the [List View](../04.understanding-ui/index.md#list-view) section. For record selection methods, see the [Mass Actions](../12.mass-actions/index.md) documentation.
 

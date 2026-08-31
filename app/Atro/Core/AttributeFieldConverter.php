@@ -247,8 +247,10 @@ class AttributeFieldConverter
         if (class_exists("\\Pim\\Module")) {
             $select[] = 'c.name as channel_name';
 
-            foreach ($locales as $locale) {
-                $select[] = 'c.name_' . $locale . ' as channel_name_' . $locale;
+            if (!empty($this->metadata->get(['entityDefs', 'Channel', 'fields', 'name', 'isMultilang'], false))) {
+                foreach ($locales as $locale) {
+                    $select[] = 'c.name_' . $locale . ' as channel_name_' . $locale;
+                }
             }
         }
 
@@ -283,7 +285,7 @@ class AttributeFieldConverter
 
                 foreach ($locales as $locale) {
                     $attributeLabel = $attribute['name_' . $locale] ?? $attribute['name'];
-                    $channelLabel  = $attribute['channel_name_' . $locale] ?? $attribute['channel_name'];
+                    $channelLabel   = $attribute['channel_name_' . $locale] ?? $attribute['channel_name'];
 
                     $res[$k]['name_' . $locale] = $attributeLabel . ' / ' . $channelLabel;
                 }

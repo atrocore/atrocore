@@ -78,7 +78,8 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
                 layoutName: this.layoutName,
                 searchManager: this.searchManager,
                 buttonsDisabled: true,
-                skipBuildRows: true
+                skipBuildRows: true,
+                pagination: 'bottom'
             }
 
             if (typeof this.options.allowSelectAllResult === 'boolean') {
@@ -86,6 +87,12 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
             }
 
             this.createView('list', viewName, options, function (view) {
+                view.mountPaginationToolbar(() => {
+                    return this.dialog
+                        ? document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-pagination-container')
+                        : null;
+                }, {onShowMore: null});
+
                 this.listenTo(view, 'after:render', () => {
                     if (!this.dialog) {
                         return;

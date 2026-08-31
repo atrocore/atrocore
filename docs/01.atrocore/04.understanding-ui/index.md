@@ -24,7 +24,19 @@ The list view page shows a table of records with main fields configured for each
 
 Here you can change entity records order in the list by clicking any sortable column title; this will sort the column either ascending or descending. Users can adjust the size of the columns. Please, note that the default order of entity records is predefined in the Entity Manager. To change it, please, contact the administrator.
 
-The total number of entity records and the number of current records on the list page are displayed on the list view page:
+### Pagination Toolbar
+
+Below the records list, the pagination toolbar brings together the tools for navigating and organizing the list:
+
+![Pagination Toolbar](./_assets/pagination-toolbar.png){.large}
+
+- **Actions** – [mass actions](../12.mass-actions/index.md) for the records selected via the checkbox to the left; the button is enabled once at least one record is selected.
+- **Sort** – click the sort icon to choose a field and direction to sort by. The dropdown groups fields into *Default* – the entity's predefined order, selectable at any time to reset custom sorting – and *Fields*.
+- **Page size** – the number of records shown per page.
+- **Load next** – loads the next batch of records into the current page, showing how many records remain to be loaded.
+- Page numbers – jump directly to any page.
+
+The total number of entity records and the number of currently loaded records are displayed next to the toolbar:
 
 ![Total number displayed](./_assets/total-number.png){.medium}
 
@@ -102,7 +114,7 @@ The following actions are available for the small list view panels:
 
   ![Related entity global actions](./_assets/related-entity-actions-global.png){.small}
 
-  - *Refresh* – to refresh the related entities list on the panel;
+  - *Refresh* – to refresh the related entities list on the panel; the button is disabled and shows a loading indicator while the refresh is in progress;
   - *Create* – to create a new record for the related entity;
   - *Select* – to create a relation between the entity record, which is opened in the main window and the entity record, which was chosen in the pop-up window.
 
@@ -112,6 +124,12 @@ The following actions are available for the small list view panels:
     ![Related entity single actions](./_assets/related-entity-actions-single.png){.medium}
 
 - [**Mass actions**](../12.mass-actions) – actions that are performed on multiple or all records in a list simultaneously. In a small list, the same mass actions are available as those accessible to the user in a list view.
+
+Below the records, a [pagination toolbar](#pagination-toolbar) is available with the *Actions* button, *Sort*, and *Load next*, same as on the [list view](#pagination-toolbar); page size and page numbers are not shown here.
+
+![Small List Pagination Toolbar](./_assets/small-list-pagination-toolbar.png){.medium}
+
+> If drag-and-drop record reordering is enabled for the panel, it is only available while the list is sorted by the field and direction that define the drag-and-drop order; sorting by anything else disables reordering until the sort order matching drag-and-drop is restored.
 
 Users can edit records and add or delete attributes via small list view using [in-line editing](../../01.atrocore/08.record-management/index.md#in-line-editing).
 

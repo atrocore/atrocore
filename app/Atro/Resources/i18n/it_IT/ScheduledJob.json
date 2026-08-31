@@ -2,7 +2,11 @@
   "fields": {
     "name": "Nome",
     "scheduling": "Programmazione",
-    "jobs": "Offerte di lavoro"
+    "jobs": "Offerte di lavoro",
+    "action": "Azione"
+  },
+  "links": {
+    "action": "Azione"
   },
   "labels": {
     "executeNow": "Eseguire ora"
@@ -25,7 +29,8 @@
       "FindMatches": "Trova le corrispondenze",
       "CalculateScriptFieldsForEntities": "Calcola i campi dello script",
       "SendReports": "Inviare segnalazioni di errore anonime",
-      "CreateClusters": "Creare cluster"
+      "CreateClusters": "Creare cluster",
+      "Action": "Azione"
     }
   },
   "tooltips": {

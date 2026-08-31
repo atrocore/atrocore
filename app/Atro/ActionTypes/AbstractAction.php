@@ -69,7 +69,7 @@ abstract class AbstractAction implements TypeInterface
             if (empty($sourceEntity)) {
                 return true;
             }
-            $raw = $action->get('conditions');
+            $raw        = $action->get('conditions');
             $conditions = is_string($raw) ? @json_decode($raw, true) : @json_decode(@json_encode($raw), true);
             if (!empty($conditions)) {
                 if ($sourceEntity->getEntityType() !== $action->get('sourceEntity')) {
@@ -102,7 +102,7 @@ abstract class AbstractAction implements TypeInterface
          *
          */
         if ($action->get('conditionsType') === 'script') {
-            $template = (string)($action->get('conditionsScript') ?? '');
+            $template     = (string)($action->get('conditionsScript') ?? '');
             $templateData = [
                 'entity'          => $this->getSourceEntity($action, $input),
                 'triggeredEntity' => $input->triggeredEntity ?? null,
@@ -148,25 +148,10 @@ abstract class AbstractAction implements TypeInterface
     {
         // for backward compatibility
         if (method_exists($this, 'executeNow')) {
-            $action = $execution->get('action');
-            try {
-                $res = $this->executeNow($action, $input);
-                $execution->set('status', 'done');
-            } catch (\Throwable $e) {
-                $res = false;
-                $execution->set('status', 'failed');
-                $execution->set('statusMessage', $e->getMessage());
+            $res = $this->executeNow($execution->get('action'), $input);
 
-                if ($e instanceof BadRequest && $action->get('type') === 'error') {
-                    $res = true;
-                    $execution->set('status', 'done');
-                }
-            }
+            $execution->set('status', 'done');
             $this->getEntityManager()->saveEntity($execution);
-
-            if (!empty($e) && empty($res)) {
-                throw $e;
-            }
 
             return $res;
         }
@@ -192,7 +177,10 @@ abstract class AbstractAction implements TypeInterface
 
     protected function getWhere(Entity $action): ?array
     {
-        return !empty($action->get('data')->where) ? $action->get('data')->where : null;
+        if (!empty($action->get('data')->where)) {
+            return json_decode(json_encode($action->get('data')->where), true);
+        }
+        return null;
     }
 
     public function getServiceFactory(): ServiceFactory

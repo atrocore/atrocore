@@ -46,8 +46,8 @@
       }
     },
     "mergingScript": {
-      "type": "text",
-      "view": "views/fields/script",
+      "type": "code",
+      "engine": "Twig",
       "language": "json",
       "default": "{# { \"targetRecordData\": { \"name\" : \"{{ sourceRecord.name }}\" } } #}",
       "editorActions": {
@@ -55,7 +55,7 @@
           "entityNameField": "sourceEntity"
         }
       },
-      "twigVariables": [
+      "variables": [
         "sourceRecord",
         "targetRecord"
       ],

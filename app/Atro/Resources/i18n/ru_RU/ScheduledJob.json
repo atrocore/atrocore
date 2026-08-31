@@ -2,7 +2,11 @@
   "fields": {
     "name": "Название",
     "scheduling": "Планирование",
-    "jobs": "Задания"
+    "jobs": "Задания",
+    "action": "Действие"
+  },
+  "links": {
+    "action": "Действие"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Неправильная конфигурация crontab",
@@ -18,7 +22,8 @@
       "CalculateScriptFieldsForEntities": "Вычислите поля сценария",
       "FindMatches": "Найдите соответствия",
       "SendReports": "Отправлять анонимные отчеты об ошибках",
-      "CreateClusters": "Создавайте кластеры"
+      "CreateClusters": "Создавайте кластеры",
+      "Action": "Действие"
     }
   },
   "tooltips": {
