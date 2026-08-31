@@ -156,6 +156,7 @@
     "resetAllToDefault": "Ripristina tutti i valori predefiniti",
     "pleaseReloadPage": "La preghiamo di <a href=\"javascript:\" onClick=\"window.location.reload();\">aggiornare</a> la pagina per aggiornare i metadati.",
     "pleaseRebuildDatabase": "Ricostruisca il database <a href=\"javascript:\" data-action=\"rebuild-notification\"></a> dall'Amministrazione. Lo schema del database non è coerente.",
+    "expiredRentedModulesMessage": "Il periodo di noleggio di {modules} è scaduto. L'uso continuato non è consentito — rinnova il noleggio o disinstalla il modulo (la disinstallazione elimina tutti i dati correlati). Gli aggiornamenti di sistema sono bloccati finché il problema non viene risolto.",
     "youHaveNewNotification": "Hai una nuova notifica!",
     "youHaveNewNotifications": "Ci sono nuove notifiche!",
     "status": "Stato",
@@ -1305,6 +1306,11 @@
     "cd": "cd"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Il collegamento degli attributi è disabilitato.",
+    "createAttributeValueForbidden": "Non si dispone dell'autorizzazione per creare valori di attributo.",
+    "attributeUnlinkingDisabled": "Lo scollegamento degli attributi è disabilitato.",
+    "deleteAttributeValueForbidden": "Non si dispone dell'autorizzazione per eliminare valori di attributo.",
+    "nestedAttributeRemovalForbidden": "Un attributo annidato non può essere rimosso senza rimuovere anche il relativo attributo composito principale.",
     "singleClassificationAllowed": "È consentita solo una classificazione",
     "moreThanOneClassification": "Alcuni record hanno più di una classificazione.",
     "reverseAssociationError": "Errore di associazione a ritroso: %s",

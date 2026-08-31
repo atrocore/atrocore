@@ -22,12 +22,51 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         reloadNotifShown: false,
 
+        expiredRentedModulesWarningShown: false,
+
         setup: function () {
             this.navbarView = this.getMetadata().get('app.clientDefs.navbarView') || this.navbarView;
 
             Dep.prototype.setup.call(this);
 
             this.getPublicData();
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            this.showExpiredRentedModulesWarning();
+        },
+
+        showExpiredRentedModulesWarning() {
+            if (this.expiredRentedModulesWarningShown) {
+                return;
+            }
+
+            const modules = this.getHelper().getAppParam('expiredRentedModules') || [];
+            if (!modules.length) {
+                return;
+            }
+
+            this.expiredRentedModulesWarningShown = true;
+
+            const message = this.translate('expiredRentedModulesMessage').replace('{modules}', modules.join(', '));
+
+            const dialog = Espo.Ui.dialog({
+                backdrop: 'static',
+                header: false,
+                className: 'dialog-confirm',
+                body: '<span class="confirm-message">' + message + '</span>',
+                buttons: [
+                    {
+                        text: this.translate('Close'),
+                        name: 'close',
+                        onClick: () => dialog.close(),
+                    }
+                ]
+            });
+
+            dialog.show();
         },
 
         getPublicData() {

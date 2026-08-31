@@ -34,6 +34,7 @@ Espo.define('views/consolidation/record/panels/matchings', ['views/record/panels
 
         actionShowFullList(data) {
             this.getStorage().set('listQueryBuilder', this.scope, this.getWhereDataForFilter());
+            this.getStorage().set('treeSelectedNodes', this.scope, []);
             window.open(`#${this.scope}`, '_blank');
         },
 

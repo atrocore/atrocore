@@ -218,6 +218,7 @@
     "notInheritedFromParent": "Není zděděno od rodiče",
     "resetAllToDefault": "Obnovení výchozího nastavení",
     "pleaseRebuildDatabase": "Prosím, <a href=\"javascript:\" data-action=\"rebuild-notification\">obnovte databázi</a> z administrace. Schéma databáze je nekonzistentní.",
+    "expiredRentedModulesMessage": "Doba pronájmu {modules} vypršela. Další používání není povoleno — obnovte prosím pronájem nebo modul odinstalujte (odinstalací dojde ke smazání všech souvisejících dat). Aktualizace systému jsou zablokovány, dokud nebude tento problém vyřešen.",
     "youHaveNewNotification": "Máte nové oznámení!",
     "youHaveNewNotifications": "Máte nová oznámení!",
     "status": "Stav",
@@ -1143,6 +1144,11 @@
     "Saturday": "Sobota"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Propojování atributů je zakázáno.",
+    "createAttributeValueForbidden": "Nemáte oprávnění vytvářet hodnoty atributů.",
+    "attributeUnlinkingDisabled": "Odpojování atributů je zakázáno.",
+    "deleteAttributeValueForbidden": "Nemáte oprávnění mazat hodnoty atributů.",
+    "nestedAttributeRemovalForbidden": "Vnořený atribut nelze odebrat bez odebrání jeho nadřazeného složeného atributu.",
     "reverseAssociationError": "Chyba zpětného přiřazení: %s",
     "integerValueValidationFailed": "Celočíselná hodnota pole/atributu \"%s\" musí být mezi %s a %s.",
     "singleClassificationAllowed": "Je povolena pouze jedna klasifikace",

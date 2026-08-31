@@ -220,6 +220,7 @@
     "resetAllToDefault": "Alles auf Standardwerte zurücksetzen",
     "pleaseReloadPage": "Bitte laden Sie die Seite neu, um die Metadaten zu aktualisieren.",
     "pleaseRebuildDatabase": "Bitte aktualisieren Sie die Datenbankstruktur über die Administration. Das Datenbankschema ist inkonsistent.",
+    "expiredRentedModulesMessage": "Die Mietdauer für {modules} ist abgelaufen. Die weitere Nutzung ist nicht zulässig — bitte verlängern Sie die Miete oder deinstallieren Sie das Modul (durch die Deinstallation werden alle zugehörigen Daten gelöscht). Systemaktualisierungen sind gesperrt, bis dies behoben ist.",
     "youHaveNewNotification": "Sie haben eine neue Benachrichtigung!",
     "youHaveNewNotifications": "Sie haben neue Benachrichtigungen!",
     "Expand": "Einblenden",
@@ -1232,6 +1233,11 @@
     "kanban": "Kanban"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Die Attributverknüpfung ist deaktiviert.",
+    "createAttributeValueForbidden": "Sie haben keine Berechtigung, Attributwerte zu erstellen.",
+    "attributeUnlinkingDisabled": "Die Aufhebung der Attributverknüpfung ist deaktiviert.",
+    "deleteAttributeValueForbidden": "Sie haben keine Berechtigung, Attributwerte zu löschen.",
+    "nestedAttributeRemovalForbidden": "Ein verschachteltes Attribut kann nicht entfernt werden, ohne dass auch das übergeordnete zusammengesetzte Attribut entfernt wird.",
     "singleClassificationAllowed": "Nur eine Klassifizierung ist zulässig",
     "moreThanOneClassification": "Einige Datensätze haben mehr als eine Klassifizierung.",
     "reverseAssociationError": "Rückwärtsassoziationsfehler: %s",

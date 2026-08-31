@@ -201,6 +201,7 @@
     "resetAllToDefault": "Resetuj wszystko do domyślnych",
     "pleaseReloadPage": "Proszę <a href=\"javascript:\" onClick=\"window.location.reload();\">odśwież</a> stronę, aby zaktualizować metadane.",
     "pleaseRebuildDatabase": "Proszę <a href=\"javascript:\" data-action=\"rebuild-notification\">przebuduj bazę danych</a> z poziomu Administracji. Schemat bazy danych jest niespójny.",
+    "expiredRentedModulesMessage": "Okres najmu {modules} wygasł. Dalsze korzystanie jest niedozwolone — odnów najem lub odinstaluj moduł (odinstalowanie powoduje usunięcie wszystkich powiązanych danych). Aktualizacje systemu są zablokowane do czasu rozwiązania tego problemu.",
     "youHaveNewNotification": "Masz nowe powiadomienie!",
     "youHaveNewNotifications": "Masz nowe powiadomienia!",
     "status": "Status",
@@ -1201,6 +1202,11 @@
     "cd": "cd"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Łączenie atrybutów jest wyłączone.",
+    "createAttributeValueForbidden": "Nie masz uprawnień do tworzenia wartości atrybutów.",
+    "attributeUnlinkingDisabled": "Rozłączanie atrybutów jest wyłączone.",
+    "deleteAttributeValueForbidden": "Nie masz uprawnień do usuwania wartości atrybutów.",
+    "nestedAttributeRemovalForbidden": "Nie można usunąć zagnieżdżonego atrybutu bez usunięcia jego nadrzędnego atrybutu złożonego.",
     "colorDepthValidationFailed": "Głębia koloru tego zasobu nie jest dozwolona.",
     "colorSpaceValidationFailed": "Przestrzeń kolorów tego zasobu nie jest dozwolona.",
     "fileExtensionValidationFailed": "Używaj tylko plików z następującymi rozszerzeniami: %s.",

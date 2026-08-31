@@ -240,6 +240,7 @@
     "resetAllToDefault": "Reset all to Default",
     "pleaseReloadPage": "Please refresh the page to update the metadata.",
     "pleaseRebuildDatabase": "Please rebuild the database from Administration. Database schema is inconsistent.",
+    "expiredRentedModulesMessage": "The rental period for {modules} has expired. Continued use is not permitted — please renew the rental or uninstall the module (uninstalling deletes all related data). System updates are blocked until this is resolved.",
     "youHaveNewNotification": "You have new notification!",
     "youHaveNewNotifications": "You have new notifications!",
     "status": "Status",
@@ -1237,6 +1238,11 @@
     "cd": "cd"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Attribute linking is disabled.",
+    "createAttributeValueForbidden": "You do not have permission to create attribute values.",
+    "attributeUnlinkingDisabled": "Attribute unlinking is disabled.",
+    "deleteAttributeValueForbidden": "You do not have permission to delete attribute values.",
+    "nestedAttributeRemovalForbidden": "Nested attribute cannot be removed without its composite parent.",
     "singleClassificationAllowed": "Only one classification is allowed",
     "moreThanOneClassification": "Some records have more than one classification.",
     "reverseAssociationError": "Backward association error: %s",

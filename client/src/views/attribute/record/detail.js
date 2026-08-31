@@ -50,6 +50,7 @@ Espo.define('views/attribute/record/detail', 'views/record/detail',
             };
 
             this.getStorage().set('listQueryBuilder', entityType, params);
+            this.getStorage().set('treeSelectedNodes', entityType, []);
             window.open(`#${entityType}`, '_blank');
         },
 
