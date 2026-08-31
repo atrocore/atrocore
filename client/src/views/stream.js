@@ -143,7 +143,7 @@ Espo.define('views/stream', 'view', function (Dep) {
         setFilter: function (filter) {
             this.collection.data.filter = null;
             if (filter) {
-                this.collection.data.filter = filter;
+                this.collection.data.filter = [filter];
             }
             this.collection.offset = 0;
             this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;

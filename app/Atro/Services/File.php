@@ -152,7 +152,9 @@ class File extends Base
             return $this->createFileViaUrl($attachment, $url);
         }
 
-        $attachment->storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($attachment->folderId ?? '')->get('id');
+        if (!property_exists($attachment, 'reupload')){
+            $attachment->storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($attachment->folderId ?? '')->get('id');
+        }
 
         if (empty($attachment->id)) {
             $attachment->id = IdGenerator::uuid();

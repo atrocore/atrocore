@@ -70,6 +70,11 @@ class File extends Base
                 if ($entity->isAttributeChanged('folderId')) {
                     throw new BadRequest($this->getInjection('language')->translate('fileFolderCannotBeChanged', 'exceptions', 'File'));
                 }
+
+                if ($entity->isAttributeChanged('name')) {
+                    $this->updateItem($entity);
+                }
+
                 // recreate origin file
                 if (!$this->getStorage($entity)->reupload($entity)) {
                     throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));

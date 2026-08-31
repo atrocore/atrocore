@@ -45,6 +45,8 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
                 }
             ];
 
+            const filterableTypes = Object.keys(this.getMetadata().get('action.filterableTypes') ?? {});
+
             if (['create', 'createOrUpdate', 'createRendition'].includes(this.model.get('type'))) {
                 layout.push({
                     "name": "createdCount",
@@ -53,7 +55,7 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
                 });
             }
 
-            if (['update', 'createOrUpdate'].includes(this.model.get('type'))) {
+            if (['update', 'createOrUpdate', ...filterableTypes].includes(this.model.get('type'))) {
                 layout.push({
                     "name": "updatedCount",
                     "notSortable": true,
@@ -61,7 +63,7 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
                 });
             }
 
-            if (['create', 'update', 'createOrUpdate', 'createRendition'].includes(this.model.get('type'))) {
+            if (['create', 'update', 'createOrUpdate', 'createRendition', ...filterableTypes].includes(this.model.get('type'))) {
                 layout.push({
                     "name": "failedCount",
                     "notSortable": true,

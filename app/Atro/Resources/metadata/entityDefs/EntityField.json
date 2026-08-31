@@ -730,7 +730,8 @@
       "tooltip": true
     },
     "script": {
-      "type": "text",
+      "type": "code",
+      "engine": "Twig",
       "view": "views/entity-field/fields/script",
       "isMultilang": true
     },

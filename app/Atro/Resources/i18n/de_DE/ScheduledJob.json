@@ -2,7 +2,11 @@
   "fields": {
     "scheduling": "Planung",
     "jobs": "Aufträge",
-    "name": "Name"
+    "name": "Name",
+    "action": "Aktion"
+  },
+  "links": {
+    "action": "Aktion"
   },
   "labels": {
     "executeNow": "Jetzt ausführen"
@@ -21,7 +25,8 @@
       "FindMatches": "Treffer finden",
       "CalculateScriptFieldsForEntities": "Skriptfelder berechnen",
       "SendReports": "Anonyme Fehlerberichte senden",
-      "CreateClusters": "Cluster erstellen"
+      "CreateClusters": "Cluster erstellen",
+      "Action": "Aktion"
     }
   },
   "tooltips": {

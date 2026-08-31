@@ -327,8 +327,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $value = $entity->get($fieldName);
 
         if (is_int($value)) {
-            $min = $fieldData['min'] ?? -2147483648;
-            $max = $fieldData['max'] ?? 2147483647;
+            if (($fieldData['dbType'] ?? null) === 'bigint') {
+                $min = $fieldData['min'] ?? PHP_INT_MIN;
+                $max = $fieldData['max'] ?? PHP_INT_MAX;
+            } else {
+                $min = $fieldData['min'] ?? -2147483648;
+                $max = $fieldData['max'] ?? 2147483647;
+            }
 
             if ($value < $min || $value > $max) {
                 $label = $fieldData['detailViewLabel'] ?? $fieldData['label'] ?? $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType());
