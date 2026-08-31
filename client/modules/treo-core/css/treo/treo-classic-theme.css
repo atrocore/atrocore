@@ -19341,20 +19341,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: #fbfbfb;
 }
 
-.compare-records:not([data-mode=merge]) .compare-panel table tr td.cell[data-mode=edit] {
-    border-color: #06c;
-}
-
-.compare-records:not([data-mode=merge]) .compare-panel table tr td.cell.has-error[data-mode=edit] {
-    border-color: #a94442;
-}
-
 .list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit]:first-child {
     padding-left: 15px !important;
-}
-
-.compare-records .compare-panel table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.combined-group), input:not([type=radio]):not([type=checkbox]), .selectize-input) {
-    border-bottom: 0;
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] :where(textarea, input:not([type=radio]):not([type=checkbox]), .selectize-input) {
