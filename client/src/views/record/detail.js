@@ -1243,6 +1243,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         fieldView.hideInlineEditLink();
                         fieldView.inlineEditModeIsOn = false;
                         fieldView.killAfterOutsideClickListener()
+                        this.inlineEditModeIsOn = false;
+                        this.unregisterOpenInlineField(fieldView);
                     }
                     fieldView.setMode('edit');
                     fieldView.render(() => {
