@@ -201,6 +201,7 @@
     "resetAllToDefault": "Resetuj wszystko do domyślnych",
     "pleaseReloadPage": "Proszę <a href=\"javascript:\" onClick=\"window.location.reload();\">odśwież</a> stronę, aby zaktualizować metadane.",
     "pleaseRebuildDatabase": "Proszę <a href=\"javascript:\" data-action=\"rebuild-notification\">przebuduj bazę danych</a> z poziomu Administracji. Schemat bazy danych jest niespójny.",
+    "expiredRentedModulesMessage": "Okres najmu {modules} wygasł. Dalsze korzystanie jest niedozwolone — odnów najem lub odinstaluj moduł (odinstalowanie powoduje usunięcie wszystkich powiązanych danych). Aktualizacje systemu są zablokowane do czasu rozwiązania tego problemu.",
     "youHaveNewNotification": "Masz nowe powiadomienie!",
     "youHaveNewNotifications": "Masz nowe powiadomienia!",
     "status": "Status",

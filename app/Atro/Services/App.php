@@ -21,6 +21,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Metadata;
+use Atro\Repositories\SoftwarePackage;
 use Espo\Core\Acl;
 
 class App extends AbstractService
@@ -142,7 +143,8 @@ class App extends AbstractService
             'token'       => $user->get('token'),
             'settings'    => $settings,
             'appParams'   => [
-                'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
+                'maxUploadSize'        => $this->getMaxUploadSize() / 1024.0 / 1024.0,
+                'expiredRentedModules' => $this->getSoftwarePackageRepository()->getExpiredRentedModules()
             ],
         ];
     }
@@ -308,5 +310,10 @@ class App extends AbstractService
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
         return $this->getInjection('container')->get(AttributeFieldConverter::class);
+    }
+
+    protected function getSoftwarePackageRepository(): SoftwarePackage
+    {
+        return $this->getEntityManager()->getRepository('SoftwarePackage');
     }
 }

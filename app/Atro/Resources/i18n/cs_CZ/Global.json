@@ -218,6 +218,7 @@
     "notInheritedFromParent": "Není zděděno od rodiče",
     "resetAllToDefault": "Obnovení výchozího nastavení",
     "pleaseRebuildDatabase": "Prosím, <a href=\"javascript:\" data-action=\"rebuild-notification\">obnovte databázi</a> z administrace. Schéma databáze je nekonzistentní.",
+    "expiredRentedModulesMessage": "Doba pronájmu {modules} vypršela. Další používání není povoleno — obnovte prosím pronájem nebo modul odinstalujte (odinstalací dojde ke smazání všech souvisejících dat). Aktualizace systému jsou zablokovány, dokud nebude tento problém vyřešen.",
     "youHaveNewNotification": "Máte nové oznámení!",
     "youHaveNewNotifications": "Máte nová oznámení!",
     "status": "Stav",
