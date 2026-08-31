@@ -23,9 +23,6 @@
   "views/list": [
     "treo-core"
   ],
-  "views/admin/index": [
-    "treo-core"
-  ],
   "views/admin/layouts/list-small": [
     "treo-core"
   ],
