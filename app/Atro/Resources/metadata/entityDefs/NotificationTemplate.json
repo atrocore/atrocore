@@ -22,11 +22,11 @@
       "emHidden": true
     },
     "body": {
-      "type": "text",
+      "type": "code",
       "required": true,
       "notStorable": true,
       "virtualField": true,
-      "view": "views/fields/script"
+      "engine": "Twig"
     },
     "createdAt": {
       "type": "datetime",

@@ -228,7 +228,7 @@
       }
     },
     "conditionsExpression": {
-      "type": "text",
+      "type": "code",
       "notStorable": true,
       "engine": "ExpressionLanguage",
       "variables": [
@@ -266,13 +266,13 @@
       }
     },
     "conditionsScript": {
-      "type": "text",
-      "view": "views/fields/script",
+      "type": "code",
+      "engine": "Twig",
       "readOnly": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,
-      "twigVariables": [
+      "variables": [
         "entity",
         "uiRecord",
         "uiRecordFromName",
@@ -811,8 +811,8 @@
       "openApiEnabled": true
     },
     "emailScript": {
-      "type": "text",
-      "view": "views/fields/script",
+      "type": "code",
+      "engine": "Twig",
       "default": "{% set emailTo = ['email1@somedomain.com', 'email2@somedomain.com'] %}\n{% set emailCc = [] %}\n{% set emailBcc = [] %}\n{% set emailTemplateId = 'some-id' %}",
       "notStorable": true,
       "virtualField": true,
@@ -1046,10 +1046,10 @@
       "openApiEnabled": true
     },
     "updateScript": {
-      "type": "text",
+      "type": "code",
       "notStorable": true,
       "virtualField": true,
-      "view": "views/fields/script",
+      "engine": "Twig",
       "language": "json",
       "default": "{# { \"name\": \"Entity Name: {{ entity.name }}\" } #}",
       "filterDisabled": true,
@@ -1063,7 +1063,7 @@
           "entityNameField": "targetEntity"
         }
       },
-      "twigVariables": [
+      "variables": [
         "entity",
         "triggeredEntityType",
         "triggeredEntityId",

@@ -1,0 +1,33 @@
+{
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "language",
+      "type": "varchar"
+    },
+    {
+      "name": "engine",
+      "type": "varchar"
+    },
+    {
+      "name": "variables",
+      "type": "array"
+    },
+    {
+      "name": "editorActions",
+      "type": "jsonObject"
+    }
+  ],
+  "fieldDefs": {
+    "type": "text"
+  },
+  "filter": true,
+  "auditable": true,
+  "notCreatable": true,
+  "view": "views/fields/script",
+  "group": "other"
+}

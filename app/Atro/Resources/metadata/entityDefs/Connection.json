@@ -22,12 +22,16 @@
       "default": "atrocore"
     },
     "payload": {
-      "type": "text",
-      "view": "views/fields/script",
+      "type": "code",
+      "engine": "Twig",
       "default": "{# { \"Username\": \"{{ username }}\\n Password: {{ password }}\" } #}",
       "notStorable": true,
       "dataField": true,
       "required": false,
+      "variables": [
+        "username",
+        "password"
+      ],
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -1322,12 +1326,15 @@
       }
     },
     "headers": {
-      "type": "text",
-      "view": "views/fields/script",
+      "type": "code",
+      "engine": "Twig",
       "default": "{#  [\"Authorization: Bearer {{ response['token'] }}\" ] #}",
       "notStorable": true,
       "dataField": true,
       "required": false,
+      "variables": [
+        "response"
+      ],
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
