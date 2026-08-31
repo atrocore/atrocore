@@ -1229,6 +1229,11 @@
     "cd": "Кд"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Прив'язку атрибутів вимкнено.",
+    "createAttributeValueForbidden": "У вас немає прав для створення значень атрибутів.",
+    "attributeUnlinkingDisabled": "Від'єднання атрибутів вимкнено.",
+    "deleteAttributeValueForbidden": "У вас немає прав для видалення значень атрибутів.",
+    "nestedAttributeRemovalForbidden": "Вкладений атрибут не можна видалити без видалення його батьківського складеного атрибута.",
     "singleClassificationAllowed": "Дозволено встановлювати лише одну класифікацію",
     "moreThanOneClassification": "Деякі записи мають більше ніж одну класифікацію.",
     "reverseAssociationError": "Помилка зворотної асоціації: %s",

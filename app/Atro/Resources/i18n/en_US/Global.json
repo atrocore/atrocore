@@ -1238,6 +1238,11 @@
     "cd": "cd"
   },
   "exceptions": {
+    "attributeLinkingDisabled": "Attribute linking is disabled.",
+    "createAttributeValueForbidden": "You do not have permission to create attribute values.",
+    "attributeUnlinkingDisabled": "Attribute unlinking is disabled.",
+    "deleteAttributeValueForbidden": "You do not have permission to delete attribute values.",
+    "nestedAttributeRemovalForbidden": "Nested attribute cannot be removed without its composite parent.",
     "singleClassificationAllowed": "Only one classification is allowed",
     "moreThanOneClassification": "Some records have more than one classification.",
     "reverseAssociationError": "Backward association error: %s",

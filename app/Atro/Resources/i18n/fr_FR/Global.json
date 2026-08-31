@@ -1172,6 +1172,11 @@
     }
   },
   "exceptions": {
+    "attributeLinkingDisabled": "La liaison d'attributs est désactivée.",
+    "createAttributeValueForbidden": "Vous n'avez pas la permission de créer des valeurs d'attribut.",
+    "attributeUnlinkingDisabled": "La déliaison d'attributs est désactivée.",
+    "deleteAttributeValueForbidden": "Vous n'avez pas la permission de supprimer des valeurs d'attribut.",
+    "nestedAttributeRemovalForbidden": "Un attribut imbriqué ne peut pas être supprimé sans que son attribut composite parent le soit également.",
     "reverseAssociationError": "Erreur association inverse : %s",
     "noSuchAssociation": "Échec de la validation. Aucune association de ce type n'existe",
     "itselfAssociation": "L'enregistrement ne peut pas être associé à lui-même.",
