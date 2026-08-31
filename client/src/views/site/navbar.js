@@ -475,14 +475,14 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             });
 
             setInterval(() => {
-                const $composerLi = $('a[data-action="composerUpdate"]').parent();
+                const $systemUpdateLi = $('a[data-action="updateSystem"]').parent();
                 const $rebuildLi = $('a[data-action="rebuildDatabase"]').parent();
                 const isNeedToUpdate = localStorage.getItem('pd_isNeedToUpdate') || false;
                 const isNeedToRebuildDb = localStorage.getItem('pd_isNeedToRebuildDatabase') || false;
                 if (isNeedToUpdate === 'true') {
-                    $composerLi.removeClass('hidden');
+                    $systemUpdateLi.removeClass('hidden');
                 } else {
-                    $composerLi.addClass('hidden');
+                    $systemUpdateLi.addClass('hidden');
                 }
 
                 if (isNeedToRebuildDb === 'true') {
