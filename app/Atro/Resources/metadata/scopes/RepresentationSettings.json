@@ -1,9 +1,0 @@
-{
-  "entity": false,
-  "module": "TreoCore",
-  "streamDisabled": true,
-  "notificationDisabled": true,
-  "bookmarkDisabled": true,
-  "actionDisabled": true,
-  "emHidden": true
-}
