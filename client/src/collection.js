@@ -138,6 +138,7 @@ Espo.define('collection', [], function () {
             if (!options?.more) {
                 if (response.list.length < this.maxSize) {
                     this.total = this.offset + response.list.length
+                    this.trigger('update-total', this, options)
                 } else {
                     this.fetchTotal()
                 }

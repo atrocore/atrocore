@@ -393,6 +393,12 @@ Espo.define('views/classification/record/panels/classification-attributes',
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
+
+            if (this.collection) {
+                Dep.prototype.setupTotal.call(this);
+                RecordInGroup.prototype.mountCounterToolbar.call(this);
+            }
+
             this.buildGroups();
         },
 
@@ -471,16 +477,16 @@ Espo.define('views/classification/record/panels/classification-attributes',
 
         fetchCollectionPart(callback) {
             this.collection.fetch({ remove: false, more: true }).then(response => {
-                if (!response.list) {
-                    callback();
+                if (!response.list || response.list.length < this.collection.maxSize) {
+                    this.collection.total = this.collection.length;
+                    this.collection.trigger('update-total', this.collection);
+                    if (callback) {
+                        callback();
+                    }
                     return;
                 }
-                let length = this.collection.length + response.list.length;
-                if (this.collection.total > length) {
-                    this.fetchCollectionPart(callback);
-                } else if (callback) {
-                    callback();
-                }
+
+                this.fetchCollectionPart(callback);
             });
         },
 

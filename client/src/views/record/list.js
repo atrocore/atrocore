@@ -1285,6 +1285,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.uniqueKey = this.options.searchUniqueKey;
             }
 
+            this.viewMode = this.options.viewMode;
+            this.onViewModeChange = this.options.onViewModeChange;
+
             if (this.getMetadata().get(['scopes', this.getModelScope(), 'disabled'])) {
                 this.checkboxes = false;
             }
@@ -1590,16 +1593,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 props: this.getActionsProperties()
             });
 
-            this.listenTo(this, 'update-counters', () => {
-                component.$set({
-                    counters: this.getCounters(),
-                    loading: this.isListLoading(),
-                })
-            });
-
             this.listenTo(this, 'select-all-results', () => {
                 component.$set({
-                    counters: this.getCounters(),
                     massActions: this.getMassActions(),
                     selected: true,
                 });
@@ -1607,7 +1602,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             this.listenTo(this, 'unselect-all-results', () => {
                 component.$set({
-                    counters: this.getCounters(),
                     massActions: this.getMassActions(),
                     selected: false
                 });
@@ -1615,7 +1609,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             this.listenTo(this, 'check', () => {
                 component.$set({
-                    counters: this.getCounters(),
                     massActions: this.getMassActions(),
                     selected: this.checkedList
                 });
@@ -1637,8 +1630,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 searchManager: this.searchManager,
                 uniqueKey: this.uniqueKey,
                 scope: this.scope,
-                counters: this.getCounters(),
-                loading: this.isListLoading(),
+                viewMode: this.viewMode,
+                onViewModeChange: this.onViewModeChange,
                 selected: this.allResultIsChecked ? true : this.checkedList,
                 massActions: this.getMassActions(),
                 isRelationship: !!this.options.panelView,
@@ -1655,48 +1648,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         getActionsComponent: function () {
             return Svelte.ListToolbar;
-        },
-
-        getCounters: function () {
-            const groups = [];
-            const counters = [];
-
-            if (this.checkedList?.length > 0) {
-                counters.push({
-                    name: 'selected',
-                    label: this.translate('Selected'),
-                    value: this.checkedList.length,
-                });
-            } else if (this.allResultIsChecked) {
-                counters.push({
-                    name: 'selected',
-                    label: this.translate('Selected'),
-                    value: this.collection.total,
-                });
-            }
-
-            if (this.displayTotalCount) {
-                var shownCount = this.collection.length + (this.collection.lengthCorrection || 0);
-                if (shownCount > this.collection.maxSize) {
-                    counters.push({
-                        name: 'shown',
-                        label: this.translate('Shown'),
-                        value: shownCount,
-                    });
-                }
-
-                counters.push({
-                    name: 'total',
-                    label: this.translate('Total'),
-                    value: this.collection.total,
-                });
-            }
-
-            if (counters.length) {
-                groups.push(counters);
-            }
-
-            return groups;
         },
 
         getMassActions: function () {
@@ -3231,6 +3182,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }.bind(this) : null,
                 controls: this.getToolbarControls(),
                 scope: this.scope,
+                selectedCount: this.checkedList?.length > 0
+                    ? this.checkedList.length
+                    : (this.allResultIsChecked ? this.collection.total : null),
+                shownCount: this.displayTotalCount ? (this.collection.length + (this.collection.lengthCorrection || 0)) : null,
+                totalCount: this.displayTotalCount ? this.collection.total : null,
+                loading: this.isListLoading(),
                 massActions: this.getMassActions(),
                 selected: this.allResultIsChecked ? true : this.checkedList,
                 hasSelectAllCheckbox: !!this.checkboxes && this.isAllowedSelectAllResult(),
