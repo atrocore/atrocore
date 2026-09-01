@@ -16,6 +16,8 @@ use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 
 final class Config
 {
+    private const string CONFIG_PATH = 'data/config.php';
+
     /**
      * System config defaults, merged under data/config.php on load
      */
@@ -67,8 +69,6 @@ final class Config
 
     protected ?array $referenceData = null;
 
-    protected $configPath = 'data/config.php';
-
     protected string $customHeadCodeDir = 'public/client/custom/html';
 
     protected string $customHeadCodeFilename = 'head-code.html';
@@ -91,6 +91,11 @@ final class Config
     protected array $changedData = [];
     protected array $removeData = [];
 
+    public static function loadFromFile(): array
+    {
+        return file_exists(self::CONFIG_PATH) ? include self::CONFIG_PATH : self::getDefaults();
+    }
+
     public function clearReferenceDataCache(): void
     {
         $this->referenceData = null;
@@ -99,7 +104,7 @@ final class Config
     protected function loadConfig(bool $reload = false): array
     {
         if ($reload || empty($this->data)) {
-            $this->data = file_exists($this->configPath) ? include $this->configPath : $this->getDefaults();
+            $this->data = self::loadFromFile();
             $this->data = Util::merge($this->systemConfig, $this->data);
         }
 
@@ -210,11 +215,6 @@ final class Config
         return $this->referenceData;
     }
 
-    public function getConfigPath()
-    {
-        return $this->configPath;
-    }
-
     /**
      * Get an option from config
      *
@@ -299,11 +299,11 @@ final class Config
 
     public function save(): bool
     {
-        if (!file_exists($this->configPath)) {
+        if (!file_exists(self::CONFIG_PATH)) {
             return false;
         }
 
-        $data = include $this->configPath;
+        $data = self::loadFromFile();
 
         if (empty($data) || !is_array($data)) {
             return false;
@@ -321,7 +321,7 @@ final class Config
             }
         }
 
-        if (!$this->writeAtomically($this->configPath, $this->exportPhp($data))) {
+        if (!$this->writeAtomically($this->exportPhp($data))) {
             return false;
         }
 
@@ -369,8 +369,10 @@ final class Config
      * Writes through a temporary file and renames it into place, so a concurrent
      * reader never includes a half-written config.
      */
-    private function writeAtomically(string $path, string $content): bool
+    private function writeAtomically(string $content): bool
     {
+        $path = self::CONFIG_PATH;
+
         $tmp = $path . '.' . uniqid('', true) . '.tmp';
 
         if (file_put_contents($tmp, $content) === false) {
@@ -394,7 +396,7 @@ final class Config
         return true;
     }
 
-    public function getDefaults(): array
+    private static function getDefaults(): array
     {
         return [
             'isInstalled'                     => false,
