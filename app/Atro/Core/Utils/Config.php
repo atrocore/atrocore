@@ -13,7 +13,6 @@ namespace Atro\Core\Utils;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
-use Espo\Core\Utils\File\Manager as FileManager;
 
 final class Config
 {
@@ -88,16 +87,9 @@ final class Config
             'defaultPermissions',
         ];
 
-    protected array $data;
+    protected array $data = [];
     protected array $changedData = [];
     protected array $removeData = [];
-
-    protected FileManager $fileManager;
-
-    public function __construct()
-    {
-        $this->fileManager = new FileManager();
-    }
 
     public function clearReferenceDataCache(): void
     {
@@ -107,7 +99,7 @@ final class Config
     protected function loadConfig(bool $reload = false): array
     {
         if ($reload || empty($this->data)) {
-            $this->data = file_exists($this->configPath) ? $this->fileManager->getPhpContents($this->configPath) : $this->getDefaults();
+            $this->data = file_exists($this->configPath) ? include $this->configPath : $this->getDefaults();
             $this->data = Util::merge($this->systemConfig, $this->data);
         }
 
@@ -278,102 +270,128 @@ final class Config
         return true;
     }
 
-    /**
-     * Set an option to the config
-     *
-     * @param string $name
-     * @param string $value
-     *
-     * @return bool
-     */
-    public function set($name, $value = null, $dontMarkDirty = false)
+    public function set(string $name, mixed $value = null): void
     {
-        if (is_object($name)) {
-            $name = get_object_vars($name);
+        // a bare set() must not leave $data holding only that one key
+        $this->loadConfig();
+
+        // stdClass from the REST payload would end up as \stdClass::__set_state() in config.php
+        if (is_object($value) && in_array($name, $this->associativeArrayAttributeList, true)) {
+            $value = (array)$value;
         }
 
-        if (!is_array($name)) {
-            $name = array($name => $value);
-        }
-
-        foreach ($name as $key => $value) {
-            if (in_array($key, $this->associativeArrayAttributeList) && is_object($value)) {
-                $value = (array)$value;
-            }
-            $this->data[$key] = $value;
-            if (!$dontMarkDirty) {
-                $this->changedData[$key] = $value;
-            }
-        }
+        $this->data[$name] = $value;
+        $this->changedData[$name] = $value;
     }
 
-    /**
-     * Remove an option in config
-     *
-     * @param string $name
-     *
-     * @return bool | null - null if an option doesn't exist
-     */
-    public function remove($name)
+    public function remove(string $name): bool
     {
+        $this->loadConfig();
+
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
             $this->removeData[] = $name;
             return true;
         }
 
-        return null;
+        return false;
     }
 
-    public function save()
+    public function save(): bool
     {
         if (!file_exists($this->configPath)) {
             return false;
         }
 
-        $data = include($this->configPath);
+        $data = include $this->configPath;
 
         if (empty($data) || !is_array($data)) {
             return false;
         }
 
-        $values = $this->changedData;
-        if (is_array($values)) {
-            foreach ($values as $key => $value) {
-                $data[$key] = $value;
+        // change config data
+        foreach ($this->changedData as $key => $value) {
+            $data[$key] = $value;
+        }
+
+        // remove config data
+        foreach ($this->removeData as $key) {
+            if (array_key_exists($key, $data)) {
+                unset($data[$key]);
             }
         }
 
-        $removeData = empty($this->removeData) ? [] : $this->removeData;
-        if (is_array($removeData)) {
-            $removeData[] = '_prev';
-            $removeData[] = '_silentMode';
-
-            foreach ($removeData as $key) {
-                if (array_key_exists($key, $data)) {
-                    unset($data[$key]);
-                }
-            }
-        }
-
-        $content = $this->fileManager->wrapForDataExport($data, true);
-
-        if (strpos($content, '<?php') === false) {
+        if (!$this->writeAtomically($this->configPath, $this->exportPhp($data))) {
             return false;
         }
 
-        $result = file_put_contents($this->configPath, $content, LOCK_EX);
+        $this->changedData = [];
+        $this->removeData = [];
+        $this->loadConfig(true);
 
-        if ($result) {
-            if (function_exists('opcache_invalidate')) {
-                opcache_invalidate($this->configPath);
-            }
-            $this->changedData = array();
-            $this->removeData = array();
-            $this->loadConfig(true);
+        return true;
+    }
+
+    /**
+     * Renders config data as a loadable PHP file: short array syntax,
+     * 4-space indentation, stdClass as `(object) [...]`.
+     */
+    private function exportPhp(array $data): string
+    {
+        return "<?php\nreturn " . $this->exportValue($data) . ";\n";
+    }
+
+    private function exportValue(mixed $value, int $level = 0): string
+    {
+        if ($value instanceof \stdClass) {
+            return '(object) ' . $this->exportValue(get_object_vars($value), $level);
         }
 
-        return $result;
+        if (!is_array($value)) {
+            return var_export($value, true);
+        }
+
+        if ($value === []) {
+            return '[]';
+        }
+
+        $indent = str_repeat('    ', $level + 1);
+
+        $rows = [];
+        foreach ($value as $key => $item) {
+            $rows[] = $indent . var_export($key, true) . ' => ' . $this->exportValue($item, $level + 1);
+        }
+
+        return "[\n" . implode(",\n", $rows) . "\n" . str_repeat('    ', $level) . ']';
+    }
+
+    /**
+     * Writes through a temporary file and renames it into place, so a concurrent
+     * reader never includes a half-written config.
+     */
+    private function writeAtomically(string $path, string $content): bool
+    {
+        $tmp = $path . '.' . uniqid('', true) . '.tmp';
+
+        if (file_put_contents($tmp, $content) === false) {
+            return false;
+        }
+
+        // a fresh file gets umask permissions - keep whatever the config had
+        if (file_exists($path) && ($perms = fileperms($path)) !== false) {
+            chmod($tmp, $perms & 0777);
+        }
+
+        if (!rename($tmp, $path)) {
+            @unlink($tmp);
+            return false;
+        }
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($path, true);
+        }
+
+        return true;
     }
 
     public function getDefaults(): array
@@ -440,13 +458,9 @@ final class Config
     }
 
     /**
-     * Set JSON data acording to restrictions for a user
-     *
-     * @param $isAdmin
-     *
-     * @return bool
+     * Apply incoming data, dropping whatever the given role is not allowed to write.
      */
-    public function setData($data, $isAdmin = null)
+    public function setData(array|\stdClass $data, ?bool $isAdmin = null): void
     {
         $restrictItems = $this->getRestrictItems($isAdmin);
 
@@ -465,7 +479,9 @@ final class Config
 
         $values = $this->prepareStylesheetConfigForSave($values);
 
-        return $this->set($values);
+        foreach ($values as $key => $value) {
+            $this->set($key, $value);
+        }
     }
 
     /**
