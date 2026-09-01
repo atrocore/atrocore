@@ -11,7 +11,6 @@
 
 namespace Atro\Core\Utils;
 
-use Atro\Core\Container;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 use Espo\Core\Utils\File\Manager as FileManager;
@@ -79,15 +78,9 @@ final class Config
 
     protected string $customStylesheetFileName = 'custom-css.css';
 
-    /**
-     * Array of admin items
-     *
-     * @access protected
-     * @var array
-     */
-    protected $adminItems = array();
+    protected array $adminItems = array();
 
-    protected $associativeArrayAttributeList
+    protected array $associativeArrayAttributeList
         = [
             'currencyRates',
             'database',
@@ -95,37 +88,15 @@ final class Config
             'defaultPermissions',
         ];
 
+    protected array $data;
+    protected array $changedData = [];
+    protected array $removeData = [];
 
-    /**
-     * Contains content of config
-     *
-     * @access private
-     * @var array
-     */
-    protected $data;
+    protected FileManager $fileManager;
 
-    protected $changedData = array();
-    protected $removeData = array();
-
-    /**
-     * @var FileManager
-     */
-    protected $fileManager;
-
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * Config constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct()
     {
         $this->fileManager = new FileManager();
-        $this->container = $container->get('container');
     }
 
     public function clearReferenceDataCache(): void
@@ -136,7 +107,7 @@ final class Config
     protected function loadConfig(bool $reload = false): array
     {
         if ($reload || empty($this->data)) {
-            $this->data = file_exists($this->configPath) ? $this->getFileManager()->getPhpContents($this->configPath) : $this->getDefaults();
+            $this->data = file_exists($this->configPath) ? $this->fileManager->getPhpContents($this->configPath) : $this->getDefaults();
             $this->data = Util::merge($this->systemConfig, $this->data);
         }
 
@@ -247,11 +218,6 @@ final class Config
         return $this->referenceData;
     }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
     public function getConfigPath()
     {
         return $this->configPath;
@@ -267,10 +233,6 @@ final class Config
      */
     public function get($name, $default = null)
     {
-        if ($name == 'isModulesLoaded') {
-            return $this->container->get('moduleManager')->isLoaded();
-        }
-
         $keys = explode('.', $name);
 
         $lastBranch = $this->loadConfig();
@@ -394,7 +356,7 @@ final class Config
             }
         }
 
-        $content = $this->getFileManager()->wrapForDataExport($data, true);
+        $content = $this->fileManager->wrapForDataExport($data, true);
 
         if (strpos($content, '<?php') === false) {
             return false;
