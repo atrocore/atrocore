@@ -17,6 +17,7 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
 use Atro\Core\DataManager;
 use Atro\Core\Utils\Config;
+use Atro\Services\Settings;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
@@ -49,7 +50,7 @@ class Twig
     public function renderTemplate(string $template, array $templateData, string $outputType = 'text')
     {
         $twig = $this->getTwigEnvironment();
-        $templateData['config'] = $this->getConfig()->getData();
+        $templateData['config'] = $this->getSettingsService()->getPublicConfig();
 
         foreach (['entity', 'record'] as $key) {
             if (isset($templateData[$key]) && $templateData[$key] instanceof Entity) {
@@ -165,6 +166,11 @@ class Twig
     protected function getConfig(): Config
     {
         return $this->container->get('config');
+    }
+
+    protected function getSettingsService(): Settings
+    {
+        return $this->container->get('serviceFactory')->create('Settings');
     }
 
     protected function getMetadata(): Metadata

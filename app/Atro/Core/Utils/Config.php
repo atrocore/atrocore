@@ -68,16 +68,6 @@ final class Config
 
     private ?array $referenceData = null;
 
-    private string $customHeadCodeDir = 'public/client/custom/html';
-
-    private string $customHeadCodeFilename = 'head-code.html';
-
-    private string $customStylesheetDir = 'public/client/custom/css';
-
-    private string $customStylesheetFileName = 'custom-css.css';
-
-    private array $adminItems = array();
-
     private array $associativeArrayAttributeList
         = [
             'database',
@@ -140,24 +130,13 @@ final class Config
         $this->referenceData = null;
     }
 
-    public function getData($isAdmin = null)
+    /**
+     * The whole config as stored, with no filtering whatsoever. Deciding what of
+     * it may leave the backend is the caller's job - see Services\Settings.
+     */
+    public function getAll(): array
     {
-        $data = $this->loadConfig();
-        $data = $this->prepareCustomHeadCodeForOutput($data);
-        $data = $this->prepareStylesheetConfigForOutput($data);
-        $restrictedConfig = $data;
-
-        foreach ($this->getRestrictItems($isAdmin) as $name) {
-            if (isset($restrictedConfig[$name])) {
-                unset($restrictedConfig[$name]);
-            }
-        }
-
-        if (isset($restrictedConfig['clickhouse']['database'])) {
-            unset($restrictedConfig['clickhouse']['database']);
-        }
-
-        return $restrictedConfig;
+        return $this->loadConfig();
     }
 
     public function get(string $name, mixed $default = null): mixed
@@ -262,44 +241,6 @@ final class Config
         return true;
     }
 
-    /**
-     * Apply incoming data, dropping whatever the given role is not allowed to write.
-     */
-    public function setData(array|\stdClass $data, ?bool $isAdmin = null): void
-    {
-        $restrictItems = $this->getRestrictItems($isAdmin);
-
-        if (is_object($data)) {
-            $data = get_object_vars($data);
-        }
-
-        $values = array();
-        foreach ($data as $key => $item) {
-            if (!in_array($key, $restrictItems)) {
-                $values[$key] = $item;
-            }
-        }
-
-        $values = $this->prepareCustomHeadCodeForSave($values);
-
-        $values = $this->prepareStylesheetConfigForSave($values);
-
-        foreach ($values as $key => $value) {
-            $this->set($key, $value);
-        }
-    }
-
-    public function getCustomHeadCode(): ?string
-    {
-        $path = $this->getCustomHeadCodePath();
-
-        if (!empty($path) && file_exists($path)) {
-            return file_get_contents($path);
-        }
-
-        return null;
-    }
-
     protected function loadConfig(bool $reload = false): array
     {
         if ($reload || empty($this->data)) {
@@ -386,100 +327,6 @@ final class Config
         }
 
         return $this->referenceData;
-    }
-
-    /**
-     * Get admin items
-     *
-     * @return object
-     */
-    protected function getRestrictItems($onlySystemItems = null)
-    {
-        $data = $this->loadConfig();
-
-        if ($onlySystemItems) {
-            return $data['systemItems'];
-        }
-
-        if (empty($this->adminItems)) {
-            $this->adminItems = array_merge($data['systemItems'], $data['adminItems']);
-        }
-
-        if ($onlySystemItems === false) {
-            return $this->adminItems;
-        }
-
-        return array_merge($this->adminItems, $data['userItems']);
-    }
-
-    protected function prepareStylesheetConfigForOutput(array $data): array
-    {
-        if (!empty($data['customStylesheetPath']) && file_exists($data['customStylesheetPath'])) {
-            $data['customStylesheet'] = file_get_contents($data['customStylesheetPath']);
-        }
-
-        return $data;
-    }
-
-    protected function prepareCustomHeadCodeForOutput(array $data): array
-    {
-        $data['customHeadCode'] = $this->getCustomHeadCode();
-
-        return $data;
-    }
-
-    protected function prepareStylesheetConfigForSave(array $data): array
-    {
-        // create custom css theme file
-        if (array_key_exists('customStylesheet', $data)) {
-            if (empty($data['customStylesheet']) && !empty($this->get('customStylesheetPath')) && file_exists($this->get('customStylesheetPath'))) {
-                unlink($this->get('customStylesheetPath'));
-                $data['customStylesheetPath'] = null;
-            } else {
-                if (!empty($data['customStylesheet'])) {
-                    Util::createDir($this->customStylesheetDir);
-                    file_put_contents($this->getCustomStylesheetPath(), $data['customStylesheet']);
-
-                    $data['customStylesheetPath'] = $this->getCustomStylesheetPath();
-                }
-            }
-        }
-        unset($data['customStylesheet']);
-
-        return $data;
-    }
-
-    protected function prepareCustomHeadCodeForSave(array $data): array
-    {
-        // create custom head scripts file
-        if (array_key_exists('customHeadCode', $data)) {
-            if (empty($data['customHeadCode']) && !empty($this->get('customHeadCodePath')) && file_exists($this->get('customHeadCodePath'))) {
-                unlink($this->get('customHeadCodePath'));
-                $data['customHeadCodePath'] = null;
-            } else {
-                if (!empty($data['customHeadCode'])) {
-                    Util::createDir($this->customHeadCodeDir);
-
-                    $path = $this->getCustomHeadCodePath();
-
-                    file_put_contents($path, $data['customHeadCode']);
-                    $data['customHeadCodePath'] = $path;
-                }
-            }
-        }
-        unset($data['customHeadCode']);
-
-        return $data;
-    }
-
-    protected function getCustomHeadCodePath(): string
-    {
-        return $this->customHeadCodeDir . '/' . $this->customHeadCodeFilename;
-    }
-
-    protected function getCustomStylesheetPath(): string
-    {
-        return $this->customStylesheetDir . '/' . $this->customStylesheetFileName;
     }
 
     /**
