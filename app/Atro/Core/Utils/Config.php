@@ -69,14 +69,6 @@ final class Config
 
     protected ?array $referenceData = null;
 
-    /**
-     * Path of default config file
-     *
-     * @access private
-     * @var string
-     */
-    private $defaultConfigPath = VENDOR_PATH . '/atrocore-legacy/app/Espo/Core/defaults/config.php';
-
     protected $configPath = 'data/config.php';
 
     protected string $customHeadCodeDir = 'public/client/custom/html';
@@ -144,8 +136,8 @@ final class Config
     protected function loadConfig(bool $reload = false): array
     {
         if ($reload || empty($this->data)) {
-            $configPath = file_exists($this->configPath) ? $this->configPath : $this->defaultConfigPath;
-            $this->data = Util::merge($this->systemConfig, $this->getFileManager()->getPhpContents($configPath));
+            $this->data = file_exists($this->configPath) ? $this->getFileManager()->getPhpContents($this->configPath) : $this->getDefaults();
+            $this->data = Util::merge($this->systemConfig, $this->data);
         }
 
         // put reference data into config
@@ -422,9 +414,67 @@ final class Config
         return $result;
     }
 
-    public function getDefaults()
+    public function getDefaults(): array
     {
-        return $this->getFileManager()->getPhpContents($this->defaultConfigPath);
+        return [
+            'isInstalled'                     => false,
+            'passwordSalt'                    => 'some-salt',
+            'amountOfDbDumps'                 => 14,
+            'database'                        => [
+                'driver'   => 'pdo_mysql',
+                'host'     => 'localhost',
+                'port'     => '',
+                'charset'  => 'utf8mb4',
+                'dbname'   => '',
+                'user'     => '',
+                'password' => ''
+            ],
+            'maxConcurrentWorkers'            => 6,
+            'currencyRates'                   => [],
+            'outboundEmailFromAddress'        => '',
+            'logger'                          => [
+                'path'          => 'data/logs/atro.log',
+                'level'         => 'WARNING', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
+                'rotation'      => true,
+                'maxFileNumber' => 7,
+            ],
+            'assignmentEmailNotifications'    => false,
+            'disabledCountQueryEntityList'    => [],
+            'authTokenLifetime'               => 0,
+            'authTokenMaxIdleTime'            => 120,
+            'userNameRegularExpression'       => '[^a-z0-9\-@_\.\s]',
+            'displayListViewRecordCount'      => true,
+            'aclStrictMode'                   => false,
+            'textFilterUseContainsForVarchar' => false,
+            'noteDeleteThresholdPeriod'       => '1 month',
+            'noteEditThresholdPeriod'         => '7 days',
+            'recordsPerPage'                  => 50,
+            'recordsPerPageSmall'             => 20,
+            'lastViewedCount'                 => 20,
+            'useCache'                        => true,
+            'applicationName'                 => 'AtroPIM',
+            'filesPath'                       => 'upload/files/',
+            'thumbnailsPath'                  => 'upload/thumbnails/',
+            'chunkFileSize'                   => 2,
+            'fileUploadStreamCount'           => 3,
+            'globalSearchEntityList'          => ['File', 'Folder', 'Attribute', 'AttributeGroup', 'Classification'],
+            'checkForConflicts'               => true,
+            'locale'                          => 'main',
+            'massCreateMaxChunkSize'          => 3000,
+            'massUpdateMaxCountWithoutJob'    => 200,
+            'massUpdateMinChunkSize'          => 400,
+            'massUpdateMaxChunkSize'          => 3000,
+            'massDeleteMaxCountWithoutJob'    => 200,
+            'massDeleteMinChunkSize'          => 400,
+            'massDeleteMaxChunkSize'          => 3000,
+            'massRestoreMaxCountWithoutJob'   => 200,
+            'massRestoreMinChunkSize'         => 400,
+            'massRestoreMaxChunkSize'         => 3000,
+            'massDownloadMinChunkSize'        => 400,
+            'massDownloadMaxChunkSize'        => 1000,
+            'maxTransactionJobsPerProcess'    => 1000,
+            'frontendTimeout'                 => 120
+        ];
     }
 
     /**
