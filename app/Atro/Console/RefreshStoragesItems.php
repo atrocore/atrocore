@@ -26,33 +26,43 @@ class RefreshStoragesItems extends AbstractConsole
 
     public function run(array $data): void
     {
-        $this->createFoldersItems();
-        self::show("Folders items has been refreshed successfully.", self::SUCCESS);
+        try {
+            $this->createFoldersItems();
+            self::show("Folders items has been refreshed successfully.", self::SUCCESS);
 
-        $this->createFilesItems();
-        self::show("Files items has been refreshed successfully.", self::SUCCESS);
+            $this->createFilesItems();
+            self::show("Files items has been refreshed successfully.", self::SUCCESS);
+
+        } catch (\Throwable $e) {
+            self::show($e->getMessage(), self::ERROR);
+        }
     }
 
     public function createFoldersItems(): void
     {
-        $this->getConnection()->createQueryBuilder()
+        $this->getDbal()->createQueryBuilder()
             ->delete('file_folder_linker')
             ->where('folder_id IS NOT NULL')
             ->executeQuery();
 
-        $records = $this->getConnection()->createQueryBuilder()
+        $records = $this->getDbal()->createQueryBuilder()
             ->select('f.*, h.parent_id')
             ->from('folder', 'f')
+            ->innerJoin('f', 'storage', 's', 'f.storage_id=s.id')
             ->leftJoin('f', 'folder_hierarchy', 'h', 'f.id=h.entity_id')
             ->leftJoin('h', 'folder', 'f1', 'f1.id=h.parent_id')
             ->where('f.deleted=:false')
             ->andWhere('f.deleted=:false')
             ->andWhere('f1.deleted=:false')
+            ->andWhere('s.deleted=:false')
+            ->andWhere('(s.type != :local OR s.sync_folders = :true)')
             ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('local', 'local')
             ->fetchAllAssociative();
 
         foreach ($records as $record) {
-            $this->getConnection()->createQueryBuilder()
+            $this->getDbal()->createQueryBuilder()
                 ->insert('file_folder_linker')
                 ->setValue('id', ':id')
                 ->setValue('name', ':name')
@@ -68,22 +78,25 @@ class RefreshStoragesItems extends AbstractConsole
 
     public function createFilesItems(): void
     {
-        $this->getConnection()->createQueryBuilder()
+        $this->getDbal()->createQueryBuilder()
             ->delete('file_folder_linker')
             ->where('file_id IS NOT NULL')
             ->executeQuery();
 
-        $records = $this->getConnection()->createQueryBuilder()
+        $records = $this->getDbal()->createQueryBuilder()
             ->select('f.*, s.path as storage_path')
             ->from('file', 'f')
             ->innerJoin('f', 'storage', 's', 'f.storage_id=s.id')
             ->where('f.deleted=:false')
             ->andWhere('s.deleted=:false')
+            ->andWhere('(s.type != :local OR s.sync_folders = :true)')
             ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('local', 'local')
             ->fetchAllAssociative();
 
         foreach ($records as $record) {
-            $this->getConnection()->createQueryBuilder()
+            $this->getDbal()->createQueryBuilder()
                 ->insert('file_folder_linker')
                 ->setValue('id', ':id')
                 ->setValue('name', ':name')
@@ -97,8 +110,8 @@ class RefreshStoragesItems extends AbstractConsole
         }
     }
 
-    protected function getConnection(): Connection
+    protected function getDbal(): Connection
     {
-        return $this->getContainer()->get('connection');
+        return $this->getContainer()->get('dbal');
     }
 }

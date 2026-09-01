@@ -418,6 +418,15 @@ class File extends Base
 
     public function validateItemName(FileEntity $file): void
     {
+        $storage = $file->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         if ($file->isNew() || $file->isAttributeChanged('name') || $file->isAttributeChanged('folderId')) {
             $qb = $this->getDbal()->createQueryBuilder()
                 ->select('*')
@@ -427,7 +436,7 @@ class File extends Base
                 ->andWhere('deleted = :false')
                 ->setParameter('name', $file->get('name'))
                 ->setParameter('parentId', $file->get('folderId') ?? '')
-                ->setParameter('false', 'false', ParameterType::BOOLEAN);
+                ->setParameter('false', false, ParameterType::BOOLEAN);
 
             if (!$file->isNew()) {
                 $qb->andWhere('id!=:id')->setParameter('id', $file->get('id'));
