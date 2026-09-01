@@ -1,7 +1,6 @@
 {
   "fields": {
     "useCache": "Usar caché",
-    "currencyRates": "Tipos de cambio",
     "companyLogo": "El logotipo de cabecera",
     "disableEmailDelivery": "Desactivar el envío de correo electrónico",
     "recordsPerPage": "Registros por página",

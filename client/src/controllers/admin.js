@@ -61,19 +61,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             this.main('views/admin/layouts/index', {scope: scope, type: type, relatedScope, layoutProfileId: layoutProfileId});
         },
 
-        fieldManager: function (options) {
-            var scope = options.scope || null;
-            var field = options.field || null;
-
-            this.main('views/admin/field-manager/index', {scope: scope, field: field});
-        },
-
-        linkManager: function (options) {
-            var scope = options.scope || null;
-
-            this.main('views/admin/link-manager/index', {scope: scope});
-        },
-
         apiRequest: function (options) {
             var scope = options.scope || null;
 
@@ -111,32 +98,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        notifications: function () {
-            var model = this.getSettingsModel();
-
-            model.once('sync', function () {
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTitle: 'Notifications',
-                    recordView: 'views/admin/notifications'
-                });
-            }, this);
-            model.fetch();
-        },
-
-        outboundEmails: function () {
-            var model = this.getSettingsModel();
-
-            model.once('sync', function () {
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTitle: 'Outbound Emails',
-                    recordView: 'views/admin/outbound-emails'
-                });
-            }, this);
-            model.fetch();
-        },
-
         authTokens: function () {
             this.collectionFactory.create('AuthToken', function (collection) {
                 var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
@@ -148,21 +109,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                     scope: 'AuthToken',
                     collection: collection,
                     searchManager: searchManager
-                });
-            }, this);
-        },
-
-        jobs: function () {
-            this.collectionFactory.create('Job', function (collection) {
-                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
-                searchManager.loadStored();
-                collection.where = searchManager.getWhere();
-                collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
-
-                this.main('views/admin/job/list', {
-                    scope: 'Job',
-                    collection: collection,
-                    searchManager: searchManager,
                 });
             }, this);
         },

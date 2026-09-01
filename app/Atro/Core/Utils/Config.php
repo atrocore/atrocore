@@ -80,7 +80,6 @@ final class Config
 
     private array $associativeArrayAttributeList
         = [
-            'currencyRates',
             'database',
             'logger',
             'defaultPermissions',
@@ -563,7 +562,6 @@ final class Config
                 'password' => ''
             ],
             'maxConcurrentWorkers'            => 6,
-            'currencyRates'                   => [],
             'outboundEmailFromAddress'        => '',
             'logger'                          => [
                 'path'          => 'data/logs/atro.log',

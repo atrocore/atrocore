@@ -5,7 +5,6 @@
     "variables": "Змінні",
     "locale": "Локаль за замовчуванням",
     "useCache": "Використовувати кеш",
-    "currencyRates": "Курси обміну",
     "companyLogo": "Логотип заголовка",
     "notificationSmtpConnection": "З'єднання для сповіщень електронною поштою",
     "recordsPerPage": "Записів на сторінку",
