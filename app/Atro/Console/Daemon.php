@@ -179,7 +179,7 @@ class Daemon extends AbstractConsole
             }
 
             if (file_exists(JobManager::QUEUE_FILE) && !file_exists(JobManager::PAUSE_FILE)) {
-                $config = Config::loadFromFile();
+                $config = Config::load();
                 $workersCount = $config['maxConcurrentWorkers'] ?? 6;
                 if ($workersCount < 4) {
                     $workersCount = 4;

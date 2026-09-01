@@ -39,7 +39,6 @@ final class Config
                 'isInstalled',
                 'defaultPermissions',
                 'passwordSalt',
-                'cryptKey',
                 'userLimit',
                 'stylesheet',
                 'userItems',
@@ -91,9 +90,45 @@ final class Config
     protected array $changedData = [];
     protected array $removeData = [];
 
-    public static function loadFromFile(): array
+    /**
+     * Config data as stored on disk. Falls back to the defaults before the
+     * installation has created the file - that is a normal state, unlike a
+     * file that exists but does not hold an array.
+     */
+    public static function load(): array
     {
-        return file_exists(self::CONFIG_PATH) ? include self::CONFIG_PATH : self::getDefaults();
+        if (!file_exists(self::CONFIG_PATH)) {
+            return self::getDefaults();
+        }
+
+        $data = include self::CONFIG_PATH;
+
+        if (!is_array($data)) {
+            throw new \RuntimeException(sprintf('Config file %s is corrupted.', self::CONFIG_PATH));
+        }
+
+        return $data;
+    }
+
+    /**
+     * Creates the config file from the defaults on a fresh installation.
+     * Returns false when the file is already there, or could not be written.
+     */
+    public static function createIfMissing(): bool
+    {
+        if (file_exists(self::CONFIG_PATH)) {
+            return false;
+        }
+
+        $data = self::getDefaults();
+        $data['passwordSalt'] = bin2hex(random_bytes(16));
+
+        return self::writeAtomically(self::exportPhp($data));
+    }
+
+    public static function isInstalled(): bool
+    {
+        return !empty(self::load()['isInstalled']);
     }
 
     public function clearReferenceDataCache(): void
@@ -104,7 +139,7 @@ final class Config
     protected function loadConfig(bool $reload = false): array
     {
         if ($reload || empty($this->data)) {
-            $this->data = self::loadFromFile();
+            $this->data = self::load();
             $this->data = Util::merge($this->systemConfig, $this->data);
         }
 
@@ -303,7 +338,7 @@ final class Config
             return false;
         }
 
-        $data = self::loadFromFile();
+        $data = self::load();
 
         if (empty($data) || !is_array($data)) {
             return false;
@@ -321,7 +356,7 @@ final class Config
             }
         }
 
-        if (!$this->writeAtomically($this->exportPhp($data))) {
+        if (!self::writeAtomically(self::exportPhp($data))) {
             return false;
         }
 
@@ -336,15 +371,15 @@ final class Config
      * Renders config data as a loadable PHP file: short array syntax,
      * 4-space indentation, stdClass as `(object) [...]`.
      */
-    private function exportPhp(array $data): string
+    private static function exportPhp(array $data): string
     {
-        return "<?php\nreturn " . $this->exportValue($data) . ";\n";
+        return "<?php\nreturn " . self::exportValue($data) . ";\n";
     }
 
-    private function exportValue(mixed $value, int $level = 0): string
+    private static function exportValue(mixed $value, int $level = 0): string
     {
         if ($value instanceof \stdClass) {
-            return '(object) ' . $this->exportValue(get_object_vars($value), $level);
+            return '(object) ' . self::exportValue(get_object_vars($value), $level);
         }
 
         if (!is_array($value)) {
@@ -359,7 +394,7 @@ final class Config
 
         $rows = [];
         foreach ($value as $key => $item) {
-            $rows[] = $indent . var_export($key, true) . ' => ' . $this->exportValue($item, $level + 1);
+            $rows[] = $indent . var_export($key, true) . ' => ' . self::exportValue($item, $level + 1);
         }
 
         return "[\n" . implode(",\n", $rows) . "\n" . str_repeat('    ', $level) . ']';
@@ -369,7 +404,7 @@ final class Config
      * Writes through a temporary file and renames it into place, so a concurrent
      * reader never includes a half-written config.
      */
-    private function writeAtomically(string $content): bool
+    private static function writeAtomically(string $content): bool
     {
         $path = self::CONFIG_PATH;
 

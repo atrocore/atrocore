@@ -595,7 +595,7 @@ class Installer extends HasContainer
          */
         $file = 'data/after_install_script.php';
         if (file_exists($file)) {
-            $configData = Config::loadFromFile();
+            $configData = Config::load();
             if (!empty($configData['database']['driver']) && $configData['database']['driver'] !== 'pdo_pgsql') {
                 include_once $file;
             }

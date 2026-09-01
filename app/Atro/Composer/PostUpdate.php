@@ -18,12 +18,12 @@ use Atro\Core\Container;
 use Atro\Core\Application as App;
 use Atro\Jobs\MassDownload;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\ORM\EntityManager;
 
 class PostUpdate
 {
-    private const CONFIG_PATH = 'data/config.php';
     private const STABLE_COMPOSER_JSON = 'data/stable-composer.json';
     private const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
 
@@ -82,7 +82,9 @@ class PostUpdate
             self::clearCache();
 
             // create config if it needs
-            self::createConfig();
+            if (Config::createIfMissing()) {
+                self::renderLine('Creating main config');
+            }
 
             // update client files
             self::updateClientFiles();
@@ -491,32 +493,6 @@ class PostUpdate
         self::copyDir(dirname(CORE_PATH) . '/client', 'public/client');
         foreach (self::$container->get('moduleManager')->getModules() as $module) {
             self::copyDir($module->getClientPath(), 'public/client');
-        }
-    }
-
-    /**
-     * Create config
-     */
-    private static function createConfig(): void
-    {
-        // prepare config path
-        $path = self::CONFIG_PATH;
-
-        if (!file_exists($path)) {
-            self::renderLine('Creating main config');
-
-            // get default data
-            $data = include 'vendor/atrocore/atrocore-legacy/app/Espo/Core/defaults/config.php';
-
-            $data['passwordSalt'] = mb_substr(md5((string)time()), 0, 9);
-
-            $data['cryptKey'] = md5(uniqid());
-
-            // get content
-            $content = "<?php\nreturn " . self::$container->get('fileManager')->varExport($data) . ";\n?>";
-
-            // create config
-            file_put_contents($path, $content);
         }
     }
 
@@ -944,10 +920,6 @@ class PostUpdate
 
     private static function isInstalled(): bool
     {
-        if (!file_exists(self::CONFIG_PATH)) {
-            return false;
-        }
-
-        return self::$container->get('config')->get('isInstalled', false);
+        return Config::isInstalled();
     }
 }
