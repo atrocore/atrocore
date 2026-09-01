@@ -10170,10 +10170,20 @@ div.list-kanban > div > table th {
 
 div.list-kanban > div > table th > div {
     padding-left: 8px;
+    padding-right: 15px;
     position: relative;
     line-height: 28px;
     height: 100%;
-    width: 100%
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+div.list-kanban > div > table th .kanban-group-count {
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-left: 4px;
 }
 
 div.list-kanban > div > table th > div:before, div.list-kanban > div > table th > div:after {
@@ -10330,8 +10340,7 @@ div.list-kanban > div.kanban-columns-container > table {
     }
 
     div.list-kanban > div.kanban-head-container > table > thead tr.kanban-row > th .kanban-group-label {
-        display: inline-block;
-        max-width: calc(100% - 15px);
+        min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap
@@ -13432,9 +13441,10 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total > span {
-    border-radius: 0;
-    background-color: #e3e3e3;
-    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: #f1f1f1;
+    font-weight: 700;
+    padding: 5px 10px;
 }
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total:hover {
@@ -13545,6 +13555,10 @@ input#sn-checkbox-open-in-new-window {
     flex: 1;
     width: max-content;
     min-width: 100%;
+}
+
+#main main > .list-container:has(.list-kanban) {
+    width: 100%;
 }
 
 #main main > .list-container > .table-show-more-container {

@@ -189,6 +189,9 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.uniqueKey = this.options.searchUniqueKey;
             }
 
+            this.viewMode = this.options.viewMode;
+            this.onViewModeChange = this.options.onViewModeChange;
+
             this.statusField = this.getMetadata().get(['scopes', this.scope, 'statusField']);
 
             if (!this.statusField) {
@@ -423,7 +426,9 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                         dataList: itemDataList,
                         collection: collection,
                         isLast: i === groupList.length - 1,
-                        hasShowMore: collection.total > collection.length || collection.total == -1
+                        hasShowMore: collection.total > collection.length || collection.total == -1,
+                        countLabel: this.getGroupCountLabel(collection.length, collection.total),
+                        countTitle: this.getGroupCountTitle(collection.length, collection.total)
                     };
 
                     this.groupDataList.push(o);
@@ -467,6 +472,29 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             }, callback);
         },
 
+        getGroupCountLabel: function (shownCount, total) {
+            if (!total) {
+                return '0';
+            }
+
+            return shownCount + ' / ' + total;
+        },
+
+        getGroupCountTitle: function (shownCount, total) {
+            if (!total) return;
+            return this.translate('Shown', 'labels', 'Global') + ': ' + shownCount + ' / ' +
+                this.translate('Total', 'labels', 'Global') + ': ' + total;
+        },
+
+        updateGroupCount: function (groupItem) {
+            groupItem.countLabel = this.getGroupCountLabel(groupItem.collection.length, groupItem.collection.total);
+            groupItem.countTitle = this.getGroupCountTitle(groupItem.collection.length, groupItem.collection.total);
+
+            this.$el.find('.group-header[data-name="' + groupItem.name + '"] .kanban-group-count')
+                .text('(' + groupItem.countLabel + ')')
+                .attr('title', groupItem.countTitle);
+        },
+
         removeRecordFromList: function (id) {
             this.collection.remove(id);
             this.totalCount = this.collection.total;
@@ -489,10 +517,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                     var item = groupItem.dataList[j];
                     if (item.id === id) {
                         groupItem.dataList.splice(j, 1);
-                        if (groupItem.collection.total > 0) {
-                            groupItem.collection.total--;
-                        }
                         groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length || groupItem.collection.total == -1;
+                        this.updateGroupCount(groupItem);
                         break;
                     }
                 }
@@ -506,9 +532,6 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.collection.subCollectionList.forEach(function (collection) {
                 if (collection.get(id)) {
                     collection.remove(id);
-                    if (collection.total > 0) {
-                        collection.total--;
-                    }
                 }
             }, this);
 
@@ -521,13 +544,13 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                     if (item.id === id) {
                         dataItem = item;
                         groupItem.dataList.splice(j, 1);
+                        this.updateGroupCount(groupItem);
                         break;
                     }
                 }
             }
 
             if (!group) return;
-            if (o.isDrop) return;
 
             for (var i in this.groupDataList) {
                 var groupItem = this.groupDataList[i];
@@ -538,7 +561,10 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                     groupItem.dataList.unshift(dataItem);
                     groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length || groupItem.collection.total == -1;
                 }
+                this.updateGroupCount(groupItem);
             }
+
+            if (o.isDrop) return;
 
             var $item = this.$el.find('.item[data-id="' + id + '"]');
             var $column = this.$el.find('.group-column[data-name="' + group + '"] .group-column-list');
@@ -579,10 +605,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                     });
                 }, this);
 
-                let $shown = this.$el.find('.shown-count-span');
-                if ($shown.length > 0) {
-                    $shown.html(this.collection.length);
-                }
+                this.updateGroupCount(groupItem);
             });
         },
 

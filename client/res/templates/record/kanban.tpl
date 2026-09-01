@@ -5,7 +5,7 @@
             <tr class="kanban-row">
                 {{#each groupDataList}}
                 <th data-name="{{name}}" class="group-header">
-                    <div><span class="kanban-group-label">{{label}}</span></div>
+                    <div><span class="kanban-group-label">{{label}}</span> <span class="kanban-group-count" title="{{countTitle}}">({{countLabel}})</span></div>
                 </th>
                 {{/each}}
             </tr>
