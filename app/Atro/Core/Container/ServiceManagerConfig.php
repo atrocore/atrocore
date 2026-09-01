@@ -78,7 +78,6 @@ class ServiceManagerConfig
         EntityManager::class                            => 'entityManager',
         'fieldManagerUtil'                              => 'fieldManager',
         \Atro\Core\Utils\Config::class                  => 'config',
-        \Espo\Core\Utils\Config::class                  => 'config',
         \Atro\Core\Utils\Metadata::class                => 'metadata',
         \Espo\Core\Utils\Metadata::class                => 'metadata',
         \Atro\Core\Utils\FileManager::class             => 'fileManager',

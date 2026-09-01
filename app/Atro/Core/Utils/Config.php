@@ -141,21 +141,11 @@ final class Config
         $this->referenceData = null;
     }
 
-    protected function loadConfig($reload = false)
+    protected function loadConfig(bool $reload = false): array
     {
-        // parent::loadConfig skips re-reading when data is already loaded — merge defaults only on actual load
-        $justLoaded = $reload || empty($this->data);
-
-        if (!$reload && isset($this->data) && !empty($this->data)) {
-            return $this->data;
-        }
-
-        $configPath = file_exists($this->configPath) ? $this->configPath : $this->defaultConfigPath;
-
-        $this->data = $this->getFileManager()->getPhpContents($configPath);
-
-        if ($justLoaded) {
-            $this->data = Util::merge($this->systemConfig, $this->data);
+        if ($reload || empty($this->data)) {
+            $configPath = file_exists($this->configPath) ? $this->configPath : $this->defaultConfigPath;
+            $this->data = Util::merge($this->systemConfig, $this->getFileManager()->getPhpContents($configPath));
         }
 
         // put reference data into config
