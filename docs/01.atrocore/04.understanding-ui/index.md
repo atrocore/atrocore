@@ -24,6 +24,10 @@ The list view page shows a table of records with main fields configured for each
 
 Here you can change entity records order in the list by clicking any sortable column title; this will sort the column either ascending or descending. Users can adjust the size of the columns. Please, note that the default order of entity records is predefined in the Entity Manager. To change it, please, contact the administrator.
 
+Next to the `More` button, additional buttons may appear depending on the entity and your permissions – a star to add or remove the entity from [Favorites](../05.toolbar/02.favorites/index.md), a link to a related contributor entity, and a tour button (?) that opens a guided walkthrough of the page:
+
+![List view header buttons](./_assets/list-header-buttons.png){.medium}
+
 ### Pagination Toolbar
 
 Below the records list, the pagination toolbar brings together the tools for navigating and organizing the list:
@@ -35,10 +39,7 @@ Below the records list, the pagination toolbar brings together the tools for nav
 - **Page size** – the number of records shown per page.
 - **Load next** – loads the next batch of records into the current page, showing how many records remain to be loaded.
 - Page numbers – jump directly to any page.
-
-The total number of entity records and the number of currently loaded records are displayed next to the toolbar:
-
-![Total number displayed](./_assets/total-number.png){.medium}
+- Record counters – *Shown* and *Total* display the number of currently loaded and total entity records; *Selected* appears next to them once at least one record is selected via the checkbox.
 
 On the list view page, you can perform actions with separate or multiple entity records at once via the [single record](#single-record-actions) and [mass actions](#mass-actions) menus correspondingly.
 
