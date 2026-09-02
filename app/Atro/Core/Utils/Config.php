@@ -20,6 +20,19 @@ final class Config
     private const string CONFIG_PATH = 'data/config.php';
 
     /**
+     * Keys the core derives on every load - see applyComputedKeys(). They are
+     * never stored in data/config.php and never writable.
+     */
+    private const COMPUTED_KEYS
+        = [
+            'locales',
+            'mainLanguage',
+            'inputLanguageList',
+            'isMultilangActive',
+            'onlyStableReleases',
+        ];
+
+    /**
      * What the core itself contributes to the config, as 'key' => provider.
      * A key may be segmented: 'referenceData.Language' lands in
      * $config['referenceData']['Language']. Each provider owns its storage and
@@ -281,10 +294,6 @@ final class Config
         $this->applyAdditionalConfigData();
         $this->applyComputedKeys();
 
-        $minimumStability = SoftwarePackageRepository::getComposerData()['minimum-stability'] ?? 'stable';
-
-        $this->data['onlyStableReleases'] = $minimumStability === 'stable';
-
         return $this->data;
     }
 
@@ -414,6 +423,10 @@ final class Config
         }
 
         $this->data['isMultilangActive'] = !empty($this->data['inputLanguageList']);
+
+        $minimumStability = SoftwarePackageRepository::getComposerData()['minimum-stability'] ?? 'stable';
+
+        $this->data['onlyStableReleases'] = $minimumStability === 'stable';
     }
 
     private static function pathExists(array $data, string $path): bool
@@ -460,13 +473,7 @@ final class Config
      */
     private function getReadOnlyKeys(): array
     {
-        $keys = [
-            'locales',
-            'mainLanguage',
-            'inputLanguageList',
-            'isMultilangActive',
-            'onlyStableReleases',
-        ];
+        $keys = self::COMPUTED_KEYS;
 
         foreach (array_keys($this->getAdditionalConfigData()) as $path) {
             $keys[] = strtok($path, '.');
