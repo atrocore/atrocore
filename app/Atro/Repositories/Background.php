@@ -19,6 +19,35 @@ use Espo\ORM\Entity;
 
 class Background extends ReferenceData
 {
+    /**
+     * The fields of this entity that the config exposes.
+     */
+    public static function getConfigData(): array
+    {
+        $path = self::DIR_PATH . '/Background.json';
+
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $items = @json_decode(file_get_contents($path), true);
+
+        if (!is_array($items)) {
+            return [];
+        }
+
+        $res = [];
+        foreach ($items as $key => $row) {
+            $res[$key] = [
+                'id' => $row['id'] ?? null,
+                'code' => $row['code'] ?? null,
+                'imageId' => $row['imageId'] ?? null,
+            ];
+        }
+
+        return $res;
+    }
+
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);

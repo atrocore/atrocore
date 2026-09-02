@@ -19,6 +19,36 @@ use Espo\ORM\Entity;
 
 class Language extends ReferenceData
 {
+    /**
+     * The fields of this entity that the config exposes.
+     */
+    public static function getConfigData(): array
+    {
+        $path = self::DIR_PATH . '/Language.json';
+
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $items = @json_decode(file_get_contents($path), true);
+
+        if (!is_array($items)) {
+            return [];
+        }
+
+        $res = [];
+        foreach ($items as $key => $row) {
+            $res[$key] = [
+                'id' => $row['id'] ?? null,
+                'code' => $row['code'] ?? null,
+                'name' => $row['name'] ?? null,
+                'role' => $row['role'] ?? null,
+            ];
+        }
+
+        return $res;
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
@@ -83,13 +113,11 @@ class Language extends ReferenceData
 
     protected function clearCache(): void
     {
-        $this->getConfig()->clearReferenceDataCache();
         $this->getInjection('dataManager')->clearCache();
     }
 
     protected function rebuild(): void
     {
-        $this->getConfig()->clearReferenceDataCache();
         $this->getInjection('dataManager')->rebuild();
     }
 }

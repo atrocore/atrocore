@@ -87,6 +87,22 @@ abstract class AbstractModule
     {
     }
 
+    /**
+     * Config entries this module contributes, as 'key' => value. A key may be
+     * segmented - 'referenceData.Car' lands in $config['referenceData']['Car'].
+     *
+     * A module can only add: if the key already exists, whether it comes from
+     * the core or from another module, loading fails loudly instead of silently
+     * overwriting. Every key returned here becomes read-only in the config.
+     *
+     * Static on purpose - the config is built before the container can hand out
+     * module instances, so this must work without one.
+     */
+    public static function getConfigAdditionalData(): array
+    {
+        return [];
+    }
+
     public function getId(): string
     {
         return $this->id;

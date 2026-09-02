@@ -20,6 +20,23 @@ use Espo\ORM\Entity;
 
 class Style extends ReferenceData
 {
+    /**
+     * Styles are exposed in full: ThemeManager::getParam() and its client-side
+     * counterpart look up arbitrary fields by name.
+     */
+    public static function getConfigData(): array
+    {
+        $path = self::DIR_PATH . '/Style.json';
+
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $items = @json_decode(file_get_contents($path), true);
+
+        return is_array($items) ? $items : [];
+    }
+
     protected $customStylesheetDir = 'public/client/custom/css';
 
     protected $customHeadCodeDir = 'public/client/custom/html';

@@ -11,12 +11,29 @@
 
 namespace Atro\Core\Utils;
 
-use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\ModuleManager\AbstractModule;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 
 final class Config
 {
     private const string CONFIG_PATH = 'data/config.php';
+
+    /**
+     * What the core itself contributes to the config, as 'key' => provider.
+     * A key may be segmented: 'referenceData.Language' lands in
+     * $config['referenceData']['Language']. Each provider owns its storage and
+     * decides which of its fields it exposes, through its own getConfigData().
+     * Modules contribute theirs via AbstractModule::getConfigAdditionalData().
+     */
+    private const ADDITIONAL_CONFIG_PROVIDERS
+        = [
+            'referenceData.Language'       => \Atro\Repositories\Language::class,
+            'referenceData.Locale'         => \Atro\Repositories\Locale::class,
+            'referenceData.Style'          => \Atro\Repositories\Style::class,
+            'referenceData.AttributePanel' => \Atro\Repositories\AttributePanel::class,
+            'referenceData.Background'     => \Atro\Repositories\Background::class,
+        ];
 
     /**
      * System config defaults, merged under data/config.php on load
@@ -66,7 +83,7 @@ final class Config
             'isInstalled'        => false,
         ];
 
-    private ?array $referenceData = null;
+    private ?array $additionalConfigCache = null;
 
     private array $associativeArrayAttributeList
         = [
@@ -125,9 +142,13 @@ final class Config
         return rtrim($this->get('siteUrl'), '/');
     }
 
-    public function clearReferenceDataCache(): void
+    /**
+     * Drops the in-memory cache of everything the config computes on load.
+     * Called by DataManager when the caches are cleared.
+     */
+    public function clearCache(): void
     {
-        $this->referenceData = null;
+        $this->additionalConfigCache = null;
     }
 
     /**
@@ -184,6 +205,8 @@ final class Config
         // a bare set() must not leave $data holding only that one key
         $this->loadConfig();
 
+        $this->assertWritable($name);
+
         // stdClass from the REST payload would end up as \stdClass::__set_state() in config.php
         if (is_object($value) && in_array($name, $this->associativeArrayAttributeList, true)) {
             $value = (array)$value;
@@ -196,6 +219,8 @@ final class Config
     public function remove(string $name): bool
     {
         $this->loadConfig();
+
+        $this->assertWritable($name);
 
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
@@ -244,12 +269,17 @@ final class Config
     protected function loadConfig(bool $reload = false): array
     {
         if ($reload || empty($this->data)) {
-            $this->data = self::load();
-            $this->data = Util::merge($this->systemConfig, $this->data);
+            // checked before it lands in $data: leaving a broken config in place
+            // would silence the check on every later call
+            $data = Util::merge($this->systemConfig, self::load());
+
+            $this->assertNoConflictsWithStoredConfig($data);
+
+            $this->data = $data;
         }
 
-        // put reference data into config
-        $this->putReferenceDataIntoConfig();
+        $this->applyAdditionalConfigData();
+        $this->applyComputedKeys();
 
         $minimumStability = SoftwarePackageRepository::getComposerData()['minimum-stability'] ?? 'stable';
 
@@ -258,75 +288,191 @@ final class Config
         return $this->data;
     }
 
-    protected function putReferenceDataIntoConfig(): void
+    /**
+     * Lays the contributed entries over the config. Runs on every load, so it
+     * must stay idempotent - the conflict check lives in
+     * assertNoConflictsWithStoredConfig() and runs against the stored data only.
+     */
+    private function applyAdditionalConfigData(): void
     {
-        $this->data['referenceData'] = [];
+        foreach ($this->getAdditionalConfigData() as $path => $value) {
+            self::writePath($this->data, $path, $value);
+        }
+    }
+
+    /**
+     * A provider may only add: a key that is already in data/config.php means
+     * the provider and the stored config disagree, and that is a bug worth
+     * failing on rather than resolving silently.
+     */
+    private function assertNoConflictsWithStoredConfig(array $data): void
+    {
+        foreach (array_keys($this->getAdditionalConfigData()) as $path) {
+            if (self::pathExists($data, $path)) {
+                throw new \LogicException(
+                    sprintf("Config key '%s' is contributed but already exists.", $path)
+                );
+            }
+        }
+    }
+
+    /**
+     * Entries contributed to the config, collected once. The core lists its own
+     * providers here; modules add theirs through getConfigAdditionalData(). The
+     * module list is read directly, without the container, because the config
+     * is built before module instances exist.
+     */
+    private function getAdditionalConfigData(): array
+    {
+        if ($this->additionalConfigCache !== null) {
+            return $this->additionalConfigCache;
+        }
+
+        // collected locally: a half-filled cache after a failure would make the
+        // next call return silently broken data instead of failing again
+        $collected = [];
+        $providers = [];
+
+        foreach (self::ADDITIONAL_CONFIG_PROVIDERS as $path => $class) {
+            self::collectItem($path, $class::getConfigData(), 'the core', $collected, $providers);
+        }
+
+        foreach (ModuleManager::getList() as $module) {
+            $class = "\\$module\\Module";
+
+            if (!class_exists($class) || !is_a($class, AbstractModule::class, true)) {
+                continue;
+            }
+
+            foreach ($class::getConfigAdditionalData() as $path => $value) {
+                self::collectItem($path, $value, $module, $collected, $providers);
+            }
+        }
+
+        return $this->additionalConfigCache = $collected;
+    }
+
+    private static function collectItem(
+        string $path,
+        mixed  $value,
+        string $provider,
+        array  &$collected,
+        array  &$providers
+    ): void {
+        if (isset($providers[$path])) {
+            throw new \LogicException(sprintf(
+                "Config key '%s' is contributed by both %s and %s.", $path, $providers[$path], $provider
+            ));
+        }
+
+        $providers[$path] = $provider;
+
+        if (!empty($value)) {
+            $collected[$path] = $value;
+        }
+    }
+
+    /**
+     * Keys the core derives from the contributed data.
+     */
+    private function applyComputedKeys(): void
+    {
+        $this->data['locales'] = [];
         $this->data['inputLanguageList'] = [];
 
-        foreach ($this->getReferenceData() as $entityName => $items) {
-            $this->data['referenceData'][$entityName] = $items;
+        foreach ($this->data['referenceData']['Locale'] ?? [] as $row) {
+            if (empty($row['id'])) {
+                continue;
+            }
 
-            switch ($entityName) {
-                case 'Locale':
-                    foreach ($items as $row) {
-                        if (!empty($row['id'])) {
-                            $this->data['locales'][$row['id']] = [
-                                'code'                           => $row['code'],
-                                'name'                           => $row['name'] ?? 'en_US',
-                                'language'                       => $row['languageCode'] ?? 'en_US',
-                                'fallbackLanguage'               => $row['fallbackLanguageCode'] ?? null,
-                                'weekStart'                      => $row['weekStart'] === 'monday' ? 1 : 0,
-                                'dateFormat'                     => $row['dateFormat'] ?? 'MM/DD/YYYY',
-                                'timeFormat'                     => $row['timeFormat'] ?? 'HH:mm',
-                                'timeZone'                       => $row['timeZone'] ?? 'UTC',
-                                'thousandSeparator'              => $row['thousandSeparator'] ?? '',
-                                'decimalMark'                    => $row['decimalMark'] ?? '.',
-                                'displayLabelsInContentLanguage' => $row['displayLabelsInContentLanguage'] ?? false,
-                                'disableForUi'                   => $row['disableForUi'] ?? false,
-                            ];
-                        }
+            $this->data['locales'][$row['id']] = [
+                'code'                           => $row['code'],
+                'name'                           => $row['name'] ?? 'en_US',
+                'language'                       => $row['languageCode'] ?? 'en_US',
+                'fallbackLanguage'               => $row['fallbackLanguageCode'] ?? null,
+                'weekStart'                      => $row['weekStart'] === 'monday' ? 1 : 0,
+                'dateFormat'                     => $row['dateFormat'] ?? 'MM/DD/YYYY',
+                'timeFormat'                     => $row['timeFormat'] ?? 'HH:mm',
+                'timeZone'                       => $row['timeZone'] ?? 'UTC',
+                'thousandSeparator'              => $row['thousandSeparator'] ?? '',
+                'decimalMark'                    => $row['decimalMark'] ?? '.',
+                'displayLabelsInContentLanguage' => $row['displayLabelsInContentLanguage'] ?? false,
+                'disableForUi'                   => $row['disableForUi'] ?? false,
+            ];
+        }
 
-                    }
-                    break;
-                case 'Language':
-                    foreach ($items as $row) {
-                        if (!empty($row['role'])) {
-                            if ($row['role'] === 'main') {
-                                $this->data['mainLanguage'] = $row['code'];
-                            } elseif ($row['role'] === 'additional') {
-                                $this->data['inputLanguageList'][] = $row['code'];
-                            }
-                        }
-                    }
-                    break;
+        foreach ($this->data['referenceData']['Language'] ?? [] as $row) {
+            if (empty($row['role'])) {
+                continue;
+            }
+
+            if ($row['role'] === 'main') {
+                $this->data['mainLanguage'] = $row['code'];
+            } elseif ($row['role'] === 'additional') {
+                $this->data['inputLanguageList'][] = $row['code'];
             }
         }
 
         $this->data['isMultilangActive'] = !empty($this->data['inputLanguageList']);
     }
 
-    protected function getReferenceData(): array
+    private static function pathExists(array $data, string $path): bool
     {
-        if ($this->referenceData !== null) {
-            return $this->referenceData;
-        }
-
-        $this->referenceData = [];
-
-        if (is_dir(ReferenceData::DIR_PATH)) {
-            foreach (scandir(ReferenceData::DIR_PATH) as $file) {
-                if (!is_file(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file)) {
-                    continue;
-                }
-                $entityName = str_replace('.json', '', $file);
-                $items = @json_decode(file_get_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file), true);
-                if (!empty($items)) {
-                    $this->referenceData[$entityName] = $items;
-                }
+        foreach (explode('.', $path) as $key) {
+            if (!is_array($data) || !array_key_exists($key, $data)) {
+                return false;
             }
+            $data = $data[$key];
         }
 
-        return $this->referenceData;
+        return true;
+    }
+
+    private static function writePath(array &$data, string $path, mixed $value): void
+    {
+        $keys = explode('.', $path);
+        $last = array_pop($keys);
+
+        $branch = &$data;
+        foreach ($keys as $key) {
+            if (!isset($branch[$key]) || !is_array($branch[$key])) {
+                $branch[$key] = [];
+            }
+            $branch = &$branch[$key];
+        }
+
+        $branch[$last] = $value;
+    }
+
+    private function assertWritable(string $name): void
+    {
+        if (in_array($name, $this->getReadOnlyKeys(), true)) {
+            throw new \LogicException(
+                sprintf("Config key '%s' is computed on load and cannot be written.", $name)
+            );
+        }
+    }
+
+    /**
+     * Keys that may not be written: the ones the core derives on load, plus
+     * everything contributed by the providers. A segmented contributed key
+     * protects its root, since set() only ever writes top-level keys.
+     */
+    private function getReadOnlyKeys(): array
+    {
+        $keys = [
+            'locales',
+            'mainLanguage',
+            'inputLanguageList',
+            'isMultilangActive',
+            'onlyStableReleases',
+        ];
+
+        foreach (array_keys($this->getAdditionalConfigData()) as $path) {
+            $keys[] = strtok($path, '.');
+        }
+
+        return array_unique($keys);
     }
 
     /**
