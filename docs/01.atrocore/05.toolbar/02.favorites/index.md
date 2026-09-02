@@ -14,7 +14,7 @@ The modal window for configuring Favorites opens. Drag the entities you want to 
 
 ![Config Favorites](./_assets/configure-favorites1.png){.large}
 
-You can also add an Entity to Favorites by clicking on the star icon in the List View of any Entity. Clicking on the icon again will remove the Entity from the Favorites Menu.
+You can also add an Entity to Favorites by clicking the star icon next to the `More` button in the List View of any Entity. Clicking the icon again will remove the Entity from the Favorites Menu.
 
 ![Config Favorites](./_assets/fav-star.png){.large}
 

@@ -192,11 +192,49 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             Dep.prototype.afterRender.call(this);
             Dep.prototype.setupTotal.call(this)
 
+            this.mountCounterToolbar();
+
             this.buildGroups();
 
             if (this.mode === 'edit') {
                 this.setEditMode();
             }
+        },
+
+        mountCounterToolbar() {
+            const container = this.$el.find('.list-pagination-container')[0];
+
+            if (this.svelteCounterToolbar) {
+                try {
+                    this.svelteCounterToolbar.$destroy();
+                } catch (e) {
+                }
+                this.svelteCounterToolbar = null;
+            }
+
+            if (!container) {
+                return;
+            }
+
+            this.svelteCounterToolbar = new Svelte.PaginationToolbar({
+                target: container,
+                props: {
+                    showPagination: false,
+                    loading: this.collection.total === null,
+                    shownCount: this.collection.length,
+                    totalCount: this.collection.total,
+                }
+            });
+
+            this.listenTo(this.collection, 'update update-total', () => {
+                if (this.svelteCounterToolbar) {
+                    this.svelteCounterToolbar.$set({
+                        loading: this.collection.total === null,
+                        shownCount: this.collection.length,
+                        totalCount: this.collection.total,
+                    });
+                }
+            });
         },
 
         getLinksForRefresh() {

@@ -13,3 +13,4 @@
 <div class="list-container"><div class="no-data-container">{{translate 'No Data'}}</div></div>
 {{/if}}
 {{/if}}
+<div class="list-pagination-container relationship-pagination-container"></div>

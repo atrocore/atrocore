@@ -290,15 +290,25 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                         },
                         canRunAction: (scope, action) => this.getAcl().check(scope, action)
                     },
-                    viewMode: this.viewMode,
                     isFavoriteEntity: !!this.getPreferences().get('favoritesList')?.includes(this.scope),
-                    onViewModeChange: (mode) => {
-                        if (mode) {
-                            this.getRouter().navigate(`${this.scope}/${mode}`, { trigger: false });
-                            this.switchViewMode(mode);
-                        }
-                    }
+                    entityStats: this.getEntityStats(),
+                    entityStatsLoading: false
                 }
+            });
+        },
+
+        getEntityStats: function () {
+            return [];
+        },
+
+        updateEntityStats: function (entityStats, loading) {
+            if (!window.svelteListHeader) {
+                return;
+            }
+
+            window.svelteListHeader.$set({
+                entityStats: entityStats,
+                entityStatsLoading: !!loading
             });
         },
 
@@ -489,7 +499,14 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 showSearch: !!this.searchPanel,
                 showFilter: this.shouldShowFilter(),
                 listInlineEditModeEnabled: this.listInlineEditModeEnabled,
-                pagination: 'bottom'
+                pagination: 'bottom',
+                viewMode: this.viewMode,
+                onViewModeChange: (mode) => {
+                    if (mode) {
+                        this.getRouter().navigate(`${this.scope}/${mode}`, { trigger: false });
+                        this.switchViewMode(mode);
+                    }
+                }
             };
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];

@@ -63,7 +63,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         afterRender: function () {
             this.panelList.forEach(panel => {
                 const view = this.getView(panel.name)
-                if (view && view.collection && view.collection.length > 0) {
+                if (view && view.collection && view.collection.total !== null) {
                     view.collection.trigger('update-total')
                 }
             })
