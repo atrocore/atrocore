@@ -3,6 +3,7 @@
     "configuration": "Konfigurace"
   },
   "exceptions": {
+    "duplicateYamlKeys": "Konfigurace opakuje klíč nebo klíče {keys} s prázdnou hodnotou. YAML vyžaduje jedinečné klíče, takže jedna z hodnot je zahozena. V Symfony 8 to přestane fungovat.",
     "notValidYaml": "Konfigurace není platný YAML."
   }
 }

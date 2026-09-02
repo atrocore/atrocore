@@ -1,5 +1,6 @@
 {
   "fields": {
+    "htmlSanitizerLegacyParser": "Usar el analizador HTML antiguo (obsoleto)",
     "useCache": "Usar caché",
     "currencyRates": "Tipos de cambio",
     "companyLogo": "El logotipo de cabecera",
@@ -46,6 +47,7 @@
     "disableNavigationPath": "Desactivar ruta de navegación"
   },
   "tooltips": {
+    "htmlSanitizerLegacyParser": "Si está marcado, la limpieza de HTML utiliza el antiguo analizador HTML5 Masterminds, que está obsoleto y se eliminará con Symfony 8. Desmárquelo para usar en su lugar el analizador HTML5 integrado en PHP; el marcado saneado puede diferir ligeramente, por ejemplo las tablas reciben un elemento tbody.",
     "recordsPerPage": "Número de registros a mostrar inicialmente en las vistas.",
     "recordsPerPageSmall": "Número de registros que se muestran inicialmente en los paneles de relaciones.",
     "authTokenLifetime": "Define el período de vigencia de los tokens. 0 (cero) significa que no caducan.",

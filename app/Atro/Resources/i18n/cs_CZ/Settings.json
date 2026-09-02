@@ -1,5 +1,6 @@
 {
   "fields": {
+    "htmlSanitizerLegacyParser": "Použít starý HTML parser (zastaralé)",
     "maxConcurrentWorkers": "Maximální počet souběžně pracujících pracovníků",
     "fileNameRegexPattern": "Regex vzor názvu souboru",
     "variables": "Proměnné",
@@ -46,6 +47,7 @@
     "disableNavigationPath": "Zakázat navigační cestu"
   },
   "tooltips": {
+    "htmlSanitizerLegacyParser": "Pokud je zaškrtnuto, čištění HTML používá starý parser HTML5 Masterminds, který je zastaralý a bude se Symfony 8 odstraněn. Odškrtnutím přejdete na parser HTML5 vestavěný v PHP; vyčištěné značkování se může mírně lišit, například tabulky získají element tbody.",
     "maxConcurrentWorkers": "Horní limit počtu úloh nebo procesů, které mohou být spuštěny současně na pozadí serveru.",
     "fileNameRegexPattern": "Povolení pouze malých písmen s max. 24 znaků použijte \"/^[a-z]{1,24}$/\".",
     "recordsPerPage": "Počet záznamů původně zobrazených v zobrazeních seznamu.",

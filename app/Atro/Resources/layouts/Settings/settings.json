@@ -55,7 +55,9 @@
         {
           "name": "aclStrictMode"
         },
-        false
+        {
+          "name": "htmlSanitizerLegacyParser"
+        }
       ],
       [
         {
