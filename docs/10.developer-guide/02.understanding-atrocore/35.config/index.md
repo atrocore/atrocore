@@ -40,6 +40,105 @@ $config->set('applicationName', 'My Custom App');
 $config->save();
 ```
 
+Computed and contributed parameters cannot be written this way - see [Read-Only Parameters](#read-only-parameters).
+
+## Read-Only Parameters
+
+Some parameters are not stored in `data/config.php` at all - the system derives them on every load.
+Writing them is a programming error, so `set()` and `remove()` throw a `LogicException` for such a key:
+
+- `locales`, `mainLanguage`, `inputLanguageList`, `isMultilangActive` - derived from the Language and Locale records
+- `onlyStableReleases` - derived from `minimum-stability` in `composer.json`
+- `referenceData` and everything else contributed by a module (see below)
+
+-----
+
+## Contributing Your Own Data
+
+A module adds its own entries to the configuration through the static `getConfigAdditionalData()`
+method of its `Module` class. The method returns an associative array of `key => value`. A key may be
+segmented, so `'referenceData.Car'` lands in `$config['referenceData']['Car']`:
+
+```php
+namespace MyModule;
+
+use Atro\Core\ModuleManager\AbstractModule;
+use MyModule\Repositories\Car;
+
+class Module extends AbstractModule
+{
+    public static function getConfigAdditionalData(): array
+    {
+        return [
+            'referenceData.Car' => Car::getConfigData(),
+        ];
+    }
+}
+```
+
+Keep the data-fetching itself in the repository that owns the records, so the configuration never has
+to know where or how they are stored:
+
+```php
+namespace MyModule\Repositories;
+
+use Atro\Core\Templates\Repositories\ReferenceData;
+
+class Car extends ReferenceData
+{
+    public static function getConfigData(): array
+    {
+        $path = self::DIR_PATH . '/Car.json';
+
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $items = @json_decode(file_get_contents($path), true);
+
+        if (!is_array($items)) {
+            return [];
+        }
+
+        $res = [];
+        foreach ($items as $key => $row) {
+            $res[$key] = [
+                'id'   => $row['id'] ?? null,
+                'code' => $row['code'] ?? null,
+                'name' => $row['name'] ?? null,
+            ];
+        }
+
+        return $res;
+    }
+}
+```
+
+The method is static because the configuration is built before the service container can provide
+module instances. It is called once per process; `DataManager::clearCache()` drops the cached result.
+
+### Never Contribute Sensitive Data
+
+Everything returned by `getConfigAdditionalData()` is exposed to the outside world. It reaches:
+
+- the browser, where it is read as `this.getConfig().get('referenceData')`
+- Twig templates that users edit through the UI, as `config.referenceData`
+- PDF and export rendering contexts
+
+Restrict every entry to the fields the UI actually needs. API tokens, passwords, connection details
+and any other secret must never be contributed this way.
+
+### A Key Can Have Only One Owner
+
+A module may only **add** entries. If a key is already provided by the core, by another module, or is
+already present in `data/config.php`, loading the configuration fails with a `LogicException` instead
+of silently overwriting the value. Prefix your keys with something specific to the module to avoid
+collisions.
+
+Every key a module contributes automatically becomes read-only.
+
+-----
+
 ## General System Settings
 
 | Parameter         | Type      | Description                                                                                                                              |
