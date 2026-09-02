@@ -50,7 +50,7 @@ class Twig
     public function renderTemplate(string $template, array $templateData, string $outputType = 'text')
     {
         $twig = $this->getTwigEnvironment();
-        $templateData['config'] = $this->getSettingsService()->getPublicConfig();
+        $templateData['config'] = $this->getSettingsService()->getScriptConfig();
 
         foreach (['entity', 'record'] as $key) {
             if (isset($templateData[$key]) && $templateData[$key] instanceof Entity) {

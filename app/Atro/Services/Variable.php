@@ -14,17 +14,33 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Services\Base;
 
+/**
+ * User-defined variables, stored apart from the configuration.
+ *
+ * They live in their own file precisely because users put secrets in them: kept
+ * in the config they would share a namespace with the system parameters, and
+ * every mechanism that exposes the config would risk exposing them too.
+ */
 class Variable extends Base
 {
-    protected function init()
-    {
-        parent::init();
+    public const FILE_PATH = 'data/variables.json';
 
-        $this->addDependency('metadata');
+    /**
+     * All variables as 'key' => value. Available to Twig and other server-side
+     * script contexts - never to the frontend.
+     */
+    public static function loadAll(): array
+    {
+        if (!file_exists(self::FILE_PATH)) {
+            return [];
+        }
+
+        $data = @json_decode(file_get_contents(self::FILE_PATH), true);
+
+        return is_array($data) ? $data : [];
     }
 
     public static function defineType($value): string
@@ -44,20 +60,15 @@ class Variable extends Base
     public function findEntities(array $params): array
     {
         $variables = [];
-        foreach ($this->getConfig()->get('variables', []) as $key) {
-            $value = $this->getConfig()->get($key, '');
-            $variables[] = [
-                "id"    => $key,
-                "key"   => $key,
-                "type"  => self::defineType($value),
-                "value" => $value,
-                "_meta" => [
-                    "permissions" => [
-                        "edit" => true,
-                        "delete" => true
+        foreach (self::loadAll() as $key => $value) {
+            $variables[] = $this->prepareRow($key, $value) + [
+                    "_meta" => [
+                        "permissions" => [
+                            "edit"   => true,
+                            "delete" => true
+                        ]
                     ]
-                ]
-            ];
+                ];
         }
 
         return [
@@ -68,59 +79,46 @@ class Variable extends Base
 
     public function createEntity(\stdClass $attachment): array
     {
-        $variables = $this->getConfig()->get('variables', []);
-
         $key = $attachment->key;
 
-        // validate key
         if (!preg_match('/^[a-z][a-zA-Z0-9]*$/', $key)) {
             throw new BadRequest($this->getInjection('language')->translate('variableKeyInvalid', 'exceptions', 'Settings'));
         }
-        if ($key === 'variables' || in_array($key, $this->getRestrictedKeys()) || $this->getConfig()->has($key)) {
+
+        $variables = self::loadAll();
+
+        if (array_key_exists($key, $variables)) {
             throw new BadRequest(sprintf($this->getInjection('language')->translate('variableKeyIsExist', 'exceptions', 'Settings'), $key));
         }
 
-        $variables[] = $key;
-
-        $type = $attachment->type ?? 'text';
         $value = $attachment->value ?? '';
 
         if (empty($value)) {
-            switch ($type) {
-                case 'bool':
-                    $value = false;
-                    break;
-                case 'float':
-                    $value = 0;
-                    break;
-                case 'array':
-                    $value = [];
-                    break;
-            }
+            $value = match ($attachment->type ?? 'text') {
+                'bool'  => false,
+                'float' => 0,
+                'array' => [],
+                default => '',
+            };
         }
 
-        $this->getConfig()->set('variables', $variables);
-        $this->getConfig()->set($key, $value);
-        $this->getConfig()->save();
+        $variables[$key] = $value;
+        $this->saveAll($variables);
 
         return $this->readEntity($key);
     }
 
     public function updateEntity(string $id, \stdClass $data): array
     {
-        $variables = $this->getConfig()->get('variables', []);
-        if (!in_array($id, $variables)) {
+        $variables = self::loadAll();
+
+        if (!array_key_exists($id, $variables)) {
             throw new NotFound();
         }
 
-        // such a variable could only be created before the restriction was introduced, so it can be deleted but not changed
-        if (in_array($id, $this->getRestrictedKeys())) {
-            throw new Forbidden();
-        }
-
         if (property_exists($data, 'value')) {
-            $this->getConfig()->set($id, $data->value);
-            $this->getConfig()->save();
+            $variables[$id] = $data->value;
+            $this->saveAll($variables);
         }
 
         return $this->readEntity($id);
@@ -128,53 +126,48 @@ class Variable extends Base
 
     public function readEntity(string $id): array
     {
-        $variables = $this->getConfig()->get('variables', []);
-        if (!in_array($id, $variables)) {
+        $variables = self::loadAll();
+
+        if (!array_key_exists($id, $variables)) {
             throw new NotFound();
         }
 
-        $value = $this->getConfig()->get($id, '');
+        return $this->prepareRow($id, $variables[$id]);
+    }
 
+    public function deleteEntity(string $id): bool
+    {
+        $variables = self::loadAll();
+
+        if (!array_key_exists($id, $variables)) {
+            throw new NotFound();
+        }
+
+        unset($variables[$id]);
+        $this->saveAll($variables);
+
+        return true;
+    }
+
+    private function prepareRow(string $key, $value): array
+    {
         return [
-            "id"    => $id,
-            "key"   => $id,
+            "id"    => $key,
+            "key"   => $key,
             "type"  => self::defineType($value),
             "value" => $value
         ];
     }
 
-    public function deleteEntity(string $id): bool
+    private function saveAll(array $variables): void
     {
-        $variables = $this->getConfig()->get('variables', []);
-        if (!in_array($id, $variables)) {
-            throw new NotFound();
+        $content = json_encode($variables, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $tmp = self::FILE_PATH . '.' . uniqid('', true) . '.tmp';
+
+        if (file_put_contents($tmp, $content) === false || !rename($tmp, self::FILE_PATH)) {
+            @unlink($tmp);
+            throw new BadRequest('Cannot save variables.');
         }
-
-        $newVariables = [];
-        foreach ($variables as $key) {
-            if ($key !== $id) {
-                $newVariables[] = $key;
-            }
-        }
-
-        $this->getConfig()->set('variables', $newVariables);
-        $this->getConfig()->remove($id);
-        $this->getConfig()->save();
-
-        return true;
-    }
-
-    /**
-     * A variable must never shadow a config parameter the system owns: Config::set()
-     * writes straight to the file, so a colliding key would silently take over a
-     * real setting. Settings fields cover what the UI edits, the computed and
-     * contributed keys cover what the config derives on load.
-     */
-    protected function getRestrictedKeys(): array
-    {
-        return array_merge(
-            array_keys($this->getInjection('metadata')->get('entityDefs.Settings.fields', [])),
-            $this->getConfig()->getReadOnlyKeys()
-        );
     }
 }

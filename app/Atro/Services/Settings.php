@@ -66,6 +66,17 @@ class Settings extends AbstractService
     private string $customStylesheetFileName = 'custom-css.css';
 
     /**
+     * Config for server-side script contexts - Twig templates, PDF and export
+     * rendering. Same as the public config plus the user-defined variables:
+     * those may hold secrets, which is fine here because the script runs on the
+     * backend, and is exactly why they never go to the frontend.
+     */
+    public function getScriptConfig(): array
+    {
+        return array_merge($this->getPublicConfig(), Variable::loadAll());
+    }
+
+    /**
      * Everything the Settings UI needs: the public config plus the parameters
      * declared as Settings fields, which is what the form edits. Password
      * fields never leave the backend.

@@ -425,7 +425,7 @@ final class Config
      * everything contributed by the providers. A segmented contributed key
      * protects its root, since set() only ever writes top-level keys.
      */
-    public function getReadOnlyKeys(): array
+    private function getReadOnlyKeys(): array
     {
         $keys = self::COMPUTED_KEYS;
 
