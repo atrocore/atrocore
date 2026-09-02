@@ -393,6 +393,11 @@ class Attribute extends Base
             $value = $entity->entityDefs['fields'][$fieldName]['default'];
         }
 
+        $idField = lcfirst($entity->getEntityName()) . 'AttributeValuesIds';
+        if ($entity->has($idField)) {
+            $entity->clear($idField);
+        }
+
         if (!$this->getAcl()->check($entity->getEntityName(), 'createAttributeValue')) {
             if ($insertOnly) {
                 return;
