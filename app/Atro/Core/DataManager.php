@@ -172,6 +172,7 @@ class DataManager
             Util::removeDir(self::CACHE_DIR_PATH);
             self::createCacheDir();
 
+            $this->getConfig()->clearCache();
             $this->getConfig()->remove('cacheTimestamp');
             $this->getConfig()->save();
 

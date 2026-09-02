@@ -19,6 +19,45 @@ use Espo\ORM\Entity;
 
 class Locale extends ReferenceData
 {
+    /**
+     * The fields of this entity that the config exposes.
+     */
+    public static function getConfigData(): array
+    {
+        $path = self::DIR_PATH . '/Locale.json';
+
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $items = @json_decode(file_get_contents($path), true);
+
+        if (!is_array($items)) {
+            return [];
+        }
+
+        $res = [];
+        foreach ($items as $key => $row) {
+            $res[$key] = [
+                'id' => $row['id'] ?? null,
+                'code' => $row['code'] ?? null,
+                'name' => $row['name'] ?? null,
+                'languageCode' => $row['languageCode'] ?? null,
+                'fallbackLanguageCode' => $row['fallbackLanguageCode'] ?? null,
+                'weekStart' => $row['weekStart'] ?? null,
+                'dateFormat' => $row['dateFormat'] ?? null,
+                'timeFormat' => $row['timeFormat'] ?? null,
+                'timeZone' => $row['timeZone'] ?? null,
+                'thousandSeparator' => $row['thousandSeparator'] ?? null,
+                'decimalMark' => $row['decimalMark'] ?? null,
+                'displayLabelsInContentLanguage' => $row['displayLabelsInContentLanguage'] ?? null,
+                'disableForUi' => $row['disableForUi'] ?? null,
+            ];
+        }
+
+        return $res;
+    }
+
     public function refreshCache(): void
     {
         $this->getInjection('dataManager')->clearCache(true);

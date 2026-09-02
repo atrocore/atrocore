@@ -58,10 +58,6 @@ class InstallDemoProject extends AbstractConsole
                 $this->getConfig()->set('passwordSalt', $_SERVER['PASSWORD_SALT']);
             }
 
-            if (isset($_SERVER['CRYPT_KEY'])) {
-                $this->getConfig()->set('cryptKey', $_SERVER['CRYPT_KEY'] == 'empty' ? '' : $_SERVER['CRYPT_KEY']);
-            }
-
             if (!empty($_SERVER['LANGUAGE'])) {
                 $this->getConfig()->set('language', $_SERVER['LANGUAGE']);
             }

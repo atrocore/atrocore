@@ -133,7 +133,7 @@ class Manager
             try {
                 $path = (new \ReflectionClass($className))->getFileName();
             } catch (\Throwable $e) {
-                $GLOBALS['log']->error("Module Manager ERROR: Can't load $className");
+                $this->logError("Can't load $className");
                 return;
             }
 
@@ -145,12 +145,25 @@ class Manager
                 }
 
                 if ($path == '/') {
-                    $GLOBALS['log']->error("Module Manager ERROR: Can't find composer.json file");
+                    $this->logError("Can't find composer.json file for $className");
                     return;
                 }
             }
 
             $this->modules[$module] = new $className($module, $modulePath, $this->getPackage($module), $this->sm);
+        } else {
+            $this->logError("Can't load $className. Class does not exist or does not extend " . AbstractModule::class . ".");
+        }
+    }
+
+    /**
+     * Modules are loaded during bootstrap, before $GLOBALS['log'] is set up,
+     * so the logger is not guaranteed to exist at this point.
+     */
+    private function logError(string $message): void
+    {
+        if (isset($GLOBALS['log'])) {
+            $GLOBALS['log']->error("Module Manager ERROR: $message");
         }
     }
 

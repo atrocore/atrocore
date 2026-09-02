@@ -18,6 +18,46 @@ use Espo\ORM\EntityCollection;
 
 class AttributePanel extends ReferenceData
 {
+    /**
+     * The fields of this entity that the config exposes. Localized names are
+     * kept as well - the UI looks them up by a computed field name.
+     */
+    public static function getConfigData(): array
+    {
+        $path = self::DIR_PATH . '/AttributePanel.json';
+
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $items = @json_decode(file_get_contents($path), true);
+
+        if (!is_array($items)) {
+            return [];
+        }
+
+        $res = [];
+        foreach ($items as $key => $row) {
+            $item = [
+                'id'        => $row['id'] ?? null,
+                'code'      => $row['code'] ?? null,
+                'sortOrder' => $row['sortOrder'] ?? null,
+                'entityId'  => $row['entityId'] ?? null,
+                'default'   => $row['default'] ?? null,
+            ];
+
+            foreach ($row as $field => $value) {
+                if (str_starts_with($field, 'name')) {
+                    $item[$field] = $value;
+                }
+            }
+
+            $res[$key] = $item;
+        }
+
+        return $res;
+    }
+
     public function findRelated(Entity $entity, string $link, array $selectParams): EntityCollection
     {
         if ($link === 'attributes') {
@@ -117,7 +157,6 @@ class AttributePanel extends ReferenceData
 
     protected function clearCache(): void
     {
-        $this->getConfig()->clearReferenceDataCache();
         $this->getInjection('dataManager')->clearCache();
     }
 }

@@ -190,7 +190,7 @@ final class Application
      */
     public function isInstalled(): bool
     {
-        return file_exists($this->getConfig()->getConfigPath()) && $this->getConfig()->get('isInstalled');
+        return $this->getConfig()->get('isInstalled');
     }
 
     protected function showOpenApiJson(): void

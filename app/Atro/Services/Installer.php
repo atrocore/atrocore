@@ -17,6 +17,7 @@ use Atro\Core\SeederFactory;
 use Atro\Core\Templates\Services\HasContainer;
 use Atro\Console\AbstractConsole;
 use Atro\Core\ModuleManager\Manager;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Utils\Language;
@@ -259,16 +260,9 @@ class Installer extends HasContainer
         return ['status' => empty($message), 'message' => $message];
     }
 
-    /**
-     * Check if is install
-     *
-     * @return bool
-     */
     public function isInstalled(): bool
     {
-        $config = $this->getConfig();
-
-        return file_exists($config->getConfigPath()) && $config->get('isInstalled');
+        return $this->getConfig()->get('isInstalled');
     }
 
     /**
@@ -601,12 +595,9 @@ class Installer extends HasContainer
          */
         $file = 'data/after_install_script.php';
         if (file_exists($file)) {
-            $configFile = 'data/config.php';
-            if (file_exists($configFile)) {
-                $configData = include $configFile;
-                if (!empty($configData['database']['driver']) && $configData['database']['driver'] !== 'pdo_pgsql') {
-                    include_once $file;
-                }
+            $configData = Config::load();
+            if (!empty($configData['database']['driver']) && $configData['database']['driver'] !== 'pdo_pgsql') {
+                include_once $file;
             }
             unlink($file);
         }

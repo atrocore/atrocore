@@ -3,7 +3,6 @@
     "fileNameRegexPattern": "Шаблон для имени файла",
     "locale": "Локаль",
     "useCache": "Использовать кэш",
-    "currencyRates": "Курсы обмена",
     "companyLogo": "Логотип заголовка",
     "recordsPerPage": "Записей на страницу",
     "recordsPerPageSmall": "Записей на страницу (сжатый вид)",

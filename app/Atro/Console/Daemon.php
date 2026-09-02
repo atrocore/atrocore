@@ -16,6 +16,7 @@ namespace Atro\Console;
 use Atro\Core\Application;
 use Atro\Core\JobManager;
 use Atro\Core\PseudoTransactionManager;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Services\SoftwarePackage;
 use Doctrine\DBAL\Connection;
@@ -178,7 +179,7 @@ class Daemon extends AbstractConsole
             }
 
             if (file_exists(JobManager::QUEUE_FILE) && !file_exists(JobManager::PAUSE_FILE)) {
-                $config = include 'data/config.php';
+                $config = Config::load();
                 $workersCount = $config['maxConcurrentWorkers'] ?? 6;
                 if ($workersCount < 4) {
                     $workersCount = 4;
