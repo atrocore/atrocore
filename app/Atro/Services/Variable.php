@@ -20,6 +20,13 @@ use Espo\Core\Services\Base;
 
 class Variable extends Base
 {
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('metadata');
+    }
+
     public static function defineType($value): string
     {
         $type = 'text';
@@ -158,15 +165,16 @@ class Variable extends Base
     }
 
     /**
-     * A variable must never shadow a protected config parameter, because Config::set() bypasses
-     * the systemItems/adminItems restrictions that Settings::update() relies on
+     * A variable must never shadow a config parameter the system owns: Config::set()
+     * writes straight to the file, so a colliding key would silently take over a
+     * real setting. Settings fields cover what the UI edits, the computed and
+     * contributed keys cover what the config derives on load.
      */
     protected function getRestrictedKeys(): array
     {
         return array_merge(
-            $this->getConfig()->get('systemItems', []),
-            $this->getConfig()->get('adminItems', []),
-            $this->getConfig()->get('userItems', [])
+            array_keys($this->getInjection('metadata')->get('entityDefs.Settings.fields', [])),
+            $this->getConfig()->getReadOnlyKeys()
         );
     }
 }

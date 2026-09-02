@@ -113,25 +113,8 @@ class App extends AbstractService
 
         $userData = $user->getValueMap();
 
-        $settings = (object)[];
-        foreach ($this->getConfig()->get('userItems') as $item) {
-            $settings->$item = $this->getConfig()->get($item);
-        }
-
-        if ($this->getUser()->isAdmin()) {
-            foreach ($this->getConfig()->get('adminItems') as $item) {
-                if ($this->getConfig()->has($item)) {
-                    $settings->$item = $this->getConfig()->get($item);
-                }
-            }
-        }
-
-        $settingsFieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields', []);
-        foreach ($settingsFieldDefs as $field => $d) {
-            if ($d['type'] === 'password') {
-                unset($settings->$field);
-            }
-        }
+        // one source for the whole frontend: the same set /api/Settings returns
+        $settings = (object)$this->getService('Settings')->getConfigData();
 
         unset($userData->authTokenId);
         unset($userData->password);

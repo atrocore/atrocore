@@ -51,59 +51,8 @@ final class Config
     /**
      * System config defaults, merged under data/config.php on load
      */
-    private array $systemConfig
-        = [
-            'defaultPermissions' => [
-                'dir'   => '0775',
-                'file'  => '0664',
-                'user'  => '',
-                'group' => '',
-            ],
-            'systemItems'        => [
-                'systemItems',
-                'adminItems',
-                'configPath',
-                'cachePath',
-                'database',
-                'logger',
-                'isInstalled',
-                'defaultPermissions',
-                'passwordSalt',
-                'userLimit',
-                'stylesheet',
-                'userItems',
-                'phpBinPath',
-            ],
-            'adminItems'         => [
-                'devMode',
-                'adminPanelIframeUrl',
-                'authTokenLifetime',
-                'authTokenMaxIdleTime',
-                'leadCaptureAllowOrigin',
-                // secrets: must stay readable/writable for admins via Settings UI,
-                // but hidden from non-admin API responses and script (Twig) contexts
-                'smtpPassword',
-                'oidcClientSecret',
-                'gitlabApiToken',
-                'oktaApiToken',
-                'etimClientSecret',
-                'icecatPassword',
-            ],
-            'userItems'          => [
-                'outboundEmailFromAddress',
-                'integrations',
-            ],
-            'isInstalled'        => false,
-        ];
 
     private ?array $additionalConfigCache = null;
-
-    private array $associativeArrayAttributeList
-        = [
-            'database',
-            'logger',
-            'defaultPermissions',
-        ];
 
     private array $data = [];
     private array $changedData = [];
@@ -168,9 +117,19 @@ final class Config
      * The whole config as stored, with no filtering whatsoever. Deciding what of
      * it may leave the backend is the caller's job - see Services\Settings.
      */
-    public function getAll(): array
+    /**
+     * Root keys of everything contributed by the core providers and the modules.
+     * They are meant to reach the frontend, so Settings exposes them by default.
+     */
+    public function getAdditionalConfigKeys(): array
     {
-        return $this->loadConfig();
+        $keys = [];
+
+        foreach (array_keys($this->getAdditionalConfigData()) as $path) {
+            $keys[] = strtok($path, '.');
+        }
+
+        return array_values(array_unique($keys));
     }
 
     public function get(string $name, mixed $default = null): mixed
@@ -219,11 +178,6 @@ final class Config
         $this->loadConfig();
 
         $this->assertWritable($name);
-
-        // stdClass from the REST payload would end up as \stdClass::__set_state() in config.php
-        if (is_object($value) && in_array($name, $this->associativeArrayAttributeList, true)) {
-            $value = (array)$value;
-        }
 
         $this->data[$name] = $value;
         $this->changedData[$name] = $value;
@@ -284,7 +238,7 @@ final class Config
         if ($reload || empty($this->data)) {
             // checked before it lands in $data: leaving a broken config in place
             // would silence the check on every later call
-            $data = Util::merge($this->systemConfig, self::load());
+            $data = self::load();
 
             $this->assertNoConflictsWithStoredConfig($data);
 
@@ -471,7 +425,7 @@ final class Config
      * everything contributed by the providers. A segmented contributed key
      * protects its root, since set() only ever writes top-level keys.
      */
-    private function getReadOnlyKeys(): array
+    public function getReadOnlyKeys(): array
     {
         $keys = self::COMPUTED_KEYS;
 

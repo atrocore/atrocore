@@ -26,28 +26,68 @@ use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 
 class Settings extends AbstractService
 {
+    /**
+     * Config parameters that may leave the backend. Anything not listed here
+     * stays server-side, so a new parameter is private until someone adds it
+     * on purpose - never by forgetting to exclude it.
+     *
+     * Keys contributed through AbstractModule::getConfigAdditionalData() are
+     * exposed on top of this list, since that mechanism exists for the frontend.
+     */
+    private const PUBLIC_CONFIG_KEYS
+        = [
+            'actionHistoryDisabled', 'adminPanelIframeHeight', 'applicationName',
+            'assignedUserAttributeOwnership', 'assignedUserProductOwnership', 'avatarsDisabled',
+            'cacheTimestamp', 'changeStatusAfterTranslation', 'chunkFileSize',
+            'companyLogoId', 'currencyList', 'dashletsOptions',
+            'dateFormat', 'defaultNotificationProfileId', 'defaultStyleId',
+            'disableEmailDelivery', 'disableNavigationPath', 'disableToolbarLogo',
+            'displayListViewRecordCount', 'faviconId', 'favoritesIconsDisabled',
+            'fileNameRegexPattern', 'fileUploadStreamCount', 'fuzzySearchAvailable',
+            'globalSearchEntityList', 'globalSearchMaxSize', 'hasApproved',
+            'hasNotTranslateFrom', 'hasNotTranslateTo', 'inputLanguageList',
+            'isMultilangActive', 'isStreamSide', 'language',
+            'lastViewedCount', 'locale', 'locales',
+            'mainLanguage', 'massDeleteMaxCountWithoutJob', 'massRestoreMaxCountWithoutJob',
+            'massUpdateMaxCountWithoutJob', 'maxComparableItem', 'maxMassLinkCount',
+            'maxMassUnlinkCount', 'maxSizeForEntityComparisons', 'notificationsMaxSize',
+            'notificationSmtpConnectionId', 'ownerUserAttributeOwnership', 'ownerUserProductOwnership',
+            'packaged', 'readableDateFormatDisabled', 'recordListMaxSizeLimit',
+            'recordsPerPage', 'recordsPerPageSmall', 'resetPasswordViaEmailOnly',
+            'scopeColorsDisabled', 'siteUrl', 'systemUserId',
+            'tabIconsDisabled', 'timeFormat', 'timeZone',
+            'unitsOfMeasure', 'userNameRegularExpression', 'userThemesDisabled',
+            'weekStart',
+        ];
+
     private string $customHeadCodeDir = 'public/client/custom/html';
     private string $customHeadCodeFilename = 'head-code.html';
     private string $customStylesheetDir = 'public/client/custom/css';
     private string $customStylesheetFileName = 'custom-css.css';
 
-    private array $adminItems = [];
-
+    /**
+     * Everything the Settings UI needs: the public config plus the parameters
+     * declared as Settings fields, which is what the form edits. Password
+     * fields never leave the backend.
+     */
     public function getConfigData(): array
     {
-        if ($this->getUser()->isGlobalSystemUser()) {
-            $data = $this->getPublicConfig();
-        } else {
-            $data = $this->getPublicConfig($this->getUser()->isAdmin());
-        }
+        $config = $this->getConfig();
+        $data = $this->getPublicConfig();
 
-        $fieldDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
-
-        foreach ($fieldDefs as $field => $d) {
-            if ($d['type'] === 'password') {
+        foreach ($this->getSettingsFieldDefs() as $field => $defs) {
+            if (($defs['type'] ?? null) === 'password') {
                 unset($data[$field]);
+                continue;
+            }
+
+            if (!array_key_exists($field, $data) && $config->has($field)) {
+                $data[$field] = $config->get($field);
             }
         }
+
+        $data = $this->prepareCustomHeadCodeForOutput($data);
+        $data = $this->prepareStylesheetConfigForOutput($data);
 
         $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
         $data['themes'] = $this->getMetadata()->get('themes');
@@ -60,6 +100,11 @@ class Settings extends AbstractService
         return $this->getInjection('eventManager')
             ->dispatch('SettingsService', 'afterGetConfigData', new Event(['data' => $data]))
             ->getArgument('data');
+    }
+
+    private function getSettingsFieldDefs(): array
+    {
+        return $this->getMetadata()->get('entityDefs.Settings.fields', []);
     }
 
     public function update(\stdClass $data)
@@ -96,7 +141,7 @@ class Settings extends AbstractService
             $data->siteUrl = rtrim($data->siteUrl, '/');
         }
 
-        $this->setData($data, $this->getUser()->isAdmin());
+        $this->setData($data);
         $result = $this->getConfig()->save();
         if ($result === false) {
             throw new Error('Cannot save settings');
@@ -125,44 +170,39 @@ class Settings extends AbstractService
     }
 
     /**
-     * The part of the config that may leave the backend - for the UI, Twig
-     * templates, PDF and export contexts. Strips whatever the given role
-     * must not see.
-     *
-     * @param bool|null $isAdmin null - hide system, admin and user items;
-     *                           true - hide system items only;
-     *                           false - hide system and admin items.
+     * The part of the config that may leave the backend - the UI, Twig
+     * templates, PDF and export contexts. Built from an explicit allow list
+     * plus whatever the providers contribute: nothing else ever leaves.
      */
-    public function getPublicConfig(?bool $isAdmin = null): array
+    public function getPublicConfig(): array
     {
-        $data = $this->getConfig()->getAll();
-        $data = $this->prepareCustomHeadCodeForOutput($data);
-        $data = $this->prepareStylesheetConfigForOutput($data);
+        $config = $this->getConfig();
 
-        foreach ($this->getRestrictItems($isAdmin) as $name) {
-            if (isset($data[$name])) {
-                unset($data[$name]);
+        $keys = array_merge(self::PUBLIC_CONFIG_KEYS, $config->getAdditionalConfigKeys());
+
+        $data = [];
+        foreach (array_unique($keys) as $key) {
+            if ($config->has($key)) {
+                $data[$key] = $config->get($key);
             }
-        }
-
-        if (isset($data['clickhouse']['database'])) {
-            unset($data['clickhouse']['database']);
         }
 
         return $data;
     }
 
     /**
-     * Apply incoming data, dropping whatever the given role is not allowed to write.
+     * Applies incoming data. Only parameters declared as Settings fields can be
+     * written: anything else in the payload is ignored, so a request can never
+     * reach a config key that the UI does not own.
      */
-    private function setData(array|\stdClass $data, ?bool $isAdmin = null): void
+    private function setData(array|\stdClass $data): void
     {
-        $restrictItems = $this->getRestrictItems($isAdmin);
+        $fieldDefs = $this->getSettingsFieldDefs();
 
         $values = [];
-        foreach ((array)$data as $key => $item) {
-            if (!in_array($key, $restrictItems, true)) {
-                $values[$key] = $item;
+        foreach ((array)$data as $key => $value) {
+            if (isset($fieldDefs[$key])) {
+                $values[$key] = $value;
             }
         }
 
@@ -174,24 +214,6 @@ class Settings extends AbstractService
         }
     }
 
-    private function getRestrictItems(?bool $onlySystemItems = null): array
-    {
-        $config = $this->getConfig();
-
-        if ($onlySystemItems) {
-            return $config->get('systemItems', []);
-        }
-
-        if (empty($this->adminItems)) {
-            $this->adminItems = array_merge($config->get('systemItems', []), $config->get('adminItems', []));
-        }
-
-        if ($onlySystemItems === false) {
-            return $this->adminItems;
-        }
-
-        return array_merge($this->adminItems, $config->get('userItems', []));
-    }
 
     private function getCustomHeadCode(): ?string
     {
