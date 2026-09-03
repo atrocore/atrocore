@@ -8,29 +8,19 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/user/password-expired', 'views/user/password-change-request', function (Dep) {
+Espo.define('views/user/password-expired', 'view', function (Dep) {
 
     return Dep.extend({
-        data: function () {
-            return {};
-        },
 
-        afterRender() {
+        _template: '',
+
+        afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            $('.panel-body').prepend(`<p style="margin: 0 0 2rem;">${this.translate('passwordExpiredForm', 'messages', 'User')}</p>`);
-        },
-
-        sendRequest(password) {
-            $.ajax({
-                type: 'POST',
-                url: 'User/changeExpiredPassword',
-                data: JSON.stringify({
-                    password: password
-                }),
-                error: this.onRequestError.bind(this)
-            }).done(this.onRequestDone.bind(this));
+            new Svelte.ChangeExpiredPassword({
+                target: this.el
+            });
         }
+
     });
 });
-

@@ -520,6 +520,9 @@ Espo.define(
                 this.preferences.clear();
                 this.acl.clear();
                 this.storage.clear('user', 'auth');
+                if (window.SvelteUserData) {
+                    window.SvelteUserData.set(null);
+                }
                 this.doAction({ action: 'login' });
 
                 this.unsetCookieAuth();
