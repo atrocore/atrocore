@@ -18,7 +18,11 @@ Espo.define('views/admin/field-manager/fields/foreign-code', 'views/fields/varch
             this.listenTo(this.model, 'change:entityId change:type change:relationType', () => {
                 if (this.model.get('entityId')) {
                     if (this.model.get('type') === 'link') {
-                        this.model.set(this.name, this.lcfirst(this.model.get('entityId')) + 's');
+                        if (this.model.get('relationType') === 'oneToOne') {
+                            this.model.set(this.name, this.lcfirst(this.model.get('entityId')));
+                        } else {
+                            this.model.set(this.name, this.lcfirst(this.model.get('entityId')) + 's');
+                        }
                     }
 
                     if (this.model.get('type') === 'linkMultiple') {
