@@ -106,6 +106,9 @@ class EntityField extends ReferenceData
                 $fieldDefs['relationName']      = $linkDefs['relationName'] ?? null;
                 $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
             }
+            if ($fieldDefs['type'] === 'link') {
+                $fieldDefs['relationType'] = $linkDefs['relationType'] ?? 'manyToOne';
+            }
             if (!empty($linkDefs['entity'])) {
                 $fieldDefs['foreignEntityId']   = $linkDefs['entity'];
                 $fieldDefs['foreignEntityName'] = $this->translateLabel($linkDefs['entity'], 'scopeNames');
@@ -758,33 +761,54 @@ class EntityField extends ReferenceData
                     $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                         'links' => [
                             $entity->get('code') => [
-                                'type'    => 'belongsTo',
-                                'foreign' => $entity->get('foreignCode'),
-                                'entity'  => $entity->get('foreignEntityId'),
+                                'type'         => 'belongsTo',
+                                'relationType' => $entity->get('relationType') ?? 'manyToOne',
+                                'foreign'      => $entity->get('foreignCode'),
+                                'entity'       => $entity->get('foreignEntityId'),
                             ]
                         ]
                     ]);
 
-                    $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
-                        'fields' => [
-                            $entity->get('foreignCode') => [
-                                'type'                 => 'linkMultiple',
-                                'noLoad'               => true,
-                                'layoutDetailDisabled' => true,
-                                'massUpdateDisabled'   => true,
-                                'isCustom'             => true
+                    if ($entity->get('relationType') === 'oneToOne') {
+                        $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                            'fields' => [
+                                $entity->get('foreignCode') => [
+                                    'type'     => 'link',
+                                    'isCustom' => true
+                                ]
                             ]
-                        ]
-                    ]);
-                    $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
-                        'links' => [
-                            $entity->get('foreignCode') => [
-                                'type'    => 'hasMany',
-                                'foreign' => $entity->get('code'),
-                                'entity'  => $entity->get('entityId'),
+                        ]);
+                        $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                            'links' => [
+                                $entity->get('foreignCode') => [
+                                    'type'    => 'hasOne',
+                                    'foreign' => $entity->get('code'),
+                                    'entity'  => $entity->get('entityId'),
+                                ]
                             ]
-                        ]
-                    ]);
+                        ]);
+                    } else {
+                        $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                            'fields' => [
+                                $entity->get('foreignCode') => [
+                                    'type'                 => 'linkMultiple',
+                                    'noLoad'               => true,
+                                    'layoutDetailDisabled' => true,
+                                    'massUpdateDisabled'   => true,
+                                    'isCustom'             => true
+                                ]
+                            ]
+                        ]);
+                        $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                            'links' => [
+                                $entity->get('foreignCode') => [
+                                    'type'    => 'hasMany',
+                                    'foreign' => $entity->get('code'),
+                                    'entity'  => $entity->get('entityId'),
+                                ]
+                            ]
+                        ]);
+                    }
                 } else {
                     $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                         'fields' => [
