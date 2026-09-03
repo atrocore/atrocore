@@ -1295,6 +1295,7 @@
     "integerValueValidationFailed": "Der ganzzahlige Wert für das Feld/Attribut \"%s\" muss zwischen %s und %s liegen.",
     "notAllowedOption": "Die Option '%s' ist für '%s' nicht erlaubt.",
     "listOptionCannotBeDeleted": "Die ausgewählte(n) Option(en) kann nicht gelöscht werden, da sie bereits von einem oder mehreren Datensätzen verwendet wird.",
+    "oneToOneRelationIsAlreadyUsed": "Der Datensatz kann nicht gespeichert werden: Das ausgewählte '%s' ist bereits mit einem anderen Datensatz verknüpft — '%s'. Dies ist eine Eins-zu-Eins-Beziehung, daher ist nur ein verknüpfter Datensatz erlaubt.",
     "notUniqueRecordField": "Der Datensatz kann nicht gespeichert werden, ein Datensatz mit diesem '%s' existiert bereits.",
     "noAccessToScope": "Sie haben keinen Zugriff auf %s."
   },

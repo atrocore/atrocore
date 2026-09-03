@@ -293,6 +293,40 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function validateLink(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $idName = $fieldName . 'Id';
+
+        if (!$entity->hasAttribute($idName) || !$entity->isAttributeChanged($idName) || empty($entity->get($idName))) {
+            return;
+        }
+
+        $linkDefs = $entity->entityDefs['links'][$fieldName] ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $fieldName], []);
+
+        // a one-to-one relation is protected by an unique index, so it has to be validated before saving
+        if (($linkDefs['type'] ?? null) !== 'belongsTo' || ($linkDefs['relationType'] ?? null) !== 'oneToOne') {
+            return;
+        }
+
+        $where = [$idName => $entity->get($idName)];
+        if (!$entity->isNew()) {
+            $where['id!='] = $entity->get('id');
+        }
+
+        $exists = $this->where($where)->findOne();
+        if (empty($exists)) {
+            return;
+        }
+
+        throw new NotUnique(
+            sprintf(
+                $this->getLanguage()->translate('oneToOneRelationIsAlreadyUsed', 'exceptions', 'Global'),
+                $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType()),
+                $exists->get('name') ?? $exists->get('id')
+            )
+        );
+    }
+
     protected function validateRangeValue(Entity $entity, string $fieldName, array $fieldData): void
     {
         if (empty($fieldData['mainField'])) {

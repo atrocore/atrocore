@@ -1231,6 +1231,7 @@
     "listOptionCannotBeDeleted": "Impossible de supprimer l'option(s) sélectionnée(s) car elles sont déjà utilisées dans un ou plusieurs enregistrements.",
     "dateIsInvalid": "La date du champ '%s' n'est pas valide.",
     "datetimeIsInvalid": "La date et l'heure du champ \"%s\" ne sont pas valides.",
+    "oneToOneRelationIsAlreadyUsed": "L'enregistrement ne peut pas être enregistré : le '%s' sélectionné est déjà lié à un autre enregistrement — '%s'. Il s'agit d'une relation un à un, un seul enregistrement lié est donc autorisé.",
     "notUniqueRecordField": "L'enregistrement ne peut pas être sauvegardé, l'enregistrement avec un tel \"%s\" existe déjà.",
     "entityCannotBeBookmarked": "Les enregistrements de cette entité ne peuvent pas être mis en signet.",
     "integerValueValidationFailed": "La valeur entière du champ/attribut \"%s\" doit être comprise entre %s et %s.",
