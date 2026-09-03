@@ -88,7 +88,7 @@
     "passwordChangedByRequest": "La password è stata modificata.",
     "setupSmtpBefore": "Deve configurare le impostazioni SMTP di <a href=\"{url}\"></a> per far sì che il sistema sia in grado di inviare la password nelle e-mail.",
     "userNameExists": "Il nome utente esiste già",
-    "newPasswordInvalid": "La sua password deve contenere almeno un simbolo, una lettera maiuscola e una cifra e deve essere lunga almeno 8 caratteri.",
+    "newPasswordHint": "La sua password deve contenere almeno un simbolo, una lettera maiuscola e una cifra e deve essere lunga almeno 8 caratteri.",
     "changePasswordOnResetViaEmailOnly": "Non è possibile impostare una password manualmente. Utilizzi l'azione \"Reimposta password\"."
   },
   "options": {

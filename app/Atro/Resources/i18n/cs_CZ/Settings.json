@@ -56,7 +56,7 @@
     "textFilterUseContainsForVarchar": "Pokud není zaškrtnuto, použije se operátor \"začíná s\". Můžete použít zástupný znak '%'.",
     "authTokenPreventConcurrent": "Uživatelé nebudou moci být přihlášeni na více zařízeních současně.",
     "emailAddressIsOptedOutByDefault": "Při vytváření nového záznamu bude e-mailová adresa označena jako opt-out.",
-    "passwordRegexPattern": "Nastavení pravidel složitosti hesla pomocí regulárního výrazu. \nTip: k definování požadovaných symbolů použijte skupiny jako (?=.*\\d). \n\nPodle tohoto <a href=\"{message_link}\" target=\"_blank\">odkazu</a> aktualizujte chybovou zprávu o ověření.",
+    "passwordRegexPattern": "Nastavení pravidel složitosti hesla pomocí regulárního výrazu. \nTip: k definování požadovaných symbolů použijte skupiny jako (?=.*\\d). ",
     "passwordExpireDays": "Definujte dobu (ve dnech), po které musí uživatelé aktualizovat své heslo.",
     "automaticFileExtensionCorrection": "Pokud je tato možnost povolena, systém v případě potřeby automaticky upraví příponu každého nahraného souboru tak, aby odpovídala jeho typu MIME.",
     "applicationName": "Doporučujeme, aby tato hodnota byla co nejkratší, protože šířka karty prohlížeče je omezená a možná budete chtít zobrazit i názvy stránek.",

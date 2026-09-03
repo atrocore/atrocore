@@ -87,7 +87,7 @@
     "userNameExists": "User Name already exists",
     "passwordResetEmailBody": "Puede restaurar su contraseña siguiendo este enlace {link}. Este URL único caducará pronto.",
     "passwordExpiredForm": "Su contraseña ha caducado. Por favor, actualícela utilizando el siguiente formulario.",
-    "newPasswordInvalid": "Su contraseña debe contener al menos un símbolo, una letra mayúscula y un dígito y debe tener al menos 8 caracteres.",
+    "newPasswordHint": "Su contraseña debe contener al menos un símbolo, una letra mayúscula y un dígito y debe tener al menos 8 caracteres.",
     "changePasswordOnResetViaEmailOnly": "No puede establecer una contraseña manualmente. Por favor, utilice la acción \"Restablecer contraseña\".",
     "passwordResetEmailSubject": "Restablecer contraseña"
   },

@@ -56,7 +56,7 @@
     "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
-    "passwordRegexPattern": "Set password complexity rules using regular expression. \nTip: use groups like (?=.*\\d) to define required symbols. \n\nFollow this <a href=\"{message_link}\" target=\"_blank\">link</a> to update an validation error message.",
+    "passwordRegexPattern": "Set password complexity rules using regular expression. \nTip: use groups like (?=.*\\d) to define required symbols.",
     "passwordExpireDays": "Define the period (in days) after which users must update their password.",
     "automaticFileExtensionCorrection": "If enabled, the system will automatically adjust, if necessary, the extension of each uploaded file to match its MIME type.",
     "applicationName": "We recommend keeping this value as short as possible, as the width of the browser tab is limited and you may still want to see page titles.",
@@ -89,7 +89,8 @@
     "Custom Code": "Custom Code"
   },
   "messages": {
-    "languageMustBeSelected": "At least one language should be selected."
+    "languageMustBeSelected": "At least one language should be selected.",
+    "editPasswordHintLabel": "Edit the password requirements hint shown to users"
   },
   "exceptions": {
     "variableKeyInvalid": "Key should start with a small letter and can consist only of letters and numbers.",

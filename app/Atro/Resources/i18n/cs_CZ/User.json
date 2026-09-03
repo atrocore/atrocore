@@ -88,7 +88,7 @@
     "passwordChangedByRequest": "Heslo bylo změněno.",
     "setupSmtpBefore": "Aby systém mohl odesílat hesla v e-mailu, je třeba nastavit nastavení <a href=\"{url}\">SMTP</a>.",
     "userNameExists": "Uživatelské jméno již existuje",
-    "newPasswordInvalid": "Heslo by mělo obsahovat alespoň jeden symbol, velké písmeno a číslici a mělo by mít alespoň 8 znaků.",
+    "newPasswordHint": "Heslo by mělo obsahovat alespoň jeden symbol, velké písmeno a číslici a mělo by mít alespoň 8 znaků.",
     "changePasswordOnResetViaEmailOnly": "Heslo nelze nastavit ručně. Použijte akci \"Obnovit heslo\"."
   },
   "options": {

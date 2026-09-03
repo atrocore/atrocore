@@ -8,12 +8,32 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/settings/fields/password-regex-pattern', ['views/fields/varchar', 'lib!MD5'], (Dep, MD5) => {
+Espo.define('views/settings/fields/password-regex-pattern', 'views/fields/varchar-with-translation-sign', Dep => {
     return Dep.extend({
         setup: function () {
             Dep.prototype.setup.call(this);
             this.validations.push('regexpValid');
             this.applyDefaultValue();
+        },
+
+        getEntityScope() {
+            return 'User';
+        },
+
+        getCategory() {
+            return 'messages';
+        },
+
+        getEntityFieldName() {
+            return 'newPasswordHint';
+        },
+
+        getIconClass() {
+            return 'ph-globe-simple';
+        },
+
+        getIconTitle() {
+            return this.translate('editPasswordHintLabel', 'messages', 'Settings');
         },
 
         applyDefaultValue: function () {
@@ -27,12 +47,6 @@ Espo.define('views/settings/fields/password-regex-pattern', ['views/fields/varch
             if (value === undefined && defaultValue) {
                 this.model.set(this.name, defaultValue)
             }
-        },
-
-        getTooltipText: function () {
-            let link = '#Translation/edit/' + MD5('User.messages.newPasswordInvalid');
-
-            return (Dep.prototype.getTooltipText.call(this) ?? '').replace('{message_link}', link);
         },
 
         validateRegexpValid: function () {

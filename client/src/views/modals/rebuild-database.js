@@ -9,43 +9,35 @@
  */
 
 
-Espo.define('views/modals/rebuild-database', 'views/modal', function (Dep) {
+Espo.define('views/modals/rebuild-database', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'modals/rebuild-database',
+        _template: '',
 
-        backdrop: true,
+        svelteComponent: null,
 
-        header: 'Rebuild database',
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.once('remove', () => {
+                if (this.svelteComponent) {
+                    this.svelteComponent.$destroy();
+                    this.svelteComponent = null;
+                }
+            });
+        },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.find('.modal-body').css({paddingTop: '0px'});
-
-            const container = this.$el.find('.rebuild-db-container');
-            if (container.length) {
-                new Svelte.RebuildDatabaseModal({
-                    target: container.get(0),
-                    props: {
-                        onApply: () => {
-                            Espo.Ui.notify(this.getLanguage().translate('Please wait...'));
-
-                            this.ajaxPostRequest('rebuildDb').success(response => {
-                                Espo.Ui.success(this.getLanguage().translate('Done'));
-                                this.close();
-                            });
-                        },
-                        onCancel: () => {
-                            this.close();
-                        }
-                    }
-                });
-            }
+            this.svelteComponent = new Svelte.RebuildDatabaseModal({
+                target: document.body,
+                props: {
+                    onClose: () => this.remove()
+                }
+            });
         }
 
     });
 });
-
-
