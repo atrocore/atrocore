@@ -88,7 +88,7 @@
     "passwordResetEmailSubject": "Resetowanie hasła",
     "passwordResetEmailBody": "Mogą Państwo przywrócić swoje hasło pod tym linkiem {link}. Ten unikalny adres URL wkrótce wygaśnie.",
     "passwordExpiredForm": "Państwa hasło wygasło. Proszę je zaktualizować za pomocą poniższego formularza.",
-    "newPasswordInvalid": "Państwa hasło powinno zawierać co najmniej jeden symbol, wielką literę i cyfrę oraz składać się z co najmniej 8 znaków.",
+    "newPasswordHint": "Państwa hasło powinno zawierać co najmniej jeden symbol, wielką literę i cyfrę oraz składać się z co najmniej 8 znaków.",
     "changePasswordOnResetViaEmailOnly": "Nie można ustawić hasła ręcznie. Proszę użyć akcji \"Resetuj hasło\"."
   },
   "options": {

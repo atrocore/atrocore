@@ -60,18 +60,8 @@ Espo.define('views/login', 'view', function (Dep) {
             new Svelte.Login({
                 target: this.el,
                 props: {
-                    onLogin: (data) => this.trigger('login', data),
-                    onForgotPassword: () => this.showPasswordChangeRequest()
+                    onLogin: (data) => this.trigger('login', data)
                 }
-            });
-        },
-
-        showPasswordChangeRequest: function () {
-            this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
-                url: window.location.href,
-                fullHeight: false
-            }, function (view) {
-                view.render();
             });
         }
 

@@ -56,7 +56,7 @@
     "textFilterUseContainsForVarchar": "Se non è selezionato, viene utilizzato l'operatore 'inizia con'. Può utilizzare il carattere jolly '%'.",
     "authTokenPreventConcurrent": "Gli utenti non potranno effettuare il login su più dispositivi contemporaneamente.",
     "emailAddressIsOptedOutByDefault": "Al momento della creazione di un nuovo record, l'indirizzo e-mail sarà contrassegnato come opted-out.",
-    "passwordRegexPattern": "Imposta le regole di complessità della password utilizzando le espressioni regolari. \nSuggerimento: utilizzi gruppi come (?=.*\\d) per definire i simboli richiesti. \n\nSegua questo link <a href=\"{message_link}\" target=\"_blank\"></a> per aggiornare un messaggio di errore di convalida.",
+    "passwordRegexPattern": "Imposta le regole di complessità della password utilizzando le espressioni regolari. \nSuggerimento: utilizzi gruppi come (?=.*\\d) per definire i simboli richiesti. ",
     "passwordExpireDays": "Definisce il periodo (in giorni) dopo il quale gli utenti devono aggiornare la loro password.",
     "automaticFileExtensionCorrection": "Se abilitato, il sistema regolerà automaticamente, se necessario, l'estensione di ogni file caricato per adattarlo al suo tipo MIME.",
     "applicationName": "Raccomandiamo di mantenere questo valore il più breve possibile, in quanto la larghezza della scheda del browser è limitata e lei potrebbe comunque voler vedere i titoli delle pagine.",

@@ -61,13 +61,13 @@ Espo.define('controllers/base', 'controller', function (Dep) {
         },
 
         error404: function () {
-            this.entire('views/error', {template: 'errors/404'}, function (view) {
+            this.entire('views/error', {code: 404}, function (view) {
                 view.render();
             });
         },
 
         error403: function () {
-            this.entire('views/error', {template: 'errors/403'}, function (view) {
+            this.entire('views/error', {code: 403}, function (view) {
                 view.render();
             });
         },

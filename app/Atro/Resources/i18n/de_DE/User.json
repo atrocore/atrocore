@@ -77,6 +77,9 @@
     "passwordResetEmailSubject": "Passwort zurücksetzen",
     "passwordResetEmailBody": "Sie können Ihr Passwort über diesen Link {link} wiederherstellen. Diese einzigartige URL wird bald ablaufen.",
     "passwordExpiredForm": "Ihr Passwort ist abgelaufen. Bitte aktualisieren Sie es mit dem untenstehenden Formular.",
+    "passwordChangeRequestForm": "Legen Sie ein neues Passwort für Ihr {appName}-Konto fest.",
+    "passwordChangeRequestDescription": "Geben Sie Ihren Benutzernamen und Ihre E-Mail-Adresse ein, und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+    "passwordChangeRequestNotFound": "Dieser Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
     "passwordChanged": "Das Passwort wurde geändert",
     "userCantBeEmpty": "Der Benutzername darf nicht leer gelassen werden.",
     "usernameOrPasswordCantBeEmpty": "Benutzername oder Passwort dürfen nicht leer sein.",
@@ -89,7 +92,7 @@
     "setupSmtpBefore": "Sie müssen die <a href=\"{url}\">SMTP Einstellungen</a> setzen damit das System Passwörter in E-Mails senden kann.",
     "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern. Diese eindeutige URL ist nur für kurze Zeit gültig.",
     "userNameExists": "Benutzername existiert bereits",
-    "newPasswordInvalid": "Ihr Passwort muss mindestens ein Symbol, einen Großbuchstaben und eine Ziffer enthalten und sollte mehr als 8 Zeichen lang sein.",
+    "newPasswordHint": "Ihr Passwort muss mindestens ein Symbol, einen Großbuchstaben und eine Ziffer enthalten und sollte mehr als 8 Zeichen lang sein.",
     "changePasswordOnResetViaEmailOnly": "Sie können ein Passwort nicht manuell festlegen. Bitte verwenden Sie die Aktion \"Passwort zurücksetzen\"."
   },
   "boolFilters": {

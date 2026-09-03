@@ -59,7 +59,7 @@
     "customHeadCode": "Dodaj kod na końcu znacznika <head>. Atrocore nie weryfikuje niestandardowego kodu, więc upewnij się, że sprawdziłeś swój kod przed opublikowaniem.",
     "favicon": "Zalecamy, aby wartość ta była jak najkrótsza, ponieważ szerokość karty przeglądarki jest ograniczona i nadal możesz chcieć zobaczyć tytuły stron.",
     "maxConcurrentWorkers": "Górny limit liczby zadań lub procesów, które mogą działać jednocześnie w tle serwera.",
-    "passwordRegexPattern": "Ustawianie reguł złożoności hasła za pomocą wyrażeń regularnych. \nWskazówka: proszę użyć grup takich jak (?=.*\\d), aby zdefiniować wymagane symbole. \n\nProszę skorzystać z linku <a href=\"{message_link}\" target=\"_blank\"></a> , aby zaktualizować komunikat o błędzie walidacji.",
+    "passwordRegexPattern": "Ustawianie reguł złożoności hasła za pomocą wyrażeń regularnych. \nWskazówka: proszę użyć grup takich jak (?=.*\\d), aby zdefiniować wymagane symbole. ",
     "passwordExpireDays": "Określić okres (w dniach), po którym użytkownicy muszą zaktualizować swoje hasło.",
     "automaticFileExtensionCorrection": "Jeśli ta opcja jest włączona, system automatycznie dostosuje, jeśli to konieczne, rozszerzenie każdego przesłanego pliku do jego typu MIME.",
     "applicationName": "Zalecamy, aby wartość ta była jak najkrótsza, ponieważ szerokość karty przeglądarki jest ograniczona i nadal mogą Państwo chcieć zobaczyć tytuły stron.",

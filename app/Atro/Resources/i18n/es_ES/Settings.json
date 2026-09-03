@@ -59,7 +59,7 @@
     "favicon": "Recomendamos mantener este valor lo más corto posible, ya que el ancho de la pestaña del navegador es limitado y es posible que aún desee ver los títulos de las páginas.",
     "maxConcurrentWorkers": "Límite superior del número de tareas o procesos que pueden ejecutarse simultáneamente en segundo plano en un servidor.",
     "fileNameRegexPattern": "Para habilitar sólo letras minúsculas con un máximo de longitud de 24 símbolos utilice \"/^[a-z]{1,24}$/\".",
-    "passwordRegexPattern": "Establezca reglas de complejidad de contraseñas utilizando expresiones regulares. \nConsejo: utilice grupos como (?=.*\\d) para definir los símbolos requeridos. \n\nSiga este enlace <a href=\"{message_link}\" target=\"_blank\"></a> para actualizar un mensaje de error de validación.",
+    "passwordRegexPattern": "Establezca reglas de complejidad de contraseñas utilizando expresiones regulares. \nConsejo: utilice grupos como (?=.*\\d) para definir los símbolos requeridos. ",
     "passwordExpireDays": "Defina el periodo (en días) tras el cual los usuarios deben actualizar su contraseña.",
     "automaticFileExtensionCorrection": "Si está activada, el sistema ajustará automáticamente, si es necesario, la extensión de cada archivo cargado para que coincida con su tipo MIME.",
     "applicationName": "Le recomendamos que mantenga este valor lo más corto posible, ya que la anchura de la pestaña del navegador es limitada y es posible que siga queriendo ver los títulos de las páginas.",

@@ -57,7 +57,7 @@
     "customStylesheetPath": "Vos styles CSS personnalisés seront écrits dans ce fichier. Vous pouvez également y apporter des modifications directement.",
     "customHeadCode": "Ajoutez le code à la fin de la balise <head>. Atrocore ne valide pas le code personnalisé pour vous, alors assurez-vous de vérifier votre code avant de le publier.",
     "fileNameRegexPattern": "Pour activer uniquement les lettres minuscules d'une longueur maximale de 24 symboles, utilisez \"/^[a-z]{1,24}$/\". 24 symboles, utiliser \"/^[a-z]{1,24}$/\".",
-    "passwordRegexPattern": "Définissez des règles de complexité pour les mots de passe à l'aide d'expressions régulières. \nConseil : utilisez des groupes comme (?=.*\\d) pour définir les symboles requis. \n\nSuivez ce <a href=\"{message_link}\" target=\"_blank\">lien</a> pour mettre à jour un message d'erreur de validation.",
+    "passwordRegexPattern": "Définissez des règles de complexité pour les mots de passe à l'aide d'expressions régulières. \nConseil : utilisez des groupes comme (?=.*\\d) pour définir les symboles requis. ",
     "passwordExpireDays": "Définissez la période (en jours) après laquelle les utilisateurs doivent mettre à jour leur mot de passe.",
     "favicon": "Type de fichier disponible : image/svg+xml",
     "maxConcurrentWorkers": "Limite supérieure du nombre de tâches ou de processus pouvant s'exécuter simultanément en arrière-plan du serveur.",
@@ -93,6 +93,7 @@
     "variableKeyIsExist": "La clé \"%s\" existe déjà."
   },
   "messages": {
-    "languageMustBeSelected": "Au moins une langue doit être sélectionnée."
+    "languageMustBeSelected": "Au moins une langue doit être sélectionnée.",
+    "editPasswordHintLabel": "Modifier le message d'aide sur les exigences du mot de passe"
   }
 }

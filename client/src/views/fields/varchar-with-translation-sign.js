@@ -24,6 +24,17 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
             return this.name;
         },
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            if (this.mode === 'edit') {
+                this.listenTo(this, 'after:render', () => {
+                    this.initStatusContainer();
+                    this.initInlineLabelEdit();
+                }, this);
+            }
+        },
+
         initInlineActions() {
             Dep.prototype.initInlineActions.call(this);
 
@@ -34,6 +45,10 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
             return '';
         },
 
+        getIconClass() {
+            return 'ph-globe';
+        },
+
         initInlineLabelEdit() {
             if (this.getAllUiLanguages().length < 2) {
                 return;
@@ -41,8 +56,8 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
 
             let $cell = this.getCellElement();
 
-            this.getInlineActionsContainer().find('.ph-globe').parent().remove();
-            let $link = $(`<a href="javascript:" class="pull-right inline-label-edit-link hidden" title="${this.getIconTitle()}"><i class="ph ph-globe"></i></a>`);
+            this.getInlineActionsContainer().find('.inline-label-edit-link').remove();
+            let $link = $(`<a href="javascript:" class="pull-right inline-label-edit-link hidden" title="${this.getIconTitle()}"><i class="ph ${this.getIconClass()}"></i></a>`);
 
             if ($cell.size() === 0) {
                 this.listenToOnce(this, 'after:render', this.initInlineLabelEdit, this);

@@ -10,11 +10,19 @@
 
 Espo.define('views/error', 'view', function (Dep) {
     return Dep.extend({
-        data() {
-            return {
-                logo: this.getFavicon(),
-                isAuthorized: !!this.getUser(),
-            }
-        },
+
+        _template: '',
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            new Svelte.ErrorPage({
+                target: this.el,
+                props: {
+                    code: this.options.code
+                }
+            });
+        }
+
     });
 });
