@@ -108,7 +108,9 @@
     },
     "relationType": {
       "oneToMany": "Jeden-na-mnoho",
-      "manyToMany": "Mnoho-na-mnoho"
+      "manyToMany": "Mnoho-na-mnoho",
+      "oneToOne": "Jeden-na-jeden",
+      "manyToOne": "Mnoho-na-jeden"
     }
   },
   "groupOptions": {

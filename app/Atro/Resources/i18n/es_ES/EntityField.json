@@ -107,8 +107,10 @@
       "datetime": "Date-Time"
     },
     "relationType": {
-      "oneToMany": "One-to-Many",
-      "manyToMany": "Many-to-Many"
+      "oneToMany": "Uno a muchos",
+      "manyToMany": "Muchos a muchos",
+      "oneToOne": "Uno a uno",
+      "manyToOne": "Muchos a uno"
     }
   },
   "groupOptions": {
