@@ -78,6 +78,9 @@
     "passwordResetEmailSubject": "Password reset",
     "passwordResetEmailBody": "You can restore your password following this link {link}. This unique URL will be expired soon.",
     "passwordExpiredForm": "Your password has been expired. Please update it using the form below.",
+    "passwordChangeRequestForm": "Set a new password for your {appName} account.",
+    "passwordChangeRequestDescription": "Enter your username and email address, and we will send you a link to reset your password.",
+    "passwordChangeRequestNotFound": "This password reset link is invalid or has expired. Please request a new one.",
     "passwordChanged": "Password has been changed",
     "userCantBeEmpty": "The username cannot be left blank.",
     "usernameOrPasswordCantBeEmpty": "Username or password cannot be empty.",
@@ -89,7 +92,7 @@
     "passwordChangedByRequest": "Password has been changed.",
     "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
     "userNameExists": "User Name already exists",
-    "newPasswordInvalid": "Your password should contain at least one symbol, capital letter, and digit and should be at least 8 characters long.",
+    "newPasswordHint": "Your password should contain at least one symbol, capital letter, and digit and should be at least 8 characters long.",
     "changePasswordOnResetViaEmailOnly": "You cannot set a password manually. Please use \"Reset password\" action."
   },
   "options": {
