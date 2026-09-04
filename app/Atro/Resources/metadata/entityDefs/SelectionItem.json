@@ -4,7 +4,17 @@
       "type": "enum",
       "view": "views/selection-item/fields/entity-name",
       "trim": true,
-      "required": true
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "entityId": {
       "type": "varchar",
