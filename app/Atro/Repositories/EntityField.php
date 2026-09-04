@@ -107,7 +107,9 @@ class EntityField extends ReferenceData
                 $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
             }
             if ($fieldDefs['type'] === 'link') {
-                $fieldDefs['relationType'] = $linkDefs['relationType'] ?? 'manyToOne';
+                $fieldDefs['relationType'] = $linkDefs['type'] === 'hasOne'
+                    ? 'oneToOne'
+                    : $linkDefs['relationType'] ?? 'manyToOne';
             }
             if (!empty($linkDefs['entity'])) {
                 $fieldDefs['foreignEntityId']   = $linkDefs['entity'];
