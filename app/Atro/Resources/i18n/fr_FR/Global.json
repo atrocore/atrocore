@@ -707,6 +707,7 @@
     "badTokenInstance": "Mauvais jeton d'autorisation pour l'instance",
     "dontHaveAccessInInstance": "Vous n'avez pas accès à cet enregistrement sur l'instance",
     "selectNoMoreThan": "Ne sélectionnez pas plus de {count} enregistrements",
+    "selectTwoOrMoreRecords": "Sélectionnez 2 enregistrements ou plus",
     "fillEmptyFieldBeforeMerging": "Certains champs vides sont obligatoires, veuillez les remplir avant de fusionner.",
     "unableToDuplicateRecord": "Impossible de dupliquer. Un enregistrement avec une valeur pour un champ à valeur unique existe déjà.",
     "youHaveErrorsInFilter": "Le filtre comporte quelques erreurs.",

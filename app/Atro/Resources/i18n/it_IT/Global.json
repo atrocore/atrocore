@@ -568,6 +568,7 @@
     "badTokenInstance": "Token di autorizzazione errato per esempio",
     "dontHaveAccessInInstance": "Non ha accesso a questo record sull'istanza",
     "selectNoMoreThan": "Seleziona non più di {count} record",
+    "selectTwoOrMoreRecords": "Seleziona 2 o più record",
     "fillEmptyFieldBeforeMerging": "Alcuni campi vuoti sono obbligatori, li riempia prima dell'unione.",
     "unableToDuplicateRecord": "Impossibile duplicare. Esiste già un record con un valore del campo unico.",
     "youHaveErrorsInFilter": "Il filtro presenta alcuni errori.",

@@ -667,6 +667,7 @@
     "badTokenInstance": "Неправильний токен авторизації для екземпляра",
     "dontHaveAccessInInstance": "У вас немає доступу до цього запису на екземплярі",
     "selectNoMoreThan": "Вибрати не більше {count} записів",
+    "selectTwoOrMoreRecords": "Виберіть 2 або більше записів",
     "fillEmptyFieldBeforeMerging": "Деякі поля є обов'язковими для заповнення, будь ласка, заповніть їх перед злиттям.",
     "unableToDuplicateRecord": "Неможливо продублювати. Запис зі значенням унікального поля вже існує.",
     "youHaveErrorsInFilter": "У фільтрі є деякі помилки.",

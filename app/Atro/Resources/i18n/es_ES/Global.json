@@ -639,6 +639,7 @@
     "badTokenInstance": "Token de autorización erróneo por ejemplo",
     "dontHaveAccessInInstance": "No tiene acceso a este registro en instancia",
     "selectNoMoreThan": "Seleccione no más de {count} registros",
+    "selectTwoOrMoreRecords": "Seleccione 2 o más registros",
     "fillEmptyFieldBeforeMerging": "Algunos campos vacíos son obligatorios, por favor rellénelos antes de fusionar.",
     "unableToDuplicateRecord": "No se puede duplicar. Ya existe un registro con un valor del campo único.",
     "youHaveErrorsInFilter": "El filtro tiene algunos errores.",
