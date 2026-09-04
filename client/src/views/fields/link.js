@@ -315,6 +315,10 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 this.selectBoolFilterList.push('notDisabledOptions');
             }
 
+            if (this.mode !== 'search' && this.isForeignFieldEditForbidden()) {
+                this.setReadOnly(true);
+            }
+
             this.addActionHandler('selectLink', function () {
                 this.selectLink();
             });
@@ -358,6 +362,29 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                     }.bind(this));
                 });
             });
+        },
+
+        /**
+         * A hasOne link is a virtual field of an one-to-one relation: the relation is stored in the foreign field of
+         * the related entity and the backend saves it by updating the related record. Editing it is therefore only
+         * possible if that foreign field can be edited, otherwise the backend would always answer with Forbidden.
+         *
+         * @return {boolean}
+         */
+        isForeignFieldEditForbidden: function () {
+            if (this.model.getLinkParam(this.name, 'type') !== 'hasOne') {
+                return false;
+            }
+
+            const foreignEntity = this.model.getLinkParam(this.name, 'entity'),
+                foreignField = this.model.getLinkParam(this.name, 'foreign');
+
+            if (!foreignEntity || !foreignField) {
+                return false;
+            }
+
+            return !this.getAcl().check(foreignEntity, 'edit')
+                || (this.getAcl().getScopeForbiddenFieldList(foreignEntity, 'edit') || []).includes(foreignField);
         },
 
         select: function (model) {

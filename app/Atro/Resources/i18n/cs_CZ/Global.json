@@ -1198,6 +1198,7 @@
     "oneToOneNoEditAccessToRelatedRecord": "Pole \"%2$s\" je vazba jeden na jednoho, proto je uloženo v souvisejícím záznamu. Uložení vyžaduje také úpravu vybraného záznamu \"%1$s\", ke kterému nemáte oprávnění k úpravám.",
     "oneToOneNoEditAccessToPreviousRelatedRecord": "Pole \"%2$s\" je vazba jeden na jednoho, proto je uloženo v souvisejícím záznamu. Jeho vymazání vyžaduje úpravu dříve souvisejícího záznamu \"%1$s\", ke kterému nemáte oprávnění k úpravám.",
     "oneToOneNoEditAccessToOccupyingRecord": "Vybraný záznam \"%1$s\" je již přes \"%2$s\" propojen s jiným záznamem \"%3$s\". Protože \"%2$s\" je vazba jeden na jednoho, je nutné tuto vazbu nejprve odstranit, k tomuto záznamu však nemáte oprávnění k úpravám.",
+    "virtualOneToOneFieldNotConfigurable": "Pole \"%1$s\" je virtuální pole vazby jeden na jednoho. Jeho oprávnění jsou určena polem \"%2$s\" entity \"%3$s\" a nelze je zde nastavit.",
     "optionIsDisabled": "Položka \"%s\" je pro pole \"%s\" zakázána.",
     "someCouldNotDuplicatedAndLinked": "Některé záznamy nebylo možné duplikovat a propojit.",
     "someCouldNotLinked": "Některé záznamy nebylo možné propojit",

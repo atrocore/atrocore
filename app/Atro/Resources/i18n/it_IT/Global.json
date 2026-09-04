@@ -1360,6 +1360,7 @@
     "oneToOneNoEditAccessToRelatedRecord": "Il campo \"%2$s\" è una relazione uno a uno, quindi viene memorizzato nel record correlato. Per salvare è necessario aggiornare anche il record \"%1$s\" selezionato, ma non hai i permessi di modifica su di esso.",
     "oneToOneNoEditAccessToPreviousRelatedRecord": "Il campo \"%2$s\" è una relazione uno a uno, quindi viene memorizzato nel record correlato. Per svuotarlo è necessario aggiornare il record \"%1$s\" precedentemente correlato, ma non hai i permessi di modifica su di esso.",
     "oneToOneNoEditAccessToOccupyingRecord": "Il record \"%1$s\" selezionato è già correlato a un altro record \"%3$s\" tramite \"%2$s\". Poiché \"%2$s\" è una relazione uno a uno, tale relazione deve essere prima rimossa, ma non hai i permessi di modifica su quel record.",
+    "virtualOneToOneFieldNotConfigurable": "Il campo \"%1$s\" è un campo virtuale di una relazione uno a uno. I suoi permessi di accesso sono definiti dal campo \"%2$s\" dell'entità \"%3$s\" e non possono essere configurati qui.",
     "optionIsDisabled": "L'elemento '%s' è disabilitato per il campo '%s'.",
     "someCouldNotDuplicatedAndLinked": "Alcuni record non potevano essere duplicati e collegati.",
     "someCouldNotLinked": "Alcuni record non potevano essere collegati",

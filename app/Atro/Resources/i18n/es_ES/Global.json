@@ -1254,6 +1254,7 @@
     "oneToOneNoEditAccessToRelatedRecord": "El campo \"%2$s\" es una relación uno a uno, por lo que se almacena en el registro relacionado. Para guardar es necesario actualizar también el registro \"%1$s\" seleccionado, pero no tiene permisos de edición sobre él.",
     "oneToOneNoEditAccessToPreviousRelatedRecord": "El campo \"%2$s\" es una relación uno a uno, por lo que se almacena en el registro relacionado. Para vaciarlo es necesario actualizar el registro \"%1$s\" relacionado anteriormente, pero no tiene permisos de edición sobre él.",
     "oneToOneNoEditAccessToOccupyingRecord": "El registro \"%1$s\" seleccionado ya está relacionado con otro registro \"%3$s\" mediante \"%2$s\". Dado que \"%2$s\" es una relación uno a uno, primero hay que eliminar esa relación, pero no tiene permisos de edición sobre ese registro.",
+    "virtualOneToOneFieldNotConfigurable": "El campo \"%1$s\" es un campo virtual de una relación uno a uno. Sus permisos de acceso están definidos por el campo \"%2$s\" de la entidad \"%3$s\" y no se pueden configurar aquí.",
     "someCouldNotDuplicatedAndLinked": "Algunos registros no pudieron duplicarse y vincularse",
     "someCouldNotLinked": "Algunos registros no pudieron vincularse",
     "massUpdateNoRecordProceed": "No se actualizó ningún registro.",

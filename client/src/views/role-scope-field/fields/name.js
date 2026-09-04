@@ -49,9 +49,17 @@ Espo.define('views/role-scope-field/fields/name', 'views/fields/enum', Dep => {
             this.translatedOptions = { '': '' };
 
             this.getFieldManager().getScopeFieldList(scope).forEach(field => {
-                if (!forbiddenList.includes(field)) {
-                    this.translatedOptions[field] = this.translate(field, 'fields', scope);
+                if (forbiddenList.includes(field)) {
+                    return;
                 }
+
+                // a hasOne link is a virtual field of an one-to-one relation - the value is stored in the foreign
+                // field of the related entity, so the access has to be configured for that field
+                if (this.getMetadata().get(['entityDefs', scope, 'links', field, 'type']) === 'hasOne') {
+                    return;
+                }
+
+                this.translatedOptions[field] = this.translate(field, 'fields', scope);
             })
 
             const sortedEntries = Object.entries(this.translatedOptions).sort((a, b) => {
