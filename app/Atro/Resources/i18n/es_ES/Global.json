@@ -1262,7 +1262,6 @@
     "entityCannotBeBookmarked": "Los registros de esta entidad no pueden marcarse.",
     "integerValueValidationFailed": "El valor entero para el campo/atributo '%s' debe estar entre %s y %s.",
     "imageSizeValidationFailed": "El tamaño del archivo debe estar entre %skb y %skb.",
-    "oneToOneRelationIsAlreadyUsed": "El registro no se puede guardar: el '%s' seleccionado ya está relacionado con otro registro — '%s'. Esta es una relación uno a uno, por lo que solo se permite un registro relacionado.",
     "notUniqueRecordField": "El registro no puede guardarse, el registro con tal '%s' ya existe.",
     "notUniqueValue": "El registro no puede crearse/actualizarse debido a restricciones de la base de datos.",
     "noAccessToScope": "No tienes acceso a %s."

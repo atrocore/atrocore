@@ -1354,7 +1354,6 @@
     "notDashletService": "Il servizio %s deve implementare l'interfaccia Dashlet",
     "editedByAnotherUser": "Il set di dati [%s] è stato modificato nel frattempo. Può <a href=\"javascript:\" onclick=\"location.reload();\">ricaricare la pagina</a> per vedere i nuovi valori, tornare alla modifica premendo \"Annulla\" o sovrascrivere i dati premendo \"Applica\". Vuole sovrascrivere i dati?",
     "dontMatchToPattern": "Il valore del campo \"{field}\" non corrisponde al modello \"{pattern}\".",
-    "oneToOneRelationIsAlreadyUsed": "Il record non può essere salvato: il '%s' selezionato è già collegato a un altro record — '%s'. Questa è una relazione uno-a-uno, quindi è consentito un solo record collegato.",
     "notUniqueRecordField": "Il record non può essere salvato, il record con tale '%s' esiste già.",
     "notUniqueValue": "Il record non può essere creato/aggiornato a causa di vincoli del database.",
     "notUniqueCreatedValue": "Tali relazioni esistono già e quindi non possono essere aggiunte.",
