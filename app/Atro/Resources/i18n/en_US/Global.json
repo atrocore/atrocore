@@ -680,7 +680,8 @@
     "theSavedFilterMightBeCorrupt": "Format not supported, the Saved Filter might be corrupt.",
     "closePanelConfirmation": "Are you sure you want to close the panel?",
     "minimumRecordForComparison": "You cannot have less than {count} records.",
-    "notPossibleToOpenDetailView": "It is not possible to open the detail view."
+    "notPossibleToOpenDetailView": "It is not possible to open the detail view.",
+    "resolveMergeConflictsBeforeMerging": "Some fields are in conflict, please choose a value for them before merging."
   },
   "boolFilters": {
     "onlyActive": "Active",

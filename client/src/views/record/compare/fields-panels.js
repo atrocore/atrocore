@@ -36,6 +36,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.model = this.options.model;
             this.instances = this.options.instances ?? this.getMetadata().get(['app', 'comparableInstances'])
             this.instanceComparison = this.options.instanceComparison;
+            this.derivativeComparison = this.options.derivativeComparison;
             this.columns = this.options.columns;
             this.models = this.options.models;
             this.merging = this.options.merging;
@@ -84,10 +85,12 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.fieldList.forEach(fieldListByGroup => {
                 fieldListByGroup.fieldListInGroup.forEach(fieldData => {
                     let field = fieldData.field;
+                    let defaultModelId = this.getDefaultModelIdForField(field);
+
                     fieldData.fieldValueRows.forEach((row, index) => {
                         let model = this.models[index];
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
-                        let mode = (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail';
+                        let mode = (this.merging && model.id === defaultModelId && !fieldData.disabled) ? 'edit' : 'detail';
                         let modelForView = model;
                         if (this.merging) {
                             modelForView = model.clone();
@@ -183,8 +186,36 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
         afterRender() {
             Dep.prototype.afterRender.call(this)
             if (this.merging) {
-                $('input[data-id="' + this.options.defaultModelId + '"]').prop('checked', true);
+                if (this.derivativeComparison) {
+                    // conflict-aware, per-field default selection (see getDefaultModelIdForField) -
+                    // the "select this whole column" header radio still lives outside this panel's
+                    // own tbody (in compare.tpl's thead), so it always uses the standard default
+                    $('input[type="radio"][name="check-all"][data-id="' + this.options.defaultModelId + '"]').prop('checked', true);
+
+                    this.fieldList.forEach(fieldListByGroup => {
+                        fieldListByGroup.fieldListInGroup.forEach(fieldData => {
+                            let defaultModelId = this.getDefaultModelIdForField(fieldData.field);
+                            if (defaultModelId) {
+                                this.$el.find(`input.field-radio[name="${fieldData.field}"][data-id="${defaultModelId}"]`).prop('checked', true);
+                            }
+                        });
+                    });
+                } else {
+                    $('input[data-id="' + this.options.defaultModelId + '"]').prop('checked', true);
+                }
             }
+        },
+
+        /**
+         * Resolves per-field via options.getDefaultModelIdForField when provided (returns null
+         * for "no default", e.g. an unresolved conflict - no column gets pre-selected), otherwise
+         * falls back to the single whole-panel default id every other caller still passes.
+         */
+        getDefaultModelIdForField(field) {
+            if (typeof this.options.getDefaultModelIdForField === 'function') {
+                return this.options.getDefaultModelIdForField(field);
+            }
+            return this.options.defaultModelId;
         },
 
         handleAllFieldsRendered(key) {
@@ -319,6 +350,29 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             });
 
             return validate;
+        },
+
+        /**
+         * Fields with no checked radio at all - i.e. unresolved merge conflicts (see
+         * getDefaultModelIdForField(), which returns null for those). Kept separate from
+         * validate() so the caller can show a distinct "resolve conflicts" message instead of
+         * the generic "fill required fields" one.
+         */
+        getUnresolvedFields() {
+            let unresolved = [];
+
+            this.fieldList.forEach(fieldListByGroup => {
+                fieldListByGroup.fieldListInGroup.forEach(fieldData => {
+                    if (fieldData.disabled) {
+                        return;
+                    }
+                    if (this.$el.find(`input.field-radio[name="${fieldData.field}"]:checked`).length === 0) {
+                        unresolved.push(fieldData.field);
+                    }
+                });
+            });
+
+            return unresolved;
         }
     })
 })

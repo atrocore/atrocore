@@ -200,6 +200,11 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
             for (const panel of this.fieldPanels) {
                 let fieldsPanels = this.getView(panel.name);
 
+                if (fieldsPanels.getUnresolvedFields().length > 0) {
+                    this.notify(this.translate('resolveMergeConflictsBeforeMerging', 'messages'), 'error');
+                    return;
+                }
+
                 if (fieldsPanels.validate()) {
                     this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
                     return;
@@ -491,8 +496,10 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                     instances: this.instances,
                     columns: this.buildComparisonTableHeaderColumn(),
                     instanceComparison: this.instanceComparison,
+                    derivativeComparison: this.options.derivativeComparison,
                     models: this.getModels(),
                     defaultModelId: this.getDefaultModelId(),
+                    getDefaultModelIdForField: (field) => this.getDefaultModelIdForField(field),
                     merging: this.merging,
                     hideCheckAll: index !== 0,
                     hasLayoutEditor: !!panel.hasLayoutEditor,
@@ -538,6 +545,16 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
 
         getDefaultModelId() {
             return this.getModels()[0].id;
+        },
+
+        /**
+         * Per-field default model id for merge mode. Returns null when there is no default
+         * (e.g. a conflict that must be explicitly resolved by the user) - no column is
+         * pre-selected in that case. Falls back to the single whole-column default so every
+         * other consumer of this generic compare view is unaffected.
+         */
+        getDefaultModelIdForField(field) {
+            return this.getDefaultModelId();
         },
 
         renderRelationshipsPanels() {
