@@ -1073,21 +1073,24 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return false;
             }
 
-            if (this.checkedList.length < 2) {
-                this.notify('Select 2 or more records', 'error');
+            const currentSelectionId = this.getUser().get('currentSelectionId');
+
+            if (this.checkedList.length < 2 && !currentSelectionId) {
+                this.notify(this.translate('selectTwoOrMoreRecords', 'messages'), 'error');
                 return;
             }
+
             if (this.checkedList.length > 10) {
                 this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', 10), 'error');
                 return;
             }
+
             this.notify(this.translate('Loading'))
 
             const payload = {
                     entityName: this.entityType,
                     entityIds: this.checkedList.map(id => String(id))
                 },
-                currentSelectionId = this.getUser().get('currentSelectionId'),
                 url = currentSelectionId ? 'Selection/' + currentSelectionId + '/updateWithItems' : 'Selection/createWithItems';
 
             this.ajaxPostRequest(url, payload).then(result => {
@@ -1170,7 +1173,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.checkedList.length < 2) {
-                this.notify('Select 2 or more records', 'error');
+                this.notify(this.translate('selectTwoOrMoreRecords', 'messages'), 'error');
                 return;
             }
 

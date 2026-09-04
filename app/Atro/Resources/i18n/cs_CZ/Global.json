@@ -666,6 +666,7 @@
     "badTokenInstance": "Například špatný autorizační token",
     "dontHaveAccessInInstance": "K tomuto záznamu nemáte přístup v instanci",
     "selectNoMoreThan": "Vybrat ne více než {počet} záznamů",
+    "selectTwoOrMoreRecords": "Vyberte 2 nebo více záznamů",
     "fillEmptyFieldBeforeMerging": "Některá prázdná pole jsou povinná, vyplňte je před sloučením.",
     "youHaveErrorsInFilter": "Filtr má některé chyby.",
     "theSavedFilterMightBeCorrupt": "Formát není podporován, uložený filtr může být poškozen.",

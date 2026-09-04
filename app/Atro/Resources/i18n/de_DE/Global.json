@@ -669,6 +669,7 @@
     "badTokenInstance": "Schlechtes Autorisierungs-Token zum Beispiel",
     "dontHaveAccessInInstance": "Sie haben keinen Zugriff auf diesen Datensatz auf der Instanz",
     "selectNoMoreThan": "Nicht mehr als {count} Datensätze auswählen",
+    "selectTwoOrMoreRecords": "Wählen Sie 2 oder mehr Datensätze aus",
     "fillEmptyFieldBeforeMerging": "Einige leere Felder sind erforderlich, bitte füllen Sie sie vor dem Zusammenführen aus.",
     "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits.",
     "youHaveErrorsInFilter": "Der Filter hat einige Fehler.",

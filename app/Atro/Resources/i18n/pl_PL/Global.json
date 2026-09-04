@@ -642,6 +642,7 @@
     "badTokenInstance": "Na przykład zły token autoryzacji",
     "dontHaveAccessInInstance": "Nie mają Państwo dostępu do tego rekordu w instancji",
     "selectNoMoreThan": "Proszę wybrać nie więcej niż {count} rekordów",
+    "selectTwoOrMoreRecords": "Wybierz 2 lub więcej rekordów",
     "fillEmptyFieldBeforeMerging": "Niektóre puste pola są wymagane, proszę je wypełnić przed scaleniem.",
     "unableToDuplicateRecord": "Nie można powielić. Rekord z wartością unikalnego pola już istnieje.",
     "youHaveErrorsInFilter": "Filtr zawiera pewne błędy.",
