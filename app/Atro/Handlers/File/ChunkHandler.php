@@ -58,14 +58,17 @@ use Psr\Http\Server\RequestHandlerInterface;
                                 ],
                                 'reupload'    => [
                                     'type'        => 'string',
+                                    'nullable'    => true,
                                     'description' => 'ID of an existing File record to replace. When set, the upload overwrites the existing file content.',
                                 ],
                                 'typeId'      => [
                                     'type'        => 'string',
+                                    'nullable'    => true,
                                     'description' => 'ID of the file type to assign to the uploaded file.',
                                 ],
                                 'folderId'    => [
                                     'type'        => 'string',
+                                    'nullable'    => true,
                                     'description' => 'ID of the folder to place the uploaded file in.',
                                 ],
                             ],

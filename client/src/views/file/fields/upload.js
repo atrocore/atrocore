@@ -436,7 +436,8 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                         fileSize: file.size,
                         fileContents: undefined,
                         typeId: this.model.get('typeId'),
-                        folderId: this.model.get('folderId')
+                        folderId: this.model.get('folderId'),
+                        reupload: this.model.get('reupload')
                     })),
                 }).done(entity => {
                     this.uploadedChunks = entity.chunks;
