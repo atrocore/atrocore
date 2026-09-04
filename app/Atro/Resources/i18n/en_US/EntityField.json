@@ -110,7 +110,9 @@
     },
     "relationType": {
       "oneToMany": "One-to-Many",
-      "manyToMany": "Many-to-Many"
+      "manyToMany": "Many-to-Many",
+      "oneToOne": "One-to-One",
+      "manyToOne": "Many-to-One"
     }
   },
   "groupOptions": {

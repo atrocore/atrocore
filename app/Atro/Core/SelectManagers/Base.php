@@ -1697,6 +1697,40 @@ class Base
             $attribute .= 'Id';
         }
 
+        // one-to-one relations have no key on this side, so such filters have to be converted to link filters
+        if (!empty($attribute) && !empty($item['type'])) {
+            $link = $attribute;
+            if (
+                $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'type']) !== 'hasOne'
+                && str_ends_with($link, 'Id')
+            ) {
+                $link = substr($link, 0, -2);
+            }
+
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'type']) === 'hasOne') {
+                $types = [
+                    'in'            => 'linkedWith',
+                    'equals'        => 'linkedWith',
+                    'linkedWith'    => 'linkedWith',
+                    'notIn'         => 'notLinkedWith',
+                    'notEquals'     => 'notLinkedWith',
+                    'notLinkedWith' => 'notLinkedWith',
+                    'isNull'        => 'isNotLinked',
+                    'isNotLinked'   => 'isNotLinked',
+                    'isNotNull'     => 'isLinked',
+                    'isLinked'      => 'isLinked',
+                ];
+
+                if (isset($types[$item['type']])) {
+                    $attribute    = $link;
+                    $item['type'] = $types[$item['type']];
+                    if (isset($item['value']) && !is_array($item['value'])) {
+                        $item['value'] = [$item['value']];
+                    }
+                }
+            }
+        }
+
         // for backward compatibility (extensibleMultiEnum)
         if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'type']) === 'linkMultiple' && !empty($item['type'])) {
             switch ($item['type']) {
@@ -2279,7 +2313,7 @@ class Base
                             $part = [
                                 'id!=' => [
                                     'innerSql' => [
-                                        'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN ({$value['innerSql']['sql']})",
+                                        'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND {$foreignKey} IS NOT NULL AND id IN ({$value['innerSql']['sql']})",
                                         'parameters' => array_merge([$falseParam => false], $value['innerSql']['parameters']),
                                     ],
                                 ],
@@ -2289,7 +2323,7 @@ class Base
                             $part     = [
                                 'id!=' => [
                                     'innerSql' => [
-                                        'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND id IN (:{$idsParam})",
+                                        'sql'        => "SELECT {$foreignKey} FROM {$foreignTable} WHERE deleted = :{$falseParam} AND {$foreignKey} IS NOT NULL AND id IN (:{$idsParam})",
                                         'parameters' => [$falseParam => false, $idsParam => $value],
                                     ],
                                 ],

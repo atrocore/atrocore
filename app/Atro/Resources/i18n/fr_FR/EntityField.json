@@ -108,7 +108,9 @@
     },
     "relationType": {
       "oneToMany": "Un à plusieurs",
-      "manyToMany": "Plusieurs à plusieurs"
+      "manyToMany": "Plusieurs à plusieurs",
+      "oneToOne": "Un à un",
+      "manyToOne": "Plusieurs à un"
     }
   },
   "groupOptions": {

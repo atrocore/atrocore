@@ -133,10 +133,19 @@ class Converter
 
                 $this->addColumn($schema, $table, $fieldName, $fieldDefs);
 
+                $originalName = $fieldDefs['originalName'] ?? null;
+
                 if (
-                    !empty($fieldDefs['unique'])
-                    && !in_array($fieldDefs['type'], ['id', 'autoincrement'])
-                    && empty($fieldDefs['autoincrement'])
+                    (
+                        !empty($fieldDefs['unique'])
+                        && !in_array($fieldDefs['type'], ['id', 'autoincrement'])
+                        && empty($fieldDefs['autoincrement'])
+                    )
+                    || (
+                        $fieldDefs['type'] === 'foreignId'
+                        && ($entityDefs['relations'][$originalName]['type'] ?? null) === 'belongsTo'
+                        && ($entityDefs['relations'][$originalName]['relationType'] ?? null) === 'oneToOne'
+                    )
                 ) {
                     $columnNames = [self::getColumnName($fieldName)];
                     if (isset($entityDefs['fields']['deleted'])) {
@@ -145,7 +154,6 @@ class Converter
                     $uniqueFields[] = $columnNames;
                 }
 
-                $originalName = $fieldDefs['originalName'] ?? null;
                 if ($originalName && !empty($entityDefs['relations'][$originalName])) {
                     $link = $entityDefs['relations'][$originalName];
 

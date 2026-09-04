@@ -188,7 +188,7 @@ class QueryConverter
         }
 
         if (empty($params['skipBelongsToJoins'])) {
-            $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']), $withDeleted);
+            $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']), $withDeleted, $params['orderBy']);
         } else {
             $joinsPart = array();
         }
@@ -478,7 +478,7 @@ class QueryConverter
                 if (!empty($fieldDefs['notStorable']) || !empty($entity->entityDefs['fields'][$attribute]['attributeId'])) {
                     continue;
                 }
-                if (!empty($fieldDefs['isLinkEntityName']) && $skipBelongsToJoin) {
+                if ($skipBelongsToJoin && ($attributeType === 'foreign' || !empty($fieldDefs['isLinkEntityName']))) {
                     continue;
                 }
                 if ($attributeType === null) {
@@ -543,28 +543,48 @@ class QueryConverter
         return null;
     }
 
-    protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = array(), $withDeleted = false)
+    protected function getRelationsToJoin(IEntity $entity, array $attributes): array
+    {
+        $relations = [];
+
+        foreach ($attributes as $attribute) {
+            if (is_array($attribute)) {
+                if (count($attribute) === 0) {
+                    continue;
+                }
+                $attribute = $attribute[0];
+            }
+
+            if (!is_string($attribute) || $attribute === '') {
+                continue;
+            }
+
+            if (!empty($entity->fields[$attribute]['isLinkEntity'])) {
+                $attribute .= 'Id';
+            }
+
+            if ($entity->getAttributeType($attribute) === 'foreign' && $entity->getAttributeParam($attribute, 'relation')) {
+                $relations[] = $entity->getAttributeParam($attribute, 'relation');
+            }
+        }
+
+        return $relations;
+    }
+
+    protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = array(), $withDeleted = false, $orderBy = null)
     {
         $joinsArr = array();
 
         $relationsToJoin = array();
         if (is_array($select)) {
-            foreach ($select as $item) {
-                $field = $item;
-                if (is_array($item)) {
-                    if (count($field) == 0) {
-                        continue;
-                    }
-                    $field = $item[0];
-                }
-                if ($entity->getAttributeType($field) == 'foreign' && $entity->getAttributeParam($field, 'relation')) {
-                    $relationsToJoin[] = $entity->getAttributeParam($field, 'relation');
-                }
-            }
+            $relationsToJoin = $this->getRelationsToJoin($entity, $select);
         }
 
+        // an attribute of a joined table can be ordered by only when its table is joined
+        $relationsToOrderBy = $this->getRelationsToJoin($entity, is_array($orderBy) ? $orderBy : [$orderBy]);
+
         foreach ($entity->relations as $relationName => $r) {
-            if ($r['type'] == IEntity::BELONGS_TO) {
+            if (in_array($r['type'], [IEntity::BELONGS_TO, IEntity::HAS_ONE])) {
                 if (!empty($r['noJoin'])) {
                     continue;
                 }
@@ -573,7 +593,7 @@ class QueryConverter
                 }
 
                 if (!empty($select)) {
-                    if (!in_array($relationName, $relationsToJoin)) {
+                    if (!in_array($relationName, $relationsToJoin) && !in_array($relationName, $relationsToOrderBy)) {
                         continue;
                     }
                 }

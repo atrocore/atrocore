@@ -1235,6 +1235,10 @@
     "entityCannotBeBookmarked": "Les enregistrements de cette entité ne peuvent pas être mis en signet.",
     "integerValueValidationFailed": "La valeur entière du champ/attribut \"%s\" doit être comprise entre %s et %s.",
     "notUniqueCreatedValue": "Ces relations existent déjà et ne peuvent donc pas être ajoutées.",
+    "oneToOneNoEditAccessToRelatedRecord": "Le champ \"%2$s\" est une relation un à un, il est donc stocké dans l'enregistrement lié. L'enregistrement \"%1$s\" sélectionné doit également être modifié pour enregistrer, mais vous n'avez pas les droits de modification sur celui-ci.",
+    "oneToOneNoEditAccessToPreviousRelatedRecord": "Le champ \"%2$s\" est une relation un à un, il est donc stocké dans l'enregistrement lié. Pour le vider, l'enregistrement \"%1$s\" précédemment lié doit être modifié, mais vous n'avez pas les droits de modification sur celui-ci.",
+    "oneToOneNoEditAccessToOccupyingRecord": "L'enregistrement \"%1$s\" sélectionné est déjà lié à un autre enregistrement \"%3$s\" via \"%2$s\". Comme \"%2$s\" est une relation un à un, cette relation doit d'abord être supprimée, mais vous n'avez pas les droits de modification sur cet enregistrement.",
+    "virtualOneToOneFieldNotConfigurable": "Le champ \"%1$s\" est un champ virtuel d'une relation un à un. Ses droits d'accès sont définis par le champ \"%2$s\" de l'entité \"%3$s\" et ne peuvent pas être configurés ici.",
     "noAccessToScope": "Vous n'avez pas accès à %s."
   },
   "queryBuilderFilter": {

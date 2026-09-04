@@ -945,52 +945,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         }
                     }
                 }
-            } else {
-                if ($defs['type'] === $entity::HAS_ONE) {
-                    if (empty($defs['entity']) || empty($defs['foreignKey'])) {
-                        continue;
-                    }
-
-                    if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
-                        continue;
-                    }
-
-                    $foreignEntityType = $defs['entity'];
-                    $foreignKey        = $defs['foreignKey'];
-                    $idFieldName       = $name . 'Id';
-                    $nameFieldName     = $name . 'Name';
-
-                    if (!$entity->has($idFieldName)) {
-                        continue;
-                    }
-
-                    $where                 = [];
-                    $where[$foreignKey]    = $entity->id;
-                    $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->where($where)->findOne();
-                    if ($previousForeignEntity) {
-                        if (!$entity->isNew()) {
-                            $entity->setFetched($idFieldName, $previousForeignEntity->id);
-                        }
-                        if ($previousForeignEntity->id !== $entity->get($idFieldName)) {
-                            $previousForeignEntity->set($foreignKey, null);
-                            $this->getEntityManager()->saveEntity($previousForeignEntity);
-                        }
-                    } else {
-                        if (!$entity->isNew()) {
-                            $entity->setFetched($idFieldName, null);
-                        }
-                    }
-
-                    if ($entity->get($idFieldName)) {
-                        $newForeignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $entity->get($idFieldName));
-                        if ($newForeignEntity) {
-                            $newForeignEntity->set($foreignKey, $entity->id);
-                            $this->getEntityManager()->saveEntity($newForeignEntity);
-                        } else {
-                            $entity->set($idFieldName, null);
-                        }
-                    }
-                }
             }
         }
     }

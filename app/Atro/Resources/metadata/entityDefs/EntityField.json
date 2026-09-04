@@ -87,6 +87,8 @@
     "relationType": {
       "type": "enum",
       "options": [
+        "oneToOne",
+        "manyToOne",
         "oneToMany",
         "manyToMany"
       ],
@@ -105,6 +107,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
+                "link",
                 "linkMultiple"
               ]
             }
@@ -116,11 +119,40 @@
               "type": "in",
               "attribute": "type",
               "value": [
+                "link",
                 "linkMultiple"
               ]
             }
           ]
-        }
+        },
+        "disableOptions": [
+          {
+            "options": [
+              "oneToMany",
+              "manyToMany"
+            ],
+            "conditionGroup": [
+              {
+                "type": "equals",
+                "attribute": "type",
+                "value": "link"
+              }
+            ]
+          },
+          {
+            "options": [
+              "oneToOne",
+              "manyToOne"
+            ],
+            "conditionGroup": [
+              {
+                "type": "equals",
+                "attribute": "type",
+                "value": "linkMultiple"
+              }
+            ]
+          }
+        ]
       }
     },
     "entity": {

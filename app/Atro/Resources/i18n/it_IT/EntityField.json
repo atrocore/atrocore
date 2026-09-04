@@ -99,7 +99,9 @@
   "options": {
     "relationType": {
       "oneToMany": "Uno-a-molti",
-      "manyToMany": "Da molti a molti"
+      "manyToMany": "Molti-a-molti",
+      "oneToOne": "Uno-a-uno",
+      "manyToOne": "Molti-a-uno"
     },
     "outputType": {
       "text": "Testo",

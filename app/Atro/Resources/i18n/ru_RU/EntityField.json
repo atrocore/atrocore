@@ -107,7 +107,9 @@
     },
     "relationType": {
       "oneToMany": "Один-ко-многим",
-      "manyToMany": "Многие-ко-многим"
+      "manyToMany": "Многие-ко-многим",
+      "oneToOne": "Один-к-одному",
+      "manyToOne": "Многие-к-одному"
     }
   },
   "groupOptions": {

@@ -76,6 +76,8 @@ To configure this, open the scope's detail view and go to the **Fields** panel. 
 
 A practical example: a data entry specialist has edit access to Products, but you don't want them touching the `SKU` or `Product Status` fields. By unchecking Edit for those fields in their role's scope, the fields remain visible but become read-only for that user specifically.
 
+The dropdown does not list the mirror field of a [One-to-One relationship](../../11.entity-management/07.fields-and-relations/index.md#one-to-one-relationships). Such a field stores nothing on its own, it only shows and edits the owning field of the related entity - configure the owning field instead, in the scope of the entity that keeps it.
+
 ## Attribute Permissions
 
 Scopes for entities that support attributes — such as **Product** — offer additional attribute-level permission controls.

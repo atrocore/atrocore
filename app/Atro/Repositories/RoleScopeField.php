@@ -39,6 +39,8 @@ class RoleScopeField extends Base
                 $message = $this->getLanguage()->translate('notUniqueRecordField', 'exceptions');
                 throw new NotUnique(sprintf($message, $fieldName));
             }
+
+            $this->validateFieldIsConfigurable($entity);
         }
 
         if (empty($entity->get('readAction'))) {
@@ -46,6 +48,40 @@ class RoleScopeField extends Base
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * An one-to-one relation is stored in the field of the entity which owns it, the field on the other side is
+     * only a virtual one. Access rights for such a relation are therefore defined by the owning field and
+     * configuring them for the virtual field would have no effect on it.
+     *
+     * @param Entity $entity
+     *
+     * @return void
+     * @throws BadRequest
+     */
+    protected function validateFieldIsConfigurable(Entity $entity): void
+    {
+        $roleScope = $this->getEntityManager()->getEntity('RoleScope', (string)$entity->get('roleScopeId'));
+        if (empty($roleScope)) {
+            return;
+        }
+
+        $scopeName = $roleScope->get('name');
+        $linkDefs = $this->getMetadata()->get(['entityDefs', $scopeName, 'links', $entity->get('name')], []);
+
+        if (($linkDefs['type'] ?? null) !== 'hasOne' || empty($linkDefs['entity']) || empty($linkDefs['foreign'])) {
+            return;
+        }
+
+        throw new BadRequest(
+            sprintf(
+                $this->getLanguage()->translate('virtualOneToOneFieldNotConfigurable', 'exceptions'),
+                $this->getLanguage()->translate($entity->get('name'), 'fields', $scopeName),
+                $this->getLanguage()->translate($linkDefs['foreign'], 'fields', $linkDefs['entity']),
+                $this->getLanguage()->translate($linkDefs['entity'], 'scopeNames')
+            )
+        );
     }
 
     protected function afterSave(Entity $entity, array $options = [])
