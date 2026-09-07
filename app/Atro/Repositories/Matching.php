@@ -24,21 +24,11 @@ use Espo\ORM\Entity as OrmEntity;
 
 class Matching extends Base
 {
-    public static function createCodeForDuplicate(string $entityName): string
+    public static function prepareFieldName(string $entityName, string $type): string
     {
-        return "$entityName-D2D";
-    }
+        $suffix = $type === 'duplicate' ? 'D2D' : 'C2M';
 
-    public static function createCodeForMasterRecord(string $entityName): string
-    {
-        return "$entityName-C2M";
-    }
-
-    public static function prepareFieldName(string $code): string
-    {
-        $parts = explode('-', $code);
-
-        return ucfirst($parts[0]) . ucfirst(strtolower($parts[1]));
+        return ucfirst($entityName) . ucfirst(strtolower($suffix));
     }
 
     public function activate(string $id): void
@@ -75,14 +65,17 @@ class Matching extends Base
 
         if ($entity->isNew()) {
             if ($entity->get('type') === 'duplicate') {
-                $entity->set('code', self::createCodeForDuplicate($entity->get('entity')));
                 $entity->set('masterEntity', $entity->get('entity'));
             } elseif ($entity->get('type') === 'masterRecord') {
-                $entity->set('code', self::createCodeForMasterRecord($entity->get('entity')));
                 $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->get('entity')}.primaryEntityId"));
             }
 
-            if (!empty($entity->get('code')) && !empty($this->where(['code' => $entity->get('code')])->findOne())) {
+            $exists = $this->where([
+                'entity' => $entity->get('entity'),
+                'type'   => $entity->get('type')
+            ])->findOne();
+
+            if (!empty($exists)) {
                 throw new BadRequest(
                     sprintf(
                         $this->getLanguage()->translate('matchingAlreadyExists', 'exceptions', 'Matching'),
@@ -157,7 +150,7 @@ class Matching extends Base
     public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId, string $matchedAt, bool $onlyIfAlreadySearched = false): void
     {
         $conn = $this->getDbal();
-        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('entity'), $matching->get('type')));
 
         $qb = $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))))
@@ -175,9 +168,9 @@ class Matching extends Base
 
     public function isMatchingSearchedForStaging(MatchingEntity $matching, Entity $entity): bool
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $conn = $this->getEntityManager()->getDbal();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('entity'), $matching->get('type')));
 
         $res = $conn->createQueryBuilder()
             ->select("id, $column as val")
@@ -191,9 +184,9 @@ class Matching extends Base
 
     public function unmarkAllMatchingSearched(MatchingEntity $matching): void
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $conn = $this->getEntityManager()->getDbal();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('entity'), $matching->get('type')));
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('entity')))))
             ->set($column, ':null')
@@ -206,9 +199,9 @@ class Matching extends Base
 
     public function unmarkMatchingSearchedForEntity(MatchingEntity $matching, Entity $entity): void
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $conn = $this->getEntityManager()->getDbal();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('entity'), $matching->get('type')));
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entity->getEntityName()))))
             ->set($column, ':null')
@@ -234,7 +227,7 @@ class Matching extends Base
 
     public function findPossibleMatchesForEntity(MatchingEntity $matching, Entity $entity): array
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $conn = $this->getEntityManager()->getDbal();
 
         $table = Util::toUnderScore(lcfirst($matching->get('masterEntity')));
 
