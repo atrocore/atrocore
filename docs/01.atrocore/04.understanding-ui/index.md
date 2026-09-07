@@ -172,6 +172,22 @@ Navigation through the existing entity records can be done on the detail view pa
 
 To edit the fields data on the detail view page, use [in-line editing](../08.record-management/index.md#in-line-editing).
 
+### Panel Navigation
+
+Below the [breadcrumb navigation](#breadcrumb-navigation), a horizontal strip of tabs lets you jump directly to any panel on the detail view page:
+
+![Panel navigation tabs](./_assets/panel-navigation-tabs.png){.medium}
+
+Click a tab to scroll the page to the corresponding panel. As you scroll the page manually, the tab of the panel currently in view is highlighted automatically:
+
+![Active panel tab highlighted](./_assets/panel-navigation-active-tab.png){.medium}
+
+If there are more tabs than fit the available width, scroll the strip using the mouse wheel, a trackpad gesture, or the scrollbar.
+
+The dropdown button at the start of the strip opens a list of all panels on the page, including those currently outside the visible area of the strip. Click the button, or hover over it, to open the list:
+
+![Panel navigation dropdown](./_assets/panel-navigation-dropdown.png){.small}
+
 ### Main Actions
 
 The following actions are available for all entity records by default on the detail view page:
