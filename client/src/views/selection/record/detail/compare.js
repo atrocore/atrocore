@@ -206,6 +206,10 @@ Espo.define('views/selection/record/detail/compare', [
             return true;
         },
 
+        shouldShowInsights() {
+            return Detail.prototype.shouldShowInsights.call(this);
+        },
+
         getSvelteSideViewProps(parentView) {
             let thisClone = Espo.utils.clone(this);
 
