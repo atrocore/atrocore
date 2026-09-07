@@ -26,8 +26,7 @@ class AttributeGroup extends Base
             ->getRepository('ClassificationAttribute')
             ->select(['attributeId'])
             ->where([
-                'classificationId' => (string)$this->getBoolFilterParameter('withNotLinkedAttributesToClassification'),
-                'channelId' => ''
+                'classificationId' => (string)$this->getBoolFilterParameter('withNotLinkedAttributesToClassification')
             ])
             ->find()
             ->toArray();
