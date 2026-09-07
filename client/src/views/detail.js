@@ -535,6 +535,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     },
                     breadcrumbs: this.getBreadcrumbsItems(),
                     disableNavigationHistory: this.getConfig().get('disableNavigationPath') || this.getUser().get('disableNavigationPath') || false,
+                    minimizeHeaderOnScroll: true,
                     afterOnMount: () => {
                         if (hasLayoutEditor) {
                             this.setupLayoutEditorButton();

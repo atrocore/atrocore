@@ -395,7 +395,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         scrollToPanel(name) {
             let panel = $('#main').find(`.panel[data-name="${name}"], tbody[data-name="${name}"]`);
             if (panel.size() > 0) {
-                const header = document.querySelector('.page-header');
+                const header = document.querySelector('.page-header .header-wrapper');
                 const content = document.querySelector("main") || document.querySelector('#main');
                 panel = panel.get(0);
 
@@ -733,6 +733,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             } else {
                 header.addClass('selection-header');
             }
+        },
+
+        getHeaderOptions() {
+            const options = Dep.prototype.getHeaderOptions.call(this);
+            options.params.minimizeHeaderOnScroll = this.selectionViewMode === 'standard';
+            return options;
         },
 
         setupLayoutEditorButton() {
