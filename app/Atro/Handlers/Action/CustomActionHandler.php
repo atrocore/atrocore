@@ -24,7 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Action/{id}/custom{customAction}',
+    path: '/Action/{id}/custom{customAction:(?!.*Async$).+}',
     methods: [
         'POST',
     ],
