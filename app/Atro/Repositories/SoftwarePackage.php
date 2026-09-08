@@ -56,7 +56,6 @@ class SoftwarePackage extends ReferenceData
 
     public function getRemotePackages(): array
     {
-        $this->remoteItems = null;
         if ($this->remoteItems === null) {
             $cacheFile = sprintf(self::CACHE_FILE_MASK, $this->getTimeInterval(self::CACHE_TTL));
 
