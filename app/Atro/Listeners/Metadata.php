@@ -2671,10 +2671,10 @@ class Metadata extends AbstractMetadataListener
         if ($matchings === null) {
             try {
                 $matchings = $this->getDbal()->createQueryBuilder()
-                    ->select('id, code, type, entity, master_entity, is_active')
+                    ->select('id, number, type, entity, master_entity, is_active')
                     ->from('matching')
                     ->where('deleted=:false')
-                    ->andWhere('code IS NOT NULL')
+                    ->andWhere('number IS NOT NULL')
                     ->andWhere('type IS NOT NULL')
                     ->andWhere('entity IS NOT NULL')
                     ->andWhere('master_entity IS NOT NULL')
@@ -2694,7 +2694,7 @@ class Metadata extends AbstractMetadataListener
 
             if ($matching['type'] === 'duplicate') {
                 $data['scopes'][$matching['entity']]['matchDuplicates']                                                     = true;
-                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['code'])] = [
+                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['entity'], $matching['type'])] = [
                     'type'                 => 'datetime',
                     "layoutListDisabled"   => true,
                     "layoutDetailDisabled" => true,
@@ -2707,7 +2707,7 @@ class Metadata extends AbstractMetadataListener
 
             } elseif ($matching['type'] === 'masterRecord') {
                 $data['scopes'][$matching['entity']]['matchMasterRecords']                                                  = true;
-                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['code'])] = [
+                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['entity'], $matching['type'])] = [
                     'type'                 => 'datetime',
                     "layoutListDisabled"   => true,
                     "layoutDetailDisabled" => true,

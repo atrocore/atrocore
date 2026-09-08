@@ -29,7 +29,7 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
             return;
         }
 
-        $fieldName = \Atro\Repositories\Matching::prepareFieldName($matchingData['code']);
+        $fieldName = \Atro\Repositories\Matching::prepareFieldName($matchingData['entity'], $matchingData['type']);
 
         $count = $this->getEntityManager()->getRepository($matchingData['entity'])
             ->where([$fieldName => null])

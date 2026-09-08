@@ -1,10 +1,7 @@
 [
   {
-    "name": "name",
+    "name": "number",
     "link": true
-  },
-  {
-    "name": "code"
   },
   {
     "name": "type"
