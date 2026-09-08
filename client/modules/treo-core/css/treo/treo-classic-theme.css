@@ -13526,12 +13526,11 @@ input#sn-checkbox-open-in-new-window {
 
 #main main > .list-container {
     flex: 1;
-    width: max-content;
     min-width: 100%;
 }
 
-#main main > .list-container:has(.list-kanban) {
-    width: 100%;
+#main main > .list-container:has(.list table) {
+    width: max-content;
 }
 
 #main main > .list-container > .table-show-more-container {
