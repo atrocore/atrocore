@@ -169,6 +169,10 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             return true;
         },
 
+        shouldShowInsights() {
+            return Detail.prototype.shouldShowInsights.call(this);
+        },
+
         getSvelteSideViewProps(parentView) {
             let thisClone = Espo.utils.clone(this);
 

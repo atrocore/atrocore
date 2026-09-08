@@ -146,6 +146,14 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
             this.listenTo(this, 'open-filter', () => {
                 this.openOverviewFilter();
             });
+
+            this.addToLanguageObservables();
+
+            this.listenTo(this, 'change:disabled-languages', (value) => {
+                this.getUser().set('disabledLanguages', value);
+                this.layoutData = null;
+                this.reRenderFieldsPanels();
+            });
         },
 
         setCompareMode() {
@@ -485,8 +493,6 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                         fieldListGroup.fieldListInGroup.sort((a, b) => a.sortOrderInAttributeGroup < b.sortOrderInAttributeGroup ? -1 : 1);
                     }
                 }
-
-                this.notify('Loading...');
 
                 this.createView(panel.name, this.fieldsPanelsView, {
                     panelTitle: panel.title,
@@ -1103,10 +1109,13 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
         },
 
         reRenderFieldsPanels() {
-            this.prepareFieldsData();
-            this.renderFieldsPanels();
-            this.toggleFieldPanels();
-            this.renderPanelNavigationView();
+            this.notify('Loading...');
+
+            this.prepareFieldsData(() => {
+                this.renderFieldsPanels();
+                this.toggleFieldPanels();
+                this.renderPanelNavigationView();
+            });
 
             if (this.merging) {
                 this.handleRadioButtonsDisableState(false)
