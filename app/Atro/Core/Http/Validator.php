@@ -66,7 +66,7 @@ class Validator
     public function validateHandlerResponse(RouteAttribute $routeAttr, string $method, ResponseInterface $response, string $entityName = ''): void
     {
         $builder   = $this->getValidatorBuilderForHandler($routeAttr, $entityName);
-        $operation = new OperationAddress($routeAttr->path, strtolower($method));
+        $operation = new OperationAddress(preg_replace(OpenApiGenerator::ROUTE_PARAM_REGEX_PATTERN, '{$1}', $routeAttr->path), strtolower($method));
 
         try {
             $builder->getResponseValidator()->validate($operation, $response);

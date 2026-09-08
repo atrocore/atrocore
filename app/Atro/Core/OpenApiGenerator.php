@@ -21,6 +21,8 @@ use Atro\Services\SoftwarePackage;
 
 class OpenApiGenerator
 {
+    public const ROUTE_PARAM_REGEX_PATTERN = '/\{(\w+):[^}]+\}/';
+
     private Container $container;
 
     public function __construct(Container $container)
@@ -615,7 +617,7 @@ class OpenApiGenerator
                 $row['requestBody'] = $requestBody;
             }
 
-            $result['paths'][$routeAttr->path][$method] = $row;
+            $result['paths'][preg_replace(self::ROUTE_PARAM_REGEX_PATTERN, '{$1}', $routeAttr->path)][$method] = $row;
         }
     }
 
@@ -663,7 +665,7 @@ class OpenApiGenerator
                     $this->buildEntitySchema($result, $entityName);
                 }
 
-                $path = preg_replace('/\{(\w+):[^}]+\}/', '{$1}', substr($entry['path'], strlen('/api')));
+                $path = preg_replace(self::ROUTE_PARAM_REGEX_PATTERN, '{$1}', substr($entry['path'], strlen('/api')));
 
                 foreach ($entry['methods'] as $method) {
                     $result['paths'][$path][strtolower($method)] = $entry['openapi'];
