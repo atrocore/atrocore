@@ -293,33 +293,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             this.onModelReady(()=> {
                 this.setupRightSideView();
             })
-
-            let isScrolled = false;
-
-            main.off('scroll.breadcrumbs');
-            main.on('scroll.breadcrumbs', (e) => {
-                if (window.screen.width < 768) {
-                    return;
-                }
-
-                if (e.currentTarget.scrollTop > 0) {
-                    if (!isScrolled) {
-                        isScrolled = true;
-                        setTimeout(() => requestAnimationFrame(() => {
-                            main.css('padding-bottom', header.find('.header-breadcrumbs').outerHeight() || 0);
-                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: !isScrolled}));
-                        }), 100);
-                    }
-                } else {
-                    if (isScrolled) {
-                        isScrolled = false;
-                        setTimeout(() => requestAnimationFrame(() => {
-                            main.css('padding-bottom', '');
-                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: !isScrolled}));
-                        }), 100);
-                    }
-                }
-            });
         },
 
         executeAction(action, data, event) {
@@ -359,7 +332,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         scrollToPanel(name) {
             let panel = $('#main').find(`.panel[data-name="${name}"]`);
             if (panel.size() > 0) {
-                const header = document.querySelector('.page-header');
+                const header = document.querySelector('.page-header .header-wrapper');
                 const content = document.querySelector("main") || document.querySelector('#main');
                 panel = panel.get(0);
 
@@ -368,7 +341,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
                 const stickyOffset = header.offsetHeight;
                 content.scrollTo({
-                    top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
+                    top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset + 1,
                     behavior: "smooth"
                 });
             }
@@ -414,8 +387,123 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             })
         },
 
+        initPanelsScrollSpy() {
+            const content = document.querySelector("main") || document.querySelector('#main');
+            if (!content) {
+                return null;
+            }
+
+            const observedPanels = new Set();
+            const panelTops = new Map();
+            let lastActiveName = null;
+            let intersectionObserver = null;
+
+            const dispatchActive = () => {
+                let activeName = null;
+                let minTop = Infinity;
+                panelTops.forEach((top, name) => {
+                    if (top < minTop) {
+                        minTop = top;
+                        activeName = name;
+                    }
+                });
+
+                if (activeName && activeName !== lastActiveName) {
+                    lastActiveName = activeName;
+                    window.dispatchEvent(new CustomEvent('anchor-nav:active-changed', {detail: activeName}));
+                }
+            };
+
+            const createIntersectionObserver = () => {
+                const headerOffset = this.getHeaderOffset();
+                const activationLineBottomOffset = Math.max(content.clientHeight - headerOffset, 0);
+
+                return new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        const name = entry.target.dataset.name;
+                        if (entry.isIntersecting) {
+                            panelTops.set(name, entry.boundingClientRect.top);
+                        } else {
+                            panelTops.delete(name);
+                        }
+                    });
+
+                    dispatchActive();
+                }, {
+                    root: content,
+                    rootMargin: `-${headerOffset}px 0px -${activationLineBottomOffset}px 0px`,
+                    threshold: 0,
+                });
+            };
+
+            const rebuildIntersectionObserver = () => {
+                if (intersectionObserver) {
+                    intersectionObserver.disconnect();
+                }
+                panelTops.clear();
+                intersectionObserver = createIntersectionObserver();
+                observedPanels.forEach(panelEl => intersectionObserver.observe(panelEl));
+            };
+
+            intersectionObserver = createIntersectionObserver();
+
+            const observePanel = panelEl => {
+                observedPanels.add(panelEl);
+                intersectionObserver.observe(panelEl);
+            };
+
+            const initialPanels = content.querySelectorAll('div.panel[data-name]');
+            initialPanels.forEach(observePanel);
+
+            const firstPanelName = initialPanels[0]?.dataset.name;
+            if (firstPanelName) {
+                lastActiveName = firstPanelName;
+                window.dispatchEvent(new CustomEvent('anchor-nav:active-changed', {detail: firstPanelName}));
+            }
+
+            const mutationObserver = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
+                        if (!(node instanceof HTMLElement)) {
+                            return;
+                        }
+
+                        if (node.matches?.('div.panel[data-name]')) {
+                            observePanel(node);
+                        }
+
+                        node.querySelectorAll?.('div.panel[data-name]').forEach(observePanel);
+                    });
+                });
+            });
+
+            mutationObserver.observe(content, {childList: true, subtree: true});
+
+            let headerResizeObserver = null;
+            const headerWrapper = document.querySelector('.page-header .header-wrapper');
+            if (headerWrapper) {
+                headerResizeObserver = new ResizeObserver(() => rebuildIntersectionObserver());
+                headerResizeObserver.observe(headerWrapper);
+            }
+
+            return {
+                disconnect: () => {
+                    intersectionObserver.disconnect();
+                    mutationObserver.disconnect();
+                    if (headerResizeObserver) {
+                        headerResizeObserver.disconnect();
+                    }
+                }
+            };
+        },
+
+        getHeaderOffset() {
+            return document.querySelector('.page-header .header-wrapper')?.offsetHeight ?? 0;
+        },
+
         getHeaderOptions() {
             let observer = null;
+            let panelsScrollSpy = null;
 
             const record = this.getView('record');
 
@@ -447,6 +535,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     },
                     breadcrumbs: this.getBreadcrumbsItems(),
                     disableNavigationHistory: this.getConfig().get('disableNavigationPath') || this.getUser().get('disableNavigationPath') || false,
+                    minimizeHeaderOnScroll: true,
                     afterOnMount: () => {
                         if (hasLayoutEditor) {
                             this.setupLayoutEditorButton();
@@ -459,10 +548,15 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                                 subtree: true
                             });
                         }
+
+                        panelsScrollSpy = this.initPanelsScrollSpy();
                     },
                     afterOnDestroy: () => {
                         if (observer) {
                             observer.disconnect();
+                        }
+                        if (panelsScrollSpy) {
+                            panelsScrollSpy.disconnect();
                         }
                     }
                 },
