@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\ActionTypes\AbstractAction;
+use Atro\ActionTypes\AbstractBulkAction;
 use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
@@ -183,6 +184,14 @@ class Metadata extends AbstractMetadataListener
 
             if (!class_exists($className) || !is_a($className, AbstractAction::class, true)) {
                 continue;
+            }
+
+            if (is_a($className, AbstractBulkAction::class, true)) {
+                $data['entityDefs']['Action']['fields']['searchEntity']['conditionalProperties']['visible']['conditionGroup'][0]['value'][]  = $typeName;
+                $data['entityDefs']['Action']['fields']['searchEntity']['conditionalProperties']['readOnly']['conditionGroup'][0]['value'][] = $typeName;
+                $data['entityDefs']['Action']['fields']['applyToPreselectedRecords']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = $typeName;
+
+                $data['action']['filterableTypes'][$typeName] = true;
             }
 
             $data['action']['types'][$typeName]     = $className;

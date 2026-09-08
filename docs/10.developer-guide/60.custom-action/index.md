@@ -82,6 +82,62 @@ class Foo extends AbstractAction
 
 ---
 
+## Bulk Action Type (`AbstractBulkAction`)
+
+A custom action that needs to run the same logic over **many records at once** — instead of a single triggering record — should extend `Atro\ActionTypes\AbstractBulkAction` rather than `AbstractAction`. It already implements the mass-processing mechanics (record fan-out, chunking into background jobs for large sets, per-record logging) so the developer only has to implement what happens for one record.
+
+```php
+<?php
+
+namespace CustomActions;
+
+use Atro\ActionTypes\AbstractBulkAction;
+use Espo\ORM\Entity;
+
+class Foo extends AbstractBulkAction
+{
+    public static function getTypeLabel(): ?string
+    {
+        return 'Foo';
+    }
+
+    public static function getName(): ?string
+    {
+        return 'Do Foo';
+    }
+
+    public static function getDescription(): ?string
+    {
+        return 'Describe Foo';
+    }
+
+    protected function processEntity(Entity $entity, Entity $log): bool
+    {
+        // Custom logic for one record. Return true on success, false if the
+        // action was not applicable / failed for $entity.
+        // Optionally override the default outcome by setting $log->set('type', ...)
+        // and $log->set('message', ...) before returning.
+
+        return true;
+    }
+}
+```
+
+Only `processEntity(Entity $entity, Entity $log): bool` needs to be implemented — it is called once per processed record, and `$log` is the `ActionExecutionLog` entity being built for that record.
+
+### Two Run Modes
+
+An Action based on `AbstractBulkAction` supports two mutually exclusive modes, toggled by the **Apply to preselected records** field:
+
+| Mode | Apply to preselected records | Behavior |
+|---|---|---|
+| Search Entity | Off | The action defines its own static filter (**Search Entity** + condition/`where`). Every run processes all records currently matching that filter. |
+| Preselected Records | On | The action is meant to be run from the mass-actions dropdown of a list view. It processes only the records the user has checked, or every record matching the list's current search when **select all matching** is used. |
+
+Both the **Search Entity** and **Apply to preselected records** fields on the Action form become available automatically for any action type that extends `AbstractBulkAction` — a custom action registered under `data/custom-code/CustomActions/` does not need any extra metadata to expose them.
+
+---
+
 ## UI Preview of Custom Code
 
 To improve developer experience, the system provides a convenient way to preview the implementation of a custom Action directly from the UI.
