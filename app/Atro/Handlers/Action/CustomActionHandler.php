@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Handlers\Action;
 
 use Atro\ActionTypes\AbstractAction;
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -100,11 +99,16 @@ class CustomActionHandler extends AbstractHandler
         /** @var AbstractAction $instance */
         $instance = $this->container->get($className);
 
-        if (!method_exists($instance, 'executeNow')) {
-            throw new BadRequest("Custom action class '$className' does not implement executeNow().");
-        }
+        $execution = $this->getEntityManager()->getRepository('ActionExecution')->get();
+        $execution->set('actionId', $action->get('id'));
+        $execution->set('actionName', $action->get('name'));
+        $execution->set('action', $action);
+        $execution->set('name', $action->get('name'));
+        $execution->set('type', 'manual');
+        $execution->set('status', 'running');
+        $this->getEntityManager()->saveEntity($execution);
 
-        $success = $instance->executeNow($action, $input);
+        $success = $instance->execute($execution, $input);
 
         return new JsonResponse(['success' => $success, 'message' => $this->getLanguage()->translate('Done')]);
     }
