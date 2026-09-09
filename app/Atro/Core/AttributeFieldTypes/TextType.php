@@ -94,6 +94,7 @@ class TextType extends AbstractFieldType
 
         if ($this->type === 'varchar') {
             $entity->entityDefs['fields'][$name]['fullWidth'] = !empty($attributeData['fullWidth']);
+            $entity->entityDefs['fields'][$name]['trim']      = !empty($row['trim']);
 
             if (!empty($row['pattern'])) {
                 $entity->entityDefs['fields'][$name]['pattern'] = $row['pattern'];
