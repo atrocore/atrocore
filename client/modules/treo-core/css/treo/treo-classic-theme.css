@@ -11910,6 +11910,7 @@ h4.panel-title span.color-icon {
     margin-inline-end: 5px;
     width: 14px;
     height: 14px;
+    font-size: 14px;
     border-radius: 50%;
     display: block;
     background-color: transparent;
@@ -19418,4 +19419,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .toast-text > .stream-head-container {
     padding: 0;
+}
+
+.quality-checks-field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
+.quality-checks-field-item .label {
+    font-size: 13px;
 }
