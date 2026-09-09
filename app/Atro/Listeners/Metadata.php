@@ -1309,7 +1309,10 @@ class Metadata extends AbstractMetadataListener
                     continue 1;
                 }
 
-                if ($fieldData['type'] === 'autoincrement') {
+                if (
+                    $fieldData['type'] === 'autoincrement'
+                    || $this->isOneToOneLink($data['entityDefs'][$scope]['links'][$fieldName] ?? [], $fieldData)
+                ) {
                     if (!isset($data['scopes'][$scope]['mandatoryUnInheritedFields'])) {
                         $data['scopes'][$scope]['mandatoryUnInheritedFields'] = [];
                     }
@@ -1349,6 +1352,22 @@ class Metadata extends AbstractMetadataListener
         }
 
         return $data;
+    }
+
+    /**
+     * A one-to-one relation allows only one related record on each side, so its value must never be inherited
+     * from the parent: inheriting it would move the relation from the parent to the child.
+     *
+     * Both sides are covered: the owning side (`belongsTo` with `relationType` `oneToOne`) and the virtual
+     * side (`hasOne`), whose key is stored in the foreign entity.
+     */
+    private function isOneToOneLink(array $linkDefs, array $fieldData): bool
+    {
+        if (($fieldData['type'] ?? null) !== 'link') {
+            return false;
+        }
+
+        return ($linkDefs['type'] ?? null) === 'hasOne' || ($linkDefs['relationType'] ?? null) === 'oneToOne';
     }
 
     private function addScopesToRelationShip(

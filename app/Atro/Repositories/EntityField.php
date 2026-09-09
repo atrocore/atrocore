@@ -416,8 +416,10 @@ class EntityField extends ReferenceData
             $type       = $this->getMetadata()->get("scopes.{$entityName}.type");
             $fieldType  = $entity->get('type');
 
-            if (!empty($type) && $type !== 'ReferenceData' && $fieldType !== 'linkMultiple') {
-                $connection = $this->getEntityManager()->getConnection();
+            $hasOne = $this->getMetadata()->get("entityDefs.{$entityName}.links.{$entity->get('code')}.type") === 'hasOne';
+
+            if (!empty($type) && $type !== 'ReferenceData' && $fieldType !== 'linkMultiple' && !$hasOne) {
+                $connection = $this->getEntityManager()->getDbal();
                 $tableName  = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
                 $fieldName  = $entity->get('code');
 
