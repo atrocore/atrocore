@@ -483,6 +483,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function prepareFieldTypeVarchar(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if ($entity->isAttributeChanged($fieldName) && !empty($fieldData['trim']) && !empty($value = $entity->get($fieldName))) {
+            $entity->set($fieldName, trim($value));
+        }
+    }
+
+    protected function prepareFieldTypeEmail(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $this->prepareFieldTypeVarchar($entity, $fieldName, $fieldData);
+    }
+
     public function convertDateWithModifier(string $date, string $modifier, string $format = 'Y-m-d'): string
     {
         $dt = new \DateTime($date);
