@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\DataManager;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
@@ -175,8 +176,18 @@ class SoftwarePackage extends ReferenceData
             $code = $package['abandoned'] ?? $package['name'] ?? null;
 
             if (!empty($code)) {
+                $targetVersion = (string)$entity->get('targetVersion');
+
+                if (
+                    $targetVersion !== '*'
+                    && !$this->isPreReleaseVersion($targetVersion)
+                    && !in_array($targetVersion, $this->prepareTargetVersions($code, $package), true)
+                ) {
+                    throw new BadRequest($this->translateException('invalidTargetVersion'));
+                }
+
                 $composerData = self::getComposerData();
-                $composerData['require'][$code] = $entity->get('targetVersion');
+                $composerData['require'][$code] = $targetVersion;
                 self::setComposerData('require', $composerData['require']);
 
                 return true;
@@ -368,6 +379,11 @@ class SoftwarePackage extends ReferenceData
         }
 
         return $matches[0];
+    }
+
+    private function isPreReleaseVersion(string $version): bool
+    {
+        return $this->prepareVersionForComparison($version) !== $version;
     }
 
     private function getPackage(string $id): array
