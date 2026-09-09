@@ -47,5 +47,8 @@
       "Global": "Globale",
       "Channel": "Canale"
     }
+  },
+  "exceptions": {
+    "attributeEntityMismatch": "L’attributo «%s» appartiene a %s, mentre la classificazione riguarda %s."
   }
 }

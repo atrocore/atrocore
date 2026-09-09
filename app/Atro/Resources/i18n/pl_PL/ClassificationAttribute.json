@@ -47,5 +47,8 @@
     "cascadeUnlinkRelatedAttribute": "Czy na pewno chcą Państwo usunąć wybrany atrybut z wybranej Klasyfikacji i powiązanych z nią rekordów? Wszystkie powiązane wartości atrybutów również zostaną usunięte.",
     "removeRelatedAttributeGroup": "Czy na pewno chcą Państwo usunąć wszystkie atrybuty dla wybranej grupy atrybutów z wybranej klasyfikacji? Wszystkie powiązane rekordy zachowają te atrybuty.",
     "removeRelatedAttributeGroupCascade": "Czy na pewno chcą Państwo usunąć wszystkie atrybuty dla wybranej grupy atrybutów z wybranej klasyfikacji i powiązanych rekordów? Wszystkie powiązane wartości atrybutów również zostaną usunięte."
+  },
+  "exceptions": {
+    "attributeEntityMismatch": "Atrybut „%s” należy do %s, natomiast klasyfikacja dotyczy %s."
   }
 }

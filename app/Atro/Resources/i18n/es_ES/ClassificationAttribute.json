@@ -47,5 +47,8 @@
     "cascadeUnlinkRelatedAttribute": "¿Está seguro de que desea eliminar el atributo seleccionado de la Clasificación seleccionada y sus registros relacionados? También se eliminarán todos los valores de atributo relacionados.",
     "removeRelatedAttributeGroup": "¿Está seguro de que desea eliminar todos los Atributos del Grupo de Atributos seleccionado de la Clasificación seleccionada? Todos los registros relacionados conservarán estos Atributos.",
     "removeRelatedAttributeGroupCascade": "¿Está seguro de que desea eliminar todos los atributos del Grupo de Atributos seleccionado de la Clasificación seleccionada y sus registros relacionados? También se eliminarán todos los Valores de Atributo relacionados."
+  },
+  "exceptions": {
+    "attributeEntityMismatch": "El atributo «%s» pertenece a %s, mientras que la clasificación es para %s."
   }
 }

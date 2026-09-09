@@ -47,5 +47,8 @@
     "cascadeUnlinkRelatedAttribute": "Sind Sie sicher, dass Sie das ausgewählte Attribut aus der ausgewählten Klassifizierung und den zugehörigen Datensätzen löschen möchten? Alle zugehörigen Attributwerte werden ebenfalls entfernt.",
     "removeRelatedAttributeGroup": "Sind Sie sicher, dass Sie alle Attribute für die ausgewählte Attributgruppe aus der ausgewählten Klassifizierung löschen möchten? Alle zugehörigen Datensätze behalten diese Attribute bei.",
     "removeRelatedAttributeGroupCascade": "Sind Sie sicher, dass Sie alle Attribute für die ausgewählte Attributgruppe aus der ausgewählten Klassifizierung und den zugehörigen Datensätzen löschen möchten? Alle zugehörigen Attributwerte werden ebenfalls entfernt."
+  },
+  "exceptions": {
+    "attributeEntityMismatch": "Das Attribut „%s“ gehört zu %s, die Klassifizierung ist jedoch für %s."
   }
 }

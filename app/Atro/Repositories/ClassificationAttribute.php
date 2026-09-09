@@ -157,8 +157,35 @@ class ClassificationAttribute extends Base
             throw new BadRequest("No Attribute '{$entity->get('attributeId')}' has been found.");
         }
 
+        $this->validateAttributeEntity($entity, $attribute);
+
         $this->getAttributeRepository()->validateMinMax($entity);
 
+    }
+
+    /**
+     * Both links are immutable once the record exists, so a mismatch can only be introduced while relating them.
+     */
+    protected function validateAttributeEntity(Entity $entity, Entity $attribute): void
+    {
+        if (!$entity->isAttributeChanged('attributeId') && !$entity->isAttributeChanged('classificationId')) {
+            return;
+        }
+
+        $classification = $this->getEntityManager()->getRepository('Classification')->get($entity->get('classificationId'));
+
+        if (empty($classification) || $attribute->get('entityId') === $classification->get('entityId')) {
+            return;
+        }
+
+        throw new BadRequest(
+            sprintf(
+                $this->exception('attributeEntityMismatch'),
+                $attribute->get('name'),
+                $this->translate($attribute->get('entityId'), 'scopeNames', 'Global'),
+                $this->translate($classification->get('entityId'), 'scopeNames', 'Global')
+            )
+        );
     }
 
     public function save(Entity $entity, array $options = [])
