@@ -367,6 +367,7 @@ class OpenApiGenerator
                 'anyOf'    => [
                     ['type' => 'string', 'nullable' => true],
                     ['type' => 'number'],
+                    ['type' => 'boolean'],
                     ['type' => 'array', 'items' => (object)[]],
                     ['type' => 'object'],
                 ]
