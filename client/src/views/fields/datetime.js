@@ -102,6 +102,16 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             return this.getDateTime().toDisplay(value);
         },
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.on('inline-edit-off', () => {
+                if (this.$time && this.$time.data('timepicker-list')) {
+                    this.$time.timepicker('hide');
+                }
+            });
+        },
+
         initTimepicker: function () {
             var $time = this.$time;
             $time.timepicker({
