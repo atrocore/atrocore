@@ -2421,8 +2421,14 @@ class Metadata extends AbstractMetadataListener
                 }
 
                 $data['entityDefs']['Classification']['fields'][Util::pluralize(lcfirst($scope))] = [
-                    "type" => "linkMultiple"
+                    "type"                => "linkMultiple",
+                    "noLoad"              => true,
+                    "inheritanceDisabled" => true
                 ];
+
+                if (!in_array(Util::pluralize(lcfirst($scope)), $data['scopes']['Classification']['mandatoryUnInheritedFields'] ?? [])) {
+                    $data['scopes']['Classification']['mandatoryUnInheritedFields'][] = Util::pluralize(lcfirst($scope));
+                }
 
                 $data['entityDefs']['Classification']['links'][Util::pluralize(lcfirst($scope))] = [
                     "type"         => "hasMany",

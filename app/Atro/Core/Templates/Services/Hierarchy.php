@@ -1239,6 +1239,10 @@ class Hierarchy extends Base
                     }
                     break;
                 case 'linkMultiple':
+                    if (!empty($fieldDefs['noLoad'])) {
+                        break;
+                    }
+
                     if (!in_array($field, $this->getRepository()->getUnInheritedFields())) {
                         if (!empty($fieldDefs['attributeId'])) {
                             $parentIds = $parent->get($field . 'Ids') ?? [];
