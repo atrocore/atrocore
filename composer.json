@@ -65,7 +65,7 @@
   },
   "extra": {
     "atroId": "Atro",
-    "frontend": "0.1.9",
+    "frontend": "0.1.10",
     "name": {
       "default": "Core"
     },
