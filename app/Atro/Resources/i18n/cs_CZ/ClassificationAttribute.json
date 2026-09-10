@@ -47,5 +47,8 @@
     "cascadeUnlinkRelatedAttribute": "Jste si jisti, že chcete odstranit vybraný atribut z vybrané klasifikace a souvisejících záznamů? Všechny související hodnoty atributů budou také odstraněny.",
     "removeRelatedAttributeGroup": "Jste si jisti, že chcete odstranit všechny atributy vybrané skupiny atributů z vybrané klasifikace? Všechny související záznamy si tyto Atributy ponechají.",
     "removeRelatedAttributeGroupCascade": "Jste si jisti, že chcete odstranit všechny atributy vybrané skupiny atributů z vybrané klasifikace a jejich souvisejících záznamů? Budou odstraněny také všechny související hodnoty atributů."
+  },
+  "exceptions": {
+    "attributeEntityMismatch": "Atribut „%s“ patří k %s, zatímco klasifikace je pro %s."
   }
 }

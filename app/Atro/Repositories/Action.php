@@ -184,7 +184,11 @@ class Action extends Base
         if (!$entity->isNew() && $entity->get('conditionsType') === 'expression') {
             $className = self::getCompiledExpressionFullClassName($entity);
             if (class_exists($className) && is_a($className, CompiledExpression::class, true)) {
-                $entity->set('conditionsExpression', $className::expression());
+                $expression = $className::expression();
+
+                $entity->set('conditionsExpression', $expression);
+                // the field is not storable, so it has to be marked as fetched to stay unchanged until really edited
+                $entity->setFetched('conditionsExpression', $expression);
             }
         }
     }
