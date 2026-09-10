@@ -46,7 +46,8 @@
   },
   "exceptions": {
     "jobManagerRunning": "Systém nelze aktualizovat, protože ve Správci úloh jsou spuštěné úlohy. Zkuste to prosím později.",
-    "daemonNotAlive": "Akci nelze provést, protože naplánované úlohy neběží. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku, jak server správně nastavit."
+    "daemonNotAlive": "Akci nelze provést, protože naplánované úlohy neběží. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku, jak server správně nastavit.",
+    "invalidTargetVersion": "Vybraná cílová verze není pro tento modul dostupná."
   },
   "notifications": {
     "Module update": "Modul {module} byl aktualizován. Z verze {from} na {to}.",

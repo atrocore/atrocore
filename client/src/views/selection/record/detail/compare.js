@@ -206,12 +206,17 @@ Espo.define('views/selection/record/detail/compare', [
             return true;
         },
 
+        shouldShowInsights() {
+            return Detail.prototype.shouldShowInsights.call(this);
+        },
+
         getSvelteSideViewProps(parentView) {
             let thisClone = Espo.utils.clone(this);
 
             thisClone.scope = 'Selection';
             thisClone.model = this.selectionModel;
             thisClone.mode = 'detail';
+            thisClone.shouldShowInsights = () => true;
 
             let option = Detail.prototype.getSvelteSideViewProps.call(thisClone, parentView);
 

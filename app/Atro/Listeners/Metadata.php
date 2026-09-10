@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\ActionTypes\AbstractAction;
+use Atro\ActionTypes\AbstractBulkAction;
 use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
@@ -183,6 +184,14 @@ class Metadata extends AbstractMetadataListener
 
             if (!class_exists($className) || !is_a($className, AbstractAction::class, true)) {
                 continue;
+            }
+
+            if (is_a($className, AbstractBulkAction::class, true)) {
+                $data['entityDefs']['Action']['fields']['searchEntity']['conditionalProperties']['visible']['conditionGroup'][0]['value'][]  = $typeName;
+                $data['entityDefs']['Action']['fields']['searchEntity']['conditionalProperties']['readOnly']['conditionGroup'][0]['value'][] = $typeName;
+                $data['entityDefs']['Action']['fields']['applyToPreselectedRecords']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = $typeName;
+
+                $data['action']['filterableTypes'][$typeName] = true;
             }
 
             $data['action']['types'][$typeName]     = $className;
@@ -1300,7 +1309,10 @@ class Metadata extends AbstractMetadataListener
                     continue 1;
                 }
 
-                if ($fieldData['type'] === 'autoincrement') {
+                if (
+                    $fieldData['type'] === 'autoincrement'
+                    || $this->isOneToOneLink($data['entityDefs'][$scope]['links'][$fieldName] ?? [], $fieldData)
+                ) {
                     if (!isset($data['scopes'][$scope]['mandatoryUnInheritedFields'])) {
                         $data['scopes'][$scope]['mandatoryUnInheritedFields'] = [];
                     }
@@ -1340,6 +1352,22 @@ class Metadata extends AbstractMetadataListener
         }
 
         return $data;
+    }
+
+    /**
+     * A one-to-one relation allows only one related record on each side, so its value must never be inherited
+     * from the parent: inheriting it would move the relation from the parent to the child.
+     *
+     * Both sides are covered: the owning side (`belongsTo` with `relationType` `oneToOne`) and the virtual
+     * side (`hasOne`), whose key is stored in the foreign entity.
+     */
+    private function isOneToOneLink(array $linkDefs, array $fieldData): bool
+    {
+        if (($fieldData['type'] ?? null) !== 'link') {
+            return false;
+        }
+
+        return ($linkDefs['type'] ?? null) === 'hasOne' || ($linkDefs['relationType'] ?? null) === 'oneToOne';
     }
 
     private function addScopesToRelationShip(
@@ -2662,10 +2690,10 @@ class Metadata extends AbstractMetadataListener
         if ($matchings === null) {
             try {
                 $matchings = $this->getDbal()->createQueryBuilder()
-                    ->select('id, code, type, entity, master_entity, is_active')
+                    ->select('id, number, type, entity, master_entity, is_active')
                     ->from('matching')
                     ->where('deleted=:false')
-                    ->andWhere('code IS NOT NULL')
+                    ->andWhere('number IS NOT NULL')
                     ->andWhere('type IS NOT NULL')
                     ->andWhere('entity IS NOT NULL')
                     ->andWhere('master_entity IS NOT NULL')
@@ -2685,7 +2713,7 @@ class Metadata extends AbstractMetadataListener
 
             if ($matching['type'] === 'duplicate') {
                 $data['scopes'][$matching['entity']]['matchDuplicates']                                                     = true;
-                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['code'])] = [
+                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['entity'], $matching['type'])] = [
                     'type'                 => 'datetime',
                     "layoutListDisabled"   => true,
                     "layoutDetailDisabled" => true,
@@ -2698,7 +2726,7 @@ class Metadata extends AbstractMetadataListener
 
             } elseif ($matching['type'] === 'masterRecord') {
                 $data['scopes'][$matching['entity']]['matchMasterRecords']                                                  = true;
-                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['code'])] = [
+                $data['entityDefs'][$matching['entity']]['fields'][MatchingRepository::prepareFieldName($matching['entity'], $matching['type'])] = [
                     'type'                 => 'datetime',
                     "layoutListDisabled"   => true,
                     "layoutDetailDisabled" => true,

@@ -13,5 +13,6 @@
   "hideFieldTypeFilters": true,
   "hasActive": true,
   "selectionDisabled": true,
-  "isSystem": true
+  "isSystem": true,
+  "nameField": "number"
 }

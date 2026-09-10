@@ -99,6 +99,10 @@ Espo.define('views/record/kanban-item', 'view', function (Dep) {
                     valueEmpty = false;
                 }
 
+                if (this.model.getFieldParam(name, 'notStorable')) {
+                    valueEmpty = false;
+                }
+
                 if (!valueEmpty) {
                     this.createView(key, viewName, {
                         model: this.model,

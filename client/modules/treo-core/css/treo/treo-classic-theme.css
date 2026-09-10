@@ -1707,11 +1707,6 @@ a.bg-danger:hover, a.bg-danger:focus {
     background-color: #e4b9b9
 }
 
-.page-header {
-    padding-bottom: 8.5px;
-    margin: 38px 0 19px;
-    border-bottom: 1px solid #eee
-}
 
 ul, ol {
     margin-top: 0;
@@ -10058,19 +10053,11 @@ label {
     position: sticky;
     left: 0;
     z-index: 11;
-    padding: 0 20px;
 }
 
 .table-show-more-container {
     position: sticky;
     left: 0;
-}
-
-.page-header {
-    margin: 10px 0;
-    border-bottom: 0;
-    padding-bottom: 2px;
-    min-height: 33px;
 }
 
 .dashboard-header {
@@ -12966,7 +12953,8 @@ table.table {
 }
 
 .record .middle > .panel:first-child {
-    border-top-width: 0
+    border-top-width: 0;
+    margin-top: -1px;
 }
 
 .record .middle > .panel {
@@ -13526,12 +13514,11 @@ input#sn-checkbox-open-in-new-window {
 
 #main main > .list-container {
     flex: 1;
-    width: max-content;
     min-width: 100%;
 }
 
-#main main > .list-container:has(.list-kanban) {
-    width: 100%;
+#main main > .list-container:has(.list table) {
+    width: max-content;
 }
 
 #main main > .list-container > .table-show-more-container {
@@ -13644,8 +13631,11 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .page-header {
-    padding-bottom: 0;
     flex-shrink: 0;
+}
+
+.page-header.detail-page-header {
+    display: contents;
 }
 
 #header .navbar-inverse.navbar[data-orientation="vertical"] .navbar-nav .active > a {
@@ -13680,20 +13670,8 @@ ul.dropdown-menu > li.checkbox {
     text-align: center;
 }
 
-.page-header.detail-page-header {
-    margin: 0;
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 101;
-    background-color: #fff;
-    padding: 10px 20px 0;
-    border-bottom: 1px solid #dedede;
-}
-
-.page-header.detail-page-header.selection-header {
-    top: auto;
+.page-header.detail-page-header.selection-header .header-wrapper {
+    position: static;
 }
 
 #main > .content-wrapper > main[data-mode=detail]:has(.page-header.detail-page-header.selection-header) {
@@ -18411,6 +18389,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .list-buttons-container {
     margin: 10px 0;
+    padding: 0 20px;
 }
 
 .list-container.for-tree-view > .list-buttons-container {
@@ -19439,4 +19418,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .toast-text > .stream-head-container {
     padding: 0;
+}
+
+.quality-checks-field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
+.quality-checks-field-item .label {
+    font-size: 13px;
 }

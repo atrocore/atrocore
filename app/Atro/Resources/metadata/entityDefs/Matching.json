@@ -1,9 +1,8 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "required": true,
-      "trim": true
+    "number": {
+      "type": "autoincrement",
+      "isCode": true
     },
     "type": {
       "type": "enum",
@@ -24,12 +23,6 @@
           ]
         }
       }
-    },
-    "code": {
-      "type": "varchar",
-      "unique": true,
-      "protected": true,
-      "customizable": false
     },
     "description": {
       "type": "text"
