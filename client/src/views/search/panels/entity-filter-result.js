@@ -26,6 +26,12 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
                 return;
             }
 
+            this.buttonList = [{
+                title: this.translate('openSearchFilter'),
+                action: 'openSearchFilter',
+                html: this.getFilterButtonHtml()
+            }];
+
             Dep.prototype.setup.call(this);
 
             if (!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
@@ -41,13 +47,6 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
                     });
                 }
             }
-
-            this.buttonList.unshift({
-                title: this.translate('openSearchFilter'),
-                action: 'openSearchFilter',
-                html: this.getFilterButtonHtml()
-            });
-
         },
 
         getLayoutRelatedScope() {
