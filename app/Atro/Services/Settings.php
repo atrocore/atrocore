@@ -18,6 +18,7 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Utils\FieldManager;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Util;
@@ -87,13 +88,15 @@ class Settings extends AbstractService
         $data = $this->getPublicConfig();
 
         foreach ($this->getSettingsFieldDefs() as $field => $defs) {
-            if (($defs['type'] ?? null) === 'password') {
-                unset($data[$field]);
-                continue;
-            }
+            foreach ($this->getFieldAttributes($field) as $attribute) {
+                if (($defs['type'] ?? null) === 'password') {
+                    unset($data[$attribute]);
+                    continue;
+                }
 
-            if (!array_key_exists($field, $data) && $config->has($field)) {
-                $data[$field] = $config->get($field);
+                if (!array_key_exists($attribute, $data) && $config->has($attribute)) {
+                    $data[$attribute] = $config->get($attribute);
+                }
             }
         }
 
@@ -116,6 +119,19 @@ class Settings extends AbstractService
     private function getSettingsFieldDefs(): array
     {
         return $this->getMetadata()->get('entityDefs.Settings.fields', []);
+    }
+
+    /**
+     * The config keys a Settings field is actually stored under. For most types
+     * that is the field name itself, but reference types are split into
+     * attributes - a file field lives as `<field>Id` and `<field>Name`, which is
+     * exactly what the UI sends and expects back.
+     */
+    private function getFieldAttributes(string $field): array
+    {
+        $attributes = $this->getFieldManager()->getAttributeList('Settings', $field);
+
+        return empty($attributes) ? [$field] : $attributes;
     }
 
     public function update(\stdClass $data)
@@ -180,6 +196,11 @@ class Settings extends AbstractService
         return $this->getInjection('dataManager');
     }
 
+    protected function getFieldManager(): FieldManager
+    {
+        return $this->getInjection('fieldManagerUtil');
+    }
+
     /**
      * The part of the config that may leave the backend - the UI, Twig
      * templates, PDF and export contexts. Built from an explicit allow list
@@ -208,11 +229,16 @@ class Settings extends AbstractService
      */
     private function setData(array|\stdClass $data): void
     {
-        $fieldDefs = $this->getSettingsFieldDefs();
+        $allowedAttributes = [];
+        foreach (array_keys($this->getSettingsFieldDefs()) as $field) {
+            foreach ($this->getFieldAttributes($field) as $attribute) {
+                $allowedAttributes[$attribute] = true;
+            }
+        }
 
         $values = [];
         foreach ((array)$data as $key => $value) {
-            if (isset($fieldDefs[$key])) {
+            if (isset($allowedAttributes[$key])) {
                 $values[$key] = $value;
             }
         }
@@ -318,5 +344,6 @@ class Settings extends AbstractService
         $this->addDependency('metadata');
         $this->addDependency('dataManager');
         $this->addDependency('eventManager');
+        $this->addDependency('fieldManagerUtil');
     }
 }
