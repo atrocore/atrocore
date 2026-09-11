@@ -2397,6 +2397,8 @@ class Metadata extends AbstractMetadataListener
     {
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['hasAttribute']) && !empty($scopeDefs['hasClassification'])) {
+                $relFieldName = Util::pluralize(lcfirst($scope));
+
                 if (empty($data['entityDefs'][$scope]['fields']['classifications'])) {
                     $data['entityDefs'][$scope]['fields']['classifications'] = [];
                 }
@@ -2406,7 +2408,7 @@ class Metadata extends AbstractMetadataListener
 
                 $data['entityDefs'][$scope]['links']['classifications'] = [
                     "type"         => "hasMany",
-                    "foreign"      => Util::pluralize(lcfirst($scope)),
+                    "foreign"      => $relFieldName,
                     "relationName" => "{$scope}Classification",
                     "entity"       => "Classification"
                 ];
@@ -2420,11 +2422,17 @@ class Metadata extends AbstractMetadataListener
                     $data['clientDefs'][$scope]['boolFilterList'][] = 'multipleClassifications';
                 }
 
-                $data['entityDefs']['Classification']['fields'][Util::pluralize(lcfirst($scope))] = [
-                    "type" => "linkMultiple"
+                $data['entityDefs']['Classification']['fields'][$relFieldName] = [
+                    "type"                => "linkMultiple",
+                    "noLoad"              => true,
+                    "inheritanceDisabled" => true
                 ];
 
-                $data['entityDefs']['Classification']['links'][Util::pluralize(lcfirst($scope))] = [
+                if (!in_array($relFieldName, $data['scopes']['Classification']['mandatoryUnInheritedFields'] ?? [])) {
+                    $data['scopes']['Classification']['mandatoryUnInheritedFields'][] = $relFieldName;
+                }
+
+                $data['entityDefs']['Classification']['links'][$relFieldName] = [
                     "type"         => "hasMany",
                     "foreign"      => 'classifications',
                     "relationName" => "{$scope}Classification",
