@@ -405,6 +405,10 @@ class ReferenceData extends Repository implements Injectable
                     $field = substr($field, 0, -1);
                 }
 
+                if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields', $field, 'type']) === 'bool') {
+                    $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                }
+
                 $filtered = [];
                 foreach ($items as $item) {
                     if (
