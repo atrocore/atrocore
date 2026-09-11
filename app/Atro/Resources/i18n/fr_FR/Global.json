@@ -800,7 +800,7 @@
     "onlyMy": "Mien",
     "assignedToMe": "Attribué à moi",
     "ownedByMe": "J'en suis propriétaire",
-    "onlyArchived": "Sans données non archivés",
+    "onlyArchived": "Archivées uniquement",
     "withArchived": "Avec les archivées",
     "onlyDeleted": "Supprimé",
     "onlyFollowed": "Suivi",
