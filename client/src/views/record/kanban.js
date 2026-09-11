@@ -197,7 +197,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             if (!this.statusField) {
                 throw new Error("No status field for entity type '" + this.scope + "'.");
             }
-            this.statusList = Espo.Utils.clone(this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'options']));
+            this.statusList = Espo.Utils.clone(this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'options'])) || [];
 
             var statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
 
