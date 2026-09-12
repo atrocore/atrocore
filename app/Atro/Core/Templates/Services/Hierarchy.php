@@ -205,7 +205,7 @@ class Hierarchy extends Base
         }
 
         $sortBy = $params['sortBy'] ?? 'id';
-        $order = $params['asc'] ? 'ASC' : 'DESC';
+        $order = !empty($params['asc']) ? 'ASC' : 'DESC';
 
         if (!isset($params['ids'])) {
             $params = $this->getParamsForTree($params['link'], $params['scope'], $params);

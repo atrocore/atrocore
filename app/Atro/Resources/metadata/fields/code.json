@@ -20,6 +20,11 @@
     {
       "name": "editorActions",
       "type": "jsonObject"
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "default": false
     }
   ],
   "fieldDefs": {
