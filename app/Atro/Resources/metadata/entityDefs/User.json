@@ -192,6 +192,16 @@
       "view": "views/user/fields/avatar",
       "previewSize": "small"
     },
+    "avatarFileName": {
+      "type": "varchar",
+      "maxLength": 255,
+      "internal": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
+    },
     "sendAccessInfo": {
       "type": "bool",
       "notStorable": true,

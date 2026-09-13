@@ -64,23 +64,122 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
             }.bind(this));
         },
 
+        isOwnAvatar: function () {
+            return this.model.id === this.getUser().id;
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            if (this.isOwnAvatar()) {
+                // in addition to clearing the (legacy, File-based) link fields, also remove
+                // an avatar uploaded via the raw avatar endpoint, which isn't tied to avatarId
+                this.addActionHandler('clearLink', function () {
+                    Dep.prototype.clearLink.call(this);
+
+                    if (this.model.get('avatarFileName')) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: 'User/avatar'
+                        }).done(function () {
+                            this.model.fetch().done(function () {
+                                this.reRender();
+                            }.bind(this));
+                        }.bind(this));
+                    }
+                }.bind(this));
+            }
+        },
+
+        // uploads directly to the raw, ACL-free avatar endpoint instead of the generic
+        // base64 File-upload flow, and only for the logged-in user's own avatar
+        uploadLink: function () {
+            if (!this.isOwnAvatar()) {
+                Dep.prototype.uploadLink.call(this);
+                return;
+            }
+
+            var $input = $('<input type="file" accept="image/jpeg,image/png,image/gif,image/webp">');
+
+            $input.one('change', function () {
+                var file = $input[0].files[0];
+                if (!file) {
+                    return;
+                }
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    this.createView('crop', 'views/modals/image-crop', {
+                        contents: e.target.result
+                    }, function (view) {
+                        view.render();
+
+                        this.listenToOnce(view, 'crop', function (croppedContents) {
+                            this.clearView('crop');
+                            this.uploadAvatarFile(croppedContents);
+                        }.bind(this));
+                        this.listenToOnce(view, 'remove', function () {
+                            this.clearView('crop');
+                        }.bind(this));
+                    }.bind(this));
+                }.bind(this);
+                reader.readAsDataURL(file);
+            }.bind(this));
+
+            $input.trigger('click');
+        },
+
+        uploadAvatarFile: function (dataUrl) {
+            this.notify('Loading...');
+
+            var formData = new FormData();
+            formData.append('file', this.dataUrlToBlob(dataUrl), 'avatar.jpg');
+
+            $.ajax({
+                type: 'POST',
+                url: 'User/avatar',
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function () {
+                this.model.fetch().done(function () {
+                    this.notify(false);
+                    this.reRender();
+                }.bind(this));
+            }.bind(this)).fail(function () {
+                this.notify(this.translate('Error occurred'), 'error');
+            }.bind(this));
+        },
+
+        dataUrlToBlob: function (dataUrl) {
+            var parts = dataUrl.split(',');
+            var mime = parts[0].match(/:(.*?);/)[1];
+            var binary = atob(parts[1]);
+            var array = new Uint8Array(binary.length);
+            for (var i = 0; i < binary.length; i++) {
+                array[i] = binary.charCodeAt(i);
+            }
+
+            return new Blob([array], {type: mime});
+        },
+
         getValueForDisplay: function () {
             if (this.mode == 'detail' || this.mode == 'list') {
                 var id = this.model.get(this.idName);
                 var userId = this.model.id;
 
-                var t = Date.now();
+                var t = this.model.get('modifiedAt') ? (new Date(this.model.get('modifiedAt'))).getTime() : Date.now();
 
                 var imgHtml;
 
                 if (this.mode == 'detail') {
-                    imgHtml = '<img src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&attachmentId=' + ( id || 'false') + '">';
+                    imgHtml = '<img src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&attachmentId=' + ( id || 'false') + '&t=' + t + '">';
                 } else {
                     var cache = this.getCache();
                     if (cache) {
                         t = cache.get('app', 'timestamp');
                     }
-                    imgHtml = '<img width="16" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '">';
+                    imgHtml = '<img width="16" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '">';
                     return imgHtml;
                 }
 
