@@ -156,9 +156,9 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     style: this.options.merging ? 'primary' : '',
                     label: '<i class="ph ph-arrows-merge"></i>',
                     onClick: (dialog) => {
-                        this.trigger('switchToMerge', dialog)
                         $('#compare-button-container').find('[data-name="switchToMerge"]').addClass('btn-primary').siblings().removeClass('btn-primary');
                         this.$el.find('.modal-footer [data-name="merge"]').removeClass('hidden').addClass('disabled').attr('disabled', true);
+                        this.trigger('switchToMerge', dialog)
                     }
                 });
             }

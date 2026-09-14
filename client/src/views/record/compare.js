@@ -116,6 +116,9 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
             this.wait(true);
             this.prepareFieldsData(() => {
                 this.wait(false);
+                if (this.isFullyRendered()) {
+                    this.renderPanels();
+                }
             });
 
             this.listenTo(this, 'switchToCompare', (dialog) => {
@@ -1145,15 +1148,17 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                 });
             }
 
+            this.renderPanels();
+        },
+
+        renderPanels() {
             this.notify('Loading...');
             this.renderedPanels = [];
-
 
             this.renderFieldsPanels();
             this.renderPanelNavigationView();
             this.renderRelationshipsPanels();
             this.toggleFieldPanels();
-
         },
 
         getModelsForAttributes() {
