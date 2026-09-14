@@ -29,7 +29,7 @@ use Atro\Handlers\AbstractHandler;
         'GET',
     ],
     summary: 'Returns a record',
-    description: 'Returns a single record by ID. If the entity has a field marked as code, its value can be passed instead of the ID.',
+    description: 'Returns a single record by ID. If the entity has a field marked as slug, its value can be passed instead of the ID.',
     tag: '{entityName}',
     parameters: [
         [
@@ -85,7 +85,7 @@ class ReadHandler extends AbstractHandler
         /** @var Record $service */
         $service = $this->getRecordService($entityName);
 
-        $id = $service->resolveIdByCode($id) ?? $id;
+        $id = $service->resolveIdBySlug($id) ?? $id;
 
         $entity = $service->readEntity($id, $withRelationships);
 

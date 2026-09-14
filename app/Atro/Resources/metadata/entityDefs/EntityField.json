@@ -355,7 +355,7 @@
         }
       }
     },
-    "isCode": {
+    "isSlug": {
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {

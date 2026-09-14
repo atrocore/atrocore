@@ -2,7 +2,7 @@
   "fields": {
     "number": {
       "type": "autoincrement",
-      "isCode": true
+      "isSlug": true
     },
     "entity": {
       "type": "enum",
