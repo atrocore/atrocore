@@ -46,6 +46,11 @@ The following parameters are available when defining a Matching Rule:
   - Set – represents a grouped collection of subordinate Matching Rules that are evaluated together. A Set rule enables composite matching logic by aggregating multiple conditions into a single weighted rule. A Set has an Operator parameter that defines how its sub-rules are evaluated:
     - Operator: AND - All sub-rules within the Set must evaluate to true for the Set to be considered true.
     - Operator: OR - At least one sub-rule must evaluate to true for the Set to be considered true.
+  - Expression – lets you write custom matching logic instead of picking a fixed rule type, using two separate [Expression Language](../../../10.developer-guide/85.expression-language/index.md#matching-rule-expressions) expressions:
+    - Matched Where Expression – decides which records are even worth considering as candidates for the record being checked.
+    - Score Expression – decides, for each candidate the first expression let through, how well it actually matches, as a number from 0 to 1. This is multiplied by the rule's Weight the same way any other rule type's result is.
+
+    Use this rule type when the built-in types above can't express the comparison you need - for example, matching a record's name against a candidate's translated name in a specific language, or combining several fields into one custom condition.
 
   The [Advanced Data Management](https://store.atrocore.com/en/advanced-data-management/20113) module provides additional rule types for approximate matching:
 

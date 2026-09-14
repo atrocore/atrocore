@@ -29,7 +29,7 @@
     "expressionCannotBeEmpty": "Wyrażenie nie może być puste."
   },
   "tooltips": {
-    "matchedWhereExpression": "Wyrażenie ExpressionLanguage z dostępem do `stageEntity` (pełnego rekordu). Musi zwracać natywną tablicę warunku where, w tym samym formacie, który akceptują `Repository::where()` oraz funkcje Twig findEntities/findRecords - np. {nameFrFr: stageEntity.get('name')} znajduje rekordy główne, których nameFrFr jest równe name rekordu źródłowego.",
-    "matchScoreExpression": "Wyrażenie ExpressionLanguage z dostępem do `stageEntity` (pełnego rekordu) i `masterEntity` (surowych wartości pól kandydata jako tablicy - np. masterEntity['name']). Musi zwracać liczbę z zakresu od 0 do 1, mnożoną przez wagę reguły w celu uzyskania wyniku dopasowania."
+    "matchedWhereExpression": "Wyrażenie ExpressionLanguage z dostępem do `stageEntity` (pełnego rekordu). Musi zwracać tablicę warunku where opisującą, które rekordy główne uznać za kandydatów - klucze to nazwy pól, wartości to to, z czym porównywać (operatory można osadzić w kluczu, np. `field>`, `field*`, a grupy `OR`/`AND` można zagnieżdżać dla bardziej złożonych warunków) - np. {nameFrFr: stageEntity.get('name')} znajduje rekordy główne, których nameFrFr jest równe name rekordu źródłowego.",
+    "matchScoreExpression": "Wyrażenie ExpressionLanguage z dostępem do `stageEntity` (pełnego rekordu) i `masterEntity` (surowych wartości pól kandydata jako tablicy - np. masterEntity['name']). Musi zwracać liczbę z zakresu od 0 do 1, mnożoną przez wagę reguły w celu uzyskania wyniku dopasowania - np. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 ocenia dokładne dopasowanie jako 1, a wszystko inne jako 0."
   }
 }
