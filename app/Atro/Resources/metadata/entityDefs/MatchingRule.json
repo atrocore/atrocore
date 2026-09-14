@@ -213,6 +213,7 @@
       "variables": [
         "stageEntity"
       ],
+      "tooltip": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -242,6 +243,7 @@
         "stageEntity",
         "masterEntity"
       ],
+      "tooltip": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [

@@ -29,7 +29,7 @@
     "expressionCannotBeEmpty": "L'espressione non può essere vuota."
   },
   "tooltips": {
-    "matchedWhereExpression": "Un'espressione ExpressionLanguage con accesso a `stageEntity` (un record completo). Deve restituire un array di condizione where nativo, nello stesso formato accettato da `Repository::where()` e dalle funzioni Twig findEntities/findRecords - es. {nameFrFr: stageEntity.get('name')} trova i record master il cui nameFrFr è uguale al name del record di origine.",
-    "matchScoreExpression": "Un'espressione ExpressionLanguage con accesso a `stageEntity` (un record completo) e `masterEntity` (i valori grezzi dei campi del candidato, come array - es. masterEntity['name']). Deve restituire un numero tra 0 e 1, moltiplicato per il peso della regola per produrre il punteggio di corrispondenza."
+    "matchedWhereExpression": "Un'espressione ExpressionLanguage con accesso a `stageEntity` (un record completo). Deve restituire un array di condizione where che descrive quali record master considerare come candidati - le chiavi sono nomi di campo, i valori sono ciò con cui confrontare (gli operatori possono essere incorporati nella chiave, es. `field>`, `field*`, e i gruppi `OR`/`AND` possono essere annidati per condizioni più complesse) - es. {nameFrFr: stageEntity.get('name')} trova i record master il cui nameFrFr è uguale al name del record di origine.",
+    "matchScoreExpression": "Un'espressione ExpressionLanguage con accesso a `stageEntity` (un record completo) e `masterEntity` (i valori grezzi dei campi del candidato, come array - es. masterEntity['name']). Deve restituire un numero tra 0 e 1, moltiplicato per il peso della regola per produrre il punteggio di corrispondenza - es. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 assegna il punteggio 1 a una corrispondenza esatta e 0 a tutto il resto."
   }
 }

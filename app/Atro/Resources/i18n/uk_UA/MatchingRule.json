@@ -38,7 +38,7 @@
     "expressionCannotBeEmpty": "Вираз не може бути порожнім."
   },
   "tooltips": {
-    "matchedWhereExpression": "Вираз ExpressionLanguage з доступом до `stageEntity` (повного запису). Повинен повертати нативний масив умови where, у тому самому форматі, який приймають `Repository::where()` та функції Twig findEntities/findRecords - напр. {nameFrFr: stageEntity.get('name')} знаходить головні записи, у яких nameFrFr дорівнює name вихідного запису.",
-    "matchScoreExpression": "Вираз ExpressionLanguage з доступом до `stageEntity` (повного запису) та `masterEntity` (необроблених значень полів кандидата у вигляді масиву - напр. masterEntity['name']). Повинен повертати число від 0 до 1, яке множиться на вагу правила для отримання оцінки відповідності."
+    "matchedWhereExpression": "Вираз ExpressionLanguage з доступом до `stageEntity` (повного запису). Повинен повертати масив умови where, що описує, які головні записи вважати кандидатами - ключі це назви полів, значення це те, з чим порівнювати (оператори можна вбудовувати в ключ, напр. `field>`, `field*`, а групи `OR`/`AND` можна вкладати для складніших умов) - напр. {nameFrFr: stageEntity.get('name')} знаходить головні записи, у яких nameFrFr дорівнює name вихідного запису.",
+    "matchScoreExpression": "Вираз ExpressionLanguage з доступом до `stageEntity` (повного запису) та `masterEntity` (необроблених значень полів кандидата у вигляді масиву - напр. masterEntity['name']). Повинен повертати число від 0 до 1, яке множиться на вагу правила для отримання оцінки відповідності - напр. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 оцінює точний збіг як 1, а все інше як 0."
   }
 }

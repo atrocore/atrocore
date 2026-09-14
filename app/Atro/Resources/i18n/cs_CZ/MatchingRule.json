@@ -29,7 +29,7 @@
     "expressionCannotBeEmpty": "Výraz nesmí být prázdný."
   },
   "tooltips": {
-    "matchedWhereExpression": "Výraz ExpressionLanguage s přístupem k `stageEntity` (naplněný záznam). Musí vrátit pole ve formátu nativní podmínky where, stejném, jaké přijímá `Repository::where()` a Twig funkce findEntities/findRecords - např. {nameFrFr: stageEntity.get('name')} najde hlavní záznamy, jejichž nameFrFr se rovná name zdrojového záznamu.",
-    "matchScoreExpression": "Výraz ExpressionLanguage s přístupem k `stageEntity` (naplněný záznam) a `masterEntity` (surové hodnoty polí kandidáta jako pole - např. masterEntity['name']). Musí vrátit číslo mezi 0 a 1, které se vynásobí váhou pravidla a vytvoří skóre shody."
+    "matchedWhereExpression": "Výraz ExpressionLanguage s přístupem k `stageEntity` (naplněný záznam). Musí vrátit pole podmínky where popisující, které hlavní záznamy zvážit jako kandidáty - klíče jsou názvy polí, hodnoty jsou to, s čím se má porovnávat (operátory lze vložit do klíče, např. `field>`, `field*`, a skupiny `OR`/`AND` se dají vnořovat pro složitější podmínky) - např. {nameFrFr: stageEntity.get('name')} najde hlavní záznamy, jejichž nameFrFr se rovná name zdrojového záznamu.",
+    "matchScoreExpression": "Výraz ExpressionLanguage s přístupem k `stageEntity` (naplněný záznam) a `masterEntity` (surové hodnoty polí kandidáta jako pole - např. masterEntity['name']). Musí vrátit číslo mezi 0 a 1, které se vynásobí váhou pravidla a vytvoří skóre shody - např. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 ohodnotí přesnou shodu jako 1 a vše ostatní jako 0."
   }
 }

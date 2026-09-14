@@ -38,7 +38,7 @@
     "expressionCannotBeEmpty": "Expression cannot be empty."
   },
   "tooltips": {
-    "matchedWhereExpression": "An ExpressionLanguage expression with access to `stageEntity` (a hydrated record). Must return a native where-clause array, the same format `Repository::where()` and the findEntities/findRecords Twig functions accept - e.g. {nameFrFr: stageEntity.get('name')} finds master records whose nameFrFr equals the stage record's name.",
-    "matchScoreExpression": "An ExpressionLanguage expression with access to `stageEntity` (a hydrated record) and `masterEntity` (the candidate's raw field values, as an array - e.g. masterEntity['name']). Must return a number between 0 and 1, multiplied by the rule's weight to produce the match score."
+    "matchedWhereExpression": "An ExpressionLanguage expression with access to `stageEntity` (a hydrated record). Must return a where-clause array describing which master records to consider as candidates - keys are field names, values are what to match against (operators can be embedded in the key, e.g. `field>`, `field*`, and `OR`/`AND` groups nest for more complex conditions) - e.g. {nameFrFr: stageEntity.get('name')} finds master records whose nameFrFr equals the stage record's name.",
+    "matchScoreExpression": "An ExpressionLanguage expression with access to `stageEntity` (a hydrated record) and `masterEntity` (the candidate's raw field values, as an array - e.g. masterEntity['name']). Must return a number between 0 and 1, multiplied by the rule's weight to produce the match score - e.g. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 scores an exact match as 1 and everything else as 0."
   }
 }
