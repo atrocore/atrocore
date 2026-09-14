@@ -5,7 +5,9 @@
     "matchingRuleSet": "Набор",
     "matchingRules": "Правила подбора",
     "operator": "Оператор",
-    "attribute": "Атрибут"
+    "attribute": "Атрибут",
+    "matchedWhereExpression": "Выражение соответствия where",
+    "matchScoreExpression": "Выражение оценки"
   },
   "groupOptions": {
     "field": {
@@ -18,7 +20,8 @@
       "fieldEqual": "Поле равно",
       "fieldSimilar": "Поле похоже",
       "fieldContains": "Поле содержит",
-      "set": "Набор"
+      "set": "Набор",
+      "expression": "Выражение"
     },
     "operator": {
       "and": "AND",
@@ -31,6 +34,11 @@
     "notValidMatching": "Сопоставление недействительно",
     "notValidMatchingRuleSet": "Набор правил соответствия недействителен",
     "notValidFieldType": "Тип поля не поддерживается выбранным типом правила.",
-    "notValidAttributeType": "Тип атрибута не поддерживается выбранным типом правила."
+    "notValidAttributeType": "Тип атрибута не поддерживается выбранным типом правила.",
+    "expressionCannotBeEmpty": "Выражение не может быть пустым."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Выражение ExpressionLanguage с доступом к `stageEntity` (полной записи). Должно возвращать нативный массив условия where, в том же формате, который принимают `Repository::where()` и функции Twig findEntities/findRecords - напр. {nameFrFr: stageEntity.get('name')} находит главные записи, у которых nameFrFr равно name исходной записи.",
+    "matchScoreExpression": "Выражение ExpressionLanguage с доступом к `stageEntity` (полной записи) и `masterEntity` (необработанным значениям полей кандидата в виде массива - напр. masterEntity['name']). Должно возвращать число от 0 до 1, которое умножается на вес правила для получения оценки совпадения."
   }
 }

@@ -4,14 +4,17 @@
     "weight": "Poids",
     "matchingRuleSet": "Ensemble",
     "matchingRules": "Règles d'appariements",
-    "operator": "Opérateur"
+    "operator": "Opérateur",
+    "matchedWhereExpression": "Expression de correspondance where",
+    "matchScoreExpression": "Expression de score"
   },
   "options": {
     "type": {
       "fieldEqual": "Le champ est égal",
       "fieldSimilar": "Le champ est similaire",
       "fieldContains": "Le champ contient",
-      "set": "Ensemble"
+      "set": "Ensemble",
+      "expression": "Expression"
     },
     "operator": {
       "and": "ET",
@@ -22,6 +25,11 @@
     "notValidCode": "Le code ne doit contenir que des lettres, des chiffres, des traits de soulignement et des tirets.",
     "notValidMatchingActivation": "La règle de correspondance ne peut être modifiée que pour une correspondance inactive.",
     "notValidMatching": "La correspondance n'est pas valide",
-    "notValidMatchingRuleSet": "L'ensemble de règles de correspondance n'est pas valide"
+    "notValidMatchingRuleSet": "L'ensemble de règles de correspondance n'est pas valide",
+    "expressionCannotBeEmpty": "L'expression ne peut pas être vide."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Une expression ExpressionLanguage avec accès à `stageEntity` (un enregistrement complet). Doit renvoyer un tableau de condition where natif, au même format que celui accepté par `Repository::where()` et les fonctions Twig findEntities/findRecords - par ex. {nameFrFr: stageEntity.get('name')} trouve les enregistrements principaux dont le nameFrFr est égal au name de l'enregistrement source.",
+    "matchScoreExpression": "Une expression ExpressionLanguage avec accès à `stageEntity` (un enregistrement complet) et `masterEntity` (les valeurs brutes des champs du candidat, sous forme de tableau - par ex. masterEntity['name']). Doit renvoyer un nombre compris entre 0 et 1, multiplié par le poids de la règle pour produire le score de correspondance."
   }
 }

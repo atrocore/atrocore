@@ -4,14 +4,17 @@
     "weight": "Peso",
     "matchingRuleSet": "Set",
     "matchingRules": "Regole di abbinamento",
-    "operator": "Operatore"
+    "operator": "Operatore",
+    "matchedWhereExpression": "Espressione di corrispondenza where",
+    "matchScoreExpression": "Espressione del punteggio"
   },
   "options": {
     "type": {
       "fieldEqual": "Il campo è uguale",
       "fieldSimilar": "Il campo è simile",
       "fieldContains": "Il campo contiene",
-      "set": "Set"
+      "set": "Set",
+      "expression": "Espressione"
     },
     "operator": {
       "and": "E",
@@ -22,6 +25,11 @@
     "notValidCode": "Il codice deve contenere solo lettere, numeri, trattini e trattini bassi.",
     "notValidMatchingActivation": "La regola di abbinamento può essere modificata solo per un abbinamento inattivo.",
     "notValidMatching": "La corrispondenza non è valida",
-    "notValidMatchingRuleSet": "Il set di regole di corrispondenza non è valido"
+    "notValidMatchingRuleSet": "Il set di regole di corrispondenza non è valido",
+    "expressionCannotBeEmpty": "L'espressione non può essere vuota."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Un'espressione ExpressionLanguage con accesso a `stageEntity` (un record completo). Deve restituire un array di condizione where nativo, nello stesso formato accettato da `Repository::where()` e dalle funzioni Twig findEntities/findRecords - es. {nameFrFr: stageEntity.get('name')} trova i record master il cui nameFrFr è uguale al name del record di origine.",
+    "matchScoreExpression": "Un'espressione ExpressionLanguage con accesso a `stageEntity` (un record completo) e `masterEntity` (i valori grezzi dei campi del candidato, come array - es. masterEntity['name']). Deve restituire un numero tra 0 e 1, moltiplicato per il peso della regola per produrre il punteggio di corrispondenza."
   }
 }

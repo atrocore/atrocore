@@ -48,6 +48,11 @@ abstract class AbstractMatchingRule
         return (float)($this->rule->get('weight') ?? 0);
     }
 
+    protected function getContainer(): Container
+    {
+        return $this->container;
+    }
+
     protected function getConnection(): Connection
     {
         return $this->container->get('connection');
