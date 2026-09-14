@@ -4,14 +4,17 @@
     "weight": "Waga",
     "matchingRuleSet": "Zestaw",
     "matchingRules": "Zasady dopasowywania",
-    "operator": "Operator"
+    "operator": "Operator",
+    "matchedWhereExpression": "Wyrażenie dopasowania where",
+    "matchScoreExpression": "Wyrażenie wyniku"
   },
   "options": {
     "type": {
       "fieldEqual": "Pole jest równe",
       "fieldSimilar": "Pole jest podobne",
       "fieldContains": "Pole zawiera",
-      "set": "Zestaw"
+      "set": "Zestaw",
+      "expression": "Wyrażenie"
     },
     "operator": {
       "and": "ORAZ",
@@ -22,6 +25,11 @@
     "notValidCode": "Kod musi zawierać wyłącznie litery, cyfry, podkreślniki i myślniki.",
     "notValidMatchingActivation": "Regułę dopasowania można zmienić tylko dla nieaktywnego dopasowania.",
     "notValidMatching": "Dopasowanie jest nieprawidłowe",
-    "notValidMatchingRuleSet": "Zestaw reguł dopasowania jest nieprawidłowy"
+    "notValidMatchingRuleSet": "Zestaw reguł dopasowania jest nieprawidłowy",
+    "expressionCannotBeEmpty": "Wyrażenie nie może być puste."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Wyrażenie ExpressionLanguage z dostępem do `stageEntity` (pełnego rekordu). Musi zwracać natywną tablicę warunku where, w tym samym formacie, który akceptują `Repository::where()` oraz funkcje Twig findEntities/findRecords - np. {nameFrFr: stageEntity.get('name')} znajduje rekordy główne, których nameFrFr jest równe name rekordu źródłowego.",
+    "matchScoreExpression": "Wyrażenie ExpressionLanguage z dostępem do `stageEntity` (pełnego rekordu) i `masterEntity` (surowych wartości pól kandydata jako tablicy - np. masterEntity['name']). Musi zwracać liczbę z zakresu od 0 do 1, mnożoną przez wagę reguły w celu uzyskania wyniku dopasowania."
   }
 }

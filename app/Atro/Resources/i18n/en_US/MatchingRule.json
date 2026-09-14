@@ -5,7 +5,9 @@
     "matchingRuleSet": "Set",
     "matchingRules": "Matching Rules",
     "operator": "Operator",
-    "attribute": "Attribute"
+    "attribute": "Attribute",
+    "matchedWhereExpression": "Matched Where Expression",
+    "matchScoreExpression": "Score Expression"
   },
   "groupOptions": {
     "field": {
@@ -18,7 +20,8 @@
       "fieldEqual": "Field is Equal",
       "fieldSimilar": "Field is Similar",
       "fieldContains": "Field Contains",
-      "set": "Set"
+      "set": "Set",
+      "expression": "Expression"
     },
     "operator": {
       "and": "AND",
@@ -31,6 +34,11 @@
     "notValidMatching": "Matching is invalid",
     "notValidMatchingRuleSet": "Matching Rule Set is invalid",
     "notValidFieldType": "Field type is not supported by the selected rule type.",
-    "notValidAttributeType": "Attribute type is not supported by the selected rule type."
+    "notValidAttributeType": "Attribute type is not supported by the selected rule type.",
+    "expressionCannotBeEmpty": "Expression cannot be empty."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "An ExpressionLanguage expression with access to `stageEntity` (a hydrated record). Must return a native where-clause array, the same format `Repository::where()` and the findEntities/findRecords Twig functions accept - e.g. {nameFrFr: stageEntity.get('name')} finds master records whose nameFrFr equals the stage record's name.",
+    "matchScoreExpression": "An ExpressionLanguage expression with access to `stageEntity` (a hydrated record) and `masterEntity` (the candidate's raw field values, as an array - e.g. masterEntity['name']). Must return a number between 0 and 1, multiplied by the rule's weight to produce the match score."
   }
 }

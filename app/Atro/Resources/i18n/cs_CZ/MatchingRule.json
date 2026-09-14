@@ -4,14 +4,17 @@
     "weight": "Hmotnost",
     "matchingRuleSet": "Sada",
     "matchingRules": "Pravidla porovnávání",
-    "operator": "Operátor"
+    "operator": "Operátor",
+    "matchedWhereExpression": "Výraz shody where",
+    "matchScoreExpression": "Výraz pro skóre"
   },
   "options": {
     "type": {
       "fieldEqual": "Pole se rovná",
       "fieldSimilar": "Pole je podobné",
       "fieldContains": "Pole obsahuje",
-      "set": "Sada"
+      "set": "Sada",
+      "expression": "Výraz"
     },
     "operator": {
       "and": "A",
@@ -22,6 +25,11 @@
     "notValidCode": "Kód musí obsahovat pouze písmena, číslice, podtržítka a pomlčky.",
     "notValidMatchingActivation": "Pravidlo přiřazování lze změnit pouze u neaktivního přiřazování.",
     "notValidMatching": "Shoda je neplatná",
-    "notValidMatchingRuleSet": "Sada odpovídajících pravidel je neplatná"
+    "notValidMatchingRuleSet": "Sada odpovídajících pravidel je neplatná",
+    "expressionCannotBeEmpty": "Výraz nesmí být prázdný."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Výraz ExpressionLanguage s přístupem k `stageEntity` (naplněný záznam). Musí vrátit pole ve formátu nativní podmínky where, stejném, jaké přijímá `Repository::where()` a Twig funkce findEntities/findRecords - např. {nameFrFr: stageEntity.get('name')} najde hlavní záznamy, jejichž nameFrFr se rovná name zdrojového záznamu.",
+    "matchScoreExpression": "Výraz ExpressionLanguage s přístupem k `stageEntity` (naplněný záznam) a `masterEntity` (surové hodnoty polí kandidáta jako pole - např. masterEntity['name']). Musí vrátit číslo mezi 0 a 1, které se vynásobí váhou pravidla a vytvoří skóre shody."
   }
 }
