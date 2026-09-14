@@ -2128,10 +2128,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 });
                             });
                         }
-
-                        this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(this.getView('bottom')?.panelList || []) });
                     }
                 });
+
+                this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(this.getView('bottom')?.panelList || []) });
             });
         },
 
