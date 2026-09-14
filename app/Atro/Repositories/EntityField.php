@@ -383,21 +383,21 @@ class EntityField extends ReferenceData
             }
         }
 
-        if (!empty($entity->get('isCode')) && ($entity->isNew() || $entity->isAttributeChanged('isCode'))) {
+        if (!empty($entity->get('isSlug')) && ($entity->isNew() || $entity->isAttributeChanged('isSlug'))) {
             $entityName = $entity->get('entityId');
 
             if (!in_array($entity->get('type'), ['varchar', 'int', 'autoincrement'])) {
-                throw new BadRequest($this->getLanguage()->translate('invalidCodeFieldType', 'exceptions', 'EntityField'));
+                throw new BadRequest($this->getLanguage()->translate('invalidSlugFieldType', 'exceptions', 'EntityField'));
             }
 
             if (empty($entity->get('unique')) && $entity->get('type') !== 'autoincrement') {
-                throw new BadRequest($this->getLanguage()->translate('codeFieldMustBeUnique', 'exceptions', 'EntityField'));
+                throw new BadRequest($this->getLanguage()->translate('slugFieldMustBeUnique', 'exceptions', 'EntityField'));
             }
 
             foreach ($this->getMetadata()->get("entityDefs.$entityName.fields", []) as $fieldCode => $fieldDefs) {
-                if ($fieldCode !== $entity->get('code') && !empty($fieldDefs['isCode'])) {
+                if ($fieldCode !== $entity->get('code') && !empty($fieldDefs['isSlug'])) {
                     throw new BadRequest(sprintf(
-                        $this->getLanguage()->translate('onlyOneCodeFieldAllowed', 'exceptions', 'EntityField'),
+                        $this->getLanguage()->translate('onlyOneSlugFieldAllowed', 'exceptions', 'EntityField'),
                         $fieldCode
                     ));
                 }
@@ -405,10 +405,10 @@ class EntityField extends ReferenceData
         }
 
         if (
-            !$entity->isNew() && !empty($entity->get('isCode')) && $entity->get('type') !== 'autoincrement'
+            !$entity->isNew() && !empty($entity->get('isSlug')) && $entity->get('type') !== 'autoincrement'
             && $entity->isAttributeChanged('unique') && empty($entity->get('unique'))
         ) {
-            throw new BadRequest($this->getLanguage()->translate('cannotDisableUniqueForCodeField', 'exceptions', 'EntityField'));
+            throw new BadRequest($this->getLanguage()->translate('cannotDisableUniqueForSlugField', 'exceptions', 'EntityField'));
         }
 
         if (!empty($entity->get('required') && $entity->isAttributeChanged('required'))) {

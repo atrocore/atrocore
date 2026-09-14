@@ -5,7 +5,7 @@
     },
     "number": {
       "type": "autoincrement",
-      "isCode": true
+      "isSlug": true
     },
     "masterEntity": {
       "type": "varchar",

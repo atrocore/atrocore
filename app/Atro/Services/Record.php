@@ -32,18 +32,18 @@ use Espo\Services\RecordService;
 class Record extends RecordService
 {
     /**
-     * Resolves $id to the entity's real id in a single query, allowing it to also be looked up by its `isCode`
-     * field (when the entity type has one). Returns null (leaving $id untouched) when there's no code field to
+     * Resolves $id to the entity's real id in a single query, allowing it to also be looked up by its `isSlug`
+     * field (when the entity type has one). Returns null (leaving $id untouched) when there's no slug field to
      * fall back on, so the caller's normal id-only lookup path is used as-is.
      */
-    public function resolveIdByCode(string $id): ?string
+    public function resolveIdBySlug(string $id): ?string
     {
-        $codeField = $this->getCodeField();
-        if ($codeField === null) {
+        $slugField = $this->getSlugField();
+        if ($slugField === null) {
             return null;
         }
 
-        if (in_array($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $codeField, 'type']), ['int', 'autoincrement'])) {
+        if (in_array($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $slugField, 'type']), ['int', 'autoincrement'])) {
             if (is_numeric($id)) {
                 $id = (int)$id;
             } else {
@@ -52,7 +52,7 @@ class Record extends RecordService
         }
 
         $record = $this->getRepository()
-            ->where(['OR' => ['id' => $id, $codeField => $id]])
+            ->where(['OR' => ['id' => $id, $slugField => $id]])
             ->findOne();
 
         if (!empty($record)) {
@@ -62,10 +62,10 @@ class Record extends RecordService
         return !empty($record) ? $record->get('id') : null;
     }
 
-    protected function getCodeField(): ?string
+    protected function getSlugField(): ?string
     {
         foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $field => $defs) {
-            if (!empty($defs['isCode'])) {
+            if (!empty($defs['isSlug'])) {
                 return $field;
             }
         }
