@@ -4067,6 +4067,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 allRows = [...changedRows, ...changedRelationRows]
 
             if (!changedRows.length && !changedRelationRows.length) {
+                Espo.Ui.warning(this.translate('notModified', 'messages'));
                 this.trigger('cancel:save');
                 return;
             }
