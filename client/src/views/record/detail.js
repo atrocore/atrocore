@@ -961,7 +961,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         initListenToInlineMode: function () {
-            var fields = this.getFieldViews();
+            var fields = [];
+            $.each(this.getFieldViews(), (name, fieldView) => {
+                const children = typeof fieldView.getChildrenFieldViews === 'function' ? fieldView.getChildrenFieldViews() : [];
+                if (children.length) {
+                    fields = fields.concat(children);
+                } else {
+                    fields.push(fieldView);
+                }
+            });
 
             this.destroyInlineMultiToolbar();
 
@@ -1094,6 +1102,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         saveAllInlineFields: function () {
+            this.openInlineFields.forEach(function (view) {
+                view.fetchToModel();
+            });
+
             this.setInlineToolbarSaving(true);
 
             const stopSaving = () => this.setInlineToolbarSaving(false);

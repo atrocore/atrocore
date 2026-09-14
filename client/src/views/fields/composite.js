@@ -98,19 +98,34 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
             return rows;
         },
 
+        getChildrenFieldViews() {
+            return this.childrenFields.map(child => this.getView(child.name)).filter(view => !!view);
+        },
+
         setMode(mode) {
             Dep.prototype.setMode.call(this, mode);
 
-            this.childrenFields.forEach(child => {
-                this.getView(child.name).setMode(mode);
+            this.getChildrenFieldViews().forEach(view => {
+                if (view.inlineEditModeIsOn) {
+                    view.inlineEditModeIsOn = false;
+                    view.hideInlineEditLink();
+                    view.killAfterOutsideClickListener();
+                    view.trigger('inline-edit-off');
+
+                    if (mode === 'edit') {
+                        view.fetchToModel();
+                    }
+                }
+
+                view.setMode(mode);
             });
         },
 
         fetch() {
             let data = {};
 
-            this.childrenFields.forEach(child => {
-                _.extend(data, this.getView(child.name).fetch());
+            this.getChildrenFieldViews().forEach(view => {
+                _.extend(data, view.fetch());
             });
 
             return data;
@@ -119,8 +134,8 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
         validate() {
             let validate = false;
 
-            this.childrenFields.forEach(child => {
-                if (this.getView(child.name).validate()) {
+            this.getChildrenFieldViews().forEach(view => {
+                if (view.validate()) {
                     validate = true;
                 }
             });

@@ -10678,8 +10678,8 @@ main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]):n
     width: 100%;
 }
 
-main:not([data-mode=edit]) .cell:not([data-readonly]):not([data-mode=edit]):hover > .field,
-main:not([data-mode=edit]) + .right-side-view .cell:not([data-readonly]):not([data-mode=edit]):hover > .field {
+main:not([data-mode=edit]) .cell:not([data-readonly]):not([data-mode=edit]):hover > .field:not(:has(> .composite-container)),
+main:not([data-mode=edit]) + .right-side-view .cell:not([data-readonly]):not([data-mode=edit]):hover > .field:not(:has(> .composite-container)) {
     background-color: var(--field-hover-color);
 }
 
@@ -13294,6 +13294,19 @@ input#sn-checkbox-open-in-new-window {
 
 #main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group div.field:has(> .composite-container) {
     border-bottom: 0;
+}
+
+#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group:not([data-mode=edit]) div.field:has(> .composite-container),
+#main main[data-mode=detail] + .right-side-view .row .cell:not([data-mode=edit]) .field:has(> .composite-container),
+.modal-body .record > .detail .cell:not([data-mode=edit]) .field:has(> .composite-container) {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group .composite-container .cell[data-mode=edit] > div.field,
+#main main[data-mode=detail] + .right-side-view .row .cell .composite-container .cell[data-mode=edit] > .field,
+.modal-body .record > .detail .cell .composite-container .cell[data-mode=edit] > .field {
+    padding: 0;
 }
 
 .modal-header {
