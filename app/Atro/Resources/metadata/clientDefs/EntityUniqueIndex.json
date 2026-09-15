@@ -1,8 +1,4 @@
 {
   "controller": "controllers/record",
-  "limit": 500,
-  "recordViews": {
-    "detail": "views/entity-unique-index/record/detail",
-    "detailSmall": "views/entity-unique-index/record/detail"
-  }
+  "limit": 500
 }

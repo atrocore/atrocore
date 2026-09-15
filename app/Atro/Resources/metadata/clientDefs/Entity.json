@@ -31,7 +31,6 @@
     },
     "uniqueIndexes": {
       "select": false,
-      "rowActionsView": "views/entity-unique-index/record/row-actions/default",
       "actions": {
         "unlinkRelated": {
           "disabled": true
