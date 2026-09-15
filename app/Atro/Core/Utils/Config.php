@@ -138,12 +138,10 @@ final class Config
 
         $lastBranch = $this->loadConfig();
         foreach ($keys as $keyName) {
-            if (isset($lastBranch[$keyName]) && (is_array($lastBranch) || is_object($lastBranch))) {
-                if (is_array($lastBranch)) {
-                    $lastBranch = $lastBranch[$keyName];
-                } else {
-                    $lastBranch = $lastBranch->$keyName;
-                }
+            if (is_array($lastBranch) && isset($lastBranch[$keyName])) {
+                $lastBranch = $lastBranch[$keyName];
+            } elseif (is_object($lastBranch) && isset($lastBranch->$keyName)) {
+                $lastBranch = $lastBranch->$keyName;
             } else {
                 return $default;
             }
