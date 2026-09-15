@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Nazwa",
+    "entity": "Encja",
+    "fields": "Pola",
+    "isCustom": "Niestandardowy"
+  },
+  "tooltips": {
+    "name": "Nazwa indeksu unikalnego, np. unique_relationship. Dozwolone są tylko małe litery łacińskie, cyfry i podkreślenia.",
+    "fields": "Pola, z których składa się indeks unikalny. Kolumna `deleted` jest zawsze dodawana do indeksu jako pierwsza."
+  },
+  "exceptions": {
+    "indexNameIsInvalid": "Nazwa indeksu unikalnego jest nieprawidłowa. Musi zaczynać się od małej litery łacińskiej, nie może kończyć się podkreśleniem i może zawierać tylko małe litery łacińskie, cyfry i podkreślenia.",
+    "indexFieldsAreRequired": "Należy wybrać co najmniej jedno pole.",
+    "indexFieldsShouldBeUnique": "To samo pole nie może być użyte w indeksie unikalnym dwukrotnie.",
+    "fieldCannotBeUsedInUniqueIndex": "Pole '%s' nie ma własnej kolumny w tabeli i nie może być użyte w indeksie unikalnym.",
+    "fieldTypeCannotBeUsedInUniqueIndex": "Typ pola '%s' nie jest obsługiwany przez indeksy unikalne.",
+    "uniqueIndexAlreadyExists": "Indeks unikalny '%s' już istnieje.",
+    "entityTypeIsNotSuitableForUniqueIndexes": "Indeksy unikalne można konfigurować tylko dla encji typu Base i Hierarchy."
+  }
+}

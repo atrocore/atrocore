@@ -27,5 +27,6 @@
   "notCreatable": true,
   "fieldDefs": {
     "type": "float"
-  }
+  },
+  "uniqueIndexAllowed": true
 }

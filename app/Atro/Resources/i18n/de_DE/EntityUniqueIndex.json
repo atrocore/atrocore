@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Name",
+    "entity": "Entität",
+    "fields": "Felder",
+    "isCustom": "Benutzerdefiniert"
+  },
+  "tooltips": {
+    "name": "Der Name des Unique-Index, z. B. unique_relationship. Erlaubt sind nur lateinische Kleinbuchstaben, Ziffern und Unterstriche.",
+    "fields": "Die Felder, aus denen der Unique-Index besteht. Die Spalte `deleted` wird dem Index immer als erste Spalte hinzugefügt."
+  },
+  "exceptions": {
+    "indexNameIsInvalid": "Der Name des Unique-Index ist ungültig. Er muss mit einem lateinischen Kleinbuchstaben beginnen, darf nicht mit einem Unterstrich enden und darf nur lateinische Kleinbuchstaben, Ziffern und Unterstriche enthalten.",
+    "indexFieldsAreRequired": "Es muss mindestens ein Feld ausgewählt werden.",
+    "indexFieldsShouldBeUnique": "Dasselbe Feld kann im Unique-Index nicht zweimal verwendet werden.",
+    "fieldCannotBeUsedInUniqueIndex": "Das Feld '%s' hat keine eigene Spalte in der Tabelle und kann im Unique-Index nicht verwendet werden.",
+    "fieldTypeCannotBeUsedInUniqueIndex": "Der Typ des Feldes '%s' wird von Unique-Indizes nicht unterstützt.",
+    "uniqueIndexAlreadyExists": "Der Unique-Index '%s' existiert bereits.",
+    "entityTypeIsNotSuitableForUniqueIndexes": "Unique-Indizes können nur für Entitäten der Typen Base und Hierarchy konfiguriert werden."
+  }
+}

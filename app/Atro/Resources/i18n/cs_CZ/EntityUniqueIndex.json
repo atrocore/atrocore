@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Název",
+    "entity": "Entita",
+    "fields": "Pole",
+    "isCustom": "Vlastní"
+  },
+  "tooltips": {
+    "name": "Název unikátního indexu, například unique_relationship. Povolena jsou pouze malá latinská písmena, číslice a podtržítka.",
+    "fields": "Pole, ze kterých se unikátní index skládá. Sloupec `deleted` je do indexu vždy přidán jako první."
+  },
+  "exceptions": {
+    "indexNameIsInvalid": "Název unikátního indexu je neplatný. Musí začínat malým latinským písmenem, nesmí končit podtržítkem a může obsahovat pouze malá latinská písmena, číslice a podtržítka.",
+    "indexFieldsAreRequired": "Je nutné vybrat alespoň jedno pole.",
+    "indexFieldsShouldBeUnique": "Stejné pole nelze v unikátním indexu použít dvakrát.",
+    "fieldCannotBeUsedInUniqueIndex": "Pole '%s' nemá vlastní sloupec v tabulce a nelze jej použít v unikátním indexu.",
+    "fieldTypeCannotBeUsedInUniqueIndex": "Typ pole '%s' není unikátními indexy podporován.",
+    "uniqueIndexAlreadyExists": "Unikátní index '%s' již existuje.",
+    "entityTypeIsNotSuitableForUniqueIndexes": "Unikátní indexy lze konfigurovat pouze pro entity typu Base a Hierarchy."
+  }
+}

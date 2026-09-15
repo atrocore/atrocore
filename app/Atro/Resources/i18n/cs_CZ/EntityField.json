@@ -133,6 +133,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Některé záznamy mají nulové hodnoty",
+    "fieldIsUsedInUniqueIndex": "Pole '%s' je použito v unikátním indexu nebo indexech '%s' a nelze jej smazat.",
     "cannotAddRequiredFieldWithExistingRecords": "Nelze přidat povinné pole s existujícími záznamy bez výchozí hodnoty",
     "relationAlreadyUsed": "Middle Table Name %s je již používán, zvolte jiný.",
     "optionCodeUsedInDisabledOptionsRules": "Možnost '%s' je použita v pravidlech zakázaných možností a nelze ji změnit.",

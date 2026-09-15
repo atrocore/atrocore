@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nombre singular",
     "namePlural": "Nombre plural",
+    "uniqueIndexes": "Índices únicos",
     "code": "Nombre del sistema",
     "disabled": "Discapacitados",
     "customizable": "Personalizable",

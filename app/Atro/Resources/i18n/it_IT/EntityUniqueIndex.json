@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Nome",
+    "entity": "Entità",
+    "fields": "Campi",
+    "isCustom": "Personalizzato"
+  },
+  "tooltips": {
+    "name": "Il nome dell'indice univoco, ad esempio unique_relationship. Sono ammesse solo lettere latine minuscole, cifre e trattini bassi.",
+    "fields": "I campi che compongono l'indice univoco. La colonna `deleted` viene sempre aggiunta all'indice come prima colonna."
+  },
+  "exceptions": {
+    "indexNameIsInvalid": "Il nome dell'indice univoco non è valido. Deve iniziare con una lettera latina minuscola, non deve terminare con un trattino basso e può contenere solo lettere latine minuscole, cifre e trattini bassi.",
+    "indexFieldsAreRequired": "È necessario selezionare almeno un campo.",
+    "indexFieldsShouldBeUnique": "Lo stesso campo non può essere utilizzato due volte nell'indice univoco.",
+    "fieldCannotBeUsedInUniqueIndex": "Il campo '%s' non ha una colonna propria nella tabella e non può essere utilizzato nell'indice univoco.",
+    "fieldTypeCannotBeUsedInUniqueIndex": "Il tipo del campo '%s' non è supportato dagli indici univoci.",
+    "uniqueIndexAlreadyExists": "L'indice univoco '%s' esiste già.",
+    "entityTypeIsNotSuitableForUniqueIndexes": "Gli indici univoci possono essere configurati solo per le entità di tipo Base e Hierarchy."
+  }
+}

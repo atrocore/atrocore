@@ -135,6 +135,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Some records have null values",
+    "fieldIsUsedInUniqueIndex": "The field '%s' is used in the unique index(es) '%s' and cannot be deleted.",
     "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value",
     "relationAlreadyUsed": "The Middle Table Name %s is already used, choose another.",
     "optionCodeUsedInDisabledOptionsRules": "Option '%s' is used in Disabled Options rules and cannot be changed.",

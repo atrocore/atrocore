@@ -677,6 +677,30 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
+    "uniqueIndexes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "nonComparableFields": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/non-comparable-fields",
@@ -941,6 +965,11 @@
       "type": "hasMany",
       "foreign": "entity",
       "entity": "EntityField"
+    },
+    "uniqueIndexes": {
+      "type": "hasMany",
+      "foreign": "entity",
+      "entity": "EntityUniqueIndex"
     }
   },
   "collection": {

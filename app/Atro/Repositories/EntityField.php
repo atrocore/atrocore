@@ -672,7 +672,32 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
+        $this->validateFieldIsNotUsedInUniqueIndex((string)$entity->get('entityId'), (string)$entity->get('code'));
+
+        // a link field is removed together with its foreign field
+        if (!empty($entity->get('foreignEntityId')) && !empty($entity->get('foreignCode'))) {
+            $this->validateFieldIsNotUsedInUniqueIndex((string)$entity->get('foreignEntityId'), (string)$entity->get('foreignCode'));
+        }
+
         parent::beforeRemove($entity, $options);
+    }
+
+    protected function validateFieldIsNotUsedInUniqueIndex(string $entityName, string $field): void
+    {
+        if (empty($entityName) || empty($field)) {
+            return;
+        }
+
+        $indexes = $this->getEntityManager()->getRepository('EntityUniqueIndex')->findIndexesByField($entityName, $field);
+        if (empty($indexes)) {
+            return;
+        }
+
+        throw new BadRequest(sprintf(
+            $this->getLanguage()->translate('fieldIsUsedInUniqueIndex', 'exceptions', 'EntityField'),
+            $this->translateLabel($field, 'fields', $entityName),
+            implode(', ', $indexes)
+        ));
     }
 
     public function insertEntity(OrmEntity $entity): bool
