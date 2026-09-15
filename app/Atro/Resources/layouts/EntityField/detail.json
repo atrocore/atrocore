@@ -260,7 +260,7 @@
       ],
       [
         {
-          "name": "auditableEnabled"
+          "name": "isAuditableRelation"
         },
         false
       ],

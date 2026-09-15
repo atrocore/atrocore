@@ -57,7 +57,7 @@
     "isNonComparable": "Non comparabile",
     "isDuplicatableRelation": "Duplicabile",
     "inheritanceDisabled": "Non ereditato",
-    "auditableEnabled": "Registra la modifica come attività di registrazione",
+    "isAuditableRelation": "Registra la modifica come attività di registrazione",
     "auditableDisabled": "Non crea alcun record di attività",
     "modifiedExtendedDisabled": "Nessuna registrazione come modifica",
     "modifiedExtendedEnabled": "Registra il cambiamento come modifica",
@@ -93,6 +93,7 @@
     "modifiedExtendedEnabled": "Le modifiche di questa relazione causeranno l'aggiornamento della data e dell'ora di \"Modified At\".",
     "inheritanceDisabled": "I valori di questo campo non saranno ereditati dall'elemento padre.",
     "modifiedExtendedDisabled": "Se impostato, le modifiche in questo campo non aggiorneranno il timestamp \"Modified At\".",
+    "isAuditableRelation": "Le modifiche in questa relazione vengono visualizzate come Attività.",
     "auditableDisabled": "Le modifiche in questo campo non vengono visualizzate come Attività.",
     "selectPageSize": "Numero di record visualizzati per pagina nella finestra di selezione. Evitare valori troppo alti, poiché potrebbero rallentare o bloccare il browser dell'utente."
   },

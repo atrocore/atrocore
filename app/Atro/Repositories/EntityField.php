@@ -887,7 +887,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'isAuditableRelation', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where'];
 
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
@@ -1203,11 +1203,11 @@ class EntityField extends ReferenceData
             }
         }
 
-        // we set auditableEnabled to true for File, channel and category is nothing was defined
-        if (in_array($entity->get('foreignEntityId'), $defaultRelationScopeAudited)) {
+        // we set isAuditableRelation to true for File, channel and category is nothing was defined
+        if ($entity->get('type') === 'linkMultiple' && in_array($entity->get('foreignEntityId'), $defaultRelationScopeAudited)) {
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->get('entityId'), 'fields', $entity->get('code')]);
-            if (!isset($fieldDefs['auditableEnabled'])) {
-                $entity->set('auditableEnabled', true);
+            if (!isset($fieldDefs['isAuditableRelation'])) {
+                $entity->set('isAuditableRelation', true);
             }
         }
     }

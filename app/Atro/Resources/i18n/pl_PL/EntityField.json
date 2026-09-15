@@ -57,7 +57,7 @@
     "isNonComparable": "Nieporównywalne",
     "isDuplicatableRelation": "Możliwość powielania",
     "inheritanceDisabled": "Odziedziczony",
-    "auditableEnabled": "Proszę zarejestrować zmianę jako czynność zapisu",
+    "isAuditableRelation": "Proszę zarejestrować zmianę jako czynność zapisu",
     "auditableDisabled": "Nie tworzyć żadnych rekordów aktywności",
     "modifiedExtendedDisabled": "Brak zapisu jako modyfikacja",
     "modifiedExtendedEnabled": "Proszę zapisać zmianę jako modyfikację",
@@ -93,6 +93,7 @@
     "modifiedExtendedEnabled": "Zmiany w tej relacji spowodują aktualizację daty i godziny \"Modified At\".",
     "inheritanceDisabled": "Wartości dla tego pola nie będą dziedziczone z elementu nadrzędnego.",
     "modifiedExtendedDisabled": "Jeśli ustawione, zmiany w tym polu nie będą aktualizować znacznika czasu \"Modified At\".",
+    "isAuditableRelation": "Zmiany w tej relacji są wyświetlane jako Aktywność.",
     "auditableDisabled": "Zmiany w tym polu nie są wyświetlane jako Aktywność.",
     "selectPageSize": "Liczba rekordów wyświetlanych na stronie w oknie dialogowym wyboru. Unikaj zbyt wysokich wartości, ponieważ może to spowolnić lub zawiesić przeglądarkę użytkownika."
   },
