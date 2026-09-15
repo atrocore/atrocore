@@ -646,10 +646,10 @@ class Entity extends ReferenceData
                 foreach ($entity->get('fields') ?? [] as $field) {
                     $changed = false;
                     if (in_array($field->get('code'), $entity->get('auditedEnabledRelations'))) {
-                        $field->set('auditableEnabled', true);
+                        $field->set('isAuditableRelation', true);
                         $changed = true;
-                    } else if (!empty($field->get('auditableEnabled'))) {
-                        $field->set('auditableEnabled', false);
+                    } else if (!empty($field->get('isAuditableRelation'))) {
+                        $field->set('isAuditableRelation', false);
                         $changed = true;
                     }
 
@@ -706,12 +706,12 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if (!empty($fieldDef['auditableEnabled'])) {
+            if (!empty($fieldDef['isAuditableRelation'])) {
                 $fields[] = $field;
                 continue;
             }
 
-            if (isset($fieldDef['auditableEnabled'])) {
+            if (isset($fieldDef['isAuditableRelation'])) {
                 continue;
             }
 
