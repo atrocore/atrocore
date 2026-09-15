@@ -42,7 +42,10 @@ class Layout extends AbstractListener
                 }
 
                 // add _self if entity is hierarchy type
-                if (in_array($this->getMetadata()->get(['scopes', $scope, 'type']), ['Hierarchy', 'Base'])) {
+                if (
+                    in_array($this->getMetadata()->get(['scopes', $scope, 'type']), ['Hierarchy', 'Base'])
+                    || !empty($this->getMetadata()->get(['scopes', $scope, 'navigationTreeEnabled']))
+                ) {
                     $result = $event->getArgument('result');
                     $exists = false;
                     foreach ($result as $item) {
@@ -131,6 +134,8 @@ class Layout extends AbstractListener
 
     protected function isAdminView($scope): bool
     {
+        $scope = $this->getMetadata()->get(['scopes', $scope, 'adminPanelScope']) ?? $scope;
+
         foreach ($this->getMetadata()->get(['app', 'adminPanel']) as $panel) {
             foreach ($panel['itemList'] as $item) {
                 if (!empty($item['scope']) && $item['scope'] === $scope) {

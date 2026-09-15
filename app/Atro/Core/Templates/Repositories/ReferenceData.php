@@ -558,6 +558,21 @@ class ReferenceData extends Repository implements Injectable
         return $collection;
     }
 
+    public function getRecordPosition(string $id, array $selectParams): ?int
+    {
+        unset($selectParams['offset'], $selectParams['limit']);
+
+        $position = 1;
+        foreach ($this->find($selectParams) as $entity) {
+            if ($entity->get('id') === $id) {
+                return $position;
+            }
+            $position++;
+        }
+
+        return null;
+    }
+
     public function count(array $params)
     {
         if (isset($params['offset'])) {

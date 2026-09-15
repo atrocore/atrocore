@@ -1,5 +1,6 @@
 {
   "type": "ReferenceData",
+  "navigationTreeEnabled": true,
   "object": true,
   "notificationDisabled": true,
   "entity": true,

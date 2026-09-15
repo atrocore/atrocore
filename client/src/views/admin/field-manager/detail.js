@@ -12,5 +12,29 @@ Espo.define('views/admin/field-manager/detail', 'views/detail', Dep => {
 
     return Dep.extend({
 
+        getBreadcrumbsItems: function (isAdmin = false) {
+            const result = [
+                {
+                    url: '#Entity',
+                    label: this.getLanguage().translate('Entity', 'scopeNamesPlural')
+                }
+            ];
+
+            if (this.model.get('entityId')) {
+                result.push({
+                    url: `#Entity/view/${this.model.get('entityId')}`,
+                    label: this.model.get('entityName') || this.model.get('entityId')
+                });
+            }
+
+            result.push({
+                url: `#${this.scope}/view/${this.model.id}`,
+                label: this.getLabel(),
+                className: 'header-title'
+            });
+
+            return result;
+        }
+
     });
 });
