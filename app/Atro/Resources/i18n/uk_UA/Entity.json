@@ -2,6 +2,7 @@
   "fields": {
     "name": "Назва в однині",
     "namePlural": "Назва в множині",
+    "uniqueIndexes": "Унікальні індекси",
     "code": "Системна назва",
     "disabled": "Вимкнено",
     "customizable": "Налаштовується",

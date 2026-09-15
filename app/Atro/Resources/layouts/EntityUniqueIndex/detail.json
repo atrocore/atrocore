@@ -1,0 +1,21 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "fields"
+        },
+        false
+      ]
+    ]
+  }
+]

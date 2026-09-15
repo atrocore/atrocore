@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "name": "Name",
+    "entity": "Entity",
+    "fields": "Fields",
+    "isCustom": "Custom"
+  },
+  "tooltips": {
+    "name": "The name of the unique index, e.g. unique_relationship. Only lowercase Latin letters, digits and underscores are allowed.",
+    "fields": "The fields the unique index consists of. The `deleted` column is always added to the index as the first column. At least two fields are required."
+  },
+  "exceptions": {
+    "indexNameIsInvalid": "The name of the unique index is invalid. It should start with a lowercase Latin letter, should not end with an underscore and can contain lowercase Latin letters, digits and underscores only.",
+    "atLeastTwoFieldsRequired": "A unique index should consist of at least two fields. To make a single field unique, enable the 'Unique' checkbox in the field settings.",
+    "indexFieldsShouldBeUnique": "The same field cannot be used in the unique index twice.",
+    "fieldCannotBeUsedInUniqueIndex": "The field '%s' has no own column in the table and cannot be used in the unique index.",
+    "fieldTypeCannotBeUsedInUniqueIndex": "The type of the field '%s' is not supported by unique indexes.",
+    "duplicateValuesExist": "The unique index cannot be created: the table already contains duplicate values for the selected fields: %s",
+    "indexNameAlreadyUsed": "An index named '%s' already exists for this entity.",
+    "entityTypeIsNotSuitableForUniqueIndexes": "Unique indexes can be configured for the Base and Hierarchy entities only."
+  }
+}

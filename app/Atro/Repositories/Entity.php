@@ -117,12 +117,17 @@ class Entity extends ReferenceData
             return $this->getEntityManager()->getRepository('EntityField')->find($selectParams);
         }
 
+        if ($link === 'uniqueIndexes') {
+            $selectParams['whereClause'] = [['entityId=' => $entity->get('id')]];
+            return $this->getEntityManager()->getRepository('EntityUniqueIndex')->find($selectParams);
+        }
+
         return parent::findRelated($entity, $link, $selectParams);
     }
 
     public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
     {
-        if ($relationName === 'fields') {
+        if (in_array($relationName, ['fields', 'uniqueIndexes'], true)) {
             $params['offset'] = 0;
             $params['limit']  = \PHP_INT_MAX;
             return count($this->findRelated($entity, $relationName, $params));
