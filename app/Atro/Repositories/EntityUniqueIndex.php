@@ -32,6 +32,11 @@ class EntityUniqueIndex extends ReferenceData
      */
     public const DELETED_COLUMN = 'deleted';
 
+    /**
+     * The primary key is unique on its own, so an index containing it makes no sense.
+     */
+    public const FORBIDDEN_FIELDS = ['id', 'deleted'];
+
     protected array $ormFieldsCache = [];
     protected array $customIndexesCache = [];
 
@@ -142,9 +147,11 @@ class EntityUniqueIndex extends ReferenceData
             throw new BadRequest($this->translateException('indexNameIsInvalid'));
         }
 
+        $this->validateNameIsFree($entity);
+
         $fields = $entity->get('fields');
-        if (!is_array($fields) || empty($fields)) {
-            throw new BadRequest($this->translateException('indexFieldsAreRequired'));
+        if (!is_array($fields) || count($fields) < 2) {
+            throw new BadRequest($this->translateException('atLeastTwoFieldsRequired'));
         }
 
         if (count($fields) !== count(array_unique($fields))) {
@@ -154,7 +161,7 @@ class EntityUniqueIndex extends ReferenceData
         foreach ($fields as $field) {
             $fieldLabel = $this->translate((string)$field, 'fields', $entityName);
 
-            if (!$this->isFieldTypeAllowed($entityName, (string)$field)) {
+            if (in_array($field, self::FORBIDDEN_FIELDS, true) || !$this->isFieldTypeAllowed($entityName, (string)$field)) {
                 throw new BadRequest(sprintf($this->translateException('fieldTypeCannotBeUsedInUniqueIndex'), $fieldLabel));
             }
 
@@ -165,17 +172,75 @@ class EntityUniqueIndex extends ReferenceData
 
         $this->validateMaxLength($entity);
 
+        if ($entity->isNew() || $entity->isAttributeChanged('fields')) {
+            $this->validateNoDuplicates($entityName, $this->getIndexColumns($entity));
+        }
+
         $this->dispatch('beforeSave', $entity, $options);
+    }
+
+    /**
+     * The index name is a part of the index name in the database, so it should be unique within the entity.
+     */
+    protected function validateNameIsFree(OrmEntity $entity): void
+    {
+        $entityName = (string)$entity->get('entityId');
+        $indexName = (string)$entity->get('name');
+
+        // the entity itself keeps its own name on update
+        if (!$entity->isNew() && $entity->get('id') === "{$entityName}_{$indexName}") {
+            return;
+        }
+
+        $taken = $this->getMetadata()->get(['entityDefs', $entityName, 'uniqueIndexes', $indexName]) !== null
+            || $this->getMetadata()->get(['entityDefs', $entityName, 'indexes', $indexName]) !== null;
+
+        if ($taken) {
+            throw new Conflict(sprintf($this->translateException('indexNameAlreadyUsed'), $indexName));
+        }
+    }
+
+    /**
+     * The index cannot be created while the table contains records violating it,
+     * so the duplicates are reported before the schema rebuild fails with a raw SQL error.
+     */
+    protected function validateNoDuplicates(string $entityName, array $columns): void
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $tableName = $this->getEntityManager()->getMapper()->toDb($entityName);
+
+        $quoted = array_map(fn($column) => $connection->quoteIdentifier($column), $columns);
+
+        $rows = $connection->createQueryBuilder()
+            ->select(implode(', ', $quoted))
+            ->from($connection->quoteIdentifier($tableName))
+            ->groupBy(...$quoted)
+            ->having('count(*) > 1')
+            ->setMaxResults(16)
+            ->fetchAllAssociative();
+
+        if (empty($rows)) {
+            return;
+        }
+
+        $examples = [];
+        foreach (array_slice($rows, 0, 15) as $row) {
+            unset($row[self::DELETED_COLUMN]);
+            $examples[] = '(' . implode(', ', array_map(fn($value) => $value === null ? 'null' : (string)$value, $row)) . ')';
+        }
+
+        $str = implode(', ', $examples);
+        if (count($rows) > 15) {
+            $str .= ', ...';
+        }
+
+        throw new BadRequest(sprintf($this->translateException('duplicateValuesExist'), $str));
     }
 
     public function insertEntity(OrmEntity $entity): bool
     {
         $entityName = (string)$entity->get('entityId');
         $indexName = (string)$entity->get('name');
-
-        if ($this->getMetadata()->get(['entityDefs', $entityName, 'uniqueIndexes', $indexName]) !== null) {
-            throw new Conflict(sprintf($this->translateException('uniqueIndexAlreadyExists'), $indexName));
-        }
 
         $entity->id = "{$entityName}_{$indexName}";
         $entity->set('isCustom', true);
@@ -228,15 +293,24 @@ class EntityUniqueIndex extends ReferenceData
         return true;
     }
 
-    protected function saveIndexToMetadata(OrmEntity $entity): void
+    protected function getIndexColumns(OrmEntity $entity): array
     {
         $entityName = (string)$entity->get('entityId');
-        $indexName = (string)$entity->get('name');
 
         $columns = [self::DELETED_COLUMN];
         foreach ($entity->get('fields') as $field) {
             $columns[] = $this->fieldToColumn($entityName, (string)$field);
         }
+
+        return $columns;
+    }
+
+    protected function saveIndexToMetadata(OrmEntity $entity): void
+    {
+        $entityName = (string)$entity->get('entityId');
+        $indexName = (string)$entity->get('name');
+
+        $columns = $this->getIndexColumns($entity);
 
         $this->getMetadata()->set('entityDefs', $entityName, [
             'uniqueIndexes' => [

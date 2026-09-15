@@ -50,7 +50,8 @@ Espo.define('views/entity-unique-index/fields/fields', 'views/fields/multi-enum'
                 return false;
             }
 
-            if (field === 'deleted') {
+            // the primary key is unique on its own, such an index makes no sense
+            if (['id', 'deleted'].includes(field)) {
                 return false;
             }
 

@@ -7,15 +7,16 @@
   },
   "tooltips": {
     "name": "El nombre del índice único, por ejemplo unique_relationship. Solo se permiten letras latinas minúsculas, dígitos y guiones bajos.",
-    "fields": "Los campos que componen el índice único. La columna `deleted` siempre se añade al índice como primera columna."
+    "fields": "Los campos que componen el índice único. La columna `deleted` siempre se añade al índice como primera columna. Se requieren al menos dos campos."
   },
   "exceptions": {
     "indexNameIsInvalid": "El nombre del índice único no es válido. Debe comenzar con una letra latina minúscula, no debe terminar con un guion bajo y solo puede contener letras latinas minúsculas, dígitos y guiones bajos.",
-    "indexFieldsAreRequired": "Se debe seleccionar al menos un campo.",
+    "atLeastTwoFieldsRequired": "Un índice único debe constar de al menos dos campos. Para hacer único un solo campo, active la casilla 'Único' en la configuración del campo.",
     "indexFieldsShouldBeUnique": "El mismo campo no puede utilizarse dos veces en el índice único.",
     "fieldCannotBeUsedInUniqueIndex": "El campo '%s' no tiene columna propia en la tabla y no puede utilizarse en el índice único.",
     "fieldTypeCannotBeUsedInUniqueIndex": "El tipo del campo '%s' no es compatible con los índices únicos.",
-    "uniqueIndexAlreadyExists": "El índice único '%s' ya existe.",
+    "duplicateValuesExist": "El índice único no se puede crear: la tabla ya contiene valores duplicados para los campos seleccionados: %s",
+    "indexNameAlreadyUsed": "Ya existe un índice con el nombre '%s' para esta entidad.",
     "entityTypeIsNotSuitableForUniqueIndexes": "Los índices únicos solo se pueden configurar para entidades de tipo Base y Hierarchy."
   }
 }

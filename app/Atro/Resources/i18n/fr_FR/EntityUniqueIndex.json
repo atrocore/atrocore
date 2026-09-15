@@ -7,15 +7,16 @@
   },
   "tooltips": {
     "name": "Le nom de l'index unique, par exemple unique_relationship. Seuls les lettres latines minuscules, les chiffres et les tirets bas sont autorisés.",
-    "fields": "Les champs qui composent l'index unique. La colonne `deleted` est toujours ajoutée à l'index en première position."
+    "fields": "Les champs qui composent l'index unique. La colonne `deleted` est toujours ajoutée à l'index en première position. Au moins deux champs sont requis."
   },
   "exceptions": {
     "indexNameIsInvalid": "Le nom de l'index unique est invalide. Il doit commencer par une lettre latine minuscule, ne doit pas se terminer par un tiret bas et ne peut contenir que des lettres latines minuscules, des chiffres et des tirets bas.",
-    "indexFieldsAreRequired": "Au moins un champ doit être sélectionné.",
+    "atLeastTwoFieldsRequired": "Un index unique doit être composé d'au moins deux champs. Pour rendre un seul champ unique, activez la case 'Unique' dans les paramètres du champ.",
     "indexFieldsShouldBeUnique": "Le même champ ne peut pas être utilisé deux fois dans l'index unique.",
     "fieldCannotBeUsedInUniqueIndex": "Le champ '%s' n'a pas de colonne propre dans la table et ne peut pas être utilisé dans l'index unique.",
     "fieldTypeCannotBeUsedInUniqueIndex": "Le type du champ '%s' n'est pas pris en charge par les index uniques.",
-    "uniqueIndexAlreadyExists": "L'index unique '%s' existe déjà.",
+    "duplicateValuesExist": "L'index unique ne peut pas être créé : la table contient déjà des valeurs en double pour les champs sélectionnés : %s",
+    "indexNameAlreadyUsed": "Un index nommé '%s' existe déjà pour cette entité.",
     "entityTypeIsNotSuitableForUniqueIndexes": "Les index uniques ne peuvent être configurés que pour les entités de type Base et Hierarchy."
   }
 }

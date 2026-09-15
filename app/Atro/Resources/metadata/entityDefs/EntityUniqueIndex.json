@@ -7,6 +7,7 @@
       "maxLength": 60,
       "pattern": "^[a-z]([a-z0-9_]*[a-z0-9])?$",
       "tooltip": true,
+      "view": "views/entity-unique-index/fields/name",
       "conditionalProperties": {
         "readOnly": {
           "conditionGroup": [
