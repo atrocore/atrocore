@@ -104,6 +104,8 @@ Configure the entity-specific left sidebar
 
 The left sidebar appears the same for both List view and Detail view. By default, it shows the selected entity itself and [bookmarks](../../../05.toolbar/01.bookmarks/). Available fields include the entity itself, Bookmarks, and all fields of type [Link](../../11.entity-management/02.data-types/index.md#link) or [Multiple Link](../../11.entity-management/02.data-types/index.md#multiple-link).
 
+This applies to all entity types, including [Reference](../../11.entity-management/01.entity-types/index.md#reference) entities.
+
 ![Account Navigation](_assets/account-navigation.png){.medium}
 
 > To learn how search works in the left sidebar, see [Left Sidebar Search](../../../11.search-and-filtering/index.md#left-sidebar-search).

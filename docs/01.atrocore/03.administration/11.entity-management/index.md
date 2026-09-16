@@ -123,6 +123,16 @@ The Attributes panel allows you to add and configure attributes for the entity.
 
 For detailed information about attribute types and configuration, see [Fields and Attributes](../11.entity-management/03.fields-and-attributes/).
 
+## Navigating entities and fields
+
+The left sidebar provides a tree for moving between entities and their fields without returning to the list.
+
+On an entity page the tree lists all entities. On a field page it lists the fields of the entity the field belongs to, so you can step from one field to another directly. In both cases the record you are viewing is highlighted in the tree, and the search box above it filters the tree by name.
+
+Breadcrumbs on a field page show the path `Entities / Entity Name / Field Name`, where each part is a link.
+
+Fields are always opened in the context of their entity – from the [Fields panel](#fields-panel) or from the tree. A standalone list of all fields is not available.
+
 ## Working with entity records
 
 For information about creating, editing, and deleting records within entities, see the [Record Management](../../08.record-management/) documentation.

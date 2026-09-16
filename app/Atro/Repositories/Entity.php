@@ -94,6 +94,17 @@ class Entity extends ReferenceData
     ];
 
     protected ?array $boolFields = null;
+    protected ?array $translationsCache = null;
+
+    // TODO: remove after the dynamic translations mechanism is optimized
+    protected function translateLabel(string $label, string $category, string $scope = 'Global'): string
+    {
+        if ($this->translationsCache === null) {
+            $this->translationsCache = $this->getLanguage()->getAll();
+        }
+
+        return $this->translationsCache[$scope][$category][$label] ?? $this->translate($label, $category, $scope);
+    }
 
     protected function getEntityById($id)
     {
@@ -162,8 +173,8 @@ class Entity extends ReferenceData
         $res = array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
-            'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
-            'namePlural'            => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
+            'name'                  => $this->translateLabel($code, 'scopeNames'),
+            'namePlural'            => $this->translateLabel($code, 'scopeNamesPlural'),
             'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
             'kanbanViewMode'        => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
             'quickActions'          => $this->getMetadata()->get(['clientDefs', $code, 'quickActions'], []),

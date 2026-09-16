@@ -1,5 +1,6 @@
 {
   "type": "ReferenceData",
+  "adminPanelScope": "Entity",
   "object": true,
   "notificationDisabled": true,
   "entity": true,

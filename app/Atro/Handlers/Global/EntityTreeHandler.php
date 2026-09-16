@@ -268,6 +268,16 @@ class EntityTreeHandler extends AbstractHandler
             throw new Forbidden();
         }
 
+        $contextField = $this->getMetadata()->get(['clientDefs', $entityName, 'navigationTreeContextField']);
+
+        if (!empty($contextField) && ($qp['link'] ?? '') === '_self') {
+            $where = $this->prepareWhereQuery($qp['where'] ?? null);
+
+            if (!in_array($contextField, array_column(is_array($where) ? $where : [], 'attribute'), true)) {
+                throw new BadRequest(sprintf("Tree for '%s' requires a filter by '%s'.", $entityName, $contextField));
+            }
+        }
+
         $service = $this->getRecordService($entityName);
 
         if (method_exists($service, 'isHierarchy') && $service->isHierarchy()) {
