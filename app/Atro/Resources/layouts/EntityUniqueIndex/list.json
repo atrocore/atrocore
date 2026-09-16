@@ -1,0 +1,13 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "fields",
+    "widthPx": 350
+  },
+  {
+    "name": "entity"
+  }
+]

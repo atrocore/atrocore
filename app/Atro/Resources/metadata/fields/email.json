@@ -61,5 +61,6 @@
   "auditable": true,
   "personalData": true,
   "textFilter": true,
-  "group": "character"
+  "group": "character",
+  "uniqueIndexAllowed": true
 }

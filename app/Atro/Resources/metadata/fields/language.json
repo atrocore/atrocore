@@ -37,5 +37,6 @@
   "translatedOptions": false,
   "personalData": true,
   "view": "views/fields/language",
-  "group": "reference"
+  "group": "reference",
+  "uniqueIndexAllowed": true
 }

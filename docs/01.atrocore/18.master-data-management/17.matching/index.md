@@ -11,8 +11,7 @@ To define similarity criteria, navigate to the Administration/Matchings entity a
 A Matching record defines similarity rules and determines how the system evaluates entities for potential duplicates.
 The following parameters are available when configuring a Matching:
 
-- Name – the label for the Matching configuration.
-- Code – a unique system identifier. This field is immutable after creation.
+- Number – an auto-generated sequential identifier assigned to the record on save. It also serves as the record's label. This field is immutable after creation.
 - Active – when enabled, the system evaluates matching conditions automatically:
   - On creation of new records in the selected entity.
   - Whenever a field used by Matching Rules is modified.
@@ -37,12 +36,11 @@ Matching Rules define the individual comparison criteria used within a Matching 
 
 The following parameters are available when defining a Matching Rule:
 
-- Name – descriptive label for the rule.
-- Code – unique system identifier. Immutable after creation.
+- Number – an auto-generated sequential identifier assigned to the rule on save. This field is immutable after creation.
 - Type – determines how field values are compared. Immutable after creation. Available types:
   - Field is Equal – strict equality between values.
   - Field is Similar – normalized string comparison (lowercased, trimmed, spaces removed). For array-based fields ([array](../../03.administration/11.entity-management/02.data-types/index.md#array), [multi-value list](../../03.administration/11.entity-management/02.data-types/index.md#multi-value-list)), values are considered similar if they contain the same elements regardless of order. Example: [1,2,3] and [1,3,2] are considered similar.
-  - Field Contains – checks if the source value contains the target value. For array-based fields (array, extensibleMultiEnum, multiEnum), this means that all elements of the source value must be present in the target value. Example: [1,2] and [3,1,2] – the second value contains the first.
+  - Field Contains – checks if the source value contains the target value. For array-based fields ([array](../../03.administration/11.entity-management/02.data-types/index.md#array), [multi-value list](../../03.administration/11.entity-management/02.data-types/index.md#multi-value-list)), this means that all elements of the source value must be present in the target value. Example: [1,2] and [3,1,2] – the second value contains the first.
   - Set – represents a grouped collection of subordinate Matching Rules that are evaluated together. A Set rule enables composite matching logic by aggregating multiple conditions into a single weighted rule. A Set has an Operator parameter that defines how its sub-rules are evaluated:
     - Operator: AND - All sub-rules within the Set must evaluate to true for the Set to be considered true.
     - Operator: OR - At least one sub-rule must evaluate to true for the Set to be considered true.
@@ -57,16 +55,11 @@ The following parameters are available when defining a Matching Rule:
   - Field is Similar (Fuzzy) – finds records with approximately matching field values, including typos and slight variations. The match score is proportional to the similarity.
   - Field is Similar (Levenshtein) – finds records based on the number of character edits required to transform one value into another. The allowed edit distance is configurable.
 - Matching – references the parent Matching configuration. Immutable after creation.
-- Weight – numerical value defining the rule’s importance in the overall similarity score.
-- Entity (Contributor - Master only) – the contributor entity from which external or temporary data originates. Inherited from parent Matching. Immutable.
-- Master Entity (Contributor - Master only) – primary entity containing the reference data. Inherited from parent Matching. Immutable.
-- Source Field – field (or attribute) from the selected entity being evaluated.
-  - For Duplicate - Duplicate matchings, this refers to the field used to compare values between two records within the same entity.
-  - For Contributor - Master matchings, this refers to the field in the Contributor Entity.
+- Weight – numerical value defining the rule’s importance in the overall similarity score. Not applicable to the Set type, whose effective weight is derived from its sub-rules (the sum of their weights for the AND operator, or the highest of them for OR).
+- Field – the field (or attribute) being compared, chosen from the entity of the parent Matching configuration (the Master Entity, for Contributor - Master matchings). Only fields whose type is supported by the selected rule Type are offered.
+  - For Duplicate - Duplicate matchings, this is the field compared between the two records within the same entity.
+  - For Contributor - Master matchings, the same field name is compared: its value is read from the Contributor Entity record and matched against the value of the identically named field on the Master Entity candidate.
   - For entities that support [attributes](../../03.administration/12.attribute-management/index.md) (e.g., Product, Listing), an attribute can be selected instead of a regular field by choosing **[Add Attribute]** from the field dropdown. Only attribute types compatible with the selected rule type are shown. If the attribute value is absent in either compared record, the rule contributes a score of `0` for that pair.
-- Target Field – field (or attribute) against which the source is compared.
-  - For Duplicate - Duplicate matchings, this may be the same as Source Field.
-  - For Contributor - Master matchings, this refers to the field in the Master Entity.
 
 > Each Matching Rule can belong to one Matching only. A Matching can contain multiple rules.
 

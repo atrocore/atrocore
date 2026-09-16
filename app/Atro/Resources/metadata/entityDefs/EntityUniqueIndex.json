@@ -1,0 +1,72 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "maxLength": 60,
+      "pattern": "^[a-z]([a-z0-9_]*[a-z0-9])?$",
+      "tooltip": true,
+      "view": "views/entity-unique-index/fields/name",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "entity": {
+      "type": "link",
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "fields": {
+      "type": "array",
+      "required": true,
+      "tooltip": true,
+      "view": "views/entity-unique-index/fields/fields",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustom"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "isCustom": {
+      "type": "bool",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "entity": {
+      "type": "belongsTo",
+      "foreign": "uniqueIndexes",
+      "entity": "Entity"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  }
+}

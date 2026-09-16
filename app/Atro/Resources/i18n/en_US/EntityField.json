@@ -59,7 +59,7 @@
     "isNonComparable": "Non Comparable",
     "isDuplicatableRelation": "Duplicatable",
     "inheritanceDisabled": "Uninherited",
-    "auditableEnabled": "Log the change as a record activity",
+    "isAuditableRelation": "Log the change as a record activity",
     "auditableDisabled": "Create no record activity",
     "modifiedExtendedDisabled": "No recording as modification",
     "modifiedExtendedEnabled": "Record change as modification",
@@ -96,6 +96,7 @@
     "modifiedExtendedEnabled": "Changes in this relation will cause the update of \"Modified At\" date and time.",
     "inheritanceDisabled": "Values for this field will not be inherited from the parent item.",
     "modifiedExtendedDisabled": "If set the changes in this field will not update the \"Modified At\" timestamp.",
+    "isAuditableRelation": "Changes in this relation are displayed as Activity.",
     "auditableDisabled": "Changes in this field are not displayed as Activity.",
     "selectPageSize": "Number of records shown per page in the selection dialog. Avoid setting this value too high, as it may slow down or freeze the user's browser."
   },
@@ -134,6 +135,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Some records have null values",
+    "fieldIsUsedInUniqueIndex": "The field '%s' is used in the unique index(es) '%s' and cannot be deleted.",
     "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value",
     "relationAlreadyUsed": "The Middle Table Name %s is already used, choose another.",
     "optionCodeUsedInDisabledOptionsRules": "Option '%s' is used in Disabled Options rules and cannot be changed.",

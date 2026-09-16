@@ -32,10 +32,6 @@
       "type": "array",
       "isMultilang": true
     },
-    "code": {
-      "type": "varchar",
-      "trim": true
-    },
     "entity": {
       "type": "link",
       "entity": "Entity",
@@ -107,15 +103,7 @@
     "sortBy": "createdAt",
     "asc": false,
     "textFilterFields": [
-      "name",
-      "code"
-    ]
-  },
-  "uniqueIndexes": {
-    "unique_classification": [
-      "deleted",
-      "release",
-      "code"
+      "name"
     ]
   },
   "indexes": {

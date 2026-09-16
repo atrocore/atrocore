@@ -895,7 +895,7 @@
         }
       }
     },
-    "auditableEnabled": {
+    "isAuditableRelation": {
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
@@ -903,10 +903,9 @@
           "conditionGroup": [
             {
               "attribute": "type",
-              "type": "notIn",
+              "type": "in",
               "value": [
-                "linkMultiple",
-                "autoincrement"
+                "linkMultiple"
               ]
             }
           ]

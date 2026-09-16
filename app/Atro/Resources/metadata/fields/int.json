@@ -76,5 +76,6 @@
   "qbFilterType": "integer",
   "textFilter": true,
   "personalData": true,
-  "group": "numeric"
+  "group": "numeric",
+  "uniqueIndexAllowed": true
 }

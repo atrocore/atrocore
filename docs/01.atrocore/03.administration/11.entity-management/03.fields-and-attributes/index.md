@@ -95,6 +95,8 @@ The following options are available for all or most field types:
 
 For detailed information about configuration options specific to each data type, see [Data Types](../02.data-types/index.md).
 
+The **Unique** option, available for String and Integer types among others, keeps the values of that single field unique within the entity. To enforce uniqueness of a combination of several fields, create a unique index instead — see [Unique Indexes](../index.md#unique-indexes-panel).
+
 The `Relation management` panel is available for [Link](../02.data-types/index.md#link) and [Multiple Link](../02.data-types/index.md#multiple-link) field types. This panel provides additional configuration options for managing relationships between entities, including:
 
 -   **Entity selection**: Choose which entity to link to

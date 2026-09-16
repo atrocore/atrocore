@@ -28,6 +28,14 @@
           "disabled": true
         }
       }
+    },
+    "uniqueIndexes": {
+      "select": false,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
     }
   },
   "bottomPanels": {

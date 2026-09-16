@@ -54,5 +54,6 @@
   ],
   "filter": true,
   "auditable": true,
-  "group": "reference"
+  "group": "reference",
+  "uniqueIndexAllowed": true
 }
