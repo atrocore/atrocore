@@ -16,6 +16,7 @@ namespace Atro\Handlers\User;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
+use Atro\Services\Avatar as AvatarService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -26,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'DELETE',
     ],
     summary: 'Remove own avatar',
-    description: 'Removes the current user\'s avatar uploaded via the raw avatar-upload endpoint, deleting the stored file and its cached thumbnails.',
+    description: 'Removes the current user\'s avatar uploaded via the raw avatar-upload endpoint, deleting its dedicated storage folder.',
     tag: 'User',
     responses: [
         200 => [
@@ -45,15 +46,7 @@ class DeleteAvatarHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $user = $this->getUser();
-
-        $fileName = $user->get('avatarFileName');
-        if (!empty($fileName)) {
-            UploadAvatarHandler::deleteAvatarFiles($fileName);
-
-            $user->set('avatarFileName', null);
-            $this->getEntityManager()->saveEntity($user);
-        }
+        $this->getServiceFactory()->create('Avatar')->deleteFiles();
 
         return new BoolResponse(true);
     }

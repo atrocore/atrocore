@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
+use Atro\Services\Avatar as AvatarService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -55,7 +56,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'avatarFileName' => ['type' => 'string'],
+                            'avatarName' => ['type' => 'string'],
                         ],
                     ],
                 ],
@@ -68,9 +69,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 )]
 class UploadAvatarHandler extends AbstractHandler
 {
-    public const AVATAR_DIR       = 'data/upload/avatars';
-    public const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $uploadedFile = $request->getUploadedFiles()['file'] ?? null;
@@ -82,41 +80,8 @@ class UploadAvatarHandler extends AbstractHandler
             throw new BadRequest("File upload failed.");
         }
 
-        $extension = strtolower((string)pathinfo((string)$uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
-        if (!in_array($extension, self::ALLOWED_EXTENSIONS, true)) {
-            throw new BadRequest("Unsupported avatar file type.");
-        }
+        $fileName = $this->getServiceFactory()->create('Avatar')->upload($uploadedFile);
 
-        if (!is_dir(self::AVATAR_DIR)) {
-            mkdir(self::AVATAR_DIR, 0777, true);
-        }
-
-        $user = $this->getUser();
-
-        $oldFileName = $user->get('avatarFileName');
-        if (!empty($oldFileName)) {
-            self::deleteAvatarFiles($oldFileName);
-        }
-
-        $fileName = hash('sha256', microtime(true) . random_bytes(16)) . '.' . $extension;
-
-        $uploadedFile->moveTo(self::AVATAR_DIR . '/' . $fileName);
-
-        $user->set('avatarFileName', $fileName);
-        $this->getEntityManager()->saveEntity($user);
-
-        return new JsonResponse(['avatarFileName' => $fileName]);
-    }
-
-    public static function deleteAvatarFiles(string $fileName): void
-    {
-        $path = self::AVATAR_DIR . '/' . $fileName;
-        if (is_file($path)) {
-            @unlink($path);
-        }
-
-        foreach (glob(self::AVATAR_DIR . '/.thumbnails/*/' . $fileName) ?: [] as $thumbnailPath) {
-            @unlink($thumbnailPath);
-        }
+        return new JsonResponse(['avatarName' => $fileName]);
     }
 }

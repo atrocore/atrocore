@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Entities\User as UserEntity;
+use Atro\Services\Avatar as AvatarService;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
@@ -242,6 +243,8 @@ class User extends RDB
         parent::afterRemove($entity, $options);
 
         $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
+
+        AvatarService::deleteFiles($entity->get('id'));
     }
 
     protected function afterRestore($entity)

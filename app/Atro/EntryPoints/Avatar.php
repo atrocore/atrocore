@@ -13,14 +13,10 @@ namespace Atro\EntryPoints;
 
 use Atro\Entities\File;
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Handlers\User\UploadAvatarHandler;
-use Gumlet\ImageResize;
-use Gumlet\ImageResizeException;
+use Atro\Services\Avatar as AvatarService;
 
 class Avatar extends Image
 {
-    protected const THUMBNAILS_DIR = UploadAvatarHandler::AVATAR_DIR . '/.thumbnails';
-
     public static bool $authRequired = true;
 
     public static bool $notStrictAuth = true;
@@ -77,10 +73,10 @@ class Avatar extends Image
         $id = $user->get('avatarId');
         $size = $_GET['size'] ?? null;
 
-        $avatarFileName = $user->get('avatarFileName');
+        $avatarFileName = AvatarService::getFileName($userId);
 
-        if (!empty($avatarFileName) && is_file(UploadAvatarHandler::AVATAR_DIR . '/' . $avatarFileName)) {
-            $this->showAvatarFile($avatarFileName, $size);
+        if (!empty($avatarFileName)) {
+            $this->showAvatarFile($userId, $avatarFileName);
         } elseif (!empty($id) && !empty($file = $this->getEntityManager()->getEntity("File", $id))) {
             $this->show($file, $size);
         } else {
@@ -121,16 +117,9 @@ class Avatar extends Image
         return true;
     }
 
-    protected function showAvatarFile(string $fileName, ?string $size = null): void
+    protected function showAvatarFile(string $userId, string $fileName): void
     {
-        $path = UploadAvatarHandler::AVATAR_DIR . '/' . $fileName;
-
-        if (!empty($size)) {
-            $thumbnailPath = self::THUMBNAILS_DIR . '/' . $size . '/' . $fileName;
-            if (is_file($thumbnailPath) || $this->createAvatarThumbnail($path, $size, $thumbnailPath)) {
-                $path = $thumbnailPath;
-            }
-        }
+        $path = AvatarService::getPath($userId, $fileName);
 
         $contents = file_get_contents($path);
         $mimeType = mime_content_type($path);
@@ -144,30 +133,6 @@ class Avatar extends Image
         header('Content-Length: ' . mb_strlen($contents, '8bit'));
         echo $contents;
         exit;
-    }
-
-    protected function createAvatarThumbnail(string $originFilePath, string $size, string $thumbnailPath): bool
-    {
-        $imageSize = $this->getImageSize($size);
-        if (empty($imageSize)) {
-            return false;
-        }
-
-        try {
-            $image = new ImageResize($originFilePath);
-        } catch (ImageResizeException $e) {
-            return false;
-        }
-
-        [$width, $height] = $imageSize;
-        $image->resizeToBestFit($width, $height);
-
-        $dir = dirname($thumbnailPath);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
-
-        return file_put_contents($thumbnailPath, $image->getImageAsString()) !== false;
     }
 }
 

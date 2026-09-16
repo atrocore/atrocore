@@ -34,35 +34,7 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
 
     return Dep.extend({
 
-        handleFileUpload: function (file, contents, callback) {
-
-            this.createView('crop', 'views/modals/image-crop', {
-                contents: contents
-            }, function (view) {
-                view.render();
-
-                var croped = false;
-
-                this.listenToOnce(view, 'crop', function (croppedContents, params) {
-                    croped = true;
-                    setTimeout(function () {
-                        params = params || {};
-                        params.name = 'avatar.jpg';
-                        params.type = 'image/jpeg';
-
-                        callback(croppedContents, params);
-                    }.bind(this), 10);
-                });
-                this.listenToOnce(view, 'remove', function () {
-                    if (!croped) {
-                        setTimeout(function () {
-                            this.render();
-                        }.bind(this), 10);
-                    }
-                    this.clearView('crop');
-                }.bind(this));
-            }.bind(this));
-        },
+        readOnly: true,
 
         isOwnAvatar: function () {
             return this.model.id === this.getUser().id;
@@ -72,33 +44,51 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
             Dep.prototype.setup.call(this);
 
             if (this.isOwnAvatar()) {
-                // in addition to clearing the (legacy, File-based) link fields, also remove
-                // an avatar uploaded via the raw avatar endpoint, which isn't tied to avatarId
-                this.addActionHandler('clearLink', function () {
-                    Dep.prototype.clearLink.call(this);
-
-                    if (this.model.get('avatarFileName')) {
-                        $.ajax({
-                            type: 'DELETE',
-                            url: 'User/avatar'
-                        }).done(function () {
-                            this.model.fetch().done(function () {
-                                this.reRender();
-                            }.bind(this));
-                        }.bind(this));
-                    }
-                }.bind(this));
+                this.on('after:render', function () {
+                    this.initAvatarActions();
+                }, this);
             }
         },
 
-        // uploads directly to the raw, ACL-free avatar endpoint instead of the generic
-        // base64 File-upload flow, and only for the logged-in user's own avatar
-        uploadLink: function () {
-            if (!this.isOwnAvatar()) {
-                Dep.prototype.uploadLink.call(this);
-                return;
+        // mirrors the standard inline-edit-link pattern (base.js initInlineEdit):
+        // hidden action icons in the cell's inline-actions container, revealed on hover
+        initAvatarActions: function () {
+            var $cell = this.getCellElement();
+            var $inlineActions = this.getInlineActionsContainer();
+
+            $inlineActions.find('.avatar-upload-link, .avatar-delete-link').remove();
+
+            var $uploadLink = $('<a href="javascript:" class="avatar-upload-link hidden" title="' + this.translate('Upload') + '"><i class="ph ph-paperclip"></i></a>');
+            var $deleteLink = $('<a href="javascript:" class="avatar-delete-link hidden" title="' + this.translate('Delete') + '"><i class="ph ph-trash"></i></a>');
+
+            if ($inlineActions.size()) {
+                $inlineActions.prepend($uploadLink, $deleteLink);
+            } else {
+                $cell.prepend($uploadLink, $deleteLink);
             }
 
+            $uploadLink.on('click', function () {
+                this.uploadAvatar();
+            }.bind(this));
+            $deleteLink.on('click', function () {
+                this.deleteAvatar();
+            }.bind(this));
+
+            $cell.off('mouseenter.avatarActions mouseleave.avatarActions').on('mouseenter.avatarActions', function (e) {
+                e.stopPropagation();
+                if (this.disabled) {
+                    return;
+                }
+                $uploadLink.removeClass('hidden');
+                $deleteLink.removeClass('hidden');
+            }.bind(this)).on('mouseleave.avatarActions', function (e) {
+                e.stopPropagation();
+                $uploadLink.addClass('hidden');
+                $deleteLink.addClass('hidden');
+            });
+        },
+
+        uploadAvatar: function () {
             var $input = $('<input type="file" accept="image/jpeg,image/png,image/gif,image/webp">');
 
             $input.one('change', function () {
@@ -151,6 +141,22 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
             }.bind(this));
         },
 
+        deleteAvatar: function () {
+            this.notify('Loading...');
+
+            $.ajax({
+                type: 'DELETE',
+                url: 'User/avatar'
+            }).done(function () {
+                this.model.fetch().done(function () {
+                    this.notify(false);
+                    this.reRender();
+                }.bind(this));
+            }.bind(this)).fail(function () {
+                this.notify(this.translate('Error occurred'), 'error');
+            }.bind(this));
+        },
+
         dataUrlToBlob: function (dataUrl) {
             var parts = dataUrl.split(',');
             var mime = parts[0].match(/:(.*?);/)[1];
@@ -168,12 +174,12 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
                 var id = this.model.get(this.idName);
                 var userId = this.model.id;
 
-                var t = this.model.get('modifiedAt') ? (new Date(this.model.get('modifiedAt'))).getTime() : Date.now();
+                var t = this.model.get(this.nameName) || id || userId;
 
                 var imgHtml;
 
                 if (this.mode == 'detail') {
-                    imgHtml = '<img src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&attachmentId=' + ( id || 'false') + '&t=' + t + '">';
+                    imgHtml = '<img style="width:100%;height:auto;" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&attachmentId=' + ( id || 'false') + '&t=' + t + '">';
                 } else {
                     var cache = this.getCache();
                     if (cache) {
@@ -183,12 +189,23 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
                     return imgHtml;
                 }
 
-                if (id) {
-                    return '<a data-action="showImagePreview" data-id="' + id + '" href="'+this.getBasePath()+'?entryPoint=image&id=' + id + '">' + imgHtml +' </a>';
-                } else {
-                    return imgHtml;
-                }
+                return '<a data-action="showImagePreview" data-id="' + userId + '" style="display:block;width:100%;" href="' + this.getBasePath() + '?entryPoint=avatar&id=' + userId + '">' + imgHtml + '</a>';
             }
+        },
+
+        prepareMediaFromModel: function (model) {
+            var userId = model.id;
+            var t = model.get(this.nameName) || model.get(this.idName) || userId;
+            var baseUrl = this.getBasePath() + '?entryPoint=avatar&id=' + userId + '&t=' + t;
+
+            return {
+                id: userId,
+                name: model.get('name'),
+                url: baseUrl,
+                smallThumbnail: baseUrl + '&size=' + this.previewSize,
+                largeThumbnail: baseUrl,
+                isImage: true
+            };
         },
 
     });
