@@ -111,6 +111,8 @@ class Metadata extends AbstractMetadataListener
 
         $this->addThumbnailFieldsByTypesToFile($data);
 
+        $this->prepareEntityFieldScriptLocales($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -612,6 +614,41 @@ class Metadata extends AbstractMetadataListener
         $language = Util::toCamelCase(strtolower($this->getConfig()->get('mainLanguage', 'en_Us')));
         if (is_array($data['entityDefs']['Translation']['fields'][$language])) {
             $data['entityDefs']['Translation']['fields'][$language]['required'] = true;
+        }
+    }
+
+    protected function prepareEntityFieldScriptLocales(array &$data): void
+    {
+        if (empty($locales = $this->getConfig()->get('inputLanguageList', []))) {
+            return;
+        }
+
+        if (empty($scriptFieldDefs = $data['entityDefs']['EntityField']['fields']['script'] ?? null)
+            || empty($previewFieldDefs = $data['entityDefs']['EntityField']['fields']['preview'] ?? null)) {
+            return;
+        }
+
+        foreach ($locales as $locale) {
+            $field = 'script' . ucfirst(Util::toCamelCase(strtolower($locale)));
+            $data['entityDefs']['EntityField']['fields'][$field] = array_merge($scriptFieldDefs, [
+                'isMultilang' => false,
+                'required'    => false,
+            ]);
+            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['visible']['conditionGroup'][] = [
+                'type'      => 'isTrue',
+                'attribute' => 'isMultilang',
+            ];
+
+            $previewField = 'preview' . ucfirst(Util::toCamelCase(strtolower($locale)));
+            $data['entityDefs']['EntityField']['fields'][$previewField] = array_merge($previewFieldDefs, [
+                'readOnly'    => true,
+                'isMultilang' => false,
+                'required'    => false,
+            ]);
+            $data['entityDefs']['EntityField']['fields'][$previewField]['conditionalProperties']['visible']['conditionGroup'][] = [
+                'type'      => 'isTrue',
+                'attribute' => 'isMultilang',
+            ];
         }
     }
 

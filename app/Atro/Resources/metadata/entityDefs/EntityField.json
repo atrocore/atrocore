@@ -764,8 +764,7 @@
     "script": {
       "type": "code",
       "engine": "Twig",
-      "view": "views/entity-field/fields/script",
-      "isMultilang": true
+      "view": "views/entity-field/fields/script"
     },
     "outputType": {
       "type": "enum",
@@ -801,8 +800,7 @@
     "preview": {
       "type": "text",
       "view": "views/admin/field-manager/fields/script-preview",
-      "readOnly": true,
-      "isMultilang": true
+      "readOnly": true
     },
     "rowsMin": {
       "type": "int",
