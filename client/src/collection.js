@@ -131,11 +131,15 @@ Espo.define('collection', [], function () {
         },
 
         parse: function (response, options) {
-            if (response.total != null) {
+            if (options?.fetchNew) {
+                if (this.total > 0) {
+                    this.total += response.list.length
+                }
+            } else if (response.total != null) {
                 this.total = response.total;
             }
 
-            if (!options?.more) {
+            if (!options?.more && !options?.fetchNew) {
                 if (response.list.length < this.maxSize) {
                     this.total = this.offset + response.list.length
                     this.trigger('update-total', this, options)
@@ -154,7 +158,7 @@ Espo.define('collection', [], function () {
         },
 
         fetch: function (options) {
-            if (!options || !options.more) {
+            if (!options || (!options.more && !options.fetchNew)) {
                 this.total = null
                 this.lengthCorrection = 0
             }
