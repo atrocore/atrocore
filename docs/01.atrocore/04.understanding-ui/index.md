@@ -308,7 +308,11 @@ Other modules can add more panels to the side view panel. Please, visit our [sto
 
 ## Left sidebar
 
-Left sidebar is used for filtering records. For more information please go to [search and filtering](../11.search-and-filtering/).
+The left sidebar is used to navigate and filter records. It contains a tree of the current entity's records, tabs for its Link and Multiple Link fields, [Bookmarks](../05.toolbar/01.bookmarks/index.md) and [Last viewed](#last-viewed-tab).
+
+Clicking a record in the tree opens it – the record you are viewing stays highlighted, and the search box above the tree filters the tree by name. Filtering the list by the related fields is described in [search and filtering](../11.search-and-filtering/).
+
+Which tabs appear is configured per entity – see [Navigation](../03.administration/13.user-interface/02.layouts/index.md#navigation).
 
  ![Left sidebar](./_assets/left.png){.medium}
 
