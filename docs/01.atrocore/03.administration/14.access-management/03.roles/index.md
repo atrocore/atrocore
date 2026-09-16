@@ -56,6 +56,8 @@ For Read, Edit, and Delete, the access level determines which specific entries t
 - `own` is the most restrictive level — the user can only access entries where they are either the **Owner** or the **Assigned User**. Ownership is set automatically when a record is created; the assigned user can be set manually on each entry.
 - `no` completely blocks the action, regardless of ownership or team membership.
 
+> When Read is set to `no` for an entity, Link and Link Multiple fields that point to it stop offering record selection – the select button is hidden on every record that references this entity, not only on its own records.
+
 > Entries can be assigned to one or more **Teams** directly on the record. Any user who belongs to one of those teams will be able to access the entry if their role's access level is `team` or higher.
 
 The **Owner**, **Assigned User**, and **Teams** fields appear on records when the corresponding access control options are enabled in the [Access Management panel](../../11.entity-management/index.md#access-management-panel).
