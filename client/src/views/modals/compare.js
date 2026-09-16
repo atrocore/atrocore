@@ -48,7 +48,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             this.versionComparison = this.options.versionComparison ?? false;
             this.versions = this.options.versions ?? [];
-            this.currentVersion = this.options.initialVersion ?? this.versions[0]?.name
+            this.currentVersion = this.options.initialVersionId ?? this.versions[0]?.id
 
             this.derivativeComparison = this.options.derivativeComparison ?? false;
 
@@ -273,10 +273,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     this.ajaxGetRequest(`version`, {
                         entityName: this.scope,
                         entityId: this.model.id,
-                        name: this.currentVersion,
+                        versionId: this.currentVersion,
                     }).success(res => {
                         let versionModel = scopeModel.clone();
-                        res['id'] = this.versions.find(v => v.name === this.currentVersion).id;
+                        res['id'] = this.currentVersion;
                         versionModel.set(res);
                         options.versionModel = versionModel;
                         options.versions = this.versions;

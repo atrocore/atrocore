@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
@@ -23,8 +24,10 @@ use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\FileValidator;
 use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\FolderPathGenerator;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\PDFLib;
 use Atro\Core\Utils\RegexUtil;
+use Atro\Core\Utils\Thumbnail;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -75,12 +78,18 @@ class File extends Base
                     $this->updateItem($entity);
                 }
 
-                // recreate origin file
-                if (!$this->getStorage($entity)->reupload($entity)) {
-                    throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
-                }
+                $localPath = $this->resolveLocalTmpFile($entity);
+                try {
+                    // recreate origin file
+                    if (!$this->getStorage($entity)->reupload($entity, $localPath)) {
+                        throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
+                    }
 
-                $this->addDimensions($entity);
+                    $this->createThumbnailIfNeeded($entity, $localPath);
+                    $this->addDimensions($entity, $localPath);
+                } finally {
+                    $this->cleanupLocalTmpFile($localPath);
+                }
             } else {
                 if ($entity->isAttributeChanged('name') || $entity->isAttributeChanged('folderId')) {
                     $this->updateItem($entity);
@@ -93,16 +102,134 @@ class File extends Base
         } else {
             $this->createItem($entity);
 
-            // create origin file
-            if (empty($options['scanning']) && !$this->getStorage($entity)->createFile($entity)) {
-                throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
-            }
+            if (empty($options['scanning'])) {
+                $localPath = $this->resolveLocalTmpFile($entity);
+                try {
+                    // create origin file
+                    if (!$this->getStorage($entity)->createFile($entity, $localPath)) {
+                        throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
+                    }
 
-            if ($this->getConfig()->get('automaticFileExtensionCorrection')) {
-                $this->automaticallyCorrectExtension($entity);
-            }
+                    if ($this->getConfig()->get('automaticFileExtensionCorrection')) {
+                        $this->automaticallyCorrectExtension($entity, $localPath);
+                    }
 
-            $this->addDimensions($entity);
+                    $this->createThumbnailIfNeeded($entity, $localPath);
+                    $this->addDimensions($entity, $localPath);
+                } finally {
+                    $this->cleanupLocalTmpFile($localPath);
+                }
+            } else {
+                // scanning: the file already exists on the remote side, nothing was uploaded here
+                $this->addDimensions($entity);
+            }
+        }
+    }
+
+    /**
+     * Resolves a File's pending upload (_input) to one local file, whatever shape it arrived in.
+     * Centralized here so createFile()/reupload() get a ready path instead of resolving it themselves.
+     */
+    protected function resolveLocalTmpFile(FileEntity $file): string
+    {
+        $input = $file->_input ?? new \stdClass();
+
+        $localPath = LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR . IdGenerator::uuid() . DIRECTORY_SEPARATOR . $file->get('name');
+        $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($localPath), 0777, true);
+
+        if (property_exists($input, 'fileContents')) {
+            $this->getFileManager()->putContents($localPath, LocalStorage::parseInputFileContent((string)$input->fileContents));
+        } elseif (property_exists($input, 'allChunks')) {
+            $chunkDirPath = $this->getStorage($file)->getChunksDir($file->getStorage()) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
+
+            $f = fopen($localPath, 'a+');
+            foreach ($input->allChunks as $chunk) {
+                fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
+            }
+            fclose($f);
+
+            $this->getFileManager()->removeAllInDir($chunkDirPath);
+        } elseif (property_exists($input, 'remoteUrl')) {
+            if (str_starts_with($input->remoteUrl, 'file://')) {
+                $localFileName = str_replace('file://', '', $input->remoteUrl);
+                if (!file_exists($localFileName)) {
+                    throw new Error("File $localFileName does not exist");
+                }
+                copy($localFileName, $localPath);
+            } else {
+                // headers should be passed as key-value structure
+                $headers = $input->urlHeaders ?? null;
+                if (is_object($headers)) {
+                    $headers = json_decode(json_encode($headers), true);
+                } elseif (is_string($headers)) {
+                    $headers = @json_decode($headers, true);
+                }
+
+                set_time_limit(0);
+                $fp = fopen($localPath, 'w+');
+                if ($fp === false) {
+                    throw new Error(sprintf("Can't write any data to the file %s", $file->get('name')));
+                }
+                $ch = curl_init($input->remoteUrl);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+                curl_setopt($ch, CURLOPT_FILE, $fp);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                if (is_array($headers) && !empty($headers)) {
+                    $requestHeaders = [];
+                    foreach ($headers as $header => $value) {
+                        $requestHeaders[] = "$header: $value";
+                    }
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
+                }
+
+                curl_exec($ch);
+                $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+                fclose($fp);
+
+                if (!in_array($responseCode, [200, 201])) {
+                    $this->cleanupLocalTmpFile($localPath);
+                    throw new Error(sprintf("Download for '%s' failed.", $input->remoteUrl));
+                }
+            }
+        } elseif (property_exists($input, 'localFileName')) {
+            if (!file_exists($input->localFileName)) {
+                throw new Error(sprintf("File %s does not exist", $input->localFileName));
+            }
+            $localPath = $input->localFileName;
+        }
+
+        if (!file_exists($localPath)) {
+            throw new Error("Could not resolve a local file to upload for '{$file->get('name')}'.");
+        }
+
+        return $localPath;
+    }
+
+    /**
+     * Only deletes $localPath when it's under our own scratch dir - 'localFileName' inputs point
+     * at a caller-owned file elsewhere, which isn't ours to delete.
+     */
+    protected function cleanupLocalTmpFile(string $localPath): void
+    {
+        if (str_starts_with($localPath, LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR) && file_exists($localPath)) {
+            $this->getFileManager()->removeAllInDir($this->getFileManager()->getFileDir($localPath));
+        }
+    }
+
+    /**
+     * Pre-generates the largest thumbnail while the just-uploaded file is still local.
+     * Skipped for local storage - its thumbnails can be generated lazily on request instead.
+     */
+    protected function createThumbnailIfNeeded(FileEntity $file, string $localPath): void
+    {
+        if ($this->getStorage($file) instanceof LocalFileStorageInterface) {
+            return;
+        }
+
+        $ext = strtolower(pathinfo($file->get('name'), PATHINFO_EXTENSION));
+        if (in_array($ext, $this->getMetadata()->get(['app', 'extensionsWithThumbnail'], []))) {
+            $this->getThumbnailCreator()->createLargestThumbnail($file, $localPath);
         }
     }
 
@@ -493,13 +620,19 @@ class File extends Base
         return $url;
     }
 
-    public function addDimensions(FileEntity $file): void
+    /**
+     * @param string|null $localPath When given, used directly instead of re-fetching from storage.
+     */
+    public function addDimensions(FileEntity $file, ?string $localPath = null): void
     {
         if (!$file->isImage() && !$file->isPdf()) {
             return;
         }
 
-        if ($this->getStorage($file) instanceof LocalFileStorageInterface) {
+        $isTempFile = false;
+        if ($localPath !== null) {
+            $filePath = $localPath;
+        } elseif ($this->getStorage($file) instanceof LocalFileStorageInterface) {
             $filePath = $this->getFilePath($file);
         } else {
             $filePath = LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR . $file->get('name');
@@ -630,7 +763,7 @@ class File extends Base
         }
     }
 
-    protected function automaticallyCorrectExtension(Entity $entity): void
+    protected function automaticallyCorrectExtension(Entity $entity, string $localPath): void
     {
         if (empty($entity->_input->fromApi)) {
             return;
@@ -655,7 +788,7 @@ class File extends Base
 
         $entity->set('name', join('.', $nameParts));
 
-        $this->getStorage($entity)->reupload($entity);
+        $this->getStorage($entity)->reupload($entity, $localPath);
     }
 
     public function getStorage(FileEntity $file): FileStorageInterface
@@ -671,6 +804,11 @@ class File extends Base
     protected function getFileManager(): FileManager
     {
         return $this->getInjection('fileManager');
+    }
+
+    protected function getThumbnailCreator(): Thumbnail
+    {
+        return $this->getInjection('container')->get(Thumbnail::class);
     }
 
     protected function init()
