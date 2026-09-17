@@ -158,6 +158,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 }
             }
 
+            if (!this.selectDisabled && this.mode !== 'search' && !this.getAcl().check(this.foreignScope, 'read')) {
+                this.selectDisabled = true;
+            }
+
             if (this.mode !== 'list') {
                 this.addActionHandler('selectLink', function () {
                     this.selectLink();
@@ -296,6 +300,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         selectLink: function () {
+            if (this.selectDisabled) {
+                return;
+            }
+
             this.notify('Loading...');
             this.createView('dialog', this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView, {
                 scope: this.foreignScope,

@@ -58,6 +58,8 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
 
         createDisabled: false,
 
+        selectDisabled: false,
+
         noCreateScopeList: ['User', 'Team', 'Role'],
 
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isNot', 'isOneOf', 'isNotOneOf'],
@@ -122,6 +124,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 valueIsSet: this.model.has(this.idName),
                 iconHtml: iconHtml,
                 createDisabled: this.createDisabled,
+                selectDisabled: this.selectDisabled,
             }, Dep.prototype.data.call(this));
 
             if (['list', 'detail', 'edit'].includes(this.mode) && this.idName !== this.name) {
@@ -311,6 +314,14 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
                 }
             }
 
+            if ('selectDisabled' in this.options) {
+                this.selectDisabled = this.options.selectDisabled;
+            }
+
+            if (!this.selectDisabled && this.mode !== 'search' && this.foreignScope && !this.getAcl().check(this.foreignScope, 'read')) {
+                this.selectDisabled = true;
+            }
+
             if (this.getDisableOptionsRules() && !this.selectBoolFilterList.includes('notDisabledOptions')) {
                 this.selectBoolFilterList.push('notDisabledOptions');
             }
@@ -403,6 +414,10 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         },
 
         selectLink: function () {
+            if (this.selectDisabled) {
+                return;
+            }
+
             this.notify('Loading...');
 
             var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
