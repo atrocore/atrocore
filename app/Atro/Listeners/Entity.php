@@ -216,7 +216,7 @@ class Entity extends AbstractListener
 
     private function syncTargetFromSource(OrmEntity $entity): void
     {
-        if ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links', 'targetRecord', 'type']) !== 'belongsTo') {
+        if (empty($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'isDataPipelineSource']))) {
             return;
         }
 
@@ -229,6 +229,10 @@ class Entity extends AbstractListener
 
     private function syncTargetSourcesAfterMasterChange(OrmEntity $entity): void
     {
+        if (empty($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'isDataPipelineTarget']))) {
+            return;
+        }
+
         if (empty($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'primaryEntityId']))) {
             return;
         }
