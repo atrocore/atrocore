@@ -226,6 +226,9 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                 }
             });
 
+            // Groups are fetched after the panel is rendered, so the collection fills up later
+            $(container).toggleClass('hidden', !this.collection.length);
+
             this.listenTo(this.collection, 'update update-total', () => {
                 if (this.svelteCounterToolbar) {
                     this.svelteCounterToolbar.$set({
@@ -233,6 +236,8 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                         shownCount: this.collection.length,
                         totalCount: this.collection.total,
                     });
+
+                    $(container).toggleClass('hidden', !this.collection.length);
                 }
             });
         },
