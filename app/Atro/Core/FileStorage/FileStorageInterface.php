@@ -20,7 +20,12 @@ interface FileStorageInterface
 {
     public function scan(Storage $storage): void;
 
-    public function createFile(File $file): bool;
+    /**
+     * @param string $localPath Absolute path to an already-materialized, existing local file
+     *                          with the content to upload - resolved and owned by the caller
+     *                          (Atro\Repositories\File), which also deletes it afterward.
+     */
+    public function createFile(File $file, string $localPath): bool;
 
     public function createFolder(Folder $folder): bool;
 
@@ -34,6 +39,12 @@ interface FileStorageInterface
      */
     public function createChunk(\stdClass $input, Storage $storage): array;
 
+    /**
+     * Local directory this storage buffers browser-uploaded chunks into (see createChunk()) -
+     * exposed so Atro\Repositories\File can assemble them into one file when resolving _input.
+     */
+    public function getChunksDir(Storage $storage): string;
+
     public function deleteCache(Storage $storage): void;
 
     public function renameFile(File $file): bool;
@@ -44,7 +55,10 @@ interface FileStorageInterface
 
     public function moveFolder(string $entityId, string $wasParentId, string $becameParentId): bool;
 
-    public function reupload(File $file): bool;
+    /**
+     * @param string $localPath See createFile()'s $localPath.
+     */
+    public function reupload(File $file, string $localPath): bool;
 
     public function deleteFilePermanently(File $file): bool;
 
@@ -59,16 +73,6 @@ interface FileStorageInterface
     public function getThumbnailPdfImageCachePath(File $file): ?string;
 
     public function getContents(File $file): string;
-
-    public function createFileVersion(File $file, string $versionId): bool;
-
-    /**
-     * @param File $version the versioned File entity — never the live entity,
-     *                      whose current field values may no longer match what was archived.
-     */
-    public function getFileVersionContents(File $version): string;
-
-    public function deleteFileVersion(File $file, string $versionId): bool;
 
     public function isAvailable(Storage $storage): bool;
 }
