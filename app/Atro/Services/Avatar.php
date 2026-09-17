@@ -15,8 +15,11 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Metadata;
+use Atro\Core\Utils\Util;
 use Atro\Entities\User;
 use Espo\Core\Injectable;
+use Gumlet\ImageResize;
+use Gumlet\ImageResizeException;
 use Psr\Http\Message\UploadedFileInterface;
 
 class Avatar extends Injectable
@@ -34,32 +37,40 @@ class Avatar extends Injectable
         return $this->getMetadata()->get(['app', 'file', 'image', 'extensions'], []);
     }
 
-    /**
-     * Stores the uploaded file as raw, ACL-free avatar storage (no `File` entity involved),
-     * inside a folder dedicated to the user, and returns its generated file name. Saving it
-     * onto the user is the caller's responsibility.
-     */
-    public function upload( UploadedFileInterface $uploadedFile): string
+    public function upload(UploadedFileInterface $uploadedFile): string
     {
         $extension = strtolower((string)pathinfo((string)$uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
         if (!in_array($extension, $this->getAllowedExtensions(), true)) {
             throw new BadRequest("Unsupported avatar file type.");
         }
 
-        $dir = self::getUserDir($this->getUser()->get('id'));
+        $sourcePath = $uploadedFile->getStream()->getMetadata('uri');
+        if (empty($sourcePath) || !is_file($sourcePath)) {
+            throw new BadRequest("File upload failed.");
+        }
 
-        // wipe any previous avatar before storing the new one
-        self::removeDir($dir);
+        $userId = $this->getUser()->get('id');
 
-        mkdir($dir, 0777, true);
+        $dir = self::getUserDir($userId);
+        Util::removeDir($dir);
+        Util::createDir($dir);
 
-        // a distinct name per upload keeps the browser from serving a stale cached image
-        // when re-uploading with the same extension (the entry point sets a long max-age)
-        $fileName = 'avatar-' . bin2hex(random_bytes(4)) . '.' . $extension;
+        $fileName = self::getFileName($userId);
 
-        $uploadedFile->moveTo($dir . '/' . $fileName);
+        try {
+            (new ImageResize($sourcePath))->save($dir . '/' . $fileName, IMAGETYPE_PNG);
+        } catch (ImageResizeException $e) {
+            throw new BadRequest("Unsupported avatar file type.");
+        }
 
         return $fileName;
+    }
+
+    public function delete(): void
+    {
+        $dir = self::getUserDir($this->getUser()->get('id'));
+
+        Util::removeDir($dir);
     }
 
     public static function getUserDir(string $userId): string
@@ -73,53 +84,17 @@ class Avatar extends Injectable
      */
     public static function getFileName(string $userId): ?string
     {
-        $dir = self::getUserDir($userId);
-        if (!is_dir($dir)) {
-            return null;
-        }
-
-        foreach (scandir($dir) as $item) {
-            if (is_file($dir . '/' . $item)) {
-                return $item;
-            }
-        }
-
-        return null;
+        return md5($userId) . '.png';
     }
 
-    public static function getPath(string $userId, string $fileName): string
+    public static function getFullPath(string $userId): string
     {
-        return self::getUserDir($userId) . '/' . $fileName;
+        return self::getUserDir($userId) . '/' . self::getFileName($userId);
     }
 
-    /**
-     * Deletes the user's avatar folder along with the stored file.
-     */
-    public static function deleteFiles(string $userId): void
+    public static function isUploaded(string $userId): bool
     {
-        self::removeDir(self::getUserDir($userId));
-    }
-
-    protected static function removeDir(string $dir): void
-    {
-        if (!is_dir($dir)) {
-            return;
-        }
-
-        foreach (scandir($dir) as $item) {
-            if ($item === '.' || $item === '..') {
-                continue;
-            }
-
-            $path = $dir . '/' . $item;
-            if (is_dir($path)) {
-                self::removeDir($path);
-            } else {
-                @unlink($path);
-            }
-        }
-
-        @rmdir($dir);
+        return file_exists(self::getFullPath($userId));
     }
 
     protected function getMetadata(): Metadata

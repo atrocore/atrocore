@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\User;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -54,10 +55,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'avatarName' => ['type' => 'string'],
-                        ],
+                        'type'       => 'boolean',
                     ],
                 ],
             ],
@@ -80,8 +78,8 @@ class UploadAvatarHandler extends AbstractHandler
             throw new BadRequest("File upload failed.");
         }
 
-        $fileName = $this->getServiceFactory()->create('Avatar')->upload($uploadedFile);
+        $this->getServiceFactory()->create('Avatar')->upload($uploadedFile);
 
-        return new JsonResponse(['avatarName' => $fileName]);
+        return new BoolResponse(true);
     }
 }

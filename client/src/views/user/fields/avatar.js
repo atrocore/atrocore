@@ -70,6 +70,7 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
             $uploadLink.on('click', function () {
                 this.uploadAvatar();
             }.bind(this));
+
             $deleteLink.on('click', function () {
                 this.deleteAvatar();
             }.bind(this));
@@ -108,11 +109,13 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
                             this.clearView('crop');
                             this.uploadAvatarFile(croppedContents);
                         }.bind(this));
+
                         this.listenToOnce(view, 'remove', function () {
                             this.clearView('crop');
                         }.bind(this));
                     }.bind(this));
                 }.bind(this);
+
                 reader.readAsDataURL(file);
             }.bind(this));
 
@@ -132,6 +135,7 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
                 processData: false,
                 contentType: false
             }).done(function () {
+                this.bumpAvatarCacheTimestamp();
                 this.model.fetch().done(function () {
                     this.notify(false);
                     this.reRender();
@@ -148,6 +152,7 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
                 type: 'DELETE',
                 url: 'User/avatar'
             }).done(function () {
+                this.bumpAvatarCacheTimestamp();
                 this.model.fetch().done(function () {
                     this.notify(false);
                     this.reRender();
@@ -155,6 +160,15 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
             }.bind(this)).fail(function () {
                 this.notify(this.translate('Error occurred'), 'error');
             }.bind(this));
+        },
+
+        // the 'app'/'timestamp' cache entry is backed by localStorage (see cache.js), so
+        // bumping it here survives a page reload, unlike a plain in-memory view property
+        bumpAvatarCacheTimestamp: function () {
+            var cache = this.getCache();
+            if (cache) {
+                cache.set('app', 'timestamp', Date.now());
+            }
         },
 
         dataUrlToBlob: function (dataUrl) {
@@ -174,18 +188,14 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
                 var id = this.model.get(this.idName);
                 var userId = this.model.id;
 
-                var t = this.model.get(this.nameName) || id || userId;
+                var t = this.model.get('modifiedAt') ? (new Date(this.model.get('modifiedAt'))).getTime() : Date.now();
 
                 var imgHtml;
 
                 if (this.mode == 'detail') {
-                    imgHtml = '<img style="width:100%;height:auto;" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&attachmentId=' + ( id || 'false') + '&t=' + t + '">';
+                    imgHtml = '<img style="width:100%;height:auto;" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '">';
                 } else {
-                    var cache = this.getCache();
-                    if (cache) {
-                        t = cache.get('app', 'timestamp');
-                    }
-                    imgHtml = '<img width="16" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '">';
+                    imgHtml = '<img width="16" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '">';
                     return imgHtml;
                 }
 
@@ -195,15 +205,12 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
 
         prepareMediaFromModel: function (model) {
             var userId = model.id;
-            var t = model.get(this.nameName) || model.get(this.idName) || userId;
-            var baseUrl = this.getBasePath() + '?entryPoint=avatar&id=' + userId + '&t=' + t;
+            var baseUrl = this.getBasePath() + '?entryPoint=avatar&id=' + userId;
 
             return {
                 id: userId,
                 name: model.get('name'),
                 url: baseUrl,
-                smallThumbnail: baseUrl + '&size=' + this.previewSize,
-                largeThumbnail: baseUrl,
                 isImage: true
             };
         },

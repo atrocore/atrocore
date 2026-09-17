@@ -70,15 +70,8 @@ class Avatar extends Image
             exit;
         }
 
-        $id = $user->get('avatarId');
-        $size = $_GET['size'] ?? null;
-
-        $avatarFileName = AvatarService::getFileName($userId);
-
-        if (!empty($avatarFileName)) {
-            $this->showAvatarFile($userId, $avatarFileName);
-        } elseif (!empty($id) && !empty($file = $this->getEntityManager()->getEntity("File", $id))) {
-            $this->show($file, $size);
+        if (AvatarService::isUploaded($userId)) {
+            $this->showAvatar($userId);
         } else {
             $avatar = new \LasseRafn\InitialAvatarGenerator\InitialAvatar();
 
@@ -117,14 +110,14 @@ class Avatar extends Image
         return true;
     }
 
-    protected function showAvatarFile(string $userId, string $fileName): void
+    protected function showAvatar(string $userId): void
     {
-        $path = AvatarService::getPath($userId, $fileName);
+        $path = AvatarService::getFullPath($userId);
 
         $contents = file_get_contents($path);
         $mimeType = mime_content_type($path);
 
-        header('Content-Disposition:inline;filename="' . $fileName . '"');
+        header('Content-Disposition:inline;filename="' . AvatarService::getFileName($userId) . '"');
         if (!empty($mimeType)) {
             header('Content-Type: ' . $mimeType);
         }
