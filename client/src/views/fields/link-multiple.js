@@ -62,6 +62,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         createDisabled: false,
 
+        selectDisabled: false,
+
         uploadDisabled: true,
 
         sortable: false,
@@ -151,6 +153,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 placeholder: this.options.placeholder || this.translate('Select'),
                 valueIsSet: this.model.has(this.idsName),
                 createDisabled: this.createDisabled,
+                selectDisabled: this.selectDisabled,
                 uploadDisabled: this.uploadDisabled,
                 hideSearchType: this.options.hideSearchType
             }, Dep.prototype.data.call(this));
@@ -311,6 +314,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 }
             }
 
+            if ('selectDisabled' in this.options) {
+                this.selectDisabled = this.options.selectDisabled;
+            }
+
+            if (!this.selectDisabled && this.mode !== 'search' && this.foreignScope && !this.getAcl().check(this.foreignScope, 'read')) {
+                this.selectDisabled = true;
+            }
+
             if ('allowSelectAllResult' in this.options) {
                 this.allowSelectAllResult = this.options.allowSelectAllResult;
             }
@@ -358,6 +369,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             }
 
             this.addActionHandler('selectLink', function () {
+                if (this.selectDisabled) {
+                    return;
+                }
+
                 self.notify('Loading...');
                 var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
 

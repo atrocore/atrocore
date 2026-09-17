@@ -1214,29 +1214,29 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     }
 
 
-    public function getVersionData(string $entityId, string $versionName): array
+    public function getVersionData(string $entityId, string $versionId): array
     {
         $entityType = $this->entityType;
 
         return $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('*')
             ->from(Util::toUnderScore(lcfirst("{$entityType}Version")))
-            ->where('name = :name')
+            ->where('id = :id')
             ->andWhere(Util::toUnderScore(lcfirst($entityType) . 'Id') . ' = :entityId')
-            ->setParameter('name', $versionName)
+            ->setParameter('id', $versionId)
             ->setParameter('entityId', $entityId)
             ->fetchAssociative();
     }
 
-    public function deleteVersion(string $entityId, string $versionName): bool
+    public function deleteVersion(string $entityId, string $versionId): bool
     {
         $entityType = $this->entityType;
 
         $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->delete(Util::toUnderScore(lcfirst("{$entityType}Version")))
-            ->where('name = :name')
+            ->where('id = :id')
             ->andWhere(Util::toUnderScore(lcfirst($entityType) . 'Id') . ' = :entityId')
-            ->setParameter('name', $versionName)
+            ->setParameter('id', $versionId)
             ->setParameter('entityId', $entityId)
             ->executeStatement();
 

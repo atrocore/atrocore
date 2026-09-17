@@ -28,12 +28,11 @@ use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
 use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\Config;
-use Atro\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Psr\Http\Message\StreamInterface;
 
-class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, HasBasketInterface
+class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, HasBasketInterface, HasVersionHistoryInterface
 {
     public const TMP_DIR = 'data/.local-storage-tmp';
     public const CHUNKS_DIR = '.chunks';
@@ -78,12 +77,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         $this->scanFiles($storage, $otherStorages, $xattr);
     }
 
-    public function createFile(File $file): bool
+    public function createFile(File $file, string $localPath): bool
     {
-        $result = false;
-
-        $input = $file->_input ?? new \stdClass();
-
         if (!$file->getStorage()->get('syncFolders')) {
             $file->set('path', FolderPathGenerator::generate($this->getConfig()->get('uploadRootPath') ?? '', true));
             $file->set('thumbnailsPath', $file->get('path'));
@@ -91,96 +86,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
         $fileName = $this->getLocalPath($file);
 
-        // create folders for new file
         $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($fileName), 0777, true);
 
-        /**
-         * Create via contents
-         */
-        if (property_exists($input, 'fileContents')) {
-            $result = file_put_contents($fileName, self::parseInputFileContent($input->fileContents)) !== false;
-        }
-
-        /**
-         * Create via chunks
-         */
-        if (!$result && property_exists($input, 'allChunks')) {
-            $chunkDirPath = $this->getChunksDir($file->getStorage()) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
-
-            // create file via chunks
-            $f = fopen($fileName, 'a+');
-            foreach ($input->allChunks as $chunk) {
-                fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
-            }
-            fclose($f);
-
-            Util::removeDir($chunkDirPath);
-
-            $result = true;
-        }
-
-        /**
-         * Create via remote URL
-         */
-        if (!$result && property_exists($input, 'remoteUrl')) {
-            // if url use file protocol
-            if (str_starts_with($input->remoteUrl, 'file://')) {
-                $localFileName = str_replace('file://', '', $input->remoteUrl);
-                if (!file_exists($localFileName)) {
-                    throw new Error("File $localFileName does not exist");
-                }
-                $result = copy($localFileName, $fileName);
-            } else {
-                // headers should be passed as key-value structure
-                $headers = $input->urlHeaders ?? null;
-                if (is_object($headers)) {
-                    $headers = json_decode(json_encode($headers), true);
-                } else {
-                    if (is_string($headers)) {
-                        $headers = @json_decode($headers, true);
-                    }
-                }
-
-                // load file from url
-                set_time_limit(0);
-                $fp = fopen($fileName, 'w+');
-                if ($fp === false) {
-                    throw new Error(sprintf("Can't write any data to the file %s", $file->get('name')));
-                }
-                $ch = curl_init($input->remoteUrl);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-                curl_setopt($ch, CURLOPT_FILE, $fp);
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                if (is_array($headers) && !empty($headers)) {
-                    $requestHeaders = [];
-                    foreach ($headers as $header => $value) {
-                        $requestHeaders[] = "$header: $value";
-                    }
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
-                }
-
-                curl_exec($ch);
-                $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                curl_close($ch);
-                fclose($fp);
-
-                if (!in_array($responseCode, [200, 201])) {
-                    if (file_exists($fileName)) {
-                        @unlink($fileName);
-                    }
-                    throw new Error(sprintf("Download for '%s' failed.", $input->remoteUrl));
-                }
-
-                $result = true;
-            }
-        }
-
-        /**
-         * Create via local file
-         */
-        if (!$result && property_exists($input, 'localFileName')) {
-            $result = file_exists($input->localFileName) && rename($input->localFileName, $fileName);
-        }
+        // copy, not move: $localPath is caller-owned and reused/deleted by it afterward
+        $result = copy($localPath, $fileName);
 
         if ($result) {
             $mimeType = mime_content_type($fileName);
@@ -312,9 +221,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         return rename($folderNameFrom, $folderNameTo);
     }
 
-    public function reupload(File $file): bool
+    public function reupload(File $file, string $localPath): bool
     {
-        return $this->deleteFile($file) && $this->createFile($file);
+        return $this->deleteFile($file) && $this->createFile($file, $localPath);
     }
 
     public function deleteFile(File $file): bool
@@ -537,7 +446,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         return implode('/', $folders);
     }
 
-    protected function getChunksDir(Storage $storage): string
+    public function getChunksDir(Storage $storage): string
     {
         return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
     }
