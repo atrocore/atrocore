@@ -236,7 +236,7 @@ class Hierarchy extends Base
         }
     }
 
-    public function getInheritableFields(array $fieldsDefs = null): array
+    public function getInheritableFields(?array $fieldsDefs = null): array
     {
         $unInheritableFields = $this->getUnInheritableFields();
 
