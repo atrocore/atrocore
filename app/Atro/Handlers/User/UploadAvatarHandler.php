@@ -15,13 +15,10 @@ namespace Atro\Handlers\User;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
-use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Atro\Services\Avatar as AvatarService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
@@ -30,19 +27,27 @@ use Psr\Http\Server\RequestHandlerInterface;
         'POST',
     ],
     summary: 'Upload own avatar',
-    description: 'Uploads a raw (multipart/form-data) image as the current user\'s avatar. Bounded only by PHP\'s upload_max_filesize/post_max_size, stored outside the File entity in its own folder, and requires no File ACL permissions.',
+    description: 'Uploads a base64 data URL image as the current user\'s avatar.',
     tag: 'User',
     requestBody: [
         'required' => true,
         'content'  => [
-            'multipart/form-data' => [
+            'application/json' => [
                 'schema' => [
                     'type'       => 'object',
-                    'required'   => ['file'],
+                    'required'   => ['fileContents', 'name', 'filesize'],
                     'properties' => [
-                        'file' => [
-                            'type'   => 'string',
-                            'format' => 'binary',
+                        'fileContents'     => [
+                            'type'        => 'string',
+                            'description' => 'Base64-encoded avatar file content as a data URI (e.g. `data:image/png;base64,...`).',
+                        ],
+                        'name' => [
+                            'type'        => 'string',
+                            'description' => 'Original avatar file name.',
+                        ],
+                        'filesize' => [
+                            'type'        => 'integer',
+                            'description' => 'Avatar file size in bytes.',
                         ],
                     ],
                 ],
@@ -61,7 +66,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'No file uploaded, upload error, or unsupported file type.',
+            'description' => 'No image data provided or unsupported file type.',
         ],
     ],
 )]
@@ -69,16 +74,9 @@ class UploadAvatarHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $uploadedFile = $request->getUploadedFiles()['file'] ?? null;
-        if (!$uploadedFile instanceof UploadedFileInterface) {
-            throw new BadRequest("No file uploaded.");
-        }
+        $data = $this->getRequestBody($request);
 
-        if ($uploadedFile->getError() !== UPLOAD_ERR_OK) {
-            throw new BadRequest("File upload failed.");
-        }
-
-        $this->getServiceFactory()->create('Avatar')->upload($uploadedFile);
+        $this->getServiceFactory()->create('Avatar')->upload($data->fileContents, $data->name, $data->filesize);
 
         return new BoolResponse(true);
     }

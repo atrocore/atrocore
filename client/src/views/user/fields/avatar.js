@@ -50,8 +50,6 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
             }
         },
 
-        // mirrors the standard inline-edit-link pattern (base.js initInlineEdit):
-        // hidden action icons in the cell's inline-actions container, revealed on hover
         initAvatarActions: function () {
             var $cell = this.getCellElement();
             var $inlineActions = this.getInlineActionsContainer();
@@ -107,7 +105,7 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
 
                         this.listenToOnce(view, 'crop', function (croppedContents) {
                             this.clearView('crop');
-                            this.uploadAvatarFile(croppedContents);
+                            this.uploadAvatarFile(croppedContents, file.name, this.getDataUrlSize(croppedContents));
                         }.bind(this));
 
                         this.listenToOnce(view, 'remove', function () {
@@ -122,20 +120,23 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
             $input.trigger('click');
         },
 
-        uploadAvatarFile: function (dataUrl) {
-            this.notify('Loading...');
+        // byte size of the base64-decoded payload, computed without actually decoding it
+        getDataUrlSize: function (dataUrl) {
+            var base64 = (dataUrl.split(',')[1] || '').replace(/\s/g, '');
+            var padding = (base64.match(/=+$/) || [''])[0].length;
 
-            var formData = new FormData();
-            formData.append('file', this.dataUrlToBlob(dataUrl), 'avatar.jpg');
+            return Math.floor((base64.length * 3) / 4) - padding;
+        },
+
+        uploadAvatarFile: function (dataUrl, filename, size) {
+            this.notify('Loading...');
 
             $.ajax({
                 type: 'POST',
                 url: 'User/avatar',
-                data: formData,
-                processData: false,
-                contentType: false
+                contentType: 'application/json',
+                data: JSON.stringify({fileContents: dataUrl, name: filename, filesize: size})
             }).done(function () {
-                this.bumpAvatarCacheTimestamp();
                 this.model.fetch().done(function () {
                     this.notify(false);
                     this.reRender();
@@ -152,7 +153,6 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
                 type: 'DELETE',
                 url: 'User/avatar'
             }).done(function () {
-                this.bumpAvatarCacheTimestamp();
                 this.model.fetch().done(function () {
                     this.notify(false);
                     this.reRender();
@@ -162,41 +162,16 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
             }.bind(this));
         },
 
-        // the 'app'/'timestamp' cache entry is backed by localStorage (see cache.js), so
-        // bumping it here survives a page reload, unlike a plain in-memory view property
-        bumpAvatarCacheTimestamp: function () {
-            var cache = this.getCache();
-            if (cache) {
-                cache.set('app', 'timestamp', Date.now());
-            }
-        },
-
-        dataUrlToBlob: function (dataUrl) {
-            var parts = dataUrl.split(',');
-            var mime = parts[0].match(/:(.*?);/)[1];
-            var binary = atob(parts[1]);
-            var array = new Uint8Array(binary.length);
-            for (var i = 0; i < binary.length; i++) {
-                array[i] = binary.charCodeAt(i);
-            }
-
-            return new Blob([array], {type: mime});
-        },
-
         getValueForDisplay: function () {
-            if (this.mode == 'detail' || this.mode == 'list') {
-                var id = this.model.get(this.idName);
-                var userId = this.model.id;
+            if (this.mode === 'detail' || this.mode === 'list') {
+                let userId = this.model.id,
+                    t = this.getCache() ? this.getCache().get('app', 'timestamp') : Date.now(),
+                    imgHtml = null;
 
-                var t = this.model.get('modifiedAt') ? (new Date(this.model.get('modifiedAt'))).getTime() : Date.now();
-
-                var imgHtml;
-
-                if (this.mode == 'detail') {
-                    imgHtml = '<img style="width:100%;height:auto;" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '">';
+                if (this.mode === 'detail') {
+                    imgHtml = '<img style="width:100%;height:auto;" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&time=' + t + '">';
                 } else {
-                    imgHtml = '<img width="16" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '">';
-                    return imgHtml;
+                    imgHtml = '<img width="16" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&time=' + t + '">';
                 }
 
                 return '<a data-action="showImagePreview" data-id="' + userId + '" style="display:block;width:100%;" href="' + this.getBasePath() + '?entryPoint=avatar&id=' + userId + '">' + imgHtml + '</a>';
@@ -204,8 +179,9 @@ Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
         },
 
         prepareMediaFromModel: function (model) {
-            var userId = model.id;
-            var baseUrl = this.getBasePath() + '?entryPoint=avatar&id=' + userId;
+            let userId = model.id,
+                t = this.getCache() ? this.getCache().get('app', 'timestamp') : Date.now(),
+                baseUrl = this.getBasePath() + '?entryPoint=avatar&id=' + userId + '&time=' + t;
 
             return {
                 id: userId,

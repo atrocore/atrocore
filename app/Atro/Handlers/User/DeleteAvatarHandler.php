@@ -27,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'DELETE',
     ],
     summary: 'Remove own avatar',
-    description: 'Removes the current user\'s avatar uploaded via the raw avatar-upload endpoint, deleting its dedicated storage folder.',
+    description: 'Removes the current user\'s avatar.',
     tag: 'User',
     responses: [
         200 => [

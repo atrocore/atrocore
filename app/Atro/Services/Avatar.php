@@ -20,7 +20,6 @@ use Atro\Entities\User;
 use Espo\Core\Injectable;
 use Gumlet\ImageResize;
 use Gumlet\ImageResizeException;
-use Psr\Http\Message\UploadedFileInterface;
 
 class Avatar extends Injectable
 {
@@ -32,21 +31,16 @@ class Avatar extends Injectable
         $this->addDependency('user');
     }
 
-    protected function getAllowedExtensions(): array
+    public function upload(string $contents, string $name, int $filesize): string
     {
-        return $this->getMetadata()->get(['app', 'file', 'image', 'extensions'], []);
-    }
-
-    public function upload(UploadedFileInterface $uploadedFile): string
-    {
-        $extension = strtolower((string)pathinfo((string)$uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
+        $extension = strtolower((string)pathinfo($name, PATHINFO_EXTENSION));
         if (!in_array($extension, $this->getAllowedExtensions(), true)) {
             throw new BadRequest("Unsupported avatar file type.");
         }
 
-        $sourcePath = $uploadedFile->getStream()->getMetadata('uri');
-        if (empty($sourcePath) || !is_file($sourcePath)) {
-            throw new BadRequest("File upload failed.");
+        $maxSize = $this->convertToBytes((string)ini_get('upload_max_filesize'));
+        if (!empty($maxSize) && $filesize > $maxSize) {
+            throw new BadRequest("Avatar file exceeds the maximum upload size.");
         }
 
         $userId = $this->getUser()->get('id');
@@ -58,9 +52,11 @@ class Avatar extends Injectable
         $fileName = self::getFileName($userId);
 
         try {
-            (new ImageResize($sourcePath))->save($dir . '/' . $fileName, IMAGETYPE_PNG);
+            (new ImageResize($contents))->save($dir . '/' . $fileName, IMAGETYPE_PNG);
         } catch (ImageResizeException $e) {
             throw new BadRequest("Unsupported avatar file type.");
+        } catch (\Throwable $e) {
+            throw new BadRequest("Error while saving avatar file: " . $e->getMessage());
         }
 
         return $fileName;
@@ -70,7 +66,11 @@ class Avatar extends Injectable
     {
         $dir = self::getUserDir($this->getUser()->get('id'));
 
-        Util::removeDir($dir);
+        try {
+            Util::removeDir($dir);
+        } catch (\Throwable $e) {
+            throw new BadRequest("Error while deleting avatar file: " . $e->getMessage());
+        }
     }
 
     public static function getUserDir(string $userId): string
@@ -78,10 +78,6 @@ class Avatar extends Injectable
         return self::AVATAR_DIR . '/' . $userId;
     }
 
-    /**
-     * The `avatar` field is notStorable, so the currently stored file name is discovered
-     * from disk (a user's folder holds at most one avatar file) rather than tracked in the DB.
-     */
     public static function getFileName(string $userId): ?string
     {
         return md5($userId) . '.png';
@@ -95,6 +91,29 @@ class Avatar extends Injectable
     public static function isUploaded(string $userId): bool
     {
         return file_exists(self::getFullPath($userId));
+    }
+
+    protected function getAllowedExtensions(): array
+    {
+        return $this->getMetadata()->get(['app', 'file', 'image', 'extensions'], []);
+    }
+
+    protected function convertToBytes(string $size): int
+    {
+        $suffix = substr($size, -1);
+        $value = (int)substr($size, 0, -1);
+
+        switch (strtoupper($suffix)) {
+            case 'G':
+                $value *= 1024;
+            case 'M':
+                $value *= 1024;
+            case 'K':
+                $value *= 1024;
+                break;
+        }
+
+        return $value;
     }
 
     protected function getMetadata(): Metadata
