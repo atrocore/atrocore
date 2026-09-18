@@ -13,6 +13,7 @@ namespace Atro\EntryPoints;
 
 use Atro\Entities\File;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Services\Avatar as AvatarService;
 
 class Avatar extends Image
 {
@@ -69,11 +70,8 @@ class Avatar extends Image
             exit;
         }
 
-        $id = $user->get('avatarId');
-        $size = $_GET['size'] ?? null;
-
-        if (!empty($id) && !empty($file = $this->getEntityManager()->getEntity("File", $id))) {
-            $this->show($file, $size);
+        if (AvatarService::isUploaded($userId)) {
+            $this->showAvatar($userId);
         } else {
             $avatar = new \LasseRafn\InitialAvatarGenerator\InitialAvatar();
 
@@ -110,6 +108,24 @@ class Avatar extends Image
     protected function checkFile(File $file): bool
     {
         return true;
+    }
+
+    protected function showAvatar(string $userId): void
+    {
+        $path = AvatarService::getFullPath($userId);
+
+        $contents = file_get_contents($path);
+        $mimeType = mime_content_type($path);
+
+        header('Content-Disposition:inline;filename="' . AvatarService::getFileName($userId) . '"');
+        if (!empty($mimeType)) {
+            header('Content-Type: ' . $mimeType);
+        }
+        header('Pragma: public');
+        header('Cache-Control: max-age=360000, must-revalidate');
+        header('Content-Length: ' . mb_strlen($contents, '8bit'));
+        echo $contents;
+        exit;
     }
 }
 

@@ -19,6 +19,7 @@ use Atro\Core\Utils\IdGenerator;
 use Atro\Entities\User as UserEntity;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\AclManager;
+use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
 
 class User extends RDB
@@ -223,7 +224,6 @@ class User extends RDB
 
         if ($entity->isAttributeChanged('localeId')
             || $entity->isAttributeChanged('styleId')
-            || $entity->isAttributeChanged('avatarId')
         ) {
             $this->getInjection('container')->get('dataManager')->clearCache(true);
         }
@@ -242,6 +242,8 @@ class User extends RDB
         parent::afterRemove($entity, $options);
 
         $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
+
+        $this->getServiceFactory()->create('Avatar')->delete($entity->get('id'));
     }
 
     protected function afterRestore($entity)
@@ -254,6 +256,11 @@ class User extends RDB
     protected function getAclManager(): AclManager
     {
         return $this->getInjection('container')->get('aclManager');
+    }
+
+    protected function getServiceFactory(): ServiceFactory
+    {
+        return $this->getInjection('container')->get('serviceFactory');
     }
 
     protected function init()

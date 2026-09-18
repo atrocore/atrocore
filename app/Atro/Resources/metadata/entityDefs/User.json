@@ -190,7 +190,8 @@
       "type": "file",
       "fileTypeId": "019c320b-77ba-73d3-8f1b-8346dce0f7bb",
       "view": "views/user/fields/avatar",
-      "previewSize": "small"
+      "previewSize": "small",
+      "notStorable": true
     },
     "sendAccessInfo": {
       "type": "bool",
