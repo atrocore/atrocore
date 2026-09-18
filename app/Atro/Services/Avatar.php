@@ -31,7 +31,7 @@ class Avatar extends Injectable
         $this->addDependency('user');
     }
 
-    public function upload(string $contents, string $name, int $filesize): string
+    public function upload(string $userId, string $contents, string $name, int $filesize): string
     {
         $extension = strtolower((string)pathinfo($name, PATHINFO_EXTENSION));
         if (!in_array($extension, $this->getAllowedExtensions(), true)) {
@@ -42,8 +42,6 @@ class Avatar extends Injectable
         if (!empty($maxSize) && $filesize > $maxSize) {
             throw new BadRequest("Avatar file exceeds the maximum upload size.");
         }
-
-        $userId = $this->getUser()->get('id');
 
         $dir = self::getUserDir($userId);
         Util::removeDir($dir);
@@ -62,9 +60,9 @@ class Avatar extends Injectable
         return $fileName;
     }
 
-    public function delete(): void
+    public function delete(string $userId): void
     {
-        $dir = self::getUserDir($this->getUser()->get('id'));
+        $dir = self::getUserDir($userId);
 
         try {
             Util::removeDir($dir);

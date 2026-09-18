@@ -76,7 +76,12 @@ class UploadAvatarHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        $this->getServiceFactory()->create('Avatar')->upload($data->fileContents, $data->name, $data->filesize);
+        $this->getServiceFactory()->create('Avatar')->upload(
+            $this->getUser()->get('id'),
+            $data->fileContents,
+            $data->name,
+            $data->filesize
+        );
 
         return new BoolResponse(true);
     }

@@ -46,7 +46,7 @@ class DeleteAvatarHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->getServiceFactory()->create('Avatar')->delete();
+        $this->getServiceFactory()->create('Avatar')->delete($this->getUser()->get('id'));
 
         return new BoolResponse(true);
     }
