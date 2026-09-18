@@ -57,7 +57,7 @@
     "isNonComparable": "Nicht vergleichbar",
     "isDuplicatableRelation": "Duplizierbar",
     "inheritanceDisabled": "Unvererbbar",
-    "auditableEnabled": "Die Änderung als Datensatz-Aktivität protokoliere",
+    "isAuditableRelation": "Die Änderung als Datensatz-Aktivität protokoliere",
     "auditableDisabled": "Keine Datensatz-Aktivität erstellen",
     "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung",
     "modifiedExtendedEnabled": "Änderung als Modifikation erfassen",
@@ -94,6 +94,7 @@
     "modifiedExtendedEnabled": "Änderungen in dieser Beziehung führen zur Aktualisierung des Datums und der Uhrzeit \"Geändert am\".",
     "inheritanceDisabled": "Die Werte für dieses Feld werden nicht vom übergeordneten Element geerbt.",
     "modifiedExtendedDisabled": "Wenn aktiviert, wird bei Änderungen in diesem Feld der Zeitstempel „Geändert am“ nicht aktualisiert.",
+    "isAuditableRelation": "Änderungen in dieser Verknüpfung werden als Aktivität angezeigt.",
     "auditableDisabled": "Änderungen in diesem Feld werden nicht als Aktivität angezeigt.",
     "selectPageSize": "Anzahl der pro Seite im Auswahldialog angezeigten Datensätze. Vermeiden Sie zu hohe Werte, da dies den Browser des Benutzers verlangsamen oder zum Einfrieren bringen kann."
   },
@@ -132,6 +133,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Einige Datensätze haben Nullwerte",
+    "fieldIsUsedInUniqueIndex": "Das Feld '%s' wird im Unique-Index bzw. in den Unique-Indizes '%s' verwendet und kann nicht gelöscht werden.",
     "cannotAddRequiredFieldWithExistingRecords": "Sie können kein erforderliches Feld mit vorhandenen Datensätzen ohne Standardwert hinzufügen",
     "relationAlreadyUsed": "Der Middle Table Name %s wird bereits verwendet, wählen Sie einen anderen.",
     "optionCodeUsedInDisabledOptionsRules": "Die Option '%s' wird in Regeln für deaktivierte Optionen verwendet und kann nicht geändert werden.",

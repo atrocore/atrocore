@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
@@ -66,10 +65,6 @@ class Classification extends Hierarchy
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->get('code') === '') {
-            $entity->set('code', null);
-        }
-
         if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
             throw new BadRequest($this->exception('entityCannotBeChanged'));
         }
@@ -84,17 +79,6 @@ class Classification extends Hierarchy
         }
 
         parent::beforeSave($entity, $options);
-    }
-
-    public function save(Entity $entity, array $options = [])
-    {
-        try {
-            $result = parent::save($entity, $options);
-        } catch (UniqueConstraintViolationException $e) {
-            throw new BadRequest(sprintf($this->exception('notUniqueValue', 'Global'), 'code'));
-        }
-
-        return $result;
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -129,27 +113,6 @@ class Classification extends Hierarchy
             ->fetchAssociative();
 
         return !empty($record);
-    }
-
-    public function remove(Entity $entity, array $options = [])
-    {
-        if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-            $this->deleteFromDb($toDelete->get('id'), true);
-        }
-
-        return parent::remove($entity, $options);
-    }
-
-    public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
-    {
-        return $this
-            ->where([
-                'id!='    => $entity->get('id'),
-                'release' => $entity->get('release'),
-                'code'    => $entity->get('code'),
-                'deleted' => $deleted
-            ])
-            ->findOne(['withDeleted' => $deleted]);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

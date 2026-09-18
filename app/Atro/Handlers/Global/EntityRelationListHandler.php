@@ -169,7 +169,7 @@ class EntityRelationListHandler extends AbstractHandler
         $params                  = $this->buildListParams($request);
         $params['whereRelation'] = $this->prepareWhereQuery($qp['whereRelation'] ?? null);
 
-        $id = $service->resolveIdByCode($id) ?? $id;
+        $id = $service->resolveIdBySlug($id) ?? $id;
 
         $result = $service->findLinkedEntities($id, $link, $params);
 

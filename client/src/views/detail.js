@@ -232,7 +232,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             var fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
             for (var field in fields) {
-                if (fields[field].isCode) {
+                if (fields[field].isSlug) {
                     var value = model.get(field);
                     return (value !== null && value !== undefined && value !== '') ? value : id;
                 }

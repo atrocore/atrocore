@@ -74,5 +74,6 @@
   "fieldDefs": {
     "notNull": false
   },
-  "group": "numeric"
+  "group": "numeric",
+  "uniqueIndexAllowed": true
 }

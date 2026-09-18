@@ -355,7 +355,7 @@
         }
       }
     },
-    "isCode": {
+    "isSlug": {
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
@@ -764,8 +764,7 @@
     "script": {
       "type": "code",
       "engine": "Twig",
-      "view": "views/entity-field/fields/script",
-      "isMultilang": true
+      "view": "views/entity-field/fields/script"
     },
     "outputType": {
       "type": "enum",
@@ -801,8 +800,7 @@
     "preview": {
       "type": "text",
       "view": "views/admin/field-manager/fields/script-preview",
-      "readOnly": true,
-      "isMultilang": true
+      "readOnly": true
     },
     "rowsMin": {
       "type": "int",
@@ -895,7 +893,7 @@
         }
       }
     },
-    "auditableEnabled": {
+    "isAuditableRelation": {
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
@@ -903,10 +901,9 @@
           "conditionGroup": [
             {
               "attribute": "type",
-              "type": "notIn",
+              "type": "in",
               "value": [
-                "linkMultiple",
-                "autoincrement"
+                "linkMultiple"
               ]
             }
           ]

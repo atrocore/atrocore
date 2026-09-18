@@ -2,7 +2,7 @@
   "fields": {
     "number": {
       "type": "autoincrement",
-      "isCode": true
+      "isSlug": true
     },
     "entity": {
       "type": "enum",
@@ -50,7 +50,7 @@
     },
     "selectionItems": {
       "type": "linkMultiple",
-      "auditableEnabled": true
+      "isAuditableRelation": true
     },
     "type": {
       "type": "enum",

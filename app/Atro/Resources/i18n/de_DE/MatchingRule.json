@@ -5,7 +5,9 @@
     "matchingRuleSet": "Satz",
     "matchingRules": "Übereinstimmungs-Regeln",
     "operator": "Operator",
-    "attribute": "Attribut"
+    "attribute": "Attribut",
+    "matchedWhereExpression": "Matched-Where-Ausdruck",
+    "matchScoreExpression": "Score-Ausdruck"
   },
   "groupOptions": {
     "field": {
@@ -18,7 +20,8 @@
       "fieldEqual": "Feld ist gleich",
       "fieldSimilar": "Feld ist ähnlich",
       "fieldContains": "Feld enthält",
-      "set": "Set"
+      "set": "Set",
+      "expression": "Ausdruck"
     },
     "operator": {
       "and": "AND",
@@ -31,6 +34,11 @@
     "notValidMatching": "Die Übereinstimmung ist ungültig",
     "notValidMatchingRuleSet": "Der übereinstimmende Regelsatz ist ungültig",
     "notValidFieldType": "Der Feldtyp wird vom ausgewählten Regeltyp nicht unterstützt.",
-    "notValidAttributeType": "Der Attributtyp wird vom ausgewählten Regeltyp nicht unterstützt."
+    "notValidAttributeType": "Der Attributtyp wird vom ausgewählten Regeltyp nicht unterstützt.",
+    "expressionCannotBeEmpty": "Der Ausdruck darf nicht leer sein."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Ein ExpressionLanguage-Ausdruck mit Zugriff auf `stageEntity` (einen hydratisierten Datensatz). Muss ein Where-Bedingungs-Array zurückgeben, das beschreibt, welche Hauptdatensätze als Kandidaten in Frage kommen - Schlüssel sind Feldnamen, Werte sind das, womit verglichen wird (Operatoren können in den Schlüssel eingebettet werden, z. B. `field>`, `field*`, und `OR`/`AND`-Gruppen lassen sich für komplexere Bedingungen verschachteln) - z. B. {nameFrFr: stageEntity.get('name')} findet Hauptdatensätze, deren nameFrFr dem name des Quelldatensatzes entspricht.",
+    "matchScoreExpression": "Ein ExpressionLanguage-Ausdruck mit Zugriff auf `stageEntity` (einen hydratisierten Datensatz) und `masterEntity` (die rohen Feldwerte des Kandidaten als Array - z. B. masterEntity['name']). Muss eine Zahl zwischen 0 und 1 zurückgeben, die mit dem Gewicht der Regel multipliziert den Übereinstimmungswert ergibt - z. B. bewertet stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 eine exakte Übereinstimmung mit 1 und alles andere mit 0."
   }
 }

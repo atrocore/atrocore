@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "name": "Name",
+    "entity": "Entität",
+    "fields": "Felder",
+    "isCustom": "Benutzerdefiniert"
+  },
+  "tooltips": {
+    "name": "Der Name des Unique-Index, z. B. unique_relationship. Erlaubt sind nur lateinische Kleinbuchstaben, Ziffern und Unterstriche.",
+    "fields": "Die Felder, aus denen der Unique-Index besteht. Die Spalte `deleted` wird dem Index immer als erste Spalte hinzugefügt. Es sind mindestens zwei Felder erforderlich."
+  },
+  "exceptions": {
+    "indexNameIsInvalid": "Der Name des Unique-Index ist ungültig. Er muss mit einem lateinischen Kleinbuchstaben beginnen, darf nicht mit einem Unterstrich enden und darf nur lateinische Kleinbuchstaben, Ziffern und Unterstriche enthalten.",
+    "atLeastTwoFieldsRequired": "Ein Unique-Index muss aus mindestens zwei Feldern bestehen. Um ein einzelnes Feld eindeutig zu machen, aktivieren Sie das Kontrollkästchen 'Eindeutig' in den Feldeinstellungen.",
+    "indexFieldsShouldBeUnique": "Dasselbe Feld kann im Unique-Index nicht zweimal verwendet werden.",
+    "fieldCannotBeUsedInUniqueIndex": "Das Feld '%s' hat keine eigene Spalte in der Tabelle und kann im Unique-Index nicht verwendet werden.",
+    "fieldTypeCannotBeUsedInUniqueIndex": "Der Typ des Feldes '%s' wird von Unique-Indizes nicht unterstützt.",
+    "duplicateValuesExist": "Der Unique-Index kann nicht erstellt werden: Die Tabelle enthält bereits doppelte Werte für die ausgewählten Felder: %s",
+    "indexNameAlreadyUsed": "Ein Index mit dem Namen '%s' existiert für diese Entität bereits.",
+    "entityTypeIsNotSuitableForUniqueIndexes": "Unique-Indizes können nur für Entitäten der Typen Base und Hierarchy konfiguriert werden."
+  }
+}

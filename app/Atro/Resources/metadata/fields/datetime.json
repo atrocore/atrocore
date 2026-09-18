@@ -59,5 +59,6 @@
     "notNull": false
   },
   "personalData": true,
-  "group": "date"
+  "group": "date",
+  "uniqueIndexAllowed": true
 }

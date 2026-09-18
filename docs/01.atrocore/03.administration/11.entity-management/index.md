@@ -90,6 +90,31 @@ The Fields panel allows you to add and configure fields for the entity.
 
 For detailed information about field types, configuration, and management, see [Fields and Attributes](../11.entity-management/03.fields-and-attributes/).
 
+### Unique Indexes panel
+
+The Unique Indexes panel is available for [Base](01.entity-types/index.md#base) and [Hierarchy](01.entity-types/index.md#hierarchy) entities. It lists the unique indexes of the entity and lets you create your own.
+
+A unique index enforces the uniqueness of a **combination** of values: no two records of the entity may hold the same set of values in the selected fields. To make a single field unique, use the **Unique** option of that field instead — see [Data Types](02.data-types/index.md).
+
+#### Creating a unique index
+
+| **Field Name** | **Description**                                                                                                                                                                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name           | Identifier of the index. It is filled in automatically from the selected fields (`unique_sku_brand`) and can be adjusted. Lowercase Latin letters, digits and underscores are allowed. The name must be unique within the entity and cannot be changed afterwards |
+| Fields         | The fields the index consists of. At least two fields are required                                                                                                                                                                                              |
+| Entity         | The entity the index belongs to                                                                                                                                                                                                                                 |
+
+The following field types can be part of a unique index: Boolean, String, Integer, Float, List, Link, File, Date, Date-time, Email, URL and Language Code. The record ID is not offered, because it is unique on its own.
+
+> The index name is what the database reports when the index is violated, so give it a name that identifies the rule.
+
+#### Behavior
+
+-   The index is created in the database as soon as the record is saved. If the entity already contains records that violate it, the index is not created and the conflicting values are listed in the error message.
+-   [Soft-deleted](../../08.record-management/index.md#soft-delete) records are indexed separately from active ones, so a deleted record never blocks the creation of a new record with the same values.
+-   A field that is part of a unique index cannot be deleted. Delete the index first.
+-   Unique indexes shipped with AtroCore and its modules are listed in the panel as well, but cannot be edited or deleted.
+
 ### Attributes panel
 
 The Attributes panel allows you to add and configure attributes for the entity.
@@ -97,6 +122,16 @@ The Attributes panel allows you to add and configure attributes for the entity.
 ![attributes](./_assets/attributes.png)
 
 For detailed information about attribute types and configuration, see [Fields and Attributes](../11.entity-management/03.fields-and-attributes/).
+
+## Navigating entities and fields
+
+The left sidebar provides a tree for moving between entities and their fields without returning to the list.
+
+On an entity page the tree lists all entities. On a field page it lists the fields of the entity the field belongs to, so you can step from one field to another directly. In both cases the record you are viewing is highlighted in the tree, and the search box above it filters the tree by name.
+
+Breadcrumbs on a field page show the path `Entities / Entity Name / Field Name`, where each part is a link.
+
+Fields are always opened in the context of their entity – from the [Fields panel](#fields-panel) or from the tree. A standalone list of all fields is not available.
 
 ## Working with entity records
 

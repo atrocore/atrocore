@@ -44,6 +44,7 @@ Espo.define('collections/note', 'collection', function (Dep) {
                 options.remove = false;
                 options.at = 0;
                 options.maxSize = null;
+                options.fetchNew = true;
             }
 
             this.fetch(options);

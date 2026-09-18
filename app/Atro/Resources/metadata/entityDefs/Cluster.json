@@ -5,7 +5,7 @@
     },
     "number": {
       "type": "autoincrement",
-      "isCode": true
+      "isSlug": true
     },
     "masterEntity": {
       "type": "varchar",
@@ -53,7 +53,7 @@
     },
     "clusterItems": {
       "type": "linkMultiple",
-      "auditableEnabled": true
+      "isAuditableRelation": true
     },
     "goldenRecord": {
       "type": "link",

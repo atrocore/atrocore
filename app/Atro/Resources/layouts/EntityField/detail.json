@@ -45,7 +45,7 @@
           "name": "readOnly"
         },
         {
-          "name": "isCode"
+          "name": "isSlug"
         }
       ],
       [
@@ -260,7 +260,7 @@
       ],
       [
         {
-          "name": "auditableEnabled"
+          "name": "isAuditableRelation"
         },
         false
       ],

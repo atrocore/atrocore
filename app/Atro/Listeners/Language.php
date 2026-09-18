@@ -226,6 +226,20 @@ class Language extends AbstractListener
                     }
                 }
             }
+
+            foreach (['script', 'preview'] as $field) {
+                foreach ($data as $locale => $rows) {
+                    $baseLabel = $data[$locale]['EntityField']['fields'][$field] ?? $field;
+
+                    foreach ($languages as $code => $name) {
+                        $mField = $field . ucfirst(Util::toCamelCase(strtolower($code)));
+
+                        if (!isset($data[$locale]['EntityField']['fields'][$mField])) {
+                            $data[$locale]['EntityField']['fields'][$mField] = $baseLabel . ' / ' . $name;
+                        }
+                    }
+                }
+            }
         }
 
         foreach ($this->getMetadata()->get(['app', 'thumbnailTypes'], []) as $size => $params) {

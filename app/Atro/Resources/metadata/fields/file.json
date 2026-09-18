@@ -52,5 +52,6 @@
   "filter": true,
   "auditable": true,
   "personalData": true,
-  "group": "reference"
+  "group": "reference",
+  "uniqueIndexAllowed": true
 }

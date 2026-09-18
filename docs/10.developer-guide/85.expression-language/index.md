@@ -11,7 +11,7 @@ AtroCore uses two scripting tools side by side, each aimed at its own kind of ta
 | Tool | Task | Where it is used |
 |---|---|---|
 | [Twig](../80.twig-tutorial/index.md) | Producing content | Script fields, export and import feed templates, notification and e-mail bodies, PDF markup, merging and consolidation scripts, action payloads |
-| Expression Language | Evaluating a rule | Conditions of Actions and Workflows |
+| Expression Language | Evaluating a rule | Conditions of Actions and Workflows, and Matching Rules of type `Expression` |
 
 Twig is a template engine: it renders text from data. The Expression Language is an expression evaluator: it computes one value from data. A condition is exactly one value — a boolean — which is the shape the Expression Language is built for, and that gives it two properties conditions rely on:
 
@@ -26,8 +26,9 @@ An expression sees exactly the properties of its context class — nothing else.
 |---|---|
 | Action | `Atro\Core\ExpressionLanguage\Compiled\ActionConditionContext` |
 | Workflow | `Workflows\Core\ExpressionLanguage\Compiled\WorkflowConditionContext` |
+| Matching Rule | `Atro\Core\ExpressionLanguage\Compiled\MatchingRuleWhereContext` / `MatchingRuleScoreContext` — see [Matching Rule expressions](#matching-rule-expressions) |
 
-In both cases the condition is activated by setting `Conditions Type` to `Expression` and writing the rule into the `Conditions Expression` field.
+For Action and Workflow, the condition is activated by setting `Conditions Type` to `Expression` and writing the rule into the `Conditions Expression` field.
 
 ### Action condition variables
 
@@ -183,6 +184,39 @@ if ($action->get('conditionsType') === 'expression') {
 
 The same switch also contains a `script` branch, kept for backward compatibility with conditions created before the Expression Language was introduced. The `Conditions Script` field is read-only, and `script` is no longer offered as an option in the UI.
 
+## Matching Rule expressions
+
+A `MatchingRule` decides whether a candidate record is a match for a staged record, and how strong the match is. Its `Expression` type (`type: expression`) is the odd one out among the consumers above: instead of one boolean condition, it uses **two independent expressions**, each with its own return type and its own context, because the rule needs to answer two different questions.
+
+| Field | Context | Returns | Question it answers |
+|---|---|---|---|
+| `Matched Where Expression` | `MatchingRuleWhereContext` | a where-clause array | Which master records are even worth considering as candidates? |
+| `Score Expression` | `MatchingRuleScoreContext` | `float` (0 to 1) | How well does this specific candidate match? |
+
+### Matched Where Expression
+
+Runs once per staged record, before any candidate has been loaded — its only variable is `stageEntity`, the staged record. It must return a where-clause array: keys are field names, values are what to compare against; operators can be embedded in the key (`field>`, `field*`, ...) and `OR`/`AND` groups nest for more complex conditions.
+
+```
+{nameFrFr: stageEntity.get('name')}
+```
+
+This narrows the search to master records whose `nameFrFr` equals the staged record's `name`. `Atro\Core\MatchingRuleType\Expression::prepareMatchingSqlPart()` turns the array into the actual SQL condition and merges it into the candidate-shortlist query — an expression here can only describe *which* records to look at, it never loads or touches anything itself.
+
+### Score Expression
+
+Runs once per candidate the where expression let through. It sees two variables: `stageEntity` (the staged record, a hydrated `Entity`) and `masterEntity` — the candidate, as the **raw array** of column values the shortlist query returned, not an `Entity`. Reading a field is therefore `masterEntity['field']`, not `masterEntity.get('field')`.
+
+```
+stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0
+```
+
+The result is clamped to `[0, 1]` and multiplied by the rule's `Weight` to produce this rule's contribution to the overall match score.
+
+### Failure handling
+
+Unlike Action and Workflow conditions — where a broken expression is rejected at save time and any runtime failure is otherwise unguarded — a Matching Rule expression that throws at runtime (for example, a field that no longer exists on the entity) is caught, logged, and treated as "this rule contributes nothing": the where expression falls back to excluding every candidate (`1=0`), and the score expression falls back to `0.0`. A single bad rule degrades gracefully instead of failing the whole matching run for every other rule and record.
+
 ## Registering custom functions
 
 Beyond the operators and literals of the Expression Language itself, expressions may call functions. A module can contribute its own.
@@ -281,7 +315,7 @@ Also keep in mind that the compiled code is written verbatim into a file: return
 
 ## Adding a new expression context
 
-The mechanism is not limited to Action and Workflow conditions. A new consumer needs three pieces, copied from `Atro\Repositories\Action`:
+The mechanism is not limited to Action and Workflow conditions — [Matching Rule expressions](#matching-rule-expressions) above is a real, worked example of a consumer with two expressions instead of one. A new consumer needs three pieces, copied from `Atro\Repositories\Action`:
 
 **1. A context class** — a `final readonly class` whose public properties are exactly the variables the expression may use:
 

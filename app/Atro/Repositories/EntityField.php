@@ -383,21 +383,21 @@ class EntityField extends ReferenceData
             }
         }
 
-        if (!empty($entity->get('isCode')) && ($entity->isNew() || $entity->isAttributeChanged('isCode'))) {
+        if (!empty($entity->get('isSlug')) && ($entity->isNew() || $entity->isAttributeChanged('isSlug'))) {
             $entityName = $entity->get('entityId');
 
             if (!in_array($entity->get('type'), ['varchar', 'int', 'autoincrement'])) {
-                throw new BadRequest($this->getLanguage()->translate('invalidCodeFieldType', 'exceptions', 'EntityField'));
+                throw new BadRequest($this->getLanguage()->translate('invalidSlugFieldType', 'exceptions', 'EntityField'));
             }
 
             if (empty($entity->get('unique')) && $entity->get('type') !== 'autoincrement') {
-                throw new BadRequest($this->getLanguage()->translate('codeFieldMustBeUnique', 'exceptions', 'EntityField'));
+                throw new BadRequest($this->getLanguage()->translate('slugFieldMustBeUnique', 'exceptions', 'EntityField'));
             }
 
             foreach ($this->getMetadata()->get("entityDefs.$entityName.fields", []) as $fieldCode => $fieldDefs) {
-                if ($fieldCode !== $entity->get('code') && !empty($fieldDefs['isCode'])) {
+                if ($fieldCode !== $entity->get('code') && !empty($fieldDefs['isSlug'])) {
                     throw new BadRequest(sprintf(
-                        $this->getLanguage()->translate('onlyOneCodeFieldAllowed', 'exceptions', 'EntityField'),
+                        $this->getLanguage()->translate('onlyOneSlugFieldAllowed', 'exceptions', 'EntityField'),
                         $fieldCode
                     ));
                 }
@@ -405,10 +405,10 @@ class EntityField extends ReferenceData
         }
 
         if (
-            !$entity->isNew() && !empty($entity->get('isCode')) && $entity->get('type') !== 'autoincrement'
+            !$entity->isNew() && !empty($entity->get('isSlug')) && $entity->get('type') !== 'autoincrement'
             && $entity->isAttributeChanged('unique') && empty($entity->get('unique'))
         ) {
-            throw new BadRequest($this->getLanguage()->translate('cannotDisableUniqueForCodeField', 'exceptions', 'EntityField'));
+            throw new BadRequest($this->getLanguage()->translate('cannotDisableUniqueForSlugField', 'exceptions', 'EntityField'));
         }
 
         if (!empty($entity->get('required') && $entity->isAttributeChanged('required'))) {
@@ -672,7 +672,32 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
+        $this->validateFieldIsNotUsedInUniqueIndex((string)$entity->get('entityId'), (string)$entity->get('code'));
+
+        // a link field is removed together with its foreign field
+        if (!empty($entity->get('foreignEntityId')) && !empty($entity->get('foreignCode'))) {
+            $this->validateFieldIsNotUsedInUniqueIndex((string)$entity->get('foreignEntityId'), (string)$entity->get('foreignCode'));
+        }
+
         parent::beforeRemove($entity, $options);
+    }
+
+    protected function validateFieldIsNotUsedInUniqueIndex(string $entityName, string $field): void
+    {
+        if (empty($entityName) || empty($field)) {
+            return;
+        }
+
+        $indexes = $this->getEntityManager()->getRepository('EntityUniqueIndex')->findIndexesByField($entityName, $field);
+        if (empty($indexes)) {
+            return;
+        }
+
+        throw new BadRequest(sprintf(
+            $this->getLanguage()->translate('fieldIsUsedInUniqueIndex', 'exceptions', 'EntityField'),
+            $this->translateLabel($field, 'fields', $entityName),
+            implode(', ', $indexes)
+        ));
     }
 
     public function insertEntity(OrmEntity $entity): bool
@@ -887,7 +912,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'isAuditableRelation', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where'];
 
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
@@ -1203,11 +1228,11 @@ class EntityField extends ReferenceData
             }
         }
 
-        // we set auditableEnabled to true for File, channel and category is nothing was defined
-        if (in_array($entity->get('foreignEntityId'), $defaultRelationScopeAudited)) {
+        // we set isAuditableRelation to true for File, channel and category is nothing was defined
+        if ($entity->get('type') === 'linkMultiple' && in_array($entity->get('foreignEntityId'), $defaultRelationScopeAudited)) {
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->get('entityId'), 'fields', $entity->get('code')]);
-            if (!isset($fieldDefs['auditableEnabled'])) {
-                $entity->set('auditableEnabled', true);
+            if (!isset($fieldDefs['isAuditableRelation'])) {
+                $entity->set('isAuditableRelation', true);
             }
         }
     }

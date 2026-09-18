@@ -1,7 +1,7 @@
 {
   "params": [
     {
-      "name": "isCode",
+      "name": "isSlug",
       "type": "bool",
       "tooltip": true
     }

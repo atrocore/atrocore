@@ -39,5 +39,6 @@
   "filter": true,
   "auditable": true,
   "qbFilterType": "boolean",
-  "group": "other"
+  "group": "other",
+  "uniqueIndexAllowed": true
 }

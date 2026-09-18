@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nom singulier",
     "namePlural": "Nom pluriel",
+    "uniqueIndexes": "Index uniques",
     "code": "Nom du système",
     "disabled": "Désactivée",
     "customizable": "Personnalisable",

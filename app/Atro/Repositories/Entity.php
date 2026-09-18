@@ -94,6 +94,17 @@ class Entity extends ReferenceData
     ];
 
     protected ?array $boolFields = null;
+    protected ?array $translationsCache = null;
+
+    // TODO: remove after the dynamic translations mechanism is optimized
+    protected function translateLabel(string $label, string $category, string $scope = 'Global'): string
+    {
+        if ($this->translationsCache === null) {
+            $this->translationsCache = $this->getLanguage()->getAll();
+        }
+
+        return $this->translationsCache[$scope][$category][$label] ?? $this->translate($label, $category, $scope);
+    }
 
     protected function getEntityById($id)
     {
@@ -117,12 +128,17 @@ class Entity extends ReferenceData
             return $this->getEntityManager()->getRepository('EntityField')->find($selectParams);
         }
 
+        if ($link === 'uniqueIndexes') {
+            $selectParams['whereClause'] = [['entityId=' => $entity->get('id')]];
+            return $this->getEntityManager()->getRepository('EntityUniqueIndex')->find($selectParams);
+        }
+
         return parent::findRelated($entity, $link, $selectParams);
     }
 
     public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
     {
-        if ($relationName === 'fields') {
+        if (in_array($relationName, ['fields', 'uniqueIndexes'], true)) {
             $params['offset'] = 0;
             $params['limit']  = \PHP_INT_MAX;
             return count($this->findRelated($entity, $relationName, $params));
@@ -157,8 +173,8 @@ class Entity extends ReferenceData
         $res = array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
-            'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
-            'namePlural'            => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
+            'name'                  => $this->translateLabel($code, 'scopeNames'),
+            'namePlural'            => $this->translateLabel($code, 'scopeNamesPlural'),
             'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
             'kanbanViewMode'        => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
             'quickActions'          => $this->getMetadata()->get(['clientDefs', $code, 'quickActions'], []),
@@ -646,10 +662,10 @@ class Entity extends ReferenceData
                 foreach ($entity->get('fields') ?? [] as $field) {
                     $changed = false;
                     if (in_array($field->get('code'), $entity->get('auditedEnabledRelations'))) {
-                        $field->set('auditableEnabled', true);
+                        $field->set('isAuditableRelation', true);
                         $changed = true;
-                    } else if (!empty($field->get('auditableEnabled'))) {
-                        $field->set('auditableEnabled', false);
+                    } else if (!empty($field->get('isAuditableRelation'))) {
+                        $field->set('isAuditableRelation', false);
                         $changed = true;
                     }
 
@@ -706,12 +722,12 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if (!empty($fieldDef['auditableEnabled'])) {
+            if (!empty($fieldDef['isAuditableRelation'])) {
                 $fields[] = $field;
                 continue;
             }
 
-            if (isset($fieldDef['auditableEnabled'])) {
+            if (isset($fieldDef['isAuditableRelation'])) {
                 continue;
             }
 

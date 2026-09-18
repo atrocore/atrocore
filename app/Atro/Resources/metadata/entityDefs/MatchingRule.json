@@ -66,7 +66,8 @@
               "value": [
                 "fieldEqual",
                 "fieldSimilar",
-                "fieldContains"
+                "fieldContains",
+                "expression"
               ]
             }
           ]
@@ -80,7 +81,8 @@
         "fieldEqual",
         "fieldSimilar",
         "fieldContains",
-        "set"
+        "set",
+        "expression"
       ],
       "conditionalProperties": {
         "protected": {
@@ -199,6 +201,65 @@
               "type": "equals",
               "attribute": "type",
               "value": "set"
+            }
+          ]
+        }
+      }
+    },
+    "matchedWhereExpression": {
+      "type": "code",
+      "notStorable": true,
+      "engine": "ExpressionLanguage",
+      "variables": [
+        "stageEntity"
+      ],
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "expression"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "expression"
+            }
+          ]
+        }
+      }
+    },
+    "matchScoreExpression": {
+      "type": "code",
+      "notStorable": true,
+      "engine": "ExpressionLanguage",
+      "variables": [
+        "stageEntity",
+        "masterEntity"
+      ],
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "expression"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "expression"
             }
           ]
         }

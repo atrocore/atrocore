@@ -5,7 +5,9 @@
     "matchingRuleSet": "Набір",
     "matchingRules": "Правила зіставлення",
     "operator": "Оператор",
-    "attribute": "Атрибут"
+    "attribute": "Атрибут",
+    "matchedWhereExpression": "Вираз відповідності where",
+    "matchScoreExpression": "Вираз оцінки"
   },
   "groupOptions": {
     "field": {
@@ -18,7 +20,8 @@
       "fieldEqual": "Поле рівне",
       "fieldSimilar": "Поле схоже",
       "fieldContains": "Поле містить",
-      "set": "Набір"
+      "set": "Набір",
+      "expression": "Вираз"
     },
     "operator": {
       "and": "AND",
@@ -31,6 +34,11 @@
     "notValidMatching": "Зіставлення недійсне",
     "notValidMatchingRuleSet": "Набір правил зіставлення недійсний",
     "notValidFieldType": "Тип поля не підтримується обраним типом правила.",
-    "notValidAttributeType": "Тип атрибута не підтримується обраним типом правила."
+    "notValidAttributeType": "Тип атрибута не підтримується обраним типом правила.",
+    "expressionCannotBeEmpty": "Вираз не може бути порожнім."
+  },
+  "tooltips": {
+    "matchedWhereExpression": "Вираз ExpressionLanguage з доступом до `stageEntity` (повного запису). Повинен повертати масив умови where, що описує, які головні записи вважати кандидатами - ключі це назви полів, значення це те, з чим порівнювати (оператори можна вбудовувати в ключ, напр. `field>`, `field*`, а групи `OR`/`AND` можна вкладати для складніших умов) - напр. {nameFrFr: stageEntity.get('name')} знаходить головні записи, у яких nameFrFr дорівнює name вихідного запису.",
+    "matchScoreExpression": "Вираз ExpressionLanguage з доступом до `stageEntity` (повного запису) та `masterEntity` (необроблених значень полів кандидата у вигляді масиву - напр. masterEntity['name']). Повинен повертати число від 0 до 1, яке множиться на вагу правила для отримання оцінки відповідності - напр. stageEntity.get('name') == masterEntity['nameFrFr'] ? 1.0 : 0.0 оцінює точний збіг як 1, а все інше як 0."
   }
 }

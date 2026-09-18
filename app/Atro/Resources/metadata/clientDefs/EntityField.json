@@ -1,6 +1,8 @@
 {
-  "controller": "controllers/record",
+  "controller": "controllers/entity-field",
+  "iconClass": "database",
   "limit": 500,
+  "navigationTreeContextField": "entityId",
   "views": {
     "detail": "views/admin/field-manager/detail"
   },

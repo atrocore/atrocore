@@ -375,7 +375,7 @@ class Note
         }
 
         foreach ($this->createRelatedData[$entity->getEntityName()] as $field => list($scope, $foreignLink)) {
-            if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $foreignLink, 'auditableEnabled'])) {
+            if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $foreignLink, 'isAuditableRelation'])) {
                 continue;
             }
             if ($entity->isAttributeChanged($field)) {
@@ -499,8 +499,8 @@ class Note
         ]);
         if (
             $this->streamEnabled($this->relationEntityData[$entity->getEntityName()]['entity1'])
-            && (!empty($fieldDefs['auditableEnabled'])
-                || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityName()]['entity2'], $defaultRelationScopeAudited)))
+            && (!empty($fieldDefs['isAuditableRelation'])
+                || (!isset($fieldDefs['isAuditableRelation']) && in_array($this->relationEntityData[$entity->getEntityName()]['entity2'], $defaultRelationScopeAudited)))
             && !is_null($entity->get($this->relationEntityData[$entity->getEntityName()]['field1']))
         ) {
             $relatedId = $entity->get($this->relationEntityData[$entity->getEntityName()]['field2']);
@@ -525,8 +525,8 @@ class Note
 
         if (
             $this->streamEnabled($this->relationEntityData[$entity->getEntityName()]['entity2'])
-            && (!empty($fieldDefs['auditableEnabled'])
-                || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityName()]['entity1'], $defaultRelationScopeAudited)))
+            && (!empty($fieldDefs['isAuditableRelation'])
+                || (!isset($fieldDefs['isAuditableRelation']) && in_array($this->relationEntityData[$entity->getEntityName()]['entity1'], $defaultRelationScopeAudited)))
             && !is_null($entity->get($this->relationEntityData[$entity->getEntityName()]['field2']))
         ) {
             $relatedId = $entity->get($this->relationEntityData[$entity->getEntityName()]['field1']);

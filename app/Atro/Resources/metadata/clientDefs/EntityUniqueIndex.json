@@ -1,0 +1,4 @@
+{
+  "controller": "controllers/record",
+  "limit": 500
+}

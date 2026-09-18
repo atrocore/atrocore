@@ -21,13 +21,13 @@ Espo.define('views/admin/field-manager/fields/script-preview', 'views/fields/bas
 
         relatedScriptFieldName: 'script',
 
+        locale: '',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.model.defs.fields[this.name] &&  this.model.defs.fields[this.name].multilangLocale) {
-                let locale = this.model.defs.fields[this.name].multilangLocale;
-                this.relatedScriptFieldName += locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
-            }
+            this.locale = this.name.slice('preview'.length);
+            this.relatedScriptFieldName += this.locale;
 
             this.preparePreview();
             this.listenTo(this.model, `change:${this.relatedScriptFieldName} change:outputType after:save`, () => {
@@ -97,9 +97,7 @@ Espo.define('views/admin/field-manager/fields/script-preview', 'views/fields/bas
         },
 
         controlViewVisibility() {
-            let locale = this.model.getFieldParam(this.name, 'multilangLocale') || 'main';
-
-            if (locale !== 'main') {
+            if (this.locale) {
                 if (this.model.get('type') === 'script' && this.model.get('isMultilang') && this.model.get('outputType') === 'text') {
                     this.show();
                 } else {

@@ -62,7 +62,7 @@
       "type": "bool"
     },
     {
-      "name": "isCode",
+      "name": "isSlug",
       "type": "bool",
       "tooltip": true
     },
@@ -91,5 +91,6 @@
   "qbFilterType": "string",
   "personalData": true,
   "textFilter": true,
-  "group": "character"
+  "group": "character",
+  "uniqueIndexAllowed": true
 }

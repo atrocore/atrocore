@@ -532,7 +532,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             var fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
             for (var field in fields) {
-                if (fields[field].isCode) {
+                if (fields[field].isSlug) {
                     var value = model.get(field);
                     return (value !== null && value !== undefined && value !== '') ? value : id;
                 }
@@ -3246,15 +3246,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             if (!this.hasPaginationToolbar()) {
                 this.destroyPaginationToolbar();
+                $(container).addClass('hidden');
                 return;
             }
 
             if (this.sveltePaginationToolbar && this.paginationToolbarMountedContainer !== container) {
-                try {
-                    this.sveltePaginationToolbar.$destroy();
-                } catch (e) {
-                }
-                this.sveltePaginationToolbar = null;
+                this.destroyPaginationToolbar();
             }
 
             $(container).removeClass('hidden');
@@ -3262,10 +3259,21 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             var props = Object.assign(this.getPaginationToolbarProps(), this.paginationToolbarPropsOverride, extraProps || {});
 
             if (!this.sveltePaginationToolbar) {
+                // A list view of a page the user has left is kept alive by the controller cache and still
+                // resolves its container against the live DOM, so the toolbar of the previous page has to be
+                // dropped before a new one is mounted into the same container.
+                if (container.sveltePaginationToolbar) {
+                    try {
+                        container.sveltePaginationToolbar.$destroy();
+                    } catch (e) {
+                    }
+                }
+
                 this.sveltePaginationToolbar = new Svelte.PaginationToolbar({
                     target: container,
                     props: props
                 });
+                container.sveltePaginationToolbar = this.sveltePaginationToolbar;
                 this.paginationToolbarMountedContainer = container;
                 return;
             }
@@ -3274,9 +3282,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         destroyPaginationToolbar: function () {
-            var container = this.getPaginationToolbarContainer();
+            var container = this.paginationToolbarMountedContainer;
             if (container) {
                 $(container).addClass('hidden');
+
+                if (container.sveltePaginationToolbar === this.sveltePaginationToolbar) {
+                    container.sveltePaginationToolbar = null;
+                }
             }
 
             if (this.sveltePaginationToolbar) {
@@ -4067,6 +4079,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 allRows = [...changedRows, ...changedRelationRows]
 
             if (!changedRows.length && !changedRelationRows.length) {
+                Espo.Ui.warning(this.translate('notModified', 'messages'));
                 this.trigger('cancel:save');
                 return;
             }

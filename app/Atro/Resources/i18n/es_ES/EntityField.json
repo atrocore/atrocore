@@ -58,7 +58,7 @@
     "isNonComparable": "No comparable",
     "isDuplicatableRelation": "Duplicable",
     "inheritanceDisabled": "Sin heredar",
-    "auditableEnabled": "Registre el cambio como una actividad de registro",
+    "isAuditableRelation": "Registre el cambio como una actividad de registro",
     "auditableDisabled": "No crear ninguna actividad de registro",
     "modifiedExtendedDisabled": "No se registra como modificación",
     "modifiedExtendedEnabled": "Registrar el cambio como modificación",
@@ -94,6 +94,7 @@
     "modifiedExtendedEnabled": "Los cambios en esta relación provocarán la actualización de la fecha y hora de \"Modificado en\".",
     "inheritanceDisabled": "Los valores de este campo no se heredarán del artículo padre.",
     "modifiedExtendedDisabled": "Si se establece, los cambios en este campo no actualizarán la marca de tiempo \"Modificado en\".",
+    "isAuditableRelation": "Los cambios en esta relación se muestran como Actividad.",
     "auditableDisabled": "Los cambios en este campo no se muestran como Actividad.",
     "selectPageSize": "Número de registros mostrados por página en el diálogo de selección. Evite valores demasiado altos, ya que pueden ralentizar o bloquear el navegador del usuario."
   },
@@ -132,6 +133,7 @@
   },
   "exceptions": {
     "nullValuesExist": "Algunos registros tienen valores nulos",
+    "fieldIsUsedInUniqueIndex": "El campo '%s' se utiliza en el índice o los índices únicos '%s' y no se puede eliminar.",
     "cannotAddRequiredFieldWithExistingRecords": "No se puede añadir un campo obligatorio con registros existentes sin valor por defecto",
     "relationAlreadyUsed": "El Middle Table Name %s ya está en uso, elija otro."
   }
