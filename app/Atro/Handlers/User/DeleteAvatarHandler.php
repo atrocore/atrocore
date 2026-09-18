@@ -31,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     tag: 'User',
     responses: [
         200 => [
-            'description' => 'Success',
+            'description' => 'User avatar was successfully removed.',
             'content'     => [
                 'application/json' => [
                     'schema' => [

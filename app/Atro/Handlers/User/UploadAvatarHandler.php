@@ -66,7 +66,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'No image data provided or unsupported file type.',
+            'description' => 'No image data provided, unsupported file type or permitted file size has been exceeded.',
         ],
     ],
 )]
