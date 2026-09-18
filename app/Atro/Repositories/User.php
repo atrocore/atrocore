@@ -243,7 +243,7 @@ class User extends RDB
 
         $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
 
-        $this->getServiceFactory()->create('Avatar')->delete($entity->get('id'))
+        $this->getServiceFactory()->create('Avatar')->delete($entity->get('id'));
     }
 
     protected function afterRestore($entity)
