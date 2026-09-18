@@ -236,7 +236,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return this.ajaxGetRequest(this.foreignScope, {
                 select: `id,${foreignName}`,
                 collectionOnly: true,
-                where: [{type: 'in', attribute: 'id', value: ids}]
+                where: [{ type: 'in', attribute: 'id', value: ids }]
             }).done(function (response) {
                     const names = {};
                     (response.list || []).forEach(item => {
@@ -502,7 +502,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 const entityFieldId = this.model.name + '_' + this.name;
                 const recordId = this.model.id || '';
                 const url = 'EntityField/' + entityFieldId + '/prepareFieldWhere' + (recordId ? '?recordId=' + recordId : '');
-                this.ajaxGetRequest(url, null, {async: false}).success(response => {
+                this.ajaxGetRequest(url, null, { async: false }).success(response => {
                     res = response?.where || res;
                 });
             }
@@ -1191,7 +1191,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 if (foreignScope === 'User') {
                     operators = operators.concat(['is_team_member', 'include_me', 'exclude_me'])
                 }
-                operators = operators.concat(['is_not_linked', 'is_linked']);
+                if (this.defs.params?.attribute) {
+                    operators = operators.concat(['is_not_null', 'is_null']);
+                } else {
+                    operators = operators.concat(['is_not_linked', 'is_linked']);
+                }
             }
 
             let customFilters = this.model.getFieldParam(this.name, 'customFilters') || [];
@@ -1269,7 +1273,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         getForeignScope: function () {
             const scope = this.model.urlRoot;
             return this.options.foreignScope
-            ?? this.defs.params.foreignScope
+                ?? this.defs.params.foreignScope
                 ?? this.foreignScope
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                 ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);
