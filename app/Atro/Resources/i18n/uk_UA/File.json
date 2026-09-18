@@ -36,6 +36,7 @@
     "fileHasDuplicate": "Вже існує принаймні один <a target=\"_blank\" href=\"/#File/view/{{id}}\">дублікат</a> цього файлу.",
     "cannotDefineFileName": "Система не може розпізнати ім'я файлу за URL-адресою.",
     "urlExpected": "Вказано невірну URL-адресу",
+    "urlCannotBeFetched": "Не вдалося отримати URL.",
     "fileExtensionCorrectedAutomatically": "Розширення файлу було виправлено автоматично.",
     "downloadJobsCreated": "Для підготовки архівного файлу було створено фонове завдання."
   },

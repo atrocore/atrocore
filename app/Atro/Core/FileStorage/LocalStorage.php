@@ -47,6 +47,41 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         $this->container = $container;
     }
 
+    /**
+     * The chunk directory name, as sent by the uploading client. It ends up in a filesystem
+     * path, so it has to stay a single harmless segment - the browser widget sends an MD5 hex
+     * digest, and anything that could climb out of the chunks directory is rejected outright.
+     *
+     * @throws BadRequest
+     */
+    public static function assertChunkHash(mixed $value): string
+    {
+        if (!is_string($value) || preg_match('/^[A-Za-z0-9_-]{1,64}$/', $value) !== 1) {
+            throw new BadRequest("'fileUniqueHash' is invalid.");
+        }
+
+        return $value;
+    }
+
+    /**
+     * A chunk file name - the byte offset the chunk starts at, which is what the client sends
+     * and what scanDir() reads back when the chunks are reassembled.
+     *
+     * @throws BadRequest
+     */
+    public static function assertChunkName(mixed $value): string
+    {
+        if (is_int($value) && $value >= 0) {
+            return (string)$value;
+        }
+
+        if (!is_string($value) || preg_match('/^\d{1,20}$/', $value) !== 1) {
+            throw new BadRequest("'start' is invalid.");
+        }
+
+        return $value;
+    }
+
     public static function parseInputFileContent(string $fileContent): string
     {
         $arr      = explode(',', $fileContent);
@@ -127,9 +162,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function createChunk(\stdClass $input, Storage $storage): array
     {
-        $path = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
+        $path      = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . self::assertChunkHash($input->fileUniqueHash ?? null);
+        $chunkName = self::assertChunkName($input->start ?? null);
 
-        $this->getFileManager()->putContents($path . DIRECTORY_SEPARATOR . $input->start, self::parseInputFileContent($input->piece));
+        $this->getFileManager()->putContents($path . DIRECTORY_SEPARATOR . $chunkName, self::parseInputFileContent($input->piece));
 
         $chunkFiles = $this->getFileManager()->scanDir($path);
         sort($chunkFiles);

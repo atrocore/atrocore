@@ -105,11 +105,22 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                 } else {
                     $el.val('');
                     const decodedUrl = decodeURIComponent(url);
+                    const headers = {'Content-Type': 'application/json'};
+                    const auth = this.getStorage().get('user', 'auth');
+                    if (auth) {
+                        headers['Authorization-Token'] = auth;
+                    }
+
                     fetch('api/File/uploadProxy', {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
+                        headers: headers,
                         body: JSON.stringify({url: decodedUrl})
                     }).then(response => {
+                        if (!response.ok) {
+                            this.notify(this.translate('urlCannotBeFetched', 'messages', 'File'), 'error');
+                            return;
+                        }
+
                         response.blob().then(file => {
                             const fileName = this.getFileNameFromURL(decodedUrl);
                             if (this.hasExtension(fileName)) {

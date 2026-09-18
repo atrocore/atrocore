@@ -33,6 +33,7 @@
     "fileHasDuplicate": "Уже существует как минимум один <a target=\"_blank\" href=\"/#File/view/{{id}}\">дубликат</a> этого файла.",
     "cannotDefineFileName": "Система не может распознать имя файла из URL-адреса.",
     "urlExpected": "Был указан неверный URL-адрес",
+    "urlCannotBeFetched": "Не удалось получить URL.",
     "fileExtensionCorrectedAutomatically": "Расширение файла было исправлено автоматически.",
     "downloadJobsCreated": "Была создана фоновая задача для подготовки вашего архивного файла."
   },

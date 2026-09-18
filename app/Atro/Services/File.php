@@ -18,14 +18,32 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
+use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\UrlGuard;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class File extends Base
 {
+    /**
+     * Input keys that only internal callers may set: they name a server-side source for the
+     * file content, which a request has no business choosing. Stripped at the HTTP boundary
+     * so a payload cannot pass itself off as an internal call.
+     */
+    public const INTERNAL_INPUT_KEYS = ['localFileName', 'allChunks'];
+
     protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName', 'folderId', 'data'];
+
+    public static function stripInternalInput(\stdClass $data): \stdClass
+    {
+        foreach (self::INTERNAL_INPUT_KEYS as $key) {
+            unset($data->$key);
+        }
+
+        return $data;
+    }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
@@ -173,6 +191,10 @@ class File extends Base
             throw new Forbidden();
         }
 
+        // both end up as path segments under the storage's chunks directory
+        LocalStorage::assertChunkHash($attachment->fileUniqueHash ?? null);
+        LocalStorage::assertChunkName($attachment->start ?? null);
+
         $attachment->storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($attachment->folderId ?? '')->get('id');
 
         // create entity for validation
@@ -229,9 +251,10 @@ class File extends Base
 
     public function createFileViaUrl(\stdClass $attachment, string $url): string
     {
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new BadRequest("Invalid URL");
-        }
+        // http/https only, and never at an address inside the server's own network:
+        // the URL is fetched by the server, so it must not be usable to reach what
+        // the caller cannot reach themselves
+        $url = UrlGuard::assertFetchable($url, (array)$this->getConfig()->get('fetchAllowedHosts', []));
 
         if (!property_exists($attachment, 'name')) {
             $attachment->name = basename($url);
