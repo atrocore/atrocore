@@ -127,6 +127,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterRemove($entity, $options);
 
+        if ($entity->shouldApplyUpdatedFields()) {
+            foreach ($this->getMetadata()->get(['scopes', $this->entityType, 'modifiedExtendedIntermediateRelations'], []) as $relation) {
+                $defs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relation], []);
+
+                if (($defs['type'] ?? null) !== 'belongsTo' || empty($defs['entity']) || empty($entity->get($relation . 'Id'))) {
+                    continue;
+                }
+
+                $data                       = new \stdClass();
+                $data->modifiedAt           = (new \DateTime())->format('Y-m-d H:i') . ':00';
+                $data->_skipIsEntityUpdated = true;
+
+                $this->getInjection('container')->get('pseudoTransactionManager')
+                    ->pushUpdateEntityJob($defs['entity'], $entity->get($relation . 'Id'), $data);
+            }
+        }
+
         $this->dispatch('afterRemove', $entity, $options);
     }
 
@@ -689,30 +706,39 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function updateModifiedAtForIntermediateEntities(Entity $entity)
     {
-        if ($entity->isNew() || !$entity->shouldApplyUpdatedFields()) {
+        if (!$entity->shouldApplyUpdatedFields()) {
             return;
         }
 
         foreach ($this->getMetadata()->get(['scopes', $this->entityType, 'modifiedExtendedIntermediateRelations'], []) as $relation) {
             $defs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relation], []);
 
-            if (is_array($defs) && !empty($defs['entity']) && !empty($defs['foreign'])) {
-                $data                       = new \stdClass();
-                $data->modifiedAt           = $entity->get('modifiedAt');
-                $data->_skipIsEntityUpdated = true;
-
-                $params = [
-                    'where' => [
-                        [
-                            'type'      => 'linkedWith',
-                            'attribute' => $defs['foreign'],
-                            'value'     => [$entity->id]
-                        ]
-                    ]
-                ];
-
-                $this->getInjection('container')->get('pseudoTransactionManager')->pushMassUpdateEntityJob($defs['entity'], $data, $params);
+            if (!is_array($defs) || empty($defs['entity']) || empty($defs['foreign'])) {
+                continue;
             }
+
+            $data                       = new \stdClass();
+            $data->modifiedAt           = $entity->get('modifiedAt');
+            $data->_skipIsEntityUpdated = true;
+
+            if (($defs['type'] ?? null) === 'belongsTo'
+                && $entity->isAttributeChanged($relation . 'Id')
+                && !empty($previousId = $entity->getFetched($relation . 'Id'))) {
+                $this->getInjection('container')->get('pseudoTransactionManager')
+                    ->pushUpdateEntityJob($defs['entity'], $previousId, $data);
+            }
+
+            $params = [
+                'where' => [
+                    [
+                        'type'      => 'linkedWith',
+                        'attribute' => $defs['foreign'],
+                        'value'     => [$entity->id]
+                    ]
+                ]
+            ];
+
+            $this->getInjection('container')->get('pseudoTransactionManager')->pushMassUpdateEntityJob($defs['entity'], $data, $params);
         }
     }
 
