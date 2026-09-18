@@ -38,7 +38,7 @@ Please note:
 
 All derivatives of a master entity are listed in its `Derivatives` panel.
 
-The contributor entity contains a Master Record field, which can be used to link the contributor record to the corresponding record in the master entity.
+The contributor entity contains a Master Record field, which can be used to link the contributor record to the corresponding record in the master entity. It is displayed in the [Data Lineage](#data-lineage-panel) panel.
 
 The contributor entity fully inherits the fields, attributes, and layouts of the master entity. These settings cannot be modified manually for the contributor entity, as they are always inherited automatically from the master entity.
 
@@ -71,7 +71,7 @@ Each pipeline creates a [One-to-One relation](../03.administration/11.entity-man
 - on the source entity, a field labelled with the name of the target entity;
 - on the target entity, a field labelled with the name of the source entity.
 
-Both fields are filled by the pipeline and cannot be edited manually. Because the relation is One-to-One, a source record references exactly one target record, and a target record can be referenced by only one record of the same source entity. When a source entity is used in several pipelines, each of them gets its own field.
+Both fields are filled by the pipeline and cannot be edited manually. Because the relation is One-to-One, a source record references exactly one target record, and a target record can be referenced by only one record of the same source entity. When a source entity is used in several pipelines, each of them gets its own field. All these fields are displayed in the [Data Lineage](#data-lineage-panel) panel.
 
 #### Merging Script
 
@@ -148,3 +148,14 @@ Three variables are available in the script:
 - `masterRecord` – the existing master record, or `null` when the master record does not yet exist.
 
 If the returned object contains `"skipped": true`, the operation is skipped and the master record is neither created nor updated.
+
+## Data Lineage Panel
+
+The fields that connect the three layers to each other are created by the system, not by the user, and are therefore placed on the detail layout automatically, in a separate Data Lineage panel:
+
+- **Master Record** – on the contributor entity, the link to the master record it is consolidated into.
+- The Link fields created by the data pipelines – on the source entity, the link to the target record, and on the target entity, the link to the source record.
+
+The panel is added at the end of the detail layout as long as the entity has no customized detail layout of its own. It also appears in `Administration / Layouts`, so saving the detail layout there turns the panel into a regular part of it. From then on the system no longer adds the panel, and it is managed manually like any other panel.
+
+> A contributor entity that inherits the layout of its master entity has no layout of its own, so it still receives the panel even if the layout of the master entity is customized.

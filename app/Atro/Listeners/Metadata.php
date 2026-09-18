@@ -265,6 +265,7 @@ class Metadata extends AbstractMetadataListener
                 'readOnly'           => true,
                 'importDisabled'     => true,
                 'massUpdateDisabled' => true,
+                'dataLineage'        => true,
             ];
 
             $data['entityDefs'][$sourceEntity]['links'][$targetField] = [
@@ -281,6 +282,7 @@ class Metadata extends AbstractMetadataListener
                 'readOnly'           => true,
                 'importDisabled'     => true,
                 'massUpdateDisabled' => true,
+                'dataLineage'        => true,
             ];
             $data['entityDefs'][$targetEntity]['links'][$foreignField]  = [
                 'type'    => 'hasOne',
@@ -2707,8 +2709,9 @@ class Metadata extends AbstractMetadataListener
 
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['masterRecord'] = [
-                'type'     => 'link',
-                'required' => false
+                'type'        => 'link',
+                'required'    => false,
+                'dataLineage' => true
             ];
             $data['entityDefs'][$scope]['links']['masterRecord']  = [
                 'type'    => 'belongsTo',

@@ -128,9 +128,7 @@ class LayoutManager
         }
 
         if (!empty($derivativeScope)) {
-            if ($viewType === 'detail') {
-                array_unshift($layout[0]['rows'], [['name' => 'masterRecord'], false]);
-            } elseif ($viewType === 'list') {
+            if ($viewType === 'list') {
                 $layout[] = ['name' => 'masterRecord'];
             } elseif ($viewType === 'relationships') {
                 foreach ($this->getMetadata()->get(['entityDefs', $derivativeScope, 'links']) ?? [] as $link => $linkDefs) {
@@ -139,6 +137,10 @@ class LayoutManager
                     }
                 }
             }
+        }
+
+        if ($viewType === 'detail' && (!empty($derivativeScope) || empty($storedProfile))) {
+            $layout = $this->injectDataLineagePanel($layout, $derivativeScope ?? $scope);
         }
 
         $event = new Event([
@@ -176,6 +178,52 @@ class LayoutManager
             'selectedProfileId' => empty($selectedProfileId) ? null : $selectedProfileId,
             'canEdit'           => empty($layoutProfile) ? false : $this->getAcl()->check($layoutProfile, 'edit')
         ];
+    }
+
+    protected function injectDataLineagePanel(array $layout, string $scope): array
+    {
+        $fields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['dataLineage']) && empty($fieldDefs['layoutDetailDisabled'])) {
+                $fields[] = $field;
+            }
+        }
+
+        if (empty($fields)) {
+            return $layout;
+        }
+
+        // the master record is the origin of the record, so it goes first
+        usort($fields, fn($a, $b) => (int)($b === 'masterRecord') <=> (int)($a === 'masterRecord'));
+
+        $usedFields = [];
+        foreach ($layout as $panel) {
+            foreach ($panel['rows'] ?? [] as $row) {
+                foreach ($row as $cell) {
+                    if (!empty($cell['name'])) {
+                        $usedFields[] = $cell['name'];
+                    }
+                }
+            }
+        }
+
+        $fields = array_values(array_diff($fields, $usedFields));
+        if (empty($fields)) {
+            return $layout;
+        }
+
+        $rows = [];
+        foreach (array_chunk($fields, 2) as $chunk) {
+            $rows[] = [['name' => $chunk[0]], isset($chunk[1]) ? ['name' => $chunk[1]] : false];
+        }
+
+        $layout[] = [
+            'name'  => 'dataLineage',
+            'label' => 'dataLineage',
+            'rows'  => $rows
+        ];
+
+        return $layout;
     }
 
     public function getRelationScope(string $scope, ?string $relatedScope, ?string $relatedLink): ?string
