@@ -36,6 +36,7 @@
     "fileHasDuplicate": "Es gibt bereits mindestens ein <a target=\"_blank\" href=\"/#File/view/{{id}}\">Duplikat</a> dieser Datei.",
     "cannotDefineFileName": "Das System kann den Dateinamen aus der URL nicht erkennen.",
     "urlExpected": "Falsche URL wurde angegeben",
+    "urlCannotBeFetched": "Die URL konnte nicht abgerufen werden.",
     "fileExtensionCorrectedAutomatically": "Dateierweiterung wurde automatisch korrigiert.",
     "downloadJobsCreated": "Ein Hintergrundjob wurde erstellt, um Ihre Archivdatei vorzubereiten."
   },

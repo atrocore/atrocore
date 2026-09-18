@@ -222,6 +222,31 @@ Every key a module contributes automatically becomes read-only.
 | `thumbnailsPath`        | `string`  | The base file path where generated image thumbnails are stored.                                                   |
 | `chunkFileSize`         | `integer` | The maximum size of each data chunk in bytes that is uploaded to the server during a file upload.                 |
 | `fileUploadStreamCount` | `integer` | The maximum number of concurrent streams (or chunks) that can be uploaded simultaneously, improving upload speed. |
+| `fetchAllowedHosts`     | `array`   | Hosts the server may fetch from even when they resolve to a private address. Empty by default - see below.        |
+
+### Fetching Files From URLs
+
+Wherever the system downloads a file from a URL the user supplied - the `Upload via URL` field, the
+`url` property of `POST /api/File`, `POST /api/File/uploadProxy` - the request is made by the server,
+not by the browser. The server therefore reaches whatever it can reach, including services that are
+not exposed to the outside world at all.
+
+For that reason only `http` and `https` URLs pointing at publicly routable addresses are accepted.
+Loopback, link-local, private and reserved ranges are rejected, redirects are not followed, and the
+address the connection actually reached is checked again once the transfer starts.
+
+An installation that legitimately pulls files from its own network - an in-house DAM, a staging
+server - names those hosts in `fetchAllowedHosts`, and only those skip the address check:
+
+```php
+'fetchAllowedHosts' => [
+    'dam.internal.example.com',
+    'files.staging.example.com',
+],
+```
+
+List the hosts you actually fetch from. The parameter is empty by default, so reaching a private
+address stays a decision someone made on purpose.
 
 -----
 

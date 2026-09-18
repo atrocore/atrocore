@@ -33,6 +33,7 @@
     "fileHasDuplicate": "Ya existe al menos un <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicado</a> de este archivo.",
     "cannotDefineFileName": "El sistema no puede reconocer el nombre del archivo a partir de la URL.",
     "urlExpected": "Se ha dado una URL incorrecta",
+    "urlCannotBeFetched": "No se ha podido obtener la URL.",
     "fileExtensionCorrectedAutomatically": "La extensión del archivo se corrigió automáticamente.",
     "downloadJobsCreated": "Se ha creado una tarea en segundo plano para preparar su archivo comprimido."
   },

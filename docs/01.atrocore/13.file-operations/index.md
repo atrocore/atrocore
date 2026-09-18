@@ -80,6 +80,20 @@ To upload a file from the user interface using a URL, click the `Upload` button 
 
 ![files-upload-via-url](./_assets/files-upload-via-url.png){.medium}
 
+The file is downloaded by the server, not by your browser, so the system accepts only `http` and
+`https` links that point to a publicly reachable address. Links to `localhost`, to an address inside
+the server's own network, or to any other scheme are rejected, and redirects are not followed. This
+keeps the upload field from being used to reach services that are only reachable from the server.
+
+If your installation needs to pull files from a host inside your own network - an in-house DAM, for
+example - an administrator adds that host to the `fetchAllowedHosts` parameter in `data/config.php`:
+
+```php
+'fetchAllowedHosts' => ['dam.internal.example.com'],
+```
+
+Only the hosts listed there are exempt. The parameter is empty by default.
+
 ## File Fields
 
 ![file-fields](./_assets/file-fields.png){.medium}

@@ -119,10 +119,11 @@ abstract class AbstractRemoteFileStorage implements FileStorageInterface
      */
     public function createChunk(\stdClass $input, Storage $storage): array
     {
-        $path = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
+        $path      = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . LocalStorage::assertChunkHash($input->fileUniqueHash ?? null);
+        $chunkName = LocalStorage::assertChunkName($input->start ?? null);
 
         $this->getFileManager()->putContents(
-            $path . DIRECTORY_SEPARATOR . $input->start,
+            $path . DIRECTORY_SEPARATOR . $chunkName,
             LocalStorage::parseInputFileContent($input->piece)
         );
 

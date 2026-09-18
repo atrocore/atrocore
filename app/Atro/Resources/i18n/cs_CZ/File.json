@@ -33,6 +33,7 @@
     "fileHasDuplicate": "Existuje již nejméně jeden duplikát tohoto souboru <a target=\"_blank\" href=\"/#File/view/{{id}}\"></a> .",
     "cannotDefineFileName": "Systém nemůže rozpoznat název souboru z adresy URL.",
     "urlExpected": "Byla zadána nesprávná adresa URL",
+    "urlCannotBeFetched": "Adresu URL se nepodařilo načíst.",
     "fileExtensionCorrectedAutomatically": "Přípona souboru byla automaticky opravena.",
     "downloadJobsCreated": "Byla vytvořena úloha na pozadí pro přípravu archivačního souboru."
   },
