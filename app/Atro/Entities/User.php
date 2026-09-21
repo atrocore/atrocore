@@ -16,8 +16,6 @@ use Espo\ORM\Entity;
 
 class User extends \Espo\Core\ORM\Entity
 {
-    public const string AVATAR_DIR = 'data/upload/avatars';
-
     public function isAdmin()
     {
         return $this->get('delegator')->get('isAdmin');
@@ -134,32 +132,18 @@ class User extends \Espo\Core\ORM\Entity
         return array_column($collection->toArray(), 'userId');
     }
 
-    public function getAvatarDir(): string
+    public function getAvatarName(): ?string
     {
-        return self::AVATAR_DIR . '/' . $this->id;
+        return $this->getEntityManager()->getRepository('User')->getAvatarName($this);
     }
 
-    public function getAvatarFileName(): ?string
+    public function getAvatarContent(): ?string
     {
-        $dir = $this->getAvatarDir();
-
-        if (is_dir($dir)) {
-            foreach (scandir($dir) as $item) {
-                if (!in_array($item, ['.', '..'])) {
-                    $extension = strtolower((string)pathinfo($item, PATHINFO_EXTENSION));
-
-                    if (in_array($extension, $this->getEntityManager()->getEspoMetadata()->get(['app', 'file', 'image', 'extensions'], []))) {
-                        return $item;
-                    }
-                }
-            }
-        }
-
-        return null;
+        return $this->getEntityManager()->getRepository('User')->getAvatarContent($this);
     }
 
     public function hasAvatar(): bool
     {
-        return !empty($this->getAvatarFileName());
+        return !empty($this->getAvatarName());
     }
 }

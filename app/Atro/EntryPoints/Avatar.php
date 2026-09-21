@@ -113,15 +113,10 @@ class Avatar extends Image
 
     protected function showAvatar(User $user): void
     {
-        $dir = $user->getAvatarDir();
-        $name = $user->getAvatarFileName();
+        $contents = $user->getAvatarContent();
+        $mimeType = (new \finfo(FILEINFO_MIME_TYPE))->buffer($contents);
 
-        $path = $dir . DIRECTORY_SEPARATOR . $name;
-
-        $contents = file_get_contents($path);
-        $mimeType = mime_content_type($path);
-
-        header('Content-Disposition:inline;filename="' . $name . '"');
+        header('Content-Disposition:inline;filename="' . $user->getAvatarName() . '"');
         if (!empty($mimeType)) {
             header('Content-Type: ' . $mimeType);
         }

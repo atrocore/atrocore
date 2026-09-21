@@ -27,6 +27,8 @@ class User extends RDB
 {
     protected ?UserEntity $systemUser = null;
 
+    public const string AVATAR_DIR = 'data/upload/avatars';
+
     public function getGlobalSystemUser(): UserEntity
     {
         if ($this->systemUser === null) {
@@ -227,7 +229,7 @@ class User extends RDB
             throw new BadRequest("Invalid avatar file data.");
         }
 
-        $dir = $user->getAvatarDir();
+        $dir = $this->getAvatarDir($user);
         Util::removeDir($dir);
         Util::createDir($dir);
 
@@ -243,12 +245,54 @@ class User extends RDB
     public function deleteAvatar(UserEntity $user): bool
     {
         try {
-            Util::removeDir($user->getAvatarDir());
+            Util::removeDir($this->getAvatarDir($user));
         } catch (\Throwable $e) {
             throw new BadRequest("Error while deleting avatar file: " . $e->getMessage());
         }
 
         return true;
+    }
+
+    public function getAvatarName(UserEntity $user): ?string
+    {
+        if (!empty($path = $this->getAvatarFilePath($user))) {
+            return basename($path);
+        }
+
+        return null;
+    }
+
+    public function getAvatarContent(UserEntity $user): ?string
+    {
+        if (!empty($path = $this->getAvatarFilePath($user))) {
+            return file_get_contents($path);
+        }
+
+        return null;
+    }
+
+    protected function getAvatarDir(UserEntity $user): string
+    {
+        return self::AVATAR_DIR . '/' . $user->id;
+    }
+
+    protected function getAvatarFilePath(UserEntity $user): ?string
+    {
+        $dir = $this->getAvatarDir($user);
+
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (!in_array($item, ['.', '..'])) {
+                    $extension = strtolower((string)pathinfo($item, PATHINFO_EXTENSION));
+
+                    if (in_array($extension, $this->getEntityManager()->getEspoMetadata()->get(['app', 'file', 'image', 'extensions'], []))) {
+                        return $dir . DIRECTORY_SEPARATOR . $item;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     protected function afterSave(Entity $entity, array $options = [])
