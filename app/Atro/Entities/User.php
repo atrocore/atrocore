@@ -160,10 +160,6 @@ class User extends \Espo\Core\ORM\Entity
 
     public function hasAvatar(): bool
     {
-        if (empty($this->getAvatarDir()) || empty($this->getAvatarFileName())) {
-            return false;
-        }
-
-        return file_exists($this->getAvatarDir() . DIRECTORY_SEPARATOR . $this->getAvatarFileName());
+        return !empty($this->getAvatarFileName());
     }
 }
