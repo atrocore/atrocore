@@ -38,7 +38,7 @@ Please note:
 
 All derivatives of a master entity are listed in its `Derivatives` panel.
 
-The contributor entity contains a Master Record field, which can be used to link the contributor record to the corresponding record in the master entity.
+The contributor entity contains a Master Record field, which can be used to link the contributor record to the corresponding record in the master entity. It is displayed in the [Data Lineage](#data-lineage-panel) panel.
 
 The contributor entity fully inherits the fields, attributes, and layouts of the master entity. These settings cannot be modified manually for the contributor entity, as they are always inherited automatically from the master entity.
 
@@ -62,7 +62,16 @@ Each pipeline record contains the following fields:
 - **Target Entity** – the target entity this pipeline writes to (e.g. the contributor entity).
 - **Merging Script** – a Twig script that defines how source record data is transformed and mapped to the target record.
 
-Both the Source Entity and Target Entity fields are locked after the pipeline is created and cannot be changed. Only one pipeline can exist per pair of entities.
+Both the Source Entity and Target Entity fields are locked after the pipeline is created and cannot be changed. Only one pipeline can exist per pair of entities, but the same source entity can be used in several pipelines that write to different target entities.
+
+#### Link between source and target records
+
+Each pipeline creates a [One-to-One relation](../03.administration/11.entity-management/07.fields-and-relations/index.md#one-to-one-relationships) between its source and target entities, with a read-only Link field on both sides:
+
+- on the source entity, a field labelled with the name of the target entity;
+- on the target entity, a field labelled with the name of the source entity.
+
+Both fields are filled by the pipeline and cannot be edited manually. Because the relation is One-to-One, a source record references exactly one target record, and a target record can be referenced by only one record of the same source entity. When a source entity is used in several pipelines, each of them gets its own field. All these fields are displayed in the [Data Lineage](#data-lineage-panel) panel.
 
 #### Merging Script
 
@@ -87,9 +96,9 @@ Two variables are available in the script:
 
 Once a pipeline is configured, the system automatically:
 
-- **Creates** a new target record when a source record is saved and has no linked target record yet. The created record is linked to the source record via its Target Record field.
+- **Creates** a new target record when a source record is saved and has no linked target record yet. The created record is linked to the source record via the field described above.
 - **Updates** the target record when the source record is saved and is already linked.
-- **Re-applies** all pipelines for the target entity when the Master Record link of the target (contributor) record is changed – data from all linked source records is pushed to the target record again.
+- **Re-applies** all pipelines for the target entity when the Master Record link of the target (contributor) record is changed – data from the linked source record of each source entity is pushed to the target record again.
 
 All synchronization operations are performed on behalf of the system user, regardless of who triggered the save.
 
@@ -139,3 +148,14 @@ Three variables are available in the script:
 - `masterRecord` – the existing master record, or `null` when the master record does not yet exist.
 
 If the returned object contains `"skipped": true`, the operation is skipped and the master record is neither created nor updated.
+
+## Data Lineage Panel
+
+The fields that connect the three layers to each other are created by the system, not by the user, and are therefore placed on the detail layout automatically, in a separate Data Lineage panel:
+
+- **Master Record** – on the contributor entity, the link to the master record it is consolidated into.
+- The Link fields created by the data pipelines – on the source entity, the link to the target record, and on the target entity, the link to the source record.
+
+The panel is added at the end of the detail layout as long as the entity has no customized detail layout of its own. It also appears in `Administration / Layouts`, so saving the detail layout there turns the panel into a regular part of it. From then on the system no longer adds the panel, and it is managed manually like any other panel.
+
+> A contributor entity that inherits the layout of its master entity has no layout of its own, so it still receives the panel even if the layout of the master entity is customized.

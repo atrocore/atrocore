@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
+use Atro\Services\File as FileService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -41,32 +42,42 @@ use Psr\Http\Server\RequestHandlerInterface;
                         ],
                         [
                             'type'       => 'object',
-                            'required'   => ['id', 'piecesCount'],
+                            'required'   => ['id', 'piecesCount', 'fileUniqueHash', 'start'],
                             'properties' => [
-                                'id'          => [
+                                'id'             => [
                                     'type'        => 'string',
                                     'description' => 'Client-generated file ID, consistent across all chunks of the same upload',
                                 ],
-                                'piece'       => [
+                                'fileUniqueHash' => [
+                                    'type'        => 'string',
+                                    'pattern'     => '^[A-Za-z0-9_-]{1,64}$',
+                                    'description' => 'Client-generated identifier of the upload, used as the name of the directory the chunks are buffered in',
+                                ],
+                                'start'          => [
+                                    'type'        => 'integer',
+                                    'minimum'     => 0,
+                                    'description' => 'Byte offset this chunk starts at, used as the chunk file name',
+                                ],
+                                'piece'          => [
                                     'type'        => 'string',
                                     'description' => 'Base64-encoded chunk data',
                                 ],
-                                'piecesCount' => [
+                                'piecesCount'    => [
                                     'type'        => 'integer',
                                     'minimum'     => 1,
                                     'description' => 'Total number of chunks the file is split into',
                                 ],
-                                'reupload'    => [
+                                'reupload'       => [
                                     'type'        => 'string',
                                     'nullable'    => true,
                                     'description' => 'ID of an existing File record to replace. When set, the upload overwrites the existing file content.',
                                 ],
-                                'typeId'      => [
+                                'typeId'         => [
                                     'type'        => 'string',
                                     'nullable'    => true,
                                     'description' => 'ID of the file type to assign to the uploaded file.',
                                 ],
-                                'folderId'    => [
+                                'folderId'       => [
                                     'type'        => 'string',
                                     'nullable'    => true,
                                     'description' => 'ID of the folder to place the uploaded file in.',
@@ -140,7 +151,7 @@ class ChunkHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
+        $data = FileService::stripInternalInput($this->getRequestBody($request));
 
         $service = $this->getRecordService('File');
 

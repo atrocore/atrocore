@@ -18,47 +18,52 @@ use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
 use Atro\Core\UserContext;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class DataPipeline extends Base
 {
     public function pushToTarget(Entity $sourceRecord): void
     {
-        $pipeline = $this->getEntityManager()
+        $pipelines = $this->getEntityManager()
             ->getRepository('DataPipeline')
             ->where(['sourceEntityId' => $sourceRecord->getEntityName()])
-            ->findOne();
+            ->find();
 
-        if (empty($pipeline) || empty($pipeline->get('mergingScript'))) {
-            return;
-        }
-
-        $targetEntityType = $this->getMetadata()->get(['entityDefs', $sourceRecord->getEntityName(), 'links', 'targetRecord', 'entity']);
-        if (empty($targetEntityType)) {
-            return;
-        }
-
-        $targetId = $sourceRecord->get('targetRecordId');
-        $targetRecord = !empty($targetId) ? $this->getEntityManager()->getEntity($targetEntityType, $targetId) : null;
-
-        $em = $this->getEntityManager();
-        $userContext = $this->getContainer()->get(UserContext::class);
-        $previousUser = $userContext->getUser();
-        $em->setUser($em->getRepository('User')->getGlobalSystemUser());
-        $userContext->set($em->getRepository('User')->getGlobalSystemUser());
-
-        try {
-            if (empty($targetRecord)) {
-                $this->createTargetRecord($pipeline->get('mergingScript'), $sourceRecord, $targetEntityType);
-            } else {
-                $this->updateTargetRecord($pipeline->get('mergingScript'), $sourceRecord, $targetRecord);
+        foreach ($pipelines as $pipeline) {
+            if (empty($pipeline->get('mergingScript'))) {
+                continue;
             }
-        } finally {
-            if ($previousUser !== null) {
-                $em->setUser($previousUser);
-                $userContext->set($previousUser);
+
+            $field = 'target' . ucfirst(Util::toCamelCase($pipeline->get('targetEntityId')));
+            $targetEntityType = $this->getMetadata()->get(['entityDefs', $sourceRecord->getEntityName(), 'links', $field, 'entity']);
+            if (empty($targetEntityType)) {
+                continue;
+            }
+
+            $targetId = $sourceRecord->get($field . 'Id');
+            $targetRecord = !empty($targetId) ? $this->getEntityManager()->getEntity($targetEntityType, $targetId) : null;
+
+            $em = $this->getEntityManager();
+            $userContext = $this->getContainer()->get(UserContext::class);
+            $previousUser = $userContext->getUser();
+            $em->setUser($em->getRepository('User')->getGlobalSystemUser());
+            $userContext->set($em->getRepository('User')->getGlobalSystemUser());
+
+            try {
+                if (empty($targetRecord)) {
+                    $this->createTargetRecord($pipeline->get('mergingScript'), $sourceRecord, $targetEntityType);
+                } else {
+                    $this->updateTargetRecord($pipeline->get('mergingScript'), $sourceRecord, $targetRecord);
+                }
+            } finally {
+                if ($previousUser !== null) {
+                    $em->setUser($previousUser);
+                    $userContext->set($previousUser);
+                }
             }
         }
+
     }
 
     public function pushAllToTarget(Entity $targetRecord): void
@@ -74,9 +79,10 @@ class DataPipeline extends Base
                 continue;
             }
 
+            $field = 'target' . ucfirst(Util::toCamelCase($pipeline->get('targetEntityId')));
             $sourceRecords = $this->getEntityManager()
                 ->getRepository($sourceEntityType)
-                ->where(['targetRecordId' => $targetRecord->get('id')])
+                ->where([$field . 'Id' => $targetRecord->get('id')])
                 ->find();
 
             foreach ($sourceRecords as $sourceRecord) {
@@ -119,9 +125,11 @@ class DataPipeline extends Base
             return null;
         }
 
+        $field = 'target' . ucfirst(Util::toCamelCase($targetEntityType));
+
         $this
             ->getRecordService($sourceRecord->getEntityName())
-            ->updateEntity($sourceRecord->get('id'), (object)['targetRecordId' => $targetId]);
+            ->updateEntity($sourceRecord->get('id'), (object)[$field . 'Id' => $targetId]);
 
         return $this->getEntityManager()->getEntity($targetEntityType, $targetId);
     }

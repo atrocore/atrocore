@@ -1,0 +1,18 @@
+# Uploaded and generated files are served from here, so nothing in this tree may ever
+# be handed to an interpreter - it is content, not code.
+
+php_flag engine off
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+<IfModule mod_mime.c>
+    RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .pht .phar
+    RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .pht .phar
+    AddType text/plain .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .pht .phar
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine Off
+</IfModule>

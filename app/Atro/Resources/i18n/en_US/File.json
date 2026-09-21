@@ -36,6 +36,7 @@
     "fileHasDuplicate": "There is already at least one <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file.",
     "cannotDefineFileName": "The system cannot recognize the file name from the URL.",
     "urlExpected": "Incorrect URL was given",
+    "urlCannotBeFetched": "The URL could not be fetched.",
     "fileExtensionCorrectedAutomatically": "File extension was corrected automatically.",
     "downloadJobsCreated": "A background job has been created to prepare your archive file."
   },

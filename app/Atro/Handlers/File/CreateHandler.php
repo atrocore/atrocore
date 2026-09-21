@@ -16,6 +16,7 @@ namespace Atro\Handlers\File;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
+use Atro\Services\File as FileService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -102,7 +103,7 @@ class CreateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data          = $this->getRequestBody($request);
+        $data          = FileService::stripInternalInput($this->getRequestBody($request));
         $data->fromApi = true;
 
         $result = $this->getRecordService('File')->createEntityAndBuildResponse($data);

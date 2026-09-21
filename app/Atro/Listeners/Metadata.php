@@ -253,34 +253,40 @@ class Metadata extends AbstractMetadataListener
             $sourceEntity = $item['source_entity_id'];
             $targetEntity = $item['target_entity_id'];
 
-            $foreign = 'source' . Util::pluralize(ucfirst($sourceEntity));
+            $foreignField = 'source' . ucfirst($sourceEntity);
+            $targetField = 'target' . ucfirst($targetEntity);
 
-            $data['entityDefs'][$sourceEntity]['fields']['targetRecord'] = [
+            $data['scopes'][$sourceEntity]['isDataPipelineSource'] = true;
+            $data['scopes'][$targetEntity]['isDataPipelineTarget'] = true;
+
+            $data['entityDefs'][$sourceEntity]['fields'][$targetField] = [
                 'type'               => 'link',
+                'labelKey'           => "Global.scopeNames.{$targetEntity}",
                 'readOnly'           => true,
                 'importDisabled'     => true,
                 'massUpdateDisabled' => true,
+                'dataLineage'        => true,
             ];
 
-            $data['entityDefs'][$sourceEntity]['links']['targetRecord'] = [
-                'type'    => 'belongsTo',
-                'foreign' => $foreign,
-                'entity'  => $targetEntity
+            $data['entityDefs'][$sourceEntity]['links'][$targetField] = [
+                'type'         => 'belongsTo',
+                'relationType' => 'oneToOne',
+                'noIndex'      => true,
+                'foreign'      => $foreignField,
+                'entity'       => $targetEntity
             ];
 
-            $data['entityDefs'][$sourceEntity]['uniqueIndexes']['unique_target_record'] = [
-                "deleted",
-                "target_record_id"
+            $data['entityDefs'][$targetEntity]['fields'][$foreignField] = [
+                'type'               => 'link',
+                'labelKey'           => "Global.scopeNames.{$sourceEntity}",
+                'readOnly'           => true,
+                'importDisabled'     => true,
+                'massUpdateDisabled' => true,
+                'dataLineage'        => true,
             ];
-
-            $data['entityDefs'][$targetEntity]['fields'][$foreign] = [
-                'type'     => 'linkMultiple',
-                'labelKey' => "Global.scopeNamesPlural.{$sourceEntity}",
-                'noLoad'   => true,
-            ];
-            $data['entityDefs'][$targetEntity]['links'][$foreign]  = [
-                'type'    => 'hasMany',
-                'foreign' => 'targetRecord',
+            $data['entityDefs'][$targetEntity]['links'][$foreignField]  = [
+                'type'    => 'hasOne',
+                'foreign' => $targetField,
                 'entity'  => $sourceEntity
             ];
         }
@@ -2703,8 +2709,9 @@ class Metadata extends AbstractMetadataListener
 
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['masterRecord'] = [
-                'type'     => 'link',
-                'required' => false
+                'type'        => 'link',
+                'required'    => false,
+                'dataLineage' => true
             ];
             $data['entityDefs'][$scope]['links']['masterRecord']  = [
                 'type'    => 'belongsTo',

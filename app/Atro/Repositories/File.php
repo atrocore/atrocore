@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
@@ -28,6 +29,7 @@ use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\PDFLib;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Thumbnail;
+use Atro\Core\Utils\UrlGuard;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -134,65 +136,86 @@ class File extends Base
     {
         $input = $file->_input ?? new \stdClass();
 
-        $localPath = LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR . IdGenerator::uuid() . DIRECTORY_SEPARATOR . $file->get('name');
+        // basename(): the name is user-supplied and only names the scratch copy here, so it must
+        // not be able to steer where that copy lands
+        $localPath = LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR . IdGenerator::uuid() . DIRECTORY_SEPARATOR . basename((string)$file->get('name'));
         $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($localPath), 0777, true);
 
         if (property_exists($input, 'fileContents')) {
             $this->getFileManager()->putContents($localPath, LocalStorage::parseInputFileContent((string)$input->fileContents));
         } elseif (property_exists($input, 'allChunks')) {
-            $chunkDirPath = $this->getStorage($file)->getChunksDir($file->getStorage()) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
+            $chunkDirPath = $this->getStorage($file)->getChunksDir($file->getStorage())
+                . DIRECTORY_SEPARATOR . LocalStorage::assertChunkHash($input->fileUniqueHash ?? null);
+
+            if (!is_array($input->allChunks)) {
+                throw new BadRequest("'allChunks' is invalid.");
+            }
 
             $f = fopen($localPath, 'a+');
             foreach ($input->allChunks as $chunk) {
-                fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
+                fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . LocalStorage::assertChunkName($chunk)));
             }
             fclose($f);
 
             $this->getFileManager()->removeAllInDir($chunkDirPath);
         } elseif (property_exists($input, 'remoteUrl')) {
-            if (str_starts_with($input->remoteUrl, 'file://')) {
-                $localFileName = str_replace('file://', '', $input->remoteUrl);
-                if (!file_exists($localFileName)) {
-                    throw new Error("File $localFileName does not exist");
-                }
-                copy($localFileName, $localPath);
-            } else {
-                // headers should be passed as key-value structure
-                $headers = $input->urlHeaders ?? null;
-                if (is_object($headers)) {
-                    $headers = json_decode(json_encode($headers), true);
-                } elseif (is_string($headers)) {
-                    $headers = @json_decode($headers, true);
-                }
+            $allowedHosts = (array)$this->getConfig()->get('fetchAllowedHosts', []);
+            $remoteUrl    = UrlGuard::assertFetchable((string)$input->remoteUrl, $allowedHosts);
 
-                set_time_limit(0);
-                $fp = fopen($localPath, 'w+');
-                if ($fp === false) {
-                    throw new Error(sprintf("Can't write any data to the file %s", $file->get('name')));
-                }
-                $ch = curl_init($input->remoteUrl);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-                curl_setopt($ch, CURLOPT_FILE, $fp);
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                if (is_array($headers) && !empty($headers)) {
-                    $requestHeaders = [];
-                    foreach ($headers as $header => $value) {
-                        $requestHeaders[] = "$header: $value";
-                    }
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
-                }
+            // headers should be passed as key-value structure
+            $headers = $input->urlHeaders ?? null;
+            if (is_object($headers)) {
+                $headers = json_decode(json_encode($headers), true);
+            } elseif (is_string($headers)) {
+                $headers = @json_decode($headers, true);
+            }
 
-                curl_exec($ch);
-                $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                curl_close($ch);
-                fclose($fp);
+            set_time_limit(0);
+            $fp = fopen($localPath, 'w+');
+            if ($fp === false) {
+                throw new Error(sprintf("Can't write any data to the file %s", $file->get('name')));
+            }
+            $ch = curl_init($remoteUrl);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            // redirects are not followed: a redirect is a second URL that the guard above never saw
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+            UrlGuard::restrictProtocols($ch);
+            if (is_array($headers) && !empty($headers)) {
+                $requestHeaders = [];
+                foreach ($headers as $header => $value) {
+                    $requestHeaders[] = "$header: $value";
+                }
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
+            }
 
-                if (!in_array($responseCode, [200, 201])) {
+            curl_exec($ch);
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $primaryIp    = (string)curl_getinfo($ch, CURLINFO_PRIMARY_IP);
+            curl_close($ch);
+            fclose($fp);
+
+            // the address the transfer actually reached, in case the name resolved differently
+            // between the check above and the request itself
+            if ($primaryIp !== '' && !UrlGuard::isHostAllowlisted($remoteUrl, $allowedHosts)) {
+                try {
+                    UrlGuard::assertIpAllowed($primaryIp);
+                } catch (BadRequest $e) {
                     $this->cleanupLocalTmpFile($localPath);
-                    throw new Error(sprintf("Download for '%s' failed.", $input->remoteUrl));
+                    throw $e;
                 }
             }
+
+            if (!in_array($responseCode, [200, 201])) {
+                $this->cleanupLocalTmpFile($localPath);
+                throw new Error(sprintf("Download for '%s' failed.", $remoteUrl));
+            }
         } elseif (property_exists($input, 'localFileName')) {
+            // a server-side path: only ever set by internal callers (moveLocalFileToFileEntity),
+            // never something a request may name
+            if (!empty($input->fromApi)) {
+                throw new Forbidden("'localFileName' cannot be used through the API.");
+            }
             if (!file_exists($input->localFileName)) {
                 throw new Error(sprintf("File %s does not exist", $input->localFileName));
             }
