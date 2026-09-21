@@ -1244,7 +1244,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         $entityType = $this->entityType;
 
-        return $this->getEntityManager()->getConnection()->createQueryBuilder()
+        return $this->getEntityManager()->getDbal()->createQueryBuilder()
             ->select('*')
             ->from(Util::toUnderScore(lcfirst("{$entityType}Version")))
             ->where('id = :id')
@@ -1258,7 +1258,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         $entityType = $this->entityType;
 
-        $this->getEntityManager()->getConnection()->createQueryBuilder()
+        $this->getEntityManager()->getDbal()->createQueryBuilder()
             ->delete(Util::toUnderScore(lcfirst("{$entityType}Version")))
             ->where('id = :id')
             ->andWhere(Util::toUnderScore(lcfirst($entityType) . 'Id') . ' = :entityId')
@@ -1267,5 +1267,62 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->executeStatement();
 
         return true;
+    }
+
+    /**
+     * Versions failing retention: kept if younger than $maxAgeDays OR among the $minCount most
+     * recent, so only returned here when both fail. Either threshold may be null to disable that
+     * half of the rule; $entityId scopes to one record instead of every record of this type;
+     * $limit caps how many rows come back (e.g. for batch processing).
+     *
+     * @return array<int, array{id: string, entity_id: string}>
+     */
+    public function getVersionsToDelete(?string $entityId, ?int $minCount, ?int $maxAgeDays, ?int $limit = null): array
+    {
+        if ($minCount === null && $maxAgeDays === null) {
+            return [];
+        }
+
+        $entityType = $this->entityType;
+        $table      = Util::toUnderScore(lcfirst("{$entityType}Version"));
+        $fkColumn   = Util::toUnderScore(lcfirst($entityType)) . '_id';
+
+        $conditions = [];
+        $params     = ['false' => false];
+        $types      = ['false' => ParameterType::BOOLEAN];
+
+        $conditions[] = $maxAgeDays !== null ? 'created_at < :cutoff' : '1=1';
+        if ($maxAgeDays !== null) {
+            $params['cutoff'] = date('Y-m-d H:i:s', strtotime("-{$maxAgeDays} days"));
+            $types['cutoff']  = ParameterType::STRING;
+        }
+
+        $conditions[] = $minCount !== null ? 'rnk > :min_count' : '1=1';
+        if ($minCount !== null) {
+            $params['min_count'] = $minCount;
+            $types['min_count']  = ParameterType::INTEGER;
+        }
+
+        if ($entityId !== null) {
+            $conditions[] = "{$fkColumn} = :entity_id";
+            $params['entity_id'] = $entityId;
+            $types['entity_id']  = ParameterType::STRING;
+        }
+
+        $sql = "SELECT id, {$fkColumn} AS entity_id FROM (
+                SELECT id, {$fkColumn}, created_at,
+                       ROW_NUMBER() OVER (PARTITION BY {$fkColumn} ORDER BY created_at DESC) AS rnk
+                FROM {$table}
+                WHERE deleted = :false
+            ) ranked
+            WHERE " . implode(' AND ', $conditions);
+
+        if ($limit !== null) {
+            $sql .= ' LIMIT :limit';
+            $params['limit'] = $limit;
+            $types['limit']  = ParameterType::INTEGER;
+        }
+
+        return $this->getEntityManager()->getDbal()->executeQuery($sql, $params, $types)->fetchAllAssociative();
     }
 }
