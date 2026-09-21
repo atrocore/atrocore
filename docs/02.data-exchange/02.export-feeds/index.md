@@ -75,7 +75,7 @@ For type-specific configuration, see:
 
 **CSV and Excel:**
 
-- **Header Row** – when enabled, column names are included in the first row. Enabled by default for Excel.
+- **Number of Headers** – number of header rows generated above the data, from `0` (no header row) to `10`. Defaults to `1`. See [Multiple Header Rows](#multiple-header-rows) to configure what each row contains.
 - **Has Multiple Sheets** – enables multi-sheet Excel export. Requires the [Synchronization](https://store.atrocore.com/en/synchronization/20124) module.
 
 CSV-specific:
@@ -140,11 +140,33 @@ The `Configurator` panel defines which fields and attributes are included in the
 
 ### Field Configuration
 
-Each configurator item has a **Column** setting, which defines the column header name in the output file. Additional settings depend on the field type.
+Each configurator item has one **Header** setting per header row configured on the feed (see [Multiple Header Rows](#multiple-header-rows) below), which defines the column header name in the output file. Additional settings depend on the field type.
 
-Added items are displayed as a list with `Field` and `Column Name` columns. Use the single record actions menu on each item to edit its configuration or remove it.
+Added items are displayed as a list with `Field` and one `Header` column per configured header row (labeled `Header` when only one row is configured, or `Header 1`, `Header 2`, etc. when more than one). Use the single record actions menu on each item to edit its configuration or remove it.
 
 > Fields order in the export file is controlled via drag-and-drop in `Configurator`.
+
+### Multiple Header Rows
+
+By default, an export feed generates a single header row containing each column's field or attribute name. The **Number of Headers** setting (`Export Data Settings` panel, CSV and Excel formats only) controls how many header rows are generated, from `0` (no header row) up to `10`.
+
+When set to more than `1`, each configurator item gets one **Header N** panel per header row (`Header 1` through `Header N`), so a different label can be used per row — for example, a first row with a human-readable name and a second row with the technical/system field name.
+
+!! The last header row (`Header N`) is always the row the system also uses internally as the item's column name, e.g. for value mapping when the exported file is later re-imported. Earlier rows (`Header 1` to `Header N-1`) are purely descriptive extra rows written above it.
+
+Each header row has two fields:
+
+- **Column Label** – where the header text for that row comes from:
+    - **Name** – the field's/attribute's translated label (in the feed's [Locale](#feed-settings)).
+    - **System Name** – the field's/attribute's raw code.
+    - **Tooltip Text** – the field's/attribute's translated tooltip.
+    - Any other property of the underlying [field](../../01.atrocore/03.administration/11.entity-management/03.fields-and-attributes/index.md) or [attribute](../../01.atrocore/03.administration/12.attribute-management/01.attributes/index.md) (e.g. `Type`, `Default Value`); `link`/`linkMultiple` properties resolve to the related record's name.
+    - **Custom Name** – a fixed literal value entered in **Column Name**. Not available for `Add All Attributes` items, since a single label can't apply to every expanded attribute column.
+- **Column Name** – editable only when **Column Label** is `Custom Name`. Supports referencing related-entity fields as `{{fieldName}}` when the **Separate** option is enabled (see [Relation Fields](#relation-fields)).
+
+For **Fixed Value** and **Script** items, **Column Label** is locked to `Custom Name`.
+
+! Changing **Number of Headers** on the feed shows a confirmation, since it adds or removes header rows (and their configuration) on every existing configurator item.
 
 ### Relation Fields
 

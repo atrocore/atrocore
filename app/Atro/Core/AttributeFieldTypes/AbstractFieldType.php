@@ -27,7 +27,6 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     protected string $column = 'varchar_value';
 
     protected Config $config;
-    protected User $user;
     protected EntityManager $em;
     protected Language $language;
     protected mixed $selectManagerFactory;
@@ -36,10 +35,9 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
 
     public function __construct(Container $container)
     {
-        $this->config = $container->get('config');
-        $this->user = $container->get('user');
-        $this->em = $container->get('entityManager');
-        $this->language = $container->get('language');
+        $this->config               = $container->get('config');
+        $this->em                   = $container->get('entityManager');
+        $this->language             = $container->get('language');
         $this->selectManagerFactory = $container->get('selectManagerFactory');
     }
 
@@ -54,11 +52,11 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
 
         if (in_array($item['type'], ['isLinked', 'isNotLinked'])) {
             // we select records that are linked or not linked with the attribute
-            $operator = $item['type'] === 'isLinked' ? 'EXISTS' : 'NOT EXISTS';
-            $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
+            $operator       = $item['type'] === 'isLinked' ? 'EXISTS' : 'NOT EXISTS';
+            $tableName      = Util::toUnderScore(lcfirst($entity->getEntityType()));
             $attributeAlias = IdGenerator::unsortableId();
-            $aliasMiddle = IdGenerator::unsortableId();
-            $subQb = $this->em->getConnection()->createQueryBuilder()
+            $aliasMiddle    = IdGenerator::unsortableId();
+            $subQb          = $this->em->getConnection()->createQueryBuilder()
                 ->select('1')
                 ->from("{$tableName}_attribute_value", $aliasMiddle)
                 ->join($aliasMiddle, 'attribute', $attributeAlias, "$aliasMiddle.attribute_id = $attributeAlias.id AND $attributeAlias.deleted = :false")
@@ -90,9 +88,9 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
             ]
         ];
 
-        $where['value'][] = $this->convertWhere($entity, $attribute, $item);
+        $where['value'][]     = $this->convertWhere($entity, $attribute, $item);
         $attributeValueEntity = "{$entity->getEntityType()}AttributeValue";
-        $avRepo = $this->em->getRepository($attributeValueEntity);
+        $avRepo               = $this->em->getRepository($attributeValueEntity);
 
         $sp = $this->getSelectManagerFactory()
             ->create($attributeValueEntity)
@@ -150,7 +148,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
 
     protected function getCachedCurrentLocale(): ?IEntity
     {
-        $localeId = Language::detectLocale($this->config, $this->user) ?? '';
+        $localeId = Language::detectLocale($this->config, $this->getUser()) ?? '';
         if (!array_key_exists($localeId, $this->cachedLocales)) {
             $this->cachedLocales[$localeId] = $localeId
                 ? $this->em->getEntity('Locale', $localeId)
@@ -244,5 +242,10 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     protected function getSelectManagerFactory(): SelectManagerFactory
     {
         return $this->selectManagerFactory;
+    }
+
+    protected function getUser(): User
+    {
+        return $this->em->getContainer()->get('user');
     }
 }
