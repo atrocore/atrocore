@@ -96,7 +96,7 @@ class LinkMultipleType extends AbstractFieldType
                     $names[$foreign->get('id')] = empty($foreign->get($localizedNameColumn)) ? $foreign->get($foreignName) : $foreign->get($localizedNameColumn);
                 }
 
-                if (!empty($defs)){
+                if (!empty($defs)) {
                     // fix sort order for ids
                     $ids = array_keys($names);
                     foreach ($value as $id) {
@@ -209,6 +209,26 @@ class LinkMultipleType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
+        if ($item['type'] === 'isNull') {
+            return [
+                'type'  => 'or',
+                'value' => [
+                    ['type' => 'isNull', 'attribute' => 'jsonValue'],
+                    ['type' => 'equals', 'attribute' => 'jsonValue', 'value' => '[]'],
+                ]
+            ];
+        }
+
+        if ($item['type'] === 'isNotNull') {
+            return [
+                'type'  => 'and',
+                'value' => [
+                    ['type' => 'isNotNull', 'attribute' => 'jsonValue'],
+                    ['type' => 'notEquals', 'attribute' => 'jsonValue', 'value' => '[]'],
+                ]
+            ];
+        }
+
         $where = [
             'type'  => 'and',
             'value' => []
