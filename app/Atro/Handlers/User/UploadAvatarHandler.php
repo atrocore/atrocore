@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\User;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
+use Atro\Services\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -76,13 +76,9 @@ class UploadAvatarHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        $this->getServiceFactory()->create('Avatar')->upload(
-            $this->getUser()->get('id'),
-            $data->fileContents,
-            $data->name,
-            $data->filesize
-        );
+        /* @var $service User */
+        $service = $this->getServiceFactory()->create('User');
 
-        return new BoolResponse(true);
+        return new BoolResponse($service->uploadAvatar($data->fileContents, $data->name, $data->filesize));
     }
 }

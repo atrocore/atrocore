@@ -16,7 +16,7 @@ namespace Atro\Handlers\User;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Atro\Services\Avatar as AvatarService;
+use Atro\Services\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -46,8 +46,9 @@ class DeleteAvatarHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->getServiceFactory()->create('Avatar')->delete($this->getUser()->get('id'));
+        /* @var User $service */
+        $service = $this->getServiceFactory()->create('User');
 
-        return new BoolResponse(true);
+        return new BoolResponse($service->deleteAvatar());
     }
 }

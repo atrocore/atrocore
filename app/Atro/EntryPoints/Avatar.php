@@ -13,7 +13,7 @@ namespace Atro\EntryPoints;
 
 use Atro\Entities\File;
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Services\Avatar as AvatarService;
+use Atro\Entities\User;
 
 class Avatar extends Image
 {
@@ -57,6 +57,7 @@ class Avatar extends Image
 
         $userId = $_GET['id'];
 
+        /* @var User $user */
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
             header('Content-Type: image/png');
@@ -70,8 +71,8 @@ class Avatar extends Image
             exit;
         }
 
-        if (AvatarService::isUploaded($userId)) {
-            $this->showAvatar($userId);
+        if ($user->hasAvatar()) {
+            $this->showAvatar($user);
         } else {
             $avatar = new \LasseRafn\InitialAvatarGenerator\InitialAvatar();
 
@@ -110,14 +111,14 @@ class Avatar extends Image
         return true;
     }
 
-    protected function showAvatar(string $userId): void
+    protected function showAvatar(User $user): void
     {
-        $path = AvatarService::getFullPath($userId);
+        $path = $user->getAvatarDir() . DIRECTORY_SEPARATOR . $user->getAvatarFileName();
 
         $contents = file_get_contents($path);
         $mimeType = mime_content_type($path);
 
-        header('Content-Disposition:inline;filename="' . AvatarService::getFileName($userId) . '"');
+        header('Content-Disposition:inline;filename="' . $user->getAvatarFileName() . '"');
         if (!empty($mimeType)) {
             header('Content-Type: ' . $mimeType);
         }
@@ -128,4 +129,3 @@ class Avatar extends Image
         exit;
     }
 }
-

@@ -16,6 +16,8 @@ use Espo\ORM\Entity;
 
 class User extends \Espo\Core\ORM\Entity
 {
+    public const string AVATAR_DIR = 'data/upload/avatars';
+
     public function isAdmin()
     {
         return $this->get('delegator')->get('isAdmin');
@@ -130,5 +132,38 @@ class User extends \Espo\Core\ORM\Entity
 
         $collection = $this->getEntityManager()->getRepository('TeamUser')->select(['userId'])->where(['teamId' => $teamsIds])->find();
         return array_column($collection->toArray(), 'userId');
+    }
+
+    public function getAvatarDir(): string
+    {
+        return self::AVATAR_DIR . '/' . $this->id;
+    }
+
+    public function getAvatarFileName(): ?string
+    {
+        $dir = $this->getAvatarDir();
+
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (!in_array($item, ['.', '..'])) {
+                    $extension = strtolower((string)pathinfo($item, PATHINFO_EXTENSION));
+
+                    if (in_array($extension, $this->getEntityManager()->getEspoMetadata()->get(['app', 'file', 'image', 'extensions'], []))) {
+                        return $item;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function hasAvatar(): bool
+    {
+        if (empty($this->getAvatarDir()) || empty($this->getAvatarFileName())) {
+            return false;
+        }
+
+        return file_exists($this->getAvatarDir() . DIRECTORY_SEPARATOR . $this->getAvatarFileName());
     }
 }

@@ -16,6 +16,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\Util;
 use Atro\Entities\User as UserEntity;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\AclManager;
@@ -201,6 +202,55 @@ class User extends RDB
         return false;
     }
 
+    public function uploadAvatar(UserEntity $user, string $contents, string $name, int $filesize): bool
+    {
+        $extension = strtolower((string)pathinfo($name, PATHINFO_EXTENSION));
+        if (!in_array($extension, $this->getAllowedExtensions(), true)) {
+            throw new BadRequest("Unsupported avatar file type.");
+        }
+
+        $maxSize = $this->convertToBytes((string)ini_get('upload_max_filesize'));
+        if (!empty($maxSize) && $filesize > $maxSize) {
+            throw new BadRequest("Avatar file exceeds the maximum upload size.");
+        }
+
+        $base64 = $contents;
+        if (str_starts_with($base64, 'data:')) {
+            $arr = explode(',', $base64);
+            if (count($arr) > 1) {
+                $base64 = $arr[1];
+            }
+        }
+
+        $decoded = base64_decode($base64, true);
+        if ($decoded === false) {
+            throw new BadRequest("Invalid avatar file data.");
+        }
+
+        $dir = $user->getAvatarDir();
+        Util::removeDir($dir);
+        Util::createDir($dir);
+
+        try {
+            file_put_contents($dir . DIRECTORY_SEPARATOR . $name, $decoded);
+        } catch (\Throwable $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function deleteAvatar(UserEntity $user): bool
+    {
+        try {
+            Util::removeDir($user->getAvatarDir());
+        } catch (\Throwable $e) {
+            throw new BadRequest("Error while deleting avatar file: " . $e->getMessage());
+        }
+
+        return true;
+    }
+
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
@@ -243,7 +293,8 @@ class User extends RDB
 
         $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
 
-        $this->getServiceFactory()->create('Avatar')->delete($entity->get('id'));
+        /* @var $entity UserEntity */
+        $this->deleteAvatar($entity);
     }
 
     protected function afterRestore($entity)
@@ -251,6 +302,29 @@ class User extends RDB
         parent::afterRestore($entity);
 
         $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
+    }
+
+    protected function getAllowedExtensions(): array
+    {
+        return $this->getMetadata()->get(['app', 'file', 'image', 'extensions'], []);
+    }
+
+    protected function convertToBytes(string $size): int
+    {
+        $suffix = substr($size, -1);
+        $value = (int)substr($size, 0, -1);
+
+        switch (strtoupper($suffix)) {
+            case 'G':
+                $value *= 1024;
+            case 'M':
+                $value *= 1024;
+            case 'K':
+                $value *= 1024;
+                break;
+        }
+
+        return $value;
     }
 
     protected function getAclManager(): AclManager
