@@ -114,7 +114,7 @@ class Avatar extends Image
     protected function showAvatar(User $user): void
     {
         $contents = $user->getAvatarContent();
-        $mimeType = (new \finfo(FILEINFO_MIME_TYPE))->buffer($contents);
+        $mimeType = $this->getEntityManager()->getRepository('User')->getAvatarMimeType($user);
 
         header('Content-Disposition:inline;filename="' . $user->getAvatarName() . '"');
         if (!empty($mimeType)) {

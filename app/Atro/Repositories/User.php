@@ -271,6 +271,15 @@ class User extends RDB
         return null;
     }
 
+    public function getAvatarMimeType(UserEntity $user): ?string
+    {
+        if (!empty($path = $this->getAvatarFilePath($user))) {
+            return mime_content_type($path);
+        }
+
+        return null;
+    }
+
     protected function getAvatarDir(UserEntity $user): string
     {
         return self::AVATAR_DIR . '/' . $user->id;
