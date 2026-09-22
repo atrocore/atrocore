@@ -171,18 +171,16 @@ class Cluster extends Base
 
         $payload = $consolidationService->buildMasterRecordPayloadForCluster($cluster, $consolidationScript);
 
-        // built through the factory, not the repository: a repository instance is shared via the identity map,
-        // and applying the payload to it would leak preview values into the rest of this request
-        $preview = $this->getEntityManager()->getEntityFactory()->create($masterEntityName);
+        $masterRepository = $this->getEntityManager()->getRepository($masterEntityName);
+        $preview = $masterRepository->get();
 
         if (!empty($cluster->get('goldenRecordId'))) {
-            $golden = $this->getEntityManager()->getRepository($masterEntityName)->get($cluster->get('goldenRecordId'));
+            $golden = $masterRepository->get($cluster->get('goldenRecordId'));
             if (empty($golden)) {
                 throw new NotFound();
             }
             $preview->set($golden->toArray());
         } else {
-            $preview->populateDefaults();
             foreach ($preview->getAttributes() as $attribute => $defs) {
                 if (!$preview->has($attribute)) {
                     $preview->set($attribute, ($defs['type'] ?? null) === Entity::JSON_ARRAY ? [] : null);
