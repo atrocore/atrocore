@@ -23,7 +23,9 @@
     }
   },
   "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "La fusion est impossible sans un enregistrement de référence"
+    "cannotMergeWithoutGoldenRecord": "La fusion est impossible sans un enregistrement de référence",
+    "noClusterItemsToPreview": "Rien à prévisualiser : le cluster n'a aucun élément contributeur",
+    "cannotPreviewInvalidCluster": "Il est impossible de prévisualiser la consolidation pour un cluster non valide"
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "Les éléments non confirmés ne peuvent pas être ajoutés à la fusion"
@@ -36,7 +38,11 @@
     "masterRecords": "enregistrements de référence",
     "confirmed": "Confirmé",
     "unconfirmed": "Non confirmé",
-    "rejected": "Rejeté"
+    "rejected": "Rejeté",
+    "consolidationPreview": "Aperçu de la consolidation",
+    "consolidationPreviewHint": "Montre à quoi ressemblerait l'enregistrement de référence après la consolidation. Rien n'est enregistré.",
+    "noConsolidationConfigured": "Aucune consolidation n'est configurée pour cette entité",
+    "discard": "Abandonner"
   },
   "streamMessages": {
     "clusterLinked": "{user} a lié {relatedEntity} à ce cluster",

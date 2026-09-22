@@ -37,7 +37,9 @@
   },
   "exceptions": {
     "cannotDelete": "Only empty clusters can be deleted",
-    "cannotMergeWithoutGoldenRecord": "It is not possible to merge without a golden record"
+    "cannotMergeWithoutGoldenRecord": "It is not possible to merge without a golden record",
+    "noClusterItemsToPreview": "There is nothing to preview: the cluster has no contributor items",
+    "cannotPreviewInvalidCluster": "It is not possible to preview the consolidation for an invalid cluster"
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "Unconfirmed items cannot be added to the merging",
@@ -52,7 +54,11 @@
     "masterRecordsPanel": "Master Records",
     "confirmed": "Confirmed",
     "unconfirmed": "Unconfirmed",
-    "rejected": "Rejected"
+    "rejected": "Rejected",
+    "consolidationPreview": "Consolidation Preview",
+    "consolidationPreviewHint": "Shows how the golden record would look after consolidation. Nothing is saved.",
+    "noConsolidationConfigured": "No consolidation is configured for this entity",
+    "discard": "Discard"
   },
   "streamMessages": {
     "clusterLinked": "{user} linked {relatedEntity} to this cluster",

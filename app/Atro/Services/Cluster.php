@@ -150,6 +150,53 @@ class Cluster extends Base
         $this->getEntityManager()->removeEntity($cluster, ['isPurge' => true]);
     }
 
+    public function buildMasterRecordPreview(string $clusterId, ?string $consolidationScript = null): Entity
+    {
+        $cluster = $this->getEntity($clusterId);
+
+        if (empty($cluster)) {
+            throw new NotFound();
+        }
+
+        if ($cluster->get('state') === 'invalid') {
+            throw new BadRequest($this->getInjection('language')->translate('cannotPreviewInvalidCluster', 'exceptions', 'Cluster'));
+        }
+
+        $masterEntityName = (string)$cluster->get('masterEntity');
+        $consolidationService = $this->getRecordService('Consolidation');
+
+        if ($consolidationScript === null) {
+            $consolidationScript = (string)$consolidationService->getConsolidation($masterEntityName)->get('consolidationScript');
+        }
+
+        $payload = $consolidationService->buildMasterRecordPayloadForCluster($cluster, $consolidationScript);
+
+        // built through the factory, not the repository: a repository instance is shared via the identity map,
+        // and applying the payload to it would leak preview values into the rest of this request
+        $preview = $this->getEntityManager()->getEntityFactory()->create($masterEntityName);
+
+        if (!empty($cluster->get('goldenRecordId'))) {
+            $golden = $this->getEntityManager()->getRepository($masterEntityName)->get($cluster->get('goldenRecordId'));
+            if (empty($golden)) {
+                throw new NotFound();
+            }
+            $preview->set($golden->toArray());
+        } else {
+            $preview->populateDefaults();
+            foreach ($preview->getAttributes() as $attribute => $defs) {
+                if (!$preview->has($attribute)) {
+                    $preview->set($attribute, ($defs['type'] ?? null) === Entity::JSON_ARRAY ? [] : null);
+                }
+            }
+        }
+
+        if (!$payload->isSkipped()) {
+            $preview->set($payload->getMasterRecordData());
+        }
+
+        return $preview;
+    }
+
     public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes): Entity
     {
         $cluster = $this->getEntity($clusterId);

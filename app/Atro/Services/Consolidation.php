@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
+use Atro\DTO\MasterRecordPayloadDTO;
 use Atro\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -34,36 +35,17 @@ class Consolidation extends Base
             throw new Forbidden();
         }
 
-        $consolidation = $this->getRepository()->getByEntityName($master->getEntityName());
-        if (empty($consolidation)) {
-            throw new BadRequest("Consolidation for entity {$master->getEntityName()} not found.");
-        }
+        $consolidation = $this->getConsolidation($master->getEntityName());
 
-        $consolidationScript = $consolidation->get('consolidationScript');
-        if (empty($consolidationScript)) {
-            throw new BadRequest($this->translate('consolidationScriptIsMissing', 'exceptions', 'Consolidation'));
-        }
+        $payload = $this->buildMasterRecordPayload($contributor, $master, (string)$consolidation->get('consolidationScript'));
 
-        $templateData = [
-            'contributorRecord'  => $contributor,
-            'masterRecord'       => $master,
-            'contributorRecords' => $master->get("derived{$contributor->getEntityName()}Records", ['noCache' => true])
-        ];
-
-        $res = $this->getTwig()->renderTemplate($consolidationScript, $templateData);
-        $input = json_decode($res, true);
-
-        if (!is_array($input) || empty($input['masterRecordData'])) {
-            throw new BadRequest(sprintf($this->translate('consolidationScriptIsNotValid', 'exceptions', 'Consolidation'), $res));
-        }
-
-        if (!empty($input['skipped'])) {
+        if ($payload->isSkipped()) {
             return false;
         }
 
-        $this->executeAsMergeUser($consolidation, function () use ($input, $master) {
+        $this->executeAsMergeUser($consolidation, function () use ($payload, $master) {
             try {
-                $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($input['masterRecordData'])));
+                $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($payload->getMasterRecordData())));
             } catch (NotModified) {
                 // ignore
             }
@@ -80,20 +62,43 @@ class Consolidation extends Base
             throw new Forbidden();
         }
 
-        $consolidation = $this->getRepository()->getByEntityName($masterEntity);
-        if (empty($consolidation)) {
-            throw new BadRequest("Consolidation for entity {$masterEntity} not found.");
+        $consolidation = $this->getConsolidation($masterEntity);
+
+        $payload = $this->buildMasterRecordPayload($contributor, null, (string)$consolidation->get('consolidationScript'));
+
+        if ($payload->isSkipped()) {
+            return null;
         }
 
-        $consolidationScript = $consolidation->get('consolidationScript');
+        $id = null;
+
+        $this->executeAsMergeUser($consolidation, function () use ($payload, $masterEntity, &$id) {
+            $id = $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($payload->getMasterRecordData())));
+        });
+
+        if (empty($id)) {
+            return null;
+        }
+
+        return $this->getEntityManager()->getEntity($masterEntity, $id);
+    }
+
+    public function buildMasterRecordPayload(Entity $contributor, ?Entity $master, string $consolidationScript, ?EntityCollection $contributorRecords = null): MasterRecordPayloadDTO
+    {
         if (empty($consolidationScript)) {
             throw new BadRequest($this->translate('consolidationScriptIsMissing', 'exceptions', 'Consolidation'));
         }
 
+        if ($contributorRecords === null) {
+            $contributorRecords = $master !== null
+                ? $master->get("derived{$contributor->getEntityName()}Records", ['noCache' => true])
+                : new EntityCollection([], $contributor->getEntityName());
+        }
+
         $templateData = [
             'contributorRecord'  => $contributor,
-            'masterRecord'       => null,
-            'contributorRecords' => new EntityCollection([], $contributor->getEntityName())
+            'masterRecord'       => $master,
+            'contributorRecords' => $contributorRecords
         ];
 
         $res = $this->getTwig()->renderTemplate($consolidationScript, $templateData);
@@ -103,21 +108,85 @@ class Consolidation extends Base
             throw new BadRequest(sprintf($this->translate('consolidationScriptIsNotValid', 'exceptions', 'Consolidation'), $res));
         }
 
-        if (!empty($input['skipped'])) {
-            return null;
+        return new MasterRecordPayloadDTO($input['masterRecordData'], !empty($input['skipped']));
+    }
+
+    public function buildMasterRecordPayloadForCluster(Entity $cluster, string $consolidationScript): MasterRecordPayloadDTO
+    {
+        $masterEntityName = (string)$cluster->get('masterEntity');
+
+        if (!$this->getAcl()->check($masterEntityName, 'read')) {
+            throw new Forbidden();
         }
 
-        $id = null;
+        $clusterItemService = $this->getRecordService('ClusterItem');
 
-        $this->executeAsMergeUser($consolidation, function () use ($input, $masterEntity, &$id) {
-            $id = $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($input['masterRecordData'])));
-        });
-
-        if (empty($id)) {
-            return null;
+        $clusterItems = [];
+        $unconfirmedItems = [];
+        foreach ($this->getEntityManager()->getRepository('ClusterItem')->where(['clusterId' => $cluster->get('id')])->find() as $clusterItem) {
+            if ($clusterItem->get('entityName') === $masterEntityName) {
+                continue;
+            }
+            $clusterItems[] = $clusterItem;
+            if (!$clusterItemService->isClusterItemConfirmed($clusterItem)) {
+                $unconfirmedItems[] = $clusterItem;
+            }
         }
 
-        return $this->getEntityManager()->getEntity($masterEntity, $id);
+        // unconfirmed items answer "what happens when I confirm them"; with none left the question becomes
+        // "what does the script produce for what is already in the cluster", which is the updateMasterRecord run
+        if (!empty($unconfirmedItems)) {
+            $clusterItems = $unconfirmedItems;
+        }
+
+        if (empty($clusterItems)) {
+            throw new BadRequest($this->translate('noClusterItemsToPreview', 'exceptions', 'Cluster'));
+        }
+
+        $records = [];
+        foreach ($clusterItems as $clusterItem) {
+            $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId'));
+            if (!empty($record)) {
+                $records[] = $record;
+            }
+        }
+
+        if (empty($records)) {
+            throw new BadRequest($this->translate('noClusterItemsToPreview', 'exceptions', 'Cluster'));
+        }
+
+        $contributor = array_pop($records);
+        $master = $cluster->get('goldenRecord');
+
+        $contributorRecords = new EntityCollection([], $contributor->getEntityName());
+        $addedIds = [];
+
+        if (!empty($master)) {
+            foreach ($master->get("derived{$contributor->getEntityName()}Records", ['noCache' => true]) as $linkedRecord) {
+                $contributorRecords->append($linkedRecord);
+                $addedIds[] = $linkedRecord->get('id');
+            }
+        }
+
+        foreach ($records as $record) {
+            if ($record->getEntityName() !== $contributor->getEntityName() || in_array($record->get('id'), $addedIds, true)) {
+                continue;
+            }
+            $contributorRecords->append($record);
+            $addedIds[] = $record->get('id');
+        }
+
+        return $this->buildMasterRecordPayload($contributor, $master, $consolidationScript, $contributorRecords);
+    }
+
+    public function getConsolidation(string $masterEntityName): Entity
+    {
+        $consolidation = $this->getRepository()->getByEntityName($masterEntityName);
+        if (empty($consolidation)) {
+            throw new BadRequest("Consolidation for entity {$masterEntityName} not found.");
+        }
+
+        return $consolidation;
     }
 
     private function executeAsMergeUser(Entity $consolidation, $callback): void
