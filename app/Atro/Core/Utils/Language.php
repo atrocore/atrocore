@@ -46,8 +46,15 @@ class Language
         $this->unifier = new Unifier($this->container->get('fileManager'), $this->getMetadata());
     }
 
-    public static function detectLocale(Config $config, User $user = null): ?string
+    /**
+     * $GLOBALS['localeId'] has super priority over everything else
+     */
+    public static function detectLocale(Config $config, ?User $user = null): ?string
     {
+        if (!empty($GLOBALS['localeId'])) {
+            return $GLOBALS['localeId'];
+        }
+
         $localeId = AbstractService::getHeader('Locale-Id');
 
         if (empty($localeId) && $user) {
@@ -61,7 +68,7 @@ class Language
         return $localeId ?? null;
     }
 
-    public static function detectLanguage(Config $config, User $user = null): ?string
+    public static function detectLanguage(Config $config, ?User $user = null): ?string
     {
         $localeId = self::detectLocale($config, $user);
         if (!empty($localeId)) {
