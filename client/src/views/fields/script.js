@@ -59,6 +59,10 @@ Espo.define('views/fields/script', 'views/fields/base', Dep => {
 
         handleInlineEditEnterKeydown: function (e) {},
 
+        onScriptChange: function (value) {
+            this.trigger('script:change', value);
+        },
+
         removeSvelteComponent() {
             if (this.svelteComponent) {
                 try {

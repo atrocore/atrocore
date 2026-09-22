@@ -43,7 +43,9 @@
                                     <th class="text-center {{#unless isFirst}} inline-actions {{/unless}}" data-id ="{{id}}">
                                         {{#unless isFirst}}
                                             {{#if ../showCompareHeaderCheckbox}}
-                                                <input type="checkbox" class="compare-header-checkbox" data-id="{{id}}">
+                                                {{#unless isVirtual}}
+                                                    <input type="checkbox" class="compare-header-checkbox" data-id="{{id}}">
+                                                {{/unless}}
                                             {{/if}}
                                         {{/unless}}
                                         {{{name}}}
@@ -53,9 +55,11 @@
                                         {{/if}}
                                         {{#unless isFirst}}
                                          {{#if ../hasRecordAction}}
-                                            <div class="pull-right inline-actions">
-                                                {{{var action ../this}}}
-                                            </div>
+                                            {{#unless isVirtual}}
+                                                <div class="pull-right inline-actions">
+                                                    {{{var action ../this}}}
+                                                </div>
+                                            {{/unless}}
                                         {{/if}}
                                         {{/unless}}
                                     </th>

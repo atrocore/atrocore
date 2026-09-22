@@ -18950,12 +18950,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .compare-records table tr th.confirmed,
-.compare-records table tr th.golden {
+.compare-records table tr th.golden,
+.compare-records table tr th.consolidation-preview {
     position: relative;
 }
 
 .compare-records table tr th.confirmed:before,
-.compare-records table tr th.golden:before {
+.compare-records table tr th.golden:before,
+.compare-records table tr th.consolidation-preview:before {
     content: '';
     position: absolute;
     top: 0;
@@ -18988,6 +18990,15 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .compare-records table tr th.golden:before {
     background-color: #daa520;
+}
+
+.compare-records table tr th.consolidation-preview:before {
+    background-color: #06c;
+    background-image: repeating-linear-gradient(135deg, #daa520, #daa520 4px, #ffffff 4px, #ffffff 8px);
+}
+
+.compare-records table tr th.consolidation-preview {
+    font-style: italic;
 }
 
 .compare-records table tr .merge-radio {
