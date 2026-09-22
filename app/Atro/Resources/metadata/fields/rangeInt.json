@@ -84,6 +84,7 @@
   "fieldDefs": {
     "notStorable": true
   },
+  "notSortable": true,
   "filter": false,
   "group": "numeric"
 }

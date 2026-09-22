@@ -2938,17 +2938,28 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             var props = this.getPaginationToolbarProps();
-            return props.totalPages > 1 || props.showMoreVisible || props.controls.length > 0;
+
+            return props.totalPages > 1
+                || props.showMoreVisible
+                || props.controls.length > 0
+                || props.selectedCount != null
+                || props.shownCount != null
+                || props.totalCount != null
+                || props.hasSelectAllCheckbox
+                || (props.massActions || []).length > 0;
         },
 
         getSortFieldsList: function () {
             var fields = [];
             var fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields']);
             for (var field in fieldDefs) {
-                if (!fieldDefs[field].disabled
+                if (field !== 'id'
+                    && !fieldDefs[field].disabled
                     && !fieldDefs[field].layoutListDisabled
+                    && !fieldDefs[field].notStorable
+                    && !fieldDefs[field].unitIdField
+                    && !fieldDefs[field].prefixIdField
                     && !this.getMetadata().get(['fields', fieldDefs[field].type, 'notSortable'])
-                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime', 'bool'].includes(fieldDefs[field].type)
                 ) {
                     fields.push(field);
                 }
@@ -2960,6 +2971,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             return fields;
         },
+
+        relationSortNotSupportedTypes: ['link', 'file', 'image', 'linkParent', 'measure', 'foreign'],
 
         getRelationSortFieldsList: function () {
             if (!this.relationScope) {
@@ -2973,8 +2986,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     && !fieldDefs[field].disabled
                     && !fieldDefs[field].relationField
                     && !fieldDefs[field].layoutListDisabled
+                    && !fieldDefs[field].notStorable
+                    && !fieldDefs[field].unitIdField
+                    && !fieldDefs[field].prefixIdField
+                    && !this.relationSortNotSupportedTypes.includes(fieldDefs[field].type)
                     && !this.getMetadata().get(['fields', fieldDefs[field].type, 'notSortable'])
-                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime', 'bool'].includes(fieldDefs[field].type)
                 ) {
                     fields.push(field);
                 }
@@ -3021,6 +3037,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getSortToolbarControl: function () {
+            if (this.options.disableSorting) {
+                return null;
+            }
+
             var fields = this.getSortFieldsList();
             var relationFields = this.getRelationSortFieldsList();
             if (!fields.length && !relationFields.length) {
@@ -3065,6 +3085,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     group: relationFieldsGroupLabel
                 });
             }, this);
+
+            if (this.collection.sortBy && !options.some(option => option.value === this.collection.sortBy)) {
+                var currentFieldInfo = this.getSortFieldInfo(this.collection.sortBy);
+                options.push({
+                    value: this.collection.sortBy,
+                    label: currentFieldInfo ? this.translate(currentFieldInfo.field, 'fields', currentFieldInfo.scope) : this.collection.sortBy,
+                    hidden: true
+                });
+            }
 
             return {
                 key: 'sort',
