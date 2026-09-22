@@ -73,7 +73,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             this.selectionViewMode = "compare";
                         }
 
-                        if (this.selectionItemModels.length <= 1) {
+                        if (this.selectionViewMode === 'compare' && !this.canCompare()) {
                             this.selectionViewMode = 'standard';
                         }
 
@@ -143,7 +143,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.notify(this.translate('Loading...'));
             if (['compare', 'merge'].includes(this.selectionViewMode) && !noReload) {
                 this.reloadModels(() => {
-                    if (this.selectionItemModels.length < 2) {
+                    if (!(this.selectionViewMode === 'merge' ? this.canMerge() : this.canCompare())) {
                         this.selectionViewMode = 'standard'
                     }
                     this.refreshContent();
@@ -520,7 +520,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 })
 
                 if (this.isRendered()) {
-                    view.render();
+                    // the side view is built from the record view's props, so replacing that view
+                    // - switching the mode, refreshing - has to rebuild it as well
+                    view.render(() => this.setupRightSideView());
                 }
             });
 
@@ -534,6 +536,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 createView();
                 this.wait(false);
             }
+        },
+
+        canCompare() {
+            const models = this.selectionViewMode === 'standard' ? this.collection?.models : this.selectionItemModels;
+
+            return (models || []).length > 1;
         },
 
         canMerge() {
@@ -590,7 +598,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
 
                 if (action === 'compare' && this.getEntityTypes().length) {
-                    let shouldDisabled = (this.selectionViewMode === 'standard' ? this.collection?.length : this.selectionItemModels?.length) <= 1;
+                    let shouldDisabled = !this.canCompare();
                     if (shouldDisabled) {
                         return;
                     }
