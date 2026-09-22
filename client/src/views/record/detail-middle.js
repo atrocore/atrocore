@@ -53,9 +53,15 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
                 this.$el.find('.panel-body[data-name="' + name + '"]').collapse('toggle');
             },
             'show.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
+                if (e.target !== e.currentTarget || e.namespace !== 'bs.collapse') {
+                    return;
+                }
                 this.afterPanelCollapsed($(e.currentTarget));
             },
             'hide.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
+                if (e.target !== e.currentTarget || e.namespace !== 'bs.collapse') {
+                    return;
+                }
                 this.afterPanelCollapsed($(e.currentTarget), true);
             }
         },
