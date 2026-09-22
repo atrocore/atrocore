@@ -38,7 +38,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     public const CHUNKS_DIR = '.chunks';
     public const TRASH_DIR = '.trash';
     public const PDF_IMAGE_DIR = '.img-from-pdf';
-    public const VERSION_DIR = 'version';
+    public const VERSION_DIR = '.versions';
 
     protected Container $container;
 
@@ -114,7 +114,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function createFile(File $file, string $localPath): bool
     {
-        if (!$file->getStorage()->get('syncFolders')) {
+        // only generate a path on first creation - a reupload calls createFile() again with the
+        // same File entity, and its real on-disk location needs to stay stable across reuploads
+        if (!$file->getStorage()->get('syncFolders') && empty($file->get('path'))) {
             $file->set('path', FolderPathGenerator::generate($this->getConfig()->get('uploadRootPath') ?? '', true));
             $file->set('thumbnailsPath', $file->get('path'));
         }
@@ -264,15 +266,13 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function deleteFile(File $file): bool
     {
+        $file = $file->_fetchedEntity ?? $file;
+
         /** @var Thumbnail $thumbnailCreator */
         $thumbnailCreator = $this->container->get(Thumbnail::class);
 
         // delete thumbnails
-        foreach (['small', 'medium', 'large'] as $size) {
-            if ($thumbnailCreator->hasThumbnail($file, $size)) {
-                @unlink($thumbnailCreator->preparePath($file, $size));
-            }
-        }
+        $thumbnailCreator->deleteAllThumbnails($file);
 
         $path = $this->getLocalPath($file);
         if (file_exists($path)) {
@@ -386,7 +386,17 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     protected function getFileVersionDir(File $file, string $versionId): string
     {
-        return trim($file->getStorage()->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'version' . DIRECTORY_SEPARATOR . $versionId;
+        $storagePath = trim($file->getStorage()->get('path'), DIRECTORY_SEPARATOR);
+
+        // syncFolders: group by file id (real folder names already mirror PIM's own tree, so a
+        // flat-by-id grouping under .versions is enough). Otherwise real paths are generated/hashed
+        // and carry no meaning on their own, so mirror the file's own real path instead - the exact
+        // same segment getLocalPath() already uses to locate the file itself.
+        $fileSegment = $file->getStorage()->get('syncFolders')
+            ? $file->get('id')
+            : trim($file->get('path'), DIRECTORY_SEPARATOR);
+
+        return $storagePath . DIRECTORY_SEPARATOR . self::VERSION_DIR . DIRECTORY_SEPARATOR . $fileSegment . DIRECTORY_SEPARATOR . $versionId;
     }
 
     public function getLocalPath(File $file, bool $fetched = false): string
