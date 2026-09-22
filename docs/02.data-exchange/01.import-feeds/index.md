@@ -80,14 +80,18 @@ The `Data Sourcing` section is type-dependent—each import feed type has its ow
 
 **CSV specific:**
 
-- **Header row** – activate the checkbox if column names are included in the import file, or leave it empty if the file has no header row with column names
+- **Header Row Number** – row number that contains column names. Set to `0` if the file has no header row; column names are then auto-generated (`Column1`, `Column2`, ...). Default: `1`.
+- **Data Start Row Number** – row number where the actual data begins. Must be greater than `Header Row Number`. Default: `2`.
 - **Field Delimiter** – field delimiter used to separate fields. Options: `,`, `;`, `/t`. Default value is `;`
 - **Text Qualifier** – options: `Double Quote`, `Single Quote`
 
 **Excel specific:**
 
 - **Sheet** – select worksheet for import
-- **Header row** – activate the checkbox if column names are included in the import file, or leave it empty if the file has no header row with column names
+- **Header Row Number** – row number that contains column names. Set to `0` if the file has no header row; column names are then auto-generated (`Column1`, `Column2`, ...). Default: `1`.
+- **Data Start Row Number** – row number where the actual data begins. Must be greater than `Header Row Number`. Default: `2`.
+
+`Header Row Number` and `Data Start Row Number` don't have to be adjacent. Any rows in between are skipped entirely — neither read as the header nor imported as data — which allows source files with extra rows (titles, notes, blank rows) between the header and the actual data.
 
 ! If the XLS file is too large to import, you can convert it to CSV.
 
