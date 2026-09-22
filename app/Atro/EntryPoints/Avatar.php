@@ -13,6 +13,7 @@ namespace Atro\EntryPoints;
 
 use Atro\Entities\File;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\User;
 
 class Avatar extends Image
 {
@@ -56,6 +57,7 @@ class Avatar extends Image
 
         $userId = $_GET['id'];
 
+        /* @var User $user */
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
             header('Content-Type: image/png');
@@ -69,11 +71,8 @@ class Avatar extends Image
             exit;
         }
 
-        $id = $user->get('avatarId');
-        $size = $_GET['size'] ?? null;
-
-        if (!empty($id) && !empty($file = $this->getEntityManager()->getEntity("File", $id))) {
-            $this->show($file, $size);
+        if ($user->hasAvatar()) {
+            $this->showAvatar($user);
         } else {
             $avatar = new \LasseRafn\InitialAvatarGenerator\InitialAvatar();
 
@@ -111,5 +110,20 @@ class Avatar extends Image
     {
         return true;
     }
-}
 
+    protected function showAvatar(User $user): void
+    {
+        $contents = $user->getAvatarContent();
+        $mimeType = $this->getEntityManager()->getRepository('User')->getAvatarMimeType($user);
+
+        header('Content-Disposition:inline;filename="' . $user->getAvatarName() . '"');
+        if (!empty($mimeType)) {
+            header('Content-Type: ' . $mimeType);
+        }
+        header('Pragma: public');
+        header('Cache-Control: max-age=360000, must-revalidate');
+        header('Content-Length: ' . mb_strlen($contents, '8bit'));
+        echo $contents;
+        exit;
+    }
+}

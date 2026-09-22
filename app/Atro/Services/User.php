@@ -19,6 +19,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\RegexUtil;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 
@@ -345,6 +346,28 @@ class User extends Record
         }
 
         return parent::updateEntity($id, $data);
+    }
+
+    public function uploadAvatar(string $contents, string $name, int $filesize): bool
+    {
+        $user = $this->getUser();
+
+        if ($user->isSystemUser()) {
+            return false;
+        }
+
+        return $this->getRepository()->uploadAvatar($user, $contents, $name, $filesize);
+    }
+
+    public function deleteAvatar(): bool
+    {
+        $user = $this->getUser();
+
+        if ($user->isSystemUser()) {
+            return false;
+        }
+
+        return $this->getRepository()->deleteAvatar($user);
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)

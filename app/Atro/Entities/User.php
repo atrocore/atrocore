@@ -131,4 +131,19 @@ class User extends \Espo\Core\ORM\Entity
         $collection = $this->getEntityManager()->getRepository('TeamUser')->select(['userId'])->where(['teamId' => $teamsIds])->find();
         return array_column($collection->toArray(), 'userId');
     }
+
+    public function getAvatarName(): ?string
+    {
+        return $this->getEntityManager()->getRepository('User')->getAvatarName($this);
+    }
+
+    public function getAvatarContent(): ?string
+    {
+        return $this->getEntityManager()->getRepository('User')->getAvatarContent($this);
+    }
+
+    public function hasAvatar(): bool
+    {
+        return !empty($this->getAvatarName());
+    }
 }
