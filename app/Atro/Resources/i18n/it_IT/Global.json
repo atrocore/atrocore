@@ -1359,6 +1359,7 @@
     "dontMatchToPattern": "Il valore del campo \"{field}\" non corrisponde al modello \"{pattern}\".",
     "notUniqueRecordField": "Il record non può essere salvato, il record con tale '%s' esiste già.",
     "notUniqueValue": "Il record non può essere creato/aggiornato a causa di vincoli del database.",
+    "notUniqueValueFields": "Il record non può essere salvato: esiste già un altro record con gli stessi valori: %s.",
     "notUniqueCreatedValue": "Tali relazioni esistono già e quindi non possono essere aggiunte.",
     "oneToOneNoEditAccessToRelatedRecord": "Il campo \"%2$s\" è una relazione uno a uno, quindi viene memorizzato nel record correlato. Per salvare è necessario aggiornare anche il record \"%1$s\" selezionato, ma non hai i permessi di modifica su di esso.",
     "oneToOneNoEditAccessToPreviousRelatedRecord": "Il campo \"%2$s\" è una relazione uno a uno, quindi viene memorizzato nel record correlato. Per svuotarlo è necessario aggiornare il record \"%1$s\" precedentemente correlato, ma non hai i permessi di modifica su di esso.",

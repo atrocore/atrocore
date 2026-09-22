@@ -75,11 +75,6 @@ Espo.define('views/main', 'view', function (Dep) {
 
             this.updateLastUrl();
 
-            $(document).on('click', '.show-hidden', function () {
-                let message = $(this).parent().find('textarea.hidden').val();
-                Espo.Ui.notify(message, 'info', 1000 * 60 * 60, true);
-            });
-
             window.languageObservableViews = new Map();
         },
 

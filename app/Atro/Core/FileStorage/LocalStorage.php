@@ -16,6 +16,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\FolderPathGenerator;
 use Atro\Core\Utils\IdGenerator;
@@ -582,7 +583,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             try {
                 $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
                 $xattr->set($folderData['_dirName'], 'atroId', $entity->get('id'));
-            } catch (NotUnique $e) {
+            } catch (UniqueConstraintViolationException|NotUnique $e) {
                 $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
                     ->where([
                         'parentId'   => $folderData['parentId'],
@@ -775,7 +776,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     {
         try {
             $this->getEntityManager()->saveEntity($file, ['scanning' => true]);
-        } catch (NotUnique $e) {
+        } catch (UniqueConstraintViolationException|NotUnique $e) {
             $parts = explode('.', $file->get('name'));
             $ext   = array_pop($parts);
             $from  = $this->getLocalPath($file);

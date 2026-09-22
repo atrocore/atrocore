@@ -16,6 +16,7 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotUnique;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -70,7 +71,7 @@ class SelectionItem extends Base
     {
         try {
             return parent::save($entity, $options);
-        } catch (NotUnique $e) {
+        } catch (UniqueConstraintViolationException|NotUnique $e) {
             throw new NotUnique("Selection record already exists");
         }
     }

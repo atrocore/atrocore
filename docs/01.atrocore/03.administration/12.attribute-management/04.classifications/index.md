@@ -27,12 +27,12 @@ Classifications can be activated or deactivated.
 
 - **Active** — Whether the Classification is enabled and applied to records
 - **Name** — Display name; supports multiple languages
-- **Entity** — The entity this Classification applies to. For [Listings](../../../../05.pim/14.listing/index.md) a **Channel** field will also appear. Cannot be changed after creation.
-- **Code** — Unique identifier consisting of lowercase letters, digits, and underscores
+- **Type** (required) — The kind of Classification. `General` is the only type in a standard installation; the [ETIM Classification](https://store.atrocore.com/en/etim-classification/20132) extension adds the `ETIM` type along with the **Release** field, which selects the ETIM release the Classification follows
+- **Entity** (required) — The entity this Classification applies to. For [Listings](../../../../05.pim/14.listing/index.md) a **Channel** field will also appear. Cannot be changed after creation.
 - **Description** — Optional description of the Classification's purpose; supports multiple languages
 - **Synonyms** — Optional alternative names; supports multiple languages
 
-> Name Classifications clearly so it is obvious which attributes they contain. If names are similar, use the **Description** field to clarify the difference.
+> Name Classifications clearly so it is obvious which attributes they contain. If names are similar, use the **Description** and **Synonyms** fields to clarify the difference.
 
 An existing Classification can be **duplicated** to use as a starting point — all attributes are copied. Unnecessary attributes can then be removed and new ones added.
 

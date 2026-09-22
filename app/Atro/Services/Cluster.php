@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
@@ -277,7 +278,7 @@ class Cluster extends Base
             $clusterItem->set('entityId', $goldenRecord->get('id'));
             $clusterItem->set('entityName', $goldenRecord->getEntityName());
             $this->getEntityManager()->saveEntity($clusterItem);
-        } catch (NotUnique $e) {
+        } catch (UniqueConstraintViolationException|NotUnique $e) {
         }
 
         return $goldenRecord;

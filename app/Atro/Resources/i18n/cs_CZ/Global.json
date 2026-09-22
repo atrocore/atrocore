@@ -1197,6 +1197,7 @@
     "dontMatchToPattern": "Hodnota pole \"{field}\" neodpovídá vzoru \"{pattern}\".",
     "notUniqueRecordField": "Záznam nelze uložit, záznam s takovým '%s' již existuje.",
     "notUniqueValue": "Záznam nelze vytvořit/aktualizovat z důvodu omezení databáze.",
+    "notUniqueValueFields": "Záznam nelze uložit: již existuje jiný záznam se stejnými hodnotami: %s.",
     "notUniqueCreatedValue": "Takové vztahy již existují, a proto je nelze přidat.",
     "oneToOneNoEditAccessToRelatedRecord": "Pole \"%2$s\" je vazba jeden na jednoho, proto je uloženo v souvisejícím záznamu. Uložení vyžaduje také úpravu vybraného záznamu \"%1$s\", ke kterému nemáte oprávnění k úpravám.",
     "oneToOneNoEditAccessToPreviousRelatedRecord": "Pole \"%2$s\" je vazba jeden na jednoho, proto je uloženo v souvisejícím záznamu. Jeho vymazání vyžaduje úpravu dříve souvisejícího záznamu \"%1$s\", ke kterému nemáte oprávnění k úpravám.",
