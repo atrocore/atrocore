@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Atro\DTO;
+namespace Atro\DTOs;
 
 class MasterRecordPayloadDTO
 {

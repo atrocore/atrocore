@@ -18,7 +18,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
-use Atro\DTO\MasterRecordPayloadDTO;
+use Atro\DTOs\MasterRecordPayloadDTO;
 use Atro\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
