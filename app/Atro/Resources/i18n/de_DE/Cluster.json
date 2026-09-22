@@ -27,7 +27,9 @@
     "purge": "Sind Sie sicher, dass Sie diesen Cluster bereinigen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "exceptions": {
-    "cannotMergeWithoutGoldenRecord": "Eine Zusammenführung ohne Golden Record ist nicht möglich"
+    "cannotMergeWithoutGoldenRecord": "Eine Zusammenführung ohne Golden Record ist nicht möglich",
+    "noClusterItemsToPreview": "Es gibt nichts zur Vorschau: Der Cluster hat keine Contributor-Einträge",
+    "cannotPreviewInvalidCluster": "Für einen ungültigen Cluster kann die Konsolidierung nicht in der Vorschau angezeigt werden"
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "Unbestätigte Einträge können nicht zur Zusammenführung hinzugefügt werden"
@@ -40,7 +42,11 @@
     "masterRecords": "master-Datensätze",
     "confirmed": "Bestätigt",
     "unconfirmed": "Unbestätigt",
-    "rejected": "Abgelehnt"
+    "rejected": "Abgelehnt",
+    "consolidationPreview": "Konsolidierungsvorschau",
+    "consolidationPreviewHint": "Zeigt, wie der Golden Record nach der Konsolidierung aussehen würde. Es wird nichts gespeichert.",
+    "noConsolidationConfigured": "Für diese Entität ist keine Konsolidierung konfiguriert",
+    "discard": "Verwerfen"
   },
   "streamMessages": {
     "clusterLinked": "{user} hat {relatedEntity} mit diesem Cluster verknüpft",

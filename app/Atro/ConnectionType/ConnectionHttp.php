@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ConnectionType;
 
-use Atro\DTO\HttpResponseDTO;
+use Atro\DTOs\HttpResponseDTO;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Config;
 

@@ -23,7 +23,9 @@
     }
   },
   "exceptions": {
-    "cannotDelete": "Можна видаляти лише порожні кластери"
+    "cannotDelete": "Можна видаляти лише порожні кластери",
+    "noClusterItemsToPreview": "Немає чого показати: у кластері немає contributor-записів",
+    "cannotPreviewInvalidCluster": "Неможливо показати прев'ю консолідації для невалідного кластера"
   },
   "labels": {
     "contributorRecord": "contributor-запис",
@@ -33,7 +35,11 @@
     "masterRecords": "майстер-записи",
     "confirmed": "Підтверджено",
     "unconfirmed": "Непідтверджено",
-    "rejected": "Відхилено"
+    "rejected": "Відхилено",
+    "consolidationPreview": "Прев’ю консолідації",
+    "consolidationPreviewHint": "Показує, яким стане golden record після консолідації. Нічого не зберігається.",
+    "noConsolidationConfigured": "Для цієї сутності не налаштовано консолідацію",
+    "discard": "Скасувати зміни"
   },
   "streamMessages": {
     "clusterLinked": "{user} пов'язав {relatedEntity} з цим кластером",

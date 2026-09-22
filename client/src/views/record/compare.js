@@ -788,7 +788,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
 
                 if (
                     (current.get(fieldId) && current.get(fieldId).length === 0)
-                    && others.map(other => (other.get(fieldId) && other.get(fieldId).length === 0)).reduce((prev, curr) => prev && curr)) {
+                    && others.map(other => (other.get(fieldId) && other.get(fieldId).length === 0)).reduce((prev, curr) => prev && curr, true)) {
                     return true;
                 }
 

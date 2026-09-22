@@ -374,6 +374,13 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
             return true;
         },
 
+        canCompare() {
+            const models = this.selectionViewMode === 'standard' ? this.collection?.models : this.selectionItemModels;
+
+            // a cluster of one item is still worth comparing: the consolidation preview runs on it
+            return (models || []).length > 0;
+        },
+
         canMerge() {
             if (['empty', 'invalid'].includes(this.model.get('state'))) {
                 return false;
