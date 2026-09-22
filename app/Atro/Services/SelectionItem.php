@@ -15,6 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\NotUnique;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -172,7 +173,7 @@ class SelectionItem extends Base
 
         try {
             $this->getEntityManager()->saveEntity($record);
-        } catch (NotUnique $e) {
+        } catch (UniqueConstraintViolationException|NotUnique $e) {
         }
 
         return true;

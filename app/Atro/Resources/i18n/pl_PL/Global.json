@@ -1243,6 +1243,7 @@
     "editedByAnotherUser": "Zestaw danych [%s] został zmieniony w międzyczasie. Możesz <a href=\"javascript:\" onclick=\"location.reload();\">odświeżyć stronę</a>, aby zobaczyć nowe wartości, wrócić do edycji, naciskając „Anuluj” lub nadpisać dane, naciskając „Zastosuj”. Czy chcesz nadpisać dane?",
     "dontMatchToPattern": "Wartość pola \"{field}\" nie odpowiada wzorowi \"{pattern}\".",
     "notUniqueValue": "Rekord nie może zostać utworzony/zaktualizowany z powodu ograniczeń bazy danych.",
+    "notUniqueValueFields": "Nie można zapisać rekordu: istnieje już inny rekord o tych samych wartościach: %s.",
     "optionIsDisabled": "Element '%s' jest wyłączony dla pola '%s'.",
     "noSuchAssociation": "Walidacja nie powiodła się. Takie stowarzyszenie nie istnieje.",
     "notUniqueRecordField": "Rekord nie może zostać zapisany, rekord z takim '%s' już istnieje.",

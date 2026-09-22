@@ -18,7 +18,7 @@ By default, a product can be assigned to multiple Classifications, which is usef
 
 Before creating a new Classification, check whether a suitable one already exists to avoid duplicates. Name each Classification clearly so its attribute set is obvious from the name alone — "Shoes", "Laptops", "Fresh Produce" are better than generic names like "Category A".
 
-When two Classifications have similar names, use the **Description** field to explain the difference and clarify which products each one covers. The **Code** is always unique and can serve as an unambiguous identifier when names are too similar to distinguish at a glance.
+When two Classifications have similar names, use the **Description** and **Synonyms** fields to explain the difference and clarify which products each one covers.
 
 A common pattern is to start from an existing Classification and duplicate it when a product family needs a slightly different attribute set. For example, if a new clothing collection introduces a "Style" attribute that older collections did not have, you can duplicate the "Clothing" Classification, name it "Clothing New", and add "Style" as a required attribute — without affecting the original Classification or the products already assigned to it.
 
