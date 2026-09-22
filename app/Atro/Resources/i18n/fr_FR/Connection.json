@@ -45,7 +45,9 @@
     "headers": "En-têtes",
     "verifySsl": "Vérifier SSL",
     "smtpOauthScope": "Champ d'application Oauth",
-    "server": "Serveur"
+    "server": "Serveur",
+    "apiKeyName": "Nom de la clé d'API",
+    "apiKeyValue": "Clé d'API"
   },
   "labels": {
     "connectionSuccess": "La connexion est établie avec succès",
@@ -72,7 +74,8 @@
     "smtp": "SMTP",
     "tokenAuthApi": "API d'authentification par jeton",
     "pdoSql": "PDO SQL",
-    "vertica": "Vertica DB"
+    "vertica": "Vertica DB",
+    "apiKey": "Clé d'API"
   },
   "exceptions": {
     "sqlsrvMissing": "L'extension PHP MSSQL n'est pas installée.",
@@ -80,7 +83,9 @@
     "connectionFailed": "La connexion n'a pas pu être établie : %s",
     "noSuchType": "Aucun type de connexion de ce type.",
     "notificationConnectionCannotBeDeleted": "Cette connexion est utilisée pour les notifications par e‑mail et ne peut pas être supprimée.",
-    "onlySmtpConnectionsSupported": "L'envoi d'e-mails de test n'est pris en charge que pour les connexions SMTP."
+    "onlySmtpConnectionsSupported": "L'envoi d'e-mails de test n'est pris en charge que pour les connexions SMTP.",
+    "apiKeyValueIsEmpty": "La clé d'API est vide.",
+    "apiKeyTestNotSupported": "Les connexions de ce type ne peuvent pas être testées."
   },
   "options": {
     "smtpAuthType": {

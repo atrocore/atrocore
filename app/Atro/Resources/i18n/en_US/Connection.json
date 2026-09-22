@@ -45,7 +45,9 @@
     "dsn": "Dsn",
     "server": "Server",
     "headers": "Headers",
-    "verifySsl": "Verify SSL"
+    "verifySsl": "Verify SSL",
+    "apiKeyName": "API Key Name",
+    "apiKeyValue": "API Key"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
@@ -73,7 +75,8 @@
     "smtp": "SMTP",
     "pdoSql": "PDO SQL",
     "vertica": "Vertica DB",
-    "tokenAuthApi": "Token Auth API"
+    "tokenAuthApi": "Token Auth API",
+    "apiKey": "API Key"
   },
   "options": {
     "smtpAuthType": {
@@ -87,6 +90,8 @@
     "connectionFailed": "Connection could not be established: %s",
     "noSuchType": "No such connection type.",
     "notificationConnectionCannotBeDeleted": "This connection is used for E-Mail Notifications and cannot be deleted",
-    "onlySmtpConnectionsSupported": "Sending test emails is only supported for SMTP connections."
+    "onlySmtpConnectionsSupported": "Sending test emails is only supported for SMTP connections.",
+    "apiKeyValueIsEmpty": "API Key is empty.",
+    "apiKeyTestNotSupported": "Connections of this type cannot be tested."
   }
 }

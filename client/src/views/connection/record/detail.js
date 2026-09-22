@@ -22,6 +22,10 @@ Espo.define('views/connection/record/detail', 'views/record/detail', function (D
                 }
             ];
 
+            if (this.model.get('type') === 'apiKey') {
+                this.additionalButtons = [];
+            }
+
             if (this.model.get('type') === 'smtp') {
                 this.additionalButtons = [
                     {
