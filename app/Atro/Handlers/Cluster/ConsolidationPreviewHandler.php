@@ -85,10 +85,7 @@ class ConsolidationPreviewHandler extends AbstractHandler
 
         $data = $this->getRequestBody($request);
 
-        // the editor in the sidebar previews what is typed, which is not what is stored yet
-        $scriptOverride = (string)$data->consolidationScript;
-
-        $preview = $this->getRecordService('Cluster')->buildMasterRecordPreview($id, $scriptOverride);
+        $preview = $this->getRecordService('Cluster')->buildMasterRecordPreview($id, (string)$data->consolidationScript);
 
         return new JsonResponse($preview->toArray());
     }
