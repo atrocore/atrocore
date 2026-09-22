@@ -2,7 +2,7 @@
 
 namespace Atro\ConnectionType;
 
-use Atro\DTO\HttpResponseDTO;
+use Atro\DTOs\HttpResponseDTO;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 

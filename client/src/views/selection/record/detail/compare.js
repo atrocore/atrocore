@@ -65,7 +65,7 @@ Espo.define('views/selection/record/detail/compare', [
                 });
             });
 
-            this.getModels().forEach(model => {
+            this.getModels().filter(model => !!model.item).forEach(model => {
                 this.createView(model.id + 'Action', this.recordActionView, {
                     el: this.options.el + ` [data-id="${model.id}"] .inline-actions`,
                     model: model.item,
@@ -85,7 +85,7 @@ Espo.define('views/selection/record/detail/compare', [
         },
 
         prepareAndExecuteAction(data, callback) {
-            let model = this.getModels().find(m => m.item.id === data.id);
+            let model = this.getModels().find(m => m.item?.id === data.id);
             if (!model) {
                 return;
             }
@@ -94,7 +94,7 @@ Espo.define('views/selection/record/detail/compare', [
             self.model = this.selectionModel;
             self.link = this.relationName;
             self.getModel = () => {
-                let model = this.getModels().find(m => m.item.id === data.id);
+                let model = this.getModels().find(m => m.item?.id === data.id);
                 if (!model) {
                     return;
                 }
