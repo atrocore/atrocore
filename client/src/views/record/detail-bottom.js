@@ -90,9 +90,15 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 this.collapseBottomPanel($(e.currentTarget).data('panel'));
             },
             'show.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
+                if (e.target !== e.currentTarget || e.namespace !== 'bs.collapse') {
+                    return;
+                }
                 this.afterPanelCollapsed($(e.currentTarget));
             },
             'hide.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
+                if (e.target !== e.currentTarget || e.namespace !== 'bs.collapse') {
+                    return;
+                }
                 this.afterPanelCollapsed($(e.currentTarget), true);
             },
             'click [data-action="closePanel"]': function (e) {
