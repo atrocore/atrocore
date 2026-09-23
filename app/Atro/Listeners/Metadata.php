@@ -2691,6 +2691,18 @@ class Metadata extends AbstractMetadataListener
                 unset($data['scopes'][$scope]['module']);
             }
 
+            if (array_key_exists('isDataPipelineSource', $scopeDefs)) {
+                $data['scopes'][$scope]['isDataPipelineSource'] = $scopeDefs['isDataPipelineSource'];
+            } else {
+                unset($data['scopes'][$scope]['isDataPipelineSource']);
+            }
+
+            if (array_key_exists('isDataPipelineTarget', $scopeDefs)) {
+                $data['scopes'][$scope]['isDataPipelineTarget'] = $scopeDefs['isDataPipelineTarget'];
+            } else {
+                unset($data['scopes'][$scope]['isDataPipelineTarget']);
+            }
+
             $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
                 'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null,
             ]);
