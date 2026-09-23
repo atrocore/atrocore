@@ -18,8 +18,6 @@ The Hierarchy Management panel provides several options to control how inheritan
 
 ### Core Hierarchy Settings
 
-- **Disable Hierarchy** - Makes a hierarchical entity behave like a basic entity by changing the layout and disabling inheritance functionality. Existing parent-child relationships are preserved but not displayed or used for inheritance.
-
 - **Multiple Parents** - Allows child records to have multiple parent records. By default, each child can only have one parent. When multiple parents are enabled, inheritance is disabled as the system cannot determine which parent's values to inherit.
 
 > Multiple parent relationships should be used sparingly and only in exceptional cases. Consider carefully whether such complex structures are necessary, as they can significantly complicate data management and user experience.
