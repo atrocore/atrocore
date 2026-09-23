@@ -45,7 +45,9 @@
     "additionalParameters": "Zusätzliche Parameter",
     "atrocoreUrl": "URL",
     "smtpServer": "Server",
-    "smtpPort": "Port"
+    "smtpPort": "Port",
+    "apiKeyName": "API-Schlüssel-Name",
+    "apiKeyValue": "API-Schlüssel"
   },
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
@@ -72,7 +74,8 @@
     "orders": "Bestellungen",
     "returns": "Retouren",
     "products": "Produkte",
-    "price-reduction": "Preisreduzierung"
+    "price-reduction": "Preisreduzierung",
+    "apiKey": "API-Schlüssel"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",
@@ -80,7 +83,9 @@
     "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s",
     "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden.",
     "notificationConnectionCannotBeDeleted": "Diese Verbindung wird für E-Mail-Benachrichtigungen verwendet und kann nicht gelöscht werden",
-    "onlySmtpConnectionsSupported": "Das Senden von Test-E-Mails wird nur für SMTP-Verbindungen unterstützt."
+    "onlySmtpConnectionsSupported": "Das Senden von Test-E-Mails wird nur für SMTP-Verbindungen unterstützt.",
+    "apiKeyValueIsEmpty": "API-Schlüssel ist leer.",
+    "apiKeyTestNotSupported": "Verbindungen dieses Typs können nicht getestet werden."
   },
   "options": {
     "smtpAuthType": {

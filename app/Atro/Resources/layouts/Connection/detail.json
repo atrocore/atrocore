@@ -135,6 +135,14 @@
       ],
       [
         {
+          "name": "apiKeyName"
+        },
+        {
+          "name": "apiKeyValue"
+        }
+      ],
+      [
+        {
           "name": "smtpServer"
         },
         {

@@ -17,7 +17,8 @@
         "cookie",
         "smtp",
         "vertica",
-        "tokenAuthApi"
+        "tokenAuthApi",
+        "apiKey"
       ],
       "default": "atrocore"
     },
@@ -1349,6 +1350,68 @@
         }
       }
     },
+    "apiKeyName": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "default": "X-API-Key",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "apiKey"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "apiKey"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "apiKeyValue": {
+      "type": "password",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "apiKey"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "apiKey"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "verifySsl": {
       "type": "bool",
       "notStorable": true,
@@ -1366,7 +1429,8 @@
                 "oauth1",
                 "otto",
                 "cookie",
-                "tokenAuthApi"
+                "tokenAuthApi",
+                "apiKey"
               ]
             }
           ]

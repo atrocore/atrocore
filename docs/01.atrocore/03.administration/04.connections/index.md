@@ -119,11 +119,22 @@ Secure File Transfer Protocol connections that provide encrypted file transfer c
 
 ### Authentication & Authorization
 
+#### API Key
+
+Authentication with a static API key that is sent as an HTTP header with every request. Use this type when the API provider issues a permanent key that does not need to be exchanged for a token. If the provider issues a short-lived token in return for credentials, use [Token Auth API](#token-auth-api) instead.
+
+![API Key](./_assets/api-key.png){.medium}
+
+- **API Key Name** (required): The name of the HTTP header that carries the key (defaults to "X-API-Key")
+- **API Key** (required): The key itself, stored encrypted
+
+The "Test Connection" button is not available for this connection type, because a static key alone does not define an endpoint to call.
+
 #### Token Auth API
 
 Token-based API authentication that obtains a session token by POSTing credentials to a login endpoint, then uses the token in subsequent request headers. The payload and headers are defined as [Twig](../../../10.developer-guide/80.twig-tutorial/index.md) templates.
 
-![Token Auth API](./_assets/token-auth-api.png){medium}
+![Token Auth API](./_assets/token-auth-api.png){.medium}
 
 - **Login URL** (required): The API endpoint URL where credentials are posted to obtain the token
 - **Password**: The password used in the payload template (stored encrypted)
