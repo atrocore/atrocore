@@ -42,7 +42,7 @@ class EntityField extends ReferenceData
 
     protected function getEntityById($id)
     {
-        $parts = explode("_", $id);
+        $parts = explode("_", $id, 2);
         if (count($parts) !== 2) {
             return null;
         }
