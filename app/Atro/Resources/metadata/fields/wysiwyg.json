@@ -79,6 +79,7 @@
       "tooltip": true
     }
   ],
+  "notSortable": true,
   "filter": true,
   "auditable": true,
   "qbFilterType": "string",

@@ -1,7 +1,8 @@
 {
   "relationshipPanels": {
     "variables": {
-      "checkboxes": false
+      "checkboxes": false,
+      "disableSorting": true
     }
   }
 }
