@@ -14,7 +14,6 @@ The entity of the Hierarchy type differs from the Basic one in that it allows yo
 
 ![Hierarchy management](./_assets/hierarchy-management.png)
 
-- **Disable Hierarchy** - converts a hierarchical entity to a basic entity with no record inheritance
 - **Multiple Parents** - allows to link multiple parents to one child record
 - **Drag & Drop** - this option activates hierarchy sort order, so no other sorting is possible in hierarchial navigation
 - **Field Value Inheritance** - if this checkbox is selected, child records inherit field values from parent records
