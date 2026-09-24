@@ -425,3 +425,4 @@ Standard [record management actions](../../01.atrocore/08.record-management/inde
 - **Copy Configuration** – copies the feed configuration as JSON for API-based recreation. See [Copying Feed Configurations](../11.copying-feed-configurations/index.md).
 
 > **Duplicate as Import** and **Copy Configuration** actions are available exclusively in the [detail view](../../01.atrocore/04.understanding-ui/index.md#detail-view) of the export feed.
+1
