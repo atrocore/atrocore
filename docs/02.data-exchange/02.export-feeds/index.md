@@ -164,7 +164,7 @@ Each header row has two fields:
     - **Custom Name** – a fixed literal value entered in **Column Name**. Not available for `Add All Attributes` items, since a single label can't apply to every expanded attribute column.
 - **Column Name** – editable only when **Column Label** is `Custom Name`. Supports referencing related-entity fields as `{{fieldName}}` when the **Separate** option is enabled (see [Relation Fields](#relation-fields)).
 
-![Multiple Header Rows configuration](_assets/Multiple-Header-Rows-configuration.png){.large}
+![multiple-header-rows-configuration](_assets/multiple-header-rows-configuration.png){.large}
 
 For **Fixed Value** and **Script** items, **Column Label** is locked to `Custom Name`.
 
