@@ -1,0 +1,38 @@
+{
+  "followers": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\Followers"
+  },
+  "association": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\Association"
+  },
+  "masterRecordLink": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\MasterRecordLink"
+  },
+  "linkToRelationEntity": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\LinkToRelationEntity"
+  },
+  "rangeField": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\RangeField"
+  },
+  "combinedField": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\CombinedField"
+  },
+  "labelKey": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\LabelKey"
+  },
+  "thumbnailUrl": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\ThumbnailUrl"
+  },
+  "linkField": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\LinkField"
+  },
+  "nameField": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\NameField"
+  },
+  "multilangField": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\MultilangField"
+  },
+  "entityFieldScriptPreview": {
+    "className": "\\Atro\\Core\\LanguageResolvers\\EntityFieldScriptPreview"
+  }
+}

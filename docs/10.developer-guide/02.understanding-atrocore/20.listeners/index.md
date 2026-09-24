@@ -23,7 +23,7 @@ YourModule/
 ├── app/
     ├── Listeners/
     │   ├── Metadata.php          # Modify metadata
-    │   ├── Language.php          # Modify translations
+    │   ├── Language.php          # Modify translations (deprecated)
     │   ├── Layout.php            # Modify Product entity layouts
     │   ├── ProductLayout.php     # Modify Product entity layouts
     │   ├── ProductEntity.php     # Listen to Product entity lifecycle events
@@ -88,12 +88,9 @@ Check out a production implementation: [Metadata.php in AtroPim module](https://
 
 **File:** `Listeners/Language.php`
 
-Language listeners allow you to modify localization data at runtime, just before the translations are served via the API. This is useful for:
-- Adding or removing translations conditionally
-- Dynamic translation generation
-- Multi-tenant localization scenarios
-
-### Example Implementation
+!! Deprecated. Write a [language resolver](../27.translations/index.md#dynamic-translations-language-resolvers)
+instead. The hook still runs so existing modules keep working, but it shapes only the translation tree served to
+the frontend – `translate()` in PHP never sees what it produces.
 
 ```php
 <?php
@@ -108,16 +105,18 @@ class Language extends AbstractListener
     {
         $data = $event->getArgument('data');
 
-        // Example: Add dynamic translations
-        if ($this->someCondition()) {
-            $data['en_US']['Product']['fields']['name'] = 'Full Name'
+        foreach ($data as $language => $rows) {
+            $data[$language]['Product']['fields']['name'] = 'Full Name';
         }
 
-        // Update the event with modified translations
         $event->setArgument('data', $data);
     }
 }
 ```
+
+The event carries one language at a time – `[<current language> => <tree>]` – so iterate it as above rather than
+indexing a fixed language code. What the hook can and cannot reach is described in
+[Language Listeners (Deprecated)](../27.translations/index.md#language-listeners-deprecated).
 
 ---
 
