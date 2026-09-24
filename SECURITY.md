@@ -91,7 +91,7 @@
 
 5.1.2. Report vulnerabilities privately through GitHub, using **"Report a vulnerability"** in the **Security** tab of the repository concerned. This is our preferred channel: your report stays confidential and is linked directly to the advisory process.
 
-5.1.3. Alternatively, report by e-mail to **security@atrocore.com** with the subject line **"Vulnerability Report – [brief description]"**.
+5.1.3. Alternatively, report by e-mail to **security@OUR-COMPANY-NAME.com** with the subject line **"Vulnerability Report – [brief description]"**.
 
 5.1.4. Reports may be submitted in English or German.
 
