@@ -14,7 +14,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
 
-class V2Dot3Dot24 extends Base
+class V2Dot4Dot4 extends Base
 {
     protected const array ALLOWED_EXTENSIONS = [
         'jpg',
