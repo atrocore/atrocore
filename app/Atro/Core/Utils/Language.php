@@ -14,6 +14,8 @@ namespace Atro\Core\Utils;
 use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
+use Atro\Core\LanguageResolvers\AbstractLanguageResolver;
+use Atro\DTOs\TranslationKeyDTO;
 use Atro\Repositories\Translation as TranslationRepository;
 use Atro\Services\AbstractService;
 use Espo\Core\Utils\File\Unifier;
@@ -33,6 +35,10 @@ class Language
 
     private array $translateCache = [];
     private ?array $fieldToLanguageCode = null;
+    private ?array $resolvers = null;
+    private ?array $storedTranslations = null;
+    private ?array $fullTranslations = null;
+    private array $resolvingKeys = [];
 
     public function __construct(Container $container, ?string $localeId = null)
     {
@@ -80,31 +86,40 @@ class Language
 
     public function getLanguage(): string
     {
+        if (!empty($this->language)) {
+            return $this->language;
+        }
+
         return $this->getConfig()->get('locales')[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+    }
+
+    public function getLocaleId(): ?string
+    {
+        return $this->localeId;
     }
 
     public function setLanguage(string $languageCode): void
     {
         $this->language = $languageCode;
+        $this->storedTranslations = null;
     }
 
     public function setLocale(?string $localeId): void
     {
         $this->localeId = $localeId;
+        $this->storedTranslations = null;
     }
 
     public function translate(string $name, string $category = 'labels', string $scope = 'Global'): string
     {
         if (!isset($this->translateCache[$this->localeId][$scope][$category][$name])) {
-            $translation = $this->getRepository()->getTranslation($scope, $category, $name);
-            if ($translation === null) {
-                if ($scope !== 'Global') {
-                    return $this->translate($name, $category, 'Global');
-                }
-                return $name;
+            $value = $this->resolveKey(new TranslationKeyDTO($scope, $category, $name));
+
+            if ($value === null && $scope !== 'Global') {
+                $value = $this->translate($name, $category, 'Global');
             }
 
-            $this->translateCache[$this->localeId][$scope][$category][$name] = $this->resolveTranslation($translation) ?? $name;
+            $this->translateCache[$this->localeId][$scope][$category][$name] = $value ?? $name;
         }
 
         return $this->translateCache[$this->localeId][$scope][$category][$name];
@@ -113,15 +128,128 @@ class Language
     public function translateOption(string $value, string $field, string $scope = 'Global'): string
     {
         if (!isset($this->translateCache[$this->localeId][$scope]['options'][$field][$value])) {
-            $translation = $this->getRepository()->getOptionTranslation($scope, $field, $value);
-            if ($translation === null) {
-                return $value;
-            }
+            $resolved = $this->resolveKey(new TranslationKeyDTO($scope, 'options', $field, $value));
 
-            $this->translateCache[$this->localeId][$scope]['options'][$field][$value] = $this->resolveTranslation($translation) ?? $value;
+            $this->translateCache[$this->localeId][$scope]['options'][$field][$value] = $resolved ?? $value;
         }
 
         return $this->translateCache[$this->localeId][$scope]['options'][$field][$value];
+    }
+
+    public function findTranslation(TranslationKeyDTO $key, ?AbstractLanguageResolver $except = null): ?string
+    {
+        return $this->resolveKey($key, $except);
+    }
+
+    public function getStoredTranslation(TranslationKeyDTO $key): ?string
+    {
+        if ($this->storedTranslations !== null) {
+            return $this->readFromTree($this->storedTranslations, $key);
+        }
+
+        $translation = $this->findStoredEntity($key);
+
+        return $translation === null ? null : $this->resolveTranslation($translation);
+    }
+
+    public function getStoredTranslationInCurrentLanguage(TranslationKeyDTO $key): ?string
+    {
+        if ($this->fullTranslations !== null) {
+            return $this->readFromTree($this->getTranslationsInCurrentLanguage(), $key);
+        }
+
+        $translation = $this->findStoredEntity($key);
+
+        return $translation?->get(self::languageToField($this->getLanguage()));
+    }
+
+    private function readFromTree(array $tree, TranslationKeyDTO $key): ?string
+    {
+        $value = $key->option === null
+            ? ($tree[$key->scope][$key->category][$key->name] ?? null)
+            : ($tree[$key->scope]['options'][$key->name][$key->option] ?? null);
+
+        return is_string($value) ? $value : null;
+    }
+
+    private function findStoredEntity(TranslationKeyDTO $key): ?Entity
+    {
+        return $key->option === null
+            ? $this->getRepository()->getTranslation($key->scope, $key->category, $key->name)
+            : $this->getRepository()->getOptionTranslation($key->scope, $key->name, $key->option);
+    }
+
+    /**
+     * @return AbstractLanguageResolver[]
+     */
+    public function getResolvers(): array
+    {
+        if ($this->resolvers === null) {
+            $this->resolvers = [];
+
+            if ($this->getConfig()->get('isInstalled', false)) {
+                foreach ($this->getMetadata()->get(['app', 'languageResolvers'], []) as $resolverDefs) {
+                    if (empty($resolverDefs['className']) || !class_exists($resolverDefs['className'])) {
+                        continue;
+                    }
+                    $this->resolvers[] = new $resolverDefs['className']($this->container, $this);
+                }
+            }
+        }
+
+        return $this->resolvers;
+    }
+
+    private function resolveKey(TranslationKeyDTO $key, ?AbstractLanguageResolver $except = null): ?string
+    {
+        $code = $key->getCode() . ($except === null ? '' : '|' . get_class($except));
+
+        if (isset($this->resolvingKeys[$code])) {
+            $GLOBALS['log']->warning("Language: cyclic translation resolving detected for '$code'.");
+
+            return $this->getStoredTranslation($key);
+        }
+
+        $this->resolvingKeys[$code] = true;
+
+        try {
+            foreach ($this->getResolvers() as $resolver) {
+                if ($resolver === $except || !$resolver->decoratesStoredTranslation() || !$resolver->supports($key)) {
+                    continue;
+                }
+                $value = $resolver->resolve($key);
+                if ($value !== null) {
+                    return $value;
+                }
+            }
+
+            $exact = $this->getStoredTranslationInCurrentLanguage($key);
+            if ($exact !== null) {
+                return $exact;
+            }
+
+            $inheritedScope = $this->getInheritedScope($key->scope);
+            if ($inheritedScope !== null) {
+                $value = $this->resolveKey($this->keyForScope($key, $inheritedScope));
+                if ($value !== null) {
+                    return $value;
+                }
+            }
+
+            foreach ($this->getResolvers() as $resolver) {
+                if ($resolver === $except || !!$resolver->decoratesStoredTranslation() || !$resolver->supports($key)) {
+                    continue;
+                }
+                $value = $resolver->resolve($key);
+                if ($value !== null) {
+                    return $value;
+                }
+            }
+
+            return $this->getStoredTranslation($key);
+        } finally {
+            unset($this->resolvingKeys[$code]);
+        }
     }
 
     public function refreshTranslations(): void
@@ -209,11 +337,186 @@ class Language
 
     public function getAll(): array
     {
-        $installed = $this->getConfig()->get('isInstalled', false);
+        $result = $this->getStoredTranslations();
+
+        foreach ($this->collectKeys() as $key) {
+            $value = $this->findTranslation($key);
+            if ($value === null) {
+                continue;
+            }
+
+            if ($key->option === null) {
+                $result[$key->scope][$key->category][$key->name] = $value;
+            } else {
+                $result[$key->scope]['options'][$key->name][$key->option] = $value;
+            }
+        }
+
+        return $this->applyLanguageListeners($result);
+    }
+
+    /**
+     * @deprecated use a language resolver instead
+     */
+    private function applyLanguageListeners(array $result): array
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return $result;
+        }
+
+        $language = $this->getLanguage();
+
+        $data = $this->getEventManager()
+            ->dispatch('Language', 'modify', new Event(['data' => [$language => $result]]))
+            ->getArgument('data');
+
+        return $data[$language] ?? $result;
+    }
+
+    /**
+     * @return TranslationKeyDTO[]
+     */
+    private function collectKeys(): array
+    {
+        $keys = [];
+
+        foreach ($this->getResolvers() as $resolver) {
+            foreach ($resolver->getKeys() as $key) {
+                $keys[$key->getCode()] = $key;
+            }
+        }
+
+        foreach ($this->getStoredTranslations() as $scope => $categories) {
+            foreach ($categories as $category => $items) {
+                if (!is_array($items)) {
+                    continue;
+                }
+                foreach ($items as $name => $value) {
+                    if ($category === 'options' && is_array($value)) {
+                        foreach ($value as $option => $optionValue) {
+                            if (!is_string($optionValue)) {
+                                continue;
+                            }
+                            $stored = new TranslationKeyDTO($scope, 'options', (string)$name, (string)$option);
+                            $keys[$stored->getCode()] = $stored;
+                        }
+                        continue;
+                    }
+                    if (!is_string($value)) {
+                        continue;
+                    }
+                    $stored = new TranslationKeyDTO($scope, (string)$category, (string)$name);
+                    $keys[$stored->getCode()] = $stored;
+                }
+            }
+        }
+
+        $byScope = [];
+        foreach ($keys as $key) {
+            $byScope[$key->scope][] = $key;
+        }
+
+        foreach (array_keys($this->getMetadata()->get('scopes', [])) as $scope) {
+            $seen = [$scope => true];
+
+            for ($source = $this->getInheritedScope((string)$scope); $source !== null; $source = $this->getInheritedScope($source)) {
+                if (isset($seen[$source])) {
+                    break;
+                }
+                $seen[$source] = true;
+
+                foreach ($byScope[$source] ?? [] as $key) {
+                    $inherited = $this->keyForScope($key, (string)$scope);
+                    $keys[$inherited->getCode()] = $inherited;
+                }
+            }
+        }
+
+        return $keys;
+    }
+
+
+    private function getInheritedScope(string $scope): ?string
+    {
+        if ($scope === 'UserProfile') {
+            return 'User';
+        }
+
+        $scopeDefs = $this->getMetadata()->get(['scopes', $scope], []);
+        if (empty($scopeDefs['type'])) {
+            return null;
+        }
+
+        $source = $scopeDefs['primaryEntityId'] ?? $scopeDefs['derivativeForRelation'] ?? null;
+
+        return $source === $scope ? null : $source;
+    }
+
+    private function keyForScope(TranslationKeyDTO $key, string $scope): TranslationKeyDTO
+    {
+        return new TranslationKeyDTO($scope, $key->category, $key->name, $key->option);
+    }
+
+    public function getStoredTranslations(): array
+    {
+        if ($this->storedTranslations !== null) {
+            return $this->storedTranslations;
+        }
+
+        $fullData = $this->getFullTranslations();
+
+        $result = $fullData[self::DEFAULT_LANGUAGE] ?? [];
+
+        if (!empty($this->language)) {
+            if ($this->language !== self::DEFAULT_LANGUAGE) {
+                $result = Util::merge($result, $fullData[$this->language] ?? []);
+            }
+
+            return $this->storedTranslations = $result;
+        }
+
+        $locales = $this->getConfig()->get('locales') ?? [];
+
+        $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
+        if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
+            $result = Util::merge($result, $fullData[$fallbackLanguage] ?? []);
+        }
+
+        $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+
+        if (array_key_exists($language, $fullData)) {
+            $result = Util::merge($result, $fullData[$language]);
+        }
+
+        return $this->storedTranslations = $result;
+    }
+
+    public function preload(): void
+    {
+        $this->getStoredTranslations();
+    }
+
+    public function clearCache(): void
+    {
+        $this->translateCache = [];
+        $this->storedTranslations = null;
+        $this->fullTranslations = null;
+    }
+
+    public function getTranslationsInCurrentLanguage(): array
+    {
+        return $this->getFullTranslations()[$this->getLanguage()] ?? [];
+    }
+
+    private function getFullTranslations(): array
+    {
+        if ($this->fullTranslations !== null) {
+            return $this->fullTranslations;
+        }
 
         $data = [];
 
-        if ($installed) {
+        if ($this->getConfig()->get('isInstalled', false)) {
             $data = $this->getPreparedTranslations();
         }
 
@@ -237,55 +540,7 @@ class Language
             $fullData = Util::merge($fullData, $data['custom']);
         }
 
-        foreach ($fullData as $i18nName => $i18nData) {
-            if (!empty($i18nData['User']) && !empty($i18nData['Global']['labels']['Followed'])) {
-                foreach ($this->getMetadata()->get("entityDefs.User.links") as $link => $defs) {
-                    if (!empty($defs['foreign']) && $defs['foreign'] === 'followers' && !empty($i18nData['Global']['scopeNamesPlural'][$defs['entity']])) {
-                        $i18nData['User']['fields'][$link] = $i18nData['Global']['scopeNamesPlural'][$defs['entity']] . ' (' . $i18nData['Global']['labels']['Followed'] . ')';
-                    }
-                }
-                $i18nData['UserProfile'] = $i18nData['User'];
-            }
-            $fullData[$i18nName] = $i18nData;
-        }
-
-        if ($installed) {
-            $fullData = $this->getEventManager()
-                ->dispatch('Language', 'modify', new Event(['data' => $fullData]))
-                ->getArgument('data');
-        }
-
-        if (!empty($this->language)) {
-            $result = $fullData[self::DEFAULT_LANGUAGE] ?? [];
-            if ($this->language !== self::DEFAULT_LANGUAGE) {
-                $result = Util::merge($result, $fullData[$this->language] ?? []);
-            }
-            return $result;
-        }
-
-        $result = $fullData[self::DEFAULT_LANGUAGE] ?? [];
-
-        $locales = $this->getConfig()->get('locales') ?? [];
-
-        $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
-        if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
-            $result = Util::merge($result, $fullData[$fallbackLanguage] ?? []);
-        }
-
-        $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
-
-        if (!empty($locales[$this->localeId]['displayLabelsInContentLanguage'])) {
-            $key = $language . '_with_labels_in_content_language';
-            if (array_key_exists($key, $fullData)) {
-                $language = $key;
-            }
-        }
-
-        if (array_key_exists($language, $fullData)) {
-            $result = Util::merge($result, $fullData[$language]);
-        }
-
-        return $result;
+        return $this->fullTranslations = $fullData;
     }
 
     public static function getLocalizedFieldName(Container $container, string $scope, string $fieldName): string

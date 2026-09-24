@@ -28,18 +28,6 @@ use Espo\ORM\Entity as OrmEntity;
 class EntityField extends ReferenceData
 {
     protected ?array $boolFields = null;
-    protected ?array $translationsCache = null;
-
-    // TODO: remove after the dynamic translations mechanism is optimized
-    protected function translateLabel(string $label, string $category, string $scope = 'Global'): string
-    {
-        if ($this->translationsCache === null) {
-            $this->translationsCache = $this->getLanguage()->getAll();
-        }
-
-        return $this->translationsCache[$scope][$category][$label] ?? $this->translate($label, $category, $scope);
-    }
-
     protected function getEntityById($id)
     {
         $parts = explode("_", $id, 2);
@@ -113,7 +101,7 @@ class EntityField extends ReferenceData
             }
             if (!empty($linkDefs['entity'])) {
                 $fieldDefs['foreignEntityId']   = $linkDefs['entity'];
-                $fieldDefs['foreignEntityName'] = $this->translateLabel($linkDefs['entity'], 'scopeNames');
+                $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
             } else {
                 $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName], []);
 
@@ -122,16 +110,16 @@ class EntityField extends ReferenceData
 
                     if (!empty($foreignScope) && !empty($foreignScope['type']) && $foreignScope['type'] == 'ReferenceData') {
                         $fieldDefs['foreignEntityId']   = $fieldDefs['entity'];
-                        $fieldDefs['foreignEntityName'] = $this->translateLabel($fieldDefs['entity'], 'scopeNames');
+                        $fieldDefs['foreignEntityName'] = $this->translate($fieldDefs['entity'], 'scopeNames');
                     }
                 }
             }
             $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
         }
 
-        $label = $this->translateLabel($fieldName, 'fields', $entityName);
+        $label = $this->translate($fieldName, 'fields', $entityName);
         if (in_array($fieldDefs['type'], ['int', 'float', 'varchar']) && (!empty($fieldDefs['measureId']) || !empty($fieldDefs['prefixEnabled']))) {
-            $label = $this->translateLabel('combined' . ucfirst($fieldName), 'fields', $entityName);
+            $label = $this->translate('combined' . ucfirst($fieldName), 'fields', $entityName);
         }
 
         $translatedOptions = null;
@@ -149,8 +137,8 @@ class EntityField extends ReferenceData
             'code'                      => $fieldName,
             'name'                      => $label,
             'entityId'                  => $entityName,
-            'entityName'                => $this->translateLabel($entityName, 'scopeNames'),
-            'tooltipText'               => $this->translateLabel($fieldName, 'tooltips', $entityName),
+            'entityName'                => $this->translate($entityName, 'scopeNames'),
+            'tooltipText'               => $this->translate($fieldName, 'tooltips', $entityName),
             'conditionalRequired'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.required"),
             'conditionalReadOnly'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.readOnly"),
             'conditionalProtected'      => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.protected"),
@@ -180,6 +168,8 @@ class EntityField extends ReferenceData
 
     protected function getAllItems(array $params = []): array
     {
+        $this->getLanguage()->preload();
+
         $entities = [];
 
         $entityName               = null;
@@ -233,7 +223,7 @@ class EntityField extends ReferenceData
                     'required'   => false,
                     'readOnly'   => true,
                     'entityId'   => $entityName,
-                    'entityName' => $this->translateLabel($entityName, 'scopeNames')
+                    'entityName' => $this->translate($entityName, 'scopeNames')
                 ];
             }
 
@@ -695,7 +685,7 @@ class EntityField extends ReferenceData
 
         throw new BadRequest(sprintf(
             $this->getLanguage()->translate('fieldIsUsedInUniqueIndex', 'exceptions', 'EntityField'),
-            $this->translateLabel($field, 'fields', $entityName),
+            $this->translate($field, 'fields', $entityName),
             implode(', ', $indexes)
         ));
     }
