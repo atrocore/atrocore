@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\TwigFunction;
 
 use Atro\Core\Twig\AbstractTwigFunction;
-use Atro\Repositories\Translation as TranslationRepository;
+use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -22,36 +22,24 @@ class Translate extends AbstractTwigFunction
 {
     const FALLBACK_LANGUAGE = 'en_US';
 
-    protected EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
+    protected Language $language;
+    public function __construct(Language $language)
     {
-        $this->entityManager = $entityManager;
+        $this->language = $language;
     }
-
     public function run(string $value, string $languageCode = 'en_US', string $category = 'labels', string $scope = 'Global'): string
     {
-        $translation = $this->getTranslationRepository()->getTranslation($scope, $category, $value);
+        $initialLanguage = $this->language->getLanguage();
+        $this->language->setLanguage($languageCode);
+        $translated = $this->language->translate($value, $category, $scope);
 
-        if ($translation === null && $scope !== 'Global') {
-            $translation = $this->getTranslationRepository()->getTranslation('Global', $category, $value);
+        if($translated === $value){
+            $this->language->setLanguage(self::FALLBACK_LANGUAGE);
+            return $this->language->translate($value, $category, $scope);
         }
 
-        if ($translation === null) {
-            return $value;
-        }
+        $this->language->setLanguage($initialLanguage);
 
-        $translated = $translation->get(TranslationRepository::languageToField($languageCode));
-
-        if (empty($translated) && $languageCode !== self::FALLBACK_LANGUAGE) {
-            $translated = $translation->get(TranslationRepository::languageToField(self::FALLBACK_LANGUAGE));
-        }
-
-        return !empty($translated) ? $translated : $value;
-    }
-
-    protected function getTranslationRepository(): TranslationRepository
-    {
-        return $this->entityManager->getRepository('Translation');
+        return $translated;
     }
 }
