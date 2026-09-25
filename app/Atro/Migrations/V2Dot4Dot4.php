@@ -43,6 +43,10 @@ class V2Dot4Dot4 extends Base
 
     protected function migrateFileBasedAvatars(): void
     {
+        if (!$this->getCurrentSchema()->getTable('user')->hasColumn('avatar_id')) {
+            return;
+        }
+
         $rows = $this->getDbal()->createQueryBuilder()
             ->select('u.id', 'f.name', 'f.file_size', 'f.path', 's.path AS storage_path')
             ->from($this->getDbal()->quoteIdentifier('user'), 'u')
