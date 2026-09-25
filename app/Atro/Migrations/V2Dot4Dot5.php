@@ -31,10 +31,11 @@ class V2Dot4Dot5 extends Base
         $fromSchema = $this->getCurrentSchema();
         $toSchema = clone $fromSchema;
 
-        /* @var $metadata \Atro\Core\Utils\Metadata */
-        $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
+        $multilangCodeFields = [
+            'Attribute' => 'script',
+        ];
 
-        foreach ($metadata->get('entityDefs', []) as $scope => $defs) {
+        foreach ($multilangCodeFields as $scope => $field) {
             $tableName = Util::toUnderScore(lcfirst($scope));
 
             if (!$toSchema->hasTable($tableName)) {
@@ -42,13 +43,9 @@ class V2Dot4Dot5 extends Base
             }
             $table = $toSchema->getTable($tableName);
 
-            foreach (($defs['fields'] ?? []) as $field => $fieldDefs) {
-                if (($fieldDefs['type'] ?? '') !== 'script' || empty($fieldDefs['isMultilang'])) {
-                    continue;
-                }
+            $baseColumn = Util::toUnderScore(lcfirst($field));
 
-                $baseColumn = Util::toUnderScore(lcfirst($field));
-
+            if ($table->hasColumn($baseColumn)) {
                 foreach ($inputLanguageList as $code) {
                     $column = $baseColumn . '_' . strtolower($code);
 
