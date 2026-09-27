@@ -65,6 +65,53 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
         },
 
+        // For a relationship panel shown on a File record, some linkMultiple fields on the
+        // related entity restrict which File types they accept - returns true when the current
+        // File's typeId isn't one of them, so Create/Select should be unavailable.
+        isFileTypeRestricted() {
+            if (this.model.urlRoot !== 'File') {
+                return false;
+            }
+
+            let foreign = this.getMetadata().get(['entityDefs', 'File', 'links', this.link, 'foreign']);
+            let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields', foreign]);
+            if (!fieldDefs || fieldDefs['type'] !== 'linkMultiple') {
+                return false;
+            }
+
+            let fileTypes = fieldDefs['fileTypes'] ?? [];
+            if (!fileTypes.length) {
+                return false;
+            }
+
+            return !fileTypes.includes(this.model.get('typeId'));
+        },
+
+        // The panel heading (Create/Select/etc buttons) is rendered by the parent detail-bottom
+        // view from its own copy of this panel's action/button lists, not by this view's own
+        // template - refreshing this view alone leaves the heading showing stale actions, so the
+        // parent's copy has to be updated and its heading redrawn instead.
+        refreshPanelHeading() {
+            let parentView = this.getParentView();
+            if (!parentView || typeof parentView.rebuildPanelHeading !== 'function' || !parentView.panelList) {
+                return;
+            }
+
+            let panelDefs = parentView.panelList.find(p => p.name === this.panelName);
+            if (!panelDefs) {
+                return;
+            }
+
+            if ('getActionList' in this) {
+                panelDefs.actionList = parentView.filterActions(this.getActionList());
+            }
+            if ('getButtonList' in this) {
+                panelDefs.buttonList = parentView.filterActions(this.getButtonList());
+            }
+
+            parentView.rebuildPanelHeading(panelDefs);
+        },
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -128,6 +175,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             let canSelect = true;
             let canUnlink = true;
+            let createButtonItem = null;
+            let selectActionItem = null;
 
             let relationName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.link, 'relationName']);
             if (relationName) {
@@ -161,27 +210,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.filter = this.getStoredFilter();
             }
 
-            if (this.model.urlRoot === 'File') {
-                let foreign = this.getMetadata().get(['entityDefs', 'File', 'links', this.link, 'foreign']);
-                let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields', foreign]);
-                if (fieldDefs['type'] === 'linkMultiple') {
-                    let fileTypes = fieldDefs['fileTypes'] ?? [],
-                        typeId = this.model.get('typeId');
-
-                    if ((typeId || fileTypes.length) && !fileTypes.includes(typeId)) {
-                        canSelect = false;
-                        this.defs.create = false;
-                    }
-                }
-            }
-
             if (
                 this.defs.create
                 && this.getAcl().check(this.scope, 'create')
                 && !~['User', 'Team'].indexOf()
                 && !(this.scope === 'EntityField' && this.model.name === 'Entity' && this.getMetadata().get(`scopes.${this.model.id}.customizable`) === false)
             ) {
-                this.buttonList.push({
+                createButtonItem = {
                     title: 'Create',
                     action: this.defs.createAction || 'createRelated',
                     link: this.link,
@@ -191,7 +226,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     data: {
                         link: this.link,
                     }
-                });
+                };
+                if (!this.isFileTypeRestricted()) {
+                    this.buttonList.push(createButtonItem);
+                }
             }
 
             if (this.defs.select) {
@@ -204,13 +242,16 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
 
                 if (canSelect) {
-                    this.actionList.unshift({
+                    selectActionItem = {
                         label: 'Select',
                         action: this.defs.selectAction || 'selectRelated',
                         data: data,
                         acl: 'edit',
                         aclScope: this.model.name
-                    });
+                    };
+                    if (!this.isFileTypeRestricted()) {
+                        this.actionList.unshift(selectActionItem);
+                    }
                 }
             }
 
@@ -257,6 +298,43 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     data: data,
                     acl: 'edit',
                     aclScope: this.model.name
+                });
+            }
+
+            if (this.model.urlRoot === 'File' && (createButtonItem || selectActionItem)) {
+                this.listenTo(this.model, 'sync after:save after:inlineEditSave', () => {
+                    let changed = false;
+                    const restricted = this.isFileTypeRestricted();
+
+                    if (createButtonItem) {
+                        const included = this.buttonList.includes(createButtonItem);
+                        if (restricted && included) {
+                            this.buttonList = this.buttonList.filter(item => item !== createButtonItem);
+                            changed = true;
+                        } else if (!restricted && !included) {
+                            this.buttonList.push(createButtonItem);
+                            changed = true;
+                        }
+                    }
+
+                    if (selectActionItem) {
+                        const included = this.actionList.includes(selectActionItem);
+                        if (restricted && included) {
+                            this.actionList = this.actionList.filter(item => item !== selectActionItem);
+                            changed = true;
+                        } else if (!restricted && !included) {
+                            this.actionList.unshift(selectActionItem);
+                            changed = true;
+                        }
+                    }
+
+                    if (changed) {
+                        if (this.isRendered()) {
+                            this.refreshPanelHeading();
+                        } else {
+                            this.once('after:render', () => this.refreshPanelHeading());
+                        }
+                    }
                 });
             }
 
@@ -401,9 +479,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.setupFilterActions();
 
-            var select = this.actionList.find(item => item.action === (this.defs.selectAction || 'selectRelated'));
-            if (select) {
-                select.data = {
+            if (selectActionItem) {
+                selectActionItem.data = {
                     link: this.link,
                     scope: this.scope,
                     boolFilterListCallback: 'getSelectBoolFilterList',
