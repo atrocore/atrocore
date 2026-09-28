@@ -92,6 +92,21 @@ class Language extends AbstractListener
                     }
 
                     if (
+                        !empty($fieldDefs['personalData'])
+                        && !empty($fieldDefs['notInEveryRecord'])
+                        && !empty($this->getMetadata()->get(['scopes', $entity, 'containsPersonalData']))
+                    ) {
+                        $hasPdField = $field . 'HasPd';
+                        if (!isset($data[$locale][$entity]['fields'][$hasPdField])) {
+                            $fieldLabel = $this->getLabel($data, $locale, $entity, $field);
+                            $data[$locale][$entity]['fields'][$hasPdField] = sprintf(
+                                $this->getLabel($data, $locale, 'Global', 'hasPersonalData', 'labels'),
+                                $fieldLabel
+                            );
+                        }
+                    }
+
+                    if (
                         !empty($entityDefs['links'][$field]['foreign'])
                         && !empty($entityDefs['links'][$field]['entity'])
                         && $entityDefs['links'][$field]['foreign'] === 'masterRecord'

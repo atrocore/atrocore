@@ -69,7 +69,14 @@
     "conditionalProtected": "Chroniony",
     "conditionalDisableOptions": "Wyłączone opcje",
     "urlLabel": "Etykieta URL",
-    "selectPageSize": "Rekordów na stronie (okno dialogowe wyboru)"
+    "selectPageSize": "Rekordów na stronie (okno dialogowe wyboru)",
+    "personalData": "Dane osobowe",
+    "notInEveryRecord": "Nie w każdym rekordzie",
+    "category": "Kategoria",
+    "specialCategory": "Kategoria szczególna",
+    "specialPersonDataCategory": "Szczególna kategoria danych osobowych",
+    "erasureMode": "Tryb usuwania",
+    "relevantForAccessRequest": "Istotne dla wniosku o dostęp"
   },
   "tooltips": {
     "foreignCode": "Ta nazwa kodowa jest używana dla pola utworzonego w powiązanej jednostce dla relacji wstecznej.",
@@ -111,6 +118,36 @@
       "manyToMany": "Wiele do wielu",
       "oneToOne": "Jeden do jednego",
       "manyToOne": "Wiele do jednego"
+    },
+    "category": {
+      "identity": "Tożsamość",
+      "contact": "Kontakt",
+      "location": "Lokalizacja",
+      "financial": "Finansowe / Konto",
+      "behavioral": "Behawioralne",
+      "credential": "Dane uwierzytelniające",
+      "employment": "Zatrudnienie",
+      "technical": "Techniczne/Urządzenie",
+      "communication": "Treść komunikacji"
+    },
+    "specialPersonDataCategory": {
+      "origin": "Pochodzenie rasowe lub etniczne",
+      "political": "Poglądy polityczne",
+      "religious": "Przekonania religijne lub filozoficzne",
+      "trade": "Przynależność związkowa",
+      "genetic": "Dane genetyczne",
+      "biometric": "Dane biometryczne",
+      "health": "Dane dotyczące zdrowia",
+      "sex": "Życie seksualne",
+      "orientation": "Orientacja seksualna"
+    },
+    "erasureMode": {
+      "anonymize": "Anonimizuj",
+      "nullify": "Wyzeruj",
+      "delete": "Usuń",
+      "retain": "Zachowaj",
+      "cascade": "Kaskadowo",
+      "unlink": "Odłącz"
     }
   },
   "groupOptions": {
@@ -128,7 +165,8 @@
   "labels": {
     "resetToDefault": "Resetuj do domyślnego",
     "relationManagement": "Zarządzanie relacjami",
-    "conditionalProperties": "Właściwości warunkowe"
+    "conditionalProperties": "Właściwości warunkowe",
+    "personalData": "Dane osobowe"
   },
   "exceptions": {
     "nullValuesExist": "Niektóre rekordy mają wartości null",

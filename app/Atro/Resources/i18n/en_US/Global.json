@@ -221,6 +221,7 @@
     "varcharPart": "(String)",
     "unitPart": "(Unit)",
     "prefixPart": "(Prefix)",
+    "hasPersonalData": "%s has Personal Data",
     "inheritAllForChildren": "Inherit all for children items",
     "inheritAllFromParent": "Inherit all from parent",
     "homepage": "Homepage",

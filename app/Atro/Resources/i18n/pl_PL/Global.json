@@ -184,6 +184,7 @@
     "floatPart": "(Liczba zmiennoprzecinkowa)",
     "unitPart": "(Jednostka)",
     "prefixPart": "(Prefiks)",
+    "hasPersonalData": "%s zawiera dane osobowe",
     "availablePrefixes": "Dostępne prefiksy",
     "inheritAllForChildren": "Dziedzicz wszystkie dla elementów podrzędnych",
     "inheritAllFromParent": "Dziedziczy wszystko od rodzica",

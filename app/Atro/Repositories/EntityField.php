@@ -17,7 +17,6 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
 use Atro\Core\Utils\Util;
@@ -912,7 +911,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'isAuditableRelation', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'isAuditableRelation', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled', 'inheritanceDisabled', 'where', 'personalData', 'notInEveryRecord', 'category', 'specialCategory', 'specialPersonDataCategory', 'erasureMode', 'relevantForAccessRequest'];
 
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
@@ -1167,6 +1166,16 @@ class EntityField extends ReferenceData
         }
 
         $this->getMetadata()->delete('entityDefs', $scope, ["fields.$name", "links.$name"]);
+    }
+
+    public function containsPersonalData(OrmEntity $entity): bool
+    {
+        if ($this->getMetadata()->get(['scopes', $entity->get('entityId'), 'containsPersonalData'], false)
+            && $this->getMetadata()->get(['fields', $entity->get('type'), 'personalData'], false)) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function updateEntityFromVirtualFields(OrmEntity $entity): void

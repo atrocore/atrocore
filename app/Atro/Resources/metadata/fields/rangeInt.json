@@ -86,5 +86,6 @@
   },
   "notSortable": true,
   "filter": false,
+  "personalData": true,
   "group": "numeric"
 }

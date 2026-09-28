@@ -45,7 +45,9 @@
     "linkAttributesWithClassificationAutomatically": "Link Attributes with the Classification automatically",
     "primaryEntity": "Primary Entity",
     "derivativeEntities": "Derivatives",
-    "role": "Role"
+    "role": "Role",
+    "containsPersonalData": "Contains Personal Data",
+    "isPerson": "Is Person"
   },
   "options": {
     "type": {

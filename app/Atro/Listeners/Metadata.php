@@ -93,6 +93,8 @@ class Metadata extends AbstractMetadataListener
 
         $this->prepareEntityFields($data);
 
+        $this->prepareHasPdFields($data);
+
         $this->putCustomCodeActions($data);
 
         $this->putCustomCodeConditionTypes($data);
@@ -419,6 +421,32 @@ class Metadata extends AbstractMetadataListener
             "type"      => "isEmpty",
             "attribute" => "multilangField"
         ];
+    }
+
+    protected function prepareHasPdFields(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
+            if (empty($entityDefs['fields']) || empty($data['scopes'][$entityType]['containsPersonalData'])) {
+                continue;
+            }
+
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (empty($fieldDefs['personalData']) || empty($fieldDefs['notInEveryRecord'])) {
+                    continue;
+                }
+
+                $hasPdField = $field . 'HasPd';
+
+                if (isset($data['entityDefs'][$entityType]['fields'][$hasPdField])) {
+                    continue;
+                }
+
+                $data['entityDefs'][$entityType]['fields'][$hasPdField] = [
+                    'type'     => 'bool',
+                    'required' => false,
+                ];
+            }
+        }
     }
 
     protected function prepareAclActionLevelListMap(array &$data): void
