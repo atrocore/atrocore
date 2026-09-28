@@ -39,7 +39,15 @@ class Thumbnail
         }
 
         if (!$this->isResizeSupported($file)) {
-            return $thumbnailPath . DIRECTORY_SEPARATOR . $file->get('name');
+            // the original is copied verbatim into the public thumbnails dir, so the extension
+            // must come from the detected mime type, never from the user-controlled name
+            $baseName = explode('.', $file->get('name'));
+            array_pop($baseName);
+
+            $ext = $this->getMetadata()->get(['app', 'mimeTypeToExtensions', $file->get('mimeType'), 0])
+                ?? strtolower(pathinfo($file->get('name'), PATHINFO_EXTENSION));
+
+            return $thumbnailPath . DIRECTORY_SEPARATOR . implode('.', $baseName) . '.' . $ext;
         }
 
         $thumbnailPath .= DIRECTORY_SEPARATOR . trim($size);
