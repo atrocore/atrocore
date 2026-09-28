@@ -142,7 +142,6 @@
     "optionCodeUsedInDisabledOptionsRulesDelete": "Option '%s' is used in Disabled Options rules and cannot be deleted.",
     "onlyOneSlugFieldAllowed": "Only one field can be marked as slug for this entity. Field '%s' is already marked as slug.",
     "slugFieldMustBeUnique": "Field must be unique to be used as slug.",
-    "cannotDisableUniqueForSlugField": "Cannot disable uniqueness while this field is used as slug.",
     "invalidSlugFieldType": "Only varchar, int or autoincrement fields can be marked as slug."
   }
 }
