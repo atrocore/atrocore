@@ -13,6 +13,7 @@ namespace Atro\EntryPoints;
 
 use Atro\Entities\File;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Thumbnail as ThumbnailCreator;
 use Atro\Core\Utils\Util;
@@ -32,6 +33,10 @@ class Thumbnail extends AbstractEntryPoint
         $file = $this->getEntityManager()->getEntity("File", $id);
         if (empty($file)) {
             throw new NotFound();
+        }
+
+        if (!$this->getAcl()->checkEntity($file)) {
+            throw new Forbidden();
         }
 
         $tc = $this->getThumbnailCreator();

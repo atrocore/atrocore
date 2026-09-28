@@ -36,6 +36,7 @@
     "fileRenameFailed": "Le renommage de fichier a échoué.",
     "fileDeleteFailed": "La suppression du fichier a échoué.",
     "fileNameNotValidByUserRegex": "Le nom de fichier n'est pas valide. Il doit correspondre à la regex '%s'.",
+    "fileNameNotValid": "Le nom de fichier n'est pas valide. Il ne peut pas être vide ni contenir de séparateurs de chemin.",
     "fileExtensionCannotBeChanged": "L'extension du fichier ne peut pas être modifiée.",
     "fileStorageCannotBeChanged": "Le stockage de fichiers ne peut pas être modifié.",
     "fileFolderCannotBeChanged": "Le dossier de fichiers ne peut pas être modifié.",
