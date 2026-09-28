@@ -17,7 +17,7 @@ Espo.define('views/admin/field-manager/fields/is-slug', 'views/fields/bool', Dep
 
             this.listenTo(this.model, 'change:unique', () => {
                 if (!this.model.get('unique')) {
-                    this.model.set('isSlug', false);
+                    this.model.set(this.name, false);
                 }
             });
         }
