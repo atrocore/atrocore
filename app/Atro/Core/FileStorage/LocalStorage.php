@@ -389,15 +389,21 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     {
         $storagePath = trim($file->getStorage()->get('path'), DIRECTORY_SEPARATOR);
 
-        // syncFolders: group by file id (real folder names already mirror PIM's own tree, so a
-        // flat-by-id grouping under .versions is enough). Otherwise real paths are generated/hashed
-        // and carry no meaning on their own, so mirror the file's own real path instead - the exact
-        // same segment getLocalPath() already uses to locate the file itself.
+        // syncFolders: group by file id, matching getLocalPath(). Otherwise group by the file's
+        // live path, not $file's own (it can be a stale version snapshot) - every version of a
+        // file lives under the same, current path.
         $fileSegment = $file->getStorage()->get('syncFolders')
             ? $file->get('id')
-            : trim($file->get('path'), DIRECTORY_SEPARATOR);
+            : trim($this->getLiveFilePath($file), DIRECTORY_SEPARATOR);
 
         return $storagePath . DIRECTORY_SEPARATOR . self::VERSION_DIR . DIRECTORY_SEPARATOR . $fileSegment . DIRECTORY_SEPARATOR . $versionId;
+    }
+
+    protected function getLiveFilePath(File $file): string
+    {
+        $liveFile = $this->getEntityManager()->getEntity('File', $file->get('id'));
+
+        return $liveFile !== null ? (string)$liveFile->get('path') : (string)$file->get('path');
     }
 
     public function getLocalPath(File $file, bool $fetched = false): string
