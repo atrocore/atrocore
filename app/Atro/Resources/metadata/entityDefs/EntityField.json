@@ -398,8 +398,7 @@
             }
           ]
         }
-      },
-      "view": "views/admin/field-manager/fields/is-slug"
+      }
     },
     "index": {
       "type": "bool",

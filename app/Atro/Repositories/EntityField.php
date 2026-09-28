@@ -408,7 +408,7 @@ class EntityField extends ReferenceData
             !$entity->isNew() && !empty($entity->get('isSlug')) && $entity->get('type') !== 'autoincrement'
             && $entity->isAttributeChanged('unique') && empty($entity->get('unique'))
         ) {
-            throw new BadRequest($this->getLanguage()->translate('cannotDisableUniqueForSlugField', 'exceptions', 'EntityField'));
+            $entity->set('isSlug', false);
         }
 
         if (!empty($entity->get('required') && $entity->isAttributeChanged('required'))) {
