@@ -444,6 +444,7 @@ class Metadata extends AbstractMetadataListener
                 $data['entityDefs'][$entityType]['fields'][$hasPdField] = [
                     'type'     => 'bool',
                     'required' => false,
+                    'personalField' => $field
                 ];
             }
         }
