@@ -244,6 +244,11 @@ server {
     deny all;
   }
 
+  location ^~ /upload/ {
+    try_files $uri @router;
+    default_type application/octet-stream;
+  }
+
   location / {
     try_files $uri $uri/ @router;
     index index.html index.php;
