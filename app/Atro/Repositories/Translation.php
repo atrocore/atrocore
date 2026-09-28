@@ -199,7 +199,7 @@ class Translation extends Base
 
     public function findByCode(string $code): ?Entity
     {
-        if (!isset($this->cachedCodes[$code])) {
+        if (!array_key_exists($code, $this->cachedCodes)) {
             $this->cachedCodes[$code] = $this->where(['code' => $code])->findOne();
         }
 
@@ -375,6 +375,8 @@ class Translation extends Base
 
     public function refreshTimestamp(array $options): void
     {
+        $this->getInjection('language')->clearCache();
+
         if (!empty($options['keepCache'])) {
             return;
         }
