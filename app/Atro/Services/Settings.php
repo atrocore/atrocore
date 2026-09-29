@@ -53,7 +53,7 @@ class Settings extends AbstractService
             'massUpdateMaxCountWithoutJob', 'maxComparableItem', 'maxMassLinkCount',
             'maxMassUnlinkCount', 'maxSizeForEntityComparisons', 'notificationsMaxSize',
             'notificationSmtpConnectionId', 'ownerUserAttributeOwnership', 'ownerUserProductOwnership',
-            'packaged', 'readableDateFormatDisabled', 'recordListMaxSizeLimit',
+            'packaged', 'passwordChangeRequestAvailable', 'readableDateFormatDisabled', 'recordListMaxSizeLimit',
             'recordsPerPage', 'recordsPerPageSmall', 'resetPasswordViaEmailOnly',
             'scopeColorsDisabled', 'siteUrl', 'systemUserId',
             'tabIconsDisabled', 'timeFormat', 'timeZone',
