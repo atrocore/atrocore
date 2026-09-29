@@ -192,6 +192,18 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 panel.expanded = false;
             }
             this.panelList.push(panel);
+
+            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
+                let view = this.getView('stream');
+                if (!view) {
+                    return;
+                }
+
+                if (view.$el && !view.$el.hasClass('in')) {
+                    return;
+                }
+                view.actionRefresh();
+            });
         },
 
         init: function () {
