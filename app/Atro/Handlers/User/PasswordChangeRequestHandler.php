@@ -27,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'POST',
     ],
     summary: 'Requests a password reset link',
-    description: 'Sends a password reset link to the user\'s email address.',
+    description: 'Sends a password reset link to the user\'s email address if an active account matches the given userName and emailAddress. The response is the same whether or not such an account exists.',
     tag: 'User',
     auth: false,
     requestBody: [
@@ -49,10 +49,6 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'type'    => 'string',
                             'example' => 'admin@example.com',
                         ],
-                        'url'          => [
-                            'type'    => 'string',
-                            'example' => 'https://your-instance.com/reset-password',
-                        ],
                     ],
                 ],
             ],
@@ -70,7 +66,10 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'userName or emailAddress is missing.',
+            'description' => 'userName or emailAddress is missing, or a reset link was requested for this account less than the configured resend interval ago.',
+        ],
+        503 => [
+            'description' => 'Password reset is unavailable because email sending is not configured.',
         ],
     ],
 )]
@@ -88,9 +87,7 @@ class PasswordChangeRequestHandler extends AbstractHandler
             throw new BadRequest("'emailAddress' is required.");
         }
 
-        $url = property_exists($data, 'url') ? $data->url : null;
-
-        $this->getRecordService('User')->passwordChangeRequest($data->userName, $data->emailAddress, $url);
+        $this->getRecordService('User')->passwordChangeRequest((string)$data->userName, (string)$data->emailAddress);
 
         return new BoolResponse(true);
     }

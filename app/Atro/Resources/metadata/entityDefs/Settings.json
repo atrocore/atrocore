@@ -83,6 +83,20 @@
       "default": 0,
       "tooltip": true
     },
+    "passwordChangeRequestResendInterval": {
+      "type": "int",
+      "min": 1,
+      "default": 1,
+      "required": true,
+      "tooltip": true
+    },
+    "passwordChangeRequestLifetime": {
+      "type": "int",
+      "min": 1,
+      "default": 15,
+      "required": true,
+      "tooltip": true
+    },
     "authTokenMaxIdleTime": {
       "type": "float",
       "min": 0,

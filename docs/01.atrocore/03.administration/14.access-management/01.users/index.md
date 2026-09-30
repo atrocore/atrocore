@@ -96,6 +96,8 @@ The Change Password dialog provides the following options:
 
 When using the Reset Password option, the user will be automatically logged out of their account and their current password will become invalid.
 
+The password reset link sent to the user replaces any link the user has requested before, so only the link from the latest email can be used. It stays valid for the time set in [Password Reset Link Lifetime](../05.authentication/index.md#password-reset). The Reset Password action is not limited by the resend interval, so administrators can send a new link at any time.
+
 ### Email Templates Configuration
 
 Password reset and change operations can trigger email notifications to users. Email templates are managed through the `Email Templates` entity and can be customized by administrators.

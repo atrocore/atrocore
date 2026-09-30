@@ -30,6 +30,7 @@ final class Config
             'inputLanguageList',
             'isMultilangActive',
             'onlyStableReleases',
+            'passwordChangeRequestAvailable',
         ];
 
     /**
@@ -379,6 +380,8 @@ final class Config
         $minimumStability = SoftwarePackageRepository::getComposerData()['minimum-stability'] ?? 'stable';
 
         $this->data['onlyStableReleases'] = $minimumStability === 'stable';
+
+        $this->data['passwordChangeRequestAvailable'] = !empty($this->data['notificationSmtpConnectionId']);
     }
 
     private static function pathExists(array $data, string $path): bool
@@ -525,6 +528,8 @@ final class Config
             'disabledCountQueryEntityList'    => [],
             'authTokenLifetime'               => 0,
             'authTokenMaxIdleTime'            => 120,
+            'passwordChangeRequestResendInterval' => 1,
+            'passwordChangeRequestLifetime'   => 15,
             'userNameRegularExpression'       => '[^a-z0-9\-@_\.\s]',
             'displayListViewRecordCount'      => true,
             'aclStrictMode'                   => false,

@@ -16,10 +16,12 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\ServiceUnavailable;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\Utils\Util;
+use Atro\Repositories\PasswordChangeRequest as PasswordChangeRequestRepository;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 
@@ -203,11 +205,9 @@ class User extends Record
         return parent::duplicateAndLinkEntity($id, $link, $foreignId);
     }
 
-    public function changePasswordByRequest(string $requestId, string $password): array
+    public function changePasswordByRequest(string $requestId, string $password): bool
     {
-        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')
-            ->where(['requestId' => $requestId])
-            ->findOne();
+        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->findActive($requestId);
 
         if (!$p) {
             throw new NotFound();
@@ -227,9 +227,9 @@ class User extends Record
             throw $e;
         }
 
-        $this->getEntityManager()->removeEntity($p);
+        $this->getEntityManager()->getRepository('PasswordChangeRequest')->removeByUser($userId);
 
-        return ['url' => $p->get('url')];
+        return true;
     }
 
     public function changeOwnPassword(string $userId, string $password, string $currentPassword, bool $sendAccessInfo = false): bool
@@ -253,8 +253,19 @@ class User extends Record
         return $this->changePassword($user->id, $password);
     }
 
-    public function passwordChangeRequest($userName, $emailAddress, $url = null, $isResetAction = false)
+    public function passwordChangeRequest(string $userName, string $emailAddress): bool
     {
+        if (!$this->getConfig()->get('passwordChangeRequestAvailable')) {
+            throw new ServiceUnavailable($this->getLanguage()->translate('passwordChangeRequestUnavailable', 'messages', 'User'));
+        }
+
+        $repository = $this->getEntityManager()->getRepository('PasswordChangeRequest');
+
+        $repository->removeOutdated();
+
+        $resendInterval = max(1, (int)$this->getConfig()->get('passwordChangeRequestResendInterval', PasswordChangeRequestRepository::DEFAULT_RESEND_INTERVAL));
+        $resendAllowedFrom = (new \DateTime())->modify("-$resendInterval minutes");
+
         $user = $this->getEntityManager()->getRepository('User')
             ->where([
                 'userName'     => $userName,
@@ -262,46 +273,47 @@ class User extends Record
             ])
             ->findOne();
 
-        if (empty($user)) {
-            throw new NotFound();
+        if (empty($user) || !$user->isActive() || $user->isSystemUser()) {
+            return true;
         }
 
-        if (!$user->isActive()) {
-            throw new Forbidden();
+        $recentRequestCount = $repository
+            ->where([
+                'userId'     => $user->id,
+                'createdAt>' => $resendAllowedFrom->format('Y-m-d H:i:s')
+            ])
+            ->count();
+
+        if ($recentRequestCount > 0) {
+            throw new BadRequest(
+                str_replace('{minutes}', (string)$resendInterval, $this->getLanguage()->translate('passwordChangeRequestTooFrequent', 'messages', 'User'))
+            );
         }
 
-        if ($user->isSystemUser()) {
-            throw new Forbidden();
-        }
+        $this->createPasswordChangeRequest($user, false);
 
-        $userId = $user->id;
+        return true;
+    }
 
-        $passwordChangeRequest = $this->getEntityManager()->getRepository('PasswordChangeRequest')
-            ->where(['userId' => $userId])
-            ->findOne();
-
-        if ($passwordChangeRequest) {
-            throw new Forbidden();
-        }
-
+    protected function createPasswordChangeRequest(\Atro\Entities\User $user, bool $isResetAction): void
+    {
         $requestId = IdGenerator::uuid();
 
         $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
         $passwordChangeRequest->set([
-            'userId'    => $userId,
-            'requestId' => $requestId,
-            'url'       => $url
+            'userId'    => $user->id,
+            'requestId' => $requestId
         ]);
 
-        $this->sendChangePasswordLink($requestId, $emailAddress, null, $isResetAction);
+        $this->sendChangePasswordLink($requestId, $user->get('emailAddress'), null, $isResetAction);
+
+        $this->getEntityManager()->getRepository('PasswordChangeRequest')->removeByUser($user->id);
 
         $this->getEntityManager()->saveEntity($passwordChangeRequest);
 
         if (!$passwordChangeRequest->id) {
             throw new Error();
         }
-
-        return true;
     }
 
     protected function hashPassword($password)
@@ -420,7 +432,11 @@ class User extends Record
             throw new BadRequest('User does not have an email');
         }
 
-        $this->passwordChangeRequest($user->get('userName'), $user->get('emailAddress'), null, true);
+        if (!$user->isActive()) {
+            throw new Forbidden();
+        }
+
+        $this->createPasswordChangeRequest($user, true);
 
         $this->invalidateUserTokens($userId);
 

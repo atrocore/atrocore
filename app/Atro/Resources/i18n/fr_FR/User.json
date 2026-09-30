@@ -90,7 +90,9 @@
     "wrongUsernamePasword": "Nom d'utilisateur/mot de passe erroné",
     "userNameEmailAddressNotFound": "Nom d'utilisateur/Adresse électronique introuvable",
     "forbidden": "Interdit, veuillez réessayer plus tard",
-    "uniqueLinkHasBeenSent": "L'URL unique a été envoyé à l'adresse électronique spécifiée.",
+    "uniqueLinkHasBeenSent": "Si un compte avec ce nom d'utilisateur et cette adresse électronique existe, un lien de réinitialisation du mot de passe y a été envoyé.",
+    "passwordChangeRequestUnavailable": "La réinitialisation du mot de passe est actuellement indisponible. Veuillez contacter votre administrateur.",
+    "passwordChangeRequestTooFrequent": "Un lien de réinitialisation du mot de passe a déjà été demandé. Veuillez réessayer dans {minutes} min.",
     "passwordChangedByRequest": "Le mot de passe a été modifié.",
     "userNameExists": "Le nom d'utilisateur existe déjà",
     "changePasswordOnResetViaEmailOnly": "Vous ne pouvez pas définir un mot de passe manuellement. Veuillez utiliser l'action \"Réinitialiser le mot de passe\"."
