@@ -488,6 +488,15 @@ class EntityField extends ReferenceData
 
         }
 
+        if ($entity->isNew() || $entity->isAttributeChanged('options')) {
+            $options = $entity->get('options') ?? [];
+            if (count($options) !== count(array_unique($options))) {
+                throw new BadRequest(
+                    $this->getLanguage()->translate('optionCodeShouldBeUnique', 'exceptions', 'EntityField')
+                );
+            }
+        }
+
         if (!$entity->isNew() && $entity->isAttributeChanged('options')) {
             $newOptions     = $entity->get('options') ?? [];
             $deletedOptions = array_values(array_diff($entity->getFetched('options') ?? [], $newOptions));
