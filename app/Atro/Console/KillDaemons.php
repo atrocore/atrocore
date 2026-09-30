@@ -31,7 +31,7 @@ class KillDaemons extends AbstractConsole
      */
     public function run(array $data): void
     {
-        file_put_contents('data/process-kill.txt', '1');
+        file_put_contents(Cron::DAEMON_KILLER, '1');
         self::show("All daemons killed successfully", self::SUCCESS, true);
     }
 }
