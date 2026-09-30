@@ -50,6 +50,9 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
         setup() {
             Dep.prototype.setup.call(this);
 
+            this.validations = Espo.utils.clone(this.validations);
+            this.validations.push('options');
+
             this.setupOptionDefs();
             this.setupItems();
             this.setupItemViews();
@@ -343,6 +346,33 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
             });
             return res;
         },
+
+        validateOptions() {
+            let res = false;
+
+            const codeCounts = {};
+            (this.optionsDefsList || []).forEach((item, i) => {
+                if (!item.code) {
+                    return;
+                }
+                codeCounts[item.code] = (codeCounts[item.code] || 0) + 1;
+
+                if (codeCounts[item.code] > 1) {
+                    this.showValidationMessage(
+                        this.translate('optionCodeShouldBeUnique', 'exceptions', 'EntityField'),
+                        '.list-group-item[data-index="' + i + '"]'
+                    );
+
+                    const optionsView = this.getView('code' + i.toString());
+                    if (optionsView) {
+                        optionsView.trigger('invalid');
+                    }
+                    res = true;
+                }
+            });
+
+            return res;
+        }
     });
 
 });
