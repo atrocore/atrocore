@@ -228,6 +228,7 @@
     "varcharPart": "(Chaine de caractères)",
     "unitPart": "(Unité)",
     "prefixPart": "(Préfixe)",
+    "hasPersonalData": "%s contient des données personnelles",
     "availablePrefixes": "Préfixes disponibles",
     "inheritAllForChildren": "Hériter tout pour les éléments enfants",
     "inheritAllFromParent": "Hériter tout du parent",

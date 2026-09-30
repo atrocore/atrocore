@@ -546,6 +546,7 @@
     "Download": "Завантажити",
     "unitPart": "(Одиниця)",
     "prefixPart": "(Префікс)",
+    "hasPersonalData": "%s має персональні дані",
     "availablePrefixes": "Доступні префікси",
     "Username can not be empty!": "Ім'я користувача не може бути порожнім!",
     "script": "Скрипт",

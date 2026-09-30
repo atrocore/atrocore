@@ -199,6 +199,7 @@
     "floatPart": "(desetinné číslo)",
     "unitPart": "(Jednotka)",
     "prefixPart": "(Prefix)",
+    "hasPersonalData": "%s obsahuje osobní údaje",
     "availablePrefixes": "Dostupné předpony",
     "inheritAllForChildren": "Dědit vše pro podřízené položky",
     "inheritAllFromParent": "Dědit vše od rodiče",

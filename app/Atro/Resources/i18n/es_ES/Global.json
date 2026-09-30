@@ -506,6 +506,7 @@
     "searchPanel": "Buscar",
     "unitPart": "(Unit)",
     "prefixPart": "(Prefijo)",
+    "hasPersonalData": "%s contiene datos personales",
     "availablePrefixes": "Prefijos disponibles",
     "unlinkAll": "Desenlazar todo",
     "addItem": "Agregar elemento",

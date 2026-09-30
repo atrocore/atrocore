@@ -940,6 +940,22 @@
       "type": "bool",
       "view": "views/entity/fields/link-attributes-with-classification-automatically",
       "tooltip": true
+    },
+    "containsPersonalData": {
+      "type": "bool"
+    },
+    "isPerson": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "containsPersonalData"
+            }
+          ]
+        }
+      }
     }
   },
   "links": {

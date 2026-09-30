@@ -551,6 +551,7 @@
     "script": "Script",
     "unitPart": "(Maßeinheit)",
     "prefixPart": "(Präfix)",
+    "hasPersonalData": "%s enthält personenbezogene Daten",
     "availablePrefixes": "Verfügbare Präfixe",
     "Details": "Details",
     "Filter": "Filter",

@@ -175,6 +175,7 @@ class EntityField extends ReferenceData
         $main = $this->getEntityManager()->getRepository('Entity')->get($entity->get('entityId'));
         if (!empty($main)) {
             $entity->set('entityData', $main->toArray());
+            $entity->set('entityContainsPersonalData', $this->getRepository()->containsPersonalData($entity));
         }
         if (empty($entity->_collectionPrepared)) {
             $this->prepareFileTypesField($entity);
