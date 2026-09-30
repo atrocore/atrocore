@@ -100,8 +100,14 @@ class QueryConverter
             'VARCHAR',
         ];
 
+    /**
+     * @deprecated MATCH_* full-text expressions will be removed in 3.0.0
+     */
     protected array $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
 
+    /**
+     * @deprecated MATCH_* full-text expressions will be removed in 3.0.0
+     */
     protected array $matchFunctionMap
         = [
             'MATCH_BOOLEAN'          => 'IN BOOLEAN MODE',
@@ -320,6 +326,9 @@ class QueryConverter
         return $function . '(' . $part . ')';
     }
 
+    /**
+     * @deprecated MATCH_* full-text expressions will be removed in 3.0.0
+     */
     protected function convertMatchExpression($entity, $expression)
     {
         $delimiterPosition = strpos($expression, ':');
@@ -373,6 +382,7 @@ class QueryConverter
             $dilimeterPosition = strpos($field, ':');
             $function          = substr($field, 0, $dilimeterPosition);
 
+            // @deprecated MATCH_* full-text expressions will be removed in 3.0.0
             if (in_array($function, $this->matchFunctionList)) {
                 return $this->convertMatchExpression($entity, $field);
             }
@@ -437,6 +447,7 @@ class QueryConverter
             }
 
             if (is_array($attribute) && count($attribute) == 2) {
+                // @deprecated VALUE: select expressions will be removed in 3.0.0
                 if (stripos($attribute[0], 'VALUE:') === 0) {
                     $part = substr($attribute[0], 6);
                     if ($part !== false) {
@@ -695,6 +706,9 @@ class QueryConverter
         return $selectPart;
     }
 
+    /**
+     * @deprecated used only by deprecated MATCH_*, VALUE: and custom SQL where-template features, will be removed in 3.0.0
+     */
     public function quote($value)
     {
         if (is_null($value)) {
@@ -703,7 +717,7 @@ class QueryConverter
             if (is_bool($value)) {
                 return $value ? '1' : '0';
             } else {
-                return $value;
+                return $this->connection->quote((string)$value);
             }
         }
     }
@@ -855,6 +869,7 @@ class QueryConverter
         foreach ($whereClause as $field => $value) {
 
             if (is_int($field)) {
+                // @deprecated MATCH_* full-text expressions will be removed in 3.0.0
                 if (is_string($value)) {
                     if (strpos($value, 'MATCH_') === 0) {
                         $rightPart    = $this->convertMatchExpression($entity, $value);
@@ -998,6 +1013,7 @@ class QueryConverter
                         continue;
                     }
 
+                    // @deprecated custom SQL where-templates (entityDefs.<Entity>.fields.<field>.where.<operator>) will be removed in 3.0.0
                     if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
                         $whereSqlPart = '';
                         if (is_string($fieldDefs['where'][$operatorModified])) {
@@ -1138,6 +1154,9 @@ class QueryConverter
         return $joinAlias;
     }
 
+    /**
+     * @deprecated custom SQL where-templates (entityDefs.<Entity>.fields.<field>.where.<operator>) will be removed in 3.0.0
+     */
     public function stringifyValue($value)
     {
         if (is_array($value)) {
