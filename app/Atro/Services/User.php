@@ -20,7 +20,7 @@ use Atro\Core\Exceptions\ServiceUnavailable;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\RegexUtil;
-use Atro\Core\Utils\Util;
+use Atro\Core\Utils\PasswordHash;
 use Atro\Repositories\PasswordChangeRequest as PasswordChangeRequestRepository;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
@@ -144,12 +144,8 @@ class User extends Record
         }
 
         if ($checkCurrentPassword) {
-            $passwordHash = new \Espo\Core\Utils\PasswordHash($this->getConfig());
-            $u = $this->getEntityManager()->getRepository('User')->where(array(
-                'id'       => $this->getUser()->id,
-                'password' => $passwordHash->hash($currentPassword)
-            ))->findOne();
-            if (!$u) {
+            $u = $this->getEntityManager()->getRepository('User')->get($this->getUser()->id);
+            if (!$u || !$this->getPasswordHash()->verify((string)$currentPassword, $u->get('password'))) {
                 throw new Forbidden();
             }
         }
@@ -318,10 +314,7 @@ class User extends Record
 
     protected function hashPassword($password)
     {
-        $config = $this->getConfig();
-        $passwordHash = new \Espo\Core\Utils\PasswordHash($config);
-
-        return $passwordHash->hash($password);
+        return $this->getPasswordHash()->hash($password);
     }
 
     public function createEntity(\stdClass $attachment): string
@@ -633,5 +626,10 @@ class User extends Record
     protected function getContainer(): Container
     {
         return $this->getInjection('container');
+    }
+
+    protected function getPasswordHash(): PasswordHash
+    {
+        return $this->getContainer()->get(PasswordHash::class);
     }
 }

@@ -90,7 +90,8 @@ final class Config
         }
 
         $data = self::getDefaults();
-        $data['passwordSalt'] = bin2hex(random_bytes(16));
+        $data['encryptionKey'] = bin2hex(random_bytes(16));
+        $data[PasswordHash::PEPPER_CONFIG_KEY] = PasswordHash::generatePepper();
 
         return self::writeAtomically(self::exportPhp($data));
     }
@@ -505,7 +506,6 @@ final class Config
     {
         return [
             'isInstalled'                     => false,
-            'passwordSalt'                    => 'some-salt',
             'amountOfDbDumps'                 => 14,
             'database'                        => [
                 'driver'   => 'pdo_mysql',

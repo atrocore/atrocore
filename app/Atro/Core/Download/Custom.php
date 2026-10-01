@@ -93,7 +93,7 @@ class Custom
 
     protected function createSubDir(): string
     {
-        $key = $this->config->get('passwordSalt', '') . '_' . $this->width . '_' . $this->height . '_' . $this->quality . '_' . $this->scale . '_' . $this->format;
+        $key = $this->config->get('encryptionKey', '') . '_' . $this->width . '_' . $this->height . '_' . $this->quality . '_' . $this->scale . '_' . $this->format;
 
         return md5($key);
     }
