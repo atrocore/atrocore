@@ -37,7 +37,7 @@ class Encrypter
 
     protected function getSecretKey(): string
     {
-        return $this->getConfig()->get('passwordSalt', 'ATRO');
+        return $this->getConfig()->get('encryptionKey', 'ATRO');
     }
 
     protected function getByteSecretIv(): string

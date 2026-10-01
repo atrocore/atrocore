@@ -17,7 +17,7 @@ To retrieve a configuration value, use the `get()` method with the parameter's k
 $config = $container->get('config');
 
 // Get a top-level key's value
-$passwordSalt = $config->get('passwordSalt');
+$siteUrl = $config->get('siteUrl');
 
 // Get a nested key's value
 $dbHost = $config->get('database.host');
@@ -144,7 +144,7 @@ Every key a module contributes automatically becomes read-only.
 | Parameter         | Type      | Description                                                                                                                              |
 |:------------------|:----------|:-----------------------------------------------------------------------------------------------------------------------------------------|
 | `isInstalled`     | `boolean` | The installation state of the application. Set to `true` upon completion of the installation wizard. If `false`, the wizard is launched. |
-| `passwordSalt`    | `string`  | A unique string used to encrypt passwords.                                                                                               |
+| `encryptionKey`   | `string`  | A unique secret key used to encrypt stored credentials, such as connection passwords.                                                    |
 | `amountOfDbDumps` | `integer` | The maximum number of database backups the system will store. Older backups are automatically deleted when this limit is reached.        |
 | `useCache`        | `boolean` | Activates or deactivates the backend and frontend caching mechanisms.                                                                    |
 | `locale`          | `string`  | The ID of the system's default language and locale.                                                                                      |
@@ -188,7 +188,7 @@ Every key a module contributes automatically becomes read-only.
 
 | Parameter                      | Type      | Description                                                                                                                                                      |
 |:-------------------------------|:----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `passwordSalt`                 | `string`  | A unique string used to encrypt passwords.                                                                                                                       |
+| `passwordPepper`               | `string`  | A unique secret key mixed into every user password hash. Without it, no user can log in, so keep it in every backup of the configuration file.                   |
 | `authTokenLifetime`            | `integer` | Defines the total lifetime of an authentication token in seconds. A value of `0` means the token never expires.                                                  |
 | `authTokenMaxIdleTime`         | `integer` | Defines the maximum duration in seconds that an authentication token can be inactive before it expires. A value of `0` means it never expires due to inactivity. |
 | `userNameRegularExpression`    | `string`  | A regular expression used to validate usernames during new user creation in the administration panel.                                                            |
