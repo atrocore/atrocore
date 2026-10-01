@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\Download;
 
 use Atro\Core\Container;
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\File;
@@ -25,13 +24,6 @@ use Imagick;
 
 class Custom
 {
-    private const ALLOWED_FORMATS = ['jpeg', 'png', 'webp'];
-    private const MIN_DIMENSION = 1;
-    private const DEFAULT_MAX_DIMENSION = 5000;
-    private const DEFAULT_MAX_MEMORY = 256 * 1024 * 1024;
-    private const DEFAULT_MAX_MAP = 512 * 1024 * 1024;
-    private const DEFAULT_MAX_AREA = 64_000_000;
-
     protected File $file;
     protected Imagick $imagick;
     protected ?string $scale;
@@ -68,10 +60,6 @@ class Custom
             throw new NotFound();
         }
 
-        Imagick::setResourceLimit(Imagick::RESOURCETYPE_MEMORY, (int)$this->config->get('imagickMemoryLimit', self::DEFAULT_MAX_MEMORY));
-        Imagick::setResourceLimit(Imagick::RESOURCETYPE_MAP, (int)$this->config->get('imagickMapLimit', self::DEFAULT_MAX_MAP));
-        Imagick::setResourceLimit(Imagick::RESOURCETYPE_AREA, (int)$this->config->get('imagickAreaLimit', self::DEFAULT_MAX_AREA));
-
         $this->file = $file;
         $this->imagick = new \Imagick($filePath);
 
@@ -80,24 +68,13 @@ class Custom
 
     protected function setParams(array $params): Custom
     {
-        $this->width = $params['width'] ? $this->clampDimension((int)$params['width']) : null;
-        $this->height = $params['height'] ? $this->clampDimension((int)$params['height']) : null;
+        $this->width = $params['width'] ? (int)$params['width'] : null;
+        $this->height = $params['height'] ? (int)$params['height'] : null;
         $this->quality = $params['quality'] ? (int)$params['quality'] : null;
-        $this->format = !empty($params['format']) ? $params['format'] : 'jpeg';
+        $this->format = $params['format'] ?? null;
         $this->scale = $params['scale'] ?? null;
 
-        if (!in_array($this->format, self::ALLOWED_FORMATS, true)) {
-            throw new BadRequest('Unsupported format.');
-        }
-
         return $this;
-    }
-
-    protected function clampDimension(int $value): int
-    {
-        $max = (int)$this->config->get('imageConversionMaxDimension', self::DEFAULT_MAX_DIMENSION);
-
-        return max(self::MIN_DIMENSION, min($max, $value));
     }
 
     protected function getDirPath(): string
@@ -133,9 +110,9 @@ class Custom
 
     protected function getName(): string
     {
-        $name = explode(".", basename($this->file->get("name")));
+        $name = explode(".", $this->file->get("name"));
         array_pop($name);
-        $name[] = $this->format;
+        $name[] = $this->format ?? "jpeg";
 
         return str_replace("\"", "\\\"", implode(".", $name));
     }
