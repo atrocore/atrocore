@@ -13,5 +13,8 @@
   "tooltips": {
     "lifetime": "Life Time should be set in hours. Zero means no expiration.",
     "idleTime": "Idle Time should be set in hours. Zero means no expiration."
+  },
+  "messages": {
+    "authTokenCreated": "The Authorization-Token is shown only once. Copy and save it now: it cannot be displayed again."
   }
 }

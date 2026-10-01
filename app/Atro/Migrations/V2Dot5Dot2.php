@@ -13,14 +13,6 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
-/**
- * Moves password hashes to argon2id with a per-hash salt and an installation pepper. The plain
- * passwords are not known here, so every sha512-crypt hash is wrapped as a whole into
- * LEGACY_PREFIX . argon2id(hmac-sha256(pepper, legacyHash)); the application replaces it with a
- * regular hash on the user's next login. Also clears auth_token.hash, which used to hold a copy of
- * the user's password hash, and copies passwordSalt, which doubled as the encryption key, into
- * encryptionKey; passwordSalt itself stays, as the wrapped hashes still need it.
- */
 class V2Dot5Dot2 extends Base
 {
     private const PEPPER_CONFIG_KEY = 'passwordPepper';
@@ -40,7 +32,7 @@ class V2Dot5Dot2 extends Base
 
         $pepper = $this->createPepper();
         $this->wrapLegacyPasswordHashes($pepper);
-        $this->clearAuthTokenHashes();
+        $this->hashAuthTokens();
     }
 
     protected function copyEncryptionKey(): void
@@ -109,12 +101,18 @@ class V2Dot5Dot2 extends Base
         }
     }
 
-    protected function clearAuthTokenHashes(): void
+    protected function hashAuthTokens(): void
     {
-        $this->getDbal()->createQueryBuilder()
-            ->update('auth_token')
-            ->set('hash', 'NULL')
-            ->where('hash IS NOT NULL')
-            ->executeStatement();
+        $fromSchema = $this->getCurrentSchema();
+        if (!$fromSchema->getTable('auth_token')->hasColumn('token')) {
+            return;
+        }
+
+        // a null token gives a null hash, which also clears the copied password hashes
+        if ($this->isPgSQL()) {
+            $this->getPDO()->exec("UPDATE auth_token SET hash = encode(sha256(convert_to(token, 'UTF8')), 'hex')");
+        } else {
+            $this->getPDO()->exec("UPDATE auth_token SET hash = SHA2(token, 256)");
+        }
     }
 }
