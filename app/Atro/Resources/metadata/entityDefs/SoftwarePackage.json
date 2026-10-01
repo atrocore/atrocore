@@ -49,11 +49,13 @@
       "type": "enum",
       "options": [
         "Public",
+        "Test",
         "Rent",
         "Purchase"
       ],
       "optionColors": [
         "#5FE0A0",
+        "#E1C6FF",
         "#FFBB3D",
         "#6FB8FF"
       ],
