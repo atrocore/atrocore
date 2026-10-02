@@ -80,11 +80,17 @@ class Custom
 
     protected function setParams(array $params): Custom
     {
-        $this->width = $params['width'] ? $this->clampDimension((int)$params['width']) : null;
-        $this->height = $params['height'] ? $this->clampDimension((int)$params['height']) : null;
-        $this->quality = $params['quality'] ? (int)$params['quality'] : null;
-        $this->format = strtolower(trim((string)($params['format'] ?? ''))) ?: 'jpeg';
-        $this->scale = $params['scale'] ?? null;
+        $this->width = $this->toDimension($params['width'] ?? null);
+        $this->height = $this->toDimension($params['height'] ?? null);
+
+        $quality = $this->toPositiveInt($params['quality'] ?? null);
+        $this->quality = $quality !== null ? min(100, $quality) : null;
+
+        $format = $params['format'] ?? '';
+        $this->format = is_scalar($format) ? (strtolower(trim((string)$format)) ?: 'jpeg') : '';
+
+        $scale = $params['scale'] ?? null;
+        $this->scale = is_string($scale) ? $scale : null;
 
         $allowedFormats = array_map('strtolower', (array)$this->config->get('imageConversionAllowedFormats', self::DEFAULT_ALLOWED_FORMATS));
         if (!in_array($this->format, $allowedFormats, true)) {
@@ -94,11 +100,34 @@ class Custom
         return $this;
     }
 
+    protected function toPositiveInt(mixed $value): ?int
+    {
+        if (!is_scalar($value)) {
+            return null;
+        }
+
+        $int = (int)$value;
+
+        return $int > 0 ? $int : null;
+    }
+
+    protected function toDimension(mixed $value): ?int
+    {
+        $int = $this->toPositiveInt($value);
+
+        return $int === null ? null : $this->clampDimension($int);
+    }
+
     protected function clampDimension(int $value): int
     {
         $max = (int)$this->config->get('imageConversionMaxDimension', self::DEFAULT_MAX_DIMENSION);
 
         return max(self::MIN_DIMENSION, min($max, $value));
+    }
+
+    protected function getImageFormat(): string
+    {
+        return $this->format === 'jpg' ? 'jpeg' : $this->format;
     }
 
     protected function getDirPath(): string
@@ -188,7 +217,7 @@ class Custom
 
     protected function quality(): Custom
     {
-        if (in_array($this->format, ['jpeg', 'webp'])) {
+        if (in_array($this->getImageFormat(), ['jpeg', 'webp'])) {
             $this->imagick->setImageCompressionQuality((int)$this->quality);
         }
 
@@ -197,11 +226,11 @@ class Custom
 
     protected function format(): Custom
     {
-        if ($this->format === "jpeg") {
+        if ($this->getImageFormat() === "jpeg") {
             $this->imagick->setBackgroundColor("#ffffff");
             $this->imagick = $this->imagick->flattenImages();
         }
-        $this->imagick->setImageFormat($this->format);
+        $this->imagick->setImageFormat($this->getImageFormat());
 
         return $this;
     }
