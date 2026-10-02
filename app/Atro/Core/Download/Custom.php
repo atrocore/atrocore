@@ -25,7 +25,7 @@ use Imagick;
 
 class Custom
 {
-    private const ALLOWED_FORMATS = ['jpeg', 'png', 'webp'];
+    private const DEFAULT_ALLOWED_FORMATS = ['jpeg', 'jpg', 'png', 'webp'];
     private const MIN_DIMENSION = 1;
     private const DEFAULT_MAX_DIMENSION = 5000;
     private const DEFAULT_MAX_MEMORY = 256 * 1024 * 1024;
@@ -83,10 +83,11 @@ class Custom
         $this->width = $params['width'] ? $this->clampDimension((int)$params['width']) : null;
         $this->height = $params['height'] ? $this->clampDimension((int)$params['height']) : null;
         $this->quality = $params['quality'] ? (int)$params['quality'] : null;
-        $this->format = !empty($params['format']) ? $params['format'] : 'jpeg';
+        $this->format = strtolower(trim((string)($params['format'] ?? ''))) ?: 'jpeg';
         $this->scale = $params['scale'] ?? null;
 
-        if (!in_array($this->format, self::ALLOWED_FORMATS, true)) {
+        $allowedFormats = array_map('strtolower', (array)$this->config->get('imageConversionAllowedFormats', self::DEFAULT_ALLOWED_FORMATS));
+        if (!in_array($this->format, $allowedFormats, true)) {
             throw new BadRequest('Unsupported format.');
         }
 
