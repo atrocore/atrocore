@@ -17,15 +17,54 @@ namespace Atro\Services;
 use Atro\Core\Application;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\DataManager;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Metadata;
 use Atro\Repositories\SoftwarePackage;
+use Atro\Services\SoftwarePackage as SoftwarePackageService;
 use Espo\Core\Acl;
 
 class App extends AbstractService
 {
+    private const PUBLIC_CONFIG_KEYS
+        = [
+            'applicationName', 'companyLogoId', 'dateFormat',
+            'faviconId', 'frontendTimeout', 'passwordChangeRequestAvailable',
+            'passwordRegexPattern', 'siteUrl', 'timeFormat',
+            'timeZone', 'weekStart',
+        ];
+
+    public function getBootstrapData(): array
+    {
+        $data = $this->getPublicConfig();
+
+        $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
+        $data['coreVersion'] = SoftwarePackageService::getCoreVersion();
+
+        return $this->getInjection('container')->get('eventManager')
+            ->dispatch('AppService', 'afterGetBootstrapData', new Event(['data' => $data]))
+            ->getArgument('data');
+    }
+
+    /**
+     * The part of the config an anonymous caller may receive.
+     */
+    public function getPublicConfig(): array
+    {
+        $config = $this->getConfig();
+
+        $data = [];
+        foreach (self::PUBLIC_CONFIG_KEYS as $key) {
+            if ($config->has($key)) {
+                $data[$key] = $config->get($key);
+            }
+        }
+
+        return $data;
+    }
+
     public function prepareScriptFields(string $entityName, array $fields): array
     {
         $entity = $this->getEntityManager()->getRepository($entityName)->get();
@@ -113,8 +152,12 @@ class App extends AbstractService
 
         $userData = $user->getValueMap();
 
-        // one source for the whole frontend: the same set /api/Settings returns
-        $settings = (object)$this->getService('Settings')->getConfigData();
+        // the config a logged-in frontend works with, on top of the bootstrap data it started from
+        $settings = $this->getService('Settings')->getConfigData();
+        $settings['matchingRules'] = $this->getEntityManager()->getRepository('MatchingRule')
+            ->select(['id', 'name', 'type', 'matchingRuleSetId', 'matchingId'])
+            ->find()->toArray();
+        $settings = (object)$settings;
 
         unset($userData->authTokenId);
         unset($userData->password);
