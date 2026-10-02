@@ -56,6 +56,6 @@ class SettingsReadHandler extends AbstractHandler
         /** @var \Atro\Services\Settings $service */
         $service = $this->getServiceFactory()->create('Settings');
 
-        return new JsonResponse($service->getConfigData());
+        return new JsonResponse($service->getFormData());
     }
 }

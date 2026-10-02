@@ -46,7 +46,7 @@ class App extends AbstractService
             'demo', 'disableEmailDelivery', 'disableNavigationPath',
             'disableToolbarLogo', 'displayListViewRecordCount', 'faviconId',
             'favoritesIconsDisabled', 'fileNameRegexPattern', 'fileUploadStreamCount',
-            'frontendTimeout', 'fuzzySearchAvailable', 'globalSearchEntityList',
+            'frontendTimeout', 'globalSearchEntityList',
             'globalSearchMaxSize', 'hasApproved', 'hasNotTranslateFrom',
             'hasNotTranslateTo', 'inputLanguageList', 'isMultilangActive',
             'isStreamSide', 'language', 'lastViewedCount',

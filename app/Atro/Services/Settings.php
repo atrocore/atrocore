@@ -34,19 +34,19 @@ class Settings extends AbstractService
 
     /**
      * Config for server-side script contexts - Twig templates, PDF and export
-     * rendering. Same as the public config plus the user-defined variables:
-     * those may hold secrets, which is fine here because the script runs on the
-     * backend, and is exactly why they never go to the frontend.
+     * rendering. Everything a logged-in frontend sees - the public config and
+     * the config data - plus the user-defined variables: those may hold
+     * secrets, which is fine here because the script runs on the backend, and
+     * is exactly why they never go to the frontend.
      */
     public function getScriptConfig(): array
     {
-        return array_merge($this->getAppService()->getPublicConfig(), Variable::loadAll());
+        return array_merge($this->getAppService()->getPublicConfig(), $this->getConfigData(), Variable::loadAll());
     }
 
     /**
-     * The values of the parameters declared as Settings fields plus the custom
-     * code kept in files - the config a logged-in frontend works with and the
-     * Settings form edits. Password fields never leave the backend.
+     * The values of the parameters declared as Settings fields - the config a
+     * logged-in frontend works with. Password fields never leave the backend.
      */
     public function getConfigData(): array
     {
@@ -65,12 +65,21 @@ class Settings extends AbstractService
             }
         }
 
-        $data = $this->prepareCustomHeadCodeForOutput($data);
-        $data = $this->prepareStylesheetConfigForOutput($data);
-
         return $this->getInjection('eventManager')
             ->dispatch('SettingsService', 'afterGetConfigData', new Event(['data' => $data]))
             ->getArgument('data');
+    }
+
+    /**
+     * What the Settings form edits: the config data plus the custom code, which
+     * is kept in files rather than in the config.
+     */
+    public function getFormData(): array
+    {
+        $data = $this->getConfigData();
+        $data = $this->prepareCustomHeadCodeForOutput($data);
+
+        return $this->prepareStylesheetConfigForOutput($data);
     }
 
     private function getSettingsFieldDefs(): array
@@ -135,7 +144,7 @@ class Settings extends AbstractService
             $this->getDataManager()->rebuild();
         }
 
-        return $this->getConfigData();
+        return $this->getFormData();
     }
 
     protected function getLanguage(): Language
