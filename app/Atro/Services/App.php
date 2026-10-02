@@ -190,8 +190,8 @@ class App extends AbstractService
 
         $userData = $user->getValueMap();
 
-        // the same set the frontend booted with, plus what only a logged-in user may see
-        $settings = $this->getBootstrapData();
+        // the config a logged-in frontend works with, on top of the bootstrap data it started from
+        $settings = $this->getService('Settings')->getConfigData();
         $settings['matchingRules'] = $this->getEntityManager()->getRepository('MatchingRule')
             ->select(['id', 'name', 'type', 'matchingRuleSetId', 'matchingId'])
             ->find()->toArray();

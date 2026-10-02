@@ -44,16 +44,12 @@ class Settings extends AbstractService
     }
 
     /**
-     * The values of the parameters declared as Settings fields - exactly what
-     * the Settings form edits, and nothing else. Admin only. Password fields
-     * never leave the backend.
+     * The values of the parameters declared as Settings fields plus the custom
+     * code kept in files - the config a logged-in frontend works with and the
+     * Settings form edits. Password fields never leave the backend.
      */
     public function getConfigData(): array
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
         $config = $this->getConfig();
         $data = [];
 

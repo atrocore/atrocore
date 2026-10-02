@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'GET',
     ],
     summary: 'Get system settings',
-    description: 'Returns the values of the system configuration parameters. Requires administrator privileges. ',
+    description: 'Returns the values of the system configuration parameters.',
     tag: 'Global',
     responses: [
         200 => [
