@@ -37,7 +37,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'schema' => [
                         'type'    => 'object',
                         'example' => [
-                            'language'    => 'en_US',
+                            'applicationName' => 'AtroPIM',
                             'dateFormat'  => 'MM/DD/YYYY',
                             'timeFormat'  => 'HH:mm',
                             'timeZone'    => 'UTC',
@@ -47,11 +47,6 @@ use Psr\Http\Server\RequestHandlerInterface;
                                 'jsTree' => [
                                     'path'      => 'client/lib/jstree.min.js',
                                     'exportsTo' => 'jQuery',
-                                ],
-                            ],
-                            'themes'      => [
-                                'AtroCore' => [
-                                    'stylesheet' => 'client/css/atrocore.css',
                                 ],
                             ],
                         ],

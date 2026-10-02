@@ -28,53 +28,19 @@ use Espo\Core\Acl;
 
 class App extends AbstractService
 {
-    /**
-     * Config parameters that may leave the backend. Anything not listed here
-     * stays server-side, so a new parameter is private until someone adds it
-     * on purpose - never by forgetting to exclude it.
-     *
-     * Keys contributed through AbstractModule::getConfigAdditionalData() are
-     * exposed on top of this list, since that mechanism exists for the frontend.
-     */
     private const PUBLIC_CONFIG_KEYS
         = [
-            'actionHistoryDisabled', 'adminPanelIframeHeight', 'applicationName',
-            'assignedUserAttributeOwnership', 'assignedUserProductOwnership', 'avatarsDisabled',
-            'cacheTimestamp', 'changeStatusAfterTranslation', 'chunkFileSize',
-            'companyLogoId', 'currencyList', 'dashletsOptions',
-            'dateFormat', 'defaultNotificationProfileId', 'defaultStyleId',
-            'demo', 'disableEmailDelivery', 'disableNavigationPath',
-            'disableToolbarLogo', 'displayListViewRecordCount', 'faviconId',
-            'favoritesIconsDisabled', 'fileNameRegexPattern', 'fileUploadStreamCount',
-            'frontendTimeout', 'globalSearchEntityList',
-            'globalSearchMaxSize', 'hasApproved', 'hasNotTranslateFrom',
-            'hasNotTranslateTo', 'inputLanguageList', 'isMultilangActive',
-            'isStreamSide', 'language', 'lastViewedCount',
-            'locale', 'locales', 'mainLanguage',
-            'massDeleteMaxCountWithoutJob', 'massRestoreMaxCountWithoutJob', 'massUpdateMaxCountWithoutJob',
-            'maxComparableItem', 'maxMassLinkCount', 'maxMassUnlinkCount',
-            'maxSizeForEntityComparisons', 'notificationsMaxSize', 'notificationSmtpConnectionId',
-            'ownerUserAttributeOwnership', 'ownerUserProductOwnership', 'packaged',
-            'passwordChangeRequestAvailable', 'passwordRegexPattern', 'readableDateFormatDisabled',
-            'recordListMaxSizeLimit', 'recordsPerPage', 'recordsPerPageSmall',
-            'resetPasswordViaEmailOnly', 'scopeColorsDisabled', 'siteUrl',
-            'systemUserId', 'tabIconsDisabled', 'timeFormat',
-            'timeZone', 'unitsOfMeasure', 'userNameRegularExpression',
-            'userThemesDisabled', 'weekStart',
+            'applicationName', 'companyLogoId', 'dateFormat',
+            'faviconId', 'frontendTimeout', 'passwordChangeRequestAvailable',
+            'passwordRegexPattern', 'siteUrl', 'timeFormat',
+            'timeZone', 'weekStart',
         ];
 
-    /**
-     * Everything the frontend needs to start, before anyone has logged in: the
-     * public config plus what the client itself is built from. It is served to
-     * anonymous callers, so nothing goes here unless the application cannot
-     * load, or render the login page, without it.
-     */
     public function getBootstrapData(): array
     {
         $data = $this->getPublicConfig();
 
         $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
-        $data['themes'] = $this->getMetadata()->get('themes');
         $data['coreVersion'] = SoftwarePackageService::getCoreVersion();
 
         return $this->getInjection('container')->get('eventManager')
@@ -83,18 +49,14 @@ class App extends AbstractService
     }
 
     /**
-     * The part of the config that may leave the backend - the UI, Twig
-     * templates, PDF and export contexts. Built from an explicit allow list
-     * plus whatever the providers contribute: nothing else ever leaves.
+     * The part of the config an anonymous caller may receive.
      */
     public function getPublicConfig(): array
     {
         $config = $this->getConfig();
 
-        $keys = array_merge(self::PUBLIC_CONFIG_KEYS, $config->getAdditionalConfigKeys());
-
         $data = [];
-        foreach (array_unique($keys) as $key) {
+        foreach (self::PUBLIC_CONFIG_KEYS as $key) {
             if ($config->has($key)) {
                 $data[$key] = $config->get($key);
             }

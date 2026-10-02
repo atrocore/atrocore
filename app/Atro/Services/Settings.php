@@ -27,31 +27,41 @@ use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 
 class Settings extends AbstractService
 {
+    private const CONFIG_KEYS
+        = [
+            'actionHistoryDisabled', 'adminPanelIframeHeight', 'assignedUserAttributeOwnership',
+            'assignedUserProductOwnership', 'cacheTimestamp', 'chunkFileSize',
+            'currencyList', 'disableEmailDelivery', 'fileUploadStreamCount',
+            'globalSearchMaxSize', 'inputLanguageList', 'isStreamSide',
+            'language', 'locales', 'mainLanguage',
+            'massDeleteMaxCountWithoutJob', 'massRestoreMaxCountWithoutJob', 'massUpdateMaxCountWithoutJob',
+            'maxComparableItem', 'maxMassLinkCount', 'maxMassUnlinkCount',
+            'maxSizeForEntityComparisons', 'notificationsMaxSize', 'ownerUserAttributeOwnership',
+            'ownerUserProductOwnership', 'packaged', 'recordListMaxSizeLimit',
+            'resetPasswordViaEmailOnly', 'systemUserId', 'unitsOfMeasure',
+            'userNameRegularExpression',
+        ];
+
     private string $customHeadCodeDir = 'public/client/custom/html';
     private string $customHeadCodeFilename = 'head-code.html';
     private string $customStylesheetDir = 'public/client/custom/css';
     private string $customStylesheetFileName = 'custom-css.css';
 
-    /**
-     * Config for server-side script contexts - Twig templates, PDF and export
-     * rendering. Everything a logged-in frontend sees - the public config and
-     * the config data - plus the user-defined variables: those may hold
-     * secrets, which is fine here because the script runs on the backend, and
-     * is exactly why they never go to the frontend.
-     */
     public function getScriptConfig(): array
     {
         return array_merge($this->getAppService()->getPublicConfig(), $this->getConfigData(), Variable::loadAll());
     }
 
-    /**
-     * The values of the parameters declared as Settings fields - the config a
-     * logged-in frontend works with. Password fields never leave the backend.
-     */
     public function getConfigData(): array
     {
         $config = $this->getConfig();
         $data = [];
+
+        foreach (array_merge(self::CONFIG_KEYS, $config->getAdditionalConfigKeys()) as $key) {
+            if ($config->has($key)) {
+                $data[$key] = $config->get($key);
+            }
+        }
 
         foreach ($this->getSettingsFieldDefs() as $field => $defs) {
             if (($defs['type'] ?? null) === 'password') {
@@ -87,12 +97,6 @@ class Settings extends AbstractService
         return $this->getMetadata()->get('entityDefs.Settings.fields', []);
     }
 
-    /**
-     * The config keys a Settings field is actually stored under. For most types
-     * that is the field name itself, but reference types are split into
-     * attributes - a file field lives as `<field>Id` and `<field>Name`, which is
-     * exactly what the UI sends and expects back.
-     */
     private function getFieldAttributes(string $field): array
     {
         $attributes = $this->getFieldManager()->getAttributeList('Settings', $field);
@@ -172,11 +176,6 @@ class Settings extends AbstractService
         return $this->getInjection('serviceFactory')->create('App');
     }
 
-    /**
-     * Applies incoming data. Only parameters declared as Settings fields can be
-     * written: anything else in the payload is ignored, so a request can never
-     * reach a config key that the UI does not own.
-     */
     private function setData(array|\stdClass $data): void
     {
         $allowedAttributes = [];
