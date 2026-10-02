@@ -26,38 +26,21 @@ use Psr\Http\Server\RequestHandlerInterface;
         'GET',
     ],
     summary: 'Get system settings',
-    description: 'Returns the system configuration available to the current user. '
-        . 'Does not require authentication — it is loaded before login to render the login page (theme, language, logo, etc.). '
-        . 'The set of returned fields depends on the caller\'s role: '
-        . 'administrators receive the full configuration, regular users receive a restricted subset. '
-        . 'Password-type fields are always stripped from the response regardless of the caller\'s role. '
-        . 'In addition to raw config fields the response always includes: '
-        . '`jsLibs` (JS library definitions for dynamic script loading), '
-        . '`themes` (available UI themes), '
-        . '`coreVersion` (installed AtroCore version), '
-        . '`matchings` (matching configuration records), '
-        . 'and `matchingRules` (matching rule records).',
+    description: 'Returns the values of the system configuration parameters. Requires administrator privileges. ',
     tag: 'Global',
-    auth: false,
     responses: [
         200 => [
-            'description' => 'System settings for the current user.',
+            'description' => 'Values of the Settings fields.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'    => 'object',
                         'example' => [
-                            'language'       => 'en_US',
-                            'dateFormat'     => 'MM/DD/YYYY',
-                            'timeFormat'     => 'HH:mm',
-                            'timeZone'       => 'UTC',
-                            'weekStart'      => 0,
-                            'defaultCurrency' => 'USD',
-                            'coreVersion'    => '1.14.0',
-                            'jsLibs'         => ['jsTree' => ['path' => 'client/lib/jstree.min.js', 'exportsTo' => 'jQuery']],
-                            'themes'         => ['AtroCore' => ['stylesheet' => 'client/css/atrocore.css']],
-                            'matchings'      => [],
-                            'matchingRules'  => [],
+                            'recordsPerPage'  => 50,
+                            'applicationName' => 'AtroPIM',
+                            'siteUrl'         => 'https://pim.example.com',
+                            'companyLogoId'   => null,
+                            'companyLogoName' => null,
                         ],
                     ],
                 ],

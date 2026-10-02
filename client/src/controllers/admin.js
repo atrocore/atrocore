@@ -70,6 +70,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
         getSettingsModel: function () {
             var model = this.getConfig().clone();
             model.defs = this.getConfig().defs;
+            model.url = 'settings';
 
             return model;
         },

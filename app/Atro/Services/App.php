@@ -17,15 +17,92 @@ namespace Atro\Services;
 use Atro\Core\Application;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\DataManager;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Metadata;
 use Atro\Repositories\SoftwarePackage;
+use Atro\Services\SoftwarePackage as SoftwarePackageService;
 use Espo\Core\Acl;
 
 class App extends AbstractService
 {
+    /**
+     * Config parameters that may leave the backend. Anything not listed here
+     * stays server-side, so a new parameter is private until someone adds it
+     * on purpose - never by forgetting to exclude it.
+     *
+     * Keys contributed through AbstractModule::getConfigAdditionalData() are
+     * exposed on top of this list, since that mechanism exists for the frontend.
+     */
+    private const PUBLIC_CONFIG_KEYS
+        = [
+            'actionHistoryDisabled', 'adminPanelIframeHeight', 'applicationName',
+            'assignedUserAttributeOwnership', 'assignedUserProductOwnership', 'avatarsDisabled',
+            'cacheTimestamp', 'changeStatusAfterTranslation', 'chunkFileSize',
+            'companyLogoId', 'currencyList', 'dashletsOptions',
+            'dateFormat', 'defaultNotificationProfileId', 'defaultStyleId',
+            'demo', 'disableEmailDelivery', 'disableNavigationPath',
+            'disableToolbarLogo', 'displayListViewRecordCount', 'faviconId',
+            'favoritesIconsDisabled', 'fileNameRegexPattern', 'fileUploadStreamCount',
+            'frontendTimeout', 'fuzzySearchAvailable', 'globalSearchEntityList',
+            'globalSearchMaxSize', 'hasApproved', 'hasNotTranslateFrom',
+            'hasNotTranslateTo', 'inputLanguageList', 'isMultilangActive',
+            'isStreamSide', 'language', 'lastViewedCount',
+            'locale', 'locales', 'mainLanguage',
+            'massDeleteMaxCountWithoutJob', 'massRestoreMaxCountWithoutJob', 'massUpdateMaxCountWithoutJob',
+            'maxComparableItem', 'maxMassLinkCount', 'maxMassUnlinkCount',
+            'maxSizeForEntityComparisons', 'notificationsMaxSize', 'notificationSmtpConnectionId',
+            'ownerUserAttributeOwnership', 'ownerUserProductOwnership', 'packaged',
+            'passwordChangeRequestAvailable', 'passwordRegexPattern', 'readableDateFormatDisabled',
+            'recordListMaxSizeLimit', 'recordsPerPage', 'recordsPerPageSmall',
+            'resetPasswordViaEmailOnly', 'scopeColorsDisabled', 'siteUrl',
+            'systemUserId', 'tabIconsDisabled', 'timeFormat',
+            'timeZone', 'unitsOfMeasure', 'userNameRegularExpression',
+            'userThemesDisabled', 'weekStart',
+        ];
+
+    /**
+     * Everything the frontend needs to start, before anyone has logged in: the
+     * public config plus what the client itself is built from. It is served to
+     * anonymous callers, so nothing goes here unless the application cannot
+     * load, or render the login page, without it.
+     */
+    public function getBootstrapData(): array
+    {
+        $data = $this->getPublicConfig();
+
+        $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
+        $data['themes'] = $this->getMetadata()->get('themes');
+        $data['coreVersion'] = SoftwarePackageService::getCoreVersion();
+
+        return $this->getInjection('container')->get('eventManager')
+            ->dispatch('AppService', 'afterGetBootstrapData', new Event(['data' => $data]))
+            ->getArgument('data');
+    }
+
+    /**
+     * The part of the config that may leave the backend - the UI, Twig
+     * templates, PDF and export contexts. Built from an explicit allow list
+     * plus whatever the providers contribute: nothing else ever leaves.
+     */
+    public function getPublicConfig(): array
+    {
+        $config = $this->getConfig();
+
+        $keys = array_merge(self::PUBLIC_CONFIG_KEYS, $config->getAdditionalConfigKeys());
+
+        $data = [];
+        foreach (array_unique($keys) as $key) {
+            if ($config->has($key)) {
+                $data[$key] = $config->get($key);
+            }
+        }
+
+        return $data;
+    }
+
     public function prepareScriptFields(string $entityName, array $fields): array
     {
         $entity = $this->getEntityManager()->getRepository($entityName)->get();
@@ -113,8 +190,12 @@ class App extends AbstractService
 
         $userData = $user->getValueMap();
 
-        // one source for the whole frontend: the same set /api/Settings returns
-        $settings = (object)$this->getService('Settings')->getConfigData();
+        // the same set the frontend booted with, plus what only a logged-in user may see
+        $settings = $this->getBootstrapData();
+        $settings['matchingRules'] = $this->getEntityManager()->getRepository('MatchingRule')
+            ->select(['id', 'name', 'type', 'matchingRuleSetId', 'matchingId'])
+            ->find()->toArray();
+        $settings = (object)$settings;
 
         unset($userData->authTokenId);
         unset($userData->password);

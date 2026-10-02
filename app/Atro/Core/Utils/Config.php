@@ -117,11 +117,11 @@ final class Config
 
     /**
      * The whole config as stored, with no filtering whatsoever. Deciding what of
-     * it may leave the backend is the caller's job - see Services\Settings.
+     * it may leave the backend is the caller's job - see Services\App::getPublicConfig().
      */
     /**
      * Root keys of everything contributed by the core providers and the modules.
-     * They are meant to reach the frontend, so Settings exposes them by default.
+     * They are meant to reach the frontend, so App::getPublicConfig() exposes them by default.
      */
     public function getAdditionalConfigKeys(): array
     {
