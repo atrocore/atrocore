@@ -606,6 +606,10 @@ class Attribute extends Base
             $this->getInjection('container')->get($converterName)->convert($entity);
         }
 
+        if ($entity->isNew()) {
+            $this->resetNonApplicableTypeFields($entity);
+        }
+
         if (!empty($entity->get('pattern')) && ($entity->isNew() || $entity->isAttributeChanged('pattern'))) {
             if (!RegexUtil::validate($entity->get('pattern'))) {
                 throw new BadRequest(
@@ -740,6 +744,51 @@ class Attribute extends Base
         parent::beforeSave($entity, $options);
 
         $this->validateMinMax($entity);
+    }
+
+    protected function resetNonApplicableTypeFields(Entity $entity): void
+    {
+        $typeRelatedFields = [
+            'fileType'                      => ['file'],
+            'pattern'                       => ['varchar'],
+            'options'                       => ['enum', 'multiEnum'],
+            'min'                           => ['int', 'float'],
+            'max'                           => ['int', 'float'],
+            'maxLength'                     => ['varchar', 'text', 'wysiwyg', 'markdown'],
+            'countBytesInsteadOfCharacters' => ['varchar', 'text', 'wysiwyg', 'markdown'],
+            'entityType'                    => ['link', 'linkMultiple'],
+            'entityField'                   => ['link', 'linkMultiple'],
+            'measure'                       => ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar'],
+            'prefixEnabled'                 => ['int', 'float', 'varchar'],
+            'defaultDate'                   => ['date', 'datetime'],
+            'amountOfDigitsAfterComma'      => ['float', 'rangeFloat'],
+            'useDisabledTextareaInViewMode' => ['text', 'varchar', 'wysiwyg'],
+            'dropdown'                      => ['link', 'linkMultiple'],
+            'selectPageSize'                => ['link', 'linkMultiple'],
+            'allowNullForBool'              => ['bool'],
+            'notNull'                       => ['varchar', 'text', 'markdown', 'wysiwyg', 'url'],
+            'trim'                          => ['varchar'],
+            'htmlSanitizer'                 => ['wysiwyg'],
+            'conditionalDisableOptions'     => ['enum', 'multiEnum', 'link', 'linkMultiple'],
+        ];
+
+        foreach ($typeRelatedFields as $field => $types) {
+            if (in_array($entity->get('type'), $types)) {
+                continue;
+            }
+
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Attribute', 'fields', $field], []);
+            $default = $fieldDefs['default'] ?? null;
+
+            if (!empty($fieldDefs['virtualField'])) {
+                $entity->setVirtualField($field, $default);
+            } elseif (in_array($fieldDefs['type'] ?? null, ['link', 'file'])) {
+                $entity->set("{$field}Id", null);
+                $entity->set("{$field}Name", null);
+            } elseif ($entity->hasAttribute($field)) {
+                $entity->set($field, $default);
+            }
+        }
     }
 
     public function validateMinMax(Entity $entity): void
