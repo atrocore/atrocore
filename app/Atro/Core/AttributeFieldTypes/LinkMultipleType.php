@@ -230,7 +230,7 @@ class LinkMultipleType extends AbstractFieldType
         }
 
         $where = [
-            'type'  => 'and',
+            'type'  => $item['type'] === 'linkedWith' ? 'or' : 'and',
             'value' => []
         ];
 
