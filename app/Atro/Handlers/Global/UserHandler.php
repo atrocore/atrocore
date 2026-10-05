@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Global;
 
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Http\AuthCookie;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -40,6 +42,16 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         [
+            'name'        => 'Authorization-Cookie',
+            'in'          => 'header',
+            'required'    => false,
+            'description' => 'When true, the auth token is set as an HttpOnly cookie and is not returned in the response body. Used by the UI.',
+            'schema'      => [
+                'type'    => 'boolean',
+                'example' => true,
+            ],
+        ],
+        [
             'name'        => 'Authorization-Token-Lifetime',
             'in'          => 'header',
             'required'    => false,
@@ -62,14 +74,11 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Authorized user data. When Authorization-Token-Only is true, only authorizationToken is returned.',
+            'description' => 'Authorized user data. When Authorization-Token-Only is true, only authorizationToken is returned. authorizationToken and token are omitted when the request is authenticated by the auth cookie or Authorization-Cookie is true.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
-                        'required'   => [
-                            'authorizationToken',
-                        ],
                         'properties' => [
                             'authorizationToken' => [
                                 'type'        => 'string',
@@ -113,13 +122,32 @@ class UserHandler extends AbstractHandler
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getServiceFactory()->create('App')->getUserData();
-        $data['authorizationToken'] = base64_encode("{$data['user']->userName}:{$data['user']->token}");
+        unset($data['user']->token);
+
+        $cookieHeader = $request->getHeaderLine('Authorization-Cookie');
+        $isCookieMode = $request->getAttribute('isCookieAuth') || $cookieHeader === 'true' || $cookieHeader === '1';
 
         $tokenOnly = $request->getHeaderLine('Authorization-Token-Only');
         if ($tokenOnly === 'true' || $tokenOnly === '1') {
-            return new JsonResponse(['authorizationToken' => $data['authorizationToken']]);
+            if ($isCookieMode) {
+                throw new Forbidden('Authorization-Token-Only is not available in cookie mode');
+            }
+            return new JsonResponse(['authorizationToken' => base64_encode("{$data['user']->userName}:{$data['token']}")]);
         }
 
-        return new JsonResponse($data);
+        if (!$isCookieMode) {
+            $data['authorizationToken'] = base64_encode("{$data['user']->userName}:{$data['token']}");
+            return new JsonResponse($data);
+        }
+
+        $cookieHeaders = AuthCookie::buildSetHeaders(
+            $request,
+            $this->getConfig()->getSiteUrl(),
+            $data['user']->userName,
+            $data['token']
+        );
+        unset($data['token']);
+
+        return (new JsonResponse($data))->withHeader('Set-Cookie', $cookieHeaders);
     }
 }

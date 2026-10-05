@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers;
 
+use Atro\Core\Exceptions\UnsupportedMediaType;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
@@ -99,7 +100,12 @@ abstract class AbstractHandler implements MiddlewareInterface
 
     protected function getRequestBody(ServerRequestInterface $request): \stdClass
     {
-        $body    = (string)$request->getBody();
+        $body = (string)$request->getBody();
+
+        if ($body !== '' && !str_starts_with(strtolower($request->getHeaderLine('Content-Type')), 'application/json')) {
+            throw new UnsupportedMediaType('Content-Type must be application/json');
+        }
+
         $decoded = $body !== '' ? json_decode($body) : null;
 
         if (is_array($decoded)) {

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Middleware;
 
 use Atro\Core\Exceptions\Unauthorized;
+use Atro\Core\Http\AuthCookie;
 use Psr\Container\ContainerInterface;
 use Atro\Core\Http\Response\ErrorResponse;
 use Espo\Core\Utils\Auth;
@@ -47,6 +48,17 @@ class AuthMiddleware implements MiddlewareInterface
         $authRequired = !isset($options['conditions']['auth']) || $options['conditions']['auth'] !== false;
 
         [$username, $password] = $this->extractCredentials($request);
+        $isCookieAuth = $this->isCookieAuth($request);
+
+        if ($isCookieAuth && !in_array($request->getMethod(), ['GET', 'HEAD', 'OPTIONS']) && !$this->isRequestFromOwnOrigin($request)) {
+            if ($authRequired) {
+                return new ErrorResponse(403, 'Cross-origin request is not allowed', ['X-Status-Reason' => 'Cross-origin request is not allowed']);
+            }
+            [$username, $password] = [null, null];
+            $isCookieAuth = false;
+        }
+
+        $request = $request->withAttribute('isCookieAuth', $isCookieAuth);
 
         $auth = new Auth($this->container, false, $request);
 
@@ -90,7 +102,12 @@ class AuthMiddleware implements MiddlewareInterface
 
 
         if (!$isAuthenticated) {
-            return $this->unauthorizedResponse();
+            $response = $this->unauthorizedResponse();
+            if ($isCookieAuth) {
+                $siteUrl = $this->container->get('config')->getSiteUrl();
+                $response = $response->withHeader('Set-Cookie', AuthCookie::buildClearHeaders($request, $siteUrl));
+            }
+            return $response;
         }
 
         return $handler->handle($request);
@@ -113,11 +130,44 @@ class AuthMiddleware implements MiddlewareInterface
         }
 
         $cookies = $request->getCookieParams();
-        if (!empty($cookies['auth-username']) && !empty($cookies['auth-token'])) {
-            return [$cookies['auth-username'], $cookies['auth-token']];
+        if (!empty($cookies[AuthCookie::USERNAME]) && !empty($cookies[AuthCookie::TOKEN])) {
+            return [$cookies[AuthCookie::USERNAME], $cookies[AuthCookie::TOKEN]];
         }
 
         return [null, null];
+    }
+
+    private function isCookieAuth(ServerRequestInterface $request): bool
+    {
+        $cookies = $request->getCookieParams();
+
+        return $request->getHeaderLine('Authorization-Token') === ''
+            && empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])
+            && empty($request->getServerParams()['PHP_AUTH_USER'])
+            && !empty($cookies[AuthCookie::USERNAME])
+            && !empty($cookies[AuthCookie::TOKEN]);
+    }
+
+    private function isRequestFromOwnOrigin(ServerRequestInterface $request): bool
+    {
+        $source = $request->getHeaderLine('Origin') ?: $request->getHeaderLine('Referer');
+        $sourceHost = parse_url($source, PHP_URL_HOST);
+        if (empty($sourceHost)) {
+            return false;
+        }
+
+        $sourcePort = parse_url($source, PHP_URL_PORT);
+        $sourceAuthority = strtolower($sourceHost . ($sourcePort ? ':' . $sourcePort : ''));
+
+        if ($sourceAuthority === strtolower($request->getHeaderLine('Host'))) {
+            return true;
+        }
+
+        $siteUrl = $this->container->get('config')->getSiteUrl();
+        $siteHost = parse_url($siteUrl, PHP_URL_HOST);
+        $sitePort = parse_url($siteUrl, PHP_URL_PORT);
+
+        return !empty($siteHost) && $sourceAuthority === strtolower($siteHost . ($sitePort ? ':' . $sitePort : ''));
     }
 
     private function unauthorizedResponse(array $extraHeaders = []): ResponseInterface
