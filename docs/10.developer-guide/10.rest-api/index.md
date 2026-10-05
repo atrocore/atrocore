@@ -6,7 +6,7 @@ AtroCore is an **API-centric** application where the frontend communicates with 
 
 Every action you perform in the UI can be replicated through an API request. A good way to learn how the API works is to monitor the **network tab** in your browser's developer console (`F12`).
 
-All API requests must include the header `Content-Type: application/json`. The base path for all API requests is `/api/`.
+All API requests must include the header `Content-Type: application/json`. Requests with a body and any other content type are rejected with `415 Unsupported Media Type`. The base path for all API requests is `/api/`.
 
 !!! **Best Practice**: We recommend creating a separate API user with a specific role and limited permissions for all API calls.
 
@@ -52,6 +52,8 @@ The response will contain your authorization token:
 ```
 
 Now, include the header `Authorization-Token: *******************` in all subsequent requests to authorize your calls.
+
+> The AtroCore UI does not use the `Authorization-Token` header – it authenticates with an `HttpOnly` auth cookie. See [Session Cookie](../../09.installation-and-maintenance/02.security-guidance/index.md#session-cookie).
 
 For example, to get the instance [generated metadata](../02.understanding-atrocore/02.metadata/index.md):
 

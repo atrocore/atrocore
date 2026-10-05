@@ -36,24 +36,6 @@ Espo.define('views/login', 'view', function (Dep) {
 
         _template: '',
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('token') && urlParams.has('username')) {
-                // do not render login form
-                this.wait(true);
-                this.getStorage().set('user', 'auth', Base64.encode(urlParams.get('username') + ':' + urlParams.get('token')));
-                this.trigger('login', {
-                    auth: {
-                        userName: urlParams.get('username'),
-                        token: urlParams.get('token')
-                    }
-                });
-                window.location.href = '/';
-            }
-        },
-
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 

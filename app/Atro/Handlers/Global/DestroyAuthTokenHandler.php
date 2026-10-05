@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Global;
 
-use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Http\AuthCookie;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -27,28 +27,9 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'POST',
     ],
-    summary: 'Invalidate an auth token',
-    description: 'Invalidates the specified auth token, effectively logging out the session associated with it. Called by the UI on logout.',
+    summary: 'Invalidate the current auth token',
+    description: 'Invalidates the auth token the request is authenticated with, effectively logging out the current session. For requests authenticated by the auth cookie, the auth cookie is cleared. Called by the UI on logout.',
     tag: 'Global',
-    requestBody: [
-        'required' => true,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'required'   => [
-                        'token',
-                    ],
-                    'properties' => [
-                        'token' => [
-                            'type'        => 'string',
-                            'description' => 'The auth token to invalidate.',
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
     responses: [
         200 => [
             'description' => 'true if the token was invalidated',
@@ -60,21 +41,18 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
-        400 => [
-            'description' => 'token is required',
-        ],
     ],
 )]
 class DestroyAuthTokenHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $data = $this->getRequestBody($request);
+        $response = new BoolResponse((new Auth($this->container))->destroyAuthToken((string)$this->getUser()->get('token')));
 
-        if (!property_exists($data, 'token')) {
-            throw new BadRequest();
+        if ($request->getAttribute('isCookieAuth')) {
+            $response = $response->withHeader('Set-Cookie', AuthCookie::buildClearHeaders($request, $this->getConfig()->getSiteUrl()));
         }
 
-        return new BoolResponse((new Auth($this->container))->destroyAuthToken($data->token));
+        return $response;
     }
 }
