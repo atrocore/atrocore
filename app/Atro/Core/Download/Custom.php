@@ -50,15 +50,37 @@ class Custom
 
     public function convert(File $file, array $params): string
     {
-        $this->setFile($file);
-        $this->setParams($params);
+        $this->prepare($file, $params);
 
         Util::createDir('public' . DIRECTORY_SEPARATOR .  $this->getDirPath());
 
-        $this->resize()->quality()->format();
         $this->imagick->writeImage($this->getFilePath());
 
         return $this->getDirPath() . DIRECTORY_SEPARATOR . $this->getName();
+    }
+
+    /**
+     * Applies the same conversion as convert() but returns the image bytes instead of writing a file.
+     *
+     * @return array{content: string, mimeType: string}
+     */
+    public function convertToBlob(File $file, array $params): array
+    {
+        $this->prepare($file, $params);
+
+        $result = ['content' => $this->imagick->getImageBlob(), 'mimeType' => $this->getType()];
+
+        $this->imagick->clear();
+
+        return $result;
+    }
+
+    protected function prepare(File $file, array $params): void
+    {
+        $this->setFile($file);
+        $this->setParams($params);
+
+        $this->resize()->quality()->format();
     }
 
     protected function setFile(File $file): Custom
@@ -172,7 +194,7 @@ class Custom
 
     protected function getType(): string
     {
-        return $this->format === "png" ? "image/png" : "image/jpeg";
+        return $this->imagick->getImageMimeType();
     }
 
     protected function resize(): Custom
