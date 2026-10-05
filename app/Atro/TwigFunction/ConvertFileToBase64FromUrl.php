@@ -20,6 +20,8 @@ use Atro\Core\Utils\Config;
  * Returns base64 content of a converted image, given its URL (as returned by getConvertedImageUrl).
  * Only URLs of this site that point into the rendition directory are supported; the file is read
  * from disk, nothing is requested over the network.
+ *
+ * @deprecated Use convertFileToBase64(file, params) instead. Will be removed in 3.0.0.
  */
 class ConvertFileToBase64FromUrl extends AbstractTwigFunction
 {
@@ -32,9 +34,6 @@ class ConvertFileToBase64FromUrl extends AbstractTwigFunction
         $this->config = $config;
     }
 
-    /**
-     * @deprecated Use convertFileToBase64(file, params) instead. Will be removed in 3.0.0.
-     */
     public function run(string $urlOrPath, ?string $type = null)
     {
         $this->logOnce('deprecated', 'convertFileToBase64FromUrl is deprecated, use convertFileToBase64(file, params) instead.');
