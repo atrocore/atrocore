@@ -21,26 +21,34 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/settings',
+    path: '/appBootstrap',
     methods: [
         'GET',
     ],
-    summary: 'Get system settings',
-    description: 'Returns the values of the system configuration parameters.',
+    summary: 'Get application bootstrap data',
+    description: 'Returns everything the frontend needs to start.',
     tag: 'Global',
+    auth: false,
     responses: [
         200 => [
-            'description' => 'Values of the Settings fields.',
+            'description' => 'Application bootstrap data.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'    => 'object',
                         'example' => [
-                            'recordsPerPage'  => 50,
                             'applicationName' => 'AtroPIM',
-                            'siteUrl'         => 'https://pim.example.com',
-                            'companyLogoId'   => null,
-                            'companyLogoName' => null,
+                            'dateFormat'  => 'MM/DD/YYYY',
+                            'timeFormat'  => 'HH:mm',
+                            'timeZone'    => 'UTC',
+                            'weekStart'   => 0,
+                            'coreVersion' => '1.14.0',
+                            'jsLibs'      => [
+                                'jsTree' => [
+                                    'path'      => 'client/lib/jstree.min.js',
+                                    'exportsTo' => 'jQuery',
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -49,13 +57,10 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     skipActionHistory: true,
 )]
-class SettingsReadHandler extends AbstractHandler
+class AppBootstrapHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        /** @var \Atro\Services\Settings $service */
-        $service = $this->getServiceFactory()->create('Settings');
-
-        return new JsonResponse($service->getFormData());
+        return new JsonResponse($this->getServiceFactory()->create('App')->getBootstrapData());
     }
 }

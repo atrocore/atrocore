@@ -105,15 +105,9 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                 } else {
                     $el.val('');
                     const decodedUrl = decodeURIComponent(url);
-                    const headers = {'Content-Type': 'application/json'};
-                    const auth = this.getStorage().get('user', 'auth');
-                    if (auth) {
-                        headers['Authorization-Token'] = auth;
-                    }
-
                     fetch('api/File/uploadProxy', {
                         method: 'POST',
-                        headers: headers,
+                        headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({url: decodedUrl})
                     }).then(response => {
                         if (!response.ok) {

@@ -27,38 +27,19 @@ use Atro\Repositories\SoftwarePackage as SoftwarePackageRepository;
 
 class Settings extends AbstractService
 {
-    /**
-     * Config parameters that may leave the backend. Anything not listed here
-     * stays server-side, so a new parameter is private until someone adds it
-     * on purpose - never by forgetting to exclude it.
-     *
-     * Keys contributed through AbstractModule::getConfigAdditionalData() are
-     * exposed on top of this list, since that mechanism exists for the frontend.
-     */
-    private const PUBLIC_CONFIG_KEYS
+    private const CONFIG_KEYS
         = [
-            'actionHistoryDisabled', 'adminPanelIframeHeight', 'applicationName',
-            'assignedUserAttributeOwnership', 'assignedUserProductOwnership', 'avatarsDisabled',
-            'cacheTimestamp', 'changeStatusAfterTranslation', 'chunkFileSize',
-            'companyLogoId', 'currencyList', 'dashletsOptions',
-            'dateFormat', 'defaultNotificationProfileId', 'defaultStyleId',
-            'disableEmailDelivery', 'disableNavigationPath', 'disableToolbarLogo',
-            'displayListViewRecordCount', 'faviconId', 'favoritesIconsDisabled',
-            'fileNameRegexPattern', 'fileUploadStreamCount', 'fuzzySearchAvailable',
-            'globalSearchEntityList', 'globalSearchMaxSize', 'hasApproved',
-            'hasNotTranslateFrom', 'hasNotTranslateTo', 'inputLanguageList',
-            'isMultilangActive', 'isStreamSide', 'language',
-            'lastViewedCount', 'locale', 'locales',
-            'mainLanguage', 'massDeleteMaxCountWithoutJob', 'massRestoreMaxCountWithoutJob',
-            'massUpdateMaxCountWithoutJob', 'maxComparableItem', 'maxMassLinkCount',
-            'maxMassUnlinkCount', 'maxSizeForEntityComparisons', 'notificationsMaxSize',
-            'notificationSmtpConnectionId', 'ownerUserAttributeOwnership', 'ownerUserProductOwnership',
-            'packaged', 'readableDateFormatDisabled', 'recordListMaxSizeLimit',
-            'recordsPerPage', 'recordsPerPageSmall', 'resetPasswordViaEmailOnly',
-            'scopeColorsDisabled', 'siteUrl', 'systemUserId',
-            'tabIconsDisabled', 'timeFormat', 'timeZone',
-            'unitsOfMeasure', 'userNameRegularExpression', 'userThemesDisabled',
-            'weekStart',
+            'actionHistoryDisabled', 'adminPanelIframeHeight', 'assignedUserAttributeOwnership',
+            'assignedUserProductOwnership', 'cacheTimestamp', 'chunkFileSize',
+            'currencyList', 'disableEmailDelivery', 'fileUploadStreamCount',
+            'globalSearchMaxSize', 'inputLanguageList', 'isStreamSide',
+            'language', 'locales', 'mainLanguage',
+            'massDeleteMaxCountWithoutJob', 'massRestoreMaxCountWithoutJob', 'massUpdateMaxCountWithoutJob',
+            'maxComparableItem', 'maxMassLinkCount', 'maxMassUnlinkCount',
+            'maxSizeForEntityComparisons', 'notificationsMaxSize', 'ownerUserAttributeOwnership',
+            'ownerUserProductOwnership', 'packaged', 'recordListMaxSizeLimit',
+            'resetPasswordViaEmailOnly', 'systemUserId', 'unitsOfMeasure',
+            'userNameRegularExpression',
         ];
 
     private string $customHeadCodeDir = 'public/client/custom/html';
@@ -66,54 +47,49 @@ class Settings extends AbstractService
     private string $customStylesheetDir = 'public/client/custom/css';
     private string $customStylesheetFileName = 'custom-css.css';
 
-    /**
-     * Config for server-side script contexts - Twig templates, PDF and export
-     * rendering. Same as the public config plus the user-defined variables:
-     * those may hold secrets, which is fine here because the script runs on the
-     * backend, and is exactly why they never go to the frontend.
-     */
     public function getScriptConfig(): array
     {
-        return array_merge($this->getPublicConfig(), Variable::loadAll());
+        return array_merge($this->getAppService()->getPublicConfig(), $this->getConfigData(), Variable::loadAll());
     }
 
-    /**
-     * Everything the Settings UI needs: the public config plus the parameters
-     * declared as Settings fields, which is what the form edits. Password
-     * fields never leave the backend.
-     */
     public function getConfigData(): array
     {
         $config = $this->getConfig();
-        $data = $this->getPublicConfig();
+        $data = [];
+
+        foreach (array_merge(self::CONFIG_KEYS, $config->getAdditionalConfigKeys()) as $key) {
+            if ($config->has($key)) {
+                $data[$key] = $config->get($key);
+            }
+        }
 
         foreach ($this->getSettingsFieldDefs() as $field => $defs) {
-            foreach ($this->getFieldAttributes($field) as $attribute) {
-                if (($defs['type'] ?? null) === 'password') {
-                    unset($data[$attribute]);
-                    continue;
-                }
+            if (($defs['type'] ?? null) === 'password') {
+                continue;
+            }
 
-                if (!array_key_exists($attribute, $data) && $config->has($attribute)) {
+            foreach ($this->getFieldAttributes($field) as $attribute) {
+                if ($config->has($attribute)) {
                     $data[$attribute] = $config->get($attribute);
                 }
             }
         }
 
-        $data = $this->prepareCustomHeadCodeForOutput($data);
-        $data = $this->prepareStylesheetConfigForOutput($data);
-
-        $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
-        $data['themes'] = $this->getMetadata()->get('themes');
-        $data['coreVersion'] = SoftwarePackage::getCoreVersion();
-
-        $data['matchingRules'] = $this->getEntityManager()->getRepository('MatchingRule')
-            ->select(['id', 'name', 'type', 'matchingRuleSetId', 'matchingId'])
-            ->find()->toArray();
-
         return $this->getInjection('eventManager')
             ->dispatch('SettingsService', 'afterGetConfigData', new Event(['data' => $data]))
             ->getArgument('data');
+    }
+
+    /**
+     * What the Settings form edits: the config data plus the custom code, which
+     * is kept in files rather than in the config.
+     */
+    public function getFormData(): array
+    {
+        $data = $this->getConfigData();
+        $data = $this->prepareCustomHeadCodeForOutput($data);
+
+        return $this->prepareStylesheetConfigForOutput($data);
     }
 
     private function getSettingsFieldDefs(): array
@@ -121,12 +97,6 @@ class Settings extends AbstractService
         return $this->getMetadata()->get('entityDefs.Settings.fields', []);
     }
 
-    /**
-     * The config keys a Settings field is actually stored under. For most types
-     * that is the field name itself, but reference types are split into
-     * attributes - a file field lives as `<field>Id` and `<field>Name`, which is
-     * exactly what the UI sends and expects back.
-     */
     private function getFieldAttributes(string $field): array
     {
         $attributes = $this->getFieldManager()->getAttributeList('Settings', $field);
@@ -178,7 +148,7 @@ class Settings extends AbstractService
             $this->getDataManager()->rebuild();
         }
 
-        return $this->getConfigData();
+        return $this->getFormData();
     }
 
     protected function getLanguage(): Language
@@ -201,32 +171,11 @@ class Settings extends AbstractService
         return $this->getInjection('fieldManagerUtil');
     }
 
-    /**
-     * The part of the config that may leave the backend - the UI, Twig
-     * templates, PDF and export contexts. Built from an explicit allow list
-     * plus whatever the providers contribute: nothing else ever leaves.
-     */
-    public function getPublicConfig(): array
+    protected function getAppService(): App
     {
-        $config = $this->getConfig();
-
-        $keys = array_merge(self::PUBLIC_CONFIG_KEYS, $config->getAdditionalConfigKeys());
-
-        $data = [];
-        foreach (array_unique($keys) as $key) {
-            if ($config->has($key)) {
-                $data[$key] = $config->get($key);
-            }
-        }
-
-        return $data;
+        return $this->getInjection('serviceFactory')->create('App');
     }
 
-    /**
-     * Applies incoming data. Only parameters declared as Settings fields can be
-     * written: anything else in the payload is ignored, so a request can never
-     * reach a config key that the UI does not own.
-     */
     private function setData(array|\stdClass $data): void
     {
         $allowedAttributes = [];
@@ -345,5 +294,6 @@ class Settings extends AbstractService
         $this->addDependency('dataManager');
         $this->addDependency('eventManager');
         $this->addDependency('fieldManagerUtil');
+        $this->addDependency('serviceFactory');
     }
 }

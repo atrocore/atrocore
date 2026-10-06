@@ -34,6 +34,8 @@
     "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
     "passwordRegexPattern": "Password Regex Pattern",
     "passwordExpireDays": "Password expiration period (in days)",
+    "passwordChangeRequestResendInterval": "Password Reset Resend Interval (minutes)",
+    "passwordChangeRequestLifetime": "Password Reset Link Lifetime (minutes)",
     "sendOutNotifications": "Send out notifications",
     "sendNotificationInSync": "Send Notifications without job",
     "automaticFileExtensionCorrection": "Automatically correct file extension",
@@ -58,6 +60,8 @@
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
     "passwordRegexPattern": "Set password complexity rules using regular expression. \nTip: use groups like (?=.*\\d) to define required symbols.",
     "passwordExpireDays": "Define the period (in days) after which users must update their password.",
+    "passwordChangeRequestResendInterval": "How long a user has to wait before requesting another password reset link. Minimum 1 minute.",
+    "passwordChangeRequestLifetime": "How long the password reset link sent by email stays valid. Minimum 1 minute.",
     "automaticFileExtensionCorrection": "If enabled, the system will automatically adjust, if necessary, the extension of each uploaded file to match its MIME type.",
     "applicationName": "We recommend keeping this value as short as possible, as the width of the browser tab is limited and you may still want to see page titles.",
     "customHeadCode": "Add code at the end of the <head> tag. Atrocore doesn't validate custom code for you, so be sure to check your code before publishing.",
@@ -66,6 +70,7 @@
     "favicon": "Available file type: image/svg+xml"
   },
   "labels": {
+    "Password Reset": "Password Reset",
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",
     "Representation": "Representation",
     "System Notifications": "System Notifications",

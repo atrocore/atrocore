@@ -26,10 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'PATCH',
     ],
     summary: 'Update system settings',
-    description: 'Updates one or more system configuration fields. Requires administrator privileges. '
-        . 'Only the fields provided in the request body are updated; omitted fields remain unchanged. '
-        . 'Password-type fields are accepted but never returned in the response. '
-        . 'Returns the full updated settings object identical to `GET /settings`.',
+    description: 'Updates one or more system configuration fields. Requires administrator privileges. ',
     tag: 'Global',
     requestBody: [
         'required' => true,
@@ -50,23 +47,17 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Full updated settings object. Same structure as `GET /settings`.',
+            'description' => 'Updated values of the Settings fields. Same structure as `GET /settings`.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'    => 'object',
                         'example' => [
-                            'language'       => 'en_US',
-                            'dateFormat'     => 'MM/DD/YYYY',
-                            'timeFormat'     => 'HH:mm',
-                            'timeZone'       => 'UTC',
-                            'weekStart'      => 0,
-                            'defaultCurrency' => 'USD',
-                            'coreVersion'    => '1.14.0',
-                            'jsLibs'         => ['jsTree' => ['path' => 'client/lib/jstree.min.js', 'exportsTo' => 'jQuery']],
-                            'themes'         => ['AtroCore' => ['stylesheet' => 'client/css/atrocore.css']],
-                            'matchings'      => [],
-                            'matchingRules'  => [],
+                            'recordsPerPage'  => 50,
+                            'applicationName' => 'AtroPIM',
+                            'siteUrl'         => 'https://pim.example.com',
+                            'companyLogoId'   => null,
+                            'companyLogoName' => null,
                         ],
                     ],
                 ],

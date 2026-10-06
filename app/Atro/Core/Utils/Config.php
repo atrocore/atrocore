@@ -30,6 +30,7 @@ final class Config
             'inputLanguageList',
             'isMultilangActive',
             'onlyStableReleases',
+            'passwordChangeRequestAvailable',
         ];
 
     /**
@@ -89,7 +90,8 @@ final class Config
         }
 
         $data = self::getDefaults();
-        $data['passwordSalt'] = bin2hex(random_bytes(16));
+        $data['encryptionKey'] = bin2hex(random_bytes(16));
+        $data[PasswordHash::PEPPER_CONFIG_KEY] = PasswordHash::generatePepper();
 
         return self::writeAtomically(self::exportPhp($data));
     }
@@ -112,15 +114,7 @@ final class Config
     {
         $this->additionalConfigCache = null;
     }
-
-    /**
-     * The whole config as stored, with no filtering whatsoever. Deciding what of
-     * it may leave the backend is the caller's job - see Services\Settings.
-     */
-    /**
-     * Root keys of everything contributed by the core providers and the modules.
-     * They are meant to reach the frontend, so Settings exposes them by default.
-     */
+    
     public function getAdditionalConfigKeys(): array
     {
         $keys = [];
@@ -379,6 +373,8 @@ final class Config
         $minimumStability = SoftwarePackageRepository::getComposerData()['minimum-stability'] ?? 'stable';
 
         $this->data['onlyStableReleases'] = $minimumStability === 'stable';
+
+        $this->data['passwordChangeRequestAvailable'] = !empty($this->data['notificationSmtpConnectionId']);
     }
 
     private static function pathExists(array $data, string $path): bool
@@ -502,7 +498,6 @@ final class Config
     {
         return [
             'isInstalled'                     => false,
-            'passwordSalt'                    => 'some-salt',
             'amountOfDbDumps'                 => 14,
             'database'                        => [
                 'driver'   => 'pdo_mysql',
@@ -525,6 +520,8 @@ final class Config
             'disabledCountQueryEntityList'    => [],
             'authTokenLifetime'               => 0,
             'authTokenMaxIdleTime'            => 120,
+            'passwordChangeRequestResendInterval' => 1,
+            'passwordChangeRequestLifetime'   => 15,
             'userNameRegularExpression'       => '[^a-z0-9\-@_\.\s]',
             'displayListViewRecordCount'      => true,
             'aclStrictMode'                   => false,

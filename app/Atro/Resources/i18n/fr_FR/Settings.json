@@ -34,6 +34,8 @@
     "customHeadCode": "Code du header",
     "passwordRegexPattern": "Regex du mot de passe",
     "passwordExpireDays": "Période d'expiration du mot de passe (en jours)",
+    "passwordChangeRequestResendInterval": "Intervalle de renvoi du lien de réinitialisation (minutes)",
+    "passwordChangeRequestLifetime": "Durée de validité du lien de réinitialisation (minutes)",
     "sendOutNotifications": "Envoyer des notifications",
     "sendNotificationInSync": "Envoyer des notifications sans tâche de fond",
     "maxConcurrentWorkers": "Nombre maximal de travailleurs simultanés",
@@ -59,6 +61,8 @@
     "fileNameRegexPattern": "Pour activer uniquement les lettres minuscules d'une longueur maximale de 24 symboles, utilisez \"/^[a-z]{1,24}$/\". 24 symboles, utiliser \"/^[a-z]{1,24}$/\".",
     "passwordRegexPattern": "Définissez des règles de complexité pour les mots de passe à l'aide d'expressions régulières. \nConseil : utilisez des groupes comme (?=.*\\d) pour définir les symboles requis. ",
     "passwordExpireDays": "Définissez la période (en jours) après laquelle les utilisateurs doivent mettre à jour leur mot de passe.",
+    "passwordChangeRequestResendInterval": "Durée pendant laquelle un utilisateur doit attendre avant de demander un nouveau lien de réinitialisation du mot de passe. Minimum 1 minute.",
+    "passwordChangeRequestLifetime": "Durée pendant laquelle le lien de réinitialisation du mot de passe envoyé par e-mail reste valide. Minimum 1 minute.",
     "favicon": "Type de fichier disponible : image/svg+xml",
     "maxConcurrentWorkers": "Limite supérieure du nombre de tâches ou de processus pouvant s'exécuter simultanément en arrière-plan du serveur.",
     "automaticFileExtensionCorrection": "Si cette option est activée, le système ajustera automatiquement, si nécessaire, l'extension de chaque fichier téléchargé pour qu'elle corresponde à son type MIME.",
@@ -66,6 +70,7 @@
     "companyLogo": "Types de fichiers disponibles : image/jpeg, image/png, image/gif, image/svg+xml"
   },
   "labels": {
+    "Password Reset": "Réinitialisation du mot de passe",
     "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues pour cette language sont automatiquement supprimées par le biais de la tâche planifiée <a href=\"/#ScheduledJob\" target=\"_blank\">Tâche planifiée</a> .",
     "Representation": "Représentation",
     "System Notifications": "Notifications du système",

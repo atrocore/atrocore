@@ -173,6 +173,7 @@
     "fieldIsUsedInUniqueIndex": "Pole '%s' jest używane w indeksie lub indeksach unikalnych '%s' i nie może zostać usunięte.",
     "cannotAddRequiredFieldWithExistingRecords": "Nie można dodać pola wymaganego z istniejącymi rekordami bez wartości domyślnej",
     "relationAlreadyUsed": "Middle Table Name %s jest już używana, wybierz inną.",
+    "optionCodeShouldBeUnique": "Kod opcji musi być unikalny.",
     "optionCodeUsedInDisabledOptionsRules": "Opcja '%s' jest używana w regułach wyłączonych opcji i nie może zostać zmieniona.",
     "optionCodeUsedInDisabledOptionsRulesDelete": "Opcja '%s' jest używana w regułach wyłączonych opcji i nie może zostać usunięta."
   }

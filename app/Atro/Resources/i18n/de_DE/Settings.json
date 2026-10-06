@@ -33,6 +33,8 @@
     "emailAddressIsOptedOutByDefault": "Neue E-Mail-Adressen als Opt-Out markieren",
     "passwordRegexPattern": "Passwort Regex Pattern",
     "passwordExpireDays": "Gültigkeitsdauer des Passworts (in Tagen)",
+    "passwordChangeRequestResendInterval": "Intervall für erneutes Senden des Passwort-Links (Minuten)",
+    "passwordChangeRequestLifetime": "Gültigkeitsdauer des Passwort-Links (Minuten)",
     "sendOutNotifications": "Benachrichtigungen verschicken",
     "sendNotificationInSync": "Benachrichtigungen ohne Auftrag senden",
     "automaticFileExtensionCorrection": "Dateierweiterung automatisch korrigieren",
@@ -58,6 +60,8 @@
     "emailAddressIsOptedOutByDefault": "Beim Anlegen eines neuen Datensatzes wird die E-Mail-Adresse als abgemeldet markiert.",
     "passwordRegexPattern": "Regeln für die Passwortkomplexität mit regulären Ausdrücken festlegen. \nTipp: Verwenden Sie Gruppen wie (?=.*\\d), um erforderliche Symbole zu definieren.",
     "passwordExpireDays": "Legen Sie den Zeitraum (in Tagen) fest, nach dem Benutzer ihr Kennwort aktualisieren müssen.",
+    "passwordChangeRequestResendInterval": "Wie lange ein Benutzer warten muss, bevor er einen weiteren Link zum Zurücksetzen des Passworts anfordern kann. Mindestens 1 Minute.",
+    "passwordChangeRequestLifetime": "Wie lange der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig bleibt. Mindestens 1 Minute.",
     "automaticFileExtensionCorrection": "Wenn diese Option aktiviert ist, passt das System bei Bedarf automatisch die Erweiterung jeder hochgeladenen Datei an ihren MIME-Typ an.",
     "applicationName": "Wir empfehlen, diesen Wert so kurz wie möglich zu halten, da die Breite des Browser-Tabs begrenzt ist und Sie möglicherweise noch Seitentitel sehen wollen.",
     "customHeadCode": "Fügen Sie den Code am Ende des <head>-Tags ein. Atrocore validiert benutzerdefinierten Code nicht für Sie, also überprüfen Sie Ihren Code vor der Veröffentlichung.",
@@ -66,6 +70,7 @@
     "favicon": "Verfügbarer Dateityp: image/svg+xml"
   },
   "labels": {
+    "Password Reset": "Passwort zurücksetzen",
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",
     "Admin Notifications": "Admin Notifications",
     "System Notifications": "System-Meldungen",

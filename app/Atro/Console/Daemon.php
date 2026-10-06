@@ -60,6 +60,9 @@ class Daemon extends AbstractConsole
     protected function composerDaemon(string $id): void
     {
         while (true) {
+            if (file_exists(Cron::DAEMON_KILLER)) {
+                break;
+            }
             $log = Application::COMPOSER_LOG_FILE;
 
             // delete check-up file
@@ -69,7 +72,7 @@ class Daemon extends AbstractConsole
 
             if (file_exists($log)) {
                 $logFileContents = file_get_contents($log);
-                $fileData = explode(" || ", $logFileContents);
+                $fileData        = explode(" || ", $logFileContents);
 
                 if (!isset($fileData[0]) || !isset($fileData[1])) {
                     $GLOBALS['log']->error('Composer update log failed: wrong log file data' . $logFileContents);
@@ -79,7 +82,7 @@ class Daemon extends AbstractConsole
                 }
 
                 $command = $fileData[0];
-                $userId = $fileData[1];
+                $userId  = $fileData[1];
 
                 $conn = $this->getConnection();
 
@@ -159,7 +162,7 @@ class Daemon extends AbstractConsole
     protected function ptDaemon(string $id): void
     {
         while (true) {
-            if (file_exists(Cron::DAEMON_KILLER)) {
+            if (file_exists(Cron::DAEMON_KILLER) || file_exists(Application::COMPOSER_LOG_FILE)) {
                 break;
             }
 
@@ -179,7 +182,7 @@ class Daemon extends AbstractConsole
             }
 
             if (file_exists(JobManager::QUEUE_FILE) && !file_exists(JobManager::PAUSE_FILE)) {
-                $config = Config::load();
+                $config       = Config::load();
                 $workersCount = $config['maxConcurrentWorkers'] ?? 6;
                 if ($workersCount < 4) {
                     $workersCount = 4;
@@ -188,7 +191,7 @@ class Daemon extends AbstractConsole
                 }
 
                 exec('ps ax | grep console.php', $processes);
-                $processes = implode(' | ', $processes);
+                $processes       = implode(' | ', $processes);
                 $numberOfWorkers = substr_count($processes, $this->getPhpBin() . " console.php job {$id}_");
 
                 if ($numberOfWorkers < $workersCount) {

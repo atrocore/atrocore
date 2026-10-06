@@ -52,7 +52,7 @@ All AtroCore handlers implement `MiddlewareInterface` (method `process`).
 ```
 ErrorHandlerMiddleware          ← catches all unexpected exceptions
 RouteMiddleware                 ← matches the request path via FastRoute
-AuthMiddleware                  ← validates the Authorization-Token
+AuthMiddleware                  ← validates the Authorization-Token or the auth cookie
 ActionHistoryMiddleware         ← logs the action to ActionHistoryRecord
 ApiValidationMiddleware         ← validates request input and response output
 [module middlewares]            ← optional, registered via Module.php
@@ -662,7 +662,7 @@ EntityType handlers extend `Atro\Core\EntityTypeHandlers\AbstractHandler`, which
 | `getRecordService(entityName)` | Returns the entity's service (falls back to the generic `Record` service). |
 | `getAcl()` | Returns the current user's ACL instance. |
 | `getUser()` | Returns the current `User` entity. |
-| `getRequestBody(request)` | Decodes the JSON request body. |
+| `getRequestBody(request)` | Decodes the JSON request body. Throws `UnsupportedMediaType` (415) if the body is not empty and `Content-Type` is not `application/json`. |
 | `buildListParams(request)` | Parses common list query parameters (`where`, `offset`, `maxSize`, `sortBy`, etc.). |
 | `buildListResult(result, params)` | Formats a list service result into the standard `{total, list}` response shape. |
 | `buildMassParams(data)` | Parses mass-action parameters (`ids` or `where`+`byWhere`). |

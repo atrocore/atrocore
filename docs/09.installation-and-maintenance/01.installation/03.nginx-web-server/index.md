@@ -236,12 +236,21 @@ server {
 
   client_max_body_size 50M;
 
+  add_header X-Content-Type-Options "nosniff" always;
+  add_header X-Frame-Options "SAMEORIGIN" always;
+  add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
   location ~ ((.*)\.sql|composer\.json)$ {
     deny all;
   }
 
   location ~ /\.ht {
     deny all;
+  }
+
+  location ^~ /upload/ {
+    try_files $uri @router;
+    default_type application/octet-stream;
   }
 
   location / {
@@ -252,7 +261,7 @@ server {
   }
 
   location @router {
-    rewrite ^/(.*)$ /index.php?treoq=$1;
+    rewrite ^/(.*)$ /index.php?atroq=$1;
   }
 
   location ~ \.php$ {
@@ -262,6 +271,12 @@ server {
 
 }
 ```
+
+The `add_header` directives set the same security headers that the bundled `.htaccess` file sets for Apache. Nginx does not read `.htaccess` files, so these headers must be set in the server block.
+
+!! Nginx stops inheriting server-level `add_header` directives in any `location` block that has its own `add_header`. If you add one to a `location` block, repeat the security headers there.
+
+! Once the site is served over HTTPS, also add `add_header Strict-Transport-Security "max-age=31536000" always;`.
 
 Activate your configuration by linking to the config file from Nginx’s ```sites-enabled``` directory:
 ```

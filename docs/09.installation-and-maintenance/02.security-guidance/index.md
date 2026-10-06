@@ -21,6 +21,13 @@ Disable remote root access to the database.
 ## Use HTTPS ##
 Using AtroCore without using an encrypted HTTPS connection opens up your server to a man-in-the-middle (MITM) attack, and risks the interception of user data and passwords. It is a best practice, and highly recommended, to always use HTTPS on production servers, and to never allow unencrypted HTTP.
 
+## Session Cookie ##
+The browser session is kept in an auth cookie that the server sets with the `HttpOnly` and `SameSite=Strict` attributes, so scripts on the page cannot read it and other sites cannot send it. The `Secure` attribute is added only when the request uses HTTPS or the [Site URL](../../01.atrocore/03.administration/01.system-settings/index.md#system) starts with `https://`.
+
+!! If HTTPS is terminated on a reverse proxy or load balancer, set **Site URL** to the `https://` address. Otherwise the auth cookie is sent without the `Secure` attribute.
+
+Requests that change data and are authenticated by the auth cookie are accepted only if their `Origin` (or `Referer`) header matches the instance host or **Site URL**.
+
 ## Redirect all unencrypted traffic to HTTPS ##
 To redirect all HTTP traffic to HTTPS administrators are encouraged to issue a permanent redirect using the 301 status code. When using Apache this can be achieved by a setting such as the following in the Apache VirtualHosts configuration:
 ```

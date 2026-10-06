@@ -21,15 +21,11 @@ class ChangePassword extends AbstractEntryPoint
     public function run()
     {
         $id = $_GET['id'] ?? null;
-        if (empty($id)) {
+        if (empty($id) || !is_string($id)) {
             throw new BadRequest();
         }
 
-        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')
-            ->where([
-                'requestId' => $id
-            ])
-            ->findOne();
+        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->findActive($id);
 
         if (!$p) {
             throw new NotFound();

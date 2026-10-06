@@ -24,13 +24,11 @@ use Atro\Core\Utils\Language;
 use Atro\Core\Exceptions;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\PasswordHash;
+use Atro\Core\Utils\PasswordHash;
 use Atro\Entities\User;
 
 class Installer extends HasContainer
 {
-    protected ?PasswordHash $passwordHash = null;
-
     private array $allTranslations = [];
 
     /**
@@ -357,19 +355,9 @@ class Installer extends HasContainer
         return $this->getContainer()->get('fileManager');
     }
 
-    /**
-     * Get passwordHash
-     *
-     * @return PasswordHash
-     */
     protected function getPasswordHash(): PasswordHash
     {
-        if (!isset($this->passwordHash)) {
-            $config = $this->getConfig();
-            $this->passwordHash = new PasswordHash($config);
-        }
-
-        return $this->passwordHash;
+        return $this->getContainer()->get(PasswordHash::class);
     }
 
     /**
@@ -489,6 +477,12 @@ class Installer extends HasContainer
      */
     protected function createSuperAdminUser(string $username, string $password): User
     {
+        // a config file created before the pepper existed; there are no users yet, so it is safe to generate one
+        if (empty($this->getConfig()->get(PasswordHash::PEPPER_CONFIG_KEY))) {
+            $this->getConfig()->set(PasswordHash::PEPPER_CONFIG_KEY, PasswordHash::generatePepper());
+            $this->getConfig()->save();
+        }
+
         $connection = $this->getEntityManager()->getDbal();
 
         // prepare data

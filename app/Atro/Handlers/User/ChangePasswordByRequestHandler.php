@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Handlers\User;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -60,13 +60,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'url' => [
-                                'type'        => 'string',
-                                'description' => 'Redirect URL after the password change.',
-                            ],
-                        ],
+                        'type' => 'boolean',
                     ],
                 ],
             ],
@@ -75,7 +69,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'requestId or password is missing, or the new password is invalid.',
         ],
         404 => [
-            'description' => 'Reset token not found.',
+            'description' => 'Reset token not found or expired.',
         ],
     ],
 )]
@@ -93,8 +87,8 @@ class ChangePasswordByRequestHandler extends AbstractHandler
             throw new BadRequest("'password' is required.");
         }
 
-        return new JsonResponse(
-            $this->getRecordService('User')->changePasswordByRequest($data->requestId, $data->password)
+        return new BoolResponse(
+            $this->getRecordService('User')->changePasswordByRequest((string)$data->requestId, (string)$data->password)
         );
     }
 }
