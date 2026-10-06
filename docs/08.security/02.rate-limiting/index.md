@@ -62,9 +62,9 @@ For Apache, `mod_evasive` or `mod_security` offer similar controls.
 
 ## Data and Maintenance ##
 
-Each accepted request to a limited endpoint is stored in the internal table `rate_limit_hit` (endpoint, HTTP method, IP address, user name, time). The table is not visible in the interface. Entries older than one day are deleted by the scheduled job **Clear deleted data**, so make sure [cron](../../09.installation-and-maintenance/01.installation/index.md) is running.
+Accepted requests to limited endpoints are kept for one day and then deleted by the scheduled job **Clear deleted data**, so make sure [cron](../../09.installation-and-maintenance/01.installation/index.md) is running.
 
-If the rate limiter fails, for example because the update that creates its table was not completed, requests are processed normally and the error is written to the log.
+If the rate limiter cannot work, for example because an update was not completed, requests are processed normally and the error is written to the log.
 
 ## For Developers ##
 

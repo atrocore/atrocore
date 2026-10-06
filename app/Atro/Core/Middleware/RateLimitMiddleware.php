@@ -78,15 +78,11 @@ class RateLimitMiddleware implements MiddlewareInterface
         $now = (float)($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true));
 
         try {
-            /** @var RateLimitHit $repository */
-            $repository = $this->container->get('entityManager')->getRepository('RateLimitHit');
-
-            $ipState = $this->getIpState($repository, $route, $method, $ipAddress, $limit, $period, $now);
+            $ipState = $this->getIpState($route, $method, $ipAddress, $limit, $period, $now);
             $retryAfter = $ipState['retryAfter'];
 
             if ($userName !== null) {
                 $userRetryAfter = $this->getUserRetryAfter(
-                    $repository,
                     $route,
                     $method,
                     $userName,
@@ -100,7 +96,7 @@ class RateLimitMiddleware implements MiddlewareInterface
             }
 
             if ($retryAfter === null) {
-                $repository->recordHit($route, $method, $ipAddress, $userName, $now);
+                $this->getRepository()->recordHit($route, $method, $ipAddress, $userName, $now);
             }
         } catch (\Throwable $e) {
             $GLOBALS['log']->error('RateLimit: ' . $e->getMessage());
@@ -135,9 +131,9 @@ class RateLimitMiddleware implements MiddlewareInterface
      *
      * @return array{count: int, retryAfter: ?float, reset: float}
      */
-    private function getIpState(RateLimitHit $repository, string $route, string $method, string $ipAddress, int $limit, float $period, float $now): array
+    private function getIpState(string $route, string $method, string $ipAddress, int $limit, float $period, float $now): array
     {
-        $times = $repository->getIpHitTimes($route, $method, $ipAddress, $now - $period);
+        $times = $this->getRepository()->getIpHitTimes($route, $method, $ipAddress, $now - $period);
         $count = count($times);
 
         return [
@@ -151,9 +147,9 @@ class RateLimitMiddleware implements MiddlewareInterface
      * Seconds until requests for the user name are allowed again when they came from more than $maxDistinctIps
      * different addresses within $period seconds, null when they are allowed now.
      */
-    private function getUserRetryAfter(RateLimitHit $repository, string $route, string $method, string $userName, int $maxDistinctIps, float $period, float $now): ?float
+    private function getUserRetryAfter(string $route, string $method, string $userName, int $maxDistinctIps, float $period, float $now): ?float
     {
-        $hits = $repository->getUserHits($route, $method, $userName, $now - $period);
+        $hits = $this->getRepository()->getUserHits($route, $method, $userName, $now - $period);
 
         $perIp = [];
         foreach ($hits as $hit) {
@@ -196,6 +192,11 @@ class RateLimitMiddleware implements MiddlewareInterface
         $maxLength = (int)$this->container->get('metadata')->get(['entityDefs', 'RateLimitHit', 'fields', 'userName', 'len'], self::DEFAULT_USER_NAME_LENGTH);
 
         return mb_strlen($userName) > $maxLength ? 'h:' . sha1($userName) : $userName;
+    }
+
+    private function getRepository(): RateLimitHit
+    {
+        return $this->container->get('entityManager')->getRepository('RateLimitHit');
     }
 
     private function getConfig(): Config

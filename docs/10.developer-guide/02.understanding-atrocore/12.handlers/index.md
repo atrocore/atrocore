@@ -225,41 +225,29 @@ This rule applies to **all** arrays inside `#[Route]` without exception: `method
 
 ## Rate Limiting
 
-`RateLimitMiddleware` limits how often one IP address may call an endpoint. It is opt-in: a route is only limited when its `#[Route]` attribute declares `rateLimit`.
+An endpoint is rate limited per IP address when its `#[Route]` attribute declares `rateLimit`. Without it, the endpoint is not limited.
 
 ```php
-#[Route(
-    path: '/User/passwordChangeRequest',
-    methods: ['POST'],
-    // ...
-    rateLimit: [],                                    // global defaults
-)]
-
 #[Route(
     path: '/Example/expensiveAction',
     methods: ['POST'],
     // ...
-    rateLimit: ['limit' => 10, 'period' => 60],       // 10 requests per 60 seconds per IP
+    rateLimit: ['limit' => 10, 'period' => 60],   // 10 requests per 60 seconds per IP
 )]
 ```
 
+An empty array (`rateLimit: []`) uses the defaults from the settings.
+
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `limit` | `int` | setting `rateLimitLimit` (3) | Number of requests one IP may send within `period`. |
-| `period` | `float` | setting `rateLimitPeriod` (1) | Length of the window in seconds. May be fractional (e.g. `0.5`). |
+| `limit` | `int` | setting *Rate Limit: Requests* (3) | Requests one IP may send within `period`. |
+| `period` | `float` | setting *Rate Limit: Period* (1) | Length of the period in seconds. May be fractional. |
 
-How it behaves:
-
-- The middleware sits right after route matching and **before** authentication, so a rejected request never reaches the handler or the auth code.
-- It is a sliding window: a request is rejected when the IP already made `limit` requests within the last `period` seconds. Every request counts, whatever its outcome (success or failure).
-- A rejected request answers `429 Too Many Requests` with a `Retry-After` header and is **not** recorded, so a client that backs off is let in again as soon as its oldest request leaves the window.
-- Every response of a limited route carries `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` headers.
-- Requests are stored in the hidden `RateLimitHit` entity (table `rate_limit_hit`: `route`, `method`, `ip_address`, `user_name`, `request_time`). The `route` is the matched route template and the key is `route + method + IP`, so `GET` and `POST` on the same path are limited separately. Rows older than one day are removed by the standard cleanup job.
-- If the limiter itself fails (for example the table does not exist yet because the schema update was not run), the request is processed normally and the error is written to the log.
-
-`/api/userSession` additionally has a per-user rule, hardcoded in the middleware: for every request the username is read from the same credentials `AuthMiddleware` uses (`Authorization-Token`, Basic, or cookies), and requests are rejected once the username was used from more than `rateLimitMaxIpsPerUser` (5) different IPs within `rateLimitUserPeriod` (60) seconds. Counting distinct IPs, not attempts, means a real user retrying from a few devices is not affected, while a distributed attack on one account is stopped. The `**logout` pseudo-user is not limited. The queries (`recordHit()`, `getIpHitTimes()`, `getUserHits()`) are in the `RateLimitHit` repository, which the middleware calls directly.
-
-> **Note:** The client address is `REMOTE_ADDR`. Behind a reverse proxy every client appears with the proxy's address and shares one limit; limit at the proxy as well (see [Rate Limiting](../../../08.security/02.rate-limiting)).
+- The check runs before authentication, so a rejected request never reaches the handler.
+- Every accepted request counts, whatever its outcome. A rejected request is answered with `429 Too Many Requests` and a `Retry-After` header, and does not count.
+- Responses of a limited endpoint carry the `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` headers.
+- `GET` and `POST` on the same path are limited separately.
+- `/api/userSession` is also limited per user name, see [Rate Limiting](../../../08.security/02.rate-limiting).
 
 ---
 
