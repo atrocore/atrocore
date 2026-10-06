@@ -24,6 +24,12 @@ RewriteRule ^(.*)$ index.php?atroq=$1 [L,QSA]
     ModPagespeed off
 </IfModule>
 
+<IfModule mod_headers.c>
+    Header setifempty X-Content-Type-Options "nosniff"
+    Header setifempty X-Frame-Options "SAMEORIGIN"
+    Header setifempty Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
 #<IfModule mod_headers.c>
 #    Header set Access-Control-Allow-Origin "*"
 #</IfModule>

@@ -33,6 +33,8 @@ class V2Dot5Dot2 extends Base
         $pepper = $this->createPepper();
         $this->wrapLegacyPasswordHashes($pepper);
         $this->hashAuthTokens();
+
+        copy('vendor/atrocore/core/copy/public/.htaccess', 'public/.htaccess');
     }
 
     protected function copyEncryptionKey(): void
