@@ -30,6 +30,7 @@ class Route
         public readonly bool         $installerOnly      = false,
         public readonly bool         $hidden             = false,
         public readonly bool         $skipActionHistory  = false,
+        public readonly ?array       $rateLimit          = null,
     ) {
     }
 }

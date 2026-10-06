@@ -115,7 +115,8 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
-    skipActionHistory: true
+    skipActionHistory: true,
+    rateLimit: []
 )]
 class UserHandler extends AbstractHandler
 {

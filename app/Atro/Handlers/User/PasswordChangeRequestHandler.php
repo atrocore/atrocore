@@ -72,6 +72,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'Password reset is unavailable because email sending is not configured.',
         ],
     ],
+    rateLimit: [],
 )]
 class PasswordChangeRequestHandler extends AbstractHandler
 {
