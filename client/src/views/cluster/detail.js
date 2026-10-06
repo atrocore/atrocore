@@ -85,8 +85,10 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                 });
             });
 
-            Promise.all(perTypePromises).then(allModels => {
-                let models = allModels.flat();
+            const clusterPromise = this.isRendered() ? this.model.fetch() : Promise.resolve();
+
+            Promise.all([...perTypePromises, clusterPromise]).then(results => {
+                let models = results.slice(0, entityTypes.length).flat();
 
                 if (models.length > 0) {
                     this.selectionItemModels = models;
