@@ -217,8 +217,37 @@ This rule applies to **all** arrays inside `#[Route]` without exception: `method
 | `hidden` | `bool` | `false` | Excludes the endpoint from the generated OpenAPI documentation (`/apidocs/`). The route is still registered and fully functional — it just does not appear in Swagger UI. Use this for internal endpoints that are only called by the AtroCore UI and are not part of the public API contract. |
 | `installerOnly` | `bool` | `false` | Registers the route **only when the application is not yet installed** (`isInstalled = false`). Once installation is complete, the route is not registered and returns 404. Use this for installer wizard endpoints that must not be accessible in a running production instance. |
 | `skipActionHistory` | `bool` | `false` | Prevents `ActionHistoryMiddleware` from logging requests to this endpoint. Use this for endpoints that are called silently and frequently by the UI (e.g. polling, metadata loading, session refresh) where logging would produce noise with no analytical value. |
+| `rateLimit` | `array\|null` | `null` | Enables per-IP rate limiting for this endpoint. `null` (the default) means no limit. An empty array uses the global defaults from the settings; the keys `limit` and `period` override them for this route. See [Rate Limiting](#rate-limiting). |
 
 > **Important:** A handler without all required fields **will not be registered as a route**. The endpoint simply will not exist. This is by design — it enforces that every API endpoint is fully documented before it can be used.
+
+---
+
+## Rate Limiting
+
+An endpoint is rate limited per IP address when its `#[Route]` attribute declares `rateLimit`. Without it, the endpoint is not limited.
+
+```php
+#[Route(
+    path: '/Example/expensiveAction',
+    methods: ['POST'],
+    // ...
+    rateLimit: ['limit' => 10, 'period' => 60],   // 10 requests per 60 seconds per IP
+)]
+```
+
+An empty array (`rateLimit: []`) uses the defaults from the settings.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `limit` | `int` | setting *Rate Limit: Requests* (3) | Requests one IP may send within `period`. |
+| `period` | `float` | setting *Rate Limit: Period* (1) | Length of the period in seconds. May be fractional. |
+
+- The check runs before authentication, so a rejected request never reaches the handler.
+- Every accepted request counts, whatever its outcome. A rejected request is answered with `429 Too Many Requests` and a `Retry-After` header, and does not count.
+- Responses of a limited endpoint carry the `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` headers.
+- `GET` and `POST` on the same path are limited separately.
+- `/api/userSession` is also limited per user name, see [Rate Limiting](../../../08.security/02.rate-limiting).
 
 ---
 

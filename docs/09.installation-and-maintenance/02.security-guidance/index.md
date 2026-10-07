@@ -66,3 +66,6 @@ By following these guidelines, you can significantly improve the security of you
 
 ## Auth token expiration ##
 Consider decreasing [Auth Token Max Idle Time](../../01.atrocore/03.administration/14.access-management/05.authentication/). Additionally, you can also specify Auth Token Lifetime.
+
+## Rate limiting ##
+Login and password reset requests are rate limited by AtroCore itself. Behind a reverse proxy, limit requests there as well, where the real client address is known; see [Rate Limiting](../../08.security/02.rate-limiting/index.md).

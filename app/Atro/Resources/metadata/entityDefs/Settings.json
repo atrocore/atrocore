@@ -83,6 +83,24 @@
       "default": 0,
       "tooltip": true
     },
+    "rateLimitLimit": {
+      "type": "int",
+      "min": 1,
+      "default": 3,
+      "tooltip": true
+    },
+    "rateLimitPeriod": {
+      "type": "float",
+      "min": 0,
+      "default": 1,
+      "tooltip": true
+    },
+    "rateLimitMaxIpsPerUser": {
+      "type": "int",
+      "min": 1,
+      "default": 5,
+      "tooltip": true
+    },
     "passwordChangeRequestResendInterval": {
       "type": "int",
       "min": 1,
