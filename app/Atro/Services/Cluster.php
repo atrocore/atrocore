@@ -20,6 +20,7 @@ use Atro\Core\Exceptions\NotUnique;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
+use Atro\DTOs\Cluster\MassActionResultDTO;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
@@ -109,7 +110,7 @@ class Cluster extends Base
         }
     }
 
-    public function purge(array $params): array
+    public function purge(array $params): MassActionResultDTO
     {
         if (!$this->getAcl()->check('Cluster', 'delete')) {
             throw new Forbidden();
@@ -125,7 +126,7 @@ class Cluster extends Base
             $this->purgeCluster($id);
         });
 
-        return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
+        return new MassActionResultDTO($count, $sync, $errors);
     }
 
     public function purgeCluster(string $id): void

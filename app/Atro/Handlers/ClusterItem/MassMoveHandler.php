@@ -130,6 +130,6 @@ class MassMoveHandler extends AbstractHandler
             throw new BadRequest($this->getLanguage()->translate('idOrIdListOrWhereRequired', 'exceptions', 'ClusterItem'));
         }
 
-        return new JsonResponse($recordService->move($params));
+        return new JsonResponse(get_object_vars($recordService->move($params)));
     }
 }

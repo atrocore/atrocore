@@ -81,6 +81,6 @@ class DeconsolidateHandler extends AbstractHandler
 
         $result = $recordService->deconsolidate(['ids' => [$id]]);
 
-        return new BoolResponse($result['count'] > 0);
+        return new BoolResponse($result->count > 0);
     }
 }

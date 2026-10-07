@@ -119,6 +119,6 @@ class MassDeconsolidateHandler extends AbstractHandler
             throw new BadRequest($this->getLanguage()->translate('idOrIdListOrWhereRequired', 'exceptions', 'ClusterItem'));
         }
 
-        return new JsonResponse($this->getRecordService('ClusterItem')->deconsolidate($params));
+        return new JsonResponse(get_object_vars($this->getRecordService('ClusterItem')->deconsolidate($params)));
     }
 }
