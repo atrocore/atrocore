@@ -18949,13 +18949,13 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     vertical-align: middle;
 }
 
-.compare-records table tr th.confirmed,
+.compare-records table tr th.consolidated,
 .compare-records table tr th.golden,
 .compare-records table tr th.consolidation-preview {
     position: relative;
 }
 
-.compare-records table tr th.confirmed:before,
+.compare-records table tr th.consolidated:before,
 .compare-records table tr th.golden:before,
 .compare-records table tr th.consolidation-preview:before {
     content: '';
@@ -18972,7 +18972,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     color: var(--label-color);
 }
 
-.compare-panel table .matched-score-row th i.autoconfirmed {
+.compare-panel table .matched-score-row th i.autoconsolidated {
     position: absolute;
     top: 0.25em;
     right: 0.5em;
@@ -18984,7 +18984,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     left: 0.5em;
 }
 
-.compare-records table tr th.confirmed:before {
+.compare-records table tr th.consolidated:before {
     background-color: #06c;
 }
 

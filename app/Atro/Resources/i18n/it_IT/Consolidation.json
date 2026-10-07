@@ -6,7 +6,6 @@
     "consolidationScript": "Script di consolidamento",
     "updateMasterAutomatically": "Aggiorna automaticamente il Master",
     "minimumMatchingScore": "Punteggio minimo di corrispondenza",
-    "consolidateAutomatically": "Conferma automatica",
     "deleteInvalidMastersAutomatically": "Elimina automaticamente i master non validi",
     "executeConsolidationAs": "Eseguire l'unione come"
   },

@@ -44,7 +44,7 @@ class ConfirmClustersAutomatically extends AbstractClusterJob implements JobInte
             try {
                 $clusterItemService->consolidateAll($clusterItems, true);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Impossible to automatically confirm cluster ' . $clusterData['clusterId'] . ': ' . $e->getMessage());
+                $GLOBALS['log']->error('Impossible to automatically consolidate cluster ' . $clusterData['clusterId'] . ': ' . $e->getMessage());
             }
         }
 
@@ -56,6 +56,6 @@ class ConfirmClustersAutomatically extends AbstractClusterJob implements JobInte
             return;
         }
 
-        $this->spawnConfirmSingleClusterItems($masterEntity, $job);
+        $this->spawnConsolidateSingleClusterItems($masterEntity, $job);
     }
 }

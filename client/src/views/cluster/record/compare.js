@@ -318,8 +318,8 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 .forEach(model => {
                     const meta = model.item?.get('_meta')?.cluster || {};
 
-                    if (meta.confirmed) {
-                        this.$el.find(`th[data-id="${model.id}"]`).addClass('confirmed');
+                    if (meta.consolidated) {
+                        this.$el.find(`th[data-id="${model.id}"]`).addClass('consolidated');
                     }
 
                     if (meta.golden) {
@@ -336,8 +336,8 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                     const aMeta = a.item?.get('_meta')?.cluster || {};
                     const bMeta = b.item?.get('_meta')?.cluster || {};
 
-                    if (!!aMeta.confirmed && !!!bMeta.confirmed) return -1;
-                    if (!!!aMeta.confirmed && !!bMeta.confirmed) return 1;
+                    if (!!aMeta.consolidated && !!!bMeta.consolidated) return -1;
+                    if (!!!aMeta.consolidated && !!bMeta.consolidated) return 1;
                     return 0;
                 })
                 .sort((a, b) => a.item?.get('_meta')?.cluster?.golden ? -1 : 1);
@@ -371,7 +371,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
         getMatchedScoreHtml(model) {
             const value = model.item.get('matchedScore');
-            const consolidatedAutomatically = model.item.get('_meta')?.cluster?.confirmed && model.item.get('consolidatedAutomatically');
+            const consolidatedAutomatically = model.item.get('_meta')?.cluster?.consolidated && model.item.get('consolidatedAutomatically');
             const entityName = model.item.get('entityName');
 
             let backgroundColor = '#CCCCCC';
@@ -410,7 +410,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
             let statusIconsHtml = '';
             if (consolidatedAutomatically) {
-                statusIconsHtml += `<i class="ph ph-sparkle autoconfirmed" title="${this.translate('consolidatedAutomatically', 'labels', 'ClusterItem')}"></i>`;
+                statusIconsHtml += `<i class="ph ph-sparkle autoconsolidated" title="${this.translate('consolidatedAutomatically', 'labels', 'ClusterItem')}"></i>`;
             }
 
             if (entityName) {

@@ -6,7 +6,6 @@
     "consolidationScript": "Skrypt konsolidacji",
     "updateMasterAutomatically": "Automatyczna aktualizacja mastera",
     "minimumMatchingScore": "Minimalny wynik dopasowania",
-    "consolidateAutomatically": "Potwierdź automatycznie",
     "deleteInvalidMastersAutomatically": "Automatycznie usuwaj nieprawidłowe rekordy główne",
     "executeConsolidationAs": "Wykonać scalanie jako"
   },

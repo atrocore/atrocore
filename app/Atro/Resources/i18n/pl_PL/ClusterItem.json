@@ -5,7 +5,6 @@
     "record": "Rekord",
     "cluster": "Klaster",
     "matchedRecord": "Dopasowany rekord",
-    "consolidatedAutomatically": "Potwierdzone automatycznie",
     "matchedScore": "Dopasowany wynik"
   },
   "exceptions": {
@@ -24,7 +23,6 @@
     "reject": "Czy na pewno chcesz odrzucić wybrane elementy?"
   },
   "actions": {
-    "reject": "Proszę odrzucić",
-    "consolidate": "Proszę potwierdzić"
+    "reject": "Proszę odrzucić"
   }
 }

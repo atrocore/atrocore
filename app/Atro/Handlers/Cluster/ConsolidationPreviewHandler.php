@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'POST',
     ],
     summary: 'Preview the consolidation result for a cluster',
-    description: 'Renders the consolidation script for the unconfirmed items of the cluster without storing anything, and returns the golden record as it would look after the consolidation. Responds with an error whenever the consolidation script is missing, invalid or fails to render.',
+    description: 'Renders the consolidation script for the unconsolidated items of the cluster without storing anything, and returns the golden record as it would look after the consolidation. Responds with an error whenever the consolidation script is missing, invalid or fails to render.',
     tag: 'Cluster',
     parameters: [
         [

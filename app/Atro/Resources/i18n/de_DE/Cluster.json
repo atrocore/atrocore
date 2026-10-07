@@ -34,17 +34,14 @@
     "cannotPreviewInvalidCluster": "Für einen ungültigen Cluster kann die Konsolidierung nicht in der Vorschau angezeigt werden",
     "clusterItemsNotInCluster": "Die Cluster-Elemente %s gehören nicht zu diesem Cluster"
   },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Unbestätigte Einträge können nicht zur Zusammenführung hinzugefügt werden"
-  },
   "labels": {
     "contributorRecord": "Contributor-Datensatz",
     "contributorRecords": "Contributor-Datensätze",
     "contributorRecordsPanel": "Contributor-Datensätze",
     "masterRecord": "master-Datensatz",
     "masterRecords": "master-Datensätze",
-    "confirmed": "Bestätigt",
-    "unconfirmed": "Unbestätigt",
+    "consolidated": "Konsolidiert",
+    "unconsolidated": "Nicht konsolidiert",
     "rejected": "Abgelehnt",
     "consolidationPreview": "Konsolidierungsvorschau",
     "consolidationPreviewHint": "Zeigt, wie der Golden Record nach der Konsolidierung aussehen würde. Es wird nichts gespeichert.",
@@ -62,8 +59,8 @@
     "clusterReincludedThis": "{user} hat {relatedEntity} in diesem Cluster wieder aufgenommen",
     "clusterMoved": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
     "clusterMovedThis": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
-    "clusterConfirmed": "{user} hat {relatedEntity} in diesem Cluster bestätigt",
-    "clusterConfirmedThis": "{user} hat {relatedEntity} in diesem Cluster bestätigt",
+    "clusterConfirmed": "{user} hat {relatedEntity} in diesem Cluster konsolidiert",
+    "clusterConfirmedThis": "{user} hat {relatedEntity} in diesem Cluster konsolidiert",
     "clusterDeconsolidated": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
     "clusterDeconsolidatedThis": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
     "clusterGoldenRecord": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",

@@ -42,7 +42,7 @@ class ConfirmSingleClusterItems extends AbstractClusterJob implements JobInterfa
             try {
                 $clusterItemService->consolidate($clusterItem, true);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Impossible to automatically confirm cluster ' . $clusterItem->get('clusterId') . ': ' . $e->getMessage());
+                $GLOBALS['log']->error('Impossible to automatically consolidate cluster ' . $clusterItem->get('clusterId') . ': ' . $e->getMessage());
             }
         }
 

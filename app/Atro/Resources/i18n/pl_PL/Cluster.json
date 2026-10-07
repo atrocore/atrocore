@@ -10,7 +10,6 @@
   },
   "actions": {
     "reject": "Proszę odrzucić",
-    "consolidate": "Proszę potwierdzić",
     "unreject": "Odrzucić"
   },
   "options": {
@@ -25,16 +24,12 @@
   "exceptions": {
     "cannotMergeWithoutGoldenRecord": "Scalanie bez rekordu wzorcowego nie jest możliwe"
   },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Niepotwierdzone elementy nie mogą być dodane do scalania"
-  },
   "labels": {
     "contributorRecord": "rekord współtwórcy",
     "contributorRecords": "rekordy współtwórców",
     "contributorRecordsPanel": "Rekordy współtwórców",
     "masterRecord": "rekord główny",
     "masterRecords": "rekordy główne",
-    "confirmed": "Potwierdzone",
     "rejected": "Odrzucone"
   },
   "streamMessages": {
@@ -48,8 +43,6 @@
     "clusterReincludedThis": "{user} ponownie włączył {relatedEntity} do tego klastra",
     "clusterMoved": "{user} przeniósł {relatedEntity} z tego klastra",
     "clusterMovedThis": "{user} przeniósł {relatedEntity} z tego klastra",
-    "clusterConfirmed": "{user} potwierdził {relatedEntity} w tym klastrze",
-    "clusterConfirmedThis": "{user} potwierdził {relatedEntity} w tym klastrze",
     "clusterGoldenRecord": "{user} ustawił {relatedEntity} jako złoty rekord w tym klastrze",
     "clusterGoldenRecordThis": "{user} ustawił {relatedEntity} jako złoty rekord w tym klastrze",
     "clusterDeleted": "{user} usunął ten klaster",

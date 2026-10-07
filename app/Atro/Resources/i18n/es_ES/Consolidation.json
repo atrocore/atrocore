@@ -7,7 +7,6 @@
     "updateMasterAutomatically": "Actualizar maestro automáticamente",
     "executeConsolidationAs": "Ejecutar fusión como",
     "minimumMatchingScore": "Puntuación mínima de concordancia",
-    "consolidateAutomatically": "Confirmar automáticamente",
     "deleteInvalidMastersAutomatically": "Eliminar automáticamente los maestros no válidos"
   },
   "tooltips": {

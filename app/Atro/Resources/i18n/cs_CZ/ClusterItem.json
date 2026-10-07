@@ -5,7 +5,6 @@
     "record": "Záznam",
     "cluster": "Cluster",
     "matchedRecord": "Shodný záznam",
-    "consolidatedAutomatically": "Potvrzeno automaticky",
     "matchedScore": "Shodný počet bodů"
   },
   "exceptions": {
@@ -24,7 +23,6 @@
     "reject": "Jste si jisti, že chcete odmítnout vybrané položky?"
   },
   "actions": {
-    "consolidate": "Potvrďte",
     "reject": "Odmítnout"
   }
 }

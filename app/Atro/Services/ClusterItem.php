@@ -193,7 +193,7 @@ class ClusterItem extends Base
             throw new Exception("Cluster is not set for item {$entity->get('id')}");
         }
 
-        if ($this->isClusterItemConfirmed($entity)) {
+        if ($this->isClusterItemConsolidated($entity)) {
             $this->runAsSystemUser(function () use ($entity, $cluster) {
                 foreach ($entity->getStagingRecords() as $stagingRecord) {
                     $stagingRecord->set('masterRecordId', null);
@@ -300,12 +300,12 @@ class ClusterItem extends Base
 
         $count = 0;
         foreach ($entities as $entity) {
-            if (!$this->isClusterItemConfirmed($entity)) {
+            if (!$this->isClusterItemConsolidated($entity)) {
                 continue;
             }
 
             $this->runAsSystemUser(function () use ($entity) {
-                $this->unConfirmClusterItem($entity);
+                $this->unlinkFromGoldenRecord($entity);
             });
 
             $this->createClusterNote($cluster->get('id'), 'deconsolidated', $entity->get('entityName'), $entity->get('entityId'));
@@ -391,7 +391,7 @@ class ClusterItem extends Base
             throw new NotFound("Cluster not found");
         }
 
-        if ($this->isClusterItemConfirmed($clusterItem)) {
+        if ($this->isClusterItemConsolidated($clusterItem)) {
             foreach ($clusterItem->getStagingRecords() as $stagingRecord) {
                 $stagingRecord->set('masterRecordId', null);
                 $this->getEntityManager()->saveEntity($stagingRecord);
@@ -420,7 +420,7 @@ class ClusterItem extends Base
         return true;
     }
 
-    public function isClusterItemConfirmed(IEntity $clusterItem): bool
+    public function isClusterItemConsolidated(IEntity $clusterItem): bool
     {
         if (empty($cluster = $clusterItem->get('cluster'))) {
             return false;
@@ -442,7 +442,7 @@ class ClusterItem extends Base
         return false;
     }
 
-    public function unConfirmClusterItem(\Atro\Entities\ClusterItem $clusterItem): void
+    public function unlinkFromGoldenRecord(\Atro\Entities\ClusterItem $clusterItem): void
     {
         foreach ($clusterItem->getStagingRecords() as $stagingRecord) {
             $stagingRecord->set('masterRecordId', null);
@@ -464,7 +464,7 @@ class ClusterItem extends Base
         if ($entityFrom->getEntityName() === 'Cluster' && $link === 'clusterItems') {
             $entity->set('cluster', $entityFrom);
 
-            $entity->setMeta('cluster', 'confirmed', $this->isClusterItemConfirmed($entity));
+            $entity->setMeta('cluster', 'consolidated', $this->isClusterItemConsolidated($entity));
             $entity->setMeta('cluster', 'golden', !empty($entityFrom->get('goldenRecordId')) && $entity->get('entityId') === $entityFrom->get('goldenRecordId'));
         }
     }
@@ -473,7 +473,7 @@ class ClusterItem extends Base
     {
         parent::putAclMeta($entity);
 
-        $isConfirmed = $this->isClusterItemConfirmed($entity);
+        $isConsolidated = $this->isClusterItemConsolidated($entity);
         $isStaging   = !empty($this->getMetadata()->get(['scopes', $entity->get('entityName'), 'primaryEntityId']));
         $record      = $this->getEntityManager()->hasRepository($entity->get('entityName')) ?
             $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId')) :
@@ -481,9 +481,10 @@ class ClusterItem extends Base
 
 
         if ($this->getUser()->isAdmin()) {
-            $entity->setMetaPermission('consolidate', !$isConfirmed);
+            $entity->setMetaPermission('consolidate', !$isConsolidated);
             $entity->setMetaPermission('reject', true);
             $entity->setMetaPermission('deconsolidate', $isStaging);
+            $entity->setMetaPermission('split', $isStaging);
             $entity->setMetaPermission('move', true);
             $entity->setMetaPermission('delete', true);
             if (empty($record)) {
@@ -497,11 +498,12 @@ class ClusterItem extends Base
         $entity->setMetaPermission('consolidate', false);
         $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('deconsolidate', $isStaging && $this->getAcl()->check($entity, 'edit'));
+        $entity->setMetaPermission('split', $isStaging && $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('move', $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('delete', false);
 
         if (!empty($record)) {
-            $entity->setMetaPermission('consolidate', !$isConfirmed && $this->getAcl()->check($record, 'edit'));
+            $entity->setMetaPermission('consolidate', !$isConsolidated && $this->getAcl()->check($record, 'edit'));
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
         } else {
             $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));
@@ -607,9 +609,9 @@ class ClusterItem extends Base
 
         $sourceClusterId = $clusterItem->get('clusterId');
 
-        if ($this->isClusterItemConfirmed($clusterItem)) {
+        if ($this->isClusterItemConsolidated($clusterItem)) {
             $this->runAsSystemUser(function () use ($clusterItem) {
-                $this->unConfirmClusterItem($clusterItem);
+                $this->unlinkFromGoldenRecord($clusterItem);
             });
         }
 

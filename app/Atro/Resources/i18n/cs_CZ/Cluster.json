@@ -10,7 +10,6 @@
   },
   "actions": {
     "reject": "Odmítnout",
-    "consolidate": "Potvrďte",
     "unreject": "Odmítnout"
   },
   "options": {
@@ -25,16 +24,12 @@
   "exceptions": {
     "cannotMergeWithoutGoldenRecord": "Sloučení bez zlatého záznamu není možné"
   },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Nepotvrzené položky nelze přidat ke sloučení"
-  },
   "labels": {
     "contributorRecord": "záznam přispěvatele",
     "contributorRecords": "záznamy přispěvatelů",
     "contributorRecordsPanel": "Záznamy přispěvatelů",
     "masterRecord": "hlavní záznam",
     "masterRecords": "hlavní záznamy",
-    "confirmed": "Potvrzeno",
     "rejected": "Odmítnuto"
   },
   "streamMessages": {
@@ -48,8 +43,6 @@
     "clusterReincludedThis": "{user} znovu zahrnul {relatedEntity} do tohoto clusteru",
     "clusterMoved": "{user} přesunul {relatedEntity} z tohoto clusteru",
     "clusterMovedThis": "{user} přesunul {relatedEntity} z tohoto clusteru",
-    "clusterConfirmed": "{user} potvrdil {relatedEntity} v tomto clusteru",
-    "clusterConfirmedThis": "{user} potvrdil {relatedEntity} v tomto clusteru",
     "clusterGoldenRecord": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
     "clusterGoldenRecordThis": "{user} nastavil {relatedEntity} jako zlatý záznam v tomto clusteru",
     "clusterDeleted": "{user} smazal tento cluster",

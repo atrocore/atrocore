@@ -30,17 +30,14 @@
     "cannotPreviewInvalidCluster": "Il est impossible de prévisualiser la consolidation pour un cluster non valide",
     "clusterItemsNotInCluster": "Les éléments de cluster %s n'appartiennent pas à ce cluster"
   },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Les éléments non confirmés ne peuvent pas être ajoutés à la fusion"
-  },
   "labels": {
     "contributorRecord": "enregistrement contributeur",
     "contributorRecords": "enregistrements contributeurs",
     "contributorRecordsPanel": "Enregistrements contributeurs",
     "masterRecord": "enregistrement de référence",
     "masterRecords": "enregistrements de référence",
-    "confirmed": "Confirmé",
-    "unconfirmed": "Non confirmé",
+    "consolidated": "Consolidé",
+    "unconsolidated": "Non consolidé",
     "rejected": "Rejeté",
     "consolidationPreview": "Aperçu de la consolidation",
     "consolidationPreviewHint": "Montre à quoi ressemblerait l'enregistrement de référence après la consolidation. Rien n'est enregistré.",
@@ -58,8 +55,8 @@
     "clusterReincludedThis": "{user} a réintégré {relatedEntity} dans ce cluster",
     "clusterMoved": "{user} a déplacé {relatedEntity} hors de ce cluster",
     "clusterMovedThis": "{user} a déplacé {relatedEntity} hors de ce cluster",
-    "clusterConfirmed": "{user} a confirmé {relatedEntity} dans ce cluster",
-    "clusterConfirmedThis": "{user} a confirmé {relatedEntity} dans ce cluster",
+    "clusterConfirmed": "{user} a consolidé {relatedEntity} dans ce cluster",
+    "clusterConfirmedThis": "{user} a consolidé {relatedEntity} dans ce cluster",
     "clusterDeconsolidated": "{user} a déconsolidé {relatedEntity} dans ce cluster",
     "clusterDeconsolidatedThis": "{user} a déconsolidé {relatedEntity} dans ce cluster",
     "clusterGoldenRecord": "{user} a défini {relatedEntity} comme enregistrement doré dans ce cluster",

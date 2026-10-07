@@ -7,7 +7,6 @@
     "updateMasterAutomatically": "Automatická aktualizace předlohy",
     "minimumMatchingScore": "Minimální skóre shody",
     "executeConsolidationAs": "Provést sloučení jako",
-    "consolidateAutomatically": "Automatické potvrzení",
     "deleteInvalidMastersAutomatically": "Automaticky mazat neplatné hlavní záznamy"
   },
   "tooltips": {

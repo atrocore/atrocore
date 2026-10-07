@@ -7,7 +7,6 @@
     "updateMasterAutomatically": "Автоматическое обновление мастера",
     "executeConsolidationAs": "Выполнить слияние как",
     "minimumMatchingScore": "Минимальный балл соответствия",
-    "consolidateAutomatically": "Подтвердите автоматически",
     "deleteInvalidMastersAutomatically": "Автоматически удалять недействительные мастер-записи"
   },
   "tooltips": {

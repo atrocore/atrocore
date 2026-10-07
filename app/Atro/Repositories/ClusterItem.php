@@ -244,7 +244,7 @@ class ClusterItem extends Base
             ->fetchFirstColumn();
     }
 
-    public function getClustersToConfirmAutomatically(string $contributorEntityName, int $offset = 0, int $limit = PHP_INT_MAX): array
+    public function getClustersToConsolidateAutomatically(string $contributorEntityName, int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $masterEntityName = $this->getMetadata()->get("scopes.$contributorEntityName.primaryEntityId");
 

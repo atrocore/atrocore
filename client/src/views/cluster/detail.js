@@ -172,7 +172,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                     name: this.getModelTitle(model),
                     entityType: model.name,
                     isMaster: model.name === masterEntityType,
-                    confirm: model.item?.get('_meta')?.cluster?.confirmed ?? false,
+                    consolidated: model.item?.get('_meta')?.cluster?.consolidated ?? false,
                     consolidatedAutomatically: model.item?.get('consolidatedAutomatically') ?? false,
                     rejected: false
                 }
@@ -184,7 +184,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                     name: this.getModelTitle(model),
                     entityType: model.name,
                     isMaster: model.name === masterEntityType,
-                    confirm: false,
+                    consolidated: false,
                     consolidatedAutomatically: false,
                     rejected: true
                 });
