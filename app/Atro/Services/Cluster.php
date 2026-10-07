@@ -151,6 +151,35 @@ class Cluster extends Base
         $this->getEntityManager()->removeEntity($cluster, ['isPurge' => true]);
     }
 
+    public function consolidate(string $clusterId, array $clusterItemIds): bool
+    {
+        $cluster = $this->getEntity($clusterId);
+
+        if (empty($cluster)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($cluster, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $clusterItemIds = array_values(array_unique($clusterItemIds));
+
+        $clusterItems = iterator_to_array($this->getEntityManager()->getRepository('ClusterItem')
+            ->where(['id' => $clusterItemIds, 'clusterId' => $cluster->get('id')])
+            ->find());
+
+        $missingIds = array_diff($clusterItemIds, array_map(fn($clusterItem) => $clusterItem->get('id'), $clusterItems));
+        if (!empty($missingIds)) {
+            throw new BadRequest(sprintf(
+                $this->getInjection('language')->translate('clusterItemsNotInCluster', 'exceptions', 'Cluster'),
+                implode(', ', $missingIds)
+            ));
+        }
+
+        return $this->getRecordService('ClusterItem')->consolidateAll(array_values($clusterItems));
+    }
+
     public function buildMasterRecordPreview(string $clusterId, ?string $consolidationScript = null): Entity
     {
         $cluster = $this->getEntity($clusterId);
@@ -164,13 +193,8 @@ class Cluster extends Base
         }
 
         $masterEntityName = (string)$cluster->get('masterEntity');
-        $consolidationService = $this->getRecordService('Consolidation');
 
-        if ($consolidationScript === null) {
-            $consolidationScript = (string)$consolidationService->getConsolidation($masterEntityName)->get('consolidationScript');
-        }
-
-        $payload = $consolidationService->buildMasterRecordPayloadForCluster($cluster, $consolidationScript);
+        $payload = $this->getRecordService('Consolidation')->buildMasterRecordPayloadForCluster($cluster, $consolidationScript);
 
         $masterRepository = $this->getEntityManager()->getRepository($masterEntityName);
         $preview = $masterRepository->get();
@@ -189,8 +213,8 @@ class Cluster extends Base
             }
         }
 
-        if (!$payload->isSkipped()) {
-            $preview->set($payload->getMasterRecordData());
+        if ($payload !== null) {
+            $preview->set($payload);
         }
 
         return $preview;

@@ -10,7 +10,7 @@
   },
   "actions": {
     "reject": "Proszę odrzucić",
-    "confirm": "Proszę potwierdzić",
+    "consolidate": "Proszę potwierdzić",
     "unreject": "Odrzucić"
   },
   "options": {
@@ -18,8 +18,8 @@
       "empty": "Puste",
       "review": "Recenzja",
       "invalid": "Nieprawidłowy",
-      "mergedAutomatically": "Połączone automatycznie",
-      "mergedManually": "Połączone ręcznie"
+      "consolidatedAutomatically": "Połączone automatycznie",
+      "consolidated": "Połączone ręcznie"
     }
   },
   "exceptions": {

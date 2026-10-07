@@ -10,7 +10,7 @@
   },
   "actions": {
     "reject": "Rechace",
-    "confirm": "Confirme",
+    "consolidate": "Confirme",
     "unreject": "Rechazar"
   },
   "options": {
@@ -18,8 +18,8 @@
       "empty": "Vacío",
       "review": "Revise",
       "invalid": "No válido",
-      "mergedManually": "Fusionado manualmente",
-      "mergedAutomatically": "Fusionados automáticamente"
+      "consolidated": "Fusionado manualmente",
+      "consolidatedAutomatically": "Fusionados automáticamente"
     }
   },
   "exceptions": {

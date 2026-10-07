@@ -39,8 +39,8 @@
       "options": [
         "empty",
         "review",
-        "mergedManually",
-        "mergedAutomatically",
+        "consolidated",
+        "consolidatedAutomatically",
         "invalid"
       ],
       "optionColors": [

@@ -5,7 +5,7 @@
     "record": "Registre",
     "cluster": "Cluster",
     "matchedRecord": "Registro coincidente",
-    "confirmedAutomatically": "Confirmado automáticamente",
+    "consolidatedAutomatically": "Confirmado automáticamente",
     "matchedScore": "Puntuación igualada"
   },
   "exceptions": {
@@ -24,7 +24,7 @@
     "reject": "¿Está seguro de que desea rechazar los elementos seleccionados?"
   },
   "actions": {
-    "confirm": "Confirme",
+    "consolidate": "Confirme",
     "reject": "Rechace"
   }
 }

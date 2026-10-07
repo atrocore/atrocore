@@ -1,6 +1,6 @@
 {
   "labels": {
-    "confirmedAutomatically": "Confirmé automatiquement"
+    "consolidatedAutomatically": "Consolidé automatiquement"
   },
   "fields": {
     "entityName": "Nom de l'entité",
@@ -8,26 +8,34 @@
     "record": "Enregistrement",
     "cluster": "Groupement d'entreprises",
     "matchedRecord": "Enregistrement apparié",
-    "confirmedAutomatically": "Confirmé automatiquement",
+    "consolidatedAutomatically": "Consolidé automatiquement",
     "matchedScore": "Score apparié"
   },
   "exceptions": {
     "notFound": "L'enregistrement de l'élément du cluster n'a pas été trouvé",
     "cannotReject": "Ce point de la grappe ne peut être rejeté",
     "cannotUnreject": "Cet élément du cluster ne peut pas être rejeté",
-    "idOrIdListOrWhereRequired": "Veuillez fournir au moins l'un des éléments suivants : un ID, une liste d'ID ou un filtre de recherche."
+    "idOrIdListOrWhereRequired": "Veuillez fournir au moins l'un des éléments suivants : un ID, une liste d'ID ou un filtre de recherche.",
+    "itemsMustBelongToTheSameCluster": "Tous les éléments doivent appartenir au même cluster pour être déconsolidés ensemble.",
+    "cannotDeconsolidateMasterEntityItem": "Impossible de déconsolider l'élément de l'entité maître."
   },
   "massActions": {
-    "reject": "Rejeter"
+    "reject": "Rejeter",
+    "deconsolidate": "Déconsolider",
+    "consolidate": "Consolider"
   },
   "massActionSuccessMessages": {
-    "reject": "Les éléments de cluster sélectionnés sont en cours de suppression en arrière-plan"
+    "reject": "Les éléments de cluster sélectionnés sont en cours de suppression en arrière-plan",
+    "deconsolidate": "Les éléments de cluster sélectionnés ont été déconsolidés",
+    "consolidate": "Les éléments de cluster sélectionnés ont été consolidés"
   },
   "massActionConfirmMessages": {
-    "reject": "Êtes-vous sûr de vouloir rejeter les éléments sélectionnés ?"
+    "reject": "Êtes-vous sûr de vouloir rejeter les éléments sélectionnés ?",
+    "deconsolidate": "Êtes-vous sûr de vouloir déconsolider les éléments sélectionnés ?"
   },
   "actions": {
     "reject": "Rejeter",
-    "confirm": "Confirmer"
+    "consolidate": "Consolider",
+    "deconsolidate": "Déconsolider"
   }
 }

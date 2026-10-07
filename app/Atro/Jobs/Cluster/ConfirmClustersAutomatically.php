@@ -42,7 +42,7 @@ class ConfirmClustersAutomatically extends AbstractClusterJob implements JobInte
             $clusterItems = iterator_to_array($clusterItemRepo->findByIds($clusterItemIds));
 
             try {
-                $clusterItemService->confirmAll($clusterItems, true);
+                $clusterItemService->consolidateAll($clusterItems, true);
             } catch (\Exception $e) {
                 $GLOBALS['log']->error('Impossible to automatically confirm cluster ' . $clusterData['clusterId'] . ': ' . $e->getMessage());
             }

@@ -10,7 +10,7 @@
   },
   "actions": {
     "reject": "Отклонить",
-    "confirm": "Подтвердите",
+    "consolidate": "Подтвердите",
     "unreject": "Отклонить"
   },
   "options": {
@@ -18,8 +18,8 @@
       "empty": "Пустые значения",
       "review": "Проверка",
       "invalid": "Неверный",
-      "mergedManually": "Объединение вручную",
-      "mergedAutomatically": "Автоматическое объединение"
+      "consolidated": "Объединение вручную",
+      "consolidatedAutomatically": "Автоматическое объединение"
     }
   },
   "exceptions": {

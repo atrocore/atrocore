@@ -6,7 +6,7 @@
     "cluster": "Кластер",
     "matchedRecord": "Сопоставленная запись",
     "matchedScore": "Соответствующий балл",
-    "confirmedAutomatically": "Подтверждается автоматически"
+    "consolidatedAutomatically": "Подтверждается автоматически"
   },
   "exceptions": {
     "notFound": "Запись об элементе кластера не найдена",
@@ -24,7 +24,7 @@
     "reject": "Вы уверены, что хотите отклонить выбранные элементы?"
   },
   "actions": {
-    "confirm": "Подтвердите",
+    "consolidate": "Подтвердите",
     "reject": "Отклонить"
   }
 }

@@ -10,7 +10,7 @@
   },
   "actions": {
     "reject": "Odmítnout",
-    "confirm": "Potvrďte",
+    "consolidate": "Potvrďte",
     "unreject": "Odmítnout"
   },
   "options": {
@@ -18,8 +18,8 @@
       "empty": "Prázdný",
       "review": "Recenze",
       "invalid": "Neplatný",
-      "mergedAutomatically": "Automatické sloučení",
-      "mergedManually": "Ruční sloučení"
+      "consolidatedAutomatically": "Automatické sloučení",
+      "consolidated": "Ruční sloučení"
     }
   },
   "exceptions": {

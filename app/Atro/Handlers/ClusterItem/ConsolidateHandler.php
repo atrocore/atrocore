@@ -13,15 +13,22 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\ClusterItem;
 
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/{id}/confirm',
+    path: '/ClusterItem/{id}/consolidate',
     methods: [
         'POST',
     ],
-    summary: 'Consolidate a cluster item (deprecated)',
-    description: 'Deprecated, use POST /ClusterItem/{id}/consolidate instead. Consolidates the specified cluster item. If the item is the master entity type, it is set as the cluster\'s golden record. Otherwise the item\'s staging record is linked to the existing golden record; if no golden record exists yet, one is created automatically (or a new master entity record is created if needed). Returns false if automatic master record creation failed.',
+    summary: 'Consolidate a cluster item',
+    description: 'Consolidates the specified cluster item. If the item is the master entity type, it is set as the cluster\'s golden record. Otherwise the item\'s staging record is linked to the existing golden record; if no golden record exists yet, one is created automatically (or a new master entity record is created if needed). Returns false if automatic master record creation failed.',
     tag: 'ClusterItem',
     parameters: [
         [
@@ -52,8 +59,23 @@ use Atro\Core\Routing\Route;
             'description' => 'ClusterItem not found.',
         ],
     ],
-    deprecated: true,
 )]
-class ConfirmHandler extends ConsolidateHandler
+class ConsolidateHandler extends AbstractHandler
 {
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
+            throw new Forbidden();
+        }
+
+        $id            = (string)$request->getAttribute('id');
+        $recordService = $this->getRecordService('ClusterItem');
+
+        $entity = $recordService->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        return new BoolResponse($recordService->consolidate($entity));
+    }
 }

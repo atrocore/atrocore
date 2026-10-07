@@ -1,6 +1,6 @@
 {
   "labels": {
-    "confirmedAutomatically": "Confirmed Automatically",
+    "consolidatedAutomatically": "Consolidated Automatically",
     "selectTargetCluster": "Select Target Cluster",
     "moveToCluster": "Move to Cluster"
   },
@@ -10,35 +10,37 @@
     "record": "Record",
     "cluster": "Cluster",
     "matchedRecord": "Matched Record",
-    "confirmedAutomatically": "Confirmed Automatically",
+    "consolidatedAutomatically": "Consolidated Automatically",
     "matchedScore": "Matched Score"
   },
   "actions": {
     "reject": "Reject",
-    "confirm": "Confirm",
-    "unmerge": "Unmerge",
+    "consolidate": "Consolidate",
+    "deconsolidate": "Deconsolidate",
     "move": "Move"
   },
   "exceptions": {
     "notFound": "Cluster item record not found",
     "cannotUnreject": "This cluster item cannot be unrejected",
-    "itemsMustBelongToTheSameCluster": "All items must belong to the same cluster to unmerge together.",
-    "cannotUnmergeMasterEntityItem": "Cannot unmerge the master entity item.",
+    "itemsMustBelongToTheSameCluster": "All items must belong to the same cluster to deconsolidate together.",
+    "cannotDeconsolidateMasterEntityItem": "Cannot deconsolidate the master entity item.",
     "idOrIdListOrWhereRequired": "Please provide at least one of: an ID, a list of IDs, or a search filter.",
     "targetClusterIdRequired": "Target cluster is required."
   },
   "massActions": {
     "reject": "Reject",
-    "unmerge": "Unmerge",
-    "move": "Move"
+    "deconsolidate": "Deconsolidate",
+    "move": "Move",
+    "consolidate": "Consolidate"
   },
   "massActionSuccessMessages": {
     "reject": "The selected Cluster Items are been deleted in the background",
-    "unmerge": "The selected Cluster Items are unmerged",
-    "move": "The selected Cluster Items have been moved"
+    "deconsolidate": "The selected Cluster Items are deconsolidated",
+    "move": "The selected Cluster Items have been moved",
+    "consolidate": "The selected Cluster Items have been consolidated"
   },
   "massActionConfirmMessages": {
     "reject": "Are you sure you want to reject the selected Items?",
-    "unmerge": "Are you sure you want to unmerge the selected Items?"
+    "deconsolidate": "Are you sure you want to deconsolidate the selected Items?"
   }
 }

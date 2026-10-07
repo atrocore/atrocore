@@ -25,129 +25,155 @@ use Espo\ORM\IEntity;
 
 class ClusterItem extends Base
 {
-    protected $mandatorySelectAttributeList = ['entityName', 'entityId', 'confirmedAutomatically'];
+    protected $mandatorySelectAttributeList = ['entityName', 'entityId', 'consolidatedAutomatically'];
 
-    public function confirm(Entity $entity, bool $automatically = false): bool
+    public function consolidate(Entity $entity, bool $automatically = false): bool
     {
         if (empty($cluster = $entity->get('cluster'))) {
             throw new Exception("Cluster is not set for item " . $entity->get('id'));
         }
 
-        $goldenRecordChanged = false;
-
-        if ($entity->get('entityName') === $cluster->get('masterEntity')) {
-            $cluster->set('goldenRecordId', $entity->get('entityId'));
-            $this->getEntityManager()->saveEntity($cluster);
-            $goldenRecordChanged = true;
-        } else {
-            $goldenRecord = $cluster->get('goldenRecord');
-            $record       = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId'));
-
-            if (empty($record)) {
-                throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
-            }
-
-            if (empty($goldenRecord)) {
-                foreach ($cluster->get('clusterItems') as $clusterItem) {
-                    if ($clusterItem->get('entityName') === $cluster->get('masterEntity')) {
-                        if (!empty($itemRecord = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId')))) {
-                            $goldenRecord = $itemRecord;
-
-                            $cluster->set('goldenRecordId', $goldenRecord->get('id'));
-                            $this->getEntityManager()->saveEntity($cluster);
-                            $goldenRecordChanged = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (empty($goldenRecord)) {
-                $goldenRecord = $this->getRecordService('Consolidation')->createMasterRecord($record);
-
-                if (empty($goldenRecord)) {
-                    return false;
-                }
-
-                $clusterItem = $this->getEntityManager()->getEntity('ClusterItem');
-                $clusterItem->set('clusterId', $cluster->get('id'));
-                $clusterItem->set('entityName', $cluster->get('masterEntity'));
-                $clusterItem->set('entityId', $goldenRecord->get('id'));
-                $this->getEntityManager()->saveEntity($clusterItem);
-
-                $cluster->set('goldenRecordId', $goldenRecord->get('id'));
-                $this->getEntityManager()->saveEntity($cluster);
-                $goldenRecordChanged = true;
-            } else {
-                $this->getRecordService('Consolidation')->updateMasterRecord($record, $goldenRecord);
-            }
-
-            $record->set('masterRecordId', $goldenRecord->get('id'));
-            $this->getEntityManager()->saveEntity($record);
+        if ($entity->get('entityName') !== $cluster->get('masterEntity')) {
+            return $this->consolidateAll([$entity], $automatically);
         }
 
-        $entity->set('confirmedAutomatically', $automatically);
+        $cluster->set('goldenRecordId', $entity->get('entityId'));
+        $this->getEntityManager()->saveEntity($cluster);
+
+        $entity->set('consolidatedAutomatically', $automatically);
         $this->getEntityManager()->saveEntity($entity);
 
         $this->createClusterNote($cluster->get('id'), 'confirmed', $entity->get('entityName'), $entity->get('entityId'));
-        if ($goldenRecordChanged) {
-            $this->runAsSystemUser(function () use ($cluster, $entity) {
-                $this->createClusterNote($cluster->get('id'), 'goldenRecord', $entity->get('entityName'), $entity->get('entityId'));
-            });
-        }
+        $this->runAsSystemUser(function () use ($cluster, $entity) {
+            $this->createClusterNote($cluster->get('id'), 'goldenRecord', $entity->get('entityName'), $entity->get('entityId'));
+        });
 
         return true;
     }
 
+    /**
+     * @deprecated Use consolidate() instead, will be removed in the next major version.
+     */
+    public function confirm(Entity $entity, bool $automatically = false): bool
+    {
+        return $this->consolidate($entity, $automatically);
+    }
+
+    /**
+     * @deprecated Use consolidateAll() instead, will be removed in the next major version.
+     */
     public function confirmAll(array $clusterItems, bool $automatically = false): bool
+    {
+        return $this->consolidateAll($clusterItems, $automatically);
+    }
+
+    public function consolidateAll(array $clusterItems, bool $automatically = false): bool
     {
         if (empty($clusterItems)) {
             return false;
         }
 
-        if (count($clusterItems) === 1) {
-            return $this->confirm($clusterItems[0], $automatically);
+        if (empty($cluster = $clusterItems[0]->get('cluster'))) {
+            throw new Exception("Cluster is not set for item " . $clusterItems[0]->get('id'));
         }
 
-        $goldenRecord = $clusterItems[0]->get('cluster')->get('goldenRecord');
-
-        if (empty($goldenRecord)) {
-            foreach ($clusterItems as $index => $clusterItem) {
-                try {
-                    $this->confirm($clusterItem, $automatically);
-                    unset($clusterItems[$index]);
-                    break;
-                } catch (\Exception $e) {
-                    $GLOBALS['log']->error('Failed to confirm cluster item ' . $clusterItem->get('id') . ' : ' . $e->getMessage());
-                }
+        $contributorItems = [];
+        foreach ($clusterItems as $clusterItem) {
+            if ($clusterItem->get('clusterId') !== $cluster->get('id')) {
+                throw new BadRequest($this->getInjection('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
             }
 
-            $clusterItems = array_values($clusterItems);
+            if ($clusterItem->get('entityName') === $cluster->get('masterEntity')) {
+                $this->consolidate($clusterItem, $automatically);
+                $cluster = $clusterItem->get('cluster');
+                continue;
+            }
 
-            $goldenRecord = $clusterItems[0]->get('cluster')->get('goldenRecord');
+            $contributorItems[$clusterItem->get('entityId')] = $clusterItem;
         }
+
+        if (empty($contributorItems)) {
+            return true;
+        }
+
+        $goldenRecordChanged = false;
+        $goldenRecord = $cluster->get('goldenRecord');
 
         if (empty($goldenRecord)) {
-            return false;
+            foreach ($cluster->get('clusterItems') as $clusterItem) {
+                if ($clusterItem->get('entityName') === $cluster->get('masterEntity')) {
+                    if (!empty($itemRecord = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId')))) {
+                        $goldenRecord = $itemRecord;
+
+                        $cluster->set('goldenRecordId', $goldenRecord->get('id'));
+                        $this->getEntityManager()->saveEntity($cluster);
+                        $goldenRecordChanged = true;
+                        break;
+                    }
+                }
+            }
         }
 
-        $lastItem = array_pop($clusterItems);
-
-        foreach ($clusterItems as $clusterItem) {
-            $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId'));
+        $selectedRecords = [];
+        foreach ($contributorItems as $entityId => $clusterItem) {
+            $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $entityId);
 
             if (empty($record)) {
                 throw new NotFound($this->getInjection('language')->translate("notFound", "exceptions", "ClusterItem"));
             }
 
-            $record->set('masterRecordId', $goldenRecord->get('id'));
-            $this->getEntityManager()->saveEntity($record);
+            if (!empty($goldenRecord) && $record->get('masterRecordId') === $goldenRecord->get('id')) {
+                continue;
+            }
 
-            $clusterItem->set('confirmedAutomatically', $automatically);
-            $this->getEntityManager()->saveEntity($clusterItem);
+            $selectedRecords[$entityId] = $record;
         }
 
-        $this->confirm($lastItem, $automatically);
+        if (empty($selectedRecords)) {
+            return false;
+        }
+
+        $consolidationService = $this->getRecordService('Consolidation');
+
+        $contributor = reset($selectedRecords);
+        $candidates = $consolidationService->findCandidates($cluster, $goldenRecord);
+
+        if (empty($goldenRecord)) {
+            $goldenRecord = $consolidationService->createMasterRecord($contributor, $candidates);
+
+            if (empty($goldenRecord)) {
+                return false;
+            }
+
+            $masterItem = $this->getEntityManager()->getEntity('ClusterItem');
+            $masterItem->set('clusterId', $cluster->get('id'));
+            $masterItem->set('entityName', $cluster->get('masterEntity'));
+            $masterItem->set('entityId', $goldenRecord->get('id'));
+            $this->getEntityManager()->saveEntity($masterItem);
+
+            $cluster->set('goldenRecordId', $goldenRecord->get('id'));
+            $this->getEntityManager()->saveEntity($cluster);
+            $goldenRecordChanged = true;
+        } else {
+            $consolidationService->updateMasterRecord($contributor, $goldenRecord, $candidates);
+        }
+
+        foreach ($selectedRecords as $record) {
+            $record->set('masterRecordId', $goldenRecord->get('id'));
+            $this->getEntityManager()->saveEntity($record, ['skipUpdateMasterRecord' => true]);
+
+            $clusterItem = $contributorItems[$record->get('id')];
+            $clusterItem->set('consolidatedAutomatically', $automatically);
+            $this->getEntityManager()->saveEntity($clusterItem);
+
+            $this->createClusterNote($cluster->get('id'), 'confirmed', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
+        }
+
+        if ($goldenRecordChanged) {
+            $this->runAsSystemUser(function () use ($cluster, $goldenRecord) {
+                $this->createClusterNote($cluster->get('id'), 'goldenRecord', $goldenRecord->getEntityName(), $goldenRecord->get('id'));
+            });
+        }
 
         return true;
     }
@@ -196,7 +222,7 @@ class ClusterItem extends Base
             });
         }
 
-        $entity->set('confirmedAutomatically', false);
+        $entity->set('consolidatedAutomatically', false);
         $entity->set('matchedRecordId', null);
 
         if ($persistRejection) {
@@ -208,7 +234,7 @@ class ClusterItem extends Base
         } else {
             // cancel if only one cluster item remains
             if (empty($this->getRepository()->where(['clusterId' => $cluster->get('id'), 'id!=' => $entity->get('id')])->findOne())) {
-                if ($entity->isAttributeChanged('confirmedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
+                if ($entity->isAttributeChanged('consolidatedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
                     $this->getEntityManager()->saveEntity($entity);
                 }
 
@@ -234,7 +260,7 @@ class ClusterItem extends Base
             $entity->set('matchedRecordId', $item['id']);
         }
 
-        if ($entity->isAttributeChanged('confirmedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
+        if ($entity->isAttributeChanged('consolidatedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
             $this->getEntityManager()->saveEntity($entity);
         }
 
@@ -256,7 +282,7 @@ class ClusterItem extends Base
         return true;
     }
 
-    public function unmerge(array $params): array
+    public function deconsolidate(array $params): array
     {
         if (!empty($params['where'])) {
             $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
@@ -270,6 +296,10 @@ class ClusterItem extends Base
 
         $entities = iterator_to_array($collection);
 
+        if (empty($entities)) {
+            return ['count' => 0, 'sync' => true, 'errors' => []];
+        }
+
         // All items must belong to the same cluster
         $clusterIds = array_unique(array_map(fn($e) => $e->get('clusterId'), $entities));
         if (count($clusterIds) > 1) {
@@ -277,37 +307,45 @@ class ClusterItem extends Base
         }
 
         $cluster = $entities[0]->get('cluster');
-        // Cannot unmerge the master entity item
         foreach ($entities as $entity) {
             if ($entity->get('entityName') === $cluster->get('masterEntity')) {
-                throw new BadRequest($this->getInjection('language')->translate('cannotUnmergeMasterEntityItem', 'exceptions', 'ClusterItem'));;
+                throw new BadRequest($this->getInjection('language')->translate('cannotDeconsolidateMasterEntityItem', 'exceptions', 'ClusterItem'));
             }
         }
 
-        $newCluster = null;
-        $this->runAsSystemUser(function () use (&$newCluster, $cluster) {
-            $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
-            $newCluster->set('masterEntity', $cluster->get('masterEntity'));
-            $this->getEntityManager()->saveEntity($newCluster);
-        });
-
+        $count = 0;
         foreach ($entities as $entity) {
-            if ($this->isClusterItemConfirmed($entity)) {
-                $this->runAsSystemUser(function () use ($entity) {
-                    $this->unConfirmClusterItem($entity);
-                });
+            if (!$this->isClusterItemConfirmed($entity)) {
+                continue;
             }
 
-            $this->createClusterNote($cluster->get('id'), 'moved', $entity->get('entityName'), $entity->get('entityId'));
-            $this->getRepository()->moveToCluster($entity->get('id'), $newCluster->get('id'));
-            $this->runAsSystemUser(function () use ($newCluster, $entity) {
-                $this->createClusterNote($newCluster->get('id'), 'linked', $entity->get('entityName'), $entity->get('entityId'));
+            $this->runAsSystemUser(function () use ($entity) {
+                $this->unConfirmClusterItem($entity);
             });
+
+            $this->createClusterNote($cluster->get('id'), 'deconsolidated', $entity->get('entityName'), $entity->get('entityId'));
+            $count++;
         }
 
-        $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newCluster->get('id')]);
+        $goldenRecord = $cluster->get('goldenRecord');
+        if ($count > 0 && !empty($goldenRecord)) {
+            $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($cluster->get('masterEntity'));
+            if (!empty($consolidation) && !empty($consolidation->get('updateMasterAutomatically'))) {
+                $contributorItem = reset($entities);
+                $contributor = $this->getEntityManager()->getEntity($contributorItem->get('entityName'), $contributorItem->get('entityId'));
+                $this->getRecordService('Consolidation')->updateMasterRecord($contributor, $goldenRecord, new EntityCollection([], $contributor->getEntityName()));
+            }
+        }
 
-        return ['count' => count($entities), 'sync' => true, 'errors' => []];
+        return ['count' => $count, 'sync' => true, 'errors' => []];
+    }
+
+    /**
+     * @deprecated Use deconsolidate() instead, will be removed in the next major version.
+     */
+    public function unmerge(array $params): array
+    {
+        return $this->deconsolidate($params);
     }
 
     public function unreject(string $clusterItemId, string $rejectedClusterItemId): bool
@@ -337,8 +375,8 @@ class ClusterItem extends Base
             }
         }
 
-        if (!empty($clusterItem->get('confirmedAutomatically'))) {
-            $clusterItem->set('confirmedAutomatically', false);
+        if (!empty($clusterItem->get('consolidatedAutomatically'))) {
+            $clusterItem->set('consolidatedAutomatically', false);
             $this->getEntityManager()->saveEntity($clusterItem);
         }
 
@@ -380,12 +418,12 @@ class ClusterItem extends Base
         foreach ($clusterItem->getStagingRecords() as $stagingRecord) {
             $stagingRecord->set('masterRecordId', null);
             if ($stagingRecord->isAttributeChanged('masterRecordId')) {
-                $this->getEntityManager()->saveEntity($stagingRecord);
+                $this->getEntityManager()->saveEntity($stagingRecord, ['skipUpdateMasterRecord' => true]);
             }
         }
 
-        if (!empty($clusterItem->get('confirmedAutomatically'))) {
-            $clusterItem->set('confirmedAutomatically', false);
+        if (!empty($clusterItem->get('consolidatedAutomatically'))) {
+            $clusterItem->set('consolidatedAutomatically', false);
             $this->getEntityManager()->saveEntity($clusterItem);
         }
     }
@@ -414,9 +452,9 @@ class ClusterItem extends Base
 
 
         if ($this->getUser()->isAdmin()) {
-            $entity->setMetaPermission('confirm', !$isConfirmed);
+            $entity->setMetaPermission('consolidate', !$isConfirmed);
             $entity->setMetaPermission('reject', true);
-            $entity->setMetaPermission('unmerge', $isStaging);
+            $entity->setMetaPermission('deconsolidate', $isStaging);
             $entity->setMetaPermission('move', true);
             $entity->setMetaPermission('delete', true);
             if (empty($record)) {
@@ -427,14 +465,14 @@ class ClusterItem extends Base
         }
 
 
-        $entity->setMetaPermission('confirm', false);
+        $entity->setMetaPermission('consolidate', false);
         $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('unmerge', $isStaging && $this->getAcl()->check($entity, 'edit'));
+        $entity->setMetaPermission('deconsolidate', $isStaging && $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('move', $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('delete', false);
 
         if (!empty($record)) {
-            $entity->setMetaPermission('confirm', !$isConfirmed && $this->getAcl()->check($record, 'edit'));
+            $entity->setMetaPermission('consolidate', !$isConfirmed && $this->getAcl()->check($record, 'edit'));
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
         } else {
             $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));

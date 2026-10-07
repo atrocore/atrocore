@@ -10,17 +10,18 @@
   },
   "actions": {
     "reject": "Ablehnen",
-    "confirm": "Bestätigen Sie",
+    "consolidate": "Konsolidieren",
     "unreject": "Ablehnen",
-    "purge": "Bereinigen"
+    "purge": "Bereinigen",
+    "deconsolidate": "Entkonsolidieren"
   },
   "options": {
     "state": {
       "empty": "Leere Werte",
       "review": "Review",
       "invalid": "Ungültig",
-      "mergedAutomatically": "Automatisch zusammengeführt",
-      "mergedManually": "Manuell zusammengeführt"
+      "consolidatedAutomatically": "Konsolidiert (auto)",
+      "consolidated": "Konsolidiert"
     }
   },
   "actionConfirms": {
@@ -29,7 +30,8 @@
   "exceptions": {
     "cannotMergeWithoutGoldenRecord": "Eine Zusammenführung ohne Golden Record ist nicht möglich",
     "noClusterItemsToPreview": "Es gibt nichts zur Vorschau: Der Cluster hat keine Contributor-Einträge",
-    "cannotPreviewInvalidCluster": "Für einen ungültigen Cluster kann die Konsolidierung nicht in der Vorschau angezeigt werden"
+    "cannotPreviewInvalidCluster": "Für einen ungültigen Cluster kann die Konsolidierung nicht in der Vorschau angezeigt werden",
+    "clusterItemsNotInCluster": "Die Cluster-Elemente %s gehören nicht zu diesem Cluster"
   },
   "messages": {
     "cannotMergeUnconfirmedItems": "Unbestätigte Einträge können nicht zur Zusammenführung hinzugefügt werden"
@@ -61,6 +63,8 @@
     "clusterMovedThis": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
     "clusterConfirmed": "{user} hat {relatedEntity} in diesem Cluster bestätigt",
     "clusterConfirmedThis": "{user} hat {relatedEntity} in diesem Cluster bestätigt",
+    "clusterDeconsolidated": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
+    "clusterDeconsolidatedThis": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
     "clusterGoldenRecord": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
     "clusterGoldenRecordThis": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
     "clusterDeleted": "{user} hat diesen Cluster gelöscht",

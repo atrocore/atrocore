@@ -43,7 +43,7 @@ class CreateClustersForOrphans extends AbstractClusterJob implements JobInterfac
             $cluster->set('clusterItems', [$clusterItem]);
 
             try {
-                $clusterItemService->confirm($clusterItem, true);
+                $clusterItemService->consolidate($clusterItem, true);
             } catch (\Exception $e) {
                 $GLOBALS['log']->error('Impossible to automatically confirm cluster ' . $cluster->get('id') . ': ' . $e->getMessage());
             }
