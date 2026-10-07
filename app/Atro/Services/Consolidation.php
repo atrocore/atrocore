@@ -28,19 +28,26 @@ use Espo\ORM\EntityCollection;
 
 class Consolidation extends Base
 {
-    public function updateMasterRecord(Entity $contributor, ?Entity $master = null, ?EntityCollection $candidates = null): bool
+    public function updateMasterForContributor(Entity $contributor): bool
     {
-        if ($master === null) {
-            $master = $contributor->get('masterRecord');
+        $master = $contributor->get('masterRecord');
+
+        if (empty($master)) {
+            throw new Forbidden();
         }
 
-        if (empty($master) || !$this->getAcl()->check($master->getEntityName(), 'edit')) {
+        return $this->updateMasterRecord($master, new EntityCollection([$contributor], $contributor->getEntityName()));
+    }
+
+    public function updateMasterRecord(Entity $master, EntityCollection $candidates): bool
+    {
+        if (!$this->getAcl()->check($master->getEntityName(), 'edit')) {
             throw new Forbidden();
         }
 
         $consolidation = $this->getConsolidation($master->getEntityName());
 
-        $payload = $this->buildMasterRecordPayload($consolidation, $candidates ?? new EntityCollection([$contributor], $contributor->getEntityName()), $master, (string)$consolidation->get('consolidationScript'));
+        $payload = $this->buildMasterRecordPayload($consolidation, $candidates, $master, (string)$consolidation->get('consolidationScript'));
 
         if ($payload === null) {
             return false;
@@ -57,9 +64,9 @@ class Consolidation extends Base
         return true;
     }
 
-    public function createMasterRecord(Entity $contributor, ?EntityCollection $candidates = null): ?Entity
+    public function createMasterRecord(EntityCollection $candidates): ?Entity
     {
-        $masterEntity = $this->getMetadata()->get(['scopes', $contributor->getEntityName(), 'primaryEntityId']);
+        $masterEntity = $this->getMetadata()->get(['scopes', $candidates->getEntityName(), 'primaryEntityId']);
 
         if (empty($masterEntity) || !$this->getAcl()->check($masterEntity, 'create')) {
             throw new Forbidden();
@@ -67,7 +74,7 @@ class Consolidation extends Base
 
         $consolidation = $this->getConsolidation($masterEntity);
 
-        $payload = $this->buildMasterRecordPayload($consolidation, $candidates ?? new EntityCollection([$contributor], $contributor->getEntityName()), null, (string)$consolidation->get('consolidationScript'));
+        $payload = $this->buildMasterRecordPayload($consolidation, $candidates, null, (string)$consolidation->get('consolidationScript'));
 
         if ($payload === null) {
             return null;

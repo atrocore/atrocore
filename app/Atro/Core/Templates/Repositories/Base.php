@@ -169,7 +169,7 @@ class Base extends RDB
         }
 
         try {
-            $this->getInjection('serviceFactory')->create('Consolidation')->updateMasterRecord($entity);
+            $this->getInjection('serviceFactory')->create('Consolidation')->updateMasterForContributor($entity);
         } catch (Forbidden|BadRequest $e) {
             // ignore
         }

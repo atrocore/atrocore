@@ -121,11 +121,10 @@ class ClusterItem extends Base
 
         $consolidationService = $this->getRecordService('Consolidation');
 
-        $contributor = reset($selectedRecords);
         $candidates = $consolidationService->findCandidates($cluster, $goldenRecord);
 
         if (empty($goldenRecord)) {
-            $goldenRecord = $consolidationService->createMasterRecord($contributor, $candidates);
+            $goldenRecord = $consolidationService->createMasterRecord($candidates);
 
             if (empty($goldenRecord)) {
                 return false;
@@ -141,7 +140,7 @@ class ClusterItem extends Base
             $this->getEntityManager()->saveEntity($cluster);
             $goldenRecordChanged = true;
         } else {
-            $consolidationService->updateMasterRecord($contributor, $goldenRecord, $candidates);
+            $consolidationService->updateMasterRecord($goldenRecord, $candidates);
         }
 
         foreach ($selectedRecords as $record) {
@@ -315,11 +314,11 @@ class ClusterItem extends Base
 
         $goldenRecord = $cluster->get('goldenRecord');
         if ($count > 0 && !empty($goldenRecord)) {
-            $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($cluster->get('masterEntity'));
+            $consolidationRepository = $this->getEntityManager()->getRepository('Consolidation');
+            $consolidation = $consolidationRepository->getByEntityName($cluster->get('masterEntity'));
             if (!empty($consolidation) && !empty($consolidation->get('updateMasterAutomatically'))) {
-                $contributorItem = reset($entities);
-                $contributor = $this->getEntityManager()->getEntity($contributorItem->get('entityName'), $contributorItem->get('entityId'));
-                $this->getRecordService('Consolidation')->updateMasterRecord($contributor, $goldenRecord, new EntityCollection([], $contributor->getEntityName()));
+                $contributorEntityName = (string)$consolidationRepository->getContributorEntityName($cluster->get('masterEntity'));
+                $this->getRecordService('Consolidation')->updateMasterRecord($goldenRecord, new EntityCollection([], $contributorEntityName));
             }
         }
 
