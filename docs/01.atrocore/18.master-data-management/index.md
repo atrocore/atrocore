@@ -121,10 +121,10 @@ The consolidation of contributor records into master records is configured via *
 - **Consolidation Script** – a Twig script that defines how contributor record data is transformed, unified, and mapped to the master record. See [below](#consolidation-script).
 - **Execute Consolidation As** – the user account that will be used to execute the Consolidation Script: `System` or `Same User`.
 - **Update Master Automatically** – when enabled, any update to a contributor record and any deconsolidation of contributor records automatically trigger an update of the linked master record according to the Consolidation Script.
-- **Consolidate Automatically** – when enabled, cluster items are confirmed automatically by the `Create Clusters` scheduled job. When checked, the **Minimum Matching Score** field becomes required and defines the confirmation threshold.
+- **Consolidate Automatically** – when enabled, cluster items are consolidated automatically by the `Create Clusters` scheduled job. When checked, the **Minimum Matching Score** field becomes required and defines the consolidation threshold.
 - **Delete Invalid Masters Automatically** – when enabled, excess master records in invalid clusters are deleted automatically.
 
-See [Clusters](./19.clusters/index.md) for details on how these settings are applied during the clustering and confirmation workflow.
+See [Clusters](./19.clusters/index.md) for details on how these settings are applied during the clustering and consolidation workflow.
 
 ### Consolidation Script
 
