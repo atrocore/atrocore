@@ -62,7 +62,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
 
             'change input.compare-header-checkbox': function (e) {
                 e.stopPropagation();
-                const id = $(e.currentTarget).data('id');
+                const id = e.currentTarget.dataset.id;
                 if (e.currentTarget.checked) {
                     if (!this.checkedIds.includes(id)) {
                         this.checkedIds.push(id);
