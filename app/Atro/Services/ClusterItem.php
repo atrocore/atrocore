@@ -19,6 +19,8 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\UserContext;
+use Atro\DTOs\Cluster\MassActionResultDTO;
+use Atro\DTOs\Cluster\MoveResultDTO;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
@@ -49,22 +51,6 @@ class ClusterItem extends Base
         });
 
         return true;
-    }
-
-    /**
-     * @deprecated Use consolidate() instead, will be removed in the next major version.
-     */
-    public function confirm(Entity $entity, bool $automatically = false): bool
-    {
-        return $this->consolidate($entity, $automatically);
-    }
-
-    /**
-     * @deprecated Use consolidateAll() instead, will be removed in the next major version.
-     */
-    public function confirmAll(array $clusterItems, bool $automatically = false): bool
-    {
-        return $this->consolidateAll($clusterItems, $automatically);
     }
 
     public function consolidateAll(array $clusterItems, bool $automatically = false): bool
@@ -178,7 +164,7 @@ class ClusterItem extends Base
         return true;
     }
 
-    public function reject(array $params): array
+    public function reject(array $params): MassActionResultDTO
     {
         $params['action']             = 'reject';
         $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
@@ -194,7 +180,7 @@ class ClusterItem extends Base
             }
         });
 
-        return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
+        return new MassActionResultDTO($count, $sync, $errors);
     }
 
     public function rejectItem(\Atro\Entities\ClusterItem|string $entity, bool $persistRejection = true): bool
@@ -282,7 +268,7 @@ class ClusterItem extends Base
         return true;
     }
 
-    public function deconsolidate(array $params): array
+    public function deconsolidate(array $params): MassActionResultDTO
     {
         if (!empty($params['where'])) {
             $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
@@ -297,7 +283,7 @@ class ClusterItem extends Base
         $entities = iterator_to_array($collection);
 
         if (empty($entities)) {
-            return ['count' => 0, 'sync' => true, 'errors' => []];
+            return new MassActionResultDTO(0);
         }
 
         // All items must belong to the same cluster
@@ -337,15 +323,59 @@ class ClusterItem extends Base
             }
         }
 
-        return ['count' => $count, 'sync' => true, 'errors' => []];
+        return new MassActionResultDTO($count);
     }
 
-    /**
-     * @deprecated Use deconsolidate() instead, will be removed in the next major version.
-     */
-    public function unmerge(array $params): array
+    public function split(array $params): MassActionResultDTO
     {
-        return $this->deconsolidate($params);
+        if (!empty($params['where'])) {
+            $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
+            $collection   = $this->getRepository()->find($selectParams);
+        } else {
+            if (empty($ids = $params['ids'])) {
+                throw new BadRequest("No ids provided.");
+            }
+            $collection = $this->getRepository()->findByIds($ids);
+        }
+
+        $entities = iterator_to_array($collection);
+
+        if (empty($entities)) {
+            return new MassActionResultDTO(0);
+        }
+
+        $clusterIds = array_unique(array_map(fn($e) => $e->get('clusterId'), $entities));
+        if (count($clusterIds) > 1) {
+            throw new BadRequest($this->getInjection('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
+        }
+
+        $cluster = $entities[0]->get('cluster');
+        foreach ($entities as $entity) {
+            if ($entity->get('entityName') === $cluster->get('masterEntity')) {
+                throw new BadRequest($this->getInjection('language')->translate('cannotSplitMasterEntityItem', 'exceptions', 'ClusterItem'));
+            }
+        }
+
+        $this->deconsolidate(['ids' => array_map(fn($e) => $e->get('id'), $entities)]);
+
+        $newCluster = null;
+        $this->runAsSystemUser(function () use (&$newCluster, $cluster) {
+            $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
+            $newCluster->set('masterEntity', $cluster->get('masterEntity'));
+            $this->getEntityManager()->saveEntity($newCluster);
+        });
+
+        foreach ($entities as $entity) {
+            $this->createClusterNote($cluster->get('id'), 'moved', $entity->get('entityName'), $entity->get('entityId'));
+            $this->getRepository()->moveToCluster($entity->get('id'), $newCluster->get('id'));
+            $this->runAsSystemUser(function () use ($newCluster, $entity) {
+                $this->createClusterNote($newCluster->get('id'), 'linked', $entity->get('entityName'), $entity->get('entityId'));
+            });
+        }
+
+        $this->getRepository()->updateMatchedScoresInClusters([$cluster->get('id'), $newCluster->get('id')]);
+
+        return new MassActionResultDTO(count($entities));
     }
 
     public function unreject(string $clusterItemId, string $rejectedClusterItemId): bool
@@ -521,7 +551,7 @@ class ClusterItem extends Base
         $this->getRecordService('SelectionItem')->prepareCollectionRecords($collection, $selectParams);
     }
 
-    public function move(array $params): array
+    public function move(array $params): MoveResultDTO
     {
         if (!$this->getAcl()->check('ClusterItem', 'edit')) {
             throw new Forbidden();
@@ -549,7 +579,7 @@ class ClusterItem extends Base
             $this->moveItem($entity, $targetClusterId) ? $moved++ : $skipped++;
         }
 
-        return ['count' => $moved, 'skipped' => $skipped];
+        return new MoveResultDTO($moved, $skipped);
     }
 
     public function moveItem(\Atro\Entities\ClusterItem $clusterItem, string $targetClusterId): bool

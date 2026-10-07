@@ -13,15 +13,22 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\ClusterItem;
 
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/massUnmerge',
+    path: '/ClusterItem/massSplit',
     methods: [
         'POST',
     ],
-    summary: 'Split cluster items (mass action) (deprecated)',
-    description: 'Deprecated, use POST /ClusterItem/massSplit instead. Moves one or more cluster items together to a new cluster. Consolidated items are deconsolidated first. All selected items must belong to the same cluster and none may be the master entity item. Accepts a list of IDs via idList or a filter via where.',
+    summary: 'Split cluster items (mass action)',
+    description: 'Moves one or more cluster items together to a new cluster. Consolidated items are deconsolidated first. All selected items must belong to the same cluster and none may be the master entity item. Accepts a list of IDs via idList or a filter via where.',
     tag: 'ClusterItem',
     requestBody: [
         'required' => true,
@@ -88,8 +95,30 @@ use Atro\Core\Routing\Route;
             'description' => 'Current user does not have edit access on ClusterItem.',
         ],
     ],
-    deprecated: true,
 )]
-class MassUnmergeHandler extends MassSplitHandler
+class MassSplitHandler extends AbstractHandler
 {
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
+            throw new Forbidden();
+        }
+
+        $data   = $this->getRequestBody($request);
+        $params = [];
+
+        if (property_exists($data, 'where')) {
+            $params['where'] = json_decode(json_encode($data->where), true);
+        }
+
+        if (property_exists($data, 'idList')) {
+            $params['ids'] = $data->idList;
+        }
+
+        if (empty($params['ids']) && empty($params['where'])) {
+            throw new BadRequest($this->getLanguage()->translate('idOrIdListOrWhereRequired', 'exceptions', 'ClusterItem'));
+        }
+
+        return new JsonResponse(get_object_vars($this->getRecordService('ClusterItem')->split($params)));
+    }
 }

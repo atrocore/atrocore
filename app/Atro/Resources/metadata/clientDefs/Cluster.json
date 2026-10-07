@@ -90,6 +90,13 @@
           "iconClass": "ph ph-arrows-split",
           "sortOrder": 30
         },
+        "split": {
+          "url": "ClusterItem/{{id}}/split",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-scissors",
+          "sortOrder": 35
+        },
         "move": {
           "url": "ClusterItem/{{id}}/move",
           "method": "PATCH",

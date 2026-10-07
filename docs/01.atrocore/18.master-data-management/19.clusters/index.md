@@ -138,6 +138,8 @@ The following actions are available for cluster items in both Standard and Compa
 
 - **Deconsolidate** – unlinks the contributor record from the golden record of the cluster. The cluster item stays in the current cluster and can be consolidated again. If **Update Master Automatically** is enabled for the consolidation, the golden record is updated according to the Consolidation Script based on the remaining contributor records. Not available for the master record. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
 
+- **Split** – moves the selected cluster items to a new cluster. Consolidated items are deconsolidated first, as described for **Deconsolidate**. Unlike **Reject**, all selected items are guaranteed to end up together in the same new cluster, and no rejection is stored. Not available for the master record. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
+
 - **Move** – transfers the cluster item to an existing cluster selected by the user. A cluster picker dialog opens, filtered to clusters of the same master entity. If the item was confirmed, its confirmation is reset before the move. The item cannot be moved to a cluster where it was previously rejected. Both the source and target clusters record the move in their activity streams.
 
 - **Delete** Deletes the corresponding record and its cluster item.

@@ -17,30 +17,35 @@
     "reject": "Reject",
     "consolidate": "Consolidate",
     "deconsolidate": "Deconsolidate",
+    "split": "Split",
     "move": "Move"
   },
   "exceptions": {
     "notFound": "Cluster item record not found",
     "cannotUnreject": "This cluster item cannot be unrejected",
-    "itemsMustBelongToTheSameCluster": "All items must belong to the same cluster to deconsolidate together.",
+    "itemsMustBelongToTheSameCluster": "All selected items must belong to the same cluster.",
     "cannotDeconsolidateMasterEntityItem": "Cannot deconsolidate the master entity item.",
+    "cannotSplitMasterEntityItem": "Cannot split the master entity item.",
     "idOrIdListOrWhereRequired": "Please provide at least one of: an ID, a list of IDs, or a search filter.",
     "targetClusterIdRequired": "Target cluster is required."
   },
   "massActions": {
     "reject": "Reject",
     "deconsolidate": "Deconsolidate",
+    "split": "Split",
     "move": "Move",
     "consolidate": "Consolidate"
   },
   "massActionSuccessMessages": {
     "reject": "The selected Cluster Items are been deleted in the background",
     "deconsolidate": "The selected Cluster Items are deconsolidated",
+    "split": "The selected Cluster Items have been moved to a new cluster",
     "move": "The selected Cluster Items have been moved",
     "consolidate": "The selected Cluster Items have been consolidated"
   },
   "massActionConfirmMessages": {
     "reject": "Are you sure you want to reject the selected Items?",
-    "deconsolidate": "Are you sure you want to deconsolidate the selected Items?"
+    "deconsolidate": "Are you sure you want to deconsolidate the selected Items?",
+    "split": "Are you sure you want to move the selected Items to a new cluster?"
   }
 }

@@ -12,7 +12,8 @@
     "reject": "Rejeter",
     "consolidate": "Consolider",
     "unreject": "Ne pas rejeter",
-    "deconsolidate": "Déconsolider"
+    "deconsolidate": "Déconsolider",
+    "split": "Scinder"
   },
   "options": {
     "state": {

@@ -13,15 +13,22 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\ClusterItem;
 
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
+use Atro\Handlers\AbstractHandler;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/{id}/unmerge',
+    path: '/ClusterItem/{id}/split',
     methods: [
         'POST',
     ],
-    summary: 'Split a single cluster item (deprecated)',
-    description: 'Deprecated, use POST /ClusterItem/{id}/split instead. Moves the specified cluster item to a new cluster. If the item is consolidated, it is deconsolidated first. The item may not be the master entity item of its cluster.',
+    summary: 'Split a single cluster item',
+    description: 'Moves the specified cluster item to a new cluster. If the item is consolidated, it is deconsolidated first. The item may not be the master entity item of its cluster.',
     tag: 'ClusterItem',
     parameters: [
         [
@@ -55,8 +62,25 @@ use Atro\Core\Routing\Route;
             'description' => 'ClusterItem not found.',
         ],
     ],
-    deprecated: true,
 )]
-class UnmergeHandler extends SplitHandler
+class SplitHandler extends AbstractHandler
 {
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        if (!$this->getAcl()->check('ClusterItem', 'edit')) {
+            throw new Forbidden();
+        }
+
+        $id            = (string)$request->getAttribute('id');
+        $recordService = $this->getRecordService('ClusterItem');
+
+        $entity = $recordService->getEntity($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        $result = $recordService->split(['ids' => [$id]]);
+
+        return new BoolResponse($result->count > 0);
+    }
 }

@@ -13,7 +13,8 @@
     "consolidate": "Konsolidieren",
     "unreject": "Ablehnen",
     "purge": "Bereinigen",
-    "deconsolidate": "Entkonsolidieren"
+    "deconsolidate": "Entkonsolidieren",
+    "split": "Aufteilen"
   },
   "options": {
     "state": {

@@ -12,7 +12,8 @@
     "reject": "Відхилити",
     "consolidate": "Консолідувати",
     "unreject": "Скасувати відхилення",
-    "deconsolidate": "Розконсолідувати"
+    "deconsolidate": "Розконсолідувати",
+    "split": "Розділити"
   },
   "options": {
     "state": {

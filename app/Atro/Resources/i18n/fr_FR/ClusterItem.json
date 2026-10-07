@@ -16,26 +16,31 @@
     "cannotReject": "Ce point de la grappe ne peut être rejeté",
     "cannotUnreject": "Cet élément du cluster ne peut pas être rejeté",
     "idOrIdListOrWhereRequired": "Veuillez fournir au moins l'un des éléments suivants : un ID, une liste d'ID ou un filtre de recherche.",
-    "itemsMustBelongToTheSameCluster": "Tous les éléments doivent appartenir au même cluster pour être déconsolidés ensemble.",
-    "cannotDeconsolidateMasterEntityItem": "Impossible de déconsolider l'élément de l'entité maître."
+    "itemsMustBelongToTheSameCluster": "Tous les éléments sélectionnés doivent appartenir au même cluster.",
+    "cannotDeconsolidateMasterEntityItem": "Impossible de déconsolider l'élément de l'entité maître.",
+    "cannotSplitMasterEntityItem": "Impossible de scinder l'élément de l'entité maître."
   },
   "massActions": {
     "reject": "Rejeter",
     "deconsolidate": "Déconsolider",
+    "split": "Scinder",
     "consolidate": "Consolider"
   },
   "massActionSuccessMessages": {
     "reject": "Les éléments de cluster sélectionnés sont en cours de suppression en arrière-plan",
     "deconsolidate": "Les éléments de cluster sélectionnés ont été déconsolidés",
+    "split": "Les éléments de cluster sélectionnés ont été déplacés vers un nouveau cluster",
     "consolidate": "Les éléments de cluster sélectionnés ont été consolidés"
   },
   "massActionConfirmMessages": {
     "reject": "Êtes-vous sûr de vouloir rejeter les éléments sélectionnés ?",
-    "deconsolidate": "Êtes-vous sûr de vouloir déconsolider les éléments sélectionnés ?"
+    "deconsolidate": "Êtes-vous sûr de vouloir déconsolider les éléments sélectionnés ?",
+    "split": "Êtes-vous sûr de vouloir déplacer les éléments sélectionnés vers un nouveau cluster ?"
   },
   "actions": {
     "reject": "Rejeter",
     "consolidate": "Consolider",
-    "deconsolidate": "Déconsolider"
+    "deconsolidate": "Déconsolider",
+    "split": "Scinder"
   }
 }

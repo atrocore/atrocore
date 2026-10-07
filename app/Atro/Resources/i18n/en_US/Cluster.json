@@ -22,6 +22,7 @@
     "consolidate": "Consolidate",
     "unreject": "Unreject",
     "deconsolidate": "Deconsolidate",
+    "split": "Split",
     "move": "Move",
     "purge": "Purge"
   },
