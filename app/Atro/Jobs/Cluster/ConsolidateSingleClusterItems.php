@@ -18,7 +18,7 @@ use Atro\Entities\Job;
 use Atro\Jobs\JobInterface;
 use Atro\Repositories\ClusterItem;
 
-class ConfirmSingleClusterItems extends AbstractClusterJob implements JobInterface
+class ConsolidateSingleClusterItems extends AbstractClusterJob implements JobInterface
 {
     public function run(Job $job): void
     {
@@ -46,7 +46,7 @@ class ConfirmSingleClusterItems extends AbstractClusterJob implements JobInterfa
             }
         }
 
-        if ($this->hasPendingSiblings('ConfirmSingleClusterItems', $masterEntity, $job)) {
+        if ($this->hasPendingSiblings('ConsolidateSingleClusterItems', $masterEntity, $job)) {
             return;
         }
 

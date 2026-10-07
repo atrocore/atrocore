@@ -25,6 +25,15 @@ class V2Dot6Dot0 extends Base
 
     public function up(): void
     {
+        $this->renameColumns();
+        $this->renameContributorRecordsInScripts();
+        $this->renameJobTypes();
+        $this->renameConfirmedClusterNotes();
+        $this->renameLayoutFields();
+    }
+
+    private function renameColumns(): void
+    {
         if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE consolidation RENAME COLUMN execute_merge_as TO execute_consolidation_as");
             $this->exec("ALTER TABLE consolidation RENAME COLUMN confirm_automatically TO consolidate_automatically");
@@ -34,7 +43,10 @@ class V2Dot6Dot0 extends Base
             $this->exec("ALTER TABLE consolidation CHANGE confirm_automatically consolidate_automatically TINYINT(1) DEFAULT '0' NOT NULL");
             $this->exec("ALTER TABLE cluster_item CHANGE confirmed_automatically consolidated_automatically TINYINT(1) DEFAULT '0' NOT NULL");
         }
+    }
 
+    private function renameContributorRecordsInScripts(): void
+    {
         $consolidations = $this->getDbal()->createQueryBuilder()
             ->select('id', 'consolidation_script')
             ->from('consolidation')
@@ -56,7 +68,57 @@ class V2Dot6Dot0 extends Base
                 ->setParameter('id', $consolidation['id'])
                 ->executeStatement();
         }
+    }
 
+    private function renameJobTypes(): void
+    {
+        $renamedJobTypes = [
+            'ConfirmClustersAutomatically' => 'ConsolidateClustersAutomatically',
+            'ConfirmSingleClusterItems'    => 'ConsolidateSingleClusterItems',
+        ];
+
+        foreach ($renamedJobTypes as $oldType => $newType) {
+            $this->getDbal()->createQueryBuilder()
+                ->update('job')
+                ->set('type', ':newType')
+                ->where('type = :oldType')
+                ->setParameter('newType', $newType)
+                ->setParameter('oldType', $oldType)
+                ->executeStatement();
+        }
+    }
+
+    private function renameConfirmedClusterNotes(): void
+    {
+        $notes = $this->getDbal()->createQueryBuilder()
+            ->select('id', 'data')
+            ->from('note')
+            ->where('type = :type')
+            ->andWhere('data LIKE :action')
+            ->setParameter('type', 'ClusterActivity')
+            ->setParameter('action', '%confirmed%')
+            ->fetchAllAssociative();
+
+        foreach ($notes as $note) {
+            $data = json_decode((string)$note['data'], true);
+            if (!is_array($data) || ($data['action'] ?? null) !== 'confirmed') {
+                continue;
+            }
+
+            $data['action'] = 'consolidated';
+
+            $this->getDbal()->createQueryBuilder()
+                ->update('note')
+                ->set('data', ':data')
+                ->where('id = :id')
+                ->setParameter('data', json_encode($data))
+                ->setParameter('id', $note['id'])
+                ->executeStatement();
+        }
+    }
+
+    private function renameLayoutFields(): void
+    {
         $renamedFields = [
             'Consolidation' => [
                 'executeMergeAs'       => 'executeConsolidationAs',

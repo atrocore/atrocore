@@ -119,13 +119,13 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\Cluster\\RejectInvalidClusterItems"
   },
-  "ConfirmClustersAutomatically": {
+  "ConsolidateClustersAutomatically": {
     "scheduledJob": false,
-    "handler": "\\Atro\\Jobs\\Cluster\\ConfirmClustersAutomatically"
+    "handler": "\\Atro\\Jobs\\Cluster\\ConsolidateClustersAutomatically"
   },
-  "ConfirmSingleClusterItems": {
+  "ConsolidateSingleClusterItems": {
     "scheduledJob": false,
-    "handler": "\\Atro\\Jobs\\Cluster\\ConfirmSingleClusterItems"
+    "handler": "\\Atro\\Jobs\\Cluster\\ConsolidateSingleClusterItems"
   },
   "CreateClustersForOrphans": {
     "scheduledJob": false,

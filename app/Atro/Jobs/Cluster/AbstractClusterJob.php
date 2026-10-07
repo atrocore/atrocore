@@ -24,8 +24,8 @@ abstract class AbstractClusterJob extends AbstractJob
     private const JOB_NAMES = [
         'ClusterMatchedRecords'        => 'Group matched records into clusters',
         'RejectInvalidClusterItems'    => 'Reject invalid cluster items',
-        'ConfirmClustersAutomatically' => 'Auto-consolidate clusters',
-        'ConfirmSingleClusterItems'    => 'Consolidate single-item clusters',
+        'ConsolidateClustersAutomatically' => 'Auto-consolidate clusters',
+        'ConsolidateSingleClusterItems'    => 'Consolidate single-item clusters',
         'CreateClustersForOrphans'     => 'Create clusters for unmatched records',
         'DeleteInvalidMasterItems'     => 'Delete invalid master records',
     ];
@@ -159,7 +159,7 @@ abstract class AbstractClusterJob extends AbstractJob
                 'clusterItemIds' => explode(',', $row['cluster_item_ids']),
             ], $page);
 
-            $this->spawnJob('ConfirmClustersAutomatically', [
+            $this->spawnJob('ConsolidateClustersAutomatically', [
                 'masterEntity' => $masterEntity,
                 'clusters'     => $clusters,
             ], $parent, $batchNum);
@@ -191,7 +191,7 @@ abstract class AbstractClusterJob extends AbstractJob
 
         while (!empty($page = $clusterItemRepo->getSingleClusterItemIdsPage($contributorEntity, $offset, $limit))) {
             $batchNum++;
-            $this->spawnJob('ConfirmSingleClusterItems', [
+            $this->spawnJob('ConsolidateSingleClusterItems', [
                 'masterEntity'   => $masterEntity,
                 'clusterItemIds' => $page,
             ], $parent, $batchNum);

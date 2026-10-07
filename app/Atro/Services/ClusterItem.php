@@ -45,7 +45,7 @@ class ClusterItem extends Base
         $entity->set('consolidatedAutomatically', $automatically);
         $this->getEntityManager()->saveEntity($entity);
 
-        $this->createClusterNote($cluster->get('id'), 'confirmed', $entity->get('entityName'), $entity->get('entityId'));
+        $this->createClusterNote($cluster->get('id'), 'consolidated', $entity->get('entityName'), $entity->get('entityId'));
         $this->runAsSystemUser(function () use ($cluster, $entity) {
             $this->createClusterNote($cluster->get('id'), 'goldenRecord', $entity->get('entityName'), $entity->get('entityId'));
         });
@@ -151,7 +151,7 @@ class ClusterItem extends Base
             $clusterItem->set('consolidatedAutomatically', $automatically);
             $this->getEntityManager()->saveEntity($clusterItem);
 
-            $this->createClusterNote($cluster->get('id'), 'confirmed', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
+            $this->createClusterNote($cluster->get('id'), 'consolidated', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
         }
 
         if ($goldenRecordChanged) {

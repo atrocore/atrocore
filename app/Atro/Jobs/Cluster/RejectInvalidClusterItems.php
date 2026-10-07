@@ -63,7 +63,7 @@ class RejectInvalidClusterItems extends AbstractClusterJob implements JobInterfa
             return;
         }
 
-        if ($this->nextPhaseAlreadySpawned('ConfirmClustersAutomatically', $masterEntity)) {
+        if ($this->nextPhaseAlreadySpawned('ConsolidateClustersAutomatically', $masterEntity)) {
             return;
         }
 

@@ -23,8 +23,8 @@ class CreateClustersForMasterEntity extends AbstractClusterJob implements JobInt
     private const SUB_JOB_TYPES = [
         'ClusterMatchedRecords',
         'RejectInvalidClusterItems',
-        'ConfirmClustersAutomatically',
-        'ConfirmSingleClusterItems',
+        'ConsolidateClustersAutomatically',
+        'ConsolidateSingleClusterItems',
         'CreateClustersForOrphans',
         'DeleteInvalidMasterItems',
     ];
