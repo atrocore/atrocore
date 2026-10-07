@@ -6,14 +6,14 @@
     "consolidationScript": "Script di consolidamento",
     "updateMasterAutomatically": "Aggiorna automaticamente il Master",
     "minimumMatchingScore": "Punteggio minimo di corrispondenza",
-    "confirmAutomatically": "Conferma automatica",
+    "consolidateAutomatically": "Conferma automatica",
     "deleteInvalidMastersAutomatically": "Elimina automaticamente i master non validi",
-    "executeMergeAs": "Eseguire l'unione come"
+    "executeConsolidationAs": "Eseguire l'unione come"
   },
   "tooltips": {
     "name": "Possono essere selezionate solo le entità master che dispongono già di un derivato con il ruolo «Contributore».",
     "consolidationScript": "Configura il modo in cui i dati di origine vengono trasformati, unificati e mappati nel record master.",
-    "executeMergeAs": "L'account utente che verrà utilizzato per eseguire lo script di consolidamento."
+    "executeConsolidationAs": "L'account utente che verrà utilizzato per eseguire lo script di consolidamento."
   },
   "exceptions": {
     "consolidationScriptIsMissing": "Manca lo script di consolidamento per l'entità master",
@@ -22,7 +22,7 @@
     "consolidationAlreadyExists": "Il consolidamento per \"%s\" esiste già"
   },
   "options": {
-    "executeMergeAs": {
+    "executeConsolidationAs": {
       "system": "Sistema",
       "sameUser": "Stesso utente"
     }

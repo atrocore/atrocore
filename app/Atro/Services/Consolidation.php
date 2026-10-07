@@ -14,18 +14,21 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotModified;
+use Atro\Core\ExpressionLanguage\Compiled\CompiledConsolidationSkipCondition;
+use Atro\Core\ExpressionLanguage\Compiled\ConsolidationSkipConditionContext;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
-use Atro\DTOs\MasterRecordPayloadDTO;
 use Atro\Entities\User;
+use Atro\Repositories\Consolidation as ConsolidationRepository;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class Consolidation extends Base
 {
-    public function updateMasterRecord(Entity $contributor, ?Entity $master = null): bool
+    public function updateMasterRecord(Entity $contributor, ?Entity $master = null, ?EntityCollection $candidates = null): bool
     {
         if ($master === null) {
             $master = $contributor->get('masterRecord');
@@ -37,15 +40,15 @@ class Consolidation extends Base
 
         $consolidation = $this->getConsolidation($master->getEntityName());
 
-        $payload = $this->buildMasterRecordPayload($contributor, $master, (string)$consolidation->get('consolidationScript'));
+        $payload = $this->buildMasterRecordPayload($consolidation, $candidates ?? new EntityCollection([$contributor], $contributor->getEntityName()), $master, (string)$consolidation->get('consolidationScript'));
 
-        if ($payload->isSkipped()) {
+        if ($payload === null) {
             return false;
         }
 
         $this->executeAsMergeUser($consolidation, function () use ($payload, $master) {
             try {
-                $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($payload->getMasterRecordData())));
+                $this->getRecordService($master->getEntityName())->updateEntity($master->get('id'), json_decode(json_encode($payload)));
             } catch (NotModified) {
                 // ignore
             }
@@ -54,7 +57,7 @@ class Consolidation extends Base
         return true;
     }
 
-    public function createMasterRecord(Entity $contributor): ?Entity
+    public function createMasterRecord(Entity $contributor, ?EntityCollection $candidates = null): ?Entity
     {
         $masterEntity = $this->getMetadata()->get(['scopes', $contributor->getEntityName(), 'primaryEntityId']);
 
@@ -64,16 +67,16 @@ class Consolidation extends Base
 
         $consolidation = $this->getConsolidation($masterEntity);
 
-        $payload = $this->buildMasterRecordPayload($contributor, null, (string)$consolidation->get('consolidationScript'));
+        $payload = $this->buildMasterRecordPayload($consolidation, $candidates ?? new EntityCollection([$contributor], $contributor->getEntityName()), null, (string)$consolidation->get('consolidationScript'));
 
-        if ($payload->isSkipped()) {
+        if ($payload === null) {
             return null;
         }
 
         $id = null;
 
         $this->executeAsMergeUser($consolidation, function () use ($payload, $masterEntity, &$id) {
-            $id = $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($payload->getMasterRecordData())));
+            $id = $this->getRecordService($masterEntity)->createEntity(json_decode(json_encode($payload)));
         });
 
         if (empty($id)) {
@@ -83,35 +86,87 @@ class Consolidation extends Base
         return $this->getEntityManager()->getEntity($masterEntity, $id);
     }
 
-    public function buildMasterRecordPayload(Entity $contributor, ?Entity $master, string $consolidationScript, ?EntityCollection $contributorRecords = null): MasterRecordPayloadDTO
+    public function buildMasterRecordPayload(Entity $consolidation, EntityCollection $candidates, ?Entity $master, string $consolidationScript): ?array
     {
         if (empty($consolidationScript)) {
             throw new BadRequest($this->translate('consolidationScriptIsMissing', 'exceptions', 'Consolidation'));
         }
 
-        if ($contributorRecords === null) {
-            $contributorRecords = $master !== null
-                ? $master->get("derived{$contributor->getEntityName()}Records", ['noCache' => true])
-                : new EntityCollection([], $contributor->getEntityName());
+        $contributorEntityName = $candidates->getEntityName();
+
+        if (!empty($consolidation->get('skipCondition'))) {
+            $className = ConsolidationRepository::getCompiledSkipConditionClassName($consolidation);
+            if (!is_a($className, CompiledConsolidationSkipCondition::class, true)) {
+                throw new Error("'$className' must be an instance of " . CompiledConsolidationSkipCondition::class);
+            }
+
+            $skipCondition = $this->getContainer()->get($className);
+
+            $filteredCandidates = new EntityCollection([], $contributorEntityName);
+            foreach ($candidates as $candidate) {
+                try {
+                    $skipped = $skipCondition->eval(new ConsolidationSkipConditionContext($candidate, $master));
+                } catch (\Throwable $e) {
+                    throw new BadRequest(sprintf($this->translate('skipConditionFailed', 'exceptions', 'Consolidation'), $e->getMessage()));
+                }
+
+                if (!$skipped) {
+                    $filteredCandidates->append($candidate);
+                }
+            }
+
+            if (count($candidates) > 0 && count($filteredCandidates) === 0) {
+                return null;
+            }
+
+            $candidates = $filteredCandidates;
         }
 
         $templateData = [
-            'contributorRecord'  => $contributor,
-            'masterRecord'       => $master,
-            'contributorRecords' => $contributorRecords
+            'candidates'   => $candidates,
+            'contributors' => $master !== null
+                ? $master->get("derived{$contributorEntityName}Records", ['noCache' => true])
+                : new EntityCollection([], $contributorEntityName),
+            'masterRecord' => $master,
         ];
 
         $res = $this->getTwig()->renderTemplate($consolidationScript, $templateData);
-        $input = json_decode($res, true);
+        $masterRecordData = json_decode((string)$res, true);
 
-        if (!is_array($input) || empty($input['masterRecordData'])) {
+        if (!is_array($masterRecordData)) {
             throw new BadRequest(sprintf($this->translate('consolidationScriptIsNotValid', 'exceptions', 'Consolidation'), $res));
         }
 
-        return new MasterRecordPayloadDTO($input['masterRecordData'], !empty($input['skipped']));
+        return $masterRecordData;
     }
 
-    public function buildMasterRecordPayloadForCluster(Entity $cluster, string $consolidationScript): MasterRecordPayloadDTO
+    public function findCandidates(Entity $cluster, ?Entity $master): EntityCollection
+    {
+        $contributorEntityName = (string)$this->getRepository()->getContributorEntityName((string)$cluster->get('masterEntity'));
+
+        $candidates = new EntityCollection([], $contributorEntityName);
+
+        $clusterItems = $this->getEntityManager()->getRepository('ClusterItem')
+            ->where(['clusterId' => $cluster->get('id'), 'entityName' => $contributorEntityName])
+            ->find();
+
+        foreach ($clusterItems as $clusterItem) {
+            $record = $this->getEntityManager()->getEntity($contributorEntityName, $clusterItem->get('entityId'));
+            if (empty($record)) {
+                continue;
+            }
+
+            if ($master !== null && $record->get('masterRecordId') === $master->get('id')) {
+                continue;
+            }
+
+            $candidates->append($record);
+        }
+
+        return $candidates;
+    }
+
+    public function buildMasterRecordPayloadForCluster(Entity $cluster, ?string $consolidationScript = null): ?array
     {
         $masterEntityName = (string)$cluster->get('masterEntity');
 
@@ -119,64 +174,30 @@ class Consolidation extends Base
             throw new Forbidden();
         }
 
-        $clusterItemService = $this->getRecordService('ClusterItem');
-
-        $clusterItems = [];
-        $unconfirmedItems = [];
-        foreach ($this->getEntityManager()->getRepository('ClusterItem')->where(['clusterId' => $cluster->get('id')])->find() as $clusterItem) {
-            if ($clusterItem->get('entityName') === $masterEntityName) {
-                continue;
-            }
-            $clusterItems[] = $clusterItem;
-            if (!$clusterItemService->isClusterItemConfirmed($clusterItem)) {
-                $unconfirmedItems[] = $clusterItem;
-            }
+        $consolidation = $this->getConsolidation($masterEntityName);
+        if ($consolidationScript === null) {
+            $consolidationScript = (string)$consolidation->get('consolidationScript');
         }
 
-        // unconfirmed items answer "what happens when I confirm them"; with none left the question becomes
-        // "what does the script produce for what is already in the cluster", which is the updateMasterRecord run
-        if (!empty($unconfirmedItems)) {
-            $clusterItems = $unconfirmedItems;
-        }
-
-        if (empty($clusterItems)) {
-            throw new BadRequest($this->translate('noClusterItemsToPreview', 'exceptions', 'Cluster'));
-        }
-
-        $records = [];
-        foreach ($clusterItems as $clusterItem) {
-            $record = $this->getEntityManager()->getEntity($clusterItem->get('entityName'), $clusterItem->get('entityId'));
-            if (!empty($record)) {
-                $records[] = $record;
-            }
-        }
-
-        if (empty($records)) {
-            throw new BadRequest($this->translate('noClusterItemsToPreview', 'exceptions', 'Cluster'));
-        }
-
-        $contributor = array_pop($records);
         $master = $cluster->get('goldenRecord');
 
-        $contributorRecords = new EntityCollection([], $contributor->getEntityName());
-        $addedIds = [];
-
-        if (!empty($master)) {
-            foreach ($master->get("derived{$contributor->getEntityName()}Records", ['noCache' => true]) as $linkedRecord) {
-                $contributorRecords->append($linkedRecord);
-                $addedIds[] = $linkedRecord->get('id');
-            }
+        $candidates = $this->findCandidates($cluster, $master);
+        if (count($candidates) > 0) {
+            return $this->buildMasterRecordPayload($consolidation, $candidates, $master, $consolidationScript);
         }
 
-        foreach ($records as $record) {
-            if ($record->getEntityName() !== $contributor->getEntityName() || in_array($record->get('id'), $addedIds, true)) {
-                continue;
-            }
-            $contributorRecords->append($record);
-            $addedIds[] = $record->get('id');
+        $contributorEntityName = (string)$this->getRepository()->getContributorEntityName($masterEntityName);
+
+        $contributor = null;
+        foreach ($this->getEntityManager()->getRepository('ClusterItem')->where(['clusterId' => $cluster->get('id'), 'entityName' => $contributorEntityName])->find() as $clusterItem) {
+            $contributor = $this->getEntityManager()->getEntity($contributorEntityName, $clusterItem->get('entityId')) ?? $contributor;
         }
 
-        return $this->buildMasterRecordPayload($contributor, $master, $consolidationScript, $contributorRecords);
+        if (empty($contributor)) {
+            throw new BadRequest($this->translate('noClusterItemsToPreview', 'exceptions', 'Cluster'));
+        }
+
+        return $this->buildMasterRecordPayload($consolidation, new EntityCollection([$contributor], $contributorEntityName), $master, $consolidationScript);
     }
 
     public function getConsolidation(string $masterEntityName): Entity
@@ -191,7 +212,7 @@ class Consolidation extends Base
 
     private function executeAsMergeUser(Entity $consolidation, $callback): void
     {
-        if ($consolidation->get('executeMergeAs') === 'system') {
+        if ($consolidation->get('executeConsolidationAs') === 'system') {
             $executeAsUser = $this->getEntityManager()->getRepository('User')->getGlobalSystemUser();
         } else {
             $executeAsUser = $this->getContainer()->get('user')->getSystemUser();

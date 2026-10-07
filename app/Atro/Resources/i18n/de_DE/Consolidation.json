@@ -6,23 +6,26 @@
     "consolidationScript": "Konsolidierungsskript",
     "updateMasterAutomatically": "Master automatisch aktualisieren",
     "minimumMatchingScore": "Minimum Matching Score",
-    "confirmAutomatically": "Automatisch bestätigen",
+    "consolidateAutomatically": "Automatisch konsolidieren",
     "deleteInvalidMastersAutomatically": "Ungültige Master automatisch löschen",
-    "executeMergeAs": "Zusammenführung ausführen als"
+    "executeConsolidationAs": "Konsolidierung ausführen als",
+    "skipCondition": "Überspringbedingung"
   },
   "tooltips": {
     "name": "Es können nur Master-Entitäten ausgewählt werden, die bereits eine Ableitung mit der Rolle \"Mitwirkender\" besitzen.",
-    "consolidationScript": "Konfigurieren Sie, wie Quelldaten transformiert, vereinheitlicht und dem Stammsatz zugeordnet werden.",
-    "executeMergeAs": "Das Benutzerkonto, das für die Ausführung des Konsolidierungsskripts verwendet werden soll."
+    "consolidationScript": "Konfigurieren Sie, wie Quelldaten transformiert, vereinheitlicht und dem Stammsatz zugeordnet werden. Das Skript muss ein JSON-Objekt mit den Feldwerten des Stammsatzes zurückgeben.",
+    "executeConsolidationAs": "Das Benutzerkonto, das für die Ausführung des Konsolidierungsskripts verwendet werden soll.",
+    "skipCondition": "Ein ExpressionLanguage-Ausdruck, der für jeden Kandidaten ausgewertet wird, mit Zugriff auf `candidate` und `masterRecord` (leer, solange der Stammsatz noch nicht erstellt ist). Kandidaten, für die er true zurückgibt, werden aus `candidates` des Konsolidierungsskripts ausgeschlossen. Bleibt kein Kandidat übrig, wird der Stammsatz weder erstellt noch aktualisiert - z. B. candidate.get('name') == null."
   },
   "exceptions": {
     "consolidationScriptIsMissing": "Konsolidierungsskript fehlt für Master-Entität",
     "consolidationScriptIsNotValid": "Konsolidierungsskript gibt ungültige Nutzdaten zurück: %s",
     "entityTypeInvalid": "Der Entitätstyp \"%s\" kann nicht für die Konsolidierung verwendet werden",
-    "consolidationAlreadyExists": "Konsolidierung für \"%s\" existiert bereits"
+    "consolidationAlreadyExists": "Konsolidierung für \"%s\" existiert bereits",
+    "skipConditionFailed": "Überspringbedingung fehlgeschlagen: %s"
   },
   "options": {
-    "executeMergeAs": {
+    "executeConsolidationAs": {
       "sameUser": "Gleicher Benutzer",
       "system": "System"
     }

@@ -14,12 +14,24 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\ExpressionLanguage\Compiled\CompiledExpression;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class Consolidation extends Base
 {
+    public const array SKIP_CONDITION_EXPRESSION_NAMES = ['candidate', 'masterRecord'];
+
+    public const string SKIP_CONDITION_EXPRESSION_NAMESPACE = 'Compiled\\ConsolidationSkipCondition';
+
+    public static function getCompiledSkipConditionClassName(Entity $consolidation): string
+    {
+        return self::SKIP_CONDITION_EXPRESSION_NAMESPACE . '\\C' . md5($consolidation->id);
+    }
+
     public function getByEntityName(?string $entityName): ?Entity
     {
         if (empty($entityName)) {
@@ -73,6 +85,122 @@ class Consolidation extends Base
                 ->executeQuery();
         }
 
+        if ($entity->isAttributeChanged('skipCondition') && !empty($entity->get('skipCondition'))) {
+            try {
+                $this->getExpressionLanguage()->lint($entity->get('skipCondition'), self::SKIP_CONDITION_EXPRESSION_NAMES);
+            } catch (SyntaxError $e) {
+                throw new BadRequest($e->getMessage());
+            }
+        }
+
         parent::beforeSave($entity, $options);
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        if (!$entity->isAttributeChanged('skipCondition')) {
+            return;
+        }
+
+        if (empty($entity->get('skipCondition'))) {
+            $this->deleteSkipCondition($entity);
+            return;
+        }
+
+        $expression = (string)$entity->get('skipCondition');
+        $code = $this->getExpressionLanguage()->compile($expression, self::SKIP_CONDITION_EXPRESSION_NAMES);
+        $namespace = self::SKIP_CONDITION_EXPRESSION_NAMESPACE;
+        $className = substr(self::getCompiledSkipConditionClassName($entity), strlen($namespace) + 1);
+
+        $literal = var_export($expression, true);
+
+        $prelude = [];
+        foreach (self::SKIP_CONDITION_EXPRESSION_NAMES as $name) {
+            if (preg_match('/\$' . preg_quote($name, '/') . '\b/', $code) === 1) {
+                $prelude[] = sprintf('        $%s = $context->%s;', $name, $name);
+            }
+        }
+        $prelude = implode("\n", $prelude);
+
+        $php = <<<PHP
+    <?php
+
+    namespace {$namespace};
+
+    /**
+     * GENERATED — do not edit. Regenerated from expression() below.
+     */
+    final class {$className} implements \\Atro\\Core\\ExpressionLanguage\\Compiled\\CompiledConsolidationSkipCondition
+    {
+        public static function expression(): string
+        {
+            return {$literal};
+        }
+
+        public function eval(\\Atro\\Core\\ExpressionLanguage\\Compiled\\ConsolidationSkipConditionContext \$context): bool
+        {
+    {$prelude}
+
+            return (bool) ({$code});
+        }
+    }
+
+    PHP;
+
+        $dir = 'data/custom-code/' . str_replace('\\', '/', $namespace);
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0775, true);
+        }
+
+        $file = $dir . '/' . $className . '.php';
+        $tmp = $file . '.' . getmypid() . '.tmp';
+
+        file_put_contents($tmp, $php);
+        rename($tmp, $file);
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->deleteSkipCondition($entity);
+    }
+
+    protected function deleteSkipCondition(Entity $entity): void
+    {
+        $fileName = 'data/custom-code/' . str_replace('\\', '/', self::getCompiledSkipConditionClassName($entity)) . '.php';
+        if (file_exists($fileName)) {
+            unlink($fileName);
+        }
+    }
+
+    protected function afterEntityPopulated(Entity $entity): void
+    {
+        if ($entity->isNew()) {
+            return;
+        }
+
+        $className = self::getCompiledSkipConditionClassName($entity);
+        if (class_exists($className) && is_a($className, CompiledExpression::class, true)) {
+            $expression = $className::expression();
+
+            $entity->set('skipCondition', $expression);
+            $entity->setFetched('skipCondition', $expression);
+        }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('expressionLanguage');
+    }
+
+    protected function getExpressionLanguage(): ExpressionLanguage
+    {
+        return $this->getInjection('expressionLanguage');
     }
 }

@@ -151,7 +151,7 @@ class Base extends RDB
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->has('modifiedAt') && $entity->isAttributeChanged('modifiedAt')) {
+        if ($entity->has('modifiedAt') && $entity->isAttributeChanged('modifiedAt') && empty($options['skipUpdateMasterRecord'])) {
             $this->updateMasterRecord($entity);
         }
     }
