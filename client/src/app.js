@@ -204,15 +204,14 @@ Espo.define(
             start: function () {
                 this.initAuth();
 
-                if (!this.auth) {
-                    this.baseController.login();
-                } else {
-                    this.initUserData(null, function () {
+                this.on('auth', this.onAuth, this);
+
+                this.requestUserData(function (data) {
+                    this.auth = true;
+                    this.initUserData(data, function () {
                         this.onAuth.call(this);
                     }.bind(this));
-                }
-
-                this.on('auth', this.onAuth, this);
+                }.bind(this));
             },
 
             onAuth: function () {
@@ -485,14 +484,10 @@ Espo.define(
             },
 
             initAuth: function () {
-                this.auth = this.storage.get('user', 'auth') || null;
+                this.auth = null;
+                this.storage.clear('user', 'auth');
 
-                this.baseController.on('login', function (data) {
-                    this.auth = Base64.encode(data.auth.userName + ':' + data.auth.token);
-                    this.storage.set('user', 'auth', this.auth);
-
-                    this.setCookieAuth(data.auth.userName, data.auth.token);
-
+                this.baseController.on('login', function () {
                     window.location.reload(true);
                 }.bind(this));
 
@@ -503,16 +498,10 @@ Espo.define(
 
             logout: function () {
                 if (this.auth) {
-                    var arr = Base64.decode(this.auth).split(':');
-                    if (arr.length > 1) {
-                        $.ajax({
-                            url: 'destroyAuthToken',
-                            type: 'POST',
-                            data: JSON.stringify({
-                                token: arr[1]
-                            })
-                        });
-                    }
+                    $.ajax({
+                        url: 'destroyAuthToken',
+                        type: 'POST'
+                    });
                 }
 
                 this.auth = null;
@@ -525,25 +514,11 @@ Espo.define(
                 }
                 this.doAction({ action: 'login' });
 
-                this.unsetCookieAuth();
-
                 xhr = new XMLHttpRequest;
                 xhr.open('GET', this.url + '/');
                 xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
                 xhr.send('');
                 xhr.abort();
-            },
-
-            setCookieAuth: function (username, token) {
-                var date = new Date();
-                date.setTime(date.getTime() + (1000 * 24 * 60 * 60 * 1000));
-                document.cookie = 'auth-username=' + username + '; expires=' + date.toGMTString() + '; path=/';
-                document.cookie = 'auth-token=' + token + '; expires=' + date.toGMTString() + '; path=/';
-            },
-
-            unsetCookieAuth: function () {
-                document.cookie = 'auth-username' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
-                document.cookie = 'auth-token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
             },
 
             initUserData: function (options, callback) {
@@ -608,21 +583,7 @@ Espo.define(
                             return;
                         }
 
-                        var xhr = new XMLHttpRequest();
-
-                        xhr.open('GET', this.basePath + this.url + '/');
-                        xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
-
-                        xhr.onreadystatechange = function () {
-                            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-
-                                var arr = Base64.decode(this.auth).split(':');
-                                this.setCookieAuth(arr[0], arr[1]);
-                                callback();
-                            }
-                        }.bind(this);
-
-                        xhr.send('');
+                        callback();
                     }.bind(this));
                 }.bind(this));
             },
@@ -630,10 +591,15 @@ Espo.define(
             requestUserData: function (callback) {
                 $.ajax({
                     url: 'userSession',
+                    login: true
                 }).done(function (data) {
                     window.SvelteUserData.set(data);
                     window.SvelteNotifier.setNotifier(Espo.Ui);
                     callback(data);
+                }.bind(this)).fail(function (xhr) {
+                    if (xhr.status === 401 && !xhr.getResponseHeader('Password-Expired')) {
+                        this.baseController.login();
+                    }
                 }.bind(this));
             },
 
@@ -647,9 +613,6 @@ Espo.define(
 
                         if (!options.local && self.basePath !== '') {
                             options.url = self.basePath + options.url;
-                        }
-                        if (self.auth !== null) {
-                            xhr.setRequestHeader('Authorization-Token', self.auth);
                         }
                         if (self.language.localeId) {
                             xhr.setRequestHeader('Locale-Id', self.language.localeId);
