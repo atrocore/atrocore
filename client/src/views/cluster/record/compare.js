@@ -30,8 +30,17 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
         PREVIEW_COLUMN_ID: '__consolidationPreview__',
 
-        hasGoldenRecord() {
-            return !!this.selectionModel && !!this.selectionModel.get('goldenRecordId');
+        getVisibleGoldenRecord() {
+            const goldenRecordId = this.selectionModel ? this.selectionModel.get('goldenRecordId') : null;
+            if (!goldenRecordId) {
+                return null;
+            }
+
+            return (Dep.prototype.getModels.call(this) || []).find(m => m.id === goldenRecordId) || null;
+        },
+
+        hasVisibleGoldenRecord() {
+            return !!this.getVisibleGoldenRecord();
         },
 
         getSvelteSideViewProps(parentView) {
@@ -142,10 +151,11 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         },
 
         showConsolidationPreview(masterRecord) {
-            const source = this.hasGoldenRecord()
-                ? (this.modelReplacedByPreview
-                    || (Dep.prototype.getModels.call(this) || []).find(m => m.id === this.selectionModel.get('goldenRecordId')))
-                : null;
+            // TODO: when the golden record is hidden, unhide it and show the preview over it instead of adding
+            //  a virtual column. Unhiding refreshes the detail page, and the right sidebar is rebuilt together
+            //  with it, which resets the preview and the unsaved consolidation script. Do this once the right
+            //  sidebar no longer depends on the detail page.
+            const source = this.getVisibleGoldenRecord();
 
             const build = sourceModel => {
                 const wasActive = this.consolidationPreviewActive;
@@ -153,7 +163,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 this.consolidationPreviewModel = this.buildPreviewModel(
                     sourceModel,
                     masterRecord,
-                    this.hasGoldenRecord() ? sourceModel.id : this.PREVIEW_COLUMN_ID
+                    this.hasVisibleGoldenRecord() ? sourceModel.id : this.PREVIEW_COLUMN_ID
                 );
                 this.consolidationPreviewActive = true;
 
@@ -164,7 +174,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                     this.model = this.consolidationPreviewModel;
                 }
 
-                if (!this.hasGoldenRecord() && !wasActive) {
+                if (!this.hasVisibleGoldenRecord() && !wasActive) {
                     this.reRenderWithPreviewColumn();
                 } else {
                     this.reRenderFieldsPanels();
@@ -187,7 +197,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 return;
             }
 
-            const hadVirtualColumn = !this.hasGoldenRecord();
+            const hadVirtualColumn = !this.hasVisibleGoldenRecord();
 
             this.consolidationPreviewActive = false;
             this.consolidationPreviewModel = null;
@@ -237,6 +247,10 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             if (window.SvelteEntityContextPanel?.$set) {
                 window.SvelteEntityContextPanel.$set(patch);
             }
+        },
+
+        isModelDisabled(model) {
+            return !!this.consolidationPreviewModel && model === this.consolidationPreviewModel;
         },
 
         markConsolidationPreviewColumn() {
@@ -298,7 +312,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 return sorted;
             }
 
-            if (this.hasGoldenRecord()) {
+            if (this.hasVisibleGoldenRecord()) {
                 const previewId = this.consolidationPreviewModel.id;
                 return sorted.map(model => model.id === previewId ? this.consolidationPreviewModel : model);
             }
@@ -380,7 +394,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         buildComparisonTableHeaderColumn() {
             const columns = Dep.prototype.buildComparisonTableHeaderColumn.call(this);
 
-            if (!this.consolidationPreviewActive || this.hasGoldenRecord()) {
+            if (!this.consolidationPreviewActive || this.hasVisibleGoldenRecord()) {
                 return columns;
             }
 
