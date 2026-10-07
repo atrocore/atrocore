@@ -567,7 +567,7 @@ Espo.define(
                     (new Promise(function (resolve) {
                         const storedLocale = this.storage.get('user', 'locale')
                         if (storedLocale) {
-                            const data = this.settings.get('locales')?.[storedLocale]
+                            const data = (options.settings?.locales ?? this.settings.get('locales'))?.[storedLocale]
                             // update preferences with stored locale data
                             if (data) {
                                 ['thousandSeparator', 'decimalMark', 'timeFormat', 'dateFormat', 'timeZone', 'weekStart', 'language', 'fallbackLanguage'].forEach(key => {
