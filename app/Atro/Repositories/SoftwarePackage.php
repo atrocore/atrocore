@@ -269,7 +269,7 @@ class SoftwarePackage extends ReferenceData
                 return true;
             }
 
-            if ($package['usage'] === 'Rent') {
+            if (in_array($package['usage'], ['Rent', 'Test'])) {
                 if (!empty($package['expirationDate']) && $package['expirationDate'] >= date('Y-m-d')) {
                     return true;
                 }
