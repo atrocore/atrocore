@@ -1,0 +1,18 @@
+{
+  "type": "Archive",
+  "entity": true,
+  "layouts": false,
+  "tab": false,
+  "acl": false,
+  "customizable": false,
+  "streamDisabled": true,
+  "notificationDisabled": true,
+  "bookmarkDisabled": true,
+  "actionDisabled": true,
+  "emHidden": true,
+  "openApiHidden": true,
+  "hideFieldTypeFilters": true,
+  "matchingDisabled": true,
+  "selectionDisabled": true,
+  "autoDeleteAfterDays": 5
+}

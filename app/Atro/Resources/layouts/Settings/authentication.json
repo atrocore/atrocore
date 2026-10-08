@@ -19,6 +19,25 @@
     ]
   },
   {
+    "label": "Rate Limit",
+    "rows": [
+      [
+        {
+          "name": "rateLimitLimit"
+        },
+        {
+          "name": "rateLimitPeriod"
+        }
+      ],
+      [
+        {
+          "name": "rateLimitMaxIpsPerUser"
+        },
+        false
+      ]
+    ]
+  },
+  {
     "label": "Password Reset",
     "rows": [
       [

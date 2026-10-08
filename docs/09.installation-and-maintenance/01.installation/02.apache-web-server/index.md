@@ -16,9 +16,9 @@ sudo apt update
 sudo apt -y install apache2
 ```
 
-Enable mod_rewrite:
+Enable mod_rewrite and mod_headers:
 ```
-sudo a2enmod rewrite
+sudo a2enmod rewrite headers
 sudo systemctl restart apache2
 ```
 If you have the ```ufw``` firewall enabled, you’ll need to adjust your firewall settings to allow HTTP traffic. UFW has different application profiles that you can leverage for accomplishing that. To list all currently available UFW application profiles, you can run:
@@ -245,6 +245,8 @@ This will create a new blank file. Paste in the following bare-bones configurati
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
+
+! Once the site is served over HTTPS, also add `Header always set Strict-Transport-Security "max-age=31536000"` to the HTTPS virtual host.
 
 Now use ```a2ensite``` to enable the new virtual host:
 ```

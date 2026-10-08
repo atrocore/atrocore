@@ -12,17 +12,9 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Doctrine\DBAL\ParameterType;
-use Doctrine\DBAL\Schema\Table;
 
-/**
- * Entity definitions without a scope describe plain tables, not entities, so they have no soft delete any more:
- * the `deleted` column is dropped from such tables of the core, along with it in every index.
- */
 class V2Dot5Dot3 extends Base
 {
-    private const TABLES = ['id_map', 'pseudo_transaction_job'];
-
     public function getMigrationDateTime(): ?\DateTime
     {
         return new \DateTime('2026-10-06 12:00:00');
@@ -30,54 +22,12 @@ class V2Dot5Dot3 extends Base
 
     public function up(): void
     {
-        $fromSchema = $this->getCurrentSchema();
-        $toSchema = clone $fromSchema;
-
-        foreach (self::TABLES as $tableName) {
-            if (!$toSchema->hasTable($tableName) || !$toSchema->getTable($tableName)->hasColumn('deleted')) {
-                continue;
-            }
-
-            // without the column such rows would come back to life - a pseudo transaction job would even be executed
-            $this->getDbal()->createQueryBuilder()
-                ->delete($tableName)
-                ->where('deleted = :true')
-                ->setParameter('true', true, ParameterType::BOOLEAN)
-                ->executeStatement();
-
-            $this->dropDeletedColumn($toSchema->getTable($tableName));
+        if ($this->isPgSQL()) {
+            $this->getPDO()->exec("CREATE TABLE IF NOT EXISTS rate_limit_hit (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', route VARCHAR(190) DEFAULT NULL, method VARCHAR(10) DEFAULT NULL, ip_address VARCHAR(45) DEFAULT NULL, user_name VARCHAR(255) DEFAULT NULL, request_time DOUBLE PRECISION DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))");
+            $this->getPDO()->exec("CREATE INDEX IF NOT EXISTS IDX_RATE_LIMIT_HIT_ROUTE_METHOD_IP_REQUEST_TIME ON rate_limit_hit (route, method, ip_address, request_time)");
+            $this->getPDO()->exec("CREATE INDEX IF NOT EXISTS IDX_RATE_LIMIT_HIT_ROUTE_METHOD_USER_NAME_REQUEST_TIME ON rate_limit_hit (route, method, user_name, request_time)");
+        } else {
+            $this->getPDO()->exec("CREATE TABLE IF NOT EXISTS rate_limit_hit (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', route VARCHAR(190) DEFAULT NULL, method VARCHAR(10) DEFAULT NULL, ip_address VARCHAR(45) DEFAULT NULL, user_name VARCHAR(255) DEFAULT NULL, request_time DOUBLE PRECISION DEFAULT NULL, created_at DATETIME DEFAULT NULL, INDEX IDX_RATE_LIMIT_HIT_ROUTE_METHOD_IP_REQUEST_TIME (route, method, ip_address, request_time), INDEX IDX_RATE_LIMIT_HIT_ROUTE_METHOD_USER_NAME_REQUEST_TIME (route, method, user_name, request_time), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
-
-        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-            $this->getPDO()->exec($sql);
-        }
-    }
-
-    /**
-     * Rebuilds every index holding the column without it. A unique index gets a name generated from its columns,
-     * a regular one keeps its name - the same as the schema rebuild creates them.
-     */
-    protected function dropDeletedColumn(Table $table): void
-    {
-        foreach ($table->getIndexes() as $index) {
-            if ($index->isPrimary() || !in_array('deleted', $index->getColumns())) {
-                continue;
-            }
-
-            $table->dropIndex($index->getName());
-
-            $columns = array_values(array_diff($index->getColumns(), ['deleted']));
-            if (empty($columns)) {
-                continue;
-            }
-
-            if ($index->isUnique()) {
-                $table->addUniqueIndex($columns);
-            } else {
-                $table->addIndex($columns, strtoupper($index->getName()));
-            }
-        }
-
-        $table->dropColumn('deleted');
     }
 }

@@ -14747,7 +14747,7 @@ ul.jqtree-tree ul.jqtree_common {
     display: block;
 }
 
-ul.jqtree-tree .sub-tree-container > ul.jqtree_common > li:not(.sub-tree-container) {
+ul.jqtree-tree .sub-tree-container > ul.jqtree_common > li.sub-tree-item {
     margin-left: 15px;
 }
 

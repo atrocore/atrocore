@@ -47,7 +47,7 @@ class AuthMiddleware implements MiddlewareInterface
         $options      = $routeResult->getMatchedRoute()->getOptions();
         $authRequired = !isset($options['conditions']['auth']) || $options['conditions']['auth'] !== false;
 
-        [$username, $password] = $this->extractCredentials($request);
+        [$username, $password] = self::extractCredentials($request);
         $isCookieAuth = $this->isCookieAuth($request);
 
         if ($isCookieAuth && !in_array($request->getMethod(), ['GET', 'HEAD', 'OPTIONS']) && !$this->isRequestFromOwnOrigin($request)) {
@@ -113,7 +113,7 @@ class AuthMiddleware implements MiddlewareInterface
         return $handler->handle($request);
     }
 
-    private function extractCredentials(ServerRequestInterface $request): array
+    public static function extractCredentials(ServerRequestInterface $request): array
     {
         $token = $request->getHeaderLine('Authorization-Token');
         if ($token !== '') {

@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "route": {
+      "type": "varchar",
+      "len": 190,
+      "readOnly": true
+    },
+    "method": {
+      "type": "varchar",
+      "len": 10,
+      "readOnly": true
+    },
+    "ipAddress": {
+      "type": "varchar",
+      "len": 45,
+      "readOnly": true
+    },
+    "requestTime": {
+      "type": "float",
+      "readOnly": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "userName": {
+      "type": "varchar",
+      "len": 255,
+      "readOnly": true
+    }
+  },
+  "links": {},
+  "collection": {
+    "sortBy": "requestTime",
+    "asc": false
+  },
+  "indexes": {
+    "routeMethodIpRequestTime": {
+      "columns": [
+        "route",
+        "method",
+        "ipAddress",
+        "requestTime"
+      ]
+    },
+    "routeMethodUserNameRequestTime": {
+      "columns": [
+        "route",
+        "method",
+        "userName",
+        "requestTime"
+      ]
+    }
+  }
+}

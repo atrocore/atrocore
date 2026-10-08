@@ -509,6 +509,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                     models: this.getModels(),
                     defaultModelId: this.getDefaultModelId(),
                     getDefaultModelIdForField: (field) => this.getDefaultModelIdForField(field),
+                    isModelDisabled: model => this.isModelDisabled(model),
                     merging: this.merging,
                     hideCheckAll: index !== 0,
                     hasLayoutEditor: !!panel.hasLayoutEditor,
@@ -564,6 +565,10 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
          */
         getDefaultModelIdForField(field) {
             return this.getDefaultModelId();
+        },
+
+        isModelDisabled(model) {
+            return false;
         },
 
         renderRelationshipsPanels() {
