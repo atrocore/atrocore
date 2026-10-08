@@ -2442,7 +2442,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let list = [];
             let conditionChecker = new ConditionsChecker(this);
             ['required', 'visible', 'protected', 'readOnly'].forEach((type) => {
-                let defs = item.attributeDefs ?? this.getMetadata().get(['entityDefs', this.scope, 'fields', item.name])
+                let defs = item.fieldDefs ?? this.getMetadata().get(['entityDefs', this.scope, 'fields', item.name])
                 let conditions = defs?.['conditionalProperties']?.[type]?.['conditionGroup'];
                 if (!conditions) {
                     return;
@@ -2568,10 +2568,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 let item;
 
                 // put defs to model if it's attribute
-                if (col.attributeDefs) {
-                    model.defs['fields'][col.attributeDefs.name] = col.attributeDefs;
-                    if (col.attributeDefs.layoutDetailView) {
-                        model.defs['fields'][col.attributeDefs.name]['view'] = col.attributeDefs.layoutDetailView;
+                if (col.fieldDefs) {
+                    model.defs['fields'][col.fieldDefs.name] = col.fieldDefs;
+                    if (col.fieldDefs.layoutDetailView) {
+                        model.defs['fields'][col.fieldDefs.name]['view'] = col.fieldDefs.layoutDetailView;
                     }
                 }
 

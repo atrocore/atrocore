@@ -447,7 +447,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                         fields.push(fieldData.name);
                         if (fieldData.attributeId) {
                             this.getModels().forEach(model => {
-                                model.defs.fields[fieldData.name] = fieldData.attributeDefs;
+                                model.defs.fields[fieldData.name] = fieldData.fieldDefs;
                                 model.defs.fields[fieldData.name].disableAttributeRemove = true;
                             });
                         }
