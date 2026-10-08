@@ -397,8 +397,10 @@ class ClusterItem extends Base
         if ($entityFrom->getEntityName() === 'Cluster' && $link === 'clusterItems') {
             $entity->set('cluster', $entityFrom);
 
-            $entity->setMeta('cluster', 'confirmed', $this->isClusterItemConfirmed($entity));
-            $entity->setMeta('cluster', 'golden', !empty($entityFrom->get('goldenRecordId')) && $entity->get('entityId') === $entityFrom->get('goldenRecordId'));
+            if ($this->isMetaGroupRequested('cluster')) {
+                $entity->setMeta('cluster', 'confirmed', $this->isClusterItemConfirmed($entity));
+                $entity->setMeta('cluster', 'golden', !empty($entityFrom->get('goldenRecordId')) && $entity->get('entityId') === $entityFrom->get('goldenRecordId'));
+            }
         }
     }
 

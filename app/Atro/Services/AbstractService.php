@@ -35,14 +35,62 @@ abstract class AbstractService implements Injectable
         $this->injections[$name] = $object;
     }
 
+    /**
+     * Whether the response has to carry the meta of its records. The With-Meta-Groups header turns it on by itself,
+     * an empty one turns it off.
+     */
     public function hasMetaHeader(): bool
     {
+        $groups = self::getRequestedMetaGroups();
+        if ($groups !== null) {
+            return !empty($groups);
+        }
+
         $meta = self::getHeader('With-Meta');
         if (empty($meta)) {
             return false;
         }
 
         return $meta == 1 || $meta == '1' || strtolower(trim($meta)) == 'true';
+    }
+
+    /**
+     * Whether the response has to carry the given group of the meta, so that the group is not even calculated
+     * when nobody asks for it.
+     */
+    public function isMetaGroupRequested(string $group): bool
+    {
+        if (!$this->hasMetaHeader()) {
+            return false;
+        }
+
+        $groups = self::getRequestedMetaGroups();
+
+        return $groups === null || in_array($group, $groups, true);
+    }
+
+    /**
+     * The groups of the meta listed by the With-Meta-Groups header, or null when the header is absent and every
+     * group is returned.
+     *
+     * @return string[]|null
+     */
+    public static function getRequestedMetaGroups(): ?array
+    {
+        $header = self::getHeader('With-Meta-Groups');
+        if ($header === null) {
+            return null;
+        }
+
+        $groups = [];
+        foreach (explode(',', $header) as $group) {
+            $group = trim($group);
+            if ($group !== '') {
+                $groups[] = $group;
+            }
+        }
+
+        return $groups;
     }
 
     public static function getHeader(string $name): ?string
