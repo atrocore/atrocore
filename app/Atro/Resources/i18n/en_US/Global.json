@@ -490,7 +490,7 @@
     "sidebarExpand": "Click to expand",
     "sidebarCollapse": "Click to collapse",
     "addAttribute": "Add Attribute",
-    "filterPlaceHolder": "Select Attribute / Field",
+    "filterPlaceHolder": "Select",
     "emptySavedSearchPlaceholder": "No saved filters",
     "General Filters": "General Filters",
     "Attributes": "Attributes",

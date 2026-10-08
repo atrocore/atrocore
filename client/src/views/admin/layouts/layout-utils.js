@@ -63,7 +63,7 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                                 }
 
                                 if(column === 'link') {
-                                    let type = attributes?.attributeDefs?.type || this.getMetadata().get(['entityDefs', scope, 'fields', attributes.name, 'type']);
+                                    let type = attributes?.fieldDefs?.type || this.getMetadata().get(['entityDefs', scope, 'fields', attributes.name, 'type']);
                                     if(['bool', 'link', 'linkMultiple', 'script'].includes(type)) {
                                         return false;
                                     }
@@ -141,6 +141,21 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
 
                                         callback(fields);
                                     })
+                                });
+                            });
+                        },
+
+                        // a module adds columns of its own by a dialog it describes in clientDefs.<scope>.layoutAddFieldsActions,
+                        // the dialog triggers "add" with the ready layout items
+                        openAddFieldsDialog: (viewName, entity, callback) => {
+                            this.createView('dialog', viewName, {
+                                entityName: entity,
+                                layoutType: params.type
+                            }, dialog => {
+                                dialog.render();
+                                dialog.once('add', items => {
+                                    this.clearView('dialog');
+                                    callback(items);
                                 });
                             });
                         },

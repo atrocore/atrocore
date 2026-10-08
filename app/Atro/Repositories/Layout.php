@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\EventManager\Event;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\DataManager;
 use Espo\ORM\Entity;
@@ -37,6 +38,7 @@ class Layout extends Base
                     $repository = $this->getEntityManager()->getRepository('LayoutListItem');
                     $listItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
                     $processedItems = [];
+                    $listItemKeys = $this->getListItemKeys((string)$entity->get('viewType'));
 
                     foreach ($data as $index => $item) {
                         $listItemEntity = null;
@@ -52,20 +54,14 @@ class Layout extends Base
                             $listItemEntity = $repository->get();
                         }
 
-                        $listItemEntity->set([
-                            'layoutId'    => $entity->get('id'),
-                            'name'        => $item['name'],
-                            'link'        => $item['link'] ?? false,
-                            'notSortable' => $item['notSortable'] ?? false,
-                            'align'       => $item['align'] ?? null,
-                            'width'       => $item['width'] ?? null,
-                            'widthPx'     => $item['widthPx'] ?? null,
-                            'isLarge'     => $item['isLarge'] ?? false,
-                            'cssStyle'    => $item['cssStyle'] ?? null,
-                            'editable'    => $item['editable'] ?? false,
-                            'sortOrder'   => $index,
-                            'attributeId' => $item['attributeId'] ?? null,
-                        ]);
+                        $values = [
+                            'layoutId'  => $entity->get('id'),
+                            'sortOrder' => $index,
+                        ];
+                        foreach ($listItemKeys as $key) {
+                            $values[$key] = $item[$key] ?? $this->getListItemKeyDefault($key);
+                        }
+                        $listItemEntity->set($values);
 
                         $this->getEntityManager()->saveEntity($listItemEntity);
                     }
@@ -250,4 +246,25 @@ class Layout extends Base
         return md5('atrocore_salt' . $text);
     }
 
+    /**
+     * The keys an item of a list layout keeps - the only place they are listed. A module adds a key of its own by
+     * a listener of Layout.getListItemKeys, the key has to be a field of LayoutListItem.
+     *
+     * @return string[]
+     */
+    public function getListItemKeys(string $viewType): array
+    {
+        $keys = $viewType === 'kanban'
+            ? ['name', 'link', 'align', 'width', 'isLarge', 'cssStyle']
+            : ['name', 'link', 'align', 'width', 'widthPx', 'notSortable', 'editable', 'attributeId'];
+
+        $event = new Event(['viewType' => $viewType, 'keys' => $keys]);
+
+        return $this->getInjection('eventManager')->dispatch('Layout', 'getListItemKeys', $event)->getArgument('keys');
+    }
+
+    protected function getListItemKeyDefault(string $key): mixed
+    {
+        return $this->getMetadata()->get(['entityDefs', 'LayoutListItem', 'fields', $key, 'type']) === 'bool' ? false : null;
+    }
 }

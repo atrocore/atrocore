@@ -194,7 +194,7 @@ Espo.define('views/selection/record/panels/relationship', ['view', 'views/record
                 }]);
 
                 if (fieldData.attributeId) {
-                    model.defs.fields[fieldData.name] = fieldData.attributeDefs;
+                    model.defs.fields[fieldData.name] = fieldData.fieldDefs;
                     model.defs.fields[fieldData.name].disableAttributeRemove = true;
                 }
             }

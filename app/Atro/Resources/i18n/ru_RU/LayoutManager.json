@@ -37,6 +37,7 @@
     "layoutManagement": "Управление макетом",
     "layoutSelection": "Выбор раскладки",
     "layoutCustomization": "Настройка макета",
-    "Current Layout": "Текущий макет"
+    "Current Layout": "Текущий макет",
+    "Add Dynamic Fields": "Добавить динамические поля"
   }
 }

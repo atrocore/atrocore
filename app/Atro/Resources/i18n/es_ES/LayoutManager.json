@@ -37,6 +37,7 @@
     "layoutSelection": "Selección del diseño",
     "layoutCustomization": "Personalización del diseño",
     "configure": "Configure",
-    "Current Layout": "Disposición actual"
+    "Current Layout": "Disposición actual",
+    "Add Dynamic Fields": "Añadir campos dinámicos"
   }
 }
