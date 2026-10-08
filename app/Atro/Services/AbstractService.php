@@ -39,7 +39,7 @@ abstract class AbstractService implements Injectable
      * Whether the response has to carry the meta of its records. The With-Meta-Groups header turns it on by itself,
      * an empty one turns it off.
      */
-    public function hasMetaHeader(): bool
+    public function isMetaRequested(): bool
     {
         $groups = self::getRequestedMetaGroups();
         if ($groups !== null) {
@@ -60,7 +60,7 @@ abstract class AbstractService implements Injectable
      */
     public function isMetaGroupRequested(string $group): bool
     {
-        if (!$this->hasMetaHeader()) {
+        if (!$this->isMetaRequested()) {
             return false;
         }
 
