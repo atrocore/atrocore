@@ -40,14 +40,13 @@ class Layout extends Base
                 usort($listItems, function ($a, $b) {
                     return $a['sortOrder'] <=> $b['sortOrder'];
                 });
+                $keys = $this->getKeyList(
+                    $this->getEntityManager()->getRepository('Layout')->getListItemKeys((string)$this->get('viewType')),
+                    $withIds
+                );
                 $data = [];
                 foreach ($listItems as $item) {
                     $newItem = [];
-                    $keys = ['name', 'link', 'align', 'width', 'widthPx', 'notSortable', 'editable', 'attributeId'];
-                    if ($this->get('viewType') === 'kanban') {
-                        $keys = ['name', 'link', 'align', 'width', 'isLarge', 'cssStyle'];
-                    }
-                    $keys = $this->getKeyList($keys, $withIds);
                     foreach ($keys as $key) {
                         if (!empty($item[$key])) {
                             $newItem[$key] = $item[$key];
