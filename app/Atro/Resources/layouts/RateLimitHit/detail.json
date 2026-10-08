@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "route"
+        },
+        {
+          "name": "method"
+        }
+      ],
+      [
+        {
+          "name": "ipAddress"
+        },
+        {
+          "name": "userName"
+        }
+      ],
+      [
+        {
+          "name": "requestTime"
+        },
+        {
+          "name": "createdAt"
+        }
+      ]
+    ]
+  }
+]

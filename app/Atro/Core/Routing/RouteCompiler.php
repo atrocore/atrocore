@@ -177,6 +177,7 @@ class RouteCompiler
                     'openapi'            => $routeAttr->hidden ? [] : $this->buildOpenApiEntry($routeAttr),
                     'schemaEntities'     => $routeAttr->entities,
                     'skipActionHistory'  => $routeAttr->skipActionHistory,
+                    'rateLimit'          => $routeAttr->rateLimit,
                 ];
             }
         }

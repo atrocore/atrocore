@@ -16,6 +16,7 @@ namespace Atro\Core\Factories;
 use Atro\Core\Middleware\ActionHistoryMiddleware;
 use Atro\Core\Middleware\ApiValidationMiddleware;
 use Atro\Core\Middleware\AuthMiddleware;
+use Atro\Core\Middleware\RateLimitMiddleware;
 use Atro\Core\Middleware\ErrorHandlerMiddleware;
 use Atro\Core\Middleware\NotFoundMiddleware;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
@@ -39,6 +40,7 @@ class HttpPipeline implements FactoryInterface
         $pipe = new MiddlewarePipe();
         $pipe->pipe(new ErrorHandlerMiddleware());
         $pipe->pipe(new RouteMiddleware($router));
+        $pipe->pipe(new RateLimitMiddleware($container));
         $pipe->pipe(new AuthMiddleware($container));
         $pipe->pipe($container->get(ActionHistoryMiddleware::class));
 
@@ -121,6 +123,9 @@ class HttpPipeline implements FactoryInterface
             }
             if (!empty($entry['skipActionHistory'])) {
                 $options['skipActionHistory'] = true;
+            }
+            if (isset($entry['rateLimit'])) {
+                $options['rateLimit'] = $entry['rateLimit'];
             }
             if (!empty($options)) {
                 $route->setOptions($options);

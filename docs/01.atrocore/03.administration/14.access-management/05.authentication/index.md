@@ -30,3 +30,15 @@ If a user requests a new link before the resend interval has passed, the request
 Only the most recent password reset link of a user is valid – each new link replaces the previous one. A link also stops working once the password has been changed with it. A change of the link lifetime applies to links that have already been sent.
 
 ! Password reset works only if the **Connection for E-Mail Notifications** is set in the [system settings](../../01.system-settings/index.md#notifications). Otherwise, the **Forgot Password?** link is not shown on the login page.
+
+## Rate Limit
+
+The *Rate Limit* panel protects the login and the password reset request from automated abuse. Clients that send too many requests receive the status `429 Too Many Requests` and have to wait before trying again.
+
+- **Rate Limit: Requests**: how many requests one IP address may send to a limited endpoint within the period. Set to 3 by default.
+- **Rate Limit: Period (seconds)**: the length of that period. Fractions are allowed, for example `0.5`. Set to 1 second by default.
+- **Max Source IPs Per User**: how many different IP addresses may be used for the same user name within 60 seconds when logging in. Set to 5 by default.
+
+The login is limited per IP address and per user name; the password reset request per IP address. All other API requests are not limited. Users behind one shared address (for example an office network) share the limit of that address, so raise **Rate Limit: Requests** if many of them open the application at the same moment.
+
+For details, including how to limit requests in the web server in addition, see [Rate Limiting](../../../../08.security/02.rate-limiting/index.md).
