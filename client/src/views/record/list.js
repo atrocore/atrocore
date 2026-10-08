@@ -2354,6 +2354,32 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
+        /**
+         * A column that is not a field of the entity may ask for the parameters of the list request it needs, giving
+         * them in fieldDefs.requestData. The values that columns give for the same parameter are joined by comma.
+         */
+        putColumnsRequestDataToSelect() {
+            for (const key of this.columnsRequestDataKeys || []) {
+                delete this.collection.data[key];
+            }
+
+            const requestData = {};
+            for (const item of this.listLayout || []) {
+                const itemRequestData = item.fieldDefs?.requestData || {};
+                for (const key in itemRequestData) {
+                    requestData[key] = requestData[key] || [];
+                    if (!requestData[key].includes(itemRequestData[key])) {
+                        requestData[key].push(itemRequestData[key]);
+                    }
+                }
+            }
+
+            this.columnsRequestDataKeys = Object.keys(requestData);
+            for (const key of this.columnsRequestDataKeys) {
+                this.collection.data[key] = requestData[key].join(',');
+            }
+        },
+
         getSelectAttributeList: function (callback) {
             if (this.scope == null || this.rowHasOwnLayout) {
                 callback(null);
@@ -2363,6 +2389,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             if (this.listLayout) {
                 var attributeList = this.fetchAttributeListFromLayout();
                 this.putAttributesToSelect();
+                this.putColumnsRequestDataToSelect();
                 callback(attributeList);
                 return;
             } else {
@@ -2370,6 +2397,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.listLayout = listLayout;
                     var attributeList = this.fetchAttributeListFromLayout();
                     this.putAttributesToSelect();
+                    this.putColumnsRequestDataToSelect();
                     callback(attributeList);
                 }.bind(this));
                 return;
