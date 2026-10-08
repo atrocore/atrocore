@@ -22,7 +22,8 @@
     "consolidationScriptIsNotValid": "Скрипт консолідації повертає некоректне корисне навантаження: %s",
     "entityTypeInvalid": "Тип сутності \"%s\" не може використовуватися для консолідації",
     "consolidationAlreadyExists": "Консолідація для \"%s\" вже існує",
-    "skipConditionFailed": "Помилка умови пропуску: %s"
+    "skipConditionFailed": "Помилка умови пропуску: %s",
+    "allCandidatesSkipped": "Усі кандидати пропущені умовою пропуску, немає чого консолідувати"
   },
   "options": {
     "executeConsolidationAs": {

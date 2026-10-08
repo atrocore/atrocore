@@ -196,6 +196,9 @@ class Cluster extends Base
         $masterEntityName = (string)$cluster->get('masterEntity');
 
         $payload = $this->getRecordService('Consolidation')->buildMasterRecordPayloadForCluster($cluster, $consolidationScript);
+        if ($payload === null) {
+            throw new BadRequest($this->getInjection('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
+        }
 
         $masterRepository = $this->getEntityManager()->getRepository($masterEntityName);
         $preview = $masterRepository->get();
@@ -214,9 +217,7 @@ class Cluster extends Base
             }
         }
 
-        if ($payload !== null) {
-            $preview->set($payload);
-        }
+        $preview->set($payload);
 
         return $preview;
     }

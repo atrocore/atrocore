@@ -39,6 +39,18 @@ class Consolidation extends Base
         return $this->updateMasterRecord($master, new EntityCollection([$contributor], $contributor->getEntityName()));
     }
 
+    public function refreshMasterRecord(Entity $master): bool
+    {
+        $consolidation = $this->getRepository()->getByEntityName($master->getEntityName());
+        if (empty($consolidation) || empty($consolidation->get('updateMasterAutomatically'))) {
+            return false;
+        }
+
+        $contributorEntityName = (string)$this->getRepository()->getContributorEntityName($master->getEntityName());
+
+        return $this->updateMasterRecord($master, new EntityCollection([], $contributorEntityName));
+    }
+
     public function updateMasterRecord(Entity $master, EntityCollection $candidates): bool
     {
         if (!$this->getAcl()->check($master->getEntityName(), 'edit')) {
@@ -101,33 +113,12 @@ class Consolidation extends Base
 
         $contributorEntityName = $candidates->getEntityName();
 
-        if (!empty($consolidation->get('skipCondition'))) {
-            $className = ConsolidationRepository::getCompiledSkipConditionClassName($consolidation);
-            if (!is_a($className, CompiledConsolidationSkipCondition::class, true)) {
-                throw new Error("'$className' must be an instance of " . CompiledConsolidationSkipCondition::class);
-            }
-
-            $skipCondition = $this->getContainer()->get($className);
-
-            $filteredCandidates = new EntityCollection([], $contributorEntityName);
-            foreach ($candidates as $candidate) {
-                try {
-                    $skipped = $skipCondition->eval(new ConsolidationSkipConditionContext($candidate, $master));
-                } catch (\Throwable $e) {
-                    throw new BadRequest(sprintf($this->translate('skipConditionFailed', 'exceptions', 'Consolidation'), $e->getMessage()));
-                }
-
-                if (!$skipped) {
-                    $filteredCandidates->append($candidate);
-                }
-            }
-
-            if (count($candidates) > 0 && count($filteredCandidates) === 0) {
-                return null;
-            }
-
-            $candidates = $filteredCandidates;
+        $filteredCandidates = $this->filterSkippedCandidates($consolidation, $candidates, $master);
+        if (count($candidates) > 0 && count($filteredCandidates) === 0) {
+            return null;
         }
+
+        $candidates = $filteredCandidates;
 
         $templateData = [
             'candidates'   => $candidates,
@@ -145,6 +136,35 @@ class Consolidation extends Base
         }
 
         return $masterRecordData;
+    }
+
+    public function filterSkippedCandidates(Entity $consolidation, EntityCollection $candidates, ?Entity $master): EntityCollection
+    {
+        if (empty($consolidation->get('skipCondition'))) {
+            return $candidates;
+        }
+
+        $className = ConsolidationRepository::getCompiledSkipConditionClassName($consolidation);
+        if (!is_a($className, CompiledConsolidationSkipCondition::class, true)) {
+            throw new Error("'$className' must be an instance of " . CompiledConsolidationSkipCondition::class);
+        }
+
+        $skipCondition = $this->getContainer()->get($className);
+
+        $filteredCandidates = new EntityCollection([], $candidates->getEntityName());
+        foreach ($candidates as $candidate) {
+            try {
+                $skipped = $skipCondition->eval(new ConsolidationSkipConditionContext($candidate, $master));
+            } catch (\Throwable $e) {
+                throw new BadRequest(sprintf($this->translate('skipConditionFailed', 'exceptions', 'Consolidation'), $e->getMessage()));
+            }
+
+            if (!$skipped) {
+                $filteredCandidates->append($candidate);
+            }
+        }
+
+        return $filteredCandidates;
     }
 
     public function findCandidates(Entity $cluster, ?Entity $master): EntityCollection

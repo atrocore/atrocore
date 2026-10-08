@@ -28,6 +28,7 @@
     "consolidationScriptIsNotValid": "Consolidation script return invalid payload: %s",
     "entityTypeInvalid": "Entity type \"%s\" cannot be used for consolidation",
     "consolidationAlreadyExists": "Consolidation for \"%s\" already exists",
-    "skipConditionFailed": "Skip condition failed: %s"
+    "skipConditionFailed": "Skip condition failed: %s",
+    "allCandidatesSkipped": "All candidates are skipped by the skip condition, there is nothing to consolidate"
   }
 }

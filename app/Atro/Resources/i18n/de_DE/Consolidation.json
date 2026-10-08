@@ -22,7 +22,8 @@
     "consolidationScriptIsNotValid": "Konsolidierungsskript gibt ungültige Nutzdaten zurück: %s",
     "entityTypeInvalid": "Der Entitätstyp \"%s\" kann nicht für die Konsolidierung verwendet werden",
     "consolidationAlreadyExists": "Konsolidierung für \"%s\" existiert bereits",
-    "skipConditionFailed": "Überspringbedingung fehlgeschlagen: %s"
+    "skipConditionFailed": "Überspringbedingung fehlgeschlagen: %s",
+    "allCandidatesSkipped": "Alle Kandidaten werden durch die Überspringbedingung ausgeschlossen, es gibt nichts zu konsolidieren"
   },
   "options": {
     "executeConsolidationAs": {

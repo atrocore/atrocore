@@ -22,7 +22,8 @@
     "consolidationScriptIsNotValid": "Le script de consolidation renvoie une charge utile invalide : %s",
     "entityTypeInvalid": "Le type d'entité \"%s\" ne peut pas être utilisé pour la consolidation",
     "consolidationAlreadyExists": "La consolidation pour \"%s\" existe déjà",
-    "skipConditionFailed": "Échec de la condition d'omission : %s"
+    "skipConditionFailed": "Échec de la condition d'omission : %s",
+    "allCandidatesSkipped": "Tous les candidats sont exclus par la condition d'omission, il n'y a rien à consolider"
   },
   "options": {
     "executeConsolidationAs": {

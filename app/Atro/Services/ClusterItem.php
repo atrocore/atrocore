@@ -121,7 +121,20 @@ class ClusterItem extends Base
 
         $consolidationService = $this->getRecordService('Consolidation');
 
-        $candidates = $consolidationService->findCandidates($cluster, $goldenRecord);
+        $consolidation = $consolidationService->getConsolidation($cluster->get('masterEntity'));
+        $candidates = $consolidationService->filterSkippedCandidates(
+            $consolidation,
+            new EntityCollection(array_values($selectedRecords), reset($selectedRecords)->getEntityName()),
+            $goldenRecord
+        );
+
+        if (count($candidates) === 0) {
+            if ($automatically) {
+                return false;
+            }
+
+            throw new BadRequest($this->getInjection('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
+        }
 
         if (empty($goldenRecord)) {
             $goldenRecord = $consolidationService->createMasterRecord($candidates);
@@ -143,7 +156,7 @@ class ClusterItem extends Base
             $consolidationService->updateMasterRecord($goldenRecord, $candidates);
         }
 
-        foreach ($selectedRecords as $record) {
+        foreach ($candidates as $record) {
             $record->set('masterRecordId', $goldenRecord->get('id'));
             $this->getEntityManager()->saveEntity($record, ['skipUpdateMasterRecord' => true]);
 
@@ -197,7 +210,7 @@ class ClusterItem extends Base
             $this->runAsSystemUser(function () use ($entity, $cluster) {
                 foreach ($entity->getStagingRecords() as $stagingRecord) {
                     $stagingRecord->set('masterRecordId', null);
-                    $this->getEntityManager()->saveEntity($stagingRecord);
+                    $this->getEntityManager()->saveEntity($stagingRecord, ['skipUpdateMasterRecord' => true]);
                 }
 
                 if ($entity->get('entityName') === $cluster->get('masterEntity')) {
@@ -205,6 +218,10 @@ class ClusterItem extends Base
                     $this->getEntityManager()->saveEntity($cluster);
                 }
             });
+
+            if ($entity->get('entityName') !== $cluster->get('masterEntity') && !empty($goldenRecord = $cluster->get('goldenRecord'))) {
+                $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
+            }
         }
 
         $entity->set('consolidatedAutomatically', false);
@@ -314,12 +331,7 @@ class ClusterItem extends Base
 
         $goldenRecord = $cluster->get('goldenRecord');
         if ($count > 0 && !empty($goldenRecord)) {
-            $consolidationRepository = $this->getEntityManager()->getRepository('Consolidation');
-            $consolidation = $consolidationRepository->getByEntityName($cluster->get('masterEntity'));
-            if (!empty($consolidation) && !empty($consolidation->get('updateMasterAutomatically'))) {
-                $contributorEntityName = (string)$consolidationRepository->getContributorEntityName($cluster->get('masterEntity'));
-                $this->getRecordService('Consolidation')->updateMasterRecord($goldenRecord, new EntityCollection([], $contributorEntityName));
-            }
+            $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
         }
 
         return new MassActionResultDTO($count);
@@ -394,13 +406,15 @@ class ClusterItem extends Base
         if ($this->isClusterItemConsolidated($clusterItem)) {
             foreach ($clusterItem->getStagingRecords() as $stagingRecord) {
                 $stagingRecord->set('masterRecordId', null);
-                $this->getEntityManager()->saveEntity($stagingRecord);
+                $this->getEntityManager()->saveEntity($stagingRecord, ['skipUpdateMasterRecord' => true]);
             }
 
             $previousCluster = $clusterItem->get('cluster');
             if ($clusterItem->get('entityName') === $previousCluster->get('masterEntity')) {
                 $previousCluster->set('goldenRecordId', null);
                 $this->getEntityManager()->saveEntity($previousCluster);
+            } elseif (!empty($goldenRecord = $previousCluster->get('goldenRecord'))) {
+                $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
             }
         }
 
@@ -613,6 +627,11 @@ class ClusterItem extends Base
             $this->runAsSystemUser(function () use ($clusterItem) {
                 $this->unlinkFromGoldenRecord($clusterItem);
             });
+
+            $sourceCluster = $clusterItem->get('cluster');
+            if ($clusterItem->get('entityName') !== $sourceCluster->get('masterEntity') && !empty($goldenRecord = $sourceCluster->get('goldenRecord'))) {
+                $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
+            }
         }
 
         $this->getRepository()->moveToCluster($clusterItem->get('id'), $targetClusterId);
