@@ -287,7 +287,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             let models = [];
             return new Promise((initialResolve, reject) => {
                 this.getModelFactory().create(this.itemScope, (itemModel) => {
-                    this.ajaxGetRequest(url)
+                    this.ajaxGetRequest(url, null, {metaContext: 'list'})
                         .then(result => {
                             let entityByScope = {};
                             let order = 0;
