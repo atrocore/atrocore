@@ -145,7 +145,7 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                             });
                         },
 
-                        // a module adds columns of its own by a dialog it describes in clientDefs.<scope>.layoutAddFieldsButtons,
+                        // a module adds columns of its own by a dialog it describes in clientDefs.<scope>.layoutAddFieldsActions,
                         // the dialog triggers "add" with the ready layout items
                         openAddFieldsDialog: (viewName, entity, callback) => {
                             this.createView('dialog', viewName, {
