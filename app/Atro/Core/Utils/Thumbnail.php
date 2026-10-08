@@ -44,7 +44,12 @@ class Thumbnail
                 return $this->getImageFilePath($file);
             }
 
-            return $thumbnailPath . DIRECTORY_SEPARATOR . $file->get('name');
+            $name = explode('.', $file->get('name'));
+            if (count($name) > 1) {
+                array_pop($name);
+            }
+
+            return $thumbnailPath . DIRECTORY_SEPARATOR . implode('.', $name) . '.svg';
         }
         $thumbnailPath .= DIRECTORY_SEPARATOR . trim($size);
 

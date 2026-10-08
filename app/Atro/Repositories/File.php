@@ -45,6 +45,8 @@ class File extends Base
         //validate via allow types of relation
         $this->validateByTypeUsingAllowFileTypes($entity);
 
+        $this->validateNameHasNoPathSeparators($entity);
+
         // validate file name
         $this->validateItemName($entity);
 
@@ -392,6 +394,21 @@ class File extends Base
         }
 
         $this->getEntityManager()->removeEntity($fileFolderLinker);
+    }
+
+    public function validateNameHasNoPathSeparators(FileEntity $file): void
+    {
+        if (!$file->isNew() && !$file->isAttributeChanged('name')) {
+            return;
+        }
+
+        $name = (string)$file->get('name');
+
+        if ($name === '' || $name === '.' || $name === '..'
+            || strpbrk($name, "/\\\0") !== false
+            || basename($name) !== $name) {
+            throw new BadRequest($this->getInjection('language')->translate('fileNameNotValid', 'exceptions', 'File'));
+        }
     }
 
     public function validateItemName(FileEntity $file): void
