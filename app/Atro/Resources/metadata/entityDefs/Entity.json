@@ -942,13 +942,33 @@
       "tooltip": true
     },
     "containsPersonalData": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "ReferenceData"
+              ]
+            }
+          ]
+        }
+      }
     },
     "isPerson": {
       "type": "bool",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "ReferenceData"
+              ]
+            },
             {
               "type": "isTrue",
               "attribute": "containsPersonalData"

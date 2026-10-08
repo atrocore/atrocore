@@ -426,11 +426,20 @@ class Metadata extends AbstractMetadataListener
     protected function preparePersonalDataTables(array &$data): void
     {
         foreach (array_keys($data['entityDefs']) as $scope) {
-            if (empty($data['scopes'][$scope]['containsPersonalData'])) {
+            if (($data['scopes'][$scope]['type'] ?? null) === 'ReferenceData' || empty($data['scopes'][$scope]['containsPersonalData'])) {
                 continue;
             }
 
-            if (!in_array('containsPersonalData', $data['clientDefs'][$scope]['boolFilterList'] ?? [])) {
+            // if any entity field set as personal data, but notInEveryRecord isn't selected, then the bool filter is useless
+            $inEveryRecord = false;
+            foreach ($data['entityDefs'][$scope]['fields'] ?? [] as $fieldDefs) {
+                if (!empty($fieldDefs['personalData']) && empty($fieldDefs['notInEveryRecord'])) {
+                    $inEveryRecord = true;
+                    break;
+                }
+            }
+
+            if (!$inEveryRecord && !in_array('containsPersonalData', $data['clientDefs'][$scope]['boolFilterList'] ?? [])) {
                 $data['clientDefs'][$scope]['boolFilterList'][] = 'containsPersonalData';
             }
 

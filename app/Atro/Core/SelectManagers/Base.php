@@ -819,6 +819,10 @@ class Base
 
     protected function boolFilterContainsPersonalData(array &$result): void
     {
+        if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) === 'ReferenceData') {
+            throw new Error("'ReferenceData' type does not have personal data table");
+        }
+
         $result['callbacks'][] = [$this, 'applyBoolFilterContainsPersonalData'];
     }
 
@@ -827,7 +831,7 @@ class Base
         $repository = $this->getEntityManager()->getRepository($this->getEntityType());
 
         if (!$repository->hasPersonalDataTable()) {
-            return;
+            throw new Error("Entity '{$this->getEntityType()}' does not have personal data table");
         }
 
         $ta = $mapper->getQueryConverter()->getMainTableAlias();

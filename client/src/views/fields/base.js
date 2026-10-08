@@ -2153,6 +2153,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const scope = this.model.urlRoot;
             const fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields', this.getPersonalDataFieldName()]) || {};
 
+            if (this.getMetadata().get(['scopes', scope, 'type']) === 'ReferenceData') {
+                return false;
+            }
+
             return !!(this.getMetadata().get(['scopes', scope, 'containsPersonalData']) && fieldDefs?.personalData && fieldDefs?.notInEveryRecord);
         },
 
