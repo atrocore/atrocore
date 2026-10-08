@@ -186,7 +186,7 @@ class Cron extends AbstractConsole
             }
 
             $authTokenMaxIdleTime = $token->get('idleTime') !== null ? $token->get('idleTime') : $this->getConfig()->get('authTokenMaxIdleTime');
-            if ($authTokenMaxIdleTime && new \DateTime($token->get('lastAccess')) < (new \DateTime())->modify('-' . $authTokenMaxIdleTime . ' hours')) {
+            if ($authTokenMaxIdleTime && new \DateTime($token->get('lastAccess') ?? $token->get('createdAt')) < (new \DateTime())->modify('-' . $authTokenMaxIdleTime . ' hours')) {
                 $token->set('isActive', false);
                 $em->saveEntity($token);
             }
