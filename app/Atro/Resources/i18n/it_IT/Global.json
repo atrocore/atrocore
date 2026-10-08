@@ -107,6 +107,8 @@
     "fieldValueFilters": "Filtri del valore del campo",
     "confirmRemoveAttributeValue": "È sicuro di voler eliminare l'attributo?",
     "UserFollowed": "Utente seguito",
+    "setAsPersonalData": "Contrassegna come dati personali",
+    "unsetAsPersonalData": "Rimuovi contrassegno dati personali",
     "authenticate": "Autenticare",
     "Download": "Scaricare",
     "Load data": "Dati di carico",
@@ -135,7 +137,6 @@
     "varcharPart": "(Stringa)",
     "unitPart": "(Unità)",
     "prefixPart": "(Prefisso)",
-    "hasPersonalData": "%s contiene dati personali",
     "availablePrefixes": "Prefissi disponibili",
     "inheritAllForChildren": "Eredita tutti gli elementi per i figli",
     "inheritAllFromParent": "Eredita tutto dal genitore",
@@ -967,6 +968,7 @@
     "accessManagement": "Gestione degli accessi"
   },
   "boolFilters": {
+    "containsPersonalData": "Contiene dati personali",
     "onlyActive": "Attivo",
     "notActive": "Inattivo",
     "onlyMy": "Il mio",
@@ -1121,6 +1123,7 @@
     "masterRecord": "Record principale"
   },
   "tooltips": {
+    "fieldContainsPersonalData": "Il campo contiene dati personali",
     "groupEnd": "Selezioni per utilizzare questo elemento per contrassegnare la fine degli elementi di navigazione raggruppati. Tutti gli elementi successivi a questa voce saranno disaggregati."
   },
   "dashlets": {

@@ -93,7 +93,7 @@ class Metadata extends AbstractMetadataListener
 
         $this->prepareEntityFields($data);
 
-        $this->prepareHasPdFields($data);
+        $this->preparePersonalDataTables($data);
 
         $this->putCustomCodeActions($data);
 
@@ -423,30 +423,38 @@ class Metadata extends AbstractMetadataListener
         ];
     }
 
-    protected function prepareHasPdFields(array &$data): void
+    protected function preparePersonalDataTables(array &$data): void
     {
-        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
-            if (empty($entityDefs['fields']) || empty($data['scopes'][$entityType]['containsPersonalData'])) {
+        foreach (array_keys($data['entityDefs']) as $scope) {
+            if (empty($data['scopes'][$scope]['containsPersonalData'])) {
                 continue;
             }
 
-            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                if (empty($fieldDefs['personalData']) || empty($fieldDefs['notInEveryRecord'])) {
-                    continue;
-                }
-
-                $hasPdField = $field . 'HasPd';
-
-                if (isset($data['entityDefs'][$entityType]['fields'][$hasPdField])) {
-                    continue;
-                }
-
-                $data['entityDefs'][$entityType]['fields'][$hasPdField] = [
-                    'type'     => 'bool',
-                    'required' => false,
-                    'personalField' => $field
-                ];
+            if (!in_array('containsPersonalData', $data['clientDefs'][$scope]['boolFilterList'] ?? [])) {
+                $data['clientDefs'][$scope]['boolFilterList'][] = 'containsPersonalData';
             }
+
+            $data['entityDefs'][$scope . 'PersonalData'] = [
+                'fields'        => [
+                    'field'  => [
+                        'type'     => 'varchar',
+                        'required' => true
+                    ],
+                    'record' => [
+                        'type'     => 'link',
+                        'required' => true
+                    ]
+                ],
+                'links'         => [
+                    'record' => [
+                        'type'   => 'belongsTo',
+                        'entity' => $scope
+                    ]
+                ],
+                'uniqueIndexes' => [
+                    'unique_relationship' => ['deleted', 'record_id', 'field']
+                ]
+            ];
         }
     }
 

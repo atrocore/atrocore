@@ -228,7 +228,6 @@
     "varcharPart": "(Chaine de caractères)",
     "unitPart": "(Unité)",
     "prefixPart": "(Préfixe)",
-    "hasPersonalData": "%s contient des données personnelles",
     "availablePrefixes": "Préfixes disponibles",
     "inheritAllForChildren": "Hériter tout pour les éléments enfants",
     "inheritAllFromParent": "Hériter tout du parent",
@@ -503,6 +502,8 @@
     "fieldValueFilters": "Filtres de valeurs de champs",
     "confirmRemoveAttributeValue": "Êtes-vous sûr de vouloir supprimer l'attribut ?",
     "UserFollowed": "Utilisateur suivi",
+    "setAsPersonalData": "Marquer comme données personnelles",
+    "unsetAsPersonalData": "Ne plus marquer comme données personnelles",
     "authenticate": "S'authentifier",
     "Load data": "Données de chargement",
     "jobManager": "Gestionnaire des tâches",
@@ -798,6 +799,7 @@
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
   },
   "boolFilters": {
+    "containsPersonalData": "Contient des données personnelles",
     "onlyMyTeams": "Mes équipes",
     "onlyActive": "Actif",
     "notActive": "Inactif",
@@ -1394,6 +1396,7 @@
     "cd": "cd"
   },
   "tooltips": {
+    "fieldContainsPersonalData": "Le champ contient des données personnelles",
     "groupEnd": "Sélectionnez cet élément pour marquer la fin des éléments de navigation groupés. Tous les éléments situés après cet élément seront dégroupés."
   },
   "firstStepsDashlet": {

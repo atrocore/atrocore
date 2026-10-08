@@ -534,6 +534,8 @@
     "_addAttribute": "[Attribut hinzufügen]",
     "confirmRemoveAttributeValue": "Sind Sie sicher, dass Sie das Attribut löschen möchten?",
     "UserFollowed": "Folgende Benutzer",
+    "setAsPersonalData": "Als personenbezogene Daten markieren",
+    "unsetAsPersonalData": "Markierung als personenbezogene Daten entfernen",
     "jobManager": "Aufrags-Manager",
     "massActionDelegatedToJm": "Ihre Aktion wurde erfolgreich an den Auftrags-Manager delegiert.",
     "intPart": "(Ganzzahl)",
@@ -551,7 +553,6 @@
     "script": "Script",
     "unitPart": "(Maßeinheit)",
     "prefixPart": "(Präfix)",
-    "hasPersonalData": "%s enthält personenbezogene Daten",
     "availablePrefixes": "Verfügbare Präfixe",
     "Details": "Details",
     "Filter": "Filter",
@@ -728,6 +729,7 @@
     "Year": "Jahre"
   },
   "boolFilters": {
+    "containsPersonalData": "Enthält personenbezogene Daten",
     "onlyMy": "Mein",
     "assignedToMe": "Mir zugewiesen",
     "ownedByMe": "Gehört mir",
@@ -882,6 +884,7 @@
     "masterRecord": "Stammdatensatz"
   },
   "tooltips": {
+    "fieldContainsPersonalData": "Das Feld enthält personenbezogene Daten",
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."
   },
   "dashlets": {

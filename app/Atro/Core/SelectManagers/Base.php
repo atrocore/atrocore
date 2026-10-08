@@ -817,6 +817,26 @@ class Base
         ];
     }
 
+    protected function boolFilterContainsPersonalData(array &$result): void
+    {
+        $result['callbacks'][] = [$this, 'applyBoolFilterContainsPersonalData'];
+    }
+
+    public function applyBoolFilterContainsPersonalData(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $repository = $this->getEntityManager()->getRepository($this->getEntityType());
+
+        if (!$repository->hasPersonalDataTable()) {
+            return;
+        }
+
+        $ta = $mapper->getQueryConverter()->getMainTableAlias();
+        $tableName = $mapper->getQueryConverter()->quoteIdentifier($repository->getPersonalDataTableName());
+
+        $qb->andWhere("$ta.id IN (SELECT pd.record_id FROM $tableName pd WHERE pd.deleted=:deleted)");
+        $qb->setParameter('deleted', false, ParameterType::BOOLEAN);
+    }
+
     protected function boolFilterOnlyArchived(array &$result): void
     {
         $result['whereClause'][] = [

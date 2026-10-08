@@ -34,8 +34,5 @@
   },
   "entityFieldScriptPreview": {
     "className": "\\Atro\\Core\\LanguageResolvers\\EntityFieldScriptPreview"
-  },
-  "personalDataField": {
-    "className": "\\Atro\\Core\\LanguageResolvers\\PersonalDataField"
   }
 }

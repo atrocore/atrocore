@@ -399,6 +399,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 });
             }
 
+            if (this.mode !== 'search' && this.hasPersonalDataControls()) {
+                this.listenTo(this.model, 'sync', () => {
+                    this.setPersonalDataControls();
+                });
+
+                this.listenTo(this, 'after:render', () => {
+                    this.setPersonalDataControls();
+                });
+            }
+
             if (this.mode != 'search') {
                 this.attributeList = this.getAttributeList();
 
@@ -2137,6 +2147,88 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 !this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.getLockedFieldName(), 'disableFieldValueLock']) &&
                 (this.model.get('_meta')?.locked?._loaded || this.model.isNew()) &&
                 !this.model.get('attributesDefs')?.[this.getLockedFieldName()]?.disableFieldValueLock;
+        },
+
+        hasPersonalDataControls() {
+            const scope = this.model.urlRoot;
+            const fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields', this.getPersonalDataFieldName()]) || {};
+
+            return !!(this.getMetadata().get(['scopes', scope, 'containsPersonalData']) && fieldDefs?.personalData && fieldDefs?.notInEveryRecord);
+        },
+
+        getPersonalDataFieldName() {
+            return this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'mainField']) || this.name;
+        },
+
+        getPersonalDataFields() {
+            return this.model.getMeta('personalData', 'fields');
+        },
+
+        isPersonalData() {
+            return (this.getPersonalDataFields() || []).includes(this.getPersonalDataFieldName());
+        },
+
+        setPersonalDataControls() {
+            this.getStatusIconsContainer().find('.personal-data-marker').remove();
+            this.getInlineActionsContainer().find('.personal-data-action').remove();
+            this.getCellElement().off('mouseover.personal-data-' + this.name);
+            this.getCellElement().off('mouseleave.personal-data-' + this.name);
+
+            if (!['detail', 'edit'].includes(this.mode) || this.model.isNew() || this.getPersonalDataFields() === null) {
+                return;
+            }
+
+            this.initStatusContainer();
+
+            const isPersonalData = this.isPersonalData();
+
+            if (isPersonalData) {
+                this.getStatusIconsContainer().append(`<i class="ph ph-identification-card personal-data-marker" title="${this.translate('fieldContainsPersonalData', 'tooltips')}"></i>`);
+            }
+
+            if (!this.getAcl().check(this.model, 'edit')) {
+                return;
+            }
+
+            const title = this.translate(isPersonalData ? 'unsetAsPersonalData' : 'setAsPersonalData', 'labels');
+            const $action = $(`<a href="javascript:" class="personal-data-action" title="${title}"><i class="ph ${isPersonalData ? 'ph-user-minus' : 'ph-user-plus'}"></i></a>`);
+
+            $action.on('click', e => {
+                e.preventDefault();
+                this.personalDataControlAction();
+            });
+
+            this.getInlineActionsContainer().prepend($action);
+
+            if (this.mode !== 'edit') {
+                $action.addClass('hidden');
+
+                this.getCellElement().on('mouseover.personal-data-' + this.name, () => {
+                    this.getInlineActionsContainer().find('.personal-data-action').removeClass('hidden');
+                });
+
+                this.getCellElement().on('mouseleave.personal-data-' + this.name, () => {
+                    this.getInlineActionsContainer().find('.personal-data-action').addClass('hidden');
+                });
+            }
+        },
+
+        personalDataControlAction() {
+            const field = this.getPersonalDataFieldName();
+            const fields = this.getPersonalDataFields() || [];
+            const isPersonalData = this.isPersonalData();
+
+            this.notify('Saving...');
+
+            this.ajaxPostRequest(isPersonalData ? 'unsetPersonalDataField' : 'setPersonalDataField', {
+                entityName: this.model.urlRoot,
+                recordId: this.model.id,
+                field: field
+            }).then(() => {
+                this.model.setMeta('personalData', 'fields', isPersonalData ? fields.filter(item => item !== field) : [...fields, field]);
+                this.notify('Saved', 'success');
+                this.setPersonalDataControls();
+            });
         },
 
         getAttributeFieldName() {

@@ -16,8 +16,10 @@ namespace Atro\Core\Templates\Repositories;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\PseudoTransactionManager;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Util;
 use Atro\Services\Record;
 use Doctrine\DBAL\ParameterType;
@@ -298,6 +300,83 @@ class Base extends RDB
         }
 
         $qb->executeQuery();
+    }
+
+    public function hasPersonalDataTable(): bool
+    {
+        return !empty($this->getMetadata()->get(['scopes', $this->entityName, 'containsPersonalData']))
+            && !empty($this->getMetadata()->get(['entityDefs', $this->entityName . 'PersonalData']));
+    }
+
+    public function getPersonalDataFields(string $id): array
+    {
+        if (!$this->hasPersonalDataTable()) {
+            return [];
+        }
+
+        return $this->getDbal()->createQueryBuilder()
+            ->select('field')
+            ->from($this->getDbal()->quoteIdentifier($this->getPersonalDataTableName()))
+            ->where('record_id = :recordId')
+            ->andWhere('deleted = :false')
+            ->setParameter('recordId', $id)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+    }
+
+    public function createPersonalDataRecord(string $id, string $field): void
+    {
+        $this->validatePersonalDataRecord($id, $field);
+
+        if (in_array($field, $this->getPersonalDataFields($id))) {
+            return;
+        }
+
+        $this->getDbal()->createQueryBuilder()
+            ->insert($this->getDbal()->quoteIdentifier($this->getPersonalDataTableName()))
+            ->setValue('id', ':id')
+            ->setValue('deleted', ':false')
+            ->setValue('record_id', ':recordId')
+            ->setValue('field', ':field')
+            ->setParameter('id', IdGenerator::uuid())
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('recordId', $id)
+            ->setParameter('field', $field)
+            ->executeStatement();
+    }
+
+    public function deletePersonalDataRecord(string $id, string $field): void
+    {
+        $this->validatePersonalDataRecord($id, $field);
+
+        $this->getDbal()->createQueryBuilder()
+            ->delete($this->getDbal()->quoteIdentifier($this->getPersonalDataTableName()))
+            ->where('record_id = :recordId')
+            ->andWhere('field = :field')
+            ->setParameter('recordId', $id)
+            ->setParameter('field', $field)
+            ->executeStatement();
+    }
+
+    protected function validatePersonalDataRecord(string $id, string $field): void
+    {
+        if (!$this->hasPersonalDataTable()) {
+            throw new BadRequest("Entity '$this->entityName' does not contain personal data.");
+        }
+
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityName, 'fields', $field], []);
+        if (empty($fieldDefs['personalData']) || empty($fieldDefs['notInEveryRecord'])) {
+            throw new BadRequest("Field '$field' must be marked as 'Personal Data' and 'Not in every record'.");
+        }
+
+        if (empty($this->get($id))) {
+            throw new NotFound();
+        }
+    }
+
+    public function getPersonalDataTableName(): string
+    {
+        return $this->getEntityManager()->getMapper()->toDb($this->entityName . 'PersonalData');
     }
 
     protected function init()
