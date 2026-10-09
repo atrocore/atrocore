@@ -456,8 +456,9 @@ class Metadata extends AbstractMetadataListener
                 ],
                 'links'         => [
                     'record' => [
-                        'type'   => 'belongsTo',
-                        'entity' => $scope
+                        'type'          => 'belongsTo',
+                        'entity'        => $scope,
+                        'cascadeDelete' => true
                     ]
                 ],
                 'uniqueIndexes' => [
