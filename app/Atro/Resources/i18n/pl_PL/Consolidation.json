@@ -6,14 +6,13 @@
     "consolidationScript": "Skrypt konsolidacji",
     "updateMasterAutomatically": "Automatyczna aktualizacja mastera",
     "minimumMatchingScore": "Minimalny wynik dopasowania",
-    "confirmAutomatically": "Potwierdź automatycznie",
     "deleteInvalidMastersAutomatically": "Automatycznie usuwaj nieprawidłowe rekordy główne",
-    "executeMergeAs": "Wykonać scalanie jako"
+    "executeConsolidationAs": "Wykonać scalanie jako"
   },
   "tooltips": {
     "name": "Można wybrać tylko taką encję główną, dla której już istnieje pochodna z rolą „Współtwórca”.",
     "consolidationScript": "Konfiguracja sposobu przekształcania, ujednolicania i mapowania danych źródłowych do rekordu głównego.",
-    "executeMergeAs": "Konto użytkownika, które zostanie użyte do wykonania skryptu konsolidacji."
+    "executeConsolidationAs": "Konto użytkownika, które zostanie użyte do wykonania skryptu konsolidacji."
   },
   "exceptions": {
     "consolidationScriptIsMissing": "Brakuje skryptu konsolidacji dla jednostki master",
@@ -22,7 +21,7 @@
     "consolidationAlreadyExists": "Konsolidacja dla \"%s\" już istnieje"
   },
   "options": {
-    "executeMergeAs": {
+    "executeConsolidationAs": {
       "sameUser": "Ten sam użytkownik",
       "system": "System"
     }

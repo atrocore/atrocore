@@ -12,16 +12,17 @@
     "state": {
       "empty": "Empty",
       "review": "Review",
-      "mergedAutomatically": "Merged Automatically",
-      "mergedManually": "Merged Manually",
+      "consolidatedAutomatically": "Consolidated (auto)",
+      "consolidated": "Consolidated",
       "invalid": "Invalid"
     }
   },
   "actions": {
     "reject": "Reject",
-    "confirm": "Confirm",
+    "consolidate": "Consolidate",
     "unreject": "Unreject",
-    "unmerge": "Unmerge",
+    "deconsolidate": "Deconsolidate",
+    "split": "Split",
     "move": "Move",
     "purge": "Purge"
   },
@@ -39,10 +40,10 @@
     "cannotDelete": "Only empty clusters can be deleted",
     "cannotMergeWithoutGoldenRecord": "It is not possible to merge without a golden record",
     "noClusterItemsToPreview": "There is nothing to preview: the cluster has no contributor items",
-    "cannotPreviewInvalidCluster": "It is not possible to preview the consolidation for an invalid cluster"
+    "cannotPreviewInvalidCluster": "It is not possible to preview the consolidation for an invalid cluster",
+    "clusterItemsNotInCluster": "Cluster items %s do not belong to this cluster"
   },
   "messages": {
-    "cannotMergeUnconfirmedItems": "Unconfirmed items cannot be added to the merging",
     "noClusterFound": "No cluster found for this record"
   },
   "labels": {
@@ -52,8 +53,8 @@
     "masterRecord": "master record",
     "masterRecords": "master records",
     "masterRecordsPanel": "Master Records",
-    "confirmed": "Confirmed",
-    "unconfirmed": "Unconfirmed",
+    "consolidated": "Consolidated",
+    "unconsolidated": "Not Consolidated",
     "rejected": "Rejected",
     "consolidationPreview": "Consolidation Preview",
     "consolidationPreviewHint": "Shows how the golden record would look after consolidation. Nothing is saved.",
@@ -71,8 +72,10 @@
     "clusterReincludedThis": "{user} re-included {relatedEntity} in this cluster",
     "clusterMoved": "{user} moved {relatedEntity} out of this cluster",
     "clusterMovedThis": "{user} moved {relatedEntity} out of this cluster",
-    "clusterConfirmed": "{user} confirmed {relatedEntity} in this cluster",
-    "clusterConfirmedThis": "{user} confirmed {relatedEntity} in this cluster",
+    "clusterConsolidated": "{user} consolidated {relatedEntity} in this cluster",
+    "clusterConsolidatedThis": "{user} consolidated {relatedEntity} in this cluster",
+    "clusterDeconsolidated": "{user} deconsolidated {relatedEntity} in this cluster",
+    "clusterDeconsolidatedThis": "{user} deconsolidated {relatedEntity} in this cluster",
     "clusterGoldenRecord": "{user} set {relatedEntity} as golden record in this cluster",
     "clusterGoldenRecordThis": "{user} set {relatedEntity} as golden record in this cluster",
     "clusterDeleted": "{user} deleted this cluster",

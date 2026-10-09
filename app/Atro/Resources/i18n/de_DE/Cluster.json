@@ -10,17 +10,19 @@
   },
   "actions": {
     "reject": "Ablehnen",
-    "confirm": "Bestätigen Sie",
+    "consolidate": "Konsolidieren",
     "unreject": "Ablehnen",
-    "purge": "Bereinigen"
+    "purge": "Bereinigen",
+    "deconsolidate": "Entkonsolidieren",
+    "split": "Aufteilen"
   },
   "options": {
     "state": {
       "empty": "Leere Werte",
       "review": "Review",
       "invalid": "Ungültig",
-      "mergedAutomatically": "Automatisch zusammengeführt",
-      "mergedManually": "Manuell zusammengeführt"
+      "consolidatedAutomatically": "Konsolidiert (auto)",
+      "consolidated": "Konsolidiert"
     }
   },
   "actionConfirms": {
@@ -29,10 +31,8 @@
   "exceptions": {
     "cannotMergeWithoutGoldenRecord": "Eine Zusammenführung ohne Golden Record ist nicht möglich",
     "noClusterItemsToPreview": "Es gibt nichts zur Vorschau: Der Cluster hat keine Contributor-Einträge",
-    "cannotPreviewInvalidCluster": "Für einen ungültigen Cluster kann die Konsolidierung nicht in der Vorschau angezeigt werden"
-  },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Unbestätigte Einträge können nicht zur Zusammenführung hinzugefügt werden"
+    "cannotPreviewInvalidCluster": "Für einen ungültigen Cluster kann die Konsolidierung nicht in der Vorschau angezeigt werden",
+    "clusterItemsNotInCluster": "Die Cluster-Elemente %s gehören nicht zu diesem Cluster"
   },
   "labels": {
     "contributorRecord": "Contributor-Datensatz",
@@ -40,8 +40,8 @@
     "contributorRecordsPanel": "Contributor-Datensätze",
     "masterRecord": "master-Datensatz",
     "masterRecords": "master-Datensätze",
-    "confirmed": "Bestätigt",
-    "unconfirmed": "Unbestätigt",
+    "consolidated": "Konsolidiert",
+    "unconsolidated": "Nicht konsolidiert",
     "rejected": "Abgelehnt",
     "consolidationPreview": "Konsolidierungsvorschau",
     "consolidationPreviewHint": "Zeigt, wie der Golden Record nach der Konsolidierung aussehen würde. Es wird nichts gespeichert.",
@@ -59,8 +59,10 @@
     "clusterReincludedThis": "{user} hat {relatedEntity} in diesem Cluster wieder aufgenommen",
     "clusterMoved": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
     "clusterMovedThis": "{user} hat {relatedEntity} aus diesem Cluster verschoben",
-    "clusterConfirmed": "{user} hat {relatedEntity} in diesem Cluster bestätigt",
-    "clusterConfirmedThis": "{user} hat {relatedEntity} in diesem Cluster bestätigt",
+    "clusterConsolidated": "{user} hat {relatedEntity} in diesem Cluster konsolidiert",
+    "clusterConsolidatedThis": "{user} hat {relatedEntity} in diesem Cluster konsolidiert",
+    "clusterDeconsolidated": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
+    "clusterDeconsolidatedThis": "{user} hat {relatedEntity} in diesem Cluster entkonsolidiert",
     "clusterGoldenRecord": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
     "clusterGoldenRecordThis": "{user} hat {relatedEntity} als Golden Record in diesem Cluster festgelegt",
     "clusterDeleted": "{user} hat diesen Cluster gelöscht",

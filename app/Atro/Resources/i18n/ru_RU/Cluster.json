@@ -10,7 +10,6 @@
   },
   "actions": {
     "reject": "Отклонить",
-    "confirm": "Подтвердите",
     "unreject": "Отклонить"
   },
   "options": {
@@ -18,15 +17,12 @@
       "empty": "Пустые значения",
       "review": "Проверка",
       "invalid": "Неверный",
-      "mergedManually": "Объединение вручную",
-      "mergedAutomatically": "Автоматическое объединение"
+      "consolidated": "Объединение вручную",
+      "consolidatedAutomatically": "Автоматическое объединение"
     }
   },
   "exceptions": {
     "cannotMergeWithoutGoldenRecord": "Объединение без эталонной записи невозможно"
-  },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Неподтверждённые элементы не могут быть добавлены к объединению"
   },
   "labels": {
     "contributorRecord": "contributor-запись",
@@ -34,7 +30,6 @@
     "contributorRecordsPanel": "Contributor-записи",
     "masterRecord": "мастер-запись",
     "masterRecords": "мастер-записи",
-    "confirmed": "Подтверждено",
     "rejected": "Отклонено"
   },
   "streamMessages": {
@@ -48,8 +43,6 @@
     "clusterReincludedThis": "{user} повторно включил {relatedEntity} в этот кластер",
     "clusterMoved": "{user} переместил {relatedEntity} из этого кластера",
     "clusterMovedThis": "{user} переместил {relatedEntity} из этого кластера",
-    "clusterConfirmed": "{user} подтвердил {relatedEntity} в этом кластере",
-    "clusterConfirmedThis": "{user} подтвердил {relatedEntity} в этом кластере",
     "clusterGoldenRecord": "{user} установил {relatedEntity} как золотую запись в этом кластере",
     "clusterGoldenRecordThis": "{user} установил {relatedEntity} как золотую запись в этом кластере",
     "clusterDeleted": "{user} удалил этот кластер",

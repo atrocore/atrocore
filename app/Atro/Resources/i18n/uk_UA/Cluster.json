@@ -10,22 +10,25 @@
   },
   "actions": {
     "reject": "Відхилити",
-    "confirm": "Підтвердити",
-    "unreject": "Скасувати відхилення"
+    "consolidate": "Консолідувати",
+    "unreject": "Скасувати відхилення",
+    "deconsolidate": "Розконсолідувати",
+    "split": "Розділити"
   },
   "options": {
     "state": {
       "empty": "Порожній",
       "review": "На перевірці",
       "invalid": "Недійсний",
-      "mergedAutomatically": "Об'єднано автоматично",
-      "mergedManually": "Об'єднано вручну"
+      "consolidatedAutomatically": "Консолідовано (авто)",
+      "consolidated": "Консолідовано"
     }
   },
   "exceptions": {
     "cannotDelete": "Можна видаляти лише порожні кластери",
     "noClusterItemsToPreview": "Немає чого показати: у кластері немає contributor-записів",
-    "cannotPreviewInvalidCluster": "Неможливо показати прев'ю консолідації для невалідного кластера"
+    "cannotPreviewInvalidCluster": "Неможливо показати прев'ю консолідації для невалідного кластера",
+    "clusterItemsNotInCluster": "Елементи кластера %s не належать до цього кластера"
   },
   "labels": {
     "contributorRecord": "contributor-запис",
@@ -33,8 +36,8 @@
     "contributorRecordsPanel": "Contributor-записи",
     "masterRecord": "майстер-запис",
     "masterRecords": "майстер-записи",
-    "confirmed": "Підтверджено",
-    "unconfirmed": "Непідтверджено",
+    "consolidated": "Консолідовано",
+    "unconsolidated": "Не консолідовано",
     "rejected": "Відхилено",
     "consolidationPreview": "Прев’ю консолідації",
     "consolidationPreviewHint": "Показує, яким стане golden record після консолідації. Нічого не зберігається.",
@@ -52,8 +55,10 @@
     "clusterReincludedThis": "{user} повторно включив {relatedEntity} у цей кластер",
     "clusterMoved": "{user} перемістив {relatedEntity} з цього кластера",
     "clusterMovedThis": "{user} перемістив {relatedEntity} з цього кластера",
-    "clusterConfirmed": "{user} підтвердив {relatedEntity} у цьому кластері",
-    "clusterConfirmedThis": "{user} підтвердив {relatedEntity} у цьому кластері",
+    "clusterConsolidated": "{user} консолідував {relatedEntity} у цьому кластері",
+    "clusterConsolidatedThis": "{user} консолідував {relatedEntity} у цьому кластері",
+    "clusterDeconsolidated": "{user} розконсолідував {relatedEntity} у цьому кластері",
+    "clusterDeconsolidatedThis": "{user} розконсолідував {relatedEntity} у цьому кластері",
     "clusterGoldenRecord": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
     "clusterGoldenRecordThis": "{user} встановив {relatedEntity} як золотий запис у цьому кластері",
     "clusterDeleted": "{user} видалив цей кластер",

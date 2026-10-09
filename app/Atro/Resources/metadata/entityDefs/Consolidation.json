@@ -27,7 +27,7 @@
       "type": "bool",
       "default": false
     },
-    "executeMergeAs": {
+    "executeConsolidationAs": {
       "type": "enum",
       "default": "system",
       "options": [
@@ -36,11 +36,25 @@
       ],
       "tooltip": true
     },
+    "skipCondition": {
+      "type": "code",
+      "notStorable": true,
+      "engine": "ExpressionLanguage",
+      "variables": [
+        "candidate",
+        "masterRecord"
+      ],
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "customizable": false,
+      "tooltip": true
+    },
     "consolidationScript": {
       "type": "code",
       "engine": "Twig",
       "language": "json",
-      "default": "{# { \"skipped\": false, \"masterRecordData\": { \"name\" : \"{{ contributorRecord.name }}\" } } #}",
+      "default": "{# { \"name\": \"{{ (candidates|last).name }}\" } #}",
       "editorActions": {
         "addFields": {
           "entityNameField": "name"
@@ -50,15 +64,15 @@
         }
       },
       "variables": [
-        "contributorRecord",
-        "contributorRecords",
+        "candidates",
+        "contributors",
         "masterRecord"
       ],
       "customizable": false,
       "layoutRemoveDisabled": true,
       "tooltip": true
     },
-    "confirmAutomatically": {
+    "consolidateAutomatically": {
       "type": "bool"
     },
     "deleteInvalidMastersAutomatically": {
@@ -74,7 +88,7 @@
           "conditionGroup": [
             {
               "type": "isTrue",
-              "attribute": "confirmAutomatically"
+              "attribute": "consolidateAutomatically"
             }
           ]
         },
@@ -82,7 +96,7 @@
           "conditionGroup": [
             {
               "type": "isTrue",
-              "attribute": "confirmAutomatically"
+              "attribute": "consolidateAutomatically"
             }
           ]
         }

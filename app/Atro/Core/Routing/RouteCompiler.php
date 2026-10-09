@@ -213,6 +213,10 @@ class RouteCompiler
                 : [],
         ];
 
+        if ($routeAttr->deprecated) {
+            $entry['deprecated'] = true;
+        }
+
         if (!empty($routeAttr->parameters)) {
             // Strip the {entityName} path parameter — it is baked into the concrete path
             $parameters = $expanded

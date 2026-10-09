@@ -5,8 +5,8 @@
     "quickEdit": {
       "disabled": true
     },
-    "confirm": {
-      "url": "ClusterItem/{{id}}/confirm",
+    "consolidate": {
+      "url": "ClusterItem/{{id}}/consolidate",
       "confirm": false,
       "refresh": true,
       "iconClass": "ph ph-check",
@@ -19,12 +19,19 @@
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
-    "unmerge": {
-      "url": "ClusterItem/{{id}}/unmerge",
+    "deconsolidate": {
+      "url": "ClusterItem/{{id}}/deconsolidate",
       "confirm": false,
       "refresh": true,
       "iconClass": "ph ph-arrows-split",
       "sortOrder": 30
+    },
+    "split": {
+      "url": "ClusterItem/{{id}}/split",
+      "confirm": false,
+      "refresh": true,
+      "iconClass": "ph ph-scissors",
+      "sortOrder": 35
     },
     "move": {
       "url": "ClusterItem/{{id}}/move",
@@ -45,13 +52,21 @@
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
-    "unmerge": {
-      "url": "ClusterItem/massUnmerge",
+    "deconsolidate": {
+      "url": "ClusterItem/massDeconsolidate",
       "confirm": false,
       "massAction": true,
       "refresh": true,
       "iconClass": "ph ph-arrows-split",
       "sortOrder": 30
+    },
+    "split": {
+      "url": "ClusterItem/massSplit",
+      "confirm": false,
+      "massAction": true,
+      "refresh": true,
+      "iconClass": "ph ph-scissors",
+      "sortOrder": 35
     },
     "move": {
       "url": "ClusterItem/massMove",

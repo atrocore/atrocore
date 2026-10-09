@@ -47,7 +47,7 @@
       "type": "int",
       "protected": true
     },
-    "confirmedAutomatically": {
+    "consolidatedAutomatically": {
       "type": "bool",
       "protected": true
     },

@@ -23,19 +23,19 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/{id}/reject',
+    path: '/ClusterItem/{id}/deconsolidate',
     methods: [
         'POST',
     ],
-    summary: 'Reject a single cluster item',
-    description: 'Rejects the specified cluster item. If the item was consolidated, its staging records are unlinked from the golden record (and the golden record is cleared if it was the master entity item). A RejectedClusterItem relation is persisted. The item is then moved to a matching existing cluster or to a newly created one.',
+    summary: 'Deconsolidate a single cluster item',
+    description: 'Unlinks the record of the specified cluster item from the golden record of its cluster. The item stays in the cluster. The item may not be the master entity item of its cluster.',
     tag: 'ClusterItem',
     parameters: [
         [
             'name'        => 'id',
             'in'          => 'path',
             'required'    => true,
-            'description' => 'ID of the ClusterItem to reject.',
+            'description' => 'ID of the ClusterItem to deconsolidate.',
             'schema'      => [
                 'type' => 'string',
             ],
@@ -43,7 +43,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'true if the item was rejected.',
+            'description' => 'true if the item was deconsolidated.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -51,6 +51,9 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'The item is the master entity item and cannot be deconsolidated.',
         ],
         403 => [
             'description' => 'Current user does not have edit access on ClusterItem.',
@@ -60,7 +63,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class RejectHandler extends AbstractHandler
+class DeconsolidateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -76,6 +79,8 @@ class RejectHandler extends AbstractHandler
             throw new NotFound();
         }
 
-        return new BoolResponse($recordService->rejectItem($entity));
+        $result = $recordService->deconsolidate(['ids' => [$id]]);
+
+        return new BoolResponse($result->count > 0);
     }
 }

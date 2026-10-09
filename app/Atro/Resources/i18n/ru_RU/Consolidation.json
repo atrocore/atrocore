@@ -5,15 +5,14 @@
   "fields": {
     "consolidationScript": "Скрипт консолидации",
     "updateMasterAutomatically": "Автоматическое обновление мастера",
-    "executeMergeAs": "Выполнить слияние как",
+    "executeConsolidationAs": "Выполнить слияние как",
     "minimumMatchingScore": "Минимальный балл соответствия",
-    "confirmAutomatically": "Подтвердите автоматически",
     "deleteInvalidMastersAutomatically": "Автоматически удалять недействительные мастер-записи"
   },
   "tooltips": {
     "name": "Можно выбрать только ту мастер-сущность, для которой уже существует дериватив с ролью «Контрибьютор».",
     "consolidationScript": "Настройте преобразование, унификацию и сопоставление исходных данных с мастер-записью.",
-    "executeMergeAs": "Учетная запись пользователя, которая будет использоваться для выполнения скрипта консолидации."
+    "executeConsolidationAs": "Учетная запись пользователя, которая будет использоваться для выполнения скрипта консолидации."
   },
   "exceptions": {
     "consolidationScriptIsMissing": "Скрипт консолидации отсутствует для главной сущности",
@@ -22,7 +21,7 @@
     "consolidationAlreadyExists": "Консолидация для \"%s\" уже существует"
   },
   "options": {
-    "executeMergeAs": {
+    "executeConsolidationAs": {
       "sameUser": "Тот же пользователь",
       "system": "Система"
     }

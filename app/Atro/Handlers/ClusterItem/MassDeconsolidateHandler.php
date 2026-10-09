@@ -23,12 +23,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ClusterItem/massReject',
+    path: '/ClusterItem/massDeconsolidate',
     methods: [
         'POST',
     ],
-    summary: 'Reject cluster items (mass action)',
-    description: 'Rejects one or more cluster items, removing them from the active cluster set. Accepts a list of IDs via idList or a filter via where.',
+    summary: 'Deconsolidate cluster items (mass action)',
+    description: 'Unlinks the records of one or more cluster items from the golden record of their cluster. The items stay in the cluster; items that are not consolidated are skipped. All selected items must belong to the same cluster and none may be the master entity item. Accepts a list of IDs via idList or a filter via where.',
     tag: 'ClusterItem',
     requestBody: [
         'required' => true,
@@ -39,14 +39,14 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'properties' => [
                         'idList' => [
                             'type'        => 'array',
-                            'description' => 'List of ClusterItem IDs to reject.',
+                            'description' => 'List of ClusterItem IDs to deconsolidate.',
                             'items'       => [
                                 'type' => 'string',
                             ],
                         ],
                         'where'  => [
                             'type'        => 'array',
-                            'description' => 'Filter criteria selecting ClusterItems to reject.',
+                            'description' => 'Filter criteria selecting ClusterItems to deconsolidate.',
                             'items'       => [
                                 'type' => 'object',
                             ],
@@ -62,7 +62,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Reject result.',
+            'description' => 'Deconsolidation result.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -70,11 +70,11 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'properties' => [
                             'count'  => [
                                 'type'        => 'integer',
-                                'description' => 'Number of cluster items successfully rejected.',
+                                'description' => 'Number of cluster items successfully deconsolidated.',
                             ],
                             'sync'   => [
                                 'type'        => 'boolean',
-                                'description' => 'true if executed synchronously, false if dispatched as a background job.',
+                                'description' => 'Always true — deconsolidation is executed synchronously.',
                             ],
                             'errors' => [
                                 'type'        => 'array',
@@ -89,14 +89,14 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'Neither idList nor where was provided.',
+            'description' => 'Neither idList nor where was provided; items belong to different clusters; or a master entity item was selected.',
         ],
         403 => [
             'description' => 'Current user does not have edit access on ClusterItem.',
         ],
     ],
 )]
-class MassRejectHandler extends AbstractHandler
+class MassDeconsolidateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -119,6 +119,6 @@ class MassRejectHandler extends AbstractHandler
             throw new BadRequest($this->getLanguage()->translate('idOrIdListOrWhereRequired', 'exceptions', 'ClusterItem'));
         }
 
-        return new JsonResponse(get_object_vars($this->getRecordService('ClusterItem')->reject($params)));
+        return new JsonResponse(get_object_vars($this->getRecordService('ClusterItem')->deconsolidate($params)));
     }
 }

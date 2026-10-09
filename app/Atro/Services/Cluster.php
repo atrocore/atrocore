@@ -20,6 +20,7 @@ use Atro\Core\Exceptions\NotUnique;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
+use Atro\DTOs\Cluster\MassActionResultDTO;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
@@ -109,7 +110,7 @@ class Cluster extends Base
         }
     }
 
-    public function purge(array $params): array
+    public function purge(array $params): MassActionResultDTO
     {
         if (!$this->getAcl()->check('Cluster', 'delete')) {
             throw new Forbidden();
@@ -125,7 +126,7 @@ class Cluster extends Base
             $this->purgeCluster($id);
         });
 
-        return ['count' => $count, 'sync' => $sync, 'errors' => $errors];
+        return new MassActionResultDTO($count, $sync, $errors);
     }
 
     public function purgeCluster(string $id): void
@@ -151,6 +152,35 @@ class Cluster extends Base
         $this->getEntityManager()->removeEntity($cluster, ['isPurge' => true]);
     }
 
+    public function consolidate(string $clusterId, array $clusterItemIds): bool
+    {
+        $cluster = $this->getEntity($clusterId);
+
+        if (empty($cluster)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($cluster, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $clusterItemIds = array_values(array_unique($clusterItemIds));
+
+        $clusterItems = iterator_to_array($this->getEntityManager()->getRepository('ClusterItem')
+            ->where(['id' => $clusterItemIds, 'clusterId' => $cluster->get('id')])
+            ->find());
+
+        $missingIds = array_diff($clusterItemIds, array_map(fn($clusterItem) => $clusterItem->get('id'), $clusterItems));
+        if (!empty($missingIds)) {
+            throw new BadRequest(sprintf(
+                $this->getInjection('language')->translate('clusterItemsNotInCluster', 'exceptions', 'Cluster'),
+                implode(', ', $missingIds)
+            ));
+        }
+
+        return $this->getRecordService('ClusterItem')->consolidateAll(array_values($clusterItems));
+    }
+
     public function buildMasterRecordPreview(string $clusterId, ?string $consolidationScript = null): Entity
     {
         $cluster = $this->getEntity($clusterId);
@@ -164,13 +194,11 @@ class Cluster extends Base
         }
 
         $masterEntityName = (string)$cluster->get('masterEntity');
-        $consolidationService = $this->getRecordService('Consolidation');
 
-        if ($consolidationScript === null) {
-            $consolidationScript = (string)$consolidationService->getConsolidation($masterEntityName)->get('consolidationScript');
+        $payload = $this->getRecordService('Consolidation')->buildMasterRecordPayloadForCluster($cluster, $consolidationScript);
+        if ($payload === null) {
+            throw new BadRequest($this->getInjection('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
         }
-
-        $payload = $consolidationService->buildMasterRecordPayloadForCluster($cluster, $consolidationScript);
 
         $masterRepository = $this->getEntityManager()->getRepository($masterEntityName);
         $preview = $masterRepository->get();
@@ -189,9 +217,7 @@ class Cluster extends Base
             }
         }
 
-        if (!$payload->isSkipped()) {
-            $preview->set($payload->getMasterRecordData());
-        }
+        $preview->set($payload);
 
         return $preview;
     }

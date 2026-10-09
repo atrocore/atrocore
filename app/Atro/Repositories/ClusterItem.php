@@ -77,7 +77,7 @@ class ClusterItem extends Base
         $this->getDbal()->createQueryBuilder()
             ->update('cluster_item')
             ->set('cluster_id', ':clusterIdTo')
-            ->set('confirmed_automatically', ':false')
+            ->set('consolidated_automatically', ':false')
             ->where('cluster_id=:clusterIdFrom and id not in (select cluster_item_id from rejected_cluster_item where cluster_id=:clusterIdTo and deleted=:false) and deleted=:false')
             ->setParameter('clusterIdFrom', $clusterIdFrom)
             ->setParameter('clusterIdTo', $clusterIdTo)
@@ -244,13 +244,13 @@ class ClusterItem extends Base
             ->fetchFirstColumn();
     }
 
-    public function getClustersToConfirmAutomatically(string $contributorEntityName, int $offset = 0, int $limit = PHP_INT_MAX): array
+    public function getClustersToConsolidateAutomatically(string $contributorEntityName, int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $masterEntityName = $this->getMetadata()->get("scopes.$contributorEntityName.primaryEntityId");
 
         $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName((string)$masterEntityName);
 
-        if (empty($consolidation) || empty($consolidation->get('confirmAutomatically'))) {
+        if (empty($consolidation) || empty($consolidation->get('consolidateAutomatically'))) {
             return [];
         }
 

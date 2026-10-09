@@ -5,8 +5,7 @@
     "record": "Record",
     "cluster": "Cluster",
     "matchedRecord": "Record abbinato",
-    "matchedScore": "Punteggio abbinato",
-    "confirmedAutomatically": "Confermato automaticamente"
+    "matchedScore": "Punteggio abbinato"
   },
   "exceptions": {
     "notFound": "Il record dell'articolo del cluster non è stato trovato",
@@ -24,7 +23,6 @@
     "reject": "Sei sicuro di voler rifiutare gli elementi selezionati?"
   },
   "actions": {
-    "confirm": "Confermare",
     "reject": "Rifiuta"
   }
 }

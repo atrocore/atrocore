@@ -1,6 +1,6 @@
 {
   "labels": {
-    "confirmedAutomatically": "Automatisch bestätigt"
+    "consolidatedAutomatically": "Automatisch konsolidiert"
   },
   "fields": {
     "entityName": "Entitäts-Name",
@@ -8,26 +8,39 @@
     "record": "Datensatz",
     "cluster": "Cluster",
     "matchedRecord": "Übereinstimmender Datensatz",
-    "confirmedAutomatically": "Automatisch bestätigt",
+    "consolidatedAutomatically": "Automatisch konsolidiert",
     "matchedScore": "Abgestimmte Punktzahl"
   },
   "exceptions": {
     "notFound": "Cluster-Element-Datensatz nicht gefunden",
     "cannotReject": "Dieses Clusterelement kann nicht abgelehnt werden",
     "cannotUnreject": "Dieses Clusterelement kann nicht abgelehnt werden",
-    "idOrIdListOrWhereRequired": "Bitte geben Sie mindestens eines an: eine ID, eine ID-Liste oder einen Suchfilter."
+    "idOrIdListOrWhereRequired": "Bitte geben Sie mindestens eines an: eine ID, eine ID-Liste oder einen Suchfilter.",
+    "itemsMustBelongToTheSameCluster": "Alle ausgewählten Elemente müssen zum selben Cluster gehören.",
+    "cannotDeconsolidateMasterEntityItem": "Das Element der Master-Entität kann nicht entkonsolidiert werden.",
+    "cannotSplitMasterEntityItem": "Das Element der Master-Entität kann nicht aufgeteilt werden."
   },
   "massActions": {
-    "reject": "Ablehnen"
+    "reject": "Ablehnen",
+    "deconsolidate": "Entkonsolidieren",
+    "split": "Aufteilen",
+    "consolidate": "Konsolidieren"
   },
   "massActionSuccessMessages": {
-    "reject": "Die ausgewählten Cluster-Elemente werden im Hintergrund gelöscht"
+    "reject": "Die ausgewählten Cluster-Elemente werden im Hintergrund gelöscht",
+    "deconsolidate": "Die ausgewählten Cluster-Elemente wurden entkonsolidiert",
+    "split": "Die ausgewählten Cluster-Elemente wurden in einen neuen Cluster verschoben",
+    "consolidate": "Die ausgewählten Cluster-Elemente wurden konsolidiert"
   },
   "massActionConfirmMessages": {
-    "reject": "Sind Sie sicher, dass Sie die ausgewählten Elemente ablehnen möchten?"
+    "reject": "Sind Sie sicher, dass Sie die ausgewählten Elemente ablehnen möchten?",
+    "deconsolidate": "Sind Sie sicher, dass Sie die ausgewählten Elemente entkonsolidieren möchten?",
+    "split": "Sind Sie sicher, dass Sie die ausgewählten Elemente in einen neuen Cluster verschieben möchten?"
   },
   "actions": {
-    "confirm": "Bestätigen Sie",
-    "reject": "Ablehnen"
+    "consolidate": "Konsolidieren",
+    "reject": "Ablehnen",
+    "deconsolidate": "Entkonsolidieren",
+    "split": "Aufteilen"
   }
 }

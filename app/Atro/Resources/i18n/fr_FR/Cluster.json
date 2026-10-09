@@ -10,25 +10,25 @@
   },
   "actions": {
     "reject": "Rejeter",
-    "confirm": "Confirmer",
-    "unreject": "Ne pas rejeter"
+    "consolidate": "Consolider",
+    "unreject": "Ne pas rejeter",
+    "deconsolidate": "Déconsolider",
+    "split": "Scinder"
   },
   "options": {
     "state": {
       "empty": "Vide",
       "review": "Révision",
       "invalid": "Invalide",
-      "mergedAutomatically": "Fusionné automatiquement",
-      "mergedManually": "Fusionné manuellement"
+      "consolidatedAutomatically": "Consolidé (auto)",
+      "consolidated": "Consolidé"
     }
   },
   "exceptions": {
     "cannotMergeWithoutGoldenRecord": "La fusion est impossible sans un enregistrement de référence",
     "noClusterItemsToPreview": "Rien à prévisualiser : le cluster n'a aucun élément contributeur",
-    "cannotPreviewInvalidCluster": "Il est impossible de prévisualiser la consolidation pour un cluster non valide"
-  },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Les éléments non confirmés ne peuvent pas être ajoutés à la fusion"
+    "cannotPreviewInvalidCluster": "Il est impossible de prévisualiser la consolidation pour un cluster non valide",
+    "clusterItemsNotInCluster": "Les éléments de cluster %s n'appartiennent pas à ce cluster"
   },
   "labels": {
     "contributorRecord": "enregistrement contributeur",
@@ -36,8 +36,8 @@
     "contributorRecordsPanel": "Enregistrements contributeurs",
     "masterRecord": "enregistrement de référence",
     "masterRecords": "enregistrements de référence",
-    "confirmed": "Confirmé",
-    "unconfirmed": "Non confirmé",
+    "consolidated": "Consolidé",
+    "unconsolidated": "Non consolidé",
     "rejected": "Rejeté",
     "consolidationPreview": "Aperçu de la consolidation",
     "consolidationPreviewHint": "Montre à quoi ressemblerait l'enregistrement de référence après la consolidation. Rien n'est enregistré.",
@@ -55,8 +55,10 @@
     "clusterReincludedThis": "{user} a réintégré {relatedEntity} dans ce cluster",
     "clusterMoved": "{user} a déplacé {relatedEntity} hors de ce cluster",
     "clusterMovedThis": "{user} a déplacé {relatedEntity} hors de ce cluster",
-    "clusterConfirmed": "{user} a confirmé {relatedEntity} dans ce cluster",
-    "clusterConfirmedThis": "{user} a confirmé {relatedEntity} dans ce cluster",
+    "clusterConsolidated": "{user} a consolidé {relatedEntity} dans ce cluster",
+    "clusterConsolidatedThis": "{user} a consolidé {relatedEntity} dans ce cluster",
+    "clusterDeconsolidated": "{user} a déconsolidé {relatedEntity} dans ce cluster",
+    "clusterDeconsolidatedThis": "{user} a déconsolidé {relatedEntity} dans ce cluster",
     "clusterGoldenRecord": "{user} a défini {relatedEntity} comme enregistrement doré dans ce cluster",
     "clusterGoldenRecordThis": "{user} a défini {relatedEntity} comme enregistrement doré dans ce cluster",
     "clusterDeleted": "{user} a supprimé ce cluster",

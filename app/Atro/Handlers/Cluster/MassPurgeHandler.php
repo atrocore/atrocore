@@ -117,6 +117,6 @@ class MassPurgeHandler extends AbstractHandler
             throw new BadRequest('One of all, idList, or where is required.');
         }
 
-        return new JsonResponse($this->getRecordService('Cluster')->purge($params));
+        return new JsonResponse(get_object_vars($this->getRecordService('Cluster')->purge($params)));
     }
 }

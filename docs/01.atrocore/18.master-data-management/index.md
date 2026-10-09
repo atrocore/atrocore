@@ -119,23 +119,20 @@ The consolidation of contributor records into master records is configured via *
 
 - **Entity** – the master entity this configuration applies to. Only master entities that already have a derivative with the Contributor role can be selected.
 - **Consolidation Script** – a Twig script that defines how contributor record data is transformed, unified, and mapped to the master record. See [below](#consolidation-script).
-- **Execute Merge As** – the user account that will be used to execute the Consolidation Script: `System` or `Same User`.
-- **Update Master Automatically** – when enabled, any update to a contributor record automatically triggers an update of the linked master record according to the Consolidation Script.
-- **Confirm Automatically** – when enabled, cluster items are confirmed automatically by the `Create Clusters` scheduled job. When checked, the **Minimum Matching Score** field becomes required and defines the confirmation threshold.
+- **Execute Consolidation As** – the user account that will be used to execute the Consolidation Script: `System` or `Same User`.
+- **Update Master Automatically** – when enabled, any update to a contributor record and any deconsolidation of contributor records automatically trigger an update of the linked master record according to the Consolidation Script.
+- **Consolidate Automatically** – when enabled, cluster items are consolidated automatically by the `Create Clusters` scheduled job. When checked, the **Minimum Matching Score** field becomes required and defines the consolidation threshold.
 - **Delete Invalid Masters Automatically** – when enabled, excess master records in invalid clusters are deleted automatically.
 
-See [Clusters](./19.clusters/index.md) for details on how these settings are applied during the clustering and confirmation workflow.
+See [Clusters](./19.clusters/index.md) for details on how these settings are applied during the clustering and consolidation workflow.
 
 ### Consolidation Script
 
-The consolidation script is a Twig template that must return a JSON object with the key `masterRecordData`, containing the field values to write to the master record:
+The consolidation script is a Twig template that must return a JSON object with the field values to write to the master record:
 
 ```twig
 {
-  "skipped": false,
-  "masterRecordData": {
-    "name": "{{ contributorRecord.name }}"
-  }
+  "name": "{{ (candidates|last).name }}"
 }
 ```
 
@@ -143,11 +140,23 @@ The consolidation script is a Twig template that must return a JSON object with 
 
 Three variables are available in the script:
 
-- `contributorRecord` – the contributor record being consolidated.
-- `contributorRecords` – all contributor records linked to the master record.
+- `candidates` – the contributor records that triggered the rendering and are not excluded by the Skip Condition:
+    - on consolidation – all unconsolidated contributor records of the cluster;
+    - on update of a contributor record by **Update Master Automatically** or by the **Update Master Record** action – only the updated record, which is also present in `contributors`;
+    - after a deconsolidation – empty, so the script must handle an empty `candidates` array if **Update Master Automatically** is enabled.
+- `contributors` – all contributor records already linked to the master record.
 - `masterRecord` – the existing master record, or `null` when the master record does not yet exist.
 
-If the returned object contains `"skipped": true`, the operation is skipped and the master record is neither created nor updated.
+The script is rendered once per consolidation, regardless of how many cluster items are consolidated.
+
+### Skip Condition
+
+The Skip Condition is an expression that is evaluated for each candidate. Two variables are available in it: `candidate` and `masterRecord`. Candidates for which the expression returns `true` are excluded from `candidates`, e.g. `candidate.get('name') == null`.
+
+If the Skip Condition excludes all candidates, the consolidation script is not rendered and the master record is neither created nor updated:
+
+- If the master record does not exist yet, nothing is consolidated.
+- If the master record already exists, the selected contributor records are still linked to it, but its field values remain unchanged.
 
 ## Data Lineage Panel
 

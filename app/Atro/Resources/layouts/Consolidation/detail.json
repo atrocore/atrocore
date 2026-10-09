@@ -13,13 +13,19 @@
       ],
       [
         {
+          "name": "skipCondition",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
           "name": "consolidationScript",
           "fullWidth": true
         }
       ],
       [
         {
-          "name": "executeMergeAs"
+          "name": "executeConsolidationAs"
         },
         {
           "name": "updateMasterAutomatically"
@@ -27,7 +33,7 @@
       ],
       [
         {
-          "name": "confirmAutomatically"
+          "name": "consolidateAutomatically"
         },
         {
           "name": "minimumMatchingScore"

@@ -24,8 +24,8 @@ abstract class AbstractClusterJob extends AbstractJob
     private const JOB_NAMES = [
         'ClusterMatchedRecords'        => 'Group matched records into clusters',
         'RejectInvalidClusterItems'    => 'Reject invalid cluster items',
-        'ConfirmClustersAutomatically' => 'Auto-confirm clusters',
-        'ConfirmSingleClusterItems'    => 'Confirm single-item clusters',
+        'ConsolidateClustersAutomatically' => 'Auto-consolidate clusters',
+        'ConsolidateSingleClusterItems'    => 'Consolidate single-item clusters',
         'CreateClustersForOrphans'     => 'Create clusters for unmatched records',
         'DeleteInvalidMasterItems'     => 'Delete invalid master records',
     ];
@@ -133,15 +133,15 @@ abstract class AbstractClusterJob extends AbstractJob
         }
 
         if ($batchNum === 0) {
-            $this->spawnConfirmClustersAutomatically($masterEntity, $parent);
+            $this->spawnConsolidateClustersAutomatically($masterEntity, $parent);
         }
     }
 
-    protected function spawnConfirmClustersAutomatically(string $masterEntity, Job $parent): void
+    protected function spawnConsolidateClustersAutomatically(string $masterEntity, Job $parent): void
     {
         $contributorEntity = $this->getContributorEntityName($masterEntity);
         if (empty($contributorEntity)) {
-            $this->spawnConfirmSingleClusterItems($masterEntity, $parent);
+            $this->spawnConsolidateSingleClusterItems($masterEntity, $parent);
             return;
         }
 
@@ -152,14 +152,14 @@ abstract class AbstractClusterJob extends AbstractJob
         $limit    = 1000;
         $batchNum = 0;
 
-        while (!empty($page = $clusterItemRepo->getClustersToConfirmAutomatically($contributorEntity, $offset, $limit))) {
+        while (!empty($page = $clusterItemRepo->getClustersToConsolidateAutomatically($contributorEntity, $offset, $limit))) {
             $batchNum++;
             $clusters = array_map(fn($row) => [
                 'clusterId'      => $row['cluster_id'],
                 'clusterItemIds' => explode(',', $row['cluster_item_ids']),
             ], $page);
 
-            $this->spawnJob('ConfirmClustersAutomatically', [
+            $this->spawnJob('ConsolidateClustersAutomatically', [
                 'masterEntity' => $masterEntity,
                 'clusters'     => $clusters,
             ], $parent, $batchNum);
@@ -170,11 +170,11 @@ abstract class AbstractClusterJob extends AbstractJob
         }
 
         if ($batchNum === 0) {
-            $this->spawnConfirmSingleClusterItems($masterEntity, $parent);
+            $this->spawnConsolidateSingleClusterItems($masterEntity, $parent);
         }
     }
 
-    protected function spawnConfirmSingleClusterItems(string $masterEntity, Job $parent): void
+    protected function spawnConsolidateSingleClusterItems(string $masterEntity, Job $parent): void
     {
         $contributorEntity = $this->getContributorEntityName($masterEntity);
         if (empty($contributorEntity)) {
@@ -191,7 +191,7 @@ abstract class AbstractClusterJob extends AbstractJob
 
         while (!empty($page = $clusterItemRepo->getSingleClusterItemIdsPage($contributorEntity, $offset, $limit))) {
             $batchNum++;
-            $this->spawnJob('ConfirmSingleClusterItems', [
+            $this->spawnJob('ConsolidateSingleClusterItems', [
                 'masterEntity'   => $masterEntity,
                 'clusterItemIds' => $page,
             ], $parent, $batchNum);

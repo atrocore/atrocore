@@ -31,6 +31,7 @@ class Route
         public readonly bool         $hidden             = false,
         public readonly bool         $skipActionHistory  = false,
         public readonly ?array       $rateLimit          = null,
+        public readonly bool         $deprecated         = false,
     ) {
     }
 }

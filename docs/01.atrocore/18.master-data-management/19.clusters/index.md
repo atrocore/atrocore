@@ -6,7 +6,7 @@ A Cluster is a system entity that virtually groups one or more records based on 
 
 Clusters are used as part of the duplicate detection workflow. When duplicate search is enabled for an entity – within the master data, within the contributor data, or between master and contributor – the system automatically groups the detected duplicates into clusters to facilitate review and processing.
 
-A correctly formed cluster contains one master record and one or more contributor records. Once the user confirms a cluster item, a real relationship between the master and contributor records is established.
+A correctly formed cluster contains one master record and one or more contributor records. Once the user consolidates a cluster item, a real relationship between the master and contributor records is established.
 
 ## Creating and Deleting Clusters
 
@@ -24,7 +24,7 @@ A cluster can only be deleted if it has no cluster items (i.e., its state is Emp
 |---|---|
 | **Number**             | A unique auto-incremented identifier, assigned automatically by the system. Read-only.|
 | **Master Entity**       |  The master entity this cluster belongs to. A cluster is always scoped to a single entity and may only contain records from that master entity and its corresponding contributor entity.|
-| **Golden Record**      |The primary master record to which contributor records will be linked upon confirmation. Only one Golden Record can be set per cluster. If the Golden Record is deleted, all contributor items are unlinked from it. |
+| **Golden Record**      |The primary master record to which contributor records will be linked upon consolidation. Only one Golden Record can be set per cluster. If the Golden Record is deleted, all contributor items are unlinked from it. |
 | **State**              |  A read-only, dynamically calculated field reflecting the current state of the cluster. Updated automatically on any change to cluster items.|
 | **Contributor Item Count**  |  The number of contributor records currently linked to the cluster. Read-only.|
 | **Master Item Count**   |  The number of master records currently linked to the cluster. Read-only.|
@@ -32,9 +32,9 @@ A cluster can only be deleted if it has no cluster items (i.e., its state is Emp
 The State field of the Cluster can have the following values:
 
 - **Empty** – the cluster has no cluster items.
-- **Review** – the cluster has items, but is not yet fully merged.
-- **Merged Manually** – all cluster items have been confirmed, and at least one was confirmed manually.
-- **Merged Automatically** – all cluster items have been confirmed automatically.
+- **Review** – the cluster has items, but is not yet fully consolidated.
+- **Consolidated** – all contributor records of the cluster are linked to its golden record, and the consolidation was done by a user.
+- **Consolidated (auto)** – all contributor records of the cluster are linked to its golden record, and the consolidation was done automatically by the system.
 - **Invalid** – the cluster contains more than one master record, or contains no contributor records.
 
 ## Cluster Items
@@ -43,9 +43,9 @@ Cluster Items panel lists all master and contributor records that the system has
 
 Cluster items cannot be added or removed manually. If a Matched Record is deleted, the corresponding Cluster Item is not removed – instead, it is reassigned to another cluster (existing or newly created).
 
-Every contributor record must belong to a cluster. If the system detects no duplicates for a given record, a cluster with a single item is created and that item is confirmed automatically.
+Every contributor record must belong to a cluster. If the system detects no duplicates for a given record, a cluster with a single item is created and that item is consolidated automatically.
 
-Cluster items are created, populated, and automatically confirmed by the Create Clusters scheduled job. If matching rules change, or a record is created or updated causing a Matched Records pair to be added, removed, or have its Matched Score changed, the cluster is not updated immediately – changes take effect on the next job run.
+Cluster items are created, populated, and automatically consolidated by the Create Clusters scheduled job. If matching rules change, or a record is created or updated causing a Matched Records pair to be added, removed, or have its Matched Score changed, the cluster is not updated immediately – changes take effect on the next job run.
 
 ## Cluster View Modes
 
@@ -63,22 +63,22 @@ Field values that differ between records are highlighted with a vertical red lin
 
 Each column in the comparison table includes a Matched Score row for the corresponding item. Field values in the table can be edited directly.
 
-The Matched Score row in each column shows icons indicating the entity role and confirmation method:
+The Matched Score row in each column shows icons indicating the entity role and consolidation method:
 
 ![Cluster icons](./_assets/cluster-icons.png){.large}
 
 - **1** – the record is a master entity record.
 - **2** – the record is a contributor entity record.
-- **3** – the item was confirmed automatically.
+- **3** – the item was consolidated automatically.
 
-The Golden Record is indicated by a horizontal gold line in the comparison table. A confirmed contributor record is indicated by a horizontal blue line.
+The Golden Record is indicated by a horizontal gold line in the comparison table. A consolidated contributor record is indicated by a horizontal blue line.
 
 To control which items are shown in the comparison table, open the `Item` tab in the left sidebar. It lists all items belonging to the cluster, grouped by entity. Use the eye icon next to each item to show or hide it in the table.
 
 Items in the left sidebar are grouped by status within each entity section:
 
-- **All items** – all items that have not been rejected, shown at the top of the section.
-- **Confirmed** – a collapsible group listing confirmed items.
+- **Not Consolidated** – items that are neither consolidated nor rejected, shown at the top of the section.
+- **Consolidated** – a collapsible group listing consolidated items.
 - **Rejected** – a collapsible group listing rejected items; collapsed by default.
 
 Grouping is applied separately for Master and Contributor entities. Each item in the sidebar has an actions button (⋮) that provides item-level actions directly from the sidebar without opening the item's detail page.
@@ -100,7 +100,7 @@ Below the cluster summary, two collapsible panels are displayed:
 
 Record names within both panels are clickable links that open the respective record's detail page.
 
-The status of each item is visually indicated by a colored horizontal line on the left side of the record name. Items confirmed automatically display an additional icon.
+The status of each item is visually indicated by a colored horizontal line on the left side of the record name. Items consolidated automatically display an additional icon.
 
 ## Merge Cluster Items
 
@@ -117,7 +117,7 @@ All cluster items are shown in the merge view by default. To exclude an item fro
 - If no Golden Record exists, it is created; if one already exists, it is updated.
 - Field values are taken from the contributor records based on the radio button selection in the merge view.
 - Participating contributor records are **not** processed through the [Consolidation Script](#consolidation-script) – selected values are applied directly.
-- Participating cluster items have their state changed to Confirmed after the merge is executed.
+- Participating cluster items are consolidated after the merge is executed.
 - Contributor records that did not participate in the merge (i.e., removed from the merge interface) remain unchanged.
 - If a field in the Golden Record is locked via a value lock, the lock is ignored – the selected value is applied regardless.
 
@@ -125,50 +125,52 @@ All cluster items are shown in the merge view by default. To exclude an item fro
 
 The following actions are available for cluster items in both Standard and Comparison views:
 
-- **Confirm** – creates a link between the contributor and master records. Two scenarios apply:
+- **Consolidate** – creates a link between the contributor and master records. Two scenarios apply:
 
   - If a master record already exists in the cluster, the contributor record is linked to it.
   - If no master record exists yet, a new master record is created based on the selected contributor record and linked to it.
 
-    An already confirmed item cannot be confirmed again.
+    An already consolidated item cannot be consolidated again.
 
-- **Reject** – removes the cluster item from the current cluster and reassigns it to another cluster (existing or newly created). The rejected item remains visible in the `Rejected Cluster Items` panel. If a confirmed master record is rejected, all already confirmed contributor records in the cluster are automatically unconfirmed and the link between the master and contributor records is removed. If a confirmed contributor record is rejected, that record is unconfirmed. Available as a mass action – can be executed for multiple cluster items at once.
+- **Reject** – removes the cluster item from the current cluster and reassigns it to another cluster (existing or newly created). The rejected item remains visible in the `Rejected Cluster Items` panel. If a consolidated master record is rejected, all consolidated contributor records in the cluster are automatically deconsolidated and the link between the master and contributor records is removed. If a consolidated contributor record is rejected, that record is deconsolidated. Available as a mass action – can be executed for multiple cluster items at once.
 
-- **Unreject** – Available for items in the `Rejected Cluster Items` panel. Returns the item to the cluster. If the item was previously confirmed, then rejected, and then returned to the cluster, it will have an unconfirmed status and must be confirmed again.
+- **Unreject** – Available for items in the `Rejected Cluster Items` panel. Returns the item to the cluster. If the item was previously consolidated, then rejected, and then returned to the cluster, it is not consolidated and must be consolidated again.
 
-- **Unmerge** – detaches the cluster item from the current cluster and moves it into a new separate cluster. If the item was previously confirmed, its confirmation is automatically reset after the unmerge. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
+- **Deconsolidate** – unlinks the contributor record from the golden record of the cluster. The cluster item stays in the current cluster and can be consolidated again. If **Update Master Automatically** is enabled for the consolidation, the golden record is updated according to the Consolidation Script based on the remaining contributor records. Not available for the master record. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
 
-- **Move** – transfers the cluster item to an existing cluster selected by the user. A cluster picker dialog opens, filtered to clusters of the same master entity. If the item was confirmed, its confirmation is reset before the move. The item cannot be moved to a cluster where it was previously rejected. Both the source and target clusters record the move in their activity streams.
+- **Split** – moves the selected cluster items to a new cluster. Consolidated items are deconsolidated first, as described for **Deconsolidate**. Unlike **Reject**, all selected items are guaranteed to end up together in the same new cluster, and no rejection is stored. Not available for the master record. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
+
+- **Move** – transfers the cluster item to an existing cluster selected by the user. A cluster picker dialog opens, filtered to clusters of the same master entity. If the item was consolidated, it is deconsolidated before the move. The item cannot be moved to a cluster where it was previously rejected. Both the source and target clusters record the move in their activity streams.
 
 - **Delete** Deletes the corresponding record and its cluster item.
 
-## Confirming Cluster Items
+## Consolidating Cluster Items
 
-When a cluster item (master or contributor record) is confirmed, the system creates a Golden Record for the cluster if one does not yet exist. If a Golden Record is already set, confirming additional items links the corresponding contributor records to that master record. The linked contributor records become visible in the relevant relation panel on the master record's detail page.
+When a cluster item (master or contributor record) is consolidated, the system creates a Golden Record for the cluster if one does not yet exist. If a Golden Record is already set, consolidating additional items links the corresponding contributor records to that master record. The linked contributor records become visible in the relevant relation panel on the master record's detail page.
 
 ### Consolidation Script
 
-During confirmation, all cluster items are processed through the Consolidation Script defined in the [Consolidation](../index.md#consolidation) configuration for the corresponding master entity.
+During consolidation, all cluster items are processed through the Consolidation Script defined in the [Consolidation](../index.md#consolidation) configuration for the corresponding master entity.
 
 
 This script describes the logic by which the master record is created or updated based on the contributor record – specifying which fields should be copied, under what conditions, and whether any field transformations should be applied.
 
-### Automatic Confirmation
+### Automatic Consolidation
 
-Cluster items can be confirmed manually by the user or automatically by the `Create Clusters` scheduled job.
-To enable automatic confirmation, check the `Confirm Automatically` checkbox in the Consolidation record of the corresponding master entity. When enabled, the Minimum Matching Score field becomes required and defines the threshold for automatic confirmation.
+Cluster items can be consolidated manually by the user or automatically by the `Create Clusters` scheduled job.
+To enable automatic consolidation, check the `Consolidate Automatically` checkbox in the Consolidation record of the corresponding master entity. When enabled, the Minimum Matching Score field becomes required and defines the threshold for automatic consolidation.
 
-A cluster item is confirmed automatically if its Matched Score is greater than or equal to the Minimum Matching Score. If the score falls below this threshold, the item will not be confirmed automatically, even if the setting is enabled for the entity.
+A cluster item is consolidated automatically if its Matched Score is greater than or equal to the Minimum Matching Score. If the score falls below this threshold, the item will not be consolidated automatically, even if the setting is enabled for the entity.
 
-Items confirmed automatically are marked with a dedicated icon in the cluster.
+Items consolidated automatically are marked with a dedicated icon in the cluster.
 
-![Confirm automatically](./_assets/confirm-automatically.png){.medium}
+![consolidate-automatically](./_assets/consolidate-automatically.png){.medium}
 
 > The Matched Score is copied from the corresponding Matched Record to the cluster item. If the matching chain is A → B with a score of 80 and B → C with a score of 60, the scores assigned to the cluster items will be: A – 80, B – 80, C – 60.
 
 ### Automatic Master Update
 
-When Update Master Automatically is enabled in the Consolidation configuration, any update to a contributor record will automatically trigger an update of the corresponding master record according to the Consolidation Script – without requiring a manual re-confirmation.
+When Update Master Automatically is enabled in the Consolidation configuration, any update to a contributor record will automatically trigger an update of the corresponding master record according to the Consolidation Script – without requiring a manual re-consolidation.
 
 If automatic [field locking](https://store.atrocore.com/en/advanced-data-management/20113) on manual modification is enabled, updates from contributor records will not overwrite fields in the master record that have been modified manually.
 
@@ -211,7 +213,8 @@ Each Cluster has an activity stream that records all significant events on its i
 | **Unlinked** | A record was removed from the cluster |
 | **Rejected** | A Cluster Item was rejected |
 | **Reincluded** | A previously rejected item was returned to the cluster |
-| **Moved** | An item was unmerged and moved out of the cluster |
-| **Confirmed** | A Cluster Item was confirmed |
+| **Moved** | An item was moved out of the cluster |
+| **Deconsolidated** | A contributor record was unlinked from the golden record |
+| **Consolidated** | A Cluster Item was consolidated |
 | **Golden Record** | A record was set as the Golden Record |
 | **Deleted** | The underlying record was deleted |

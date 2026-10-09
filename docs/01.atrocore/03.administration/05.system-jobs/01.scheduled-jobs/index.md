@@ -85,10 +85,10 @@ This scheduled process automatically evaluates new and updated records against t
 
 ### Create clusters
 
-This job processes matching results and manages the full lifecycle of [Clusters](../../../18.master-data-management/19.clusters/index.md) – creating new clusters, updating existing ones, and automatically confirming single-item clusters.
+This job processes matching results and manages the full lifecycle of [Clusters](../../../18.master-data-management/19.clusters/index.md) – creating new clusters, updating existing ones, and automatically consolidating single-item clusters.
 
 On each run, the job:
 
 - Creates clusters for entities that have a Matching configuration with active rules, based on the Matched Score data from the Matching entity.
 - Adds new cluster items or reassigns existing ones if matching results have changed since the last run.
-- Automatically confirms cluster items where applicable.
+- Automatically consolidates cluster items where applicable.

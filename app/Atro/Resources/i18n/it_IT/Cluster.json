@@ -10,7 +10,6 @@
   },
   "actions": {
     "reject": "Rifiuta",
-    "confirm": "Confermare",
     "unreject": "Non rifiutare"
   },
   "options": {
@@ -18,15 +17,12 @@
       "empty": "Vuoto",
       "review": "Recensione",
       "invalid": "Non valido",
-      "mergedAutomatically": "Fusione automatica",
-      "mergedManually": "Unita manualmente"
+      "consolidatedAutomatically": "Fusione automatica",
+      "consolidated": "Unita manualmente"
     }
   },
   "exceptions": {
     "cannotMergeWithoutGoldenRecord": "Non è possibile effettuare la fusione senza un record di riferimento"
-  },
-  "messages": {
-    "cannotMergeUnconfirmedItems": "Gli elementi non confermati non possono essere aggiunti alla fusione"
   },
   "labels": {
     "contributorRecord": "record contributore",
@@ -34,7 +30,6 @@
     "contributorRecordsPanel": "Record contributori",
     "masterRecord": "record master",
     "masterRecords": "record master",
-    "confirmed": "Confermato",
     "rejected": "Rifiutato"
   },
   "streamMessages": {
@@ -48,8 +43,6 @@
     "clusterReincludedThis": "{user} ha reintegrato {relatedEntity} in questo cluster",
     "clusterMoved": "{user} ha spostato {relatedEntity} fuori da questo cluster",
     "clusterMovedThis": "{user} ha spostato {relatedEntity} fuori da questo cluster",
-    "clusterConfirmed": "{user} ha confermato {relatedEntity} in questo cluster",
-    "clusterConfirmedThis": "{user} ha confermato {relatedEntity} in questo cluster",
     "clusterGoldenRecord": "{user} ha impostato {relatedEntity} come record dorato in questo cluster",
     "clusterGoldenRecordThis": "{user} ha impostato {relatedEntity} come record dorato in questo cluster",
     "clusterDeleted": "{user} ha eliminato questo cluster",

@@ -151,7 +151,7 @@ class Base extends RDB
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->has('modifiedAt') && $entity->isAttributeChanged('modifiedAt')) {
+        if ($entity->has('modifiedAt') && $entity->isAttributeChanged('modifiedAt') && empty($options['skipUpdateMasterRecord'])) {
             $this->updateMasterRecord($entity);
         }
     }
@@ -169,7 +169,7 @@ class Base extends RDB
         }
 
         try {
-            $this->getInjection('serviceFactory')->create('Consolidation')->updateMasterRecord($entity);
+            $this->getInjection('serviceFactory')->create('Consolidation')->updateMasterForContributor($entity);
         } catch (Forbidden|BadRequest $e) {
             // ignore
         }

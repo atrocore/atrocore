@@ -18,12 +18,12 @@ use Atro\Entities\Job;
 use Atro\Jobs\JobInterface;
 use Atro\Repositories\ClusterItem;
 
-class ConfirmSingleClusterItems extends AbstractClusterJob implements JobInterface
+class ConsolidateClustersAutomatically extends AbstractClusterJob implements JobInterface
 {
     public function run(Job $job): void
     {
-        $masterEntity   = $job->getPayload()['masterEntity'] ?? null;
-        $clusterItemIds = $job->getPayload()['clusterItemIds'] ?? [];
+        $masterEntity = $job->getPayload()['masterEntity'] ?? null;
+        $clusters     = $job->getPayload()['clusters'] ?? [];
 
         if (empty($masterEntity)) {
             return;
@@ -33,27 +33,29 @@ class ConfirmSingleClusterItems extends AbstractClusterJob implements JobInterfa
         $clusterItemRepo = $this->getEntityManager()->getRepository('ClusterItem');
         $clusterItemService = $this->getServiceFactory()->create('ClusterItem');
 
-        foreach ($clusterItemIds as $id) {
-            $clusterItem = $clusterItemRepo->get($id);
-            if (empty($clusterItem)) {
+        foreach ($clusters as $clusterData) {
+            $clusterItemIds = $clusterData['clusterItemIds'] ?? [];
+            if (empty($clusterItemIds)) {
                 continue;
             }
 
+            $clusterItems = iterator_to_array($clusterItemRepo->findByIds($clusterItemIds));
+
             try {
-                $clusterItemService->confirm($clusterItem, true);
+                $clusterItemService->consolidateAll($clusterItems, true);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Impossible to automatically confirm cluster ' . $clusterItem->get('clusterId') . ': ' . $e->getMessage());
+                $GLOBALS['log']->error('Impossible to automatically consolidate cluster ' . $clusterData['clusterId'] . ': ' . $e->getMessage());
             }
         }
 
-        if ($this->hasPendingSiblings('ConfirmSingleClusterItems', $masterEntity, $job)) {
+        if ($this->hasPendingSiblings('ConsolidateClustersAutomatically', $masterEntity, $job)) {
             return;
         }
 
-        if ($this->nextPhaseAlreadySpawned('CreateClustersForOrphans', $masterEntity)) {
+        if ($this->nextPhaseAlreadySpawned('ConsolidateSingleClusterItems', $masterEntity)) {
             return;
         }
 
-        $this->spawnCreateClustersForOrphans($masterEntity, $job);
+        $this->spawnConsolidateSingleClusterItems($masterEntity, $job);
     }
 }

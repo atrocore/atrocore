@@ -421,8 +421,8 @@ The `ClusterItem` entity:
 {
   "listActions": {
     "quickEdit": { "disabled": true },
-    "confirm": {
-      "url": "ClusterItem/{{id}}/confirm",
+    "consolidate": {
+      "url": "ClusterItem/{{id}}/consolidate",
       "method": "POST",
       "confirm": false,
       "refresh": true,
@@ -436,8 +436,8 @@ The `ClusterItem` entity:
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
-    "unmerge": {
-      "url": "ClusterItem/{{id}}/unmerge",
+    "deconsolidate": {
+      "url": "ClusterItem/{{id}}/deconsolidate",
       "method": "POST",
       "refresh": true,
       "iconClass": "ph ph-arrows-split",
@@ -462,8 +462,8 @@ The `ClusterItem` entity:
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
-    "unmerge": {
-      "url": "ClusterItem/massUnmerge",
+    "deconsolidate": {
+      "url": "ClusterItem/massDeconsolidate",
       "method": "POST",
       "refresh": true,
       "iconClass": "ph ph-arrows-split",
@@ -489,6 +489,6 @@ The `ClusterItem` entity:
 This configuration:
 
 - Disables the built-in `quickEdit` row action.
-- Adds four custom row actions — **Confirm**, **Reject**, **Unmerge**, and **Move** — each using `{{id}}` in the URL. **Move** opens a `Cluster` picker first and posts the chosen ID under `targetClusterId`.
+- Adds four custom row actions — **Consolidate**, **Reject**, **Deconsolidate**, and **Move** — each using `{{id}}` in the URL. **Move** opens a `Cluster` picker first and posts the chosen ID under `targetClusterId`.
 - Declares three toolbar mass actions pointing at dedicated bulk endpoints.
 - Suppresses the built-in **Mass Update**, **Add Relation**, and **Remove Relation** entries.
