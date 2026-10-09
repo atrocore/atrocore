@@ -849,7 +849,7 @@ class Base
         $ta = $mapper->getQueryConverter()->getMainTableAlias();
         $tableName = $mapper->getQueryConverter()->quoteIdentifier($repository->getPersonalDataTableName());
 
-        $qb->andWhere("$ta.id IN (SELECT pd.record_id FROM $tableName pd WHERE pd.deleted=:deleted)");
+        $qb->andWhere("$ta.id IN (SELECT pd.record_id FROM $tableName pd)");
         $qb->setParameter('deleted', false, ParameterType::BOOLEAN);
     }
 
