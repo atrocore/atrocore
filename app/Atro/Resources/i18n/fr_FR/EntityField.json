@@ -70,7 +70,14 @@
     "conditionalProtected": "Protegé",
     "conditionalDisableOptions": "Options désactivées",
     "urlLabel": "Label de l'URL",
-    "selectPageSize": "Enregistrements par page (dialogue de sélection)"
+    "selectPageSize": "Enregistrements par page (dialogue de sélection)",
+    "personalData": "Données personnelles",
+    "notInEveryRecord": "Pas dans chaque enregistrement",
+    "category": "Catégorie",
+    "specialCategory": "Catégorie spéciale",
+    "specialPersonDataCategory": "Catégorie spéciale de données personnelles",
+    "erasureMode": "Mode d'effacement",
+    "relevantForAccessRequest": "Pertinent pour la demande d'accès"
   },
   "tooltips": {
     "foreignCode": "Ce nom de code est utilisé pour le champ créé dans l’entité étrangère pour la relation inverse.",
@@ -112,6 +119,36 @@
       "manyToMany": "Plusieurs à plusieurs",
       "oneToOne": "Un à un",
       "manyToOne": "Plusieurs à un"
+    },
+    "category": {
+      "identity": "Identité",
+      "contact": "Contact",
+      "location": "Localisation",
+      "financial": "Financier / Compte",
+      "behavioral": "Comportemental",
+      "credential": "Identifiants",
+      "employment": "Emploi",
+      "technical": "Technique/Appareil",
+      "communication": "Contenu des communications"
+    },
+    "specialPersonDataCategory": {
+      "origin": "Origine raciale ou ethnique",
+      "political": "Opinions politiques",
+      "religious": "Convictions religieuses ou philosophiques",
+      "trade": "Appartenance syndicale",
+      "genetic": "Données génétiques",
+      "biometric": "Données biométriques",
+      "health": "Données de santé",
+      "sex": "Vie sexuelle",
+      "orientation": "Orientation sexuelle"
+    },
+    "erasureMode": {
+      "anonymize": "Anonymiser",
+      "nullify": "Annuler",
+      "delete": "Supprimer",
+      "retain": "Conserver",
+      "cascade": "Cascade",
+      "unlink": "Dissocier"
     }
   },
   "groupOptions": {
@@ -129,7 +166,8 @@
   "labels": {
     "resetToDefault": "Réinitialiser par défaut",
     "relationManagement": "Gestion des relations",
-    "conditionalProperties": "Propriétés conditionnelles"
+    "conditionalProperties": "Propriétés conditionnelles",
+    "personalData": "Données personnelles"
   },
   "exceptions": {
     "nullValuesExist": "Certains enregistrements ont des valeurs nulles",

@@ -255,6 +255,50 @@ class App extends AbstractService
         }
     }
 
+    public function markFieldAsPersonalData(string $entityName, string $recordId, string $field): bool
+    {
+        if ($this->getMetadata()->get(['scopes', $entityName, 'type']) === 'ReferenceData') {
+            throw new BadRequest("Entity '{$entityName}' does not contain personal data.");
+        }
+
+        $repository = $this->getEntityManager()->getRepository($entityName);
+
+        $entity = $repository->get($recordId);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $repository->createPersonalDataRecord($recordId, $field);
+
+        return true;
+    }
+
+    public function unmarkFieldAsPersonalData(string $entityName, string $recordId, string $field): bool
+    {
+        if ($this->getMetadata()->get(['scopes', $entityName, 'type']) === 'ReferenceData') {
+            throw new BadRequest("Entity '{$entityName}' does not contain personal data.");
+        }
+
+        $repository = $this->getEntityManager()->getRepository($entityName);
+
+        $entity = $repository->get($recordId);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $repository->deletePersonalDataRecord($recordId, $field);
+
+        return true;
+    }
+
     protected function getMaxUploadSize(): int
     {
         $maxSize = 0;

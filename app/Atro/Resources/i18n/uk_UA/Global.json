@@ -511,6 +511,8 @@
     "basic": "Базовий",
     "expression": "Вираз",
     "UserFollowed": "Користувач підписався",
+    "setAsPersonalData": "Позначити як персональні дані",
+    "unsetAsPersonalData": "Зняти позначку персональних даних",
     "authenticate": "Автентифікація",
     "Load data": "Завантажити дані",
     "floatPart": "(Дійсне число)",
@@ -684,6 +686,7 @@
     "notPossibleToOpenDetailView": "Неможливо відкрити детальний перегляд."
   },
   "boolFilters": {
+    "containsPersonalData": "Містить персональні дані",
     "onlyActive": "Активні",
     "notActive": "Неактивні",
     "assignedToMe": "Призначений мені",
@@ -838,6 +841,7 @@
     "masterRecord": "Майстер-запис"
   },
   "tooltips": {
+    "fieldContainsPersonalData": "Поле містить персональні дані",
     "groupEnd": "Виберіть, щоб використовувати цей пункт для позначення кінця згрупованих елементів навігації. Всі елементи після цього пункту будуть негруповані."
   },
   "dashlets": {

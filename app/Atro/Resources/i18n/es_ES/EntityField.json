@@ -70,7 +70,14 @@
     "conditionalProtected": "Protegido",
     "conditionalDisableOptions": "Opciones para discapacitados",
     "urlLabel": "Etiqueta URL",
-    "selectPageSize": "Registros por página (diálogo de selección)"
+    "selectPageSize": "Registros por página (diálogo de selección)",
+    "personalData": "Datos personales",
+    "notInEveryRecord": "No en todos los registros",
+    "category": "Categoría",
+    "specialCategory": "Categoría especial",
+    "specialPersonDataCategory": "Categoría especial de datos personales",
+    "erasureMode": "Modo de supresión",
+    "relevantForAccessRequest": "Relevante para la solicitud de acceso"
   },
   "tooltips": {
     "foreignCode": "Este nombre en clave se utiliza para el campo creado en la entidad relacionada para la relación hacia atrás.",
@@ -112,6 +119,36 @@
       "manyToMany": "Muchos a muchos",
       "oneToOne": "Uno a uno",
       "manyToOne": "Muchos a uno"
+    },
+    "category": {
+      "identity": "Identidad",
+      "contact": "Contacto",
+      "location": "Ubicación",
+      "financial": "Financiero / Cuenta",
+      "behavioral": "Comportamiento",
+      "credential": "Credenciales",
+      "employment": "Empleo",
+      "technical": "Técnico/Dispositivo",
+      "communication": "Contenido de comunicaciones"
+    },
+    "specialPersonDataCategory": {
+      "origin": "Origen racial o étnico",
+      "political": "Opiniones políticas",
+      "religious": "Creencias religiosas o filosóficas",
+      "trade": "Afiliación sindical",
+      "genetic": "Datos genéticos",
+      "biometric": "Datos biométricos",
+      "health": "Datos de salud",
+      "sex": "Vida sexual",
+      "orientation": "Orientación sexual"
+    },
+    "erasureMode": {
+      "anonymize": "Anonimizar",
+      "nullify": "Anular",
+      "delete": "Eliminar",
+      "retain": "Conservar",
+      "cascade": "En cascada",
+      "unlink": "Desvincular"
     }
   },
   "groupOptions": {
@@ -129,7 +166,8 @@
   "labels": {
     "resetToDefault": "Restablecer a (por defecto)",
     "relationManagement": "Gestión de relaciones",
-    "conditionalProperties": "Propiedades condicionales"
+    "conditionalProperties": "Propiedades condicionales",
+    "personalData": "Datos personales"
   },
   "exceptions": {
     "nullValuesExist": "Algunos registros tienen valores nulos",
