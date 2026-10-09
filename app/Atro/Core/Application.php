@@ -105,6 +105,12 @@ final class Application
      */
     public function run()
     {
+        ini_set('session.cookie_httponly', '1');
+        ini_set('session.cookie_samesite', 'Lax');
+        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || str_starts_with((string)$this->getConfig()->get('siteUrl'), 'https://')) {
+            ini_set('session.cookie_secure', '1');
+        }
+
         if (!empty($query = $this->getQuery())) {
             /** @var bool $show404 */
             $show404 = true;

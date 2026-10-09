@@ -1336,7 +1336,7 @@ class Hierarchy extends Base
 
     public function getSelectForTree(array $additionalFields = []): array
     {
-        $res = ['id', 'name', 'routes'];
+        $res = ['id', $this->getNameField($this->entityType), 'routes'];
         $field = $this->getLocalizedNameField($this->entityType);
         if (!empty($field)) {
             $res[] = $field;

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Handlers;
 
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\UnsupportedMediaType;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
@@ -167,7 +168,15 @@ abstract class AbstractHandler implements MiddlewareInterface
             $params['completeAttrDefs'] = true;
         }
 
-        return $params;
+        // a module may turn its own query parameters into list params
+        $event = new Event([
+            'entityName'  => $this->getEntityName($request),
+            'request'     => $request,
+            'queryParams' => $qp,
+            'params'      => $params
+        ]);
+
+        return $this->container->get('eventManager')->dispatch('Handler', 'afterBuildListParams', $event)->getArgument('params');
     }
 
     protected function buildListResult(array $result, array $params): array

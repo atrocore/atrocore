@@ -23,7 +23,7 @@ class ErrorResponse extends Response
         $headerMessage = preg_replace('/[\x00-\x08\x0A-\x1F\x7F]/', ' ', $message);
         parent::__construct(
             $status,
-            array_merge(['Content-Type' => 'text/html; charset=utf-8', 'X-Status-Reason' => $headerMessage], $extraHeaders),
+            array_merge(['Content-Type' => 'text/plain; charset=utf-8', 'X-Status-Reason' => $headerMessage], $extraHeaders),
             $message
         );
     }

@@ -38,6 +38,7 @@
     "layoutSelection": "Profile de la disposition",
     "layoutCustomization": "Personnalisation de la disposition",
     "configure": "Configurer",
-    "Current Layout": "Disposition actuelle"
+    "Current Layout": "Disposition actuelle",
+    "Add Dynamic Fields": "Ajouter des champs dynamiques"
   }
 }

@@ -287,7 +287,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             let models = [];
             return new Promise((initialResolve, reject) => {
                 this.getModelFactory().create(this.itemScope, (itemModel) => {
-                    this.ajaxGetRequest(url)
+                    this.ajaxGetRequest(url, null, {metaContext: 'list'})
                         .then(result => {
                             let entityByScope = {};
                             let order = 0;
@@ -1069,7 +1069,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                 if (model.name !== entityType) {
                                     return;
                                 }
-                                model.defs.fields[fieldData.name] = fieldData.attributeDefs;
+                                model.defs.fields[fieldData.name] = fieldData.fieldDefs;
                                 model.defs.fields[fieldData.name].disableAttributeRemove = true;
                             });
                         }

@@ -1411,7 +1411,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         inlineEditSaveModel(model, attrs) {
             attrs['_skipIsEntityUpdated'] = true;
             this.notify('Saving...');
-            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs)
+            // the response brings the meta of the saved record
+            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs, {metaContext: 'detail'})
                 .success(res => {
                     this.onInlineEditSave(res, attrs, model);
                 })
@@ -1426,7 +1427,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                         }, () => {
                             attrs['_prev'] = null;
                             attrs['_silentMode'] = false;
-                            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs).success(res => {
+                            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs, {metaContext: 'detail'}).success(res => {
                                 this.onInlineEditSave(res, attrs, model);
                             }).error(xhr => {
                                 this.onInlineEditError(xhr);

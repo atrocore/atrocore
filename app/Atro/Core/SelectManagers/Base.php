@@ -253,6 +253,18 @@ class Base
                 $this->mutateWhereQuery($item['rules'], $result);
                 $item = ['type' => $this->qbConditionToType((string)$item['condition']), 'value' => $item['rules']];
             } else {
+                // a module may turn a condition of its own into a ready one, which the core does not process then
+                $event = $this->dispatch('SelectManager', 'mutateWhereItem', new Event([
+                    'item'          => $item,
+                    'entityType'    => $this->entityType,
+                    'selectManager' => $this,
+                    'handled'       => false,
+                ]));
+                if ($event->getArgument('handled')) {
+                    $item = $event->getArgument('item');
+                    continue;
+                }
+
                 // for attributes
                 $additionForAttribute = [];
                 $attribute            = "";
