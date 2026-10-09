@@ -45,11 +45,19 @@ class File extends Base
 
         $this->prepareThumbnailsPath($entity);
 
-        // validate via type
-        $this->validateByType($entity);
+        try {
+            // validate via type
+            $this->validateByType($entity);
 
-        //validate via allow types of relation
-        $this->validateByTypeUsingAllowFileTypes($entity);
+            //validate via allow types of relation
+            $this->validateByTypeUsingAllowFileTypes($entity);
+        } catch (\Throwable $e) {
+            if (!empty($entity->_resolvedTmpFile)) {
+                $this->cleanupLocalTmpFile($entity->_resolvedTmpFile);
+            }
+
+            throw $e;
+        }
 
         // reject names that could escape the storage root or steer the on-disk path
         $this->validateNameHasNoPathSeparators($entity);
@@ -137,6 +145,11 @@ class File extends Base
      */
     protected function resolveLocalTmpFile(FileEntity $file): string
     {
+        // already resolved while validating the incoming content: chunks and downloads are consumed once
+        if (!empty($file->_resolvedTmpFile) && file_exists($file->_resolvedTmpFile)) {
+            return $file->_resolvedTmpFile;
+        }
+
         $input = $file->_input ?? new \stdClass();
 
         // basename(): the name is user-supplied and only names the scratch copy here, so it must
@@ -228,6 +241,8 @@ class File extends Base
         if (!file_exists($localPath)) {
             throw new Error("Could not resolve a local file to upload for '{$file->get('name')}'.");
         }
+
+        $file->_resolvedTmpFile = $localPath;
 
         return $localPath;
     }
@@ -453,12 +468,21 @@ class File extends Base
 
     public function getContents(FileEntity $file): string
     {
-        if ($file->isNew()) {
-            $input = $file->_input ?? new \stdClass();
+        $input = $file->_input ?? new \stdClass();
+
+        // a file that is being saved has the content of its input
+        if ($file->isBeingSaved()) {
             if (property_exists($input, 'fileContents')) {
                 return LocalStorage::parseInputFileContent((string)$input->fileContents);
             }
+
+            foreach (['allChunks', 'remoteUrl', 'localFileName'] as $property) {
+                if (property_exists($input, $property)) {
+                    return (string)file_get_contents($this->resolveLocalTmpFile($file));
+                }
+            }
         }
+
         return $this->getStorage($file)->getContents($file);
     }
 
