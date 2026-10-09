@@ -391,6 +391,9 @@ class AttributeFieldConverter
             }
         }
 
+        // a duplicate always gets the attributes of the duplicated record, even when linking is disabled
+        $attributesToAdd = array_values(array_unique(array_merge($attributesToAdd, $this->getDuplicatingEntityAttributesIds($entity))));
+
         // it needs because we should be able to create attribute value on entity update
         if (!empty($entity->_originalInput)) {
             $attributesIds = $attributesToAdd;
@@ -479,6 +482,27 @@ class AttributeFieldConverter
         $entity->hasAllEntityAttributes = true;
     }
 
+
+    protected function getDuplicatingEntityAttributesIds(IEntity $entity): array
+    {
+        // __duplicatingEntityId is where the hierarchy service keeps it when it removes _duplicatingEntityId
+        $duplicatingEntityId = $entity->_originalInput->_duplicatingEntityId ?? $entity->_originalInput->__duplicatingEntityId ?? null;
+        if (!$entity->isNew() || empty($duplicatingEntityId) || !is_string($duplicatingEntityId)) {
+            return [];
+        }
+
+        $tableName = Util::toUnderScore(lcfirst($entity->getEntityName()));
+
+        return $this->conn->createQueryBuilder()
+            ->select('av.attribute_id')
+            ->from("{$tableName}_attribute_value", 'av')
+            ->innerJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id AND a.deleted=:false')
+            ->where("av.{$tableName}_id=:id")
+            ->andWhere('av.deleted=:false')
+            ->setParameter('id', $duplicatingEntityId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+    }
 
     public function prepareInputForAttributeValuesArray(IEntity $entity, \stdClass $input): void
     {

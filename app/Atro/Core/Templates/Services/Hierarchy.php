@@ -692,6 +692,8 @@ class Hierarchy extends Base
     public function prepareChildInputData(\stdClass $attachment): void
     {
         if (property_exists($attachment, 'parentsIds') && !empty($attachment->parentsIds[0])) {
+            $duplicatingEntityId = $attachment->_duplicatingEntityId ?? null;
+
             foreach ($this->getDuplicateAttributes($attachment->parentsIds[0]) as $field => $value) {
                 if (property_exists($attachment, $field) || in_array($field, $this->getNonInheritedFieldsKeys())) {
                     continue 1;
@@ -700,6 +702,11 @@ class Hierarchy extends Base
             }
             if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance'])) && property_exists($attachment, '_duplicatingEntityId')) {
                 unset($attachment->_duplicatingEntityId);
+
+                // the child inherits from its parents instead of duplicating the record, but still gets its attributes
+                if (!empty($duplicatingEntityId)) {
+                    $attachment->__duplicatingEntityId = $duplicatingEntityId;
+                }
             }
         }
     }
