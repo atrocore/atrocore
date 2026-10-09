@@ -578,6 +578,7 @@
     "accessManagement": "Access Management"
   },
   "messages": {
+    "logoutFailed": "Logout failed. Please check your connection and try again.",
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",
     "queryHasErrors": "They are some errors on your query",
     "deletedFilterTooltip": "Field \"%s\" no longer exists",

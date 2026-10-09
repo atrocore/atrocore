@@ -574,6 +574,7 @@
     "accessManagement": "Zugriffsverwaltung"
   },
   "messages": {
+    "logoutFailed": "Abmeldung fehlgeschlagen. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",
     "deletedFilterTooltip": "Feld \"%s\" existiert nicht mehr",
