@@ -609,6 +609,7 @@
     "accessManagement": "Gestion des accès"
   },
   "messages": {
+    "logoutFailed": "La déconnexion a échoué. Veuillez vérifier votre connexion et réessayer.",
     "fieldIsRequired": "{field} est requis",
     "actionExecuted": "L'action \"%s\" a été exécutée avec succès",
     "optionValueCannotBeEmpty": "La valeur de l'option ne peut pas être vide",
