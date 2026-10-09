@@ -350,7 +350,14 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
         getModelBodyAttributes() {
             const fields = this.model.defs.fields || {};
             const definedFields = Object.keys(fields).filter(f => !fields[f].readOnly && !fields[f].protected);
-            return _.pick(this.model.attributes, definedFields);
+            const attributes = _.pick(this.model.attributes, definedFields);
+
+            // asks the server to create a shared URL for the uploaded file, it is not a field of the file
+            if (this.attributes && this.attributes.share) {
+                attributes.share = true;
+            }
+
+            return attributes;
         },
 
         generateId() {
