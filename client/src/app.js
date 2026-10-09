@@ -206,6 +206,11 @@ Espo.define(
 
                 this.on('auth', this.onAuth, this);
 
+                if (!/(?:^|;\s*)auth-session=/.test(document.cookie)) {
+                    this.baseController.login();
+                    return;
+                }
+
                 this.requestUserData(function (data) {
                     this.auth = true;
                     this.initUserData(data, function () {
@@ -497,28 +502,26 @@ Espo.define(
             },
 
             logout: function () {
-                if (this.auth) {
-                    $.ajax({
-                        url: 'destroyAuthToken',
-                        type: 'POST'
-                    });
+                if (!this.auth) {
+                    window.location.reload();
+                    return;
                 }
 
-                this.auth = null;
-                this.user.clear();
-                this.preferences.clear();
-                this.acl.clear();
-                this.storage.clear('user', 'auth');
-                if (window.SvelteUserData) {
-                    window.SvelteUserData.set(null);
-                }
-                this.doAction({ action: 'login' });
+                $.ajax({
+                    url: 'destroyAuthToken',
+                    type: 'POST'
+                }).done(function () {
+                    window.location.reload();
+                }).fail(function (xhr) {
+                    xhr.errorIsHandled = true;
 
-                xhr = new XMLHttpRequest;
-                xhr.open('GET', this.url + '/');
-                xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
-                xhr.send('');
-                xhr.abort();
+                    if (xhr.status === 401) {
+                        window.location.reload();
+                        return;
+                    }
+
+                    Espo.Ui.error(this.language.translate('logoutFailed', 'messages'));
+                }.bind(this));
             },
 
             initUserData: function (options, callback) {
