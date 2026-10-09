@@ -66,10 +66,6 @@ Espo.define('model', [], function () {
                 var sep = baseUrl.indexOf('?') === -1 ? '?' : '&';
                 options.url = baseUrl + sep + 'withRelationships=' + encodeURIComponent(model.withRelationships);
             }
-            if (method === 'create' || method === 'update' || method === 'patch') {
-                // _meta (permissions, options) is data of the loaded record for the UI, never a value to save
-                options.attrs = _.omit(options.attrs || model.toJSON(options), '_meta');
-            }
             return Dep.prototype.sync.call(this, method, model, options);
         },
 
