@@ -19,7 +19,7 @@ use Doctrine\DBAL\Schema\Table;
  * Entity definitions without a scope describe plain tables, not entities, so they have no soft delete any more:
  * the `deleted` column is dropped from such tables of the core, along with it in every index.
  */
-class V2Dot5Dot4 extends Base
+class V2Dot6Dot0 extends Base
 {
     private const TABLES = ['id_map', 'pseudo_transaction_job'];
 
