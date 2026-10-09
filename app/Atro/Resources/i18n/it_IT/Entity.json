@@ -43,7 +43,9 @@
     "nonDuplicatableFields": "Campi non duplicati",
     "deleteValuesAfterUnlinkingClassification": "Cancellare i valori degli attributi dopo aver scollegato le classificazioni",
     "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione",
-    "role": "Ruolo"
+    "role": "Ruolo",
+    "containsPersonalData": "Contiene dati personali",
+    "isPerson": "È una persona"
   },
   "labels": {
     "resetToDefault": "Ripristino delle impostazioni predefinite",

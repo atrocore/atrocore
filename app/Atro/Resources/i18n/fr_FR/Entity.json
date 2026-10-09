@@ -44,7 +44,9 @@
     "deleteValuesAfterUnlinkingClassification": "Supprimer les valeurs d'attributs après avoir dissocié les classifications",
     "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification",
     "primaryEntity": "Entité primaire",
-    "role": "Rôle"
+    "role": "Rôle",
+    "containsPersonalData": "Contient des données personnelles",
+    "isPerson": "Est une personne"
   },
   "options": {
     "type": {

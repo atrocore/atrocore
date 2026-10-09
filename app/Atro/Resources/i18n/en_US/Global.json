@@ -193,6 +193,8 @@
     "fieldValueFilters": "Field Value Filters",
     "confirmRemoveAttributeValue": "Are you sure you want to delete the attribute?",
     "UserFollowed": "User Followed",
+    "setAsPersonalData": "Mark as Personal Data",
+    "unsetAsPersonalData": "Unmark as Personal Data",
     "authenticate": "Authenticate",
     "Download": "Download",
     "Load data": "Load data",
@@ -688,6 +690,7 @@
     "resolveMergeConflictsBeforeMerging": "Some fields are in conflict, please choose a value for them before merging."
   },
   "boolFilters": {
+    "containsPersonalData": "Contains personal data",
     "onlyActive": "Active",
     "notActive": "Inactive",
     "onlyMy": "My",
@@ -843,6 +846,7 @@
     "masterRecord": "Master Record"
   },
   "tooltips": {
+    "fieldContainsPersonalData": "Field contains Personal Data",
     "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."
   },
   "dashlets": {

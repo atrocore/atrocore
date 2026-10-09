@@ -381,6 +381,8 @@
     "fieldValueFilters": "Filtros de valor de campo",
     "confirmRemoveAttributeValue": "¿Está seguro de que desea eliminar el atributo?",
     "UserFollowed": "Usuario seguido",
+    "setAsPersonalData": "Marcar como datos personales",
+    "unsetAsPersonalData": "Desmarcar como datos personales",
     "authenticate": "Autentifique",
     "Load data": "Datos de carga",
     "jobManager": "Director de trabajo",
@@ -654,6 +656,7 @@
     "notPossibleToOpenDetailView": "No es posible abrir la vista detallada."
   },
   "boolFilters": {
+    "containsPersonalData": "Contiene datos personales",
     "onlyMy": "Solo míos",
     "onlyActive": "Active",
     "assignedToMe": "Assigned to me",
@@ -1366,6 +1369,7 @@
     "previewTemplate": "Gestione plantillas HTML/CSS para la previsualización automática de datos"
   },
   "tooltips": {
+    "fieldContainsPersonalData": "El campo contiene datos personales",
     "groupEnd": "Seleccione esta opción para marcar el final de los elementos de navegación agrupados. Todos los elementos posteriores a este elemento se desagruparán."
   },
   "firstStepsDashlet": {
