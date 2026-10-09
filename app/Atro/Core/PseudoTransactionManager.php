@@ -17,7 +17,6 @@ use Atro\Core\Utils\IdGenerator;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Json;
 use Atro\Entities\User;
 use Atro\Services\Record;
@@ -138,8 +137,6 @@ class PseudoTransactionManager
         return $this->connection->createQueryBuilder()
             ->select('*')
             ->from('pseudo_transaction_job')
-            ->where('deleted = :deleted')
-            ->setParameter('deleted', false, ParameterType::BOOLEAN)
             ->orderBy('sort_order', 'ASC')
             ->setFirstResult(0)
             ->setMaxResults($max)
@@ -151,8 +148,6 @@ class PseudoTransactionManager
         $res = $this->connection->createQueryBuilder()
             ->select('id')
             ->from('pseudo_transaction_job')
-            ->where('deleted = :deleted')
-            ->setParameter('deleted', false, ParameterType::BOOLEAN)
             ->setFirstResult(0)
             ->setMaxResults(1)
             ->fetchFirstColumn();
@@ -164,9 +159,7 @@ class PseudoTransactionManager
         $qb = $this->connection->createQueryBuilder();
 
         $qb->select('*')
-            ->from('pseudo_transaction_job')
-            ->where('deleted = :deleted')
-            ->setParameter('deleted', false, Mapper::getParameterType(false));
+            ->from('pseudo_transaction_job');
 
         if (!empty($entityType) && empty($parentId)) {
             $qb->andWhere('entity_type = :entityType')->setParameter('entityType', $entityType);
@@ -343,8 +336,6 @@ class PseudoTransactionManager
             ->from('pseudo_transaction_job')
             ->where('parent_id = :parentId')
             ->setParameter('parentId', $parentId)
-            ->andWhere('deleted = :deleted')
-            ->setParameter('deleted', false, Mapper::getParameterType(false))
             ->fetchAllAssociative();
 
         $ids = array_column($rows, 'id');

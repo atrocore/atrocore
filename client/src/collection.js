@@ -170,6 +170,8 @@ Espo.define('collection', [], function () {
             options = this.getRequestOptions(options);
             delete options.data.collectionOnly
             options.data.totalOnly = true
+            // only the count is returned, no records to carry the meta
+            delete options.metaContext
 
             options = _.extend(options, {
                 error: (resp) => {
@@ -186,6 +188,9 @@ Espo.define('collection', [], function () {
         getRequestOptions(options) {
             var options = options || {};
             options.data = _.extend(options.data || {}, this.data);
+
+            // records of a collection get the meta groups of a list
+            options.metaContext = options.metaContext || 'list';
 
             this.offset = options.offset || this.offset;
             this.sortBy = options.sortBy || this.sortBy;

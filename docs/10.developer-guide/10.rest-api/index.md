@@ -956,6 +956,26 @@ With-Meta: true
 
 ---
 
+### The `With-Meta-Groups` Header
+
+`With-Meta: true` returns every category of `_meta`. The `With-Meta-Groups` header limits `_meta` to the listed categories, given as a comma-separated list. The categories not listed are not only left out of the response — they are not calculated at all, so a client that needs a part of `_meta` does not pay for the rest of it.
+
+```http
+GET /api/Product HTTP/1.1
+Host: demo.atropim.com
+Authorization-Token: ***************
+With-Meta-Groups: permissions, options
+```
+
+- The header turns `_meta` on by itself, `With-Meta` is not needed along with it.
+- An empty header (`With-Meta-Groups:`) turns `_meta` off, the same as `With-Meta: false`.
+- Without the header, every category is returned, as with `With-Meta: true`.
+- Category names are case-sensitive. An unknown name is ignored.
+
+Ask only for the categories your client uses: `permissions`, for example, runs an ACL check on every record of a list, which is significant on large lists.
+
+---
+
 ### The `_meta` Object Structure
 
 When `With-Meta: true` is sent, each entity in the response includes a `_meta` property. The object is organized into named categories.
@@ -1113,7 +1133,10 @@ The table below lists the currently known `_meta` categories. This list will gro
 | `permissions` | Always (when header is sent)                                              | ACL flags for edit, delete, stream, unlink, etc. |
 | `options` | When record has `Link` / `Multiple link` fields pointing to `List Option` | Full option objects (id, code, name, color) |
 | `audit` | When a delegated session was involved                                     | Real actor and delegator for createdBy/modifiedBy |
+| `cluster` | For the items of a cluster, in the linked records of the cluster          | Whether the item is confirmed and whether it is the golden record |
 | *(future)* | Varies                                                                    | Additional categories may be added by modules or core updates |
+
+The category names are the values accepted by the [`With-Meta-Groups`](#the-with-meta-groups-header) header.
 
 ---
 

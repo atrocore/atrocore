@@ -74,6 +74,7 @@ class SavedSearch extends Base
                 if(!empty($rule['field'])
                     && !$searchEntity->hasField($rule['field']) && $rule['field'] !== 'id'
                     && !str_starts_with($rule['field'], 'attr_')
+                    && !$this->isFilterGroupField($scope, $rule['field'])
                 ){
                     unset($data['rules'][$key]);
                 }
@@ -83,6 +84,21 @@ class SavedSearch extends Base
                 }
             }
         }
+    }
+
+    /**
+     * A filter that is not a field of the entity, but of a group of filters a module describes in
+     * clientDefs.<scope>.queryBuilderFilterGroups.
+     */
+    protected function isFilterGroupField(string $scope, string $field): bool
+    {
+        foreach ($this->getMetadata()->get(['clientDefs', $scope, 'queryBuilderFilterGroups'], []) as $group) {
+            if (isset($group['fields'][$field])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

@@ -51,14 +51,12 @@
   "indexes": {
     "entityType": {
       "columns": [
-        "entityType",
-        "deleted"
+        "entityType"
       ]
     },
     "entityId": {
       "columns": [
-        "entityId",
-        "deleted"
+        "entityId"
       ]
     }
   }

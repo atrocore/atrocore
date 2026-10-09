@@ -932,7 +932,7 @@ class LayoutManager
                                 if ($row['name'] === $attrField) {
                                     $data[$key]['label']         = $attributeDefs['detailViewLabel'] ?? $attributeDefs['label'];
                                     $data[$key]['notSortable']   = !empty($attributeDefs['notSortable']);
-                                    $data[$key]['attributeDefs'] = array_merge($attributeDefs, ['name' => $attrField]);
+                                    $data[$key]['fieldDefs'] = array_merge($attributeDefs, ['name' => $attrField]);
                                     if (!empty($attributeDefs['channelName'])) {
                                         $data[$key]['label'] .= ' / ' . $attributeDefs['channelName'];
                                     }
@@ -942,11 +942,25 @@ class LayoutManager
                         }
                     }
 
-                    foreach ($data as $key => $row) {
+                    // a module may keep and complete columns of its own, which are not fields of the entity - a column that
+                    // is not a field gets the defs of its field in fieldDefs
+                    $event = $this->getEventManager()->dispatch('Layout', 'prepareListItems', new Event([
+                        'scope'  => $scope,
+                        'name'   => $name,
+                        'data'   => $data,
+                        'fields' => $fields,
+                    ]));
+                    $data = $event->getArgument('data');
+                    $fields = $event->getArgument('fields');
+
+                    $keptData = [];
+                    foreach ($data as $row) {
                         if (isset($row['name']) && !in_array($row['name'], $fields) && empty($row['attributeId'])) {
-                            array_splice($data, $key, 1);
+                            continue;
                         }
+                        $keptData[] = $row;
                     }
+                    $data = $keptData;
                     break;
             }
         }
