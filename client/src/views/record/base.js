@@ -520,7 +520,8 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             let model = this.model;
 
             $.each(model.getClonedAttributes(), (name, value) => {
-                if (!(name in data) && !this.getMetadata().get(['entityDefs', model.urlRoot, 'fields', name, 'relationVirtualField'])) {
+                // _meta (permissions, options) is data of the loaded record for the UI, never a value to save
+                if (name !== '_meta' && !(name in data) && !this.getMetadata().get(['entityDefs', model.urlRoot, 'fields', name, 'relationVirtualField'])) {
                     data[name] = value;
                 }
             });
@@ -594,11 +595,20 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
 
             let _prev = {};
             $.each(attrs, function (field, value) {
-                _prev[field] = initialAttributes[field];
+                // attribute definitions are metadata, not a value to compare, and can be large
+                if (field !== 'attributesDefs') {
+                    _prev[field] = initialAttributes[field];
+                }
             });
 
             attrs['_prev'] = _prev;
             attrs['_silentMode'] = true;
+
+            // a duplicate is built by the server from the duplicated record (or inherited from its parents), so its attribute definitions and the previous state are not sent
+            if (this.isNew && attrs['_duplicatingEntityId']) {
+                delete attrs['_prev'];
+                delete attrs['attributesDefs'];
+            }
 
             this.beforeSave();
 
