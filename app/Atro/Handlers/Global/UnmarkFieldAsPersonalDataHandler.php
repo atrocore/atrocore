@@ -88,7 +88,7 @@ class UnmarkFieldAsPersonalDataHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        $result = $this->getServiceFactory()->create('App')->unsetPersonalDataField($data->entityName, $data->recordId, $data->field);
+        $result = $this->getServiceFactory()->create('App')->unmarkFieldAsPersonalData($data->entityName, $data->recordId, $data->field);
 
         return new BoolResponse($result);
     }

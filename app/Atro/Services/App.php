@@ -255,7 +255,7 @@ class App extends AbstractService
         }
     }
 
-    public function setPersonalDataField(string $entityName, string $recordId, string $field): bool
+    public function markFieldAsPersonalData(string $entityName, string $recordId, string $field): bool
     {
         if ($this->getMetadata()->get(['scopes', $entityName, 'type']) === 'ReferenceData') {
             throw new BadRequest("Entity '{$entityName}' does not contain personal data.");
@@ -277,7 +277,7 @@ class App extends AbstractService
         return true;
     }
 
-    public function unsetPersonalDataField(string $entityName, string $recordId, string $field): bool
+    public function unmarkFieldAsPersonalData(string $entityName, string $recordId, string $field): bool
     {
         if ($this->getMetadata()->get(['scopes', $entityName, 'type']) === 'ReferenceData') {
             throw new BadRequest("Entity '{$entityName}' does not contain personal data.");

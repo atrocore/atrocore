@@ -88,7 +88,7 @@ class MarkFieldAsPersonalDataHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        $result = $this->getServiceFactory()->create('App')->setPersonalDataField($data->entityName, $data->recordId, $data->field);
+        $result = $this->getServiceFactory()->create('App')->markFieldAsPersonalData($data->entityName, $data->recordId, $data->field);
 
         return new BoolResponse($result);
     }
