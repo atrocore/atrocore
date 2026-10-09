@@ -574,6 +574,7 @@
     "accessManagement": "Керування доступом"
   },
   "messages": {
+    "logoutFailed": "Не вдалося вийти. Перевірте з’єднання та спробуйте ще раз.",
     "queryHasErrors": "У вашому запиті є помилки",
     "deletedFilterTooltip": "Поле \"%s\" більше не існує",
     "actionExecuted": "Дію \"%s\" успішно виконано",
