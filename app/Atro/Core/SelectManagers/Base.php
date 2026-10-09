@@ -850,7 +850,6 @@ class Base
         $tableName = $mapper->getQueryConverter()->quoteIdentifier($repository->getPersonalDataTableName());
 
         $qb->andWhere("$ta.id IN (SELECT pd.record_id FROM $tableName pd)");
-        $qb->setParameter('deleted', false, ParameterType::BOOLEAN);
     }
 
     protected function boolFilterOnlyArchived(array &$result): void
