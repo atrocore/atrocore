@@ -462,7 +462,7 @@ class Metadata extends AbstractMetadataListener
                     ]
                 ],
                 'uniqueIndexes' => [
-                    'unique_relationship' => ['deleted', 'record_id', 'field']
+                    'unique_relationship' => ['record_id', 'field']
                 ]
             ];
         }

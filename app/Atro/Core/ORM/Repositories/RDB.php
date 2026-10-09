@@ -1343,9 +1343,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->select('field')
             ->from($this->getDbal()->quoteIdentifier($this->getPersonalDataTableName()))
             ->where('record_id = :recordId')
-            ->andWhere('deleted = :false')
             ->setParameter('recordId', $id)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchFirstColumn();
     }
 
@@ -1360,11 +1358,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->getDbal()->createQueryBuilder()
             ->insert($this->getDbal()->quoteIdentifier($this->getPersonalDataTableName()))
             ->setValue('id', ':id')
-            ->setValue('deleted', ':false')
             ->setValue('record_id', ':recordId')
             ->setValue('field', ':field')
             ->setParameter('id', IdGenerator::uuid())
-            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('recordId', $id)
             ->setParameter('field', $field)
             ->executeStatement();

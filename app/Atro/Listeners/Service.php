@@ -15,9 +15,35 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Utils\Language;
+use Atro\Services\AbstractService;
+use Espo\ORM\Entity;
 
 class Service extends AbstractListener
 {
+    public function beforePutMeta(Event $event): void
+    {
+        /* @var Entity $entity */
+        $entity = $event->getArgument('entity');
+
+        /* @var AbstractService $service */
+        $service = $event->getArgument('service');
+
+        if (empty($entity->id) || !$service->isMetaGroupRequested('personalData')) {
+            return;
+        }
+
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']) === 'ReferenceData') {
+            return;
+        }
+
+        $repository = $this->getEntityManager()->getRepository($entity->getEntityName());
+        if (!$repository->hasPersonalDataTable()) {
+            return;
+        }
+
+        $entity->setMeta('personalData', 'fields', $repository->getPersonalDataFields($entity->id));
+    }
+
     public function prepareEntityForOutput(Event $event): void
     {
         $entity = $event->getArgument('entity');

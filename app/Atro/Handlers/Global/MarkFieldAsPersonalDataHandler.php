@@ -21,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/setPersonalDataField',
+    path: '/markFieldAsPersonalData',
     methods: [
         'POST',
     ],
@@ -82,13 +82,13 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class SetPersonalDataFieldHandler extends AbstractHandler
+class MarkFieldAsPersonalDataHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $this->getRequestBody($request);
 
-        $result = $this->getRecordService($data->entityName)->setPersonalDataField($data->recordId, $data->field);
+        $result = $this->getServiceFactory()->create('App')->setPersonalDataField($data->entityName, $data->recordId, $data->field);
 
         return new BoolResponse($result);
     }

@@ -2225,7 +2225,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             this.notify('Saving...');
 
-            this.ajaxPostRequest(isPersonalData ? 'unsetPersonalDataField' : 'setPersonalDataField', {
+            this.ajaxPostRequest(isPersonalData ? 'unmarkFieldAsPersonalData' : 'markFieldAsPersonalData', {
                 entityName: this.model.urlRoot,
                 recordId: this.model.id,
                 field: field
