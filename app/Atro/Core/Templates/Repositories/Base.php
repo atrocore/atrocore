@@ -20,6 +20,7 @@ use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\PseudoTransactionManager;
 use Atro\Core\Utils\Util;
 use Atro\Services\Record;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -225,6 +226,50 @@ class Base extends RDB
                     ->executeQuery();
             }
         }
+    }
+
+    public function getLinkedIds(string $field, array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        $column = $this->getMapper()->toDb($field);
+
+        $dbal = $this->getDbal();
+        $rows = $dbal->createQueryBuilder()
+            ->select('id', $dbal->quoteIdentifier($column) . ' AS foreign_id')
+            ->from($dbal->quoteIdentifier($this->getMapper()->toDb($this->entityType)))
+            ->where('id IN (:ids)')
+            ->andWhere($dbal->quoteIdentifier($column) . ' IS NOT NULL')
+            ->andWhere('deleted=:false')
+            ->setParameter('ids', array_values($ids), Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        return array_column($rows, 'foreign_id', 'id');
+    }
+
+    public function getReferencingIds(string $field, array $referencedIds): array
+    {
+        if (empty($referencedIds)) {
+            return [];
+        }
+
+        $column = $this->getMapper()->toDb($field);
+
+        $dbal = $this->getDbal();
+        $rows = $dbal->createQueryBuilder()
+            ->select('id', $dbal->quoteIdentifier($column) . ' AS foreign_id')
+            ->from($dbal->quoteIdentifier($this->getMapper()->toDb($this->entityType)))
+            ->where($dbal->quoteIdentifier($column) . ' IN (:referencedIds)')
+            ->andWhere('deleted=:false')
+            ->orderBy('id')
+            ->setParameter('referencedIds', array_values($referencedIds), Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        return array_column($rows, 'foreign_id', 'id');
     }
 
     public function hasDeletedRecordsToClear(): bool
