@@ -94,7 +94,9 @@
       "stream": "all",
       "edit": "all",
       "delete": "no",
-      "create": "yes"
+      "create": "yes",
+      "createAttributeValue": "yes",
+      "deleteAttributeValue": "no"
     }
   },
   "scopeLevelTypesStrictDefaults": {
@@ -104,7 +106,9 @@
       "stream": "no",
       "edit": "no",
       "delete": "no",
-      "create": "no"
+      "create": "no",
+      "createAttributeValue": "no",
+      "deleteAttributeValue": "no"
     }
   }
 }
