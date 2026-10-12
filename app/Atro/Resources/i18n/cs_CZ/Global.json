@@ -172,6 +172,8 @@
     "fieldValueFilters": "Filtry hodnot polí",
     "confirmRemoveAttributeValue": "Jste si jisti, že chcete atribut odstranit?",
     "UserFollowed": "Sledovaný uživatel",
+    "setAsPersonalData": "Označit jako osobní údaje",
+    "unsetAsPersonalData": "Zrušit označení jako osobní údaje",
     "authenticate": "Ověřit",
     "Download": "Stáhnout",
     "Load data": "Načíst data",
@@ -771,6 +773,7 @@
     "notPossibleToOpenDetailView": "Zobrazení detailů není možné otevřít."
   },
   "boolFilters": {
+    "containsPersonalData": "Obsahuje osobní údaje",
     "onlyActive": "Aktivní",
     "notActive": "Neaktivní",
     "onlyMy": "Moje",
@@ -1107,6 +1110,7 @@
     }
   },
   "tooltips": {
+    "fieldContainsPersonalData": "Pole obsahuje osobní údaje",
     "groupEnd": "Vyberte tuto položku, pokud chcete označit konec seskupených navigačních položek. Všechny položky, které budou umístěny za touto položkou, již nebudou součástí skupiny."
   },
   "monthNames": {

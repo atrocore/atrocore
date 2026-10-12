@@ -45,7 +45,9 @@
     "fields": "Felder",
     "primaryEntity": "Primäre Entität",
     "derivativeEntities": "Derivatives",
-    "role": "Rolle"
+    "role": "Rolle",
+    "containsPersonalData": "Enthält personenbezogene Daten",
+    "isPerson": "Ist eine Person"
   },
   "options": {
     "type": {

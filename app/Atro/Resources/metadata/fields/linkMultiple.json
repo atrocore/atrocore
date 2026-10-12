@@ -60,5 +60,6 @@
   ],
   "notSortable": true,
   "filter": true,
+  "personalData": true,
   "group": "reference"
 }

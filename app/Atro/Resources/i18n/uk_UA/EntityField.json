@@ -69,7 +69,14 @@
     "defaultValueType": "Тип значення за замовчуванням",
     "protected": "Захищено",
     "urlLabel": "Мітка URL",
-    "selectPageSize": "Записів на сторінці (діалог вибору)"
+    "selectPageSize": "Записів на сторінці (діалог вибору)",
+    "personalData": "Персональні дані",
+    "notInEveryRecord": "Не в кожному записі",
+    "category": "Категорія",
+    "specialCategory": "Особлива категорія",
+    "specialPersonDataCategory": "Категорія особливих персональних даних",
+    "erasureMode": "Режим видалення",
+    "relevantForAccessRequest": "Актуально для запиту на доступ"
   },
   "tooltips": {
     "foreignCode": "Це ім'я коду використовується для поля, створеного у пов'язаній сутності для зворотного зв'язку.",
@@ -111,6 +118,36 @@
       "manyToMany": "Багато-до-багатьох",
       "oneToOne": "Один-до-одного",
       "manyToOne": "Багато-до-одного"
+    },
+    "category": {
+      "identity": "Особистість",
+      "contact": "Контакт",
+      "location": "Місцезнаходження",
+      "financial": "Фінанси / Рахунок",
+      "behavioral": "Поведінкові",
+      "credential": "Облікові дані",
+      "employment": "Працевлаштування",
+      "technical": "Технічні/Пристрій",
+      "communication": "Зміст спілкування"
+    },
+    "specialPersonDataCategory": {
+      "origin": "Расове або етнічне походження",
+      "political": "Політичні погляди",
+      "religious": "Релігійні або світоглядні переконання",
+      "trade": "Членство в профспілці",
+      "genetic": "Генетичні дані",
+      "biometric": "Біометричні дані",
+      "health": "Дані про здоров'я",
+      "sex": "Статеве життя",
+      "orientation": "Сексуальна орієнтація"
+    },
+    "erasureMode": {
+      "anonymize": "Анонімізувати",
+      "nullify": "Обнулити",
+      "delete": "Видалити",
+      "retain": "Зберегти",
+      "cascade": "Каскадно",
+      "unlink": "Розв'язати"
     }
   },
   "groupOptions": {
@@ -128,7 +165,8 @@
   "labels": {
     "resetToDefault": "Скинути до значень за замовчуванням",
     "relationManagement": "Керування зв'язками",
-    "conditionalProperties": "Умовні властивості"
+    "conditionalProperties": "Умовні властивості",
+    "personalData": "Персональні дані"
   },
   "exceptions": {
     "nullValuesExist": "Деякі записи мають нульові значення",

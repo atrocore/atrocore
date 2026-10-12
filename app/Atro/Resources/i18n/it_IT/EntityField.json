@@ -69,7 +69,14 @@
     "conditionalProtected": "Protetto",
     "conditionalDisableOptions": "Opzioni disabilitate",
     "urlLabel": "Etichetta URL",
-    "selectPageSize": "Record per pagina (finestra di selezione)"
+    "selectPageSize": "Record per pagina (finestra di selezione)",
+    "personalData": "Dati personali",
+    "notInEveryRecord": "Non in ogni record",
+    "category": "Categoria",
+    "specialCategory": "Categoria speciale",
+    "specialPersonDataCategory": "Categoria speciale di dati personali",
+    "erasureMode": "Modalità di cancellazione",
+    "relevantForAccessRequest": "Rilevante per la richiesta di accesso"
   },
   "tooltips": {
     "maxLength": "Lunghezza massima accettabile del testo.",
@@ -111,6 +118,36 @@
       "bool": "Booleano",
       "date": "Data",
       "datetime": "Data e ora"
+    },
+    "category": {
+      "identity": "Identità",
+      "contact": "Contatto",
+      "location": "Posizione",
+      "financial": "Finanziario / Conto",
+      "behavioral": "Comportamentale",
+      "credential": "Credenziali",
+      "employment": "Occupazione",
+      "technical": "Tecnico/Dispositivo",
+      "communication": "Contenuto delle comunicazioni"
+    },
+    "specialPersonDataCategory": {
+      "origin": "Origine razziale o etnica",
+      "political": "Opinioni politiche",
+      "religious": "Convinzioni religiose o filosofiche",
+      "trade": "Appartenenza sindacale",
+      "genetic": "Dati genetici",
+      "biometric": "Dati biometrici",
+      "health": "Dati sanitari",
+      "sex": "Vita sessuale",
+      "orientation": "Orientamento sessuale"
+    },
+    "erasureMode": {
+      "anonymize": "Anonimizza",
+      "nullify": "Annulla",
+      "delete": "Elimina",
+      "retain": "Conserva",
+      "cascade": "Cascata",
+      "unlink": "Scollega"
     }
   },
   "groupOptions": {
@@ -128,7 +165,8 @@
   "labels": {
     "resetToDefault": "Ripristino delle impostazioni predefinite",
     "relationManagement": "Gestione delle relazioni",
-    "conditionalProperties": "Proprietà condizionali"
+    "conditionalProperties": "Proprietà condizionali",
+    "personalData": "Dati personali"
   },
   "exceptions": {
     "nullValuesExist": "Alcuni record hanno valori nulli",

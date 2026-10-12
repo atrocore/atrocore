@@ -437,6 +437,8 @@
     "expression": "Wyrażenie",
     "confirmRemoveAttributeValue": "Czy na pewno chce Pan usunąć ten atrybut?",
     "UserFollowed": "Użytkownik śledzony",
+    "setAsPersonalData": "Oznacz jako dane osobowe",
+    "unsetAsPersonalData": "Usuń oznaczenie danych osobowych",
     "Load data": "Dane ładowania",
     "jobManager": "Job Manager",
     "massActionDelegatedToJm": "Pana/Pani działanie zostało pomyślnie delegowane do menedżera zadań.",
@@ -654,6 +656,7 @@
     "notPossibleToOpenDetailView": "Nie można otworzyć widoku szczegółowego."
   },
   "boolFilters": {
+    "containsPersonalData": "Zawiera dane osobowe",
     "onlyActive": "Aktywne",
     "notActive": "Nieaktywne",
     "onlyMy": "Moje",
@@ -1366,6 +1369,7 @@
     "previewTemplate": "Zarządzanie szablonami HTML/CSS dla automatycznego podglądu danych"
   },
   "tooltips": {
+    "fieldContainsPersonalData": "Pole zawiera dane osobowe",
     "groupEnd": "Proszę wybrać, aby użyć tego elementu do oznaczenia końca zgrupowanych elementów nawigacji. Wszystkie elementy po tym elemencie zostaną rozgrupowane."
   },
   "firstStepsDashlet": {

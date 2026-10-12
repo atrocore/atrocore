@@ -44,7 +44,9 @@
     "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación",
     "primaryEntity": "Entidad primaria",
     "derivativeEntities": "Derivatives",
-    "role": "Rol"
+    "role": "Rol",
+    "containsPersonalData": "Contiene datos personales",
+    "isPerson": "Es una persona"
   },
   "options": {
     "type": {

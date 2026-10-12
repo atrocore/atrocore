@@ -543,6 +543,10 @@ class Entity extends ReferenceData
             }
         }
 
+        if ($entity->isAttributeChanged('containsPersonalData') && !$entity->get('containsPersonalData')) {
+            $entity->set('isPerson', false);
+        }
+
         parent::beforeSave($entity, $options);
     }
 

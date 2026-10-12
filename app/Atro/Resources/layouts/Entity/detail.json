@@ -161,6 +161,14 @@
           "name": "autoDeleteAfterDays"
         },
         false
+      ],
+      [
+        {
+          "name": "containsPersonalData"
+        },
+        {
+          "name": "isPerson"
+        }
       ]
     ]
   },

@@ -70,7 +70,14 @@
     "conditionalProtected": "Chráněno",
     "conditionalDisableOptions": "Zakázané možnosti",
     "urlLabel": "Označení URL",
-    "selectPageSize": "Záznamů na stránce (dialog výběru)"
+    "selectPageSize": "Záznamů na stránce (dialog výběru)",
+    "personalData": "Osobní údaje",
+    "notInEveryRecord": "Není v každém záznamu",
+    "category": "Kategorie",
+    "specialCategory": "Zvláštní kategorie",
+    "specialPersonDataCategory": "Kategorie zvláštních osobních údajů",
+    "erasureMode": "Režim výmazu",
+    "relevantForAccessRequest": "Relevantní pro žádost o přístup"
   },
   "tooltips": {
     "foreignCode": "Tento kódový název se používá pro pole vytvořené v související entitě pro zpětný vztah.",
@@ -112,6 +119,36 @@
       "manyToMany": "Mnoho-na-mnoho",
       "oneToOne": "Jeden-na-jeden",
       "manyToOne": "Mnoho-na-jeden"
+    },
+    "category": {
+      "identity": "Identita",
+      "contact": "Kontakt",
+      "location": "Poloha",
+      "financial": "Finanční / účet",
+      "behavioral": "Behaviorální",
+      "credential": "Přihlašovací údaje",
+      "employment": "Zaměstnání",
+      "technical": "Technické/Zařízení",
+      "communication": "Obsah komunikace"
+    },
+    "specialPersonDataCategory": {
+      "origin": "Rasový nebo etnický původ",
+      "political": "Politické názory",
+      "religious": "Náboženské nebo filozofické přesvědčení",
+      "trade": "Členství v odborech",
+      "genetic": "Genetické údaje",
+      "biometric": "Biometrické údaje",
+      "health": "Zdravotní údaje",
+      "sex": "Sexuální život",
+      "orientation": "Sexuální orientace"
+    },
+    "erasureMode": {
+      "anonymize": "Anonymizovat",
+      "nullify": "Vynulovat",
+      "delete": "Smazat",
+      "retain": "Zachovat",
+      "cascade": "Kaskádově",
+      "unlink": "Odpojit"
     }
   },
   "groupOptions": {
@@ -129,7 +166,8 @@
   "labels": {
     "resetToDefault": "Obnovení výchozího nastavení",
     "relationManagement": "Řízení vztahů",
-    "conditionalProperties": "Podmíněné vlastnosti"
+    "conditionalProperties": "Podmíněné vlastnosti",
+    "personalData": "Osobní údaje"
   },
   "exceptions": {
     "nullValuesExist": "Některé záznamy mají nulové hodnoty",

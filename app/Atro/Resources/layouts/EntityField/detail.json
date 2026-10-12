@@ -373,5 +373,40 @@
         false
       ]
     ]
+  },
+  {
+    "label": "personalData",
+    "rows": [
+      [
+        {
+          "name": "personalData"
+        },
+        {
+          "name": "notInEveryRecord"
+        }
+      ],
+      [
+        {
+          "name": "category"
+        },
+        {
+          "name": "specialCategory"
+        }
+      ],
+      [
+        {
+          "name": "specialPersonDataCategory"
+        },
+        {
+          "name": "erasureMode"
+        }
+      ],
+      [
+        {
+          "name": "relevantForAccessRequest"
+        },
+        false
+      ]
+    ]
   }
 ]

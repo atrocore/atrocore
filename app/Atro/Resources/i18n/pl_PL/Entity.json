@@ -44,7 +44,9 @@
     "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją",
     "primaryEntity": "Podmiot główny",
     "derivativeEntities": "Derivatives",
-    "role": "Rola"
+    "role": "Rola",
+    "containsPersonalData": "Zawiera dane osobowe",
+    "isPerson": "Jest osobą"
   },
   "options": {
     "type": {

@@ -44,7 +44,9 @@
     "linkAttributesWithClassificationAutomatically": "Automatické propojení atributů s klasifikací",
     "primaryEntity": "Primární entita",
     "derivativeEntities": "Derivatives",
-    "role": "Role"
+    "role": "Role",
+    "containsPersonalData": "Obsahuje osobní údaje",
+    "isPerson": "Je osoba"
   },
   "options": {
     "type": {

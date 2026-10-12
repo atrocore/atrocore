@@ -93,6 +93,8 @@ class Metadata extends AbstractMetadataListener
 
         $this->prepareEntityFields($data);
 
+        $this->preparePersonalDataTables($data);
+
         $this->putCustomCodeActions($data);
 
         $this->putCustomCodeConditionTypes($data);
@@ -419,6 +421,51 @@ class Metadata extends AbstractMetadataListener
             "type"      => "isEmpty",
             "attribute" => "multilangField"
         ];
+    }
+
+    protected function preparePersonalDataTables(array &$data): void
+    {
+        foreach (array_keys($data['entityDefs']) as $scope) {
+            if (($data['scopes'][$scope]['type'] ?? null) === 'ReferenceData' || empty($data['scopes'][$scope]['containsPersonalData'])) {
+                continue;
+            }
+
+            // if any entity field set as personal data, but notInEveryRecord isn't selected, then the bool filter is useless
+            $inEveryRecord = false;
+            foreach ($data['entityDefs'][$scope]['fields'] ?? [] as $fieldDefs) {
+                if (!empty($fieldDefs['personalData']) && empty($fieldDefs['notInEveryRecord'])) {
+                    $inEveryRecord = true;
+                    break;
+                }
+            }
+
+            if (!$inEveryRecord && !in_array('containsPersonalData', $data['clientDefs'][$scope]['boolFilterList'] ?? [])) {
+                $data['clientDefs'][$scope]['boolFilterList'][] = 'containsPersonalData';
+            }
+
+            $data['entityDefs'][$scope . 'PersonalData'] = [
+                'fields'        => [
+                    'field'  => [
+                        'type'     => 'varchar',
+                        'required' => true
+                    ],
+                    'record' => [
+                        'type'     => 'link',
+                        'required' => true
+                    ]
+                ],
+                'links'         => [
+                    'record' => [
+                        'type'          => 'belongsTo',
+                        'entity'        => $scope,
+                        'cascadeDelete' => true
+                    ]
+                ],
+                'uniqueIndexes' => [
+                    'unique_relationship' => ['record_id', 'field']
+                ]
+            ];
+        }
     }
 
     protected function prepareAclActionLevelListMap(array &$data): void

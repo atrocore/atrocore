@@ -9,6 +9,7 @@
     "permissions",
     "options",
     "audit",
-    "cluster"
+    "cluster",
+    "personalData"
   ]
 }

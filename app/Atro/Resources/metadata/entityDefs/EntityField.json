@@ -1114,6 +1114,291 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true
+    },
+    "entityContainsPersonalData": {
+      "type": "bool",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "personalData": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        }
+      }
+    },
+    "notInEveryRecord": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "personalData"
+            }
+          ]
+        }
+      }
+    },
+    "relevantForAccessRequest": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            },
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "category": {
+      "type": "enum",
+      "options": [
+        "identity",
+        "contact",
+        "location",
+        "financial",
+        "behavioral",
+        "credential",
+        "employment",
+        "technical",
+        "communication"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "personalData"
+            }
+          ]
+        }
+      }
+    },
+    "specialCategory": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        }
+      }
+    },
+    "specialPersonDataCategory": {
+      "type": "enum",
+      "options": [
+        "origin",
+        "political",
+        "religious",
+        "trade",
+        "genetic",
+        "biometric",
+        "health",
+        "sex",
+        "orientation"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "specialCategory"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "specialCategory"
+            }
+          ]
+        }
+      }
+    },
+    "erasureMode": {
+      "type": "enum",
+      "options": [
+        "anonymize",
+        "nullify",
+        "delete",
+        "retain",
+        "cascade",
+        "unlink"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "entityContainsPersonalData"
+            }
+          ]
+        },
+        "disableOptions": [
+          {
+            "options": [
+              "anonymize"
+            ],
+            "conditionGroup": [
+              {
+                "type": "or",
+                "value": [
+                  {
+                    "type": "in",
+                    "attribute": "type",
+                    "value": [
+                      "link",
+                      "linkMultiple",
+                      "file",
+                      "bool"
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "value": [
+                      {
+                        "type": "in",
+                        "attribute": "type",
+                        "value": [
+                          "float",
+                          "int",
+                          "rangeFloat",
+                          "rangeInt"
+                        ]
+                      },
+                      {
+                        "type": "isTrue",
+                        "attribute": "unique"
+                      },
+                      {
+                        "type": "isNotEmpty",
+                        "attribute": "max"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "options": [
+              "nullify"
+            ],
+            "conditionGroup": [
+              {
+                "type": "or",
+                "value": [
+                  {
+                    "type": "in",
+                    "attribute": "type",
+                    "value": [
+                      "link",
+                      "linkMultiple",
+                      "file"
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "value": [
+                      {
+                        "type": "equals",
+                        "attribute": "type",
+                        "value": "bool"
+                      },
+                      {
+                        "type": "isFalse",
+                        "attribute": "allowNullForBool"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "value": [
+                      {
+                        "type": "in",
+                        "attribute": "type",
+                        "value": [
+                          "text",
+                          "markdown",
+                          "wysiwyg",
+                          "varchar",
+                          "email"
+                        ]
+                      },
+                      {
+                        "type": "isTrue",
+                        "attribute": "required"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "options": [
+              "delete",
+              "cascade",
+              "unlink"
+            ],
+            "conditionGroup": [
+              {
+                "type": "notIn",
+                "attribute": "type",
+                "value": [
+                  "link",
+                  "linkMultiple",
+                  "file"
+                ]
+              }
+            ]
+          }
+        ]
+      }
     }
   },
   "links": {

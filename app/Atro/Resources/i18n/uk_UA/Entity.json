@@ -44,7 +44,9 @@
     "deleteValuesAfterUnlinkingClassification": "Видалити значення атрибутів після від’єднання класифікацій",
     "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації",
     "primaryEntity": "Первинна сутність",
-    "role": "Роль"
+    "role": "Роль",
+    "containsPersonalData": "Містить персональні дані",
+    "isPerson": "Є особою"
   },
   "options": {
     "type": {

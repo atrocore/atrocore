@@ -71,7 +71,14 @@
     "conditionalProtected": "Protected",
     "conditionalDisableOptions": "Disabled Options",
     "urlLabel": "URL Label",
-    "selectPageSize": "Records per page (select dialog)"
+    "selectPageSize": "Records per page (select dialog)",
+    "personalData": "Personal Data",
+    "notInEveryRecord": "Not in every record",
+    "category": "Category",
+    "specialCategory": "Special Category",
+    "specialPersonDataCategory": "Special Personal Data Category",
+    "erasureMode": "Erasure Mode",
+    "relevantForAccessRequest": "Relevant for Access Request"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
@@ -114,6 +121,36 @@
       "manyToMany": "Many-to-Many",
       "oneToOne": "One-to-One",
       "manyToOne": "Many-to-One"
+    },
+    "category": {
+      "identity": "Identity",
+      "contact": "Contact",
+      "location": "Location",
+      "financial": "Financial / Account",
+      "behavioral": "Behavioral",
+      "credential": "Credential",
+      "employment": "Employment",
+      "technical": "Technical/Device",
+      "communication": "Communication content"
+    },
+    "specialPersonDataCategory": {
+      "origin": "Racial or ethnic origin",
+      "political": "Political opinions",
+      "religious": "Religious or philosophical beliefs",
+      "trade": "Trade union membership",
+      "genetic": "Genetic data",
+      "biometric": "Biometric data",
+      "health": "Health data",
+      "sex": "Sex life",
+      "orientation": "Sexual orientation"
+    },
+    "erasureMode": {
+      "anonymize": "Anonymize",
+      "nullify": "Nullify",
+      "delete": "Delete",
+      "retain": "Retain",
+      "cascade": "Cascade",
+      "unlink": "Unlink"
     }
   },
   "groupOptions": {
@@ -131,7 +168,8 @@
   "labels": {
     "resetToDefault": "Reset to default",
     "relationManagement": "Relation Management",
-    "conditionalProperties": "Conditional Properties"
+    "conditionalProperties": "Conditional Properties",
+    "personalData": "Personal Data"
   },
   "exceptions": {
     "nullValuesExist": "Some records have null values",

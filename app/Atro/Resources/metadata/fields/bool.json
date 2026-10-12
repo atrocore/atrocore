@@ -39,6 +39,7 @@
   "filter": true,
   "auditable": true,
   "qbFilterType": "boolean",
+  "personalData": true,
   "group": "other",
   "uniqueIndexAllowed": true
 }

@@ -70,7 +70,14 @@
     "conditionalVisible": "Sichtbar",
     "conditionalDisableOptions": "Deaktivierte Optionen",
     "urlLabel": "URL Label",
-    "selectPageSize": "Datensätze pro Seite (Auswahldialog)"
+    "selectPageSize": "Datensätze pro Seite (Auswahldialog)",
+    "personalData": "Personenbezogene Daten",
+    "notInEveryRecord": "Nicht in jedem Datensatz",
+    "category": "Kategorie",
+    "specialCategory": "Besondere Kategorie",
+    "specialPersonDataCategory": "Besondere Kategorie personenbezogener Daten",
+    "erasureMode": "Löschmodus",
+    "relevantForAccessRequest": "Relevant für Auskunftsersuchen"
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
@@ -112,6 +119,36 @@
       "manyToMany": "Viele-zu-Vielen",
       "oneToOne": "Eins-zu-Eins",
       "manyToOne": "Viele-zu-Einem"
+    },
+    "category": {
+      "identity": "Identität",
+      "contact": "Kontakt",
+      "location": "Standort",
+      "financial": "Finanziell / Konto",
+      "behavioral": "Verhaltensbezogen",
+      "credential": "Anmeldedaten",
+      "employment": "Beschäftigung",
+      "technical": "Technisch/Gerät",
+      "communication": "Kommunikationsinhalt"
+    },
+    "specialPersonDataCategory": {
+      "origin": "Rassische oder ethnische Herkunft",
+      "political": "Politische Meinungen",
+      "religious": "Religiöse oder weltanschauliche Überzeugungen",
+      "trade": "Gewerkschaftszugehörigkeit",
+      "genetic": "Genetische Daten",
+      "biometric": "Biometrische Daten",
+      "health": "Gesundheitsdaten",
+      "sex": "Sexualleben",
+      "orientation": "Sexuelle Orientierung"
+    },
+    "erasureMode": {
+      "anonymize": "Anonymisieren",
+      "nullify": "Nullen",
+      "delete": "Löschen",
+      "retain": "Beibehalten",
+      "cascade": "Kaskadieren",
+      "unlink": "Verknüpfung aufheben"
     }
   },
   "groupOptions": {
@@ -129,7 +166,8 @@
   "labels": {
     "resetToDefault": "Auf Standardwert zurücksetzen",
     "relationManagement": "Beziehungs-Management",
-    "conditionalProperties": "Bedingte Eigenschaften"
+    "conditionalProperties": "Bedingte Eigenschaften",
+    "personalData": "Personenbezogene Daten"
   },
   "exceptions": {
     "nullValuesExist": "Einige Datensätze haben Nullwerte",
