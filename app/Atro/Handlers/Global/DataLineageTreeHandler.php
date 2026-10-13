@@ -129,6 +129,11 @@ use Psr\Http\Server\RequestHandlerInterface;
                                             'nullable'    => true,
                                             'description' => 'ID of the data pipeline or consolidation configuration',
                                         ],
+                                        'number' => [
+                                            'type'        => 'integer',
+                                            'nullable'    => true,
+                                            'description' => 'Number of the data pipeline or consolidation configuration',
+                                        ],
                                     ],
                                 ],
                             ],

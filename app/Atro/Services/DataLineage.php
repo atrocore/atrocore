@@ -140,7 +140,11 @@ class DataLineage extends AbstractService
             $selected,
             $endpoints,
             $records,
-            array_map(fn(array $link) => new DataLineageLinkDTO($link[0], $link[1], $link[2], $this->getLinkConfigId(...$link)), array_values($links)),
+            array_map(function (array $link) {
+                $config = $this->getLinkConfig(...$link);
+
+                return new DataLineageLinkDTO($link[0], $link[1], $link[2], $config['id'] ?? null, $config['number'] ?? null);
+            }, array_values($links)),
             $truncated
         );
     }
@@ -256,14 +260,19 @@ class DataLineage extends AbstractService
                     continue;
                 }
 
-                $this->pipelines[] = ['id' => $pipeline->get('id'), 'source' => $source, 'target' => $target];
+                $this->pipelines[] = [
+                    'id'     => $pipeline->get('id'),
+                    'number' => $pipeline->get('number'),
+                    'source' => $source,
+                    'target' => $target
+                ];
             }
         }
 
         return $this->pipelines;
     }
 
-    private function getLinkConfigId(string $type, string $from, string $to): ?string
+    private function getLinkConfig(string $type, string $from, string $to): ?array
     {
         if ($type === DataLineageLinkDTO::TYPE_DATA_PIPELINE) {
             if (!$this->getAcl()->check('DataPipeline', 'read')) {
@@ -272,7 +281,7 @@ class DataLineage extends AbstractService
 
             foreach ($this->getPipelines() as $pipeline) {
                 if ($pipeline['source'] === $from && $pipeline['target'] === $to) {
-                    return $pipeline['id'];
+                    return ['id' => $pipeline['id'], 'number' => $pipeline['number']];
                 }
             }
 
@@ -283,7 +292,12 @@ class DataLineage extends AbstractService
             return null;
         }
 
-        return $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($to)?->get('id');
+        $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($to);
+        if (empty($consolidation)) {
+            return null;
+        }
+
+        return ['id' => $consolidation->get('id'), 'number' => $consolidation->get('number')];
     }
 
     private function loadEntities(array $keys): void
