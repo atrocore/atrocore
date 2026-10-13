@@ -44,6 +44,14 @@
     }
   },
   "massActions": {
+    "consolidate": {
+      "url": "ClusterItem/massConsolidate",
+      "confirm": false,
+      "massAction": true,
+      "refresh": true,
+      "iconClass": "ph ph-check",
+      "sortOrder": 10
+    },
     "reject": {
       "url": "ClusterItem/massReject",
       "confirm": false,

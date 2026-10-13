@@ -130,13 +130,13 @@ The following actions are available for cluster items in both Standard and Compa
   - If a master record already exists in the cluster, the contributor record is linked to it.
   - If no master record exists yet, a new master record is created based on the selected contributor record and linked to it.
 
-    An already consolidated item cannot be consolidated again.
+    An already consolidated item cannot be consolidated again. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster. All selected items are consolidated together into one master record.
 
 - **Reject** – removes the cluster item from the current cluster and reassigns it to another cluster (existing or newly created). The rejected item remains visible in the `Rejected Cluster Items` panel. If a consolidated master record is rejected, all consolidated contributor records in the cluster are automatically deconsolidated and the link between the master and contributor records is removed. If a consolidated contributor record is rejected, that record is deconsolidated. Available as a mass action – can be executed for multiple cluster items at once.
 
 - **Unreject** – Available for items in the `Rejected Cluster Items` panel. Returns the item to the cluster. If the item was previously consolidated, then rejected, and then returned to the cluster, it is not consolidated and must be consolidated again.
 
-- **Deconsolidate** – unlinks the contributor record from the golden record of the cluster. The cluster item stays in the current cluster and can be consolidated again. If **Update Master Automatically** is enabled for the consolidation, the golden record is updated according to the Consolidation Script based on the remaining contributor records. Not available for the master record. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
+- **Deconsolidate** – unlinks the contributor record from the golden record of the cluster. The cluster item stays in the current cluster and can be consolidated again. If **Update Master Automatically** is enabled for the consolidation, the golden record is updated according to the Consolidation Script based on the remaining contributor records. Available only for consolidated contributor records. At least one contributor record must stay consolidated, so the last consolidated item cannot be deconsolidated, and all consolidated items cannot be deconsolidated at once. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
 
 - **Split** – moves the selected cluster items to a new cluster. Consolidated items are deconsolidated first, as described for **Deconsolidate**. Unlike **Reject**, all selected items are guaranteed to end up together in the same new cluster, and no rejection is stored. Not available for the master record. Available as a mass action – can be executed for multiple cluster items at once, but only for items belonging to the same cluster.
 

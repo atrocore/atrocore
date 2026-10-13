@@ -18,6 +18,7 @@
     "idOrIdListOrWhereRequired": "Bitte geben Sie mindestens eines an: eine ID, eine ID-Liste oder einen Suchfilter.",
     "itemsMustBelongToTheSameCluster": "Alle ausgewählten Elemente müssen zum selben Cluster gehören.",
     "cannotDeconsolidateMasterEntityItem": "Das Element der Master-Entität kann nicht entkonsolidiert werden.",
+    "cannotDeconsolidateAllItems": "Es können nicht alle konsolidierten Einträge dekonsolidiert werden: Mindestens ein Eintrag muss mit dem Golden Record verknüpft bleiben.",
     "cannotSplitMasterEntityItem": "Das Element der Master-Entität kann nicht aufgeteilt werden."
   },
   "massActions": {

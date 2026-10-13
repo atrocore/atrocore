@@ -221,6 +221,25 @@ class ClusterItem extends Base
             ->fetchAllAssociative();
     }
 
+    public function getConsolidatedContributorItemIds(string $clusterId, string $contributorEntityName, string $goldenRecordId): array
+    {
+        $contributorTableName = Util::toUnderScore(lcfirst($contributorEntityName));
+
+        return $this->getDbal()->createQueryBuilder()
+            ->select('ci.id')
+            ->from('cluster_item', 'ci')
+            ->innerJoin('ci', $this->getDbal()->quoteIdentifier($contributorTableName), 'se', 'se.id = ci.entity_id AND se.deleted = :false')
+            ->where('ci.cluster_id = :clusterId')
+            ->andWhere('ci.entity_name = :contributorEntityName')
+            ->andWhere('ci.deleted = :false')
+            ->andWhere('se.master_record_id = :goldenRecordId')
+            ->setParameter('clusterId', $clusterId)
+            ->setParameter('contributorEntityName', $contributorEntityName)
+            ->setParameter('goldenRecordId', $goldenRecordId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+    }
+
     public function getSingleClusterItemIdsPage(string $stagingEntityName, int $offset, int $limit): array
     {
         $masterEntityName = $this->getMetadata()->get("scopes.$stagingEntityName.primaryEntityId");

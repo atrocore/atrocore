@@ -261,13 +261,21 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         },
 
         getCompareMassActions() {
-            const actions = Dep.prototype.getCompareMassActions.call(this);
+            let actions = Dep.prototype.getCompareMassActions.call(this);
 
-            if (this.merging || !this.getAcl().check('Cluster', 'edit')) {
-                return actions;
+            if (!this.merging && this.getAcl().check('Cluster', 'edit')) {
+                actions = ['consolidate', ...actions.filter(action => action !== 'consolidate')];
             }
 
-            return ['consolidate', ...actions.filter(action => action !== 'consolidate')];
+            const checkedItems = this.getModels()
+                .filter(model => model.id !== this.PREVIEW_COLUMN_ID && this.checkedIds.includes(model.id) && model.item)
+                .map(model => model.item);
+
+            return actions.filter(action => {
+                const permission = action === 'remove' ? 'delete' : action;
+
+                return checkedItems.every(item => item.get('_meta')?.permissions?.[permission] !== false);
+            });
         },
 
         executeCompareMassAction(action, data) {

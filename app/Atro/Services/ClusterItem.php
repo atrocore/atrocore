@@ -29,6 +29,8 @@ class ClusterItem extends Base
 {
     protected $mandatorySelectAttributeList = ['entityName', 'entityId', 'consolidatedAutomatically'];
 
+    private array $consolidatedContributorItemIds = [];
+
     public function consolidate(Entity $entity, bool $automatically = false): bool
     {
         if (empty($cluster = $entity->get('cluster'))) {
@@ -173,7 +175,42 @@ class ClusterItem extends Base
             });
         }
 
+        unset($this->consolidatedContributorItemIds[$cluster->get('id')]);
+
         return true;
+    }
+
+    public function massConsolidate(array $params): MassActionResultDTO
+    {
+        if (!empty($params['where'])) {
+            $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
+            $collection   = $this->getRepository()->find($selectParams);
+        } else {
+            if (empty($ids = $params['ids'])) {
+                throw new BadRequest("No ids provided.");
+            }
+            $collection = $this->getRepository()->findByIds($ids);
+        }
+
+        $entities = iterator_to_array($collection);
+
+        if (empty($entities)) {
+            return new MassActionResultDTO(0);
+        }
+
+        $clusterIds = array_unique(array_map(fn($e) => $e->get('clusterId'), $entities));
+        if (count($clusterIds) > 1) {
+            throw new BadRequest($this->getInjection('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
+        }
+
+        $itemsToConsolidate = array_values(array_filter($entities, fn($e) => !$this->isClusterItemConsolidated($e)));
+        if (empty($itemsToConsolidate)) {
+            return new MassActionResultDTO(0);
+        }
+
+        $this->consolidateAll($itemsToConsolidate);
+
+        return new MassActionResultDTO(count(array_filter($itemsToConsolidate, fn($e) => $this->isClusterItemConsolidated($e))));
     }
 
     public function reject(array $params): MassActionResultDTO
@@ -315,6 +352,17 @@ class ClusterItem extends Base
             }
         }
 
+        $consolidatedItemIds = $this->getConsolidatedContributorItemIds($cluster);
+        $selectedItemIds = array_map(fn($e) => $e->get('id'), $entities);
+        if (!empty($consolidatedItemIds) && empty(array_diff($consolidatedItemIds, $selectedItemIds))) {
+            throw new BadRequest($this->getInjection('language')->translate('cannotDeconsolidateAllItems', 'exceptions', 'ClusterItem'));
+        }
+
+        return new MassActionResultDTO($this->deconsolidateItems($cluster, $entities));
+    }
+
+    private function deconsolidateItems(Entity $cluster, array $entities): int
+    {
         $count = 0;
         foreach ($entities as $entity) {
             if (!$this->isClusterItemConsolidated($entity)) {
@@ -329,12 +377,31 @@ class ClusterItem extends Base
             $count++;
         }
 
+        unset($this->consolidatedContributorItemIds[$cluster->get('id')]);
+
         $goldenRecord = $cluster->get('goldenRecord');
         if ($count > 0 && !empty($goldenRecord)) {
             $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
         }
 
-        return new MassActionResultDTO($count);
+        return $count;
+    }
+
+    private function getConsolidatedContributorItemIds(Entity $cluster): array
+    {
+        if (empty($cluster->get('goldenRecordId'))) {
+            return [];
+        }
+
+        if (!isset($this->consolidatedContributorItemIds[$cluster->get('id')])) {
+            $contributorEntityName = (string)$this->getEntityManager()->getRepository('Consolidation')->getContributorEntityName($cluster->get('masterEntity'));
+
+            $this->consolidatedContributorItemIds[$cluster->get('id')] = empty($contributorEntityName)
+                ? []
+                : $this->getRepository()->getConsolidatedContributorItemIds($cluster->get('id'), $contributorEntityName, $cluster->get('goldenRecordId'));
+        }
+
+        return $this->consolidatedContributorItemIds[$cluster->get('id')];
     }
 
     public function split(array $params): MassActionResultDTO
@@ -367,7 +434,7 @@ class ClusterItem extends Base
             }
         }
 
-        $this->deconsolidate(['ids' => array_map(fn($e) => $e->get('id'), $entities)]);
+        $this->deconsolidateItems($cluster, $entities);
 
         $newCluster = null;
         $this->runAsSystemUser(function () use (&$newCluster, $cluster) {
@@ -496,10 +563,14 @@ class ClusterItem extends Base
             null;
 
 
+        $canDeconsolidate = $isStaging
+            && $isConsolidated
+            && count($this->getConsolidatedContributorItemIds($entity->get('cluster'))) > 1;
+
         if ($this->getUser()->isAdmin()) {
             $entity->setMetaPermission('consolidate', !$isConsolidated);
             $entity->setMetaPermission('reject', true);
-            $entity->setMetaPermission('deconsolidate', $isStaging);
+            $entity->setMetaPermission('deconsolidate', $canDeconsolidate);
             $entity->setMetaPermission('split', $isStaging);
             $entity->setMetaPermission('move', true);
             $entity->setMetaPermission('delete', true);
@@ -513,7 +584,7 @@ class ClusterItem extends Base
 
         $entity->setMetaPermission('consolidate', false);
         $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('deconsolidate', $isStaging && $this->getAcl()->check($entity, 'edit'));
+        $entity->setMetaPermission('deconsolidate', $canDeconsolidate && $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('split', $isStaging && $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('move', $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('delete', false);

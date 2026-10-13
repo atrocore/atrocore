@@ -15,6 +15,7 @@
     "cannotUnreject": "Для цього елемента кластера неможливо скасувати відхилення",
     "itemsMustBelongToTheSameCluster": "Усі вибрані елементи мають належати до одного кластера.",
     "cannotDeconsolidateMasterEntityItem": "Неможливо розконсолідувати елемент майстер-сутності.",
+    "cannotDeconsolidateAllItems": "Неможливо деконсолідувати всі консолідовані елементи: щонайменше один має лишитися пов’язаним із golden record.",
     "cannotSplitMasterEntityItem": "Неможливо розділити елемент майстер-сутності."
   },
   "massActions": {
