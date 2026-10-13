@@ -264,7 +264,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             let actions = Dep.prototype.getCompareMassActions.call(this);
 
             if (!this.merging && this.getAcl().check('Cluster', 'edit')) {
-                actions = ['consolidate', ...actions.filter(action => action !== 'consolidate')];
+                actions = ['consolidate', 'deconsolidate', ...actions.filter(action => !['consolidate', 'deconsolidate'].includes(action))];
             }
 
             const checkedItems = this.getModels()
@@ -279,7 +279,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         },
 
         executeCompareMassAction(action, data) {
-            if (action !== 'consolidate') {
+            if (!['consolidate', 'deconsolidate'].includes(action)) {
                 return Dep.prototype.executeCompareMassAction.call(this, action, data);
             }
 
@@ -293,9 +293,9 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
             this.notify(this.translate('pleaseWait', 'messages'));
 
-            this.ajaxPostRequest(`Cluster/${this.selectionId}/consolidate`, {clusterItemsIds})
+            this.ajaxPostRequest(`Cluster/${this.selectionId}/${action}`, {clusterItemsIds})
                 .then(() => {
-                    this.notify(this.translate('consolidate', 'massActionSuccessMessages', 'ClusterItem'), 'success');
+                    this.notify(this.translate(action, 'massActionSuccessMessages', 'ClusterItem'), 'success');
 
                     const view = this.getParentView();
                     view.reloadModels(() => view.refreshContent());

@@ -62,6 +62,7 @@
   },
   "relationshipPanels": {
     "clusterItems": {
+      "recordListView": "views/cluster-item/record/list",
       "actions": {
         "quickView": {
           "disabled": true

@@ -154,6 +154,16 @@ class Cluster extends Base
 
     public function consolidate(string $clusterId, array $clusterItemIds): bool
     {
+        return $this->getRecordService('ClusterItem')->consolidateAll($this->findClusterItemsForAction($clusterId, $clusterItemIds));
+    }
+
+    public function deconsolidate(string $clusterId, array $clusterItemIds): MassActionResultDTO
+    {
+        return $this->getRecordService('ClusterItem')->deconsolidateAll($this->findClusterItemsForAction($clusterId, $clusterItemIds));
+    }
+
+    private function findClusterItemsForAction(string $clusterId, array $clusterItemIds): array
+    {
         $cluster = $this->getEntity($clusterId);
 
         if (empty($cluster)) {
@@ -178,7 +188,7 @@ class Cluster extends Base
             ));
         }
 
-        return $this->getRecordService('ClusterItem')->consolidateAll(array_values($clusterItems));
+        return array_values($clusterItems);
     }
 
     public function buildMasterRecordPreview(string $clusterId, ?string $consolidationScript = null): Entity

@@ -29,8 +29,6 @@ class ClusterItem extends Base
 {
     protected $mandatorySelectAttributeList = ['entityName', 'entityId', 'consolidatedAutomatically'];
 
-    private array $consolidatedContributorItemIds = [];
-
     public function consolidate(Entity $entity, bool $automatically = false): bool
     {
         if (empty($cluster = $entity->get('cluster'))) {
@@ -175,42 +173,7 @@ class ClusterItem extends Base
             });
         }
 
-        unset($this->consolidatedContributorItemIds[$cluster->get('id')]);
-
         return true;
-    }
-
-    public function massConsolidate(array $params): MassActionResultDTO
-    {
-        if (!empty($params['where'])) {
-            $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
-            $collection   = $this->getRepository()->find($selectParams);
-        } else {
-            if (empty($ids = $params['ids'])) {
-                throw new BadRequest("No ids provided.");
-            }
-            $collection = $this->getRepository()->findByIds($ids);
-        }
-
-        $entities = iterator_to_array($collection);
-
-        if (empty($entities)) {
-            return new MassActionResultDTO(0);
-        }
-
-        $clusterIds = array_unique(array_map(fn($e) => $e->get('clusterId'), $entities));
-        if (count($clusterIds) > 1) {
-            throw new BadRequest($this->getInjection('language')->translate('itemsMustBelongToTheSameCluster', 'exceptions', 'ClusterItem'));
-        }
-
-        $itemsToConsolidate = array_values(array_filter($entities, fn($e) => !$this->isClusterItemConsolidated($e)));
-        if (empty($itemsToConsolidate)) {
-            return new MassActionResultDTO(0);
-        }
-
-        $this->consolidateAll($itemsToConsolidate);
-
-        return new MassActionResultDTO(count(array_filter($itemsToConsolidate, fn($e) => $this->isClusterItemConsolidated($e))));
     }
 
     public function reject(array $params): MassActionResultDTO
@@ -321,19 +284,9 @@ class ClusterItem extends Base
         return true;
     }
 
-    public function deconsolidate(array $params): MassActionResultDTO
+    public function deconsolidateAll(array $clusterItems): MassActionResultDTO
     {
-        if (!empty($params['where'])) {
-            $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
-            $collection   = $this->getRepository()->find($selectParams);
-        } else {
-            if (empty($ids = $params['ids'])) {
-                throw new BadRequest("No ids provided.");
-            }
-            $collection = $this->getRepository()->findByIds($ids);
-        }
-
-        $entities = iterator_to_array($collection);
+        $entities = array_values($clusterItems);
 
         if (empty($entities)) {
             return new MassActionResultDTO(0);
@@ -377,8 +330,6 @@ class ClusterItem extends Base
             $count++;
         }
 
-        unset($this->consolidatedContributorItemIds[$cluster->get('id')]);
-
         $goldenRecord = $cluster->get('goldenRecord');
         if ($count > 0 && !empty($goldenRecord)) {
             $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
@@ -393,15 +344,12 @@ class ClusterItem extends Base
             return [];
         }
 
-        if (!isset($this->consolidatedContributorItemIds[$cluster->get('id')])) {
-            $contributorEntityName = (string)$this->getEntityManager()->getRepository('Consolidation')->getContributorEntityName($cluster->get('masterEntity'));
-
-            $this->consolidatedContributorItemIds[$cluster->get('id')] = empty($contributorEntityName)
-                ? []
-                : $this->getRepository()->getConsolidatedContributorItemIds($cluster->get('id'), $contributorEntityName, $cluster->get('goldenRecordId'));
+        $contributorEntityName = (string)$this->getEntityManager()->getRepository('Consolidation')->getContributorEntityName($cluster->get('masterEntity'));
+        if (empty($contributorEntityName)) {
+            return [];
         }
 
-        return $this->consolidatedContributorItemIds[$cluster->get('id')];
+        return $this->getRepository()->getConsolidatedContributorItemIds($cluster->get('id'), $contributorEntityName, $cluster->get('goldenRecordId'));
     }
 
     public function split(array $params): MassActionResultDTO
