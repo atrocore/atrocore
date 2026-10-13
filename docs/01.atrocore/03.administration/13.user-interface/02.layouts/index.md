@@ -106,6 +106,8 @@ The left sidebar appears the same for both List view and Detail view. By default
 
 This applies to all entity types, including [Reference](../../11.entity-management/01.entity-types/index.md#reference) entities.
 
+For the entities involved in master data management, the default sidebar also contains the [Data Lineage](../../../18.master-data-management/index.md#data-lineage-tab) tab.
+
 ![Account Navigation](_assets/account-navigation.png){.medium}
 
 > To learn how search works in the left sidebar, see [Left Sidebar Search](../../../11.search-and-filtering/index.md#left-sidebar-search).
