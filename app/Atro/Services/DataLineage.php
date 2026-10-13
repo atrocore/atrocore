@@ -19,15 +19,16 @@ use Atro\Core\Utils\Metadata;
 use Atro\DTOs\DataLineage\DataLineageEndpointDTO;
 use Atro\DTOs\DataLineage\DataLineageLinkDTO;
 use Atro\DTOs\DataLineage\DataLineageRecordDTO;
+use Atro\DTOs\DataLineage\DataLineageRecordEdgeDTO;
+use Atro\DTOs\DataLineage\DataLineageScopeEdgeDTO;
 use Atro\DTOs\DataLineage\DataLineageTreeDTO;
 use Espo\Core\Acl;
 use Espo\Core\ServiceFactory;
+use Espo\ORM\Entity;
 
 class DataLineage extends AbstractService
 {
     private ?array $pipelines = null;
-    private array $entities = [];
-    private array $names = [];
 
     protected function init()
     {
@@ -49,16 +50,12 @@ class DataLineage extends AbstractService
             throw new Forbidden();
         }
 
-        $currentKey = "$scope:$id";
-        $this->entities[$currentKey] = $current;
+        $previous = $this->findDownstream($this->buildRecordKey($scope, $id));
 
-        [$endpointKeys, $previous] = $this->findEndpoints($currentKey);
-
-        $endpoints = array_map(function (string $key) {
-            $entity = $this->entities[$key];
-
-            return new DataLineageEndpointDTO($entity->getEntityName(), $entity->get('id'), $this->getRecordName($key));
-        }, $endpointKeys);
+        $endpoints = [];
+        foreach ($this->loadRecords(array_keys(array_diff_key($previous, array_flip(array_filter($previous))))) as $entity) {
+            $endpoints[] = new DataLineageEndpointDTO($entity->getEntityName(), $entity->get('id'), $this->getRecordName($entity));
+        }
 
         usort($endpoints, fn(DataLineageEndpointDTO $a, DataLineageEndpointDTO $b) => [$a->scope, $a->name ?? ''] <=> [$b->scope, $b->name ?? '']);
 
@@ -69,69 +66,110 @@ class DataLineage extends AbstractService
             }
         }
 
-        $selectedKey = "$selected->scope:$selected->id";
+        $selectedKey = $this->buildRecordKey($selected->scope, $selected->id);
 
         $pathKeys = [];
         for ($key = $selectedKey; $key !== null; $key = $previous[$key]) {
             $pathKeys[$key] = true;
         }
 
+        return $this->buildUpstreamTree($selected, $endpoints, $pathKeys);
+    }
+
+    /**
+     * @return array<string, ?string>
+     */
+    private function findDownstream(string $currentKey): array
+    {
+        $previous = [$currentKey => null];
+
+        $frontier = [$currentKey];
+        while (!empty($frontier)) {
+            $edges = [];
+            foreach ($this->groupIdsByScope($frontier) as $frontierScope => $ids) {
+                foreach ($this->getDownstreamEdges($frontierScope) as $scopeEdge) {
+                    $map = $this->getEntityManager()->getRepository($frontierScope)->getLinkedIds($scopeEdge->field, $ids);
+                    foreach ($map as $sourceId => $targetId) {
+                        $edges[] = new DataLineageRecordEdgeDTO($scopeEdge->type, $frontierScope, $sourceId, $scopeEdge->scope, $targetId);
+                    }
+                }
+            }
+
+            $loaded = $this->loadRecords(array_map(fn(DataLineageRecordEdgeDTO $edge) => $edge->getToKey(), $edges));
+
+            $next = [];
+            foreach ($edges as $edge) {
+                $key = $edge->getToKey();
+                if (isset($loaded[$key]) && !array_key_exists($key, $previous)) {
+                    $previous[$key] = $edge->getKey();
+                    $next[] = $key;
+                }
+            }
+
+            $frontier = $next;
+        }
+
+        return $previous;
+    }
+
+    /**
+     * @param DataLineageEndpointDTO[] $endpoints
+     * @param array<string, bool> $pathKeys
+     */
+    private function buildUpstreamTree(DataLineageEndpointDTO $selected, array $endpoints, array $pathKeys): DataLineageTreeDTO
+    {
         $maxNodes = (int)$this->getConfig()->get('dataLineageMaxNodes', 500);
-        $records = [$this->createRecord($selectedKey, null)];
+        $selectedKey = $this->buildRecordKey($selected->scope, $selected->id);
+        $names = [$selectedKey => $selected->name];
+        $records = [new DataLineageRecordDTO($selected->scope, $selected->id, $selected->name, null, null, $selected->name === null)];
         $included = [$selectedKey => true];
         $links = [];
         $truncated = false;
 
         $frontier = [$selectedKey];
         while (!empty($frontier)) {
-            $candidates = [];
+            $edges = [];
             foreach ($this->groupIdsByScope($frontier) as $frontierScope => $ids) {
-                foreach ($this->getUpstreamEdges($frontierScope) as $edge) {
-                    $map = $this->getEntityManager()->getRepository($edge['scope'])->getReferencingIds($edge['field'], $ids);
+                foreach ($this->getUpstreamEdges($frontierScope) as $scopeEdge) {
+                    $map = $this->getEntityManager()->getRepository($scopeEdge->scope)->getReferencingIds($scopeEdge->field, $ids);
                     foreach ($map as $sourceId => $targetId) {
-                        $candidates[] = [
-                            'key'  => "{$edge['scope']}:$sourceId",
-                            'to'   => "$frontierScope:$targetId",
-                            'type' => $edge['type']
-                        ];
+                        $edges[] = new DataLineageRecordEdgeDTO($scopeEdge->type, $scopeEdge->scope, $sourceId, $frontierScope, $targetId);
                     }
                 }
             }
 
-            usort($candidates, fn(array $a, array $b) => isset($pathKeys[$b['key']]) <=> isset($pathKeys[$a['key']]));
-
             $accepted = [];
-            foreach ($candidates as $candidate) {
-                if (isset($included[$candidate['key']])) {
+            foreach ($edges as $edge) {
+                if (isset($included[$edge->getKey()])) {
                     continue;
                 }
-                if (!isset($pathKeys[$candidate['key']]) && count($included) >= $maxNodes) {
+                if (!isset($pathKeys[$edge->getKey()]) && count($included) >= $maxNodes) {
                     $truncated = true;
                     continue;
                 }
-                $accepted[] = $candidate;
-                $included[$candidate['key']] = true;
+                $accepted[] = $edge;
+                $included[$edge->getKey()] = true;
             }
 
-            $this->loadEntities(array_column($accepted, 'key'));
+            $names += array_map(fn(Entity $entity) => $this->getRecordName($entity), $this->loadRecords(array_map(fn(DataLineageRecordEdgeDTO $edge) => $edge->getKey(), $accepted)));
 
-            $accepted = array_values(array_filter($accepted, fn(array $candidate) => isset($this->entities[$candidate['key']])));
+            $accepted = array_values(array_filter($accepted, fn(DataLineageRecordEdgeDTO $edge) => array_key_exists($edge->getKey(), $names)));
 
-            usort($accepted, function (array $a, array $b) use ($pathKeys) {
-                return [isset($pathKeys[$b['key']]), $this->entities[$a['key']]->getEntityName(), $this->getRecordName($a['key']) ?? '']
-                    <=> [isset($pathKeys[$a['key']]), $this->entities[$b['key']]->getEntityName(), $this->getRecordName($b['key']) ?? ''];
-            });
+            usort($accepted, fn(DataLineageRecordEdgeDTO $a, DataLineageRecordEdgeDTO $b) => [$a->scope, $names[$a->getKey()] ?? ''] <=> [$b->scope, $names[$b->getKey()] ?? '']);
 
             $frontier = [];
-            foreach ($accepted as $candidate) {
-                $records[] = $this->createRecord($candidate['key'], $candidate['to']);
+            foreach ($accepted as $edge) {
+                $name = $names[$edge->getKey()];
+                $records[] = new DataLineageRecordDTO($edge->scope, $edge->id, $name, $edge->toScope, $edge->toId, $name === null);
 
-                $from = $this->entities[$candidate['key']]->getEntityName();
-                $to = $this->entities[$candidate['to']]->getEntityName();
-                $links["{$candidate['type']}|$from|$to"] = [$candidate['type'], $from, $to];
+                $linkKey = "$edge->type|$edge->scope|$edge->toScope";
+                if (!isset($links[$linkKey])) {
+                    $config = $this->getLinkConfig($edge->type, $edge->scope, $edge->toScope);
+                    $links[$linkKey] = new DataLineageLinkDTO($edge->type, $edge->scope, $edge->toScope, $config?->get('id'), $config?->get('number'));
+                }
 
-                if (isset($pathKeys[$candidate['key']]) || $this->getRecordName($candidate['key']) !== null) {
-                    $frontier[] = $candidate['key'];
+                if (isset($pathKeys[$edge->getKey()]) || $name !== null) {
+                    $frontier[] = $edge->getKey();
                 }
             }
         }
@@ -140,108 +178,48 @@ class DataLineage extends AbstractService
             $selected,
             $endpoints,
             $records,
-            array_map(function (array $link) {
-                $config = $this->getLinkConfig(...$link);
-
-                return new DataLineageLinkDTO($link[0], $link[1], $link[2], $config['id'] ?? null, $config['number'] ?? null);
-            }, array_values($links)),
+            array_values($links),
             $truncated
         );
     }
 
-    private function findEndpoints(string $currentKey): array
-    {
-        $previous = [$currentKey => null];
-        $endpointKeys = [];
-
-        $frontier = [$currentKey];
-        while (!empty($frontier)) {
-            $candidates = [];
-            foreach ($this->groupIdsByScope($frontier) as $frontierScope => $ids) {
-                foreach ($this->getDownstreamEdges($frontierScope) as $edge) {
-                    $map = $this->getEntityManager()->getRepository($frontierScope)->getLinkedIds($edge['field'], $ids);
-                    foreach ($map as $sourceId => $targetId) {
-                        $candidates[] = ['key' => "{$edge['scope']}:$targetId", 'from' => "$frontierScope:$sourceId"];
-                    }
-                }
-            }
-
-            $this->loadEntities(array_column($candidates, 'key'));
-
-            $hasDownstream = [];
-            $next = [];
-            foreach ($candidates as $candidate) {
-                if (!isset($this->entities[$candidate['key']])) {
-                    continue;
-                }
-
-                $hasDownstream[$candidate['from']] = true;
-
-                if (!array_key_exists($candidate['key'], $previous)) {
-                    $previous[$candidate['key']] = $candidate['from'];
-                    $next[] = $candidate['key'];
-                }
-            }
-
-            foreach ($frontier as $key) {
-                if (!isset($hasDownstream[$key])) {
-                    $endpointKeys[] = $key;
-                }
-            }
-
-            $frontier = $next;
-        }
-
-        return [$endpointKeys, $previous];
-    }
-
+    /**
+     * @return DataLineageScopeEdgeDTO[]
+     */
     private function getDownstreamEdges(string $scope): array
     {
         $edges = [];
 
         foreach ($this->getPipelines() as $pipeline) {
-            if ($pipeline['source'] === $scope) {
-                $edges[] = [
-                    'type'  => DataLineageLinkDTO::TYPE_DATA_PIPELINE,
-                    'field' => 'target' . ucfirst($pipeline['target']) . 'Id',
-                    'scope' => $pipeline['target']
-                ];
+            if ($pipeline->get('sourceEntityId') === $scope) {
+                $edges[] = new DataLineageScopeEdgeDTO(DataLineageLinkDTO::TYPE_DATA_PIPELINE, 'target' . ucfirst($pipeline->get('targetEntityId')) . 'Id', $pipeline->get('targetEntityId'));
             }
         }
 
         $scopeDefs = $this->getMetadata()->get(['scopes', $scope]) ?? [];
         if (!empty($scopeDefs['primaryEntityId']) && ($scopeDefs['role'] ?? null) === 'contributor') {
-            $edges[] = [
-                'type'  => DataLineageLinkDTO::TYPE_CONSOLIDATION,
-                'field' => 'masterRecordId',
-                'scope' => $scopeDefs['primaryEntityId']
-            ];
+            $edges[] = new DataLineageScopeEdgeDTO(DataLineageLinkDTO::TYPE_CONSOLIDATION, 'masterRecordId', $scopeDefs['primaryEntityId']);
         }
 
         return $edges;
     }
 
+    /**
+     * @return DataLineageScopeEdgeDTO[]
+     */
     private function getUpstreamEdges(string $scope): array
     {
         $edges = [];
 
         foreach ($this->getPipelines() as $pipeline) {
-            if ($pipeline['target'] === $scope) {
-                $edges[] = [
-                    'type'  => DataLineageLinkDTO::TYPE_DATA_PIPELINE,
-                    'field' => 'target' . ucfirst($scope) . 'Id',
-                    'scope' => $pipeline['source']
-                ];
+            if ($pipeline->get('targetEntityId') === $scope) {
+                $edges[] = new DataLineageScopeEdgeDTO(DataLineageLinkDTO::TYPE_DATA_PIPELINE, 'target' . ucfirst($scope) . 'Id', $pipeline->get('sourceEntityId'));
             }
         }
 
         foreach ($this->getMetadata()->get('scopes') ?? [] as $contributorScope => $scopeDefs) {
             if (($scopeDefs['primaryEntityId'] ?? null) === $scope && ($scopeDefs['role'] ?? null) === 'contributor') {
-                $edges[] = [
-                    'type'  => DataLineageLinkDTO::TYPE_CONSOLIDATION,
-                    'field' => 'masterRecordId',
-                    'scope' => $contributorScope
-                ];
+                $edges[] = new DataLineageScopeEdgeDTO(DataLineageLinkDTO::TYPE_CONSOLIDATION, 'masterRecordId', $contributorScope);
             }
         }
 
@@ -253,26 +231,18 @@ class DataLineage extends AbstractService
         if ($this->pipelines === null) {
             $this->pipelines = [];
             foreach ($this->getEntityManager()->getRepository('DataPipeline')->find() as $pipeline) {
-                $source = $pipeline->get('sourceEntityId');
-                $target = $pipeline->get('targetEntityId');
-
-                if (empty($this->getMetadata()->get(['entityDefs', $source, 'links', 'target' . ucfirst($target)]))) {
+                if (empty($this->getMetadata()->get(['entityDefs', $pipeline->get('sourceEntityId'), 'links', 'target' . ucfirst($pipeline->get('targetEntityId'))]))) {
                     continue;
                 }
 
-                $this->pipelines[] = [
-                    'id'     => $pipeline->get('id'),
-                    'number' => $pipeline->get('number'),
-                    'source' => $source,
-                    'target' => $target
-                ];
+                $this->pipelines[] = $pipeline;
             }
         }
 
         return $this->pipelines;
     }
 
-    private function getLinkConfig(string $type, string $from, string $to): ?array
+    private function getLinkConfig(string $type, string $from, string $to): ?Entity
     {
         if ($type === DataLineageLinkDTO::TYPE_DATA_PIPELINE) {
             if (!$this->getAcl()->check('DataPipeline', 'read')) {
@@ -280,8 +250,8 @@ class DataLineage extends AbstractService
             }
 
             foreach ($this->getPipelines() as $pipeline) {
-                if ($pipeline['source'] === $from && $pipeline['target'] === $to) {
-                    return ['id' => $pipeline['id'], 'number' => $pipeline['number']];
+                if ($pipeline->get('sourceEntityId') === $from && $pipeline->get('targetEntityId') === $to) {
+                    return $pipeline;
                 }
             }
 
@@ -292,56 +262,39 @@ class DataLineage extends AbstractService
             return null;
         }
 
-        $consolidation = $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($to);
-        if (empty($consolidation)) {
+        return $this->getEntityManager()->getRepository('Consolidation')->getByEntityName($to);
+    }
+
+    /**
+     * @return array<string, Entity>
+     */
+    private function loadRecords(array $keys): array
+    {
+        $records = [];
+        foreach ($this->groupIdsByScope(array_unique($keys)) as $scope => $ids) {
+            foreach ($this->getEntityManager()->getRepository($scope)->where(['id' => $ids])->find() as $entity) {
+                $records[$this->buildRecordKey($scope, $entity->get('id'))] = $entity;
+            }
+        }
+
+        return $records;
+    }
+
+    private function getRecordName(Entity $entity): ?string
+    {
+        if (!$this->getAcl()->check($entity, 'read')) {
             return null;
         }
 
-        return ['id' => $consolidation->get('id'), 'number' => $consolidation->get('number')];
+        $service = $this->getServiceFactory()->create($entity->getEntityName());
+        $value = $service instanceof Record ? $service->getLocalizedNameValue($entity, $entity->getEntityName()) : null;
+
+        return !empty($value) ? $value : $entity->get('id');
     }
 
-    private function loadEntities(array $keys): void
+    private function buildRecordKey(string $scope, string $id): string
     {
-        $missing = array_filter($keys, fn(string $key) => !isset($this->entities[$key]));
-
-        foreach ($this->groupIdsByScope($missing) as $scope => $ids) {
-            foreach ($this->getEntityManager()->getRepository($scope)->where(['id' => $ids])->find() as $entity) {
-                $this->entities["$scope:{$entity->get('id')}"] = $entity;
-            }
-        }
-    }
-
-    private function createRecord(string $key, ?string $toKey): DataLineageRecordDTO
-    {
-        $entity = $this->entities[$key];
-        $name = $this->getRecordName($key);
-        $to = $toKey !== null ? $this->entities[$toKey] : null;
-
-        return new DataLineageRecordDTO(
-            $entity->getEntityName(),
-            $entity->get('id'),
-            $name,
-            $to?->getEntityName(),
-            $to?->get('id'),
-            $name === null
-        );
-    }
-
-    private function getRecordName(string $key): ?string
-    {
-        if (!array_key_exists($key, $this->names)) {
-            $entity = $this->entities[$key];
-            $scope = $entity->getEntityName();
-
-            $this->names[$key] = null;
-            if ($this->getAcl()->check($entity, 'read')) {
-                $service = $this->getServiceFactory()->create($scope);
-                $value = $service instanceof Record ? $service->getLocalizedNameValue($entity, $scope) : null;
-                $this->names[$key] = !empty($value) ? $value : $entity->get('id');
-            }
-        }
-
-        return $this->names[$key];
+        return "$scope:$id";
     }
 
     private function groupIdsByScope(array $keys): array
