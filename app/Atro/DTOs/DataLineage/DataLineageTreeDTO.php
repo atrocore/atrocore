@@ -21,7 +21,7 @@ final readonly class DataLineageTreeDTO
      * @param DataLineageLinkDTO[]     $links
      */
     public function __construct(
-        public DataLineageEndpointDTO $endpoint,
+        public DataLineageEndpointDTO $currentEndpoint,
         public array $endpoints,
         public array $records,
         public array $links,
@@ -32,11 +32,11 @@ final readonly class DataLineageTreeDTO
     public function toArray(): array
     {
         return [
-            'endpoint'  => ['scope' => $this->endpoint->scope, 'id' => $this->endpoint->id],
-            'endpoints' => array_map(fn(DataLineageEndpointDTO $item) => get_object_vars($item), $this->endpoints),
-            'records'   => array_map(fn(DataLineageRecordDTO $item) => get_object_vars($item), $this->records),
-            'links'     => array_map(fn(DataLineageLinkDTO $item) => get_object_vars($item), $this->links),
-            'truncated' => $this->truncated,
+            'currentEndpoint' => ['scope' => $this->currentEndpoint->scope, 'id' => $this->currentEndpoint->id],
+            'endpoints'       => array_map(fn(DataLineageEndpointDTO $item) => get_object_vars($item), $this->endpoints),
+            'records'         => array_map(fn(DataLineageRecordDTO $item) => get_object_vars($item), $this->records),
+            'links'           => array_map(fn(DataLineageLinkDTO $item) => get_object_vars($item), $this->links),
+            'truncated'       => $this->truncated,
         ];
     }
 }

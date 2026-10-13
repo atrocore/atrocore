@@ -77,7 +77,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
-                            'endpoint'  => [
+                            'currentEndpoint' => [
                                 'type'        => 'object',
                                 'description' => 'Selected endpoint, the root of the tree',
                                 'properties'  => [
@@ -85,7 +85,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                                     'id'    => ['type' => 'string'],
                                 ],
                             ],
-                            'endpoints' => [
+                            'endpoints'       => [
                                 'type'        => 'array',
                                 'description' => 'All endpoints reachable from the current record',
                                 'items'       => [
@@ -97,7 +97,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                                     ],
                                 ],
                             ],
-                            'records'   => [
+                            'records'         => [
                                 'type'        => 'array',
                                 'description' => 'Records of the tree. Each record refers to the record it passes the data to.',
                                 'items'       => [
@@ -115,7 +115,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                                     ],
                                 ],
                             ],
-                            'links'     => [
+                            'links'           => [
                                 'type'        => 'array',
                                 'description' => 'Relations between the entities of the tree',
                                 'items'       => [
@@ -137,7 +137,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                                     ],
                                 ],
                             ],
-                            'truncated' => [
+                            'truncated'       => [
                                 'type'        => 'boolean',
                                 'description' => '`true` when the tree is cut by the maximum number of records',
                             ],
