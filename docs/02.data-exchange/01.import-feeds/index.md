@@ -114,6 +114,9 @@ The `Data Sourcing` section is type-dependent—each import feed type has its ow
 - **Marker for Null Value** – symbol interpreted as NULL
 - **Marking for No Relation** – symbol for unlinked relations
 - **Marker for Skipped Value** – symbol to skip during import, regardless of whether it is a field or a relation
+- **Skip Missing Source Fields** – defines what happens if a source field used in the [configurator](#configurator) is missing in the import file:
+    - *disabled* (default) – the import fails with an error listing all missing source fields, and no data is changed
+    - *enabled* – the import runs, and fields mapped to missing source fields are left unchanged. If a mapping rule uses several source fields and at least one of them is missing, the whole rule is skipped.
 - **Repeated data record processing** – duplicate handling:
     - *Generate mistake for repeated records* – error on duplicates
     - *Allow repeated data record processing* – process duplicates. For feeds of type "Update", this results in existing data being replaced with the last processed value. If your feed allows creating new records, both duplicate records will be created.
@@ -143,6 +146,8 @@ Use [single record actions](../../01.atrocore/04.understanding-ui/index.md#singl
 ### Identifier
 
 Define which fields serve as identifiers for record matching. Multiple identifiers can be selected and are used together for database searches. If no identifier is selected, only new records can be created (updates require identifiers).
+
+!! If a source field used as an identifier is missing in the import file, the import fails, even if [Skip Missing Source Fields](#data-processing) is enabled.
 
 ### Default Value
 
