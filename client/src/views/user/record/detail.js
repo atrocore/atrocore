@@ -41,7 +41,19 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
             this.setupNonAdminFieldsAccess();
 
-            if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
+            if (this.model.id === this.getUser().id) {
+                this.listenTo(this.model, 'after:save', function () {
+                    this.getUser().set(this.model.toJSON());
+                }.bind(this));
+            }
+
+            this.setupFieldAppearance();
+        },
+
+        setupActionItems: function () {
+            Dep.prototype.setupActionItems.call(this);
+
+            if (this.model.id === this.getUser().id || this.getUser().isAdmin()) {
                 if (!this.getConfig().get('resetPasswordViaEmailOnly', false)) {
                     this.dropdownItemList.push({
                         name: 'changePassword',
@@ -56,14 +68,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     style: 'default'
                 });
             }
-
-            if (this.model.id == this.getUser().id) {
-                this.listenTo(this.model, 'after:save', function () {
-                    this.getUser().set(this.model.toJSON());
-                }.bind(this));
-            }
-
-            this.setupFieldAppearance();
         },
 
         setupNonAdminFieldsAccess: function () {
