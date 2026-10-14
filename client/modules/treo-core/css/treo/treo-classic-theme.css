@@ -13695,8 +13695,11 @@ ul.dropdown-menu > li.checkbox {
     text-align: center;
 }
 
+.page-header.detail-page-header.selection-header .entity-history-container,
 .page-header.detail-page-header.selection-header .header-wrapper {
-    position: static;
+    position: sticky;
+    top: auto;
+    left: 0;
 }
 
 #main > .content-wrapper > main[data-mode=detail]:has(.page-header.detail-page-header.selection-header) {
