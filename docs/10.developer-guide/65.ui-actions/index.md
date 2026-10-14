@@ -462,12 +462,12 @@ The `ClusterItem` entity:
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
-    "deconsolidate": {
-      "url": "ClusterItem/massDeconsolidate",
+    "split": {
+      "url": "ClusterItem/massSplit",
       "method": "POST",
       "refresh": true,
-      "iconClass": "ph ph-arrows-split",
-      "sortOrder": 30
+      "iconClass": "ph ph-scissors",
+      "sortOrder": 35
     },
     "move": {
       "url": "ClusterItem/massMove",

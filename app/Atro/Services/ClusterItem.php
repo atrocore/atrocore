@@ -284,19 +284,9 @@ class ClusterItem extends Base
         return true;
     }
 
-    public function deconsolidate(array $params): MassActionResultDTO
+    public function deconsolidateAll(array $clusterItems): MassActionResultDTO
     {
-        if (!empty($params['where'])) {
-            $selectParams = $this->getSelectParams(['where' => $params['where'], 'maxSize' => 2000]);
-            $collection   = $this->getRepository()->find($selectParams);
-        } else {
-            if (empty($ids = $params['ids'])) {
-                throw new BadRequest("No ids provided.");
-            }
-            $collection = $this->getRepository()->findByIds($ids);
-        }
-
-        $entities = iterator_to_array($collection);
+        $entities = array_values($clusterItems);
 
         if (empty($entities)) {
             return new MassActionResultDTO(0);
@@ -315,6 +305,17 @@ class ClusterItem extends Base
             }
         }
 
+        $consolidatedItemIds = $this->getConsolidatedContributorItemIds($cluster);
+        $selectedItemIds = array_map(fn($e) => $e->get('id'), $entities);
+        if (!empty($consolidatedItemIds) && empty(array_diff($consolidatedItemIds, $selectedItemIds))) {
+            throw new BadRequest($this->getInjection('language')->translate('cannotDeconsolidateAllItems', 'exceptions', 'ClusterItem'));
+        }
+
+        return new MassActionResultDTO($this->deconsolidateItems($cluster, $entities));
+    }
+
+    private function deconsolidateItems(Entity $cluster, array $entities): int
+    {
         $count = 0;
         foreach ($entities as $entity) {
             if (!$this->isClusterItemConsolidated($entity)) {
@@ -334,7 +335,21 @@ class ClusterItem extends Base
             $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
         }
 
-        return new MassActionResultDTO($count);
+        return $count;
+    }
+
+    private function getConsolidatedContributorItemIds(Entity $cluster): array
+    {
+        if (empty($cluster->get('goldenRecordId'))) {
+            return [];
+        }
+
+        $contributorEntityName = (string)$this->getEntityManager()->getRepository('Consolidation')->getContributorEntityName($cluster->get('masterEntity'));
+        if (empty($contributorEntityName)) {
+            return [];
+        }
+
+        return $this->getRepository()->getConsolidatedContributorItemIds($cluster->get('id'), $contributorEntityName, $cluster->get('goldenRecordId'));
     }
 
     public function split(array $params): MassActionResultDTO
@@ -367,7 +382,7 @@ class ClusterItem extends Base
             }
         }
 
-        $this->deconsolidate(['ids' => array_map(fn($e) => $e->get('id'), $entities)]);
+        $this->deconsolidateItems($cluster, $entities);
 
         $newCluster = null;
         $this->runAsSystemUser(function () use (&$newCluster, $cluster) {
@@ -496,10 +511,14 @@ class ClusterItem extends Base
             null;
 
 
+        $canDeconsolidate = $isStaging
+            && $isConsolidated
+            && count($this->getConsolidatedContributorItemIds($entity->get('cluster'))) > 1;
+
         if ($this->getUser()->isAdmin()) {
             $entity->setMetaPermission('consolidate', !$isConsolidated);
             $entity->setMetaPermission('reject', true);
-            $entity->setMetaPermission('deconsolidate', $isStaging);
+            $entity->setMetaPermission('deconsolidate', $canDeconsolidate);
             $entity->setMetaPermission('split', $isStaging);
             $entity->setMetaPermission('move', true);
             $entity->setMetaPermission('delete', true);
@@ -513,7 +532,7 @@ class ClusterItem extends Base
 
         $entity->setMetaPermission('consolidate', false);
         $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('deconsolidate', $isStaging && $this->getAcl()->check($entity, 'edit'));
+        $entity->setMetaPermission('deconsolidate', $canDeconsolidate && $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('split', $isStaging && $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('move', $this->getAcl()->check($entity, 'edit'));
         $entity->setMetaPermission('delete', false);

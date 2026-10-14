@@ -79,7 +79,7 @@ class DeconsolidateHandler extends AbstractHandler
             throw new NotFound();
         }
 
-        $result = $recordService->deconsolidate(['ids' => [$id]]);
+        $result = $recordService->deconsolidateAll([$entity]);
 
         return new BoolResponse($result->count > 0);
     }

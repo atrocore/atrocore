@@ -261,17 +261,25 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         },
 
         getCompareMassActions() {
-            const actions = Dep.prototype.getCompareMassActions.call(this);
+            let actions = Dep.prototype.getCompareMassActions.call(this);
 
-            if (this.merging || !this.getAcl().check('Cluster', 'edit')) {
-                return actions;
+            if (!this.merging && this.getAcl().check('Cluster', 'edit')) {
+                actions = ['consolidate', 'deconsolidate', ...actions.filter(action => !['consolidate', 'deconsolidate'].includes(action))];
             }
 
-            return ['consolidate', ...actions.filter(action => action !== 'consolidate')];
+            const checkedItems = this.getModels()
+                .filter(model => model.id !== this.PREVIEW_COLUMN_ID && this.checkedIds.includes(model.id) && model.item)
+                .map(model => model.item);
+
+            return actions.filter(action => {
+                const permission = action === 'remove' ? 'delete' : action;
+
+                return checkedItems.every(item => item.get('_meta')?.permissions?.[permission] !== false);
+            });
         },
 
         executeCompareMassAction(action, data) {
-            if (action !== 'consolidate') {
+            if (!['consolidate', 'deconsolidate'].includes(action)) {
                 return Dep.prototype.executeCompareMassAction.call(this, action, data);
             }
 
@@ -285,9 +293,9 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
             this.notify(this.translate('pleaseWait', 'messages'));
 
-            this.ajaxPostRequest(`Cluster/${this.selectionId}/consolidate`, {clusterItemsIds})
+            this.ajaxPostRequest(`Cluster/${this.selectionId}/${action}`, {clusterItemsIds})
                 .then(() => {
-                    this.notify(this.translate('consolidate', 'massActionSuccessMessages', 'ClusterItem'), 'success');
+                    this.notify(this.translate(action, 'massActionSuccessMessages', 'ClusterItem'), 'success');
 
                     const view = this.getParentView();
                     view.reloadModels(() => view.refreshContent());

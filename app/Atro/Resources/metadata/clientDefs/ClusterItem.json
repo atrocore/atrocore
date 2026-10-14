@@ -52,14 +52,6 @@
       "iconClass": "ph ph-x",
       "sortOrder": 20
     },
-    "deconsolidate": {
-      "url": "ClusterItem/massDeconsolidate",
-      "confirm": false,
-      "massAction": true,
-      "refresh": true,
-      "iconClass": "ph ph-arrows-split",
-      "sortOrder": 30
-    },
     "split": {
       "url": "ClusterItem/massSplit",
       "confirm": false,

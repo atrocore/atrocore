@@ -25,6 +25,7 @@
     "cannotUnreject": "This cluster item cannot be unrejected",
     "itemsMustBelongToTheSameCluster": "All selected items must belong to the same cluster.",
     "cannotDeconsolidateMasterEntityItem": "Cannot deconsolidate the master entity item.",
+    "cannotDeconsolidateAllItems": "Cannot deconsolidate all consolidated items: at least one item must stay linked to the golden record.",
     "cannotSplitMasterEntityItem": "Cannot split the master entity item.",
     "idOrIdListOrWhereRequired": "Please provide at least one of: an ID, a list of IDs, or a search filter.",
     "targetClusterIdRequired": "Target cluster is required."
