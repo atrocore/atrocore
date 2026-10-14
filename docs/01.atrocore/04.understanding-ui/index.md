@@ -308,7 +308,7 @@ Other modules can add more panels to the side view panel. Please, visit our [sto
 
 ## Left sidebar
 
-The left sidebar is used to navigate and filter records. It contains a tree of the current entity's records, tabs for its Link and Multiple Link fields, [Bookmarks](../05.toolbar/01.bookmarks/index.md) and [Last viewed](#last-viewed-tab).
+The left sidebar is used to navigate and filter records. It contains a tree of the current entity's records, tabs for its Link and Multiple Link fields, [Bookmarks](../05.toolbar/01.bookmarks/index.md), [Last viewed](#last-viewed-tab) and, for the entities involved in master data management, [Data Lineage](../18.master-data-management/index.md#data-lineage-tab).
 
 Clicking a record in the tree opens it – the record you are viewing stays highlighted, and the search box above the tree filters the tree by name. Filtering the list by the related fields is described in [search and filtering](../11.search-and-filtering/).
 

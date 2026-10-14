@@ -72,6 +72,12 @@ class Layout extends AbstractListener
                     $event->setArgument('result', $result);
                 }
 
+                if ($this->hasDataLineage($scope)) {
+                    $result = $event->getArgument('result');
+                    $result[] = ['name' => '_dataLineage'];
+                    $event->setArgument('result', $result);
+                }
+
                 if(in_array($scope, ['Selection', 'Cluster'])) {
                     $result = $event->getArgument('result');
                     $result[] = ['name' => '_items'];
@@ -146,6 +152,27 @@ class Layout extends AbstractListener
                 }
             }
         }
+        return false;
+    }
+
+    protected function hasDataLineage(string $scope): bool
+    {
+        $scopeDefs = $this->getMetadata()->get(['scopes', $scope]) ?? [];
+
+        if (!empty($scopeDefs['isDataPipelineSource']) || !empty($scopeDefs['isDataPipelineTarget'])) {
+            return true;
+        }
+
+        if (!empty($scopeDefs['primaryEntityId']) && ($scopeDefs['role'] ?? null) === 'contributor') {
+            return true;
+        }
+
+        foreach ($this->getMetadata()->get('scopes') ?? [] as $defs) {
+            if (($defs['primaryEntityId'] ?? null) === $scope && ($defs['role'] ?? null) === 'contributor') {
+                return true;
+            }
+        }
+
         return false;
     }
 

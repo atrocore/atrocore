@@ -168,3 +168,41 @@ The fields that connect the three layers to each other are created by the system
 The panel is added at the end of the detail layout as long as the entity has no customized detail layout of its own. It also appears in `Administration / Layouts`, so saving the detail layout there turns the panel into a regular part of it. From then on the system no longer adds the panel, and it is managed manually like any other panel.
 
 > A contributor entity that inherits the layout of its master entity has no layout of its own, so it still receives the panel even if the layout of the master entity is customized.
+
+## Data Lineage Tab
+
+On the detail view of a record, the [left sidebar](../04.understanding-ui/index.md#left-sidebar) contains the **Data Lineage** tab. It shows the chain of records the data of the current record passes through – via the data pipelines and the consolidation – up to the final record, and the records this final record is built from.
+
+The tab is available for the source and target entities of the data pipelines, for the contributor entities and for the master entities that have a contributor entity.
+
+![Data Lineage tab](./_assets/data-lineage-tab.png){.small}
+
+### Tree Structure
+
+The final record, called the endpoint, is displayed at the top of the tree. Usually it is a master record. Below it, the records the data comes from are displayed, down to the source records at the bottom. From any record there is only one path to the endpoint.
+
+The records are connected as follows:
+
+- Contributor records are indented under their master record and connected to it with a solid line.
+- Records connected by a data pipeline are displayed one under another at the same level and connected with a dotted line.
+
+Each record is displayed with its entity name and its name. Clicking the name opens the record. The current record is highlighted. Records you have no read access to are displayed with the entity name only.
+
+### Endpoint Selection
+
+The data of a record can reach several endpoints, e.g. when its entity is the source entity of several data pipelines. All endpoints are listed in the drop-down list above the tree, and the tree is built for the selected one. If there is only one endpoint, the drop-down list is disabled.
+
+When you open another record, the selected endpoint is kept as long as it is reachable from that record. Otherwise, the first endpoint is selected.
+
+![Data Lineage endpoint selection](./_assets/data-lineage-endpoint-selection.png){.small}
+
+### Opening Data Pipelines and Consolidations
+
+The lines between the records are clickable and open the corresponding configuration in a new browser tab:
+
+- A dotted line opens the [data pipeline](#data-pipelines) that connects the two entities.
+- A solid line opens the [consolidation](#consolidation) of the master entity.
+
+Hovering over a line highlights it and shows the name and the number of the configuration. A line is not clickable if the configuration does not exist or you have no read access to it.
+
+![Data Lineage line hover](./_assets/data-lineage-line-hover.png){.small}
