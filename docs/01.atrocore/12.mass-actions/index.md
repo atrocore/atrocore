@@ -24,6 +24,7 @@ The following mass actions are available by default in the AtroCore system:
 - **[Remove relation](#remove-relation)** – to remove the relations that have been added to the selected entity records.
 - **[Delete attribute](#delete-attribute)** – to remove attributes from records of entities that have attributes enabled.
 - **[Inherit all from parent](#inherit-all-from-parent)** – to overwrite inheritable field values in the selected records with values from their parent records. Available on [hierarchy](../03.administration/11.entity-management/01.entity-types/index.md#hierarchy) entities only such as a [Product](../../05.pim/03.products/index.md).
+- **[Fill from children](#fill-from-children)** – to fill the empty field values, attributes and relations of the selected records with values shared by all of their direct children. Available on [hierarchy](../03.administration/11.entity-management/01.entity-types/index.md#hierarchy) entities without multiple parents.
 
 Additional options may be added by additional modules, such as **Translate** option added by [Translations](https://store.atrocore.com/en/translations/20191) module. You can also [create](#custom-mass-actions) your own mass actions.
 
@@ -146,6 +147,14 @@ To use this action, select the child records you want to update and choose `Acti
 > This action overwrites existing field values. Unlike automatic inheritance, which only fills empty fields, this action replaces any inheritable value regardless of whether the field already has a value.
 
 For more information on how inheritance works, see [Hierarchies and Inheritance](../03.administration/11.entity-management/04.hierarchies-and-inheritance/index.md).
+
+## Fill from children
+
+Fill from children is a mass action available on [Hierarchy](../03.administration/11.entity-management/01.entity-types/index.md#hierarchy) entities without multiple parents. For each selected record, it fills the empty fields, attributes and relations with values that all of its direct children share. Existing values are not replaced, and records without children are left unchanged.
+
+To use this action, select the parent records and choose `Actions / Fill from children`. The operation runs as a background job.
+
+For the exact rules, see [Fill from Children](../03.administration/11.entity-management/04.hierarchies-and-inheritance/index.md#fill-from-children).
 
 ## Custom mass actions
 

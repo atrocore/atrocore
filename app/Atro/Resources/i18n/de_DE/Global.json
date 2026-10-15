@@ -204,6 +204,7 @@
     "previewFor": "Skriptwert für",
     "inheritAllForChildren": "Alles für untergeordnete Elemente vererben",
     "inheritAllFromParent": "Vererben alles von Eltern",
+    "fillFromChildren": "Aus untergeordneten Elementen füllen",
     "homepage": "Startseite",
     "Sharing": "Freigaben",
     "useDragAndDrop": "Per Drag & Drop neu anordnen",
@@ -583,6 +584,9 @@
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
     "confirmInheritAllForChildren": "Sind Sie sicher, dass alle untergeordneten Elemente Feld- (und Attribut-) Werte sowie auch Beziehungen von diesem übergeordneten Element erben sollen? Vorhandene Werte werden nicht ersetzt.",
     "confirmInheritAllFromParent": "Sind Sie sicher, dass Sie wollen, dass alle Elemente Feld- (und Attribut-) Werte sowie Beziehungen von Elementen des übergeordneten Datensatzes erben? Vorhandene Werte werden nicht ersetzt.",
+    "confirmFillFromChildren": "Sind Sie sicher, dass die leeren Feld- (und Attribut-) Werte sowie die Beziehungen dieses Datensatzes mit den Werten gefüllt werden sollen, die alle direkten untergeordneten Elemente gemeinsam haben? Vorhandene Werte werden nicht ersetzt.",
+    "confirmMassFillFromChildren": "Sind Sie sicher, dass die leeren Feld- (und Attribut-) Werte sowie die Beziehungen der ausgewählten Datensätze mit den Werten gefüllt werden sollen, die alle ihre direkten untergeordneten Elemente gemeinsam haben? Vorhandene Werte werden nicht ersetzt.",
+    "nothingFilledFromChildren": "Nichts zu füllen: Die untergeordneten Elemente haben keinen gemeinsamen Wert, der in diesem Datensatz leer ist.",
     "optionValueCannotBeEmpty": "Option darf nicht leer sein",
     "minimumOneOptionsRequired": "Mindestens ein Optionswert ist erforderlich.",
     "defaultEnumValueCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",
@@ -768,7 +772,8 @@
     "compare": "Vergleichen Sie",
     "removeAttribute": "Attribut löschen",
     "select": "Wählen",
-    "inheritAllFromParent": "Vererben alles von Eltern"
+    "inheritAllFromParent": "Vererben alles von Eltern",
+    "fillFromChildren": "Aus untergeordneten Elementen füllen"
   },
   "fields": {
     "number": "Nummer",

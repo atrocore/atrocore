@@ -2038,6 +2038,16 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.massActionList.push('inheritAllFromParent');
                 this.checkAllResultMassActionList.push('inheritAllFromParent');
             }
+
+            if (
+                this.isHierarchical()
+                && !this.getMetadata().get(['scopes', this.scope, 'multiParents'])
+                && (this.getMetadata().get(['scopes', this.scope, 'fieldValueInheritance']) || this.getMetadata().get(['scopes', this.scope, 'relationInheritance']))
+                && this.getAcl().check(this.scope, 'edit')
+            ) {
+                this.massActionList.push('fillFromChildren');
+                this.checkAllResultMassActionList.push('fillFromChildren');
+            }
         },
 
         isAddRemoveRelationEnabled() {
@@ -2150,6 +2160,23 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.collection.fetch();
                 }.bind(this));
             }, this);
+        },
+
+        massActionFillFromChildren() {
+            this.confirm({
+                message: this.translate('confirmMassFillFromChildren', 'messages'),
+                confirmText: this.translate('Apply')
+            }, () => {
+                let where = this.allResultIsChecked
+                    ? this.collection.getWhere()
+                    : [{type: 'in', attribute: 'id', value: this.checkedList}];
+
+                this.notify(this.translate('pleaseWait', 'messages'));
+
+                this.ajaxPostRequest(`${this.entityType}/fillFromChildrenAsync`, {where}).then(() => {
+                    this.notify(this.translate('jobAdded', 'messages'), 'success');
+                });
+            });
         },
 
         checkMassActionJob(jobId) {

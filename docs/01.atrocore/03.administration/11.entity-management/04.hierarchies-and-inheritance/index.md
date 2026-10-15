@@ -103,6 +103,19 @@ In addition to automatic inheritance, you can manually update inheritance for al
 
 > These manual actions will overwrite existing field values, unlike automatic inheritance which only affects empty fields.
 
+### Fill from Children
+
+**Fill from children** works in the opposite direction: it fills a parent record from values that all of its direct children share. It is useful when child records come from external systems (e.g. an ERP) and are grouped under a parent created in AtroCore. The action is available in the detail view of a record that has children, and as a [mass action](../../../12.mass-actions/index.md#fill-from-children).
+
+- A field is filled only if it is empty in the parent and every direct child has exactly the same value. Existing values are never replaced, and different values among the children leave the field empty.
+- Empty and blank values are different values: children only agree if all of them are empty, or all of them are blank.
+- Language versions of a field are compared separately, so a field can be filled in one language and not in another.
+- A value with a unit or a range is compared as a whole: the same value with different units does not count as the same value.
+- A relation is filled only if the parent has no linked record and all children are linked to exactly the same records.
+- An attribute present on every child is added to the parent; its value is filled only if all children have the same value. Adding attributes requires the permission to add attributes to the record and is not done when attribute linking is disabled for the entity. Variant-specific attributes of a product are not added.
+
+Only direct children are used. For a hierarchy with several levels, fill the lower parents first. The action follows the **Field Value Inheritance** and **Relation Inheritance** settings and skips uninherited fields and relations. It is not available when **Multiple Parents** is enabled.
+
 ## Use Cases
 
 Hierarchies and inheritance are particularly useful for:

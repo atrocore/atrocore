@@ -301,6 +301,11 @@ class Record extends RecordService
         return $chunkSize;
     }
 
+    protected function getAllowedMassActions(): array
+    {
+        return ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
+    }
+
     public function executeMassAction(array $params, ?\Closure $actionOperation = null): array
     {
         if (empty($params['action']) || !is_int($params['maxCountWithoutJob']) || empty($params['maxChunkSize']) || empty($params['minChunkSize'])) {
@@ -313,10 +318,8 @@ class Record extends RecordService
         $minChunkSize       = $params['minChunkSize'];
         $maxConcurrentJobs  = $this->getConfig()->get('maxConcurrentJobs', 6);
 
-        $allowMassActions = ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
-
         $allowMassActions = array_merge(
-            $allowMassActions,
+            $this->getAllowedMassActions(),
             $this->getMetadata()->get(['clientDefs', $this->getEntityType(), 'massActionList'], [])
         );
 
