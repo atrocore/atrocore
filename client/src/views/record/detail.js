@@ -605,6 +605,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        actionTransformationPreview: function () {
+            this.createView('dataPipelineCompare', 'views/data-pipeline/modals/compare', {
+                sourceScope: this.model.name,
+                sourceId: this.model.id
+            }, dialog => dialog.render());
+        },
+
         actionShowPdfDialog: function () {
             const scope = this.model.name || this.scope;
 
@@ -694,6 +701,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         });
                     }
                 }
+            }
+
+            if (
+                !this.model.isNew()
+                && this.getMetadata().get(['scopes', this.model.name, 'isDataPipelineSource'])
+                && this.getAcl().check('DataPipeline', 'read')
+            ) {
+                this.additionalButtons.push({
+                    name: 'transformationPreview',
+                    label: this.translate('transformationPreview', 'labels', 'DataPipeline'),
+                    action: 'transformationPreview'
+                });
             }
 
             if (this.isHierarchical() && !this.model.isNew()) {

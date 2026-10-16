@@ -2,16 +2,34 @@
   "fields": {
     "targetEntity": "Entité cible",
     "sourceEntity": "Entité source",
-    "mergingScript": "Script de fusion"
+    "transformationScript": "Script de transformation",
+    "executeTransformationAs": "Exécuter la transformation en tant que"
   },
   "tooltips": {
-    "mergingScript": "Configurez la façon dont les données de l'enregistrement source sont transformées et mappées vers l'enregistrement cible."
+    "transformationScript": "Configurez la façon dont les données de l'enregistrement source sont transformées et mappées vers l'enregistrement cible.",
+    "executeTransformationAs": "Le compte d'utilisateur qui sera utilisé pour exécuter le script de transformation."
   },
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "L'entité '%s' est une dérivation de type contributor ou change request et ne peut pas être utilisée comme entité source.",
     "sourceEntityTypeNotAllowed": "L'entité '%s' ne peut pas être utilisée comme entité source : seuls les types Base et Hierarchy sont autorisés.",
     "targetEntityCannotBePrimaryOfContributorDerivative": "L'entité '%s' est l'entité primaire d'une dérivation de type contributor et ne peut pas être utilisée comme entité cible.",
     "sourceAndTargetEntityCannotBeSame": "L'entité source et l'entité cible ne peuvent pas être identiques.",
-    "dataPipelineAlreadyExists": "Un data pipeline pour ce couple d'entités existe déjà."
+    "dataPipelineAlreadyExists": "Un data pipeline pour ce couple d'entités existe déjà.",
+    "transformationScriptIsMissing": "Le script de transformation est manquant pour le pipeline de données.",
+    "transformationScriptIsNotValid": "Le script de transformation renvoie une charge utile invalide : %s"
+  },
+  "labels": {
+    "targetRecordPreviewHint": "Montre à quoi ressemblerait l'enregistrement cible après la transformation. Rien n'est enregistré.",
+    "noDataPipelineConfigured": "Aucun pipeline de données n'est configuré pour ce couple d'entités",
+    "noSourceRecords": "Il n'existe encore aucun enregistrement de l'entité source",
+    "discard": "Abandonner",
+    "transformationPreview": "Aperçu de la transformation",
+    "targetRecordNotExists": "L'enregistrement cible n'existe pas encore. Appliquez l'aperçu pour voir à quoi il ressemblerait après la transformation."
+  },
+  "options": {
+    "executeTransformationAs": {
+      "system": "Système",
+      "sameUser": "Même utilisateur"
+    }
   }
 }

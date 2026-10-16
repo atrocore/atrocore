@@ -19016,6 +19016,66 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     font-style: italic;
 }
 
+.compare-entities table tr th .target-entity-select {
+    display: block;
+    width: 200px;
+    max-width: 100%;
+    margin: 0 auto;
+    font-weight: normal;
+    text-align: left;
+}
+
+.compare-entities table tr th .target-entity-select .selectize-dropdown .option {
+    text-align: left;
+}
+
+.compare-entities table tr th .source-record-select {
+    display: block;
+    width: 250px;
+    max-width: 100%;
+    margin: 0 auto;
+    font-weight: normal;
+    text-align: left;
+}
+
+.compare-entities.data-pipeline-compare .compare-panel .list {
+    overflow-x: auto;
+}
+
+.compare-entities.data-pipeline-compare .compare-panel table {
+    table-layout: fixed;
+    width: 100%;
+    min-width: 700px;
+}
+
+.compare-entities.data-pipeline-compare .compare-panel table th,
+.compare-entities.data-pipeline-compare .compare-panel table td {
+    max-width: none;
+}
+
+.compare-entities .record-content .no-target-record {
+    padding: 20px;
+    color: #999;
+    font-style: italic;
+    text-align: center;
+}
+
+.compare-entities table tr th.data-pipeline-preview {
+    position: relative;
+    font-style: italic;
+}
+
+.compare-entities table tr th.data-pipeline-preview:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2px);
+    height: 3px;
+    background-image: repeating-linear-gradient(135deg, #daa520, #daa520 4px, #ffffff 4px, #ffffff 8px);
+}
+
 .compare-records table tr .merge-radio {
     padding-left: 15px;
     padding-right: 15px;
