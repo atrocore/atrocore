@@ -153,7 +153,7 @@ class DataPipeline extends Base
             $transformationScript = (string)$pipeline->get('transformationScript');
         }
 
-        if ($transformationScript === '') {
+        if (empty($transformationScript)) {
             throw new BadRequest($this->getInjection('language')->translate('transformationScriptIsMissing', 'exceptions', 'DataPipeline'));
         }
 
