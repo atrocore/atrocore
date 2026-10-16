@@ -1085,6 +1085,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                             hasLayoutEditor: true,
                             afterOnMount: () => {
                                 this.createLayoutConfigurator();
+                                this.getParentView().$el.find('.modal-body').get(0)?.style.setProperty('--compare-anchor-nav-height', anchorContainer.outerHeight() + 'px');
                             },
                             scrollCallback: (name) => {
                                 let panel = this.$el.find(`tbody[data-name="${name}"]`);
@@ -1092,8 +1093,9 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                                     panel = panel.get(0);
                                     let content = this.getParentView().$el.find('.modal-body').get(0);
                                     const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+                                    const headerHeight = anchorContainer.outerHeight() + (this.$el.find('.compare-panel table > thead').outerHeight() || 0);
                                     content.scrollTo({
-                                        top: panelOffset - 42,
+                                        top: panelOffset - headerHeight,
                                         behavior: "smooth"
                                     });
                                 }

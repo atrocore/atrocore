@@ -18744,6 +18744,28 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     table-layout: fixed;
 }
 
+.modal-body .compare-records .compare-panel .table {
+    margin-top: -1px;
+}
+
+.modal-body .compare-records .compare-panel .table > thead {
+    position: sticky;
+    top: var(--compare-anchor-nav-height, 0);
+    z-index: 10;
+}
+
+.modal-body .compare-records .compare-panel .table > thead > tr > th {
+    background-color: #fff;
+}
+
+.modal-body .compare-records .compare-panel .table > thead > tr:first-child > th {
+    box-shadow: inset 0 1px 0 #e8eced;
+}
+
+.modal .modal-dialog .modal-body > .anchor-nav-container .panel-navigation {
+    box-shadow: none;
+}
+
 .compare-records .compare-panel tr td:first-child {
     min-width: 250px !important;
 }
