@@ -178,6 +178,456 @@ class Hierarchy extends Base
         return true;
     }
 
+    public function fillFromChildrenViaJob(array $where): array
+    {
+        if (!$this->getAcl()->check($this->entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $this->validateFillFromChildren();
+
+        // no sync threshold: the records are always filled by the mass action jobs, which call fillFromChildren() for each
+        $result = $this->executeMassAction([
+            'action'             => 'fillFromChildren',
+            'where'              => json_decode(json_encode($where), true),
+            'maxCountWithoutJob' => 0,
+            'maxChunkSize'       => $this->getConfig()->get('massUpdateMaxChunkSize', 3000),
+            'minChunkSize'       => $this->getConfig()->get('massUpdateMinChunkSize', 400),
+            'singleActionMethod' => 'fillFromChildren',
+        ]);
+
+        return ['jobId' => $result[3]->get('id')];
+    }
+
+    /**
+     * Fills the empty fields, attributes and relations of a record with the values shared by all its direct children.
+     * Existing values are never replaced. Returns false when the record has no children or nothing was filled.
+     */
+    public function fillFromChildren(string $id): bool
+    {
+        $this->validateFillFromChildren();
+
+        $parent = $this->getRepository()->get($id);
+        if (empty($parent)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($parent, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $children = $parent->get('children');
+        if (empty($children[0])) {
+            return false;
+        }
+
+        $filled = false;
+
+        // relations go first, so that a classification taken from the children brings its attributes to the parent
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
+            $filled = $this->fillRelationsFromChildren($parent, $children);
+        }
+
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'fieldValueInheritance']))) {
+            $filled = $this->fillFieldsFromChildren($id, $children) || $filled;
+        }
+
+        $this->dispatchEvent('afterFillFromChildren', new Event(['parent' => $parent, 'children' => $children, 'filled' => $filled]));
+
+        return $filled;
+    }
+
+    protected function validateFillFromChildren(): void
+    {
+        if (!$this->isHierarchy()) {
+            throw new BadRequest('Filling from children is available only for entities of type Hierarchy.');
+        }
+
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+            throw new BadRequest('Filling from children is not available when multiple parents are enabled.');
+        }
+
+        if (
+            empty($this->getMetadata()->get(['scopes', $this->entityType, 'fieldValueInheritance']))
+            && empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))
+        ) {
+            throw new BadRequest('Filling from children requires field value inheritance or relation inheritance.');
+        }
+    }
+
+    /**
+     * A relation is filled when the parent has no record linked and all children are linked to the same records.
+     * Additional fields of the relation are copied when all children have the same values for them.
+     */
+    protected function fillRelationsFromChildren(Entity $parent, EntityCollection $children): bool
+    {
+        $childrenIds = array_column($children->toArray(), 'id');
+        $unInheritable = array_merge($this->getRepository()->getUnInheritableFields(), $this->getRepository()->getUnInheritableRelations());
+
+        $filled = false;
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $link => $fieldDefs) {
+            if (($fieldDefs['type'] ?? null) !== 'linkMultiple' || !empty($fieldDefs['notStorable']) || in_array($link, $unInheritable)) {
+                continue;
+            }
+
+            $relationName = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'relationName']);
+            if (empty($relationName)) {
+                continue;
+            }
+
+            $relationEntityName = ucfirst($relationName);
+            $relationRepository = $this->getEntityManager()->getRepository($relationEntityName);
+            $keySet = $this->getRepository()->getMapper()->getKeys($parent, $link);
+
+            if (!empty($relationRepository->select(['id'])->where([$keySet['nearKey'] => $parent->get('id')])->findOne())) {
+                continue;
+            }
+
+            $additionalFields = $this->getAdditionalFieldsNames($this->entityType, $link);
+
+            $linked = array_fill_keys($childrenIds, []);
+            foreach ($relationRepository->where([$keySet['nearKey'] => $childrenIds])->find() as $relationRecord) {
+                $foreignId = $relationRecord->get($keySet['distantKey']);
+                if (empty($foreignId)) {
+                    continue;
+                }
+
+                $additionalData = [];
+                foreach ($additionalFields as $additionalField) {
+                    $additionalData[$additionalField] = $relationRecord->get($additionalField);
+                }
+                $linked[$relationRecord->get($keySet['nearKey'])][$foreignId] = $additionalData;
+            }
+
+            $foreignIds = null;
+            foreach ($linked as $childLinks) {
+                $childForeignIds = array_keys($childLinks);
+                sort($childForeignIds);
+                if ($foreignIds !== null && $foreignIds !== $childForeignIds) {
+                    continue 2;
+                }
+                $foreignIds = $childForeignIds;
+            }
+
+            if (empty($foreignIds)) {
+                continue;
+            }
+
+            foreach ($foreignIds as $foreignId) {
+                $input = new \stdClass();
+                $input->{$keySet['nearKey']} = $parent->get('id');
+                $input->{$keySet['distantKey']} = $foreignId;
+
+                foreach ($additionalFields as $additionalField) {
+                    $values = array_unique(array_map(fn($childLinks) => $this->normalizeValueForComparison($childLinks[$foreignId][$additionalField]), $linked));
+                    if (count($values) === 1) {
+                        $input->$additionalField = reset($linked)[$foreignId][$additionalField];
+                    }
+                }
+
+                try {
+                    $this->getServiceFactory()->create($relationEntityName)->createEntity($input);
+                    $filled = true;
+                } catch (NotUnique $e) {
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error("Fill relation '$link' of {$this->entityType} '{$parent->get('id')}' from children failed: {$e->getMessage()}");
+                }
+            }
+        }
+
+        return $filled;
+    }
+
+    /**
+     * Fills the empty fields and attribute values of the parent with the values shared by all children. An attribute that
+     * is on every child is added to the parent, provided attributes can be linked to records and the user may add them.
+     */
+    protected function fillFieldsFromChildren(string $parentId, EntityCollection $children): bool
+    {
+        $converter = $this->getAttributeFieldConverter();
+
+        // filling the relations can have added attributes to the parent
+        $parent = $this->getRepository()->get($parentId);
+        $parent->hasAllEntityAttributes = false;
+        $converter->putAttributesToEntity($parent);
+        foreach ($children as $child) {
+            $converter->putAttributesToEntity($child);
+        }
+
+        $excludedAttributeIds = $this->getAttributeIdsExcludedFromFillFromChildren($parent);
+        $parentAttributeIds = $this->getLinkedAttributeIds($parent);
+
+        $childrenAttributeIds = [];
+        $commonAttributeIds = null;
+        foreach ($children as $child) {
+            $childAttributeIds = $this->getLinkedAttributeIds($child);
+            $childrenAttributeIds[$child->get('id')] = $childAttributeIds;
+            $commonAttributeIds = $commonAttributeIds === null ? $childAttributeIds : array_values(array_intersect($commonAttributeIds, $childAttributeIds));
+        }
+
+        $attributeIdsToAdd = [];
+        if (
+            empty($this->getMetadata()->get(['scopes', $this->entityType, 'disableAttributeLinking']))
+            && $this->getAcl()->check($parent, 'createAttributeValue')
+        ) {
+            $attributeIdsToAdd = array_values(array_diff($commonAttributeIds ?? [], $parentAttributeIds, $excludedAttributeIds));
+        }
+
+        // the fields of the parent and the fields of the attributes to add, which only the children have
+        $fieldsDefs = $parent->entityDefs['fields'] ?? [];
+        foreach ($children[0]->entityDefs['fields'] ?? [] as $field => $defs) {
+            if (!isset($fieldsDefs[$field]) && in_array($defs['attributeId'] ?? null, $attributeIdsToAdd, true)) {
+                $fieldsDefs[$field] = $defs;
+            }
+        }
+
+        // values of the fields and of the attributes the parent already has, values of the attributes to add
+        $inputs = [];
+        $newAttributeInputs = [];
+        foreach ($this->getRepository()->getInheritableFields($fieldsDefs) as $field) {
+            $defs = $fieldsDefs[$field];
+            $attributeId = $defs['attributeId'] ?? null;
+
+            if (empty($defs['type']) || (!empty($defs['mainField']) && $defs['mainField'] !== $field)) {
+                continue;
+            }
+
+            // system-managed fields such as the routes are never filled
+            if (empty($attributeId) && (!empty($defs['readOnly']) || !empty($defs['protected']))) {
+                continue;
+            }
+
+            // non-attribute linkMultiple fields are relations
+            if ($defs['type'] === 'linkMultiple' && empty($attributeId)) {
+                continue;
+            }
+
+            if (!empty($attributeId) && in_array($attributeId, $excludedAttributeIds, true)) {
+                continue;
+            }
+
+            $relevantChildren = [];
+            foreach ($children as $child) {
+                if (empty($attributeId) || in_array($attributeId, $childrenAttributeIds[$child->get('id')], true)) {
+                    $relevantChildren[] = $child;
+                }
+            }
+
+            if (empty($relevantChildren)) {
+                continue;
+            }
+
+            [$parts, $valueParts] = $this->getFieldPartsForFillFromChildren($relevantChildren[0], $field, $defs);
+
+            $isNewAttribute = !empty($attributeId) && !in_array($attributeId, $parentAttributeIds, true);
+            if (!$isNewAttribute && !$this->arePartsNull($parent, $valueParts)) {
+                continue;
+            }
+
+            $sharedValue = null;
+            foreach ($relevantChildren as $child) {
+                $value = [];
+                foreach ($parts as $part) {
+                    $value[$part] = $child->get($part);
+                }
+
+                if ($sharedValue !== null && $this->normalizeValueForComparison($sharedValue) !== $this->normalizeValueForComparison($value)) {
+                    continue 2;
+                }
+                $sharedValue = $value;
+            }
+
+            // all children are null, there is nothing to fill
+            if ($this->arePartsNull($relevantChildren[0], $valueParts)) {
+                continue;
+            }
+
+            if ($isNewAttribute) {
+                $newAttributeInputs[$attributeId][$field] = (object)$sharedValue;
+            } else {
+                $inputs[$field] = (object)$sharedValue;
+            }
+        }
+
+        if (empty($inputs) && empty($attributeIdsToAdd)) {
+            return false;
+        }
+
+        $filled = $this->updateEntityInParts($parentId, $inputs);
+
+        // an attribute is added together with its value, so that a required attribute is not added empty
+        $attributeIdsWithoutValue = array_values(array_diff($attributeIdsToAdd, array_keys($newAttributeInputs)));
+        if (!empty($newAttributeInputs)) {
+            $input = $this->mergeInputs(array_merge(...array_values(array_map('array_values', $newAttributeInputs))));
+            $input->__attributes = array_keys($newAttributeInputs);
+            if ($this->updateEntityForFillFromChildren($parentId, $input)) {
+                $filled = true;
+            } else {
+                foreach ($newAttributeInputs as $attributeId => $attributeInputs) {
+                    $input = $this->mergeInputs($attributeInputs);
+                    $input->__attributes = [$attributeId];
+                    if ($this->updateEntityForFillFromChildren($parentId, $input)) {
+                        $filled = true;
+                    } else {
+                        $attributeIdsWithoutValue[] = $attributeId;
+                    }
+                }
+            }
+        }
+
+        // added last and on their own: the required check skips attributes that are only being added, but a required
+        // attribute left empty would make every following update of the record fail
+        if (!empty($attributeIdsWithoutValue)) {
+            $filled = $this->updateEntityForFillFromChildren($parentId, (object)['__attributes' => $attributeIdsWithoutValue]) || $filled;
+        }
+
+        return $filled;
+    }
+
+    /**
+     * Updates the record with all inputs at once, or with each input on its own if something prevents the update as a
+     * whole (e.g. a field the user may not edit).
+     */
+    protected function updateEntityInParts(string $id, array $inputs): bool
+    {
+        if (empty($inputs)) {
+            return false;
+        }
+
+        if ($this->updateEntityForFillFromChildren($id, $this->mergeInputs($inputs))) {
+            return true;
+        }
+
+        $updated = false;
+        foreach ($inputs as $input) {
+            $updated = $this->updateEntityForFillFromChildren($id, $input) || $updated;
+        }
+
+        return $updated;
+    }
+
+    protected function mergeInputs(array $inputs): \stdClass
+    {
+        $result = new \stdClass();
+        foreach ($inputs as $input) {
+            foreach ($input as $key => $value) {
+                $result->$key = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function updateEntityForFillFromChildren(string $id, \stdClass $input): bool
+    {
+        // the update gets the same cached entity, its attributes must be loaded again to take the added ones
+        $entity = $this->getRepository()->get($id);
+        if (!empty($entity)) {
+            $entity->hasAllEntityAttributes = false;
+        }
+
+        try {
+            $this->updateEntity($id, $input);
+        } catch (NotModified $e) {
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("Fill {$this->entityType} '$id' from children failed: {$e->getMessage()}");
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the entity attributes that hold the value of a field (all of them are compared, so a value and its unit are
+     * one value) and the ones that tell whether the field is empty.
+     */
+    protected function getFieldPartsForFillFromChildren(Entity $entity, string $field, array $defs): array
+    {
+        switch ($defs['type']) {
+            case 'link':
+            case 'file':
+                $valueParts = [$field . 'Id'];
+                break;
+            case 'linkMultiple':
+                $valueParts = [$field . 'Ids'];
+                break;
+            case 'rangeInt':
+            case 'rangeFloat':
+                $valueParts = [$field . 'From', $field . 'To'];
+                break;
+            default:
+                $valueParts = [$field];
+        }
+
+        $parts = $valueParts;
+        foreach (['UnitId', 'PrefixId'] as $suffix) {
+            if ($entity->hasAttribute($field . $suffix)) {
+                $parts[] = $field . $suffix;
+            }
+        }
+
+        return [$parts, $valueParts];
+    }
+
+    /**
+     * A blank value is not null, an empty list is.
+     */
+    protected function arePartsNull(Entity $entity, array $parts): bool
+    {
+        foreach ($parts as $part) {
+            $value = $entity->get($part);
+            if ($value !== null && $value !== []) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Null and blank are different values. Lists of ids are compared regardless of their order.
+     */
+    protected function normalizeValueForComparison($value): string
+    {
+        if (is_array($value)) {
+            foreach ($value as $key => $item) {
+                if (is_array($item) && is_string($key) && str_ends_with($key, 'Ids')) {
+                    sort($item);
+                    $value[$key] = $item;
+                }
+            }
+        }
+
+        return json_encode($value);
+    }
+
+    protected function getLinkedAttributeIds(Entity $entity): array
+    {
+        $ids = [];
+        foreach ($entity->entityDefs['fields'] ?? [] as $defs) {
+            if (!empty($defs['attributeId']) && !empty($defs['attributeValueId'])) {
+                $ids[$defs['attributeId']] = $defs['attributeId'];
+            }
+        }
+
+        return array_values($ids);
+    }
+
+    /**
+     * Attributes that are never added or filled on the parent by "Fill from children".
+     */
+    protected function getAttributeIdsExcludedFromFillFromChildren(Entity $parent): array
+    {
+        return [];
+    }
+
+    protected function getAllowedMassActions(): array
+    {
+        return array_merge(parent::getAllowedMassActions(), ['fillFromChildren']);
+    }
+
+
     public function getTreeDataForSelectedNode(string $id, array $sortParams): array
     {
         $entity = $this->getEntity($id);

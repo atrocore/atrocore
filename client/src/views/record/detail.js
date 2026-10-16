@@ -339,6 +339,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        actionFillFromChildren: function () {
+            this.confirm({
+                message: this.translate('confirmFillFromChildren', 'messages'),
+                confirmText: this.translate('Apply')
+            }, () => {
+                this.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest(`${this.scope}/${this.model.id}/fillFromChildren`, {}).then(filled => {
+                    this.notify(filled ? 'Done' : this.translate('nothingFilledFromChildren', 'messages'), 'success');
+                    if (filled) {
+                        this.model.fetch();
+                    }
+                });
+            });
+        },
+
         getDynamicActionDefs(id) {
             for (let key of ['dynamicRecordActions', 'dynamicFieldActions', 'dynamicOnFieldFocusActions']) {
                 let defs = (this.getMetadata().get(['clientDefs', this.entityType, key]) || []).find(defs => defs.id === id)
@@ -695,6 +710,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         'label': 'inheritAllFromParent',
                         'name': 'inheritAllFromParent',
                         sortOrder: 170
+                    });
+                }
+
+                if (
+                    this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true
+                    && (this.getMetadata().get(`scopes.${this.scope}.fieldValueInheritance`) || this.getMetadata().get(`scopes.${this.scope}.relationInheritance`))
+                    && this.getAcl().check(this.entityType, 'edit')
+                    && this.model.get('hasChildren')
+                ) {
+                    this.dropdownItemList.push({
+                        'label': 'fillFromChildren',
+                        'name': 'fillFromChildren',
+                        sortOrder: 175
                     });
                 }
             }

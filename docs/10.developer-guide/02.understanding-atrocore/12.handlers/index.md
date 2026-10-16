@@ -619,7 +619,7 @@ All built-in entity type handlers live in `Atro\Core\EntityTypeHandlers\`.
 | Type | Handler set |
 |---|---|
 | `Base` | Full CRUD + actions + attribute operations |
-| `Hierarchy` | Same as Base + tree navigation (`TreeHandler`, `TreeDataHandler`) + field/relation inheritance (`InheritField`, `InheritAll`, `InheritAllForChildren`, `InheritAllFromParent`) |
+| `Hierarchy` | Same as Base + tree navigation (`TreeHandler`, `TreeDataHandler`) + field/relation inheritance (`InheritField`, `InheritAll`, `InheritAllForChildren`, `InheritAllFromParent`, `FillFromChildren`, `FillFromChildrenAsync`) |
 | `Archive` | Read-only: `list` and `read` only |
 | `Relation` | Full CRUD + `InheritRelationHandler`, `RemoveAssociatesHandler` |
 | `ReferenceData` | Reduced CRUD (no mass mutations, no follow/link); admin-only |

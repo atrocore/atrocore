@@ -225,6 +225,7 @@
     "prefixPart": "(Prefix)",
     "inheritAllForChildren": "Inherit all for children items",
     "inheritAllFromParent": "Inherit all from parent",
+    "fillFromChildren": "Fill from children",
     "homepage": "Homepage",
     "Sharing": "Sharing",
     "customDownload": "Custom Download",
@@ -588,6 +589,9 @@
     "jobAdded": "The Job was successfully added to Job Manager.",
     "confirmInheritAllForChildren": "Are you sure you want all child items to inherit field (and attribute) values as well as relations from this parent item? Existing values will not be replaced.",
     "confirmInheritAllFromParent": "Are you sure you want all items to inherit field (and attribute) values as well as relations from items of parent record? Existing values will not be replaced.",
+    "confirmFillFromChildren": "Are you sure you want to fill the empty field (and attribute) values and relations of this record with the values shared by all of its direct children? Existing values will not be replaced.",
+    "confirmMassFillFromChildren": "Are you sure you want to fill the empty field (and attribute) values and relations of the selected records with the values shared by all of their direct children? Existing values will not be replaced.",
+    "nothingFilledFromChildren": "Nothing to fill: the children do not share any value that is empty in this record.",
     "optionValueCannotBeEmpty": "Option value cannot be empty",
     "minimumOneOptionsRequired": "Minimum one option value is required.",
     "defaultEnumValueCannotBeEmpty": "Default value should be selected if empty value is disabled.",
@@ -729,7 +733,8 @@
     "compare": "Compare",
     "removeAttribute": "Delete Attribute",
     "select": "Select",
-    "inheritAllFromParent": "Inherit all from parent"
+    "inheritAllFromParent": "Inherit all from parent",
+    "fillFromChildren": "Fill from children"
   },
   "fields": {
     "__currentUser": "Current User",
