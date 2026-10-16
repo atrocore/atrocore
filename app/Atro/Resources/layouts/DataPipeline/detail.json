@@ -19,7 +19,13 @@
       ],
       [
         {
-          "name": "mergingScript",
+          "name": "executeTransformationAs"
+        },
+        false
+      ],
+      [
+        {
+          "name": "transformationScript",
           "fullWidth": true
         }
       ]

@@ -2,16 +2,34 @@
   "fields": {
     "targetEntity": "Zielentität",
     "sourceEntity": "Quellentität",
-    "mergingScript": "Zusammenführungs-Skript"
+    "transformationScript": "Transformationsskript",
+    "executeTransformationAs": "Transformation ausführen als"
   },
   "tooltips": {
-    "mergingScript": "Konfigurieren Sie, wie die Daten aus dem Quelldatensatz transformiert und dem Zieldatensatz zugeordnet werden."
+    "transformationScript": "Konfigurieren Sie, wie die Daten aus dem Quelldatensatz transformiert und dem Zieldatensatz zugeordnet werden.",
+    "executeTransformationAs": "Das Benutzerkonto, das für die Ausführung des Transformationsskripts verwendet werden soll."
   },
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Die Entität '%s' ist eine Contributor- oder Change-Request-Ableitung und kann nicht als Quellentität verwendet werden.",
     "sourceEntityTypeNotAllowed": "Die Entität '%s' kann nicht als Quellentität verwendet werden: Nur die Typen Base und Hierarchy sind zulässig.",
     "targetEntityCannotBePrimaryOfContributorDerivative": "Die Entität '%s' ist die Primärentität einer Contributor-Ableitung und kann nicht als Zielentität verwendet werden.",
     "sourceAndTargetEntityCannotBeSame": "Quellentität und Zielentität dürfen nicht identisch sein.",
-    "dataPipelineAlreadyExists": "Für dieses Entitätenpaar existiert bereits eine Data Pipeline."
+    "dataPipelineAlreadyExists": "Für dieses Entitätenpaar existiert bereits eine Data Pipeline.",
+    "transformationScriptIsMissing": "Für die Daten-Pipeline fehlt das Transformationsskript.",
+    "transformationScriptIsNotValid": "Das Transformationsskript gibt ungültige Nutzdaten zurück: %s"
+  },
+  "labels": {
+    "targetRecordPreviewHint": "Zeigt, wie der Zieldatensatz nach der Transformation aussehen würde. Es wird nichts gespeichert.",
+    "noDataPipelineConfigured": "Für dieses Entitätenpaar ist keine Daten-Pipeline konfiguriert",
+    "noSourceRecords": "Es gibt noch keine Datensätze der Quellentität",
+    "discard": "Verwerfen",
+    "transformationPreview": "Transformationsvorschau",
+    "targetRecordNotExists": "Der Zieldatensatz existiert noch nicht. Wenden Sie die Vorschau an, um zu sehen, wie er nach der Transformation aussehen würde."
+  },
+  "options": {
+    "executeTransformationAs": {
+      "system": "System",
+      "sameUser": "Gleicher Benutzer"
+    }
   }
 }

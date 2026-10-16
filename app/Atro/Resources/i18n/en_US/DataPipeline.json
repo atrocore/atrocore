@@ -2,16 +2,34 @@
   "fields": {
     "targetEntity": "Target Entity",
     "sourceEntity": "Source Entity",
-    "mergingScript": "Merging Script"
+    "transformationScript": "Transformation Script",
+    "executeTransformationAs": "Execute Transformation As"
   },
   "tooltips": {
-    "mergingScript": "Configure how source record data is transformed and mapped to the target record."
+    "transformationScript": "Configure how source record data is transformed and mapped to the target record.",
+    "executeTransformationAs": "The user account that will be used to execute the Transformation Script."
   },
   "exceptions": {
     "sourceEntityCannotBeContributorOrChangeRequestDerivative": "Entity '%s' is a contributor or change request derivative and cannot be used as a source entity.",
     "sourceEntityTypeNotAllowed": "Entity '%s' cannot be used as a source entity: only Base and Hierarchy types are allowed.",
     "targetEntityCannotBePrimaryOfContributorDerivative": "Entity '%s' is the primary entity of a contributor derivative and cannot be used as a target entity.",
     "sourceAndTargetEntityCannotBeSame": "Source Entity and Target Entity cannot be the same.",
-    "dataPipelineAlreadyExists": "A data pipeline for this pair of entities already exists."
+    "dataPipelineAlreadyExists": "A data pipeline for this pair of entities already exists.",
+    "transformationScriptIsMissing": "Transformation script is missing for the data pipeline.",
+    "transformationScriptIsNotValid": "Transformation script returns an invalid payload: %s"
+  },
+  "labels": {
+    "targetRecordPreviewHint": "Shows how the target record would look after the transformation. Nothing is saved.",
+    "noDataPipelineConfigured": "No data pipeline is configured for this pair of entities",
+    "noSourceRecords": "There are no records of the source entity yet",
+    "discard": "Discard",
+    "transformationPreview": "Transformation Preview",
+    "targetRecordNotExists": "The target record does not exist yet. Apply the preview to see how it would look after the transformation."
+  },
+  "options": {
+    "executeTransformationAs": {
+      "system": "System",
+      "sameUser": "Same User"
+    }
   }
 }

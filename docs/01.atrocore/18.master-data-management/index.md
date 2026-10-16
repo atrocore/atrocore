@@ -60,7 +60,8 @@ Each pipeline record contains the following fields:
 
 - **Source Entity** – the source entity this pipeline reads from.
 - **Target Entity** – the target entity this pipeline writes to (e.g. the contributor entity).
-- **Merging Script** – a Twig script that defines how source record data is transformed and mapped to the target record.
+- **Transformation Script** – a Twig script that defines how source record data is transformed and mapped to the target record.
+- **Execute Transformation As** – the user account that will be used to create and update target records: `System` or `Same User`.
 
 Both the Source Entity and Target Entity fields are locked after the pipeline is created and cannot be changed. Only one pipeline can exist per pair of entities, but the same source entity can be used in several pipelines that write to different target entities.
 
@@ -73,17 +74,17 @@ Each pipeline creates a [One-to-One relation](../03.administration/11.entity-man
 
 Both fields are filled by the pipeline and cannot be edited manually. Because the relation is One-to-One, a source record references exactly one target record, and a target record can be referenced by only one record of the same source entity. When a source entity is used in several pipelines, each of them gets its own field. All these fields are displayed in the [Data Lineage](#data-lineage-panel) panel.
 
-#### Merging Script
+#### Transformation Script
 
-The merging script is a Twig template that must return a JSON object with the key `targetRecordData`, containing the field values to write to the target record:
+The transformation script is a Twig template that must return a JSON object with the field values to write to the target record:
 
 ```twig
 {
-  "targetRecordData": {
-    "name": "{{ sourceRecord.name }}"
-  }
+  "name": "{{ sourceRecord.name }}"
 }
 ```
+
+!! Wrapping the field values in the `targetRecordData` key is deprecated and will no longer be supported in AtroCore 3.0.0.
 
 > The default value of the field is wrapped in a Twig comment (`{# ... #}`) and serves only as an example of the expected format – a script wrapped in comment markers produces no output and is ignored. Remove the comment markers and adjust the script to activate the pipeline.
 
@@ -91,6 +92,21 @@ Two variables are available in the script:
 
 - `sourceRecord` – the source record that triggered the sync.
 - `targetRecord` – the existing target record, or `null` when the target record does not yet exist.
+
+#### Transformation Preview
+
+The **Transformation Preview** window shows how the target record would look after the transformation. Nothing is saved while the preview is used. The window can be opened in two ways:
+
+- with the **Transformation Preview** button on the detail page of a source record – the opened record is used as the source record. If the source entity is used in several pipelines, the target entity can be selected in the header of the target column;
+- with the **Transformation Preview** button on the detail page of a data pipeline – the target entity of the pipeline is used, and the source record can be selected in the header of the source column. The most recently created source record is selected by default.
+
+The window shows the source record and the target record side by side, and the transformation script of the pipeline in the right side panel. The following actions are available in the panel:
+
+- **Preview** – applies the script from the editor to the source record and shows the result in the target column. The script does not need to be saved first. If the target record does not exist yet, the target column stays empty until the preview is applied.
+- **Discard** – restores the saved script and hides the preview.
+- **Save** – saves the script from the editor to the data pipeline.
+
+The preview is executed with the access rights of the current user, the same as the transformation script during [automatic synchronization](#automatic-synchronization).
 
 #### Automatic synchronization
 
@@ -100,7 +116,12 @@ Once a pipeline is configured, the system automatically:
 - **Updates** the target record when the source record is saved and is already linked.
 - **Re-applies** all pipelines for the target entity when the Master Record link of the target (contributor) record is changed – data from the linked source record of each source entity is pushed to the target record again.
 
-All synchronization operations are performed on behalf of the system user, regardless of who triggered the save.
+The transformation script is always executed with the access rights of the user who triggered the save. Target records are created and updated according to the **Execute Transformation As** field:
+
+| Option | Target records are saved by |
+|---|---|
+| System | the system user, with full access rights |
+| Same User | the system user on behalf of the user who triggered the save, with the access rights of that user |
 
 
 ### Data Unification and Deduplication
