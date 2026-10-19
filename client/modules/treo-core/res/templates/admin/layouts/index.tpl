@@ -2,7 +2,7 @@
     <main>
         <div class="page-header">
             <div id="layout-header"></div>
-            <div id="layout-header-buttons" style="display: flex">
+            <div id="layout-header-buttons" style="display: flex; padding: 0 20px;">
                 <div id="layout-buttons"></div>
                 <button style="margin: 10px 7px 10px 20px" class="btn btn-default action" data-action="resetAllToDefault" type="button">{{translate 'resetAllToDefault'}}</button>
             </div>
