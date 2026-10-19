@@ -83,6 +83,7 @@
     "conditionalProperties": "Propriétés conditionnelles",
     "__currentUser": "Utilisateur courant",
     "routes": "Chemin(s)",
+    "routesNamesSimplified": "Noms des chemins",
     "width": "Largeur",
     "height": "Hauteur",
     "logs": "Journaux",

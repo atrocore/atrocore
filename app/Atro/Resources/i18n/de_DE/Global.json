@@ -872,6 +872,7 @@
     "conditionalProperties": "Bedingte Eigenschaften",
     "__currentUser": "Aktueller Benutzer",
     "routes": "Route(n)",
+    "routesNamesSimplified": "Routennamen",
     "logs": "Protokolle",
     "extension": "Erweiterung",
     "hierarchySortOrder": "Sortierreihenfolge für Hierarchie",

@@ -773,6 +773,7 @@
     "extension": "Rozszerzenie",
     "__currentUser": "Obecny użytkownik",
     "routes": "Trasa(y)",
+    "routesNamesSimplified": "Nazwy tras",
     "width": "Szerokość",
     "height": "Wysokość",
     "logs": "Dzienniki",

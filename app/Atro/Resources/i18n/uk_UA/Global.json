@@ -824,6 +824,7 @@
     "disableActionHistory": "Вимкнути реєстрацію дій",
     "downloadUrl": "URL-адреса для завантаження",
     "routes": "Маршрут(и)",
+    "routesNamesSimplified": "Назви маршрутів",
     "conditionalProperties": "Умовні властивості",
     "emailAddress": "Електронна пошта",
     "width": "Ширина",
