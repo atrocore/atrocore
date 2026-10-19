@@ -8,4 +8,15 @@
         margin-left: 20px;
         margin-right: 20px;
     }
+
+    #admin-page-content > .page-header {
+        margin-left: -10px;
+        margin-right: -20px;
+    }
+
+    @media screen and (min-width: 768px) {
+        #admin-page-content > .page-header {
+            margin-left: -20px;
+        }
+    }
 </style>

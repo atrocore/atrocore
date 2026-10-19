@@ -66,6 +66,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 lastViewed: !this.getConfig().get('actionHistoryDisabled'),
                 hasLocaleSwitcher: this.hasLocaleSwitcher(),
                 hasLogo: !this.getConfig().get('disableToolbarLogo'),
+                faviconSrc: this.getFavicon(),
                 showCurrentSelection: true,
                 isAdmin: this.getUser().isAdmin(),
             }, Dep.prototype.data.call(this));

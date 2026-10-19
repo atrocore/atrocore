@@ -1,14 +1,14 @@
 <div class="content-wrapper">
-    <main style="padding: 0 20px;">
+    <main>
         <div class="page-header">
             <div id="layout-header"></div>
-            <div id="layout-header-buttons" style="display: flex">
+            <div id="layout-header-buttons" style="display: flex; padding: 0 20px;">
                 <div id="layout-buttons"></div>
                 <button style="margin: 10px 7px 10px 20px" class="btn btn-default action" data-action="resetAllToDefault" type="button">{{translate 'resetAllToDefault'}}</button>
             </div>
         </div>
 
-        <div style="display: flex; gap: 50px;">
+        <div style="display: flex; gap: 50px; padding: 0 20px;">
             <div id="layouts-menu" class="col-sm-3">
                 <div class="well row">
                     <div class="col-xs-12 cell form-group">

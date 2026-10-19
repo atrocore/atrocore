@@ -7,7 +7,7 @@
             <i class="ph ph-list"></i>
         </button>
         {{#if hasLogo }}
-            <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon ph ph-house" title="{{translate 'homepage'}}"></span></a>
+            <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo hidden-xs"><img src="{{faviconSrc}}" class="logo favicon visible-xs"><span class="home-icon ph ph-house" title="{{translate 'homepage'}}"></span></a>
         {{/if}}
         <div class="navbar-header-inner pull-right">
             {{#if globalSearch}}
