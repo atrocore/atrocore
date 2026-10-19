@@ -455,6 +455,9 @@ class OpenApiGenerator
                     'forRead' => true
                 ];
                 break;
+            case "password":
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string', 'format' => 'password'];
+                break;
             default:
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
         }
