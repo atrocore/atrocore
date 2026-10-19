@@ -1358,6 +1358,17 @@ class Metadata extends AbstractMetadataListener
                 "emHidden"             => true,
             ];
 
+            $data['entityDefs'][$scope]['fields']['routesNamesSimplified'] = [
+                "type"                 => "jsonArray",
+                "notStorable"          => true,
+                "layoutListDisabled"   => true,
+                "layoutDetailDisabled" => true,
+                "massUpdateDisabled"   => true,
+                "filterDisabled"       => true,
+                "importDisabled"       => true,
+                "emHidden"             => true,
+            ];
+
             $data['entityDefs'][$scope]['fields']['isRoot'] = [
                 "type"                 => "bool",
                 "notStorable"          => true,

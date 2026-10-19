@@ -748,6 +748,7 @@
     "disableActionHistory": "Desactivar el registro de acciones",
     "__currentUser": "Usuario actual",
     "routes": "Ruta(s)",
+    "routesNamesSimplified": "Nombres de rutas",
     "width": "Anchura",
     "height": "Altura",
     "start": "Inicie",

@@ -891,7 +891,7 @@ class Hierarchy extends Base
 
         if ($this->isHierarchy()) {
             $this->prepareHasChildren($collection);
-            $this->prepareRoutesNames($collection);
+            $this->prepareRoutesNames($collection, $selectParams);
         }
     }
 
@@ -923,17 +923,12 @@ class Hierarchy extends Base
         }
     }
 
-    public function prepareRoutesNames(EntityCollection $collection): void
+    public function prepareRoutesNames(EntityCollection $collection, array $selectParams = []): void
     {
-        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
+        if (empty($collection[0]) || !$this->isRoutesNamesRequested($selectParams)) {
             return;
         }
 
-        if (empty($collection[0])) {
-            return;
-        }
-
-        // put routes names to the collection
         $routesItemsIds = [];
         foreach ($collection as $entity) {
             foreach ($entity->getRoutes() as $ids) {
@@ -950,16 +945,40 @@ class Hierarchy extends Base
 
         foreach ($collection as $entity) {
             $routesNames = [];
+            $routesNamesSimplified = [];
             foreach ($entity->getRoutes() as $k => $ids) {
                 foreach ($ids as $id) {
+                    $itemName = !empty($routeEntities[$id]) ? ($routeEntities[$id]->get($name) ?? $routeEntities[$id]->get('name')) : $id;
+
                     $routesNames[$k][] = [
                         'id'   => $id,
-                        'name' => !empty($routeEntities[$id]) ? ($routeEntities[$id]->get($name) ?? $routeEntities[$id]->get('name')) : $id,
+                        'name' => $itemName,
                     ];
+                    $routesNamesSimplified[$k][] = $itemName;
                 }
             }
             $entity->set('routesNames', $routesNames);
+            $entity->set('routesNamesSimplified', array_map(fn($names) => '|' . implode('|', $names) . '|', $routesNamesSimplified));
         }
+    }
+
+    protected function isRoutesNamesRequested(array $selectParams): bool
+    {
+        if (!empty(array_intersect(['routes', 'routesNamesSimplified'], $selectParams['select'] ?? []))) {
+            return true;
+        }
+
+        if (empty($this->getMemoryStorage()->get('exportJobId'))) {
+            return true;
+        }
+
+        foreach ($this->getMemoryStorage()->get('exportConfiguration') ?? [] as $item) {
+            if (in_array($item['field'] ?? null, ['routes', 'routesNamesSimplified']) && ($item['entity'] ?? null) === $this->entityType) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function prepareHasChildren(EntityCollection $collection): void
