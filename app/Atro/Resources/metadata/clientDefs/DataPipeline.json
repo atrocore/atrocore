@@ -3,5 +3,8 @@
   "iconClass": "database",
   "quickActions": [
     "quickEdit"
-  ]
+  ],
+  "recordViews": {
+    "detail": "views/data-pipeline/record/detail"
+  }
 }

@@ -85,7 +85,9 @@ class ConsolidationPreviewHandler extends AbstractHandler
 
         $data = $this->getRequestBody($request);
 
-        $preview = $this->getRecordService('Cluster')->buildMasterRecordPreview($id, (string)$data->consolidationScript);
+        $consolidationScript = property_exists($data, 'consolidationScript') ? (string)$data->consolidationScript : null;
+
+        $preview = $this->getRecordService('Cluster')->buildMasterRecordPreview($id, $consolidationScript);
 
         return new JsonResponse($preview->toArray());
     }

@@ -45,11 +45,11 @@
         }
       }
     },
-    "mergingScript": {
+    "transformationScript": {
       "type": "code",
       "engine": "Twig",
       "language": "json",
-      "default": "{# { \"targetRecordData\": { \"name\" : \"{{ sourceRecord.name }}\" } } #}",
+      "default": "{# { \"name\": \"{{ sourceRecord.name }}\" } #}",
       "editorActions": {
         "addFields": {
           "entityNameField": "sourceEntity"
@@ -61,6 +61,15 @@
       ],
       "customizable": false,
       "layoutRemoveDisabled": true,
+      "tooltip": true
+    },
+    "executeTransformationAs": {
+      "type": "enum",
+      "default": "system",
+      "options": [
+        "system",
+        "sameUser"
+      ],
       "tooltip": true
     },
     "hash": {
