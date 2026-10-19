@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Core\Middleware;
 
+use Atro\Core\OpenApiGenerator;
+use Atro\Core\Routing\Route as RouteAttribute;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
@@ -54,8 +56,10 @@ class ActionHistoryMiddleware implements MiddlewareInterface
             }
 
             $headers = $request->getHeaders();
-            foreach (['authorization-token', 'authorization', 'Authorization-Token', 'Authorization'] as $h) {
-                unset($headers[$h]);
+            foreach (array_keys($headers) as $h) {
+                if (in_array(strtolower((string)$h), ['authorization-token', 'authorization', 'cookie'])) {
+                    unset($headers[$h]);
+                }
             }
 
             $historyData = ['request' => ['headers' => $headers, 'params' => $request->getQueryParams()]];
@@ -63,6 +67,9 @@ class ActionHistoryMiddleware implements MiddlewareInterface
             $body = (string) $request->getBody();
             if ($body !== '') {
                 $decoded = json_decode($body, true);
+                if (is_array($decoded)) {
+                    $decoded = $this->maskSensitiveProperties($decoded, $this->getSensitivePropertiesFromRequest($request, $decoded));
+                }
                 $historyData['request']['body'] = $decoded ?? $body;
             }
 
@@ -129,6 +136,96 @@ class ActionHistoryMiddleware implements MiddlewareInterface
         }
 
         return true;
+    }
+
+    private function getSensitivePropertiesFromRequest(ServerRequestInterface $request, array $body): array
+    {
+        $fields = [];
+
+        $bodyEntityName = is_string($body['entityName'] ?? null) && $this->getMetadata()->get(['scopes', $body['entityName']])
+            ? $body['entityName']
+            : '';
+
+        $routeAttr = $this->resolveRouteAttribute($request);
+        if ($routeAttr !== null) {
+            /** @var RouteResult $routeResult */
+            $routeResult = $request->getAttribute(RouteResult::class);
+            $routeEntityName = (string)($routeResult->getMatchedRoute()->getOptions()['entityName'] ?? '');
+            foreach (array_unique([$routeEntityName, $bodyEntityName]) as $schemaEntityName) {
+                $schema = $this->container->get(OpenApiGenerator::class)->getSchemaForHandler($routeAttr, $schemaEntityName);
+                $fields += $this->getSensitivePropertiesFromSchema($schema);
+            }
+        }
+
+        return $fields;
+    }
+
+    private function resolveRouteAttribute(ServerRequestInterface $request): ?RouteAttribute
+    {
+        $routeResult = $request->getAttribute(RouteResult::class);
+
+        if (!$routeResult instanceof RouteResult || $routeResult->isFailure()) {
+            return null;
+        }
+
+        $handlerMiddleware = $routeResult->getMatchedRoute()->getMiddleware();
+
+        $ref        = new \ReflectionClass($handlerMiddleware);
+        $attributes = $ref->getAttributes(RouteAttribute::class);
+
+        if (empty($attributes)) {
+            return null;
+        }
+
+        // Match the attribute whose path corresponds to the current route
+        $path = $routeResult->getMatchedRouteName();
+        foreach ($attributes as $attr) {
+            /** @var RouteAttribute $routeAttr */
+            $routeAttr = $attr->newInstance();
+            if (str_ends_with($path, $routeAttr->path)) {
+                return $routeAttr;
+            }
+        }
+
+        return $attributes[0]->newInstance();
+    }
+
+    private function getSensitivePropertiesFromSchema(array $schema): array
+    {
+        $properties = [];
+
+        foreach ($schema as $key => $value) {
+            if (!is_array($value)) {
+                continue;
+            }
+
+            if ($key === 'properties') {
+                foreach ($value as $property => $definition) {
+                    if (is_array($definition) && ($definition['format'] ?? null) === 'password') {
+                        $properties[$property] = true;
+                    }
+                }
+            }
+
+            $properties += $this->getSensitivePropertiesFromSchema($value);
+        }
+
+        return $properties;
+    }
+
+    private function maskSensitiveProperties(array $data, array $fields): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_string($key) && isset($fields[$key])) {
+                if ($value !== null && $value !== '' && $value !== []) {
+                    $data[$key] = '***';
+                }
+            } elseif (is_array($value)) {
+                $data[$key] = $this->maskSensitiveProperties($value, $fields);
+            }
+        }
+
+        return $data;
     }
 
     /**
