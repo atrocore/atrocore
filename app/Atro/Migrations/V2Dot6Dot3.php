@@ -55,8 +55,6 @@ class V2Dot6Dot3 extends Base
             $this->exec("UPDATE action_history_record SET data = REGEXP_REPLACE(data, 'auth-token=[^;\"]*', 'auth-token=***') WHERE data LIKE '%auth-token=%'");
         }
 
-        echo "Cookie replacement completed.\n";
-
         $sensitiveProperties = $this->getSensitiveProperties();
 
         $limit = 1000;
@@ -105,8 +103,6 @@ class V2Dot6Dot3 extends Base
                     ->setParameter('id', $row['id'])
                     ->executeStatement();
             }
-
-            echo "$offset records processed.\n";
         }
     }
 
