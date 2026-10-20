@@ -52,7 +52,11 @@ class V2Dot6Dot3 extends Base
         if ($this->isPgSQL()) {
             $this->exec("UPDATE action_history_record SET data = regexp_replace(data, 'auth-token=[^;\"]*', 'auth-token=***', 'g') WHERE data LIKE '%auth-token=%'");
         } else {
-            $this->exec("UPDATE action_history_record SET data = REGEXP_REPLACE(data, 'auth-token=[^;\"]*', 'auth-token=***') WHERE data LIKE '%auth-token=%'");
+            try {
+                $this->getDbal()->executeStatement("UPDATE action_history_record SET data = REGEXP_REPLACE(data, 'auth-token=[^;\"]*', 'auth-token=***') WHERE data LIKE '%auth-token=%'");
+            } catch (\Throwable $e) {
+                $this->exec("DELETE FROM action_history_record WHERE data LIKE '%auth-token=%'");
+            }
         }
 
         $sensitiveProperties = $this->getSensitiveProperties();
