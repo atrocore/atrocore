@@ -47,6 +47,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                         ],
                         'password'  => [
                             'type'    => 'string',
+                            'format'  => 'password',
                             'example' => 'newSecurePassword123',
                         ],
                     ],

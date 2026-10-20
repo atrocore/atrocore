@@ -41,6 +41,7 @@ use Psr\Http\Server\RequestHandlerInterface;
                     'properties' => [
                         'password' => [
                             'type'        => 'string',
+                            'format'      => 'password',
                             'description' => 'The new password to set.',
                         ],
                     ],
