@@ -106,6 +106,16 @@
       "index": true,
       "inheritanceDisabled": true
     },
+    "gtin": {
+      "type": "varchar",
+      "trim": true,
+      "index": true
+    },
+    "ean": {
+      "type": "varchar",
+      "trim": true,
+      "index": true
+    },
     "note": {
       "type": "text"
     }

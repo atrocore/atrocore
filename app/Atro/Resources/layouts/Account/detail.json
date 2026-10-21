@@ -40,6 +40,14 @@
       ],
       [
         {
+          "name": "vatId"
+        },
+        {
+          "name": "webUrl"
+        }
+      ],
+      [
+        {
           "name": "description",
           "fullWidth": true
         }

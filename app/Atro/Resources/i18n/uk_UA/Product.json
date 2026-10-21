@@ -10,6 +10,8 @@
     "parents": "Батьківські продукти",
     "quantity": "величина",
     "mpn": "Номер виробника (MPN)",
+    "gtin": "GTIN",
+    "ean": "EAN",
     "customsNumber": "Митний номер",
     "countryOfOrigin": "Країна походження",
     "defaultSupplier": "Постачальник за замовчуванням",

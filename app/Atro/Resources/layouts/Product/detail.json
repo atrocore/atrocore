@@ -17,6 +17,14 @@
       ],
       [
         {
+          "name": "gtin"
+        },
+        {
+          "name": "ean"
+        }
+      ],
+      [
+        {
           "name": "countryOfOrigin"
         },
         {

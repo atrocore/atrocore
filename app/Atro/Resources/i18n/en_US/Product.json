@@ -10,6 +10,8 @@
     "parents": "Parent Products",
     "quantity": "Quantity",
     "mpn": "Manufacturer number (MPN)",
+    "gtin": "GTIN",
+    "ean": "EAN",
     "customsNumber": "Customs Number",
     "countryOfOrigin": "Country of Origin",
     "defaultSupplier": "Default Supplier",
