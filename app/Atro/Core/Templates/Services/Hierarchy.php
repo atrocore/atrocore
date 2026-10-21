@@ -1601,7 +1601,7 @@ class Hierarchy extends Base
         // ignore duplicating for link 'children'
     }
 
-    public function createPseudoTransactionJobs(array $parent, \stdClass $data, string $parentTransactionId = null): void
+    public function createPseudoTransactionJobs(array $parent, \stdClass $data, ?string $parentTransactionId = null): void
     {
         $children = $this->getRepository()->getChildrenArray($parent['id']);
         foreach ($children as $childArray) {
