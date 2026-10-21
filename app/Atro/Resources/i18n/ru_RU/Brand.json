@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "products": "Продукты",
+    "description": "Описание",
+    "isActive": "Активный",
+    "code": "Код"
+  },
+  "exceptions": {
+    "brandWithSuchCodeAlreadyExist": "Бренд с таким кодом уже существует"
+  }
+}

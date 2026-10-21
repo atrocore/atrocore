@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "products": "Produkty",
+    "description": "Popis",
+    "isActive": "Úno",
+    "code": "Kód"
+  },
+  "exceptions": {
+    "brandWithSuchCodeAlreadyExist": "Značky s takovým kódem již existují."
+  }
+}

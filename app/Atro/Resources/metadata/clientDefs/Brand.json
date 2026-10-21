@@ -1,0 +1,15 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "tag",
+  "boolFilterList": [
+    "onlyMy"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "relationshipPanels": {
+    "products": {
+      "selectAction": "selectRelatedEntity"
+    }
+  }
+}

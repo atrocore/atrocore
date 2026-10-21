@@ -15,7 +15,8 @@
     "width": "Anchura",
     "height": "Altura",
     "size": "Talla",
-    "colorSpace": "Espacio de color"
+    "colorSpace": "Espacio de color",
+    "brands": "Marcas"
   },
   "labels": {
     "Preview": "Vista previa",

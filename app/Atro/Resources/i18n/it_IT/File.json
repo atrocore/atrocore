@@ -15,7 +15,8 @@
     "width": "Larghezza",
     "height": "Altezza",
     "size": "Dimensioni",
-    "colorSpace": "Spazio colore"
+    "colorSpace": "Spazio colore",
+    "brands": "Marche"
   },
   "labels": {
     "Preview": "Anteprima",

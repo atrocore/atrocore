@@ -15,7 +15,8 @@
     "customsNumber": "Numero della dogana",
     "countryOfOrigin": "Paese di origine",
     "defaultSupplier": "Fornitore predefinito",
-    "note": "Nota"
+    "note": "Nota",
+    "brand": "Marchio"
   },
   "labels": {
     "manufacturer": "Produttore",

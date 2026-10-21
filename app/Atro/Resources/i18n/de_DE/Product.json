@@ -15,7 +15,8 @@
     "customsNumber": "Zolltarifnummer",
     "countryOfOrigin": "Herkunftsland",
     "defaultSupplier": "Standardlieferant",
-    "note": "Notiz"
+    "note": "Notiz",
+    "brand": "Marke"
   },
   "labels": {
     "manufacturer": "Hersteller",

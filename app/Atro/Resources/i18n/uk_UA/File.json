@@ -15,7 +15,8 @@
     "size": "Розмір",
     "colorSpace": "Колірний простір",
     "url": "URL",
-    "uploadUrl": "URL"
+    "uploadUrl": "URL",
+    "brands": "Бренди"
   },
   "labels": {
     "Preview": "Попередній перегляд",

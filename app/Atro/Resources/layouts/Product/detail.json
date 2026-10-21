@@ -13,7 +13,9 @@
         {
           "name": "number"
         },
-        false
+        {
+          "name": "brand"
+        }
       ],
       [
         {

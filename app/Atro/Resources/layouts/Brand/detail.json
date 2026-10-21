@@ -1,0 +1,28 @@
+[
+    {
+        "label": "Details",
+        "style": "default",
+        "rows": [
+            [
+                {
+                    "name": "isActive"
+                },
+                {
+                    "name": "code"
+                }
+            ],
+            [
+                {
+                    "name": "name"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "description",
+                    "fullWidth": true
+                }
+            ]
+        ]
+    }
+]

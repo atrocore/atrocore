@@ -85,7 +85,8 @@
     "ActionExecutionLog": "Dziennik wykonania akcji",
     "Layout": "Układ",
     "Cluster": "Klaster dopasowań",
-    "ClusterItem": "Pozycja klastra dopasowań"
+    "ClusterItem": "Pozycja klastra dopasowań",
+    "Brand": "Marka"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Pakiety oprogramowania",
@@ -160,7 +161,8 @@
     "ActionExecutionLog": "Dzienniki wykonania akcji",
     "Layout": "Układy",
     "Cluster": "Klastry dopasowań",
-    "ClusterItem": "Elementy klastra dopasowań"
+    "ClusterItem": "Elementy klastra dopasowań",
+    "Brand": "Marki"
   },
   "labels": {
     "backgroundProcessingNotWorking": "Przetwarzanie w tle nie działa. Najprawdopodobniej crontab nie jest poprawnie skonfigurowany lub wystąpił problem na serwerze. Zapoznaj się z przewodnikiem instalacji.",

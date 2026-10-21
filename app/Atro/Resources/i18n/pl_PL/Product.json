@@ -15,7 +15,8 @@
     "customsNumber": "Numer celny",
     "countryOfOrigin": "Kraj pochodzenia",
     "defaultSupplier": "Domyślny dostawca",
-    "note": "Notatka"
+    "note": "Notatka",
+    "brand": "Marka"
   },
   "labels": {
     "manufacturer": "Producent",

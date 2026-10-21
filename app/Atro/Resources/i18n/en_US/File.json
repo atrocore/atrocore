@@ -15,7 +15,8 @@
     "width": "Width",
     "height": "Height",
     "size": "Size",
-    "colorSpace": "Color Space"
+    "colorSpace": "Color Space",
+    "brands": "Brands"
   },
   "labels": {
     "Preview": "Preview",

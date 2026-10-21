@@ -85,7 +85,8 @@
     "ActionExecutionLog": "Registro de ejecución de acciones",
     "Layout": "Diseño",
     "ClusterItem": "Elemento del clúster de coincidencias",
-    "Cluster": "Clúster de coincidencias"
+    "Cluster": "Clúster de coincidencias",
+    "Brand": "Marca"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Paquetes de software",
@@ -160,7 +161,8 @@
     "ActionExecutionLog": "Registros de ejecución de acciones",
     "Layout": "Diseño",
     "Cluster": "Clústeres de coincidencias",
-    "ClusterItem": "Elementos del clúster de coincidencias"
+    "ClusterItem": "Elementos del clúster de coincidencias",
+    "Brand": "Marcas"
   },
   "labels": {
     "backgroundProcessingNotWorking": "El procesamiento en segundo plano no funciona. Lo más probable es que crontab no esté configurado correctamente o que haya un problema en el servidor. Consulte la guía de instalación.",

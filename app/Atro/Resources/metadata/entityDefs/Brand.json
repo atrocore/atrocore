@@ -1,0 +1,94 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "trim": true,
+            "isMultilang": true
+        },
+        "description": {
+            "type": "text",
+            "required": false,
+            "rowsMax": 4,
+            "lengthOfCut": 400,
+            "seeMoreDisabled": false,
+            "readOnly": false,
+            "tooltip": false,
+            "isMultilang": true
+        },
+        "files": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "massUpdateDisabled": true,
+            "noLoad": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "products": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "massUpdateDisabled": true,
+            "noLoad": true,
+            "importDisabled": true
+        },
+        "code": {
+            "type": "varchar",
+            "trim": true,
+            "unique": true
+        }
+    },
+    "links": {
+        "files": {
+            "type": "hasMany",
+            "relationName": "brandFile",
+            "foreign": "brands",
+            "entity": "File"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "products": {
+            "type": "hasMany",
+            "foreign": "brand",
+            "entity": "Product"
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false,
+        "textFilterFields": [
+            "name",
+            "code"
+        ]
+    },
+    "indexes": {
+        "name": {
+            "columns": [
+                "name",
+                "deleted"
+            ]
+        }
+    }
+}

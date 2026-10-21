@@ -15,7 +15,8 @@
     "height": "Hauteur",
     "size": "Taille",
     "colorSpace": "Espace couleur",
-    "uploadUrl": "URL"
+    "uploadUrl": "URL",
+    "brands": "Marques"
   },
   "labels": {
     "Upload": "Importer",

@@ -86,7 +86,8 @@
     "ProductGroup": "Product Group",
     "Selection": "Selection",
     "SelectionItem": "Selection Item",
-    "Layout": "Layout"
+    "Layout": "Layout",
+    "Brand": "Brand"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Software Packages",
@@ -162,7 +163,8 @@
     "ProductGroup": "Product Groups",
     "Selection": "Selections",
     "SelectionItem": "Selection Items",
-    "Layout": "Layouts"
+    "Layout": "Layouts",
+    "Brand": "Brands"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"

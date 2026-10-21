@@ -318,6 +318,10 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
+    },
+    "brands": {
+      "type": "linkMultiple",
+      "noLoad": true
     }
   },
   "links": {
@@ -343,6 +347,12 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "brands": {
+      "type": "hasMany",
+      "relationName": "brandFile",
+      "foreign": "files",
+      "entity": "Brand"
     }
   },
   "collection": {

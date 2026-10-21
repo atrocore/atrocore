@@ -85,7 +85,8 @@
     "ActionExecutionLog": "Protokol o provedení akce",
     "Layout": "Rozložení",
     "Cluster": "Klastr párování",
-    "ClusterItem": "Položka klastru párování"
+    "ClusterItem": "Položka klastru párování",
+    "Brand": "Značka"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Softwarové balíčky",
@@ -160,7 +161,8 @@
     "ActionExecutionLog": "Protokoly o provádění akcí",
     "Layout": "Rozložení",
     "Cluster": "Klastry párování",
-    "ClusterItem": "Položky klastru párování"
+    "ClusterItem": "Položky klastru párování",
+    "Brand": "Značky"
   },
   "labels": {
     "backgroundProcessingNotWorking": "Zpracování na pozadí nefunguje. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku.",

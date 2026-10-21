@@ -15,7 +15,8 @@
     "customsNumber": "Customs Number",
     "countryOfOrigin": "Country of Origin",
     "defaultSupplier": "Default Supplier",
-    "note": "Note"
+    "note": "Note",
+    "brand": "Brand"
   },
   "labels": {
     "manufacturer": "Manufacturer",

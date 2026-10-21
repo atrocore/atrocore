@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "isActive": "Aktiv",
+    "products": "Produkte",
+    "code": "Code",
+    "description": "Beschreibung"
+  },
+  "exceptions": {
+    "brandWithSuchCodeAlreadyExist": "Die Marke mit einem solchen Code existiert bereits."
+  }
+}

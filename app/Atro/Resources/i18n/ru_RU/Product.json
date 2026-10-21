@@ -15,7 +15,8 @@
     "customsNumber": "Таможенный номер",
     "countryOfOrigin": "Страна происхождения",
     "defaultSupplier": "Поставщик по умолчанию",
-    "note": "Заметка"
+    "note": "Заметка",
+    "brand": "Бренд"
   },
   "labels": {
     "manufacturer": "Производитель",

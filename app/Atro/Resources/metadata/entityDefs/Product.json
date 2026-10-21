@@ -118,6 +118,9 @@
     },
     "note": {
       "type": "text"
+    },
+    "brand": {
+      "type": "link"
     }
   },
   "links": {
@@ -170,6 +173,11 @@
       "type": "belongsTo",
       "foreign": "products",
       "entity": "Account"
+    },
+    "brand": {
+      "type": "belongsTo",
+      "foreign": "products",
+      "entity": "Brand"
     }
   },
   "collection": {

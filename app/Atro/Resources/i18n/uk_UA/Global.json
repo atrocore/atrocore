@@ -86,7 +86,8 @@
     "ActionExecutionLog": "Журнал виконання дій",
     "Layout": "Макет",
     "Cluster": "Кластер зіставлення",
-    "ClusterItem": "Елемент кластера зіставлення"
+    "ClusterItem": "Елемент кластера зіставлення",
+    "Brand": "Бренд"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Програмні пакети",
@@ -162,7 +163,8 @@
     "ActionExecutionLog": "Журнали виконання дій",
     "Layout": "Макети",
     "Cluster": "Кластери зіставлення",
-    "ClusterItem": "Елементи кластера зіставлення"
+    "ClusterItem": "Елементи кластера зіставлення",
+    "Brand": "Бренди"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"

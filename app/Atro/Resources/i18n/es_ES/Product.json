@@ -15,7 +15,8 @@
     "customsNumber": "Número de aduana",
     "countryOfOrigin": "País de origen",
     "defaultSupplier": "Proveedor por defecto",
-    "note": "Note"
+    "note": "Note",
+    "brand": "Marca"
   },
   "labels": {
     "manufacturer": "Fabricante",

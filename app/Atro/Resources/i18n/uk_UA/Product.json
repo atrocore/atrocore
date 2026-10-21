@@ -15,7 +15,8 @@
     "customsNumber": "Митний номер",
     "countryOfOrigin": "Країна походження",
     "defaultSupplier": "Постачальник за замовчуванням",
-    "note": "Нотатка"
+    "note": "Нотатка",
+    "brand": "Бренд"
   },
   "labels": {
     "manufacturer": "Виробник",

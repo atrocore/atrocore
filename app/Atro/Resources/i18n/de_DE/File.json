@@ -15,7 +15,8 @@
     "size": "Größe",
     "colorSpace": "Farbraum",
     "url": "URL",
-    "uploadUrl": "URL"
+    "uploadUrl": "URL",
+    "brands": "Marken"
   },
   "labels": {
     "Preview": "Vorschau",

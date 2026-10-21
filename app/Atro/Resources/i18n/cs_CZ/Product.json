@@ -15,7 +15,8 @@
     "customsNumber": "Celní číslo",
     "countryOfOrigin": "Země původu",
     "defaultSupplier": "Výchozí dodavatel",
-    "note": "Poznámka"
+    "note": "Poznámka",
+    "brand": "Značka"
   },
   "labels": {
     "manufacturer": "Výrobce",

@@ -86,7 +86,8 @@
     "ActionExecutionLog": "Aktions-Ausführungsprotokoll",
     "Layout": "Layout",
     "Cluster": "Übereinstimmungs-Cluster",
-    "ClusterItem": "Übereinstimmungs-Cluster-Artikel"
+    "ClusterItem": "Übereinstimmungs-Cluster-Artikel",
+    "Brand": "Marke"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Softwarepakete",
@@ -162,7 +163,8 @@
     "ActionExecutionLog": "Protokolle der Aktionsausführung",
     "Layout": "Layouts",
     "Cluster": "Übereinstimmungs-Cluster",
-    "ClusterItem": "Übereinstimmungs-Cluster-Artikel"
+    "ClusterItem": "Übereinstimmungs-Cluster-Artikel",
+    "Brand": "Marken"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"

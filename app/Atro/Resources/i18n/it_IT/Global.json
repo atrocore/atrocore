@@ -85,7 +85,8 @@
     "ActionExecutionLog": "Registro di esecuzione dell'azione",
     "Layout": "Layout",
     "Cluster": "Cluster di abbinamento",
-    "ClusterItem": "Articolo del cluster di abbinamento"
+    "ClusterItem": "Articolo del cluster di abbinamento",
+    "Brand": "Marchio"
   },
   "labels": {
     "backgroundProcessingNotWorking": "L'elaborazione in background non funziona. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione.",
@@ -958,7 +959,8 @@
     "ActionExecutionLog": "Registri di esecuzione delle azioni",
     "Layout": "Layout",
     "Cluster": "Cluster di abbinamento",
-    "ClusterItem": "Articoli del cluster di abbinamento"
+    "ClusterItem": "Articoli del cluster di abbinamento",
+    "Brand": "Marche"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."

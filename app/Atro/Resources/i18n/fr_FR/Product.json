@@ -15,7 +15,8 @@
     "customsNumber": "Numéro personnalisé",
     "countryOfOrigin": "Pays d'origine",
     "defaultSupplier": "Fournisseur par défaut",
-    "note": "Remarque"
+    "note": "Remarque",
+    "brand": "Marque"
   },
   "labels": {
     "manufacturer": "Fabricant",
