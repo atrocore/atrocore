@@ -12,23 +12,29 @@ Espo.define('views/consolidation/record/panels/matchings', ['views/record/panels
     (Dep, SearchManager) => Dep.extend({
 
         setup() {
-            this.scope = 'Matching';
-            this.url = 'Matching';
+            this.wait(true);
 
-            this.model.defs.links.matchings = {
-                entity: this.scope,
-                type: "hasMany"
-            }
+            this.onModelReady(() => {
+                this.scope = 'Matching';
+                this.url = 'Matching';
 
-            this.defs.create = false;
-            this.defs.select = false;
-            this.defs.unlinkAll = false;
+                this.model.defs.links.matchings = {
+                    entity: this.scope,
+                    type: "hasMany"
+                }
 
-            Dep.prototype.setup.call(this);
+                this.defs.create = false;
+                this.defs.select = false;
+                this.defs.unlinkAll = false;
 
-            this.actionList.push({
-                label: 'showFullList',
-                action: 'showFullList'
+                this.actionList = [{
+                    label: 'showFullList',
+                    action: 'showFullList'
+                }];
+
+                Dep.prototype.setup.call(this);
+
+                this.wait(false);
             });
         },
 
