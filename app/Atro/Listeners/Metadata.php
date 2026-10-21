@@ -268,6 +268,7 @@ class Metadata extends AbstractMetadataListener
                 'importDisabled'     => true,
                 'massUpdateDisabled' => true,
                 'dataLineage'        => true,
+                'duplicateIgnore'    => true,
             ];
 
             $data['entityDefs'][$sourceEntity]['links'][$targetField] = [
@@ -285,6 +286,7 @@ class Metadata extends AbstractMetadataListener
                 'importDisabled'     => true,
                 'massUpdateDisabled' => true,
                 'dataLineage'        => true,
+                'duplicateIgnore'    => true,
             ];
             $data['entityDefs'][$targetEntity]['links'][$foreignField]  = [
                 'type'    => 'hasOne',

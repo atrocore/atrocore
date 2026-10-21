@@ -52,8 +52,10 @@ class Entity extends AbstractListener
         // find matchings if it needs
         $this->getContainer()->get('matchingManager')->findMatchingsAfterEntitySave($entity);
 
-        $this->syncTargetFromSource($entity);
-        $this->syncTargetSourcesAfterMasterChange($entity);
+        if (empty($event->getArgument('options')['skipDataPipeline'])) {
+            $this->syncTargetFromSource($entity);
+            $this->syncTargetSourcesAfterMasterChange($entity);
+        }
     }
 
     public function beforeRemove(Event $event): void
