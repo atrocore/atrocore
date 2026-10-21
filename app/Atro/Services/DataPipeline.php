@@ -22,6 +22,7 @@ use Atro\Core\Templates\Services\Base;
 use Atro\Core\Twig\Twig;
 use Atro\Core\UserContext;
 use Atro\Core\Utils\Util;
+use Espo\Core\Acl;
 use Espo\ORM\Entity;
 
 class DataPipeline extends Base
@@ -33,6 +34,7 @@ class DataPipeline extends Base
             ->where(['sourceEntityId' => $sourceRecord->getEntityName()])
             ->find();
 
+        $targetEntities = array_map(fn($pipeline) => $pipeline->get('targetEntityId'), iterator_to_array($pipelines));
         foreach ($pipelines as $pipeline) {
             if (empty($pipeline->get('transformationScript'))) {
                 continue;
@@ -57,26 +59,24 @@ class DataPipeline extends Base
                 continue;
             }
 
-            $em = $this->getEntityManager();
-            $userContext = $this->getContainer()->get(UserContext::class);
-            $previousUser = $userContext->getUser();
-            $executeAsUser = $pipeline->get('executeTransformationAs') === 'sameUser' && $previousUser !== null
-                ? $previousUser->getSystemUser()
-                : $em->getRepository('User')->getGlobalSystemUser();
-            $em->setUser($executeAsUser);
-            $userContext->set($executeAsUser);
-
-            try {
+            $this->executeTransformationAs($pipeline, function (Acl $acl) use ($targetRecordData, $targetRecord, $targetEntityType, $field, $sourceRecord) {
                 if (empty($targetRecord)) {
-                    $this->createTargetRecord($targetRecordData, $sourceRecord, $targetEntityType);
-                } else {
+                    if ($acl->check($targetEntityType, 'create')) {
+                        $targetEntity = $this->createTargetRecord($targetRecordData, $targetEntityType);
+                        if ($targetEntity) {
+                            $sourceRecord->set($field . 'Id', $targetEntity->get('id'));
+                        }
+                    }
+                } elseif ($acl->check($targetRecord, 'edit')) {
                     $this->updateTargetRecord($targetRecordData, $targetRecord);
                 }
-            } finally {
-                if ($previousUser !== null) {
-                    $em->setUser($previousUser);
-                    $userContext->set($previousUser);
-                }
+            });
+        }
+
+        foreach ($targetEntities as $targetEntity) {
+            if ($sourceRecord->isAttributeChanged('target' . ucfirst(Util::toCamelCase($targetEntity)) . 'Id')) {
+                $this->getEntityManager()->saveEntity($sourceRecord, ['skipDataPipeline' => true]);
+                break;
             }
         }
     }
@@ -106,7 +106,7 @@ class DataPipeline extends Base
 
             try {
                 $targetRecordData = $this->buildTargetRecordPayload((string)$pipeline->get('transformationScript'), $sourceRecord, $targetRecord);
-            } catch (\Throwable $e) {
+            } catch (BadRequest) {
                 continue;
             }
 
@@ -114,24 +114,11 @@ class DataPipeline extends Base
                 continue;
             }
 
-            $em = $this->getEntityManager();
-            $userContext = $this->getContainer()->get(UserContext::class);
-            $previousUser = $userContext->getUser();
-            $executeAsUser = $pipeline->get('executeTransformationAs') === 'sameUser' && $previousUser !== null
-                ? $previousUser->getSystemUser()
-                : $em->getRepository('User')->getGlobalSystemUser();
-            $em->setUser($executeAsUser);
-            $userContext->set($executeAsUser);
-
-            try {
-                $this->updateTargetRecord($targetRecordData, $targetRecord);
-            } catch (\Throwable $e) {
-            } finally {
-                if ($previousUser !== null) {
-                    $em->setUser($previousUser);
-                    $userContext->set($previousUser);
+            $this->executeTransformationAs($pipeline, function (Acl $acl) use ($targetRecordData, $targetRecord) {
+                if ($acl->check($targetRecord, 'edit')) {
+                    $this->updateTargetRecord($targetRecordData, $targetRecord);
                 }
-            }
+            });
         }
     }
 
@@ -208,7 +195,7 @@ class DataPipeline extends Base
         return $targetRecordData;
     }
 
-    private function createTargetRecord(array $targetRecordData, Entity $sourceRecord, string $targetEntityType): ?Entity
+    private function createTargetRecord(array $targetRecordData, string $targetEntityType): ?Entity
     {
         $targetId = $this
             ->getRecordService($targetEntityType)
@@ -217,12 +204,6 @@ class DataPipeline extends Base
         if (empty($targetId)) {
             return null;
         }
-
-        $field = 'target' . ucfirst(Util::toCamelCase($targetEntityType));
-
-        $this
-            ->getRecordService($sourceRecord->getEntityName())
-            ->updateEntity($sourceRecord->get('id'), (object)[$field . 'Id' => $targetId]);
 
         return $this->getEntityManager()->getEntity($targetEntityType, $targetId);
     }
@@ -234,6 +215,29 @@ class DataPipeline extends Base
                 ->getRecordService($targetRecord->getEntityName())
                 ->updateEntity($targetRecord->get('id'), json_decode(json_encode($targetRecordData)));
         } catch (NotModified) {
+        }
+    }
+
+    private function executeTransformationAs(Entity $pipeline, callable $callback): void
+    {
+        $em = $this->getEntityManager();
+        $userContext = $this->getContainer()->get(UserContext::class);
+        $previousUser = $userContext->getUser();
+
+        $executeAsUser = $pipeline->get('executeTransformationAs') === 'sameUser' && $previousUser !== null
+            ? $previousUser->getSystemUser()
+            : $em->getRepository('User')->getGlobalSystemUser();
+
+        $em->setUser($executeAsUser);
+        $userContext->set($executeAsUser);
+
+        try {
+            $callback($this->getContainer()->get('acl'));
+        } finally {
+            if ($previousUser !== null) {
+                $em->setUser($previousUser);
+                $userContext->set($previousUser);
+            }
         }
     }
 
