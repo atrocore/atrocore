@@ -10,6 +10,8 @@
     "quantity": "Ilość",
     "description": "Krótki opis",
     "mpn": "Numer producenta (MPN)",
+    "gtin": "GTIN",
+    "ean": "EAN",
     "customsNumber": "Numer celny",
     "countryOfOrigin": "Kraj pochodzenia",
     "defaultSupplier": "Domyślny dostawca",

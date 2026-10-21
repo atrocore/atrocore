@@ -10,6 +10,8 @@
     "parents": "Родительские продукты",
     "quantity": "Количество",
     "mpn": "Номер производителя (MPN)",
+    "gtin": "GTIN",
+    "ean": "EAN",
     "customsNumber": "Таможенный номер",
     "countryOfOrigin": "Страна происхождения",
     "defaultSupplier": "Поставщик по умолчанию",

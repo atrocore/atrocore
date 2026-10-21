@@ -87,6 +87,12 @@
       "noLoad": true,
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true
+    },
+    "vatId": {
+      "type": "varchar"
+    },
+    "webUrl": {
+      "type": "url"
     }
   },
   "links": {

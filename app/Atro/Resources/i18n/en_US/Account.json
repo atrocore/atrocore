@@ -9,7 +9,9 @@
     "number": "Number",
     "language": "Language",
     "addresses": "Addresses",
-    "contacts": "Contacts"
+    "contacts": "Contacts",
+    "vatId": "VAT ID",
+    "webUrl": "Web URL"
   },
   "options": {
     "type": {

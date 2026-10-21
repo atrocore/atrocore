@@ -10,6 +10,8 @@
     "parents": "Mateřské produkty",
     "quantity": "Množství",
     "mpn": "Číslo výrobce (MPN)",
+    "gtin": "GTIN",
+    "ean": "EAN",
     "customsNumber": "Celní číslo",
     "countryOfOrigin": "Země původu",
     "defaultSupplier": "Výchozí dodavatel",
