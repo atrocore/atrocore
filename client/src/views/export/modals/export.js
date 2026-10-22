@@ -115,7 +115,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 if (!this.model.get('exportAllField') && this.model.get('fieldList')) {
                     fieldDefs = {};
                     this.model.get('fieldList').forEach(field => {
-                        fieldDefs[field] = this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}`);
+                        fieldDefs[field] = this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}`) || this.getMetadata().get(`scopes.${this.scope}.exportVirtualFields.${field}`);
                     });
                 }
 
