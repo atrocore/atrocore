@@ -16,7 +16,8 @@
     "sourceAndTargetEntityCannotBeSame": "Source Entity and Target Entity cannot be the same.",
     "dataPipelineAlreadyExists": "A data pipeline for this pair of entities already exists.",
     "transformationScriptIsMissing": "Transformation script is missing for the data pipeline.",
-    "transformationScriptIsNotValid": "Transformation script returns an invalid payload: %s"
+    "transformationScriptIsNotValid": "Transformation script returns an invalid payload: %s",
+    "noSourceRecordIsLinked": "No source record is linked to the record."
   },
   "labels": {
     "targetRecordPreviewHint": "Shows how the target record would look after the transformation. Nothing is saved.",
@@ -24,7 +25,15 @@
     "noSourceRecords": "There are no records of the source entity yet",
     "discard": "Discard",
     "transformationPreview": "Transformation Preview",
-    "targetRecordNotExists": "The target record does not exist yet. Apply the preview to see how it would look after the transformation."
+    "targetRecordNotExists": "The target record does not exist yet. Apply the preview to see how it would look after the transformation.",
+    "applyToRecords": "Apply To Records",
+    "transformTo": "Transform {entity}"
+  },
+  "messages": {
+    "transformConfirmation": "The transformation script will be executed for the selected records, and the target records will be created or updated. Continue?",
+    "updateFromSourceConfirmation": "The transformation script will be executed for the source records linked to the selected records, and the selected records will be updated. Continue?",
+    "recordsTransformed": "%s / %s records transformed",
+    "recordsNotTransformed": "%s records could not be transformed. See the log for details."
   },
   "options": {
     "executeTransformationAs": {

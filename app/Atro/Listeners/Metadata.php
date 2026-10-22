@@ -259,6 +259,7 @@ class Metadata extends AbstractMetadataListener
             $targetField = 'target' . ucfirst($targetEntity);
 
             $data['scopes'][$sourceEntity]['isDataPipelineSource'] = true;
+            $data['scopes'][$sourceEntity]['dataPipelineTargets'][] = $targetEntity;
             $data['scopes'][$targetEntity]['isDataPipelineTarget'] = true;
 
             $data['entityDefs'][$sourceEntity]['fields'][$targetField] = [
@@ -2761,6 +2762,12 @@ class Metadata extends AbstractMetadataListener
                 $data['scopes'][$scope]['isDataPipelineTarget'] = $scopeDefs['isDataPipelineTarget'];
             } else {
                 unset($data['scopes'][$scope]['isDataPipelineTarget']);
+            }
+
+            if (array_key_exists('dataPipelineTargets', $scopeDefs)) {
+                $data['scopes'][$scope]['dataPipelineTargets'] = $scopeDefs['dataPipelineTargets'];
+            } else {
+                unset($data['scopes'][$scope]['dataPipelineTargets']);
             }
 
             $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [

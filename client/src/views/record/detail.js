@@ -612,6 +612,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }, dialog => dialog.render());
         },
 
+        actionUpdateFromSource: function (data) {
+            this.actionTransform(data);
+        },
+
+        actionTransform: function (data) {
+            const isTarget = data.action === 'updateFromSource';
+            const url = isTarget ? 'DataPipeline/updateFromSource' : 'DataPipeline/transform';
+            const payload = {entityName: this.model.name, entityId: this.model.id};
+            if (!isTarget) {
+                payload.targetEntityName = data.id;
+            }
+
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest(url, payload).then(() => {
+                this.notify(this.translate('Done'), 'success');
+                this.model.fetch();
+            });
+        },
+
         actionShowPdfDialog: function () {
             const scope = this.model.name || this.scope;
 
@@ -713,6 +732,28 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     label: this.translate('transformationPreview', 'labels', 'DataPipeline'),
                     action: 'transformationPreview'
                 });
+            }
+
+            if (!this.model.isNew()) {
+                (this.getMetadata().get(['scopes', this.model.name, 'dataPipelineTargets']) || []).forEach(targetEntity => {
+                    if (this.getAcl().check(targetEntity, 'edit')) {
+                        this.dropdownItemList.push({
+                            name: 'transformTo' + targetEntity,
+                            action: 'transform',
+                            id: targetEntity,
+                            label: this.translate('transformTo', 'labels', 'DataPipeline').replace('{entity}', this.translate(targetEntity, 'scopeNames')),
+                            sortOrder: 155
+                        });
+                    }
+                });
+
+                if (this.getMetadata().get(['scopes', this.model.name, 'isDataPipelineTarget']) && this.getAcl().check(this.model, 'edit')) {
+                    this.dropdownItemList.push({
+                        name: 'updateFromSource',
+                        label: this.translate('updateFromSource', 'massActions'),
+                        sortOrder: 155
+                    });
+                }
             }
 
             if (this.isHierarchical() && !this.model.isNew()) {

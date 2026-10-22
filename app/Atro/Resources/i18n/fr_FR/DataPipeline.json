@@ -16,7 +16,8 @@
     "sourceAndTargetEntityCannotBeSame": "L'entité source et l'entité cible ne peuvent pas être identiques.",
     "dataPipelineAlreadyExists": "Un data pipeline pour ce couple d'entités existe déjà.",
     "transformationScriptIsMissing": "Le script de transformation est manquant pour le pipeline de données.",
-    "transformationScriptIsNotValid": "Le script de transformation renvoie une charge utile invalide : %s"
+    "transformationScriptIsNotValid": "Le script de transformation renvoie une charge utile invalide : %s",
+    "noSourceRecordIsLinked": "Aucun enregistrement source n'est lié à l'enregistrement."
   },
   "labels": {
     "targetRecordPreviewHint": "Montre à quoi ressemblerait l'enregistrement cible après la transformation. Rien n'est enregistré.",
@@ -24,7 +25,15 @@
     "noSourceRecords": "Il n'existe encore aucun enregistrement de l'entité source",
     "discard": "Abandonner",
     "transformationPreview": "Aperçu de la transformation",
-    "targetRecordNotExists": "L'enregistrement cible n'existe pas encore. Appliquez l'aperçu pour voir à quoi il ressemblerait après la transformation."
+    "targetRecordNotExists": "L'enregistrement cible n'existe pas encore. Appliquez l'aperçu pour voir à quoi il ressemblerait après la transformation.",
+    "applyToRecords": "Appliquer aux enregistrements",
+    "transformTo": "Transformer en {entity}"
+  },
+  "messages": {
+    "transformConfirmation": "Le script de transformation sera exécuté pour les enregistrements sélectionnés, et les enregistrements cibles seront créés ou mis à jour. Continuer ?",
+    "updateFromSourceConfirmation": "Le script de transformation sera exécuté pour les enregistrements source liés aux enregistrements sélectionnés, et les enregistrements sélectionnés seront mis à jour. Continuer ?",
+    "recordsTransformed": "%s / %s enregistrements transformés",
+    "recordsNotTransformed": "%s enregistrements n'ont pas pu être transformés. Consultez le journal pour plus de détails."
   },
   "options": {
     "executeTransformationAs": {
