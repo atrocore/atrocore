@@ -98,6 +98,9 @@ class File extends Base
                         throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
                     }
 
+                    // old thumbnails must be removed
+                    $this->getThumbnailCreator()->deleteAllThumbnails($entity->_fetchedEntity ?? $entity);
+
                     $this->createThumbnailIfNeeded($entity, $localPath);
                     $this->addDimensions($entity, $localPath);
                 } finally {
