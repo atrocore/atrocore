@@ -262,6 +262,14 @@ class Metadata extends AbstractMetadataListener
             $data['scopes'][$sourceEntity]['dataPipelineTargets'][] = $targetEntity;
             $data['scopes'][$targetEntity]['isDataPipelineTarget'] = true;
 
+            if (!in_array('dataPipelineTransformSource', $data['clientDefs'][$sourceEntity]['massActionList'] ?? [])) {
+                $data['clientDefs'][$sourceEntity]['massActionList'][] = 'dataPipelineTransformSource';
+            }
+
+            if (!in_array('dataPipelineUpdateFromSource', $data['clientDefs'][$targetEntity]['massActionList'] ?? [])) {
+                $data['clientDefs'][$targetEntity]['massActionList'][] = 'dataPipelineUpdateFromSource';
+            }
+
             $data['entityDefs'][$sourceEntity]['fields'][$targetField] = [
                 'type'               => 'link',
                 'labelKey'           => "Global.scopeNames.{$targetEntity}",
@@ -2773,6 +2781,25 @@ class Metadata extends AbstractMetadataListener
             $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
                 'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null,
             ]);
+
+            $massActionList = array_values(array_diff(
+                $data['clientDefs'][$scope]['massActionList'] ?? [],
+                ['dataPipelineTransformSource', 'dataPipelineUpdateFromSource']
+            ));
+
+            if (!empty($scopeDefs['dataPipelineTargets'])) {
+                $massActionList[] = 'dataPipelineTransformSource';
+            }
+
+            if (!empty($scopeDefs['isDataPipelineTarget'])) {
+                $massActionList[] = 'dataPipelineUpdateFromSource';
+            }
+
+            if (!empty($massActionList)) {
+                $data['clientDefs'][$scope]['massActionList'] = $massActionList;
+            } else {
+                unset($data['clientDefs'][$scope]['massActionList']);
+            }
 
             // add additional actions
             $data['clientDefs'][$scope]['detailActions']['updateMasterRecord'] = [

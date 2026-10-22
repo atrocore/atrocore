@@ -157,6 +157,9 @@ Espo.define('views/selection/record/detail/compare', [
             }
 
             (this.getMetadata().get(['clientDefs', scope, 'massActionList']) || []).forEach(item => {
+                if (['dataPipelineTransformSource', 'dataPipelineUpdateFromSource'].includes(item)) {
+                    return;
+                }
                 const defs = this.getMetadata().get(['clientDefs', scope, 'massActionDefs', item]) || {};
                 if (defs.acl || defs.aclScope) {
                     if (!this.getAcl().check(defs.aclScope || scope, defs.acl)) {

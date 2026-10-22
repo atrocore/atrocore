@@ -1350,6 +1350,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
+                if (['dataPipelineTransformSource', 'dataPipelineUpdateFromSource'].includes(item)) {
+                    this.addDataPipelineMassAction(item);
+                    return;
+                }
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
                 var acl = defs.acl;
                 var aclScope = defs.aclScope;
@@ -1401,23 +1405,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.massActionList.push(actionName);
                 this.checkAllResultMassActionList.push(actionName);
             });
-
-            (this.getMetadata().get(['scopes', this.entityType, 'dataPipelineTargets']) || []).forEach(targetEntity => {
-                if (this.getAcl().check(targetEntity, 'edit')) {
-                    const item = {
-                        action: 'transform',
-                        id: targetEntity,
-                        label: this.translate('transformTo', 'labels', 'DataPipeline').replace('{entity}', this.translate(targetEntity, 'scopeNames'))
-                    };
-                    this.massActionList.push(item);
-                    this.checkAllResultMassActionList.push(item);
-                }
-            });
-
-            if (this.getMetadata().get(['scopes', this.entityType, 'isDataPipelineTarget']) && this.getAcl().check(this.entityType, 'edit')) {
-                this.massActionList.push('updateFromSource');
-                this.checkAllResultMassActionList.push('updateFromSource');
-            }
 
             if (
                 !this.massFollowDisabled &&
@@ -2055,6 +2042,27 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         fullTableScroll() {
+        },
+
+        addDataPipelineMassAction(name) {
+            if (name === 'dataPipelineTransformSource') {
+                (this.getMetadata().get(['scopes', this.entityType, 'dataPipelineTargets']) || []).forEach(targetEntity => {
+                    if (this.getAcl().check(targetEntity, 'edit')) {
+                        const item = {
+                            action: 'transform',
+                            id: targetEntity,
+                            label: this.translate('transformTo', 'labels', 'DataPipeline').replace('{entity}', this.translate(targetEntity, 'scopeNames'))
+                        };
+                        this.massActionList.push(item);
+                        this.checkAllResultMassActionList.push(item);
+                    }
+                });
+            }
+
+            if (name === 'dataPipelineUpdateFromSource' && this.getAcl().check(this.entityType, 'edit')) {
+                this.massActionList.push('updateFromSource');
+                this.checkAllResultMassActionList.push('updateFromSource');
+            }
         },
 
         setupMassActionItems() {

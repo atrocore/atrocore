@@ -303,7 +303,7 @@ class Record extends RecordService
 
     protected function getAllowedMassActions(): array
     {
-        return ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute', 'dataPipelineTransformSource', 'dataPipelineUpdateFromSource'];
+        return ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'];
     }
 
     public function executeMassAction(array $params, ?\Closure $actionOperation = null): array
