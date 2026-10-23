@@ -1166,6 +1166,34 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }.bind(this));
         },
 
+        massActionUpdateFromSource: function (data) {
+            this.massActionTransform(data);
+        },
+
+        massActionTransform: function (data) {
+            const isTarget = data.action === 'updateFromSource';
+            const url = isTarget ? 'DataPipeline/updateFromSourceAsync' : 'DataPipeline/transformAsync';
+            const payload = {
+                entityName: this.entityType,
+                where: this.allResultIsChecked
+                    ? this.collection.getWhereForCheckedRecords()
+                    : [{type: 'in', attribute: 'id', value: this.checkedList}]
+            };
+            if (!isTarget) {
+                payload.targetEntityName = data.id;
+            }
+
+            this.confirm({
+                message: this.translate(isTarget ? 'updateFromSourceConfirmation' : 'transformConfirmation', 'messages', 'DataPipeline'),
+                confirmText: this.translate('Apply')
+            }, () => {
+                this.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest(url, payload).then(result => {
+                    this.processMassActionResult({sync: false, jobId: result.jobId});
+                });
+            });
+        },
+
         massActionCompare: function (data, e, merging = false) {
             if (!this.getAcl().check(this.entityType, 'read')) {
                 this.notify('Access denied', 'error');
@@ -1322,6 +1350,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
+                if (['dataPipelineTransformSource', 'dataPipelineUpdateFromSource'].includes(item)) {
+                    this.addDataPipelineMassAction(item);
+                    return;
+                }
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
                 var acl = defs.acl;
                 var aclScope = defs.aclScope;
@@ -2010,6 +2042,27 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
         },
 
         fullTableScroll() {
+        },
+
+        addDataPipelineMassAction(name) {
+            if (name === 'dataPipelineTransformSource') {
+                (this.getMetadata().get(['scopes', this.entityType, 'dataPipelineTargets']) || []).forEach(targetEntity => {
+                    if (this.getAcl().check(targetEntity, 'edit')) {
+                        const item = {
+                            action: 'transform',
+                            id: targetEntity,
+                            label: this.translate('transformTo', 'labels', 'DataPipeline').replace('{entity}', this.translate(targetEntity, 'scopeNames'))
+                        };
+                        this.massActionList.push(item);
+                        this.checkAllResultMassActionList.push(item);
+                    }
+                });
+            }
+
+            if (name === 'dataPipelineUpdateFromSource' && this.getAcl().check(this.entityType, 'edit')) {
+                this.massActionList.push('updateFromSource');
+                this.checkAllResultMassActionList.push('updateFromSource');
+            }
         },
 
         setupMassActionItems() {

@@ -186,6 +186,7 @@
     "authenticate": "Authentifizieren",
     "Load data": "Daten laden",
     "massActionJobName": "%s der Entität \"%s\" (%s von %s)",
+    "massActionCreatorJobName": "Jobs für %s der Entität \"%s\" erstellen",
     "inheritAllFromParentJobName": "Vererben alles von Eltern für %s (%s)",
     "customizeLayout": "Layout anpassen",
     "deletePermanently": "Dauerhaft löschen",
@@ -754,6 +755,9 @@
     "all": "Alle"
   },
   "massActions": {
+    "dataPipelineTransformSource": "Transformation der Quelldatensätze",
+    "dataPipelineUpdateFromSource": "Aus Quelle aktualisieren",
+    "updateFromSource": "Transformieren",
     "massUpdatePartial": "Massenänderung (Anteil %s)",
     "removePartial": "Löschen (Anteil %s)",
     "unfollow": "Nicht abonnieren",

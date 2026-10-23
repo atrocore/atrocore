@@ -122,6 +122,118 @@ class DataPipeline extends Base
         }
     }
 
+    public function transformSourceRecordsViaJob(string $sourceEntityType, string $targetEntityType, array $where): string
+    {
+        $pipeline = $this->getEntityManager()
+            ->getRepository('DataPipeline')
+            ->where(['sourceEntityId' => $sourceEntityType, 'targetEntityId' => $targetEntityType])
+            ->findOne();
+
+        if (empty($pipeline)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($sourceEntityType, 'read') || !$this->getAcl()->check($targetEntityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $result = $this->getRecordService($sourceEntityType)->executeMassAction([
+            'action'             => 'dataPipelineTransformSource',
+            'where'              => $where,
+            'maxCountWithoutJob' => 0,
+            'maxChunkSize'       => $this->getConfig()->get('massUpdateMaxChunkSize', 3000),
+            'minChunkSize'       => $this->getConfig()->get('massUpdateMinChunkSize', 400),
+            'additionalJobData'  => ['targetEntityName' => $targetEntityType],
+        ]);
+
+        return $result[3]->get('id');
+    }
+
+    public function updateFromSourceViaJob(string $targetEntityType, array $where): string
+    {
+        if (empty($this->getMetadata()->get(['scopes', $targetEntityType, 'isDataPipelineTarget']))) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($targetEntityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $result = $this->getRecordService($targetEntityType)->executeMassAction([
+            'action'             => 'dataPipelineUpdateFromSource',
+            'where'              => $where,
+            'maxCountWithoutJob' => 0,
+            'maxChunkSize'       => $this->getConfig()->get('massUpdateMaxChunkSize', 3000),
+            'minChunkSize'       => $this->getConfig()->get('massUpdateMinChunkSize', 400),
+        ]);
+
+        return $result[3]->get('id');
+    }
+
+    public function transformSourceRecord(string $sourceEntityType, string $targetEntityType, string $sourceRecordId): void
+    {
+        $pipeline = $this->getEntityManager()
+            ->getRepository('DataPipeline')
+            ->where(['sourceEntityId' => $sourceEntityType, 'targetEntityId' => $targetEntityType])
+            ->findOne();
+
+        if (empty($pipeline)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($targetEntityType, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $sourceRecord = $this->getEntityManager()->getEntity($sourceEntityType, $sourceRecordId);
+        if (empty($sourceRecord)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($sourceRecord, 'read')) {
+            throw new Forbidden();
+        }
+
+        $this->applyTransformation($pipeline, $sourceRecord);
+    }
+
+    public function updateFromSource(string $targetEntityType, string $targetRecordId): void
+    {
+        $targetRecord = $this->getEntityManager()->getEntity($targetEntityType, $targetRecordId);
+        if (empty($targetRecord)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($targetRecord, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $pipelines = $this->getEntityManager()
+            ->getRepository('DataPipeline')
+            ->where(['targetEntityId' => $targetEntityType])
+            ->find();
+
+        foreach ($pipelines as $pipeline) {
+            $sourceRecord = $this->getEntityManager()
+                ->getRepository((string)$pipeline->get('sourceEntityId'))
+                ->where(['target' . ucfirst(Util::toCamelCase($targetEntityType)) . 'Id' => $targetRecordId])
+                ->findOne();
+
+            if (empty($sourceRecord)) {
+                continue;
+            }
+
+            if (!$this->getAcl()->check($sourceRecord, 'read')) {
+                throw new Forbidden();
+            }
+
+            $this->applyTransformation($pipeline, $sourceRecord);
+            return;
+        }
+
+        throw new BadRequest($this->getInjection('language')->translate('noSourceRecordIsLinked', 'exceptions', 'DataPipeline'));
+    }
+
     public function buildTargetRecordPreview(string $pipelineId, string $sourceRecordId, ?string $transformationScript = null): Entity
     {
         $pipeline = $this->getEntity($pipelineId);
@@ -193,6 +305,48 @@ class DataPipeline extends Base
         }
 
         return $targetRecordData;
+    }
+
+    private function applyTransformation(Entity $pipeline, Entity $sourceRecord): void
+    {
+        $transformationScript = (string)$pipeline->get('transformationScript');
+        if ($transformationScript === '') {
+            throw new BadRequest($this->getInjection('language')->translate('transformationScriptIsMissing', 'exceptions', 'DataPipeline'));
+        }
+
+        $targetEntityType = (string)$pipeline->get('targetEntityId');
+        $field = 'target' . ucfirst(Util::toCamelCase($targetEntityType));
+
+        $targetId = $sourceRecord->get($field . 'Id');
+        $targetRecord = !empty($targetId) ? $this->getEntityManager()->getEntity($targetEntityType, $targetId) : null;
+
+        $targetRecordData = $this->buildTargetRecordPayload($transformationScript, $sourceRecord, $targetRecord);
+        if (empty($targetRecordData)) {
+            return;
+        }
+
+        $this->executeTransformationAs($pipeline, function (Acl $acl) use ($targetRecordData, $targetRecord, $targetEntityType, $field, $sourceRecord) {
+            if (empty($targetRecord)) {
+                if (!$acl->check($targetEntityType, 'create')) {
+                    throw new Forbidden();
+                }
+
+                $targetEntity = $this->createTargetRecord($targetRecordData, $targetEntityType);
+                if ($targetEntity) {
+                    $sourceRecord->set($field . 'Id', $targetEntity->get('id'));
+                }
+            } else {
+                if (!$acl->check($targetRecord, 'edit')) {
+                    throw new Forbidden();
+                }
+
+                $this->updateTargetRecord($targetRecordData, $targetRecord);
+            }
+        });
+
+        if ($sourceRecord->isAttributeChanged($field . 'Id')) {
+            $this->getEntityManager()->saveEntity($sourceRecord, ['skipDataPipeline' => true]);
+        }
     }
 
     private function createTargetRecord(array $targetRecordData, string $targetEntityType): ?Entity

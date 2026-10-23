@@ -386,7 +386,11 @@ class Record extends RecordService
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
-                'name'     => "Create jobs for mass " . (empty($actionEntity) ? $action : $actionEntity->get('name')),
+                'name'     => sprintf(
+                    $this->getInjection('language')->translate('massActionCreatorJobName'),
+                    empty($actionEntity) ? $this->getInjection('language')->translate($action, 'massActions', $this->entityType) : $actionEntity->get('name'),
+                    $this->entityType
+                ),
                 'type'     => 'MassActionCreator',
                 'priority' => $this->entityType === 'Job' ? 300 : 100,
                 'payload'  => [

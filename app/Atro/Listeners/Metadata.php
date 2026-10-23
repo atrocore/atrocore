@@ -275,7 +275,16 @@ class Metadata extends AbstractMetadataListener
             $targetField = 'target' . ucfirst($targetEntity);
 
             $data['scopes'][$sourceEntity]['isDataPipelineSource'] = true;
+            $data['scopes'][$sourceEntity]['dataPipelineTargets'][] = $targetEntity;
             $data['scopes'][$targetEntity]['isDataPipelineTarget'] = true;
+
+            if (!in_array('dataPipelineTransformSource', $data['clientDefs'][$sourceEntity]['massActionList'] ?? [])) {
+                $data['clientDefs'][$sourceEntity]['massActionList'][] = 'dataPipelineTransformSource';
+            }
+
+            if (!in_array('dataPipelineUpdateFromSource', $data['clientDefs'][$targetEntity]['massActionList'] ?? [])) {
+                $data['clientDefs'][$targetEntity]['massActionList'][] = 'dataPipelineUpdateFromSource';
+            }
 
             $data['entityDefs'][$sourceEntity]['fields'][$targetField] = [
                 'type'               => 'link',
@@ -2779,9 +2788,34 @@ class Metadata extends AbstractMetadataListener
                 unset($data['scopes'][$scope]['isDataPipelineTarget']);
             }
 
+            if (array_key_exists('dataPipelineTargets', $scopeDefs)) {
+                $data['scopes'][$scope]['dataPipelineTargets'] = $scopeDefs['dataPipelineTargets'];
+            } else {
+                unset($data['scopes'][$scope]['dataPipelineTargets']);
+            }
+
             $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
                 'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null,
             ]);
+
+            $massActionList = array_values(array_diff(
+                $data['clientDefs'][$scope]['massActionList'] ?? [],
+                ['dataPipelineTransformSource', 'dataPipelineUpdateFromSource']
+            ));
+
+            if (!empty($scopeDefs['dataPipelineTargets'])) {
+                $massActionList[] = 'dataPipelineTransformSource';
+            }
+
+            if (!empty($scopeDefs['isDataPipelineTarget'])) {
+                $massActionList[] = 'dataPipelineUpdateFromSource';
+            }
+
+            if (!empty($massActionList)) {
+                $data['clientDefs'][$scope]['massActionList'] = $massActionList;
+            } else {
+                unset($data['clientDefs'][$scope]['massActionList']);
+            }
 
             // add additional actions
             $data['clientDefs'][$scope]['detailActions']['updateMasterRecord'] = [

@@ -511,6 +511,7 @@
     "jobManager": "Gestionnaire des tâches",
     "massActionDelegatedToJm": "Votre action a été déléguée avec succès au gestionnaire des tâches.",
     "massActionJobName": "%s sur l'entité '%s' (%s sur %s)",
+    "massActionCreatorJobName": "Création des tâches pour %s sur l'entité '%s'",
     "inheritAllFromParentJobName": "Hériter tout du parent pour %s (%s)",
     "inheritedFromParent": "Héritée du parent",
     "notInheritedFromParent": "Non hérité du parent",
@@ -818,6 +819,9 @@
     "multipleClassifications": "Classifications multiples"
   },
   "massActions": {
+    "dataPipelineTransformSource": "Transformation des enregistrements source",
+    "dataPipelineUpdateFromSource": "Mise à jour depuis la source",
+    "updateFromSource": "Transformer",
     "removePartial": "Suppression(Partie %s)",
     "follow": "Suivre",
     "unfollow": "Se désabonner",

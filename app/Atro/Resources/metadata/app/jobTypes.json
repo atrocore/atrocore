@@ -56,6 +56,14 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\MassRemoveAttribute"
   },
+  "MassDataPipelineTransformSource": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassDataPipelineTransformSource"
+  },
+  "MassDataPipelineUpdateFromSource": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassDataPipelineUpdateFromSource"
+  },
   "Upsert": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\Upsert"

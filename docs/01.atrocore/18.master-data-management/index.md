@@ -123,6 +123,32 @@ The transformation script is always executed with the access rights of the user 
 | System | the system user, with full access rights |
 | Same User | the system user on behalf of the user who triggered the save, with the access rights of that user |
 
+#### Manual Transformation
+
+Automatic synchronization runs only when a source record is saved. To apply a pipeline to records that already exist, e.g. after the pipeline is created or its transformation script is changed, run the transformation manually:
+
+| Where | Action | Records |
+|---|---|---|
+| Detail page of a data pipeline | **Apply To Records** | the source records selected in the pop-up window |
+| List view of the source entity | `Actions / Transform Target Entity` | the selected source records |
+| Detail page of a source record | `More / Transform Target Entity` | the opened record |
+| List view of the target entity | `Actions / Transform` | the selected target records |
+| Detail page of a target record | `More / Transform` | the opened record |
+
+![data-pipeline-apply-to-records](./_assets/data-pipeline-apply-to-records.png){.medium}
+
+In the source entity actions, *Target Entity* is replaced with the name of the target entity. If the source entity is used in several pipelines, a separate action is displayed for each target entity. If an entity is the source entity of one pipeline and the target entity of another, both kinds of actions are displayed.
+
+![data-pipeline-transform-mass-actions](./_assets/data-pipeline-transform-mass-actions.png){.small}
+
+When the transformation is run for source records, the linked target record is created or updated, the same way as during [automatic synchronization](#automatic-synchronization).
+
+When the transformation is run for target records, each target record is updated from the source record linked to it. A target record can be linked to only one source record, so the pipeline of the entity of that source record is used. Target records are not created in this case. If no source record is linked to a target record, the record is not changed and an error is shown.
+
+The actions on the detail page of a record are executed immediately. **Apply To Records** and the mass actions run as background jobs in the [Job Manager](../05.toolbar/03.job-manager/index.md). If some records could not be transformed, the number of such records is shown when the job is finished, and the reasons are written to the system log.
+
+The actions are displayed only if the user has edit access to the target entity. Target records are created and updated according to the **Execute Transformation As** field, the same as during automatic synchronization.
+
 
 ### Data Unification and Deduplication
 

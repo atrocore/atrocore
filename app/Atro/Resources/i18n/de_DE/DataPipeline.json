@@ -16,7 +16,8 @@
     "sourceAndTargetEntityCannotBeSame": "Quellentität und Zielentität dürfen nicht identisch sein.",
     "dataPipelineAlreadyExists": "Für dieses Entitätenpaar existiert bereits eine Data Pipeline.",
     "transformationScriptIsMissing": "Für die Daten-Pipeline fehlt das Transformationsskript.",
-    "transformationScriptIsNotValid": "Das Transformationsskript gibt ungültige Nutzdaten zurück: %s"
+    "transformationScriptIsNotValid": "Das Transformationsskript gibt ungültige Nutzdaten zurück: %s",
+    "noSourceRecordIsLinked": "Mit dem Datensatz ist kein Quelldatensatz verknüpft."
   },
   "labels": {
     "targetRecordPreviewHint": "Zeigt, wie der Zieldatensatz nach der Transformation aussehen würde. Es wird nichts gespeichert.",
@@ -24,7 +25,15 @@
     "noSourceRecords": "Es gibt noch keine Datensätze der Quellentität",
     "discard": "Verwerfen",
     "transformationPreview": "Transformationsvorschau",
-    "targetRecordNotExists": "Der Zieldatensatz existiert noch nicht. Wenden Sie die Vorschau an, um zu sehen, wie er nach der Transformation aussehen würde."
+    "targetRecordNotExists": "Der Zieldatensatz existiert noch nicht. Wenden Sie die Vorschau an, um zu sehen, wie er nach der Transformation aussehen würde.",
+    "applyToRecords": "Auf Datensätze anwenden",
+    "transformTo": "In {entity} transformieren"
+  },
+  "messages": {
+    "transformConfirmation": "Das Transformationsskript wird für die ausgewählten Datensätze ausgeführt, und die Zieldatensätze werden erstellt oder aktualisiert. Fortfahren?",
+    "updateFromSourceConfirmation": "Das Transformationsskript wird für die mit den ausgewählten Datensätzen verknüpften Quelldatensätze ausgeführt, und die ausgewählten Datensätze werden aktualisiert. Fortfahren?",
+    "recordsTransformed": "%s / %s Datensätze transformiert",
+    "recordsNotTransformed": "%s Datensätze konnten nicht transformiert werden. Details finden Sie im Log."
   },
   "options": {
     "executeTransformationAs": {
