@@ -22,6 +22,7 @@ use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
+use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
 use Atro\Repositories\Action as ActionRepository;
 use Espo\Core\ORM\EntityManager;
@@ -144,6 +145,13 @@ abstract class AbstractAction implements TypeInterface
         return true;
     }
 
+    /**
+     * Action types that do not override this method are executed through their executeNow().
+     *
+     * @deprecated executeNow() of an action type is deprecated, override executeWithResult() instead
+     *             (and execute() as "return $this->executeWithResult(...)->toBool();").
+     * @todo 3.0.0: returns ActionResultDTO, the executeNow() bridge is removed.
+     */
     public function execute(ActionExecution $execution, \stdClass $input): bool
     {
         // for backward compatibility
@@ -157,6 +165,42 @@ abstract class AbstractAction implements TypeInterface
         }
 
         return true;
+    }
+
+    /**
+     * Executes the action and reports what happened (executed or not, handed over to background jobs or not, success).
+     *
+     * An action type reports it by overriding this method (and implementing execute() as
+     * "return $this->executeWithResult(...)->toBool();"). Every other action type reports only a bool,
+     * it is wrapped and "in background" stays unknown (null).
+     *
+     * @todo 3.0.0: this becomes execute() (TypeInterface::execute() returns ActionResultDTO), executeWithResult(),
+     *       executeNow() and ActionResultDTO::fromLegacy() are removed.
+     */
+    public function executeWithResult(ActionExecution $execution, \stdClass $input): ActionResultDTO
+    {
+        return ActionResultDTO::fromLegacy($this->execute($execution, $input));
+    }
+
+    protected function markExecutionDone(ActionExecution $execution): void
+    {
+        $execution->set('status', 'done');
+
+        // the fake execution (see createFakeExecution()) is never saved
+        if (!$execution->isNew()) {
+            $this->getEntityManager()->saveEntity($execution);
+        }
+    }
+
+    /**
+     * A not saved execution for the code that calls an action type directly (deprecated executeNow()).
+     */
+    protected function createFakeExecution(Entity $action): ActionExecution
+    {
+        $execution = $this->getEntityManager()->getRepository('ActionExecution')->get();
+        $execution->set('action', $action);
+
+        return $execution;
     }
 
     public function getSourceEntity($action, \stdClass $input): ?Entity

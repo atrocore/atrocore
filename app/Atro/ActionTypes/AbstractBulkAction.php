@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\ActionTypes;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
 use Espo\ORM\Entity;
 
@@ -40,6 +41,11 @@ abstract class AbstractBulkAction extends AbstractAction
 
     public function execute(ActionExecution $execution, \stdClass $input): bool
     {
+        return $this->executeWithResult($execution, $input)->toBool();
+    }
+
+    public function executeWithResult(ActionExecution $execution, \stdClass $input): ActionResultDTO
+    {
         $action       = $execution->get('action');
         $sourceEntity = $this->getSourceEntity($action, $input);
 
@@ -54,16 +60,14 @@ abstract class AbstractBulkAction extends AbstractAction
             $count = $repository->count($selectParams);
 
             if ($count === 0) {
-                $execution->set('status', 'done');
-                $this->getEntityManager()->saveEntity($execution);
-
-                return true;
+                return ActionResultDTO::done(true, 'There are no records to process.');
             }
 
             if ($count > $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200)) {
                 $this->dispatchChunkCreatorJob($action, $execution, $entityType, $where, $count);
 
-                return true;
+                // the records are processed by jobs, the execution stays "running" until they are done
+                return ActionResultDTO::queued();
             }
 
             $collection = $repository->find($selectParams);
@@ -72,22 +76,14 @@ abstract class AbstractBulkAction extends AbstractAction
                 $this->runForEntity($entity, $execution);
             }
 
-            $execution->set('status', 'done');
-            $this->getEntityManager()->saveEntity($execution);
-
-            return true;
+            return ActionResultDTO::done();
         }
 
         if (empty($sourceEntity)) {
             throw new BadRequest('Action can be executed only from Source Entity.');
         }
 
-        $result = $this->runForEntity($sourceEntity, $execution);
-
-        $execution->set('status', 'done');
-        $this->getEntityManager()->saveEntity($execution);
-
-        return $result;
+        return ActionResultDTO::done($this->runForEntity($sourceEntity, $execution));
     }
 
     /**

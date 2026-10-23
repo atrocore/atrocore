@@ -80,15 +80,22 @@ class Action extends Base
             }
         }
 
-        $success = $this->getActionManager()->executeNow($action, $input);
+        $actionResult = $this->getActionManager()->execute($action, $input);
+        $success = $actionResult->toBool();
         if ($success) {
             $message = sprintf($this->getLanguage()->translate('actionExecuted', 'messages'), $action->get('name'));
         }
 
         $result = [
-            'success' => $success,
-            'message' => $message ?? null,
+            'success'  => $success,
+            'message'  => $message ?? null,
+            'executed' => $actionResult->executed,
         ];
+
+        // the work was handed over to background jobs (action types that cannot tell do not set it)
+        if ($actionResult->inBackground === true) {
+            $result['inBackground'] = true;
+        }
 
         return $this
             ->dispatchEvent('afterExecuteNow', new Event(['result' => $result, 'action' => $action, 'input' => $input]))
