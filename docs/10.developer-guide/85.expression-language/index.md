@@ -78,6 +78,8 @@ The result of the expression is cast to `bool`. There is no variable to assign a
 
 `entity.get('id')` is a special case, answered before anything else, so it works on every record.
 
+Modules may add their own methods to every entity - for example `entity.getQualityCheckValue('completeness')` of the Data Quality module. They are called the same way as the methods above. See [Adding Methods to Every Entity](../02.understanding-atrocore/05.entities/index.md#adding-methods-to-every-entity).
+
 ### Related records
 
 `entity.get('brand')` does not return an id — it returns the related **record object**, and it fetches that record from the database on the spot. Two things follow from this.
