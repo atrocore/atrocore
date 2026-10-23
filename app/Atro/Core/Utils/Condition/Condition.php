@@ -119,6 +119,16 @@ class Condition
 
         $attribute = $item['attribute'];
 
+        // the value of a quality check, the attribute being the system name of the check
+        if (!empty($item['qualityCheckId'])) {
+            $values = [$entity->getQualityCheckValue($attribute)];
+            if (isset($item['value'])) {
+                $values[] = $item['value'];
+            }
+
+            return new ConditionGroup($item['type'], $values);
+        }
+
         if (!empty($item['attributeId'])) {
             if (in_array($item['type'], ['isLinked', 'isNotLinked'])) {
                 $type = $item['type'] === 'isLinked' ? 'isTrue' : 'isFalse';

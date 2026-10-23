@@ -57,6 +57,7 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
             if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
                 this.loadAttributesInMetadata(this.getAttributeIds(this.conditionGroup))
             }
+            this.putQualityChecksToMetadata(this.conditionGroup);
             this.createStringView();
         },
 
@@ -79,6 +80,29 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
                     })
                 }
             }
+        },
+
+        // a quality check is compared like a number field named after its system name, the check being taken from the metadata
+        putQualityChecksToMetadata(conditionGroup) {
+            const checks = this.getMetadata().get(['scopes', this.scope, 'activeQualityChecks']) || {};
+
+            conditionGroup.forEach(condition => {
+                if (condition.attribute) {
+                    const check = checks[condition.qualityCheckId];
+                    if (check) {
+                        this.getMetadata().data.entityDefs[this.scope].fields[check.systemName] = {
+                            type: 'float',
+                            qualityCheckId: condition.qualityCheckId
+                        };
+                        this.getLanguage().data[this.scope].fields[check.systemName] = check.name;
+                    }
+                } else if (Array.isArray(condition.value)) {
+                    this.putQualityChecksToMetadata(condition.value);
+                } else if (condition.value && typeof condition.value === 'object') {
+                    // the group of "not" holds a single group
+                    this.putQualityChecksToMetadata([condition.value]);
+                }
+            });
         },
 
         getAttributeIds(conditionGroup) {
@@ -115,7 +139,8 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
         edit: function () {
             this.createView('modal', 'views/admin/dynamic-logic/modals/edit', {
                 conditionGroup: this.conditionGroup,
-                scope: this.scope
+                scope: this.scope,
+                qualityChecksEnabled: !!this.options.qualityChecksEnabled
             }, function (view) {
                 view.render();
 

@@ -66,7 +66,8 @@ Espo.define('views/admin/dynamic-logic/modals/edit', 'views/modal', function (De
                 itemData: {
                     value: this.conditionGroup
                 },
-                scope: this.options.scope
+                scope: this.options.scope,
+                qualityChecksEnabled: !!this.options.qualityChecksEnabled
             });
         },
 

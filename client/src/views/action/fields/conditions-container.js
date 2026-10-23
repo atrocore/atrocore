@@ -46,6 +46,8 @@ Espo.define('views/action/fields/conditions-container', 'views/fields/base',
                 model: this.model,
                 scope: entityType,
                 params: {required: false},
+                // the conditions are checked on the server, where the values of quality checks are known
+                qualityChecksEnabled: true,
                 inlineEditDisabled: true,
                 mode: this.mode,
             }, view => view.render());
