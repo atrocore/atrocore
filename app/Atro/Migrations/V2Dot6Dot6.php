@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\Schema\Table;
 
 class V2Dot6Dot6 extends Base
 {
@@ -37,6 +38,10 @@ class V2Dot6Dot6 extends Base
             }
         }
 
+        if ($toSchema->hasTable('product') && $toSchema->getTable('product')->hasColumn('gtin')) {
+            $this->ensureIndex($toSchema->getTable('product'), 'IDX_PRODUCT_GTIN', ['gtin', 'deleted'], false);
+        }
+
         if ($toSchema->hasTable('brand')) {
             $table = $toSchema->getTable('brand');
 
@@ -56,16 +61,37 @@ class V2Dot6Dot6 extends Base
             }
         }
 
-        // brand_file created by the PIM module has no unique relation index
+        // the relation tables created by the PIM module have the unique indexes with another column order
         if ($toSchema->hasTable('brand_file')) {
-            $table = $toSchema->getTable('brand_file');
-            if (!$table->hasIndex('IDX_BRAND_FILE_UNIQUE_RELATION')) {
-                $table->addUniqueIndex(['deleted', 'brand_id', 'file_id'], 'IDX_BRAND_FILE_UNIQUE_RELATION');
-            }
+            $this->ensureIndex($toSchema->getTable('brand_file'), 'IDX_BRAND_FILE_UNIQUE_RELATION', ['deleted', 'brand_id', 'file_id'], true);
+        }
+
+        if ($toSchema->hasTable('user_followed_brand')) {
+            $this->ensureIndex($toSchema->getTable('user_followed_brand'), 'IDX_USER_FOLLOWED_BRAND_UNIQUE_RELATION', ['deleted', 'brand_id', 'user_id'], true);
         }
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->exec($sql);
+        }
+    }
+
+    protected function ensureIndex(Table $table, string $name, array $columns, bool $unique): void
+    {
+        if ($table->hasIndex($name)) {
+            $index = $table->getIndex($name);
+            $existingColumns = array_map('strtolower', $index->getColumns());
+
+            if ($existingColumns === $columns && $index->isUnique() === $unique) {
+                return;
+            }
+
+            $table->dropIndex($name);
+        }
+
+        if ($unique) {
+            $table->addUniqueIndex($columns, $name);
+        } else {
+            $table->addIndex($columns, $name);
         }
     }
 
