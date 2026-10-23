@@ -18,6 +18,8 @@ use Atro\Core\Routing\Route as RouteAttribute;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
+use Atro\Handlers\Global\UpsertAsyncHandler;
+use Atro\Handlers\Global\UpsertHandler;
 use Espo\ORM\EntityManager;
 use Mezzio\Router\RouteResult;
 use Psr\Container\ContainerInterface;
@@ -67,8 +69,13 @@ class ActionHistoryMiddleware implements MiddlewareInterface
             $body = (string) $request->getBody();
             if ($body !== '') {
                 $decoded = json_decode($body, true);
-                if (is_array($decoded)) {
-                    $decoded = $this->maskSensitiveProperties($decoded, $this->getSensitivePropertiesFromRequest($request, $decoded));
+                if (is_array($decoded) && ($routeAttr = $this->resolveRouteAttribute($request)) !== null) {
+                    $routeHandler = $request->getAttribute(RouteResult::class)->getMatchedRoute()->getMiddleware();
+                    if ($routeHandler instanceof UpsertHandler || $routeHandler instanceof UpsertAsyncHandler) {
+                        $decoded = $this->maskUpsertRequestBody($routeAttr, $decoded);
+                    } else {
+                        $decoded = $this->maskRequestBody($request, $routeAttr, $decoded);
+                    }
                 }
                 $historyData['request']['body'] = $decoded ?? $body;
             }
@@ -138,26 +145,41 @@ class ActionHistoryMiddleware implements MiddlewareInterface
         return true;
     }
 
-    private function getSensitivePropertiesFromRequest(ServerRequestInterface $request, array $body): array
+    private function maskRequestBody(ServerRequestInterface $request, RouteAttribute $routeAttr, array $body): array
     {
-        $fields = [];
+        $properties = [];
 
-        $bodyEntityName = is_string($body['entityName'] ?? null) && $this->getMetadata()->get(['scopes', $body['entityName']])
-            ? $body['entityName']
-            : '';
-
-        $routeAttr = $this->resolveRouteAttribute($request);
-        if ($routeAttr !== null) {
-            /** @var RouteResult $routeResult */
-            $routeResult = $request->getAttribute(RouteResult::class);
-            $routeEntityName = (string)($routeResult->getMatchedRoute()->getOptions()['entityName'] ?? '');
-            foreach (array_unique([$routeEntityName, $bodyEntityName]) as $schemaEntityName) {
-                $schema = $this->container->get(OpenApiGenerator::class)->getSchemaForHandler($routeAttr, $schemaEntityName);
-                $fields += $this->getSensitivePropertiesFromSchema($schema);
-            }
+        $entityNames = [(string)($request->getAttribute(RouteResult::class)->getMatchedRoute()->getOptions()['entityName'] ?? '')];
+        if (is_string($body['entityName'] ?? null) && $this->getMetadata()->get(['scopes', $body['entityName']])) {
+            $entityNames[] = $body['entityName'];
         }
 
-        return $fields;
+        foreach (array_unique($entityNames) as $entityName) {
+            $schema = $this->container->get(OpenApiGenerator::class)->getSchemaForHandler($routeAttr, $entityName);
+            $properties += $this->getSensitivePropertiesFromSchema($schema);
+        }
+
+        return $this->maskSensitiveProperties($body, $properties);
+    }
+
+    private function maskUpsertRequestBody(RouteAttribute $routeAttr, array $body): array
+    {
+        $propertiesByEntity = [];
+
+        foreach ($body as $key => $item) {
+            $entityName = is_array($item) ? $item['entity'] ?? null : null;
+            if (!is_string($entityName) || !is_array($item['payload'] ?? null) || !$this->getMetadata()->get(['scopes', $entityName])) {
+                continue;
+            }
+
+            $propertiesByEntity[$entityName] ??= $this->getSensitivePropertiesFromSchema(
+                $this->container->get(OpenApiGenerator::class)->getSchemaForHandler($routeAttr, $entityName)
+            );
+
+            $body[$key]['payload'] = $this->maskSensitiveProperties($item['payload'], $propertiesByEntity[$entityName]);
+        }
+
+        return $body;
     }
 
     private function resolveRouteAttribute(ServerRequestInterface $request): ?RouteAttribute
