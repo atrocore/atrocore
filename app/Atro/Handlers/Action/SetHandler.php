@@ -70,10 +70,6 @@ use Atro\Core\Routing\Route;
                                 'type'        => 'boolean',
                                 'description' => 'False when the action did not run (conditions not met, nothing to do).',
                             ],
-                            'inBackground' => [
-                                'type'        => 'boolean',
-                                'description' => 'Present and true when the work was handed over to background jobs.',
-                            ],
                             'message' => [
                                 'type'     => 'string',
                                 'nullable' => true,

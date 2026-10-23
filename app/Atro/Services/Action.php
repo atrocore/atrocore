@@ -92,11 +92,6 @@ class Action extends Base
             'executed' => $actionResult->executed,
         ];
 
-        // the work was handed over to background jobs (action types that cannot tell do not set it)
-        if ($actionResult->inBackground === true) {
-            $result['inBackground'] = true;
-        }
-
         return $this
             ->dispatchEvent('afterExecuteNow', new Event(['result' => $result, 'action' => $action, 'input' => $input]))
             ->getArgument('result');

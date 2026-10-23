@@ -132,7 +132,7 @@ An Action Set uses the result to decide when to run its next action: right after
 
 The status of the action execution is set to `done` when the action returns a result that is not in the background. An action that returns `queued()` sets the status itself: call `$this->markExecutionDone($execution)`, or leave the execution `running` until its jobs are finished.
 
-The REST response of an action contains `success`, `message`, `executed` and, when the work was queued, `inBackground`.
+The REST response of an action contains `success`, `message` and `executed`.
 
 ---
 
