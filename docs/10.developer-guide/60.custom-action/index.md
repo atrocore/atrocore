@@ -78,11 +78,12 @@ class Foo extends AbstractAction
 | `getTypeLabel()`  | Returns a short label identifying the action type. Example: `'Foo'`.                           |
 | `getName()`       | Returns the default name of the Action type. If the user selects this action type but does not provide a custom name, the system uses this value automatically. Example: `'Do Foo'`.              |
 | `getDescription()`| Returns the default description of the Action type. If the user does not provide a description during creation, the system uses this value. Example: `'Describe Foo'`.                |
-| `executeNow(Entity $action, \stdClass $input)` | **Deprecated**, see "Reporting the Result" below. Contains the main execution logic of the action. |
+| `executeNow(Entity $action, \stdClass $input)` | Contains the main execution logic of the action. Returns `true` or `false`. |
+| `executeWithResult(ActionExecution $execution, \stdClass $input)` | Optional. Contains the main execution logic of the action and returns an `ActionResultDTO` (see below). The action record is available as `$execution->get('action')`. |
 
-### Reporting the Result (optional)
+### Action Result
 
-`executeNow()` is deprecated and returns only `true` or `false`. An action that is part of an **Action Set** can additionally tell the set what happened by overriding `executeWithResult()` and returning an `Atro\DTOs\ActionResultDTO`. Without it nothing changes: the action keeps working and the set decides on its own, as before. The method is optional, `TypeInterface` is not changed. When the action reports that it finished without background jobs (`inBackground = false`), the status of the execution is set to `done` for you. When it returns `queued()`, the action decides about the status itself (for example `$this->markExecutionDone($execution)`, or it leaves the execution `running` until its jobs are finished).
+An action can tell the system what happened by implementing `executeWithResult()` and `execute()`:
 
 ```php
 use Atro\DTOs\ActionResultDTO;
@@ -92,7 +93,25 @@ public function execute(ActionExecution $execution, \stdClass $input): bool
 {
     return $this->executeWithResult($execution, $input)->toBool();
 }
+```
 
+`executeWithResult()` returns an `Atro\DTOs\ActionResultDTO`:
+
+| Property | Meaning |
+|----------|---------|
+| `executed` | `false` when the action did not run (conditions not met, nothing to do), `true` otherwise. |
+| `inBackground` | `true` when the work was handed over to background jobs, `false` when it was finished right away. |
+| `success` | Whether the action succeeded. |
+| `message` | Optional text. |
+
+| Factory | Use it when |
+|---------|-------------|
+| `ActionResultDTO::done()` | The action finished right away. |
+| `ActionResultDTO::queued()` | The action created background jobs. |
+| `ActionResultDTO::skipped('reason')` | There was nothing to do. |
+| `ActionResultDTO::failed('reason')` | The action ran and failed. |
+
+```php
 public function executeWithResult(ActionExecution $execution, \stdClass $input): ActionResultDTO
 {
     $action = $execution->get('action');
@@ -109,15 +128,11 @@ public function executeWithResult(ActionExecution $execution, \stdClass $input):
 }
 ```
 
-| Property / Factory | Meaning |
-|--------------------|---------|
-| `executed` | `false` when the action did not run (conditions not met, nothing to do), `true` otherwise. |
-| `inBackground` | `true` when the work was handed over to background jobs, `false` when it was finished inline, `null` when unknown. |
-| `success` | Whether the action succeeded. |
-| `done()`, `queued()`, `skipped()`, `failed()` | Factories for the usual cases. |
-| `fromLegacy(bool)` | What actions that return only a `bool` are mapped to (`inBackground = null`). |
+An Action Set uses the result to decide when to run its next action: right after an action that finished or was skipped, and once all background jobs are finished after an action that returned `queued()`. An action that creates background jobs has to return `queued()`.
 
-An Action Set continues with the next action right away when the previous one was skipped or finished inline, and waits for the jobs when it was queued. An action that does not report `inBackground` (`null`) is considered as finished, so an action that creates background jobs has to implement `executeWithResult()` and return `queued()`, otherwise the set does not wait for its jobs. `ActionManager::execute()` returns the DTO, `ActionManager::executeNow()` still returns a `bool`. The REST response of an action contains `executed` and, when the work was queued, `inBackground`, besides `success` and `message`.
+The status of the action execution is set to `done` when the action returns a result that is not in the background. An action that returns `queued()` sets the status itself: call `$this->markExecutionDone($execution)`, or leave the execution `running` until its jobs are finished.
+
+The REST response of an action contains `success`, `message`, `executed` and, when the work was queued, `inBackground`.
 
 ---
 
