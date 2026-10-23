@@ -14,6 +14,7 @@ namespace Atro\ActionTypes;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
+use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
 use Espo\ORM\Entity;
 use Atro\Services\Record;
@@ -23,6 +24,11 @@ class Create extends AbstractAction
     protected array $services = [];
 
     public function execute(ActionExecution $execution, \stdClass $input): bool
+    {
+        return $this->executeWithResult($execution, $input)->toBool();
+    }
+
+    public function executeWithResult(ActionExecution $execution, \stdClass $input): ActionResultDTO
     {
         $action = $execution->get('action');
 
@@ -40,7 +46,7 @@ class Create extends AbstractAction
             $count = $repository->count($selectParams);
 
             if ($count === 0) {
-                return true;
+                return ActionResultDTO::done(true, 'There are no records to create from.');
             }
 
             $offset = 0;
@@ -73,7 +79,9 @@ class Create extends AbstractAction
                     ]);
                     $this->getEntityManager()->saveEntity($jobEntity);
                 }
-                return true;
+
+                // the records are created by jobs, the execution stays "running" until they are done
+                return ActionResultDTO::queued();
             } else {
                 foreach ($repository->find($selectParams) as $entity) {
                     $this->createEntity($entity, $execution, $input);
@@ -86,28 +94,19 @@ class Create extends AbstractAction
             } elseif (property_exists($input, 'triggeredEntityType') && property_exists($input, 'triggeredEntityId')) {
                 $entity = $this->getEntityManager()->getRepository($input->triggeredEntityType)->get($input->triggeredEntityId);
                 if (empty($entity)) {
-                    $execution->set('status', 'done');
-                    $this->getEntityManager()->saveEntity($execution);
-
-                    return false;
+                    return ActionResultDTO::skipped('The triggered record does not exist.');
                 }
             } elseif (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
                 $entity = $this->getEntityManager()->getRepository($action->get('sourceEntity'))->get($input->entityId);
                 if (empty($entity)) {
-                    $execution->set('status', 'done');
-                    $this->getEntityManager()->saveEntity($execution);
-
-                    return false;
+                    return ActionResultDTO::skipped('The source record does not exist.');
                 }
             }
 
             $this->createEntity($entity, $execution, $input);
         }
 
-        $execution->set('status', 'done');
-        $this->getEntityManager()->saveEntity($execution);
-
-        return true;
+        return ActionResultDTO::done();
     }
 
     public function createEntity(?Entity $entity, ActionExecution $execution, \stdClass $input): bool

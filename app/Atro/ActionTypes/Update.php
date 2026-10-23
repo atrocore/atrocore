@@ -12,11 +12,11 @@
 namespace Atro\ActionTypes;
 
 use Atro\Core\EventManager\Event;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\ActionExecution;
 use Atro\Services\Record;
 use Espo\ORM\Entity;
@@ -24,6 +24,11 @@ use Espo\ORM\Entity;
 class Update extends AbstractAction
 {
     public function execute(ActionExecution $execution, \stdClass $input): bool
+    {
+        return $this->executeWithResult($execution, $input)->toBool();
+    }
+
+    public function executeWithResult(ActionExecution $execution, \stdClass $input): ActionResultDTO
     {
         $action       = $execution->get('action');
         $sourceEntity = $this->getSourceEntity($action, $input);
@@ -50,10 +55,7 @@ class Update extends AbstractAction
             $count = $repository->count($selectParams);
 
             if ($count === 0) {
-                $execution->set('status', 'done');
-                $this->getEntityManager()->saveEntity($execution);
-
-                return true;
+                return ActionResultDTO::done(true, 'There are no records to update.');
             }
 
             if ($count > $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200)) {
@@ -112,7 +114,8 @@ class Update extends AbstractAction
                     $this->getEntityManager()->saveEntity($jobEntity);
                 }
 
-                return true;
+                // the records are updated by jobs, the execution stays "running" until they are done
+                return ActionResultDTO::queued();
             }
 
             $collection = $repository->find($selectParams);
@@ -125,22 +128,14 @@ class Update extends AbstractAction
                 }
             }
 
-            $execution->set('status', 'done');
-            $this->getEntityManager()->saveEntity($execution);
-
-            return $result;
+            return ActionResultDTO::done($result);
         } else {
             if (empty($sourceEntity)) {
                 throw new BadRequest('Action can be executed only from Source Entity.');
             }
         }
 
-        $result = $this->updateEntity($sourceEntity, $sourceEntity, $execution, $input);
-
-        $execution->set('status', 'done');
-        $this->getEntityManager()->saveEntity($execution);
-
-        return $result;
+        return ActionResultDTO::done($this->updateEntity($sourceEntity, $sourceEntity, $execution, $input));
     }
 
 
