@@ -42,7 +42,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 operator: this.operator,
                 level: this.level,
                 groupOperator: this.getGroupOperator(),
-                hasAttributes: !!this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])
+                hasAttributes: !!this.getMetadata().get(['scopes', this.scope, 'hasAttribute']),
+                hasQualityChecks: this.hasQualityChecks()
             };
         },
 
@@ -56,6 +57,9 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             },
             'click > div.group-bottom [data-action="addAttribute"]': function (e) {
                 this.actionAddAttribute();
+            },
+            'click > div.group-bottom [data-action="addQualityCheck"]': function (e) {
+                this.actionAddQualityCheck();
             },
             'click > div.group-bottom [data-action="addAnd"]': function (e) {
                 this.actionAddGroup('and');
@@ -143,7 +147,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 field: field,
                 attributeId: attributeId,
                 fieldType: fieldType,
-                hasFieldLocking: false
+                hasFieldLocking: false,
+                qualityChecksEnabled: !!this.options.qualityChecksEnabled
             }, function (view) {
                 if (this.isRendered()) {
                     view.render()
@@ -166,6 +171,10 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 const attributeId = this.getMetadata().get(['entityDefs', this.scope, 'fields', data.data?.field || data.attribute, 'attributeId'])
                 if (attributeId) {
                     data.attributeId = attributeId
+                }
+                const qualityCheckId = this.getMetadata().get(['entityDefs', this.scope, 'fields', data.data?.field || data.attribute, 'qualityCheckId'])
+                if (qualityCheckId) {
+                    data.qualityCheckId = qualityCheckId
                 }
                 list.push(data);
             }, this);
@@ -247,6 +256,46 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                         this.clearView('dialog');
 
                     })
+                });
+            });
+        },
+
+        // the value of a quality check is compared like a number field named after the system name of the check, only
+        // where the conditions are checked on the server
+        hasQualityChecks: function () {
+            return !!this.options.qualityChecksEnabled
+                && !!this.getMetadata().get(['scopes', 'QualityCheck'])
+                && !_.isEmpty(this.getMetadata().get(['scopes', this.scope, 'activeQualityChecks']));
+        },
+
+        actionAddQualityCheck: function () {
+            this.notify('Loading...');
+            this.createView('dialog', 'data-quality:views/modals/select-quality-checks', {
+                entityName: this.scope,
+                multiple: false
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+
+                dialog.once('add', items => {
+                    const checks = this.getMetadata().get(['scopes', this.scope, 'activeQualityChecks']) || {};
+
+                    items.forEach(item => {
+                        const check = checks[item.qualityCheckId];
+                        if (!check) {
+                            return;
+                        }
+
+                        this.getMetadata().data.entityDefs[this.scope].fields[check.systemName] = {
+                            type: 'float',
+                            qualityCheckId: item.qualityCheckId
+                        };
+                        this.getLanguage().data[this.scope].fields[check.systemName] = check.name;
+
+                        this.addField(check.systemName);
+                    });
+
+                    this.clearView('dialog');
                 });
             });
         },
