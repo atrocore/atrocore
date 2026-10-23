@@ -128,6 +128,8 @@ class Metadata extends AbstractMetadataListener
             $data['entityDefs']['Action']['fields']['type']['options'] = array_keys($data['action']['types']);
         }
 
+        $this->prepareEntityMethods($data);
+
         foreach ($data['scopes'] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type'])
                 || !in_array(
@@ -148,6 +150,20 @@ class Metadata extends AbstractMetadataListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    /**
+     * A method of the entity class itself always wins over a registered one, so such a registration would never be
+     * called - it is dropped and logged instead of failing silently.
+     */
+    protected function prepareEntityMethods(array &$data): void
+    {
+        foreach ($data['app']['entityMethods'] ?? [] as $name => $method) {
+            if (method_exists(\Espo\ORM\Entity::class, $name)) {
+                $GLOBALS['log']->error("Entity method '$name' is not registered: the entity class already has a method of this name.");
+                unset($data['app']['entityMethods'][$name]);
+            }
+        }
     }
 
     protected function prepareMultilingualAttributes(array &$data): void

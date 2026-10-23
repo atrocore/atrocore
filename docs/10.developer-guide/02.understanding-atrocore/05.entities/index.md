@@ -691,6 +691,52 @@ echo "Manufacturer: {$capitalizedName}";
 
 > You can check the parent class to check additional methods.
 
+### Adding Methods to Every Entity
+
+A module can add a method to every entity of the system without its own entity class. Such a method exists only while the module is installed, and it is called like any other method - in PHP code, in [Twig](../../80.twig-tutorial/index.md) and in the [Expression Language](../../85.expression-language/index.md):
+
+```php
+$entity->getQualityCheckValue('completeness');
+```
+
+```
+entity.getQualityCheckValue('completeness') > 75
+```
+
+The method is implemented by a handler, which implements `Atro\Core\EntityMethods\EntityMethodInterface`. It gets the entity the method is called on and the arguments of the call:
+
+```php
+<?php
+
+namespace ExampleModule\EntityMethods;
+
+use Atro\Core\EntityMethods\EntityMethodInterface;
+use Espo\ORM\Entity;
+
+class GetCapitalizedName implements EntityMethodInterface
+{
+    public function call(Entity $entity, mixed ...$arguments): mixed
+    {
+        return ucfirst((string)$entity->get('name'));
+    }
+}
+```
+
+The handler is registered in `Resources/metadata/app/entityMethods.json` of the module, the key being the name of the method:
+
+```json
+{
+  "getCapitalizedName": {
+    "handler": "\\ExampleModule\\EntityMethods\\GetCapitalizedName"
+  }
+}
+```
+
+The handler is created by the DI container on the first call of the method, so a registered method costs nothing until it is used, and the handler may get its dependencies through the constructor.
+
+- A method of the entity class itself always takes precedence. A registration named after a method of `Espo\ORM\Entity` is dropped and logged as an error.
+- Calling a method nobody has registered throws `BadMethodCallException`, the same way PHP does for an undefined method.
+
 ---
 
 ## Conditional Properties
