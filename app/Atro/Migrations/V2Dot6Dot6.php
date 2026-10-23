@@ -24,12 +24,49 @@ class V2Dot6Dot6 extends Base
 
     public function up(): void
     {
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
         // the vat_id column already exists where the Accounting module is installed
-        $this->exec("ALTER TABLE account ADD vat_id VARCHAR(255) DEFAULT NULL");
-        $this->exec("ALTER TABLE account ADD web_url VARCHAR(255) DEFAULT NULL");
+        if ($toSchema->hasTable('account')) {
+            $table = $toSchema->getTable('account');
+            foreach (['vat_id', 'web_url'] as $column) {
+                if (!$table->hasColumn($column)) {
+                    $table->addColumn($column, 'string', ['length' => 255, 'notnull' => false]);
+                }
+            }
+        }
+
+        if ($toSchema->hasTable('brand')) {
+            $table = $toSchema->getTable('brand');
+
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                $language = strtolower($code);
+
+                if (!$table->hasColumn("name_$language")) {
+                    $table->addColumn("name_$language", 'string', ['length' => 255, 'notnull' => false]);
+                }
+                if (!$table->hasColumn("description_$language")) {
+                    $table->addColumn("description_$language", 'text', ['notnull' => false]);
+                }
+            }
+
+            if (!$table->columnsAreIndexed(['code', 'deleted'])) {
+                $table->addUniqueIndex(['code', 'deleted']);
+            }
+        }
 
         // brand_file created by the PIM module has no unique relation index
-        $this->exec("CREATE UNIQUE INDEX IDX_BRAND_FILE_UNIQUE_RELATION ON brand_file (deleted, brand_id, file_id)");
+        if ($toSchema->hasTable('brand_file')) {
+            $table = $toSchema->getTable('brand_file');
+            if (!$table->hasIndex('IDX_BRAND_FILE_UNIQUE_RELATION')) {
+                $table->addUniqueIndex(['deleted', 'brand_id', 'file_id'], 'IDX_BRAND_FILE_UNIQUE_RELATION');
+            }
+        }
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->exec($sql);
+        }
     }
 
     protected function exec(string $sql): void

@@ -47,9 +47,6 @@ class V2Dot6Dot5 extends Base
             $this->exec("ALTER TABLE product ADD brand_id VARCHAR(36) DEFAULT NULL");
             $this->exec("CREATE INDEX IDX_PRODUCT_BRAND_ID ON product (brand_id, deleted)");
         }
-
-        // multilingual columns and the unique code index depend on the installation and are added by the schema rebuild
-        $this->rebuild();
     }
 
     protected function exec(string $sql): void
