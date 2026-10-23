@@ -78,7 +78,7 @@ class V2Dot6Dot3 extends Base
                 $qb->setParameter("property$i", '%"' . $property . '"%');
             }
             $qb->andWhere($qb->expr()->or(...$conditions));
-            $qb->andWhere($qb->expr()->in('action', [$qb->expr()->literal('POST'), $qb->expr()->literal('PATCH')]));
+            $qb->andWhere($qb->expr()->in('action', [$qb->expr()->literal('POST'), $qb->expr()->literal('PUT'), $qb->expr()->literal('PATCH')]));
 
             $rows = $qb->fetchAllAssociative();
             if (empty($rows)) {
