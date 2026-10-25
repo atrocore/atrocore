@@ -26,7 +26,7 @@
     "street": {
       "type": "text"
     },
-    "zip": {
+    "postalCode": {
       "type": "varchar"
     },
     "box": {

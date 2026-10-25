@@ -4,7 +4,7 @@
     "email": "Email",
     "phone": "Phone",
     "street": "Street",
-    "zip": "ZIP",
+    "postalCode": "Postal Code",
     "box": "Box",
     "city": "City",
     "country": "Country",

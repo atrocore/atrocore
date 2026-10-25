@@ -4,7 +4,7 @@
     "email": "E-mail",
     "phone": "Telefon",
     "street": "Ulice",
-    "zip": "ZIP",
+    "postalCode": "PSČ",
     "box": "Box",
     "city": "Město",
     "country": "Země",
