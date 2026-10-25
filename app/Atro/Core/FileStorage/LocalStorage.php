@@ -20,6 +20,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\FolderPathGenerator;
 use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\MimeTypeResolver;
 use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
@@ -130,10 +131,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         $result = copy($localPath, $fileName);
 
         if ($result) {
-            $mimeType = mime_content_type($fileName);
-            if ($mimeType === 'text/plain' && pathinfo($fileName, PATHINFO_EXTENSION) === 'csv') {
-                $mimeType = 'text/csv';
-            }
+            $mimeType = $this->getMimeTypeResolver()->resolveByPath($fileName, $file->get('name'));
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
             $file->set('mimeType', $mimeType);
             $file->set('fileSize', filesize($fileName));
@@ -675,7 +673,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
                     'fileSize'  => filesize($fileName),
                     'fileMtime' => gmdate("Y-m-d H:i:s", filemtime($fileName)),
                     'hash'      => $this->getFileManager()->md5File($fileName),
-                    'mimeType'  => mime_content_type($fileName),
+                    'mimeType'  => $this->getMimeTypeResolver()->resolveByPath($fileName, $fileInfo['basename']),
                     'storageId' => $storage->get('id'),
                     '_fileName' => $fileName
                 ];
@@ -846,6 +844,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
+    }
+
+    protected function getMimeTypeResolver(): MimeTypeResolver
+    {
+        return $this->container->get(MimeTypeResolver::class);
     }
 
     protected function getFileManager(): FileManager
