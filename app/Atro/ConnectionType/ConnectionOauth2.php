@@ -96,15 +96,22 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
 
     private function postToken(Entity $connectionEntity, array $body, bool $useBasicAuth): array
     {
+        $headers = ['Content-Type: application/json'];
+        $useClientAuth = $useBasicAuth && $connectionEntity->get('oauthClientId');
+        if (!$useClientAuth) {
+            // the client credentials of the grant already use the Authorization header, otherwise the Basic protection is added
+            $headers = $this->addBasicAuthorization($headers);
+        }
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $connectionEntity->get('oauthUrl'));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        if ($useBasicAuth && $connectionEntity->get('oauthClientId')) {
+        if ($useClientAuth) {
             curl_setopt($ch, CURLOPT_USERPWD, $connectionEntity->get('oauthClientId') . ':' . $this->decryptPassword($connectionEntity->get('oauthClientSecret')));
         }
         if ($connectionEntity->get('verifySsl') === false) {

@@ -1436,6 +1436,123 @@
           ]
         }
       }
+    },
+    "httpBasicEnabled": {
+      "type": "bool",
+      "notNull": true,
+      "notStorable": true,
+      "dataField": true,
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore",
+                "apiKey",
+                "cookie",
+                "oauth2",
+                "tokenAuthApi"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "httpBasicUsername": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore",
+                "apiKey",
+                "cookie",
+                "oauth2",
+                "tokenAuthApi"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore",
+                "apiKey",
+                "cookie",
+                "oauth2",
+                "tokenAuthApi"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        }
+      }
+    },
+    "httpBasicPassword": {
+      "type": "password",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore",
+                "apiKey",
+                "cookie",
+                "oauth2",
+                "tokenAuthApi"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore",
+                "apiKey",
+                "cookie",
+                "oauth2",
+                "tokenAuthApi"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "httpBasicEnabled"
+            }
+          ]
+        }
+      }
     }
   },
   "links": {

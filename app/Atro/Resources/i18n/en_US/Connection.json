@@ -46,6 +46,9 @@
     "server": "Server",
     "headers": "Headers",
     "verifySsl": "Verify SSL",
+    "httpBasicEnabled": "HTTP Basic authentication",
+    "httpBasicUsername": "HTTP Basic username",
+    "httpBasicPassword": "HTTP Basic password",
     "apiKeyName": "API Key Name",
     "apiKeyValue": "API Key"
   },

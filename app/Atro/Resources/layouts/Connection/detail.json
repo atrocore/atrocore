@@ -143,6 +143,20 @@
       ],
       [
         {
+          "name": "httpBasicEnabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "httpBasicUsername"
+        },
+        {
+          "name": "httpBasicPassword"
+        }
+      ],
+      [
+        {
           "name": "smtpServer"
         },
         {
