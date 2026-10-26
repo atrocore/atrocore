@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
 
 /**
@@ -45,7 +44,7 @@ class V2Dot7Dot1 extends Base
                 $table->addColumn('gtin', 'string', ['length' => 255, 'notnull' => false]);
             }
 
-            $indexName = Converter::generateIndexName($entityName, 'gtin');
+            $indexName = $this->getIndexName($tableName, 'gtin');
             if (!$table->hasIndex($indexName)) {
                 $table->addIndex(['gtin', 'deleted'], $indexName);
             }
@@ -54,6 +53,20 @@ class V2Dot7Dot1 extends Base
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->exec($sql);
         }
+    }
+
+    /**
+     * The name the system gives to the index of a field: IDX_ and the table and field name in upper case, the
+     * md5 of them when they are too long for the identifier limit of the database.
+     */
+    protected function getIndexName(string $tableName, string $fieldName): string
+    {
+        $name = $tableName . '_' . $fieldName;
+        if (strlen($name) > 55) {
+            $name = md5($name);
+        }
+
+        return 'IDX_' . strtoupper($name);
     }
 
     /**
