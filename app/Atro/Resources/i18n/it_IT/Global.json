@@ -472,7 +472,8 @@
     "uninstall": "Disinstalla",
     "showReleaseNotes": "Note di rilascio",
     "readDocs": "Documentazione",
-    "entityFilterResult": "Risultato del filtro"
+    "entityFilterResult": "Risultato del filtro",
+    "Required": "Richiesto"
   },
   "messages": {
     "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",

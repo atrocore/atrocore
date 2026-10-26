@@ -573,7 +573,8 @@
     "openPrimaryEntity": "Master-Entität öffnen",
     "currentSelection": "Aktuelle Auswahl",
     "isLinked": "Ist verknüpft",
-    "rejectItem": "Ablehnen"
+    "rejectItem": "Ablehnen",
+    "Required": "Erforderlich"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
