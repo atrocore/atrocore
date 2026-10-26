@@ -163,7 +163,9 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
         },
 
         getAssociationLabel(association) {
-            return this.translate('associatedTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${association.name}</strong></a>`)
+            const [nameField] = this.getLocalizedFieldData('Association', 'name')
+            const nameValue = association[nameField] || association.name
+            return this.translate('associatedTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${nameValue}</strong></a>`)
         },
 
         getDeleteData() {

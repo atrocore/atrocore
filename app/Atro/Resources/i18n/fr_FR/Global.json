@@ -607,7 +607,8 @@
     "showReleaseNotes": "Notes de version",
     "readDocs": "Documentation",
     "entityFilterResult": "Résultat du filtre",
-    "System": "Système"
+    "System": "Système",
+    "Required": "Requis"
   },
   "insightsPanels": {
     "summary": "Sommaire",

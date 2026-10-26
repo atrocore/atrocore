@@ -548,7 +548,8 @@
     "showReleaseNotes": "Notas de la versión",
     "readDocs": "Documentación",
     "entityFilterResult": "Resultado del filtrado",
-    "System": "Sistema"
+    "System": "Sistema",
+    "Required": "Obligatorio"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",

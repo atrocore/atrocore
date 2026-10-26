@@ -572,7 +572,8 @@
     "uninstall": "Видалити",
     "showReleaseNotes": "Примітки до випуску",
     "readDocs": "Документація",
-    "entityFilterResult": "Результат фільтрації"
+    "entityFilterResult": "Результат фільтрації",
+    "Required": "Обов'язковий"
   },
   "insightsPanels": {
     "summary": "Підсумок",

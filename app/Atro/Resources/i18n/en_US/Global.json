@@ -577,7 +577,8 @@
     "isLinked": "Is Linked",
     "openContributorEntity": "Open Contributor Entity",
     "openPrimaryEntity": "Open Master Entity",
-    "currentSelection": "Current Selection"
+    "currentSelection": "Current Selection",
+    "Required": "Required"
   },
   "insightsPanels": {
     "summary": "Summary",

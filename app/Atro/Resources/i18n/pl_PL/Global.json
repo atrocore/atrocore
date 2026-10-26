@@ -548,7 +548,8 @@
     "showReleaseNotes": "Informacje o wydaniu",
     "readDocs": "Dokumentacja",
     "entityFilterResult": "Wynik filtra",
-    "System": "System"
+    "System": "System",
+    "Required": "Wymagane"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",

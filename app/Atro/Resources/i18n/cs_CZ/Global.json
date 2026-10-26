@@ -548,7 +548,8 @@
     "showReleaseNotes": "Poznámky k vydání",
     "readDocs": "Dokumentace",
     "entityFilterResult": "Výsledek filtru",
-    "System": "Systém"
+    "System": "Systém",
+    "Required": "Požadované"
   },
   "fields": {
     "number": "Číslo",
