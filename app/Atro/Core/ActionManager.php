@@ -16,6 +16,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Utils\Metadata;
+use Atro\DTOs\ActionResultDTO;
 use Atro\Entities\User;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
@@ -45,7 +46,20 @@ class ActionManager
         return $this->getActionType($action->get('type'))->canExecute($action, $input);
     }
 
+    /**
+     * @deprecated Use execute() that reports what happened. Kept for backward compatibility.
+     * @todo 3.0.0: remove.
+     */
     public function executeNow(Entity $action, \stdClass $input): bool
+    {
+        return $this->execute($action, $input)->toBool();
+    }
+
+    /**
+     * Executes the action and reports what happened: was it executed, was the work handed over to background jobs
+     * (the caller has to wait for them) and was it successful. executeNow() returns the same as a bool.
+     */
+    public function execute(Entity $action, \stdClass $input): ActionResultDTO
     {
         $actionType = $this->getActionType($action->get('type'));
 
@@ -72,18 +86,19 @@ class ActionManager
                 'additionalJobData'  => $data,
             ];
 
-            $this->getServiceFactory()->create($action->get('sourceEntity'))->executeMassAction($params,
+            $massResult = $this->getServiceFactory()->create($action->get('sourceEntity'))->executeMassAction($params,
                 function ($id) use ($action, $input) {
                     $newInput           = clone $input;
                     $newInput->entityId = $id;
                     $this->executeNow($action, $newInput);
                 });
 
-            return true;
+            // executeMassAction returns [$total, $errors, $sync, $job], $sync is false when the records are processed by a job
+            return (is_array($massResult) && ($massResult[2] ?? true) === false) ? ActionResultDTO::queued() : ActionResultDTO::done();
         }
 
         if (!$this->canExecute($action, $input)) {
-            return false;
+            return ActionResultDTO::skipped('Conditions of the action are not met.');
         }
 
         // prepare current user ID
@@ -131,7 +146,7 @@ class ActionManager
                             $this->auth($currentUser);
                         }
 
-                        return false;
+                        return ActionResultDTO::failed('Workflow auto-deactivated: execution loop detected.', false);
                     }
                 }
             }
@@ -158,9 +173,19 @@ class ActionManager
         $this->getEntityManager()->saveEntity($execution);
 
         try {
-            $res = $actionType->execute($execution, $input);
+            // action types that cannot report a rich result only return a bool
+            $result = method_exists($actionType, 'executeWithResult')
+                ? $actionType->executeWithResult($execution, $input)
+                : ActionResultDTO::fromLegacy($actionType->execute($execution, $input));
+
+            // an action type that reports that it finished without background jobs does not have to take care of
+            // the status of the execution; otherwise (jobs, unknown) the type decides, the execution can stay "running"
+            if ($result->inBackground === false && $execution->get('status') === 'running') {
+                $execution->set('status', 'done');
+                $this->getEntityManager()->saveEntity($execution);
+            }
         } catch (\Throwable $e) {
-            $res = false;
+            $result = ActionResultDTO::failed($e->getMessage());
 
             if (!($e instanceof BadRequest && $action->get('type') === 'error')) {
                 $execution->set('status', 'failed');
@@ -178,7 +203,7 @@ class ActionManager
             throw $e;
         }
 
-        return $res;
+        return $result;
     }
 
     protected function preparePayload(\stdClass $input): \stdClass

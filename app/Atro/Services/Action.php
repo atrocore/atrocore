@@ -80,14 +80,16 @@ class Action extends Base
             }
         }
 
-        $success = $this->getActionManager()->executeNow($action, $input);
+        $actionResult = $this->getActionManager()->execute($action, $input);
+        $success = $actionResult->toBool();
         if ($success) {
             $message = sprintf($this->getLanguage()->translate('actionExecuted', 'messages'), $action->get('name'));
         }
 
         $result = [
-            'success' => $success,
-            'message' => $message ?? null,
+            'success'  => $success,
+            'message'  => $message ?? null,
+            'executed' => $actionResult->executed,
         ];
 
         return $this
