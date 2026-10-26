@@ -16,13 +16,14 @@ namespace Atro\Core\FileValidation\Items;
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
-use finfo;
+use Atro\Core\Utils\MimeTypeResolver;
 
 class Mime extends Base
 {
     public function validate(File $file): bool
     {
-        $mimeType = (new finfo(FILEINFO_MIME_TYPE))->buffer($file->getContents());
+        // the same resolution the stored mimeType gets, so a file is validated as what it will be saved as
+        $mimeType = $this->getMimeTypeResolver()->resolveByContents($file->getContents(), $file->get('name'));
 
         if (in_array($mimeType, $this->params['mimeTypes'])) {
             return true;
@@ -43,5 +44,10 @@ class Mime extends Base
     public function onValidateFail()
     {
         throw new BadRequest($this->exception('mimeTypeValidationFailed'));
+    }
+
+    protected function getMimeTypeResolver(): MimeTypeResolver
+    {
+        return $this->container->get(MimeTypeResolver::class);
     }
 }
