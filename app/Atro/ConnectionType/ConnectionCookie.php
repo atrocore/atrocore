@@ -94,6 +94,11 @@ class ConnectionCookie extends ConnectionHttp implements ConnectionInterface
         return join('; ', $cookies);
     }
 
+    /**
+     * @deprecated Not used by the core anymore, use extractCookiesFromHeaders() instead.
+     *
+     * TODO: remove this method in 3.0.0 if no module uses it anymore.
+     */
     public function extractCookiesFromResponse(string $result): string
     {
         preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $result, $matches);
