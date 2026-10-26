@@ -44,6 +44,9 @@
     "dsn": "Dsn",
     "headers": "Nagłówki",
     "verifySsl": "Weryfikuj SSL",
+    "httpBasicEnabled": "Uwierzytelnianie HTTP Basic",
+    "httpBasicUsername": "Nazwa użytkownika HTTP Basic",
+    "httpBasicPassword": "Hasło HTTP Basic",
     "smtpOauthScope": "Zakres OAuth",
     "server": "Serwer SMTP"
   },

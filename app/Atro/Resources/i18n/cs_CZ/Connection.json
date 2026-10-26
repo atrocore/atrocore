@@ -45,7 +45,10 @@
     "dsn": "Dsn",
     "server": "Server",
     "headers": "Záhlaví",
-    "verifySsl": "Ověřit SSL"
+    "verifySsl": "Ověřit SSL",
+    "httpBasicEnabled": "HTTP Basic autentizace",
+    "httpBasicUsername": "Uživatelské jméno HTTP Basic",
+    "httpBasicPassword": "Heslo HTTP Basic"
   },
   "labels": {
     "connectionSuccess": "Spojení bylo úspěšně navázáno",

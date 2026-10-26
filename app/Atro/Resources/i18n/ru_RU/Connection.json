@@ -45,6 +45,9 @@
     "smtpPassword": "Пароль",
     "headers": "Заголовки",
     "verifySsl": "Проверять SSL",
+    "httpBasicEnabled": "HTTP Basic-аутентификация",
+    "httpBasicUsername": "Имя пользователя HTTP Basic",
+    "httpBasicPassword": "Пароль HTTP Basic",
     "atrocoreUrl": "URL"
   },
   "labels": {
