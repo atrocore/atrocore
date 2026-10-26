@@ -21,7 +21,7 @@ use Atro\Core\Utils\Util;
  * V2Dot6Dot4 and V2Dot6Dot6 added the gtin column and its index to the product table only. The entities that
  * are derivatives of Product have the same fields, so they get the column and the index too.
  */
-class V2Dot7Dot0 extends Base
+class V2Dot7Dot1 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
