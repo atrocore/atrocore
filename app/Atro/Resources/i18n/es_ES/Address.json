@@ -3,7 +3,7 @@
     "email": "Correo electrónico",
     "phone": "Teléfono",
     "street": "Calle",
-    "zip": "ZIP",
+    "postalCode": "Código postal",
     "box": "Box",
     "city": "Ciudad",
     "country": "País",

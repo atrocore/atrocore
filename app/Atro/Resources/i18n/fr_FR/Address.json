@@ -4,7 +4,7 @@
     "email": "Courriel",
     "phone": "Téléphone",
     "street": "Rue",
-    "zip": "ZIP",
+    "postalCode": "Code postal",
     "box": "Boîte",
     "city": "Ville",
     "country": "Pays",
