@@ -16,6 +16,7 @@ namespace Atro\Services;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
@@ -163,6 +164,10 @@ class Attribute extends Base
     {
         if (!$this->getAcl()->check($entityName, 'createAttributeValue')) {
             throw new Forbidden();
+        }
+
+        if ($this->hasArchivedRecords($entityName, [$entityId])) {
+            throw new BadRequest($this->getInjection('language')->translate('archivedRecordCannotBeChanged', 'exceptions', 'Global'));
         }
 
         if ($where !== null) {
