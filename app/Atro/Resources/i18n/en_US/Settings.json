@@ -23,6 +23,8 @@
     "rateLimitLimit": "Rate Limit: Requests",
     "rateLimitPeriod": "Rate Limit: Period (seconds)",
     "rateLimitMaxIpsPerUser": "Max Source IPs Per User",
+    "apiDocsUsername": "Username",
+    "apiDocsPassword": "Password",
     "authTokenMaxIdleTime": "Auth Token Max Idle Time (hours)",
     "siteUrl": "Site URL",
     "addressPreview": "Address Preview",
@@ -58,6 +60,8 @@
     "rateLimitLimit": "Number of requests one IP address may send to a rate limited route (login, password reset) within the period. Further requests get a 429 response with a Retry-After header.",
     "rateLimitPeriod": "Length of the rate limit period, in seconds (e.g. 3 requests with a period of 1 allow at most 3 requests per second).",
     "rateLimitMaxIpsPerUser": "Requests for the same user (e.g. login) are rejected once they came from more than this many different IP addresses within the last minute.",
+    "apiDocsUsername": "Username for the HTTP Basic authentication of the REST API documentation (/apidocs/). These credentials are independent of AtroCore users.",
+    "apiDocsPassword": "Password for the HTTP Basic authentication of the REST API documentation (/apidocs/). The documentation is not accessible until both username and password are set.",
     "authTokenMaxIdleTime": "Defines how long access tokens can exist since the last access. A value of 0 (zero) means no expiration.",
     "userThemesDisabled": "If checked then users won't be able to select another theme.",
     "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
@@ -76,6 +80,7 @@
     "favicon": "Available file type: image/svg+xml"
   },
   "labels": {
+    "API Documentation": "API Documentation",
     "Password Reset": "Password Reset",
     "Rate Limit": "Rate Limit",
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",

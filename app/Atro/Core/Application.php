@@ -122,7 +122,7 @@ final class Application
             }
 
             // generate openapi json
-            if (preg_match('/^openapi\.json$/', $query)) {
+            if ($query === 'apidocs/openapi.json') {
                 $this->showOpenApiJson();
             }
 
@@ -201,9 +201,60 @@ final class Application
 
     protected function showOpenApiJson(): void
     {
+        header('Cache-Control: no-store');
+
+        if (!$this->isApiDocsAuthorized()) {
+            header('HTTP/1.1 401 Unauthorized');
+            header('WWW-Authenticate: Basic realm="AtroCore API Documentation", charset="UTF-8"');
+            exit;
+        }
+
         header('Content-Type: application/json; charset=utf-8');
         echo Json::encode($this->getContainer()->get(OpenApiGenerator::class)->getFullSchema());
         exit;
+    }
+
+    /**
+     * Api docs have own credentials, independent of AtroCore users. Without configured credentials access is denied.
+     */
+    private function isApiDocsAuthorized(): bool
+    {
+        $username = (string)$this->getConfig()->get('apiDocsUsername', '');
+        $passwordHash = (string)$this->getConfig()->get('apiDocsPassword', '');
+
+        if ($username === '' || $passwordHash === '') {
+            return false;
+        }
+
+        [$requestUsername, $requestPassword] = $this->extractBasicAuthCredentials();
+        if ($requestUsername === null) {
+            return false;
+        }
+
+        // both checks are always executed to not reveal a valid username by response time
+        $isUsernameValid = hash_equals($username, $requestUsername);
+        $isPasswordValid = password_verify($requestPassword, $passwordHash);
+
+        return $isUsernameValid && $isPasswordValid;
+    }
+
+    private function extractBasicAuthCredentials(): array
+    {
+        if (isset($_SERVER['PHP_AUTH_USER'])) {
+            return [(string)$_SERVER['PHP_AUTH_USER'], (string)($_SERVER['PHP_AUTH_PW'] ?? '')];
+        }
+
+        $header = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
+        if (stripos($header, 'Basic ') !== 0) {
+            return [null, null];
+        }
+
+        $decoded = base64_decode(substr($header, 6), true);
+        if ($decoded === false || !str_contains($decoded, ':')) {
+            return [null, null];
+        }
+
+        return explode(':', $decoded, 2);
     }
 
     /**

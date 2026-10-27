@@ -101,6 +101,16 @@
       "default": 5,
       "tooltip": true
     },
+    "apiDocsUsername": {
+      "type": "varchar",
+      "required": true,
+      "tooltip": true
+    },
+    "apiDocsPassword": {
+      "type": "password",
+      "required": true,
+      "tooltip": true
+    },
     "passwordChangeRequestResendInterval": {
       "type": "int",
       "min": 1,

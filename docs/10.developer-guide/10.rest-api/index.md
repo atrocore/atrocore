@@ -12,9 +12,11 @@ All API requests must include the header `Content-Type: application/json`. Reque
 
 ## API Documentation
 
-The REST API documentation is automatically generated for each AtroCore project based on its configurations and installed modules. You can access it at `https://ATROCORE_INSTANCE_URL/apidocs/`.
+The REST API documentation is automatically generated for each AtroCore project based on its configurations and installed modules. You can access it at `https://ATROCORE_INSTANCE_URL/apidocs/`. The OpenAPI schema itself is available at `https://ATROCORE_INSTANCE_URL/apidocs/openapi.json`.
 
-For example, the documentation for our public demo instance is available at: [Demo REST API](https://demo.atropim.com/apidocs). You can use the **login `admin`** and **password `admin`** in the basic authentication of the [Swagger](https://demo.atropim.com/apidocs/) to explore the routes.
+The OpenAPI schema is always protected by HTTP Basic authentication with its own credentials, independent of AtroCore users; the browser asks for them when the documentation page loads the schema. Set them in `Administration > Authentication`, panel **API Documentation**. The schema is not accessible until both username and password are set. The password is stored as a hash and cannot be read back.
+
+To call the routes from Swagger, use the login and password of an AtroCore user in the basic authentication of the Swagger UI.
 
 ## Authentication
 
@@ -675,7 +677,7 @@ To create a publicly accessible URL for a file, you must create a **Sharing** en
 
 The URL returned in the **`link`** field is now public. You can share it for direct downloads or use it to embed files on external websites.
 
-For more advanced options and parameters, such as controlling link expiry or setting a password, please refer to the [Sharing API documentation](https://demo.atropim.com/apidocs/?atroq=apidocs#/Sharing/createSharingItem).
+For more advanced options and parameters, such as controlling link expiry or setting a password, please refer to the [Sharing API documentation](https://demo.atropim.com/apidocs/#/Sharing/createSharingItem).
 
 ### Working with Attributes
 

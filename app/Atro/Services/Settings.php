@@ -42,6 +42,11 @@ class Settings extends AbstractService
             'userNameRegularExpression',
         ];
 
+    /**
+     * Not exposed to users and templates, only shown to administrators in the Settings form
+     */
+    private const ADMIN_ONLY_KEYS = ['apiDocsUsername'];
+
     private string $customHeadCodeDir = 'public/client/custom/html';
     private string $customHeadCodeFilename = 'head-code.html';
     private string $customStylesheetDir = 'public/client/custom/css';
@@ -64,7 +69,7 @@ class Settings extends AbstractService
         }
 
         foreach ($this->getSettingsFieldDefs() as $field => $defs) {
-            if (($defs['type'] ?? null) === 'password') {
+            if (($defs['type'] ?? null) === 'password' || in_array($field, self::ADMIN_ONLY_KEYS, true)) {
                 continue;
             }
 
@@ -87,6 +92,7 @@ class Settings extends AbstractService
     public function getFormData(): array
     {
         $data = $this->getConfigData();
+        $data = $this->prepareAdminOnlyForOutput($data);
         $data = $this->prepareCustomHeadCodeForOutput($data);
 
         return $this->prepareStylesheetConfigForOutput($data);
@@ -136,6 +142,15 @@ class Settings extends AbstractService
 
         if (!empty($data->siteUrl)) {
             $data->siteUrl = rtrim($data->siteUrl, '/');
+        }
+
+        // api docs password is stored only as a hash, an empty value keeps the current one
+        if (property_exists($data, 'apiDocsPassword')) {
+            if ((string)$data->apiDocsPassword === '') {
+                unset($data->apiDocsPassword);
+            } else {
+                $data->apiDocsPassword = password_hash((string)$data->apiDocsPassword, PASSWORD_DEFAULT);
+            }
         }
 
         $this->setData($data);
@@ -216,6 +231,21 @@ class Settings extends AbstractService
     {
         if (!empty($data['customStylesheetPath']) && file_exists($data['customStylesheetPath'])) {
             $data['customStylesheet'] = file_get_contents($data['customStylesheetPath']);
+        }
+
+        return $data;
+    }
+
+    private function prepareAdminOnlyForOutput(array $data): array
+    {
+        if (!$this->getUser()->isAdmin()) {
+            return $data;
+        }
+
+        foreach (self::ADMIN_ONLY_KEYS as $key) {
+            if ($this->getConfig()->has($key)) {
+                $data[$key] = $this->getConfig()->get($key);
+            }
         }
 
         return $data;

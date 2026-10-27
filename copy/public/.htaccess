@@ -7,6 +7,7 @@ RewriteRule ^ /client/ [R=404]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} /apidocs/
+RewriteCond %{REQUEST_URI} !/apidocs/openapi\.json$
 RewriteRule ^ apidocs/index.html [QSA,L]
 
 RewriteRule ^docs$ /docs/ [R=301,L]

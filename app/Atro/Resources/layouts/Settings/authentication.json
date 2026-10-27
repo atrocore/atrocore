@@ -49,5 +49,18 @@
         }
       ]
     ]
+  },
+  {
+    "label": "API Documentation",
+    "rows": [
+      [
+        {
+          "name": "apiDocsUsername"
+        },
+        {
+          "name": "apiDocsPassword"
+        }
+      ]
+    ]
   }
 ]
