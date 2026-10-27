@@ -130,30 +130,34 @@ class Unit extends Base
             }
         }
 
-        foreach ($this->getMetadata()->get(['scopes']) as $scope => $defs) {
-            $entityName = $defs['attributeValueFor'] ?? null;
-            if (!empty($entityName)) {
-                $avId = $this->getConnection()->createQueryBuilder()
-                    ->select('id')
-                    ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($scope))), 't')
-                    ->where('t.reference_value = :unitId')
-                    ->andWhere('t.deleted = :false')
-                    ->setParameter('unitId', $entity->get('id'))
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->fetchOne();
+        foreach ($this->getMetadata()->get(['scopes']) as $entityName => $defs) {
+            if (empty($defs['hasAttribute'])) {
+                continue;
+            }
 
-                if (!empty($avId)) {
-                    $avEntity = $this->getEntityManager()->getRepository($scope)->get($avId);
-                    throw new BadRequest(
-                        sprintf(
-                            $this->getLanguage()->translate('unitIsUsedOnEntityAttribute', 'exceptions', 'Unit'),
-                            $entity->get('name'),
-                            $avEntity->get('attributeName') ?? $avEntity->get('attributeId'),
-                            $this->getLanguage()->translate($entityName, 'scopeNames'),
-                            $avEntity->get(lcfirst($entityName . 'Name')) ?? $avEntity->get(lcfirst($entityName . 'Id'))
-                        )
-                    );
-                }
+            $tableName = Util::toUnderScore(lcfirst($entityName));
+
+            $av = $this->getDbal()->createQueryBuilder()
+                ->select("av.{$tableName}_id AS record_id, a.id AS attribute_id, a.name AS attribute_name")
+                ->from($this->getDbal()->quoteIdentifier("{$tableName}_attribute_value"), 'av')
+                ->leftJoin('av', $this->getDbal()->quoteIdentifier('attribute'), 'a', 'a.id = av.attribute_id')
+                ->where('av.reference_value = :unitId')
+                ->andWhere('av.deleted = :false')
+                ->setParameter('unitId', $entity->get('id'))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAssociative();
+
+            if (!empty($av)) {
+                $record = $this->getEntityManager()->getEntity($entityName, $av['record_id']);
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()->translate('unitIsUsedOnEntityAttribute', 'exceptions', 'Unit'),
+                        $entity->get('name'),
+                        $av['attribute_name'] ?? $av['attribute_id'],
+                        $this->getLanguage()->translate($entityName, 'scopeNames'),
+                        $record?->get('name') ?? $av['record_id']
+                    )
+                );
             }
         }
 
