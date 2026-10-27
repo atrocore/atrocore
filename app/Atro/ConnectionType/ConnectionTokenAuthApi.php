@@ -23,24 +23,15 @@ class ConnectionTokenAuthApi extends ConnectionHttp implements ConnectionInterfa
     {
         $body = $this->buildBody($connectionEntity);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $connectionEntity->get('loginUrl'));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        if ($connectionEntity->get('verifySsl') === false) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        $response = null;
+        $httpCode = 0;
+        try {
+            $result = $this->send($connectionEntity->get('loginUrl'), 'POST', ['Content-Type: application/json'], json_encode($body), false, false);
+            $response = $result->getOutput();
+            $httpCode = $result->getCode();
+        } catch (BadRequest $e) {
+            $message = $e->getMessage();
         }
-        $response = curl_exec($ch);
-        if ($response === false) {
-            $message = curl_error($ch);
-        }
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
 
         if (!empty($response) && $httpCode == 200) {
             return @json_decode($response, true) ?? $response;

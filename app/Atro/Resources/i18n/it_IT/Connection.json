@@ -45,7 +45,10 @@
     "dsn": "Dsn",
     "server": "Server",
     "headers": "Intestazioni",
-    "verifySsl": "Verifica SSL"
+    "verifySsl": "Verifica SSL",
+    "httpBasicEnabled": "Autenticazione HTTP Basic",
+    "httpBasicUsername": "Nome utente HTTP Basic",
+    "httpBasicPassword": "Password HTTP Basic"
   },
   "labels": {
     "connectionSuccess": "La connessione è stata stabilita con successo",

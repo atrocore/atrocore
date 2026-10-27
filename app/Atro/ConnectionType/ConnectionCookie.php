@@ -40,28 +40,17 @@ class ConnectionCookie extends ConnectionHttp implements ConnectionInterface
         $body = $this->buildBody($connectionEntity);
         $url = $connectionEntity->get('loginUrl');
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        if ($connectionEntity->get('verifySsl') === false) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nosemgrep:php.lang.security.curl-ssl-verifypeer-off.curl-ssl-verifypeer-off
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        $response = null;
+        $httpCode = 0;
+        try {
+            $response = $this->send($url, 'POST', ['Content-Type: application/json'], json_encode($body), false, false);
+            $httpCode = $response->getCode();
+        } catch (BadRequest $e) {
+            $message = $e->getMessage();
         }
-        $response = curl_exec($ch);
-        if ($response === false) {
-            $message = curl_error($ch);
-        }
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
 
         if (!empty($response) && $httpCode == 200) {
-            $cookies = $this->extractCookiesFromResponse($response);
+            $cookies = $this->extractCookiesFromHeaders($response->getHeaders());
             if (!empty($cookies)) {
                 return [
                     'cookie' => $cookies
@@ -69,10 +58,47 @@ class ConnectionCookie extends ConnectionHttp implements ConnectionInterface
             }
         }
 
-
         throw new BadRequest(sprintf($this->exception('connectionFailed'), $message ?? 'Connection failed.'));
     }
 
+    /**
+     * The values of all Set-Cookie headers are joined with ';' in the headers of the response, so the attributes of
+     * the cookies (Path, Expires, ...) are left out and what remains are the cookies as name=value.
+     */
+    public function extractCookiesFromHeaders(array $headers): string
+    {
+        $setCookie = '';
+        foreach ($headers as $name => $value) {
+            if (strtolower((string)$name) === 'set-cookie') {
+                $setCookie = (string)$value;
+                break;
+            }
+        }
+
+        $attributes = ['expires', 'max-age', 'domain', 'path', 'secure', 'httponly', 'samesite', 'partitioned', 'priority'];
+
+        $cookies = [];
+        foreach (explode(';', $setCookie) as $segment) {
+            $segment = trim($segment);
+            if ($segment === '' || !str_contains($segment, '=')) {
+                continue;
+            }
+
+            if (in_array(strtolower(explode('=', $segment, 2)[0]), $attributes, true)) {
+                continue;
+            }
+
+            $cookies[] = $segment;
+        }
+
+        return join('; ', $cookies);
+    }
+
+    /**
+     * @deprecated Not used by the core anymore, use extractCookiesFromHeaders() instead.
+     *
+     * TODO: remove this method in 3.0.0 if no module uses it anymore.
+     */
     public function extractCookiesFromResponse(string $result): string
     {
         preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $result, $matches);

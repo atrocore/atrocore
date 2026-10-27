@@ -45,7 +45,10 @@
     "dsn": "Dsn",
     "server": "Servidor",
     "headers": "Cabeceras",
-    "verifySsl": "Verificar SSL"
+    "verifySsl": "Verificar SSL",
+    "httpBasicEnabled": "Autenticación HTTP Basic",
+    "httpBasicUsername": "Usuario de HTTP Basic",
+    "httpBasicPassword": "Contraseña de HTTP Basic"
   },
   "labels": {
     "connectionSuccess": "La conexión se ha establecido correctamente",
