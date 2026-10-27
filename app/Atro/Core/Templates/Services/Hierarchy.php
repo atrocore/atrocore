@@ -1180,6 +1180,11 @@ class Hierarchy extends Base
                 throw new Forbidden();
             }
 
+            $this->validateArchivedRecordUpdate($entity, $data);
+            if ($this->hasArchivedRecords($this->entityType, [$data->parentId, $this->getRepository()->getParentRecord((string)$id)['id'] ?? null])) {
+                throw new BadRequest($this->getInjection('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
+            }
+
             $sortAsc = true;
             if (property_exists($data, '_sortAsc')) {
                 $sortAsc = $data->_sortAsc === true;

@@ -162,6 +162,30 @@ class Relation extends Record
         return parent::isEntityUpdated($entity, $data);
     }
 
+    protected function beforeUpdateEntity(Entity $entity, $data)
+    {
+        parent::beforeUpdateEntity($entity, $data);
+
+        $this->validateArchivedRelationSides($entity);
+    }
+
+    protected function beforeDeleteEntity(Entity $entity)
+    {
+        parent::beforeDeleteEntity($entity);
+
+        $this->validateArchivedRelationSides($entity);
+    }
+
+    protected function validateArchivedRelationSides(Entity $entity): void
+    {
+        foreach ($this->getRepository()->getRelationFields() as $field) {
+            $foreignEntityName = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'entity']);
+            if (!empty($foreignEntityName) && $this->hasArchivedRecords($foreignEntityName, [$entity->get("{$field}Id")])) {
+                throw new BadRequest($this->getInjection('language')->translate('archivedRecordCannotBeLinked', 'exceptions', 'Global'));
+            }
+        }
+    }
+
     protected function storeEntity(Entity $entity)
     {
         if ($this->isAssociatesRelation()) {

@@ -1281,6 +1281,8 @@
     "imageMinSizeValidationFailed": "Die Dateigröße sollte größer als %skb sein.",
     "imageMaxSizeValidationFailed": "Die Dateigröße sollte niedriger als %skb sein.",
     "childsMustBeArchived": "Der (übergeordnete) Datensatz kann nur archiviert werden, wenn auch alle untergeordneten Datensätzte archiviert sind.",
+    "archivedRecordCannotBeChanged": "Der archivierte Datensatz kann nicht geändert werden. Heben Sie zuerst die Archivierung auf.",
+    "archivedRecordCannotBeLinked": "Die Verknüpfung mit einem archivierten Datensatz kann nicht erstellt oder entfernt werden.",
     "maxLengthIsExceeded": "Die zulässige maximale Länge für \"%s\" beträgt \"%s\" Symbole, Ihre aktuelle Länge beträgt \"%s\" Symbole.",
     "parentRecordsHaveDifferentValues": "Eltern-Datensätze haben unterschiedliche Werte, der zu vererbende Wert kann nicht bestimmt werden.",
     "hasMultipleParents": "Es gibt einen oder mehr Datensätze mit mehreren Elterndatensätzen.",
