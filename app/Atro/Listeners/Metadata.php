@@ -1664,23 +1664,6 @@ class Metadata extends AbstractMetadataListener
             if (!empty($scopeDefs['hasAttribute'])) {
                 $entityName = "{$scope}AttributeValue";
 
-                $metadata['scopes'][$entityName] = [
-                    'type'              => "Base",
-                    'attributeValueFor' => $scope,
-                    'entity'            => false,
-                    'layouts'           => false,
-                    'tab'               => false,
-                    'acl'               => false,
-                    'customizable'      => false,
-                    'importable'        => false,
-                    'notifications'     => false,
-                    'disabled'          => false,
-                    'object'            => false,
-                    'streamDisabled'    => true,
-                    'hideLastViewed'    => true,
-                    'emHidden'          => true,
-                ];
-
                 $metadata["entityDefs"][$scope]['fields']["attributesDefs"] = [
                     "type"                        => "jsonObject",
                     "notStorable"                 => true,
@@ -1693,29 +1676,6 @@ class Metadata extends AbstractMetadataListener
                     "exportDisabled"              => true,
                     "emHidden"                    => true,
                 ];
-
-                $metadata["entityDefs"][$scope]['fields'][lcfirst($scope) . "AttributeValues"] = [
-                    "type"                        => "linkMultiple",
-                    "layoutDetailDisabled"        => true,
-                    "layoutListDisabled"          => true,
-                    "layoutRelationshipsDisabled" => true,
-                    "layoutNavigationDisabled"    => true,
-                    "massUpdateDisabled"          => true,
-                    "importDisabled"              => true,
-                    "exportDisabled"              => true,
-                    "noLoad"                      => true
-                ];
-
-                $metadata["entityDefs"][$scope]['links'][lcfirst($scope) . "AttributeValues"] = [
-                    "type"                        => "hasMany",
-                    "foreign"                     => lcfirst($scope),
-                    "layoutRelationshipsDisabled" => true,
-                    "entity"                      => "{$scope}AttributeValue",
-                    "disableMassRelation"         => true,
-                    "notMergeable"                => true
-                ];
-
-                $metadata['app']['nonDuplicatableRelations'][] = lcfirst($scope) . "AttributeValues";
 
                 $metadata["entityDefs"][$entityName] = [
                     "fields"        => [
@@ -1773,7 +1733,6 @@ class Metadata extends AbstractMetadataListener
                         lcfirst($scope) => [
                             "type"          => "belongsTo",
                             "entity"        => $scope,
-                            "foreign"       => lcfirst($scope) . "AttributeValues",
                             "emHidden"      => true,
                             "cascadeDelete" => true
                         ],
@@ -1786,7 +1745,6 @@ class Metadata extends AbstractMetadataListener
                     ],
                     "uniqueIndexes" => [
                         "unique_relationship" => [
-                            "deleted",
                             Util::toUnderScore(lcfirst($scope)) . "_id",
                             "attribute_id"
                         ]
@@ -1794,75 +1752,59 @@ class Metadata extends AbstractMetadataListener
                     "indexes"       => [
                         "boolValue"      => [
                             "columns" => [
-                                "bool_value",
-                                "deleted"
+                                "bool_value"
                             ]
                         ],
                         "dateValue"      => [
                             "columns" => [
-                                "date_value",
-                                "deleted"
+                                "date_value"
                             ]
                         ],
                         "datetimeValue"  => [
                             "columns" => [
-                                "datetime_value",
-                                "deleted"
+                                "datetime_value"
                             ]
                         ],
                         "intValue"       => [
                             "columns" => [
-                                "int_value",
-                                "deleted"
+                                "int_value"
                             ]
                         ],
                         "intValue1"      => [
                             "columns" => [
-                                "int_value1",
-                                "deleted"
+                                "int_value1"
                             ]
                         ],
                         "floatValue"     => [
                             "columns" => [
-                                "float_value",
-                                "deleted"
+                                "float_value"
                             ]
                         ],
                         "floatValue1"    => [
                             "columns" => [
-                                "float_value1",
-                                "deleted"
+                                "float_value1"
                             ]
                         ],
                         "varcharValue"   => [
                             "columns" => [
-                                "varchar_value",
-                                "deleted"
+                                "varchar_value"
                             ]
                         ],
                         "textValue"      => [
                             "columns" => [
-                                "text_value",
-                                "deleted"
+                                "text_value"
                             ]
                         ],
                         "referenceValue" => [
                             "columns" => [
-                                "reference_value",
-                                "deleted"
+                                "reference_value"
                             ]
                         ],
                         "prefixValue"    => [
                             "columns" => [
-                                "prefix_value",
-                                "deleted"
+                                "prefix_value"
                             ]
                         ]
-                    ],
-                    "collection"    => [
-                        "sortBy"           => "id",
-                        "asc"              => false,
-                        "textFilterFields" => []
                     ]
                 ];
             }

@@ -18,7 +18,7 @@ Espo.define('views/layout/fields/related-entity', 'views/fields/enum', function 
                 return false
             }
 
-            if (['ProductAttributeValue', 'ClassificationAttribute', 'ComponentAttributeValue'].includes(scope)) {
+            if (scope === 'ClassificationAttribute') {
                 return false
             }
 

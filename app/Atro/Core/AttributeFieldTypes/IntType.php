@@ -426,7 +426,7 @@ class IntType extends AbstractFieldType
             ->select('u.id', 'u.multiplier')
             ->from('unit', 'u')
             ->innerJoin('u',
-                "(SELECT DISTINCT reference_value AS uid FROM {$tableName}_attribute_value WHERE attribute_id = :attrId AND reference_value IS NOT NULL AND reference_value != '' AND deleted = :false)",
+                "(SELECT DISTINCT reference_value AS uid FROM {$tableName}_attribute_value WHERE attribute_id = :attrId AND reference_value IS NOT NULL AND reference_value != '')",
                 'used',
                 'u.id = used.uid'
             )

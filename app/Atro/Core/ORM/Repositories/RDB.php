@@ -1157,7 +1157,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute']) && class_exists('\AdvancedDataManagement\Module')) {
             $atTable       = $table . '_attribute_value';
             $foreignColumn = Util::toUnderScore(lcfirst($this->entityType)) . "_id";
-            $qb->leftJoin('t', $atTable, 'at', "t.id = at.$foreignColumn AND at.deleted = :false")
+            $qb->leftJoin('t', $atTable, 'at', "t.id = at.$foreignColumn")
                 ->leftJoin('at', 'attribute', 'a', 'a.id = at.attribute_id AND a.deleted = :false AND a.type = :script AND a.entity_id = :entityId')
                 ->setParameter('script', 'script')
                 ->setParameter('entityId', $this->entityType);

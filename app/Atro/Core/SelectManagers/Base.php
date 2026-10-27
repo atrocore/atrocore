@@ -35,27 +35,21 @@ use Atro\Core\Utils\Util;
 use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
-use phpseclib3\Crypt\EC\Curves\brainpoolP160r1;
+use Psr\Container\ContainerInterface;
 
 class Base
 {
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
+    protected ContainerInterface $container;
+
     protected User $user;
 
     protected Acl $acl;
 
-    protected EntityManager $entityManager;
-
     protected string $entityType;
 
-    protected Metadata $metadata;
-
     protected array $selectParameters;
-
-    protected Config $config;
-
-    protected Language $language;
 
     protected ?SelectManagerFactory $selectManagerFactory;
 
@@ -69,16 +63,11 @@ class Base
 
     protected array $cachedData = [];
 
-    public function __construct(EntityManager $entityManager, User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory, Language $language)
+    public function __construct(ContainerInterface $container, User $user, Acl $acl)
     {
-        $this->entityManager     = $entityManager;
-        $this->user              = $user;
-        $this->acl               = $acl;
-        $this->aclManager        = $aclManager;
-        $this->metadata          = $metadata;
-        $this->config            = $config;
-        $this->injectableFactory = $injectableFactory;
-        $this->language          = $language;
+        $this->container = $container;
+        $this->user      = $user;
+        $this->acl       = $acl;
     }
 
     protected function limit($offset = null, $maxSize = null, &$result = [])
@@ -288,7 +277,7 @@ class Base
                             }
                         }
                     } else if (!$this->isKnownField($attribute)) {
-                        throw new BadRequest(sprintf($this->language->translate('filterContainsUnknownField', 'exceptions', 'Global'), $attribute));
+                        throw new BadRequest(sprintf($this->getLanguage()->translate('filterContainsUnknownField', 'exceptions', 'Global'), $attribute));
                     }
                 }
 
@@ -1037,7 +1026,7 @@ class Base
         $this->q($params, $result);
 
         // check if entity has hasArchive activated
-        if ($this->metadata->get(['scopes', $this->entityType, 'hasArchive'])) {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'hasArchive'])) {
             //filter only if boolean filter not activated
             $hasArchivedFilterInWhere = count(
                     array_filter($result['whereClause'], function ($row) {
@@ -1208,185 +1197,17 @@ class Base
 
     public function convertDateTimeWhere($item)
     {
-        $format = 'Y-m-d H:i:s';
-
-        $value    = null;
-        $timeZone = 'UTC';
-
-        $attribute = null;
-        if (isset($item['field'])) {
-            $attribute = $item['field'];
-        }
-        if (isset($item['attribute'])) {
-            $attribute = $item['attribute'];
-        }
-
-        if (!$attribute) {
-            return null;
-        }
-        if (empty($item['type'])) {
-            return null;
-        }
-        if (!empty($item['value'])) {
-            $value = $item['value'];
-        }
-
-        if (!empty($item['timeZone'])) {
-            $timeZone = $item['timeZone'];
-        }
-
-        $type = $item['type'];
-
-        if (empty($value) && in_array($type, array('on', 'before', 'after'))) {
+        $where = $this->getColumnWhereConverter()->prepareDateTimeItem($item);
+        if ($where === null) {
             return null;
         }
 
-        $where              = array();
-        $where['attribute'] = $attribute;
+        return $this->getWherePart($where);
+    }
 
-        $dt = new \DateTime('now', new \DateTimeZone($timeZone));
-
-        switch ($type) {
-            case 'today':
-                $where['type'] = 'between';
-                $dt->setTime(0, 0, 0);
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $from = $dt->format($format);
-                $dt->modify('+1 day -1 second');
-                $to             = $dt->format($format);
-                $where['value'] = [$from, $to];
-                break;
-            case 'past':
-                $where['type'] = 'before';
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $where['value'] = $dt->format($format);
-                break;
-            case 'future':
-                $where['type'] = 'after';
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $where['value'] = $dt->format($format);
-                break;
-            case 'lastSevenDays':
-                $where['type'] = 'between';
-
-                $dtFrom = clone $dt;
-
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $to = $dt->format($format);
-
-
-                $dtFrom->modify('-7 day');
-                $dtFrom->setTime(0, 0, 0);
-                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
-
-                $from = $dtFrom->format($format);
-
-                $where['value'] = [$from, $to];
-
-                break;
-            case 'lastXDays':
-                $where['type'] = 'between';
-
-                $dtFrom = clone $dt;
-
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $to = $dt->format($format);
-
-                $number = strval(intval($item['value']));
-                $dtFrom->modify('-' . $number . ' day');
-                $dtFrom->setTime(0, 0, 0);
-                $dtFrom->setTimezone(new \DateTimeZone('UTC'));
-
-                $from = $dtFrom->format($format);
-
-                $where['value'] = [$from, $to];
-
-                break;
-            case 'nextXDays':
-                $where['type'] = 'between';
-
-                $dtTo = clone $dt;
-
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $from = $dt->format($format);
-
-                $number = strval(intval($item['value']));
-                $dtTo->modify('+' . $number . ' day');
-                $dtTo->setTime(23, 59, 59);
-                $dtTo->setTimezone(new \DateTimeZone('UTC'));
-
-                $to = $dtTo->format($format);
-
-                $where['value'] = [$from, $to];
-
-                break;
-            case 'olderThanXDays':
-                $where['type'] = 'before';
-                $number        = strval(intval($item['value']));
-                $dt->modify('-' . $number . ' day');
-                $dt->setTime(0, 0, 0);
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $where['value'] = $dt->format($format);
-                break;
-            case 'afterXDays':
-                $where['type'] = 'after';
-                $number        = strval(intval($item['value']));
-                $dt->modify('+' . $number . ' day');
-                $dt->setTime(0, 0, 0);
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $where['value'] = $dt->format($format);
-                break;
-            case 'on':
-                $where['type'] = 'between';
-
-                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $from = $dt->format($format);
-                $dt->modify('+1 day -1 second');
-                $to             = $dt->format($format);
-                $where['value'] = [$from, $to];
-                break;
-            case 'before':
-                $where['type'] = 'before';
-                $dt            = new \DateTime($value, new \DateTimeZone($timeZone));
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $where['value'] = $dt->format($format);
-                break;
-            case 'after':
-                $where['type'] = 'after';
-                $dt            = new \DateTime($value, new \DateTimeZone($timeZone));
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $where['value'] = $dt->format($format);
-                break;
-            case 'between':
-                $where['type'] = 'between';
-                if (is_array($value)) {
-                    $dt = new \DateTime($value[0], new \DateTimeZone($timeZone));
-                    $dt->setTimezone(new \DateTimeZone('UTC'));
-                    $from = $dt->format($format);
-
-                    $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
-                    $dt->setTimezone(new \DateTimeZone('UTC'));
-                    $to             = $dt->format($format);
-                    $where['value'] = [$from, $to];
-                }
-                break;
-            default:
-                $where['type'] = $type;
-                if (!empty($value) && is_string($value)) {
-                    $dt = new \DateTime($value, new \DateTimeZone($timeZone));
-                    $dt->setTimezone(new \DateTimeZone('UTC'));
-                    $where['value'] = $dt->format($format);
-                } else {
-                    $where['value'] = $value;
-                }
-
-        }
-
-        $where['dateTime'] = false;
-        $result            = $this->getWherePart($where);
-
-        return $result;
+    protected function getColumnWhereConverter(): ColumnWhereConverter
+    {
+        return $this->container->get(ColumnWhereConverter::class);
     }
 
     protected function convertUnitFieldWhere(array $item): array
@@ -1871,270 +1692,13 @@ class Base
                     }
                     break;
 
-                case 'like':
-                    $part[$attribute . '*'] = $value;
-                    break;
-
-                case 'notLike':
-                    $part[$attribute . '!*'] = $value;
-                    break;
-
-                case 'equals':
-                case 'on':
-                    $part[$attribute . '='] = $value;
-                    break;
-
-                case 'startsWith':
-                    $part[$attribute . '*'] = $value . '%';
-                    break;
-
-                case 'endsWith':
-                    $part[$attribute . '*'] = '%' . $value;
-                    break;
-
-                case 'contains':
-                    $part[$attribute . '*'] = '%' . $value . '%';
-                    break;
-
-                case 'notContains':
-                    $part[$attribute . '!*'] = '%' . $value . '%';
-                    break;
-
-                case 'similar':
-                    if (!is_null($value) && $value !== '') {
-                        $threshold        = (float)$this->getConfig()->get('similarityThreshold', 1);
-                        $colName          = Util::toUnderScore($attribute);
-                        $paramVal         = 'sim_v_' . IdGenerator::unsortableId();
-                        $paramThr         = 'sim_t_' . IdGenerator::unsortableId();
-                        $part['innerSql'] = [
-                            'sql'        => 'similarity(' . QueryConverter::TABLE_ALIAS . '.' . $colName . ', :' . $paramVal . ') >= :' . $paramThr,
-                            'parameters' => [$paramVal => $value, $paramThr => $threshold],
-                        ];
-                    }
-                    break;
-
-                case 'wordSimilar':
-                    if (!is_null($value) && $value !== '') {
-                        $threshold        = (float)$this->getConfig()->get('similarityThreshold', 1);
-                        $colName          = Util::toUnderScore($attribute);
-                        $paramVal         = 'wsim_v_' . IdGenerator::unsortableId();
-                        $paramThr         = 'wsim_t_' . IdGenerator::unsortableId();
-                        $part['innerSql'] = [
-                            'sql'        => 'word_similarity(:' . $paramVal . ', ' . QueryConverter::TABLE_ALIAS . '.' . $colName . ') >= :' . $paramThr,
-                            'parameters' => [$paramVal => $value, $paramThr => $threshold],
-                        ];
-                    }
-                    break;
-
-                case 'notEquals':
-                case 'notOn':
-                    $part[$attribute . '!='] = $value;
-                    break;
-
-                case 'greaterThan':
-                case 'after':
-                    $part[$attribute . '>'] = $value;
-                    break;
-
-                case 'lessThan':
-                case 'before':
-                    $part[$attribute . '<'] = $value;
-                    break;
-
-                case 'greaterThanOrEquals':
-                    $part[$attribute . '>='] = $value;
-                    break;
-
-                case 'lessThanOrEquals':
-                    $part[$attribute . '<='] = $value;
-                    break;
-
-                case 'in':
-                    if (!empty($item['attribute'])) {
-                        $hasEmpty = is_array($value) && in_array('', $value);
-                        $value    = $this->prepareValueOptions($value, $item['attribute']);
-                        if ($hasEmpty) {
-                            $value[] = '';
-                        }
-                    }
-                    $part[$attribute . '='] = $value;
-                    break;
-
-                case 'notIn':
-                    if (!empty($item['attribute'])) {
-                        $hasEmpty = is_array($value) && in_array('', $value);
-                        $value    = $this->prepareValueOptions($value, $item['attribute']);
-                        if ($hasEmpty) {
-                            $value[] = '';
-                        }
-                    }
-                    $part[$attribute . '!='] = $value;
-                    break;
-
                 case 'isNull':
-                    $foreignEntity = $this->getLinkEntityForAttribute($attribute);
-                    if ($foreignEntity !== null) {
-                        $part['innerSql'] = $this->buildForeignDeletedNullCheck($foreignEntity, $attribute, false);
-                    } else {
-                        $part[$attribute . '='] = null;
-                    }
-                    break;
-
                 case 'isNotNull':
                     $foreignEntity = $this->getLinkEntityForAttribute($attribute);
                     if ($foreignEntity !== null) {
-                        $part['innerSql'] = $this->buildForeignDeletedNullCheck($foreignEntity, $attribute, true);
+                        $part['innerSql'] = $this->buildForeignDeletedNullCheck($foreignEntity, $attribute, $type === 'isNotNull');
                     } else {
-                        $part[$attribute . '!='] = null;
-                    }
-                    break;
-
-                case 'ever':
-                    $part[$attribute . '!='] = null;
-                    break;
-
-                case 'isTrue':
-                    $part[$attribute . '='] = true;
-                    break;
-
-                case 'isFalse':
-                    $part[$attribute . '='] = false;
-                    break;
-
-                case 'today':
-                    $part[$attribute . '='] = date('Y-m-d');
-                    break;
-
-                case 'past':
-                    $part[$attribute . '<'] = date('Y-m-d');
-                    break;
-
-                case 'future':
-                    $part[$attribute . '>'] = date('Y-m-d');
-                    break;
-
-                case 'lastSevenDays':
-                    $dt1 = new \DateTime();
-                    $dt2 = clone $dt1;
-                    $dt2->modify('-7 days');
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt2->format('Y-m-d'),
-                        $attribute . '<=' => $dt1->format('Y-m-d'),
-                    ];
-                    break;
-
-                case 'lastXDays':
-                    $dt1    = new \DateTime();
-                    $dt2    = clone $dt1;
-                    $number = strval(intval($value));
-
-                    $dt2->modify('-' . $number . ' days');
-                    $dt2->setTime(0, 0, 0);
-                    $dt1->setTime(23, 59, 59);
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt2->format('Y-m-d H:i:s'),
-                        $attribute . '<=' => $dt1->format('Y-m-d H:i:s'),
-                    ];
-                    break;
-
-                case 'nextXDays':
-                    $dt1    = new \DateTime();
-                    $dt2    = clone $dt1;
-                    $number = strval(intval($value));
-                    $dt2->modify('+' . $number . ' days');
-                    $dt1->setTime(0, 0, 0);
-                    $dt2->setTime(23, 59, 59);
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt1->format('Y-m-d H:i:s'),
-                        $attribute . '<=' => $dt2->format('Y-m-d H:i:s'),
-                    ];
-                    break;
-
-                case 'olderThanXDays':
-                    $dt1    = new \DateTime();
-                    $number = strval(intval($value));
-                    $dt1->modify('-' . $number . ' days');
-                    $part[$attribute . '<'] = $dt1->format('Y-m-d');
-                    break;
-
-                case 'afterXDays':
-                    $dt1    = new \DateTime();
-                    $number = strval(intval($value));
-                    $dt1->modify('+' . $number . ' days');
-                    $part[$attribute . '>'] = $dt1->format('Y-m-d');
-                    break;
-
-                case 'currentMonth':
-                    $dt          = new \DateTime();
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
-                    ];
-                    break;
-
-                case 'lastMonth':
-                    $dt          = new \DateTime();
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
-                    ];
-                    break;
-
-                case 'nextMonth':
-                    $dt          = new \DateTime();
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt->modify('first day of next month')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
-                    ];
-                    break;
-
-                case 'currentQuarter':
-                    $dt      = new \DateTime();
-                    $quarter = ceil($dt->format('m') / 3);
-                    $dt->modify('first day of January this year');
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
-                    ];
-                    break;
-
-                case 'lastQuarter':
-                    $dt      = new \DateTime();
-                    $quarter = ceil($dt->format('m') / 3);
-                    $dt->modify('first day of January this year');
-                    $quarter--;
-                    if ($quarter == 0) {
-                        $quarter = 4;
-                        $dt->modify('-1 year');
-                    }
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
-                    ];
-                    break;
-
-                case 'currentYear':
-                    $dt          = new \DateTime();
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
-                    ];
-                    break;
-
-                case 'lastYear':
-                    $dt          = new \DateTime();
-                    $part['AND'] = [
-                        $attribute . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
-                    ];
-                    break;
-
-                case 'between':
-                    if (is_array($value)) {
-                        $part['AND'] = [
-                            $attribute . '>=' => $value[0],
-                            $attribute . '<=' => $value[1],
-                        ];
+                        $part = $this->getColumnWhereConverter()->convert($attribute, $type, $value);
                     }
                     break;
 
@@ -2371,49 +1935,6 @@ class Base
                         }
                     }
                     break;
-
-                case 'arrayAnyOf':
-                    if (empty($value) || !is_array($value)) {
-                        break;
-                    }
-                    $value = $this->prepareValueOptions($value, $attribute);
-                    foreach ($value as $v) {
-                        $part['OR'][] = [$attribute . '*' => '%"' . $v . '"%'];
-                    }
-                    break;
-                case 'arrayNoneOf':
-                    if (empty($value) || !is_array($value)) {
-                        break;
-                    }
-                    $value = $this->prepareValueOptions($value, $attribute);
-
-                    $andRows['AND'] = [];
-                    foreach ($value as $v) {
-                        $andRows['AND'][] = [$attribute . '!*' => '%"' . $v . '"%'];
-                    }
-
-                    $part['OR'] = [
-                        [$attribute => null],
-                        [$attribute => '[]'],
-                        [$attribute => ''],
-                        $andRows
-                    ];
-
-                    break;
-                case 'arrayIsEmpty':
-                    $part['OR'] = [
-                        [$attribute => null],
-                        [$attribute => '[]'],
-                        [$attribute => '']
-                    ];
-                    break;
-                case 'arrayIsNotEmpty':
-                    $part['AND'] = [
-                        [$attribute . '!=' => null],
-                        [$attribute . '!=' => '[]'],
-                        [$attribute . '!=' => '']
-                    ];
-                    break;
                 case 'savedSearch':
                     if (empty($value) || !is_array($value)) {
                         break;
@@ -2441,6 +1962,11 @@ class Base
 
                     if (!empty($item["value"])) {
                         $part = $this->getWherePart($item, $result);
+                    }
+
+                default:
+                    if ($this->getColumnWhereConverter()->isSupported($type)) {
+                        $part = $this->getColumnWhereConverter()->convert((string)$attribute, $type, $value);
                     }
             }
         }
@@ -2482,21 +2008,6 @@ class Base
                 $impl->applyFilter($this->entityType, $filterName, $result, $this);
             }
         }
-    }
-
-    protected function prepareValueOptions($value, $field)
-    {
-        if (!is_array($value) || !is_string($field)) {
-            return $value;
-        }
-
-        if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'array') {
-            // escape slashes to search in escaped json
-            $value = str_replace('\\', '\\\\\\\\', $value);
-            $value = str_replace("/", "\\\\/", $value);
-        }
-
-        return $value;
     }
 
     public function applyFilter($filterName, &$result)
@@ -3073,12 +2584,12 @@ class Base
 
     protected function getEntityManager(): EntityManager
     {
-        return $this->entityManager;
+        return $this->container->get('entityManager');
     }
 
     protected function getMetadata(): Metadata
     {
-        return $this->metadata;
+        return $this->container->get('metadata');
     }
 
     protected function getUser(): User
@@ -3093,17 +2604,22 @@ class Base
 
     protected function getConfig(): Config
     {
-        return $this->config;
+        return $this->container->get('config');
     }
 
     protected function getAclManager(): AclManager
     {
-        return $this->aclManager;
+        return $this->container->get('aclManager');
     }
 
     protected function getInjectableFactory(): InjectableFactory
     {
-        return $this->injectableFactory;
+        return $this->container->get('injectableFactory');
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->container->get('language');
     }
 
     public function setEntityType(string $entityType): void

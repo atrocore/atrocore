@@ -134,7 +134,7 @@ class AttributeFieldConverter
                 $alias,
                 "{$tableName}_attribute_value",
                 $attributeAlias,
-                "{$attributeAlias}.{$tableName}_id={$alias}.id AND {$attributeAlias}.deleted=:false AND {$attributeAlias}.attribute_id=:{$attributeAlias}AttributeId"
+                "{$attributeAlias}.{$tableName}_id={$alias}.id AND {$attributeAlias}.attribute_id=:{$attributeAlias}AttributeId"
             );
             $qb->setParameter("{$attributeAlias}AttributeId", $attribute['id']);
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
@@ -287,8 +287,7 @@ class AttributeFieldConverter
             ->leftJoin('a', 'attribute_group', 'ag', 'ag.id=a.attribute_group_id AND ag.deleted=:false')
             ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType AND f.deleted=:false')
             ->leftJoin('av', $this->conn->quoteIdentifier('prefix'), 'p', 'p.id=av.prefix_value AND p.deleted=:false')
-            ->where('av.deleted=:false')
-            ->andWhere("av.{$tableName}_id=:id")
+            ->where("av.{$tableName}_id=:id")
             ->orderBy('a.sort_order', 'ASC')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $entity->get('id'))
@@ -498,7 +497,6 @@ class AttributeFieldConverter
             ->from("{$tableName}_attribute_value", 'av')
             ->innerJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id AND a.deleted=:false')
             ->where("av.{$tableName}_id=:id")
-            ->andWhere('av.deleted=:false')
             ->setParameter('id', $duplicatingEntityId)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchFirstColumn();
