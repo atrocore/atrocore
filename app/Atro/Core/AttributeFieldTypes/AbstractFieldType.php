@@ -63,7 +63,6 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
                 ->join($aliasMiddle, 'attribute', $attributeAlias, "$aliasMiddle.attribute_id = $attributeAlias.id AND $attributeAlias.deleted = :false")
                 ->where("$aliasMiddle.{$tableName}_id= $mainTableAlias.id")
                 ->andWhere("$aliasMiddle.attribute_id= :{$attributeAlias}AttributeId")
-                ->andWhere("$aliasMiddle.deleted = :false")
                 ->setParameter("{$attributeAlias}AttributeId", $attributeId)
                 ->setParameter("false", false, ParameterType::BOOLEAN);
 
@@ -85,9 +84,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
             ->select("$avAlias.{$tableName}_id")
             ->from("{$tableName}_attribute_value", $avAlias)
             ->where("$avAlias.attribute_id = :{$avAlias}AttributeId")
-            ->andWhere("$avAlias.deleted = :false")
-            ->setParameter("{$avAlias}AttributeId", $attributeId)
-            ->setParameter('false', false, ParameterType::BOOLEAN);
+            ->setParameter("{$avAlias}AttributeId", $attributeId);
 
         $condition = $this->getTableWhereBuilder()->build($qb1, $avAlias, $this->convertWhere($entity, $attribute, $item));
         if ($condition !== null) {

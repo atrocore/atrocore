@@ -66,7 +66,6 @@ class Attribute extends Base
             ->from("{$tableName}_attribute_value", 'av')
             ->innerJoin('av', "attribute", 'a', 'av.attribute_id = a.id AND a.deleted=:false')
             ->where("av.{$tableName}_id in ({$qb1->getSQL()})")
-            ->andWhere('av.deleted=:false')
             ->orderBy('a.sort_order', 'ASC')
             ->setParameter('false', false, ParameterType::BOOLEAN);
 
@@ -214,9 +213,7 @@ class Attribute extends Base
             $attrs = $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('*')
                 ->from("{$tableName}_attribute_value")
-                ->where("deleted=:false")
-                ->andWhere("{$tableName}_id=:id")
-                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->where("{$tableName}_id=:id")
                 ->setParameter('id', $parentId)
                 ->fetchAllAssociative();
 
@@ -227,12 +224,10 @@ class Attribute extends Base
             foreach ($attrs as $attr) {
                 $this->getEntityManager()->getConnection()->createQueryBuilder()
                     ->delete("{$tableName}_attribute_value")
-                    ->where('deleted=:false')
-                    ->andWhere("{$tableName}_id = :recordId")
+                    ->where("{$tableName}_id = :recordId")
                     ->andWhere("attribute_id = :attributeId")
                     ->setParameter('recordId', $entity->get('id'))
                     ->setParameter('attributeId', $attr['attribute_id'])
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->executeQuery();
 
 
@@ -403,17 +398,15 @@ class Attribute extends Base
                 ->set($valColumn, ":value")
                 ->where("{$name}_id=:entityId")
                 ->andWhere("attribute_id=:attributeId")
-                ->andWhere("deleted=:false")
                 ->setParameter('value', $value, Mapper::getParameterType($value))
                 ->setParameter('entityId', $entity->id)
                 ->setParameter('attributeId', $entity->fields[$fieldName]['attributeId'])
-                ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->executeQuery();
         } else {
             $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value)";
             if (!$insertOnly) {
                 if (Converter::isPgSQL($this->getDbal())) {
-                    $sql .= " ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn RETURNING xmax";
+                    $sql .= " ON CONFLICT ({$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn RETURNING xmax";
                 } else {
                     $sql .= " ON DUPLICATE KEY UPDATE $valColumn = VALUES($valColumn)";
                 }
@@ -496,10 +489,8 @@ class Attribute extends Base
             ->from("{$name}_attribute_value")
             ->where('attribute_id=:attributeId')
             ->andWhere("{$name}_id=:entityId")
-            ->andWhere('deleted=:false')
             ->setParameter('attributeId', $attributeId)
             ->setParameter('entityId', $entityId)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAssociative();
 
         return !empty($res);
@@ -528,10 +519,8 @@ class Attribute extends Base
             ->from("{$name}_attribute_value")
             ->where('attribute_id=:attributeId')
             ->andWhere("{$name}_id=:entityId")
-            ->andWhere('deleted=:false')
             ->setParameter('attributeId', $attributeId)
             ->setParameter('entityId', $entityId)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAssociative();
 
         if (!empty($res)) {
@@ -660,9 +649,7 @@ class Attribute extends Base
                         ->select('id')
                         ->from($tableName)
                         ->where('attribute_id=:attributeId')
-                        ->andWhere('deleted=:false')
-                        ->setParameter('attributeId', $entity->get('id'))
-                        ->setParameter('false', false, ParameterType::BOOLEAN);
+                        ->setParameter('attributeId', $entity->get('id'));
 
                     $conditions = [$query->expr()->in('varchar_value', ':options')];
                     $query->setParameter('options', $deletedOptions, Mapper::getParameterType($deletedOptions));
@@ -813,9 +800,8 @@ class Attribute extends Base
             ->update($conn->quoteIdentifier($table))
             ->set($column, ':null')
             ->where('attribute_id = :attributeId')
-            ->andWhere("$column is NOT NULL AND deleted=:false")
+            ->andWhere("$column is NOT NULL")
             ->setParameter('null', null, ParameterType::NULL)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('attributeId', $attributeId)
             ->executeQuery();
     }
@@ -861,7 +847,7 @@ class Attribute extends Base
                     ->update($table)
                     ->set('bool_value', ':false')
                     ->where('attribute_id = :attributeId')
-                    ->andWhere("bool_value is NULL AND deleted=:false")
+                    ->andWhere("bool_value is NULL")
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->setParameter('attributeId', $entity->get('id'))
                     ->executeStatement();

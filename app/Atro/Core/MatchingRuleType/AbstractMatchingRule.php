@@ -19,7 +19,6 @@ use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\Entities\MatchingRule as MatchingRuleEntity;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -93,10 +92,8 @@ abstract class AbstractMatchingRule
             ->from("{$tableName}_attribute_value", 'av')
             ->where("av.{$tableName}_id = :entityId")
             ->andWhere('av.attribute_id = :attrId')
-            ->andWhere('av.deleted = :false')
             ->setParameter('entityId', $entityId)
             ->setParameter('attrId', $attributeId)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchOne();
     }
 }

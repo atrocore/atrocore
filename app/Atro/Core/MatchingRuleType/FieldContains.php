@@ -150,8 +150,7 @@ class FieldContains extends AbstractMatchingRule
         $qb->setParameter($attrParam, $attributeId);
 
         $baseCondition = "{$subAlias}.{$tableName}_id = {$alias}.id"
-            . " AND {$subAlias}.attribute_id = :{$attrParam}"
-            . " AND {$subAlias}.deleted = :false";
+            . " AND {$subAlias}.attribute_id = :{$attrParam}";
 
         if ($value === null) {
             return "EXISTS (SELECT 1 FROM {$tableName}_attribute_value {$subAlias}"

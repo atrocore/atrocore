@@ -142,9 +142,7 @@ class Unit extends Base
                 ->from($this->getDbal()->quoteIdentifier("{$tableName}_attribute_value"), 'av')
                 ->leftJoin('av', $this->getDbal()->quoteIdentifier('attribute'), 'a', 'a.id = av.attribute_id')
                 ->where('av.reference_value = :unitId')
-                ->andWhere('av.deleted = :false')
                 ->setParameter('unitId', $entity->get('id'))
-                ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->fetchAssociative();
 
             if (!empty($av)) {

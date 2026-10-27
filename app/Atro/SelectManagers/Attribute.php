@@ -13,7 +13,6 @@ namespace Atro\SelectManagers;
 
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 use Atro\Core\SelectManagers\Base;
@@ -201,12 +200,11 @@ class Attribute extends Base
             foreach ($entityTypes as $entityType) {
                 $avTable = Util::toUnderScore(lcfirst($entityType)) . '_attribute_value';
                 $conditions[] = "({$alias}.entity_id = '{$entityType}' AND NOT EXISTS ("
-                    . "SELECT 1 FROM {$avTable} WHERE attribute_id = {$alias}.id AND deleted = :notLinkedFalse"
+                    . "SELECT 1 FROM {$avTable} WHERE attribute_id = {$alias}.id"
                     . "))";
             }
 
             $qb->andWhere('(' . implode(' OR ', $conditions) . ')');
-            $qb->setParameter('notLinkedFalse', false, ParameterType::BOOLEAN);
         };
     }
 }

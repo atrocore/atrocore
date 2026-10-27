@@ -153,8 +153,7 @@ class FieldSimilar extends AbstractMatchingRule
         $qb->setParameter($attrParam, $attributeId);
 
         $baseCondition = "{$subAlias}.{$tableName}_id = {$alias}.id"
-            . " AND {$subAlias}.attribute_id = :{$attrParam}"
-            . " AND {$subAlias}.deleted = :false";
+            . " AND {$subAlias}.attribute_id = :{$attrParam}";
 
         if ($value === null) {
             return '1=0';
