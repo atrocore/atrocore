@@ -12,6 +12,7 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\Container;
+use Atro\Core\SelectManagers\TableWhereBuilder;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
@@ -45,7 +46,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     {
         $attributeId = $attribute['id'];
 
-        $mainTableAlias = $this->em->getRepository($entity->getEntityType())
+        $mainTableAlias = $this->em->getRepository($entity->getEntityName())
             ->getMapper()
             ->getQueryConverter()
             ->getMainTableAlias();
@@ -53,10 +54,10 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         if (in_array($item['type'], ['isLinked', 'isNotLinked'])) {
             // we select records that are linked or not linked with the attribute
             $operator       = $item['type'] === 'isLinked' ? 'EXISTS' : 'NOT EXISTS';
-            $tableName      = Util::toUnderScore(lcfirst($entity->getEntityType()));
+            $tableName      = Util::toUnderScore(lcfirst($entity->getEntityName()));
             $attributeAlias = IdGenerator::unsortableId();
             $aliasMiddle    = IdGenerator::unsortableId();
-            $subQb          = $this->em->getConnection()->createQueryBuilder()
+            $subQb          = $this->em->getDbal()->createQueryBuilder()
                 ->select('1')
                 ->from("{$tableName}_attribute_value", $aliasMiddle)
                 ->join($aliasMiddle, 'attribute', $attributeAlias, "$aliasMiddle.attribute_id = $attributeAlias.id AND $attributeAlias.deleted = :false")
@@ -77,40 +78,31 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
             return;
         }
 
-        $where = [
-            'type'  => 'and',
-            'value' => [
-                [
-                    'type'      => 'equals',
-                    'attribute' => 'attributeId',
-                    'value'     => $attributeId
-                ],
-            ]
-        ];
+        $tableName = Util::toUnderScore(lcfirst($entity->getEntityName()));
+        $avAlias   = IdGenerator::unsortableId();
 
-        $where['value'][]     = $this->convertWhere($entity, $attribute, $item);
-        $attributeValueEntity = "{$entity->getEntityType()}AttributeValue";
-        $avRepo               = $this->em->getRepository($attributeValueEntity);
+        $qb1 = $this->em->getDbal()->createQueryBuilder()
+            ->select("$avAlias.{$tableName}_id")
+            ->from("{$tableName}_attribute_value", $avAlias)
+            ->where("$avAlias.attribute_id = :{$avAlias}AttributeId")
+            ->andWhere("$avAlias.deleted = :false")
+            ->setParameter("{$avAlias}AttributeId", $attributeId)
+            ->setParameter('false', false, ParameterType::BOOLEAN);
 
-        $sp = $this->getSelectManagerFactory()
-            ->create($attributeValueEntity)
-            ->getSelectParams(['where' => [$where]], true, true);
-
-        $sp['select'] = [lcfirst($entity->getEntityType()) . 'Id'];
-
-        $qb1 = $avRepo->getMapper()->createSelectQueryBuilder($avRepo->get(), $sp);
+        $condition = $this->getTableWhereBuilder()->build($qb1, $avAlias, $this->convertWhere($entity, $attribute, $item));
+        if ($condition !== null) {
+            $qb1->andWhere($condition);
+        }
 
         $operator = 'IN';
         if (isset($item['type']) && $item['type'] === 'arrayNoneOf') {
             $operator = 'NOT IN';
         }
 
-        $innerSql = str_replace($mainTableAlias, IdGenerator::unsortableId(), $qb1->getSql());
-
         $item = [
             'type'  => 'innerSql',
             'value' => [
-                "sql"        => "$mainTableAlias.id $operator ($innerSql)",
+                "sql"        => "$mainTableAlias.id $operator ({$qb1->getSQL()})",
                 "parameters" => $qb1->getParameters()
             ]
         ];
@@ -190,7 +182,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         $item['value'] = [
             "innerSql" => [
                 "sql"        => str_replace(
-                    $this->em->getRepository($entity->getEntityType())->getMapper()->getQueryConverter()->getMainTableAlias(),
+                    $this->em->getRepository($entity->getEntityName())->getMapper()->getQueryConverter()->getMainTableAlias(),
                     'sbq_' . IdGenerator::unsortableId(), $qb1->getSql()
                 ),
                 "parameters" => $qb1->getParameters()
@@ -242,6 +234,11 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     protected function getSelectManagerFactory(): SelectManagerFactory
     {
         return $this->selectManagerFactory;
+    }
+
+    protected function getTableWhereBuilder(): TableWhereBuilder
+    {
+        return $this->em->getContainer()->get(TableWhereBuilder::class);
     }
 
     protected function getUser(): User
