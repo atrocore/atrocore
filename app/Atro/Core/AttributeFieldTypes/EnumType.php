@@ -95,4 +95,11 @@ class EnumType extends AbstractFieldType
             $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name) . ' ' . $params['order']);
         }
     }
+
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
+    {
+        $item['attribute'] = 'varcharValue';
+
+        return $item;
+    }
 }
