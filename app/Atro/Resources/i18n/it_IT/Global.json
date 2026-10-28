@@ -564,6 +564,8 @@
     "confirmMassRestore": "È sicuro di voler ripristinare i record selezionati?",
     "massRestoreResultSingle": "Il record {count} ora è ripristinato",
     "erasePersonalDataConfirmation": "I campi selezionati saranno cancellati in modo permanente. È sicuro?",
+    "erasePersonalDataRecordConfirmation": "I dati personali di questo record verranno cancellati definitivamente in base alla modalità di cancellazione di ciascun campo. Sei sicuro?",
+    "erasePersonalDataRecordsConfirmation": "I dati personali dei record selezionati verranno cancellati definitivamente in base alla modalità di cancellazione di ciascun campo. Sei sicuro?",
     "clearAclCacheError": "Non è stato possibile cancellare la cache ACL.",
     "emptyMultilangOptions": "L'elenco delle opzioni non può essere vuoto quando è attivata l'opzione multilingue.",
     "duplicatedAndLinked": "I record sono stati duplicati e collegati con successo.",
@@ -972,6 +974,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Contiene dati personali",
+    "erased": "Cancellati",
     "onlyActive": "Attivo",
     "notActive": "Inattivo",
     "onlyMy": "Il mio",
@@ -989,6 +992,7 @@
     "all": "Tutti"
   },
   "massActions": {
+    "erasePersonalData": "Cancellare",
     "massUpdatePartial": "Aggiornamento di massa (Parte %s)",
     "removePartial": "Rimuovi (Parte %s)",
     "addRelation": "Aggiungi relazione",
@@ -1093,6 +1097,7 @@
     "teams": "Squadre",
     "createdAt": "Creato a",
     "modifiedAt": "Modificato a",
+    "erasedAt": "Cancellato il",
     "createdBy": "Creato da",
     "modifiedBy": "Modificato da",
     "description": "Descrizione",
@@ -1143,6 +1148,8 @@
     "entityRemoved": "{utente} ha cancellato {entityType} {entità}"
   },
   "streamMessages": {
+    "eraseThis": "{user} ha cancellato i dati personali di questo record il {datetime}.",
+    "erase": "{user} ha cancellato i dati personali di {entityType} {entity} il {datetime}.",
     "composerUpdate": "{user} ha modificato i pacchetti software installati",
     "createRecordAssociationThis": "{utente} ha associato {record correlato} come {associazione}.",
     "deleteRecordAssociationThis": "{user} ha rimosso l'associazione a {relatedRecord} come {associazione}.",
@@ -1381,6 +1388,8 @@
     "massRestoreNoRecordProceed": "Non è stato ripristinato alcun record.",
     "massUpdateSomeRecordNotProceed": "Non è stato possibile aggiornare alcuni record.",
     "massDeleteSomeRecordNotProceed": "Non è stato possibile rimuovere con successo alcuni record.",
+    "massErasePersonalDataNoRecordProceed": "Nessun record è stato cancellato.",
+    "massErasePersonalDataSomeRecordNotProceed": "Alcuni record non sono stati cancellati correttamente.",
     "massRestoreSomeRecordNotProceed": "Non è stato possibile ripristinare alcuni record.",
     "entityCannotBeBookmarked": "I record di questa entità non possono essere inseriti nei segnalibri.",
     "integerValueValidationFailed": "Il valore intero per il campo/attributo '%s' deve essere compreso tra %s e %s.",

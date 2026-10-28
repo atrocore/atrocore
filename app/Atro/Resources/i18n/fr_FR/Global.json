@@ -54,6 +54,7 @@
     "emailAddressIsOptedOut": "L'adresse mail est exclue",
     "assignedUserName": "Nom de l'utilisateur assigné",
     "modifiedAt": "Modifié à",
+    "erasedAt": "Effacé le",
     "createdBy": "Créé par",
     "modifiedBy": "Modifié par",
     "order": "Commande",
@@ -700,6 +701,8 @@
     "massUnfollowZeroResult": "Rien n'a été désabandonné",
     "massRestoreResult": "{count} enregistrements sont maintenant restaurés",
     "erasePersonalDataConfirmation": "Les champs sélectionnés seront effacés définitivement. Êtes-vous sûr de vous ?",
+    "erasePersonalDataRecordConfirmation": "Les données personnelles de cet enregistrement seront effacées définitivement selon le mode d'effacement de chaque champ. Êtes-vous sûr ?",
+    "erasePersonalDataRecordsConfirmation": "Les données personnelles des enregistrements sélectionnés seront effacées définitivement selon le mode d'effacement de chaque champ. Êtes-vous sûr ?",
     "duplicatedAndLinked": "Les enregistrements ont été dupliqués et reliés avec succès.",
     "deletePermanentlyRecordsConfirmation": "Êtes-vous sûr de vouloir supprimer définitivement les enregistrements sélectionnés ?",
     "deletePermanentlyRecordConfirmation": "Êtes-vous sûr de vouloir supprimer définitivement l'enregistrement ?",
@@ -806,6 +809,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Contient des données personnelles",
+    "erased": "Effacés",
     "onlyMyTeams": "Mes équipes",
     "onlyActive": "Actif",
     "notActive": "Inactif",
@@ -820,6 +824,7 @@
     "multipleClassifications": "Classifications multiples"
   },
   "massActions": {
+    "erasePersonalData": "Effacer",
     "dataPipelineTransformSource": "Transformation des enregistrements source",
     "dataPipelineUpdateFromSource": "Mise à jour depuis la source",
     "updateFromSource": "Transformer",
@@ -858,6 +863,8 @@
     "assign": "{entityType} {entity} vous a été attribué."
   },
   "streamMessages": {
+    "eraseThis": "{user} a effacé les données personnelles de cet enregistrement le {datetime}.",
+    "erase": "{user} a effacé les données personnelles de {entityType} {entity} le {datetime}.",
     "composerUpdate": "{user} a modifié les paquets logiciels installés",
     "createRecordAssociationThis": "{utilisateur} a associé {relatedRecord} en tant que {association}",
     "createAssociationRecordThis": "{user} a associé {mainRecord} à {relatedRecord}",
@@ -1242,6 +1249,8 @@
     "massDeleteNoRecordProceed": "Aucun enregistrement n'a été supprimé.",
     "massUpdateSomeRecordNotProceed": "Certains enregistrements n'ont pas pu être mis à jour.",
     "massDeleteSomeRecordNotProceed": "Certains enregistrements n'ont pas pu être supprimés.",
+    "massErasePersonalDataNoRecordProceed": "Aucun enregistrement n'a été effacé.",
+    "massErasePersonalDataSomeRecordNotProceed": "Certains enregistrements n'ont pas pu être effacés.",
     "singleClassificationAllowed": "Une seule classification est autorisée",
     "moreThanOneClassification": "Certains enregistrements ont plus d'une classification.",
     "notAllowedOption": "L'option \"%s\" n'est pas autorisée pour \"%s\".",

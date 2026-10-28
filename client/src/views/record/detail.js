@@ -327,6 +327,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        actionErasePersonalData: function () {
+            this.confirm({
+                message: this.translate('erasePersonalDataRecordConfirmation', 'messages'),
+                confirmText: this.translate('Erase')
+            }, () => {
+                this.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest(`${this.scope}/${this.model.id}/erasePersonalData`, {}).then(() => {
+                    this.notify('Done', 'success');
+                    this.model.fetch();
+                });
+            });
+        },
+
         actionInheritAllFromParent: function () {
             this.confirm({
                 message: this.translate('confirmInheritAllFromParent', 'messages'),
@@ -754,6 +767,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         sortOrder: 155
                     });
                 }
+            }
+
+            if (
+                !this.model.isNew()
+                && this.getMetadata().get(['scopes', this.model.name, 'containsPersonalData'])
+                && (this.getUser().isAdmin() || this.getUser().isDataPrivacyAdmin())
+            ) {
+                this.dropdownItemList.push({
+                    label: 'Erase',
+                    name: 'erasePersonalData',
+                    sortOrder: 158
+                });
             }
 
             if (this.isHierarchical() && !this.model.isNew()) {

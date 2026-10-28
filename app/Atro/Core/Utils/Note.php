@@ -15,6 +15,7 @@ namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
 use Atro\Entities\User;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\EntityManager;
 use Espo\ORM\Entity as OrmEntity;
@@ -35,7 +36,7 @@ class Note
         $this->container = $container;
     }
 
-    public function afterEntitySaved(OrmEntity $entity): void
+    public function afterEntitySaved(OrmEntity $entity, array $options = []): void
     {
         if ($entity->isNew()) {
             $this->handleRelationEntity($entity, 'Relate');
@@ -44,7 +45,8 @@ class Note
         if ($this->streamEnabled($entity->getEntityName())) {
             $this->followEntity($entity);
 
-            if (!$entity->isNew()) {
+            // erased values must not get into the stream, the "Erase" note is created instead
+            if (!$entity->isNew() && empty($options['erasePersonalData'])) {
                 $this->handleAudited($entity);
             }
         }
@@ -67,6 +69,18 @@ class Note
                 ->setParameter('entityType', $entity->getEntityName())
                 ->setParameter('deleted', true, ParameterType::BOOLEAN)
                 ->executeQuery();
+        }
+    }
+
+    /**
+     * Removes all notes related to the erased fields of the record and creates the "Erase" note
+     */
+    public function afterPersonalDataErased(OrmEntity $entity, array $fields): void
+    {
+        $this->deleteFieldNotes($entity, $fields);
+
+        if ($this->streamEnabled($entity->getEntityName())) {
+            $this->createNote('Erase', $entity->getEntityName(), $entity->id, []);
         }
     }
 
@@ -216,6 +230,73 @@ class Note
         }
 
         return $result;
+    }
+
+    protected function deleteFieldNotes(OrmEntity $entity, array $fields): void
+    {
+        if (empty($fields)) {
+            return;
+        }
+
+        $entityType = $entity->getEntityName();
+
+        // foreign links are used in the relation notes of the linked records
+        $foreignLinks = [];
+        foreach ($fields as $field) {
+            $foreignLink = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $field, 'foreign']);
+            if (!empty($foreignLink)) {
+                $foreignLinks[] = $foreignLink;
+            }
+        }
+
+        $conn = $this->getEntityManager()->getDbal();
+
+        $notes = $conn->createQueryBuilder()
+            ->select('id, type, parent_type, parent_id, data')
+            ->from($conn->quoteIdentifier('note'))
+            ->where('type IN (:types)')
+            ->andWhere('(parent_type = :entityType AND parent_id = :entityId) OR data LIKE :entityIdLike')
+            ->setParameter('types', ['Update', 'Relate', 'Unrelate'], Connection::PARAM_STR_ARRAY)
+            ->setParameter('entityType', $entityType)
+            ->setParameter('entityId', $entity->id)
+            ->setParameter('entityIdLike', '%"' . $entity->id . '"%')
+            ->fetchAllAssociative();
+
+        $ids = [];
+        foreach ($notes as $note) {
+            $data = @json_decode((string)$note['data'], true) ?? [];
+            $isOwnNote = $note['parent_type'] === $entityType && $note['parent_id'] === $entity->id;
+
+            if ($note['type'] === 'Update') {
+                // the note can be created for the linked record with the changes of this record
+                $isRecordChanges = !empty($data['entityId'])
+                    ? ($data['entityType'] ?? null) === $entityType && $data['entityId'] === $entity->id
+                    : $isOwnNote;
+
+                if ($isRecordChanges && !empty(array_intersect($data['fields'] ?? [], $fields))) {
+                    $ids[] = $note['id'];
+                }
+                continue;
+            }
+
+            $link = $data['link'] ?? null;
+            if ($isOwnNote && in_array($link, $fields)) {
+                $ids[] = $note['id'];
+                continue;
+            }
+
+            if (($data['relatedType'] ?? null) === $entityType && ($data['relatedId'] ?? null) === $entity->id && in_array($link, $foreignLinks)) {
+                $ids[] = $note['id'];
+            }
+        }
+
+        foreach (array_chunk($ids, 1000) as $chunk) {
+            $conn->createQueryBuilder()
+                ->delete($conn->quoteIdentifier('note'))
+                ->where('id IN (:ids)')
+                ->setParameter('ids', $chunk, Connection::PARAM_STR_ARRAY)
+                ->executeQuery();
+        }
     }
 
     protected function followEntity(OrmEntity $entity): void

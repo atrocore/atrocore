@@ -1,0 +1,20 @@
+{
+  "anonymize": {
+    "className": "\\Atro\\Core\\AnonymizationResolvers\\Anonymize"
+  },
+  "nullify": {
+    "className": "\\Atro\\Core\\AnonymizationResolvers\\Nullify"
+  },
+  "delete": {
+    "className": "\\Atro\\Core\\AnonymizationResolvers\\Delete"
+  },
+  "retain": {
+    "className": "\\Atro\\Core\\AnonymizationResolvers\\Retain"
+  },
+  "cascade": {
+    "className": "\\Atro\\Core\\AnonymizationResolvers\\Cascade"
+  },
+  "unlink": {
+    "className": "\\Atro\\Core\\AnonymizationResolvers\\Unlink"
+  }
+}

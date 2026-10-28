@@ -646,6 +646,7 @@
     "teams": "Týmy",
     "order": "Objednávka",
     "modifiedAt": "Datum úpravy",
+    "erasedAt": "Datum výmazu",
     "isPublic": "Veřejný",
     "created": "Vytvořeno",
     "modified": "Upraveno",
@@ -758,6 +759,8 @@
     "massRestoreResultSingle": "{count} záznam je nyní obnoven",
     "massRestoreZeroResult": "Nic nebylo obnoveno",
     "erasePersonalDataConfirmation": "Zaškrtnutá pole budou trvale vymazána. Jste si jisti?",
+    "erasePersonalDataRecordConfirmation": "Osobní údaje tohoto záznamu budou trvale vymazány podle režimu výmazu jednotlivých polí. Jste si jisti?",
+    "erasePersonalDataRecordsConfirmation": "Osobní údaje vybraných záznamů budou trvale vymazány podle režimu výmazu jednotlivých polí. Jste si jisti?",
     "clearAclCacheError": "Vyrovnávací paměť protokolu ACL se nepodařilo vymazat.",
     "emptyMultilangOptions": "Seznam možností nemůže být prázdný, pokud je aktivována možnost více jazyků.",
     "duplicatedAndLinked": "Záznamy byly úspěšně duplikovány a propojeny.",
@@ -778,6 +781,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Obsahuje osobní údaje",
+    "erased": "Vymazané",
     "onlyActive": "Aktivní",
     "notActive": "Neaktivní",
     "onlyMy": "Moje",
@@ -795,6 +799,7 @@
     "all": "Všechny"
   },
   "massActions": {
+    "erasePersonalData": "Vymazat",
     "massUpdatePartial": "Hromadná aktualizace (část %s)",
     "removePartial": "Odstranit (část %s)",
     "addRelation": "Přidat vztah",
@@ -830,6 +835,8 @@
     "own": "Byl jste nastaven jako vlastník pro {entityType} {entity}."
   },
   "streamMessages": {
+    "eraseThis": "{user} vymazal osobní údaje tohoto záznamu dne {datetime}.",
+    "erase": "{user} vymazal osobní údaje {entityType} {entity} dne {datetime}.",
     "composerUpdate": "{user} změnil nainstalované softwarové balíčky",
     "createRecordAssociationThis": "{user} přidružený {relatedRecord} jako {association}",
     "post": "{user} zveřejnil na {entityType} {entity}",
@@ -1219,6 +1226,8 @@
     "massRestoreNoRecordProceed": "Žádný záznam nebyl obnoven.",
     "massUpdateSomeRecordNotProceed": "Některé záznamy se nepodařilo úspěšně aktualizovat.",
     "massDeleteSomeRecordNotProceed": "Některé záznamy se nepodařilo úspěšně odstranit.",
+    "massErasePersonalDataNoRecordProceed": "Žádný záznam nebyl vymazán.",
+    "massErasePersonalDataSomeRecordNotProceed": "Některé záznamy nemohly být úspěšně vymazány.",
     "massRestoreSomeRecordNotProceed": "Některé záznamy se nepodařilo úspěšně obnovit.",
     "entityCannotBeBookmarked": "Záznamy této entity nelze záložkovat.",
     "fileIsInvalid": "Soubor pro pole '%s' není platný.",

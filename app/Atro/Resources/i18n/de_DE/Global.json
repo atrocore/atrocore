@@ -674,6 +674,8 @@
     "fieldShouldBeLess": "{field} muss kleiner als {value} sein",
     "fieldShouldBeGreater": "{field} muss größer als {value} sein",
     "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
+    "erasePersonalDataRecordConfirmation": "Die personenbezogenen Daten dieses Datensatzes werden gemäß dem Löschmodus jedes Feldes endgültig gelöscht. Sind Sie sicher?",
+    "erasePersonalDataRecordsConfirmation": "Die personenbezogenen Daten der ausgewählten Datensätze werden gemäß dem Löschmodus jedes Feldes endgültig gelöscht. Sind Sie sicher?",
     "clearAclCacheError": "Cache von Zugriffskontrollliste konnte nicht geleert werden.",
     "emptyMultilangOptions": "Die Optionsliste darf nicht leer sein, solange die Mehrsprachigkeit aktiviert ist.",
     "duplicatedAndLinked": "Die Datensätze wurden erfolgreich dupliziert und verknüpft.",
@@ -739,6 +741,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Enthält personenbezogene Daten",
+    "erased": "Gelöscht",
     "onlyMy": "Mein",
     "assignedToMe": "Mir zugewiesen",
     "ownedByMe": "Gehört mir",
@@ -756,6 +759,7 @@
     "all": "Alle"
   },
   "massActions": {
+    "erasePersonalData": "Löschen",
     "dataPipelineTransformSource": "Transformation der Quelldatensätze",
     "dataPipelineUpdateFromSource": "Aus Quelle aktualisieren",
     "updateFromSource": "Transformieren",
@@ -853,6 +857,7 @@
     "assignedUserName": "Zugewiesener Benutzername",
     "createdAt": "Erstellt am",
     "modifiedAt": "Geändert am",
+    "erasedAt": "Gelöscht am",
     "createdBy": "Erstellt von",
     "modifiedBy": "Geändert von",
     "description": "Beschreibung",
@@ -914,6 +919,8 @@
     "entityRemoved": "{user} hat {entityType} {entity} gelöscht"
   },
   "streamMessages": {
+    "eraseThis": "{user} hat am {datetime} personenbezogene Daten dieses Datensatzes gelöscht.",
+    "erase": "{user} hat am {datetime} personenbezogene Daten von {entityType} {entity} gelöscht.",
     "composerUpdate": "{user} hat die installierten Softwarepakete geändert",
     "createRecordAssociationThis": "{user} hat {relatedRecord} als {association} assoziiert",
     "deleteRecordAssociationThis": "{user} hat die Assoziation zu {relatedRecord} als {association} entfernt",
@@ -1319,6 +1326,8 @@
     "massRestoreNoRecordProceed": "No wurde der Datensatz wiederhergestellt.",
     "massUpdateSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich aktualisiert werden.",
     "massDeleteSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich entfernt werden.",
+    "massErasePersonalDataNoRecordProceed": "Es wurde kein Datensatz gelöscht.",
+    "massErasePersonalDataSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich gelöscht werden.",
     "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden.",
     "entityCannotBeBookmarked": "Die Datensätze dieser Entität können nicht mit Lesezeichen versehen werden.",
     "integerValueValidationFailed": "Der ganzzahlige Wert für das Feld/Attribut \"%s\" muss zwischen %s und %s liegen.",

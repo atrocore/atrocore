@@ -841,6 +841,21 @@ class Base
         $qb->andWhere("$ta.id IN (SELECT pd.record_id FROM $tableName pd)");
     }
 
+    protected function boolFilterErased(array &$result): void
+    {
+        if (!$this->getUser()->isAdmin() && !$this->getUser()->isDataPrivacyAdmin()) {
+            throw new Forbidden();
+        }
+
+        if (empty($this->getMetadata()->get(['scopes', $this->getEntityType(), 'containsPersonalData'])) || $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) === 'ReferenceData') {
+            throw new Error("Entity '{$this->getEntityType()}' does not contain personal data");
+        }
+
+        $result['whereClause'][] = [
+            'erasedAt!=' => null
+        ];
+    }
+
     protected function boolFilterOnlyArchived(array &$result): void
     {
         $result['whereClause'][] = [

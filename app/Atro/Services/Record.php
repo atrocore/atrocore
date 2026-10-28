@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\AnonymizationResolvers\AbstractAnonymizationResolver;
+use Atro\Core\Utils\Note as NoteUtil;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotModified;
@@ -941,5 +944,93 @@ class Record extends RecordService
         }
 
         return $attributes;
+    }
+
+    public function massErasePersonalData(array $params): array
+    {
+        if (!$this->getUser()->isAdmin() && !$this->getUser()->isDataPrivacyAdmin()) {
+            throw new Forbidden();
+        }
+
+        $params['action']             = 'erasePersonalData';
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        $params['maxChunkSize']       = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize']       = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['singleActionMethod'] = 'erasePersonalData';
+
+        $result = $this->executeMassAction($params, function ($id) {
+            $this->erasePersonalData($id);
+        });
+
+        if (empty($result)) {
+            throw new BadRequest("Entity '{$this->getEntityType()}' does not contain personal data.");
+        }
+
+        [$count, $errors, $sync, $jobEntity] = array_pad($result, 4, null);
+
+        return $sync
+            ? ['count' => $count, 'errors' => $errors, 'sync' => true]
+            : ['jobId' => $jobEntity->get('id'), 'sync' => false];
+    }
+
+    public function erasePersonalData(string $id, array &$processed = []): bool
+    {
+        if (!$this->getUser()->isAdmin() && !$this->getUser()->isDataPrivacyAdmin()) {
+            throw new Forbidden();
+        }
+
+        $entityType = $this->getEntityType();
+        if (empty($this->getMetadata()->get(['scopes', $entityType, 'containsPersonalData'])) || $this->getMetadata()->get(['scopes', $entityType, 'type']) === 'ReferenceData') {
+            throw new BadRequest("Entity '$entityType' does not contain personal data.");
+        }
+
+        // prevents endless loops for cascade erasure
+        if (isset($processed[$entityType][$id])) {
+            return true;
+        }
+        $processed[$entityType][$id] = true;
+
+        $repository = $this->getRepository();
+
+        if (empty($entity = $repository->get($id))) {
+            throw new NotFound();
+        }
+
+        $erasedFields = [];
+        foreach (($repository->getPersonalDataFields($id) ?? []) as $field) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field], []);
+
+            if (empty($fieldDefs['personalData']) || empty($fieldDefs['erasureMode'])) {
+                continue;
+            }
+
+            $resolver = $this->getAnonymizationResolver($fieldDefs['erasureMode']);
+            if (!$resolver->supports($entity, $field)) {
+                throw new Error("No anonymization resolver supports field '$field' of entity '$entityType' for record '$id'.");
+            }
+
+            if ($resolver->resolve($entity, $field, $processed)) {
+                $erasedFields[] = $field;
+            }
+        }
+
+        if (!empty($erasedFields)) {
+            $entity->set('erasedAt', (new \DateTime())->format('Y-m-d H:i:s'));
+
+            $this->getEntityManager()->saveEntity($entity, ['erasePersonalData' => true]);
+        }
+
+        return true;
+    }
+
+    protected function getAnonymizationResolver(string $mode): AbstractAnonymizationResolver
+    {
+        $className = $this->getMetadata()->get(['app', 'anonymizationResolvers', $mode, 'className']);
+        if (empty($className) || !class_exists($className)) {
+            throw new Error("Anonymization resolver for erasure mode '$mode' is not registered.");
+        }
+
+        /** @var AbstractAnonymizationResolver $resolver */
+        return $this->getEntityManager()->getContainer()->get($className);
     }
 }

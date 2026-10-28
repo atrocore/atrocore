@@ -679,6 +679,8 @@
     "massRestoreResultSingle": "{count} record now is restored",
     "massRestoreZeroResult": "Nothing got restore",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
+    "erasePersonalDataRecordConfirmation": "The personal data of this record will be erased permanently according to the erasure mode of each field. Are you sure?",
+    "erasePersonalDataRecordsConfirmation": "The personal data of the selected records will be erased permanently according to the erasure mode of each field. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
     "duplicatedAndLinked": "Records were successfully duplicated and linked.",
@@ -700,6 +702,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Contains personal data",
+    "erased": "Erased",
     "onlyActive": "Active",
     "notActive": "Inactive",
     "onlyMy": "My",
@@ -717,6 +720,7 @@
     "all": "All"
   },
   "massActions": {
+    "erasePersonalData": "Erase",
     "dataPipelineTransformSource": "Source Record Transformation",
     "dataPipelineUpdateFromSource": "Update From Source",
     "updateFromSource": "Transform",
@@ -831,6 +835,7 @@
     "teams": "Teams",
     "createdAt": "Created At",
     "modifiedAt": "Modified At",
+    "erasedAt": "Erased At",
     "createdBy": "Created By",
     "modifiedBy": "Modified By",
     "description": "Description",
@@ -876,6 +881,8 @@
     "entityRemoved": "{user} deleted {entityType} {entity}"
   },
   "streamMessages": {
+    "eraseThis": "{user} erased personal data for this record on {datetime}.",
+    "erase": "{user} erased personal data for {entityType} {entity} on {datetime}.",
     "createRecordAssociationThis": "{user} associated {relatedRecord} as {association}",
     "deleteRecordAssociationThis": "{user} removed association to {relatedRecord} as {association}",
     "createAssociationRecordThis": "{user} associated {mainRecord} with {relatedRecord}",
@@ -1328,6 +1335,8 @@
     "massRestoreNoRecordProceed": "No record was restored.",
     "massUpdateSomeRecordNotProceed": "Some record(s) could not be successfully updated.",
     "massDeleteSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
+    "massErasePersonalDataNoRecordProceed": "No record was erased.",
+    "massErasePersonalDataSomeRecordNotProceed": "Some record(s) could not be successfully erased.",
     "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
     "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked.",
     "integerValueValidationFailed": "Integer value for field/attribute '%s' must be between %s and %s.",

@@ -40,7 +40,7 @@ class Entity extends AbstractListener
         /** @var OrmEntity $entity */
         $entity = $event->getArgument('entity');
 
-        $this->getNoteUtil()->afterEntitySaved($entity);
+        $this->getNoteUtil()->afterEntitySaved($entity, $event->getArgument('options') ?? []);
 
         $this->getNotificationManager()->afterEntitySaved($entity);
 

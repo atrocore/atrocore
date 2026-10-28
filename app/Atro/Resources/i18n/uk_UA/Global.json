@@ -647,6 +647,8 @@
     "fieldShouldBeGreater": "{field} має бути більше ніж {value}",
     "fieldIsUploading": "Завантаження",
     "erasePersonalDataConfirmation": "Позначені поля будуть стерті назавжди. Ви впевнені?",
+    "erasePersonalDataRecordConfirmation": "Персональні дані цього запису будуть остаточно стерті відповідно до режиму стирання кожного поля. Ви впевнені?",
+    "erasePersonalDataRecordsConfirmation": "Персональні дані вибраних записів будуть остаточно стерті відповідно до режиму стирання кожного поля. Ви впевнені?",
     "testEmailSent": "Тестовий електронний лист надіслано",
     "isRequiredAndUnique": "{field} обов'язково і має бути унікальним.",
     "relationsAdded": "Зв'язок успішно доданий.",
@@ -691,6 +693,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Містить персональні дані",
+    "erased": "Стерті",
     "onlyActive": "Активні",
     "notActive": "Неактивні",
     "assignedToMe": "Призначений мені",
@@ -708,6 +711,7 @@
     "all": "Усі"
   },
   "massActions": {
+    "erasePersonalData": "Стерти",
     "dataPipelineTransformSource": "Трансформація записів джерела",
     "dataPipelineUpdateFromSource": "Оновлення з джерела",
     "updateFromSource": "Трансформувати",
@@ -770,6 +774,7 @@
     "teams": "Групи",
     "createdAt": "Створено в",
     "modifiedAt": "Змінено в",
+    "erasedAt": "Стерто",
     "createdBy": "Створено (ким)",
     "modifiedBy": "Змінено (ким)",
     "description": "Опис",
@@ -865,6 +870,8 @@
     "own": "Вас було призначено власником для {entityType} {entity}."
   },
   "streamMessages": {
+    "eraseThis": "{user} стер персональні дані цього запису {datetime}.",
+    "erase": "{user} стер персональні дані {entityType} {entity} {datetime}.",
     "composerUpdate": "{user} змінив встановлені програмні пакети",
     "post": "{user} залишив примітку до {entityType} {entity}",
     "postInList": "{user} залишив примітку до {entityType}",
@@ -1309,6 +1316,8 @@
     "massRestoreNoRecordProceed": "Жоден запис не був відновлений.",
     "massUpdateSomeRecordNotProceed": "Деякі записи не були оновлені.",
     "massDeleteSomeRecordNotProceed": "Деякі записи не були видалені.",
+    "massErasePersonalDataNoRecordProceed": "Жоден запис не був стертий.",
+    "massErasePersonalDataSomeRecordNotProceed": "Деякі записи не вдалося стерти.",
     "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити.",
     "entityCannotBeBookmarked": "До записів цієї сутності не можна додавати закладки.",
     "integerValueValidationFailed": "Ціле значення для поля/атрибута \"%s\" повинно бути в межах від %s до %s.",

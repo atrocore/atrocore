@@ -635,6 +635,8 @@
     "massRestoreResultSingle": "{count} rekord został przywrócony",
     "massRestoreZeroResult": "Nic nie zostało przywrócone",
     "erasePersonalDataConfirmation": "Zaznaczone pola zostaną trwale usunięte. Czy na pewno?",
+    "erasePersonalDataRecordConfirmation": "Dane osobowe tego rekordu zostaną trwale usunięte zgodnie z trybem usuwania każdego pola. Czy na pewno?",
+    "erasePersonalDataRecordsConfirmation": "Dane osobowe wybranych rekordów zostaną trwale usunięte zgodnie z trybem usuwania każdego pola. Czy na pewno?",
     "clearAclCacheError": "Pamięć podręczna ACL nie mogła zostać wyczyszczona.",
     "emptyMultilangOptions": "Lista opcji nie może być pusta przy aktywowanej opcji wielojęzycznej.",
     "closePanelConfirmation": "Czy na pewno chcesz zamknąć panel?",
@@ -660,6 +662,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Zawiera dane osobowe",
+    "erased": "Usunięte",
     "onlyActive": "Aktywne",
     "notActive": "Nieaktywne",
     "onlyMy": "Moje",
@@ -677,6 +680,7 @@
     "all": "Wszystkie"
   },
   "massActions": {
+    "erasePersonalData": "Usuń",
     "massUpdatePartial": "Masowa aktualizacja (część %s)",
     "removePartial": "Usuń (część %s)",
     "addRelation": "Dodaj relację",
@@ -756,6 +760,7 @@
     "teams": "Teams",
     "createdAt": "Created At",
     "modifiedAt": "Modified At",
+    "erasedAt": "Usunięto",
     "createdBy": "Created By",
     "modifiedBy": "Modified By",
     "description": "Description",
@@ -827,6 +832,8 @@
     "entityRemoved": "{user} deleted {entityType} {entity}"
   },
   "streamMessages": {
+    "eraseThis": "{user} usunął dane osobowe tego rekordu {datetime}.",
+    "erase": "{user} usunął dane osobowe {entityType} {entity} {datetime}.",
     "composerUpdate": "{user} zmienił zainstalowane pakiety oprogramowania",
     "post": "{user} posted on {entityType} {entity}",
     "postInList": "{user} posted on {entityType}",
@@ -1273,6 +1280,8 @@
     "massRestoreNoRecordProceed": "Żaden rekord nie został przywrócony.",
     "massUpdateSomeRecordNotProceed": "Niektóre rekordy nie mogły zostać pomyślnie zaktualizowane.",
     "massDeleteSomeRecordNotProceed": "Nie udało się usunąć niektórych rekordów.",
+    "massErasePersonalDataNoRecordProceed": "Żaden rekord nie został usunięty.",
+    "massErasePersonalDataSomeRecordNotProceed": "Niektórych rekordów nie udało się usunąć.",
     "massRestoreSomeRecordNotProceed": "Nie udało się przywrócić niektórych rekordów.",
     "entityCannotBeBookmarked": "Rekordy tego podmiotu nie mogą być dodawane do zakładek.",
     "integerValueValidationFailed": "Wartość całkowita dla pola/atrybutu \"%s\" musi zawierać się w przedziale od %s do %s.",

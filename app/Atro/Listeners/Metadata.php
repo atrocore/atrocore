@@ -470,6 +470,19 @@ class Metadata extends AbstractMetadataListener
                 $data['clientDefs'][$scope]['boolFilterList'][] = 'containsPersonalData';
             }
 
+            if (!in_array('erased', $data['clientDefs'][$scope]['boolFilterList'] ?? [])) {
+                $data['clientDefs'][$scope]['boolFilterList'][] = 'erased';
+            }
+
+            $data['entityDefs'][$scope]['fields']['erasedAt'] = [
+                'type' => 'datetime',
+                'readOnly' => true,
+            ];
+
+            if (!in_array('erasePersonalData', $data['clientDefs'][$scope]['massActionList'] ?? [])) {
+                $data['clientDefs'][$scope]['massActionList'][] = 'erasePersonalData';
+            }
+
             $data['entityDefs'][$scope . 'PersonalData'] = [
                 'fields'        => [
                     'field'  => [

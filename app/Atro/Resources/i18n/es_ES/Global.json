@@ -339,7 +339,7 @@
     "Convert to": "Convert to",
     "View Personal Data": "View Personal Data",
     "Personal Data": "Personal Data",
-    "Erase": "Erase",
+    "Erase": "Borrar",
     "Move Over": "Move Over",
     "oneToMany": "Uno a muchos",
     "manyToOne": "Muchos a uno",
@@ -625,6 +625,8 @@
     "fieldIsUploading": "Uploading in progress",
     "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
+    "erasePersonalDataRecordConfirmation": "Los datos personales de este registro se borrarán de forma permanente según el modo de borrado de cada campo. ¿Está seguro?",
+    "erasePersonalDataRecordsConfirmation": "Los datos personales de los registros seleccionados se borrarán de forma permanente según el modo de borrado de cada campo. ¿Está seguro?",
     "clearAclCacheError": "ACL cache could not be cleared.",
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
     "closePanelConfirmation": "¿Seguro que quieres cerrar el panel?",
@@ -660,6 +662,7 @@
   },
   "boolFilters": {
     "containsPersonalData": "Contiene datos personales",
+    "erased": "Borrados",
     "onlyMy": "Solo míos",
     "onlyActive": "Active",
     "assignedToMe": "Assigned to me",
@@ -677,6 +680,7 @@
     "all": "Todos"
   },
   "massActions": {
+    "erasePersonalData": "Borrar",
     "remove": "Eliminar",
     "merge": "Unir",
     "follow": "Seguir",
@@ -711,6 +715,7 @@
     "teams": "Equipos",
     "createdAt": "Creado en",
     "modifiedAt": "Modificado el",
+    "erasedAt": "Borrado el",
     "createdBy": "Creado por",
     "modifiedBy": "Modificado Por",
     "description": "Descripción",
@@ -827,6 +832,8 @@
     "own": "You were set as Owner for {entityType} {entity}."
   },
   "streamMessages": {
+    "eraseThis": "{user} borró los datos personales de este registro el {datetime}.",
+    "erase": "{user} borró los datos personales de {entityType} {entity} el {datetime}.",
     "composerUpdate": "{user} ha cambiado los paquetes de software instalados",
     "post": "{user} ha publicado en: {entityType} {entity}",
     "attach": "{user} ha añadido un archivo adjunto en: {entityType} {entity}",
@@ -1272,6 +1279,8 @@
     "massRestoreNoRecordProceed": "No se restauró ningún registro.",
     "massUpdateSomeRecordNotProceed": "No se ha podido actualizar correctamente algún(os) registro(s).",
     "massDeleteSomeRecordNotProceed": "No se ha podido eliminar correctamente algún(os) registro(s).",
+    "massErasePersonalDataNoRecordProceed": "No se borró ningún registro.",
+    "massErasePersonalDataSomeRecordNotProceed": "Algunos registros no se pudieron borrar correctamente.",
     "massRestoreSomeRecordNotProceed": "No se ha podido restaurar correctamente algún(os) registro(s).",
     "entityCannotBeBookmarked": "Los registros de esta entidad no pueden marcarse.",
     "integerValueValidationFailed": "El valor entero para el campo/atributo '%s' debe estar entre %s y %s.",
