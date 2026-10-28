@@ -170,7 +170,7 @@ class ControllerManager
             }
 
             if (!empty($data)) {
-                $historyRecordData['request']['body'] = $data;
+                $historyRecordData['request']['body'] = $this->maskRequestBody($controllerName, $data);
             }
 
             foreach ($historyRecordData['request']['headers'] ?? [] as $k => $v) {
@@ -247,6 +247,73 @@ class ControllerManager
         if (!is_null($result)) {
             $result = $event->getArgument('result');
         }
+    }
+
+    private function maskRequestBody(string $controllerName, $data)
+    {
+        if (!is_array($data) && !is_object($data)) {
+            return $data;
+        }
+
+        $data = json_decode(json_encode($data));
+
+        if ($controllerName === 'MassActions' && is_array($data)) {
+            foreach ($data as $item) {
+                if (!is_object($item) || !is_string($item->entity ?? null) || !is_object($item->payload ?? null)) {
+                    continue;
+                }
+                $item->payload = $this->maskSensitiveProperties($item->payload, $this->getSensitiveProperties($item->entity));
+            }
+
+            return $data;
+        }
+
+        $properties = $this->getSensitiveProperties($controllerName);
+        if ($controllerName === 'User') {
+            $properties['currentPassword'] = true;
+        }
+        if (is_object($data) && is_string($data->entityName ?? null)) {
+            $properties += $this->getSensitiveProperties($data->entityName);
+        }
+
+        return $this->maskSensitiveProperties($data, $properties);
+    }
+
+    private function getSensitiveProperties(string $entityName): array
+    {
+        $properties = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields']) ?? [] as $field => $fieldDefs) {
+            if (is_array($fieldDefs) && ($fieldDefs['type'] ?? null) === 'password') {
+                $properties[$field] = true;
+            }
+        }
+
+        return $properties;
+    }
+
+    private function maskSensitiveProperties($data, array $properties)
+    {
+        foreach ($data as $key => $value) {
+            if (is_string($key) && isset($properties[$key])) {
+                if ($value === null || $value === '' || $value === []) {
+                    continue;
+                }
+                $value = '***';
+            } elseif (is_array($value) || is_object($value)) {
+                $value = $this->maskSensitiveProperties($value, $properties);
+            } else {
+                continue;
+            }
+
+            if (is_object($data)) {
+                $data->$key = $value;
+            } else {
+                $data[$key] = $value;
+            }
+        }
+
+        return $data;
     }
 
     protected function getContainer(): Container
