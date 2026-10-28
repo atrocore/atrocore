@@ -471,9 +471,9 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                                 }
                             },
                         }, view => {
-                            view.params.options = this.params.options ?? this.model.getFieldParam(this.name, 'options')
-                            view.params.optionColors = this.params.optionColors ?? this.model.getFieldParam(this.name, 'optionColors');
-                            view.translatedOptions = this.translatedOptions;
+                            view.params.options = this.params.attribute?.options ?? this.params.options ?? this.model.getFieldParam(this.name, 'options')
+                            view.params.optionColors = this.params.attribute?.optionColors ?? this.params.optionColors ?? this.model.getFieldParam(this.name, 'optionColors');
+                            view.translatedOptions = this.params.attribute?.translatedOptions ?? this.translatedOptions;
                             this.listenTo(view, 'change', () => {
                                 this.filterValue = model.get('value');
                                 rule.$el.find(`input[name="${inputName}"]`).trigger('change');
