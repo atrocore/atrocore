@@ -18,7 +18,7 @@ Each action entry in `clientDefs` maps an action name to:
 
 The action label and confirmation messages come from the entity's i18n translation files.
 
-Action visibility per record is controlled by the backend via the `_meta.permissions` map returned with each record. If `_meta.permissions.myAction` is not truthy, the action is hidden for that record.
+Action visibility per record is controlled by the backend via the `_meta.availableActions` map returned with each record. If `_meta.availableActions.myAction` is not truthy, the action is hidden for that record.
 
 ---
 
@@ -347,7 +347,7 @@ Return `['count' => $n]` so the success message can use the `{count}` placeholde
 
 ## Controlling Visibility per Record
 
-Actions are shown only when the backend sets the action name to `true` in `_meta.permissions`. Override `putAclMeta()` in the entity's **service** class:
+Actions are shown only when the backend sets the action name to `true` in `_meta.availableActions`. Override `putAclMeta()` in the entity's **service** class:
 
 ```php
 // app/Atro/Services/MyEntity.php
@@ -358,8 +358,8 @@ public function putAclMeta(\Espo\ORM\Entity $entity): void
 
     $isPending = $entity->get('status') === 'pending';
 
-    $entity->setMetaPermission('publish', $isPending && $this->getAcl()->check($entity, 'edit'));
-    $entity->setMetaPermission('reject',  $isPending && $this->getAcl()->check($entity, 'edit'));
+    $entity->setAvailableAction('publish', $isPending && $this->getAcl()->check($entity, 'edit'));
+    $entity->setAvailableAction('reject',  $isPending && $this->getAcl()->check($entity, 'edit'));
 }
 ```
 
@@ -370,7 +370,7 @@ public function putAclMetaForLink(\Espo\ORM\Entity $entityFrom, string $link, \E
 {
     parent::putAclMetaForLink($entityFrom, $link, $entity);
 
-    $entity->setMetaPermission('ship', $this->getAcl()->check($entity, 'edit'));
+    $entity->setAvailableAction('ship', $this->getAcl()->check($entity, 'edit'));
 }
 ```
 

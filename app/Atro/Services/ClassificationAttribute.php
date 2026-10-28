@@ -143,8 +143,8 @@ class ClassificationAttribute extends Base
 
         $this->putAclMeta($entity);
 
-        $entity->setMetaPermission('unlinkRelatedAttribute',  $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'delete'));
-        $entity->setMetaPermission('cascadeUnlinkRelatedAttribute', $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'delete'));
+        $entity->setAvailableAction('unlinkRelatedAttribute',  $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'delete'));
+        $entity->setAvailableAction('cascadeUnlinkRelatedAttribute', $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'delete'));
     }
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void

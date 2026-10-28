@@ -274,7 +274,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             return actions.filter(action => {
                 const permission = action === 'remove' ? 'delete' : action;
 
-                return checkedItems.every(item => item.get('_meta')?.permissions?.[permission] !== false);
+                return checkedItems.every(item => item.get('_meta')?.availableActions?.[permission] !== false);
             });
         },
 
@@ -324,7 +324,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
             (this.getModels() || [])
                 .forEach(model => {
-                    const meta = model.item?.get('_meta')?.cluster || {};
+                    const meta = model.item?.get('_meta')?.state || {};
 
                     if (meta.consolidated) {
                         this.$el.find(`th[data-id="${model.id}"]`).addClass('consolidated');
@@ -341,14 +341,14 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
             const sorted = models
                 .sort((a, b) => {
-                    const aMeta = a.item?.get('_meta')?.cluster || {};
-                    const bMeta = b.item?.get('_meta')?.cluster || {};
+                    const aMeta = a.item?.get('_meta')?.state || {};
+                    const bMeta = b.item?.get('_meta')?.state || {};
 
                     if (!!aMeta.consolidated && !!!bMeta.consolidated) return -1;
                     if (!!!aMeta.consolidated && !!bMeta.consolidated) return 1;
                     return 0;
                 })
-                .sort((a, b) => a.item?.get('_meta')?.cluster?.golden ? -1 : 1);
+                .sort((a, b) => a.item?.get('_meta')?.state?.golden ? -1 : 1);
 
             if (!this.consolidationPreviewActive || !this.consolidationPreviewModel) {
                 return sorted;
@@ -379,7 +379,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
         getMatchedScoreHtml(model) {
             const value = model.item.get('matchedScore');
-            const consolidatedAutomatically = model.item.get('_meta')?.cluster?.consolidated && model.item.get('consolidatedAutomatically');
+            const consolidatedAutomatically = model.item.get('_meta')?.state?.consolidated && model.item.get('consolidatedAutomatically');
             const entityName = model.item.get('entityName');
 
             let backgroundColor = '#CCCCCC';

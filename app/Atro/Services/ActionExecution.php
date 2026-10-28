@@ -50,6 +50,6 @@ class ActionExecution extends Base
 
         $this->putAclMeta($entity);
 
-        $entity->setMetaPermission('allLogs', true);
+        $entity->setAvailableAction('allLogs', true);
     }
 }

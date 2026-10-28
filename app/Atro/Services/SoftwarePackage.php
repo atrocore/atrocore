@@ -46,18 +46,18 @@ class SoftwarePackage extends ReferenceData
         parent::putAclMeta($entity);
 
         if (empty($entity->get('currentVersion'))) {
-            $entity->setMetaPermission('edit', false);
+            $entity->setAvailableAction('edit', false);
         }
-        $entity->setMetaPermission('delete', false);
+        $entity->setAvailableAction('delete', false);
 
-        $entity->setMetaPermission('showReleaseNotes', true);
-        $entity->setMetaPermission('readDocs', $entity->get('installed') && ($entity->get('id') === 'Atro' || $this->getModuleManager()->getModule($entity->get('id'))->hasDocs()));
+        $entity->setAvailableAction('showReleaseNotes', true);
+        $entity->setAvailableAction('readDocs', $entity->get('installed') && ($entity->get('id') === 'Atro' || $this->getModuleManager()->getModule($entity->get('id'))->hasDocs()));
 
-        $entity->setMetaPermission('installPackage', !$entity->get('installed'));
-        $entity->setMetaPermission(
+        $entity->setAvailableAction('installPackage', !$entity->get('installed'));
+        $entity->setAvailableAction(
             'uninstallPackage', $entity->get('installed') && $entity->get('id') !== 'Atro' && !empty($entity->get('currentVersion')) && !empty($entity->get('targetVersion'))
         );
-        $entity->setMetaPermission('updatePackage', $this->isUpdatable($entity));
+        $entity->setAvailableAction('updatePackage', $this->isUpdatable($entity));
     }
 
     public function getLastUpdateStatus(): ?array

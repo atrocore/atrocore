@@ -96,17 +96,17 @@ class Cluster extends Base
     {
         parent::putAclMeta($entity);
 
-        if ($entity->getMeta('permissions', 'delete')) {
+        if ($entity->getMeta('availableActions', 'delete')) {
             $canPurge = false;
             $this->calculateVirtualFields($entity);
             if ($entity->get('state') !== 'empty') {
-                $entity->setMetaPermission('delete', false);
+                $entity->setAvailableAction('delete', false);
                 $canPurge = true;
             }
 
-            $entity->setMetaPermission('purge', $canPurge);
+            $entity->setAvailableAction('purge', $canPurge);
         } else {
-            $entity->setMetaPermission('purge', false);
+            $entity->setAvailableAction('purge', false);
         }
     }
 

@@ -2919,9 +2919,9 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 };
 
                 let getRelationModel = (callback) => {
-                    if (model.get('__relationEntity')) {
+                    if (model.getMeta('relationRecord')) {
                         this.getModelFactory().create(this.relationScope, relModel => {
-                            relModel.set(model.get('__relationEntity'));
+                            relModel.set(model.getMeta('relationRecord'));
                             model.relationModel = relModel
                             callback(relModel)
                         })
@@ -4254,7 +4254,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         } else {
                             model.set(changedAttrs);
                             if (model !== mainModel) {
-                                mainModel.set('__relationEntity', Object.assign({}, mainModel.get('__relationEntity') || {}, changedAttrs));
+                                const meta = mainModel.get('_meta') || {};
+                                mainModel.set('_meta', {...meta, relationRecord: Object.assign({}, meta.relationRecord || {}, changedAttrs)});
                             }
                             if (!closedRows.includes(mainModel.id)) {
                                 if (this._inlineEditRowAttrs) {
@@ -4294,7 +4295,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 const mainModel = rowView.model,
                     model = useRelationModel && mainModel.relationModel ? mainModel.relationModel : mainModel,
                     attrs = (this._inlineEditRowAttrs || {})[mainModel.id] || {},
-                    initialAttrs = useRelationModel ? (attrs['__relationEntity'] || {}) : attrs;
+                    initialAttrs = useRelationModel ? (attrs['_meta']?.relationRecord || {}) : attrs;
 
                 if (!model) return;
 

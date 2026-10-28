@@ -520,7 +520,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
             let model = this.model;
 
             $.each(model.getClonedAttributes(), (name, value) => {
-                // _meta (permissions, options) is data of the loaded record for the UI, never a value to save
+                // _meta (availableActions, linkOptions) is data of the loaded record for the UI, never a value to save
                 if (name !== '_meta' && !(name in data) && !this.getMetadata().get(['entityDefs', model.urlRoot, 'fields', name, 'relationVirtualField'])) {
                     data[name] = value;
                 }

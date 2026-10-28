@@ -128,7 +128,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
             }, Dep.prototype.data.call(this));
 
             if (['list', 'detail', 'edit'].includes(this.mode) && this.idName !== this.name) {
-                const optionData = this.model.getMeta('options', this.name) || this.getOptionsData();
+                const optionData = this.model.getMeta('linkOptions', this.name) || this.getOptionsData();
                 if (optionData.color) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
                     data.description = optionData.description || '';
@@ -148,7 +148,7 @@ Espo.define('views/fields/link', ['views/fields/base', 'views/fields/colored-enu
         },
 
         onInlineEditSave(res, attrs, model) {
-            if (res?._meta?.options?.[this.name]) {
+            if (res?._meta?.linkOptions?.[this.name]) {
                 model.set('_meta', res._meta);
             }
 

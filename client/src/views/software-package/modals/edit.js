@@ -31,7 +31,7 @@ Espo.define('views/software-package/modals/edit', 'views/modals/edit', Dep => {
         controlActionButtons() {
             Dep.prototype.controlActionButtons.call(this);
 
-            if (this.model.get('_meta')?.permissions?.updatePackage) {
+            if (this.model.get('_meta')?.availableActions?.updatePackage) {
                 this.showButton('saveAndUpdate');
             } else {
                 this.hideButton('saveAndUpdate');

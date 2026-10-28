@@ -938,7 +938,7 @@ With `Flatten-Attributes: true`, you can pass an object instead of a raw ID. The
 
 ## The `With-Meta` Header
 
-The `With-Meta` request header instructs the API to enrich every entity in the response with a `_meta` object. This object provides contextual information that would otherwise require additional API calls — such as the current user's permissions on the record, full option data for enum fields, and audit delegation details.
+The `With-Meta` request header instructs the API to enrich every entity in the response with a `_meta` object. This object provides contextual information that would otherwise require additional API calls — such as the actions available for the record, full data of linked options, and audit delegation details.
 
 The header is accepted on the following endpoints:
 
@@ -966,7 +966,7 @@ With-Meta: true
 GET /api/Product HTTP/1.1
 Host: demo.atropim.com
 Authorization-Token: ***************
-With-Meta-Groups: permissions, options
+With-Meta-Groups: availableActions, linkOptions
 ```
 
 - The header turns `_meta` on by itself, `With-Meta` is not needed along with it.
@@ -974,7 +974,7 @@ With-Meta-Groups: permissions, options
 - Without the header, every category is returned, as with `With-Meta: true`.
 - Category names are case-sensitive. An unknown name is ignored.
 
-Ask only for the categories your client uses: `permissions`, for example, runs an ACL check on every record of a list, which is significant on large lists.
+Ask only for the categories your client uses: `availableActions`, for example, runs an ACL check on every record of a list, which is significant on large lists.
 
 ---
 
@@ -989,12 +989,12 @@ When `With-Meta: true` is sent, each entity in the response includes a `_meta` p
   "id": "a01jz56xg5xe09abkmfg4dr0kvj",
   "name": "Example Product",
   "_meta": {
-    "permissions": {
+    "availableActions": {
       "edit": true,
       "delete": false,
       "stream": true
     },
-    "options": {
+    "linkOptions": {
       "status": {
         "id": "a01...",
         "code": "active",
@@ -1008,18 +1008,20 @@ When `With-Meta: true` is sent, each entity in the response includes a `_meta` p
 
 ---
 
-### `_meta.permissions`
+### `_meta.availableActions`
 
-Contains ACL flags for the **current authenticated user** on this specific record. Clients can use these flags to conditionally show or hide action buttons without making additional permission-check requests.
+Tells, for each action, whether it is available for this specific record to the **current authenticated user**, i.e. whether the client shows the action button. The backend takes everything into account — the ACL of the user, the state of the record and the business rules — so the client relies on the value as is and does not make additional permission-check requests.
 
-| Key | Type | Description                                                                                                                      |
-|-----|------|----------------------------------------------------------------------------------------------------------------------------------|
-| `edit` | boolean | Whether the current user can edit this record                                                                                    |
-| `delete` | boolean | Whether the current user can delete this record                                                                                  |
-| `stream` | boolean | Whether the current user can read/edit the stream                                                                                |
-| `unlink` | boolean | Whether the current user can unlink this record *(only in linked-record responses)*                                              |
+The keys are action names. The base ones are listed below, entities and modules add their own actions (`installPackage`, `consolidate`, `cancelExportJob`, etc.).
 
-**Example — list response with permissions:**
+| Key | Type | Description                                                                         |
+|-----|------|-------------------------------------------------------------------------------------|
+| `edit` | boolean | Whether the record can be edited                                              |
+| `delete` | boolean | Whether the record can be deleted                                           |
+| `stream` | boolean | Whether the stream of the record can be read/edited                         |
+| `unlink` | boolean | Whether the record can be unlinked *(only in linked-record responses)*      |
+
+**Example — list response with available actions:**
 
 ```http
 GET /api/Product?select=id,name&maxSize=2 HTTP/1.1
@@ -1036,7 +1038,7 @@ With-Meta: true
       "id": "a01...",
       "name": "Product A",
       "_meta": {
-        "permissions": {
+        "availableActions": {
           "edit": true,
           "delete": true,
           "stream": true
@@ -1047,7 +1049,7 @@ With-Meta: true
       "id": "a02...",
       "name": "Product B",
       "_meta": {
-        "permissions": {
+        "availableActions": {
           "edit": false,
           "delete": false,
           "stream": true
@@ -1060,9 +1062,9 @@ With-Meta: true
 
 ---
 
-### `_meta.options`
+### `_meta.linkOptions`
 
-Populated for `Link` and `Multiple link` fields whose related entity is **`List Option`**. Instead of returning only the ID(s), the full option object(s) are embedded in `_meta.options`, keyed by field name.
+Populated for `Link` and `Multiple link` fields whose related entity has a `color` field, such as **`List Option`**. Instead of returning only the ID(s), the full option object(s) are embedded in `_meta.linkOptions`, keyed by field name.
 
 This eliminates the need to fetch option data separately.
 
@@ -1071,7 +1073,7 @@ This eliminates the need to fetch option data separately.
   "id": "a01...",
   "name": "Example Product",
   "_meta": {
-    "options": {
+    "linkOptions": {
       "status": {
         "id": "a01k5...",
         "code": "active",
@@ -1126,16 +1128,73 @@ When present, it provides the real actor and delegator for `createdBy` and/or `m
 
 ---
 
+### `_meta.locked`
+
+Populated for the entities with field value locking enabled. `loaded` tells that the locks of the record are loaded, `fields` holds the lock of every field that has one, keyed by field name. `fields` is always an object, an empty one when no field has a lock.
+
+```json
+{
+  "id": "a01...",
+  "name": "Example Product",
+  "_meta": {
+    "locked": {
+      "loaded": true,
+      "fields": {
+        "name": true,
+        "description": false
+      }
+    }
+  }
+}
+```
+
+---
+
+### `_meta.state`
+
+The state of the record in a context it is shown in. For now it is populated for the items of a cluster, in the linked records of the cluster:
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `consolidated` | boolean | Whether the item is consolidated into the cluster |
+| `golden` | boolean | Whether the item is the golden record of the cluster |
+
+---
+
+### `_meta.relationRecord`
+
+Populated in linked-record responses (`GET /entityRelation`) for the links that have a relation entity, i.e. many-to-many links. It holds the record of the relation joining the linked record with the parent one — the fields of the relation itself, such as `sorting` or `isMainImage` of a product file.
+
+```json
+{
+  "id": "01a11f86-...",
+  "name": "product1.xlsx",
+  "_meta": {
+    "relationRecord": {
+      "id": "01a18283-...",
+      "fileId": "01a11f86-...",
+      "productId": "01a11ad9-...",
+      "isMainImage": false,
+      "sorting": 120659828
+    }
+  }
+}
+```
+
+---
+
 ### Summary
 
 The table below lists the currently known `_meta` categories. This list will grow as the system evolves — modules and future core updates may introduce additional categories.
 
 | Category | When populated                                                            | Purpose |
 |----------|---------------------------------------------------------------------------|---------|
-| `permissions` | Always (when header is sent)                                              | ACL flags for edit, delete, stream, unlink, etc. |
-| `options` | When record has `Link` / `Multiple link` fields pointing to `List Option` | Full option objects (id, code, name, color) |
+| `availableActions` | Always (when header is sent)                                         | Whether each action (edit, delete, stream, unlink, etc.) is available for the record |
+| `linkOptions` | When record has `Link` / `Multiple link` fields pointing to an entity with `color` | Full option objects (id, name, color, description) |
 | `audit` | When a delegated session was involved                                     | Real actor and delegator for createdBy/modifiedBy |
-| `cluster` | For the items of a cluster, in the linked records of the cluster          | Whether the item is confirmed and whether it is the golden record |
+| `locked` | For the entities with field value locking enabled                        | Whether the locks are loaded and the lock of each field |
+| `state` | For the items of a cluster, in the linked records of the cluster          | Whether the item is consolidated and whether it is the golden record |
+| `relationRecord` | In linked-record responses of many-to-many links                    | The record of the relation joining the linked record with the parent one |
 | *(future)* | Varies                                                                    | Additional categories may be added by modules or core updates |
 
 The category names are the values accepted by the [`With-Meta-Groups`](#the-with-meta-groups-header) header.

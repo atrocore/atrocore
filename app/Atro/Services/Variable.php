@@ -63,7 +63,7 @@ class Variable extends Base
         foreach (self::loadAll() as $key => $value) {
             $variables[] = $this->prepareRow($key, $value) + [
                     "_meta" => [
-                        "permissions" => [
+                        "availableActions" => [
                             "edit"   => true,
                             "delete" => true
                         ]
