@@ -246,7 +246,7 @@ If you want to test AtroCore without PIM, simply uninstall the PIM module after 
 - **Software**:
   - Apache Web Server or Nginx
   - PHP 8.4 - 8.5.
-  - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ or MariaDB 5.5+.
+  - PostgreSQL 14.9+ (recommended) or MySQL 8.0+ or MariaDB 10.6+.
 
 > AtroCore and AtroPIM do not run on standard shared hosting because of their technical requirements and resource needs. Managed server hosting can work, but each provider and configuration should be evaluated individually.
 

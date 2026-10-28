@@ -13,9 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Core\Middleware;
 
+use Atro\Core\OpenApiGenerator;
+use Atro\Core\Routing\Route as RouteAttribute;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Entities\User;
+use Atro\Handlers\Global\UpsertAsyncHandler;
+use Atro\Handlers\Global\UpsertHandler;
 use Espo\ORM\EntityManager;
 use Mezzio\Router\RouteResult;
 use Psr\Container\ContainerInterface;
@@ -54,8 +58,10 @@ class ActionHistoryMiddleware implements MiddlewareInterface
             }
 
             $headers = $request->getHeaders();
-            foreach (['authorization-token', 'authorization', 'Authorization-Token', 'Authorization'] as $h) {
-                unset($headers[$h]);
+            foreach (array_keys($headers) as $h) {
+                if (in_array(strtolower((string)$h), ['authorization-token', 'authorization', 'cookie'])) {
+                    unset($headers[$h]);
+                }
             }
 
             $historyData = ['request' => ['headers' => $headers, 'params' => $request->getQueryParams()]];
@@ -63,6 +69,14 @@ class ActionHistoryMiddleware implements MiddlewareInterface
             $body = (string) $request->getBody();
             if ($body !== '') {
                 $decoded = json_decode($body, true);
+                if (is_array($decoded) && ($routeAttr = $this->resolveRouteAttribute($request)) !== null) {
+                    $routeHandler = $request->getAttribute(RouteResult::class)->getMatchedRoute()->getMiddleware();
+                    if ($routeHandler instanceof UpsertHandler || $routeHandler instanceof UpsertAsyncHandler) {
+                        $decoded = $this->maskUpsertRequestBody($routeAttr, $decoded);
+                    } else {
+                        $decoded = $this->maskRequestBody($request, $routeAttr, $decoded);
+                    }
+                }
                 $historyData['request']['body'] = $decoded ?? $body;
             }
 
@@ -129,6 +143,111 @@ class ActionHistoryMiddleware implements MiddlewareInterface
         }
 
         return true;
+    }
+
+    private function maskRequestBody(ServerRequestInterface $request, RouteAttribute $routeAttr, array $body): array
+    {
+        $properties = [];
+
+        $entityNames = [(string)($request->getAttribute(RouteResult::class)->getMatchedRoute()->getOptions()['entityName'] ?? '')];
+        if (is_string($body['entityName'] ?? null) && $this->getMetadata()->get(['scopes', $body['entityName']])) {
+            $entityNames[] = $body['entityName'];
+        }
+
+        foreach (array_unique($entityNames) as $entityName) {
+            $schema = $this->container->get(OpenApiGenerator::class)->getSchemaForHandler($routeAttr, $entityName);
+            $properties += $this->getSensitivePropertiesFromSchema($schema);
+        }
+
+        return $this->maskSensitiveProperties($body, $properties);
+    }
+
+    private function maskUpsertRequestBody(RouteAttribute $routeAttr, array $body): array
+    {
+        $propertiesByEntity = [];
+
+        foreach ($body as $key => $item) {
+            $entityName = is_array($item) ? $item['entity'] ?? null : null;
+            if (!is_string($entityName) || !is_array($item['payload'] ?? null) || !$this->getMetadata()->get(['scopes', $entityName])) {
+                continue;
+            }
+
+            $propertiesByEntity[$entityName] ??= $this->getSensitivePropertiesFromSchema(
+                $this->container->get(OpenApiGenerator::class)->getSchemaForHandler($routeAttr, $entityName)
+            );
+
+            $body[$key]['payload'] = $this->maskSensitiveProperties($item['payload'], $propertiesByEntity[$entityName]);
+        }
+
+        return $body;
+    }
+
+    private function resolveRouteAttribute(ServerRequestInterface $request): ?RouteAttribute
+    {
+        $routeResult = $request->getAttribute(RouteResult::class);
+
+        if (!$routeResult instanceof RouteResult || $routeResult->isFailure()) {
+            return null;
+        }
+
+        $handlerMiddleware = $routeResult->getMatchedRoute()->getMiddleware();
+
+        $ref        = new \ReflectionClass($handlerMiddleware);
+        $attributes = $ref->getAttributes(RouteAttribute::class);
+
+        if (empty($attributes)) {
+            return null;
+        }
+
+        // Match the attribute whose path corresponds to the current route
+        $path = $routeResult->getMatchedRouteName();
+        foreach ($attributes as $attr) {
+            /** @var RouteAttribute $routeAttr */
+            $routeAttr = $attr->newInstance();
+            if (str_ends_with($path, $routeAttr->path)) {
+                return $routeAttr;
+            }
+        }
+
+        return $attributes[0]->newInstance();
+    }
+
+    private function getSensitivePropertiesFromSchema(array $schema): array
+    {
+        $properties = [];
+
+        foreach ($schema as $key => $value) {
+            if (!is_array($value)) {
+                continue;
+            }
+
+            if ($key === 'properties') {
+                foreach ($value as $property => $definition) {
+                    if (is_array($definition) && ($definition['format'] ?? null) === 'password') {
+                        $properties[$property] = true;
+                    }
+                }
+            }
+
+            $properties += $this->getSensitivePropertiesFromSchema($value);
+        }
+
+        return $properties;
+    }
+
+    private function maskSensitiveProperties(array $data, array $fields): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_string($key) && isset($fields[$key])) {
+                if ($value !== null && $value !== '' && $value !== []) {
+                    $data[$key] = '***';
+                }
+            } elseif (is_array($value)) {
+                $data[$key] = $this->maskSensitiveProperties($value, $fields);
+            }
+        }
+
+        return $data;
     }
 
     /**
