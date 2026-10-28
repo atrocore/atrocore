@@ -15,7 +15,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V2Dot6Dot3 extends Base
+class V2Dot5Dot4 extends Base
 {
     private const MODULE_SENSITIVE_FIELDS = [
         'User'       => ['password', 'passwordConfirm', 'currentPassword'],
