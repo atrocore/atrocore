@@ -2,6 +2,7 @@
   "fields": {
     "type": "Typ",
     "entity": "Encja",
+    "isCustom": "Niestandardowy",
     "isMultilang": "Wielojęzyczny",
     "required": "Wymagane",
     "notNull": "Wyłączenie wartości null",

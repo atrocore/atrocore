@@ -20,6 +20,12 @@
       ],
       [
         {
+          "name": "isCustom"
+        },
+        false
+      ],
+      [
+        {
           "name": "required"
         },
         {

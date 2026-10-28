@@ -2,6 +2,7 @@
   "fields": {
     "type": "Typ",
     "entity": "Entita",
+    "isCustom": "Vlastní",
     "isMultilang": "Vícejazyčný",
     "required": "Požadované",
     "notNull": "Zakázat nulovou hodnotu",

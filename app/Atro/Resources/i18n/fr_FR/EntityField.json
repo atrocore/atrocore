@@ -2,6 +2,7 @@
   "fields": {
     "type": "Type",
     "entity": "Entité",
+    "isCustom": "Personnalisé",
     "isMultilang": "Multilingue",
     "required": "Requis",
     "notNull": "Désactiver la valeur nulle",

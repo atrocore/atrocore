@@ -2,6 +2,7 @@
   "fields": {
     "type": "Type",
     "entity": "Entity",
+    "isCustom": "Custom",
     "isMultilang": "Multilingual",
     "required": "Required",
     "notNull": "Disable null value",
