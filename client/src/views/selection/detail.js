@@ -316,9 +316,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                             let currentModel = model.clone();
                                             let item = itemModel.clone();
                                             item.set(data._item);
-                                            if (data._item.__relationEntity) {
+                                            if (data._item._meta?.relationRecord) {
                                                 relationModel = new Model();
-                                                relationModel.set(data._item.__relationEntity);
+                                                relationModel.set(data._item._meta.relationRecord);
                                                 item.relationModel = relationModel;
                                             }
                                             delete data._item;

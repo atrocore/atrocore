@@ -1,15 +1,16 @@
 {
   "list": [
-    "permissions",
-    "options",
+    "availableActions",
+    "linkOptions",
     "audit",
-    "cluster"
+    "state",
+    "relationRecord"
   ],
   "detail": [
-    "permissions",
-    "options",
+    "availableActions",
+    "linkOptions",
     "audit",
-    "cluster",
+    "state",
     "personalData"
   ]
 }

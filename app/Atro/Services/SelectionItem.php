@@ -44,18 +44,18 @@ class SelectionItem extends Base
         $this->putAclMeta($entity);
 
         if ($this->getUser()->isAdmin()) {
-            $entity->setMetaPermission('replaceItem', true);
-            $entity->setMetaPermission('unlink', true);
-            $entity->setMetaPermission('delete', true);
+            $entity->setAvailableAction('replaceItem', true);
+            $entity->setAvailableAction('unlink', true);
+            $entity->setAvailableAction('delete', true);
             return;
         }
 
-        $entity->setMetaPermission('replaceItem', $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));
-        $entity->setMetaPermission('delete', false);
+        $entity->setAvailableAction('replaceItem', $this->getAcl()->check($entity, 'edit'));
+        $entity->setAvailableAction('unlink', $this->getAcl()->check($entity, 'delete'));
+        $entity->setAvailableAction('delete', false);
 
         if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('entityId')))) {
-            $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
+            $entity->setAvailableAction('delete', $this->getAcl()->check($record, 'delete'));
         }
     }
 

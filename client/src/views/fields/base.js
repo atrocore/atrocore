@@ -1463,9 +1463,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             // model.trigger('after:save'); // ignored because saving needs to be silent
 
             if (this.hasLockedControls()) {
-                const metaValue = res['_meta']?.locked?.[this.getLockedFieldName()];
+                const metaValue = res['_meta']?.locked?.fields?.[this.getLockedFieldName()];
                 if (metaValue !== undefined) {
-                    this.model.setMeta('locked', this.getLockedFieldName(), metaValue);
+                    this.setLockedMeta(this.getLockedFieldName(), metaValue);
                 }
 
                 this.setLockedControls();
@@ -2114,7 +2114,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     this.model.set('_lockedFields', [...lockedFields, field]);
                 }
 
-                this.model.setMeta('locked', field, !this.isLocked());
+                this.setLockedMeta(field, !this.isLocked());
 
                 this.setLockedControls();
 
@@ -2136,7 +2136,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         isLocked() {
-            return !!this.model.get('_meta')?.locked?.[this.getLockedFieldName()];
+            return !!this.model.get('_meta')?.locked?.fields?.[this.getLockedFieldName()];
+        },
+
+        setLockedMeta(field, value) {
+            const meta = this.model.get('_meta') || {};
+            meta.locked = meta.locked || {};
+            meta.locked.fields = {...(meta.locked.fields || {}), [field]: value};
+            this.model.set('_meta', meta);
         },
 
         hasLockedControls() {
@@ -2146,7 +2153,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             return this.getMetadata().get(['scopes', this.model.urlRoot, 'enableFieldValueLock']) &&
                 !this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.getLockedFieldName(), 'disableFieldValueLock']) &&
-                (this.model.get('_meta')?.locked?._loaded || this.model.isNew()) &&
+                (this.model.get('_meta')?.locked?.loaded || this.model.isNew()) &&
                 !this.model.get('attributesDefs')?.[this.getLockedFieldName()]?.disableFieldValueLock;
         },
 

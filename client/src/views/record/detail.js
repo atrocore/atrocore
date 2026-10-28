@@ -949,7 +949,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         preparedActionItemList.push(actionItems[actionName]);
                     } else {
                         let actionData = this.getMetadata().get(['clientDefs', this.scope, 'detailActions', actionName]);
-                        if (actionData && this.model.get('_meta')?.permissions?.[actionName]) {
+                        if (actionData && this.model.get('_meta')?.availableActions?.[actionName]) {
                             let row = {
                                 name: actionName,
                                 action: actionData.action || 'universalAction',

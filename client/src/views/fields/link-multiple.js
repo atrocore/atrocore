@@ -161,7 +161,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             res.isNull = ids === null || ids === undefined;
 
             if (['list', 'detail', 'edit'].includes(this.mode) && this.idsName !== this.name) {
-                const options = this.model.get('_meta')?.options?.[this.name] || this.getOptionsData();
+                const options = this.model.get('_meta')?.linkOptions?.[this.name] || this.getOptionsData();
                 if (options && options.length > 0) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
 
@@ -197,7 +197,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getColorHash() {
-            const options = this.model.get('_meta')?.options?.[this.name] || this.getOptionsData() || [];
+            const options = this.model.get('_meta')?.linkOptions?.[this.name] || this.getOptionsData() || [];
             const hash = {};
             options.forEach(option => {
                 if (option && option.id) {
@@ -208,7 +208,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         onInlineEditSave(res, attrs, model) {
-            if (res?._meta?.options?.[this.name]) {
+            if (res?._meta?.linkOptions?.[this.name]) {
                 model.set('_meta', res._meta);
             }
 

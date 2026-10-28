@@ -24,8 +24,8 @@ class EntityUniqueIndex extends ReferenceData
 
         // indexes coming from the module code are read-only
         if (empty($entity->get('isCustom'))) {
-            $entity->setMetaPermission('edit', false);
-            $entity->setMetaPermission('delete', false);
+            $entity->setAvailableAction('edit', false);
+            $entity->setAvailableAction('delete', false);
         }
     }
 }

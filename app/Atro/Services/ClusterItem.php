@@ -493,9 +493,9 @@ class ClusterItem extends Base
         if ($entityFrom->getEntityName() === 'Cluster' && $link === 'clusterItems') {
             $entity->set('cluster', $entityFrom);
 
-            if ($this->isMetaGroupRequested('cluster')) {
-                $entity->setMeta('cluster', 'consolidated', $this->isClusterItemConsolidated($entity));
-                $entity->setMeta('cluster', 'golden', !empty($entityFrom->get('goldenRecordId')) && $entity->get('entityId') === $entityFrom->get('goldenRecordId'));
+            if ($this->isMetaGroupRequested('state')) {
+                $entity->setMeta('state', 'consolidated', $this->isClusterItemConsolidated($entity));
+                $entity->setMeta('state', 'golden', !empty($entityFrom->get('goldenRecordId')) && $entity->get('entityId') === $entityFrom->get('goldenRecordId'));
             }
         }
     }
@@ -516,32 +516,32 @@ class ClusterItem extends Base
             && count($this->getConsolidatedContributorItemIds($entity->get('cluster'))) > 1;
 
         if ($this->getUser()->isAdmin()) {
-            $entity->setMetaPermission('consolidate', !$isConsolidated);
-            $entity->setMetaPermission('reject', true);
-            $entity->setMetaPermission('deconsolidate', $canDeconsolidate);
-            $entity->setMetaPermission('split', $isStaging);
-            $entity->setMetaPermission('move', true);
-            $entity->setMetaPermission('delete', true);
+            $entity->setAvailableAction('consolidate', !$isConsolidated);
+            $entity->setAvailableAction('reject', true);
+            $entity->setAvailableAction('deconsolidate', $canDeconsolidate);
+            $entity->setAvailableAction('split', $isStaging);
+            $entity->setAvailableAction('move', true);
+            $entity->setAvailableAction('delete', true);
             if (empty($record)) {
-                $entity->setMetaPermission('unlink', true);
-                $entity->setMetaPermission('delete', false);
+                $entity->setAvailableAction('unlink', true);
+                $entity->setAvailableAction('delete', false);
             }
             return;
         }
 
 
-        $entity->setMetaPermission('consolidate', false);
-        $entity->setMetaPermission('reject', $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('deconsolidate', $canDeconsolidate && $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('split', $isStaging && $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('move', $this->getAcl()->check($entity, 'edit'));
-        $entity->setMetaPermission('delete', false);
+        $entity->setAvailableAction('consolidate', false);
+        $entity->setAvailableAction('reject', $this->getAcl()->check($entity, 'edit'));
+        $entity->setAvailableAction('deconsolidate', $canDeconsolidate && $this->getAcl()->check($entity, 'edit'));
+        $entity->setAvailableAction('split', $isStaging && $this->getAcl()->check($entity, 'edit'));
+        $entity->setAvailableAction('move', $this->getAcl()->check($entity, 'edit'));
+        $entity->setAvailableAction('delete', false);
 
         if (!empty($record)) {
-            $entity->setMetaPermission('consolidate', !$isConsolidated && $this->getAcl()->check($record, 'edit'));
-            $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
+            $entity->setAvailableAction('consolidate', !$isConsolidated && $this->getAcl()->check($record, 'edit'));
+            $entity->setAvailableAction('delete', $this->getAcl()->check($record, 'delete'));
         } else {
-            $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));
+            $entity->setAvailableAction('unlink', $this->getAcl()->check($entity, 'delete'));
         }
     }
 
@@ -556,17 +556,17 @@ class ClusterItem extends Base
 
         if ($link === 'rejectedClusterItems') {
             if ($this->getUser()->isAdmin()) {
-                $entity->setMetaPermission('unreject', true);
-                $entity->setMetaPermission('unlink', true);
+                $entity->setAvailableAction('unreject', true);
+                $entity->setAvailableAction('unlink', true);
                 return;
             }
 
             if (!empty($entity->relationEntity)) {
-                $entity->setMetaPermission('unlink', $this->getAcl()->check($entity->relationEntity, 'delete'));
+                $entity->setAvailableAction('unlink', $this->getAcl()->check($entity->relationEntity, 'delete'));
             }
 
             if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
-                $entity->setMetaPermission('unreject', $this->getAcl()->check($record, 'edit'));
+                $entity->setAvailableAction('unreject', $this->getAcl()->check($record, 'edit'));
             }
             return;
         }

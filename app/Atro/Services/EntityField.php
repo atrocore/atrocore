@@ -194,9 +194,9 @@ class EntityField extends ReferenceData
         ) {
             if ($entity->get('isCustom')) {
                 $entity->set('isCustom', false);
-                $entity->setMetaPermission('delete', false);
+                $entity->setAvailableAction('delete', false);
             }
-            $entity->setMetaPermission('edit', false);
+            $entity->setAvailableAction('edit', false);
         }
     }
 
@@ -209,7 +209,7 @@ class EntityField extends ReferenceData
 
         $this->putAclMeta($entity);
 
-        $entity->setMetaPermission('delete', $entity->get('code') !== 'id' && $entity->get('isCustom'));
+        $entity->setAvailableAction('delete', $entity->get('code') !== 'id' && $entity->get('isCustom'));
     }
 
 
