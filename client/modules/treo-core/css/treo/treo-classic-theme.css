@@ -8039,7 +8039,8 @@ button.close {
 
 .note-popover .popover-content .btn-group .note-table, .panel-heading.note-toolbar .btn-group .note-table {
     min-width: 0;
-    padding: 5px
+    padding: 5px;
+    overflow: visible
 }
 
 .note-popover .popover-content .btn-group .note-table .note-dimension-picker, .panel-heading.note-toolbar .btn-group .note-table .note-dimension-picker {
