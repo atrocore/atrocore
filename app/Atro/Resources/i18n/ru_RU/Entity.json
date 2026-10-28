@@ -7,6 +7,7 @@
     "disabled": "Отключено",
     "customizable": "Настраиваемый",
     "hasArchive": "Архивируемый",
+    "isCustom": "Пользовательский",
     "hasActive": "Активируемый",
     "hideFieldTypeFilters": "Скрыть фильтры типов полей",
     "streamDisabled": "Отключить деятельность",

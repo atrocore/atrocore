@@ -7,6 +7,7 @@
     "disabled": "Вимкнено",
     "customizable": "Налаштовується",
     "hasArchive": "Архівується",
+    "isCustom": "Користувацький",
     "hasActive": "Активується",
     "hideFieldTypeFilters": "Приховати фільтри типів полів",
     "streamDisabled": "Вимкнути Активності",

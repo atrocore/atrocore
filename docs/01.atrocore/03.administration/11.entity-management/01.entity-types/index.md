@@ -29,6 +29,8 @@ For information about inheritance and hierarchies in records, see the [Hierarchi
 
 Reference is an entity type that can be used to store some guide data that has no relationships to other entities and contains a small number of records. All data of this entity is stored in the configuration file.
 
+Reference is a system entity type: Reference entities are provided by AtroCore and its modules and cannot be created by users.
+
 You cannot configure access rights, use filters, or create fields of the Link or Multiple Link [type](../02.data-types/) for this entity type. The Code field is always created as a system field and cannot be modified.
 
 > **Reference Entity Limitations**

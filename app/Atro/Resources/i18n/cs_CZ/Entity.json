@@ -7,6 +7,7 @@
     "disabled": "Zakázáno",
     "customizable": "Přizpůsobitelné",
     "hasArchive": "Archivovatelné",
+    "isCustom": "Vlastní",
     "hasActive": "Aktivovatelné",
     "hideFieldTypeFilters": "Skrytí filtrů typu pole",
     "streamDisabled": "Zakázat činnosti",

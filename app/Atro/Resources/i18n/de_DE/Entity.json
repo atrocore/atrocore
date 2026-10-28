@@ -6,6 +6,7 @@
     "code": "Systemname",
     "disabled": "Deaktiviert",
     "hasArchive": "Archivierbar",
+    "isCustom": "Benutzerdefiniert",
     "hasActive": "Aktivierbar",
     "hideFieldTypeFilters": "Feldtypfilter ausblenden",
     "streamDisabled": "Aktivitäten deaktivieren",

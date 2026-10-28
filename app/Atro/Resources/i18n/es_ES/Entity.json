@@ -7,6 +7,7 @@
     "disabled": "Discapacitados",
     "customizable": "Personalizable",
     "hasArchive": "Archivable",
+    "isCustom": "Personalizado",
     "hasActive": "Activable",
     "hideFieldTypeFilters": "Ocultar filtros de tipo de campo",
     "streamDisabled": "Desactivar actividades",

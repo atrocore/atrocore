@@ -33,8 +33,7 @@
       "required": true,
       "options": [
         "Base",
-        "Hierarchy",
-        "ReferenceData"
+        "Hierarchy"
       ],
       "conditionalProperties": {
         "protected": {

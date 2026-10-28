@@ -9,6 +9,7 @@
     "unInheritedRelations": "Relazioni non ereditate",
     "primaryEntity": "Entità primaria",
     "hasArchive": "Archiviabile",
+    "isCustom": "Personalizzato",
     "hasActive": "Attivabile",
     "hideFieldTypeFilters": "Nascondere i filtri del tipo di campo",
     "streamDisabled": "Disattivare le attività",

@@ -7,6 +7,7 @@
     "disabled": "Disabled",
     "customizable": "Customizable",
     "hasArchive": "Archivable",
+    "isCustom": "Custom",
     "hasActive": "Activatable",
     "hideFieldTypeFilters": "Hide field type filters",
     "streamDisabled": "Disable Activities",

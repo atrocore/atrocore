@@ -13,12 +13,12 @@
     "name": "containsPersonalData"
   },
   {
-    "name": "disabled"
-  },
-  {
     "name": "hasActive"
   },
   {
     "name": "hasArchive"
+  },
+  {
+    "name": "isCustom"
   }
 ]

@@ -20,7 +20,7 @@ The following fields must be filled when creating an entity:
 
 | **Field Name** | **Description**                                                                         |
 | -------------- | --------------------------------------------------------------------------------------- |
-| Type           | Type of the entity. [Base](01.entity-types/index.md#base), [Hierarchy](01.entity-types/index.md#hierarchy), [Archive](01.entity-types/index.md#archive) and [Reference](01.entity-types/index.md#reference) types are available for entities |
+| Type           | Type of the entity. Only [Base](01.entity-types/index.md#base) and [Hierarchy](01.entity-types/index.md#hierarchy) entities can be created |
 | Code           | Entity name                                                                             |
 | Name Singular  | Singular name of the entity that will be displayed in the interface                     |
 | Name Plural    | The name of the entity in the plural that will be displayed in the interface            |
