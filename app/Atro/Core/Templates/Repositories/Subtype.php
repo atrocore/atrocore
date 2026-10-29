@@ -166,12 +166,50 @@ class Subtype extends Base
             }
         }
 
+        $this->attachSubtypeFields($entity, $supertypeRecord);
+
         // the supertype record is saved every time, so that the record is marked as modified
         $this->getEntityManager()->saveEntity($supertypeRecord, $options);
 
         $entity->set('supertypeId', $supertypeRecord->get('id'));
 
         return $supertypeRecord;
+    }
+
+    /**
+     * The stream exists for the supertype record only, so the fields of the subtype are attached to the supertype
+     * record as not storable ones: the changes of the record are tracked in one place.
+     */
+    protected function attachSubtypeFields(Entity $entity, Entity $supertypeRecord): void
+    {
+        $supertypeRecord->subtypeName = $this->entityType;
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
+            if (empty($defs['type']) || !empty($defs['supertypeField']) || in_array($field, ['supertype', '_meta'], true)) {
+                continue;
+            }
+
+            if (in_array($defs['type'], ['link', 'linkMultiple'], true) && empty($defs['entity'])) {
+                $defs['entity'] = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'entity']);
+            }
+
+            $supertypeRecord->entityDefs['fields'][$field] = $defs;
+        }
+
+        foreach ($entity->getAttributes() as $attribute => $defs) {
+            if (isset($supertypeRecord->fields[$attribute]) || in_array($attribute, ['id', 'supertypeId', 'supertypeName'], true)) {
+                continue;
+            }
+
+            $supertypeRecord->fields[$attribute] = array_merge($defs, ['notStorable' => true]);
+
+            if ($entity->hasFetched($attribute)) {
+                $supertypeRecord->setFetched($attribute, $entity->getFetched($attribute));
+            }
+            if ($entity->has($attribute)) {
+                $supertypeRecord->set($attribute, $entity->get($attribute));
+            }
+        }
     }
 
     protected function populateFromSupertypeRecord(Entity $entity, Entity $supertypeRecord): void
