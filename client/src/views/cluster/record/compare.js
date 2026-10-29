@@ -49,7 +49,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             // the panel owns the requests; this view only supplies input and renders the outcome
             props.showConsolidation = !this.merging
                 && !!this.selectionModel
-                && this.selectionModel.get('state') !== 'invalid';
+                && this.selectionModel.get('status') !== 'invalid';
             props.consolidationClusterId = this.selectionId;
             props.consolidationMasterEntity = this.selectionModel ? (this.selectionModel.get('masterEntity') || '') : '';
             props.consolidationPreviewActive = this.consolidationPreviewActive;
@@ -379,7 +379,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
         getMatchedScoreHtml(model) {
             const value = model.item.get('matchedScore');
-            const consolidatedAutomatically = model.item.get('_meta')?.state?.consolidated && model.item.get('consolidatedAutomatically');
+            const confirmedAutomatically = model.item.get('_meta')?.state?.consolidated && model.item.get('confirmedAutomatically');
             const entityName = model.item.get('entityName');
 
             let backgroundColor = '#CCCCCC';
@@ -417,8 +417,8 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 .join('; ');
 
             let statusIconsHtml = '';
-            if (consolidatedAutomatically) {
-                statusIconsHtml += `<i class="ph ph-sparkle autoconsolidated" title="${this.translate('consolidatedAutomatically', 'labels', 'ClusterItem')}"></i>`;
+            if (confirmedAutomatically) {
+                statusIconsHtml += `<i class="ph ph-sparkle auto-confirmed" title="${this.translate('confirmedAutomatically', 'labels', 'ClusterItem')}"></i>`;
             }
 
             if (entityName) {
@@ -452,6 +452,10 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
         getMergeUrl() {
             return 'Cluster/merge'
+        },
+
+        getMergeSuccessMessage() {
+            return this.translate('consolidated', 'messages', 'Cluster');
         },
 
         getMergeData(targetId, attributes, relationshipData) {
