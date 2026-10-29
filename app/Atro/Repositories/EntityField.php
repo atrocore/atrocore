@@ -22,6 +22,7 @@ use Atro\Core\DataManager;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
@@ -354,10 +355,13 @@ class EntityField extends ReferenceData
                 $tableName  = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
                 $column     = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entity->get('code')));
 
+                // a subtype has no "deleted" column
+                $groupBy = $type === 'Subtype' ? [$column] : [$column, 'deleted'];
+
                 $values = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                    ->select($column, 'deleted')
+                    ->select(...$groupBy)
                     ->from($tableName)
-                    ->groupBy($column, 'deleted')
+                    ->groupBy(...$groupBy)
                     ->having("count($column) > 1")
                     ->fetchFirstColumn();
 
@@ -424,12 +428,7 @@ class EntityField extends ReferenceData
                     }
 
                     if (!$hasDefault) {
-                        $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                            ->select('id')
-                            ->from($tableName)
-                            ->where('deleted = :false')
-                            ->setParameter('false', false, ParameterType::BOOLEAN)
-                            ->fetchOne();
+                        $res = $this->createExistingRecordsQuery($entityName)->fetchOne();
 
                         if (!empty($res)) {
                             throw new BadRequest($this->getLanguage()->translate('cannotAddRequiredFieldWithExistingRecords', 'exceptions', 'EntityField'));
@@ -460,12 +459,8 @@ class EntityField extends ReferenceData
                         $conditions[] = '(' . $unitColumn . ' IS NULL OR ' . $unitColumn . ' = :empty)';
                     }
 
-                    $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                        ->select('id')
-                        ->from($tableName)
-                        ->where('deleted = :false')
+                    $res = $this->createExistingRecordsQuery($entityName)
                         ->andWhere(implode(' OR ', $conditions))
-                        ->setParameter('false', false, ParameterType::BOOLEAN)
                         ->setParameter('empty', '')
                         ->fetchOne();
 
@@ -519,14 +514,7 @@ class EntityField extends ReferenceData
                 $tableName = $this->getEntityManager()->getMapper()->toDb($entity->get('entityId'));
                 $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
 
-                $query = $this
-                    ->getEntityManager()
-                    ->getDbal()
-                    ->createQueryBuilder()
-                    ->select('id')
-                    ->from($tableName)
-                    ->where('deleted = :false')
-                    ->setParameter('false', false, ParameterType::BOOLEAN);
+                $query = $this->createExistingRecordsQuery($entity->get('entityId'));
 
                 $conditions = [$query->expr()->in($column, ':options')];
                 $query->setParameter('options', $deletedOptions, Mapper::getParameterType($deletedOptions));
@@ -678,6 +666,35 @@ class EntityField extends ReferenceData
         }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    /**
+     * The query over the not deleted records of the entity. A subtype has no "deleted" column: its records share the
+     * "deleted" state of the supertype records.
+     */
+    protected function createExistingRecordsQuery(string $entityName): QueryBuilder
+    {
+        $dbal   = $this->getEntityManager()->getDbal();
+        $mapper = $this->getEntityManager()->getMapper();
+        $table  = $dbal->quoteIdentifier($mapper->toDb($entityName));
+
+        $query = $dbal->createQueryBuilder();
+
+        if ($this->getMetadata()->get(['scopes', $entityName, 'type']) === 'Subtype') {
+            $supertype = $this->getMetadata()->get(['scopes', $entityName, 'supertypeId']);
+            $query
+                ->select('t.id')
+                ->from($table, 't')
+                ->innerJoin('t', $dbal->quoteIdentifier($mapper->toDb($supertype)), 's', 's.id = t.supertype_id')
+                ->where('s.deleted = :false');
+        } else {
+            $query
+                ->select('id')
+                ->from($table)
+                ->where('deleted = :false');
+        }
+
+        return $query->setParameter('false', false, ParameterType::BOOLEAN);
     }
 
     protected function validateFieldIsNotUsedInUniqueIndex(string $entityName, string $field): void

@@ -2569,6 +2569,11 @@ class Metadata extends AbstractMetadataListener
 
             $subtypes[$supertype][] = $scope;
 
+            // on UI a subtype record is shown only via its supertype record
+            $data['clientDefs'][$scope]['controller'] = 'controllers/subtype';
+            $data['clientDefs'][$scope]['views']['detail'] = 'views/subtype/detail';
+            $data['clientDefs'][$scope]['views']['edit'] = 'views/subtype/edit';
+
             $data['entityDefs'][$scope]['fields']['supertype'] = [
                 'type'               => 'link',
                 'protected'          => true,
@@ -2615,14 +2620,14 @@ class Metadata extends AbstractMetadataListener
     }
 
     /**
-     * A subtype record contains all fields of its supertype record. They are stored in the supertype table, so they
-     * are skipped for the subtype in the ORM and are read through the "supertype" relation instead.
+     * A subtype record contains all fields and relations of its supertype record. They are stored in the supertype
+     * table, so they are skipped for the subtype in the ORM: the fields are read through the "supertype" relation and
+     * the relations are served by the supertype record.
      */
     protected function addSupertypeFieldsToSubtype(array &$data, string $supertype, string $subtype): void
     {
         foreach ($data['entityDefs'][$supertype]['fields'] ?? [] as $field => $fieldDefs) {
-            // relations to many records are kept by the supertype only
-            if (empty($fieldDefs['type']) || $fieldDefs['type'] === 'linkMultiple') {
+            if (empty($fieldDefs['type'])) {
                 continue;
             }
 
@@ -2640,7 +2645,10 @@ class Metadata extends AbstractMetadataListener
             $data['entityDefs'][$subtype]['fields'][$field] = $fieldDefs;
 
             if (!empty($linkDefs = $data['entityDefs'][$supertype]['links'][$field] ?? null)) {
-                unset($linkDefs['foreign']);
+                // the relations to many records are served by the supertype record
+                if ($fieldDefs['type'] !== 'linkMultiple') {
+                    unset($linkDefs['foreign']);
+                }
                 $linkDefs['skipOrmDefs'] = true;
                 $data['entityDefs'][$subtype]['links'][$field] = $linkDefs;
             }

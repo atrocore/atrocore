@@ -578,7 +578,8 @@
     "openContributorEntity": "Open Contributor Entity",
     "openPrimaryEntity": "Open Master Entity",
     "currentSelection": "Current Selection",
-    "Required": "Required"
+    "Required": "Required",
+    "selectType": "Select Type"
   },
   "insightsPanels": {
     "summary": "Summary",

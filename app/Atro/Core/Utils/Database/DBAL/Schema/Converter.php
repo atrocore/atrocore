@@ -148,7 +148,7 @@ class Converter
                     )
                 ) {
                     $columnNames = [self::getColumnName($fieldName)];
-                    if (isset($entityDefs['fields']['deleted'])) {
+                    if (self::hasDeletedColumn($entityDefs)) {
                         $columnNames[] = 'deleted';
                     }
                     $uniqueFields[] = $columnNames;
@@ -302,6 +302,14 @@ class Converter
         }
     }
 
+    /**
+     * A subtype has the "deleted" attribute of its supertype, but no own "deleted" column.
+     */
+    public static function hasDeletedColumn(array $entityDefs): bool
+    {
+        return ($entityDefs['fields']['deleted']['type'] ?? null) === 'bool';
+    }
+
     protected function getIndexList(array $ormMeta, array $ignoreFlags = []): array
     {
         $indexList = [];
@@ -323,7 +331,7 @@ class Converter
                     if ($keyValue === true) {
                         $tableIndexName = self::generateIndexName($entityName, $columnName);
                         $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
-                        if (array_key_exists('deleted', $entityParams['fields'])) {
+                        if (self::hasDeletedColumn($entityParams)) {
                             $indexList[$entityName][$tableIndexName]['columns'] = [$columnName, 'deleted'];
                         }
                     } else {

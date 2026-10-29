@@ -676,55 +676,6 @@ class LayoutManager
         return $data;
     }
 
-    /**
-     * A subtype record is shown as its supertype record extended with the panel of the subtype fields.
-     */
-    protected function getDefaultForSubtypeEntityType(string $scope, string $name): array
-    {
-        $supertype = $this->getMetadata()->get(['scopes', $scope, 'supertypeId']);
-        if (empty($supertype)) {
-            return [];
-        }
-
-        [$data] = $this->compose($supertype, $name, null, null, null);
-
-        if ($name !== 'detail') {
-            return $data;
-        }
-
-        $rows = [];
-        $row  = [];
-        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $fieldDefs) {
-            if (
-                empty($fieldDefs['type'])
-                || !empty($fieldDefs['supertypeField'])
-                || !empty($fieldDefs['layoutDetailDisabled'])
-                || in_array($field, ['supertype', '_meta'], true)
-                || $fieldDefs['type'] === 'linkMultiple'
-            ) {
-                continue;
-            }
-
-            $row[] = ['name' => $field];
-            if (count($row) === 2) {
-                $rows[] = $row;
-                $row    = [];
-            }
-        }
-        if (!empty($row)) {
-            $rows[] = array_pad($row, 2, false);
-        }
-
-        if (!empty($rows)) {
-            $data[] = [
-                'label' => $this->getLanguage()->translate($scope, 'scopeNames'),
-                'rows'  => $rows,
-            ];
-        }
-
-        return $data;
-    }
-
     protected function injectMultiLanguageFields(array $data, string $viewType, string $scope, ?string $relatedEntity, ?string $relatedLink): array
     {
         $multiLangFields = $this->getMultiLangFields($scope);

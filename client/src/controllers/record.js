@@ -216,6 +216,11 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         view: function (options) {
+            if (this.hasSubtypes() && !options.skipSubtype) {
+                this.showSubtypeRecord(options, 'view');
+                return;
+            }
+
             var id = options.id;
 
             var createView = function (model) {
@@ -277,6 +282,12 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
         create: function (options) {
             options = options || {};
+
+            if (this.hasSubtypes()) {
+                this.createSubtypeRecord(options);
+                return;
+            }
+
             this.getModel(function (model) {
                 if (options.relate) {
                     model.setRelate(options.relate);
@@ -315,6 +326,11 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         edit: function (options) {
+            if (this.hasSubtypes() && !options.skipSubtype) {
+                this.showSubtypeRecord(options, 'edit');
+                return;
+            }
+
             var id = options.id;
 
             this.getModel(function (model) {
@@ -345,6 +361,97 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                 this.listenToOnce(this.baseController, 'action', function () {
                     model.abortLastFetch();
                 }, this);
+            });
+        },
+
+        hasSubtypes: function () {
+            return !!this.getMetadata().get(['scopes', this.name, 'hasSubtypes']);
+        },
+
+        /**
+         * A record of an entity with subtypes is shown and edited via the record of its subtype, while the url stays
+         * the url of the record.
+         */
+        showSubtypeRecord: function (options, mode) {
+            const id = options.id || (options.model && options.model.id);
+
+            Espo.Ajax.getRequest(`${this.name}/${id}`, null, {metaContext: 'subtype'}).then(data => {
+                const subtype = data && data._meta && data._meta.subtype;
+                if (!subtype || !subtype.entityName) {
+                    this[mode](_.extend({}, options, {skipSubtype: true}));
+                    return;
+                }
+
+                this.modelFactory.create(subtype.entityName, model => {
+                    model.id = subtype.id;
+                    model.set(subtype.data || {});
+                    this.prepareSubtypeModel(model);
+
+                    const viewOptions = {
+                        scope: subtype.entityName,
+                        model: model,
+                        returnUrl: options.returnUrl,
+                        returnDispatchParams: options.returnDispatchParams,
+                        params: options
+                    };
+
+                    if (mode === 'edit') {
+                        this.listenToOnce(model, 'sync', () => {
+                            this.main('views/subtype/edit', viewOptions);
+                        });
+                    } else {
+                        this.main('views/subtype/detail', viewOptions);
+                    }
+
+                    this._fetchWithLayout(model, subtype.entityName, {
+                        main: true,
+                        headers: {'Entity-History': sessionStorage.tabId || 'true'}
+                    });
+
+                    this.listenToOnce(this.baseController, 'action', () => {
+                        model.abortLastFetch();
+                    });
+                });
+            });
+        },
+
+        prepareSubtypeModel: function (model) {
+            const supertype = this.name;
+            const sync = model.sync;
+
+            model.supertype = supertype;
+            model.sync = function (method, m, options) {
+                // a subtype record is deleted together with its supertype record
+                if (method === 'delete') {
+                    options = options || {};
+                    options.url = `${supertype}/${m.get('supertypeId')}`;
+                }
+
+                return sync.call(this, method, m, options);
+            };
+        },
+
+        /**
+         * Each record of an entity with subtypes belongs to one of them, so the subtype is chosen first and the record
+         * is created via the subtype.
+         */
+        createSubtypeRecord: function (options) {
+            let selected = false;
+
+            this.get('master').createView('selectSubtype', 'views/modals/select-subtype', {scope: this.name}, view => {
+                view.render();
+
+                this.listenToOnce(view, 'select', subtype => {
+                    selected = true;
+                    view.close();
+                    this.getRouter().dispatch(subtype, 'create', options);
+                });
+
+                this.listenToOnce(view, 'remove', () => {
+                    if (!selected) {
+                        this.getRouter().navigate(options.returnUrl || '#' + this.name, {trigger: !options.returnUrl});
+                    }
+                });
             });
         },
 

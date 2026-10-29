@@ -44,11 +44,66 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
         setup: function () {
             this.scope = this.scope || this.options.scope;
 
+            // a record of an entity with subtypes is created via one of its subtypes
+            if (!this.options.id && this.getMetadata().get(['scopes', this.scope, 'hasSubtypes'])) {
+                this.wait(true);
+                this.selectSubtype(subtype => {
+                    this.scope = subtype;
+                    this.setupForScope();
+                    this.wait(false);
+                });
+                return;
+            }
+
+            this.setupForScope();
+        },
+
+        setupForScope: function () {
             if (this.options.relate) {
                 this.relationScope = Espo.utils.upperCaseFirst(this.getMetadata().get(['entityDefs', this.scope, 'links', this.options.relate.link, 'relationName']))
             }
 
             Dep.prototype.setup.call(this)
+        },
+
+        selectSubtype: function (callback) {
+            let selected = false;
+
+            this.createView('selectSubtype', 'views/modals/select-subtype', {scope: this.scope}, view => {
+                view.render();
+
+                this.listenToOnce(view, 'select', subtype => {
+                    selected = true;
+                    view.close();
+                    callback(subtype);
+                });
+
+                this.listenToOnce(view, 'remove', () => {
+                    if (!selected) {
+                        this.remove();
+                    }
+                });
+            });
+        },
+
+        /**
+         * A subtype record is related to other records via its supertype record.
+         */
+        prepareRelate: function (relate) {
+            const model = relate.model;
+            if (!model || !model.supertype || !model.get('supertypeId')) {
+                return relate;
+            }
+
+            if (this.getMetadata().get(['entityDefs', this.scope, 'links', relate.link, 'entity']) !== model.supertype) {
+                return relate;
+            }
+
+            const supertypeModel = model.clone();
+            supertypeModel.id = model.get('supertypeId');
+            supertypeModel.name = model.supertype;
+
+            return Object.assign({}, relate, {model: supertypeModel});
         },
 
         setupModels: function () {
@@ -99,7 +154,7 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
                     model.relationModel = relationModel
                     if (this.options.relate) {
                         this.options.relate.nameValueCallback = (model) => this.getLocalizedFieldValue(model, model.nameField)
-                        model.setRelate(this.options.relate);
+                        model.setRelate(this.prepareRelate(this.options.relate));
                         model._relateData = this.options.relate;
                     }
                     if (this.options.attributes) {

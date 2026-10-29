@@ -685,7 +685,13 @@ class Entity extends ReferenceData
             }
         }
 
-        if ($this->getEntityManager()->getRepository($supertype)->count() > 0) {
+        // the records that already belong to other subtypes stay as they are, only the records without a subtype prevent it
+        $recordsRepository = $this->getEntityManager()->getRepository($supertype);
+        if (!empty($this->getSubtypesIds($supertype))) {
+            $recordsRepository->where(['type' => null]);
+        }
+
+        if ($recordsRepository->count() > 0) {
             throw new BadRequest(sprintf($this->getLanguage()->translate('supertypeHasRecords', 'exceptions', 'Entity'), $supertype));
         }
 
