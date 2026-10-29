@@ -203,6 +203,33 @@ abstract class AbstractHandler implements MiddlewareInterface
         ];
     }
 
+    /**
+     * A subtype record shares the stream of its supertype record, so following a subtype record means following the
+     * supertype record. Returns the entity to work with and replaces the ids in the data.
+     */
+    protected function resolveSubtypeForStream(string $entityName, \stdClass $data): string
+    {
+        if ($this->getMetadata()->get(['scopes', $entityName, 'type']) !== 'Subtype') {
+            return $entityName;
+        }
+
+        $supertype = $this->getMetadata()->get(['scopes', $entityName, 'supertypeId']);
+
+        if (property_exists($data, 'ids') && is_array($data->ids) && !empty($data->ids)) {
+            $records = $this->getEntityManager()->getRepository($entityName)
+                ->select(['id', 'supertypeId'])
+                ->where(['id' => $data->ids])
+                ->find();
+
+            $data->ids = [];
+            foreach ($records as $record) {
+                $data->ids[] = $record->get('supertypeId');
+            }
+        }
+
+        return $supertype;
+    }
+
     protected function buildMassParams(\stdClass $data): array
     {
         $params = [];

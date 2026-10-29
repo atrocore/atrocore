@@ -20,6 +20,7 @@ use Atro\Core\UserContext;
 use Atro\Core\Utils\IdGenerator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Interfaces\Injectable;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
@@ -1151,6 +1152,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->executeQuery();
     }
 
+    /**
+     * Restricts the query over the table of the entity, joined with the given alias, to the not deleted records.
+     */
+    protected function whereNotDeleted(QueryBuilder $qb, string $alias): void
+    {
+        $qb->andWhere("$alias.deleted = :false")
+            ->setParameter('false', false, ParameterType::BOOLEAN);
+    }
+
     public function getEntitiesIdsWithNullScriptFields(int $offset = 0, int $limit = 2000): array
     {
         // we build the query to retrieve record with at least one script field null or one null attribute values;
@@ -1158,18 +1168,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $qb    = $this->getConnection()->createQueryBuilder()
             ->select('t.id')
             ->from($this->getConnection()->quoteIdentifier($table), 't')
-            ->where('t.deleted = :false')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->distinct()
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('true', true, ParameterType::BOOLEAN);
 
+        $this->whereNotDeleted($qb, 't');
+
         $conditions = [];
 
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldDefs) {
+            // the fields a subtype takes from its supertype are calculated by the supertype
+            if (!empty($fieldDefs['supertypeField'])) {
+                continue;
+            }
             if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
-                $conditions[] = $this->getEntityManager()->getMapper()->toDb($field) . ' IS NULL';
+                $conditions[] = 't.' . $this->getEntityManager()->getMapper()->toDb($field) . ' IS NULL';
             }
         }
 

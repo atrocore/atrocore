@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 
@@ -68,6 +69,33 @@ class Subtype extends Base
 
     public function clearDeletedRecords(): void
     {
+    }
+
+    protected function whereNotDeleted(QueryBuilder $qb, string $alias): void
+    {
+        $dbal = $this->getDbal();
+
+        $qb->innerJoin($alias, $dbal->quoteIdentifier($this->getMapper()->toDb($this->getSupertypeName())), 'st', "st.id = $alias.supertype_id")
+            ->andWhere('st.deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN);
+    }
+
+    public function clearEntityField(string $field): void
+    {
+        $dbal = $this->getDbal();
+
+        $table          = $dbal->quoteIdentifier($this->getMapper()->toDb($this->entityType));
+        $supertypeTable = $dbal->quoteIdentifier($this->getMapper()->toDb($this->getSupertypeName()));
+        $column         = $dbal->quoteIdentifier($this->getMapper()->toDb($field));
+
+        $dbal->createQueryBuilder()
+            ->update($table)
+            ->set($column, ':null')
+            ->where("$column IS NOT NULL")
+            ->andWhere("supertype_id IN (SELECT id FROM $supertypeTable WHERE deleted = :false)")
+            ->setParameter('null', null, ParameterType::NULL)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
     }
 
     public function getLinkedIds(string $field, array $ids): array
