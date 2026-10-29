@@ -24,10 +24,12 @@ Espo.define('views/entity-field/fields/option-label', 'views/fields/varchar-with
             return 'options';
         },
 
-        modalRenderedCallback(view, key) {
+        modalRenderedCallback(view, data) {
             Espo.Ui.notify(false);
-            if (!view.model.get('code')) {
-                view.model.set('code', key);
+            for (let key of ['code', 'module']) {
+                if (!view.model.get(key)) {
+                    view.model.set(key, data[key]);
+                }
             }
 
             view.render();

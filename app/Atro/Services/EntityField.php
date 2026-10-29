@@ -28,6 +28,17 @@ use Espo\ORM\EntityCollection;
 
 class EntityField extends ReferenceData
 {
+    public function updateEntity(string $id, \stdClass $data): bool
+    {
+        // the field is managed by the system, e.g. the "type" field of an entity with subtypes
+        $field = $this->getRepository()->get($id);
+        if (!empty($field) && $this->getMetadata()->get("entityDefs.{$field->get('entityId')}.fields.{$field->get('code')}.customizable") === false) {
+            throw new Forbidden();
+        }
+
+        return parent::updateEntity($id, $data);
+    }
+
     /**
      * Returns the `where` filter for the given EntityField record with Twig expressions
      * resolved against the specified context record.
@@ -185,6 +196,12 @@ class EntityField extends ReferenceData
         $entity->set('customizable', true);
         if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
             $entity->set('customizable', false);
+        }
+
+        // the field is managed by the system, e.g. the "type" field of an entity with subtypes
+        if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.customizable") === false) {
+            $entity->set('customizable', false);
+            $entity->setAvailableAction('edit', false);
         }
 
         $entityId        = $entity->get('entityId');

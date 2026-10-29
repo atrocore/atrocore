@@ -2603,7 +2603,6 @@ class Metadata extends AbstractMetadataListener
 
             $data['entityDefs'][$supertype]['fields']['type'] = [
                 'type'               => 'enum',
-                'view'               => 'views/fields/subtype-type',
                 'options'            => $options,
                 'protected'          => true,
                 'customizable'       => false,

@@ -28,16 +28,26 @@ Espo.define('views/admin/entity-manager/fields/code', 'views/fields/varchar', De
                     return;
                 }
                 if (!this.model.get('name')) {
-                    this.model.set('name', name);
+                    this.model.set('name', this.getLabelPrefix() + name);
                 }
                 if (!this.model.get('namePlural')) {
-                    this.model.set('namePlural', name + 's');
+                    this.model.set('namePlural', this.getLabelPrefix() + name + 's');
                 }
             });
 
             this.listenTo(this.model, 'change:name', () => {
+                const previousName = this.model.previous('name');
+                const name = this.model.get('name') || '';
+                const labelPrefix = this.getLabelPrefix();
+                const shortName = labelPrefix && name.startsWith(labelPrefix) ? name.slice(labelPrefix.length) : name;
+
                 if (!this.getNameFromCode()) {
-                    this.model.set('code', this.prepareCode(this.subtypePrefix + this.sanitize(this.model.get('name') || '')));
+                    this.model.set('code', this.prepareCode(this.subtypePrefix + this.sanitize(shortName)));
+                }
+
+                // the name of a subtype is suggested with the name of the supertype once, the user can change it
+                if (labelPrefix && shortName && !previousName && !name.startsWith(labelPrefix)) {
+                    this.model.set('name', labelPrefix + name);
                 }
             });
 
@@ -58,6 +68,15 @@ Espo.define('views/admin/entity-manager/fields/code', 'views/fields/varchar', De
             }
 
             return '';
+        },
+
+        // the suggested start of the name of a subtype, e.g. "Foo: "
+        getLabelPrefix() {
+            if (this.model.id || !this.subtypePrefix) {
+                return '';
+            }
+
+            return this.translate(this.model.get('supertypeId'), 'scopeNames') + ': ';
         },
 
         getNameFromCode() {

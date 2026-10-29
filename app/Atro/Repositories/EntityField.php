@@ -654,7 +654,10 @@ class EntityField extends ReferenceData
 
     protected function beforeRemove(OrmEntity $entity, array $options = [])
     {
-        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
+        if (
+            $this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false
+            || $this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.customizable") === false
+        ) {
             throw new Forbidden();
         }
 
