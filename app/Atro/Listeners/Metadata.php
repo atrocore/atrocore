@@ -2575,12 +2575,19 @@ class Metadata extends AbstractMetadataListener
             $data['clientDefs'][$scope]['views']['edit'] = 'views/subtype/edit';
             $data['clientDefs'][$scope]['recordViews']['detail'] = 'views/subtype/record/detail';
 
+            // the link to the supertype record is technical, it is used by the API only
             $data['entityDefs'][$scope]['fields']['supertype'] = [
-                'type'               => 'link',
-                'protected'          => true,
-                'customizable'       => false,
-                'massUpdateDisabled' => true,
-                'duplicateIgnore'    => true,
+                'type'                 => 'link',
+                'protected'            => true,
+                'customizable'         => false,
+                'duplicateIgnore'      => true,
+                'layoutListDisabled'   => true,
+                'layoutDetailDisabled' => true,
+                'massUpdateDisabled'   => true,
+                'filterDisabled'       => true,
+                'importDisabled'       => true,
+                'exportDisabled'       => true,
+                'emHidden'             => true,
             ];
 
             $data['entityDefs'][$scope]['links']['supertype'] = [
