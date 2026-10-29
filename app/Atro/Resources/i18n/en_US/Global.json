@@ -857,7 +857,8 @@
     "sorting": "Sort Order",
     "associateEverything": "Associate every record with every other record",
     "conditionalProperties": "Conditional Properties",
-    "masterRecord": "Master Record"
+    "masterRecord": "Master Record",
+    "supertype": "Supertype"
   },
   "tooltips": {
     "fieldContainsPersonalData": "Field contains Personal Data",

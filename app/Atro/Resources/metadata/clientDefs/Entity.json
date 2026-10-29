@@ -29,6 +29,14 @@
         }
       }
     },
+    "subtypes": {
+      "select": false,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
+    },
     "uniqueIndexes": {
       "select": false,
       "actions": {
@@ -51,12 +59,14 @@
     "canHasAttributes",
     "canHasClassifications",
     "canHasAssociates",
-    "onlyForDerivativeEnabled"
+    "onlyForDerivativeEnabled",
+    "canBeSupertype"
   ],
   "hiddenBoolFilterList": [
     "canHasAttributes",
     "canHasClassifications",
     "canHasAssociates",
-    "onlyForDerivativeEnabled"
+    "onlyForDerivativeEnabled",
+    "canBeSupertype"
   ]
 }

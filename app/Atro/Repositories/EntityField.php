@@ -734,6 +734,13 @@ class EntityField extends ReferenceData
             }
         }
 
+        $this->validateSubtypeNames($entity->get('entityId'), $entity->get('code'), $entity->get('type'), !empty($entity->get('isMultilang')));
+
+        if (in_array($entity->get('type'), ['link', 'linkMultiple']) && !empty($entity->get('foreignEntityId'))) {
+            $foreignType = $entity->get('type') === 'link' && $entity->get('relationType') === 'oneToOne' ? 'link' : 'linkMultiple';
+            $this->validateSubtypeNames($entity->get('foreignEntityId'), $entity->get('foreignCode'), $foreignType, false);
+        }
+
         $entity->id = "{$entity->get('entityId')}_{$entity->get('code')}";
         $entity->set('isCustom', true);
 
@@ -741,6 +748,86 @@ class EntityField extends ReferenceData
         $this->updateField($entity, []);
 
         return true;
+    }
+
+    /**
+     * A subtype record is shown together with its supertype record, so the names of their fields (including the
+     * attributes derived from the fields) must not intersect.
+     */
+    protected function validateSubtypeNames(string $entityName, string $field, string $type, bool $isMultilang): void
+    {
+        /** @var Entity $entityRepository */
+        $entityRepository = $this->getEntityManager()->getRepository('Entity');
+
+        $subtypes = $entityRepository->getSubtypesIds($entityName);
+        $supertype = $this->getMetadata()->get(['scopes', $entityName, 'type']) === 'Subtype'
+            ? $this->getMetadata()->get(['scopes', $entityName, 'supertypeId'])
+            : null;
+
+        if (empty($subtypes) && empty($supertype)) {
+            return;
+        }
+
+        $names = $this->getDerivedNames($field, $type, $isMultilang);
+
+        if (!empty($subtypes)) {
+            foreach (Entity::SUBTYPE_RESERVED_FIELDS as $reserved) {
+                if (in_array($reserved, $names, true)) {
+                    throw new BadRequest(sprintf($this->getLanguage()->translate('subtypeFieldIsReserved', 'exceptions', 'EntityField'), $reserved));
+                }
+            }
+        }
+
+        $related = [];
+        if (!empty($supertype)) {
+            $related[$supertype] = 'fieldNameConflictsWithSupertype';
+        }
+        foreach ($subtypes as $subtype) {
+            $related[$subtype] = 'fieldNameConflictsWithSubtype';
+        }
+
+        foreach ($related as $relatedEntity => $label) {
+            $occupied = [];
+            foreach ($this->getMetadata()->get(['entityDefs', $relatedEntity, 'fields'], []) as $relatedField => $defs) {
+                if (in_array($relatedField, ['id', '_meta', 'supertype'], true)) {
+                    continue;
+                }
+                $occupied = array_merge($occupied, $this->getDerivedNames($relatedField, $defs['type'] ?? '', false));
+            }
+
+            $conflicts = array_values(array_intersect($names, $occupied));
+            if (!empty($conflicts)) {
+                throw new BadRequest(sprintf(
+                    $this->getLanguage()->translate($label, 'exceptions', 'EntityField'),
+                    $conflicts[0],
+                    $this->translate($relatedEntity, 'scopeNames')
+                ));
+            }
+        }
+    }
+
+    /**
+     * The field name together with the names of the attributes the field produces.
+     */
+    protected function getDerivedNames(string $field, string $type, bool $isMultilang): array
+    {
+        $names = [$field];
+
+        if ($type === 'link') {
+            $names[] = $field . 'Id';
+            $names[] = $field . 'Name';
+        } elseif ($type === 'linkMultiple') {
+            $names[] = $field . 'Ids';
+            $names[] = $field . 'Names';
+        }
+
+        if ($isMultilang) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                $names[] = $field . ucfirst(Util::toCamelCase(strtolower($locale)));
+            }
+        }
+
+        return $names;
     }
 
     public function updateEntity(OrmEntity $entity): bool

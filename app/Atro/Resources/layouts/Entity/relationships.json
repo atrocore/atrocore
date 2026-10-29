@@ -9,6 +9,9 @@
     "name": "derivativeEntities"
   },
   {
+    "name": "subtypes"
+  },
+  {
     "name": "uniqueIndexes"
   }
 ]

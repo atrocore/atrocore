@@ -34,6 +34,7 @@ class Metadata extends AbstractMetadataListener
     {
         $data = $event->getArgument('data');
 
+        $this->prepareSubtypeScopes($data);
         $this->addFollowersField($data);
         $this->prepareUserProfile($data);
 
@@ -53,6 +54,8 @@ class Metadata extends AbstractMetadataListener
         $data = $this->addArchive($data);
 
         $data = $this->addActive($data);
+
+        $this->prepareSubtypes($data);
 
         $this->prepareDerivatives($data);
 
@@ -340,6 +343,38 @@ class Metadata extends AbstractMetadataListener
 
         foreach ($systemFields as $field) {
             unset($data['entityDefs']['UserProfile']['fields'][$field]);
+        }
+    }
+
+    /**
+     * All features of a subtype except fields and relations belong to its supertype. They are switched off before
+     * any other preparation, so that nothing (e.g. followers) is generated for the subtype.
+     */
+    protected function prepareSubtypeScopes(array &$data): void
+    {
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (($scopeDefs['type'] ?? null) !== 'Subtype') {
+                continue;
+            }
+
+            $data['scopes'][$scope] = array_merge($scopeDefs, [
+                'tab'                  => false,
+                'acl'                  => false,
+                'notifications'        => false,
+                'hasOwner'             => false,
+                'hasAssignedUser'      => false,
+                'hasTeam'              => false,
+                'hasActive'            => false,
+                'hasArchive'           => false,
+                'hasAttribute'         => false,
+                'hasClassification'    => false,
+                'hasAssociate'         => false,
+                'containsPersonalData' => false,
+                'streamDisabled'       => true,
+                'followDisabled'       => true,
+                'disableActionHistory' => true,
+                'derivativeEnabled'    => false,
+            ]);
         }
     }
 
@@ -2511,6 +2546,66 @@ class Metadata extends AbstractMetadataListener
 
                 $data['scopes']["{$scope}Classification"]['classificationForEntity'] = $scope;
             }
+        }
+    }
+
+    /**
+     * A subtype extends its supertype with type-specific fields: it is linked one-to-one to the supertype record
+     * and is removed by the database together with it. The supertype gets the "type" field that names the subtype
+     * of each record.
+     */
+    protected function prepareSubtypes(array &$data): void
+    {
+        $subtypes = [];
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (($scopeDefs['type'] ?? null) !== 'Subtype' || empty($scopeDefs['supertypeId'])) {
+                continue;
+            }
+
+            $supertype = $scopeDefs['supertypeId'];
+            if (empty($data['scopes'][$supertype])) {
+                continue;
+            }
+
+            $subtypes[$supertype][] = $scope;
+
+            $data['entityDefs'][$scope]['fields']['supertype'] = [
+                'type'               => 'link',
+                'required'           => true,
+                'readOnly'           => true,
+                'customizable'       => false,
+                'massUpdateDisabled' => true,
+                'duplicateIgnore'    => true,
+            ];
+
+            $data['entityDefs'][$scope]['links']['supertype'] = [
+                'type'          => 'belongsTo',
+                'entity'        => $supertype,
+                'relationType'  => 'oneToOne',
+                'cascadeDelete' => true,
+                'noIndex'       => true,
+            ];
+        }
+
+        foreach ($subtypes as $supertype => $scopes) {
+            sort($scopes);
+
+            $prefixLength = strlen($supertype . 'Type');
+
+            $options = [];
+            foreach ($scopes as $scope) {
+                $options[] = lcfirst(substr($scope, $prefixLength));
+            }
+
+            $data['entityDefs'][$supertype]['fields']['type'] = [
+                'type'               => 'enum',
+                'view'               => 'views/fields/subtype-type',
+                'options'            => $options,
+                'readOnly'           => true,
+                'customizable'       => false,
+                'massUpdateDisabled' => true,
+                'duplicateIgnore'    => true,
+            ];
         }
     }
 

@@ -12,24 +12,71 @@ Espo.define('views/admin/entity-manager/fields/code', 'views/fields/varchar', De
 
     return Dep.extend({
 
+        // the prefix the code of a subtype must start with, e.g. "ExportFeedType"
+        subtypePrefix: '',
+
         setup() {
             Dep.prototype.setup.call(this);
 
+            this.subtypePrefix = this.getSubtypePrefix();
+
             this.listenTo(this.model, 'change:code', () => {
+                this.model.set('code', this.prepareCode(this.model.get('code')));
+
+                const name = this.getNameFromCode();
+                if (!name) {
+                    return;
+                }
                 if (!this.model.get('name')) {
-                    this.model.set('name', this.model.get('code'));
+                    this.model.set('name', name);
                 }
                 if (!this.model.get('namePlural')) {
-                    this.model.set('namePlural', this.model.get('code') + 's');
+                    this.model.set('namePlural', name + 's');
                 }
-                this.model.set('code', this.sanitize(this.model.get('code')));
             });
 
             this.listenTo(this.model, 'change:name', () => {
-                if (!this.model.get('code')) {
-                    this.model.set('code', this.sanitize(this.model.get('name')));
+                if (!this.getNameFromCode()) {
+                    this.model.set('code', this.prepareCode(this.subtypePrefix + this.sanitize(this.model.get('name') || '')));
                 }
             });
+
+            this.listenTo(this.model, 'change:type change:supertypeId', () => {
+                if (this.model.id) {
+                    return;
+                }
+
+                const suffix = this.getNameFromCode();
+                this.subtypePrefix = this.getSubtypePrefix();
+                this.model.set('code', this.prepareCode(this.subtypePrefix + suffix));
+            });
+        },
+
+        getSubtypePrefix() {
+            if (this.model.get('type') === 'Subtype' && this.model.get('supertypeId')) {
+                return this.model.get('supertypeId') + 'Type';
+            }
+
+            return '';
+        },
+
+        getNameFromCode() {
+            const code = this.model.get('code') || '';
+
+            return this.subtypePrefix && code.startsWith(this.subtypePrefix) ? code.slice(this.subtypePrefix.length) : code;
+        },
+
+        prepareCode(code) {
+            code = this.sanitize(code || '');
+
+            if (this.model.id || !this.subtypePrefix) {
+                return code;
+            }
+
+            // keep the prefix of the subtype even if the user removes it
+            const suffix = code.startsWith(this.subtypePrefix) ? code.slice(this.subtypePrefix.length) : code;
+
+            return this.subtypePrefix + this.sanitize(suffix);
         },
 
         sanitize(input) {
