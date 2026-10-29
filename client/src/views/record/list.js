@@ -4394,6 +4394,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         initListenToInlineMode(view) {
             let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+            let relationScopeEditable = !!this.relationScope && this.getAcl().check(this.relationScope, 'edit');
+            let relationReadOnlyFieldList = this.relationScope ? this.getAcl().getScopeForbiddenFieldList(this.relationScope, 'edit') : [];
 
             this.listenTo(view.model, 'change', () => {
                 if (this.inlineEditModeIsOn) {
@@ -4412,6 +4414,12 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
                     if (!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
                         fieldView.setReadOnly(true);
+                    }
+
+                    if (!fieldView.readOnly && fieldView.options?.useRelationModel) {
+                        if (!relationScopeEditable || !this.getAcl().checkModel(fieldView.model, 'edit', true) || relationReadOnlyFieldList.includes(fieldView.name)) {
+                            fieldView.setReadOnly(true);
+                        }
                     }
 
                     this.listenTo(fieldView, 'edit', function (view) {
