@@ -272,6 +272,49 @@ class Base extends RDB
         return array_column($rows, 'foreign_id', 'id');
     }
 
+    protected function beforeRestore($id)
+    {
+        parent::beforeRestore($id);
+
+        $this->validateSubtypeOfRestoredRecord((string)$id);
+    }
+
+    /**
+     * When the entity has subtypes, each record must belong to one of them. A record without the subtype data
+     * cannot be restored.
+     */
+    protected function validateSubtypeOfRestoredRecord(string $id): void
+    {
+        if (empty($this->getMetadata()->get(['scopes', $this->entityName, 'hasSubtypes']))) {
+            return;
+        }
+
+        $connection = $this->getConnection();
+
+        $type = $connection->createQueryBuilder()
+            ->select('type')
+            ->from($connection->quoteIdentifier($this->getMapper()->toDb($this->entityName)))
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->fetchOne();
+
+        $subtype = empty($type) ? null : $this->entityName . 'Type' . ucfirst((string)$type);
+        if (!empty($subtype) && $this->getMetadata()->get(['scopes', $subtype, 'type']) === 'Subtype') {
+            $subtypeRecordId = $connection->createQueryBuilder()
+                ->select('id')
+                ->from($connection->quoteIdentifier($this->getMapper()->toDb($subtype)))
+                ->where('supertype_id = :id')
+                ->setParameter('id', $id)
+                ->fetchOne();
+
+            if (!empty($subtypeRecordId)) {
+                return;
+            }
+        }
+
+        throw new BadRequest($this->translateException('recordWithoutSubtypeCannotBeRestored'));
+    }
+
     public function hasDeletedRecordsToClear(): bool
     {
         if (empty($this->seed)) {

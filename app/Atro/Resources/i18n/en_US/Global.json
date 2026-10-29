@@ -1332,7 +1332,11 @@
     "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
     "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked.",
     "integerValueValidationFailed": "Integer value for field/attribute '%s' must be between %s and %s.",
-    "noAccessToScope": "You don't have access to %s."
+    "noAccessToScope": "You don't have access to %s.",
+    "recordCanBeCreatedViaSubtypeOnly": "The entity has subtypes, so a record can be created only via one of the subtypes.",
+    "subtypeCanBeDeletedViaSupertypeOnly": "A subtype record can be deleted only together with its supertype record.",
+    "supertypeRecordIsNotFound": "The supertype record is not found.",
+    "recordWithoutSubtypeCannotBeRestored": "The record cannot be restored because it does not belong to any subtype."
   },
   "firstStepsDashlet": {
     "title": {

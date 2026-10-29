@@ -2571,8 +2571,7 @@ class Metadata extends AbstractMetadataListener
 
             $data['entityDefs'][$scope]['fields']['supertype'] = [
                 'type'               => 'link',
-                'required'           => true,
-                'readOnly'           => true,
+                'protected'          => true,
                 'customizable'       => false,
                 'massUpdateDisabled' => true,
                 'duplicateIgnore'    => true,
@@ -2601,11 +2600,50 @@ class Metadata extends AbstractMetadataListener
                 'type'               => 'enum',
                 'view'               => 'views/fields/subtype-type',
                 'options'            => $options,
-                'readOnly'           => true,
+                'protected'          => true,
                 'customizable'       => false,
                 'massUpdateDisabled' => true,
                 'duplicateIgnore'    => true,
             ];
+
+            $data['scopes'][$supertype]['hasSubtypes'] = true;
+
+            foreach ($scopes as $scope) {
+                $this->addSupertypeFieldsToSubtype($data, $supertype, $scope);
+            }
+        }
+    }
+
+    /**
+     * A subtype record contains all fields of its supertype record. They are stored in the supertype table, so they
+     * are skipped for the subtype in the ORM and are read through the "supertype" relation instead.
+     */
+    protected function addSupertypeFieldsToSubtype(array &$data, string $supertype, string $subtype): void
+    {
+        foreach ($data['entityDefs'][$supertype]['fields'] ?? [] as $field => $fieldDefs) {
+            // relations to many records are kept by the supertype only
+            if (empty($fieldDefs['type']) || $fieldDefs['type'] === 'linkMultiple') {
+                continue;
+            }
+
+            if (isset($data['entityDefs'][$subtype]['fields'][$field])) {
+                continue;
+            }
+
+            // the field is managed in the supertype
+            $fieldDefs['supertypeField'] = true;
+            $fieldDefs['skipOrmDefs'] = true;
+            $fieldDefs['customizable'] = false;
+            $fieldDefs['emHidden'] = true;
+            $fieldDefs['unique'] = false;
+
+            $data['entityDefs'][$subtype]['fields'][$field] = $fieldDefs;
+
+            if (!empty($linkDefs = $data['entityDefs'][$supertype]['links'][$field] ?? null)) {
+                unset($linkDefs['foreign']);
+                $linkDefs['skipOrmDefs'] = true;
+                $data['entityDefs'][$subtype]['links'][$field] = $linkDefs;
+            }
         }
     }
 

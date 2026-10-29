@@ -635,8 +635,12 @@ class Mapper implements MapperInterface
 
             $qb->where('id = :id');
             $qb->setParameter('id', $entity->id, self::getParameterType($entity->id));
-            $qb->andWhere('deleted = :deleted');
-            $qb->setParameter('deleted', false, self::getParameterType(false));
+
+            // a subtype has no "deleted" column: it shares the "deleted" state of its supertype record
+            if ($entity->getAttributeType('deleted') === IEntity::BOOL) {
+                $qb->andWhere('deleted = :deleted');
+                $qb->setParameter('deleted', false, self::getParameterType(false));
+            }
 
             try {
                 $qb->executeQuery();
