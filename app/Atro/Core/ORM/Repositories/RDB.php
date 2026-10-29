@@ -784,6 +784,25 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return parent::save($entity, $options);
     }
 
+    /**
+     * Finishes the save that was made with the "skipAfterSave", "keepNew" and "skipUpdateFetchedValues" options, so
+     * that the after-save logic sees the entity as it was changed and runs when the related data is saved too.
+     */
+    public function completeDeferredSave(Entity $entity, array $options = []): void
+    {
+        $this->afterSave($entity, $options);
+
+        if ($entity->isNew()) {
+            $entity->setIsNew(false);
+        } elseif ($entity->isFetched()) {
+            $entity->updateFetchedValues();
+        }
+
+        if ($entity->get('id') !== null) {
+            $this->putToCache($entity->get('id'), $entity);
+        }
+    }
+
     public function generateId(): string
     {
         return IdGenerator::uuid();

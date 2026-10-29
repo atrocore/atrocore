@@ -36,9 +36,16 @@ class Subtype extends Base
         try {
             $supertypeRecord = $this->saveSupertypeRecord($entity, $options);
 
-            $result = parent::save($entity, $options);
+            // the events of the subtype concern its own data only
+            $result = true;
+            if ($entity->isNew() || $this->hasOwnChanges($entity)) {
+                $result = parent::save($entity, $options);
+            }
 
             $this->populateFromSupertypeRecord($entity, $supertypeRecord);
+
+            // any change of the record is a change of the supertype record, its after-save logic sees the saved subtype data
+            $this->getEntityManager()->getRepository($this->getSupertypeName())->completeDeferredSave($supertypeRecord, $options);
 
             $connection->commit();
         } catch (\Throwable $e) {
@@ -146,6 +153,28 @@ class Subtype extends Base
         return $attributes;
     }
 
+    /**
+     * Whether the fields of the subtype itself are changed.
+     */
+    protected function hasOwnChanges(Entity $entity): bool
+    {
+        $fieldManager = $this->getInjection('container')->get('fieldManager');
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
+            if (empty($defs['type']) || !empty($defs['supertypeField']) || in_array($field, ['supertype', '_meta'], true)) {
+                continue;
+            }
+
+            foreach ($fieldManager->getActualAttributeList($this->entityType, $field) as $attribute) {
+                if ($entity->has($attribute) && $entity->isAttributeChanged($attribute)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     protected function saveSupertypeRecord(Entity $entity, array $options): Entity
     {
         $repository = $this->getEntityManager()->getRepository($this->getSupertypeName());
@@ -168,8 +197,13 @@ class Subtype extends Base
 
         $this->attachSubtypeFields($entity, $supertypeRecord);
 
-        // the supertype record is saved every time, so that the record is marked as modified
-        $this->getEntityManager()->saveEntity($supertypeRecord, $options);
+        // the supertype record is saved every time, so that the record is marked as modified, but its after-save
+        // logic is postponed until the subtype data is saved
+        $this->getEntityManager()->saveEntity($supertypeRecord, array_merge($options, [
+            'skipAfterSave'           => true,
+            'keepNew'                 => true,
+            'skipUpdateFetchedValues' => true,
+        ]));
 
         $entity->set('supertypeId', $supertypeRecord->get('id'));
 
