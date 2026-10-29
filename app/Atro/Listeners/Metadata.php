@@ -2573,6 +2573,7 @@ class Metadata extends AbstractMetadataListener
             $data['clientDefs'][$scope]['controller'] = 'controllers/subtype';
             $data['clientDefs'][$scope]['views']['detail'] = 'views/subtype/detail';
             $data['clientDefs'][$scope]['views']['edit'] = 'views/subtype/edit';
+            $data['clientDefs'][$scope]['recordViews']['detail'] = 'views/subtype/record/detail';
 
             $data['entityDefs'][$scope]['fields']['supertype'] = [
                 'type'               => 'link',

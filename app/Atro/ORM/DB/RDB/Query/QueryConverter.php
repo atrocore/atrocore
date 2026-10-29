@@ -878,7 +878,8 @@ class QueryConverter
 
     public function getLocalizedFieldPath(IEntity $entity, string $relationName, ?string $foreignEntity, string $field): string
     {
-        $fieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($field);
+        $alias     = $this->getRelationAlias($entity, $relationName);
+        $fieldPath = $this->getColumnPath($alias, $foreignEntity, $field);
         if (empty($foreignEntity)) {
             return $fieldPath;
         }
@@ -886,11 +887,31 @@ class QueryConverter
         $localizedField = Language::getLocalizedFieldName($this->entityFactory->getEntityManager()->getContainer(), $foreignEntity, $field);
 
         if ($localizedField !== $field) {
-            $localizedFieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($localizedField);
+            $localizedFieldPath = $this->getColumnPath($alias, $foreignEntity, $localizedField);
             $fieldPath          = "COALESCE(NULLIF(TRIM($localizedFieldPath), ''), $fieldPath)";
         }
 
         return $fieldPath;
+    }
+
+    /**
+     * The path to the column of the joined entity. The fields a subtype takes from its supertype are stored in the
+     * supertype table, so they are read from there via the "supertype" key of the joined subtype record.
+     */
+    protected function getColumnPath(string $alias, ?string $entityType, string $field): string
+    {
+        $defs = empty($entityType) ? null : ($this->getSeed($entityType)->fields[$field] ?? null);
+
+        if (!empty($defs['proxyType']) && !empty($defs['relation'])) {
+            $relation = $this->getSeed($entityType)->relations[$defs['relation']] ?? null;
+            if (!empty($relation['entity']) && !empty($relation['key'])) {
+                $table = $this->quoteIdentifier($this->toDb($relation['entity']));
+
+                return "(SELECT st.{$this->toDb($defs['foreign'])} FROM $table st WHERE st.id = $alias.{$this->toDb($relation['key'])})";
+            }
+        }
+
+        return $alias . '.' . $this->toDb($field);
     }
 
     public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array(), $level = 0)
@@ -1099,7 +1120,7 @@ class QueryConverter
                                     $alias = $this->getRelationAlias($entity, $relationName);
                                     if ($alias) {
                                         if (!is_array($fieldDefs['foreign'])) {
-                                            $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
+                                            $leftPart = $this->getColumnPath($alias, $entity->relations[$relationName]['entity'] ?? null, $fieldDefs['foreign']);
                                         } else {
                                             $leftPart = $this->getFieldPath($entity, $field);
                                         }

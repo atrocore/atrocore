@@ -382,10 +382,13 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     return;
                 }
 
-                this.modelFactory.create(subtype.entityName, model => {
+                this.getModel(supertypeModel => this.modelFactory.create(subtype.entityName, model => {
+                    supertypeModel.id = data.id;
+                    supertypeModel.set(_.omit(data, '_meta'));
+
                     model.id = subtype.id;
                     model.set(subtype.data || {});
-                    this.prepareSubtypeModel(model);
+                    this.prepareSubtypeModel(model, supertypeModel);
 
                     const viewOptions = {
                         scope: subtype.entityName,
@@ -411,15 +414,22 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     this.listenToOnce(this.baseController, 'action', () => {
                         model.abortLastFetch();
                     });
-                });
+                }));
             });
         },
 
-        prepareSubtypeModel: function (model) {
+        prepareSubtypeModel: function (model, supertypeModel) {
             const supertype = this.name;
             const sync = model.sync;
 
             model.supertype = supertype;
+
+            // the stream and the history belong to the supertype record
+            model.supertypeModel = supertypeModel;
+            this.listenTo(model, 'after:save after:inlineEditSave', () => {
+                supertypeModel.fetch();
+            });
+
             model.sync = function (method, m, options) {
                 // a subtype record is deleted together with its supertype record
                 if (method === 'delete') {
