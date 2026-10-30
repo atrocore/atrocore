@@ -329,7 +329,7 @@ class EntityField extends ReferenceData
         }
 
         if (!$entity->isNew() && $entity->get('type') === 'bool' && empty($entity->get('allowNullForBool')) && $entity->isAttributeChanged('allowNullForBool')) {
-            $connection = $this->getEntityManager()->getConnection();
+            $connection = $this->getEntityManager()->getDbal();
             $entityName = $entity->get('entityId');
             $type       = $this->getMetadata()->get("scopes.{$entityName}.type");
 
@@ -350,11 +350,11 @@ class EntityField extends ReferenceData
             $type       = $this->getMetadata()->get("scopes.{$entityName}.type");
 
             if (!empty($type) && $type !== 'ReferenceData') {
-                $connection = $this->getEntityManager()->getConnection();
+                $connection = $this->getEntityManager()->getDbal();
                 $tableName  = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
                 $column     = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entity->get('code')));
 
-                $values = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                $values = $this->getEntityManager()->getDbal()->createQueryBuilder()
                     ->select($column, 'deleted')
                     ->from($tableName)
                     ->groupBy($column, 'deleted')
@@ -424,7 +424,7 @@ class EntityField extends ReferenceData
                     }
 
                     if (!$hasDefault) {
-                        $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                        $res = $this->getEntityManager()->getDbal()->createQueryBuilder()
                             ->select('id')
                             ->from($tableName)
                             ->where('deleted = :false')
@@ -460,14 +460,21 @@ class EntityField extends ReferenceData
                         $conditions[] = '(' . $unitColumn . ' IS NULL OR ' . $unitColumn . ' = :empty)';
                     }
 
-                    $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    $qb = $this->getEntityManager()->getDbal()->createQueryBuilder()
                         ->select('id')
                         ->from($tableName)
                         ->where('deleted = :false')
                         ->andWhere(implode(' OR ', $conditions))
                         ->setParameter('false', false, ParameterType::BOOLEAN)
-                        ->setParameter('empty', '')
-                        ->fetchOne();
+                        ->setParameter('empty', '');
+
+                    if ($entity->get('entityId') == 'User') {
+                        $qb
+                            ->andWhere('type = :token')
+                            ->setParameter('token', 'Token');
+                    }
+
+                    $res = $qb->fetchOne();
 
                     if (!empty($res)) {
                         throw new BadRequest($this->getLanguage()->translate('nullValuesExist', 'exceptions', 'EntityField'));
@@ -637,7 +644,7 @@ class EntityField extends ReferenceData
                 }
             }
         } else {
-            $connection = $this->getEntityManager()->getConnection();
+            $connection = $this->getEntityManager()->getDbal();
             $tableName  = $this->getEntityManager()->getMapper()->toDb($scope);
             $column     = $this->getEntityManager()->getMapper()->toDb($field);
 
