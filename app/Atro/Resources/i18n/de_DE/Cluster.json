@@ -54,6 +54,11 @@
     "unconsolidated": "Nicht konsolidiert",
     "rejected": "Abgelehnt",
     "consolidationPreview": "Konsolidierungsvorschau",
+    "standardView": "Standard",
+    "comparisonView": "Vergleich",
+    "manualConsolidationView": "Manuelle Konsolidierung",
+    "suggestedValues": "Vorgeschlagene Werte",
+    "selectAllSuggestedValues": "Alle vorgeschlagenen Werte auswählen",
     "consolidationPreviewHint": "Zeigt, wie der Golden Record nach der Konsolidierung aussehen würde. Es wird nichts gespeichert.",
     "noConsolidationConfigured": "Für diese Entität ist keine Konsolidierung konfiguriert",
     "discard": "Verwerfen"

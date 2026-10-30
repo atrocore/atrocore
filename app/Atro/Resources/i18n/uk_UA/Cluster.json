@@ -50,6 +50,11 @@
     "unconsolidated": "Не консолідовано",
     "rejected": "Відхилено",
     "consolidationPreview": "Прев’ю консолідації",
+    "standardView": "Стандартний",
+    "comparisonView": "Порівняння",
+    "manualConsolidationView": "Ручна консолідація",
+    "suggestedValues": "Запропоновані значення",
+    "selectAllSuggestedValues": "Обрати всі запропоновані значення",
     "consolidationPreviewHint": "Показує, яким стане golden record після консолідації. Нічого не зберігається.",
     "noConsolidationConfigured": "Для цієї сутності не налаштовано консолідацію",
     "discard": "Скасувати зміни"

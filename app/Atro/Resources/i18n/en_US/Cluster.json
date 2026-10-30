@@ -68,6 +68,11 @@
     "unconsolidated": "Not Consolidated",
     "rejected": "Rejected",
     "consolidationPreview": "Consolidation Preview",
+    "standardView": "Standard",
+    "comparisonView": "Comparison",
+    "manualConsolidationView": "Manual Consolidation",
+    "suggestedValues": "Suggested Values",
+    "selectAllSuggestedValues": "Select all suggested values",
     "consolidationPreviewHint": "Shows how the golden record would look after consolidation. Nothing is saved.",
     "noConsolidationConfigured": "No consolidation is configured for this entity",
     "discard": "Discard"

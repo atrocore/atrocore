@@ -30,6 +30,70 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
         PREVIEW_COLUMN_ID: '__consolidationPreview__',
 
+        SCRIPT_COLUMN_ID: '__consolidationScript__',
+
+        mergeScriptModel: undefined,
+
+        mergeScriptFailed: false,
+
+        events: _.extend({}, Dep.prototype.events, {
+            'change input[type="radio"][name="check-all"]': function (e) {
+                if (e.currentTarget.dataset.id !== this.SCRIPT_COLUMN_ID) {
+                    return Dep.prototype.events['change input[type="radio"][name="check-all"]'].call(this, e);
+                }
+
+                e.stopPropagation();
+                this.model.trigger('select-model', e.currentTarget.value);
+                this.$el.find(`input.field-radio[data-id="${this.SCRIPT_COLUMN_ID}"]:not(:disabled)`).each((i, el) => {
+                    $(el).prop('checked', true).trigger('change');
+                });
+            },
+        }),
+
+        prepareFieldsData(callback) {
+            if (!this.merging || this.mergeScriptModel !== undefined) {
+                return Dep.prototype.prepareFieldsData.call(this, () => {
+                    if (this.mergeScriptModel) {
+                        const ids = this.getModels().map(model => model.id);
+                        this.fieldsArr.forEach(fieldData => {
+                            fieldData.fieldValueRows.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+                        });
+                    }
+
+                    if (callback) {
+                        callback();
+                    }
+                });
+            }
+
+            this.mergeScriptModel = null;
+            this.mergeScriptFailed = false;
+
+            const setMergeScriptModel = masterRecord => {
+                this.getModelFactory().create(this.selectionModel.get('masterEntity'), blankModel => {
+                    this.mergeScriptModel = this.buildPreviewModel(blankModel, masterRecord, this.SCRIPT_COLUMN_ID);
+                    if (!this.mergeScriptModel.get('attributesDefs')) {
+                        this.mergeScriptModel.set('attributesDefs', {});
+                    }
+                    this.prepareFieldsData(callback);
+                });
+            };
+
+            this.ajaxPostRequest(`Cluster/${this.selectionId}/consolidationPreview`, {})
+                .then(setMergeScriptModel, () => {
+                    this.mergeScriptFailed = true;
+                    setMergeScriptModel({});
+                });
+        },
+
+        getDefaultModelId() {
+            if (this.merging && this.mergeScriptModel) {
+                return this.mergeScriptFailed ? this.getModels()[1].id : this.SCRIPT_COLUMN_ID;
+            }
+
+            return Dep.prototype.getDefaultModelId.call(this);
+        },
+
         getVisibleGoldenRecord() {
             const goldenRecordId = this.selectionModel ? this.selectionModel.get('goldenRecordId') : null;
             if (!goldenRecordId) {
@@ -249,8 +313,17 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
             }
         },
 
+        handleRadioButtonsDisableState(state) {
+            Dep.prototype.handleRadioButtonsDisableState.call(this, state);
+
+            if (this.merging && this.mergeScriptFailed) {
+                $(`input[type="radio"][data-id="${this.SCRIPT_COLUMN_ID}"]`).prop('disabled', true);
+            }
+        },
+
         isModelDisabled(model) {
-            return !!this.consolidationPreviewModel && model === this.consolidationPreviewModel;
+            return (!!this.consolidationPreviewModel && model === this.consolidationPreviewModel)
+                || (!!this.mergeScriptModel && model === this.mergeScriptModel);
         },
 
         markConsolidationPreviewColumn() {
@@ -322,6 +395,15 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                 this.markConsolidationPreviewColumn();
             }
 
+            if (this.merging && this.mergeScriptModel) {
+                this.$el.find(`th[data-id="${this.SCRIPT_COLUMN_ID}"]`).addClass('consolidation-preview');
+                if (!this.mergeScriptFailed) {
+                    this.$el.find(`input[name="check-all"][data-id="${this.SCRIPT_COLUMN_ID}"]`)
+                        .val(this.getModels()[1]?.id)
+                        .attr('title', this.translate('selectAllSuggestedValues', 'labels', 'Cluster'));
+                }
+            }
+
             (this.getModels() || [])
                 .forEach(model => {
                     const meta = model.item?.get('_meta')?.state || {};
@@ -349,6 +431,10 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
                     return 0;
                 })
                 .sort((a, b) => a.item?.get('_meta')?.state?.golden ? -1 : 1);
+
+            if (this.merging && this.mergeScriptModel && sorted.length) {
+                return [this.mergeScriptModel, ...sorted];
+            }
 
             if (!this.consolidationPreviewActive || !this.consolidationPreviewModel) {
                 return sorted;
@@ -436,6 +522,17 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         buildComparisonTableHeaderColumn() {
             const columns = Dep.prototype.buildComparisonTableHeaderColumn.call(this);
 
+            if (this.merging && this.mergeScriptModel) {
+                return columns.map(column => column.id === this.SCRIPT_COLUMN_ID
+                    ? {
+                        ...column,
+                        isVirtual: true,
+                        label: this.translate('suggestedValues', 'labels', 'Cluster'),
+                        name: this.translate('suggestedValues', 'labels', 'Cluster')
+                    }
+                    : column);
+            }
+
             if (!this.consolidationPreviewActive || this.hasVisibleGoldenRecord()) {
                 return columns;
             }
@@ -461,6 +558,10 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         getMergeData(targetId, attributes, relationshipData) {
             let data = Dep.prototype.getMergeData.call(this, targetId, attributes, relationshipData);
             data.clusterId = this.selectionId;
+            data.sourceIds = data.sourceIds.filter(id => id !== this.SCRIPT_COLUMN_ID);
+            data.scriptFields = this.$el.find(`input.field-radio[data-id="${this.SCRIPT_COLUMN_ID}"]:checked`)
+                .map((i, el) => el.name)
+                .get();
             return data;
         },
     })

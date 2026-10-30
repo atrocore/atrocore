@@ -50,6 +50,11 @@
     "unconsolidated": "Non consolidé",
     "rejected": "Rejeté",
     "consolidationPreview": "Aperçu de la consolidation",
+    "standardView": "Standard",
+    "comparisonView": "Comparaison",
+    "manualConsolidationView": "Consolidation manuelle",
+    "suggestedValues": "Valeurs suggérées",
+    "selectAllSuggestedValues": "Sélectionner toutes les valeurs suggérées",
     "consolidationPreviewHint": "Montre à quoi ressemblerait l'enregistrement de référence après la consolidation. Rien n'est enregistré.",
     "noConsolidationConfigured": "Aucune consolidation n'est configurée pour cette entité",
     "discard": "Abandonner"
