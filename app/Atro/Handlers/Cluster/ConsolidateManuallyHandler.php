@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Handlers\Cluster;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -54,13 +53,28 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'sourceIds'       => [
                             'type'        => 'array',
                             'description' => 'Entity IDs of the ClusterItems to consolidate into the golden record.',
+                            'minItems'    => 1,
                             'items'       => [
                                 'type' => 'string',
                             ],
                         ],
                         'attributes'      => [
                             'type'        => 'object',
-                            'description' => 'Field values and relationship data to apply to the golden record. Must contain an `input` object with field values and a `relationshipData` array for has-many link mutations.',
+                            'description' => 'Field values and relationship data to apply to the golden record.',
+                            'required'    => [
+                                'input',
+                                'relationshipData',
+                            ],
+                            'properties'  => [
+                                'input'            => [
+                                    'type'        => 'object',
+                                    'description' => 'Field values of the golden record.',
+                                ],
+                                'relationshipData' => [
+                                    'type'        => 'object',
+                                    'description' => 'Has-many link mutations keyed by link name.',
+                                ],
+                            ],
                         ],
                         'suggestedFields' => [
                             'type'        => 'array',
@@ -99,15 +113,6 @@ class ConsolidateManuallyHandler extends AbstractHandler
     {
         $id = (string)$request->getAttribute('id');
         $data = $this->getRequestBody($request);
-
-        if (
-            empty($data->sourceIds)
-            || !is_array($data->sourceIds)
-            || !(($data->attributes ?? null) instanceof \stdClass)
-            || (isset($data->suggestedFields) && !is_array($data->suggestedFields))
-        ) {
-            throw new BadRequest();
-        }
 
         $entity = $this->getRecordService('Cluster')->mergeItems($id, $data->sourceIds, $data->attributes, $data->suggestedFields ?? []);
 
