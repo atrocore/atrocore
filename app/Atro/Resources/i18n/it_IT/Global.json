@@ -100,7 +100,8 @@
     "ConnectionTypeCookie": "Connessione: Sessione di cookie",
     "ConnectionTypeSmtp": "Connessione: SMTP",
     "ConnectionTypeVertica": "Connessione: DB Vertica",
-    "ConnectionTypeTokenAuthApi": "Connessione: Token Auth API"
+    "ConnectionTypeTokenAuthApi": "Connessione: Token Auth API",
+    "StorageTypeLocal": "Conservazione: Locale (Linux)"
   },
   "labels": {
     "backgroundProcessingNotWorking": "L'elaborazione in background non funziona. Molto probabilmente crontab non è configurato correttamente o c'è un problema sul server. Consulta la guida all'installazione.",
@@ -989,7 +990,8 @@
     "ConnectionTypeCookie": "Connessione: Sessione di cookie",
     "ConnectionTypeSmtp": "Connessione: SMTP",
     "ConnectionTypeVertica": "Connessione: DB Vertica",
-    "ConnectionTypeTokenAuthApi": "Connessione: Token Auth API"
+    "ConnectionTypeTokenAuthApi": "Connessione: Token Auth API",
+    "StorageTypeLocal": "Conservazione: Locale (Linux)"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."

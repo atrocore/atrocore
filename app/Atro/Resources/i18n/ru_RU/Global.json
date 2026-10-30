@@ -100,7 +100,8 @@
     "ConnectionTypeCookie": "Соединение: Сессия куки",
     "ConnectionTypeSmtp": "Соединение: SMTP",
     "ConnectionTypeVertica": "Соединение: Vertica DB",
-    "ConnectionTypeTokenAuthApi": "Соединение: API Token Auth"
+    "ConnectionTypeTokenAuthApi": "Соединение: API Token Auth",
+    "StorageTypeLocal": "Хранилище: Local (Linux)"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Программные пакеты",
@@ -190,7 +191,8 @@
     "ConnectionTypeCookie": "Соединение: Сессия куки",
     "ConnectionTypeSmtp": "Соединение: SMTP",
     "ConnectionTypeVertica": "Соединение: Vertica DB",
-    "ConnectionTypeTokenAuthApi": "Соединение: API Token Auth"
+    "ConnectionTypeTokenAuthApi": "Соединение: API Token Auth",
+    "StorageTypeLocal": "Хранилище: Local (Linux)"
   },
   "labels": {
     "backgroundProcessingNotWorking": "Фоновая обработка не работает. Скорее всего, crontab настроен неправильно или есть проблема на сервере. Пожалуйста, обратитесь к инструкции по установке.",

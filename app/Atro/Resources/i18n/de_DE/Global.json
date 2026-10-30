@@ -102,7 +102,8 @@
     "ConnectionTypeSmtp": "Verbindung: SMTP",
     "ConnectionTypeVertica": "Verbindung: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Verbindung: Token-Authentifizierungs-API",
-    "ConnectionTypeApiKey": "Verbindung: API-Schlüssel"
+    "ConnectionTypeApiKey": "Verbindung: API-Schlüssel",
+    "StorageTypeLocal": "Dateiablage: Lokal (Linux)"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Softwarepakete",
@@ -194,7 +195,8 @@
     "ConnectionTypeSmtp": "Verbindung: SMTP",
     "ConnectionTypeVertica": "Verbindung: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Verbindung: Token-Authentifizierungs-API",
-    "ConnectionTypeApiKey": "Verbindung: API-Schlüssel"
+    "ConnectionTypeApiKey": "Verbindung: API-Schlüssel",
+    "StorageTypeLocal": "Dateiablage: Lokal (Linux)"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"

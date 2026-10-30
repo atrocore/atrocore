@@ -45,6 +45,11 @@ class Subtype extends Base
 
             $this->populateFromSupertypeRecord($entity, $supertypeRecord);
 
+            $this->getEntityManager()->getMemoryStorage()->set(
+                Base::getSubtypeRecordCacheKey($this->getSupertypeName(), (string)$entity->get('supertypeId')),
+                $entity
+            );
+
             // any change of the record is a change of the supertype record, its after-save logic sees the saved subtype data
             $this->getEntityManager()->getRepository($this->getSupertypeName())->completeDeferredSave($supertypeRecord, $options);
 

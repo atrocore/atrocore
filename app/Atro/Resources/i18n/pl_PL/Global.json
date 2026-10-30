@@ -100,7 +100,8 @@
     "ConnectionTypeCookie": "Połączenie: Sesja Cookie",
     "ConnectionTypeSmtp": "Połączenie: SMTP",
     "ConnectionTypeVertica": "Połączenie: Vertica DB",
-    "ConnectionTypeTokenAuthApi": "Połączenie: Token Auth API"
+    "ConnectionTypeTokenAuthApi": "Połączenie: Token Auth API",
+    "StorageTypeLocal": "Przechowywanie plików: Local (Linux)"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Pakiety oprogramowania",
@@ -190,7 +191,8 @@
     "ConnectionTypeCookie": "Połączenie: Sesja Cookie",
     "ConnectionTypeSmtp": "Połączenie: SMTP",
     "ConnectionTypeVertica": "Połączenie: Vertica DB",
-    "ConnectionTypeTokenAuthApi": "Połączenie: Token Auth API"
+    "ConnectionTypeTokenAuthApi": "Połączenie: Token Auth API",
+    "StorageTypeLocal": "Przechowywanie plików: Local (Linux)"
   },
   "labels": {
     "backgroundProcessingNotWorking": "Przetwarzanie w tle nie działa. Najprawdopodobniej crontab nie jest poprawnie skonfigurowany lub wystąpił problem na serwerze. Zapoznaj się z przewodnikiem instalacji.",

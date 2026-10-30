@@ -274,7 +274,7 @@ class Base extends RDB
 
     /**
      * The record of the subtype the record belongs to. Null when the entity has no subtypes or the record has no
-     * subtype data.
+     * subtype data. It is kept in the memory storage for the request, like the records got by ID.
      */
     public function getSubtypeRecord(Entity $entity): ?Entity
     {
@@ -291,9 +291,20 @@ class Base extends RDB
             return null;
         }
 
-        return $this->getEntityManager()->getRepository($subtype)
-            ->where(['supertypeId' => $entity->get('id')])
-            ->findOne();
+        $key = self::getSubtypeRecordCacheKey($this->entityName, (string)$entity->get('id'));
+        $memoryStorage = $this->getEntityManager()->getMemoryStorage();
+        if (!$memoryStorage->has($key)) {
+            $memoryStorage->set($key, $this->getEntityManager()->getRepository($subtype)
+                ->where(['supertypeId' => $entity->get('id')])
+                ->findOne());
+        }
+
+        return $memoryStorage->get($key);
+    }
+
+    public static function getSubtypeRecordCacheKey(string $supertype, string $id): string
+    {
+        return "subtype_record_{$supertype}_{$id}";
     }
 
     protected function beforeRestore($id)

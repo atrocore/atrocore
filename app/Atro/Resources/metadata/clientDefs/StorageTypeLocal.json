@@ -1,0 +1,26 @@
+{
+  "iconClass": "hard-drives",
+  "relationshipPanels": {
+    "folders": {
+      "create": false,
+      "select": false,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
+    },
+    "files": {
+      "create": false,
+      "select": false,
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        }
+      }
+    }
+  },
+  "recordViews": {
+    "detail": "views/storage/record/detail"
+  }
+}

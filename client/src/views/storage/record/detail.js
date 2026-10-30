@@ -8,7 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/storage/record/detail', 'views/record/detail', Dep => {
+/**
+ * The record of a storage type, the scan is executed for the storage record, it is the supertype record.
+ */
+Espo.define('views/storage/record/detail', 'views/subtype/record/detail', Dep => {
 
     return Dep.extend({
 
@@ -23,7 +26,7 @@ Espo.define('views/storage/record/detail', 'views/record/detail', Dep => {
 
         actionScan() {
             this.notify('Please wait...');
-            this.ajaxPostRequest(`Storage/${this.model.get('id')}/createScanJob`).success(() => {
+            this.ajaxPostRequest(`Storage/${this.model.get('supertypeId')}/createScanJob`).success(() => {
                 this.notify(this.translate('jobCreated'), 'success');
             });
         },

@@ -28,6 +28,7 @@ class V3Dot0Dot0 extends Base
     public function up(): void
     {
         $this->migrateConnection();
+        $this->migrateStorage();
     }
 
     /**
@@ -67,6 +68,61 @@ class V3Dot0Dot0 extends Base
             $data = @json_decode((string)$record['data'], true);
 
             $this->insertSubtypeRecord('connection', $record['type'], $record['id'], $columns, is_array($data) ? $data : []);
+        }
+    }
+
+    /**
+     * Every storage type is a subtype of Storage now: the settings of the local storage are moved from the columns
+     * of the storage table to the table of the subtype. The types of the modules are migrated by the modules.
+     */
+    protected function migrateStorage(): void
+    {
+        $subtypes = [
+            'local' => [
+                'path'        => ['path', 'type' => 'string', 'length' => 255, 'default' => 'upload/files'],
+                'syncFolders' => ['sync_folders', 'type' => 'boolean', 'notnull' => true, 'default' => false],
+            ],
+        ];
+
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        foreach ($subtypes as $type => $columns) {
+            $this->createSubtypeTable($toSchema, 'storage', $type, $columns);
+        }
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getDbal()->executeStatement($sql);
+        }
+
+        if (!$fromSchema->hasTable('storage')) {
+            return;
+        }
+
+        $storageTable = $fromSchema->getTable('storage');
+        foreach ($subtypes as $type => $columns) {
+            $sourceColumns = [];
+            foreach ($columns as $field => $options) {
+                if ($storageTable->hasColumn($options[0])) {
+                    $sourceColumns[$field] = $options[0];
+                }
+            }
+
+            $records = $this->getDbal()->createQueryBuilder()
+                ->select(implode(', ', array_merge(['id'], array_values($sourceColumns))))
+                ->from('storage')
+                ->where('type = :type')
+                ->setParameter('type', $type)
+                ->fetchAllAssociative();
+
+            foreach ($records as $record) {
+                $data = [];
+                foreach ($sourceColumns as $field => $column) {
+                    $data[$field] = $record[$column];
+                }
+
+                $this->insertSubtypeRecord('storage', $type, $record['id'], $columns, $data);
+            }
         }
     }
 

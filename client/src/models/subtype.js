@@ -17,6 +17,19 @@ Espo.define('models/subtype', 'model', Dep => Dep.extend({
         return ((this.defs.links || {}).supertype || {}).entity || null;
     },
 
+    /**
+     * The type of a new record is defined by its subtype, the conditions on the type work in the create form.
+     */
+    populateDefaults() {
+        Dep.prototype.populateDefaults.call(this);
+
+        const prefix = `${this.getSupertype()}Type`;
+        if (this.name && this.name.indexOf(prefix) === 0) {
+            const suffix = this.name.substring(prefix.length);
+            this.set('type', suffix.charAt(0).toLowerCase() + suffix.slice(1), {silent: true});
+        }
+    },
+
     sync(method, model, options) {
         if (method === 'delete') {
             options = options || {};

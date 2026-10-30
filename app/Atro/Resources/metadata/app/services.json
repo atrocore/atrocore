@@ -16,5 +16,6 @@
   "ConnectionTypeSmtp": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypeVertica": "\\Atro\\Services\\ConnectionSubtype",
   "ConnectionTypeTokenAuthApi": "\\Atro\\Services\\ConnectionSubtype",
-  "ConnectionTypeApiKey": "\\Atro\\Services\\ConnectionSubtype"
+  "ConnectionTypeApiKey": "\\Atro\\Services\\ConnectionSubtype",
+  "StorageTypeLocal": "\\Atro\\Services\\StorageSubtype"
 }

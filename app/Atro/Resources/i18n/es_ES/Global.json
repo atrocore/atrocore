@@ -100,7 +100,8 @@
     "ConnectionTypeCookie": "Conexión: Sesión de cookies",
     "ConnectionTypeSmtp": "Conexión: SMTP",
     "ConnectionTypeVertica": "Conexión: Vertica DB",
-    "ConnectionTypeTokenAuthApi": "Conexión: API de autenticación por token"
+    "ConnectionTypeTokenAuthApi": "Conexión: API de autenticación por token",
+    "StorageTypeLocal": "Almacenamiento: Local (Linux)"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Paquetes de software",
@@ -190,7 +191,8 @@
     "ConnectionTypeCookie": "Conexión: Sesión de cookies",
     "ConnectionTypeSmtp": "Conexión: SMTP",
     "ConnectionTypeVertica": "Conexión: Vertica DB",
-    "ConnectionTypeTokenAuthApi": "Conexión: API de autenticación por token"
+    "ConnectionTypeTokenAuthApi": "Conexión: API de autenticación por token",
+    "StorageTypeLocal": "Almacenamiento: Local (Linux)"
   },
   "labels": {
     "backgroundProcessingNotWorking": "El procesamiento en segundo plano no funciona. Lo más probable es que crontab no esté configurado correctamente o que haya un problema en el servidor. Consulte la guía de instalación.",

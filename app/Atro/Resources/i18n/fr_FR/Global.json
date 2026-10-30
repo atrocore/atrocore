@@ -217,7 +217,8 @@
     "ConnectionTypeSmtp": "Connexion: SMTP",
     "ConnectionTypeVertica": "Connexion: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Connexion: API d'authentification par jeton",
-    "ConnectionTypeApiKey": "Connexion: Clé d'API"
+    "ConnectionTypeApiKey": "Connexion: Clé d'API",
+    "StorageTypeLocal": "Stockage: Local (Linux)"
   },
   "labels": {
     "dataLineage": "Traçabilité des données",
@@ -829,7 +830,8 @@
     "ConnectionTypeSmtp": "Connexion: SMTP",
     "ConnectionTypeVertica": "Connexion: Vertica DB",
     "ConnectionTypeTokenAuthApi": "Connexion: API d'authentification par jeton",
-    "ConnectionTypeApiKey": "Connexion: Clé d'API"
+    "ConnectionTypeApiKey": "Connexion: Clé d'API",
+    "StorageTypeLocal": "Stockage: Local (Linux)"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"

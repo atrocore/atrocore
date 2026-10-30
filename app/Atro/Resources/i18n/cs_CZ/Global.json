@@ -100,7 +100,8 @@
     "ConnectionTypeCookie": "Připojení: Relace souborů cookie",
     "ConnectionTypeSmtp": "Připojení: SMTP",
     "ConnectionTypeVertica": "Připojení: Vertica DB",
-    "ConnectionTypeTokenAuthApi": "Připojení: Token Auth API"
+    "ConnectionTypeTokenAuthApi": "Připojení: Token Auth API",
+    "StorageTypeLocal": "Úložiště: Místní (Linux)"
   },
   "scopeNamesPlural": {
     "SoftwarePackage": "Softwarové balíčky",
@@ -190,7 +191,8 @@
     "ConnectionTypeCookie": "Připojení: Relace souborů cookie",
     "ConnectionTypeSmtp": "Připojení: SMTP",
     "ConnectionTypeVertica": "Připojení: Vertica DB",
-    "ConnectionTypeTokenAuthApi": "Připojení: Token Auth API"
+    "ConnectionTypeTokenAuthApi": "Připojení: Token Auth API",
+    "StorageTypeLocal": "Úložiště: Místní (Linux)"
   },
   "labels": {
     "backgroundProcessingNotWorking": "Zpracování na pozadí nefunguje. Pravděpodobně není crontab správně nastaven nebo je na serveru problém. Přečtěte si prosím instalační příručku.",
