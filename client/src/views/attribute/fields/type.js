@@ -42,10 +42,6 @@ Espo.define('views/attribute/fields/type', 'views/fields/enum',
             } else {
                 this.params.options.push(this.model.get(this.name));
                 this.translatedOptions[this.model.get(this.name)] = this.getLanguage().translateOption(this.model.get(this.name), 'type', 'Attribute');
-                $.each(this.getMetadata().get(['attributes', this.model.get(this.name), 'convert'], {}), (attributeType, attributeDefs) => {
-                    this.params.options.push(attributeType);
-                    this.translatedOptions[attributeType] = this.getLanguage().translateOption(attributeType, 'type', 'Attribute');
-                });
             }
 
             this.params.options.forEach(attributeType => {

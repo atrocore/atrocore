@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "measure": {
+      "type": "link",
+      "layoutRemoveDisabled": true
+    },
+    "defaultUnit": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "layoutRemoveDisabled": true
+    }
+  },
+  "links": {
+    "measure": {
+      "type": "belongsTo",
+      "entity": "Measure"
+    }
+  }
+}

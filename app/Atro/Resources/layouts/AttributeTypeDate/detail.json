@@ -13,12 +13,6 @@
       ],
       [
         {
-          "name": "fileType"
-        },
-        false
-      ],
-      [
-        {
           "name": "name"
         },
         false
@@ -45,22 +39,6 @@
       ],
       [
         {
-          "name": "pattern"
-        },
-        {
-          "name": "prefixEnabled"
-        }
-      ],
-      [
-        {
-          "name": "measure"
-        },
-        {
-          "name": "defaultUnit"
-        }
-      ],
-      [
-        {
           "name": "defaultDate"
         },
         false
@@ -76,20 +54,6 @@
       [
         {
           "name": "isReadOnly"
-        },
-        {
-          "name": "notNull"
-        }
-      ],
-      [
-        {
-          "name": "allowNullForBool"
-        },
-        false
-      ],
-      [
-        {
-          "name": "trim"
         },
         false
       ],
@@ -109,69 +73,13 @@
       ],
       [
         {
-          "name": "maxLength"
-        },
-        {
-          "name": "countBytesInsteadOfCharacters"
-        }
-      ],
-      [
-        {
-          "name": "min"
-        },
-        {
-          "name": "max"
-        }
-      ],
-      [
-        {
-          "name": "amountOfDigitsAfterComma"
-        },
-        false
-      ],
-      [
-        {
-          "name": "useDisabledTextareaInViewMode"
-        },
-        {
           "name": "fullWidth"
-        }
-      ],
-      [
-        {
-          "name": "entityType"
-        },
-        {
-          "name": "entityField"
-        }
-      ],
-      [
-        {
-          "name": "options"
-        },
-        false
-      ],
-      [
-        {
-          "name": "dropdown"
-        },
-        false
-      ],
-      [
-        {
-          "name": "selectPageSize"
         },
         false
       ],
       [
         {
           "name": "description"
-        },
-        false
-      ],
-      [
-        {
-          "name": "htmlSanitizer"
         },
         false
       ],
@@ -215,12 +123,6 @@
       [
         {
           "name": "conditionalReadOnly"
-        },
-        false
-      ],
-      [
-        {
-          "name": "conditionalDisableOptions"
         },
         false
       ]

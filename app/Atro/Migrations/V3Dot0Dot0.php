@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Schema\Schema;
 use Ramsey\Uuid\Uuid;
@@ -30,6 +31,7 @@ class V3Dot0Dot0 extends Base
         $this->migrateConnection();
         $this->migrateStorage();
         $this->migrateAction();
+        $this->migrateAttribute();
     }
 
     /**
@@ -228,14 +230,166 @@ class V3Dot0Dot0 extends Base
                 continue;
             }
 
-            $this->insertSubtypeRecord('action', $type, $record['id'], $columns, $this->getActionSettings($record, $columns, $handler));
+            $this->insertSubtypeRecord('action', $type, $record['id'], $columns, $this->getRecordSettings($record, $columns, $handler));
         }
     }
 
     /**
-     * The settings of an action: a setting was stored in a column of the action table or in the "data" field.
+     * Every attribute type is a subtype of Attribute now: the settings of the type are moved from the columns of the
+     * attribute table and from its "data" field to the table of the subtype. The types of the modules are migrated by
+     * the modules.
      */
-    protected function getActionSettings(array $record, array $columns, ?string $handler): array
+    protected function migrateAttribute(): void
+    {
+        $subtypes = [
+            'varchar' => [
+                'isMultilang' => ['is_multilang', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'maxLength' => ['max_length', 'type' => 'integer', 'source' => 'data'],
+                'countBytesInsteadOfCharacters' => ['count_bytes_instead_of_characters', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+                'trim' => ['trim', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'pattern' => ['pattern', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'measureId' => ['measure_id', 'type' => 'string', 'length' => 36, 'index' => true, 'source' => 'column'],
+                'defaultUnit' => ['default_unit', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'prefixEnabled' => ['prefix_enabled', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+            ],
+            'text' => [
+                'isMultilang' => ['is_multilang', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'maxLength' => ['max_length', 'type' => 'integer', 'source' => 'data'],
+                'countBytesInsteadOfCharacters' => ['count_bytes_instead_of_characters', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+                'useDisabledTextareaInViewMode' => ['use_disabled_textarea_in_view_mode', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+            ],
+            'wysiwyg' => [
+                'isMultilang' => ['is_multilang', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'maxLength' => ['max_length', 'type' => 'integer', 'source' => 'data'],
+                'countBytesInsteadOfCharacters' => ['count_bytes_instead_of_characters', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+                'htmlSanitizerId' => ['html_sanitizer_id', 'type' => 'string', 'length' => 36, 'source' => 'column'],
+            ],
+            'markdown' => [
+                'isMultilang' => ['is_multilang', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'maxLength' => ['max_length', 'type' => 'integer', 'source' => 'data'],
+                'countBytesInsteadOfCharacters' => ['count_bytes_instead_of_characters', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+            ],
+            'url' => [
+                'isMultilang' => ['is_multilang', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'maxLength' => ['max_length', 'type' => 'integer', 'source' => 'data'],
+                'countBytesInsteadOfCharacters' => ['count_bytes_instead_of_characters', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+            ],
+            'int' => [
+                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'min' => ['min', 'type' => 'float', 'source' => 'data'],
+                'max' => ['max', 'type' => 'float', 'source' => 'data'],
+                'measureId' => ['measure_id', 'type' => 'string', 'length' => 36, 'index' => true, 'source' => 'column'],
+                'defaultUnit' => ['default_unit', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'prefixEnabled' => ['prefix_enabled', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+            ],
+            'float' => [
+                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'min' => ['min', 'type' => 'float', 'source' => 'data'],
+                'max' => ['max', 'type' => 'float', 'source' => 'data'],
+                'measureId' => ['measure_id', 'type' => 'string', 'length' => 36, 'index' => true, 'source' => 'column'],
+                'defaultUnit' => ['default_unit', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'prefixEnabled' => ['prefix_enabled', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'amountOfDigitsAfterComma' => ['amount_of_digits_after_comma', 'type' => 'integer', 'source' => 'column'],
+            ],
+            'rangeInt' => [
+                'measureId' => ['measure_id', 'type' => 'string', 'length' => 36, 'index' => true, 'source' => 'column'],
+                'defaultUnit' => ['default_unit', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+            ],
+            'rangeFloat' => [
+                'measureId' => ['measure_id', 'type' => 'string', 'length' => 36, 'index' => true, 'source' => 'column'],
+                'defaultUnit' => ['default_unit', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+                'amountOfDigitsAfterComma' => ['amount_of_digits_after_comma', 'type' => 'integer', 'source' => 'column'],
+            ],
+            'bool' => [
+                'isMultilang' => ['is_multilang', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+                'notNull' => ['not_null', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'column'],
+            ],
+            'date' => [
+                'defaultDate' => ['default_date', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+            ],
+            'datetime' => [
+                'defaultDate' => ['default_date', 'type' => 'string', 'length' => 255, 'source' => 'column'],
+            ],
+            'enum' => [
+                'options' => ['options', 'type' => 'jsonArray', 'source' => 'data'],
+                'optionColors' => ['option_colors', 'type' => 'jsonArray', 'source' => 'data'],
+                'conditionalDisableOptions' => ['conditional_disable_options', 'type' => 'jsonArray', 'source' => 'column'],
+            ],
+            'multiEnum' => [
+                'options' => ['options', 'type' => 'jsonArray', 'source' => 'data'],
+                'optionColors' => ['option_colors', 'type' => 'jsonArray', 'source' => 'data'],
+                'conditionalDisableOptions' => ['conditional_disable_options', 'type' => 'jsonArray', 'source' => 'column'],
+            ],
+            'link' => [
+                'entityType' => ['entity_type', 'type' => 'string', 'length' => 255, 'source' => 'data'],
+                'entityField' => ['entity_field', 'type' => 'string', 'length' => 255, 'source' => 'data'],
+                'dropdown' => ['dropdown', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+                'selectPageSize' => ['select_page_size', 'type' => 'integer', 'source' => 'data'],
+                'conditionalDisableOptions' => ['conditional_disable_options', 'type' => 'jsonArray', 'source' => 'column'],
+            ],
+            'linkMultiple' => [
+                'entityType' => ['entity_type', 'type' => 'string', 'length' => 255, 'source' => 'data'],
+                'entityField' => ['entity_field', 'type' => 'string', 'length' => 255, 'source' => 'data'],
+                'dropdown' => ['dropdown', 'type' => 'boolean', 'notnull' => true, 'default' => false, 'source' => 'data'],
+                'selectPageSize' => ['select_page_size', 'type' => 'integer', 'source' => 'data'],
+                'conditionalDisableOptions' => ['conditional_disable_options', 'type' => 'jsonArray', 'source' => 'column'],
+            ],
+            'file' => [
+                'fileTypeId' => ['file_type_id', 'type' => 'string', 'length' => 36, 'index' => true, 'source' => 'column'],
+            ],
+            'array' => [
+            ],
+            'composite' => [
+            ],
+        ];
+
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        foreach ($subtypes as $type => $columns) {
+            $this->createSubtypeTable($toSchema, 'attribute', $type, $columns);
+        }
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getDbal()->executeStatement($sql);
+        }
+
+        if (!$fromSchema->hasTable('attribute')) {
+            return;
+        }
+
+        $records = $this->getDbal()->createQueryBuilder()
+            ->select('*')
+            ->from($this->getDbal()->quoteIdentifier('attribute'))
+            ->where('type IN (:types)')
+            ->setParameter('types', array_keys($subtypes), Connection::PARAM_STR_ARRAY)
+            ->fetchAllAssociative();
+
+        foreach ($records as $record) {
+            $columns = $subtypes[$record['type']];
+
+            $settings = $this->getRecordSettings($record, $columns, null);
+            foreach ($columns as $field => $options) {
+                // a JSON column keeps the encoded value
+                if ($options['source'] === 'column' && in_array($options['type'], ['jsonArray', 'jsonObject']) && is_string($settings[$field])) {
+                    $settings[$field] = @json_decode($settings[$field], true);
+                }
+            }
+
+            $this->insertSubtypeRecord('attribute', $record['type'], $record['id'], $columns, $settings);
+        }
+    }
+
+    /**
+     * The settings of a record of a supertype: a setting was stored in a column of the supertype table or in its
+     * "data" field.
+     */
+    protected function getRecordSettings(array $record, array $columns, ?string $handler): array
     {
         $data = @json_decode((string)($record['data'] ?? ''), true);
         $virtualFields = is_array($data['field'] ?? null) ? $data['field'] : [];

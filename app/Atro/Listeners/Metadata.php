@@ -104,8 +104,6 @@ class Metadata extends AbstractMetadataListener
 
         $this->addAssociateToEntity($data);
 
-        $this->prepareMultilingualAttributes($data);
-
         $data = $this->prepareClassificationAttributeMetadata($data);
 
         $this->addClassificationToEntity($data);
@@ -163,25 +161,6 @@ class Metadata extends AbstractMetadataListener
                 unset($data['app']['entityMethods'][$name]);
             }
         }
-    }
-
-    protected function prepareMultilingualAttributes(array &$data): void
-    {
-        // find multilingual attributes
-        $multilingualAttributes = [];
-        foreach ($data['attributes'] as $attribute => $attributeDefs) {
-            if (!empty($attributeDefs['multilingual'])) {
-                $multilingualAttributes[] = $attribute;
-            }
-        }
-
-        $data['entityDefs']['Attribute']['fields']['isMultilang']['conditionalProperties']['visible']['conditionGroup'] = [
-            [
-                "type"      => "in",
-                "attribute" => "type",
-                "value"     => $multilingualAttributes
-            ]
-        ];
     }
 
     /**
@@ -1693,9 +1672,6 @@ class Metadata extends AbstractMetadataListener
             $data['entityDefs'][$scope]['fields'] = $newFields;
         }
 
-        // Disable removal of isMultilang in Attribute entity
-        $data['entityDefs']['Attribute']['fields']['isMultilang']['layoutRemoveDisabled'] = true;
-
         return $data;
     }
 
@@ -2864,7 +2840,6 @@ class Metadata extends AbstractMetadataListener
                 $data['entityDefs'][$scope]['collection'] = $data['entityDefs'][$primaryEntity]['collection'];
             }
 
-
             $derivativeOverride = [
                 'primaryEntityId' => $primaryEntity,
                 'isCustom'        => true,
@@ -2879,7 +2854,6 @@ class Metadata extends AbstractMetadataListener
                 $derivativeOverride[$field] = $scopeDefs[$field] ?? null;
             }
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], $derivativeOverride);
-
 
             if (array_key_exists('module', $data['scopes'][$scope])) {
                 unset($data['scopes'][$scope]['module']);

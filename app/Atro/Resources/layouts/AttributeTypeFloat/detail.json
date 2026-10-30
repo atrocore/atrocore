@@ -1,0 +1,155 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "systemName"
+        },
+        false
+      ],
+      [
+        {
+          "name": "channel"
+        },
+        false
+      ],
+      [
+        {
+          "name": "attributePanel"
+        },
+        {
+          "name": "attributeGroup"
+        }
+      ],
+      [
+        {
+          "name": "prefixEnabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "measure"
+        },
+        {
+          "name": "defaultUnit"
+        }
+      ],
+      [
+        {
+          "name": "isRequired"
+        },
+        {
+          "name": "isProtected"
+        }
+      ],
+      [
+        {
+          "name": "isReadOnly"
+        },
+        {
+          "name": "notNull"
+        }
+      ],
+      [
+        {
+          "name": "sortOrder"
+        },
+        {
+          "name": "attributeGroupSortOrder"
+        }
+      ],
+      [
+        {
+          "name": "tooltip"
+        },
+        false
+      ],
+      [
+        {
+          "name": "min"
+        },
+        {
+          "name": "max"
+        }
+      ],
+      [
+        {
+          "name": "amountOfDigitsAfterComma"
+        },
+        false
+      ],
+      [
+        {
+          "name": "fullWidth"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description"
+        },
+        false
+      ],
+      [
+        {
+          "name": "compositeAttribute"
+        },
+        false
+      ],
+      [
+        {
+          "name": "modifiedExtendedDisabled"
+        },
+        {
+          "name": "duplicateIgnore"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "conditionalProperties",
+    "rows": [
+      [
+        {
+          "name": "conditionalVisible"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalProtected"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalReadOnly"
+        },
+        false
+      ]
+    ]
+  }
+]

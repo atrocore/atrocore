@@ -1193,6 +1193,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $foreignColumn = Util::toUnderScore(lcfirst($this->entityType)) . "_id";
             $qb->leftJoin('t', $atTable, 'at', "t.id = at.$foreignColumn")
                 ->leftJoin('at', 'attribute', 'a', 'a.id = at.attribute_id AND a.deleted = :false AND a.type = :script AND a.entity_id = :entityId')
+                // the settings of the script attributes are stored in the table of their subtype
+                ->leftJoin('a', 'attribute_type_script', 'ast', 'ast.supertype_id = a.id')
                 ->setParameter('script', 'script')
                 ->setParameter('entityId', $this->entityType);
 
@@ -1206,12 +1208,12 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     if (!empty($this->getConfig()->get('isMultilangActive'))) {
                         foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
                             $langColumn   = $column . '_' . strtolower($code);
-                            $conditions[] = "(a.output_type = :$outputType AND (at.$langColumn IS NULL) AND a.is_multilang = :true)";
+                            $conditions[] = "(ast.output_type = :$outputType AND (at.$langColumn IS NULL) AND ast.is_multilang = :true)";
                         }
                     }
                 }
 
-                $conditions[] = "(a.output_type = :$outputType AND at.$column IS NULL )";
+                $conditions[] = "(ast.output_type = :$outputType AND at.$column IS NULL )";
                 $qb->setParameter($outputType, $outputType);
             }
         }

@@ -42,6 +42,34 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         $this->selectManagerFactory = $container->get('selectManagerFactory');
     }
 
+    /**
+     * A setting of the attribute type from the row of the attribute: it is a column of the table of the subtype.
+     */
+    protected function getSetting(array $row, string $field): mixed
+    {
+        $value = $row[Util::toUnderScore($field)] ?? null;
+        if ($value === null) {
+            return null;
+        }
+
+        switch ($field) {
+            case 'options':
+            case 'optionColors':
+                return is_string($value) ? (@json_decode($value, true) ?? []) : (array)$value;
+            case 'dropdown':
+            case 'countBytesInsteadOfCharacters':
+                return !empty($value);
+            case 'maxLength':
+            case 'selectPageSize':
+                return (int)$value;
+            case 'min':
+            case 'max':
+                return (float)$value;
+        }
+
+        return $value;
+    }
+
     public function getWherePart(IEntity $entity, array $attribute, array &$item): void
     {
         $attributeId = $attribute['id'];
