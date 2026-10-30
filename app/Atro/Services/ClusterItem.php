@@ -348,7 +348,7 @@ class ClusterItem extends Base
         }
 
         $goldenRecord = $cluster->get('goldenRecord');
-        if ($count > 0 && !empty($goldenRecord)) {
+        if ($count > 0 && !empty($goldenRecord) && !in_array($cluster->get('consolidationMethod'), ['manual', 'hybrid'])) {
             $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
         }
 
@@ -528,12 +528,14 @@ class ClusterItem extends Base
             null;
 
 
+        $canConsolidate = !$isConsolidated && !in_array($entity->get('cluster')?->get('consolidationMethod'), ['manual', 'hybrid']);
+
         $canDeconsolidate = $isStaging
             && $isConsolidated
             && count($this->getConsolidatedContributorItemIds($entity->get('cluster'))) > 1;
 
         if ($this->getUser()->isAdmin()) {
-            $entity->setAvailableAction('consolidate', !$isConsolidated);
+            $entity->setAvailableAction('consolidate', $canConsolidate);
             $entity->setAvailableAction('reject', true);
             $entity->setAvailableAction('deconsolidate', $canDeconsolidate);
             $entity->setAvailableAction('split', $isStaging);
@@ -555,7 +557,7 @@ class ClusterItem extends Base
         $entity->setAvailableAction('delete', false);
 
         if (!empty($record)) {
-            $entity->setAvailableAction('consolidate', !$isConsolidated && $this->getAcl()->check($record, 'edit'));
+            $entity->setAvailableAction('consolidate', $canConsolidate && $this->getAcl()->check($record, 'edit'));
             $entity->setAvailableAction('delete', $this->getAcl()->check($record, 'delete'));
         } else {
             $entity->setAvailableAction('unlink', $this->getAcl()->check($entity, 'delete'));
