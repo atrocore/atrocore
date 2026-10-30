@@ -546,7 +546,7 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
         },
 
         getMergeUrl() {
-            return 'Cluster/merge'
+            return `Cluster/${this.selectionId}/consolidateManually`;
         },
 
         getMergeSuccessMessage() {
@@ -555,9 +555,9 @@ Espo.define('views/cluster/record/compare', ['views/selection/record/detail/comp
 
         getMergeData(targetId, attributes, relationshipData) {
             let data = Dep.prototype.getMergeData.call(this, targetId, attributes, relationshipData);
-            data.clusterId = this.selectionId;
+            delete data.entityName;
             data.sourceIds = data.sourceIds.filter(id => id !== this.PREVIEW_COLUMN_ID);
-            data.scriptFields = this.$el.find(`input.field-radio[data-id="${this.PREVIEW_COLUMN_ID}"]:checked`)
+            data.suggestedFields = this.$el.find(`input.field-radio[data-id="${this.PREVIEW_COLUMN_ID}"]:checked`)
                 .map((i, el) => el.name)
                 .get();
             return data;

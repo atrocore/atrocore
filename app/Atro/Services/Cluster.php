@@ -236,7 +236,7 @@ class Cluster extends Base
         return $preview;
     }
 
-    public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes, array $scriptFields = []): Entity
+    public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes, array $suggestedFields = []): Entity
     {
         $cluster = $this->getEntity($clusterId);
 
@@ -267,9 +267,9 @@ class Cluster extends Base
 
         $manualAttributes = array_filter(array_keys(get_object_vars($attributes->input)), fn($attribute) => !str_starts_with($attribute, '__'));
 
-        if (!empty($scriptFields)) {
+        if (!empty($suggestedFields)) {
             $preview = $this->buildMasterRecordPreview($clusterId);
-            foreach ($scriptFields as $field) {
+            foreach ($suggestedFields as $field) {
                 foreach ($this->getInjection('fieldManagerUtil')->getActualAttributeList($cluster->get('masterEntity'), $field, $preview) as $attribute) {
                     $attributes->input->$attribute = $preview->get($attribute);
                     $manualAttributes = array_diff($manualAttributes, [$attribute]);
@@ -294,7 +294,7 @@ class Cluster extends Base
         }
 
         $cluster->set('goldenRecordId', $goldenRecord->get('id'));
-        if (empty($scriptFields)) {
+        if (empty($suggestedFields)) {
             $cluster->set('consolidationMethod', 'manual');
         } else {
             $cluster->set('consolidationMethod', empty($manualAttributes) ? 'ruleBased' : 'hybrid');

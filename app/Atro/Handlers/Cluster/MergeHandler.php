@@ -26,8 +26,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'POST',
     ],
-    summary: 'Merge cluster items into a golden record',
-    description: 'Merges the specified source entity records (identified by their entity IDs within the cluster) into the cluster\'s golden record. If no golden record exists yet, one is resolved from the sources or created from the provided attributes. Values of the fields listed in scriptFields are rendered by the consolidation script. Relationship data from all source records is merged into the golden record. Returns the resulting golden record\'s field values.',
+    summary: 'Merge cluster items into a golden record (deprecated)',
+    description: 'Deprecated, use POST /Cluster/{id}/consolidateManually instead. Merges the specified source entity records (identified by their entity IDs within the cluster) into the cluster\'s golden record. If no golden record exists yet, one is resolved from the sources or created from the provided attributes. Relationship data from all source records is merged into the golden record. Returns the resulting golden record\'s field values.',
     tag: 'Cluster',
     requestBody: [
         'required' => true,
@@ -56,13 +56,6 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'type'        => 'object',
                             'description' => 'Field values and relationship data to apply to the golden record. Must contain an `input` object with field values and a `relationshipData` array for has-many link mutations.',
                         ],
-                        'scriptFields' => [
-                            'type'        => 'array',
-                            'description' => 'Fields of the golden record whose values are taken from the consolidation script instead of `attributes.input`. The cluster gets the ruleBased consolidation method when all values of `attributes.input` are taken from the consolidation script, manual when no fields are given, otherwise hybrid.',
-                            'items'       => [
-                                'type' => 'string',
-                            ],
-                        ],
                     ],
                 ],
             ],
@@ -80,12 +73,13 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'clusterId, sourceIds, attributes or scriptFields is missing or invalid; the cluster was not found; or the consolidation script failed to render the fields listed in scriptFields.',
+            'description' => 'clusterId, sourceIds, or attributes is missing or invalid; or the cluster was not found.',
         ],
         403 => [
             'description' => 'Current user does not have create access on the cluster\'s masterEntity.',
         ],
     ],
+    deprecated: true,
 )]
 class MergeHandler extends AbstractHandler
 {
@@ -98,12 +92,11 @@ class MergeHandler extends AbstractHandler
             || empty($data->sourceIds)
             || !is_array($data->sourceIds)
             || !($data->attributes instanceof \stdClass)
-            || (isset($data->scriptFields) && !is_array($data->scriptFields))
         ) {
             throw new BadRequest();
         }
 
-        $entity = $this->getRecordService('Cluster')->mergeItems($data->clusterId, $data->sourceIds, $data->attributes, $data->scriptFields ?? []);
+        $entity = $this->getRecordService('Cluster')->mergeItems($data->clusterId, $data->sourceIds, $data->attributes);
 
         return new JsonResponse((array) $entity->getValueMap());
     }
