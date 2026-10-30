@@ -163,6 +163,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             return this.translate('Merge');
         },
 
+        getViewModeLabel(mode) {
+            return {
+                merge: this.getMergeActionLabel(),
+                compare: this.translate('Compare'),
+                standard: this.translate('Standard')
+            }[mode];
+        },
+
         setupCustomButtons() {
             if (this.getEntityTypes().length === 0) {
                 return;
@@ -178,7 +186,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     action: 'showSelectionView',
                     style: this.selectionViewMode === 'merge' ? 'primary' : null,
                     html: '<i class="ph ph-arrows-merge"></i>',
-                    tooltip: this.getMergeActionLabel(),
+                    tooltip: this.getViewModeLabel('merge'),
                     disabled: true,
                     className: 'selection-view-switcher'
                 }, true, false, true);
@@ -190,7 +198,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     action: 'showSelectionView',
                     style: this.selectionViewMode === 'compare' ? 'primary' : null,
                     html: '<i class="ph ph-arrows-left-right"></i>',
-                    tooltip: this.translate('Compare'),
+                    tooltip: this.getViewModeLabel('compare'),
                     disabled: true,
                     className: 'selection-view-switcher'
                 }, true, false, true);
@@ -202,7 +210,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     action: 'showSelectionView',
                     style: this.selectionViewMode === 'standard' ? 'primary' : null,
                     html: '<i class="ph ph-list"></i>',
-                    tooltip: this.translate('Standard'),
+                    tooltip: this.getViewModeLabel('standard'),
                     disabled: true,
                     className: 'selection-view-switcher'
                 }, true, false, true);

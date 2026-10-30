@@ -26,6 +26,7 @@
   "exceptions": {
     "consolidationScriptIsMissing": "Consolidation script is missing for master entity",
     "consolidationScriptIsNotValid": "Consolidation script return invalid payload: %s",
+    "consolidationScriptReturnedNoValues": "Consolidation script returned no values",
     "entityTypeInvalid": "Entity type \"%s\" cannot be used for consolidation",
     "consolidationAlreadyExists": "Consolidation for \"%s\" already exists",
     "skipConditionFailed": "Skip condition failed: %s",

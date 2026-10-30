@@ -210,6 +210,10 @@ class Cluster extends Base
             throw new BadRequest($this->getInjection('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
         }
 
+        if (empty($payload)) {
+            throw new BadRequest($this->getInjection('language')->translate('consolidationScriptReturnedNoValues', 'exceptions', 'Consolidation'));
+        }
+
         $masterRepository = $this->getEntityManager()->getRepository($masterEntityName);
         $preview = $masterRepository->get();
 
@@ -232,7 +236,7 @@ class Cluster extends Base
         return $preview;
     }
 
-    public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes): Entity
+    public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes, array $suggestedFields = []): Entity
     {
         $cluster = $this->getEntity($clusterId);
 
@@ -261,6 +265,18 @@ class Cluster extends Base
             }
         }
 
+        $manualAttributes = array_filter(array_keys(get_object_vars($attributes->input)), fn($attribute) => !str_starts_with($attribute, '__'));
+
+        if (!empty($suggestedFields)) {
+            $preview = $this->buildMasterRecordPreview($clusterId);
+            foreach ($suggestedFields as $field) {
+                foreach ($this->getInjection('fieldManagerUtil')->getActualAttributeList($cluster->get('masterEntity'), $field, $preview) as $attribute) {
+                    $attributes->input->$attribute = $preview->get($attribute);
+                    $manualAttributes = array_diff($manualAttributes, [$attribute]);
+                }
+            }
+        }
+
         $goldenRecord = $cluster->get('goldenRecord');
         $goldenRecordChanged = empty($goldenRecord);
 
@@ -278,7 +294,11 @@ class Cluster extends Base
         }
 
         $cluster->set('goldenRecordId', $goldenRecord->get('id'));
-        $cluster->set('consolidationMethod', 'manual');
+        if (empty($suggestedFields)) {
+            $cluster->set('consolidationMethod', 'manual');
+        } else {
+            $cluster->set('consolidationMethod', empty($manualAttributes) ? 'ruleBased' : 'hybrid');
+        }
         $cluster->set('executionMode', 'manual');
         $this->getRepository()->save($cluster);
 
@@ -392,5 +412,6 @@ class Cluster extends Base
         parent::init();
 
         $this->addDependency('container');
+        $this->addDependency('fieldManagerUtil');
     }
 }

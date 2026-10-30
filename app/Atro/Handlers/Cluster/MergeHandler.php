@@ -26,8 +26,8 @@ use Psr\Http\Server\RequestHandlerInterface;
     methods: [
         'POST',
     ],
-    summary: 'Merge cluster items into a golden record',
-    description: 'Merges the specified source entity records (identified by their entity IDs within the cluster) into the cluster\'s golden record. If no golden record exists yet, one is resolved from the sources or created from the provided attributes. Relationship data from all source records is merged into the golden record. Returns the resulting golden record\'s field values.',
+    summary: 'Merge cluster items into a golden record (deprecated)',
+    description: 'Deprecated, use POST /Cluster/{id}/consolidateManually instead. Merges the specified source entity records (identified by their entity IDs within the cluster) into the cluster\'s golden record. If no golden record exists yet, one is resolved from the sources or created from the provided attributes. Relationship data from all source records is merged into the golden record. Returns the resulting golden record\'s field values.',
     tag: 'Cluster',
     requestBody: [
         'required' => true,
@@ -79,6 +79,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             'description' => 'Current user does not have create access on the cluster\'s masterEntity.',
         ],
     ],
+    deprecated: true,
 )]
 class MergeHandler extends AbstractHandler
 {
