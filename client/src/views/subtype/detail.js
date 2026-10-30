@@ -13,8 +13,73 @@ Espo.define('views/subtype/detail', ['views/detail', 'views/subtype/breadcrumbs'
     setup() {
         Dep.prototype.setup.call(this);
 
-        // the record is shown via its subtype record, it is not a row of a list to navigate through
-        this.removeMenuItem('navigation', true);
+        this.setupSupertypeNavigation();
+    },
+
+    /**
+     * The record is shown via its subtype record, the navigation goes through the records of the supertype list the
+     * record is opened from.
+     */
+    setupSupertypeNavigation() {
+        const collection = this.options.supertypeCollection;
+        if (this.navigateButtonsDisabled || !collection) {
+            this.removeMenuItem('navigation', true);
+            return;
+        }
+
+        this.supertypeCollection = collection;
+
+        this.indexOfRecord = this.options.indexOfRecord;
+        if (this.indexOfRecord === undefined || this.indexOfRecord === null) {
+            this.indexOfRecord = collection.indexOf(collection.get(this.model.get('supertypeId')));
+        }
+
+        this.hasPrevious = this.indexOfRecord > 0;
+        this.hasNext = this.indexOfRecord < collection.total - 1
+            || collection.total === -1
+            || (collection.total === -2 && this.indexOfRecord < collection.length - 1);
+    },
+
+    actionPrevious() {
+        if (!this.supertypeCollection || !(this.indexOfRecord > 0)) {
+            return;
+        }
+
+        this.switchToModelByIndex(this.indexOfRecord - 1);
+    },
+
+    actionNext() {
+        const collection = this.supertypeCollection;
+        if (!collection || !this.hasNext) {
+            return;
+        }
+
+        const indexOfRecord = this.indexOfRecord + 1;
+        if (indexOfRecord <= collection.length - 1) {
+            this.switchToModelByIndex(indexOfRecord);
+            return;
+        }
+
+        this.listenToOnce(collection, 'sync', () => {
+            this.switchToModelByIndex(indexOfRecord);
+        });
+        collection.fetch({more: true, remove: false});
+    },
+
+    switchToModelByIndex(indexOfRecord) {
+        const model = this.supertypeCollection && this.supertypeCollection.at(indexOfRecord);
+        if (!model) {
+            return;
+        }
+
+        const mode = this.mode === 'edit' ? 'edit' : 'view';
+
+        this.getRouter().navigate(`#${model.name}/${mode}/${model.id}`, {trigger: false});
+        this.getRouter().dispatch(model.name, mode, {
+            id: model.id,
+            model: model,
+            indexOfRecord: indexOfRecord
+        });
     },
 
     getBreadcrumbsItems(isAdmin = false) {

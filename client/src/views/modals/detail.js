@@ -116,11 +116,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 label: 'Cancel'
             });
 
-            // a record of an entity with subtypes is shown via its subtype record, it is not a row of the collection
-            if (this.isSupertypeRecord()) {
-                this.navigateButtonsDisabled = true;
-            }
-
             if (this.mode === 'detail' && this.model && this.model.collection && !this.navigateButtonsDisabled) {
                 this.buttonList.push({
                     name: 'previous',
@@ -196,23 +191,75 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
          */
         switchToSubtypeRecord: function (callback) {
             const scope = this.scope || this.options.scope;
+            const listModel = this.sourceModel;
+            const id = listModel ? listModel.id : this.options.id;
 
-            Espo.Ajax.getRequest(`${scope}/${this.options.id}`, null, {metaContext: 'subtype'}).then(data => {
+            Espo.Ajax.getRequest(`${scope}/${id}`, null, {metaContext: 'subtype'}).then(data => {
                 const subtype = data && data._meta && data._meta.subtype;
                 if (subtype && subtype.entityName) {
-                    const listModel = this.sourceModel;
-
                     this.scope = subtype.entityName;
                     this.id = subtype.id;
                     this.sourceModel = null;
 
-                    if (listModel) {
-                        this.listenTo(this, 'after:save', () => listModel.fetch());
-                        this.listenTo(this, 'after:destroy', () => listModel.trigger('destroy', listModel, listModel.collection));
+                    // the navigation goes through the records of the list
+                    this.supertypeListModel = listModel || null;
+                    if (listModel && listModel.collection) {
+                        this.supertypeCollection = listModel.collection;
+                    }
+
+                    if (!this.supertypeListenersAdded) {
+                        this.supertypeListenersAdded = true;
+                        this.listenTo(this, 'after:save', () => {
+                            if (this.supertypeListModel) {
+                                this.supertypeListModel.fetch();
+                            }
+                        });
+                        this.listenTo(this, 'after:destroy', () => {
+                            const model = this.supertypeListModel;
+                            if (model) {
+                                model.trigger('destroy', model, model.collection);
+                            }
+                        });
                     }
                 }
 
-                callback();
+                callback(!!(subtype && subtype.entityName));
+            });
+        },
+
+        switchToSupertypeRowByIndex: function (indexOfRecord) {
+            const listModel = this.supertypeCollection.at(indexOfRecord);
+            if (!listModel) {
+                return;
+            }
+
+            this.scope = listModel.name;
+            this.sourceModel = listModel;
+
+            this.switchToSubtypeRecord(found => {
+                if (!found) {
+                    return;
+                }
+
+                this.indexOfRecord = indexOfRecord;
+
+                this.getModelFactory().create(this.scope, model => {
+                    this.model = model;
+                    this.model.id = this.id;
+
+                    this.listenToOnce(this.model, 'sync', () => {
+                        this.createRecordView(() => {
+                            // set element before reRender
+                            this.setElement(this.containerSelector + ' .body');
+                            this.reRender();
+                            this.setupHeaderAndButtons();
+                            this.$el.find('.modal-header .modal-title').html(this.header);
+                        });
+
+                        this.controlNavigationButtons();
+                    });
+                    this.model.fetch();
+                });
             });
         },
 
@@ -428,13 +475,15 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 previousButtonEnabled = true;
             }
 
-            if (indexOfRecord < this.model.collection.total - 1) {
+            var collection = this.getNavigationCollection();
+
+            if (indexOfRecord < collection.total - 1) {
                 nextButtonEnabled = true;
             } else {
-                if (this.model.collection.total === -1) {
+                if (collection.total === -1) {
                     nextButtonEnabled = true;
-                } else if (this.model.collection.total === -2) {
-                    if (indexOfRecord < this.model.collection.length - 1) {
+                } else if (collection.total === -2) {
+                    if (indexOfRecord < collection.length - 1) {
                         nextButtonEnabled = true;
                     }
                 }
@@ -453,7 +502,16 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }
         },
 
+        getNavigationCollection: function () {
+            return this.supertypeCollection || this.model.collection;
+        },
+
         switchToModelByIndex: function (indexOfRecord) {
+            if (this.supertypeCollection) {
+                this.switchToSupertypeRowByIndex(indexOfRecord);
+                return;
+            }
+
             if (!this.model.collection) return;
 
             this.sourceModel = this.model.collection.at(indexOfRecord);
@@ -490,7 +548,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         actionPrevious: function () {
-            if (!this.model.collection) return;
+            if (!this.getNavigationCollection()) return;
             if (!(this.indexOfRecord > 0)) return;
 
             var indexOfRecord = this.indexOfRecord - 1;
@@ -498,13 +556,12 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         actionNext: function () {
-            if (!this.model.collection) return;
-            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) return;
-            if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
+            var collection = this.getNavigationCollection();
+            if (!collection) return;
+            if (!(this.indexOfRecord < collection.total - 1) && collection.total >= 0) return;
+            if (collection.total === -2 && this.indexOfRecord >= collection.length - 1) {
                 return;
             }
-
-            var collection = this.model.collection;
 
             var indexOfRecord = this.indexOfRecord + 1;
             if (indexOfRecord <= collection.length - 1) {

@@ -393,6 +393,9 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     const viewOptions = {
                         scope: subtype.entityName,
                         model: model,
+                        // the list the record is opened from, to navigate through its records
+                        supertypeCollection: options.model && options.model.collection ? options.model.collection : null,
+                        indexOfRecord: options.indexOfRecord,
                         returnUrl: options.returnUrl,
                         returnDispatchParams: options.returnDispatchParams,
                         params: options
