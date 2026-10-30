@@ -6,7 +6,9 @@
     "rejectedClusterItems": "Éléments de la grappe rejetés",
     "stagingItemCount": "Nombre d'enregistrements contributeurs",
     "masterItemCount": "Nombre d'articles de référence",
-    "state": "État"
+    "status": "Statut",
+    "consolidationMethod": "Méthode de consolidation",
+    "executionMode": "Mode d'exécution"
   },
   "actions": {
     "reject": "Rejeter",
@@ -16,12 +18,20 @@
     "split": "Scinder"
   },
   "options": {
-    "state": {
+    "status": {
       "empty": "Vide",
       "review": "Révision",
       "invalid": "Invalide",
-      "consolidatedAutomatically": "Consolidé (auto)",
       "consolidated": "Consolidé"
+    },
+    "consolidationMethod": {
+      "ruleBased": "Basée sur des règles",
+      "hybrid": "Hybride",
+      "manual": "Manuelle"
+    },
+    "executionMode": {
+      "automatic": "Automatique",
+      "manual": "Manuel"
     }
   },
   "exceptions": {
@@ -69,5 +79,8 @@
     "clusterMovedToClusterThis": "{user} a déplacé {records} du cluster {clusterLink} vers ce cluster",
     "clusterMovedFromCluster": "{user} a déplacé {records} de {entity} vers le cluster {clusterLink}",
     "clusterMovedFromClusterThis": "{user} a déplacé {records} de ce cluster vers le cluster {clusterLink}"
+  },
+  "messages": {
+    "consolidated": "Consolidé"
   }
 }

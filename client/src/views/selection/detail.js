@@ -159,6 +159,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             return this.availableModes.includes('merge') && (!this.model.get('type') || this.model.get('type') === 'single');
         },
 
+        getMergeActionLabel() {
+            return this.translate('Merge');
+        },
+
         setupCustomButtons() {
             if (this.getEntityTypes().length === 0) {
                 return;
@@ -174,7 +178,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     action: 'showSelectionView',
                     style: this.selectionViewMode === 'merge' ? 'primary' : null,
                     html: '<i class="ph ph-arrows-merge"></i>',
-                    tooltip: this.translate('Merge'),
+                    tooltip: this.getMergeActionLabel(),
                     disabled: true,
                     className: 'selection-view-switcher'
                 }, true, false, true);
@@ -956,7 +960,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         getMergeButtons(disabled = true) {
             return Object.assign(this.getCompareButtons(), this.getEntityTypes().length && this.getAcl().check(this.getEntityTypes()[0], 'create') ? {
                 buttons: [{
-                    label: this.translate('Merge'),
+                    label: this.getMergeActionLabel(),
                     name: 'merge',
                     style: 'primary',
                     disabled: disabled

@@ -6,15 +6,25 @@
     "rejectedClusterItems": "Rejected Cluster Items",
     "stagingItemCount": "Contributor Item Count",
     "masterItemCount": "Master Item Count",
-    "state": "State"
+    "status": "Status",
+    "consolidationMethod": "Consolidation Method",
+    "executionMode": "Execution Mode"
   },
   "options": {
-    "state": {
+    "status": {
       "empty": "Empty",
       "review": "Review",
-      "consolidatedAutomatically": "Consolidated (auto)",
       "consolidated": "Consolidated",
       "invalid": "Invalid"
+    },
+    "consolidationMethod": {
+      "ruleBased": "Rule-based",
+      "hybrid": "Hybrid",
+      "manual": "Manual"
+    },
+    "executionMode": {
+      "automatic": "Automatic",
+      "manual": "Manual"
     }
   },
   "actions": {
@@ -44,7 +54,8 @@
     "clusterItemsNotInCluster": "Cluster items %s do not belong to this cluster"
   },
   "messages": {
-    "noClusterFound": "No cluster found for this record"
+    "noClusterFound": "No cluster found for this record",
+    "consolidated": "Consolidated"
   },
   "labels": {
     "contributorRecord": "contributor record",

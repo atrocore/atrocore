@@ -19022,7 +19022,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     color: var(--label-color);
 }
 
-.compare-panel table .matched-score-row th i.autoconsolidated {
+.compare-panel table .matched-score-row th i.auto-confirmed {
     position: absolute;
     top: 0.25em;
     right: 0.5em;

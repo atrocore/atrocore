@@ -5,20 +5,17 @@
     "masterEntity": "Hlavní subjekt",
     "rejectedClusterItems": "Odmítnuté položky klastru",
     "stagingItemCount": "Počet záznamů přispěvatelů",
-    "masterItemCount": "Hlavní počet položek",
-    "state": "Stát"
+    "masterItemCount": "Hlavní počet položek"
   },
   "actions": {
     "reject": "Odmítnout",
     "unreject": "Odmítnout"
   },
   "options": {
-    "state": {
+    "status": {
       "empty": "Prázdný",
       "review": "Recenze",
-      "invalid": "Neplatný",
-      "consolidatedAutomatically": "Automatické sloučení",
-      "consolidated": "Ruční sloučení"
+      "invalid": "Neplatný"
     }
   },
   "exceptions": {

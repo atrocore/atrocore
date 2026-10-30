@@ -6,19 +6,17 @@
     "rejectedClusterItems": "Partidas agrupadas rechazadas",
     "stagingItemCount": "Número de registros contribuidores",
     "masterItemCount": "Recuento maestro de artículos",
-    "state": "Estado"
+    "status": "Estado"
   },
   "actions": {
     "reject": "Rechace",
     "unreject": "Rechazar"
   },
   "options": {
-    "state": {
+    "status": {
       "empty": "Vacío",
       "review": "Revise",
-      "invalid": "No válido",
-      "consolidated": "Fusionado manualmente",
-      "consolidatedAutomatically": "Fusionados automáticamente"
+      "invalid": "No válido"
     }
   },
   "exceptions": {

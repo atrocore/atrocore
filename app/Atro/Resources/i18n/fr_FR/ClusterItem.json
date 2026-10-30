@@ -1,6 +1,6 @@
 {
   "labels": {
-    "consolidatedAutomatically": "Consolidé automatiquement"
+    "confirmedAutomatically": "Automatiquement confirmé"
   },
   "fields": {
     "entityName": "Nom de l'entité",
@@ -8,7 +8,7 @@
     "record": "Enregistrement",
     "cluster": "Groupement d'entreprises",
     "matchedRecord": "Enregistrement apparié",
-    "consolidatedAutomatically": "Consolidé automatiquement",
+    "confirmedAutomatically": "Automatiquement confirmé",
     "matchedScore": "Score apparié"
   },
   "exceptions": {
