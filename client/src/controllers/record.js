@@ -419,26 +419,11 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         prepareSubtypeModel: function (model, supertypeModel) {
-            const supertype = this.name;
-            const sync = model.sync;
-
-            model.supertype = supertype;
-
             // the stream and the history belong to the supertype record
             model.supertypeModel = supertypeModel;
             this.listenTo(model, 'after:save after:inlineEditSave', () => {
                 supertypeModel.fetch();
             });
-
-            model.sync = function (method, m, options) {
-                // a subtype record is deleted together with its supertype record
-                if (method === 'delete') {
-                    options = options || {};
-                    options.url = `${supertype}/${m.get('supertypeId')}`;
-                }
-
-                return sync.call(this, method, m, options);
-            };
         },
 
         /**

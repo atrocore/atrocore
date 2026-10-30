@@ -3597,6 +3597,11 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                         }, this);
 
                         this.listenToOnce(view, 'after:edit-cancel', function () {
+                            // the record of an entity with subtypes is shown via its subtype record
+                            if (view.model.name !== scope) {
+                                this.actionQuickView(data);
+                                return;
+                            }
                             this.actionQuickView({ id: view.model.id, scope: view.model.name });
                         }, this);
 

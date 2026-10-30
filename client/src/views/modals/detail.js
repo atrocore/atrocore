@@ -116,6 +116,11 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 label: 'Cancel'
             });
 
+            // a record of an entity with subtypes is shown via its subtype record, it is not a row of the collection
+            if (this.isSupertypeRecord()) {
+                this.navigateButtonsDisabled = true;
+            }
+
             if (this.mode === 'detail' && this.model && this.model.collection && !this.navigateButtonsDisabled) {
                 this.buttonList.push({
                     name: 'previous',
@@ -145,7 +150,15 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             this.sourceModel = this.model;
 
-            this.setupModels()
+            if (this.isSupertypeRecord()) {
+                this.wait(true);
+                this.switchToSubtypeRecord(() => {
+                    this.setupModels();
+                    this.wait(false);
+                });
+            } else {
+                this.setupModels();
+            }
 
             this.listenToOnce(this.getRouter(), 'routed', function () {
                 this.remove();
@@ -168,6 +181,38 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 if (this.dialog && this.dialog.$el) {
                     this.dialog.$el.trigger('shown.bs.modal')
                 }
+            });
+        },
+
+        isSupertypeRecord: function () {
+            const scope = this.scope || this.options.scope;
+
+            return !!this.options.id && !!this.getMetadata().get(['scopes', scope, 'hasSubtypes']);
+        },
+
+        /**
+         * The record is shown with the layout of its subtype and saved via the subtype, the record of the list is
+         * refreshed afterwards.
+         */
+        switchToSubtypeRecord: function (callback) {
+            const scope = this.scope || this.options.scope;
+
+            Espo.Ajax.getRequest(`${scope}/${this.options.id}`, null, {metaContext: 'subtype'}).then(data => {
+                const subtype = data && data._meta && data._meta.subtype;
+                if (subtype && subtype.entityName) {
+                    const listModel = this.sourceModel;
+
+                    this.scope = subtype.entityName;
+                    this.id = subtype.id;
+                    this.sourceModel = null;
+
+                    if (listModel) {
+                        this.listenTo(this, 'after:save', () => listModel.fetch());
+                        this.listenTo(this, 'after:destroy', () => listModel.trigger('destroy', listModel, listModel.collection));
+                    }
+                }
+
+                callback();
             });
         },
 

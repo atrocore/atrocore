@@ -10,6 +10,13 @@
 
 Espo.define('views/subtype/detail', ['views/detail', 'views/subtype/breadcrumbs'], (Dep, Breadcrumbs) => Dep.extend({
 
+    setup() {
+        Dep.prototype.setup.call(this);
+
+        // the record is shown via its subtype record, it is not a row of a list to navigate through
+        this.removeMenuItem('navigation', true);
+    },
+
     getBreadcrumbsItems(isAdmin = false) {
         return Breadcrumbs.prepare(this, Dep.prototype.getBreadcrumbsItems.call(this, isAdmin));
     },

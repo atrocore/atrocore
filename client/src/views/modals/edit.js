@@ -91,17 +91,18 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
          */
         prepareRelate: function (relate) {
             const model = relate.model;
-            if (!model || !model.supertype || !model.get('supertypeId')) {
+            const supertype = model && typeof model.getSupertype === 'function' ? model.getSupertype() : null;
+            if (!supertype || !model.get('supertypeId')) {
                 return relate;
             }
 
-            if (this.getMetadata().get(['entityDefs', this.scope, 'links', relate.link, 'entity']) !== model.supertype) {
+            if (this.getMetadata().get(['entityDefs', this.scope, 'links', relate.link, 'entity']) !== supertype) {
                 return relate;
             }
 
             const supertypeModel = model.clone();
             supertypeModel.id = model.get('supertypeId');
-            supertypeModel.name = model.supertype;
+            supertypeModel.name = supertype;
 
             return Object.assign({}, relate, {model: supertypeModel});
         },
