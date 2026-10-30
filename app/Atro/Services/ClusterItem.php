@@ -27,7 +27,7 @@ use Espo\ORM\IEntity;
 
 class ClusterItem extends Base
 {
-    protected $mandatorySelectAttributeList = ['entityName', 'entityId', 'consolidatedAutomatically'];
+    protected $mandatorySelectAttributeList = ['entityName', 'entityId', 'confirmedAutomatically'];
 
     public function consolidate(Entity $entity, bool $automatically = false): bool
     {
@@ -35,14 +35,20 @@ class ClusterItem extends Base
             throw new Exception("Cluster is not set for item " . $entity->get('id'));
         }
 
+        if ($automatically && in_array($cluster->get('consolidationMethod'), ['manual', 'hybrid'])) {
+            return false;
+        }
+
         if ($entity->get('entityName') !== $cluster->get('masterEntity')) {
             return $this->consolidateAll([$entity], $automatically);
         }
 
         $cluster->set('goldenRecordId', $entity->get('entityId'));
+        $cluster->set('consolidationMethod', 'ruleBased');
+        $cluster->set('executionMode', $automatically ? 'automatic' : 'manual');
         $this->getEntityManager()->saveEntity($cluster);
 
-        $entity->set('consolidatedAutomatically', $automatically);
+        $entity->set('confirmedAutomatically', $automatically);
         $this->getEntityManager()->saveEntity($entity);
 
         $this->createClusterNote($cluster->get('id'), 'consolidated', $entity->get('entityName'), $entity->get('entityId'));
@@ -61,6 +67,10 @@ class ClusterItem extends Base
 
         if (empty($cluster = $clusterItems[0]->get('cluster'))) {
             throw new Exception("Cluster is not set for item " . $clusterItems[0]->get('id'));
+        }
+
+        if ($automatically && in_array($cluster->get('consolidationMethod'), ['manual', 'hybrid'])) {
+            return false;
         }
 
         $contributorItems = [];
@@ -136,6 +146,9 @@ class ClusterItem extends Base
             throw new BadRequest($this->getInjection('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
         }
 
+        $cluster->set('consolidationMethod', 'ruleBased');
+        $cluster->set('executionMode', $automatically ? 'automatic' : 'manual');
+
         if (empty($goldenRecord)) {
             $goldenRecord = $consolidationService->createMasterRecord($candidates);
 
@@ -154,6 +167,10 @@ class ClusterItem extends Base
             $goldenRecordChanged = true;
         } else {
             $consolidationService->updateMasterRecord($goldenRecord, $candidates);
+
+            if ($cluster->isAttributeChanged('consolidationMethod') || $cluster->isAttributeChanged('executionMode')) {
+                $this->getEntityManager()->saveEntity($cluster);
+            }
         }
 
         foreach ($candidates as $record) {
@@ -161,7 +178,7 @@ class ClusterItem extends Base
             $this->getEntityManager()->saveEntity($record, ['skipUpdateMasterRecord' => true]);
 
             $clusterItem = $contributorItems[$record->get('id')];
-            $clusterItem->set('consolidatedAutomatically', $automatically);
+            $clusterItem->set('confirmedAutomatically', $automatically);
             $this->getEntityManager()->saveEntity($clusterItem);
 
             $this->createClusterNote($cluster->get('id'), 'consolidated', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
@@ -224,7 +241,7 @@ class ClusterItem extends Base
             }
         }
 
-        $entity->set('consolidatedAutomatically', false);
+        $entity->set('confirmedAutomatically', false);
         $entity->set('matchedRecordId', null);
 
         if ($persistRejection) {
@@ -236,7 +253,7 @@ class ClusterItem extends Base
         } else {
             // cancel if only one cluster item remains
             if (empty($this->getRepository()->where(['clusterId' => $cluster->get('id'), 'id!=' => $entity->get('id')])->findOne())) {
-                if ($entity->isAttributeChanged('consolidatedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
+                if ($entity->isAttributeChanged('confirmedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
                     $this->getEntityManager()->saveEntity($entity);
                 }
 
@@ -262,7 +279,7 @@ class ClusterItem extends Base
             $entity->set('matchedRecordId', $item['id']);
         }
 
-        if ($entity->isAttributeChanged('consolidatedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
+        if ($entity->isAttributeChanged('confirmedAutomatically') || $entity->isAttributeChanged('matchedRecordId')) {
             $this->getEntityManager()->saveEntity($entity);
         }
 
@@ -331,7 +348,7 @@ class ClusterItem extends Base
         }
 
         $goldenRecord = $cluster->get('goldenRecord');
-        if ($count > 0 && !empty($goldenRecord)) {
+        if ($count > 0 && !empty($goldenRecord) && !in_array($cluster->get('consolidationMethod'), ['manual', 'hybrid'])) {
             $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
         }
 
@@ -433,8 +450,8 @@ class ClusterItem extends Base
             }
         }
 
-        if (!empty($clusterItem->get('consolidatedAutomatically'))) {
-            $clusterItem->set('consolidatedAutomatically', false);
+        if (!empty($clusterItem->get('confirmedAutomatically'))) {
+            $clusterItem->set('confirmedAutomatically', false);
             $this->getEntityManager()->saveEntity($clusterItem);
         }
 
@@ -480,8 +497,8 @@ class ClusterItem extends Base
             }
         }
 
-        if (!empty($clusterItem->get('consolidatedAutomatically'))) {
-            $clusterItem->set('consolidatedAutomatically', false);
+        if (!empty($clusterItem->get('confirmedAutomatically'))) {
+            $clusterItem->set('confirmedAutomatically', false);
             $this->getEntityManager()->saveEntity($clusterItem);
         }
     }
@@ -511,12 +528,14 @@ class ClusterItem extends Base
             null;
 
 
+        $canConsolidate = !$isConsolidated && !in_array($entity->get('cluster')?->get('consolidationMethod'), ['manual', 'hybrid']);
+
         $canDeconsolidate = $isStaging
             && $isConsolidated
             && count($this->getConsolidatedContributorItemIds($entity->get('cluster'))) > 1;
 
         if ($this->getUser()->isAdmin()) {
-            $entity->setAvailableAction('consolidate', !$isConsolidated);
+            $entity->setAvailableAction('consolidate', $canConsolidate);
             $entity->setAvailableAction('reject', true);
             $entity->setAvailableAction('deconsolidate', $canDeconsolidate);
             $entity->setAvailableAction('split', $isStaging);
@@ -538,7 +557,7 @@ class ClusterItem extends Base
         $entity->setAvailableAction('delete', false);
 
         if (!empty($record)) {
-            $entity->setAvailableAction('consolidate', !$isConsolidated && $this->getAcl()->check($record, 'edit'));
+            $entity->setAvailableAction('consolidate', $canConsolidate && $this->getAcl()->check($record, 'edit'));
             $entity->setAvailableAction('delete', $this->getAcl()->check($record, 'delete'));
         } else {
             $entity->setAvailableAction('unlink', $this->getAcl()->check($entity, 'delete'));
@@ -650,7 +669,12 @@ class ClusterItem extends Base
             });
 
             $sourceCluster = $clusterItem->get('cluster');
-            if ($clusterItem->get('entityName') !== $sourceCluster->get('masterEntity') && !empty($goldenRecord = $sourceCluster->get('goldenRecord'))) {
+            if ($clusterItem->get('entityName') === $sourceCluster->get('masterEntity')) {
+                $this->runAsSystemUser(function () use ($sourceCluster) {
+                    $sourceCluster->set('goldenRecordId', null);
+                    $this->getEntityManager()->saveEntity($sourceCluster);
+                });
+            } elseif (!empty($goldenRecord = $sourceCluster->get('goldenRecord'))) {
                 $this->getRecordService('Consolidation')->refreshMasterRecord($goldenRecord);
             }
         }
@@ -672,7 +696,7 @@ class ClusterItem extends Base
         );
     }
 
-    private function runAsSystemUser(callable $callback): void
+    public function runAsSystemUser(callable $callback): void
     {
         $user       = $this->getUser();
         $systemUser = $user->getSystemUser();

@@ -6,19 +6,17 @@
     "rejectedClusterItems": "Articoli del cluster rifiutati",
     "stagingItemCount": "Numero di record contributori",
     "masterItemCount": "Conteggio articoli master",
-    "state": "Stato"
+    "status": "Stato"
   },
   "actions": {
     "reject": "Rifiuta",
     "unreject": "Non rifiutare"
   },
   "options": {
-    "state": {
+    "status": {
       "empty": "Vuoto",
       "review": "Recensione",
-      "invalid": "Non valido",
-      "consolidatedAutomatically": "Fusione automatica",
-      "consolidated": "Unita manualmente"
+      "invalid": "Non valido"
     }
   },
   "exceptions": {

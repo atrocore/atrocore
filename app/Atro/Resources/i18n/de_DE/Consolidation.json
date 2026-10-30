@@ -20,6 +20,7 @@
   "exceptions": {
     "consolidationScriptIsMissing": "Konsolidierungsskript fehlt für Master-Entität",
     "consolidationScriptIsNotValid": "Konsolidierungsskript gibt ungültige Nutzdaten zurück: %s",
+    "consolidationScriptReturnedNoValues": "Konsolidierungsskript hat keine Werte zurückgegeben",
     "entityTypeInvalid": "Der Entitätstyp \"%s\" kann nicht für die Konsolidierung verwendet werden",
     "consolidationAlreadyExists": "Konsolidierung für \"%s\" existiert bereits",
     "skipConditionFailed": "Überspringbedingung fehlgeschlagen: %s",

@@ -159,6 +159,18 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             return this.availableModes.includes('merge') && (!this.model.get('type') || this.model.get('type') === 'single');
         },
 
+        getMergeActionLabel() {
+            return this.translate('Merge');
+        },
+
+        getViewModeLabel(mode) {
+            return {
+                merge: this.getMergeActionLabel(),
+                compare: this.translate('Compare'),
+                standard: this.translate('Standard')
+            }[mode];
+        },
+
         setupCustomButtons() {
             if (this.getEntityTypes().length === 0) {
                 return;
@@ -174,7 +186,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     action: 'showSelectionView',
                     style: this.selectionViewMode === 'merge' ? 'primary' : null,
                     html: '<i class="ph ph-arrows-merge"></i>',
-                    tooltip: this.translate('Merge'),
+                    tooltip: this.getViewModeLabel('merge'),
                     disabled: true,
                     className: 'selection-view-switcher'
                 }, true, false, true);
@@ -186,7 +198,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     action: 'showSelectionView',
                     style: this.selectionViewMode === 'compare' ? 'primary' : null,
                     html: '<i class="ph ph-arrows-left-right"></i>',
-                    tooltip: this.translate('Compare'),
+                    tooltip: this.getViewModeLabel('compare'),
                     disabled: true,
                     className: 'selection-view-switcher'
                 }, true, false, true);
@@ -198,7 +210,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     action: 'showSelectionView',
                     style: this.selectionViewMode === 'standard' ? 'primary' : null,
                     html: '<i class="ph ph-list"></i>',
-                    tooltip: this.translate('Standard'),
+                    tooltip: this.getViewModeLabel('standard'),
                     disabled: true,
                     className: 'selection-view-switcher'
                 }, true, false, true);
@@ -956,7 +968,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         getMergeButtons(disabled = true) {
             return Object.assign(this.getCompareButtons(), this.getEntityTypes().length && this.getAcl().check(this.getEntityTypes()[0], 'create') ? {
                 buttons: [{
-                    label: this.translate('Merge'),
+                    label: this.getMergeActionLabel(),
                     name: 'merge',
                     style: 'primary',
                     disabled: disabled

@@ -1,6 +1,6 @@
 {
   "labels": {
-    "consolidatedAutomatically": "Automatisch konsolidiert"
+    "confirmedAutomatically": "Automatisch bestätigt"
   },
   "fields": {
     "entityName": "Entitäts-Name",
@@ -8,7 +8,7 @@
     "record": "Datensatz",
     "cluster": "Cluster",
     "matchedRecord": "Übereinstimmender Datensatz",
-    "consolidatedAutomatically": "Automatisch konsolidiert",
+    "confirmedAutomatically": "Automatisch bestätigt",
     "matchedScore": "Abgestimmte Punktzahl"
   },
   "exceptions": {

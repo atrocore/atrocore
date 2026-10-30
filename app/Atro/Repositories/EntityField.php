@@ -459,10 +459,17 @@ class EntityField extends ReferenceData
                         $conditions[] = '(' . $unitColumn . ' IS NULL OR ' . $unitColumn . ' = :empty)';
                     }
 
-                    $res = $this->createExistingRecordsQuery($entityName)
+                    $qb = $this->createExistingRecordsQuery($entityName)
                         ->andWhere(implode(' OR ', $conditions))
-                        ->setParameter('empty', '')
-                        ->fetchOne();
+                        ->setParameter('empty', '');
+
+                    if ($entity->get('entityId') == 'User') {
+                        $qb
+                            ->andWhere('type = :token')
+                            ->setParameter('token', 'Token');
+                    }
+
+                    $res = $qb->fetchOne();
 
                     if (!empty($res)) {
                         throw new BadRequest($this->getLanguage()->translate('nullValuesExist', 'exceptions', 'EntityField'));

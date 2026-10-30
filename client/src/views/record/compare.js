@@ -56,7 +56,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
                 let id = e.currentTarget.value;
-                $('input[data-id="' + id + '"]').prop('checked', true);
+                $('input[type="radio"][data-id="' + id + '"]').prop('checked', true);
                 this.model.trigger('select-model', id);
             },
 
@@ -262,7 +262,7 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
                     this.handleRadioButtonsDisableState(false);
                 }
             }).done((result) => {
-                this.notify('Merged', 'success');
+                this.notify(this.getMergeSuccessMessage(), 'success');
                 this.trigger('merge-success', result);
                 if (doneCallback) {
                     doneCallback(result);
@@ -272,6 +272,10 @@ Espo.define('views/record/compare', ['view', 'views/record/list', 'collection'],
 
         getMergeUrl() {
             return 'entityMerge'
+        },
+
+        getMergeSuccessMessage() {
+            return 'Merged';
         },
 
         getMergeData(targetId, attributes, relationshipData) {

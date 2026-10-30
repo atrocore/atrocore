@@ -6,7 +6,9 @@
     "rejectedClusterItems": "Відхилені елементи кластера",
     "stagingItemCount": "Кількість Contributor-записів",
     "masterItemCount": "Кількість основних елементів",
-    "state": "Стан"
+    "status": "Статус",
+    "consolidationMethod": "Метод консолідації",
+    "executionMode": "Режим виконання"
   },
   "actions": {
     "reject": "Відхилити",
@@ -16,12 +18,20 @@
     "split": "Розділити"
   },
   "options": {
-    "state": {
+    "status": {
       "empty": "Порожній",
       "review": "На перевірці",
       "invalid": "Недійсний",
-      "consolidatedAutomatically": "Консолідовано (авто)",
       "consolidated": "Консолідовано"
+    },
+    "consolidationMethod": {
+      "ruleBased": "На основі правил",
+      "hybrid": "Гібридний",
+      "manual": "Ручний"
+    },
+    "executionMode": {
+      "automatic": "Автоматичний",
+      "manual": "Ручний"
     }
   },
   "exceptions": {
@@ -40,6 +50,11 @@
     "unconsolidated": "Не консолідовано",
     "rejected": "Відхилено",
     "consolidationPreview": "Прев’ю консолідації",
+    "standardView": "Стандартний",
+    "comparisonView": "Порівняння",
+    "manualConsolidationView": "Ручна консолідація",
+    "suggestedValues": "Запропоновані значення",
+    "selectAllSuggestedValues": "Обрати всі запропоновані значення",
     "consolidationPreviewHint": "Показує, яким стане golden record після консолідації. Нічого не зберігається.",
     "noConsolidationConfigured": "Для цієї сутності не налаштовано консолідацію",
     "discard": "Скасувати зміни"
@@ -69,5 +84,8 @@
     "clusterMovedToClusterThis": "{user} перемістив {records} з кластера {clusterLink} до цього кластера",
     "clusterMovedFromCluster": "{user} перемістив {records} з {entity} до кластера {clusterLink}",
     "clusterMovedFromClusterThis": "{user} перемістив {records} з цього кластера до кластера {clusterLink}"
+  },
+  "messages": {
+    "consolidated": "Консолідовано"
   }
 }

@@ -5,20 +5,17 @@
     "masterEntity": "Мастер сущность",
     "rejectedClusterItems": "Отклоненные элементы кластера",
     "stagingItemCount": "Количество Contributor-записей",
-    "masterItemCount": "Мастер подсчета предметов",
-    "state": "Регион"
+    "masterItemCount": "Мастер подсчета предметов"
   },
   "actions": {
     "reject": "Отклонить",
     "unreject": "Отклонить"
   },
   "options": {
-    "state": {
+    "status": {
       "empty": "Пустые значения",
       "review": "Проверка",
-      "invalid": "Неверный",
-      "consolidated": "Объединение вручную",
-      "consolidatedAutomatically": "Автоматическое объединение"
+      "invalid": "Неверный"
     }
   },
   "exceptions": {

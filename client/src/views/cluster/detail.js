@@ -72,7 +72,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                 const loadedCount = previousOffsets[entityType] || this.itemsPageSize;
                 const whereRelation = JSON.stringify([{ attribute: 'entityName', type: 'equals', value: entityType }]);
                 return this.loadSelectionItemModels(
-                    `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,consolidatedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=${loadedCount + 1}&where=${encodeURIComponent(whereRelation)}`
+                    `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=${loadedCount + 1}&where=${encodeURIComponent(whereRelation)}`
                 ).then(models => {
                     if (models.length > loadedCount) {
                         models = models.slice(0, loadedCount);
@@ -136,7 +136,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
             const where = JSON.stringify([{ attribute: 'entityName', type: 'equals', value: entityType }]);
 
             this.loadSelectionItemModels(
-                `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,consolidatedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=${offset}&maxSize=${this.itemsPageSize + 1}&where=${encodeURIComponent(where)}`
+                `entityRelation?entityName=Cluster&link=clusterItems&id=${this.model.id}&select=entityName,entityId,entity,confirmedAutomatically,matchedScore&collectionOnly=true&sortBy=id&asc=false&offset=${offset}&maxSize=${this.itemsPageSize + 1}&where=${encodeURIComponent(where)}`
             ).then(models => {
                 let hasMore = false;
                 if (models.length > this.itemsPageSize) {
@@ -173,7 +173,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                     entityType: model.name,
                     isMaster: model.name === masterEntityType,
                     consolidated: model.item?.get('_meta')?.state?.consolidated ?? false,
-                    consolidatedAutomatically: model.item?.get('consolidatedAutomatically') ?? false,
+                    confirmedAutomatically: model.item?.get('confirmedAutomatically') ?? false,
                     rejected: false
                 }
             });
@@ -185,7 +185,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
                     entityType: model.name,
                     isMaster: model.name === masterEntityType,
                     consolidated: false,
-                    consolidatedAutomatically: false,
+                    confirmedAutomatically: false,
                     rejected: true
                 });
             }
@@ -376,6 +376,18 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
             return true;
         },
 
+        getMergeActionLabel() {
+            return this.translate('consolidate', 'actions', 'Cluster');
+        },
+
+        getViewModeLabel(mode) {
+            return {
+                merge: this.translate('manualConsolidationView', 'labels', 'Cluster'),
+                compare: this.translate('comparisonView', 'labels', 'Cluster'),
+                standard: this.translate('standardView', 'labels', 'Cluster')
+            }[mode];
+        },
+
         canCompare() {
             const models = this.selectionViewMode === 'standard' ? this.collection?.models : this.selectionItemModels;
 
@@ -384,7 +396,7 @@ Espo.define('views/cluster/detail', ['views/selection/detail', 'views/record/pan
         },
 
         canMerge() {
-            if (['empty', 'invalid'].includes(this.model.get('state'))) {
+            if (['empty', 'invalid'].includes(this.model.get('status'))) {
                 return false;
             }
 

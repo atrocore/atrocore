@@ -20,6 +20,7 @@
   "exceptions": {
     "consolidationScriptIsMissing": "Відсутній скрипт консолідації для головної сутності",
     "consolidationScriptIsNotValid": "Скрипт консолідації повертає некоректне корисне навантаження: %s",
+    "consolidationScriptReturnedNoValues": "Скрипт консолідації не повернув жодного значення",
     "entityTypeInvalid": "Тип сутності \"%s\" не може використовуватися для консолідації",
     "consolidationAlreadyExists": "Консолідація для \"%s\" вже існує",
     "skipConditionFailed": "Помилка умови пропуску: %s",

@@ -77,7 +77,7 @@ class ClusterItem extends Base
         $this->getDbal()->createQueryBuilder()
             ->update('cluster_item')
             ->set('cluster_id', ':clusterIdTo')
-            ->set('consolidated_automatically', ':false')
+            ->set('confirmed_automatically', ':false')
             ->where('cluster_id=:clusterIdFrom and id not in (select cluster_item_id from rejected_cluster_item where cluster_id=:clusterIdTo and deleted=:false) and deleted=:false')
             ->setParameter('clusterIdFrom', $clusterIdFrom)
             ->setParameter('clusterIdTo', $clusterIdTo)
@@ -85,10 +85,62 @@ class ClusterItem extends Base
             ->executeQuery();
 
         if (!empty($items)) {
+            $this->transferConsolidationToCluster($clusterIdFrom, $clusterIdTo);
             $this->createMoveNotes($clusterIdFrom, $clusterIdTo, $items);
         }
 
         $this->updateMatchedScoresInClusters([$clusterIdFrom, $clusterIdTo]);
+    }
+
+    protected function transferConsolidationToCluster(string $clusterIdFrom, string $clusterIdTo): void
+    {
+        $clusters = $this->getDbal()->createQueryBuilder()
+            ->select('id', 'golden_record_id', 'consolidation_method', 'execution_mode')
+            ->from('cluster')
+            ->where('id IN (:ids)')
+            ->setParameter('ids', [$clusterIdFrom, $clusterIdTo], Mapper::getParameterType([$clusterIdFrom, $clusterIdTo]))
+            ->fetchAllAssociativeIndexed();
+
+        $from = $clusters[$clusterIdFrom] ?? null;
+        $to = $clusters[$clusterIdTo] ?? null;
+        if (empty($from) || empty($to)) {
+            return;
+        }
+
+        $methodRanks = ['ruleBased' => 1, 'hybrid' => 2, 'manual' => 3];
+        $fromRank = $methodRanks[$from['consolidation_method'] ?? ''] ?? 0;
+        $toRank = $methodRanks[$to['consolidation_method'] ?? ''] ?? 0;
+
+        if ($fromRank > 1 && $fromRank > $toRank) {
+            $qb = $this->getDbal()->createQueryBuilder()
+                ->update('cluster')
+                ->set('consolidation_method', ':consolidationMethod')
+                ->set('execution_mode', ':executionMode')
+                ->where('id = :id')
+                ->setParameter('consolidationMethod', $from['consolidation_method'])
+                ->setParameter('executionMode', $from['execution_mode'])
+                ->setParameter('id', $clusterIdTo);
+
+            if (empty($to['golden_record_id'])) {
+                $qb->set('golden_record_id', ':goldenRecordId')
+                    ->setParameter('goldenRecordId', $from['golden_record_id']);
+            }
+
+            $qb->executeStatement();
+        }
+
+        $this->getDbal()->createQueryBuilder()
+            ->update('cluster')
+            ->set('golden_record_id', ':null')
+            ->set('consolidation_method', ':null')
+            ->set('execution_mode', ':null')
+            ->where('id = :id')
+            ->andWhere('golden_record_id IS NOT NULL')
+            ->andWhere('NOT EXISTS (SELECT 1 FROM cluster_item ci WHERE ci.cluster_id = cluster.id AND ci.entity_id = cluster.golden_record_id AND ci.deleted = :false)')
+            ->setParameter('id', $clusterIdFrom)
+            ->setParameter('null', null, ParameterType::NULL)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeStatement();
     }
 
     public function moveToCluster(string $clusterItemId, string $clusterIdTo): void
@@ -249,6 +301,7 @@ class ClusterItem extends Base
         return $this->getDbal()->createQueryBuilder()
             ->select('ci.id')
             ->from('cluster_item', 'ci')
+            ->innerJoin('ci', 'cluster', 'c_chk', 'c_chk.id = ci.cluster_id AND c_chk.deleted = :false')
             ->innerJoin('ci', $stagingTableName, 'se_chk', 'se_chk.id = ci.entity_id AND se_chk.deleted = :false')
             ->leftJoin('se_chk', $masterTableName, 'me_chk', 'me_chk.id = se_chk.master_record_id AND me_chk.deleted = :false')
             ->where('ci.entity_name = :stagingEntityName')
@@ -256,7 +309,9 @@ class ClusterItem extends Base
             ->andWhere('ci.deleted = :false')
             ->andWhere('(SELECT COUNT(ci2.id) FROM cluster_item ci2 WHERE ci2.cluster_id = ci.cluster_id AND ci2.deleted = :false) = 1')
             ->andWhere('me_chk.id IS NULL')
+            ->andWhere('c_chk.consolidation_method IS NULL OR c_chk.consolidation_method = :ruleBased')
             ->setParameter('stagingEntityName', $stagingEntityName)
+            ->setParameter('ruleBased', 'ruleBased')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setFirstResult($offset)
             ->setMaxResults($limit)
@@ -292,7 +347,9 @@ class ClusterItem extends Base
             ->leftJoin('se', $masterTableName, 'me', 'me.id=se.master_record_id and me.deleted=:false')
             ->where('ci.entity_name=:contributorEntityName and ci.matched_score>=:minimumScore and ci.deleted=:false')
             ->andWhere('me.id is null or me.id <> c.golden_record_id')
+            ->andWhere('c.consolidation_method is null or c.consolidation_method = :ruleBased')
             ->setParameter('contributorEntityName', $contributorEntityName)
+            ->setParameter('ruleBased', 'ruleBased')
             ->setParameter('minimumScore', $minimumScore)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setFirstResult($offset)

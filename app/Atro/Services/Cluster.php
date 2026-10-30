@@ -46,9 +46,9 @@ class Cluster extends Base
 
     private function calculateVirtualFields(Entity $entity)
     {
-        if ($entity->get('state') === null) {
+        if ($entity->get('status') === null) {
             $sp                      = $this->getSelectParams([
-                'select' => ['state', 'stagingItemCount', 'masterItemCount'],
+                'select' => ['status', 'stagingItemCount', 'masterItemCount'],
             ]);
             $sp['whereClause']['id'] = $entity->get('id');
             $sp['noCache']           = true;
@@ -57,7 +57,7 @@ class Cluster extends Base
             if (!empty($record)) {
                 $entity->set('stagingItemCount', $record->get('stagingItemCount'));
                 $entity->set('masterItemCount', $record->get('masterItemCount'));
-                $entity->set('state', $record->get('state'));
+                $entity->set('status', $record->get('status'));
             }
         }
     }
@@ -99,7 +99,7 @@ class Cluster extends Base
         if ($entity->getMeta('availableActions', 'delete')) {
             $canPurge = false;
             $this->calculateVirtualFields($entity);
-            if ($entity->get('state') !== 'empty') {
+            if ($entity->get('status') !== 'empty') {
                 $entity->setAvailableAction('delete', false);
                 $canPurge = true;
             }
@@ -199,7 +199,7 @@ class Cluster extends Base
             throw new NotFound();
         }
 
-        if ($cluster->get('state') === 'invalid') {
+        if ($cluster->get('status') === 'invalid') {
             throw new BadRequest($this->getInjection('language')->translate('cannotPreviewInvalidCluster', 'exceptions', 'Cluster'));
         }
 
@@ -208,6 +208,10 @@ class Cluster extends Base
         $payload = $this->getRecordService('Consolidation')->buildMasterRecordPayloadForCluster($cluster, $consolidationScript);
         if ($payload === null) {
             throw new BadRequest($this->getInjection('language')->translate('allCandidatesSkipped', 'exceptions', 'Consolidation'));
+        }
+
+        if (empty($payload)) {
+            throw new BadRequest($this->getInjection('language')->translate('consolidationScriptReturnedNoValues', 'exceptions', 'Consolidation'));
         }
 
         $masterRepository = $this->getEntityManager()->getRepository($masterEntityName);
@@ -232,7 +236,7 @@ class Cluster extends Base
         return $preview;
     }
 
-    public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes): Entity
+    public function mergeItems(string $clusterId, array $sourceIds, \stdClass $attributes, array $suggestedFields = []): Entity
     {
         $cluster = $this->getEntity($clusterId);
 
@@ -243,10 +247,6 @@ class Cluster extends Base
         if (!$this->getAcl()->check($cluster->get('masterEntity'), 'create')) {
             throw new Forbidden();
         }
-
-        $user = $this->getUser();
-        $this->getEntityManager()->setUser($user->getSystemUser());
-        $this->getContainer()->get(\Atro\Core\UserContext::class)->set($user->getSystemUser());
 
         /** @var RDB $masterRepository */
         $masterRepository = $this->getEntityManager()->getRepository($cluster->get('masterEntity'));
@@ -265,7 +265,20 @@ class Cluster extends Base
             }
         }
 
+        $manualAttributes = array_filter(array_keys(get_object_vars($attributes->input)), fn($attribute) => !str_starts_with($attribute, '__'));
+
+        if (!empty($suggestedFields)) {
+            $preview = $this->buildMasterRecordPreview($clusterId);
+            foreach ($suggestedFields as $field) {
+                foreach ($this->getInjection('fieldManagerUtil')->getActualAttributeList($cluster->get('masterEntity'), $field, $preview) as $attribute) {
+                    $attributes->input->$attribute = $preview->get($attribute);
+                    $manualAttributes = array_diff($manualAttributes, [$attribute]);
+                }
+            }
+        }
+
         $goldenRecord = $cluster->get('goldenRecord');
+        $goldenRecordChanged = empty($goldenRecord);
 
         if (empty($goldenRecord)) {
             foreach ($sourceList as $source) {
@@ -281,6 +294,12 @@ class Cluster extends Base
         }
 
         $cluster->set('goldenRecordId', $goldenRecord->get('id'));
+        if (empty($suggestedFields)) {
+            $cluster->set('consolidationMethod', 'manual');
+        } else {
+            $cluster->set('consolidationMethod', empty($manualAttributes) ? 'ruleBased' : 'hybrid');
+        }
+        $cluster->set('executionMode', 'manual');
         $this->getRepository()->save($cluster);
 
         $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
@@ -349,7 +368,7 @@ class Cluster extends Base
         foreach ($sourceList as $source) {
             if ($source->getEntityName() !== $cluster->get('masterEntity')) {
                 $source->set('masterRecordId', $goldenRecord->get('id'));
-                $this->getEntityManager()->saveEntity($source);
+                $this->getEntityManager()->saveEntity($source, ['skipUpdateMasterRecord' => true]);
             }
         }
 
@@ -360,6 +379,24 @@ class Cluster extends Base
             $clusterItem->set('entityName', $goldenRecord->getEntityName());
             $this->getEntityManager()->saveEntity($clusterItem);
         } catch (UniqueConstraintViolationException|NotUnique $e) {
+        }
+
+        /** @var \Atro\Repositories\ClusterItem $clusterItemRepository */
+        $clusterItemRepository = $this->getEntityManager()->getRepository('ClusterItem');
+
+        foreach ($clusterItems as $clusterItem) {
+            if (!empty($clusterItem->get('confirmedAutomatically'))) {
+                $clusterItem->set('confirmedAutomatically', false);
+                $this->getEntityManager()->saveEntity($clusterItem);
+            }
+
+            $clusterItemRepository->createClusterActivityNote($clusterId, 'consolidated', $clusterItem->get('entityName'), $clusterItem->get('entityId'));
+        }
+
+        if ($goldenRecordChanged) {
+            $this->getRecordService('ClusterItem')->runAsSystemUser(function () use ($clusterItemRepository, $clusterId, $goldenRecord) {
+                $clusterItemRepository->createClusterActivityNote($clusterId, 'goldenRecord', $goldenRecord->getEntityName(), $goldenRecord->get('id'));
+            });
         }
 
         return $goldenRecord;
@@ -375,5 +412,6 @@ class Cluster extends Base
         parent::init();
 
         $this->addDependency('container');
+        $this->addDependency('fieldManagerUtil');
     }
 }
